@@ -4782,114 +4782,152 @@
 <h2 id="what-was-implemented">What Was Implemented</h2>
 <h3 id="1-validation-script-scriptsvalidate-at-e1-002sh">1. Validation Script (<code>scripts/validate-at-e1-002.sh</code>)</h3>
 <p>Comprehensive validation script that checks all AT-E1-002 acceptance criteria:</p>
-<p>✅ <strong>Prerequisites</strong>
-- Checks kubectl installation
-- Checks argocd CLI installation (optional)</p>
-<p>✅ <strong>Cluster Access</strong>
-- Validates Kubernetes cluster connectivity
-- Verifies cluster-info access</p>
-<p>✅ <strong>ArgoCD Namespace</strong>
-- Checks namespace exists
-- Validates namespace is Active</p>
-<p>✅ <strong>ArgoCD Deployment</strong>
-- Verifies argocd-server deployment
-- Checks argocd-application-controller
-- Validates argocd-repo-server
-- Confirms argocd-redis is running</p>
-<p>✅ <strong>ArgoCD Pods</strong>
-- Validates all pods are Running
-- Checks all pods are Ready
-- Reports pod count and status</p>
-<p>✅ <strong>ArgoCD CRDs</strong>
-- Validates applications.argoproj.io
-- Checks applicationsets.argoproj.io
-- Confirms appprojects.argoproj.io</p>
-<p>✅ <strong>Git Repository Structure</strong>
-- Checks platform/apps/ directory exists
-- Validates platform/bootstrap/ directory exists</p>
-<p>✅ <strong>App-of-Apps Pattern</strong>
-- Looks for root applications (platform-bootstrap, fawkes-app, fawkes-infra)
-- Validates at least one Application exists</p>
-<p>✅ <strong>Application Sync Status</strong>
-- Checks all applications are Synced
-- Validates all applications are Healthy
-- Identifies out-of-sync or unhealthy applications</p>
-<p>✅ <strong>Auto-Sync Configuration</strong>
-- Verifies auto-sync is enabled
-- Checks self-heal is configured</p>
-<p>✅ <strong>ArgoCD Ingress</strong>
-- Validates ingress resource exists
-- Checks ingress host configuration</p>
-<p>✅ <strong>Test Reporting</strong>
-- Generates JSON report with timestamp
-- Includes summary (total, passed, failed, pass rate)
-- Provides detailed results for each test
-- Saves to <code>reports/at-e1-002-validation-TIMESTAMP.json</code></p>
+<p>✅ <strong>Prerequisites</strong></p>
+<ul>
+<li>Checks kubectl installation</li>
+<li>Checks argocd CLI installation (optional)</li>
+</ul>
+<p>✅ <strong>Cluster Access</strong></p>
+<ul>
+<li>Validates Kubernetes cluster connectivity</li>
+<li>Verifies cluster-info access</li>
+</ul>
+<p>✅ <strong>ArgoCD Namespace</strong></p>
+<ul>
+<li>Checks namespace exists</li>
+<li>Validates namespace is Active</li>
+</ul>
+<p>✅ <strong>ArgoCD Deployment</strong></p>
+<ul>
+<li>Verifies argocd-server deployment</li>
+<li>Checks argocd-application-controller</li>
+<li>Validates argocd-repo-server</li>
+<li>Confirms argocd-redis is running</li>
+</ul>
+<p>✅ <strong>ArgoCD Pods</strong></p>
+<ul>
+<li>Validates all pods are Running</li>
+<li>Checks all pods are Ready</li>
+<li>Reports pod count and status</li>
+</ul>
+<p>✅ <strong>ArgoCD CRDs</strong></p>
+<ul>
+<li>Validates applications.argoproj.io</li>
+<li>Checks applicationsets.argoproj.io</li>
+<li>Confirms appprojects.argoproj.io</li>
+</ul>
+<p>✅ <strong>Git Repository Structure</strong></p>
+<ul>
+<li>Checks platform/apps/ directory exists</li>
+<li>Validates platform/bootstrap/ directory exists</li>
+</ul>
+<p>✅ <strong>App-of-Apps Pattern</strong></p>
+<ul>
+<li>Looks for root applications (platform-bootstrap, fawkes-app, fawkes-infra)</li>
+<li>Validates at least one Application exists</li>
+</ul>
+<p>✅ <strong>Application Sync Status</strong></p>
+<ul>
+<li>Checks all applications are Synced</li>
+<li>Validates all applications are Healthy</li>
+<li>Identifies out-of-sync or unhealthy applications</li>
+</ul>
+<p>✅ <strong>Auto-Sync Configuration</strong></p>
+<ul>
+<li>Verifies auto-sync is enabled</li>
+<li>Checks self-heal is configured</li>
+</ul>
+<p>✅ <strong>ArgoCD Ingress</strong></p>
+<ul>
+<li>Validates ingress resource exists</li>
+<li>Checks ingress host configuration</li>
+</ul>
+<p>✅ <strong>Test Reporting</strong></p>
+<ul>
+<li>Generates JSON report with timestamp</li>
+<li>Includes summary (total, passed, failed, pass rate)</li>
+<li>Provides detailed results for each test</li>
+<li>Saves to <code>reports/at-e1-002-validation-TIMESTAMP.json</code></li>
+</ul>
 <h3 id="2-e2e-sync-test-script-testse2eargocd-sync-testsh">2. E2E Sync Test Script (<code>tests/e2e/argocd-sync-test.sh</code>)</h3>
 <p>End-to-end testing for ArgoCD sync operations:</p>
-<p>✅ <strong>Features</strong>
-- Tests application sync operations
-- Supports testing specific application or all applications
-- Configurable timeout for sync operations
-- Wait for sync status (Synced)
-- Wait for health status (Healthy)
-- Optional hard refresh via argocd CLI
-- Comprehensive summary reporting</p>
-<p>✅ <strong>Options</strong>
-- <code>--namespace</code>: Specify ArgoCD namespace
-- <code>--app</code>: Test specific application
-- <code>--timeout</code>: Configure timeout in seconds
-- <code>--verbose</code>: Enable verbose output</p>
+<p>✅ <strong>Features</strong></p>
+<ul>
+<li>Tests application sync operations</li>
+<li>Supports testing specific application or all applications</li>
+<li>Configurable timeout for sync operations</li>
+<li>Wait for sync status (Synced)</li>
+<li>Wait for health status (Healthy)</li>
+<li>Optional hard refresh via argocd CLI</li>
+<li>Comprehensive summary reporting</li>
+</ul>
+<p>✅ <strong>Options</strong></p>
+<ul>
+<li><code>--namespace</code>: Specify ArgoCD namespace</li>
+<li><code>--app</code>: Test specific application</li>
+<li><code>--timeout</code>: Configure timeout in seconds</li>
+<li><code>--verbose</code>: Enable verbose output</li>
+</ul>
 <h3 id="3-unified-test-runner-testsacceptancerun-testsh">3. Unified Test Runner (<code>tests/acceptance/run-test.sh</code>)</h3>
 <p>Central test runner for all acceptance tests:</p>
-<p>✅ <strong>Features</strong>
-- Supports all AT-E1-XXX test IDs
-- Implements AT-E1-001 (calls validate-at-e1-001.sh)
-- Implements AT-E1-002 with multi-step validation:
-  1. Comprehensive validation (validate-at-e1-002.sh)
-  2. E2E sync tests (argocd-sync-test.sh)
-  3. BDD tests (pytest)
-- Placeholder for AT-E1-003 through AT-E1-012
-- Provides help and usage information
-- Color-coded output</p>
+<p>✅ <strong>Features</strong></p>
+<ul>
+<li>Supports all AT-E1-XXX test IDs</li>
+<li>Implements AT-E1-001 (calls validate-at-e1-001.sh)</li>
+<li>Implements AT-E1-002 with multi-step validation:</li>
+<li>Comprehensive validation (validate-at-e1-002.sh)</li>
+<li>E2E sync tests (argocd-sync-test.sh)</li>
+<li>BDD tests (pytest)</li>
+<li>Placeholder for AT-E1-003 through AT-E1-012</li>
+<li>Provides help and usage information</li>
+<li>Color-coded output</li>
+</ul>
 <h3 id="4-integration-test-structure-testsintegrationargocd">4. Integration Test Structure (<code>tests/integration/argocd/</code>)</h3>
 <p>Integration test infrastructure for ArgoCD:</p>
-<p>✅ <strong>Files Created</strong>
-- <code>README.md</code>: Documentation for integration tests
-- <code>test-application.yaml</code>: Sample ArgoCD Application for testing
-- <code>manifests/test-app.yaml</code>: Sample Kubernetes manifests (ConfigMap, Service, Deployment)</p>
-<p>✅ <strong>Features</strong>
-- Test Application configured with:
-  - Auto-sync enabled
-  - Self-heal enabled
-  - Prune enabled
-  - Retry with backoff
-  - CreateNamespace=true
-- Sample manifests for testing sync operations</p>
+<p>✅ <strong>Files Created</strong></p>
+<ul>
+<li><code>README.md</code>: Documentation for integration tests</li>
+<li><code>test-application.yaml</code>: Sample ArgoCD Application for testing</li>
+<li><code>manifests/test-app.yaml</code>: Sample Kubernetes manifests (ConfigMap, Service, Deployment)</li>
+</ul>
+<p>✅ <strong>Features</strong></p>
+<ul>
+<li>Test Application configured with:</li>
+<li>Auto-sync enabled</li>
+<li>Self-heal enabled</li>
+<li>Prune enabled</li>
+<li>Retry with backoff</li>
+<li>CreateNamespace=true</li>
+<li>Sample manifests for testing sync operations</li>
+</ul>
 <h3 id="5-makefile-targets">5. Makefile Targets</h3>
 <p>Added new targets to <code>Makefile</code>:</p>
-<p>✅ <strong>New Targets</strong>
+<p>✅ <strong>New Targets</strong></p>
 <div class="highlight"><pre><span></span><code><span class="err">validate-at-e1-002</span><span class="w">       </span><span class="c"># Run AT-E1-002 acceptance test validation</span>
 <span class="err">test-e2e-argocd</span><span class="w">          </span><span class="c"># Run ArgoCD E2E sync tests</span>
-</code></pre></div></p>
-<p>✅ <strong>New Variable</strong>
+</code></pre></div>
+<p>✅ <strong>New Variable</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nv">ARGO_NAMESPACE</span><span class="w"> </span><span class="o">?=</span><span class="w"> </span>fawkes
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="6-documentation">6. Documentation</h3>
 <p>Comprehensive documentation created:</p>
-<p>✅ <strong>Files</strong>
-- <code>tests/acceptance/README.md</code>: Overview of acceptance testing
-- <code>tests/integration/argocd/README.md</code>: Integration test documentation
-- <code>docs/testing/at-e1-002-validation-guide.md</code>: Complete validation guide</p>
-<p>✅ <strong>Content</strong>
-- Usage instructions for all test scripts
-- Validation check descriptions
-- Test report format and viewing
-- Manual validation commands from issue
-- Acceptance criteria checklist
-- Troubleshooting guide
-- CI/CD integration examples
-- Dependency information</p>
+<p>✅ <strong>Files</strong></p>
+<ul>
+<li><code>tests/acceptance/README.md</code>: Overview of acceptance testing</li>
+<li><code>tests/integration/argocd/README.md</code>: Integration test documentation</li>
+<li><code>docs/testing/at-e1-002-validation-guide.md</code>: Complete validation guide</li>
+</ul>
+<p>✅ <strong>Content</strong></p>
+<ul>
+<li>Usage instructions for all test scripts</li>
+<li>Validation check descriptions</li>
+<li>Test report format and viewing</li>
+<li>Manual validation commands from issue</li>
+<li>Acceptance criteria checklist</li>
+<li>Troubleshooting guide</li>
+<li>CI/CD integration examples</li>
+<li>Dependency information</li>
+</ul>
 <h2 id="usage-examples">Usage Examples</h2>
 <h3 id="run-complete-at-e1-002-validation">Run Complete AT-E1-002 Validation</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Using test runner</span>
@@ -4970,43 +5008,41 @@ Makefile                                 # Updated with new targets
 <h2 id="next-steps">Next Steps</h2>
 <p>To complete AT-E1-002 validation, execute the following when a cluster is available:</p>
 <ol>
-<li>
-<p>Ensure ArgoCD is deployed:
-   <div class="highlight"><pre><span></span><code>./scripts/ignite.sh<span class="w"> </span><span class="nb">local</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Run AT-E1-002 validation:
-   <div class="highlight"><pre><span></span><code>./tests/acceptance/run-test.sh<span class="w"> </span>AT-E1-002
-</code></pre></div></p>
-</li>
-<li>
-<p>Review test report:
-   <div class="highlight"><pre><span></span><code>cat<span class="w"> </span>reports/at-e1-002-validation-*.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-</code></pre></div></p>
-</li>
-<li>
-<p>Verify all acceptance criteria pass:
+<li>Ensure ArgoCD is deployed:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>./scripts/ignite.sh<span class="w"> </span><span class="nb">local</span>
+</code></pre></div>
+<ol>
+<li>Run AT-E1-002 validation:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>./tests/acceptance/run-test.sh<span class="w"> </span>AT-E1-002
+</code></pre></div>
+<ol>
+<li>Review test report:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>reports/at-e1-002-validation-*.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div>
+<ol>
+<li>Verify all acceptance criteria pass:
    <div class="highlight"><pre><span></span><code>cat<span class="w"> </span>reports/at-e1-002-validation-*.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.summary&#39;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <h2 id="validation-commands-from-issue">Validation Commands from Issue</h2>
 <p>The following manual validation commands from the issue are implemented:</p>
-<p>✅ <strong>Check all apps are synced</strong>
+<p>✅ <strong>Check all apps are synced</strong></p>
 <div class="highlight"><pre><span></span><code>argocd<span class="w"> </span>app<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>Synced
 </code></pre></div>
-Implemented in: <code>check_applications_synced()</code></p>
-<p>✅ <strong>Hard refresh platform-bootstrap</strong>
+<p>Implemented in: <code>check_applications_synced()</code></p>
+<p>✅ <strong>Hard refresh platform-bootstrap</strong></p>
 <div class="highlight"><pre><span></span><code>argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>platform-bootstrap<span class="w"> </span>--hard-refresh
 </code></pre></div>
-Implemented in: E2E sync test</p>
-<p>✅ <strong>Check for out-of-sync applications</strong>
+<p>Implemented in: E2E sync test</p>
+<p>✅ <strong>Check for out-of-sync applications</strong></p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>applications<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | select(.status.sync.status != &quot;Synced&quot;)&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>jq<span class="w"> </span>-s<span class="w"> </span><span class="s1">&#39;length&#39;</span>
 </code></pre></div>
-Implemented in: <code>check_applications_synced()</code> - reports out-of-sync apps</p>
+<p>Implemented in: <code>check_applications_synced()</code> - reports out-of-sync apps</p>
 <h2 id="quality-checks-performed">Quality Checks Performed</h2>
 <p>✅ Bash syntax validation (all scripts pass)
 ✅ YAML validation (all manifests valid)

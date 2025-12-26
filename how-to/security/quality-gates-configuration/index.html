@@ -5628,26 +5628,30 @@
 <h4 id="customizing-sonarqube-quality-gates">Customizing SonarQube Quality Gates</h4>
 <p>To customize the quality gate for a specific project:</p>
 <ol>
-<li>
-<p><strong>Access SonarQube UI</strong>:
-   <div class="highlight"><pre><span></span><code><span class="c1"># Local development</span>
+<li><strong>Access SonarQube UI</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Local development</span>
 open<span class="w"> </span>http://sonarqube.127.0.0.1.nip.io
 
 <span class="c1"># Production</span>
 open<span class="w"> </span>https://sonarqube.fawkes.example.com
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Navigate to Quality Gates</strong>:</p>
 </li>
-<li>Click <strong>Quality Gates</strong> in the top menu</li>
+<li>
+<p>Click <strong>Quality Gates</strong> in the top menu</p>
+</li>
 <li>
 <p>Click <strong>Create</strong> to create a custom gate</p>
 </li>
 <li>
 <p><strong>Define Conditions</strong>:</p>
 </li>
-<li>Add conditions based on your requirements</li>
+<li>
+<p>Add conditions based on your requirements</p>
+</li>
 <li>Set thresholds for each metric</li>
 <li>
 <p>Save the quality gate</p>
@@ -5660,37 +5664,37 @@ open<span class="w"> </span>https://sonarqube.fawkes.example.com
 <li>Select your custom quality gate</li>
 </ol>
 <h4 id="override-process-for-sonarqube">Override Process for SonarQube</h4>
-<p><strong>When to Override</strong>: Use overrides sparingly and only for:
-- False positives confirmed by security team
-- Known issues with documented mitigation
-- Technical debt with approved remediation plan</p>
+<p><strong>When to Override</strong>: Use overrides sparingly and only for:</p>
+<ul>
+<li>False positives confirmed by security team</li>
+<li>Known issues with documented mitigation</li>
+<li>Technical debt with approved remediation plan</li>
+</ul>
 <p><strong>How to Override</strong>:</p>
 <ol>
-<li><strong>Inline Suppression</strong> (Code-level):
-   <div class="highlight"><pre><span></span><code><span class="c1">// Java example</span>
+<li><strong>Inline Suppression</strong> (Code-level):</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1">// Java example</span>
 <span class="nd">@SuppressWarnings</span><span class="p">(</span><span class="s">&quot;java:S1234&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1">// Document reason!</span>
 <span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">problematicMethod</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// Implementation</span>
 <span class="p">}</span>
-</code></pre></div></li>
-</ol>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Python example</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">problematic_function</span><span class="p">():</span>  <span class="c1"># noqa: S102 - Reason documented in JIRA-123</span>
     <span class="k">pass</span>
 </code></pre></div>
 <ol>
-<li>
-<p><strong>Project-level Exclusions</strong> (sonar-project.properties):
-   <div class="highlight"><pre><span></span><code><span class="c1"># Exclude third-party code</span>
+<li><strong>Project-level Exclusions</strong> (sonar-project.properties):</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Exclude third-party code</span>
 <span class="na">sonar.exclusions</span><span class="o">=</span><span class="s">**/vendor/**,**/node_modules/**</span>
 
 <span class="c1"># Exclude generated code</span>
 <span class="na">sonar.exclusions</span><span class="o">=</span><span class="s">**/generated/**</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Quality Gate Exception</strong> (Requires approval):</p>
-</li>
+</code></pre></div>
+<ol>
+<li><strong>Quality Gate Exception</strong> (Requires approval):</li>
 <li>Document the issue in a JIRA ticket</li>
 <li>Get approval from Tech Lead and Security Team</li>
 <li>Option: Disable entire security scanning stage:
@@ -5703,7 +5707,7 @@ open<span class="w"> </span>https://sonarqube.fawkes.example.com
 <li>Schedule full security review for next sprint</li>
 </ol>
 <p><strong>Note</strong>: The <code>runSecurityScan = false</code> option disables the entire Security Scan stage, including SonarQube, Trivy, and secrets scanning. There is no way to disable only the SonarQube quality gate check. This is intentional - if you need to bypass quality gates, you must do so consciously for all security scanning.</p>
-<p><strong>Exception Documentation Template</strong>:
+<p><strong>Exception Documentation Template</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// EXCEPTION: Security scanning disabled for hotfix deployment</span>
 <span class="c1">// Reason: Critical production issue requires immediate fix</span>
 <span class="c1">// Issue: JIRA-1234</span>
@@ -5714,7 +5718,7 @@ open<span class="w"> </span>https://sonarqube.fawkes.example.com
 <span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
 <span class="w">    </span><span class="n">runSecurityScan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="w">  </span><span class="c1">// Disables entire security scan stage</span>
 <span class="o">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Note</strong>: The <code>runSecurityScan</code> flag disables the entire Security Scan stage, including SonarQube, Trivy, and secrets scanning. Use with extreme caution and only for approved emergency deployments.</p>
 <h3 id="2-trivy-quality-gates-container-scanning">2. Trivy Quality Gates (Container Scanning)</h3>
 <p>Trivy scans container images for vulnerabilities in OS packages and application dependencies, enforcing severity thresholds before images can be pushed to the registry.</p>
@@ -5780,10 +5784,12 @@ open<span class="w"> </span>https://sonarqube.fawkes.example.com
 <span class="o">}</span>
 </code></pre></div>
 <h4 id="override-process-for-trivy">Override Process for Trivy</h4>
-<p><strong>When to Override</strong>: Use overrides only for:
-- False positives (vulnerability doesn't apply to your use case)
-- Vulnerabilities with no available fix yet
-- Accepted risk with documented mitigation</p>
+<p><strong>When to Override</strong>: Use overrides only for:</p>
+<ul>
+<li>False positives (vulnerability doesn't apply to your use case)</li>
+<li>Vulnerabilities with no available fix yet</li>
+<li>Accepted risk with documented mitigation</li>
+</ul>
 <p><strong>How to Override</strong>:</p>
 <ol>
 <li><strong>Create <code>.trivyignore</code> file</strong> in repository root:</li>
@@ -5811,6 +5817,7 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 <span class="gu">## Trivy Scan Overrides</span>
 
 <span class="gu">### CVE-2023-12345 (PostgreSQL SQL Injection)</span>
+
 <span class="k">-</span><span class="w"> </span><span class="gs">**Severity**</span>: HIGH
 <span class="k">-</span><span class="w"> </span><span class="gs">**Affected Package**</span>: postgresql@13.2
 <span class="k">-</span><span class="w"> </span><span class="gs">**Status**</span>: False Positive
@@ -5853,10 +5860,12 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 <li><strong>Configuration</strong>: Automatic, no configuration needed</li>
 </ul>
 <h4 id="override-process-for-secrets-scanning">Override Process for Secrets Scanning</h4>
-<p><strong>When to Override</strong>: Very rare, only for:
-- False positives (pattern matches but not actual secret)
-- Test data with no sensitive value
-- Public keys or non-sensitive tokens</p>
+<p><strong>When to Override</strong>: Very rare, only for:</p>
+<ul>
+<li>False positives (pattern matches but not actual secret)</li>
+<li>Test data with no sensitive value</li>
+<li>Public keys or non-sensitive tokens</li>
+</ul>
 <p><strong>How to Override</strong>:</p>
 <ol>
 <li><strong>Create or update <code>.gitleaks.toml</code></strong>:</li>
@@ -5890,6 +5899,7 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 <span class="gu">## Gitleaks Allowlist Exceptions</span>
 
 <span class="gu">### tests/fixtures/test-data.json</span>
+
 <span class="k">-</span><span class="w"> </span><span class="gs">**Pattern**</span>: JWT token pattern
 <span class="k">-</span><span class="w"> </span><span class="gs">**Reason**</span>: Test fixture with non-functional token
 <span class="k">-</span><span class="w"> </span><span class="gs">**Approved By**</span>: security-team@example.com
@@ -5985,13 +5995,13 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 <span class="w">    </span><span class="c1">// runSecurityScan = true            // default</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>SonarQube configuration</strong> (pom.xml):
+<p><strong>SonarQube configuration</strong> (pom.xml):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;properties&gt;</span>
 <span class="w">    </span><span class="nt">&lt;sonar.host.url&gt;</span>http://sonarqube.fawkes.svc:9000<span class="nt">&lt;/sonar.host.url&gt;</span>
 <span class="w">    </span><span class="nt">&lt;sonar.projectKey&gt;</span>user-service<span class="nt">&lt;/sonar.projectKey&gt;</span>
 <span class="w">    </span><span class="nt">&lt;sonar.coverage.jacoco.xmlReportPaths&gt;</span>target/site/jacoco/jacoco.xml<span class="nt">&lt;/sonar.coverage.jacoco.xmlReportPaths&gt;</span>
 <span class="nt">&lt;/properties&gt;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="python-example">Python Example</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// Jenkinsfile</span>
 <span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
@@ -6004,13 +6014,13 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 <span class="w">    </span><span class="c1">// trivySeverity = &#39;HIGH,CRITICAL&#39;</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>SonarQube configuration</strong> (sonar-project.properties):
+<p><strong>SonarQube configuration</strong> (sonar-project.properties):</p>
 <div class="highlight"><pre><span></span><code><span class="na">sonar.projectKey</span><span class="o">=</span><span class="s">analytics-api</span>
 <span class="na">sonar.sources</span><span class="o">=</span><span class="s">src</span>
 <span class="na">sonar.tests</span><span class="o">=</span><span class="s">tests</span>
 <span class="na">sonar.python.coverage.reportPaths</span><span class="o">=</span><span class="s">coverage.xml</span>
 <span class="na">sonar.python.version</span><span class="o">=</span><span class="s">3.11</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="nodejs-example">Node.js Example</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// Jenkinsfile</span>
 <span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
@@ -6022,20 +6032,20 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 <span class="w">    </span><span class="c1">// All quality gates enabled by default</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>SonarQube configuration</strong> (sonar-project.js):
+<p><strong>SonarQube configuration</strong> (sonar-project.js):</p>
 <div class="highlight"><pre><span></span><code><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">sonar</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">projectKey</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;web-frontend&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">sources</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;src&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">tests</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;tests&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">projectKey</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;web-frontend&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">sources</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;src&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">tests</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;tests&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">javascript</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nx">lcov</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">reportPaths</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;coverage/lcov.info&#39;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">        </span><span class="nx">reportPaths</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;coverage/lcov.info&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">},</span>
 <span class="p">};</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="go-example">Go Example</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// Jenkinsfile</span>
 <span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
@@ -6047,16 +6057,16 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 <span class="w">    </span><span class="c1">// Quality gates enabled by default</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>SonarQube configuration</strong> (sonar-project.properties):
+<p><strong>SonarQube configuration</strong> (sonar-project.properties):</p>
 <div class="highlight"><pre><span></span><code><span class="na">sonar.projectKey</span><span class="o">=</span><span class="s">event-processor</span>
 <span class="na">sonar.sources</span><span class="o">=</span><span class="s">.</span>
 <span class="na">sonar.tests</span><span class="o">=</span><span class="s">.</span>
 <span class="na">sonar.test.inclusions</span><span class="o">=</span><span class="s">**/*_test.go</span>
 <span class="na">sonar.go.coverage.reportPaths</span><span class="o">=</span><span class="s">coverage.out</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="common-failure-scenarios-and-remediation">Common Failure Scenarios and Remediation</h2>
 <h3 id="scenario-1-sonarqube-detects-new-vulnerability">Scenario 1: SonarQube Detects New Vulnerability</h3>
-<p><strong>Error Message</strong>:
+<p><strong>Error Message</strong>:</p>
 <div class="highlight"><pre><span></span><code>❌ QUALITY GATE FAILED: FAILED
 The code changes did not meet the quality criteria.
 Please review the SonarQube analysis for details:
@@ -6065,15 +6075,17 @@ http://sonarqube.fawkes.svc:9000/dashboard?id=my-service&amp;branch=main
 Common failure reasons:
 - New bugs or vulnerabilities introduced
 - Code coverage dropped below threshold
-</code></pre></div></p>
-<p><strong>Remediation</strong>:
-1. Click the SonarQube link in the build log
-2. Review <strong>New Code</strong> tab for introduced issues
-3. Fix the identified security vulnerability
-4. Ensure tests cover the fix
-5. Commit and push</p>
+</code></pre></div>
+<p><strong>Remediation</strong>:</p>
+<ol>
+<li>Click the SonarQube link in the build log</li>
+<li>Review <strong>New Code</strong> tab for introduced issues</li>
+<li>Fix the identified security vulnerability</li>
+<li>Ensure tests cover the fix</li>
+<li>Commit and push</li>
+</ol>
 <h3 id="scenario-2-trivy-finds-critical-cve">Scenario 2: Trivy Finds Critical CVE</h3>
-<p><strong>Error Message</strong>:
+<p><strong>Error Message</strong>:</p>
 <div class="highlight"><pre><span></span><code>Total: 3 (HIGH: 2, CRITICAL: 1)
 ┌───────────────┬────────────────┬──────────┬───────────────────┐
 │   Library     │ Vulnerability  │ Severity │   Fixed Version   │
@@ -6081,37 +6093,39 @@ Common failure reasons:
 │ openssl       │ CVE-2023-12345 │ CRITICAL │ 3.0.10            │
 │ libxml2       │ CVE-2023-67890 │ HIGH     │ 2.11.4            │
 └───────────────┴────────────────┴──────────┴───────────────────┘
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Remediation</strong>:</p>
-<p><strong>Option A: Update Base Image</strong>:
+<p><strong>Option A: Update Base Image</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c"># Before</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-alpine</span>
 
 <span class="c"># After (updated base image with patches)</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-alpine3.19</span>
-</code></pre></div></p>
-<p><strong>Option B: Update Dependencies</strong>:
+</code></pre></div>
+<p><strong>Option B: Update Dependencies</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c"># Add explicit update in Dockerfile</span>
 <span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>--no-cache<span class="w"> </span>--upgrade<span class="w"> </span>openssl<span class="w"> </span>libxml2
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Option C: Override (if no fix available)</strong>:
-Create <code>.trivyignore</code>:
+Create <code>.trivyignore</code>:</p>
 <div class="highlight"><pre><span></span><code>CVE-2023-12345 exp:2024-12-31  # Vendor fix expected Q1 2024, WAF mitigation in place
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="scenario-3-secrets-detected">Scenario 3: Secrets Detected</h3>
-<p><strong>Error Message</strong>:
+<p><strong>Error Message</strong>:</p>
 <div class="highlight"><pre><span></span><code>❌ SECRETS DETECTED IN CODE
 Gitleaks has detected potential secrets in your code.
 
 Common secrets detected:
 - API keys and tokens
 - Passwords and credentials
-</code></pre></div></p>
-<p><strong>Remediation</strong>:
-1. <strong>Remove the secret</strong> from code
-2. <strong>Use environment variables</strong> or Vault
-3. <strong>Rotate the secret</strong> if it was committed
-4. <strong>Update</strong> <code>.gitleaks.toml</code> if false positive</p>
+</code></pre></div>
+<p><strong>Remediation</strong>:</p>
+<ol>
+<li><strong>Remove the secret</strong> from code</li>
+<li><strong>Use environment variables</strong> or Vault</li>
+<li><strong>Rotate the secret</strong> if it was committed</li>
+<li><strong>Update</strong> <code>.gitleaks.toml</code> if false positive</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="c1"># Remove from history if committed</span>
 git<span class="w"> </span>filter-branch<span class="w"> </span>--force<span class="w"> </span>--index-filter<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="s2">&quot;git rm --cached --ignore-unmatch path/to/file&quot;</span><span class="w"> </span><span class="se">\</span>

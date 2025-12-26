@@ -4944,21 +4944,25 @@
 <strong>Decision Makers</strong>: Platform Team
 <strong>Tags</strong>: feature-flags, unleash, openfeature, experimentation, a-b-testing</p>
 <h2 id="context">Context</h2>
-<p>The Fawkes platform needs feature flag management capabilities to:
-- Enable gradual rollouts of new features (reduce blast radius)
-- Support A/B testing and experimentation
-- Provide kill switches for emergency feature disablement
-- Allow targeted feature releases (by team, environment, user)
-- Facilitate continuous delivery with reduced risk
-- Support trunk-based development practices</p>
-<p>Key requirements:
-1. <strong>Self-hosted</strong>: Data sovereignty, no third-party dependencies
-2. <strong>Open Source</strong>: Community-driven, transparent, no vendor lock-in
-3. <strong>Vendor-agnostic API</strong>: Ability to swap providers without code changes
-4. <strong>Developer-friendly</strong>: Easy to instrument and use across languages
-5. <strong>Resource-efficient</strong>: Fits within platform resource constraints (&lt;70% utilization)
-6. <strong>GitOps-compatible</strong>: Declarative configuration, version-controlled
-7. <strong>Audit trail</strong>: Complete history of flag changes for compliance</p>
+<p>The Fawkes platform needs feature flag management capabilities to:</p>
+<ul>
+<li>Enable gradual rollouts of new features (reduce blast radius)</li>
+<li>Support A/B testing and experimentation</li>
+<li>Provide kill switches for emergency feature disablement</li>
+<li>Allow targeted feature releases (by team, environment, user)</li>
+<li>Facilitate continuous delivery with reduced risk</li>
+<li>Support trunk-based development practices</li>
+</ul>
+<p>Key requirements:</p>
+<ol>
+<li><strong>Self-hosted</strong>: Data sovereignty, no third-party dependencies</li>
+<li><strong>Open Source</strong>: Community-driven, transparent, no vendor lock-in</li>
+<li><strong>Vendor-agnostic API</strong>: Ability to swap providers without code changes</li>
+<li><strong>Developer-friendly</strong>: Easy to instrument and use across languages</li>
+<li><strong>Resource-efficient</strong>: Fits within platform resource constraints (&lt;70% utilization)</li>
+<li><strong>GitOps-compatible</strong>: Declarative configuration, version-controlled</li>
+<li><strong>Audit trail</strong>: Complete history of flag changes for compliance</li>
+</ol>
 <h2 id="decision">Decision</h2>
 <p>We will deploy <strong>Unleash</strong> as the feature flag management platform with <strong>OpenFeature</strong> as the standardized client API layer.</p>
 <h3 id="architecture">Architecture</h3>
@@ -4988,157 +4992,201 @@
 </code></pre></div>
 <h2 id="options-considered">Options Considered</h2>
 <h3 id="1-unleash-openfeature-selected">1. Unleash + OpenFeature ⭐ (Selected)</h3>
-<p><strong>Pros:</strong>
-- ✅ Mature open-source project with active community
-- ✅ Self-hosted, full control over data
-- ✅ Comprehensive UI for flag management
-- ✅ Advanced rollout strategies (gradual, targeting, custom)
-- ✅ OpenFeature provider available (vendor independence)
-- ✅ Multi-environment support (dev, staging, prod)
-- ✅ API tokens for CI/CD integration
-- ✅ Audit logging built-in
-- ✅ Uses PostgreSQL (already deployed via CloudNativePG)
-- ✅ Low resource footprint (~400m CPU, ~512Mi RAM total)
-- ✅ SDKs for all major languages
-- ✅ Prometheus metrics support</p>
-<p><strong>Cons:</strong>
-- ⚠️ Requires PostgreSQL database (acceptable - already deployed)
-- ⚠️ Additional component to maintain</p>
-<p><strong>Resource Requirements:</strong>
-- Unleash: 200m CPU, 256Mi RAM (2 replicas)
-- PostgreSQL: 200m CPU, 256Mi RAM (3 replicas HA)
-- <strong>Total</strong>: ~1 CPU, ~1.5Gi RAM</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>✅ Mature open-source project with active community</li>
+<li>✅ Self-hosted, full control over data</li>
+<li>✅ Comprehensive UI for flag management</li>
+<li>✅ Advanced rollout strategies (gradual, targeting, custom)</li>
+<li>✅ OpenFeature provider available (vendor independence)</li>
+<li>✅ Multi-environment support (dev, staging, prod)</li>
+<li>✅ API tokens for CI/CD integration</li>
+<li>✅ Audit logging built-in</li>
+<li>✅ Uses PostgreSQL (already deployed via CloudNativePG)</li>
+<li>✅ Low resource footprint (~400m CPU, ~512Mi RAM total)</li>
+<li>✅ SDKs for all major languages</li>
+<li>✅ Prometheus metrics support</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>⚠️ Requires PostgreSQL database (acceptable - already deployed)</li>
+<li>⚠️ Additional component to maintain</li>
+</ul>
+<p><strong>Resource Requirements:</strong></p>
+<ul>
+<li>Unleash: 200m CPU, 256Mi RAM (2 replicas)</li>
+<li>PostgreSQL: 200m CPU, 256Mi RAM (3 replicas HA)</li>
+<li><strong>Total</strong>: ~1 CPU, ~1.5Gi RAM</li>
+</ul>
 <h3 id="2-launchdarkly">2. LaunchDarkly</h3>
-<p><strong>Pros:</strong>
-- ✅ Feature-rich commercial product
-- ✅ Excellent UI/UX
-- ✅ Strong experimentation features
-- ✅ OpenFeature provider available</p>
-<p><strong>Cons:</strong>
-- ❌ SaaS-only, no self-hosted option
-- ❌ Expensive pricing ($8.33/seat/month minimum)
-- ❌ Data sovereignty concerns
-- ❌ Vendor lock-in despite OpenFeature
-- ❌ Against platform philosophy</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>✅ Feature-rich commercial product</li>
+<li>✅ Excellent UI/UX</li>
+<li>✅ Strong experimentation features</li>
+<li>✅ OpenFeature provider available</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>❌ SaaS-only, no self-hosted option</li>
+<li>❌ Expensive pricing ($8.33/seat/month minimum)</li>
+<li>❌ Data sovereignty concerns</li>
+<li>❌ Vendor lock-in despite OpenFeature</li>
+<li>❌ Against platform philosophy</li>
+</ul>
 <h3 id="3-flagsmith">3. Flagsmith</h3>
-<p><strong>Pros:</strong>
-- ✅ Open source with self-hosted option
-- ✅ Modern UI
-- ✅ OpenFeature compatible</p>
-<p><strong>Cons:</strong>
-- ❌ Less mature than Unleash
-- ❌ Smaller community
-- ❌ More resource-intensive (requires Redis, Postgres, and app server)
-- ❌ Limited rollout strategies compared to Unleash</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>✅ Open source with self-hosted option</li>
+<li>✅ Modern UI</li>
+<li>✅ OpenFeature compatible</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>❌ Less mature than Unleash</li>
+<li>❌ Smaller community</li>
+<li>❌ More resource-intensive (requires Redis, Postgres, and app server)</li>
+<li>❌ Limited rollout strategies compared to Unleash</li>
+</ul>
 <h3 id="4-growthbook">4. GrowthBook</h3>
-<p><strong>Pros:</strong>
-- ✅ Open source
-- ✅ A/B testing focus
-- ✅ Statistical analysis built-in</p>
-<p><strong>Cons:</strong>
-- ❌ Primarily an experimentation platform, not feature flags
-- ❌ No official OpenFeature provider
-- ❌ More complex setup
-- ❌ Heavier resource requirements</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>✅ Open source</li>
+<li>✅ A/B testing focus</li>
+<li>✅ Statistical analysis built-in</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>❌ Primarily an experimentation platform, not feature flags</li>
+<li>❌ No official OpenFeature provider</li>
+<li>❌ More complex setup</li>
+<li>❌ Heavier resource requirements</li>
+</ul>
 <h3 id="5-feature-flags-in-application-code">5. Feature Flags in Application Code</h3>
-<p><strong>Pros:</strong>
-- ✅ No external dependencies
-- ✅ Full control</p>
-<p><strong>Cons:</strong>
-- ❌ No centralized management UI
-- ❌ Requires code changes to update flags
-- ❌ No audit trail
-- ❌ No gradual rollout capabilities
-- ❌ Poor developer experience</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>✅ No external dependencies</li>
+<li>✅ Full control</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>❌ No centralized management UI</li>
+<li>❌ Requires code changes to update flags</li>
+<li>❌ No audit trail</li>
+<li>❌ No gradual rollout capabilities</li>
+<li>❌ Poor developer experience</li>
+</ul>
 <h2 id="decision-rationale">Decision Rationale</h2>
 <h3 id="1-unleash-as-the-backend">1. Unleash as the Backend</h3>
-<p><strong>Maturity &amp; Reliability:</strong>
-- Battle-tested in production by thousands of companies
-- Active development and security updates
-- Proven track record for stability</p>
-<p><strong>Feature Set:</strong>
-- <strong>Standard Strategy</strong>: Simple on/off toggles
-- <strong>Gradual Rollout</strong>: Percentage-based rollouts (e.g., 25% of users)
-- <strong>User IDs</strong>: Target specific users or teams
-- <strong>Flexible Rollout</strong>: Combine constraints (environment + team + custom)
-- <strong>Variants</strong>: A/B testing with multiple variations
-- <strong>Custom Strategies</strong>: Extend via API</p>
-<p><strong>Self-Hosted Benefits:</strong>
-- Data sovereignty (all data stays in Fawkes cluster)
-- No vendor fees
-- Full control over upgrades and configuration
-- Integration with existing PostgreSQL infrastructure</p>
-<p><strong>Resource Efficiency:</strong>
-- Lightweight Node.js application (~200m CPU, 256Mi RAM per pod)
-- Fits within 70% resource utilization target
-- Scales horizontally with replicas</p>
+<p><strong>Maturity &amp; Reliability:</strong></p>
+<ul>
+<li>Battle-tested in production by thousands of companies</li>
+<li>Active development and security updates</li>
+<li>Proven track record for stability</li>
+</ul>
+<p><strong>Feature Set:</strong></p>
+<ul>
+<li><strong>Standard Strategy</strong>: Simple on/off toggles</li>
+<li><strong>Gradual Rollout</strong>: Percentage-based rollouts (e.g., 25% of users)</li>
+<li><strong>User IDs</strong>: Target specific users or teams</li>
+<li><strong>Flexible Rollout</strong>: Combine constraints (environment + team + custom)</li>
+<li><strong>Variants</strong>: A/B testing with multiple variations</li>
+<li><strong>Custom Strategies</strong>: Extend via API</li>
+</ul>
+<p><strong>Self-Hosted Benefits:</strong></p>
+<ul>
+<li>Data sovereignty (all data stays in Fawkes cluster)</li>
+<li>No vendor fees</li>
+<li>Full control over upgrades and configuration</li>
+<li>Integration with existing PostgreSQL infrastructure</li>
+</ul>
+<p><strong>Resource Efficiency:</strong></p>
+<ul>
+<li>Lightweight Node.js application (~200m CPU, 256Mi RAM per pod)</li>
+<li>Fits within 70% resource utilization target</li>
+<li>Scales horizontally with replicas</li>
+</ul>
 <h3 id="2-openfeature-as-the-client-api">2. OpenFeature as the Client API</h3>
-<p><strong>Vendor Independence:</strong>
-- CNCF incubating project (vendor-neutral governance)
-- Standardized API across all providers
-- Freedom to switch providers without code changes</p>
-<p><strong>Multi-Language Support:</strong>
-- Official SDKs: TypeScript, Python, Go, Java, .NET, PHP, Ruby
-- Community SDKs: Rust, Swift, Elixir
-- Consistent API across all languages</p>
-<p><strong>Future-Proof:</strong>
-- CNCF backing ensures long-term standardization
-- Growing ecosystem of providers
-- Easy migration path if requirements change</p>
-<p><strong>Developer Experience:</strong>
-- Simple, intuitive API
-- Language-idiomatic implementations
-- Well-documented with examples</p>
+<p><strong>Vendor Independence:</strong></p>
+<ul>
+<li>CNCF incubating project (vendor-neutral governance)</li>
+<li>Standardized API across all providers</li>
+<li>Freedom to switch providers without code changes</li>
+</ul>
+<p><strong>Multi-Language Support:</strong></p>
+<ul>
+<li>Official SDKs: TypeScript, Python, Go, Java, .NET, PHP, Ruby</li>
+<li>Community SDKs: Rust, Swift, Elixir</li>
+<li>Consistent API across all languages</li>
+</ul>
+<p><strong>Future-Proof:</strong></p>
+<ul>
+<li>CNCF backing ensures long-term standardization</li>
+<li>Growing ecosystem of providers</li>
+<li>Easy migration path if requirements change</li>
+</ul>
+<p><strong>Developer Experience:</strong></p>
+<ul>
+<li>Simple, intuitive API</li>
+<li>Language-idiomatic implementations</li>
+<li>Well-documented with examples</li>
+</ul>
 <h3 id="3-combined-benefits">3. Combined Benefits</h3>
-<p><strong>Best of Both Worlds:</strong>
-- Unleash provides powerful management capabilities
-- OpenFeature provides code-level abstraction
-- Can replace Unleash without changing application code</p>
-<p><strong>Alignment with Fawkes Principles:</strong>
-- <strong>Cloud-Agnostic</strong>: OpenFeature provides abstraction layer
-- <strong>Extensible</strong>: Can add new providers via OpenFeature
-- <strong>Observable</strong>: Prometheus metrics from Unleash
-- <strong>Secure</strong>: Self-hosted, no data leaves cluster
-- <strong>GitOps-Driven</strong>: Unleash config can be version-controlled</p>
+<p><strong>Best of Both Worlds:</strong></p>
+<ul>
+<li>Unleash provides powerful management capabilities</li>
+<li>OpenFeature provides code-level abstraction</li>
+<li>Can replace Unleash without changing application code</li>
+</ul>
+<p><strong>Alignment with Fawkes Principles:</strong></p>
+<ul>
+<li><strong>Cloud-Agnostic</strong>: OpenFeature provides abstraction layer</li>
+<li><strong>Extensible</strong>: Can add new providers via OpenFeature</li>
+<li><strong>Observable</strong>: Prometheus metrics from Unleash</li>
+<li><strong>Secure</strong>: Self-hosted, no data leaves cluster</li>
+<li><strong>GitOps-Driven</strong>: Unleash config can be version-controlled</li>
+</ul>
 <h2 id="implementation">Implementation</h2>
 <h3 id="deployment-components">Deployment Components</h3>
-<p><strong>PostgreSQL Database:</strong>
+<p><strong>PostgreSQL Database:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># CloudNativePG Cluster: db-unleash-dev</span>
-<span class="nt">instances</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">  </span><span class="c1"># HA configuration</span>
+<span class="nt">instances</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"> </span><span class="c1"># HA configuration</span>
 <span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10Gi</span>
 <span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">requests</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200m CPU, 256Mi RAM</span>
 <span class="w">  </span><span class="nt">limits</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m CPU, 512Mi RAM</span>
-</code></pre></div></p>
-<p><strong>Unleash Server:</strong>
+</code></pre></div>
+<p><strong>Unleash Server:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Deployment: unleash</span>
-<span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">  </span><span class="c1"># HA configuration</span>
+<span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"> </span><span class="c1"># HA configuration</span>
 <span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unleashorg/unleash-server:5.11</span>
 <span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">requests</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200m CPU, 256Mi RAM</span>
 <span class="w">  </span><span class="nt">limits</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 CPU, 1Gi RAM</span>
-</code></pre></div></p>
-<p><strong>Access:</strong>
-- UI: <code>https://unleash.fawkes.idp</code>
-- API: <code>https://unleash.fawkes.idp/api</code>
-- Ingress: TLS via cert-manager</p>
+</code></pre></div>
+<p><strong>Access:</strong></p>
+<ul>
+<li>UI: <code>https://unleash.fawkes.idp</code></li>
+<li>API: <code>https://unleash.fawkes.idp/api</code></li>
+<li>Ingress: TLS via cert-manager</li>
+</ul>
 <h3 id="application-integration">Application Integration</h3>
-<p><strong>Backstage (TypeScript):</strong>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@openfeature/server-sdk&#39;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UnleashProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@openfeature/unleash-provider&#39;</span><span class="p">;</span>
+<p><strong>Backstage (TypeScript):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openfeature/server-sdk&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UnleashProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openfeature/unleash-provider&quot;</span><span class="p">;</span>
 
 <span class="k">await</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">setProviderAndWait</span><span class="p">(</span>
 <span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">UnleashProvider</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://unleash.fawkes.idp/api&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">appName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;backstage&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">apiToken</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.UNLEASH_API_TOKEN</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://unleash.fawkes.idp/api&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">appName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">apiToken</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.UNLEASH_API_TOKEN</span><span class="p">,</span>
 <span class="w">  </span><span class="p">})</span>
 <span class="p">);</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">getClient</span><span class="p">();</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s1">&#39;new-feature&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
-</code></pre></div></p>
-<p><strong>Python Services:</strong>
+<span class="kd">const</span><span class="w"> </span><span class="nx">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s2">&quot;new-feature&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Python Services:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">openfeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">openfeature.contrib.provider.unleash</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnleashProvider</span>
 
@@ -5150,8 +5198,8 @@
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
 <span class="n">enabled</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_boolean_value</span><span class="p">(</span><span class="s2">&quot;new-feature&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-</code></pre></div></p>
-<p><strong>Go Services:</strong>
+</code></pre></div>
+<p><strong>Go Services:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="s">&quot;github.com/open-feature/go-sdk/openfeature&quot;</span>
 <span class="w">    </span><span class="nx">unleash</span><span class="w"> </span><span class="s">&quot;github.com/open-feature/go-sdk-contrib/providers/unleash/pkg&quot;</span>
@@ -5165,7 +5213,7 @@
 
 <span class="nx">client</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">openfeature</span><span class="p">.</span><span class="nx">NewClient</span><span class="p">(</span><span class="s">&quot;my-app&quot;</span><span class="p">)</span>
 <span class="nx">enabled</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">BooleanValue</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;new-feature&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">openfeature</span><span class="p">.</span><span class="nx">EvaluationContext</span><span class="p">{})</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="consequences">Consequences</h2>
 <h3 id="positive">Positive</h3>
 <p>✅ <strong>Risk Reduction</strong>: Gradual rollouts minimize blast radius of new features

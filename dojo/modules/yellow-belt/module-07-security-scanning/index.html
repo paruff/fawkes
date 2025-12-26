@@ -4811,11 +4811,13 @@
 <strong>Module</strong>: 3 of 4 (Yellow Belt)
 <strong>Duration</strong>: 60 minutes
 <strong>Difficulty</strong>: Intermediate
-<strong>Prerequisites</strong>:
-- Module 5 &amp; 6 complete
-- Understanding of CI/CD pipelines
-- Basic security awareness
-- Familiarity with code quality concepts</p>
+<strong>Prerequisites</strong>:</p>
+<ul>
+<li>Module 5 &amp; 6 complete</li>
+<li>Understanding of CI/CD pipelines</li>
+<li>Basic security awareness</li>
+<li>Familiarity with code quality concepts</li>
+</ul>
 <hr />
 <h2 id="learning-objectives">📚 Learning Objectives</h2>
 <p>By the end of this module, you will:</p>
@@ -4828,10 +4830,12 @@
 <li>✅ Configure quality gates that enforce standards</li>
 <li>✅ Integrate security scanning into Golden Path pipelines</li>
 </ol>
-<p><strong>DORA Capabilities Addressed</strong>:
-- ✓ CD6: Shift Left on Security
-- ✓ CD8: Test Data Management
-- ✓ Security &amp; Compliance Automation</p>
+<p><strong>DORA Capabilities Addressed</strong>:</p>
+<ul>
+<li>✓ CD6: Shift Left on Security</li>
+<li>✓ CD8: Test Data Management</li>
+<li>✓ Security &amp; Compliance Automation</li>
+</ul>
 <hr />
 <h2 id="part-1-shift-left-on-security">📖 Part 1: Shift Left on Security</h2>
 <h3 id="the-traditional-security-approach-shift-right">The Traditional Security Approach (Shift Right)</h3>
@@ -4841,23 +4845,27 @@
                               Expensive to fix
                               Delays release
 </code></pre></div>
-<p><strong>Problems</strong>:
-- Security as afterthought
-- Issues found late, expensive to fix
-- Security team bottleneck
-- Slow feedback (days/weeks)</p>
+<p><strong>Problems</strong>:</p>
+<ul>
+<li>Security as afterthought</li>
+<li>Issues found late, expensive to fix</li>
+<li>Security team bottleneck</li>
+<li>Slow feedback (days/weeks)</li>
+</ul>
 <h3 id="shift-left-on-security">Shift Left on Security</h3>
 <div class="highlight"><pre><span></span><code>[SECURITY SCAN] → Develop → [SECURITY SCAN] → Build → [SECURITY SCAN] → Deploy
       ↑                            ↑                         ↑
    IDE plugins            CI/CD Pipeline              Container scan
    Immediate feedback     Fast feedback (5 min)       Pre-deploy check
 </code></pre></div>
-<p><strong>Benefits</strong>:
-- ✅ Catch issues early (cheaper to fix)
-- ✅ Developer ownership of security
-- ✅ Automated enforcement
-- ✅ Faster feedback loops
-- ✅ Reduced security team bottleneck</p>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>✅ Catch issues early (cheaper to fix)</li>
+<li>✅ Developer ownership of security</li>
+<li>✅ Automated enforcement</li>
+<li>✅ Faster feedback loops</li>
+<li>✅ Reduced security team bottleneck</li>
+</ul>
 <h3 id="cost-of-finding-bugs-by-stage">Cost of Finding Bugs by Stage</h3>
 <table>
 <thead>
@@ -4900,22 +4908,26 @@
 <h2 id="part-2-static-application-security-testing-sast">🏗️ Part 2: Static Application Security Testing (SAST)</h2>
 <h3 id="what-is-sast">What is SAST?</h3>
 <p><strong>Static Analysis</strong>: Analyze source code without executing it</p>
-<p><strong>Detects</strong>:
-- Security vulnerabilities (SQL injection, XSS, etc.)
-- Code quality issues (dead code, duplicates)
-- Code smells (complex methods, poor structure)
-- Technical debt
-- Coverage gaps</p>
+<p><strong>Detects</strong>:</p>
+<ul>
+<li>Security vulnerabilities (SQL injection, XSS, etc.)</li>
+<li>Code quality issues (dead code, duplicates)</li>
+<li>Code smells (complex methods, poor structure)</li>
+<li>Technical debt</li>
+<li>Coverage gaps</li>
+</ul>
 <h3 id="sonarqube-in-fawkes">SonarQube in Fawkes</h3>
 <p>SonarQube is the SAST tool integrated into Fawkes platform.</p>
-<p><strong>Key Features</strong>:
-- 30+ language support
-- 5,000+ rules
-- Quality gates
-- Technical debt tracking
-- Security hotspots
-- Pull request decoration</p>
-<p><strong>Architecture</strong>:
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>30+ language support</li>
+<li>5,000+ rules</li>
+<li>Quality gates</li>
+<li>Technical debt tracking</li>
+<li>Security hotspots</li>
+<li>Pull request decoration</li>
+</ul>
+<p><strong>Architecture</strong>:</p>
 <div class="highlight"><pre><span></span><code>┌────────────────────────────────────────┐
 │         Jenkins Pipeline               │
 │  ┌──────────────────────────────────┐  │
@@ -4936,7 +4948,7 @@
         │  PostgreSQL DB     │
         │  • Historical data │
         └────────────────────┘
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="part-3-hands-on-lab-implementing-security-scanning">🛠️ Part 3: Hands-On Lab - Implementing Security Scanning</h2>
 <h3 id="step-1-add-sonarqube-to-pipeline">Step 1: Add SonarQube to Pipeline</h3>
@@ -5090,31 +5102,45 @@
 <hr />
 <h2 id="part-4-understanding-security-scan-results">📊 Part 4: Understanding Security Scan Results</h2>
 <h3 id="sonarqube-metrics-explained">SonarQube Metrics Explained</h3>
-<p><strong>1. Bugs</strong> 🐛
-- Code that is demonstrably wrong
-- Example: Null pointer dereference
-- <strong>Standard</strong>: 0 bugs</p>
-<p><strong>2. Vulnerabilities</strong> 🔓
-- Security-related issues
-- Example: SQL injection risk
-- <strong>Standard</strong>: 0 vulnerabilities</p>
-<p><strong>3. Code Smells</strong> 👃
-- Maintainability issues
-- Example: Method too complex
-- <strong>Standard</strong>: &lt; 5% code smells</p>
-<p><strong>4. Security Hotspots</strong> 🔥
-- Security-sensitive code requiring review
-- Example: Cryptographic operations
-- <strong>Standard</strong>: 100% reviewed</p>
-<p><strong>5. Coverage</strong> 📊
-- % of code covered by tests
-- <strong>Standard</strong>: &gt; 80%</p>
-<p><strong>6. Duplications</strong> ©️
-- Duplicate code blocks
-- <strong>Standard</strong>: &lt; 3%</p>
-<p><strong>7. Technical Debt</strong> 💸
-- Time to fix all issues
-- <strong>Standard</strong>: &lt; 5% debt ratio</p>
+<p><strong>1. Bugs</strong> 🐛</p>
+<ul>
+<li>Code that is demonstrably wrong</li>
+<li>Example: Null pointer dereference</li>
+<li><strong>Standard</strong>: 0 bugs</li>
+</ul>
+<p><strong>2. Vulnerabilities</strong> 🔓</p>
+<ul>
+<li>Security-related issues</li>
+<li>Example: SQL injection risk</li>
+<li><strong>Standard</strong>: 0 vulnerabilities</li>
+</ul>
+<p><strong>3. Code Smells</strong> 👃</p>
+<ul>
+<li>Maintainability issues</li>
+<li>Example: Method too complex</li>
+<li><strong>Standard</strong>: &lt; 5% code smells</li>
+</ul>
+<p><strong>4. Security Hotspots</strong> 🔥</p>
+<ul>
+<li>Security-sensitive code requiring review</li>
+<li>Example: Cryptographic operations</li>
+<li><strong>Standard</strong>: 100% reviewed</li>
+</ul>
+<p><strong>5. Coverage</strong> 📊</p>
+<ul>
+<li>% of code covered by tests</li>
+<li><strong>Standard</strong>: &gt; 80%</li>
+</ul>
+<p><strong>6. Duplications</strong> ©️</p>
+<ul>
+<li>Duplicate code blocks</li>
+<li><strong>Standard</strong>: &lt; 3%</li>
+</ul>
+<p><strong>7. Technical Debt</strong> 💸</p>
+<ul>
+<li>Time to fix all issues</li>
+<li><strong>Standard</strong>: &lt; 5% debt ratio</li>
+</ul>
 <h3 id="trivy-severity-levels">Trivy Severity Levels</h3>
 <table>
 <thead>
@@ -5152,7 +5178,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Trivy Output Example</strong>:
+<p><strong>Trivy Output Example</strong>:</p>
 <div class="highlight"><pre><span></span><code>myapp:1.0 (alpine 3.18.0)
 ═══════════════════════════════════════
 Total: 2 (HIGH: 1, CRITICAL: 1)
@@ -5163,41 +5189,46 @@ Total: 2 (HIGH: 1, CRITICAL: 1)
 │ openssl        │ CVE-2023-12345 │ CRITICAL │ 3.0.8-r0          │
 │ curl           │ CVE-2023-67890 │ HIGH     │ 8.0.1-r0          │
 └────────────────┴────────────────┴──────────┴───────────────────┘
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="part-5-configuring-quality-gates">🎯 Part 5: Configuring Quality Gates</h2>
 <h3 id="quality-gate-philosophy">Quality Gate Philosophy</h3>
 <blockquote>
 <p><strong>"Quality gates should prevent bad code from progressing, not punish developers"</strong></p>
 </blockquote>
-<p><strong>Good Quality Gates</strong>:
-- ✅ Focus on new code (not legacy)
-- ✅ Achievable standards
-- ✅ Fast feedback (&lt;5 min)
-- ✅ Clear remediation steps</p>
-<p><strong>Bad Quality Gates</strong>:
-- ❌ Unrealistic standards (100% coverage)
-- ❌ Block on legacy debt
-- ❌ Slow feedback (&gt;30 min)
-- ❌ Vague error messages</p>
+<p><strong>Good Quality Gates</strong>:</p>
+<ul>
+<li>✅ Focus on new code (not legacy)</li>
+<li>✅ Achievable standards</li>
+<li>✅ Fast feedback (&lt;5 min)</li>
+<li>✅ Clear remediation steps</li>
+</ul>
+<p><strong>Bad Quality Gates</strong>:</p>
+<ul>
+<li>❌ Unrealistic standards (100% coverage)</li>
+<li>❌ Block on legacy debt</li>
+<li>❌ Slow feedback (&gt;30 min)</li>
+<li>❌ Vague error messages</li>
+</ul>
 <h3 id="recommended-quality-gates-by-stage">Recommended Quality Gates by Stage</h3>
-<p><strong>Development (IDE/PR)</strong>:
+<p><strong>Development (IDE/PR)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">gates</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">New Bugs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">New Vulnerabilities</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">New Code Coverage</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span><span class="err"> 80%</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">New Duplications</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt; 3%</span>
-</code></pre></div></p>
-<p><strong>CI/CD (Main Branch)</strong>:
+</code></pre></div>
+<p><strong>CI/CD (Main Branch)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">gates</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overall Bugs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt; 10</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overall Vulnerabilities</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overall Coverage</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span><span class="err"> 70%</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Security Hotspots Reviewed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100%</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Maintainability Rating</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">≥ B</span>
-</code></pre></div></p>
-<p><strong>Production (Release)</strong>:
-```yaml</p>
+</code></pre></div>
+<p><strong>Production (Release)</strong>:</p>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
 
 
 

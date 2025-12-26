@@ -4920,46 +4920,56 @@
 <p>Accepted</p>
 <h2 id="context">Context</h2>
 <p>The Fawkes platform integrates numerous services that require secure storage and management of sensitive credentials:</p>
-<p><strong>Service Credentials Required</strong>:
-- <strong>ArgoCD</strong>: Admin password, GitHub/GitLab tokens, webhook secrets, cluster credentials
-- <strong>Jenkins</strong>: Admin password, GitHub tokens, Docker registry credentials, cloud provider credentials, SSH keys
-- <strong>PostgreSQL</strong>: Root password, application user passwords (Backstage, Mattermost, SonarQube, Harbor)
-- <strong>Mattermost</strong>: Database password, SMTP credentials, OAuth2 client secrets, encryption keys
-- <strong>Harbor</strong>: Admin password, database password, Redis password, registry storage credentials
-- <strong>SonarQube</strong>: Admin password, database password, authentication tokens
-- <strong>Grafana</strong>: Admin password, database password, OAuth2 secrets, data source credentials
-- <strong>Backstage</strong>: Database password, GitHub tokens, catalog integration tokens, OAuth2 secrets
-- <strong>Prometheus</strong>: Basic auth credentials, remote write credentials, alertmanager credentials
-- <strong>External Secrets Operator</strong>: Cloud provider credentials (AWS, Azure, GCP service accounts)</p>
-<p><strong>Security Requirements</strong>:
-- Secrets must never be stored in Git repositories (even encrypted)
-- Secrets must be encrypted at rest in the Kubernetes cluster
-- Secrets must be encrypted in transit
-- Secrets must support rotation without service downtime
-- Secrets must have audit logging for access and changes
-- Secrets must support multi-tenancy (namespace isolation)
-- Secrets must work across cloud providers and on-premises
-- Secrets must integrate with external secret stores (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager, HashiCorp Vault)</p>
-<p><strong>Operational Requirements</strong>:
-- Automatic secret injection into pods (no manual mounting)
-- Secret synchronization from external stores
-- Automatic rotation support
-- Disaster recovery (backup/restore)
-- GitOps compatibility (declarative, version-controlled configuration without exposing secrets)
-- Easy troubleshooting (visibility without exposing plaintext)
-- Low operational overhead for platform team
-- Clear separation between secret metadata (who/what/where) and secret values</p>
-<p><strong>Developer Experience Requirements</strong>:
-- Simple secret consumption (environment variables or file mounts)
-- No custom code required in applications
-- Clear documentation and examples
-- Minimal learning curve for dojo students
-- Self-service secret creation (with RBAC controls)</p>
-<p><strong>Dojo Learning Requirements</strong>:
-- Students need isolated secret environments per learner
-- Must support rapid provisioning/teardown
-- Should demonstrate enterprise-grade practices
-- Must work in local/development environments (Minikube, Kind)</p>
+<p><strong>Service Credentials Required</strong>:</p>
+<ul>
+<li><strong>ArgoCD</strong>: Admin password, GitHub/GitLab tokens, webhook secrets, cluster credentials</li>
+<li><strong>Jenkins</strong>: Admin password, GitHub tokens, Docker registry credentials, cloud provider credentials, SSH keys</li>
+<li><strong>PostgreSQL</strong>: Root password, application user passwords (Backstage, Mattermost, SonarQube, Harbor)</li>
+<li><strong>Mattermost</strong>: Database password, SMTP credentials, OAuth2 client secrets, encryption keys</li>
+<li><strong>Harbor</strong>: Admin password, database password, Redis password, registry storage credentials</li>
+<li><strong>SonarQube</strong>: Admin password, database password, authentication tokens</li>
+<li><strong>Grafana</strong>: Admin password, database password, OAuth2 secrets, data source credentials</li>
+<li><strong>Backstage</strong>: Database password, GitHub tokens, catalog integration tokens, OAuth2 secrets</li>
+<li><strong>Prometheus</strong>: Basic auth credentials, remote write credentials, alertmanager credentials</li>
+<li><strong>External Secrets Operator</strong>: Cloud provider credentials (AWS, Azure, GCP service accounts)</li>
+</ul>
+<p><strong>Security Requirements</strong>:</p>
+<ul>
+<li>Secrets must never be stored in Git repositories (even encrypted)</li>
+<li>Secrets must be encrypted at rest in the Kubernetes cluster</li>
+<li>Secrets must be encrypted in transit</li>
+<li>Secrets must support rotation without service downtime</li>
+<li>Secrets must have audit logging for access and changes</li>
+<li>Secrets must support multi-tenancy (namespace isolation)</li>
+<li>Secrets must work across cloud providers and on-premises</li>
+<li>Secrets must integrate with external secret stores (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager, HashiCorp Vault)</li>
+</ul>
+<p><strong>Operational Requirements</strong>:</p>
+<ul>
+<li>Automatic secret injection into pods (no manual mounting)</li>
+<li>Secret synchronization from external stores</li>
+<li>Automatic rotation support</li>
+<li>Disaster recovery (backup/restore)</li>
+<li>GitOps compatibility (declarative, version-controlled configuration without exposing secrets)</li>
+<li>Easy troubleshooting (visibility without exposing plaintext)</li>
+<li>Low operational overhead for platform team</li>
+<li>Clear separation between secret metadata (who/what/where) and secret values</li>
+</ul>
+<p><strong>Developer Experience Requirements</strong>:</p>
+<ul>
+<li>Simple secret consumption (environment variables or file mounts)</li>
+<li>No custom code required in applications</li>
+<li>Clear documentation and examples</li>
+<li>Minimal learning curve for dojo students</li>
+<li>Self-service secret creation (with RBAC controls)</li>
+</ul>
+<p><strong>Dojo Learning Requirements</strong>:</p>
+<ul>
+<li>Students need isolated secret environments per learner</li>
+<li>Must support rapid provisioning/teardown</li>
+<li>Should demonstrate enterprise-grade practices</li>
+<li>Must work in local/development environments (Minikube, Kind)</li>
+</ul>
 <h2 id="decision">Decision</h2>
 <p>We will use <strong>External Secrets Operator (ESO)</strong> as the primary secrets management solution for the Fawkes platform, with support for multiple backend secret stores.</p>
 <h3 id="architecture">Architecture</h3>
@@ -5012,17 +5022,21 @@
 <li><strong>HashiCorp Vault</strong> (On-premises, multi-cloud, advanced use cases)</li>
 <li><strong>Kubernetes Secrets</strong> (Development, learning environments)</li>
 </ol>
-<p><strong>Default Recommendation by Environment</strong>:
-- <strong>Production</strong>: Cloud provider secret store (AWS/Azure/GCP)
-- <strong>Staging</strong>: Cloud provider secret store
-- <strong>Development</strong>: Kubernetes secrets (ESO optional)
-- <strong>Dojo/Learning</strong>: Kubernetes secrets with ESO synchronization from templates</p>
+<p><strong>Default Recommendation by Environment</strong>:</p>
+<ul>
+<li><strong>Production</strong>: Cloud provider secret store (AWS/Azure/GCP)</li>
+<li><strong>Staging</strong>: Cloud provider secret store</li>
+<li><strong>Development</strong>: Kubernetes secrets (ESO optional)</li>
+<li><strong>Dojo/Learning</strong>: Kubernetes secrets with ESO synchronization from templates</li>
+</ul>
 <h3 id="core-components">Core Components</h3>
-<p><strong>1. External Secrets Operator</strong>
-- Deployed in <code>fawkes-system</code> namespace
-- Monitors <code>ExternalSecret</code> and <code>SecretStore</code> resources
-- Synchronizes secrets from external stores to Kubernetes
-- Automatic refresh interval (configurable, default 1 hour)</p>
+<p><strong>1. External Secrets Operator</strong></p>
+<ul>
+<li>Deployed in <code>fawkes-system</code> namespace</li>
+<li>Monitors <code>ExternalSecret</code> and <code>SecretStore</code> resources</li>
+<li>Synchronizes secrets from external stores to Kubernetes</li>
+<li>Automatic refresh interval (configurable, default 1 hour)</li>
+</ul>
 <p><strong>2. SecretStore Resources</strong>
 Define connections to external secret backends per namespace:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
@@ -5073,17 +5087,17 @@ Define which secrets to sync and how:</p>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd-secret</span>
 <span class="w">    </span><span class="nt">creationPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Owner</span>
 <span class="w">  </span><span class="nt">data</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin.password</span>
-<span class="w">    </span><span class="nt">remoteRef</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/argocd/admin</span>
-<span class="w">      </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">password</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.token</span>
-<span class="w">    </span><span class="nt">remoteRef</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/github/integration</span>
-<span class="w">      </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin.password</span>
+<span class="w">      </span><span class="nt">remoteRef</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/argocd/admin</span>
+<span class="w">        </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">password</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.token</span>
+<span class="w">      </span><span class="nt">remoteRef</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/github/integration</span>
+<span class="w">        </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token</span>
 </code></pre></div>
 <h3 id="secret-naming-convention">Secret Naming Convention</h3>
-<p><strong>Path Structure in External Stores</strong>:
+<p><strong>Path Structure in External Stores</strong>:</p>
 <div class="highlight"><pre><span></span><code>fawkes/
   ├── core/
   │   ├── argocd/
@@ -5120,9 +5134,9 @@ Define which secrets to sync and how:</p>
       │   └── oauth2-client-secret
       └── prometheus/
           └── remote-write-password
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="example-configurations">Example Configurations</h3>
-<p><strong>ArgoCD Admin Password</strong>:
+<p><strong>ArgoCD Admin Password</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExternalSecret</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5142,10 +5156,10 @@ Define which secrets to sync and how:</p>
 <span class="w">        </span><span class="nt">admin.password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">.adminPassword</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">bcrypt</span><span class="nv"> </span><span class="s">}}&quot;</span>
 <span class="w">        </span><span class="nt">server.secretkey</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">.serverSecretKey</span><span class="nv"> </span><span class="s">}}&quot;</span>
 <span class="w">  </span><span class="nt">dataFrom</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">extract</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/core/argocd/credentials</span>
-</code></pre></div></p>
-<p><strong>Jenkins Credentials (Multiple Secrets)</strong>:
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">extract</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/core/argocd/credentials</span>
+</code></pre></div>
+<p><strong>Jenkins Credentials (Multiple Secrets)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExternalSecret</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5160,24 +5174,24 @@ Define which secrets to sync and how:</p>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins-credentials</span>
 <span class="w">    </span><span class="nt">creationPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Owner</span>
 <span class="w">  </span><span class="nt">data</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin-user</span>
-<span class="w">    </span><span class="nt">remoteRef</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/cicd/jenkins/admin</span>
-<span class="w">      </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">username</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin-password</span>
-<span class="w">    </span><span class="nt">remoteRef</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/cicd/jenkins/admin</span>
-<span class="w">      </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">password</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github-token</span>
-<span class="w">    </span><span class="nt">remoteRef</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/github/integration</span>
-<span class="w">      </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker-config.json</span>
-<span class="w">    </span><span class="nt">remoteRef</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/cicd/docker-registry</span>
-<span class="w">      </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config</span>
-</code></pre></div></p>
-<p><strong>PostgreSQL Passwords (Templated)</strong>:
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin-user</span>
+<span class="w">      </span><span class="nt">remoteRef</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/cicd/jenkins/admin</span>
+<span class="w">        </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">username</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin-password</span>
+<span class="w">      </span><span class="nt">remoteRef</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/cicd/jenkins/admin</span>
+<span class="w">        </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">password</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github-token</span>
+<span class="w">      </span><span class="nt">remoteRef</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/github/integration</span>
+<span class="w">        </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker-config.json</span>
+<span class="w">      </span><span class="nt">remoteRef</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/cicd/docker-registry</span>
+<span class="w">        </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config</span>
+</code></pre></div>
+<p><strong>PostgreSQL Passwords (Templated)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExternalSecret</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5199,16 +5213,18 @@ Define which secrets to sync and how:</p>
 <span class="w">        </span><span class="nt">argocd-password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">.argocdPassword</span><span class="nv"> </span><span class="s">}}&quot;</span>
 <span class="w">        </span><span class="nt">connection-string</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;postgresql://postgres:{{</span><span class="nv"> </span><span class="s">.rootPassword</span><span class="nv"> </span><span class="s">}}@postgres.fawkes-core.svc.cluster.local:5432/postgres&quot;</span>
 <span class="w">  </span><span class="nt">dataFrom</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">extract</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/core/postgres/passwords</span>
-</code></pre></div></p>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">extract</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/core/postgres/passwords</span>
+</code></pre></div>
 <h3 id="secret-rotation-strategy">Secret Rotation Strategy</h3>
-<p><strong>Automatic Rotation</strong>:
-1. Update secret in external store (AWS Secrets Manager, Vault, etc.)
-2. ESO detects change on next refresh interval (default 1 hour)
-3. ESO updates Kubernetes secret
-4. Pods with secret volumes automatically get updated files
-5. Pods with environment variables require restart (handled by Reloader)</p>
+<p><strong>Automatic Rotation</strong>:</p>
+<ol>
+<li>Update secret in external store (AWS Secrets Manager, Vault, etc.)</li>
+<li>ESO detects change on next refresh interval (default 1 hour)</li>
+<li>ESO updates Kubernetes secret</li>
+<li>Pods with secret volumes automatically get updated files</li>
+<li>Pods with environment variables require restart (handled by Reloader)</li>
+</ol>
 <p><strong>Reloader Integration</strong>:
 Deploy Reloader to automatically restart pods when secrets change:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
@@ -5230,13 +5246,13 @@ Deploy Reloader to automatically restart pods when secrets change:</p>
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins</span>
-<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ADMIN_PASSWORD</span>
-<span class="w">          </span><span class="nt">valueFrom</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">secretKeyRef</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins-credentials</span>
-<span class="w">              </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin-password</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins</span>
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ADMIN_PASSWORD</span>
+<span class="w">              </span><span class="nt">valueFrom</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">secretKeyRef</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins-credentials</span>
+<span class="w">                  </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin-password</span>
 </code></pre></div>
 <h3 id="security-hardening">Security Hardening</h3>
 <p><strong>1. Encryption at Rest</strong>:
@@ -5261,10 +5277,10 @@ Restrict access to secrets by namespace and role:</p>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret-reader</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-core</span>
 <span class="nt">rules</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;secrets&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resourceNames</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;argocd-secret&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;postgres-credentials&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;secrets&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resourceNames</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;argocd-secret&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;postgres-credentials&quot;</span><span class="p p-Indicator">]</span>
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RoleBinding</span>
@@ -5272,9 +5288,9 @@ Restrict access to secrets by namespace and role:</p>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd-secret-access</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-core</span>
 <span class="nt">subjects</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd-server</span>
-<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-core</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd-server</span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-core</span>
 <span class="nt">roleRef</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Role</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret-reader</span>
@@ -5294,28 +5310,28 @@ Enforce that pods cannot access secrets they don't need:</p>
 <span class="w">    </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
 <span class="w">    </span><span class="nt">fsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
 <span class="w">  </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins</span>
-<span class="w">    </span><span class="nt">securityContext</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">      </span><span class="nt">capabilities</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">drop</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALL</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins</span>
+<span class="w">      </span><span class="nt">securityContext</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">capabilities</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">drop</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALL</span>
 </code></pre></div>
 <p><strong>4. Audit Logging</strong>:
 Enable Kubernetes audit logs for secret access:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audit.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Policy</span>
 <span class="nt">rules</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Metadata</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
-<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;secrets&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">omitStages</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequestReceived</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Metadata</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;secrets&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">omitStages</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequestReceived</span>
 </code></pre></div>
 <h3 id="aws-secrets-manager-integration">AWS Secrets Manager Integration</h3>
-<p><strong>IAM Role for ESO (IRSA)</strong>:
+<p><strong>IAM Role for ESO (IRSA)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -5330,8 +5346,8 @@ Enable Kubernetes audit logs for secret access:</p>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Service Account Annotation</strong>:
+</code></pre></div>
+<p><strong>Service Account Annotation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5339,8 +5355,8 @@ Enable Kubernetes audit logs for secret access:</p>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-system</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">eks.amazonaws.com/role-arn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:iam::123456789012:role/fawkes-external-secrets</span>
-</code></pre></div></p>
-<p><strong>SecretStore for AWS</strong>:
+</code></pre></div>
+<p><strong>SecretStore for AWS</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterSecretStore</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5355,9 +5371,9 @@ Enable Kubernetes audit logs for secret access:</p>
 <span class="w">          </span><span class="nt">serviceAccountRef</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets-sa</span>
 <span class="w">            </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-system</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="hashicorp-vault-integration-alternative">HashiCorp Vault Integration (Alternative)</h3>
-<p><strong>Vault Setup</strong>:
+<p><strong>Vault Setup</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Enable Kubernetes auth</span>
 vault<span class="w"> </span>auth<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>kubernetes
 
@@ -5379,8 +5395,8 @@ vault<span class="w"> </span>write<span class="w"> </span>auth/kubernetes/role/f
 <span class="w">    </span><span class="nv">bound_service_account_namespaces</span><span class="o">=</span>fawkes-system<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">policies</span><span class="o">=</span>fawkes-secrets<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">ttl</span><span class="o">=</span>24h
-</code></pre></div></p>
-<p><strong>ClusterSecretStore for Vault</strong>:
+</code></pre></div>
+<p><strong>ClusterSecretStore for Vault</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterSecretStore</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5398,14 +5414,16 @@ vault<span class="w"> </span>write<span class="w"> </span>auth/kubernetes/role/f
 <span class="w">          </span><span class="nt">serviceAccountRef</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets-sa</span>
 <span class="w">            </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-system</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="disaster-recovery">Disaster Recovery</h3>
-<p><strong>Backup Strategy</strong>:
-1. <strong>External Store</strong>: Secrets in AWS/Azure/GCP have built-in backup/versioning
-2. <strong>ExternalSecret Manifests</strong>: Version controlled in Git (no secret values)
-3. <strong>Emergency Access</strong>: Break-glass procedures documented
-4. <strong>Key Rotation Records</strong>: Maintain audit log of all rotations</p>
-<p><strong>Recovery Procedure</strong>:
+<p><strong>Backup Strategy</strong>:</p>
+<ol>
+<li><strong>External Store</strong>: Secrets in AWS/Azure/GCP have built-in backup/versioning</li>
+<li><strong>ExternalSecret Manifests</strong>: Version controlled in Git (no secret values)</li>
+<li><strong>Emergency Access</strong>: Break-glass procedures documented</li>
+<li><strong>Key Rotation Records</strong>: Maintain audit log of all rotations</li>
+</ol>
+<p><strong>Recovery Procedure</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. Restore External Secrets Operator</span>
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>manifests/external-secrets-operator/
 
@@ -5420,7 +5438,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 
 <span class="c1"># 5. Restart pods if needed</span>
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>fawkes-core
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="consequences">Consequences</h2>
 <h3 id="positive">Positive</h3>
 <ol>
@@ -5454,181 +5472,220 @@ kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class
 </ol>
 <h2 id="alternatives-considered">Alternatives Considered</h2>
 <h3 id="alternative-1-sealed-secrets">Alternative 1: Sealed Secrets</h3>
-<p><strong>Pros</strong>:
-- Secrets encrypted and stored directly in Git
-- No external dependency (secret store)
-- Simple mental model (encrypt secret, commit, controller decrypts)
-- Good for GitOps workflows
-- No cost for external secret store</p>
-<p><strong>Cons</strong>:
-- Secrets still in Git (even if encrypted) - compliance/security concerns
-- Key management burden (must protect unsealing key)
-- No integration with external secret stores (AWS Secrets Manager, Vault)
-- Rotation requires re-encrypting and committing
-- Limited to Kubernetes secrets (no external source of truth)
-- If unsealing key compromised, all secrets exposed</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Secrets encrypted and stored directly in Git</li>
+<li>No external dependency (secret store)</li>
+<li>Simple mental model (encrypt secret, commit, controller decrypts)</li>
+<li>Good for GitOps workflows</li>
+<li>No cost for external secret store</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Secrets still in Git (even if encrypted) - compliance/security concerns</li>
+<li>Key management burden (must protect unsealing key)</li>
+<li>No integration with external secret stores (AWS Secrets Manager, Vault)</li>
+<li>Rotation requires re-encrypting and committing</li>
+<li>Limited to Kubernetes secrets (no external source of truth)</li>
+<li>If unsealing key compromised, all secrets exposed</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Sealed Secrets forces secrets into Git, which violates many compliance frameworks (SOC2, PCI-DSS). Organizations with established secret management (Vault, AWS Secrets Manager) cannot leverage existing infrastructure. The sealed secret key becomes a single point of failure.</p>
 <h3 id="alternative-2-hashicorp-vault-direct-integration">Alternative 2: HashiCorp Vault (Direct Integration)</h3>
-<p><strong>Pros</strong>:
-- Industry-leading secret management solution
-- Advanced features (dynamic secrets, leasing, PKI)
-- Superior audit logging and access controls
-- Secret engines for databases, clouds, SSH, PKI
-- Multi-tenancy and namespace support
-- Secret rotation and expiration built-in</p>
-<p><strong>Cons</strong>:
-- High operational overhead (Vault cluster management, upgrades, HA)
-- Requires Vault expertise on platform team
-- Steep learning curve for developers
-- Significant infrastructure costs (Vault Enterprise for advanced features)
-- Applications need Vault-aware clients or sidecar injectors
-- Overkill for basic secret storage needs</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Industry-leading secret management solution</li>
+<li>Advanced features (dynamic secrets, leasing, PKI)</li>
+<li>Superior audit logging and access controls</li>
+<li>Secret engines for databases, clouds, SSH, PKI</li>
+<li>Multi-tenancy and namespace support</li>
+<li>Secret rotation and expiration built-in</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>High operational overhead (Vault cluster management, upgrades, HA)</li>
+<li>Requires Vault expertise on platform team</li>
+<li>Steep learning curve for developers</li>
+<li>Significant infrastructure costs (Vault Enterprise for advanced features)</li>
+<li>Applications need Vault-aware clients or sidecar injectors</li>
+<li>Overkill for basic secret storage needs</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: While Vault is excellent, it requires dedicated operational expertise and introduces significant complexity. ESO provides integration with Vault for organizations that already have it, while also supporting simpler backends (AWS Secrets Manager) for teams without Vault. This gives Fawkes flexibility.</p>
 <h3 id="alternative-3-kubernetes-secrets-native-encrypted-at-rest">Alternative 3: Kubernetes Secrets (Native, Encrypted at Rest)</h3>
-<p><strong>Pros</strong>:
-- No additional components (native Kubernetes)
-- Zero operational overhead
-- Simple API (kubectl create secret)
-- Well understood by developers
-- No cost</p>
-<p><strong>Cons</strong>:
-- No integration with external secret stores
-- Manual rotation (no automation)
-- No audit logging (beyond Kubernetes audit logs)
-- Secrets must be base64 encoded and put in manifests (risky)
-- No centralized secret management
-- Difficult to share secrets across clusters
-- Limited access controls (namespace-level only)</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>No additional components (native Kubernetes)</li>
+<li>Zero operational overhead</li>
+<li>Simple API (kubectl create secret)</li>
+<li>Well understood by developers</li>
+<li>No cost</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>No integration with external secret stores</li>
+<li>Manual rotation (no automation)</li>
+<li>No audit logging (beyond Kubernetes audit logs)</li>
+<li>Secrets must be base64 encoded and put in manifests (risky)</li>
+<li>No centralized secret management</li>
+<li>Difficult to share secrets across clusters</li>
+<li>Limited access controls (namespace-level only)</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Native Kubernetes secrets are suitable for development but inadequate for production. Lack of integration with external stores means organizations cannot leverage existing secret infrastructure. No rotation support creates operational burden. However, Kubernetes secrets remain the <em>consumption</em> mechanism (ESO creates them), so developers still use the familiar API.</p>
 <h3 id="alternative-4-cloud-specific-solutions-aws-secrets-csi-driver-azure-key-vault-csi">Alternative 4: Cloud-Specific Solutions (AWS Secrets CSI Driver, Azure Key Vault CSI)</h3>
-<p><strong>Pros</strong>:
-- Deep cloud integration (native IAM, audit logging)
-- No intermediate controller (CSI driver directly mounts secrets)
-- Lower latency (secrets mounted on-demand)
-- Automatic rotation via CSI driver
-- Minimal resource overhead</p>
-<p><strong>Cons</strong>:
-- <strong>Cloud vendor lock-in</strong> (different implementation per cloud)
-- Cannot work on-premises or in multi-cloud
-- Different configuration per cloud (AWS ≠ Azure ≠ GCP)
-- Limited to volume mounts (no environment variables without wrapper)
-- Learner environments need cloud accounts
-- Inconsistent developer experience across environments</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Deep cloud integration (native IAM, audit logging)</li>
+<li>No intermediate controller (CSI driver directly mounts secrets)</li>
+<li>Lower latency (secrets mounted on-demand)</li>
+<li>Automatic rotation via CSI driver</li>
+<li>Minimal resource overhead</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Cloud vendor lock-in</strong> (different implementation per cloud)</li>
+<li>Cannot work on-premises or in multi-cloud</li>
+<li>Different configuration per cloud (AWS ≠ Azure ≠ GCP)</li>
+<li>Limited to volume mounts (no environment variables without wrapper)</li>
+<li>Learner environments need cloud accounts</li>
+<li>Inconsistent developer experience across environments</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Violates Fawkes' cloud portability principle. Developers and learners should have consistent experience regardless of deployment target. ESO provides abstraction layer that works with any backend, while CSI drivers lock you into cloud-specific patterns.</p>
 <h3 id="alternative-5-sops-secrets-operations">Alternative 5: SOPS (Secrets OPerationS)</h3>
-<p><strong>Pros</strong>:
-- Encrypt secrets in Git with AWS KMS, GCP KMS, Azure Key Vault, PGP
-- GitOps-friendly (encrypted secrets committed)
-- Supports multiple formats (YAML, JSON, ENV, INI)
-- Integration with FluxCD and ArgoCD
-- Partial encryption (encrypt values, leave keys plaintext)</p>
-<p><strong>Cons</strong>:
-- Secrets still in Git (compliance concerns)
-- Requires KMS key management
-- Manual rotation (re-encrypt and commit)
-- ArgoCD integration complex (requires custom tooling)
-- No runtime secret refresh (static secrets)
-- Limited audit trail (Git commits only)</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Encrypt secrets in Git with AWS KMS, GCP KMS, Azure Key Vault, PGP</li>
+<li>GitOps-friendly (encrypted secrets committed)</li>
+<li>Supports multiple formats (YAML, JSON, ENV, INI)</li>
+<li>Integration with FluxCD and ArgoCD</li>
+<li>Partial encryption (encrypt values, leave keys plaintext)</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Secrets still in Git (compliance concerns)</li>
+<li>Requires KMS key management</li>
+<li>Manual rotation (re-encrypt and commit)</li>
+<li>ArgoCD integration complex (requires custom tooling)</li>
+<li>No runtime secret refresh (static secrets)</li>
+<li>Limited audit trail (Git commits only)</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Similar issues to Sealed Secrets - storing secrets in Git creates compliance and security challenges. SOPS is excellent for configuration management, but ESO provides better separation between secret storage (external) and consumption (Kubernetes). Organizations prefer secrets in dedicated secret stores, not Git.</p>
 <h3 id="alternative-6-kubernetes-external-secrets-older-project">Alternative 6: Kubernetes External Secrets (Older Project)</h3>
-<p><strong>Pros</strong>:
-- Original external secrets project (inspired ESO)
-- Similar concept to ESO
-- Works with AWS, GCP, Azure</p>
-<p><strong>Cons</strong>:
-- <strong>Deprecated in favor of External Secrets Operator</strong>
-- Smaller community and less active development
-- Fewer backend integrations
-- Less mature API (v1alpha1)
-- Not CNCF project</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Original external secrets project (inspired ESO)</li>
+<li>Similar concept to ESO</li>
+<li>Works with AWS, GCP, Azure</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Deprecated in favor of External Secrets Operator</strong></li>
+<li>Smaller community and less active development</li>
+<li>Fewer backend integrations</li>
+<li>Less mature API (v1alpha1)</li>
+<li>Not CNCF project</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: External Secrets Operator (ESO) is the successor project with broader community, CNCF sandbox status, and more active development. No reason to use the deprecated version when ESO provides superset of functionality.</p>
 <h2 id="implementation-plan">Implementation Plan</h2>
 <h3 id="phase-1-mvp-week-4-of-sprint-01">Phase 1: MVP (Week 4 of Sprint 01)</h3>
-<p><strong>Day 1-2: External Secrets Operator Deployment</strong> [8 hours]
-1. Deploy ESO via Helm chart to <code>fawkes-system</code> namespace
-2. Configure RBAC for ESO service account
-3. Set up AWS IRSA role for ESO (or cloud-specific workload identity)
-4. Create ClusterSecretStore for AWS Secrets Manager
-5. Verify ESO controller is running and can authenticate</p>
-<p><strong>Day 3: Core Service Secrets</strong> [6 hours]
-6. Create secrets in AWS Secrets Manager for:
-   - PostgreSQL (root password, database passwords)
-   - ArgoCD (admin password, GitHub token)
-   - Backstage (database password, GitHub token, OAuth2 secrets)
-7. Create ExternalSecret manifests for each
-8. Verify Kubernetes secrets created successfully
-9. Test secret consumption by deploying test pod</p>
-<p><strong>Day 4: CI/CD Service Secrets</strong> [6 hours]
-10. Create secrets in AWS Secrets Manager for:
-    - Jenkins (admin password, GitHub token, Docker credentials)
-    - Harbor (admin password, database password, S3 credentials)
-11. Create ExternalSecret manifests
-12. Deploy Jenkins and Harbor with external secrets
-13. Verify services start successfully with secrets</p>
-<p><strong>Day 5: Documentation &amp; Validation</strong> [4 hours]
-14. Document secret naming conventions
-15. Create runbook for secret rotation
-16. Write troubleshooting guide
-17. Create Dojo module outline for secrets management</p>
+<p><strong>Day 1-2: External Secrets Operator Deployment</strong> [8 hours]</p>
+<ol>
+<li>Deploy ESO via Helm chart to <code>fawkes-system</code> namespace</li>
+<li>Configure RBAC for ESO service account</li>
+<li>Set up AWS IRSA role for ESO (or cloud-specific workload identity)</li>
+<li>Create ClusterSecretStore for AWS Secrets Manager</li>
+<li>Verify ESO controller is running and can authenticate</li>
+</ol>
+<p><strong>Day 3: Core Service Secrets</strong> [6 hours] 6. Create secrets in AWS Secrets Manager for:</p>
+<ul>
+<li>PostgreSQL (root password, database passwords)</li>
+<li>ArgoCD (admin password, GitHub token)</li>
+<li>
+<p>Backstage (database password, GitHub token, OAuth2 secrets)</p>
+</li>
+<li>
+<p>Create ExternalSecret manifests for each</p>
+</li>
+<li>Verify Kubernetes secrets created successfully</li>
+<li>Test secret consumption by deploying test pod</li>
+</ul>
+<p><strong>Day 4: CI/CD Service Secrets</strong> [6 hours] 10. Create secrets in AWS Secrets Manager for: - Jenkins (admin password, GitHub token, Docker credentials) - Harbor (admin password, database password, S3 credentials) 11. Create ExternalSecret manifests 12. Deploy Jenkins and Harbor with external secrets 13. Verify services start successfully with secrets</p>
+<p><strong>Day 5: Documentation &amp; Validation</strong> [4 hours] 14. Document secret naming conventions 15. Create runbook for secret rotation 16. Write troubleshooting guide 17. Create Dojo module outline for secrets management</p>
 <h3 id="phase-2-advanced-features-week-5">Phase 2: Advanced Features (Week 5)</h3>
-<p><strong>Secret Rotation</strong> [4 hours]
-- Deploy Reloader for automatic pod restarts
-- Document rotation procedures for each service
-- Test rotation end-to-end for PostgreSQL
-- Create Grafana alerts for secret sync failures</p>
-<p><strong>Multi-Environment Setup</strong> [4 hours]
-- Create separate secret paths for dev/staging/prod
-- Configure namespace-scoped SecretStores
-- Implement RBAC for namespace isolation
-- Test learner namespace provisioning with secrets</p>
-<p><strong>Backup &amp; Disaster Recovery</strong> [3 hours]
-- Document break-glass procedures
-- Create backup scripts for ExternalSecret manifests
-- Test secret recovery procedures
-- Create incident response runbook</p>
+<p><strong>Secret Rotation</strong> [4 hours]</p>
+<ul>
+<li>Deploy Reloader for automatic pod restarts</li>
+<li>Document rotation procedures for each service</li>
+<li>Test rotation end-to-end for PostgreSQL</li>
+<li>Create Grafana alerts for secret sync failures</li>
+</ul>
+<p><strong>Multi-Environment Setup</strong> [4 hours]</p>
+<ul>
+<li>Create separate secret paths for dev/staging/prod</li>
+<li>Configure namespace-scoped SecretStores</li>
+<li>Implement RBAC for namespace isolation</li>
+<li>Test learner namespace provisioning with secrets</li>
+</ul>
+<p><strong>Backup &amp; Disaster Recovery</strong> [3 hours]</p>
+<ul>
+<li>Document break-glass procedures</li>
+<li>Create backup scripts for ExternalSecret manifests</li>
+<li>Test secret recovery procedures</li>
+<li>Create incident response runbook</li>
+</ul>
 <h3 id="phase-3-dojo-integration-week-6">Phase 3: Dojo Integration (Week 6)</h3>
 <p><strong>Yellow Belt - Module 3: "Securing Secrets"</strong> [8 hours]</p>
-<p><strong>Learning Objectives</strong>:
-- Understand secrets management anti-patterns (secrets in Git, plain text)
-- Learn External Secrets Operator concepts
-- Create ExternalSecret manifests
-- Implement secret rotation
-- Troubleshoot secret sync issues</p>
-<p><strong>Hands-On Lab</strong>:
-1. Create secret in AWS Secrets Manager (or learner-specific backend)
-2. Deploy ExternalSecret manifest to learner namespace
-3. Consume secret in test application (environment variables and volume mounts)
-4. Rotate secret and observe automatic sync
-5. Troubleshoot intentionally broken ExternalSecret</p>
-<p><strong>Assessment</strong>:
-- Quiz on secrets best practices (10 questions)
-- Practical: Deploy application with database password from external store
-- Troubleshoot secret sync failure scenario</p>
+<p><strong>Learning Objectives</strong>:</p>
+<ul>
+<li>Understand secrets management anti-patterns (secrets in Git, plain text)</li>
+<li>Learn External Secrets Operator concepts</li>
+<li>Create ExternalSecret manifests</li>
+<li>Implement secret rotation</li>
+<li>Troubleshoot secret sync issues</li>
+</ul>
+<p><strong>Hands-On Lab</strong>:</p>
+<ol>
+<li>Create secret in AWS Secrets Manager (or learner-specific backend)</li>
+<li>Deploy ExternalSecret manifest to learner namespace</li>
+<li>Consume secret in test application (environment variables and volume mounts)</li>
+<li>Rotate secret and observe automatic sync</li>
+<li>Troubleshoot intentionally broken ExternalSecret</li>
+</ol>
+<p><strong>Assessment</strong>:</p>
+<ul>
+<li>Quiz on secrets best practices (10 questions)</li>
+<li>Practical: Deploy application with database password from external store</li>
+<li>Troubleshoot secret sync failure scenario</li>
+</ul>
 <p><strong>Time</strong>: 2 hours (45 min theory + 75 min hands-on)</p>
 <h3 id="phase-4-production-hardening-week-7">Phase 4: Production Hardening (Week 7)</h3>
-<p><strong>Security Hardening</strong> [6 hours]
-- Enable Kubernetes secret encryption at rest
-- Implement least-privilege RBAC policies
-- Configure audit logging for secret access
-- Security scan all secret configurations
-- Penetration testing for secret access paths</p>
-<p><strong>Monitoring &amp; Alerting</strong> [4 hours]
-- Create Prometheus metrics for ESO
-- Build Grafana dashboard for secret sync status
-- Configure alerts for sync failures
-- Set up alert for certificate/secret expiration
-- Integrate with PagerDuty/OpsGenie</p>
-<p><strong>Documentation</strong> [4 hours]
-- Complete architecture documentation with diagrams
-- Write comprehensive troubleshooting guide
-- Create secret rotation playbook
-- Document disaster recovery procedures
-- Create RBAC guidelines</p>
+<p><strong>Security Hardening</strong> [6 hours]</p>
+<ul>
+<li>Enable Kubernetes secret encryption at rest</li>
+<li>Implement least-privilege RBAC policies</li>
+<li>Configure audit logging for secret access</li>
+<li>Security scan all secret configurations</li>
+<li>Penetration testing for secret access paths</li>
+</ul>
+<p><strong>Monitoring &amp; Alerting</strong> [4 hours]</p>
+<ul>
+<li>Create Prometheus metrics for ESO</li>
+<li>Build Grafana dashboard for secret sync status</li>
+<li>Configure alerts for sync failures</li>
+<li>Set up alert for certificate/secret expiration</li>
+<li>Integrate with PagerDuty/OpsGenie</li>
+</ul>
+<p><strong>Documentation</strong> [4 hours]</p>
+<ul>
+<li>Complete architecture documentation with diagrams</li>
+<li>Write comprehensive troubleshooting guide</li>
+<li>Create secret rotation playbook</li>
+<li>Document disaster recovery procedures</li>
+<li>Create RBAC guidelines</li>
+</ul>
 <h2 id="monitoring-observability">Monitoring &amp; Observability</h2>
 <h3 id="key-metrics">Key Metrics</h3>
-<p><strong>External Secrets Operator Metrics</strong>:
-```</p>
-<h1 id="sync-success-rate">Sync success rate</h1>
+<p><strong>External Secrets Operator Metrics</strong>:</p>
+<div class="highlight"><pre><span></span><code># Sync success rate
+</code></pre></div>
 
 
 

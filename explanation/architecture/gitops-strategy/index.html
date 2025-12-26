@@ -5235,34 +5235,40 @@
 <p>Fawkes adopted GitOps as a <strong>core architectural principle</strong> because it directly supports the behaviors that enable elite DORA performance: high deployment frequency, low change failure rate, and fast recovery time.</p>
 <h2 id="the-problem-why-push-based-cd-falls-short">The Problem: Why Push-Based CD Falls Short</h2>
 <h3 id="security-the-credential-problem">Security: The Credential Problem</h3>
-<p><strong>The Traditional Model:</strong>
+<p><strong>The Traditional Model:</strong></p>
 <pre class="mermaid"><code>graph LR
     A[Jenkins] --&gt;|Has K8s credentials| B[Production Cluster]
     C[Developer] --&gt;|Triggers Build| A
-    style A fill:#ff6b6b</code></pre></p>
-<p>In push-based CI/CD:
-- <strong>Jenkins holds production credentials</strong> - If Jenkins is compromised, so is production
-- <strong>Credentials must be distributed</strong> - Every build agent needs cluster access
-- <strong>Blast radius is massive</strong> - A CI security breach means production breach
-- <strong>Credential rotation is painful</strong> - Update all CI configs when rotating</p>
+    style A fill:#ff6b6b</code></pre>
+<p>In push-based CI/CD:</p>
+<ul>
+<li><strong>Jenkins holds production credentials</strong> - If Jenkins is compromised, so is production</li>
+<li><strong>Credentials must be distributed</strong> - Every build agent needs cluster access</li>
+<li><strong>Blast radius is massive</strong> - A CI security breach means production breach</li>
+<li><strong>Credential rotation is painful</strong> - Update all CI configs when rotating</li>
+</ul>
 <h3 id="drift-configuration-divergence">Drift: Configuration Divergence</h3>
 <p>When humans have <code>kubectl</code> access and deadlines loom, they make "quick fixes" directly in the cluster:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># &quot;Just for now&quot; - Famous last words</span>
 kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>critical-app<span class="w"> </span>--replicas<span class="o">=</span><span class="m">10</span>
 kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>deployment/api<span class="w"> </span><span class="nv">LOG_LEVEL</span><span class="o">=</span>debug
 </code></pre></div>
-<p><strong>The Result:</strong>
-- Production state diverges from Git
-- Git is no longer the source of truth
-- Disaster recovery becomes guesswork: "What was the actual config?"
-- Compliance audits fail: "Show us the change approval for that scaling event"</p>
+<p><strong>The Result:</strong></p>
+<ul>
+<li>Production state diverges from Git</li>
+<li>Git is no longer the source of truth</li>
+<li>Disaster recovery becomes guesswork: "What was the actual config?"</li>
+<li>Compliance audits fail: "Show us the change approval for that scaling event"</li>
+</ul>
 <h3 id="auditability-the-black-box-deployment">Auditability: The Black Box Deployment</h3>
-<p>Push-based deployments create an audit gap:
-- Git shows code changes
-- Jenkins shows build execution
-- But the actual deployment? Often just a line in Jenkins logs
-- <strong>Question</strong>: "Who changed the replica count from 3 to 5?"
-- <strong>Answer</strong>: ¯\<em>(ツ)</em>/¯ "Could be anyone with kubectl access"</p>
+<p>Push-based deployments create an audit gap:</p>
+<ul>
+<li>Git shows code changes</li>
+<li>Jenkins shows build execution</li>
+<li>But the actual deployment? Often just a line in Jenkins logs</li>
+<li><strong>Question</strong>: "Who changed the replica count from 3 to 5?"</li>
+<li><strong>Answer</strong>: ¯\<em>(ツ)</em>/¯ "Could be anyone with kubectl access"</li>
+</ul>
 <h3 id="rollback-the-manual-scramble">Rollback: The Manual Scramble</h3>
 <p>When a bad deployment hits production in a push model:</p>
 <ol>
@@ -5286,8 +5292,12 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
     style B fill:#2196F3</code></pre>
 <p><strong>Key Principles:</strong></p>
 <ol>
-<li><strong>Git as Single Source of Truth</strong></li>
-<li>Entire desired state lives in Git (applications, configs, infrastructure)</li>
+<li>
+<p><strong>Git as Single Source of Truth</strong></p>
+</li>
+<li>
+<p>Entire desired state lives in Git (applications, configs, infrastructure)</p>
+</li>
 <li>Want to know production state? Read Git</li>
 <li>
 <p>Want to change production? Open a PR</p>
@@ -5295,7 +5305,9 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
 <li>
 <p><strong>Declarative Configuration</strong></p>
 </li>
-<li>Describe what you want, not how to get there</li>
+<li>
+<p>Describe what you want, not how to get there</p>
+</li>
 <li>ArgoCD figures out the <code>kubectl apply</code> dance</li>
 <li>
 <p>Idempotent: Apply the same config 100 times = same result</p>
@@ -5303,7 +5315,9 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
 <li>
 <p><strong>Automated Sync</strong></p>
 </li>
-<li>ArgoCD polls Git every 3 minutes (or use webhooks for instant sync)</li>
+<li>
+<p>ArgoCD polls Git every 3 minutes (or use webhooks for instant sync)</p>
+</li>
 <li>Detects drift and auto-corrects</li>
 <li>
 <p>No manual intervention needed</p>
@@ -5332,28 +5346,34 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
 <span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://kubernetes.default.svc</span>
 <span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd</span>
 </code></pre></div>
-<p><strong>What This Enables:</strong>
-- Deploy the entire platform with one Application
-- Add a new service? Just add a directory in <code>platform/apps/</code>
-- ArgoCD discovers and deploys it automatically
-- Remove a service? Delete its directory and it's undeployed</p>
-<p><strong>The Bootstrap Process:</strong>
-1. Install ArgoCD itself (one-time manual step)
-2. Create the root App-of-Apps
-3. Everything else (Jenkins, Backstage, Prometheus) deploys automatically
-4. <strong>Never touch <code>kubectl</code> again</strong> (well, rarely)</p>
+<p><strong>What This Enables:</strong></p>
+<ul>
+<li>Deploy the entire platform with one Application</li>
+<li>Add a new service? Just add a directory in <code>platform/apps/</code></li>
+<li>ArgoCD discovers and deploys it automatically</li>
+<li>Remove a service? Delete its directory and it's undeployed</li>
+</ul>
+<p><strong>The Bootstrap Process:</strong></p>
+<ol>
+<li>Install ArgoCD itself (one-time manual step)</li>
+<li>Create the root App-of-Apps</li>
+<li>Everything else (Jenkins, Backstage, Prometheus) deploys automatically</li>
+<li><strong>Never touch <code>kubectl</code> again</strong> (well, rarely)</li>
+</ol>
 <h3 id="security-model-shift">Security Model Shift</h3>
-<p><strong>Before (Push Model):</strong>
+<p><strong>Before (Push Model):</strong></p>
 <div class="highlight"><pre><span></span><code>CI System → Stores credentials → Deploys to cluster
-</code></pre></div></p>
-<p><strong>After (Pull Model):</strong>
+</code></pre></div>
+<p><strong>After (Pull Model):</strong></p>
 <div class="highlight"><pre><span></span><code>CI System → Updates Git → ArgoCD (running IN cluster) syncs
-</code></pre></div></p>
-<p><strong>Benefits:</strong>
-- ✅ <strong>No credentials in CI</strong> - Jenkins doesn't need cluster access
-- ✅ <strong>Credentials never leave cluster</strong> - ArgoCD uses in-cluster service account
-- ✅ <strong>Reduced attack surface</strong> - Compromise CI ≠ Compromise Production
-- ✅ <strong>Easier credential rotation</strong> - Only ArgoCD service account to manage</p>
+</code></pre></div>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>✅ <strong>No credentials in CI</strong> - Jenkins doesn't need cluster access</li>
+<li>✅ <strong>Credentials never leave cluster</strong> - ArgoCD uses in-cluster service account</li>
+<li>✅ <strong>Reduced attack surface</strong> - Compromise CI ≠ Compromise Production</li>
+<li>✅ <strong>Easier credential rotation</strong> - Only ArgoCD service account to manage</li>
+</ul>
 <h2 id="trade-offs-what-you-gain-and-lose">Trade-Offs: What You Gain and Lose</h2>
 <h3 id="what-gitops-gives-you">What GitOps Gives You</h3>
 <table>
@@ -5459,15 +5479,21 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
 <p><strong>This is a feature, not a bug.</strong> Forcing changes through Git creates the paper trail that auditors love and future-you will thank.</p>
 <h2 id="why-argocd-over-alternatives">Why ArgoCD Over Alternatives</h2>
 <h3 id="the-landscape">The Landscape</h3>
-<p>When Fawkes was designed, we evaluated:
-- <strong>Flux CD</strong> - CNCF Graduated, excellent tool, more modular
-- <strong>Spinnaker</strong> - Formerly used by Fawkes, powerful but heavyweight
-- <strong>Jenkins X</strong> - Opinionated, too tightly coupled to Jenkins
-- <strong>Helm alone</strong> - Not GitOps, manual processes</p>
+<p>When Fawkes was designed, we evaluated:</p>
+<ul>
+<li><strong>Flux CD</strong> - CNCF Graduated, excellent tool, more modular</li>
+<li><strong>Spinnaker</strong> - Formerly used by Fawkes, powerful but heavyweight</li>
+<li><strong>Jenkins X</strong> - Opinionated, too tightly coupled to Jenkins</li>
+<li><strong>Helm alone</strong> - Not GitOps, manual processes</li>
+</ul>
 <h3 id="why-argocd-won">Why ArgoCD Won</h3>
 <ol>
-<li><strong>The UI Advantage</strong></li>
-<li>Visual application topology (see dependencies at a glance)</li>
+<li>
+<p><strong>The UI Advantage</strong></p>
+</li>
+<li>
+<p>Visual application topology (see dependencies at a glance)</p>
+</li>
 <li>Diff view (Git vs. cluster side-by-side)</li>
 <li>Real-time sync status</li>
 <li>
@@ -5476,7 +5502,9 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
 <li>
 <p><strong>Proven at Scale</strong></p>
 </li>
-<li>Used by Intuit, Red Hat, IBM, Adobe</li>
+<li>
+<p>Used by Intuit, Red Hat, IBM, Adobe</p>
+</li>
 <li>15,000+ GitHub stars</li>
 <li>
 <p>CNCF Graduated (highest maturity)</p>
@@ -5484,14 +5512,18 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
 <li>
 <p><strong>App-of-Apps Pattern</strong></p>
 </li>
-<li>Elegant solution for managing platform</li>
+<li>
+<p>Elegant solution for managing platform</p>
+</li>
 <li>
 <p>Mirrors Fawkes' "platform of platforms" architecture</p>
 </li>
 <li>
 <p><strong>Argo Ecosystem</strong></p>
 </li>
-<li>Argo Rollouts (canary deployments)</li>
+<li>
+<p>Argo Rollouts (canary deployments)</p>
+</li>
 <li>Argo Events (event-driven automation)</li>
 <li>Argo Workflows (complex pipelines)</li>
 <li>
@@ -5511,12 +5543,14 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
 <p>Fawkes prioritized <strong>Developer Experience</strong>, and ArgoCD's UI is a significant UX advantage for troubleshooting and understanding system state.</p>
 <h2 id="historical-context-from-spinnaker-to-argocd">Historical Context: From Spinnaker to ArgoCD</h2>
 <p><strong>Fawkes 1.0 (2022-2023):</strong> Used Spinnaker for deployment orchestration</p>
-<p><strong>Why We Left Spinnaker:</strong>
-- <strong>Operational Burden</strong>: 10+ microservices just to run Spinnaker itself
-- <strong>Resource Hungry</strong>: 4GB+ RAM for control plane
-- <strong>Configuration Complexity</strong>: Pipelines defined in UI or JSON, hard to version
-- <strong>Not GitOps-Native</strong>: Push model, required cloud credentials
-- <strong>Overkill</strong>: Multi-cloud deployment orchestration when we only needed Kubernetes</p>
+<p><strong>Why We Left Spinnaker:</strong></p>
+<ul>
+<li><strong>Operational Burden</strong>: 10+ microservices just to run Spinnaker itself</li>
+<li><strong>Resource Hungry</strong>: 4GB+ RAM for control plane</li>
+<li><strong>Configuration Complexity</strong>: Pipelines defined in UI or JSON, hard to version</li>
+<li><strong>Not GitOps-Native</strong>: Push model, required cloud credentials</li>
+<li><strong>Overkill</strong>: Multi-cloud deployment orchestration when we only needed Kubernetes</li>
+</ul>
 <p><strong>What We Learned:</strong>
 Spinnaker is phenomenal if you're deploying to VMs, cloud functions, AND Kubernetes across multiple clouds. But for a Kubernetes-focused platform, ArgoCD gives 80% of the value with 20% of the operational cost.</p>
 <h2 id="practical-implications">Practical Implications</h2>
@@ -5543,10 +5577,12 @@ Spinnaker is phenomenal if you're deploying to VMs, cloud functions, AND Kuberne
 <li><strong>Drift Prevention</strong>: Show how GitOps auto-corrects manual changes</li>
 <li><strong>DORA Alignment</strong>: GitOps directly improves all four key metrics</li>
 </ol>
-<p><strong>Objection Handling:</strong>
-- "But we have Jenkins already!" → <em>Jenkins still does CI (build/test), ArgoCD does CD (deploy). Separation of concerns.</em>
-- "GitOps is too slow!" → <em>Webhooks give instant sync. Plus, slow and safe beats fast and fragile.</em>
-- "We need manual approval for production!" → <em>ArgoCD supports manual sync policies. Automation doesn't mean no governance.</em></p>
+<p><strong>Objection Handling:</strong></p>
+<ul>
+<li>"But we have Jenkins already!" → <em>Jenkins still does CI (build/test), ArgoCD does CD (deploy). Separation of concerns.</em></li>
+<li>"GitOps is too slow!" → <em>Webhooks give instant sync. Plus, slow and safe beats fast and fragile.</em></li>
+<li>"We need manual approval for production!" → <em>ArgoCD supports manual sync policies. Automation doesn't mean no governance.</em></li>
+</ul>
 <h2 id="related-reading">Related Reading</h2>
 <ul>
 <li><strong>How-To</strong>: <a href="../../../how-to/gitops/onboard-service-argocd/">Onboard a Service to ArgoCD</a></li>

@@ -4811,30 +4811,40 @@
 <li>Scale to handle the platform's growing documentation and code base</li>
 </ul>
 <h3 id="requirements">Requirements</h3>
-<p><strong>Functional Requirements:</strong>
-- Vector similarity search with high precision (&gt;0.7 relevance score)
-- Support for text embeddings (initially)
-- GraphQL or REST API for integration
-- Schema flexibility for different content types
-- Hybrid search (vector + keyword) capabilities</p>
-<p><strong>Non-Functional Requirements:</strong>
-- Kubernetes-native deployment
-- Horizontal scalability
-- Built-in monitoring (Prometheus metrics)
-- Backup and restore capabilities
-- Open-source with active community
-- Production-ready and battle-tested</p>
-<p><strong>Integration Requirements:</strong>
-- Compatible with transformer models (sentence-transformers)
-- Easy integration with Python applications
-- Support for batch operations
-- Low-latency queries (&lt;100ms)</p>
+<p><strong>Functional Requirements:</strong></p>
+<ul>
+<li>Vector similarity search with high precision (&gt;0.7 relevance score)</li>
+<li>Support for text embeddings (initially)</li>
+<li>GraphQL or REST API for integration</li>
+<li>Schema flexibility for different content types</li>
+<li>Hybrid search (vector + keyword) capabilities</li>
+</ul>
+<p><strong>Non-Functional Requirements:</strong></p>
+<ul>
+<li>Kubernetes-native deployment</li>
+<li>Horizontal scalability</li>
+<li>Built-in monitoring (Prometheus metrics)</li>
+<li>Backup and restore capabilities</li>
+<li>Open-source with active community</li>
+<li>Production-ready and battle-tested</li>
+</ul>
+<p><strong>Integration Requirements:</strong></p>
+<ul>
+<li>Compatible with transformer models (sentence-transformers)</li>
+<li>Easy integration with Python applications</li>
+<li>Support for batch operations</li>
+<li>Low-latency queries (&lt;100ms)</li>
+</ul>
 <h2 id="decision">Decision</h2>
 <p>We will use <strong>Weaviate</strong> as our vector database for the following reasons:</p>
 <h3 id="technical-rationale">Technical Rationale</h3>
 <ol>
-<li><strong>Native Vector Search</strong></li>
-<li>Built specifically for vector operations using HNSW (Hierarchical Navigable Small World) algorithm</li>
+<li>
+<p><strong>Native Vector Search</strong></p>
+</li>
+<li>
+<p>Built specifically for vector operations using HNSW (Hierarchical Navigable Small World) algorithm</p>
+</li>
 <li>Provides fast approximate nearest neighbor search</li>
 <li>
 <p>Supports multiple distance metrics (cosine, L2, etc.)</p>
@@ -4842,7 +4852,9 @@
 <li>
 <p><strong>GraphQL API</strong></p>
 </li>
-<li>Modern, flexible API that's easy to use</li>
+<li>
+<p>Modern, flexible API that's easy to use</p>
+</li>
 <li>Strong typing and schema validation</li>
 <li>Good documentation and tooling support</li>
 <li>
@@ -4851,7 +4863,9 @@
 <li>
 <p><strong>Built-in Vectorization</strong></p>
 </li>
-<li>Supports text2vec-transformers module out of the box</li>
+<li>
+<p>Supports text2vec-transformers module out of the box</p>
+</li>
 <li>Can use sentence-transformers models directly</li>
 <li>Extensible to other vectorization methods (OpenAI, Cohere, etc.)</li>
 <li>
@@ -4860,7 +4874,9 @@
 <li>
 <p><strong>Hybrid Search Capability</strong></p>
 </li>
-<li>Combines vector search with traditional keyword search (BM25)</li>
+<li>
+<p>Combines vector search with traditional keyword search (BM25)</p>
+</li>
 <li>Best of both worlds for different query types</li>
 <li>
 <p>Configurable weight between vector and keyword search</p>
@@ -4875,8 +4891,12 @@
 </ol>
 <h3 id="operational-rationale">Operational Rationale</h3>
 <ol>
-<li><strong>Production Ready</strong></li>
-<li>Used by many organizations in production</li>
+<li>
+<p><strong>Production Ready</strong></p>
+</li>
+<li>
+<p>Used by many organizations in production</p>
+</li>
 <li>Proven track record for reliability</li>
 <li>Good performance characteristics</li>
 <li>
@@ -4885,7 +4905,9 @@
 <li>
 <p><strong>Active Community</strong></p>
 </li>
-<li>Large and growing community</li>
+<li>
+<p>Large and growing community</p>
+</li>
 <li>Excellent documentation</li>
 <li>Active development (frequent releases)</li>
 <li>
@@ -4894,7 +4916,9 @@
 <li>
 <p><strong>Monitoring and Observability</strong></p>
 </li>
-<li>Built-in Prometheus metrics</li>
+<li>
+<p>Built-in Prometheus metrics</p>
+</li>
 <li>Grafana dashboards available</li>
 <li>Detailed logging</li>
 <li>
@@ -4910,70 +4934,94 @@
 </ol>
 <h2 id="alternatives-considered">Alternatives Considered</h2>
 <h3 id="pinecone">Pinecone</h3>
-<p><strong>Pros:</strong>
-- Fully managed service
-- Very easy to use
-- Good performance
-- Excellent documentation</p>
-<p><strong>Cons:</strong>
-- Cloud-only (SaaS)
-- Vendor lock-in
-- Not self-hosted
-- Cost increases with scale</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Fully managed service</li>
+<li>Very easy to use</li>
+<li>Good performance</li>
+<li>Excellent documentation</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Cloud-only (SaaS)</li>
+<li>Vendor lock-in</li>
+<li>Not self-hosted</li>
+<li>Cost increases with scale</li>
+</ul>
 <p><strong>Decision:</strong> ❌ Rejected - We need a self-hosted solution to maintain control and reduce operational costs.</p>
 <h3 id="milvus">Milvus</h3>
-<p><strong>Pros:</strong>
-- High performance
-- Based on FAISS
-- Large feature set
-- Good scalability</p>
-<p><strong>Cons:</strong>
-- Complex setup and operation
-- Heavy resource requirements
-- Steeper learning curve
-- More infrastructure to manage</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>High performance</li>
+<li>Based on FAISS</li>
+<li>Large feature set</li>
+<li>Good scalability</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Complex setup and operation</li>
+<li>Heavy resource requirements</li>
+<li>Steeper learning curve</li>
+<li>More infrastructure to manage</li>
+</ul>
 <p><strong>Decision:</strong> ❌ Rejected - Too complex for our current needs; Weaviate provides sufficient performance with simpler operations.</p>
 <h3 id="postgresql-with-pgvector-extension">PostgreSQL with pgvector Extension</h3>
-<p><strong>Pros:</strong>
-- Familiar database
-- Simple extension
-- Easy to get started
-- No new infrastructure</p>
-<p><strong>Cons:</strong>
-- Not purpose-built for vectors
-- Limited scalability
-- Slower for large datasets
-- Less sophisticated search algorithms</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Familiar database</li>
+<li>Simple extension</li>
+<li>Easy to get started</li>
+<li>No new infrastructure</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Not purpose-built for vectors</li>
+<li>Limited scalability</li>
+<li>Slower for large datasets</li>
+<li>Less sophisticated search algorithms</li>
+</ul>
 <p><strong>Decision:</strong> ❌ Rejected - Not specialized enough; performance degrades at scale.</p>
 <h3 id="chromadb">ChromaDB</h3>
-<p><strong>Pros:</strong>
-- Simple and lightweight
-- Python-first design
-- Easy to embed
-- Good for prototyping</p>
-<p><strong>Cons:</strong>
-- Relatively new/immature
-- Limited production usage
-- Fewer features
-- Less proven at scale</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Simple and lightweight</li>
+<li>Python-first design</li>
+<li>Easy to embed</li>
+<li>Good for prototyping</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Relatively new/immature</li>
+<li>Limited production usage</li>
+<li>Fewer features</li>
+<li>Less proven at scale</li>
+</ul>
 <p><strong>Decision:</strong> ❌ Rejected - Too new and unproven for production use; prefer more mature solution.</p>
 <h3 id="qdrant">Qdrant</h3>
-<p><strong>Pros:</strong>
-- Good performance
-- Written in Rust
-- Growing community
-- Modern architecture</p>
-<p><strong>Cons:</strong>
-- Smaller community than Weaviate
-- Less mature ecosystem
-- Fewer integrations
-- Less documentation</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Good performance</li>
+<li>Written in Rust</li>
+<li>Growing community</li>
+<li>Modern architecture</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Smaller community than Weaviate</li>
+<li>Less mature ecosystem</li>
+<li>Fewer integrations</li>
+<li>Less documentation</li>
+</ul>
 <p><strong>Decision:</strong> ❌ Considered but Weaviate has better ecosystem and documentation.</p>
 <h2 id="consequences">Consequences</h2>
 <h3 id="positive">Positive</h3>
 <ol>
-<li><strong>Fast Semantic Search</strong></li>
-<li>HNSW algorithm provides excellent performance</li>
+<li>
+<p><strong>Fast Semantic Search</strong></p>
+</li>
+<li>
+<p>HNSW algorithm provides excellent performance</p>
+</li>
 <li>Sub-100ms queries for most use cases</li>
 <li>
 <p>Scales well with dataset size</p>
@@ -4981,7 +5029,9 @@
 <li>
 <p><strong>Flexible Schema</strong></p>
 </li>
-<li>Can easily add new document types</li>
+<li>
+<p>Can easily add new document types</p>
+</li>
 <li>Strong typing prevents errors</li>
 <li>
 <p>GraphQL makes schema discovery easy</p>
@@ -4989,7 +5039,9 @@
 <li>
 <p><strong>Easy Integration</strong></p>
 </li>
-<li>Well-documented Python client</li>
+<li>
+<p>Well-documented Python client</p>
+</li>
 <li>Simple API design</li>
 <li>
 <p>Good examples and tutorials</p>
@@ -4997,7 +5049,9 @@
 <li>
 <p><strong>Kubernetes Native</strong></p>
 </li>
-<li>Fits well with existing platform</li>
+<li>
+<p>Fits well with existing platform</p>
+</li>
 <li>Uses standard Kubernetes patterns</li>
 <li>
 <p>Easy to operate with existing tools</p>
@@ -5005,7 +5059,9 @@
 <li>
 <p><strong>Active Development</strong></p>
 </li>
-<li>Regular updates and improvements</li>
+<li>
+<p>Regular updates and improvements</p>
+</li>
 <li>Security patches</li>
 <li>
 <p>New features added frequently</p>
@@ -5019,8 +5075,12 @@
 </ol>
 <h3 id="negative">Negative</h3>
 <ol>
-<li><strong>Learning Curve</strong></li>
-<li>Team needs to learn vector database concepts</li>
+<li>
+<p><strong>Learning Curve</strong></p>
+</li>
+<li>
+<p>Team needs to learn vector database concepts</p>
+</li>
 <li>GraphQL may be new to some developers</li>
 <li>
 <p>HNSW tuning requires understanding</p>
@@ -5028,7 +5088,9 @@
 <li>
 <p><strong>Additional Infrastructure</strong></p>
 </li>
-<li>New component to maintain</li>
+<li>
+<p>New component to maintain</p>
+</li>
 <li>Requires persistent storage</li>
 <li>
 <p>Adds to infrastructure complexity</p>
@@ -5036,7 +5098,9 @@
 <li>
 <p><strong>Resource Requirements</strong></p>
 </li>
-<li>Memory-intensive for large datasets</li>
+<li>
+<p>Memory-intensive for large datasets</p>
+</li>
 <li>CPU for vectorization</li>
 <li>
 <p>Storage for vectors and data</p>
@@ -5050,8 +5114,12 @@
 </ol>
 <h3 id="mitigation-strategies">Mitigation Strategies</h3>
 <ol>
-<li><strong>Training and Documentation</strong></li>
-<li>Create comprehensive documentation (done: docs/ai/vector-database.md)</li>
+<li>
+<p><strong>Training and Documentation</strong></p>
+</li>
+<li>
+<p>Create comprehensive documentation (done: docs/ai/vector-database.md)</p>
+</li>
 <li>Provide examples and tutorials</li>
 <li>
 <p>Conduct knowledge sharing sessions</p>
@@ -5059,7 +5127,9 @@
 <li>
 <p><strong>Start Small</strong></p>
 </li>
-<li>Begin with 1 replica</li>
+<li>
+<p>Begin with 1 replica</p>
+</li>
 <li>Use modest resources (2Gi RAM, 1 CPU)</li>
 <li>
 <p>Scale up based on actual usage</p>
@@ -5067,7 +5137,9 @@
 <li>
 <p><strong>Monitoring from Day 1</strong></p>
 </li>
-<li>Enable Prometheus metrics</li>
+<li>
+<p>Enable Prometheus metrics</p>
+</li>
 <li>Create Grafana dashboards</li>
 <li>
 <p>Set up alerts for issues</p>
@@ -5081,8 +5153,12 @@
 </ol>
 <h2 id="implementation-plan">Implementation Plan</h2>
 <ol>
-<li><strong>Phase 1: Deployment</strong> (Done)</li>
-<li>Deploy Weaviate via ArgoCD ✅</li>
+<li>
+<p><strong>Phase 1: Deployment</strong> (Done)</p>
+</li>
+<li>
+<p>Deploy Weaviate via ArgoCD ✅</p>
+</li>
 <li>Configure persistent storage (10GB) ✅</li>
 <li>Enable text2vec-transformers module ✅</li>
 <li>
@@ -5091,7 +5167,9 @@
 <li>
 <p><strong>Phase 2: Testing</strong> (In Progress)</p>
 </li>
-<li>Create test indexing script ✅</li>
+<li>
+<p>Create test indexing script ✅</p>
+</li>
 <li>Index sample documents ✅</li>
 <li>Validate search functionality ⏳</li>
 <li>
@@ -5100,7 +5178,9 @@
 <li>
 <p><strong>Phase 3: Production Indexing</strong> (Future)</p>
 </li>
-<li>Index all platform documentation</li>
+<li>
+<p>Index all platform documentation</p>
+</li>
 <li>Index ADRs and runbooks</li>
 <li>Index code examples</li>
 <li>
@@ -5117,8 +5197,12 @@
 <h2 id="validation">Validation</h2>
 <p>The decision will be validated by:</p>
 <ol>
-<li><strong>Performance Metrics</strong></li>
-<li>Query latency &lt;100ms for 95th percentile</li>
+<li>
+<p><strong>Performance Metrics</strong></p>
+</li>
+<li>
+<p>Query latency &lt;100ms for 95th percentile</p>
+</li>
 <li>Relevance scores &gt;0.7 for semantic queries</li>
 <li>
 <p>Indexing throughput &gt;100 documents/second</p>
@@ -5126,7 +5210,9 @@
 <li>
 <p><strong>Operational Metrics</strong></p>
 </li>
-<li>Uptime &gt;99.9%</li>
+<li>
+<p>Uptime &gt;99.9%</p>
+</li>
 <li>Successful backups daily</li>
 <li>
 <p>Recovery time &lt;30 minutes</p>

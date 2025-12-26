@@ -5040,15 +5040,17 @@
 <span class="c1"># Or using Makefile</span>
 make<span class="w"> </span>validate-at-e1-002
 </code></pre></div>
-<p>This will run:
-1. Comprehensive validation checks
-2. E2E sync tests
-3. BDD tests (if pytest available)</p>
+<p>This will run:</p>
+<ol>
+<li>Comprehensive validation checks</li>
+<li>E2E sync tests</li>
+<li>BDD tests (if pytest available)</li>
+</ol>
 <h3 id="2-run-individual-test-components">2. Run Individual Test Components</h3>
 <h4 id="comprehensive-validation-only">Comprehensive Validation Only</h4>
 <div class="highlight"><pre><span></span><code>./scripts/validate-at-e1-002.sh
 </code></pre></div>
-<p>Options:
+<p>Options:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Custom namespace</span>
 ./scripts/validate-at-e1-002.sh<span class="w"> </span>--namespace<span class="w"> </span>argocd
 
@@ -5057,11 +5059,11 @@ make<span class="w"> </span>validate-at-e1-002
 
 <span class="c1"># Custom report location</span>
 ./scripts/validate-at-e1-002.sh<span class="w"> </span>--report<span class="w"> </span>/path/to/report.json
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="e2e-sync-tests-only">E2E Sync Tests Only</h4>
 <div class="highlight"><pre><span></span><code>./tests/e2e/argocd-sync-test.sh
 </code></pre></div>
-<p>Options:
+<p>Options:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Test specific application</span>
 ./tests/e2e/argocd-sync-test.sh<span class="w"> </span>--app<span class="w"> </span>platform-bootstrap
 
@@ -5070,7 +5072,7 @@ make<span class="w"> </span>validate-at-e1-002
 
 <span class="c1"># Verbose output</span>
 ./tests/e2e/argocd-sync-test.sh<span class="w"> </span>--verbose
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="bdd-tests-only">BDD Tests Only</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># All ArgoCD bootstrap tests</span>
 pytest<span class="w"> </span>tests/bdd/test_argocd_bootstrap.py<span class="w"> </span>-v
@@ -5151,10 +5153,10 @@ pytest<span class="w"> </span>tests/bdd<span class="w"> </span>-v<span class="w"
 </ul>
 <h2 id="test-reports">Test Reports</h2>
 <h3 id="json-report-format">JSON Report Format</h3>
-<p>Test reports are generated in JSON format at:
+<p>Test reports are generated in JSON format at:</p>
 <div class="highlight"><pre><span></span><code>reports/at-e1-002-validation-YYYYMMDD-HHMMSS.json
-</code></pre></div></p>
-<p>Example report structure:
+</code></pre></div>
+<p>Example report structure:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;test_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AT-E1-002&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;test_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GitOps with ArgoCD&quot;</span><span class="p">,</span>
@@ -5174,7 +5176,7 @@ pytest<span class="w"> </span>tests/bdd<span class="w"> </span>-v<span class="w"
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="viewing-reports">Viewing Reports</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># View latest report</span>
 cat<span class="w"> </span>reports/at-e1-002-validation-*.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
@@ -5220,30 +5222,32 @@ cat<span class="w"> </span>reports/at-e1-002-validation-*.json<span class="w"> <
 <h3 id="no-cluster-access">No Cluster Access</h3>
 <div class="highlight"><pre><span></span><code>Error: Cannot access Kubernetes cluster
 </code></pre></div>
-<p><strong>Solution</strong>: Ensure kubectl is configured and pointing to the correct cluster:
+<p><strong>Solution</strong>: Ensure kubectl is configured and pointing to the correct cluster:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>cluster-info
 kubectl<span class="w"> </span>config<span class="w"> </span>current-context
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="argocd-namespace-not-found">ArgoCD Namespace Not Found</h3>
 <div class="highlight"><pre><span></span><code>Error: Namespace &#39;fawkes&#39; does not exist
 </code></pre></div>
-<p><strong>Solution</strong>: Either:
-1. Deploy ArgoCD to the fawkes namespace
-2. Use <code>--namespace argocd</code> if ArgoCD is in a different namespace</p>
+<p><strong>Solution</strong>: Either:</p>
+<ol>
+<li>Deploy ArgoCD to the fawkes namespace</li>
+<li>Use <code>--namespace argocd</code> if ArgoCD is in a different namespace</li>
+</ol>
 <h3 id="no-applications-found">No Applications Found</h3>
 <div class="highlight"><pre><span></span><code>Error: No applications found
 </code></pre></div>
-<p><strong>Solution</strong>: Deploy the app-of-apps pattern:
+<p><strong>Solution</strong>: Deploy the app-of-apps pattern:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/bootstrap/app-of-apps.yaml
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="applications-not-synced">Applications Not Synced</h3>
 <div class="highlight"><pre><span></span><code>Error: X/Y applications are Synced
 </code></pre></div>
-<p><strong>Solution</strong>: Check application status and sync:
+<p><strong>Solution</strong>: Check application status and sync:</p>
 <div class="highlight"><pre><span></span><code>argocd<span class="w"> </span>app<span class="w"> </span>list
 argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </span>&lt;app-name&gt;
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>&lt;app-name&gt;
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="argocd-cli-not-found">ArgoCD CLI Not Found</h3>
 <div class="highlight"><pre><span></span><code>Warning: argocd CLI not found
 </code></pre></div>

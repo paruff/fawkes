@@ -5106,11 +5106,13 @@
 <strong>Module</strong>: 3 of 4 (Green Belt)
 <strong>Duration</strong>: 60 minutes
 <strong>Difficulty</strong>: Advanced
-<strong>Prerequisites</strong>:
-- Module 9 &amp; 10 complete
-- Understanding of canary deployments
-- Familiarity with Prometheus metrics
-- Basic knowledge of automated analysis</p>
+<strong>Prerequisites</strong>:</p>
+<ul>
+<li>Module 9 &amp; 10 complete</li>
+<li>Understanding of canary deployments</li>
+<li>Familiarity with Prometheus metrics</li>
+<li>Basic knowledge of automated analysis</li>
+</ul>
 <hr />
 <h2 id="learning-objectives">📚 Learning Objectives</h2>
 <p>By the end of this module, you will:</p>
@@ -5123,20 +5125,22 @@
 <li>✅ Implement traffic shaping and weighted routing</li>
 <li>✅ Monitor and visualize progressive rollouts</li>
 </ol>
-<p><strong>DORA Capabilities Addressed</strong>:
-- ✓ CD2: Automate deployment process (fully automated)
-- ✓ Team Experimentation
-- ✓ Monitoring and Observability (deployment metrics)</p>
+<p><strong>DORA Capabilities Addressed</strong>:</p>
+<ul>
+<li>✓ CD2: Automate deployment process (fully automated)</li>
+<li>✓ Team Experimentation</li>
+<li>✓ Monitoring and Observability (deployment metrics)</li>
+</ul>
 <hr />
 <h2 id="part-1-what-is-progressive-delivery">📖 Part 1: What is Progressive Delivery?</h2>
 <h3 id="continuous-delivery-vs-progressive-delivery">Continuous Delivery vs Progressive Delivery</h3>
-<p><strong>Continuous Delivery</strong>:
+<p><strong>Continuous Delivery</strong>:</p>
 <div class="highlight"><pre><span></span><code>Code → Build → Test → Deploy to Production
                               ↓
                     All users get new version
                     Hope it works! 🤞
-</code></pre></div></p>
-<p><strong>Progressive Delivery</strong>:
+</code></pre></div>
+<p><strong>Progressive Delivery</strong>:</p>
 <div class="highlight"><pre><span></span><code>Code → Build → Test → Deploy to 5% users
                               ↓
                         Analyze metrics
@@ -5152,7 +5156,7 @@
                      Healthy? → Deploy to 100%
 
                      Unhealthy? → Automatic Rollback ✅
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="key-differences">Key Differences</h3>
 <table>
 <thead>
@@ -5230,13 +5234,15 @@
 <h2 id="part-2-argo-rollouts">🎯 Part 2: Argo Rollouts</h2>
 <h3 id="what-is-argo-rollouts">What is Argo Rollouts?</h3>
 <p>Argo Rollouts is a Kubernetes controller that provides advanced deployment strategies with automated analysis.</p>
-<p><strong>Key Features</strong>:
-- 🎯 Canary deployments with traffic shaping
-- 🔵🟢 Blue-Green deployments
-- 📊 Automated metric analysis
-- ⏸️ Manual approval gates
-- 🔄 Automatic rollback on failure
-- 📈 Integration with Prometheus, Datadog, etc.</p>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>🎯 Canary deployments with traffic shaping</li>
+<li>🔵🟢 Blue-Green deployments</li>
+<li>📊 Automated metric analysis</li>
+<li>⏸️ Manual approval gates</li>
+<li>🔄 Automatic rollback on failure</li>
+<li>📈 Integration with Prometheus, Datadog, etc.</li>
+</ul>
 <h3 id="installing-argo-rollouts">Installing Argo Rollouts</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Install Argo Rollouts controller</span>
 kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>argo-rollouts
@@ -5260,10 +5266,10 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">    </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
 <span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="nn">---</span>
@@ -5276,14 +5282,14 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">canary</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">    </span><span class="c1"># Step 1: 20% traffic to canary</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="p p-Indicator">}</span><span class="w">  </span><span class="c1"># Wait 2 minutes</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span><span class="w">    </span><span class="c1"># Step 2: 40% traffic</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w">    </span><span class="c1"># Step 3: 60% traffic</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w">    </span><span class="c1"># Step 4: 80% traffic</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w"> </span><span class="c1"># Step 1: 20% traffic to canary</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="w"> </span><span class="p p-Indicator">}</span><span class="w"> </span><span class="c1"># Wait 2 minutes</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span><span class="w"> </span><span class="c1"># Step 2: 40% traffic</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># Step 3: 60% traffic</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"> </span><span class="c1"># Step 4: 80% traffic</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">      </span><span class="c1"># Step 5: 100% (automatic)</span>
 <span class="w">  </span><span class="nt">revisionHistoryLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 <span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
@@ -5295,23 +5301,23 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj/rollouts-demo:blue</span>
-<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
-<span class="w">          </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">          </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
-<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32Mi</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj/rollouts-demo:blue</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">              </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">              </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32Mi</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
 </code></pre></div>
-<p>Deploy:
+<p>Deploy:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>rollout.yaml
 
 <span class="c1"># Check status</span>
 kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="w"> </span>get<span class="w"> </span>rollout<span class="w"> </span>myapp<span class="w"> </span>--watch
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="step-2-update-to-trigger-rollout">Step 2: Update to Trigger Rollout</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Update image to new version</span>
 kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="w"> </span><span class="nb">set</span><span class="w"> </span>image<span class="w"> </span>myapp<span class="w"> </span><span class="nv">myapp</span><span class="o">=</span>argoproj/rollouts-demo:yellow
@@ -5319,7 +5325,7 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="c1"># Watch the progressive rollout</span>
 kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="w"> </span>get<span class="w"> </span>rollout<span class="w"> </span>myapp<span class="w"> </span>--watch
 </code></pre></div>
-<p><strong>Expected Output</strong>:
+<p><strong>Expected Output</strong>:</p>
 <div class="highlight"><pre><span></span><code>Name:            myapp
 Namespace:       default
 Status:          ॥ Paused
@@ -5348,7 +5354,7 @@ NAME                           KIND        STATUS     AGE  INFO
       ├──□ myapp-6c5c5d8f9b-b  Pod         ✔ Running  5m   ready:1/1
       ├──□ myapp-6c5c5d8f9b-c  Pod         ✔ Running  5m   ready:1/1
       └──□ myapp-6c5c5d8f9b-d  Pod         ✔ Running  5m   ready:1/1
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="step-3-manual-promotion">Step 3: Manual Promotion</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Promote to next step</span>
 kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="w"> </span>promote<span class="w"> </span>myapp
@@ -5373,43 +5379,43 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success-rate</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">args</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
 <span class="w">  </span><span class="nt">metrics</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success-rate</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
-<span class="w">    </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result[0] &gt;= 0.95</span>
-<span class="w">    </span><span class="nt">failureLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="w">    </span><span class="nt">provider</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">prometheus</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus:9090</span>
-<span class="w">        </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">sum(rate(</span>
-<span class="w">            </span><span class="no">http_requests_total{</span>
-<span class="w">              </span><span class="no">service=&quot;{{args.service-name}}&quot;,</span>
-<span class="w">              </span><span class="no">status!~&quot;5..&quot;</span>
-<span class="w">            </span><span class="no">}[5m]</span>
-<span class="w">          </span><span class="no">))</span>
-<span class="w">          </span><span class="no">/</span>
-<span class="w">          </span><span class="no">sum(rate(</span>
-<span class="w">            </span><span class="no">http_requests_total{</span>
-<span class="w">              </span><span class="no">service=&quot;{{args.service-name}}&quot;</span>
-<span class="w">            </span><span class="no">}[5m]</span>
-<span class="w">          </span><span class="no">))</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latency</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
-<span class="w">    </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result[0] &lt;= 500</span>
-<span class="w">    </span><span class="nt">failureLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="w">    </span><span class="nt">provider</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">prometheus</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus:9090</span>
-<span class="w">        </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">histogram_quantile(0.95,</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success-rate</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
+<span class="w">      </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result[0] &gt;= 0.95</span>
+<span class="w">      </span><span class="nt">failureLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">prometheus</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus:9090</span>
+<span class="w">          </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">            </span><span class="no">sum(rate(</span>
-<span class="w">              </span><span class="no">http_request_duration_seconds_bucket{</span>
+<span class="w">              </span><span class="no">http_requests_total{</span>
+<span class="w">                </span><span class="no">service=&quot;{{args.service-name}}&quot;,</span>
+<span class="w">                </span><span class="no">status!~&quot;5..&quot;</span>
+<span class="w">              </span><span class="no">}[5m]</span>
+<span class="w">            </span><span class="no">))</span>
+<span class="w">            </span><span class="no">/</span>
+<span class="w">            </span><span class="no">sum(rate(</span>
+<span class="w">              </span><span class="no">http_requests_total{</span>
 <span class="w">                </span><span class="no">service=&quot;{{args.service-name}}&quot;</span>
 <span class="w">              </span><span class="no">}[5m]</span>
-<span class="w">            </span><span class="no">)) by (le)</span>
-<span class="w">          </span><span class="no">) * 1000</span>
+<span class="w">            </span><span class="no">))</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latency</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
+<span class="w">      </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result[0] &lt;= 500</span>
+<span class="w">      </span><span class="nt">failureLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">prometheus</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus:9090</span>
+<span class="w">          </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">histogram_quantile(0.95,</span>
+<span class="w">              </span><span class="no">sum(rate(</span>
+<span class="w">                </span><span class="no">http_request_duration_seconds_bucket{</span>
+<span class="w">                  </span><span class="no">service=&quot;{{args.service-name}}&quot;</span>
+<span class="w">                </span><span class="no">}[5m]</span>
+<span class="w">              </span><span class="no">)) by (le)</span>
+<span class="w">            </span><span class="no">) * 1000</span>
 </code></pre></div>
 <h3 id="integrating-analysis-with-rollout">Integrating Analysis with Rollout</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
@@ -5421,38 +5427,38 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">canary</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">1m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">analysis</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">templates</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">templateName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success-rate</span>
-<span class="w">          </span><span class="nt">args</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">1m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">analysis</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">templates</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">templateName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success-rate</span>
-<span class="w">          </span><span class="nt">args</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">1m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">analysis</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">templates</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">templateName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success-rate</span>
-<span class="w">          </span><span class="nt">args</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">1m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">analysis</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">templates</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">templateName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success-rate</span>
-<span class="w">          </span><span class="nt">args</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
-<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">1m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">analysis</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">templates</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">templateName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success-rate</span>
+<span class="w">            </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">1m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">analysis</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">templates</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">templateName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success-rate</span>
+<span class="w">            </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">1m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">analysis</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">templates</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">templateName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success-rate</span>
+<span class="w">            </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">1m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">analysis</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">templates</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">templateName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success-rate</span>
+<span class="w">            </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
@@ -5462,18 +5468,20 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v1.0</span>
-<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v1.0</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
 </code></pre></div>
-<p><strong>How it works</strong>:
-1. Deploy 20% canary
-2. Wait 1 minute
-3. Run analysis (check success rate and latency)
-4. If analysis passes → proceed to 40%
-5. If analysis fails 3 times → automatic rollback
-6. Repeat for each step</p>
+<p><strong>How it works</strong>:</p>
+<ol>
+<li>Deploy 20% canary</li>
+<li>Wait 1 minute</li>
+<li>Run analysis (check success rate and latency)</li>
+<li>If analysis passes → proceed to 40%</li>
+<li>If analysis fails 3 times → automatic rollback</li>
+<li>Repeat for each step</li>
+</ol>
 <hr />
 <h2 id="part-5-advanced-analysis-patterns">🎯 Part 5: Advanced Analysis Patterns</h2>
 <h3 id="baseline-vs-canary-comparison">Baseline vs Canary Comparison</h3>
@@ -5484,58 +5492,58 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compare-baseline</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">args</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">baseline-hash</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">canary-hash</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">baseline-hash</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">canary-hash</span>
 <span class="w">  </span><span class="nt">metrics</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error-rate-comparison</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
-<span class="w">    </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result[0] &lt;= 1.25</span><span class="w">  </span><span class="c1"># Canary error rate &lt; 125% of baseline</span>
-<span class="w">    </span><span class="nt">failureLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="w">    </span><span class="nt">provider</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">prometheus</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus:9090</span>
-<span class="w">        </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">(sum(rate(</span>
-<span class="w">            </span><span class="no">http_requests_total{</span>
-<span class="w">              </span><span class="no">service=&quot;{{args.service-name}}&quot;,</span>
-<span class="w">              </span><span class="no">version=&quot;{{args.canary-hash}}&quot;,</span>
-<span class="w">              </span><span class="no">status=~&quot;5..&quot;</span>
-<span class="w">            </span><span class="no">}[5m]</span>
-<span class="w">          </span><span class="no">)) or vector(0))</span>
-<span class="w">          </span><span class="no">/</span>
-<span class="w">          </span><span class="no">(sum(rate(</span>
-<span class="w">            </span><span class="no">http_requests_total{</span>
-<span class="w">              </span><span class="no">service=&quot;{{args.service-name}}&quot;,</span>
-<span class="w">              </span><span class="no">version=&quot;{{args.baseline-hash}}&quot;,</span>
-<span class="w">              </span><span class="no">status=~&quot;5..&quot;</span>
-<span class="w">            </span><span class="no">}[5m]</span>
-<span class="w">          </span><span class="no">)) or vector(0))</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latency-comparison</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
-<span class="w">    </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result[0] &lt;= 1.2</span><span class="w">  </span><span class="c1"># Canary latency &lt; 120% of baseline</span>
-<span class="w">    </span><span class="nt">failureLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="w">    </span><span class="nt">provider</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">prometheus</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus:9090</span>
-<span class="w">        </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">(histogram_quantile(0.95,</span>
-<span class="w">            </span><span class="no">sum(rate(</span>
-<span class="w">              </span><span class="no">http_request_duration_seconds_bucket{</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error-rate-comparison</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
+<span class="w">      </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result[0] &lt;= 1.25</span><span class="w"> </span><span class="c1"># Canary error rate &lt; 125% of baseline</span>
+<span class="w">      </span><span class="nt">failureLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">prometheus</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus:9090</span>
+<span class="w">          </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">(sum(rate(</span>
+<span class="w">              </span><span class="no">http_requests_total{</span>
 <span class="w">                </span><span class="no">service=&quot;{{args.service-name}}&quot;,</span>
-<span class="w">                </span><span class="no">version=&quot;{{args.canary-hash}}&quot;</span>
+<span class="w">                </span><span class="no">version=&quot;{{args.canary-hash}}&quot;,</span>
+<span class="w">                </span><span class="no">status=~&quot;5..&quot;</span>
 <span class="w">              </span><span class="no">}[5m]</span>
-<span class="w">            </span><span class="no">)) by (le)</span>
-<span class="w">          </span><span class="no">))</span>
-<span class="w">          </span><span class="no">/</span>
-<span class="w">          </span><span class="no">(histogram_quantile(0.95,</span>
-<span class="w">            </span><span class="no">sum(rate(</span>
-<span class="w">              </span><span class="no">http_request_duration_seconds_bucket{</span>
+<span class="w">            </span><span class="no">)) or vector(0))</span>
+<span class="w">            </span><span class="no">/</span>
+<span class="w">            </span><span class="no">(sum(rate(</span>
+<span class="w">              </span><span class="no">http_requests_total{</span>
 <span class="w">                </span><span class="no">service=&quot;{{args.service-name}}&quot;,</span>
-<span class="w">                </span><span class="no">version=&quot;{{args.baseline-hash}}&quot;</span>
+<span class="w">                </span><span class="no">version=&quot;{{args.baseline-hash}}&quot;,</span>
+<span class="w">                </span><span class="no">status=~&quot;5..&quot;</span>
 <span class="w">              </span><span class="no">}[5m]</span>
-<span class="w">            </span><span class="no">)) by (le)</span>
-<span class="w">          </span><span class="no">))</span>
+<span class="w">            </span><span class="no">)) or vector(0))</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latency-comparison</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
+<span class="w">      </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result[0] &lt;= 1.2</span><span class="w"> </span><span class="c1"># Canary latency &lt; 120% of baseline</span>
+<span class="w">      </span><span class="nt">failureLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">prometheus</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus:9090</span>
+<span class="w">          </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">(histogram_quantile(0.95,</span>
+<span class="w">              </span><span class="no">sum(rate(</span>
+<span class="w">                </span><span class="no">http_request_duration_seconds_bucket{</span>
+<span class="w">                  </span><span class="no">service=&quot;{{args.service-name}}&quot;,</span>
+<span class="w">                  </span><span class="no">version=&quot;{{args.canary-hash}}&quot;</span>
+<span class="w">                </span><span class="no">}[5m]</span>
+<span class="w">              </span><span class="no">)) by (le)</span>
+<span class="w">            </span><span class="no">))</span>
+<span class="w">            </span><span class="no">/</span>
+<span class="w">            </span><span class="no">(histogram_quantile(0.95,</span>
+<span class="w">              </span><span class="no">sum(rate(</span>
+<span class="w">                </span><span class="no">http_request_duration_seconds_bucket{</span>
+<span class="w">                  </span><span class="no">service=&quot;{{args.service-name}}&quot;,</span>
+<span class="w">                  </span><span class="no">version=&quot;{{args.baseline-hash}}&quot;</span>
+<span class="w">                </span><span class="no">}[5m]</span>
+<span class="w">              </span><span class="no">)) by (le)</span>
+<span class="w">            </span><span class="no">))</span>
 </code></pre></div>
 <h3 id="custom-business-metrics">Custom Business Metrics</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
@@ -5544,72 +5552,72 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">business-metrics</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">args</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
 <span class="w">  </span><span class="nt">metrics</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">revenue-per-request</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2m</span>
-<span class="w">    </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result[0] &gt;= 0.95</span><span class="w">  </span><span class="c1"># Revenue shouldn&#39;t drop &gt;5%</span>
-<span class="w">    </span><span class="nt">failureLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="w">    </span><span class="nt">provider</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">prometheus</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus:9090</span>
-<span class="w">        </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">sum(rate(</span>
-<span class="w">            </span><span class="no">revenue_total{service=&quot;{{args.service-name}}&quot;}[5m]</span>
-<span class="w">          </span><span class="no">))</span>
-<span class="w">          </span><span class="no">/</span>
-<span class="w">          </span><span class="no">sum(rate(</span>
-<span class="w">            </span><span class="no">http_requests_total{service=&quot;{{args.service-name}}&quot;}[5m]</span>
-<span class="w">          </span><span class="no">))</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">revenue-per-request</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2m</span>
+<span class="w">      </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result[0] &gt;= 0.95</span><span class="w"> </span><span class="c1"># Revenue shouldn&#39;t drop &gt;5%</span>
+<span class="w">      </span><span class="nt">failureLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">prometheus</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus:9090</span>
+<span class="w">          </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">sum(rate(</span>
+<span class="w">              </span><span class="no">revenue_total{service=&quot;{{args.service-name}}&quot;}[5m]</span>
+<span class="w">            </span><span class="no">))</span>
+<span class="w">            </span><span class="no">/</span>
+<span class="w">            </span><span class="no">sum(rate(</span>
+<span class="w">              </span><span class="no">http_requests_total{service=&quot;{{args.service-name}}&quot;}[5m]</span>
+<span class="w">            </span><span class="no">))</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conversion-rate</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2m</span>
-<span class="w">    </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result[0] &gt;= 0.02</span><span class="w">  </span><span class="c1"># At least 2% conversion</span>
-<span class="w">    </span><span class="nt">failureLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="w">    </span><span class="nt">provider</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">prometheus</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus:9090</span>
-<span class="w">        </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">sum(rate(</span>
-<span class="w">            </span><span class="no">conversions_total{service=&quot;{{args.service-name}}&quot;}[5m]</span>
-<span class="w">          </span><span class="no">))</span>
-<span class="w">          </span><span class="no">/</span>
-<span class="w">          </span><span class="no">sum(rate(</span>
-<span class="w">            </span><span class="no">page_views_total{service=&quot;{{args.service-name}}&quot;}[5m]</span>
-<span class="w">          </span><span class="no">))</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conversion-rate</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2m</span>
+<span class="w">      </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result[0] &gt;= 0.02</span><span class="w"> </span><span class="c1"># At least 2% conversion</span>
+<span class="w">      </span><span class="nt">failureLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">      </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">prometheus</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus:9090</span>
+<span class="w">          </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">sum(rate(</span>
+<span class="w">              </span><span class="no">conversions_total{service=&quot;{{args.service-name}}&quot;}[5m]</span>
+<span class="w">            </span><span class="no">))</span>
+<span class="w">            </span><span class="no">/</span>
+<span class="w">            </span><span class="no">sum(rate(</span>
+<span class="w">              </span><span class="no">page_views_total{service=&quot;{{args.service-name}}&quot;}[5m]</span>
+<span class="w">            </span><span class="no">))</span>
 </code></pre></div>
 <h3 id="external-analysis-providers">External Analysis Providers</h3>
-<p><strong>Datadog</strong>:
+<p><strong>Datadog</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">metrics</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datadog-error-rate</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">datadog</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
-<span class="w">      </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">        </span><span class="no">avg:trace.http.request.errors{service:{{args.service-name}}}</span>
-<span class="w">        </span><span class="no">.as_rate()</span>
-</code></pre></div></p>
-<p><strong>New Relic</strong>:
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datadog-error-rate</span>
+<span class="w">    </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">datadog</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="w">        </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">        </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">avg:trace.http.request.errors{service:{{args.service-name}}}</span>
+<span class="w">          </span><span class="no">.as_rate()</span>
+</code></pre></div>
+<p><strong>New Relic</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">metrics</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">newrelic-apdex</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">newRelic</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">profile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-newrelic-account</span>
-<span class="w">      </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">        </span><span class="no">SELECT apdex(duration)</span>
-<span class="w">        </span><span class="no">FROM Transaction</span>
-<span class="w">        </span><span class="no">WHERE appName = &#39;{{args.service-name}}&#39;</span>
-</code></pre></div></p>
-<p><strong>Custom Web API</strong>:
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">newrelic-apdex</span>
+<span class="w">    </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">newRelic</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">profile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-newrelic-account</span>
+<span class="w">        </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">SELECT apdex(duration)</span>
+<span class="w">          </span><span class="no">FROM Transaction</span>
+<span class="w">          </span><span class="no">WHERE appName = &#39;{{args.service-name}}&#39;</span>
+</code></pre></div>
+<p><strong>Custom Web API</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">metrics</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom-health-check</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">web</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://my-health-api.com/check?service={{args.service-name}}</span>
-<span class="w">      </span><span class="nt">jsonPath</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{$.health.status}&quot;</span>
-<span class="w">  </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result == &quot;healthy&quot;</span>
-</code></pre></div></p>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom-health-check</span>
+<span class="w">    </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://my-health-api.com/check?service={{args.service-name}}</span>
+<span class="w">        </span><span class="nt">jsonPath</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{$.health.status}&quot;</span>
+<span class="w">    </span><span class="nt">successCondition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result == &quot;healthy&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="part-6-traffic-management">🌐 Part 6: Traffic Management</h2>
 <h3 id="traffic-shaping-with-istio">Traffic Shaping with Istio</h3>
@@ -5629,16 +5637,16 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">          </span><span class="nt">virtualService</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">            </span><span class="nt">routes</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">primary</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">primary</span>
 <span class="w">      </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w">  </span><span class="c1"># Manual approval</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w"> </span><span class="c1"># Manual approval</span>
 <span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
@@ -5648,8 +5656,8 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v2.0</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v2.0</span>
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
@@ -5659,8 +5667,8 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
@@ -5670,8 +5678,8 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1beta1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VirtualService</span>
@@ -5679,16 +5687,16 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">  </span><span class="nt">http</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">primary</span>
-<span class="w">    </span><span class="nt">route</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp-stable</span>
-<span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp-canary</span>
-<span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">primary</span>
+<span class="w">      </span><span class="nt">route</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp-stable</span>
+<span class="w">          </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp-canary</span>
+<span class="w">          </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 </code></pre></div>
 <p><strong>Argo Rollouts automatically updates weights in VirtualService!</strong></p>
 <h3 id="header-based-routing">Header-Based Routing</h3>
@@ -5706,15 +5714,15 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stable</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setCanaryScale</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setHeaderRoute</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">canary-by-header</span>
-<span class="w">        </span><span class="nt">match</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">headerName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-Canary</span>
-<span class="w">          </span><span class="nt">headerValue</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">exact</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setCanaryScale</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setHeaderRoute</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">canary-by-header</span>
+<span class="w">          </span><span class="nt">match</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">headerName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-Canary</span>
+<span class="w">              </span><span class="nt">headerValue</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">exact</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 </code></pre></div>
 <p>Now users with <code>X-Canary: true</code> header get canary version!</p>
 <hr />
@@ -5725,12 +5733,14 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 
 <span class="c1"># Open browser to http://localhost:3100</span>
 </code></pre></div>
-<p><strong>Dashboard shows</strong>:
-- Current rollout status
-- Traffic weights
-- Analysis results
-- Pod health
-- Rollout history</p>
+<p><strong>Dashboard shows</strong>:</p>
+<ul>
+<li>Current rollout status</li>
+<li>Traffic weights</li>
+<li>Analysis results</li>
+<li>Pod health</li>
+<li>Rollout history</li>
+</ul>
 <h3 id="grafana-dashboard">Grafana Dashboard</h3>
 <p>Create custom Grafana dashboard:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -5792,19 +5802,23 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <h2 id="part-8-practical-exercise">💪 Part 8: Practical Exercise</h2>
 <h3 id="exercise-implement-full-progressive-delivery">Exercise: Implement Full Progressive Delivery</h3>
 <p><strong>Objective</strong>: Deploy with automated analysis and rollback</p>
-<p><strong>Scenario</strong>: You have a critical e-commerce application. Implement progressive delivery with:
-1. 4-step canary (10% → 25% → 50% → 100%)
-2. Automated analysis at each step
-3. Check: error rate, latency, conversion rate
-4. Automatic rollback if metrics degrade
-5. Manual approval before 100%</p>
-<p><strong>Requirements</strong>:
-1. Create Rollout with canary strategy
-2. Define AnalysisTemplate with 3 metrics
-3. Configure traffic routing (Istio or Nginx)
-4. Integrate with Prometheus
-5. Set up Slack notifications
-6. Test rollback scenario</p>
+<p><strong>Scenario</strong>: You have a critical e-commerce application. Implement progressive delivery with:</p>
+<ol>
+<li>4-step canary (10% → 25% → 50% → 100%)</li>
+<li>Automated analysis at each step</li>
+<li>Check: error rate, latency, conversion rate</li>
+<li>Automatic rollback if metrics degrade</li>
+<li>Manual approval before 100%</li>
+</ol>
+<p><strong>Requirements</strong>:</p>
+<ol>
+<li>Create Rollout with canary strategy</li>
+<li>Define AnalysisTemplate with 3 metrics</li>
+<li>Configure traffic routing (Istio or Nginx)</li>
+<li>Integrate with Prometheus</li>
+<li>Set up Slack notifications</li>
+<li>Test rollback scenario</li>
+</ol>
 <p><strong>Starter Template</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># rollout.yaml</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
@@ -5816,11 +5830,11 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">canary</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">analysis</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">templates</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">templateName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ecommerce-health</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">2m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">analysis</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">templates</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">templateName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ecommerce-health</span>
 <span class="w">      </span><span class="c1"># TODO: Add remaining steps</span>
 <span class="w">  </span><span class="c1"># TODO: Complete configuration</span>
 
@@ -5833,28 +5847,34 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># TODO: Define metrics</span>
 <span class="w">  </span><span class="nt">metrics</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error-rate</span>
-<span class="w">    </span><span class="c1"># TODO: Configure Prometheus query</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latency-p95</span>
-<span class="w">    </span><span class="c1"># TODO: Configure Prometheus query</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conversion-rate</span>
-<span class="w">    </span><span class="c1"># TODO: Configure Prometheus query</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error-rate</span>
+<span class="w">      </span><span class="c1"># TODO: Configure Prometheus query</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latency-p95</span>
+<span class="w">      </span><span class="c1"># TODO: Configure Prometheus query</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conversion-rate</span>
+<span class="w">      </span><span class="c1"># TODO: Configure Prometheus query</span>
 </code></pre></div>
-<p><strong>Validation Criteria</strong>:
-- [ ] Rollout deploys progressively (10% → 25% → 50% → 100%)
-- [ ] Analysis runs at each step
-- [ ] Metrics collected from Prometheus
-- [ ] Automatic promotion if healthy
-- [ ] Automatic rollback if unhealthy
-- [ ] Manual approval before 100%
-- [ ] Slack notification on rollback
-- [ ] Dashboard shows real-time status</p>
+<p><strong>Validation Criteria</strong>:</p>
+<ul>
+<li>[ ] Rollout deploys progressively (10% → 25% → 50% → 100%)</li>
+<li>[ ] Analysis runs at each step</li>
+<li>[ ] Metrics collected from Prometheus</li>
+<li>[ ] Automatic promotion if healthy</li>
+<li>[ ] Automatic rollback if unhealthy</li>
+<li>[ ] Manual approval before 100%</li>
+<li>[ ] Slack notification on rollback</li>
+<li>[ ] Dashboard shows real-time status</li>
+</ul>
 <hr />
 <h2 id="part-9-knowledge-check">🎓 Part 9: Knowledge Check</h2>
 <h3 id="quiz-questions">Quiz Questions</h3>
 <ol>
-<li><strong>What's the main difference between CD and Progressive Delivery?</strong></li>
-<li>[ ] Speed of deployment</li>
+<li>
+<p><strong>What's the main difference between CD and Progressive Delivery?</strong></p>
+</li>
+<li>
+<p>[ ] Speed of deployment</p>
+</li>
 <li>[x] Automated analysis and gradual rollout</li>
 <li>[ ] Number of environments</li>
 <li>
@@ -5863,7 +5883,9 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <li>
 <p><strong>What does Argo Rollouts use to make promotion decisions?</strong></p>
 </li>
-<li>[ ] Random selection</li>
+<li>
+<p>[ ] Random selection</p>
+</li>
 <li>[ ] Time-based only</li>
 <li>[x] Metrics analysis and success conditions</li>
 <li>
@@ -5872,7 +5894,9 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <li>
 <p><strong>In an AnalysisTemplate, what is failureLimit?</strong></p>
 </li>
-<li>[ ] Maximum deployment failures allowed</li>
+<li>
+<p>[ ] Maximum deployment failures allowed</p>
+</li>
 <li>[x] Number of times metric can fail before rollback</li>
 <li>[ ] Timeout duration</li>
 <li>
@@ -5881,7 +5905,9 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <li>
 <p><strong>What happens if analysis fails during a canary rollout?</strong></p>
 </li>
-<li>[ ] Deployment pauses indefinitely</li>
+<li>
+<p>[ ] Deployment pauses indefinitely</p>
+</li>
 <li>[ ] Continues to next step anyway</li>
 <li>[x] Automatic rollback to stable version</li>
 <li>
@@ -5890,7 +5916,9 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <li>
 <p><strong>Which traffic management option provides most precise control?</strong></p>
 </li>
-<li>[ ] Kubernetes Service</li>
+<li>
+<p>[ ] Kubernetes Service</p>
+</li>
 <li>[x] Istio VirtualService</li>
 <li>[ ] NodePort</li>
 <li>
@@ -5899,7 +5927,9 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <li>
 <p><strong>What is the purpose of baseline vs canary comparison?</strong></p>
 </li>
-<li>[ ] Save costs</li>
+<li>
+<p>[ ] Save costs</p>
+</li>
 <li>[x] Detect regressions by comparing versions</li>
 <li>[ ] Speed up deployment</li>
 <li>
@@ -5908,7 +5938,9 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <li>
 <p><strong>When should you use manual approval gates?</strong></p>
 </li>
-<li>[ ] Every deployment</li>
+<li>
+<p>[ ] Every deployment</p>
+</li>
 <li>[ ] Never, always automate</li>
 <li>[x] Before high-risk steps like 100% rollout</li>
 <li>
@@ -5947,14 +5979,18 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <li><strong>Manual gates for critical steps</strong> - Humans approve 100% rollout</li>
 </ol>
 <h3 id="real-world-impact">Real-World Impact</h3>
-<p>"After implementing progressive delivery:
-- <strong>Bad deploy detection</strong>: 30 minutes → 2 minutes
-- <strong>User impact from bad deploys</strong>: 100% → 5%
-- <strong>Manual rollbacks</strong>: 15 per month → 0 per month
-- <strong>Deployment confidence</strong>: 70% → 98%
-- <strong>Mean time to detect issues</strong>: 20 min → 2 min</p>
-<p>We deploy to production during business hours without fear."
-- <em>SRE Team, E-Commerce Platform</em></p>
+<p>"After implementing progressive delivery:</p>
+<ul>
+<li><strong>Bad deploy detection</strong>: 30 minutes → 2 minutes</li>
+<li><strong>User impact from bad deploys</strong>: 100% → 5%</li>
+<li><strong>Manual rollbacks</strong>: 15 per month → 0 per month</li>
+<li><strong>Deployment confidence</strong>: 70% → 98%</li>
+<li><strong>Mean time to detect issues</strong>: 20 min → 2 min</li>
+</ul>
+<p>We deploy to production during business hours without fear."</p>
+<ul>
+<li><em>SRE Team, E-Commerce Platform</em></li>
+</ul>
 <hr />
 <h2 id="additional-resources">📚 Additional Resources</h2>
 <h3 id="documentation">Documentation</h3>
@@ -5973,8 +6009,12 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <h2 id="module-completion">🏅 Module Completion</h2>
 <h3 id="assessment-checklist">Assessment Checklist</h3>
 <ul>
-<li>[ ] <strong>Conceptual Understanding</strong></li>
-<li>[ ] Explain progressive delivery vs CD</li>
+<li>
+<p>[ ] <strong>Conceptual Understanding</strong></p>
+</li>
+<li>
+<p>[ ] Explain progressive delivery vs CD</p>
+</li>
 <li>[ ] Understand automated analysis</li>
 <li>
 <p>[ ] Know when to use manual gates</p>
@@ -5982,7 +6022,9 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <li>
 <p>[ ] <strong>Practical Skills</strong></p>
 </li>
-<li>[ ] Configure Argo Rollouts</li>
+<li>
+<p>[ ] Configure Argo Rollouts</p>
+</li>
 <li>[ ] Create AnalysisTemplates</li>
 <li>[ ] Integrate with Prometheus</li>
 <li>[ ] Set up traffic management</li>
@@ -5992,7 +6034,9 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <li>
 <p>[ ] <strong>Hands-On Lab</strong></p>
 </li>
-<li>[ ] Deploy with progressive rollout</li>
+<li>
+<p>[ ] Deploy with progressive rollout</p>
+</li>
 <li>[ ] Analysis runs successfully</li>
 <li>[ ] Automatic promotion works</li>
 <li>
@@ -6004,10 +6048,12 @@ kubectl<span class="w"> </span>argo<span class="w"> </span>rollouts<span class="
 <li>[ ] Score 80% or higher (6/8 questions)</li>
 </ul>
 <h3 id="certification-credit">Certification Credit</h3>
-<p>Upon completion, you earn:
-- <strong>5 points</strong> toward Green Belt certification (75% complete)
-- <strong>Badge</strong>: "Progressive Delivery Expert"
-- <strong>Skill Unlocked</strong>: Automated Canary Analysis</p>
+<p>Upon completion, you earn:</p>
+<ul>
+<li><strong>5 points</strong> toward Green Belt certification (75% complete)</li>
+<li><strong>Badge</strong>: "Progressive Delivery Expert"</li>
+<li><strong>Skill Unlocked</strong>: Automated Canary Analysis</li>
+</ul>
 <hr />
 <h2 id="green-belt-progress">🎖️ Green Belt Progress</h2>
 <div class="highlight"><pre><span></span><code>Green Belt: GitOps &amp; Deployment

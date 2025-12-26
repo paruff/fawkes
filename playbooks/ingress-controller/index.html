@@ -5020,8 +5020,8 @@
 <h2 id="i-business-objective">I. Business Objective</h2>
 <div class="admonition info">
 <p class="admonition-title">Diátaxis: Explanation / Conceptual</p>
-<p>This section defines the "why"—the risk mitigated, compliance goal achieved, and value delivered.</p>
 </div>
+<p>This section defines the "why"—the risk mitigated, compliance goal achieved, and value delivered.</p>
 <h3 id="what-were-solving">What We're Solving</h3>
 <p>Organizations need secure, reliable HTTP/HTTPS access to internal platform services. Without a proper ingress controller, services are either inaccessible or exposed through insecure methods like NodePort, leading to security risks and operational complexity.</p>
 <h3 id="risk-mitigation">Risk Mitigation</h3>
@@ -5105,8 +5105,8 @@
 <h2 id="ii-technical-prerequisites">II. Technical Prerequisites</h2>
 <div class="admonition abstract">
 <p class="admonition-title">Diátaxis: Reference</p>
-<p>This section lists required Fawkes components, versions, and environment specifications.</p>
 </div>
+<p>This section lists required Fawkes components, versions, and environment specifications.</p>
 <h3 id="required-fawkes-components">Required Fawkes Components</h3>
 <table>
 <thead>
@@ -5174,8 +5174,8 @@
 <h2 id="iii-implementation-steps">III. Implementation Steps</h2>
 <div class="admonition tip">
 <p class="admonition-title">Diátaxis: How-to Guide (Core)</p>
-<p>This is the core of the playbook—step-by-step procedures using Fawkes components.</p>
 </div>
+<p>This is the core of the playbook—step-by-step procedures using Fawkes components.</p>
 <h3 id="step-1-deploy-nginx-ingress-controller-via-argocd">Step 1: Deploy NGINX Ingress Controller via ArgoCD</h3>
 <p><strong>Objective</strong>: Deploy the NGINX Ingress Controller using the ArgoCD Application manifest</p>
 <p><strong>Estimated Time</strong>: 10 minutes</p>
@@ -5190,43 +5190,39 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 </code></pre></div>
 <details class="example">
 <summary>Expected Output</summary>
-<div class="highlight"><pre><span></span><code>NAME            SYNC STATUS   HEALTH STATUS
-ingress-nginx   Synced        Healthy
-</code></pre></div>
 </details>
+<p><code>NAME            SYNC STATUS   HEALTH STATUSS
+    ingress-nginx   Synced        Healthy</code></p>
 <h3 id="step-2-verify-ingress-controller-deployment">Step 2: Verify Ingress Controller Deployment</h3>
 <p><strong>Objective</strong>: Ensure the ingress controller pods and services are running</p>
 <p><strong>Estimated Time</strong>: 5 minutes</p>
 <ol>
-<li>
-<p>Check pod status:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
-</code></pre></div></p>
-</li>
-<li>
-<p>Check service status:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
-</code></pre></div></p>
-</li>
-<li>
-<p>Verify LoadBalancer has external IP assigned:
+<li>Check pod status:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
+</code></pre></div>
+<ol>
+<li>Check service status:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
+</code></pre></div>
+<ol>
+<li>Verify LoadBalancer has external IP assigned:
    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <p><strong>Verification</strong>: All pods should be in <code>Running</code> state and LoadBalancer service should have an external IP</p>
 <details class="example">
 <summary>Expected Output</summary>
-<div class="highlight"><pre><span></span><code>NAME                                       READY   STATUS    RESTARTS   AGE
-ingress-nginx-controller-&lt;hash&gt;            1/1     Running   0          2m
-ingress-nginx-controller-&lt;hash&gt;            1/1     Running   0          2m
-ingress-nginx-defaultbackend-&lt;hash&gt;        1/1     Running   0          2m
-</code></pre></div>
 </details>
+<p><code>NAME                                       READY   STATUS    RESTARTS   AGEE
+    ingress-nginx-controller-&lt;hash&gt;            1/1     Running   0          2m
+    ingress-nginx-controller-&lt;hash&gt;            1/1     Running   0          2m
+    ingress-nginx-defaultbackend-&lt;hash&gt;        1/1     Running   0          2m</code></p>
 <div class="admonition warning">
 <p class="admonition-title">Common Pitfall</p>
-<p>If LoadBalancer is stuck in <code>&lt;Pending&gt;</code> state, verify that your cluster has LoadBalancer support (MetalLB for local, cloud provider LB for cloud environments).</p>
 </div>
+<p>If LoadBalancer is stuck in <code>&lt;Pending&gt;</code> state, verify that your cluster has LoadBalancer support (MetalLB for local, cloud provider LB for cloud environments).</p>
 <h3 id="step-3-deploy-test-ingress">Step 3: Deploy Test Ingress</h3>
 <p><strong>Objective</strong>: Deploy a test application with ingress to validate the controller</p>
 <p><strong>Estimated Time</strong>: 10 minutes</p>
@@ -5242,70 +5238,67 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 </code></pre></div>
 <details class="example">
 <summary>Expected Output</summary>
-<div class="highlight"><pre><span></span><code>NAME              CLASS   HOSTS                       ADDRESS         PORTS   AGE
-echo-server       nginx   test.127.0.0.1.nip.io      192.168.1.100   80      1m
-echo-server-tls   nginx   test-tls.127.0.0.1.nip.io  192.168.1.100   80,443  1m
-</code></pre></div>
 </details>
+<p><code>NAME              CLASS   HOSTS                       ADDRESS         PORTS   AGEE
+    echo-server       nginx   test.127.0.0.1.nip.io      192.168.1.100   80      1m
+    echo-server-tls   nginx   test-tls.127.0.0.1.nip.io  192.168.1.100   80,443  1m</code></p>
 <div class="admonition info">
 <p class="admonition-title">TLS Certificate</p>
-<p>The <code>generate-test-cert.sh</code> script creates a self-signed certificate valid for <code>*.127.0.0.1.nip.io</code>. This certificate is only for testing and should not be used in production. For production, use cert-manager with Let's Encrypt.</p>
 </div>
+<p>The <code>generate-test-cert.sh</code> script creates a self-signed certificate valid for <code>*.127.0.0.1.nip.io</code>. This certificate is only for testing and should not be used in production. For production, use cert-manager with Let's Encrypt.</p>
 <h3 id="step-4-test-http-access">Step 4: Test HTTP Access</h3>
 <p><strong>Objective</strong>: Verify HTTP traffic is routed correctly through the ingress</p>
 <p><strong>Estimated Time</strong>: 5 minutes</p>
 <ol>
-<li>
-<p>Get the LoadBalancer IP:
-   <div class="highlight"><pre><span></span><code><span class="nv">LB_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;LoadBalancer IP: </span><span class="nv">$LB_IP</span><span class="s2">&quot;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Test HTTP endpoint:
-   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Host: test.127.0.0.1.nip.io&quot;</span><span class="w"> </span>http://<span class="nv">$LB_IP</span>
-</code></pre></div></p>
-</li>
+<li>Get the LoadBalancer IP:</li>
 </ol>
-<p>Or if using nip.io DNS:
-   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://test.127.0.0.1.nip.io
-</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><span class="nv">LB_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;LoadBalancer IP: </span><span class="nv">$LB_IP</span><span class="s2">&quot;</span>
+</code></pre></div>
+<ol>
+<li>Test HTTP endpoint:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Host: test.127.0.0.1.nip.io&quot;</span><span class="w"> </span>http://<span class="nv">$LB_IP</span>
+</code></pre></div>
+<p>Or if using nip.io DNS:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://test.127.0.0.1.nip.io
+</code></pre></div>
 <p><strong>Verification</strong>: You should receive a JSON response from the echo server with request details</p>
 <details class="example">
 <summary>Expected Output</summary>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;hostname&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;test.127.0.0.1.nip.io&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;::ffff:10.244.0.1&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;ips&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;http&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;baseUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;originalUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http&quot;</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;0&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/&quot;</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="nt">&quot;cookies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="nt">&quot;body&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;test.127.0.0.1.nip.io&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;user-agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;curl/7.68.0&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;accept&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*/*&quot;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;environment&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;PATH&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;HOSTNAME&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;echo-server-&lt;hash&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;PORT&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;80&quot;</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
 </details>
+<p><code>json
+    {
+      "host": {
+        "hostname": "test.127.0.0.1.nip.io",
+        "ip": "::ffff:10.244.0.1",
+        "ips": []
+      },
+      "http": {
+        "method": "GET",
+        "baseUrl": "",
+        "originalUrl": "/",
+        "protocol": "http"
+      },
+      "request": {
+        "params": {
+          "0": "/"
+        },
+        "query": {},
+        "cookies": {},
+        "body": {},
+        "headers": {
+          "host": "test.127.0.0.1.nip.io",
+          "user-agent": "curl/7.68.0",
+          "accept": "*/*"
+        }
+      },
+      "environment": {
+        "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "HOSTNAME": "echo-server-&lt;hash&gt;",
+        "PORT": "80"
+      }
+    }</code></p>
 <h3 id="step-5-test-https-access-optional">Step 5: Test HTTPS Access (Optional)</h3>
 <p><strong>Objective</strong>: Verify TLS termination is working with self-signed certificate</p>
 <p><strong>Estimated Time</strong>: 5 minutes</p>
@@ -5327,8 +5320,8 @@ curl<span class="w"> </span>http://localhost:10254/metrics<span class="w"> </spa
 <h2 id="iv-validation-success-metrics">IV. Validation &amp; Success Metrics</h2>
 <div class="admonition check">
 <p class="admonition-title">Diátaxis: How-to Guide / Reference</p>
-<p>Instructions for verifying the implementation and measuring success.</p>
 </div>
+<p>Instructions for verifying the implementation and measuring success.</p>
 <h3 id="functional-validation">Functional Validation</h3>
 <h4 id="test-1-ingress-controller-health">Test 1: Ingress Controller Health</h4>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
@@ -5432,8 +5425,8 @@ curl<span class="w"> </span>http://localhost:10254/metrics
 <h2 id="v-client-presentation-talking-points">V. Client Presentation Talking Points</h2>
 <div class="admonition quote">
 <p class="admonition-title">Diátaxis: Explanation / Conceptual</p>
-<p>Ready-to-use business language for communicating success to client executives.</p>
 </div>
+<p>Ready-to-use business language for communicating success to client executives.</p>
 <h3 id="executive-summary">Executive Summary</h3>
 <blockquote>
 <p>We've deployed a production-grade NGINX Ingress Controller that provides secure, high-availability HTTP/HTTPS access to all platform services. This enables teams to expose services externally with automatic TLS encryption, load balancing, and comprehensive observability, reducing security risks and accelerating service delivery.</p>
@@ -5461,16 +5454,16 @@ curl<span class="w"> </span>http://localhost:10254/metrics
 <h3 id="common-executive-questions-answers">Common Executive Questions &amp; Answers</h3>
 <details class="question">
 <summary>How does this compare to industry benchmarks?</summary>
-<p>According to CNCF research, organizations with automated ingress controllers achieve 30-40% faster service deployment times and 50% fewer security incidents related to service exposure. Your implementation follows cloud-native best practices with high availability and security by default.</p>
 </details>
+<p>According to CNCF research, organizations with automated ingress controllers achieve 30-40% faster service deployment times and 50% fewer security incidents related to service exposure. Your implementation follows cloud-native best practices with high availability and security by default.</p>
 <details class="question">
 <summary>What's the ROI on this implementation?</summary>
-<p>Based on current metrics, this implementation delivers approximately 2 hours saved per service deployment through automation. With 10+ services, this translates to 20+ hours saved monthly. The security improvements reduce risk of data breaches which can cost millions.</p>
 </details>
+<p>Based on current metrics, this implementation delivers approximately 2 hours saved per service deployment through automation. With 10+ services, this translates to 20+ hours saved monthly. The security improvements reduce risk of data breaches which can cost millions.</p>
 <details class="question">
 <summary>What's the risk if we don't maintain this?</summary>
-<p>Without continued attention, the ingress controller could become a single point of failure. We recommend monthly reviews of ingress configurations, quarterly security updates, and integration with cert-manager for automated certificate renewal to sustain these improvements.</p>
 </details>
+<p>Without continued attention, the ingress controller could become a single point of failure. We recommend monthly reviews of ingress configurations, quarterly security updates, and integration with cert-manager for automated certificate renewal to sustain these improvements.</p>
 <h3 id="follow-up-actions">Follow-Up Actions</h3>
 <table>
 <thead>

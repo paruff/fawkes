@@ -5755,16 +5755,18 @@
 <h1 id="epic-1-platform-apis-reference">Epic 1 Platform APIs Reference</h1>
 <h2 id="overview">Overview</h2>
 <p>This document provides API references for all Epic 1 platform components, including REST APIs, webhooks, and integrations.</p>
-<p><strong>Component Coverage:</strong>
-- ArgoCD REST API
-- Backstage Plugin APIs
-- Jenkins REST API &amp; Webhooks
-- Prometheus Query API
-- Grafana API
-- Harbor Registry API
-- Vault API
-- DevLake DORA Metrics API
-- Kyverno Policy API</p>
+<p><strong>Component Coverage:</strong></p>
+<ul>
+<li>ArgoCD REST API</li>
+<li>Backstage Plugin APIs</li>
+<li>Jenkins REST API &amp; Webhooks</li>
+<li>Prometheus Query API</li>
+<li>Grafana API</li>
+<li>Harbor Registry API</li>
+<li>Vault API</li>
+<li>DevLake DORA Metrics API</li>
+<li>Kyverno Policy API</li>
+</ul>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol>
@@ -5845,7 +5847,7 @@
 <h3 id="get-applications">Get Applications</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /applications</span>
 </code></pre></div>
-<p><strong>Response:</strong>
+<p><strong>Response:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
@@ -5875,11 +5877,11 @@
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="sync-application">Sync Application</h3>
 <div class="highlight"><pre><span></span><code><span class="err">POST /applications/{name}/sync</span>
 </code></pre></div>
-<p><strong>Request Body:</strong>
+<p><strong>Request Body:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;revision&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;prune&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
@@ -5888,15 +5890,15 @@
 <span class="w">    </span><span class="nt">&quot;hook&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Response:</strong>
+</code></pre></div>
+<p><strong>Response:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;running&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="get-application-details">Get Application Details</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /applications/{name}</span>
 </code></pre></div>
@@ -5904,11 +5906,11 @@
 <h3 id="rollback-application">Rollback Application</h3>
 <div class="highlight"><pre><span></span><code><span class="err">POST /applications/{name}/rollback</span>
 </code></pre></div>
-<p><strong>Request Body:</strong>
+<p><strong>Request Body:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;12345&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="backstage-apis">Backstage APIs</h2>
 <p><strong>Base URL:</strong> <code>https://backstage.fawkes.local/api</code>
@@ -5917,11 +5919,13 @@
 <h4 id="list-entities">List Entities</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /catalog/entities</span>
 </code></pre></div>
-<p><strong>Query Parameters:</strong>
-- <code>filter</code> - Filter expression (e.g., <code>kind=component,metadata.name=payment-service</code>)
-- <code>limit</code> - Number of results (default: 20)
-- <code>offset</code> - Pagination offset</p>
-<p><strong>Response:</strong>
+<p><strong>Query Parameters:</strong></p>
+<ul>
+<li><code>filter</code> - Filter expression (e.g., <code>kind=component,metadata.name=payment-service</code>)</li>
+<li><code>limit</code> - Number of results (default: 20)</li>
+<li><code>offset</code> - Pagination offset</li>
+</ul>
+<p><strong>Response:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
@@ -5946,17 +5950,17 @@
 <span class="w">    </span><span class="nt">&quot;hasNextPage&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="get-entity">Get Entity</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /catalog/entities/by-name/{kind}/{namespace}/{name}</span>
 </code></pre></div>
-<p><strong>Example:</strong>
+<p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>https://backstage.fawkes.local/api/catalog/entities/by-name/component/default/payment-service
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="create-entity">Create Entity</h4>
 <div class="highlight"><pre><span></span><code><span class="err">POST /catalog/entities</span>
 </code></pre></div>
-<p><strong>Request Body:</strong>
+<p><strong>Request Body:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;apiVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;backstage.io/v1alpha1&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Component&quot;</span><span class="p">,</span>
@@ -5970,7 +5974,7 @@
 <span class="w">    </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;team-platform&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="scaffolder-api">Scaffolder API</h3>
 <h4 id="list-templates">List Templates</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /scaffolder/v2/templates</span>
@@ -5978,7 +5982,7 @@
 <h4 id="trigger-template">Trigger Template</h4>
 <div class="highlight"><pre><span></span><code><span class="err">POST /scaffolder/v2/tasks</span>
 </code></pre></div>
-<p><strong>Request Body:</strong>
+<p><strong>Request Body:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;templateRef&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;template:default/python-service&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;values&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -5987,14 +5991,14 @@
 <span class="w">    </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;team-platform&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Response:</strong>
+</code></pre></div>
+<p><strong>Response:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;task-uuid-123&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;processing&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-16T10:00:00Z&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="get-task-status">Get Task Status</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /scaffolder/v2/tasks/{taskId}</span>
 </code></pre></div>
@@ -6012,7 +6016,7 @@
 <h3 id="list-jobs">List Jobs</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/json?tree=jobs[name,url,color]</span>
 </code></pre></div>
-<p><strong>Response:</strong>
+<p><strong>Response:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;jobs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
@@ -6022,20 +6026,20 @@
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="get-job-info">Get Job Info</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /job/{job-name}/api/json</span>
 </code></pre></div>
 <h3 id="trigger-build">Trigger Build</h3>
 <div class="highlight"><pre><span></span><code><span class="err">POST /job/{job-name}/build</span>
 </code></pre></div>
-<p><strong>With Parameters:</strong>
+<p><strong>With Parameters:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="err">POST /job/{job-name}/buildWithParameters?BRANCH=main&amp;TAG=v1.0.0</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="get-build-status">Get Build Status</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /job/{job-name}/{build-number}/api/json</span>
 </code></pre></div>
-<p><strong>Response:</strong>
+<p><strong>Response:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;number&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SUCCESS&quot;</span><span class="p">,</span>
@@ -6043,13 +6047,13 @@
 <span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1702731600000</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;building&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="get-console-output">Get Console Output</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /job/{job-name}/{build-number}/consoleText</span>
 </code></pre></div>
 <h3 id="jenkins-webhook-events">Jenkins Webhook Events</h3>
 <p>Jenkins sends webhooks to registered URLs on build events:</p>
-<p><strong>Webhook Payload:</strong>
+<p><strong>Webhook Payload:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;payment-service-pipeline&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;build&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -6070,7 +6074,7 @@
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="prometheus-api">Prometheus API</h2>
 <p><strong>Base URL:</strong> <code>http://prometheus-kube-prometheus-prometheus.prometheus.svc:9090/api/v1</code>
@@ -6079,10 +6083,10 @@
 <h4 id="instant-query">Instant Query</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /query?query={promql-query}</span>
 </code></pre></div>
-<p><strong>Example:</strong>
+<p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span><span class="s1">&#39;http://prometheus.prometheus.svc:9090/api/v1/query?query=up&#39;</span>
-</code></pre></div></p>
-<p><strong>Response:</strong>
+</code></pre></div>
+<p><strong>Response:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -6098,18 +6102,18 @@
 <span class="w">    </span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="range-query">Range Query</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /query_range?query={promql-query}&amp;start={timestamp}&amp;end={timestamp}&amp;step={duration}</span>
 </code></pre></div>
-<p><strong>Example:</strong>
+<p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span><span class="s1">&#39;http://prometheus.prometheus.svc:9090/api/v1/query_range?query=rate(http_requests_total[5m])&amp;start=2024-12-16T09:00:00Z&amp;end=2024-12-16T10:00:00Z&amp;step=60s&#39;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="targets-api">Targets API</h3>
 <h4 id="list-targets">List Targets</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /targets</span>
 </code></pre></div>
-<p><strong>Response:</strong>
+<p><strong>Response:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -6125,7 +6129,7 @@
 <span class="w">    </span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="alerts-api">Alerts API</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /alerts</span>
 </code></pre></div>
@@ -6143,7 +6147,7 @@
 <h4 id="create-dashboard">Create Dashboard</h4>
 <div class="highlight"><pre><span></span><code><span class="err">POST /dashboards/db</span>
 </code></pre></div>
-<p><strong>Request Body:</strong>
+<p><strong>Request Body:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;dashboard&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DORA Metrics&quot;</span><span class="p">,</span>
@@ -6152,7 +6156,7 @@
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="nt">&quot;overwrite&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="data-sources">Data Sources</h3>
 <h4 id="list-data-sources">List Data Sources</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /datasources</span>
@@ -6164,7 +6168,7 @@
 <h4 id="create-annotation">Create Annotation</h4>
 <div class="highlight"><pre><span></span><code><span class="err">POST /annotations</span>
 </code></pre></div>
-<p><strong>Request Body:</strong>
+<p><strong>Request Body:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;dashboardUID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dashboard-uid&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;panelId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
@@ -6172,7 +6176,7 @@
 <span class="w">  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployment v1.2.3&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;deployment&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="harbor-api">Harbor API</h2>
 <p><strong>Base URL:</strong> <code>https://harbor.fawkes.local/api/v2.0</code>
@@ -6184,7 +6188,7 @@
 <h4 id="create-project">Create Project</h4>
 <div class="highlight"><pre><span></span><code><span class="err">POST /projects</span>
 </code></pre></div>
-<p><strong>Request Body:</strong>
+<p><strong>Request Body:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;project_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fawkes-platform&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;public&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
@@ -6193,7 +6197,7 @@
 <span class="w">    </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;high&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="repositories">Repositories</h3>
 <h4 id="list-repositories">List Repositories</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /projects/{project}/repositories</span>
@@ -6205,7 +6209,7 @@
 <h4 id="list-artifacts">List Artifacts</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /projects/{project}/repositories/{repository}/artifacts</span>
 </code></pre></div>
-<p><strong>Response:</strong>
+<p><strong>Response:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;artifacts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
@@ -6226,7 +6230,7 @@
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="scan-artifact">Scan Artifact</h4>
 <div class="highlight"><pre><span></span><code><span class="err">POST /projects/{project}/repositories/{repository}/artifacts/{reference}/scan</span>
 </code></pre></div>
@@ -6242,7 +6246,7 @@
 <h4 id="read-secret">Read Secret</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /secret/data/{path}</span>
 </code></pre></div>
-<p><strong>Response:</strong>
+<p><strong>Response:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -6255,18 +6259,18 @@
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="write-secret">Write Secret</h4>
 <div class="highlight"><pre><span></span><code><span class="err">POST /secret/data/{path}</span>
 </code></pre></div>
-<p><strong>Request Body:</strong>
+<p><strong>Request Body:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;newsecret&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="delete-secret">Delete Secret</h4>
 <div class="highlight"><pre><span></span><code><span class="err">DELETE /secret/data/{path}</span>
 </code></pre></div>
@@ -6274,13 +6278,13 @@
 <h4 id="kubernetes-auth">Kubernetes Auth</h4>
 <div class="highlight"><pre><span></span><code><span class="err">POST /auth/kubernetes/login</span>
 </code></pre></div>
-<p><strong>Request Body:</strong>
+<p><strong>Request Body:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;jwt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{service-account-jwt}&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Response:</strong>
+</code></pre></div>
+<p><strong>Response:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;auth&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;client_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hvs.CAESIxxxxxx&quot;</span><span class="p">,</span>
@@ -6289,7 +6293,7 @@
 <span class="w">    </span><span class="nt">&quot;lease_duration&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="system-endpoints">System Endpoints</h3>
 <h4 id="health-check">Health Check</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /sys/health</span>
@@ -6322,7 +6326,7 @@
 <h4 id="argocd-deployment-webhook">ArgoCD Deployment Webhook</h4>
 <p>DevLake receives deployment events from ArgoCD:</p>
 <p><strong>Endpoint:</strong> <code>POST /webhooks/argocd</code></p>
-<p><strong>Payload:</strong>
+<p><strong>Payload:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sync&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;application&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;payment-service&quot;</span><span class="p">,</span>
@@ -6330,10 +6334,10 @@
 <span class="w">  </span><span class="nt">&quot;revision&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc123&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-16T10:00:00Z&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="jenkins-build-webhook">Jenkins Build Webhook</h4>
 <p><strong>Endpoint:</strong> <code>POST /webhooks/jenkins</code></p>
-<p><strong>Payload:</strong>
+<p><strong>Payload:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;job&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;payment-service-pipeline&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;build&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
@@ -6341,7 +6345,7 @@
 <span class="w">  </span><span class="nt">&quot;commit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc123&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-16T10:00:00Z&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="kyverno-api">Kyverno API</h2>
 <p><strong>Base URL:</strong> Kubernetes API Server
@@ -6357,13 +6361,13 @@
 <h4 id="list-policy-reports">List Policy Reports</h4>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>policyreports<span class="w"> </span>-A
 </code></pre></div>
-<p><strong>Or via API:</strong>
+<p><strong>Or via API:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="err">GET /apis/wgpolicyk8s.io/v1alpha2/policyreports</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="get-policy-report">Get Policy Report</h4>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>policyreport<span class="w"> </span><span class="o">{</span>name<span class="o">}</span><span class="w"> </span>-n<span class="w"> </span><span class="o">{</span>namespace<span class="o">}</span><span class="w"> </span>-o<span class="w"> </span>json
 </code></pre></div>
-<p><strong>Response:</strong>
+<p><strong>Response:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;apiVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wgpolicyk8s.io/v1alpha2&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PolicyReport&quot;</span><span class="p">,</span>
@@ -6391,7 +6395,7 @@
 <span class="w">    </span><span class="nt">&quot;skip&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="common-use-cases">Common Use Cases</h2>
 <h3 id="use-case-1-trigger-deployment-from-external-system">Use Case 1: Trigger Deployment from External System</h3>
@@ -6506,17 +6510,19 @@ kubectl<span class="w"> </span>get<span class="w"> </span>policyreport<span clas
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><strong>Common HTTP Status Codes:</strong>
-- <code>200 OK</code> - Request succeeded
-- <code>201 Created</code> - Resource created
-- <code>400 Bad Request</code> - Invalid request
-- <code>401 Unauthorized</code> - Missing/invalid authentication
-- <code>403 Forbidden</code> - Insufficient permissions
-- <code>404 Not Found</code> - Resource not found
-- <code>409 Conflict</code> - Resource already exists
-- <code>429 Too Many Requests</code> - Rate limit exceeded
-- <code>500 Internal Server Error</code> - Server error
-- <code>503 Service Unavailable</code> - Service temporarily unavailable</p>
+<p><strong>Common HTTP Status Codes:</strong></p>
+<ul>
+<li><code>200 OK</code> - Request succeeded</li>
+<li><code>201 Created</code> - Resource created</li>
+<li><code>400 Bad Request</code> - Invalid request</li>
+<li><code>401 Unauthorized</code> - Missing/invalid authentication</li>
+<li><code>403 Forbidden</code> - Insufficient permissions</li>
+<li><code>404 Not Found</code> - Resource not found</li>
+<li><code>409 Conflict</code> - Resource already exists</li>
+<li><code>429 Too Many Requests</code> - Rate limit exceeded</li>
+<li><code>500 Internal Server Error</code> - Server error</li>
+<li><code>503 Service Unavailable</code> - Service temporarily unavailable</li>
+</ul>
 <hr />
 <h2 id="sdk-client-libraries">SDK &amp; Client Libraries</h2>
 <table>
@@ -6564,11 +6570,13 @@ kubectl<span class="w"> </span>get<span class="w"> </span>policyreport<span clas
 </ul>
 <hr />
 <h2 id="support">Support</h2>
-<p>For API issues or questions:
-- Check component-specific documentation
-- Review logs via <code>kubectl logs</code>
-- Open issue on GitHub with API request/response examples
-- Contact platform team</p>
+<p>For API issues or questions:</p>
+<ul>
+<li>Check component-specific documentation</li>
+<li>Review logs via <code>kubectl logs</code></li>
+<li>Open issue on GitHub with API request/response examples</li>
+<li>Contact platform team</li>
+</ul>
 <hr />
 <h2 id="change-log">Change Log</h2>
 <table>

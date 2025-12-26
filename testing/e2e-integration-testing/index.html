@@ -5612,11 +5612,13 @@ All components are properly integrated from scaffold to deploy to metrics.
 <h3 id="common-issues">Common Issues</h3>
 <h4 id="tests-fail-at-pre-flight-checks">Tests Fail at Pre-flight Checks</h4>
 <p><strong>Symptom</strong>: Tests fail before reaching component health checks</p>
-<p><strong>Causes</strong>:
-- Cluster not accessible
-- Required tools not installed
-- Incorrect namespace configuration</p>
-<p><strong>Solutions</strong>:
+<p><strong>Causes</strong>:</p>
+<ul>
+<li>Cluster not accessible</li>
+<li>Required tools not installed</li>
+<li>Incorrect namespace configuration</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify cluster access</span>
 kubectl<span class="w"> </span>cluster-info
 
@@ -5626,14 +5628,16 @@ kubectl<span class="w"> </span>get<span class="w"> </span>namespaces<span class=
 <span class="c1"># Install required tools</span>
 brew<span class="w"> </span>install<span class="w"> </span>kubectl<span class="w"> </span>helm<span class="w"> </span>jq<span class="w">  </span><span class="c1"># macOS</span>
 apt-get<span class="w"> </span>install<span class="w"> </span>kubectl<span class="w"> </span>jq<span class="w">    </span><span class="c1"># Ubuntu/Debian</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="component-health-checks-fail">Component Health Checks Fail</h4>
 <p><strong>Symptom</strong>: One or more components reported as unhealthy</p>
-<p><strong>Causes</strong>:
-- Component not deployed
-- Component pods not running
-- Resource constraints</p>
-<p><strong>Solutions</strong>:
+<p><strong>Causes</strong>:</p>
+<ul>
+<li>Component not deployed</li>
+<li>Component pods not running</li>
+<li>Resource constraints</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check component status</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>monitoring
@@ -5644,14 +5648,16 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 <span class="c1"># Check resource usage</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>nodes
 kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="argocd-sync-tests-fail">ArgoCD Sync Tests Fail</h4>
 <p><strong>Symptom</strong>: ArgoCD sync validation fails</p>
-<p><strong>Causes</strong>:
-- ArgoCD not deployed
-- No applications configured
-- Auto-sync not enabled</p>
-<p><strong>Solutions</strong>:
+<p><strong>Causes</strong>:</p>
+<ul>
+<li>ArgoCD not deployed</li>
+<li>No applications configured</li>
+<li>Auto-sync not enabled</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check ArgoCD</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>argocd-server<span class="w"> </span>-n<span class="w"> </span>fawkes
 
@@ -5661,14 +5667,16 @@ kubectl<span class="w"> </span>get<span class="w"> </span>applications<span clas
 <span class="c1"># Check app status</span>
 argocd<span class="w"> </span>app<span class="w"> </span>list
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>&lt;app-name&gt;
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="metrics-collection-tests-fail">Metrics Collection Tests Fail</h4>
 <p><strong>Symptom</strong>: DORA metrics validation fails</p>
-<p><strong>Causes</strong>:
-- DevLake not deployed
-- Webhook configuration missing
-- Network policies blocking traffic</p>
-<p><strong>Solutions</strong>:
+<p><strong>Causes</strong>:</p>
+<ul>
+<li>DevLake not deployed</li>
+<li>Webhook configuration missing</li>
+<li>Network policies blocking traffic</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check DevLake</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes-devlake
 
@@ -5677,15 +5685,17 @@ kubectl<span class="w"> </span>get<span class="w"> </span>cm<span class="w"> </s
 
 <span class="c1"># Test connectivity</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>&lt;jenkins-pod&gt;<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>http://devlake.fawkes-devlake.svc:8080/health
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="debug-mode">Debug Mode</h3>
 <p>Run tests with maximum verbosity:</p>
 <div class="highlight"><pre><span></span><code>./tests/e2e/run-e2e-integration-test.sh<span class="w"> </span>--verbose<span class="w"> </span>--skip-cleanup
 </code></pre></div>
-<p>This will:
-- Show detailed progress for each test
-- Preserve test resources for inspection
-- Display all kubectl/API calls</p>
+<p>This will:</p>
+<ul>
+<li>Show detailed progress for each test</li>
+<li>Preserve test resources for inspection</li>
+<li>Display all kubectl/API calls</li>
+</ul>
 <h3 id="manual-validation">Manual Validation</h3>
 <p>Manually verify components:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Component health</span>

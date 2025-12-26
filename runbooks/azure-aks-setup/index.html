@@ -5332,9 +5332,9 @@ curl<span class="w"> </span>https://raw.githubusercontent.com/helm/helm/main/scr
 <li><strong>Azure Reservations</strong>: Commit to 1 or 3 years for significant savings</li>
 </ol>
 <p><strong>Recommended budget</strong>: $300-500/month for dev, $800-1500/month for production</p>
-<p>Run the cost estimation script:
+<p>Run the cost estimation script:</p>
 <div class="highlight"><pre><span></span><code>./scripts/azure-cost-estimate.sh
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="architecture-overview">Architecture Overview</h2>
 <h3 id="infrastructure-components">Infrastructure Components</h3>
@@ -5398,16 +5398,20 @@ curl<span class="w"> </span>https://raw.githubusercontent.com/helm/helm/main/scr
 <li><strong>Network Policy</strong>: Azure Network Policy</li>
 </ul>
 <h3 id="node-pool-strategy">Node Pool Strategy</h3>
-<p><strong>System Node Pool</strong>:
-- Purpose: Critical system components (kube-system, ArgoCD, monitoring)
-- VM Size: Standard_D4s_v3 (4 vCPU, 16 GB RAM)
-- Node Count: 2 (fixed, no auto-scaling)
-- OS Disk: 128 GB Premium SSD</p>
-<p><strong>User Node Pool</strong>:
-- Purpose: Application workloads (Backstage, Jenkins, Focalboard, etc.)
-- VM Size: Standard_D4s_v3 (4 vCPU, 16 GB RAM)
-- Node Count: 2-10 (auto-scaling enabled)
-- OS Disk: 128 GB Premium SSD</p>
+<p><strong>System Node Pool</strong>:</p>
+<ul>
+<li>Purpose: Critical system components (kube-system, ArgoCD, monitoring)</li>
+<li>VM Size: Standard_D4s_v3 (4 vCPU, 16 GB RAM)</li>
+<li>Node Count: 2 (fixed, no auto-scaling)</li>
+<li>OS Disk: 128 GB Premium SSD</li>
+</ul>
+<p><strong>User Node Pool</strong>:</p>
+<ul>
+<li>Purpose: Application workloads (Backstage, Jenkins, Focalboard, etc.)</li>
+<li>VM Size: Standard_D4s_v3 (4 vCPU, 16 GB RAM)</li>
+<li>Node Count: 2-10 (auto-scaling enabled)</li>
+<li>OS Disk: 128 GB Premium SSD</li>
+</ul>
 <hr />
 <h2 id="step-by-step-deployment">Step-by-Step Deployment</h2>
 <h3 id="phase-1-azure-authentication">Phase 1: Azure Authentication</h3>
@@ -5437,15 +5441,17 @@ cp<span class="w"> </span>terraform.tfvars.example<span class="w"> </span>terraf
 <span class="c1"># Edit configuration (update globally unique names)</span>
 nano<span class="w"> </span>terraform.tfvars
 </code></pre></div>
-<p><strong>Important</strong>: Update these values to be globally unique:
-- <code>acr_name</code>: Must be globally unique (lowercase alphanumeric only)
-- <code>key_vault_name</code>: Must be globally unique (alphanumeric and hyphens)
-- <code>storage_account_name</code>: Must be globally unique (lowercase alphanumeric only)</p>
-<p>Example customization:
+<p><strong>Important</strong>: Update these values to be globally unique:</p>
+<ul>
+<li><code>acr_name</code>: Must be globally unique (lowercase alphanumeric only)</li>
+<li><code>key_vault_name</code>: Must be globally unique (alphanumeric and hyphens)</li>
+<li><code>storage_account_name</code>: Must be globally unique (lowercase alphanumeric only)</li>
+</ul>
+<p>Example customization:</p>
 <div class="highlight"><pre><span></span><code><span class="na">acr_name</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkesacr20241213&quot;</span>
 <span class="na">key_vault_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes-kv-20241213&quot;</span>
 <span class="na">storage_account_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkestfstate20241213&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Production Security Settings</strong>:</p>
 <p>For production environments, update these security-critical settings:</p>
 <div class="highlight"><pre><span></span><code><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span>
@@ -5611,12 +5617,12 @@ az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </
 <span class="w">  </span><span class="nt">minReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 <span class="w">  </span><span class="nt">maxReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 <span class="w">  </span><span class="nt">metrics</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Resource</span>
-<span class="w">    </span><span class="nt">resource</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu</span>
-<span class="w">      </span><span class="nt">target</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Utilization</span>
-<span class="w">        </span><span class="nt">averageUtilization</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">70</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Resource</span>
+<span class="w">      </span><span class="nt">resource</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu</span>
+<span class="w">        </span><span class="nt">target</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Utilization</span>
+<span class="w">          </span><span class="nt">averageUtilization</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">70</span>
 </code></pre></div>
 <h3 id="vertical-pod-autoscaling">Vertical Pod Autoscaling</h3>
 <p>Enable VPA addon:</p>
@@ -5665,14 +5671,14 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/paruf
 <h3 id="common-issues">Common Issues</h3>
 <h4 id="issue-terraform-fails-with-name-not-available">Issue: Terraform fails with "name not available"</h4>
 <p><strong>Symptom</strong>: ACR, Key Vault, or Storage Account name already taken</p>
-<p><strong>Solution</strong>: Update names in <code>terraform.tfvars</code> to be globally unique:
+<p><strong>Solution</strong>: Update names in <code>terraform.tfvars</code> to be globally unique:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">acr_name</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkesacr</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span>
 <span class="nv">key_vault_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes-kv-</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span>
 <span class="nv">storage_account_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tfstate</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-nodes-not-joining-cluster">Issue: Nodes not joining cluster</h4>
 <p><strong>Symptom</strong>: <code>kubectl get nodes</code> shows NotReady or missing nodes</p>
-<p><strong>Solution</strong>:
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check node pool status</span>
 az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
@@ -5694,10 +5700,10 @@ az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>user
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-cannot-pull-images-from-acr">Issue: Cannot pull images from ACR</h4>
 <p><strong>Symptom</strong>: Pods stuck in ImagePullBackOff</p>
-<p><strong>Solution</strong>:
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify ACR integration</span>
 az<span class="w"> </span>aks<span class="w"> </span>check-acr<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
@@ -5709,10 +5715,10 @@ az<span class="w"> </span>aks<span class="w"> </span>update<span class="w"> </sp
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--attach-acr<span class="w"> </span>fawkesacr
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-high-costs">Issue: High costs</h4>
 <p><strong>Symptom</strong>: Azure bill exceeds budget</p>
-<p><strong>Solution</strong>:
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check current costs</span>
 az<span class="w"> </span>cost-management<span class="w"> </span>query<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--type<span class="w"> </span>Usage<span class="w"> </span><span class="se">\</span>
@@ -5728,10 +5734,10 @@ az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </
 
 <span class="c1"># Run cost estimation</span>
 ./scripts/azure-cost-estimate.sh
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-pods-evicted-due-to-disk-pressure">Issue: Pods evicted due to disk pressure</h4>
 <p><strong>Symptom</strong>: Pods restarting, kubelet reporting disk pressure</p>
-<p><strong>Solution</strong>:
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check disk usage on nodes</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>custom-columns<span class="o">=</span>NAME:.metadata.name,DISK:.status.allocatable.ephemeral-storage
 
@@ -5742,7 +5748,7 @@ kubectl<span class="w"> </span>debug<span class="w"> </span>node/aks-user-123456
 
 <span class="c1"># Increase OS disk size (requires recreation)</span>
 <span class="c1"># Update terraform.tfvars and re-apply</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="diagnostic-commands">Diagnostic Commands</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># View cluster health</span>
 az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
@@ -5814,10 +5820,10 @@ az<span class="w"> </span>aks<span class="w"> </span>start<span class="w"> </spa
 <p>Schedule workloads on spot nodes:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">tolerations</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes.azure.com/scalesetpriority&quot;</span>
-<span class="w">    </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Equal&quot;</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;spot&quot;</span>
-<span class="w">    </span><span class="nt">effect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NoSchedule&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes.azure.com/scalesetpriority&quot;</span>
+<span class="w">      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Equal&quot;</span>
+<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;spot&quot;</span>
+<span class="w">      </span><span class="nt">effect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NoSchedule&quot;</span>
 <span class="w">  </span><span class="nt">nodeSelector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">kubernetes.azure.com/scalesetpriority</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spot</span>
 </code></pre></div>

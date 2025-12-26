@@ -4922,10 +4922,12 @@
 <p><img alt="Jenkins Logo" src="../assets/images/tools/jenkins.png" width="300" /></p>
 <p>Jenkins is an open-source automation server that enables continuous integration and continuous delivery (CI/CD) for software development projects.</p>
 <h2 id="overview">Overview</h2>
-<p>Jenkins provides robust automation capabilities:
-- <strong>Build Automation</strong> - Compile and test code automatically
-- <strong>Deployment Pipeline</strong> - Create sophisticated deployment workflows
-- <strong>Plugin Ecosystem</strong> - Extend functionality through thousands of plugins</p>
+<p>Jenkins provides robust automation capabilities:</p>
+<ul>
+<li><strong>Build Automation</strong> - Compile and test code automatically</li>
+<li><strong>Deployment Pipeline</strong> - Create sophisticated deployment workflows</li>
+<li><strong>Plugin Ecosystem</strong> - Extend functionality through thousands of plugins</li>
+</ul>
 <h2 id="key-features">Key Features</h2>
 <table>
 <thead>
@@ -4971,7 +4973,7 @@ helm<span class="w"> </span>install<span class="w"> </span>jenkins<span class="w
 <span class="w">  </span>--create-namespace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--values<span class="w"> </span>jenkins-values.yaml
 </code></pre></div>
-<p>Example <code>jenkins-values.yaml</code>:
+<p>Example <code>jenkins-values.yaml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">controller</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ingress</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -4986,7 +4988,7 @@ helm<span class="w"> </span>install<span class="w"> </span>jenkins<span class="w
 <span class="w">  </span><span class="nt">create</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">eks.amazonaws.com/role-arn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:iam::123456789012:role/jenkins-role</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="configuring-jenkins-pipelines">Configuring Jenkins Pipelines</h2>
 <h3 id="basic-pipeline-example">Basic Pipeline Example</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// Jenkinsfile</span>
@@ -5066,8 +5068,12 @@ helm<span class="w"> </span>install<span class="w"> </span>jenkins<span class="w
 </code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <ol>
-<li><strong>Pipeline as Code</strong></li>
-<li>Store Jenkinsfile in version control</li>
+<li>
+<p><strong>Pipeline as Code</strong></p>
+</li>
+<li>
+<p>Store Jenkinsfile in version control</p>
+</li>
 <li>Use declarative pipeline syntax</li>
 <li>
 <p>Keep pipelines simple and modular</p>
@@ -5075,7 +5081,9 @@ helm<span class="w"> </span>install<span class="w"> </span>jenkins<span class="w
 <li>
 <p><strong>Security</strong></p>
 </li>
-<li>Use credentials management</li>
+<li>
+<p>Use credentials management</p>
+</li>
 <li>Implement role-based access control</li>
 <li>
 <p>Regular security updates</p>
@@ -5113,10 +5121,10 @@ helm<span class="w"> </span>install<span class="w"> </span>jenkins<span class="w
 </table>
 <h2 id="monitoring-jenkins">Monitoring Jenkins</h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Prometheus configuration</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;jenkins&#39;</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;jenkins&quot;</span>
 <span class="w">  </span><span class="nt">metrics_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/prometheus</span>
 <span class="w">  </span><span class="nt">static_configs</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;jenkins.fawkes.local:8080&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;jenkins.fawkes.local:8080&quot;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <h2 id="additional-resources">Additional Resources</h2>
 <ul>

@@ -5272,11 +5272,13 @@
 <strong>Module</strong>: 3 of 4 (Brown Belt)
 <strong>Duration</strong>: 60 minutes
 <strong>Difficulty</strong>: Advanced
-<strong>Prerequisites</strong>:
-- Module 13: Observability complete
-- Module 14: DORA Metrics Deep Dive complete
-- Understanding of Prometheus and monitoring
-- Basic statistics knowledge (percentiles, averages)</p>
+<strong>Prerequisites</strong>:</p>
+<ul>
+<li>Module 13: Observability complete</li>
+<li>Module 14: DORA Metrics Deep Dive complete</li>
+<li>Understanding of Prometheus and monitoring</li>
+<li>Basic statistics knowledge (percentiles, averages)</li>
+</ul>
 <hr />
 <h2 id="learning-objectives">📚 Learning Objectives</h2>
 <p>By the end of this module, you will:</p>
@@ -5289,15 +5291,17 @@
 <li>✅ Make data-driven decisions about service reliability</li>
 <li>✅ Communicate service health to stakeholders</li>
 </ol>
-<p><strong>DORA Capabilities Addressed</strong>:
-- ✓ Monitoring and Observability
-- ✓ Service Reliability
-- ✓ Data-Driven Decision Making
-- ✓ Customer Focus</p>
+<p><strong>DORA Capabilities Addressed</strong>:</p>
+<ul>
+<li>✓ Monitoring and Observability</li>
+<li>✓ Service Reliability</li>
+<li>✓ Data-Driven Decision Making</li>
+<li>✓ Customer Focus</li>
+</ul>
 <hr />
 <h2 id="part-1-the-reliability-framework">📖 Part 1: The Reliability Framework</h2>
 <h3 id="why-slisslos-matter">Why SLIs/SLOs Matter</h3>
-<p><strong>Without SLIs/SLOs</strong>:
+<p><strong>Without SLIs/SLOs</strong>:</p>
 <div class="highlight"><pre><span></span><code>Team: &quot;Our service is pretty reliable&quot;
 Customer: &quot;It&#39;s been down twice this week!&quot;
 PM: &quot;Can we deploy this risky feature?&quot;
@@ -5308,8 +5312,8 @@ Result:
 - Arbitrary decisions about risk
 - Customer dissatisfaction
 - Team stress and conflict
-</code></pre></div></p>
-<p><strong>With SLIs/SLOs</strong>:
+</code></pre></div>
+<p><strong>With SLIs/SLOs</strong>:</p>
 <div class="highlight"><pre><span></span><code>Team: &quot;We have 99.9% availability (SLO) and we&#39;re at 99.95%&quot;
 Customer: &quot;Within SLO, acceptable&quot;
 PM: &quot;We have error budget remaining, let&#39;s deploy&quot;
@@ -5320,7 +5324,7 @@ Result:
 - Data-driven risk decisions
 - Customer expectations managed
 - Team alignment
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="the-sre-hierarchy">The SRE Hierarchy</h3>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────────────────┐
 │     User Happiness (Ultimate Goal)  │
@@ -5345,11 +5349,13 @@ Result:
 <h2 id="part-2-service-level-indicators-slis">🎯 Part 2: Service Level Indicators (SLIs)</h2>
 <h3 id="what-is-an-sli">What is an SLI?</h3>
 <p><strong>SLI</strong>: A carefully selected metric that represents user happiness</p>
-<p><strong>Good SLI characteristics</strong>:
-- ✅ User-centric (measures what users care about)
-- ✅ Measurable (can be quantified)
-- ✅ Actionable (team can improve it)
-- ✅ Aggregatable (can combine across services)</p>
+<p><strong>Good SLI characteristics</strong>:</p>
+<ul>
+<li>✅ User-centric (measures what users care about)</li>
+<li>✅ Measurable (can be quantified)</li>
+<li>✅ Actionable (team can improve it)</li>
+<li>✅ Aggregatable (can combine across services)</li>
+</ul>
 <h3 id="common-sli-types">Common SLI Types</h3>
 <h4 id="1-availability-uptime">1. Availability (Uptime)</h4>
 <p><strong>Definition</strong>: Proportion of time service is operational</p>
@@ -5450,43 +5456,51 @@ Result:
 </tbody>
 </table>
 <p><strong>Step 3: Prioritize</strong></p>
-<p>Focus on 3-5 most critical SLIs:
-1. <strong>Checkout error rate</strong> (revenue impact)
-2. <strong>Checkout latency</strong> (abandonment risk)
-3. <strong>Catalog availability</strong> (engagement)</p>
+<p>Focus on 3-5 most critical SLIs:</p>
+<ol>
+<li><strong>Checkout error rate</strong> (revenue impact)</li>
+<li><strong>Checkout latency</strong> (abandonment risk)</li>
+<li><strong>Catalog availability</strong> (engagement)</li>
+</ol>
 <hr />
 <h2 id="part-3-service-level-objectives-slos">📊 Part 3: Service Level Objectives (SLOs)</h2>
 <h3 id="what-is-an-slo">What is an SLO?</h3>
 <p><strong>SLO</strong>: A target value or range for an SLI over a time window</p>
 <p><strong>Format</strong>: <code>SLI ≥ Target over Time Window</code></p>
-<p><strong>Examples</strong>:
-- Availability ≥ 99.9% over 30 days
-- p95 latency ≤ 200ms over 7 days
-- Error rate &lt; 0.5% over 30 days</p>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>Availability ≥ 99.9% over 30 days</li>
+<li>p95 latency ≤ 200ms over 7 days</li>
+<li>Error rate &lt; 0.5% over 30 days</li>
+</ul>
 <h3 id="setting-good-slos">Setting Good SLOs</h3>
 <h4 id="rule-1-align-with-user-expectations">Rule 1: Align with User Expectations</h4>
 <p><strong>Bad</strong>: "5 nines (99.999%) because we're perfectionists"
 <strong>Good</strong>: "99.9% because user research shows this meets needs"</p>
-<p><strong>User tolerance</strong> varies by context:
-- Search engine: p95 &lt; 100ms (users expect instant)
-- Banking transfer: p95 &lt; 2s (users tolerate some delay)
-- Batch report: p95 &lt; 30s (users expect processing time)</p>
+<p><strong>User tolerance</strong> varies by context:</p>
+<ul>
+<li>Search engine: p95 &lt; 100ms (users expect instant)</li>
+<li>Banking transfer: p95 &lt; 2s (users tolerate some delay)</li>
+<li>Batch report: p95 &lt; 30s (users expect processing time)</li>
+</ul>
 <h4 id="rule-2-start-conservative-tighten-over-time">Rule 2: Start Conservative, Tighten Over Time</h4>
-<p><strong>Initial SLO</strong>: 99.5% availability
-- Monitor for 3 months
-- Actual: 99.7%
-- <strong>Tighten</strong>: 99.6% (between actual and previous)</p>
+<p><strong>Initial SLO</strong>: 99.5% availability</p>
+<ul>
+<li>Monitor for 3 months</li>
+<li>Actual: 99.7%</li>
+<li><strong>Tighten</strong>: 99.6% (between actual and previous)</li>
+</ul>
 <p><strong>Why</strong>: Easier to exceed SLO and tighten than miss and relax</p>
 <h4 id="rule-3-fewer-is-better">Rule 3: Fewer is Better</h4>
 <p><strong>Bad</strong>: 15 SLOs for one service
 <strong>Good</strong>: 3-5 SLOs that matter most</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code>Service: Payment API
 SLOs:
 1. Availability ≥ 99.95% (30 days)
 2. p95 latency ≤ 500ms (7 days)
 3. Error rate &lt; 0.1% (30 days)
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="rule-4-document-your-slos">Rule 4: Document Your SLOs</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># slo-definition.yaml</span>
 <span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-api</span>
@@ -5530,15 +5544,17 @@ Windows:
 - 7 days:  99.92% ✅
 - 30 days: 99.91% ✅ (meets SLO)
 </code></pre></div>
-<p><strong>Benefit</strong>: Early warning system
-- Hour/day violations = potential trend
-- 30-day still met = no customer impact yet</p>
+<p><strong>Benefit</strong>: Early warning system</p>
+<ul>
+<li>Hour/day violations = potential trend</li>
+<li>30-day still met = no customer impact yet</li>
+</ul>
 <hr />
 <h2 id="part-4-error-budgets">💰 Part 4: Error Budgets</h2>
 <h3 id="what-is-an-error-budget">What is an Error Budget?</h3>
 <p><strong>Error Budget</strong>: Allowed unreliability based on SLO</p>
 <p><strong>Formula</strong>: <code>Error Budget = 100% - SLO</code></p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code>SLO: 99.9% availability
 Error Budget: 0.1% (100% - 99.9%)
 
@@ -5546,7 +5562,7 @@ In a 30-day month:
 - Total time: 30 days = 43,200 minutes
 - Error budget: 0.1% × 43,200 = 43.2 minutes
 - Allowed downtime: ~43 minutes per month
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="error-budget-as-currency">Error Budget as Currency</h3>
 <p>Think of error budget as <strong>innovation currency</strong>:</p>
 <div class="highlight"><pre><span></span><code>Monthly Error Budget: 43 minutes
@@ -5563,7 +5579,7 @@ Remaining: 5 minutes (healthy) ✅
 <h3 id="burn-rate">Burn Rate</h3>
 <p><strong>Burn Rate</strong>: How fast you're consuming error budget</p>
 <p><strong>Formula</strong>: <code>Burn Rate = (Error Rate / Error Budget) × Time Window</code></p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code>Current error rate: 0.5%
 Error budget: 0.1%
 Burn rate: 0.5% / 0.1% = 5x
@@ -5571,7 +5587,7 @@ Burn rate: 0.5% / 0.1% = 5x
 At this rate:
 - 30-day budget consumed in 6 days
 - Action required! 🚨
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="error-budget-policies">Error Budget Policies</h3>
 <p>Define policies for budget exhaustion:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">error_budget_policy</span><span class="p">:</span>
@@ -5652,12 +5668,12 @@ At this rate:
 <span class="w">    </span><span class="nt">objective</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">99.9</span>
 <span class="w">    </span><span class="nt">window</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30d</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Service</span><span class="nv"> </span><span class="s">available</span><span class="nv"> </span><span class="s">99.9%</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">time</span><span class="nv"> </span><span class="s">over</span><span class="nv"> </span><span class="s">30</span><span class="nv"> </span><span class="s">days&quot;</span>
-<span class="w">    </span><span class="nt">alert_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">99.8</span><span class="w">  </span><span class="c1"># Alert when approaching SLO breach</span>
+<span class="w">    </span><span class="nt">alert_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">99.8</span><span class="w"> </span><span class="c1"># Alert when approaching SLO breach</span>
 
 <span class="w">  </span><span class="c1"># Latency SLO (p95)</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latency_p95_slo</span>
 <span class="w">    </span><span class="nt">sli</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latency_p95</span>
-<span class="w">    </span><span class="nt">objective</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span><span class="w">  </span><span class="c1"># milliseconds</span>
+<span class="w">    </span><span class="nt">objective</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span><span class="w"> </span><span class="c1"># milliseconds</span>
 <span class="w">    </span><span class="nt">window</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7d</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;95%</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">requests</span><span class="nv"> </span><span class="s">complete</span><span class="nv"> </span><span class="s">within</span><span class="nv"> </span><span class="s">500ms</span><span class="nv"> </span><span class="s">over</span><span class="nv"> </span><span class="s">7</span><span class="nv"> </span><span class="s">days&quot;</span>
 <span class="w">    </span><span class="nt">alert_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span>
@@ -5665,7 +5681,7 @@ At this rate:
 <span class="w">  </span><span class="c1"># Error Rate SLO</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error_rate_slo</span>
 <span class="w">    </span><span class="nt">sli</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error_rate</span>
-<span class="w">    </span><span class="nt">objective</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">  </span><span class="c1"># 0.1% error rate</span>
+<span class="w">    </span><span class="nt">objective</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w"> </span><span class="c1"># 0.1% error rate</span>
 <span class="w">    </span><span class="nt">window</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30d</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">below</span><span class="nv"> </span><span class="s">0.1%</span><span class="nv"> </span><span class="s">over</span><span class="nv"> </span><span class="s">30</span><span class="nv"> </span><span class="s">days&quot;</span>
 <span class="w">    </span><span class="nt">alert_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.15</span>
@@ -5820,16 +5836,18 @@ At this rate:
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Availability SLO Status&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gauge&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sli:availability:30d&quot;</span>
-<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sli:availability:30d&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
 <span class="w">        </span><span class="nt">&quot;fieldConfig&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">          </span><span class="nt">&quot;defaults&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;thresholds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">              </span><span class="nt">&quot;steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">99.8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">99.9</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="p">}</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">99.8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">99.9</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">              </span><span class="p">]</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;min&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">99</span><span class="p">,</span>
@@ -5841,27 +5859,32 @@ At this rate:
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Error Budget Remaining&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;graph&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error_budget:availability:remaining_percent&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Remaining&quot;</span>
-<span class="w">        </span><span class="p">},</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error_budget:availability:consumed_percent&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Consumed&quot;</span>
-<span class="w">        </span><span class="p">}]</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error_budget:availability:remaining_percent&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Remaining&quot;</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error_budget:availability:consumed_percent&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Consumed&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Burn Rate (Last Hour)&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stat&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error_budget:availability:burn_rate_1h&quot;</span>
-<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error_budget:availability:burn_rate_1h&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
 <span class="w">        </span><span class="nt">&quot;fieldConfig&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">          </span><span class="nt">&quot;defaults&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;thresholds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">              </span><span class="nt">&quot;steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="p">}</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">              </span><span class="p">]</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">          </span><span class="p">}</span>
@@ -5870,13 +5893,16 @@ At this rate:
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SLI vs SLO (30 days)&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;timeseries&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sli:availability:30d&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Actual&quot;</span>
-<span class="w">        </span><span class="p">},</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;99.9&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SLO (99.9%)&quot;</span>
-<span class="w">        </span><span class="p">}]</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sli:availability:30d&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Actual&quot;</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;99.9&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SLO (99.9%)&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
@@ -6010,8 +6036,12 @@ Actions:
 <p><strong>Scenario</strong>: You manage an API service that handles user authentication</p>
 <p><strong>Requirements</strong>:</p>
 <ol>
-<li><strong>Define 3 SLIs</strong></li>
-<li>Availability</li>
+<li>
+<p><strong>Define 3 SLIs</strong></p>
+</li>
+<li>
+<p>Availability</p>
+</li>
 <li>Latency (p95 and p99)</li>
 <li>
 <p>Error rate</p>
@@ -6019,7 +6049,9 @@ Actions:
 <li>
 <p><strong>Set SLOs</strong></p>
 </li>
-<li>Based on user requirements</li>
+<li>
+<p>Based on user requirements</p>
+</li>
 <li>Document reasoning</li>
 <li>
 <p>Include alert thresholds</p>
@@ -6027,7 +6059,9 @@ Actions:
 <li>
 <p><strong>Calculate Error Budgets</strong></p>
 </li>
-<li>Convert SLOs to error budgets</li>
+<li>
+<p>Convert SLOs to error budgets</p>
+</li>
 <li>Define burn rate alerts</li>
 <li>
 <p>Create exhaustion policies</p>
@@ -6035,7 +6069,9 @@ Actions:
 <li>
 <p><strong>Implement Monitoring</strong></p>
 </li>
-<li>Prometheus recording rules</li>
+<li>
+<p>Prometheus recording rules</p>
+</li>
 <li>AlertManager rules</li>
 <li>
 <p>Grafana dashboard</p>
@@ -6065,30 +6101,36 @@ Actions:
 <span class="nt">slos</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">availability_slo</span>
 <span class="w">    </span><span class="nt">sli</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">availability</span>
-<span class="w">    </span><span class="nt">objective</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">???</span><span class="w">  </span><span class="c1"># TODO: Set target</span>
+<span class="w">    </span><span class="nt">objective</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">???</span><span class="w"> </span><span class="c1"># TODO: Set target</span>
 <span class="w">    </span><span class="nt">window</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30d</span>
-<span class="w">    </span><span class="nt">reasoning</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;???&quot;</span><span class="w">  </span><span class="c1"># TODO: Document why</span>
+<span class="w">    </span><span class="nt">reasoning</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;???&quot;</span><span class="w"> </span><span class="c1"># TODO: Document why</span>
 
 <span class="w">  </span><span class="c1"># TODO: Add latency and error rate SLOs</span>
 
 <span class="nt">error_budget_policy</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># TODO: Define policies for budget consumption</span>
 </code></pre></div>
-<p><strong>Validation Criteria</strong>:
-- [ ] 3 SLIs defined with Prometheus queries
-- [ ] 3 SLOs set with clear reasoning
-- [ ] Error budgets calculated correctly
-- [ ] Recording rules implemented
-- [ ] Alert rules configured
-- [ ] Dashboard created and functional
-- [ ] Decision framework documented
-- [ ] Tested with simulated incidents</p>
+<p><strong>Validation Criteria</strong>:</p>
+<ul>
+<li>[ ] 3 SLIs defined with Prometheus queries</li>
+<li>[ ] 3 SLOs set with clear reasoning</li>
+<li>[ ] Error budgets calculated correctly</li>
+<li>[ ] Recording rules implemented</li>
+<li>[ ] Alert rules configured</li>
+<li>[ ] Dashboard created and functional</li>
+<li>[ ] Decision framework documented</li>
+<li>[ ] Tested with simulated incidents</li>
+</ul>
 <hr />
 <h2 id="part-9-knowledge-check">🎓 Part 9: Knowledge Check</h2>
 <h3 id="quiz-questions">Quiz Questions</h3>
 <ol>
-<li><strong>What is an SLI?</strong></li>
-<li>[ ] A promise to users about reliability</li>
+<li>
+<p><strong>What is an SLI?</strong></p>
+</li>
+<li>
+<p>[ ] A promise to users about reliability</p>
+</li>
 <li>[x] A metric that indicates user happiness</li>
 <li>[ ] The allowed unreliability</li>
 <li>
@@ -6097,7 +6139,9 @@ Actions:
 <li>
 <p><strong>What is an SLO?</strong></p>
 </li>
-<li>[x] A target value for an SLI over a time window</li>
+<li>
+<p>[x] A target value for an SLI over a time window</p>
+</li>
 <li>[ ] A metric collection system</li>
 <li>[ ] An error budget calculation</li>
 <li>
@@ -6106,7 +6150,9 @@ Actions:
 <li>
 <p><strong>How is error budget calculated?</strong></p>
 </li>
-<li>[ ] 100% - SLI</li>
+<li>
+<p>[ ] 100% - SLI</p>
+</li>
 <li>[x] 100% - SLO</li>
 <li>[ ] SLO - SLI</li>
 <li>
@@ -6115,7 +6161,9 @@ Actions:
 <li>
 <p><strong>What does a burn rate of 5x mean?</strong></p>
 </li>
-<li>[ ] Service is 5x faster</li>
+<li>
+<p>[ ] Service is 5x faster</p>
+</li>
 <li>[ ] 5 errors per minute</li>
 <li>[x] Consuming error budget 5x faster than normal</li>
 <li>
@@ -6124,7 +6172,9 @@ Actions:
 <li>
 <p><strong>When should you freeze feature deploys?</strong></p>
 </li>
-<li>[ ] Never, always ship features</li>
+<li>
+<p>[ ] Never, always ship features</p>
+</li>
 <li>[ ] Only during incidents</li>
 <li>[x] When error budget is critically low (&lt;10%)</li>
 <li>
@@ -6133,7 +6183,9 @@ Actions:
 <li>
 <p><strong>What's a good starting point for SLOs?</strong></p>
 </li>
-<li>[ ] 100% (perfection)</li>
+<li>
+<p>[ ] 100% (perfection)</p>
+</li>
 <li>[ ] 50% (average)</li>
 <li>[x] Slightly below current performance</li>
 <li>
@@ -6142,7 +6194,9 @@ Actions:
 <li>
 <p><strong>How many SLOs should a service have?</strong></p>
 </li>
-<li>[ ] Exactly 1</li>
+<li>
+<p>[ ] Exactly 1</p>
+</li>
 <li>[ ] At least 10</li>
 <li>[x] 3-5 most critical metrics</li>
 <li>
@@ -6177,15 +6231,19 @@ Actions:
 <li><strong>Use data to decide</strong> - Deploy when budget allows, freeze when exhausted</li>
 </ol>
 <h3 id="real-world-impact">Real-World Impact</h3>
-<p>"After implementing SLIs/SLOs/Error Budgets:
-- <strong>Deployment confidence</strong>: 70% → 95% (data-driven decisions)
-- <strong>Reliability</strong>: 99.5% → 99.9% (clear targets)
-- <strong>Innovation velocity</strong>: 30% increase (error budget enables risk)
-- <strong>Team alignment</strong>: Dramatically improved (shared language)
-- <strong>Customer satisfaction</strong>: NPS +20 points (met expectations)
-- <strong>Incident response</strong>: Faster (clear SLO breach alerts)</p>
-<p>We transformed from arguing about reliability to managing it scientifically."
-- <em>Engineering Director, SaaS Platform</em></p>
+<p>"After implementing SLIs/SLOs/Error Budgets:</p>
+<ul>
+<li><strong>Deployment confidence</strong>: 70% → 95% (data-driven decisions)</li>
+<li><strong>Reliability</strong>: 99.5% → 99.9% (clear targets)</li>
+<li><strong>Innovation velocity</strong>: 30% increase (error budget enables risk)</li>
+<li><strong>Team alignment</strong>: Dramatically improved (shared language)</li>
+<li><strong>Customer satisfaction</strong>: NPS +20 points (met expectations)</li>
+<li><strong>Incident response</strong>: Faster (clear SLO breach alerts)</li>
+</ul>
+<p>We transformed from arguing about reliability to managing it scientifically."</p>
+<ul>
+<li><em>Engineering Director, SaaS Platform</em></li>
+</ul>
 <hr />
 <h2 id="additional-resources">📚 Additional Resources</h2>
 <h3 id="books">Books</h3>
@@ -6210,8 +6268,12 @@ Actions:
 <h2 id="module-completion">🏅 Module Completion</h2>
 <h3 id="assessment-checklist">Assessment Checklist</h3>
 <ul>
-<li>[ ] <strong>Conceptual Understanding</strong></li>
-<li>[ ] Explain SLIs, SLOs, error budgets</li>
+<li>
+<p>[ ] <strong>Conceptual Understanding</strong></p>
+</li>
+<li>
+<p>[ ] Explain SLIs, SLOs, error budgets</p>
+</li>
 <li>[ ] Calculate burn rates</li>
 <li>
 <p>[ ] Understand SLO-driven decisions</p>
@@ -6219,7 +6281,9 @@ Actions:
 <li>
 <p>[ ] <strong>Practical Skills</strong></p>
 </li>
-<li>[ ] Define SLIs for services</li>
+<li>
+<p>[ ] Define SLIs for services</p>
+</li>
 <li>[ ] Set appropriate SLOs</li>
 <li>[ ] Implement monitoring</li>
 <li>[ ] Create dashboards</li>
@@ -6229,7 +6293,9 @@ Actions:
 <li>
 <p>[ ] <strong>Hands-On Lab</strong></p>
 </li>
-<li>[ ] Complete SLO implementation</li>
+<li>
+<p>[ ] Complete SLO implementation</p>
+</li>
 <li>[ ] Recording rules working</li>
 <li>[ ] Alerts configured</li>
 <li>
@@ -6241,10 +6307,12 @@ Actions:
 <li>[ ] Score 80% or higher (6/8 questions)</li>
 </ul>
 <h3 id="certification-credit">Certification Credit</h3>
-<p>Upon completion, you earn:
-- <strong>10 points</strong> toward Brown Belt certification (75% complete)
-- <strong>Badge</strong>: "SLO Architect"
-- <strong>Skill Unlocked</strong>: Service Reliability Engineering</p>
+<p>Upon completion, you earn:</p>
+<ul>
+<li><strong>10 points</strong> toward Brown Belt certification (75% complete)</li>
+<li><strong>Badge</strong>: "SLO Architect"</li>
+<li><strong>Skill Unlocked</strong>: Service Reliability Engineering</li>
+</ul>
 <hr />
 <h2 id="brown-belt-progress">🎖️ Brown Belt Progress</h2>
 <div class="highlight"><pre><span></span><code>Brown Belt: Observability &amp; SRE

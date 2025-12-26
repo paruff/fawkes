@@ -5000,19 +5000,23 @@
 <li><strong>Enable Self-Service</strong>: Teams manage their own work without external tools</li>
 </ul>
 <h3 id="the-need-for-integrated-project-management">The Need for Integrated Project Management</h3>
-<p><strong>Current Gap</strong>: Teams using Fawkes must use external tools for:
-- <strong>Sprint Planning</strong>: Jira, Azure DevOps, Linear, or spreadsheets
-- <strong>Roadmap Visualization</strong>: Separate roadmapping tools (ProductPlan, Aha!)
-- <strong>Task Management</strong>: Trello, Asana, Monday.com, or GitHub Projects
-- <strong>Learner Progress Tracking</strong>: Manual spreadsheets or LMS platforms
-- <strong>Resource Planning</strong>: Disconnected from delivery platform</p>
-<p><strong>Problems with External Tools</strong>:
-- <strong>Context Switching</strong>: Jump between platforms (Fawkes → Jira → Confluence)
-- <strong>Integration Overhead</strong>: Custom integrations required, often fragile
-- <strong>Data Silos</strong>: Work tracking separate from actual delivery metrics
-- <strong>Access Control</strong>: Different permission models, SSO complexity
-- <strong>Cost</strong>: Commercial tools expensive at scale (Jira: $7-14/user/month)
-- <strong>Vendor Lock-In</strong>: Proprietary data formats, migration challenges</p>
+<p><strong>Current Gap</strong>: Teams using Fawkes must use external tools for:</p>
+<ul>
+<li><strong>Sprint Planning</strong>: Jira, Azure DevOps, Linear, or spreadsheets</li>
+<li><strong>Roadmap Visualization</strong>: Separate roadmapping tools (ProductPlan, Aha!)</li>
+<li><strong>Task Management</strong>: Trello, Asana, Monday.com, or GitHub Projects</li>
+<li><strong>Learner Progress Tracking</strong>: Manual spreadsheets or LMS platforms</li>
+<li><strong>Resource Planning</strong>: Disconnected from delivery platform</li>
+</ul>
+<p><strong>Problems with External Tools</strong>:</p>
+<ul>
+<li><strong>Context Switching</strong>: Jump between platforms (Fawkes → Jira → Confluence)</li>
+<li><strong>Integration Overhead</strong>: Custom integrations required, often fragile</li>
+<li><strong>Data Silos</strong>: Work tracking separate from actual delivery metrics</li>
+<li><strong>Access Control</strong>: Different permission models, SSO complexity</li>
+<li><strong>Cost</strong>: Commercial tools expensive at scale (Jira: $7-14/user/month)</li>
+<li><strong>Vendor Lock-In</strong>: Proprietary data formats, migration challenges</li>
+</ul>
 <h3 id="requirements-for-project-management-tool">Requirements for Project Management Tool</h3>
 <ol>
 <li><strong>Self-Hosted &amp; Open Source</strong>: Aligns with Fawkes values, data sovereignty</li>
@@ -5027,38 +5031,52 @@
 <li><strong>Mobile Support</strong>: iOS and Android apps for on-the-go updates</li>
 </ol>
 <h3 id="forces-at-play">Forces at Play</h3>
-<p><strong>Technical Forces</strong>:
-- Need to track both platform development and team usage
-- Dojo learner progress requires structured tracking
-- Sprint planning needs integration with CI/CD metrics
-- Multiple stakeholders with different view preferences</p>
-<p><strong>Business Forces</strong>:
-- Cost consciousness (avoid per-user fees)
-- Data sovereignty and compliance requirements
-- Desire for unified platform experience
-- Open source community expectations</p>
-<p><strong>User Experience Forces</strong>:
-- Teams familiar with Trello/Jira/Asana expect similar UX
-- Learning curve for new tools creates friction
-- Mobile access increasingly important
-- Real-time collaboration expected</p>
-<p><strong>Integration Forces</strong>:
-- Must integrate deeply with Mattermost (discussions, notifications)
-- Should connect to DORA metrics and deployments
-- Needs SSO with platform authentication
-- API for automation and custom workflows</p>
+<p><strong>Technical Forces</strong>:</p>
+<ul>
+<li>Need to track both platform development and team usage</li>
+<li>Dojo learner progress requires structured tracking</li>
+<li>Sprint planning needs integration with CI/CD metrics</li>
+<li>Multiple stakeholders with different view preferences</li>
+</ul>
+<p><strong>Business Forces</strong>:</p>
+<ul>
+<li>Cost consciousness (avoid per-user fees)</li>
+<li>Data sovereignty and compliance requirements</li>
+<li>Desire for unified platform experience</li>
+<li>Open source community expectations</li>
+</ul>
+<p><strong>User Experience Forces</strong>:</p>
+<ul>
+<li>Teams familiar with Trello/Jira/Asana expect similar UX</li>
+<li>Learning curve for new tools creates friction</li>
+<li>Mobile access increasingly important</li>
+<li>Real-time collaboration expected</li>
+</ul>
+<p><strong>Integration Forces</strong>:</p>
+<ul>
+<li>Must integrate deeply with Mattermost (discussions, notifications)</li>
+<li>Should connect to DORA metrics and deployments</li>
+<li>Needs SSO with platform authentication</li>
+<li>API for automation and custom workflows</li>
+</ul>
 <h2 id="decision">Decision</h2>
 <p><strong>We will use Focalboard as the integrated project management tool for Fawkes.</strong></p>
-<p>Specifically:
-- <strong>Focalboard bundled with Mattermost</strong> (native integration)
-- <strong>Self-hosted deployment</strong> in Kubernetes alongside Mattermost
-- <strong>Deep integration</strong> with Mattermost channels (board discussions, notifications)
-- <strong>Custom templates</strong> for dojo tracking, sprint planning, platform roadmaps
-- <strong>Backstage integration</strong> via iframe or custom plugin for visibility</p>
+<p>Specifically:</p>
+<ul>
+<li><strong>Focalboard bundled with Mattermost</strong> (native integration)</li>
+<li><strong>Self-hosted deployment</strong> in Kubernetes alongside Mattermost</li>
+<li><strong>Deep integration</strong> with Mattermost channels (board discussions, notifications)</li>
+<li><strong>Custom templates</strong> for dojo tracking, sprint planning, platform roadmaps</li>
+<li><strong>Backstage integration</strong> via iframe or custom plugin for visibility</li>
+</ul>
 <h3 id="rationale">Rationale</h3>
 <ol>
-<li><strong>Native Mattermost Integration</strong>: Focalboard is developed by Mattermost, Inc. and integrates seamlessly:</li>
-<li>Built into Mattermost (no separate deployment complexity)</li>
+<li>
+<p><strong>Native Mattermost Integration</strong>: Focalboard is developed by Mattermost, Inc. and integrates seamlessly:</p>
+</li>
+<li>
+<p>Built into Mattermost (no separate deployment complexity)</p>
+</li>
 <li>Linked discussions (board cards → Mattermost threads)</li>
 <li>Unified notifications (updates appear in Mattermost)</li>
 <li>Single SSO and permission model</li>
@@ -5071,7 +5089,9 @@
 <li>
 <p><strong>Notion-Like Experience</strong>: Modern, intuitive UX inspired by Notion:</p>
 </li>
-<li>Flexible databases with custom properties</li>
+<li>
+<p>Flexible databases with custom properties</p>
+</li>
 <li>Multiple views (board, table, calendar, gallery)</li>
 <li>Rich content (markdown, embeds, checklists)</li>
 <li>
@@ -5080,7 +5100,9 @@
 <li>
 <p><strong>Perfect for Dojo Tracking</strong>: Ideal for tracking learner progress:</p>
 </li>
-<li>Board per belt level (White, Yellow, Green, Brown, Black)</li>
+<li>
+<p>Board per belt level (White, Yellow, Green, Brown, Black)</p>
+</li>
 <li>Cards represent learners with completion status</li>
 <li>Custom properties: score, time spent, assessment results</li>
 <li>Calendar view for cohort scheduling</li>
@@ -5090,7 +5112,9 @@
 <li>
 <p><strong>Lightweight &amp; Fast</strong>: Unlike Jira, Focalboard is lightweight:</p>
 </li>
-<li>Fast page loads, responsive UI</li>
+<li>
+<p>Fast page loads, responsive UI</p>
+</li>
 <li>Simple setup, minimal configuration</li>
 <li>Not overly complex for small teams</li>
 <li>
@@ -5099,7 +5123,9 @@
 <li>
 <p><strong>Developer-Friendly</strong>:</p>
 </li>
-<li>REST API for automation</li>
+<li>
+<p>REST API for automation</p>
+</li>
 <li>Import/export in JSON format</li>
 <li>Can integrate with CI/CD pipelines</li>
 <li>
@@ -5108,7 +5134,9 @@
 <li>
 <p><strong>Cost Effectiveness</strong>:</p>
 </li>
-<li>Free with Mattermost (no additional cost)</li>
+<li>
+<p>Free with Mattermost (no additional cost)</p>
+</li>
 <li>No per-user fees</li>
 <li>
 <p>Only infrastructure costs (already paying for Mattermost)</p>
@@ -5116,7 +5144,9 @@
 <li>
 <p><strong>Multiple Use Cases</strong>:</p>
 </li>
-<li><strong>Sprint Planning</strong>: Kanban boards for backlog → in progress → done</li>
+<li>
+<p><strong>Sprint Planning</strong>: Kanban boards for backlog → in progress → done</p>
+</li>
 <li><strong>Roadmap Visualization</strong>: Timeline view for quarters/releases</li>
 <li><strong>Dojo Tracking</strong>: Learner progress boards with custom properties</li>
 <li><strong>Incident Management</strong>: Board for tracking incidents and postmortems</li>
@@ -5163,8 +5193,12 @@
 <p>◽ <strong>Customization</strong>: Less customizable than Jira but easier to configure</p>
 <h3 id="mitigation-strategies">Mitigation Strategies</h3>
 <ol>
-<li><strong>Maturity Concerns</strong>:</li>
-<li>Start with core use cases (sprint planning, dojo tracking)</li>
+<li>
+<p><strong>Maturity Concerns</strong>:</p>
+</li>
+<li>
+<p>Start with core use cases (sprint planning, dojo tracking)</p>
+</li>
 <li>Contribute features back to open source project</li>
 <li>Build custom extensions via API where needed</li>
 <li>
@@ -5173,7 +5207,9 @@
 <li>
 <p><strong>Reporting Limitations</strong>:</p>
 </li>
-<li>Export data to Grafana for advanced analytics</li>
+<li>
+<p>Export data to Grafana for advanced analytics</p>
+</li>
 <li>Build custom dashboards using REST API</li>
 <li>Integrate with DORA metrics for delivery insights</li>
 <li>
@@ -5182,7 +5218,9 @@
 <li>
 <p><strong>Time Tracking</strong>:</p>
 </li>
-<li>Use custom properties for estimated/actual time</li>
+<li>
+<p>Use custom properties for estimated/actual time</p>
+</li>
 <li>Integrate with external time tracking if needed</li>
 <li>
 <p>Consider building simple time-tracking plugin</p>
@@ -5190,7 +5228,9 @@
 <li>
 <p><strong>Workflow Complexity</strong>:</p>
 </li>
-<li>Keep workflows simple (aligns with agile principles)</li>
+<li>
+<p>Keep workflows simple (aligns with agile principles)</p>
+</li>
 <li>Use Mattermost bot commands for complex automations</li>
 <li>
 <p>Document standard workflows in templates</p>
@@ -5198,7 +5238,9 @@
 <li>
 <p><strong>Dependency Management</strong>:</p>
 </li>
-<li>Use linked cards feature for simple dependencies</li>
+<li>
+<p>Use linked cards feature for simple dependencies</p>
+</li>
 <li>Document complex dependencies in card descriptions</li>
 <li>
 <p>Consider building dependency visualization</p>
@@ -5213,142 +5255,170 @@
 </ol>
 <h2 id="alternatives-considered">Alternatives Considered</h2>
 <h3 id="alternative-1-jira-saas-or-self-hosted">Alternative 1: Jira (SaaS or Self-Hosted)</h3>
-<p><strong>Pros</strong>:
-- Industry-standard for software teams
-- Extremely powerful and feature-rich
-- Extensive reporting and analytics
-- Huge marketplace of plugins (1,000+)
-- Advanced workflow engine
-- Time tracking, resource management, roadmaps
-- Familiar to most development teams
-- Strong integration ecosystem</p>
-<p><strong>Cons</strong>:
-- <strong>Cost</strong>: $7.75-$14.50/user/month SaaS, or $42,000+ for self-hosted Data Center
-- <strong>Complexity</strong>: Notoriously complex, requires dedicated admin
-- <strong>Performance</strong>: Often slow, especially self-hosted
-- <strong>Vendor Lock-In</strong>: Proprietary data format, difficult to migrate
-- <strong>No Native Mattermost Integration</strong>: Requires custom webhooks
-- <strong>Heavy Resource Requirements</strong>: Self-hosted needs significant infrastructure
-- <strong>Not Open Source</strong>: Proprietary software, no source code access
-- <strong>Misaligned Values</strong>: Commercial SaaS doesn't align with open source platform</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Industry-standard for software teams</li>
+<li>Extremely powerful and feature-rich</li>
+<li>Extensive reporting and analytics</li>
+<li>Huge marketplace of plugins (1,000+)</li>
+<li>Advanced workflow engine</li>
+<li>Time tracking, resource management, roadmaps</li>
+<li>Familiar to most development teams</li>
+<li>Strong integration ecosystem</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Cost</strong>: $7.75-$14.50/user/month SaaS, or $42,000+ for self-hosted Data Center</li>
+<li><strong>Complexity</strong>: Notoriously complex, requires dedicated admin</li>
+<li><strong>Performance</strong>: Often slow, especially self-hosted</li>
+<li><strong>Vendor Lock-In</strong>: Proprietary data format, difficult to migrate</li>
+<li><strong>No Native Mattermost Integration</strong>: Requires custom webhooks</li>
+<li><strong>Heavy Resource Requirements</strong>: Self-hosted needs significant infrastructure</li>
+<li><strong>Not Open Source</strong>: Proprietary software, no source code access</li>
+<li><strong>Misaligned Values</strong>: Commercial SaaS doesn't align with open source platform</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Cost is prohibitive for open source project (at 500 users: $46,500-$87,000/year). Complexity overkill for most teams. Self-hosted Data Center extremely expensive and complex to operate. No native Mattermost integration. Proprietary nature conflicts with Fawkes' open source values.</p>
 <h3 id="alternative-2-taiga">Alternative 2: Taiga</h3>
-<p><strong>Pros</strong>:
-- Open source (AGPL license)
-- Self-hosted and free
-- Built for agile teams (Scrum/Kanban)
-- Beautiful, modern UI
-- Epics, user stories, tasks, issues
-- Sprint planning and burndown charts
-- Time tracking and velocity reports
-- Wiki for documentation
-- Active community</p>
-<p><strong>Cons</strong>:
-- <strong>No Mattermost Integration</strong>: Separate platform, no native integration
-- <strong>Separate Deployment</strong>: Another service to deploy and maintain
-- <strong>Different Tech Stack</strong>: Django/Angular vs. Go/React
-- <strong>More Complex</strong>: Feature-rich but steeper learning curve than Focalboard
-- <strong>Resource Overhead</strong>: Separate database, more infrastructure
-- <strong>Mobile App Quality</strong>: Mobile apps less polished
-- <strong>Harder to Customize</strong>: Codebase more complex to extend</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Open source (AGPL license)</li>
+<li>Self-hosted and free</li>
+<li>Built for agile teams (Scrum/Kanban)</li>
+<li>Beautiful, modern UI</li>
+<li>Epics, user stories, tasks, issues</li>
+<li>Sprint planning and burndown charts</li>
+<li>Time tracking and velocity reports</li>
+<li>Wiki for documentation</li>
+<li>Active community</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>No Mattermost Integration</strong>: Separate platform, no native integration</li>
+<li><strong>Separate Deployment</strong>: Another service to deploy and maintain</li>
+<li><strong>Different Tech Stack</strong>: Django/Angular vs. Go/React</li>
+<li><strong>More Complex</strong>: Feature-rich but steeper learning curve than Focalboard</li>
+<li><strong>Resource Overhead</strong>: Separate database, more infrastructure</li>
+<li><strong>Mobile App Quality</strong>: Mobile apps less polished</li>
+<li><strong>Harder to Customize</strong>: Codebase more complex to extend</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: While excellent tool, running separate platform defeats unified platform vision. No Mattermost integration means context switching. Deployment and maintenance overhead higher than bundled Focalboard. More complexity than needed for most use cases.</p>
 <h3 id="alternative-3-plane">Alternative 3: Plane</h3>
-<p><strong>Pros</strong>:
-- Open source (AGPL license)
-- Modern, beautiful UI (Linear-inspired)
-- Fast and lightweight
-- Built for engineering teams
-- Cycles, modules, views
-- Real-time collaboration
-- Self-hosted option
-- Active development</p>
-<p><strong>Cons</strong>:
-- <strong>Very New</strong>: Launched 2023, still maturing
-- <strong>No Mattermost Integration</strong>: Separate platform
-- <strong>Smaller Community</strong>: Newer project, less proven
-- <strong>Limited Documentation</strong>: Still building out docs
-- <strong>Feature Set Evolving</strong>: Core features still being added
-- <strong>No Mobile Apps Yet</strong>: Web-only currently
-- <strong>Separate Infrastructure</strong>: Another service to deploy
-- <strong>Unknown Stability</strong>: Too new to assess long-term viability</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Open source (AGPL license)</li>
+<li>Modern, beautiful UI (Linear-inspired)</li>
+<li>Fast and lightweight</li>
+<li>Built for engineering teams</li>
+<li>Cycles, modules, views</li>
+<li>Real-time collaboration</li>
+<li>Self-hosted option</li>
+<li>Active development</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Very New</strong>: Launched 2023, still maturing</li>
+<li><strong>No Mattermost Integration</strong>: Separate platform</li>
+<li><strong>Smaller Community</strong>: Newer project, less proven</li>
+<li><strong>Limited Documentation</strong>: Still building out docs</li>
+<li><strong>Feature Set Evolving</strong>: Core features still being added</li>
+<li><strong>No Mobile Apps Yet</strong>: Web-only currently</li>
+<li><strong>Separate Infrastructure</strong>: Another service to deploy</li>
+<li><strong>Unknown Stability</strong>: Too new to assess long-term viability</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Too new and unproven for critical platform component. No Mattermost integration. Separate deployment adds complexity. While promising, risk too high for early-stage project. Revisit in 1-2 years when more mature.</p>
 <h3 id="alternative-4-github-projects">Alternative 4: GitHub Projects</h3>
-<p><strong>Pros</strong>:
-- Free and unlimited
-- Native GitHub integration
-- Familiar to developers
-- Board, table, and roadmap views
-- Issue and PR linking
-- GitHub Actions automation
-- No separate deployment needed
-- Already using GitHub</p>
-<p><strong>Cons</strong>:
-- <strong>Limited to Code Repositories</strong>: Not general-purpose project management
-- <strong>Basic Features</strong>: Lacks advanced PM capabilities
-- <strong>No Mattermost Integration</strong>: Separate platform, notifications via email
-- <strong>Poor for Non-Code Work</strong>: Not suitable for dojo tracking, general planning
-- <strong>No Standalone Boards</strong>: Tied to repositories
-- <strong>Limited Customization</strong>: Can't customize fields, workflows much
-- <strong>Not Self-Hosted</strong>: GitHub is SaaS (even with GitHub Enterprise)
-- <strong>No Real-Time Collaboration</strong>: More static than Focalboard/Jira</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Free and unlimited</li>
+<li>Native GitHub integration</li>
+<li>Familiar to developers</li>
+<li>Board, table, and roadmap views</li>
+<li>Issue and PR linking</li>
+<li>GitHub Actions automation</li>
+<li>No separate deployment needed</li>
+<li>Already using GitHub</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Limited to Code Repositories</strong>: Not general-purpose project management</li>
+<li><strong>Basic Features</strong>: Lacks advanced PM capabilities</li>
+<li><strong>No Mattermost Integration</strong>: Separate platform, notifications via email</li>
+<li><strong>Poor for Non-Code Work</strong>: Not suitable for dojo tracking, general planning</li>
+<li><strong>No Standalone Boards</strong>: Tied to repositories</li>
+<li><strong>Limited Customization</strong>: Can't customize fields, workflows much</li>
+<li><strong>Not Self-Hosted</strong>: GitHub is SaaS (even with GitHub Enterprise)</li>
+<li><strong>No Real-Time Collaboration</strong>: More static than Focalboard/Jira</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: GitHub Projects excellent for code-centric work but too limited for general project management. Not suitable for dojo learner tracking, team planning, roadmaps. No Mattermost integration. Can complement Focalboard but not replace it.</p>
 <h3 id="alternative-5-trello-saas">Alternative 5: Trello (SaaS)</h3>
-<p><strong>Pros</strong>:
-- Simple, intuitive Kanban boards
-- Free tier available
-- Widely known and used
-- Power-Ups for extensions
-- Mobile apps excellent
-- Real-time collaboration
-- Butler automation
-- Visual and easy to learn</p>
-<p><strong>Cons</strong>:
-- <strong>SaaS Only</strong>: No self-hosted option, data on Atlassian servers
-- <strong>Cost at Scale</strong>: $5-$17.50/user/month for paid tiers
-- <strong>Limited Views</strong>: Primarily Kanban, limited table/calendar
-- <strong>Basic Features</strong>: Less powerful than Jira/Focalboard for complex needs
-- <strong>No Mattermost Integration</strong>: Separate platform
-- <strong>Vendor Lock-In</strong>: Proprietary, owned by Atlassian
-- <strong>Not Open Source</strong>: Closed source, can't customize deeply
-- <strong>Data Export Limited</strong>: Proprietary format</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Simple, intuitive Kanban boards</li>
+<li>Free tier available</li>
+<li>Widely known and used</li>
+<li>Power-Ups for extensions</li>
+<li>Mobile apps excellent</li>
+<li>Real-time collaboration</li>
+<li>Butler automation</li>
+<li>Visual and easy to learn</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>SaaS Only</strong>: No self-hosted option, data on Atlassian servers</li>
+<li><strong>Cost at Scale</strong>: $5-$17.50/user/month for paid tiers</li>
+<li><strong>Limited Views</strong>: Primarily Kanban, limited table/calendar</li>
+<li><strong>Basic Features</strong>: Less powerful than Jira/Focalboard for complex needs</li>
+<li><strong>No Mattermost Integration</strong>: Separate platform</li>
+<li><strong>Vendor Lock-In</strong>: Proprietary, owned by Atlassian</li>
+<li><strong>Not Open Source</strong>: Closed source, can't customize deeply</li>
+<li><strong>Data Export Limited</strong>: Proprietary format</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: SaaS-only conflicts with self-hosted platform vision. Cost adds up at scale. No Mattermost integration. Atlassian ownership means potential future pricing changes. Too basic for complex project management needs.</p>
 <h3 id="alternative-6-wekan">Alternative 6: Wekan</h3>
-<p><strong>Pros</strong>:
-- Open source (MIT license)
-- Self-hosted and free
-- Kanban boards (Trello-like)
-- Lightweight and simple
-- Docker deployment easy
-- Multiple languages
-- Integrations via webhooks</p>
-<p><strong>Cons</strong>:
-- <strong>Limited Features</strong>: Very basic compared to alternatives
-- <strong>Development Pace</strong>: Slower development, smaller team
-- <strong>No Mattermost Integration</strong>: Separate platform
-- <strong>Single View Type</strong>: Only Kanban boards, no tables/calendars
-- <strong>Basic Customization</strong>: Limited custom fields
-- <strong>Mobile Experience</strong>: Web-only, no native apps
-- <strong>Smaller Community</strong>: Less active than alternatives</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Open source (MIT license)</li>
+<li>Self-hosted and free</li>
+<li>Kanban boards (Trello-like)</li>
+<li>Lightweight and simple</li>
+<li>Docker deployment easy</li>
+<li>Multiple languages</li>
+<li>Integrations via webhooks</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Limited Features</strong>: Very basic compared to alternatives</li>
+<li><strong>Development Pace</strong>: Slower development, smaller team</li>
+<li><strong>No Mattermost Integration</strong>: Separate platform</li>
+<li><strong>Single View Type</strong>: Only Kanban boards, no tables/calendars</li>
+<li><strong>Basic Customization</strong>: Limited custom fields</li>
+<li><strong>Mobile Experience</strong>: Web-only, no native apps</li>
+<li><strong>Smaller Community</strong>: Less active than alternatives</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: While simple and open source, too basic for needs. No Mattermost integration. Limited to Kanban view. Would need to run separately. Focalboard provides much richer feature set with same self-hosted benefits.</p>
 <h3 id="alternative-7-notion-saas">Alternative 7: Notion (SaaS)</h3>
-<p><strong>Pros</strong>:
-- Excellent UX, beautiful design
-- Flexible databases with multiple views
-- Rich content editing (markdown, embeds)
-- Templates and team collaboration
-- Real-time updates
-- Mobile apps excellent
-- Integrations and API
-- Very popular with teams</p>
-<p><strong>Cons</strong>:
-- <strong>SaaS Only</strong>: No self-hosted option
-- <strong>Cost</strong>: $8-$15/user/month for teams
-- <strong>Vendor Lock-In</strong>: Proprietary platform and format
-- <strong>No Mattermost Integration</strong>: Separate platform
-- <strong>Performance</strong>: Can be slow with large databases
-- <strong>Data Sovereignty</strong>: All data on Notion servers
-- <strong>Not Open Source</strong>: Closed source, can't customize
-- <strong>Export Limitations</strong>: Limited export options</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Excellent UX, beautiful design</li>
+<li>Flexible databases with multiple views</li>
+<li>Rich content editing (markdown, embeds)</li>
+<li>Templates and team collaboration</li>
+<li>Real-time updates</li>
+<li>Mobile apps excellent</li>
+<li>Integrations and API</li>
+<li>Very popular with teams</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>SaaS Only</strong>: No self-hosted option</li>
+<li><strong>Cost</strong>: $8-$15/user/month for teams</li>
+<li><strong>Vendor Lock-In</strong>: Proprietary platform and format</li>
+<li><strong>No Mattermost Integration</strong>: Separate platform</li>
+<li><strong>Performance</strong>: Can be slow with large databases</li>
+<li><strong>Data Sovereignty</strong>: All data on Notion servers</li>
+<li><strong>Not Open Source</strong>: Closed source, can't customize</li>
+<li><strong>Export Limitations</strong>: Limited export options</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: SaaS-only and proprietary conflicts with values. No self-hosting option. No Mattermost integration. Cost at scale. Focalboard provides Notion-like experience in open source, self-hosted package.</p>
 <h2 id="related-decisions">Related Decisions</h2>
 <ul>
@@ -5375,7 +5445,7 @@
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-metrics-service (link cards to deployments)</span>
 </code></pre></div>
 <h3 id="initial-board-templates">Initial Board Templates</h3>
-<p><strong>1. Sprint Planning Board</strong>
+<p><strong>1. Sprint Planning Board</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Sprint</span><span class="nv"> </span><span class="s">Planning&quot;</span>
 <span class="nt">views</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">board</span>
@@ -5400,8 +5470,8 @@
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Story</span><span class="nv"> </span><span class="s">Points&quot;</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number</span>
-</code></pre></div></p>
-<p><strong>2. Dojo Learner Progress Board</strong>
+</code></pre></div>
+<p><strong>2. Dojo Learner Progress Board</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Dojo</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">White</span><span class="nv"> </span><span class="s">Belt&quot;</span>
 <span class="nt">views</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">board</span>
@@ -5431,8 +5501,8 @@
 <span class="w">    </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Not</span><span class="nv"> </span><span class="s">Started&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;In</span><span class="nv"> </span><span class="s">Progress&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Assessment&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Certified&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;On</span><span class="nv"> </span><span class="s">Hold&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Notes&quot;</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
-</code></pre></div></p>
-<p><strong>3. Platform Roadmap Board</strong>
+</code></pre></div>
+<p><strong>3. Platform Roadmap Board</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Platform</span><span class="nv"> </span><span class="s">Roadmap&quot;</span>
 <span class="nt">views</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">board</span>
@@ -5462,8 +5532,8 @@
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Dependencies&quot;</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
-</code></pre></div></p>
-<p><strong>4. Incident Management Board</strong>
+</code></pre></div>
+<p><strong>4. Incident Management Board</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Incident</span><span class="nv"> </span><span class="s">Tracking&quot;</span>
 <span class="nt">views</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">board</span>
@@ -5493,21 +5563,21 @@
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Postmortem</span><span class="nv"> </span><span class="s">Link&quot;</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">url</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="mattermost-integration-examples">Mattermost Integration Examples</h3>
-<p><strong>1. Board Updates in Channels</strong>:
+<p><strong>1. Board Updates in Channels</strong>:</p>
 <div class="highlight"><pre><span></span><code>[Focalboard Bot] 📋 Card moved in &quot;Sprint 01&quot;
 @john moved &quot;Implement DORA metrics&quot;
 From: In Progress → Review
 Board: https://mattermost.fawkes.io/boards/abc123
-</code></pre></div></p>
-<p><strong>2. Card Discussions</strong>:
+</code></pre></div>
+<p><strong>2. Card Discussions</strong>:</p>
 <div class="highlight"><pre><span></span><code>User clicks &quot;Discuss in Mattermost&quot; on card
 → Creates thread in linked channel
 → Thread automatically linked back to card
 → Comments sync bidirectionally
-</code></pre></div></p>
-<p><strong>3. Daily Stand-up Automation</strong>:
+</code></pre></div>
+<p><strong>3. Daily Stand-up Automation</strong>:</p>
 <div class="highlight"><pre><span></span><code>[Focalboard Bot] 📊 Daily Stand-up - Sprint 01
 Cards completed yesterday: 3
 Cards in progress: 7
@@ -5516,7 +5586,7 @@ Blocked cards: 1 ⚠️
 @alice: 2 cards in review
 @bob: Working on &quot;Security scanning&quot; (blocked)
 @carol: Completed &quot;Deploy Backstage&quot;
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="backstage-integration">Backstage Integration</h3>
 <ul>
 <li><strong>Phase 1</strong>: Iframe embed in Backstage (boards visible in developer portal)</li>
@@ -5524,7 +5594,7 @@ Blocked cards: 1 ⚠️
 <li><strong>Phase 3</strong>: Deep integration (create cards from Backstage, link to services)</li>
 </ul>
 <h3 id="dora-metrics-integration">DORA Metrics Integration</h3>
-<p>Link board cards to deployments:
+<p>Link board cards to deployments:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// When deployment completes</span>
 <span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">focalboard</span><span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">cards</span><span class="o">/</span><span class="p">{</span><span class="nx">cardId</span><span class="p">}</span><span class="o">/</span><span class="nx">properties</span>
 <span class="p">{</span>
@@ -5533,7 +5603,7 @@ Blocked cards: 1 ⚠️
 <span class="w">  </span><span class="s2">&quot;dora_lead_time&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;8h 42m&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="s2">&quot;deployment_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;deploy-12345&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="mobile-experience">Mobile Experience</h3>
 <ul>
 <li>Access via Mattermost mobile app</li>
@@ -5550,11 +5620,13 @@ Blocked cards: 1 ⚠️
 <li><strong>Git Backup</strong>: Export boards to Git for version control</li>
 </ul>
 <h3 id="resource-requirements">Resource Requirements</h3>
-<p><strong>Included in Mattermost deployment</strong>:
-- No additional CPU/memory beyond Mattermost
-- Shares PostgreSQL database
-- File attachments use same storage (S3/MinIO)
-- ~100MB additional storage per 100 active boards</p>
+<p><strong>Included in Mattermost deployment</strong>:</p>
+<ul>
+<li>No additional CPU/memory beyond Mattermost</li>
+<li>Shares PostgreSQL database</li>
+<li>File attachments use same storage (S3/MinIO)</li>
+<li>~100MB additional storage per 100 active boards</li>
+</ul>
 <h3 id="performance-considerations">Performance Considerations</h3>
 <ul>
 <li>Board loading: &lt;1 second for boards with &lt;1000 cards</li>
@@ -5563,12 +5635,14 @@ Blocked cards: 1 ⚠️
 <li>Archive old boards to improve performance</li>
 </ul>
 <h2 id="monitoring-this-decision">Monitoring This Decision</h2>
-<p>We will revisit this ADR if:
-- Focalboard becomes unmaintained or development slows significantly
-- Critical features remain missing after 12 months
-- Performance issues arise that can't be resolved
-- A superior open source alternative emerges with Mattermost integration
-- Community adoption is below 50% (teams prefer external tools)</p>
+<p>We will revisit this ADR if:</p>
+<ul>
+<li>Focalboard becomes unmaintained or development slows significantly</li>
+<li>Critical features remain missing after 12 months</li>
+<li>Performance issues arise that can't be resolved</li>
+<li>A superior open source alternative emerges with Mattermost integration</li>
+<li>Community adoption is below 50% (teams prefer external tools)</li>
+</ul>
 <p><strong>Next Review Date</strong>: April 7, 2026 (6 months)</p>
 <h2 id="references">References</h2>
 <ul>
@@ -5593,18 +5667,22 @@ Blocked cards: 1 ⚠️
 </li>
 </ol>
 <h3 id="focalboards-evolution">Focalboard's Evolution</h3>
-<p>Focalboard started as standalone project, acquired by Mattermost in 2021. Now:
-- Core part of Mattermost platform
-- Active development (monthly releases)
-- Growing feature set
-- Increasing adoption
-- Path to maturity clear</p>
+<p>Focalboard started as standalone project, acquired by Mattermost in 2021. Now:</p>
+<ul>
+<li>Core part of Mattermost platform</li>
+<li>Active development (monthly releases)</li>
+<li>Growing feature set</li>
+<li>Increasing adoption</li>
+<li>Path to maturity clear</li>
+</ul>
 <h3 id="enterprise-considerations">Enterprise Considerations</h3>
-<p>While Focalboard is free, some advanced features require Mattermost Enterprise:
-- Advanced permissions and compliance
-- SAML authentication
-- Data retention policies
-- Advanced audit logging</p>
+<p>While Focalboard is free, some advanced features require Mattermost Enterprise:</p>
+<ul>
+<li>Advanced permissions and compliance</li>
+<li>SAML authentication</li>
+<li>Data retention policies</li>
+<li>Advanced audit logging</li>
+</ul>
 <p>For open source Fawkes: Start with free version, upgrade if enterprise adopters need these features.</p>
 <hr />
 <p><strong>Decision Made By</strong>: Platform Architecture Team

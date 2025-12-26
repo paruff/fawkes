@@ -5164,58 +5164,74 @@
 <p>Accepted</p>
 <h2 id="context">Context</h2>
 <p>The Fawkes platform consists of multiple interconnected services where a single user request may traverse numerous components:</p>
-<p><strong>Platform Request Flows</strong>:
-- <strong>Developer Portal Access</strong>: User → NGINX Ingress → Backstage → PostgreSQL → GitHub API → ArgoCD API
-- <strong>CI/CD Pipeline</strong>: Git Push → Jenkins Webhook → Jenkins Build → Harbor Push → ArgoCD Sync → Kubernetes Deployment
-- <strong>Dojo Learning</strong>: User → Backstage → Lab Provisioning Service → Terraform → AWS API → Kubernetes API
-- <strong>Collaboration</strong>: User → Mattermost → PostgreSQL → S3 (file storage) → Elasticsearch (search)
-- <strong>Deployment</strong>: Developer → ArgoCD UI → Kubernetes API → Application Pods → Database</p>
-<p><strong>Application Request Flows</strong>:
-- Microservice architectures with service-to-service calls
-- Database queries across multiple services
-- External API integrations
-- Message queue processing
-- Asynchronous job execution</p>
-<p><strong>Troubleshooting Challenges Without Tracing</strong>:
-- <strong>Latency Attribution</strong>: "Why is this request slow?" - Which service is the bottleneck?
-- <strong>Error Root Cause</strong>: "Where did this error originate?" - Which service in the chain failed?
-- <strong>Dependency Mapping</strong>: "What services does this request touch?" - Understanding call paths
-- <strong>Performance Optimization</strong>: "Which database queries are slow?" - Query-level visibility
-- <strong>Cascading Failures</strong>: "Why are all services degraded?" - Tracing failure propagation
-- <strong>Cross-Team Debugging</strong>: Multiple teams own services in a request path</p>
-<p><strong>DORA Metrics Requirements</strong>:
-- <strong>Lead Time for Changes</strong>: Trace deployment pipeline from commit to production
-- <strong>Change Failure Rate</strong>: Correlate failed deployments with application errors
-- <strong>Mean Time to Recovery</strong>: Quickly identify root cause of incidents
-- <strong>Deployment Frequency</strong>: Understand deployment pipeline performance</p>
-<p><strong>Technical Requirements</strong>:
-- Support for multiple programming languages (Java, Python, Node.js, Go)
-- Low overhead (&lt;5% CPU, &lt;100MB memory per service)
-- Sampling strategies to control data volume
-- Integration with existing observability (metrics, logs)
-- Correlation IDs linking traces to logs
-- Support for synchronous and asynchronous operations
-- Trace context propagation across HTTP, gRPC, message queues
-- Long-term trace storage for trend analysis
-- Real-time trace querying for active troubleshooting</p>
-<p><strong>Operational Requirements</strong>:
-- Automatic instrumentation where possible (minimal code changes)
-- Manual instrumentation for custom spans
-- Scalable backend (handle 100K+ spans/second)
-- Data retention policy (7 days detailed, 30 days sampled, 90 days aggregated)
-- Multi-tenancy (namespace/team isolation)
-- Integration with Grafana for visualization
-- Alert on trace-based SLIs (P95 latency, error rates)</p>
-<p><strong>Security Requirements</strong>:
-- Sensitive data scrubbing (PII, credentials)
-- Access control for trace data
-- Encryption in transit and at rest
-- Compliance with data retention policies</p>
-<p><strong>Learning &amp; Dojo Requirements</strong>:
-- Learners should understand distributed tracing concepts
-- Hands-on labs demonstrating tracing implementation
-- Troubleshooting exercises using traces
-- Integration with Brown Belt (Observability &amp; SRE) curriculum</p>
+<p><strong>Platform Request Flows</strong>:</p>
+<ul>
+<li><strong>Developer Portal Access</strong>: User → NGINX Ingress → Backstage → PostgreSQL → GitHub API → ArgoCD API</li>
+<li><strong>CI/CD Pipeline</strong>: Git Push → Jenkins Webhook → Jenkins Build → Harbor Push → ArgoCD Sync → Kubernetes Deployment</li>
+<li><strong>Dojo Learning</strong>: User → Backstage → Lab Provisioning Service → Terraform → AWS API → Kubernetes API</li>
+<li><strong>Collaboration</strong>: User → Mattermost → PostgreSQL → S3 (file storage) → Elasticsearch (search)</li>
+<li><strong>Deployment</strong>: Developer → ArgoCD UI → Kubernetes API → Application Pods → Database</li>
+</ul>
+<p><strong>Application Request Flows</strong>:</p>
+<ul>
+<li>Microservice architectures with service-to-service calls</li>
+<li>Database queries across multiple services</li>
+<li>External API integrations</li>
+<li>Message queue processing</li>
+<li>Asynchronous job execution</li>
+</ul>
+<p><strong>Troubleshooting Challenges Without Tracing</strong>:</p>
+<ul>
+<li><strong>Latency Attribution</strong>: "Why is this request slow?" - Which service is the bottleneck?</li>
+<li><strong>Error Root Cause</strong>: "Where did this error originate?" - Which service in the chain failed?</li>
+<li><strong>Dependency Mapping</strong>: "What services does this request touch?" - Understanding call paths</li>
+<li><strong>Performance Optimization</strong>: "Which database queries are slow?" - Query-level visibility</li>
+<li><strong>Cascading Failures</strong>: "Why are all services degraded?" - Tracing failure propagation</li>
+<li><strong>Cross-Team Debugging</strong>: Multiple teams own services in a request path</li>
+</ul>
+<p><strong>DORA Metrics Requirements</strong>:</p>
+<ul>
+<li><strong>Lead Time for Changes</strong>: Trace deployment pipeline from commit to production</li>
+<li><strong>Change Failure Rate</strong>: Correlate failed deployments with application errors</li>
+<li><strong>Mean Time to Recovery</strong>: Quickly identify root cause of incidents</li>
+<li><strong>Deployment Frequency</strong>: Understand deployment pipeline performance</li>
+</ul>
+<p><strong>Technical Requirements</strong>:</p>
+<ul>
+<li>Support for multiple programming languages (Java, Python, Node.js, Go)</li>
+<li>Low overhead (&lt;5% CPU, &lt;100MB memory per service)</li>
+<li>Sampling strategies to control data volume</li>
+<li>Integration with existing observability (metrics, logs)</li>
+<li>Correlation IDs linking traces to logs</li>
+<li>Support for synchronous and asynchronous operations</li>
+<li>Trace context propagation across HTTP, gRPC, message queues</li>
+<li>Long-term trace storage for trend analysis</li>
+<li>Real-time trace querying for active troubleshooting</li>
+</ul>
+<p><strong>Operational Requirements</strong>:</p>
+<ul>
+<li>Automatic instrumentation where possible (minimal code changes)</li>
+<li>Manual instrumentation for custom spans</li>
+<li>Scalable backend (handle 100K+ spans/second)</li>
+<li>Data retention policy (7 days detailed, 30 days sampled, 90 days aggregated)</li>
+<li>Multi-tenancy (namespace/team isolation)</li>
+<li>Integration with Grafana for visualization</li>
+<li>Alert on trace-based SLIs (P95 latency, error rates)</li>
+</ul>
+<p><strong>Security Requirements</strong>:</p>
+<ul>
+<li>Sensitive data scrubbing (PII, credentials)</li>
+<li>Access control for trace data</li>
+<li>Encryption in transit and at rest</li>
+<li>Compliance with data retention policies</li>
+</ul>
+<p><strong>Learning &amp; Dojo Requirements</strong>:</p>
+<ul>
+<li>Learners should understand distributed tracing concepts</li>
+<li>Hands-on labs demonstrating tracing implementation</li>
+<li>Troubleshooting exercises using traces</li>
+<li>Integration with Brown Belt (Observability &amp; SRE) curriculum</li>
+</ul>
 <h2 id="decision">Decision</h2>
 <p>We will use <strong>Grafana Tempo</strong> as the distributed tracing backend, integrated with <strong>OpenTelemetry</strong> for instrumentation and trace collection.</p>
 <h3 id="architecture">Architecture</h3>
@@ -5274,30 +5290,38 @@
 └───────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h3 id="technology-stack">Technology Stack</h3>
-<p><strong>Instrumentation</strong>: OpenTelemetry SDKs
-- <strong>Java</strong>: <code>opentelemetry-java-instrumentation</code> (auto-instrumentation agent)
-- <strong>Python</strong>: <code>opentelemetry-distro</code> with <code>opentelemetry-instrumentation</code>
-- <strong>Node.js</strong>: <code>@opentelemetry/sdk-node</code> with auto-instrumentation
-- <strong>Go</strong>: <code>go.opentelemetry.io/otel</code> with manual instrumentation</p>
-<p><strong>Collection</strong>: OpenTelemetry Collector
-- Deployed as DaemonSet (node-level collection)
-- Deployed as Deployment (centralized processing)
-- OTLP receivers (gRPC and HTTP)
-- Tail-based sampling processor
-- Batch processor for efficiency</p>
-<p><strong>Storage</strong>: Grafana Tempo
-- Backend: S3-compatible object storage (AWS S3, MinIO)
-- Retention: 7 days full detail, 30 days sampled
-- Compression: Snappy/LZ4 for cost efficiency
-- Ingestion rate: 100K+ spans/second</p>
-<p><strong>Visualization</strong>: Grafana
-- Tempo data source integration
-- TraceQL query builder
-- Node graph visualization
-- Trace comparison tools</p>
+<p><strong>Instrumentation</strong>: OpenTelemetry SDKs</p>
+<ul>
+<li><strong>Java</strong>: <code>opentelemetry-java-instrumentation</code> (auto-instrumentation agent)</li>
+<li><strong>Python</strong>: <code>opentelemetry-distro</code> with <code>opentelemetry-instrumentation</code></li>
+<li><strong>Node.js</strong>: <code>@opentelemetry/sdk-node</code> with auto-instrumentation</li>
+<li><strong>Go</strong>: <code>go.opentelemetry.io/otel</code> with manual instrumentation</li>
+</ul>
+<p><strong>Collection</strong>: OpenTelemetry Collector</p>
+<ul>
+<li>Deployed as DaemonSet (node-level collection)</li>
+<li>Deployed as Deployment (centralized processing)</li>
+<li>OTLP receivers (gRPC and HTTP)</li>
+<li>Tail-based sampling processor</li>
+<li>Batch processor for efficiency</li>
+</ul>
+<p><strong>Storage</strong>: Grafana Tempo</p>
+<ul>
+<li>Backend: S3-compatible object storage (AWS S3, MinIO)</li>
+<li>Retention: 7 days full detail, 30 days sampled</li>
+<li>Compression: Snappy/LZ4 for cost efficiency</li>
+<li>Ingestion rate: 100K+ spans/second</li>
+</ul>
+<p><strong>Visualization</strong>: Grafana</p>
+<ul>
+<li>Tempo data source integration</li>
+<li>TraceQL query builder</li>
+<li>Node graph visualization</li>
+<li>Trace comparison tools</li>
+</ul>
 <h3 id="opentelemetry-instrumentation-strategy">OpenTelemetry Instrumentation Strategy</h3>
 <p><strong>Automatic Instrumentation</strong> (Preferred for rapid adoption):</p>
-<p><strong>Java Applications (Jenkins plugins, Spring Boot apps)</strong>:
+<p><strong>Java Applications (Jenkins plugins, Spring Boot apps)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Download OpenTelemetry Java agent</span>
 wget<span class="w"> </span>https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar
 
@@ -5306,8 +5330,8 @@ java<span class="w"> </span>-javaagent:opentelemetry-javaagent.jar<span class="w
 <span class="w">     </span>-Dotel.service.name<span class="o">=</span>jenkins<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>-Dotel.exporter.otlp.endpoint<span class="o">=</span>http://otel-collector:4317<span class="w"> </span><span class="se">\</span>
 <span class="w">     </span>-jar<span class="w"> </span>jenkins.war
-</code></pre></div></p>
-<p><strong>Python Applications (FastAPI, Django)</strong>:
+</code></pre></div>
+<p><strong>Python Applications (FastAPI, Django)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Install OpenTelemetry distro</span>
 pip<span class="w"> </span>install<span class="w"> </span>opentelemetry-distro<span class="w"> </span>opentelemetry-exporter-otlp
 
@@ -5317,25 +5341,25 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--service_name<span class="w"> </span>my-python-app<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--exporter_otlp_endpoint<span class="w"> </span>http://otel-collector:4317<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>python<span class="w"> </span>app.py
-</code></pre></div></p>
-<p><strong>Node.js Applications (Backstage, Express)</strong>:
+</code></pre></div>
+<p><strong>Node.js Applications (Backstage, Express)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// app.js - Add at the very top</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/sdk-node&#39;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/exporter-trace-otlp-http&#39;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/auto-instrumentations-node&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/sdk-node&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/exporter-trace-otlp-http&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/auto-instrumentations-node&quot;</span><span class="p">);</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">sdk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">serviceName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;backstage&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">serviceName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">traceExporter</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;http://otel-collector:4318/v1/traces&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;http://otel-collector:4318/v1/traces&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}),</span>
 <span class="w">  </span><span class="nx">instrumentations</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">getNodeAutoInstrumentations</span><span class="p">()],</span>
 <span class="p">});</span>
 
 <span class="nx">sdk</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Manual Instrumentation</strong> (For custom spans):</p>
-<p><strong>Go Example (ArgoCD, custom controllers)</strong>:
+<p><strong>Go Example (ArgoCD, custom controllers)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="s">&quot;go.opentelemetry.io/otel&quot;</span>
 <span class="w">    </span><span class="s">&quot;go.opentelemetry.io/otel/trace&quot;</span>
@@ -5360,9 +5384,9 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="opentelemetry-collector-configuration">OpenTelemetry Collector Configuration</h3>
-<p><strong>DaemonSet Deployment</strong> (for application traces):
+<p><strong>DaemonSet Deployment</strong> (for application traces):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5442,9 +5466,9 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <span class="w">          </span><span class="no">receivers: [otlp]</span>
 <span class="w">          </span><span class="no">processors: [batch]</span>
 <span class="w">          </span><span class="no">exporters: [prometheus]</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="grafana-tempo-configuration">Grafana Tempo Configuration</h3>
-<p><strong>Deployment Manifest</strong>:
+<p><strong>Deployment Manifest</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5513,44 +5537,44 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/tempo:latest</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-config.file=/etc/tempo/tempo.yaml</span>
-<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3200</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4317</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">otlp-grpc</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4318</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">otlp-http</span>
-<span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/tempo:latest</span>
+<span class="w">          </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-config.file=/etc/tempo/tempo.yaml</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3200</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4317</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">otlp-grpc</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4318</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">otlp-http</span>
+<span class="w">          </span><span class="nt">volumeMounts</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config</span>
+<span class="w">              </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/tempo</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage</span>
+<span class="w">              </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/tempo</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
+<span class="w">            </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2000m</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4Gi</span>
+<span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config</span>
-<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/tempo</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage</span>
-<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/tempo</span>
+<span class="w">          </span><span class="nt">configMap</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo-config</span>
+<span class="w">  </span><span class="nt">volumeClaimTemplates</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage</span>
+<span class="w">      </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">accessModes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;ReadWriteOnce&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
-<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2000m</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4Gi</span>
-<span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config</span>
-<span class="w">        </span><span class="nt">configMap</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo-config</span>
-<span class="w">  </span><span class="nt">volumeClaimTemplates</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">metadata</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage</span>
-<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">accessModes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;ReadWriteOnce&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">      </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100Gi</span>
-</code></pre></div></p>
+<span class="w">            </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100Gi</span>
+</code></pre></div>
 <h3 id="trace-correlation-with-logs">Trace Correlation with Logs</h3>
-<p><strong>Log Entry with Trace Context</strong>:
+<p><strong>Log Entry with Trace Context</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-07T10:30:45Z&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span>
@@ -5562,8 +5586,8 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nt">&quot;namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;app_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;payment-service&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Loki Configuration for Trace Correlation</strong>:
+</code></pre></div>
+<p><strong>Loki Configuration for Trace Correlation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Grafana data source configuration</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 <span class="nt">datasources</span><span class="p">:</span>
@@ -5577,64 +5601,78 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <span class="w">          </span><span class="nt">matcherRegex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;trace_id=(\\w+)&quot;</span>
 <span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TraceID</span>
 <span class="w">          </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;$${__value.raw}&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="grafana-dashboard-configuration">Grafana Dashboard Configuration</h3>
-<p><strong>Service Dependency Graph</strong>:
-- Automatically generated from trace data
-- Shows request flow between services
-- Color-coded by error rate
-- Size proportional to request volume</p>
+<p><strong>Service Dependency Graph</strong>:</p>
+<ul>
+<li>Automatically generated from trace data</li>
+<li>Shows request flow between services</li>
+<li>Color-coded by error rate</li>
+<li>Size proportional to request volume</li>
+</ul>
 <p><strong>TraceQL Queries</strong>:</p>
-<p><strong>Find slow database queries</strong>:
+<p><strong>Find slow database queries</strong>:</p>
 <div class="highlight"><pre><span></span><code>{span.db.system=&quot;postgresql&quot; &amp;&amp; duration &gt; 1s}
-</code></pre></div></p>
-<p><strong>Find all traces with errors in production</strong>:
+</code></pre></div>
+<p><strong>Find all traces with errors in production</strong>:</p>
 <div class="highlight"><pre><span></span><code>{status=error &amp;&amp; resource.namespace=&quot;production&quot;}
-</code></pre></div></p>
-<p><strong>Find traces for specific user</strong>:
+</code></pre></div>
+<p><strong>Find traces for specific user</strong>:</p>
 <div class="highlight"><pre><span></span><code>{resource.service.name=&quot;backstage&quot; &amp;&amp; span.http.route=&quot;/api/catalog/*&quot; &amp;&amp; trace.user.id=&quot;alice@example.com&quot;}
-</code></pre></div></p>
-<p><strong>Deployment trace (commit to production)</strong>:
+</code></pre></div>
+<p><strong>Deployment trace (commit to production)</strong>:</p>
 <div class="highlight"><pre><span></span><code>{resource.service.name=&quot;jenkins&quot; || resource.service.name=&quot;argocd&quot;}
   | {span.git.commit.sha=&quot;abc123def&quot;}
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="sampling-strategies">Sampling Strategies</h3>
-<p><strong>Head-Based Sampling</strong> (at application):
-- 100% of errors
-- 100% of requests &gt; 1 second
-- 10% of successful requests &lt; 1 second</p>
-<p><strong>Tail-Based Sampling</strong> (at collector):
-- Keep all traces with errors
-- Keep all traces with latency &gt; P95
-- Keep traces matching specific criteria (user ID, request path)
-- Sample remaining traces at 10%</p>
-<p><strong>Cost Optimization</strong>:
-- Production: 10% sampling → ~50GB/day traces
-- Staging: 50% sampling → ~20GB/day traces
-- Development: 100% sampling → ~5GB/day traces</p>
+<p><strong>Head-Based Sampling</strong> (at application):</p>
+<ul>
+<li>100% of errors</li>
+<li>100% of requests &gt; 1 second</li>
+<li>10% of successful requests &lt; 1 second</li>
+</ul>
+<p><strong>Tail-Based Sampling</strong> (at collector):</p>
+<ul>
+<li>Keep all traces with errors</li>
+<li>Keep all traces with latency &gt; P95</li>
+<li>Keep traces matching specific criteria (user ID, request path)</li>
+<li>Sample remaining traces at 10%</li>
+</ul>
+<p><strong>Cost Optimization</strong>:</p>
+<ul>
+<li>Production: 10% sampling → ~50GB/day traces</li>
+<li>Staging: 50% sampling → ~20GB/day traces</li>
+<li>Development: 100% sampling → ~5GB/day traces</li>
+</ul>
 <h3 id="dora-metrics-integration">DORA Metrics Integration</h3>
-<p><strong>Lead Time for Changes Tracing</strong>:
-1. Git commit event → creates trace context
-2. Jenkins build → child span with commit SHA
-3. Docker build → child span with image tag
-4. Harbor push → child span with artifact metadata
-5. ArgoCD sync → child span with deployment details
-6. Application start → final span with health check</p>
-<p><strong>Query to calculate lead time</strong>:
+<p><strong>Lead Time for Changes Tracing</strong>:</p>
+<ol>
+<li>Git commit event → creates trace context</li>
+<li>Jenkins build → child span with commit SHA</li>
+<li>Docker build → child span with image tag</li>
+<li>Harbor push → child span with artifact metadata</li>
+<li>ArgoCD sync → child span with deployment details</li>
+<li>Application start → final span with health check</li>
+</ol>
+<p><strong>Query to calculate lead time</strong>:</p>
 <div class="highlight"><pre><span></span><code>{span.git.commit.sha=&quot;abc123&quot;}
   | {span.name=&quot;deploy-to-production&quot;}
-</code></pre></div></p>
-<p><strong>Change Failure Rate</strong>:
-- Trace deployments with <code>deployment.status=failed</code>
-- Correlate with application error traces
-- Generate failure rate dashboard</p>
-<p><strong>Mean Time to Recovery</strong>:
-- Incident start → trace ID in alert
-- Trace investigation → linked troubleshooting actions
-- Incident resolution → final span
-- Calculate MTTR from trace duration</p>
+</code></pre></div>
+<p><strong>Change Failure Rate</strong>:</p>
+<ul>
+<li>Trace deployments with <code>deployment.status=failed</code></li>
+<li>Correlate with application error traces</li>
+<li>Generate failure rate dashboard</li>
+</ul>
+<p><strong>Mean Time to Recovery</strong>:</p>
+<ul>
+<li>Incident start → trace ID in alert</li>
+<li>Trace investigation → linked troubleshooting actions</li>
+<li>Incident resolution → final span</li>
+<li>Calculate MTTR from trace duration</li>
+</ul>
 <h3 id="security-privacy">Security &amp; Privacy</h3>
-<p><strong>Sensitive Data Scrubbing</strong>:
+<p><strong>Sensitive Data Scrubbing</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># OpenTelemetry Collector processor</span>
 <span class="nt">processors</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">attributes</span><span class="p">:</span>
@@ -5657,23 +5695,29 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update</span>
 <span class="w">        </span><span class="nt">from_attribute</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http.url</span>
 <span class="w">        </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;\d{4}-\d{4}-\d{4}-\d{4}&#39;</span>
-<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;XXXX-XXXX-XXXX-XXXX&#39;</span>
-</code></pre></div></p>
-<p><strong>Access Control</strong>:
-- Grafana RBAC for trace viewing
-- Namespace-based trace isolation
-- Tempo multi-tenancy (tenant ID from namespace)</p>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXX-XXXX-XXXX-XXXX&quot;</span>
+</code></pre></div>
+<p><strong>Access Control</strong>:</p>
+<ul>
+<li>Grafana RBAC for trace viewing</li>
+<li>Namespace-based trace isolation</li>
+<li>Tempo multi-tenancy (tenant ID from namespace)</li>
+</ul>
 <h3 id="performance-impact">Performance Impact</h3>
-<p><strong>Benchmarks</strong> (per-service overhead):
-- <strong>CPU</strong>: 2-5% increase
-- <strong>Memory</strong>: 50-100MB increase
-- <strong>Network</strong>: ~1KB per span (compressed)
-- <strong>Latency</strong>: &lt;1ms per instrumented operation</p>
-<p><strong>Production Optimizations</strong>:
-- Use tail-based sampling
-- Batch span exports (10s intervals)
-- Compress spans before export
-- Use gRPC for OTLP (more efficient than HTTP)</p>
+<p><strong>Benchmarks</strong> (per-service overhead):</p>
+<ul>
+<li><strong>CPU</strong>: 2-5% increase</li>
+<li><strong>Memory</strong>: 50-100MB increase</li>
+<li><strong>Network</strong>: ~1KB per span (compressed)</li>
+<li><strong>Latency</strong>: &lt;1ms per instrumented operation</li>
+</ul>
+<p><strong>Production Optimizations</strong>:</p>
+<ul>
+<li>Use tail-based sampling</li>
+<li>Batch span exports (10s intervals)</li>
+<li>Compress spans before export</li>
+<li>Use gRPC for OTLP (more efficient than HTTP)</li>
+</ul>
 <h2 id="consequences">Consequences</h2>
 <h3 id="positive">Positive</h3>
 <ol>
@@ -5705,328 +5749,424 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 </ol>
 <h2 id="alternatives-considered">Alternatives Considered</h2>
 <h3 id="alternative-1-jaeger">Alternative 1: Jaeger</h3>
-<p><strong>Pros</strong>:
-- CNCF graduated project, very mature
-- Excellent UI with service dependency graphs
-- Strong community and documentation
-- Battle-tested in production
-- Built-in sampling strategies
-- Supports multiple storage backends (Cassandra, Elasticsearch, Badger)</p>
-<p><strong>Cons</strong>:
-- Higher operational complexity (requires Elasticsearch or Cassandra for scale)
-- Higher storage costs (~5x more than Tempo for equivalent data)
-- Less integration with Grafana (requires separate UI)
-- No native metrics generation from traces
-- Elasticsearch/Cassandra adds infrastructure overhead</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>CNCF graduated project, very mature</li>
+<li>Excellent UI with service dependency graphs</li>
+<li>Strong community and documentation</li>
+<li>Battle-tested in production</li>
+<li>Built-in sampling strategies</li>
+<li>Supports multiple storage backends (Cassandra, Elasticsearch, Badger)</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Higher operational complexity (requires Elasticsearch or Cassandra for scale)</li>
+<li>Higher storage costs (~5x more than Tempo for equivalent data)</li>
+<li>Less integration with Grafana (requires separate UI)</li>
+<li>No native metrics generation from traces</li>
+<li>Elasticsearch/Cassandra adds infrastructure overhead</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Operational complexity and storage costs. Tempo's integration with Grafana provides unified observability, and object storage backend is significantly cheaper than Elasticsearch. Jaeger's maturity is valuable, but Tempo's simplicity better suits Fawkes' goals.</p>
 <h3 id="alternative-2-zipkin">Alternative 2: Zipkin</h3>
-<p><strong>Pros</strong>:
-- Original distributed tracing system, very mature
-- Simple architecture, easy to deploy
-- Low resource requirements
-- Multiple language SDK support
-- Compatible with OpenTelemetry</p>
-<p><strong>Cons</strong>:
-- Less feature-rich than modern alternatives
-- No native Grafana integration
-- Limited query capabilities
-- In-memory storage default (poor retention)
-- Requires Elasticsearch for production (added complexity)
-- Smaller active community compared to CNCF projects</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Original distributed tracing system, very mature</li>
+<li>Simple architecture, easy to deploy</li>
+<li>Low resource requirements</li>
+<li>Multiple language SDK support</li>
+<li>Compatible with OpenTelemetry</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Less feature-rich than modern alternatives</li>
+<li>No native Grafana integration</li>
+<li>Limited query capabilities</li>
+<li>In-memory storage default (poor retention)</li>
+<li>Requires Elasticsearch for production (added complexity)</li>
+<li>Smaller active community compared to CNCF projects</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: While simple, Zipkin lacks modern features like TraceQL queries, Grafana integration, and metrics generation. Tempo provides better long-term value with similar deployment simplicity.</p>
 <h3 id="alternative-3-aws-x-ray">Alternative 3: AWS X-Ray</h3>
-<p><strong>Pros</strong>:
-- Fully managed service (no infrastructure to maintain)
-- Native AWS integration (Lambda, ECS, EC2)
-- Automatic instrumentation for AWS services
-- Low operational overhead
-- Pay-per-use pricing</p>
-<p><strong>Cons</strong>:
-- <strong>Cloud vendor lock-in</strong> (AWS only)
-- No multi-cloud support
-- Limited customization
-- Higher costs at scale (~$5/million traces)
-- Cannot run on-premises or in dojo labs
-- Separate UI from other observability tools</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Fully managed service (no infrastructure to maintain)</li>
+<li>Native AWS integration (Lambda, ECS, EC2)</li>
+<li>Automatic instrumentation for AWS services</li>
+<li>Low operational overhead</li>
+<li>Pay-per-use pricing</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Cloud vendor lock-in</strong> (AWS only)</li>
+<li>No multi-cloud support</li>
+<li>Limited customization</li>
+<li>Higher costs at scale (~$5/million traces)</li>
+<li>Cannot run on-premises or in dojo labs</li>
+<li>Separate UI from other observability tools</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Violates Fawkes' cloud-agnostic principle. Learners need portable skills, not cloud-specific tools. X-Ray's managed benefits don't outweigh lock-in costs.</p>
 <h3 id="alternative-4-elastic-apm">Alternative 4: Elastic APM</h3>
-<p><strong>Pros</strong>:
-- Integrated with Elastic Stack (logs, metrics, traces in one UI)
-- Excellent UI and visualization
-- Strong Java and Node.js support
-- Machine learning for anomaly detection
-- Good documentation</p>
-<p><strong>Cons</strong>:
-- Requires Elasticsearch cluster (high resource usage)
-- Complex scaling and tuning
-- Higher costs (compute + storage)
-- OpenTelemetry support is secondary (Elastic APM agents preferred)
-- Not CNCF/vendor-neutral</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Integrated with Elastic Stack (logs, metrics, traces in one UI)</li>
+<li>Excellent UI and visualization</li>
+<li>Strong Java and Node.js support</li>
+<li>Machine learning for anomaly detection</li>
+<li>Good documentation</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Requires Elasticsearch cluster (high resource usage)</li>
+<li>Complex scaling and tuning</li>
+<li>Higher costs (compute + storage)</li>
+<li>OpenTelemetry support is secondary (Elastic APM agents preferred)</li>
+<li>Not CNCF/vendor-neutral</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Elasticsearch operational complexity and costs. Fawkes already uses Grafana for visualization, so Elastic APM adds redundancy. Tempo + Grafana provides equivalent value with lower operational burden.</p>
 <h3 id="alternative-5-lightstep-honeycomb-datadog-apm-commercial-saas">Alternative 5: Lightstep / Honeycomb / Datadog APM (Commercial SaaS)</h3>
-<p><strong>Pros</strong>:
-- Best-in-class UX and query capabilities
-- Advanced sampling and trace analysis
-- Fully managed (zero operational burden)
-- Superior support and documentation
-- Advanced features (BubbleUp, trace comparison, service catalog)</p>
-<p><strong>Cons</strong>:
-- <strong>Very high costs</strong> ($100-500/month per host)
-- SaaS-only (not self-hosted)
-- Data sent to third-party
-- Cannot use in air-gapped or on-premises environments
-- Not suitable for learner environments (cost prohibitive)</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Best-in-class UX and query capabilities</li>
+<li>Advanced sampling and trace analysis</li>
+<li>Fully managed (zero operational burden)</li>
+<li>Superior support and documentation</li>
+<li>Advanced features (BubbleUp, trace comparison, service catalog)</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Very high costs</strong> ($100-500/month per host)</li>
+<li>SaaS-only (not self-hosted)</li>
+<li>Data sent to third-party</li>
+<li>Cannot use in air-gapped or on-premises environments</li>
+<li>Not suitable for learner environments (cost prohibitive)</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Cost prohibitive for open-source platform. Learners cannot use these tools without organization sponsorship. Self-hosted Tempo provides 90% of functionality at 5% of cost.</p>
 <h3 id="alternative-6-no-distributed-tracing-logs-metrics-only">Alternative 6: No Distributed Tracing (Logs + Metrics Only)</h3>
-<p><strong>Pros</strong>:
-- Lower complexity
-- Smaller operational footprint
-- Existing tools (Loki, Prometheus) sufficient
-- No additional instrumentation required</p>
-<p><strong>Cons</strong>:
-- <strong>Cannot trace requests across services</strong> (critical gap)
-- Debugging distributed systems is extremely difficult
-- No service dependency visualization
-- Cannot calculate accurate DORA lead time metrics
-- Poor learner experience (can't see end-to-end flows)</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Lower complexity</li>
+<li>Smaller operational footprint</li>
+<li>Existing tools (Loki, Prometheus) sufficient</li>
+<li>No additional instrumentation required</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Cannot trace requests across services</strong> (critical gap)</li>
+<li>Debugging distributed systems is extremely difficult</li>
+<li>No service dependency visualization</li>
+<li>Cannot calculate accurate DORA lead time metrics</li>
+<li>Poor learner experience (can't see end-to-end flows)</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Distributed tracing is essential for modern microservices platforms. DORA State of DevOps research shows observability (including tracing) strongly correlates with elite performance. Omitting tracing would cripple platform effectiveness.</p>
 <h2 id="implementation-plan">Implementation Plan</h2>
 <h3 id="phase-1-foundation-week-6-days-1-2">Phase 1: Foundation (Week 6, Days 1-2)</h3>
-<p><strong>Day 1: OpenTelemetry Collector Deployment</strong> [4 hours]
-1. Deploy OpenTelemetry Collector as DaemonSet
-2. Configure OTLP receivers (gRPC + HTTP)
-3. Set up batch and tail-sampling processors
-4. Test with sample trace data
-5. Verify Prometheus metrics export</p>
-<p><strong>Day 2: Grafana Tempo Deployment</strong> [4 hours]
-1. Deploy Tempo StatefulSet (3 replicas)
-2. Configure S3/MinIO backend storage
-3. Set up retention policies
-4. Configure Grafana data source
-5. Test trace ingestion and querying</p>
+<p><strong>Day 1: OpenTelemetry Collector Deployment</strong> [4 hours]</p>
+<ol>
+<li>Deploy OpenTelemetry Collector as DaemonSet</li>
+<li>Configure OTLP receivers (gRPC + HTTP)</li>
+<li>Set up batch and tail-sampling processors</li>
+<li>Test with sample trace data</li>
+<li>Verify Prometheus metrics export</li>
+</ol>
+<p><strong>Day 2: Grafana Tempo Deployment</strong> [4 hours]</p>
+<ol>
+<li>Deploy Tempo StatefulSet (3 replicas)</li>
+<li>Configure S3/MinIO backend storage</li>
+<li>Set up retention policies</li>
+<li>Configure Grafana data source</li>
+<li>Test trace ingestion and querying</li>
+</ol>
 <h3 id="phase-2-platform-service-instrumentation-week-6-days-3-5">Phase 2: Platform Service Instrumentation (Week 6, Days 3-5)</h3>
-<p><strong>Day 3: Backstage Tracing</strong> [3 hours]
-1. Add OpenTelemetry Node.js SDK to Backstage
-2. Configure auto-instrumentation
-3. Test trace collection for catalog API calls
-4. Add custom spans for plugin operations
-5. Verify Grafana visualization</p>
-<p><strong>Day 4: Jenkins &amp; ArgoCD Tracing</strong> [4 hours]
-1. Jenkins: Add OpenTelemetry Java agent to JVM
-2. Configure trace export for pipeline execution
-3. ArgoCD: Manual Go instrumentation for sync operations
-4. Test deployment trace (Jenkins → ArgoCD)
-5. Create Grafana dashboard for CI/CD traces</p>
-<p><strong>Day 5: Ingress &amp; Database Tracing</strong> [3 hours]
-1. NGINX Ingress: Configure trace propagation headers
-2. PostgreSQL: Add pg_stat_statements for query tracing
-3. Test end-to-end trace (User → NGINX → Backstage → PostgreSQL)
-4. Validate trace-to-log correlation</p>
+<p><strong>Day 3: Backstage Tracing</strong> [3 hours]</p>
+<ol>
+<li>Add OpenTelemetry Node.js SDK to Backstage</li>
+<li>Configure auto-instrumentation</li>
+<li>Test trace collection for catalog API calls</li>
+<li>Add custom spans for plugin operations</li>
+<li>Verify Grafana visualization</li>
+</ol>
+<p><strong>Day 4: Jenkins &amp; ArgoCD Tracing</strong> [4 hours]</p>
+<ol>
+<li>Jenkins: Add OpenTelemetry Java agent to JVM</li>
+<li>Configure trace export for pipeline execution</li>
+<li>ArgoCD: Manual Go instrumentation for sync operations</li>
+<li>Test deployment trace (Jenkins → ArgoCD)</li>
+<li>Create Grafana dashboard for CI/CD traces</li>
+</ol>
+<p><strong>Day 5: Ingress &amp; Database Tracing</strong> [3 hours]</p>
+<ol>
+<li>NGINX Ingress: Configure trace propagation headers</li>
+<li>PostgreSQL: Add pg_stat_statements for query tracing</li>
+<li>Test end-to-end trace (User → NGINX → Backstage → PostgreSQL)</li>
+<li>Validate trace-to-log correlation</li>
+</ol>
 <h3 id="phase-3-application-instrumentation-templates-week-7-days-1-2">Phase 3: Application Instrumentation Templates (Week 7, Days 1-2)</h3>
-<p><strong>Day 1: Create Language-Specific Templates</strong> [4 hours]
-1. Java Spring Boot template with OTel auto-instrumentation
-2. Python FastAPI template with OTel SDK
-3. Node.js Express template with OTel SDK
-4. Go template with manual instrumentation
-5. Document instrumentation patterns</p>
-<p><strong>Day 2: Golden Path Integration</strong> [4 hours]
-1. Update Backstage templates with OTel dependencies
-2. Add Dockerfile entries for OTel agents
-3. Update Helm charts with OTel environment variables
-4. Create CI/CD pipeline checks for instrumentation
-5. Test end-to-end application deployment with tracing</p>
+<p><strong>Day 1: Create Language-Specific Templates</strong> [4 hours]</p>
+<ol>
+<li>Java Spring Boot template with OTel auto-instrumentation</li>
+<li>Python FastAPI template with OTel SDK</li>
+<li>Node.js Express template with OTel SDK</li>
+<li>Go template with manual instrumentation</li>
+<li>Document instrumentation patterns</li>
+</ol>
+<p><strong>Day 2: Golden Path Integration</strong> [4 hours]</p>
+<ol>
+<li>Update Backstage templates with OTel dependencies</li>
+<li>Add Dockerfile entries for OTel agents</li>
+<li>Update Helm charts with OTel environment variables</li>
+<li>Create CI/CD pipeline checks for instrumentation</li>
+<li>Test end-to-end application deployment with tracing</li>
+</ol>
 <h3 id="phase-4-observability-integration-week-7-days-3-5">Phase 4: Observability Integration (Week 7, Days 3-5)</h3>
-<p><strong>Day 3: Trace-to-Metrics Integration</strong> [3 hours]
-1. Configure Tempo metrics generator
-2. Send exemplars to Prometheus
-3. Create Grafana dashboard linking metrics to traces
-4. Add "View Trace" links from Prometheus alerts</p>
-<p><strong>Day 4: Trace-to-Logs Integration</strong> [3 hours]
-1. Configure Loki derived fields for trace IDs
-2. Update application logging to include trace context
-3. Test correlation (click trace ID in logs → opens trace in Tempo)
-4. Create unified dashboard with logs + traces</p>
-<p><strong>Day 5: DORA Metrics Tracing</strong> [4 hours]
-1. Instrument deployment pipeline with trace context
-2. Track commit SHA through build → deploy → release
-3. Calculate lead time from traces
-4. Create DORA dashboard with trace links</p>
+<p><strong>Day 3: Trace-to-Metrics Integration</strong> [3 hours]</p>
+<ol>
+<li>Configure Tempo metrics generator</li>
+<li>Send exemplars to Prometheus</li>
+<li>Create Grafana dashboard linking metrics to traces</li>
+<li>Add "View Trace" links from Prometheus alerts</li>
+</ol>
+<p><strong>Day 4: Trace-to-Logs Integration</strong> [3 hours]</p>
+<ol>
+<li>Configure Loki derived fields for trace IDs</li>
+<li>Update application logging to include trace context</li>
+<li>Test correlation (click trace ID in logs → opens trace in Tempo)</li>
+<li>Create unified dashboard with logs + traces</li>
+</ol>
+<p><strong>Day 5: DORA Metrics Tracing</strong> [4 hours]</p>
+<ol>
+<li>Instrument deployment pipeline with trace context</li>
+<li>Track commit SHA through build → deploy → release</li>
+<li>Calculate lead time from traces</li>
+<li>Create DORA dashboard with trace links</li>
+</ol>
 <h3 id="phase-5-performance-optimization-week-8-days-1-2">Phase 5: Performance &amp; Optimization (Week 8, Days 1-2)</h3>
-<p><strong>Day 1: Sampling Optimization</strong> [3 hours]
-1. Analyze trace volumes and costs
-2. Tune tail-based sampling policies
-3. Implement adaptive sampling based on load
-4. Verify sample representativeness
-5. Document sampling strategies</p>
-<p><strong>Day 2: Performance Testing</strong> [3 hours]
-1. Load test with tracing enabled (measure overhead)
-2. Benchmark trace ingestion rates
-3. Test Tempo query performance
-4. Optimize collector configurations
-5. Document performance baseline</p>
+<p><strong>Day 1: Sampling Optimization</strong> [3 hours]</p>
+<ol>
+<li>Analyze trace volumes and costs</li>
+<li>Tune tail-based sampling policies</li>
+<li>Implement adaptive sampling based on load</li>
+<li>Verify sample representativeness</li>
+<li>Document sampling strategies</li>
+</ol>
+<p><strong>Day 2: Performance Testing</strong> [3 hours]</p>
+<ol>
+<li>Load test with tracing enabled (measure overhead)</li>
+<li>Benchmark trace ingestion rates</li>
+<li>Test Tempo query performance</li>
+<li>Optimize collector configurations</li>
+<li>Document performance baseline</li>
+</ol>
 <h3 id="phase-6-documentation-training-week-8-days-3-5">Phase 6: Documentation &amp; Training (Week 8, Days 3-5)</h3>
-<p><strong>Day 3: Platform Documentation</strong> [4 hours]
-1. Architecture overview with data flow diagrams
-2. Instrumentation guide for each language
-3. TraceQL query examples and cookbook
-4. Troubleshooting guide
-5. Runbook for Tempo operations</p>
-<p><strong>Day 4: Dojo Module - Brown Belt</strong> [4 hours]
-1. Module: "Distributed Tracing for Microservices"
-2. Theory: Trace context, spans, sampling
-3. Hands-on lab: Instrument sample app, query traces
-4. Troubleshooting exercise: Debug slow request
-5. Assessment quiz on tracing concepts</p>
-<p><strong>Day 5: Dashboard &amp; Playbooks</strong> [4 hours]
-1. Create standard Grafana dashboards:
-   - Service dependency graph
-   - Request latency heatmap
-   - Error rate by service
-   - Deployment trace timeline
-2. Create troubleshooting playbooks
-3. Document common trace patterns
-4. Create video walkthrough (15 minutes)</p>
+<p><strong>Day 3: Platform Documentation</strong> [4 hours]</p>
+<ol>
+<li>Architecture overview with data flow diagrams</li>
+<li>Instrumentation guide for each language</li>
+<li>TraceQL query examples and cookbook</li>
+<li>Troubleshooting guide</li>
+<li>Runbook for Tempo operations</li>
+</ol>
+<p><strong>Day 4: Dojo Module - Brown Belt</strong> [4 hours]</p>
+<ol>
+<li>Module: "Distributed Tracing for Microservices"</li>
+<li>Theory: Trace context, spans, sampling</li>
+<li>Hands-on lab: Instrument sample app, query traces</li>
+<li>Troubleshooting exercise: Debug slow request</li>
+<li>Assessment quiz on tracing concepts</li>
+</ol>
+<p><strong>Day 5: Dashboard &amp; Playbooks</strong> [4 hours]</p>
+<ol>
+<li>Create standard Grafana dashboards:</li>
+<li>Service dependency graph</li>
+<li>Request latency heatmap</li>
+<li>Error rate by service</li>
+<li>Deployment trace timeline</li>
+<li>Create troubleshooting playbooks</li>
+<li>Document common trace patterns</li>
+<li>Create video walkthrough (15 minutes)</li>
+</ol>
 <h2 id="dojo-integration">Dojo Integration</h2>
 <h3 id="brown-belt-module-6-distributed-tracing-request-flow-analysis">Brown Belt - Module 6: "Distributed Tracing &amp; Request Flow Analysis"</h3>
-<p><strong>Learning Objectives</strong>:
-- Understand distributed tracing concepts (spans, traces, context propagation)
-- Implement OpenTelemetry instrumentation in applications
-- Query traces using TraceQL
-- Correlate traces with metrics and logs
-- Debug performance issues using distributed tracing
-- Calculate DORA lead time metrics from traces</p>
+<p><strong>Learning Objectives</strong>:</p>
+<ul>
+<li>Understand distributed tracing concepts (spans, traces, context propagation)</li>
+<li>Implement OpenTelemetry instrumentation in applications</li>
+<li>Query traces using TraceQL</li>
+<li>Correlate traces with metrics and logs</li>
+<li>Debug performance issues using distributed tracing</li>
+<li>Calculate DORA lead time metrics from traces</li>
+</ul>
 <p><strong>Hands-On Lab</strong> (90 minutes):</p>
-<p><strong>Part 1: Instrument a Microservice</strong> (30 min)
-1. Deploy sample 3-tier app (frontend → API → database)
-2. Add OpenTelemetry SDK to each service
-3. Configure trace export to Tempo
-4. Generate traffic and view traces in Grafana
-5. Observe request flow across services</p>
-<p><strong>Part 2: Advanced Querying</strong> (30 min)
-1. Write TraceQL queries to find:
-   - Slow database queries
-   - Requests with errors
-   - Specific user journeys
-   - Deployment traces
-2. Create custom Grafana dashboard
-3. Set up trace-based alerts</p>
-<p><strong>Part 3: Troubleshooting Exercise</strong> (30 min)
-- <strong>Scenario</strong>: Application experiencing intermittent slowness
-- <strong>Task</strong>: Use traces to identify:
-  - Which service is the bottleneck
-  - Slow database queries
-  - External API latency
-  - Network issues
-- <strong>Deliverable</strong>: Root cause analysis report with trace evidence</p>
-<p><strong>Assessment</strong>:
-- Quiz: 10 questions on tracing concepts
-- Practical: Instrument new service and create dashboard
-- Troubleshooting: Debug broken trace (missing context propagation)</p>
+<p><strong>Part 1: Instrument a Microservice</strong> (30 min)</p>
+<ol>
+<li>Deploy sample 3-tier app (frontend → API → database)</li>
+<li>Add OpenTelemetry SDK to each service</li>
+<li>Configure trace export to Tempo</li>
+<li>Generate traffic and view traces in Grafana</li>
+<li>Observe request flow across services</li>
+</ol>
+<p><strong>Part 2: Advanced Querying</strong> (30 min)</p>
+<ol>
+<li>Write TraceQL queries to find:</li>
+<li>Slow database queries</li>
+<li>Requests with errors</li>
+<li>Specific user journeys</li>
+<li>Deployment traces</li>
+<li>Create custom Grafana dashboard</li>
+<li>Set up trace-based alerts</li>
+</ol>
+<p><strong>Part 3: Troubleshooting Exercise</strong> (30 min)</p>
+<ul>
+<li><strong>Scenario</strong>: Application experiencing intermittent slowness</li>
+<li><strong>Task</strong>: Use traces to identify:</li>
+<li>Which service is the bottleneck</li>
+<li>Slow database queries</li>
+<li>External API latency</li>
+<li>Network issues</li>
+<li><strong>Deliverable</strong>: Root cause analysis report with trace evidence</li>
+</ul>
+<p><strong>Assessment</strong>:</p>
+<ul>
+<li>Quiz: 10 questions on tracing concepts</li>
+<li>Practical: Instrument new service and create dashboard</li>
+<li>Troubleshooting: Debug broken trace (missing context propagation)</li>
+</ul>
 <p><strong>Time</strong>: 2 hours (30 min theory + 90 min hands-on + assessment)</p>
 <h2 id="monitoring-observability">Monitoring &amp; Observability</h2>
 <h3 id="tempo-health-metrics">Tempo Health Metrics</h3>
-<p><strong>Key Metrics to Monitor</strong>:
-- <code>tempo_ingester_bytes_received_total</code> - Trace ingestion rate
-- <code>tempo_ingester_blocks_flushed_total</code> - Block flush rate
-- <code>tempo_query_frontend_result_metrics_inspected_bytes</code> - Query performance
-- <code>tempo_distributor_spans_received_total</code> - Span reception rate
-- <code>tempo_compactor_blocks_compacted_total</code> - Compaction health</p>
-<p><strong>Grafana Dashboard</strong>: "Tempo Operations"
-- Ingestion rate by tenant
-- Query latency (P50, P95, P99)
-- Storage usage and growth
-- Compaction lag
-- Error rates</p>
-<p><strong>Alerting Rules</strong>:
+<p><strong>Key Metrics to Monitor</strong>:</p>
+<ul>
+<li><code>tempo_ingester_bytes_received_total</code> - Trace ingestion rate</li>
+<li><code>tempo_ingester_blocks_flushed_total</code> - Block flush rate</li>
+<li><code>tempo_query_frontend_result_metrics_inspected_bytes</code> - Query performance</li>
+<li><code>tempo_distributor_spans_received_total</code> - Span reception rate</li>
+<li><code>tempo_compactor_blocks_compacted_total</code> - Compaction health</li>
+</ul>
+<p><strong>Grafana Dashboard</strong>: "Tempo Operations"</p>
+<ul>
+<li>Ingestion rate by tenant</li>
+<li>Query latency (P50, P95, P99)</li>
+<li>Storage usage and growth</li>
+<li>Compaction lag</li>
+<li>Error rates</li>
+</ul>
+<p><strong>Alerting Rules</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">groups</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo_alerts</span>
-<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TempoHighIngestionErrors</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(tempo_distributor_spans_received_total{status=&quot;error&quot;}[5m]) &gt; 100</span>
-<span class="w">    </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
-<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">trace</span><span class="nv"> </span><span class="s">ingestion</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo_alerts</span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TempoHighIngestionErrors</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(tempo_distributor_spans_received_total{status=&quot;error&quot;}[5m]) &gt; 100</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">trace</span><span class="nv"> </span><span class="s">ingestion</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate&quot;</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TempoHighQueryLatency</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">histogram_quantile(0.95, tempo_query_frontend_duration_seconds_bucket) &gt; 10</span>
-<span class="w">    </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
-<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Tempo</span><span class="nv"> </span><span class="s">query</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">P95</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">10s&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TempoHighQueryLatency</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">histogram_quantile(0.95, tempo_query_frontend_duration_seconds_bucket) &gt; 10</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Tempo</span><span class="nv"> </span><span class="s">query</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">P95</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">10s&quot;</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TempoStorageUsageHigh</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo_ingester_bytes_metric_total &gt; 100e9</span><span class="w">  </span><span class="c1"># 100GB</span>
-<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Tempo</span><span class="nv"> </span><span class="s">ingester</span><span class="nv"> </span><span class="s">storage</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">high&quot;</span>
-</code></pre></div></p>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TempoStorageUsageHigh</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo_ingester_bytes_metric_total &gt; 100e9</span><span class="w"> </span><span class="c1"># 100GB</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Tempo</span><span class="nv"> </span><span class="s">ingester</span><span class="nv"> </span><span class="s">storage</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">high&quot;</span>
+</code></pre></div>
 <h3 id="opentelemetry-collector-health">OpenTelemetry Collector Health</h3>
-<p><strong>Key Metrics</strong>:
-- <code>otelcol_receiver_accepted_spans</code> - Spans received
-- <code>otelcol_receiver_refused_spans</code> - Spans refused (backpressure)
-- <code>otelcol_processor_batch_batch_send_size</code> - Batch sizes
-- <code>otelcol_exporter_sent_spans</code> - Spans successfully exported
-- <code>otelcol_exporter_send_failed_spans</code> - Export failures</p>
-<p><strong>Dashboard</strong>: "OpenTelemetry Collector Health"
-- Span throughput (in/out)
-- Processor queue depth
-- Export success/failure rates
-- Memory usage by component</p>
+<p><strong>Key Metrics</strong>:</p>
+<ul>
+<li><code>otelcol_receiver_accepted_spans</code> - Spans received</li>
+<li><code>otelcol_receiver_refused_spans</code> - Spans refused (backpressure)</li>
+<li><code>otelcol_processor_batch_batch_send_size</code> - Batch sizes</li>
+<li><code>otelcol_exporter_sent_spans</code> - Spans successfully exported</li>
+<li><code>otelcol_exporter_send_failed_spans</code> - Export failures</li>
+</ul>
+<p><strong>Dashboard</strong>: "OpenTelemetry Collector Health"</p>
+<ul>
+<li>Span throughput (in/out)</li>
+<li>Processor queue depth</li>
+<li>Export success/failure rates</li>
+<li>Memory usage by component</li>
+</ul>
 <h2 id="security-considerations">Security Considerations</h2>
 <h3 id="data-privacy">Data Privacy</h3>
-<p><strong>Sensitive Data Scrubbing</strong>:
-- Remove authorization headers
-- Hash SQL statements
-- Redact PII from URLs and headers
-- Obfuscate API keys in trace attributes</p>
-<p><strong>Access Control</strong>:
-- Grafana RBAC for trace viewing
-- Namespace-based trace isolation (teams only see their traces)
-- Audit logging for trace access</p>
+<p><strong>Sensitive Data Scrubbing</strong>:</p>
+<ul>
+<li>Remove authorization headers</li>
+<li>Hash SQL statements</li>
+<li>Redact PII from URLs and headers</li>
+<li>Obfuscate API keys in trace attributes</li>
+</ul>
+<p><strong>Access Control</strong>:</p>
+<ul>
+<li>Grafana RBAC for trace viewing</li>
+<li>Namespace-based trace isolation (teams only see their traces)</li>
+<li>Audit logging for trace access</li>
+</ul>
 <h3 id="compliance">Compliance</h3>
-<p><strong>Data Retention</strong>:
-- 7 days detailed traces (compliance with GDPR "right to be forgotten")
-- 30 days sampled traces
-- Automated deletion after retention period</p>
-<p><strong>Encryption</strong>:
-- TLS for all trace transmission (OTLP over gRPC/HTTPS)
-- S3 server-side encryption for stored traces
-- No plaintext credentials in trace attributes</p>
+<p><strong>Data Retention</strong>:</p>
+<ul>
+<li>7 days detailed traces (compliance with GDPR "right to be forgotten")</li>
+<li>30 days sampled traces</li>
+<li>Automated deletion after retention period</li>
+</ul>
+<p><strong>Encryption</strong>:</p>
+<ul>
+<li>TLS for all trace transmission (OTLP over gRPC/HTTPS)</li>
+<li>S3 server-side encryption for stored traces</li>
+<li>No plaintext credentials in trace attributes</li>
+</ul>
 <h2 id="cost-analysis">Cost Analysis</h2>
 <h3 id="storage-costs-production">Storage Costs (Production)</h3>
-<p><strong>Assumptions</strong>:
-- 100 services generating traces
-- 1,000 requests/second average
-- 10 spans per trace average
-- 10% sampling rate (tail-based)
-- ~1KB per span (compressed)</p>
-<p><strong>Daily Trace Volume</strong>:
-- Raw spans: 100 services × 1,000 req/s × 10 spans × 86,400 s = 86.4 billion spans/day
-- After sampling: 8.64 billion spans/day
-- Storage: 8.64B spans × 1KB = 8.64 TB/day (before compression)
-- After compression (10:1): ~864 GB/day</p>
-<p><strong>Monthly Storage (7-day retention)</strong>:
-- 864 GB/day × 7 days = 6 TB active storage
-- S3 Standard: $0.023/GB = $138/month
-- S3 Intelligent-Tiering (after 7 days): $0.0125/GB = $75/month</p>
+<p><strong>Assumptions</strong>:</p>
+<ul>
+<li>100 services generating traces</li>
+<li>1,000 requests/second average</li>
+<li>10 spans per trace average</li>
+<li>10% sampling rate (tail-based)</li>
+<li>~1KB per span (compressed)</li>
+</ul>
+<p><strong>Daily Trace Volume</strong>:</p>
+<ul>
+<li>Raw spans: 100 services × 1,000 req/s × 10 spans × 86,400 s = 86.4 billion spans/day</li>
+<li>After sampling: 8.64 billion spans/day</li>
+<li>Storage: 8.64B spans × 1KB = 8.64 TB/day (before compression)</li>
+<li>After compression (10:1): ~864 GB/day</li>
+</ul>
+<p><strong>Monthly Storage (7-day retention)</strong>:</p>
+<ul>
+<li>864 GB/day × 7 days = 6 TB active storage</li>
+<li>S3 Standard: $0.023/GB = $138/month</li>
+<li>S3 Intelligent-Tiering (after 7 days): $0.0125/GB = $75/month</li>
+</ul>
 <p><strong>Total Monthly Cost</strong>: ~$213/month (vs. $5,000+/month for commercial APM at 100 services)</p>
-<p><strong>Cost Optimization</strong>:
-- Increase sampling rate in non-production (less cost-sensitive)
-- Use S3 Lifecycle policies to move old traces to Glacier
-- Tune tail-based sampling to focus on valuable traces
-- Compress spans aggressively (Snappy → LZ4)</p>
+<p><strong>Cost Optimization</strong>:</p>
+<ul>
+<li>Increase sampling rate in non-production (less cost-sensitive)</li>
+<li>Use S3 Lifecycle policies to move old traces to Glacier</li>
+<li>Tune tail-based sampling to focus on valuable traces</li>
+<li>Compress spans aggressively (Snappy → LZ4)</li>
+</ul>
 <h3 id="infrastructure-costs">Infrastructure Costs</h3>
-<p><strong>Tempo Pods</strong>:
-- 3 replicas × 2 CPU × $0.04/CPU/hour = $5.76/day = $173/month
-- 3 replicas × 4GB RAM × $0.005/GB/hour = $1.44/day = $43/month</p>
-<p><strong>OpenTelemetry Collector</strong>:
-- DaemonSet (1 per node, 10 nodes): 10 × 0.1 CPU × $0.04 = $0.96/day = $29/month
-- DaemonSet memory: 10 × 128MB × $0.005/GB/hour = negligible</p>
+<p><strong>Tempo Pods</strong>:</p>
+<ul>
+<li>3 replicas × 2 CPU × $0.04/CPU/hour = $5.76/day = $173/month</li>
+<li>3 replicas × 4GB RAM × $0.005/GB/hour = $1.44/day = $43/month</li>
+</ul>
+<p><strong>OpenTelemetry Collector</strong>:</p>
+<ul>
+<li>DaemonSet (1 per node, 10 nodes): 10 × 0.1 CPU × $0.04 = $0.96/day = $29/month</li>
+<li>DaemonSet memory: 10 × 128MB × $0.005/GB/hour = negligible</li>
+</ul>
 <p><strong>Total Infrastructure</strong>: ~$245/month</p>
 <p><strong>Grand Total</strong>: ~$458/month for distributed tracing (100 services, production scale)</p>
 <h2 id="documentation-structure">Documentation Structure</h2>
 <h3 id="for-platform-teams">For Platform Teams</h3>
 <ol>
-<li><strong>Architecture &amp; Design</strong></li>
-<li>Trace collection flow</li>
+<li>
+<p><strong>Architecture &amp; Design</strong></p>
+</li>
+<li>
+<p>Trace collection flow</p>
+</li>
 <li>Sampling strategies explained</li>
 <li>Storage architecture (S3 layout)</li>
 <li>
@@ -6035,7 +6175,9 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <li>
 <p><strong>Deployment Guide</strong></p>
 </li>
-<li>Helm chart installation (Tempo, OTel Collector)</li>
+<li>
+<p>Helm chart installation (Tempo, OTel Collector)</p>
+</li>
 <li>Cloud-specific configurations (AWS, Azure, GCP)</li>
 <li>Scaling guidelines</li>
 <li>
@@ -6051,8 +6193,12 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 </ol>
 <h3 id="for-application-teams">For Application Teams</h3>
 <ol>
-<li><strong>Instrumentation Guide</strong></li>
-<li>Language-specific SDKs (Java, Python, Node.js, Go)</li>
+<li>
+<p><strong>Instrumentation Guide</strong></p>
+</li>
+<li>
+<p>Language-specific SDKs (Java, Python, Node.js, Go)</p>
+</li>
 <li>Auto vs. manual instrumentation</li>
 <li>Custom span creation</li>
 <li>
@@ -6061,7 +6207,9 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <li>
 <p><strong>Querying &amp; Troubleshooting</strong></p>
 </li>
-<li>TraceQL query cookbook</li>
+<li>
+<p>TraceQL query cookbook</p>
+</li>
 <li>Common debugging patterns</li>
 <li>Grafana dashboard usage</li>
 <li>
@@ -6076,8 +6224,12 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 </ol>
 <h3 id="for-dojo-learners">For Dojo Learners</h3>
 <ol>
-<li><strong>Concepts Tutorial</strong></li>
-<li>What is distributed tracing?</li>
+<li>
+<p><strong>Concepts Tutorial</strong></p>
+</li>
+<li>
+<p>What is distributed tracing?</p>
+</li>
 <li>Spans, traces, and context propagation</li>
 <li>When to use tracing vs. logs/metrics</li>
 <li>
@@ -6086,7 +6238,9 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <li>
 <p><strong>Hands-On Labs</strong></p>
 </li>
-<li>Lab 1: Instrument a simple app</li>
+<li>
+<p>Lab 1: Instrument a simple app</p>
+</li>
 <li>Lab 2: Query traces with TraceQL</li>
 <li>Lab 3: Debug performance issue</li>
 <li>
@@ -6119,34 +6273,40 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <li>OpenTelemetry Best Practices: https://opentelemetry.io/docs/concepts/instrumentation/</li>
 </ul>
 <h2 id="notes">Notes</h2>
-<p><strong>Production Readiness Checklist</strong>:
-- [ ] Tempo deployed with 3+ replicas for HA
-- [ ] S3/MinIO backend configured with proper retention
-- [ ] OpenTelemetry Collector deployed (DaemonSet + Deployment)
-- [ ] Tail-based sampling configured and tested
-- [ ] Grafana data source configured with Tempo
-- [ ] Trace-to-logs correlation working (Loki derived fields)
-- [ ] Trace-to-metrics correlation working (Prometheus exemplars)
-- [ ] Sensitive data scrubbing verified
-- [ ] Performance benchmarks completed (overhead &lt; 5%)
-- [ ] Monitoring dashboards created
-- [ ] Alerting rules configured
-- [ ] Documentation complete
-- [ ] Team trained on querying and troubleshooting</p>
-<p><strong>Learner Environment Considerations</strong>:
-- Use in-memory Tempo backend for short-lived labs
-- Pre-instrument sample applications
-- Provide TraceQL query examples
-- Include broken traces for troubleshooting practice
-- Show real-world debugging scenarios
-- Integrate with DORA metrics curriculum</p>
-<p><strong>Future Enhancements</strong> (Post-MVP):
-- Service mesh integration (Istio sidecar auto-instrumentation)
-- Trace-based SLO monitoring
-- Anomaly detection from trace patterns
-- Cost attribution per service from trace data
-- Automated performance recommendations
-- Trace replay for testing</p>
+<p><strong>Production Readiness Checklist</strong>:</p>
+<ul>
+<li>[ ] Tempo deployed with 3+ replicas for HA</li>
+<li>[ ] S3/MinIO backend configured with proper retention</li>
+<li>[ ] OpenTelemetry Collector deployed (DaemonSet + Deployment)</li>
+<li>[ ] Tail-based sampling configured and tested</li>
+<li>[ ] Grafana data source configured with Tempo</li>
+<li>[ ] Trace-to-logs correlation working (Loki derived fields)</li>
+<li>[ ] Trace-to-metrics correlation working (Prometheus exemplars)</li>
+<li>[ ] Sensitive data scrubbing verified</li>
+<li>[ ] Performance benchmarks completed (overhead &lt; 5%)</li>
+<li>[ ] Monitoring dashboards created</li>
+<li>[ ] Alerting rules configured</li>
+<li>[ ] Documentation complete</li>
+<li>[ ] Team trained on querying and troubleshooting</li>
+</ul>
+<p><strong>Learner Environment Considerations</strong>:</p>
+<ul>
+<li>Use in-memory Tempo backend for short-lived labs</li>
+<li>Pre-instrument sample applications</li>
+<li>Provide TraceQL query examples</li>
+<li>Include broken traces for troubleshooting practice</li>
+<li>Show real-world debugging scenarios</li>
+<li>Integrate with DORA metrics curriculum</li>
+</ul>
+<p><strong>Future Enhancements</strong> (Post-MVP):</p>
+<ul>
+<li>Service mesh integration (Istio sidecar auto-instrumentation)</li>
+<li>Trace-based SLO monitoring</li>
+<li>Anomaly detection from trace patterns</li>
+<li>Cost attribution per service from trace data</li>
+<li>Automated performance recommendations</li>
+<li>Trace replay for testing</li>
+</ul>
 <h2 id="last-updated">Last Updated</h2>
 <p>December 7, 2024 - Initial version documenting Grafana Tempo + OpenTelemetry for distributed tracing</p>
 

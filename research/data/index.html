@@ -4758,26 +4758,30 @@
 </code></pre></div>
 <h2 id="raw-data-raw">Raw Data (<code>raw/</code>)</h2>
 <p><strong>Purpose</strong>: Store original, unmodified data as collected.</p>
-<p><strong>Contents</strong>:
-- Survey responses (CSV, JSON)
-- Analytics exports
-- Unprocessed interview recordings metadata
-- Raw observation notes
-- Form submissions
-- Usage logs</p>
-<p><strong>Guidelines</strong>:
-- <strong>Never modify</strong>: Keep original data intact
-- <strong>Metadata</strong>: Include a <code>README.md</code> or metadata file describing:
-  - Collection method
-  - Date collected
-  - Sample size
-  - Collection tool used
-  - Any known issues or limitations
-- <strong>Naming</strong>: Use descriptive names with dates
-  - Example: <code>2025-12-23-user-survey-responses.csv</code>
-- <strong>Privacy</strong>: Do NOT commit files with PII or sensitive data
-  - Use anonymization before committing
-  - Reference secure storage location if needed</p>
+<p><strong>Contents</strong>:</p>
+<ul>
+<li>Survey responses (CSV, JSON)</li>
+<li>Analytics exports</li>
+<li>Unprocessed interview recordings metadata</li>
+<li>Raw observation notes</li>
+<li>Form submissions</li>
+<li>Usage logs</li>
+</ul>
+<p><strong>Guidelines</strong>:</p>
+<ul>
+<li><strong>Never modify</strong>: Keep original data intact</li>
+<li><strong>Metadata</strong>: Include a <code>README.md</code> or metadata file describing:</li>
+<li>Collection method</li>
+<li>Date collected</li>
+<li>Sample size</li>
+<li>Collection tool used</li>
+<li>Any known issues or limitations</li>
+<li><strong>Naming</strong>: Use descriptive names with dates</li>
+<li>Example: <code>2025-12-23-user-survey-responses.csv</code></li>
+<li><strong>Privacy</strong>: Do NOT commit files with PII or sensitive data</li>
+<li>Use anonymization before committing</li>
+<li>Reference secure storage location if needed</li>
+</ul>
 <p><strong>Example Metadata File</strong> (<code>raw/2025-12-deployment-survey-metadata.md</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="gh"># Deployment Experience Survey - December 2025</span>
 
@@ -4788,6 +4792,7 @@
 <span class="gs">**Target Audience**</span>: Platform users who deployed in last 30 days
 
 <span class="gu">## Questions</span>
+
 <span class="k">1.</span> Role and experience level
 <span class="k">2.</span> Deployment frequency
 <span class="k">3.</span> Pain points (open-ended)
@@ -4795,31 +4800,38 @@
 <span class="k">5.</span> Feature requests (optional)
 
 <span class="gu">## Data Files</span>
+
 <span class="k">-</span><span class="w"> </span><span class="sb">`2025-12-15-deployment-survey-raw.csv`</span> - All responses
 <span class="k">-</span><span class="w"> </span><span class="sb">`2025-12-15-deployment-survey-open-responses.txt`</span> - Open-ended answers
 
 <span class="gu">## Known Issues</span>
+
 <span class="k">-</span><span class="w"> </span>Question 3 had a character limit, some responses truncated
 <span class="k">-</span><span class="w"> </span>3 responses excluded due to test submissions
 
 <span class="gu">## Privacy</span>
+
 <span class="k">-</span><span class="w"> </span>All emails and names removed
 <span class="k">-</span><span class="w"> </span>Anonymized as Respondent_001, Respondent_002, etc.
 </code></pre></div>
 <h2 id="processed-data-processed">Processed Data (<code>processed/</code>)</h2>
 <p><strong>Purpose</strong>: Store cleaned, analyzed, or transformed data.</p>
-<p><strong>Contents</strong>:
-- Cleaned survey data
-- Anonymized interview transcripts
-- Aggregated analytics
-- Coded qualitative data
-- Statistical analysis outputs</p>
-<p><strong>Guidelines</strong>:
-- <strong>Document transformation</strong>: Include notes on how data was processed
-- <strong>Link to source</strong>: Reference original raw data file
-- <strong>Version</strong>: If data is processed multiple times, use versions
-  - Example: <code>2025-12-deployment-survey-processed-v2.csv</code>
-- <strong>Data dictionary</strong>: Include column definitions for datasets</p>
+<p><strong>Contents</strong>:</p>
+<ul>
+<li>Cleaned survey data</li>
+<li>Anonymized interview transcripts</li>
+<li>Aggregated analytics</li>
+<li>Coded qualitative data</li>
+<li>Statistical analysis outputs</li>
+</ul>
+<p><strong>Guidelines</strong>:</p>
+<ul>
+<li><strong>Document transformation</strong>: Include notes on how data was processed</li>
+<li><strong>Link to source</strong>: Reference original raw data file</li>
+<li><strong>Version</strong>: If data is processed multiple times, use versions</li>
+<li>Example: <code>2025-12-deployment-survey-processed-v2.csv</code></li>
+<li><strong>Data dictionary</strong>: Include column definitions for datasets</li>
+</ul>
 <p><strong>Example Processing Notes</strong> (<code>processed/2025-12-deployment-survey-processing-notes.md</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="gh"># Processing Notes: Deployment Survey</span>
 
@@ -4830,15 +4842,18 @@
 <span class="gu">## Transformations Applied</span>
 
 <span class="k">1.</span> <span class="gs">**Anonymization**</span>
+
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Removed email addresses
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Replaced names with Respondent_NNN
 
 <span class="k">2.</span> <span class="gs">**Data Cleaning**</span>
+
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Removed 3 test submissions
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Fixed typos in role field
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Standardized experience level values
 
 <span class="k">3.</span> <span class="gs">**Categorization**</span>
+
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Coded open-ended pain points into 8 themes
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Tagged responses by user segment
 
@@ -4847,11 +4862,13 @@
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Counted pain point mentions by theme
 
 <span class="gu">## Output Files</span>
+
 <span class="k">-</span><span class="w"> </span><span class="sb">`2025-12-deployment-survey-processed.csv`</span> - Clean dataset
 <span class="k">-</span><span class="w"> </span><span class="sb">`2025-12-deployment-survey-themes.csv`</span> - Coded themes
 <span class="k">-</span><span class="w"> </span><span class="sb">`2025-12-deployment-survey-summary.json`</span> - Aggregated stats
 
 <span class="gu">## Data Dictionary</span>
+
 See: <span class="sb">`2025-12-deployment-survey-data-dictionary.md`</span>
 </code></pre></div>
 <h2 id="data-types">Data Types</h2>
@@ -4880,23 +4897,27 @@ See: <span class="sb">`2025-12-deployment-survey-data-dictionary.md`</span>
 </ul>
 <h2 id="privacy-and-security">Privacy and Security</h2>
 <h3 id="what-not-to-commit">What NOT to Commit</h3>
-<p>❌ <strong>Never commit</strong>:
-- Personally identifiable information (PII)
-  - Names, email addresses, phone numbers
-  - User IDs that can be linked to individuals
-  - IP addresses
-- Sensitive data
-  - Passwords or credentials
-  - API keys
-  - Internal system details
-- Raw audio/video recordings with identifiable information</p>
+<p>❌ <strong>Never commit</strong>:</p>
+<ul>
+<li>Personally identifiable information (PII)</li>
+<li>Names, email addresses, phone numbers</li>
+<li>User IDs that can be linked to individuals</li>
+<li>IP addresses</li>
+<li>Sensitive data</li>
+<li>Passwords or credentials</li>
+<li>API keys</li>
+<li>Internal system details</li>
+<li>Raw audio/video recordings with identifiable information</li>
+</ul>
 <h3 id="whats-safe-to-commit">What's Safe to Commit</h3>
-<p>✅ <strong>Safe to commit</strong>:
-- Anonymized survey responses
-- Aggregated analytics (no individual-level data)
-- De-identified interview transcripts
-- Statistical summaries
-- Coded qualitative data (without PII)</p>
+<p>✅ <strong>Safe to commit</strong>:</p>
+<ul>
+<li>Anonymized survey responses</li>
+<li>Aggregated analytics (no individual-level data)</li>
+<li>De-identified interview transcripts</li>
+<li>Statistical summaries</li>
+<li>Coded qualitative data (without PII)</li>
+</ul>
 <h3 id="anonymization-checklist">Anonymization Checklist</h3>
 <p>Before committing data:</p>
 <ul>
@@ -4915,20 +4936,24 @@ See: <span class="sb">`2025-12-deployment-survey-data-dictionary.md`</span>
 <li><strong>Recordings</strong>: Store securely outside Git, delete after 1 year</li>
 </ul>
 <h2 id="best-practices">Best Practices</h2>
-<p>✅ <strong>Do:</strong>
-- Document collection methodology
-- Keep raw and processed data separate
-- Include data dictionaries
-- Version processed datasets
-- Link data to insights and artifacts
-- Review data privacy before committing</p>
-<p>❌ <strong>Don't:</strong>
-- Modify raw data files
-- Commit PII or sensitive information
-- Use vague filenames
-- Skip documentation
-- Share data without authorization
-- Keep data without purpose</p>
+<p>✅ <strong>Do:</strong></p>
+<ul>
+<li>Document collection methodology</li>
+<li>Keep raw and processed data separate</li>
+<li>Include data dictionaries</li>
+<li>Version processed datasets</li>
+<li>Link data to insights and artifacts</li>
+<li>Review data privacy before committing</li>
+</ul>
+<p>❌ <strong>Don't:</strong></p>
+<ul>
+<li>Modify raw data files</li>
+<li>Commit PII or sensitive information</li>
+<li>Use vague filenames</li>
+<li>Skip documentation</li>
+<li>Share data without authorization</li>
+<li>Keep data without purpose</li>
+</ul>
 <h2 id="data-analysis">Data Analysis</h2>
 <h3 id="tools">Tools</h3>
 <ul>

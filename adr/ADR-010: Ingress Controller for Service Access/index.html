@@ -5148,47 +5148,57 @@
 <p>Accepted</p>
 <h2 id="context">Context</h2>
 <p>The Fawkes platform integrates multiple services that require external access:</p>
-<p><strong>Core Services</strong>:
-- Backstage (Developer Portal &amp; Dojo Hub) - Primary user interface
-- Mattermost (Team Collaboration) - Chat and collaboration
-- Focalboard (Project Management) - Kanban boards and planning
-- ArgoCD (GitOps UI) - Deployment visualization
-- Jenkins (CI/CD UI) - Pipeline management
-- Grafana (Observability) - Metrics and dashboards
-- Harbor (Container Registry UI) - Image management
-- SonarQube (Code Quality) - Security and quality reports</p>
-<p><strong>Access Requirements</strong>:
-- Single entry point with consistent domain structure
-- TLS/SSL encryption for all services
-- Path-based or subdomain-based routing
-- Rate limiting and DDoS protection
-- Authentication integration (OIDC/OAuth2)
-- Certificate management automation
-- Load balancing across replicas
-- WebSocket support (Mattermost, ArgoCD, Jenkins)
-- Health check integration
-- Request/response logging for security auditing</p>
-<p><strong>Technical Constraints</strong>:
-- Must work across AWS, Azure, GCP, and on-premises environments
-- Should integrate with cert-manager for automated certificate provisioning
-- Must support both path-based (/backstage) and subdomain-based (backstage.fawkes.example.com) routing
-- Should minimize cloud provider lock-in
-- Must support learner environments with dynamic provisioning
-- Should provide observability (request metrics, tracing)</p>
-<p><strong>Security Requirements</strong>:
-- Force HTTPS/TLS for all traffic
-- Support for custom certificates and Let's Encrypt
-- Web Application Firewall (WAF) capabilities
-- Rate limiting per service and per IP
-- DDoS protection
-- Security headers (HSTS, CSP, X-Frame-Options)
-- IP whitelisting capabilities for sensitive services</p>
-<p><strong>Operational Requirements</strong>:
-- Easy configuration via annotations or CRDs
-- Automatic service discovery
-- Rolling updates without downtime
-- Clear error pages and troubleshooting
-- Integration with platform monitoring</p>
+<p><strong>Core Services</strong>:</p>
+<ul>
+<li>Backstage (Developer Portal &amp; Dojo Hub) - Primary user interface</li>
+<li>Mattermost (Team Collaboration) - Chat and collaboration</li>
+<li>Focalboard (Project Management) - Kanban boards and planning</li>
+<li>ArgoCD (GitOps UI) - Deployment visualization</li>
+<li>Jenkins (CI/CD UI) - Pipeline management</li>
+<li>Grafana (Observability) - Metrics and dashboards</li>
+<li>Harbor (Container Registry UI) - Image management</li>
+<li>SonarQube (Code Quality) - Security and quality reports</li>
+</ul>
+<p><strong>Access Requirements</strong>:</p>
+<ul>
+<li>Single entry point with consistent domain structure</li>
+<li>TLS/SSL encryption for all services</li>
+<li>Path-based or subdomain-based routing</li>
+<li>Rate limiting and DDoS protection</li>
+<li>Authentication integration (OIDC/OAuth2)</li>
+<li>Certificate management automation</li>
+<li>Load balancing across replicas</li>
+<li>WebSocket support (Mattermost, ArgoCD, Jenkins)</li>
+<li>Health check integration</li>
+<li>Request/response logging for security auditing</li>
+</ul>
+<p><strong>Technical Constraints</strong>:</p>
+<ul>
+<li>Must work across AWS, Azure, GCP, and on-premises environments</li>
+<li>Should integrate with cert-manager for automated certificate provisioning</li>
+<li>Must support both path-based (/backstage) and subdomain-based (backstage.fawkes.example.com) routing</li>
+<li>Should minimize cloud provider lock-in</li>
+<li>Must support learner environments with dynamic provisioning</li>
+<li>Should provide observability (request metrics, tracing)</li>
+</ul>
+<p><strong>Security Requirements</strong>:</p>
+<ul>
+<li>Force HTTPS/TLS for all traffic</li>
+<li>Support for custom certificates and Let's Encrypt</li>
+<li>Web Application Firewall (WAF) capabilities</li>
+<li>Rate limiting per service and per IP</li>
+<li>DDoS protection</li>
+<li>Security headers (HSTS, CSP, X-Frame-Options)</li>
+<li>IP whitelisting capabilities for sensitive services</li>
+</ul>
+<p><strong>Operational Requirements</strong>:</p>
+<ul>
+<li>Easy configuration via annotations or CRDs</li>
+<li>Automatic service discovery</li>
+<li>Rolling updates without downtime</li>
+<li>Clear error pages and troubleshooting</li>
+<li>Integration with platform monitoring</li>
+</ul>
 <h2 id="decision">Decision</h2>
 <p>We will use <strong>NGINX Ingress Controller</strong> as the primary ingress solution for the Fawkes platform.</p>
 <h3 id="architecture">Architecture</h3>
@@ -5219,7 +5229,7 @@
    └──&gt; SonarQube Service (/sonarqube)
 </code></pre></div>
 <h3 id="routing-strategy">Routing Strategy</h3>
-<p><strong>Primary: Subdomain-Based Routing</strong> (Production)
+<p><strong>Primary: Subdomain-Based Routing</strong> (Production)</p>
 <div class="highlight"><pre><span></span><code>https://backstage.fawkes.example.com  → Backstage
 https://chat.fawkes.example.com       → Mattermost
 https://boards.fawkes.example.com     → Focalboard
@@ -5228,8 +5238,8 @@ https://ci.fawkes.example.com         → Jenkins
 https://metrics.fawkes.example.com    → Grafana
 https://registry.fawkes.example.com   → Harbor
 https://quality.fawkes.example.com    → SonarQube
-</code></pre></div></p>
-<p><strong>Alternative: Path-Based Routing</strong> (Development/Learning)
+</code></pre></div>
+<p><strong>Alternative: Path-Based Routing</strong> (Development/Learning)</p>
 <div class="highlight"><pre><span></span><code>https://fawkes.example.com/           → Backstage
 https://fawkes.example.com/chat       → Mattermost
 https://fawkes.example.com/boards     → Focalboard
@@ -5238,7 +5248,7 @@ https://fawkes.example.com/ci         → Jenkins
 https://fawkes.example.com/metrics    → Grafana
 https://fawkes.example.com/registry   → Harbor
 https://fawkes.example.com/quality    → SonarQube
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="certificate-management">Certificate Management</h3>
 <p>Integration with <strong>cert-manager</strong> for automated certificate provisioning:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cert-manager.io/v1</span>
@@ -5252,12 +5262,12 @@ https://fawkes.example.com/quality    → SonarQube
 <span class="w">    </span><span class="nt">privateKeySecretRef</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt-prod-key</span>
 <span class="w">    </span><span class="nt">solvers</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">http01</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">ingress</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">http01</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">ingress</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
 </code></pre></div>
 <h3 id="example-ingress-configuration">Example Ingress Configuration</h3>
-<p><strong>Backstage (Primary Portal)</strong>:
+<p><strong>Backstage (Primary Portal)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5272,22 +5282,22 @@ https://fawkes.example.com/quality    → SonarQube
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
 <span class="w">  </span><span class="nt">tls</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage.fawkes.example.com</span>
-<span class="w">    </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage-tls</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage.fawkes.example.com</span>
+<span class="w">      </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage-tls</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage.fawkes.example.com</span>
-<span class="w">    </span><span class="nt">http</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">paths</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
-<span class="w">        </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prefix</span>
-<span class="w">        </span><span class="nt">backend</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">service</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage</span>
-<span class="w">            </span><span class="nt">port</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7007</span>
-</code></pre></div></p>
-<p><strong>Mattermost (WebSocket Support)</strong>:
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage.fawkes.example.com</span>
+<span class="w">      </span><span class="nt">http</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
+<span class="w">            </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prefix</span>
+<span class="w">            </span><span class="nt">backend</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage</span>
+<span class="w">                </span><span class="nt">port</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7007</span>
+</code></pre></div>
+<p><strong>Mattermost (WebSocket Support)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5302,39 +5312,39 @@ https://fawkes.example.com/quality    → SonarQube
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
 <span class="w">  </span><span class="nt">tls</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chat.fawkes.example.com</span>
-<span class="w">    </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mattermost-tls</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chat.fawkes.example.com</span>
+<span class="w">      </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mattermost-tls</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chat.fawkes.example.com</span>
-<span class="w">    </span><span class="nt">http</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">paths</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
-<span class="w">        </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prefix</span>
-<span class="w">        </span><span class="nt">backend</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">service</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mattermost</span>
-<span class="w">            </span><span class="nt">port</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8065</span>
-</code></pre></div></p>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chat.fawkes.example.com</span>
+<span class="w">      </span><span class="nt">http</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
+<span class="w">            </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prefix</span>
+<span class="w">            </span><span class="nt">backend</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mattermost</span>
+<span class="w">                </span><span class="nt">port</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8065</span>
+</code></pre></div>
 <h3 id="security-configuration">Security Configuration</h3>
-<p><strong>Rate Limiting</strong>:
+<p><strong>Rate Limiting</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">annotations</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/limit-rps</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10&quot;</span>
 <span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/limit-connections</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;20&quot;</span>
-</code></pre></div></p>
-<p><strong>IP Whitelisting</strong> (for admin services):
+</code></pre></div>
+<p><strong>IP Whitelisting</strong> (for admin services):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">annotations</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/whitelist-source-range</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10.0.0.0/8,172.16.0.0/12&quot;</span>
-</code></pre></div></p>
-<p><strong>Security Headers</strong>:
+</code></pre></div>
+<p><strong>Security Headers</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">annotations</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/configuration-snippet</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">more_set_headers &quot;X-Frame-Options: DENY&quot;;</span>
 <span class="w">    </span><span class="no">more_set_headers &quot;X-Content-Type-Options: nosniff&quot;;</span>
 <span class="w">    </span><span class="no">more_set_headers &quot;X-XSS-Protection: 1; mode=block&quot;;</span>
 <span class="w">    </span><span class="no">more_set_headers &quot;Strict-Transport-Security: max-age=31536000; includeSubDomains&quot;;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="oauth2-proxy-integration">OAuth2 Proxy Integration</h3>
 <p>For services without native SSO support:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
@@ -5346,15 +5356,17 @@ https://fawkes.example.com/quality    → SonarQube
 <span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/auth-signin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://oauth2.fawkes.example.com/oauth2/start?rd=$escaped_request_uri&quot;</span>
 </code></pre></div>
 <h3 id="monitoring-integration">Monitoring Integration</h3>
-<p>NGINX Ingress Controller exposes Prometheus metrics:
-- Request rate per service
-- Request duration percentiles
-- Error rates (4xx, 5xx)
-- Bytes transferred
-- Upstream response time</p>
+<p>NGINX Ingress Controller exposes Prometheus metrics:</p>
+<ul>
+<li>Request rate per service</li>
+<li>Request duration percentiles</li>
+<li>Error rates (4xx, 5xx)</li>
+<li>Bytes transferred</li>
+<li>Upstream response time</li>
+</ul>
 <p>Grafana dashboards: <strong>NGINX Ingress Controller</strong> (official dashboard ID: 9614)</p>
 <h3 id="deployment-configuration">Deployment Configuration</h3>
-<p><strong>NGINX Ingress Controller Helm Values</strong>:
+<p><strong>NGINX Ingress Controller Helm Values</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">controller</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 
@@ -5389,7 +5401,7 @@ https://fawkes.example.com/quality    → SonarQube
 <span class="w">  </span><span class="nt">podAnnotations</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">prometheus.io/scrape</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
 <span class="w">    </span><span class="nt">prometheus.io/port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10254&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="consequences">Consequences</h2>
 <h3 id="positive">Positive</h3>
 <ol>
@@ -5422,98 +5434,126 @@ https://fawkes.example.com/quality    → SonarQube
 </ol>
 <h2 id="alternatives-considered">Alternatives Considered</h2>
 <h3 id="alternative-1-traefik">Alternative 1: Traefik</h3>
-<p><strong>Pros</strong>:
-- Native Let's Encrypt integration (no cert-manager needed)
-- Dynamic configuration via labels
-- Built-in dashboard for traffic visualization
-- Smaller resource footprint
-- Excellent WebSocket support
-- Modern, actively developed</p>
-<p><strong>Cons</strong>:
-- Smaller community compared to NGINX
-- Less enterprise adoption
-- More limited advanced features (rate limiting, WAF)
-- Documentation less comprehensive for complex scenarios
-- Fewer third-party integrations</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Native Let's Encrypt integration (no cert-manager needed)</li>
+<li>Dynamic configuration via labels</li>
+<li>Built-in dashboard for traffic visualization</li>
+<li>Smaller resource footprint</li>
+<li>Excellent WebSocket support</li>
+<li>Modern, actively developed</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Smaller community compared to NGINX</li>
+<li>Less enterprise adoption</li>
+<li>More limited advanced features (rate limiting, WAF)</li>
+<li>Documentation less comprehensive for complex scenarios</li>
+<li>Fewer third-party integrations</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: While Traefik is excellent and modern, NGINX Ingress has broader enterprise adoption, more comprehensive documentation for complex scenarios, and better alignment with DORA best practices documentation. The larger community makes it easier for Fawkes learners to find troubleshooting resources.</p>
 <h3 id="alternative-2-istioenvoy-service-mesh">Alternative 2: Istio/Envoy Service Mesh</h3>
-<p><strong>Pros</strong>:
-- Full service mesh capabilities (mTLS, traffic management, observability)
-- Advanced traffic routing (A/B testing, canary, circuit breaking)
-- Superior observability (distributed tracing, detailed metrics)
-- Built-in security (zero-trust networking)
-- Envoy is modern, high-performance proxy</p>
-<p><strong>Cons</strong>:
-- Significant complexity overhead (steep learning curve)
-- High resource consumption (sidecar for every pod)
-- Operational burden (control plane management, upgrades)
-- Overkill for ingress-only use case
-- Adds 6-8 weeks to MVP timeline
-- Too complex for learner environments</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Full service mesh capabilities (mTLS, traffic management, observability)</li>
+<li>Advanced traffic routing (A/B testing, canary, circuit breaking)</li>
+<li>Superior observability (distributed tracing, detailed metrics)</li>
+<li>Built-in security (zero-trust networking)</li>
+<li>Envoy is modern, high-performance proxy</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Significant complexity overhead (steep learning curve)</li>
+<li>High resource consumption (sidecar for every pod)</li>
+<li>Operational burden (control plane management, upgrades)</li>
+<li>Overkill for ingress-only use case</li>
+<li>Adds 6-8 weeks to MVP timeline</li>
+<li>Too complex for learner environments</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Service mesh capabilities are valuable but represent over-engineering for MVP. Fawkes needs ingress management, not full service mesh. Istio/Envoy can be considered post-MVP as "Advanced Networking" module in Brown Belt curriculum.</p>
 <h3 id="alternative-3-kong-ingress-controller">Alternative 3: Kong Ingress Controller</h3>
-<p><strong>Pros</strong>:
-- API gateway features (rate limiting, authentication, transformation)
-- Plugin ecosystem for extensibility
-- Enterprise version available with support
-- Good for API-heavy platforms
-- Lua-based customization
-- Built-in developer portal</p>
-<p><strong>Cons</strong>:
-- More complex than pure ingress controller
-- Requires PostgreSQL for production (additional dependency)
-- Licensing considerations (enterprise features)
-- Smaller community than NGINX
-- API gateway features not needed for internal platform</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>API gateway features (rate limiting, authentication, transformation)</li>
+<li>Plugin ecosystem for extensibility</li>
+<li>Enterprise version available with support</li>
+<li>Good for API-heavy platforms</li>
+<li>Lua-based customization</li>
+<li>Built-in developer portal</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>More complex than pure ingress controller</li>
+<li>Requires PostgreSQL for production (additional dependency)</li>
+<li>Licensing considerations (enterprise features)</li>
+<li>Smaller community than NGINX</li>
+<li>API gateway features not needed for internal platform</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Kong's strength is API management, which is not a primary Fawkes requirement. The additional complexity and PostgreSQL dependency don't provide sufficient value for our use case. NGINX provides everything we need without API gateway overhead.</p>
 <h3 id="alternative-4-haproxy-ingress">Alternative 4: HAProxy Ingress</h3>
-<p><strong>Pros</strong>:
-- Extremely high performance and efficiency
-- Very low resource consumption
-- Battle-tested load balancing capabilities
-- Excellent documentation
-- Used by major internet properties</p>
-<p><strong>Cons</strong>:
-- Smaller Kubernetes community compared to NGINX
-- Less flexible annotation-based configuration
-- Fewer examples and tutorials for Kubernetes
-- Less integration with cloud-native ecosystem
-- Limited WebSocket support compared to NGINX</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Extremely high performance and efficiency</li>
+<li>Very low resource consumption</li>
+<li>Battle-tested load balancing capabilities</li>
+<li>Excellent documentation</li>
+<li>Used by major internet properties</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Smaller Kubernetes community compared to NGINX</li>
+<li>Less flexible annotation-based configuration</li>
+<li>Fewer examples and tutorials for Kubernetes</li>
+<li>Less integration with cloud-native ecosystem</li>
+<li>Limited WebSocket support compared to NGINX</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: While HAProxy is excellent for performance-critical scenarios, NGINX Ingress provides better Kubernetes-native integration, more comprehensive documentation for learners, and broader community support. HAProxy's performance advantages are not critical for Fawkes' scale.</p>
 <h3 id="alternative-5-cloud-provider-ingress-aws-alb-gcp-gclb-azure-app-gateway">Alternative 5: Cloud Provider Ingress (AWS ALB, GCP GCLB, Azure App Gateway)</h3>
-<p><strong>Pros</strong>:
-- Native cloud integration
-- Managed service (no controller to maintain)
-- Tight security integration (IAM, security groups)
-- Automatic scaling
-- Lower operational overhead</p>
-<p><strong>Cons</strong>:
-- <strong>Cloud vendor lock-in</strong> (violates Fawkes portability principle)
-- Inconsistent behavior across clouds
-- Limited customization compared to NGINX
-- Annotations differ per cloud
-- Cannot run on-premises or in learner laptops
-- Makes dojo lab provisioning cloud-specific</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Native cloud integration</li>
+<li>Managed service (no controller to maintain)</li>
+<li>Tight security integration (IAM, security groups)</li>
+<li>Automatic scaling</li>
+<li>Lower operational overhead</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Cloud vendor lock-in</strong> (violates Fawkes portability principle)</li>
+<li>Inconsistent behavior across clouds</li>
+<li>Limited customization compared to NGINX</li>
+<li>Annotations differ per cloud</li>
+<li>Cannot run on-premises or in learner laptops</li>
+<li>Makes dojo lab provisioning cloud-specific</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Violates core Fawkes principle of cloud portability. Learners need consistent experience across environments. Platform teams should be able to deploy Fawkes anywhere, including on-premises or local Kubernetes clusters. Cloud ingress controllers prevent this flexibility.</p>
 <h3 id="alternative-6-contour-envoy-based">Alternative 6: Contour (Envoy-based)</h3>
-<p><strong>Pros</strong>:
-- Uses Envoy proxy (modern, high-performance)
-- Simpler than full Istio deployment
-- Good HTTPProxy CRD for advanced routing
-- CNCF project with growing community
-- Excellent for multi-tenancy</p>
-<p><strong>Cons</strong>:
-- Smaller community and ecosystem than NGINX
-- Less mature documentation
-- Fewer examples and tutorials
-- Less enterprise adoption
-- Not as feature-complete for edge use cases</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Uses Envoy proxy (modern, high-performance)</li>
+<li>Simpler than full Istio deployment</li>
+<li>Good HTTPProxy CRD for advanced routing</li>
+<li>CNCF project with growing community</li>
+<li>Excellent for multi-tenancy</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Smaller community and ecosystem than NGINX</li>
+<li>Less mature documentation</li>
+<li>Fewer examples and tutorials</li>
+<li>Less enterprise adoption</li>
+<li>Not as feature-complete for edge use cases</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: While Contour is a good middle ground between NGINX and Istio, its smaller community and less mature documentation make it less suitable for a learning-focused platform. NGINX's extensive resources better support dojo learners troubleshooting issues independently.</p>
 <h2 id="implementation-plan">Implementation Plan</h2>
 <h3 id="phase-1-mvp-week-3-of-sprint-01">Phase 1: MVP (Week 3 of Sprint 01)</h3>
 <ol>
-<li><strong>Deploy NGINX Ingress Controller</strong> [4 hours]</li>
-<li>Install via Helm chart</li>
+<li>
+<p><strong>Deploy NGINX Ingress Controller</strong> [4 hours]</p>
+</li>
+<li>
+<p>Install via Helm chart</p>
+</li>
 <li>Configure for AWS NLB (or equivalent)</li>
 <li>Verify controller pods running</li>
 <li>
@@ -5522,7 +5562,9 @@ https://fawkes.example.com/quality    → SonarQube
 <li>
 <p><strong>Deploy cert-manager</strong> [2 hours]</p>
 </li>
-<li>Install cert-manager via Helm</li>
+<li>
+<p>Install cert-manager via Helm</p>
+</li>
 <li>Create ClusterIssuer for Let's Encrypt staging</li>
 <li>Test certificate provisioning</li>
 <li>
@@ -5531,7 +5573,9 @@ https://fawkes.example.com/quality    → SonarQube
 <li>
 <p><strong>Create Ingress for Backstage</strong> [2 hours]</p>
 </li>
-<li>Subdomain-based routing (backstage.fawkes.dev)</li>
+<li>
+<p>Subdomain-based routing (backstage.fawkes.dev)</p>
+</li>
 <li>TLS certificate from Let's Encrypt</li>
 <li>Force HTTPS redirect</li>
 <li>
@@ -5547,8 +5591,12 @@ https://fawkes.example.com/quality    → SonarQube
 </ol>
 <h3 id="phase-2-core-services-weeks-4-5">Phase 2: Core Services (Weeks 4-5)</h3>
 <ol>
-<li><strong>Deploy Ingress for Collaboration Services</strong> [4 hours]</li>
-<li>Mattermost with WebSocket support</li>
+<li>
+<p><strong>Deploy Ingress for Collaboration Services</strong> [4 hours]</p>
+</li>
+<li>
+<p>Mattermost with WebSocket support</p>
+</li>
 <li>Focalboard (integrated with Mattermost)</li>
 <li>
 <p>Test real-time features</p>
@@ -5556,7 +5604,9 @@ https://fawkes.example.com/quality    → SonarQube
 <li>
 <p><strong>Deploy Ingress for CI/CD Services</strong> [4 hours]</p>
 </li>
-<li>Jenkins with authentication</li>
+<li>
+<p>Jenkins with authentication</p>
+</li>
 <li>ArgoCD with SSO</li>
 <li>
 <p>Harbor with rate limiting</p>
@@ -5570,8 +5620,12 @@ https://fawkes.example.com/quality    → SonarQube
 </ol>
 <h3 id="phase-3-security-monitoring-week-6">Phase 3: Security &amp; Monitoring (Week 6)</h3>
 <ol>
-<li><strong>Implement Security Hardening</strong> [4 hours]</li>
-<li>Configure rate limiting</li>
+<li>
+<p><strong>Implement Security Hardening</strong> [4 hours]</p>
+</li>
+<li>
+<p>Configure rate limiting</p>
+</li>
 <li>Add security headers</li>
 <li>IP whitelisting for admin services</li>
 <li>
@@ -5580,7 +5634,9 @@ https://fawkes.example.com/quality    → SonarQube
 <li>
 <p><strong>Configure Monitoring</strong> [3 hours]</p>
 </li>
-<li>Prometheus ServiceMonitor for NGINX metrics</li>
+<li>
+<p>Prometheus ServiceMonitor for NGINX metrics</p>
+</li>
 <li>Grafana dashboard for ingress monitoring</li>
 <li>Alerting rules for high error rates</li>
 <li>
@@ -5619,60 +5675,70 @@ https://fawkes.example.com/quality    → SonarQube
 </ol>
 <h2 id="dojo-integration">Dojo Integration</h2>
 <h3 id="yellow-belt-module-4-exposing-services-with-ingress">Yellow Belt - Module 4: "Exposing Services with Ingress"</h3>
-<p><strong>Learning Objectives</strong>:
-- Understand Kubernetes Ingress concepts
-- Configure NGINX Ingress Controller
-- Implement TLS/SSL with cert-manager
-- Apply security best practices (rate limiting, headers)
-- Troubleshoot common ingress issues</p>
-<p><strong>Hands-On Lab</strong>:
-1. Deploy a sample application to learner namespace
-2. Create Ingress resource with subdomain routing
-3. Configure TLS certificate via cert-manager
-4. Test HTTPS access and forced redirect
-5. Add rate limiting and security headers
-6. Monitor ingress metrics in Grafana</p>
-<p><strong>Assessment</strong>:
-- Quiz on Ingress concepts (5 questions)
-- Practical: Deploy and expose a new service
-- Troubleshoot broken ingress configuration</p>
+<p><strong>Learning Objectives</strong>:</p>
+<ul>
+<li>Understand Kubernetes Ingress concepts</li>
+<li>Configure NGINX Ingress Controller</li>
+<li>Implement TLS/SSL with cert-manager</li>
+<li>Apply security best practices (rate limiting, headers)</li>
+<li>Troubleshoot common ingress issues</li>
+</ul>
+<p><strong>Hands-On Lab</strong>:</p>
+<ol>
+<li>Deploy a sample application to learner namespace</li>
+<li>Create Ingress resource with subdomain routing</li>
+<li>Configure TLS certificate via cert-manager</li>
+<li>Test HTTPS access and forced redirect</li>
+<li>Add rate limiting and security headers</li>
+<li>Monitor ingress metrics in Grafana</li>
+</ol>
+<p><strong>Assessment</strong>:</p>
+<ul>
+<li>Quiz on Ingress concepts (5 questions)</li>
+<li>Practical: Deploy and expose a new service</li>
+<li>Troubleshoot broken ingress configuration</li>
+</ul>
 <p><strong>Time</strong>: 90 minutes (30 min theory + 60 min hands-on)</p>
 <h2 id="monitoring-observability">Monitoring &amp; Observability</h2>
 <h3 id="key-metrics">Key Metrics</h3>
-<p><strong>NGINX Ingress Controller Metrics</strong>:
-- <code>nginx_ingress_controller_requests</code> - Total requests per service
-- <code>nginx_ingress_controller_request_duration_seconds</code> - Request latency percentiles
-- <code>nginx_ingress_controller_response_size</code> - Response sizes
-- <code>nginx_ingress_controller_ssl_expire_time_seconds</code> - Certificate expiration
-- <code>nginx_ingress_controller_nginx_process_connections</code> - Active connections</p>
-<p><strong>Grafana Dashboard Panels</strong>:
-1. Request Rate (per service, per ingress)
-2. Request Duration (P50, P95, P99)
-3. HTTP Status Codes (2xx, 4xx, 5xx rates)
-4. SSL Certificate Expiration Timeline
-5. Ingress Controller Resource Usage (CPU, memory)
-6. Error Rate by Service</p>
-<p><strong>Alerting Rules</strong>:
+<p><strong>NGINX Ingress Controller Metrics</strong>:</p>
+<ul>
+<li><code>nginx_ingress_controller_requests</code> - Total requests per service</li>
+<li><code>nginx_ingress_controller_request_duration_seconds</code> - Request latency percentiles</li>
+<li><code>nginx_ingress_controller_response_size</code> - Response sizes</li>
+<li><code>nginx_ingress_controller_ssl_expire_time_seconds</code> - Certificate expiration</li>
+<li><code>nginx_ingress_controller_nginx_process_connections</code> - Active connections</li>
+</ul>
+<p><strong>Grafana Dashboard Panels</strong>:</p>
+<ol>
+<li>Request Rate (per service, per ingress)</li>
+<li>Request Duration (P50, P95, P99)</li>
+<li>HTTP Status Codes (2xx, 4xx, 5xx rates)</li>
+<li>SSL Certificate Expiration Timeline</li>
+<li>Ingress Controller Resource Usage (CPU, memory)</li>
+<li>Error Rate by Service</li>
+</ol>
+<p><strong>Alerting Rules</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">groups</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingress_alerts</span>
-<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighErrorRate</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sum(rate(nginx_ingress_controller_requests{status=~&quot;5..&quot;}[5m])) / sum(rate(nginx_ingress_controller_requests[5m])) &gt; 0.05</span>
-<span class="w">    </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
-<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">5xx</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">detected&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingress_alerts</span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighErrorRate</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sum(rate(nginx_ingress_controller_requests{status=~&quot;5..&quot;}[5m])) / sum(rate(nginx_ingress_controller_requests[5m])) &gt; 0.05</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">5xx</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">detected&quot;</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CertificateExpiring</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(nginx_ingress_controller_ssl_expire_time_seconds - time()) / 86400 &lt; 7</span>
-<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TLS</span><span class="nv"> </span><span class="s">certificate</span><span class="nv"> </span><span class="s">expiring</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">less</span><span class="nv"> </span><span class="s">than</span><span class="nv"> </span><span class="s">7</span><span class="nv"> </span><span class="s">days&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CertificateExpiring</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(nginx_ingress_controller_ssl_expire_time_seconds - time()) / 86400 &lt; 7</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TLS</span><span class="nv"> </span><span class="s">certificate</span><span class="nv"> </span><span class="s">expiring</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">less</span><span class="nv"> </span><span class="s">than</span><span class="nv"> </span><span class="s">7</span><span class="nv"> </span><span class="s">days&quot;</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighLatency</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">histogram_quantile(0.95, nginx_ingress_controller_request_duration_seconds_bucket) &gt; 5</span>
-<span class="w">    </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
-<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;P95</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">5</span><span class="nv"> </span><span class="s">seconds&quot;</span>
-</code></pre></div></p>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighLatency</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">histogram_quantile(0.95, nginx_ingress_controller_request_duration_seconds_bucket) &gt; 5</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;P95</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">5</span><span class="nv"> </span><span class="s">seconds&quot;</span>
+</code></pre></div>
 <h2 id="security-considerations">Security Considerations</h2>
 <h3 id="tlsssl-management">TLS/SSL Management</h3>
 <ol>
@@ -5682,35 +5748,47 @@ https://fawkes.example.com/quality    → SonarQube
 <li><strong>HSTS</strong>: Strict-Transport-Security header enforced</li>
 </ol>
 <h3 id="rate-limiting">Rate Limiting</h3>
-<p>Per-Service Defaults:
-- Public services (Backstage): 100 requests/second per IP
-- Internal services (Jenkins, ArgoCD): 50 requests/second per IP
-- Admin services (Prometheus): 10 requests/second per IP</p>
+<p>Per-Service Defaults:</p>
+<ul>
+<li>Public services (Backstage): 100 requests/second per IP</li>
+<li>Internal services (Jenkins, ArgoCD): 50 requests/second per IP</li>
+<li>Admin services (Prometheus): 10 requests/second per IP</li>
+</ul>
 <h3 id="ip-whitelisting">IP Whitelisting</h3>
-<p>Sensitive services restricted to:
-- Corporate VPN CIDR blocks
-- Platform team IP ranges
-- CI/CD pipeline source IPs</p>
+<p>Sensitive services restricted to:</p>
+<ul>
+<li>Corporate VPN CIDR blocks</li>
+<li>Platform team IP ranges</li>
+<li>CI/CD pipeline source IPs</li>
+</ul>
 <h3 id="web-application-firewall-waf">Web Application Firewall (WAF)</h3>
-<p>ModSecurity integration (post-MVP):
-- OWASP Core Rule Set (CRS)
-- SQL injection prevention
-- XSS attack blocking
-- Request validation</p>
+<p>ModSecurity integration (post-MVP):</p>
+<ul>
+<li>OWASP Core Rule Set (CRS)</li>
+<li>SQL injection prevention</li>
+<li>XSS attack blocking</li>
+<li>Request validation</li>
+</ul>
 <h2 id="cost-analysis">Cost Analysis</h2>
 <h3 id="aws-deployment-production">AWS Deployment (Production)</h3>
-<p><strong>Infrastructure</strong>:
-- Network Load Balancer: $16/month + $0.006/GB data transfer
-- EBS volumes (NGINX controller state): $8/month for 80GB
-- Data transfer (estimated 1TB/month): $90/month</p>
-<p><strong>NGINX Controller Resources</strong>:
-- 3 replicas × 0.5 CPU × $0.04/hour = $43/month
-- 3 replicas × 512MB RAM × $0.005/hour = $5/month</p>
+<p><strong>Infrastructure</strong>:</p>
+<ul>
+<li>Network Load Balancer: $16/month + $0.006/GB data transfer</li>
+<li>EBS volumes (NGINX controller state): $8/month for 80GB</li>
+<li>Data transfer (estimated 1TB/month): $90/month</li>
+</ul>
+<p><strong>NGINX Controller Resources</strong>:</p>
+<ul>
+<li>3 replicas × 0.5 CPU × $0.04/hour = $43/month</li>
+<li>3 replicas × 512MB RAM × $0.005/hour = $5/month</li>
+</ul>
 <p><strong>Total Monthly Cost</strong>: ~$162/month</p>
-<p><strong>Cost Optimization</strong>:
-- Use AWS ALB for learner/dev environments (cheaper)
-- Reduce replica count in non-production
-- Implement caching to reduce data transfer</p>
+<p><strong>Cost Optimization</strong>:</p>
+<ul>
+<li>Use AWS ALB for learner/dev environments (cheaper)</li>
+<li>Reduce replica count in non-production</li>
+<li>Implement caching to reduce data transfer</li>
+</ul>
 <h3 id="multi-environment-cost-breakdown">Multi-Environment Cost Breakdown</h3>
 <table>
 <thead>
@@ -5751,8 +5829,12 @@ https://fawkes.example.com/quality    → SonarQube
 <h2 id="documentation-structure">Documentation Structure</h2>
 <h3 id="for-platform-teams">For Platform Teams</h3>
 <ol>
-<li><strong>Architecture Overview</strong></li>
-<li>Request flow diagrams</li>
+<li>
+<p><strong>Architecture Overview</strong></p>
+</li>
+<li>
+<p>Request flow diagrams</p>
+</li>
 <li>TLS termination architecture</li>
 <li>Certificate management workflow</li>
 <li>
@@ -5761,7 +5843,9 @@ https://fawkes.example.com/quality    → SonarQube
 <li>
 <p><strong>Deployment Guide</strong></p>
 </li>
-<li>Helm chart installation</li>
+<li>
+<p>Helm chart installation</p>
+</li>
 <li>Configuration recommendations</li>
 <li>Cloud-specific considerations</li>
 <li>
@@ -5777,8 +5861,12 @@ https://fawkes.example.com/quality    → SonarQube
 </ol>
 <h3 id="for-dojo-learners">For Dojo Learners</h3>
 <ol>
-<li><strong>Concepts Tutorial</strong></li>
-<li>What is an Ingress Controller?</li>
+<li>
+<p><strong>Concepts Tutorial</strong></p>
+</li>
+<li>
+<p>What is an Ingress Controller?</p>
+</li>
 <li>How TLS/SSL works</li>
 <li>Routing strategies comparison</li>
 <li>
@@ -5787,7 +5875,9 @@ https://fawkes.example.com/quality    → SonarQube
 <li>
 <p><strong>Hands-On Lab Guide</strong></p>
 </li>
-<li>Step-by-step ingress creation</li>
+<li>
+<p>Step-by-step ingress creation</p>
+</li>
 <li>TLS configuration walkthrough</li>
 <li>Troubleshooting exercises</li>
 <li>
@@ -5837,22 +5927,26 @@ https://fawkes.example.com/quality    → SonarQube
 <li>Kubernetes Ingress Concepts: https://kubernetes.io/docs/concepts/services-networking/ingress/</li>
 </ul>
 <h2 id="notes">Notes</h2>
-<p><strong>Production Readiness Checklist</strong>:
-- [ ] 3+ replicas for high availability
-- [ ] Cloud load balancer provisioned
-- [ ] TLS certificates from trusted CA (Let's Encrypt or corporate)
-- [ ] Rate limiting configured
-- [ ] Security headers enabled
-- [ ] Monitoring dashboards created
-- [ ] Alerting rules configured
-- [ ] Runbook documented
-- [ ] Team trained on ingress operations</p>
-<p><strong>Learner Environment Considerations</strong>:
-- Use path-based routing to minimize DNS complexity
-- Provide pre-configured ingress templates
-- Automate certificate provisioning
-- Create self-service ingress creation workflow
-- Include ingress troubleshooting in curriculum</p>
+<p><strong>Production Readiness Checklist</strong>:</p>
+<ul>
+<li>[ ] 3+ replicas for high availability</li>
+<li>[ ] Cloud load balancer provisioned</li>
+<li>[ ] TLS certificates from trusted CA (Let's Encrypt or corporate)</li>
+<li>[ ] Rate limiting configured</li>
+<li>[ ] Security headers enabled</li>
+<li>[ ] Monitoring dashboards created</li>
+<li>[ ] Alerting rules configured</li>
+<li>[ ] Runbook documented</li>
+<li>[ ] Team trained on ingress operations</li>
+</ul>
+<p><strong>Learner Environment Considerations</strong>:</p>
+<ul>
+<li>Use path-based routing to minimize DNS complexity</li>
+<li>Provide pre-configured ingress templates</li>
+<li>Automate certificate provisioning</li>
+<li>Create self-service ingress creation workflow</li>
+<li>Include ingress troubleshooting in curriculum</li>
+</ul>
 <h2 id="last-updated">Last Updated</h2>
 <p>December 7, 2024 - Initial version documenting NGINX Ingress Controller selection</p>
 

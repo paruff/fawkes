@@ -5039,11 +5039,13 @@
 <strong>Module</strong>: 2 of 4 (Brown Belt)
 <strong>Duration</strong>: 60 minutes
 <strong>Difficulty</strong>: Advanced
-<strong>Prerequisites</strong>:
-- Module 2: DORA Metrics (White Belt) review recommended
-- Module 13: Observability complete
-- Understanding of Prometheus and Grafana
-- Familiarity with GitOps workflows</p>
+<strong>Prerequisites</strong>:</p>
+<ul>
+<li>Module 2: DORA Metrics (White Belt) review recommended</li>
+<li>Module 13: Observability complete</li>
+<li>Understanding of Prometheus and Grafana</li>
+<li>Familiarity with GitOps workflows</li>
+</ul>
 <hr />
 <h2 id="learning-objectives">📚 Learning Objectives</h2>
 <p>By the end of this module, you will:</p>
@@ -5056,10 +5058,12 @@
 <li>✅ Use metrics to drive platform improvements</li>
 <li>✅ Present DORA metrics to leadership effectively</li>
 </ol>
-<p><strong>DORA Capabilities Addressed</strong>:
-- ✓ All 4 Key Metrics (Deployment Frequency, Lead Time, MTTR, Change Failure Rate)
-- ✓ Monitoring and Observability
-- ✓ Data-Driven Decision Making</p>
+<p><strong>DORA Capabilities Addressed</strong>:</p>
+<ul>
+<li>✓ All 4 Key Metrics (Deployment Frequency, Lead Time, MTTR, Change Failure Rate)</li>
+<li>✓ Monitoring and Observability</li>
+<li>✓ Data-Driven Decision Making</li>
+</ul>
 <hr />
 <h2 id="part-1-dora-metrics-review-advanced-concepts">📖 Part 1: DORA Metrics Review &amp; Advanced Concepts</h2>
 <h3 id="the-four-key-metrics-refresher">The Four Key Metrics (Refresher)</h3>
@@ -5095,11 +5099,13 @@
 </tbody>
 </table>
 <h3 id="why-these-four">Why These Four?</h3>
-<p>Research shows these metrics are:
-- <strong>Predictive</strong> of organizational performance
-- <strong>Balanced</strong> between speed (DF, LT) and stability (CFR, MTTR)
-- <strong>Actionable</strong> - teams can directly improve them
-- <strong>Universal</strong> - apply across industries and tech stacks</p>
+<p>Research shows these metrics are:</p>
+<ul>
+<li><strong>Predictive</strong> of organizational performance</li>
+<li><strong>Balanced</strong> between speed (DF, LT) and stability (CFR, MTTR)</li>
+<li><strong>Actionable</strong> - teams can directly improve them</li>
+<li><strong>Universal</strong> - apply across industries and tech stacks</li>
+</ul>
 <h3 id="advanced-dora-concepts">Advanced DORA Concepts</h3>
 <p><strong>1. Metric Correlation</strong></p>
 <p>Metrics don't exist in isolation:</p>
@@ -5120,50 +5126,54 @@ Better MTTR (easier to identify issues)
 <li><strong>Service-level</strong>: Track per microservice/application</li>
 </ul>
 <p><strong>3. Metric Distributions Matter</strong></p>
-<p>Don't just track averages:
-- <strong>P50 (Median)</strong>: Typical case
-- <strong>P95</strong>: Worst 5% of cases
-- <strong>P99</strong>: Outliers that hurt user experience</p>
-<p><strong>Example</strong>:
+<p>Don't just track averages:</p>
+<ul>
+<li><strong>P50 (Median)</strong>: Typical case</li>
+<li><strong>P95</strong>: Worst 5% of cases</li>
+<li><strong>P99</strong>: Outliers that hurt user experience</li>
+</ul>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code>Lead Time:
 - Average: 2 hours
 - P50: 30 minutes ✅ (Most deploys are fast)
 - P95: 8 hours ❌ (5% take too long - investigate why)
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="part-2-calculating-dora-metrics">🔢 Part 2: Calculating DORA Metrics</h2>
 <h3 id="metric-1-deployment-frequency">Metric 1: Deployment Frequency</h3>
 <p><strong>Definition</strong>: Number of deployments per time period</p>
-<p><strong>Calculation</strong>:
+<p><strong>Calculation</strong>:</p>
 <div class="highlight"><pre><span></span><code>Deployment Frequency = Total Deployments / Time Period
 
 Example:
 - 150 deployments in 30 days
 - DF = 150 / 30 = 5 deployments per day ✅ Elite
-</code></pre></div></p>
-<p><strong>Data Sources</strong>:
-- ArgoCD sync events
-- GitOps repository commits
-- CI/CD pipeline completions
-- Kubernetes deployment events</p>
-<p><strong>Prometheus Query</strong>:
+</code></pre></div>
+<p><strong>Data Sources</strong>:</p>
+<ul>
+<li>ArgoCD sync events</li>
+<li>GitOps repository commits</li>
+<li>CI/CD pipeline completions</li>
+<li>Kubernetes deployment events</li>
+</ul>
+<p><strong>Prometheus Query</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Count deployments per day</span>
 <span class="k">sum</span><span class="o">(</span><span class="kr">increase</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">{</span><span class="nl">phase</span><span class="o">=</span><span class="p">&quot;</span><span class="s">Succeeded</span><span class="p">&quot;}[</span><span class="s">1d</span><span class="p">]</span><span class="o">))</span>
 
 <span class="c1"># Deployment frequency by application</span>
 <span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">{</span><span class="nl">phase</span><span class="o">=</span><span class="p">&quot;</span><span class="s">Succeeded</span><span class="p">&quot;}[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">name</span><span class="o">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">86400</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="metric-2-lead-time-for-changes">Metric 2: Lead Time for Changes</h3>
 <p><strong>Definition</strong>: Time from code commit to running in production</p>
-<p><strong>Calculation</strong>:
+<p><strong>Calculation</strong>:</p>
 <div class="highlight"><pre><span></span><code>Lead Time = Production Deployment Time - Commit Time
 
 Example:
 - Commit: 2025-10-10 14:00:00
 - Production: 2025-10-10 14:25:00
 - Lead Time: 25 minutes ✅ Elite
-</code></pre></div></p>
-<p><strong>Components</strong>:
+</code></pre></div>
+<p><strong>Components</strong>:</p>
 <div class="highlight"><pre><span></span><code>Total Lead Time =
     Code Review Time +
     CI Build Time +
@@ -5172,8 +5182,8 @@ Example:
     Artifact Creation Time +
     Deployment Time +
     Validation Time
-</code></pre></div></p>
-<p><strong>Data Collection</strong>:
+</code></pre></div>
+<p><strong>Data Collection</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Webhook receiver for Git commits</span>
 <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/webhook/commit&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">record_commit</span><span class="p">():</span>
@@ -5199,8 +5209,8 @@ Example:
     <span class="n">lead_time_histogram</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span><span class="n">app</span><span class="o">=</span><span class="n">app_name</span><span class="p">)</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">lead_time</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">200</span>
-</code></pre></div></p>
-<p><strong>Prometheus Query</strong>:
+</code></pre></div>
+<p><strong>Prometheus Query</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Average lead time (seconds)</span>
 <span class="k">avg</span><span class="o">(</span><span class="nv">deployment_lead_time_seconds</span><span class="o">)</span>
 
@@ -5209,23 +5219,25 @@ Example:
 
 <span class="c1"># Lead time by team</span>
 <span class="k">avg</span><span class="o">(</span><span class="nv">deployment_lead_time_seconds</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">team</span><span class="o">)</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="metric-3-change-failure-rate">Metric 3: Change Failure Rate</h3>
 <p><strong>Definition</strong>: Percentage of deployments that result in failure</p>
-<p><strong>Calculation</strong>:
+<p><strong>Calculation</strong>:</p>
 <div class="highlight"><pre><span></span><code>CFR = (Failed Deployments / Total Deployments) × 100
 
 Example:
 - Total deployments: 100
 - Failed deployments: 8
 - CFR = (8 / 100) × 100 = 8% ✅ Elite
-</code></pre></div></p>
-<p><strong>Defining "Failure"</strong>:
-- Deployment rollback within 24 hours
-- Incident created within 24 hours of deployment
-- Deployment marked as failed in ArgoCD
-- Health checks fail post-deployment</p>
-<p><strong>Data Collection</strong>:
+</code></pre></div>
+<p><strong>Defining "Failure"</strong>:</p>
+<ul>
+<li>Deployment rollback within 24 hours</li>
+<li>Incident created within 24 hours of deployment</li>
+<li>Deployment marked as failed in ArgoCD</li>
+<li>Health checks fail post-deployment</li>
+</ul>
+<p><strong>Data Collection</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calculate_change_failure_rate</span><span class="p">(</span><span class="n">timeframe_hours</span><span class="o">=</span><span class="mi">24</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate CFR by correlating deployments with incidents</span>
@@ -5254,8 +5266,8 @@ Example:
 
     <span class="n">cfr</span> <span class="o">=</span> <span class="p">(</span><span class="n">failures</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">deployments</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span> <span class="k">if</span> <span class="n">deployments</span> <span class="k">else</span> <span class="mi">0</span>
     <span class="k">return</span> <span class="n">cfr</span>
-</code></pre></div></p>
-<p><strong>Prometheus Query</strong>:
+</code></pre></div>
+<p><strong>Prometheus Query</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Change Failure Rate (%)</span>
 <span class="k">sum</span><span class="o">(</span><span class="nv">deployment_result</span><span class="p">{</span><span class="nl">status</span><span class="o">=</span><span class="p">&quot;</span><span class="s">failed</span><span class="p">&quot;}</span><span class="o">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">sum</span><span class="o">(</span><span class="nv">deployment_result</span><span class="o">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span>
 
@@ -5264,18 +5276,18 @@ Example:
 
 <span class="c1"># CFR trend over time</span>
 <span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">deployment_result</span><span class="p">{</span><span class="nl">status</span><span class="o">=</span><span class="p">&quot;</span><span class="s">failed</span><span class="p">&quot;}[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">deployment_result</span><span class="p">[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="metric-4-mean-time-to-restore-mttr">Metric 4: Mean Time to Restore (MTTR)</h3>
 <p><strong>Definition</strong>: Average time to recover from a production failure</p>
-<p><strong>Calculation</strong>:
+<p><strong>Calculation</strong>:</p>
 <div class="highlight"><pre><span></span><code>MTTR = Total Downtime / Number of Incidents
 
 Example:
 - 5 incidents in a month
 - Total downtime: 125 minutes
 - MTTR = 125 / 5 = 25 minutes ✅ Elite
-</code></pre></div></p>
-<p><strong>Data Collection</strong>:
+</code></pre></div>
+<p><strong>Data Collection</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Incident lifecycle tracking</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Incident</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">severity</span><span class="p">):</span>
@@ -5300,8 +5312,8 @@ Example:
 
         <span class="c1"># Time to Resolve (total incident duration)</span>
         <span class="n">incident_duration_histogram</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span><span class="n">severity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">severity</span><span class="p">)</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">ttr</span><span class="p">)</span>
-</code></pre></div></p>
-<p><strong>Prometheus Query</strong>:
+</code></pre></div>
+<p><strong>Prometheus Query</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Average MTTR (seconds)</span>
 <span class="k">avg</span><span class="o">(</span><span class="nv">incident_duration_seconds</span><span class="o">)</span>
 
@@ -5313,7 +5325,7 @@ Example:
 
 <span class="c1"># MTTR trend</span>
 <span class="kr">avg_over_time</span><span class="o">(</span><span class="nv">incident_duration_seconds</span><span class="p">[</span><span class="s">7d</span><span class="p">]</span><span class="o">)</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="part-3-building-the-ultimate-dora-dashboard">📊 Part 3: Building the Ultimate DORA Dashboard</h2>
 <h3 id="dashboard-architecture">Dashboard Architecture</h3>
@@ -5360,112 +5372,124 @@ Example:
 <span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployment Frequency (per day)&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stat&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(argocd_app_sync_total{phase=&#39;Succeeded&#39;}[7d])) * 86400&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployments/Day&quot;</span>
-<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(argocd_app_sync_total{phase=&#39;Succeeded&#39;}[7d])) * 86400&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployments/Day&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
 <span class="w">        </span><span class="nt">&quot;fieldConfig&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">          </span><span class="nt">&quot;defaults&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;thresholds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">              </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;absolute&quot;</span><span class="p">,</span>
 <span class="w">              </span><span class="nt">&quot;steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="p">}</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">              </span><span class="p">]</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;mappings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
 <span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;short&quot;</span>
 <span class="w">          </span><span class="p">}</span>
 <span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span>
+<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Lead Time for Changes (P95)&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stat&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;histogram_quantile(0.95, sum(rate(deployment_lead_time_seconds_bucket[7d])) by (le)) / 3600&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P95 Hours&quot;</span>
-<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;histogram_quantile(0.95, sum(rate(deployment_lead_time_seconds_bucket[7d])) by (le)) / 3600&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P95 Hours&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
 <span class="w">        </span><span class="nt">&quot;fieldConfig&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">          </span><span class="nt">&quot;defaults&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;thresholds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">              </span><span class="nt">&quot;steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="p">}</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">              </span><span class="p">]</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;h&quot;</span>
 <span class="w">          </span><span class="p">}</span>
 <span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span>
+<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Change Failure Rate&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gauge&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(deployment_result{status=&#39;failed&#39;}[7d])) / sum(rate(deployment_result[7d])) * 100&quot;</span>
-<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(deployment_result{status=&#39;failed&#39;}[7d])) / sum(rate(deployment_result[7d])) * 100&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
 <span class="w">        </span><span class="nt">&quot;fieldConfig&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">          </span><span class="nt">&quot;defaults&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;thresholds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">              </span><span class="nt">&quot;steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="p">}</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">              </span><span class="p">]</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;max&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
 <span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;percent&quot;</span>
 <span class="w">          </span><span class="p">}</span>
 <span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span>
+<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Mean Time to Restore&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stat&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;avg(incident_duration_seconds) / 60&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Avg Minutes&quot;</span>
-<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;avg(incident_duration_seconds) / 60&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Avg Minutes&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
 <span class="w">        </span><span class="nt">&quot;fieldConfig&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">          </span><span class="nt">&quot;defaults&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;thresholds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">              </span><span class="nt">&quot;steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="p">},</span>
-<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1440</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="p">}</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1440</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">              </span><span class="p">]</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;m&quot;</span>
 <span class="w">          </span><span class="p">}</span>
 <span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span>
+<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployment Frequency Trend&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;graph&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(argocd_app_sync_total{phase=&#39;Succeeded&#39;}[1d])) by (name) * 86400&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{name}}&quot;</span>
-<span class="w">        </span><span class="p">}],</span>
-<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">}</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(argocd_app_sync_total{phase=&#39;Succeeded&#39;}[1d])) by (name) * 86400&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{name}}&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Lead Time Distribution&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heatmap&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(increase(deployment_lead_time_seconds_bucket[1h])) by (le)&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heatmap&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{le}}&quot;</span>
-<span class="w">        </span><span class="p">}],</span>
-<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">}</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(increase(deployment_lead_time_seconds_bucket[1h])) by (le)&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heatmap&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{le}}&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
@@ -5493,28 +5517,28 @@ Example:
 <span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">collector</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/dora-collector:v1.0</span>
-<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
-<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DATABASE_URL</span>
-<span class="w">          </span><span class="nt">valueFrom</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">secretKeyRef</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-db-credentials</span>
-<span class="w">              </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">url</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PROMETHEUS_URL</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://prometheus:9090&quot;</span>
-<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
-<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">collector</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/dora-collector:v1.0</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DATABASE_URL</span>
+<span class="w">              </span><span class="nt">valueFrom</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">secretKeyRef</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-db-credentials</span>
+<span class="w">                  </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">url</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PROMETHEUS_URL</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://prometheus:9090&quot;</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
+<span class="w">            </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
@@ -5525,12 +5549,12 @@ Example:
 <span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
 <span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
-<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
-<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090</span>
-<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090</span>
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring.coreos.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceMonitor</span>
@@ -5542,8 +5566,8 @@ Example:
 <span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
 <span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
 </code></pre></div>
 <h3 id="step-2-configure-webhooks">Step 2: Configure Webhooks</h3>
 <p><strong>ArgoCD Webhook</strong> (for deployments):</p>
@@ -5643,7 +5667,7 @@ curl<span class="w"> </span><span class="s2">&quot;http://localhost:9090/metrics
 <hr />
 <h2 id="part-5-advanced-analysis-techniques">📈 Part 5: Advanced Analysis Techniques</h2>
 <h3 id="trend-analysis">Trend Analysis</h3>
-<p><strong>Week-over-week comparison</strong>:
+<p><strong>Week-over-week comparison</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Current week deployment frequency</span>
 <span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">{</span><span class="nl">phase</span><span class="o">=</span><span class="p">&quot;</span><span class="s">Succeeded</span><span class="p">&quot;}[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">86400</span>
 
@@ -5659,7 +5683,7 @@ curl<span class="w"> </span><span class="s2">&quot;http://localhost:9090/metrics
 <span class="o">/</span>
 <span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">{</span><span class="nl">phase</span><span class="o">=</span><span class="p">&quot;</span><span class="s">Succeeded</span><span class="p">&quot;}[</span><span class="s">7d</span><span class="p">]</span><span class="w"> </span><span class="k">offset</span><span class="w"> </span><span class="s">7d</span><span class="o">))</span>
 <span class="o">*</span><span class="w"> </span><span class="mi">100</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="correlation-analysis">Correlation Analysis</h3>
 <p><strong>Does higher deployment frequency correlate with lower CFR?</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -5681,24 +5705,24 @@ curl<span class="w"> </span><span class="s2">&quot;http://localhost:9090/metrics
 <span class="c1"># Expected: Negative correlation (higher DF → lower CFR)</span>
 </code></pre></div>
 <h3 id="identifying-bottlenecks">Identifying Bottlenecks</h3>
-<p><strong>Lead time breakdown</strong>:
+<p><strong>Lead time breakdown</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Time in each stage</span>
 <span class="k">sum</span><span class="o">(</span><span class="nv">ci_stage_duration_seconds</span><span class="p">{</span><span class="nl">stage</span><span class="o">=</span><span class="p">&quot;</span><span class="s">build</span><span class="p">&quot;}</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">app</span><span class="o">)</span>
 <span class="k">sum</span><span class="o">(</span><span class="nv">ci_stage_duration_seconds</span><span class="p">{</span><span class="nl">stage</span><span class="o">=</span><span class="p">&quot;</span><span class="s">test</span><span class="p">&quot;}</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">app</span><span class="o">)</span>
 <span class="k">sum</span><span class="o">(</span><span class="nv">ci_stage_duration_seconds</span><span class="p">{</span><span class="nl">stage</span><span class="o">=</span><span class="p">&quot;</span><span class="s">scan</span><span class="p">&quot;}</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">app</span><span class="o">)</span>
 <span class="k">sum</span><span class="o">(</span><span class="nv">ci_stage_duration_seconds</span><span class="p">{</span><span class="nl">stage</span><span class="o">=</span><span class="p">&quot;</span><span class="s">deploy</span><span class="p">&quot;}</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">app</span><span class="o">)</span>
-</code></pre></div></p>
-<p>Create waterfall chart to visualize:
+</code></pre></div>
+<p>Create waterfall chart to visualize:</p>
 <div class="highlight"><pre><span></span><code>Commit → Build (3m) → Test (5m) → Scan (2m) → Deploy (1m) = 11m total
          ████████    ████████████  ████        ██
 
 Bottleneck: Testing takes 45% of lead time
 Action: Parallelize tests or optimize slow tests
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="part-6-driving-improvements-with-data">💪 Part 6: Driving Improvements with Data</h2>
 <h3 id="improvement-framework">Improvement Framework</h3>
-<p><strong>1. Measure Current State</strong>
+<p><strong>1. Measure Current State</strong></p>
 <div class="highlight"><pre><span></span><code>Current Performance (Last 30 days):
 - DF: 3 per day (High)
 - LT: 2 hours (High)
@@ -5706,15 +5730,15 @@ Action: Parallelize tests or optimize slow tests
 - MTTR: 45 minutes (Elite)
 
 Overall: High Performer
-</code></pre></div></p>
-<p><strong>2. Set Targets</strong>
+</code></pre></div>
+<p><strong>2. Set Targets</strong></p>
 <div class="highlight"><pre><span></span><code>3-Month Goals:
 - DF: 5 per day (Elite) - ↑67%
 - LT: 1 hour (Elite) - ↓50%
 - CFR: &lt;10% (Elite) - ↓17%
 - MTTR: &lt;30 min (Elite) - ↓33%
-</code></pre></div></p>
-<p><strong>3. Identify Bottlenecks</strong>
+</code></pre></div>
+<p><strong>3. Identify Bottlenecks</strong></p>
 <div class="highlight"><pre><span></span><code>Lead Time Breakdown:
 - Code Review: 45 min (38%)
 - CI Build: 15 min (13%)
@@ -5722,8 +5746,8 @@ Overall: High Performer
 - Deployment: 25 min (21%)
 
 Biggest opportunity: Code Review (38% of lead time)
-</code></pre></div></p>
-<p><strong>4. Implement Changes</strong>
+</code></pre></div>
+<p><strong>4. Implement Changes</strong></p>
 <div class="highlight"><pre><span></span><code>Actions:
 1. Reduce PR size (enforce &lt;300 lines)
 2. Pair programming for complex changes (faster review)
@@ -5732,8 +5756,8 @@ Biggest opportunity: Code Review (38% of lead time)
 
 Expected Impact: Reduce code review time by 50% (22min savings)
 New Lead Time: 1h 5min → Target not quite met, but significant progress
-</code></pre></div></p>
-<p><strong>5. Measure Impact</strong>
+</code></pre></div>
+<p><strong>5. Measure Impact</strong></p>
 <div class="highlight"><pre><span></span><code>After 30 days:
 - DF: 4.5 per day ✅ (On track)
 - LT: 1h 15min ⚠️ (Close to target)
@@ -5741,13 +5765,17 @@ New Lead Time: 1h 5min → Target not quite met, but significant progress
 - MTTR: 28 min ✅ (Target exceeded!)
 
 Continue iteration...
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="part-7-knowledge-check">🎓 Part 7: Knowledge Check</h2>
 <h3 id="quiz-questions">Quiz Questions</h3>
 <ol>
-<li><strong>What does P95 lead time represent?</strong></li>
-<li>[ ] Average lead time</li>
+<li>
+<p><strong>What does P95 lead time represent?</strong></p>
+</li>
+<li>
+<p>[ ] Average lead time</p>
+</li>
 <li>[ ] Fastest lead time</li>
 <li>[x] 95% of deployments complete within this time</li>
 <li>
@@ -5756,7 +5784,9 @@ Continue iteration...
 <li>
 <p><strong>How do you calculate Change Failure Rate?</strong></p>
 </li>
-<li>[ ] Failed deployments × 100</li>
+<li>
+<p>[ ] Failed deployments × 100</p>
+</li>
 <li>[x] (Failed deployments / Total deployments) × 100</li>
 <li>[ ] Total deployments / Failed deployments</li>
 <li>
@@ -5765,7 +5795,9 @@ Continue iteration...
 <li>
 <p><strong>What's the Elite benchmark for Deployment Frequency?</strong></p>
 </li>
-<li>[ ] Once per week</li>
+<li>
+<p>[ ] Once per week</p>
+</li>
 <li>[ ] Once per day</li>
 <li>[x] Multiple times per day</li>
 <li>
@@ -5774,7 +5806,9 @@ Continue iteration...
 <li>
 <p><strong>What should MTTR measure?</strong></p>
 </li>
-<li>[ ] Time to write code</li>
+<li>
+<p>[ ] Time to write code</p>
+</li>
 <li>[ ] Time to test</li>
 <li>[x] Time to restore service after incident</li>
 <li>
@@ -5783,7 +5817,9 @@ Continue iteration...
 <li>
 <p><strong>Why track team-level DORA metrics separately?</strong></p>
 </li>
-<li>[ ] To rank teams</li>
+<li>
+<p>[ ] To rank teams</p>
+</li>
 <li>[x] To identify improvement opportunities specific to each team</li>
 <li>[ ] To punish low performers</li>
 <li>
@@ -5792,7 +5828,9 @@ Continue iteration...
 <li>
 <p><strong>What does high DF + low CFR indicate?</strong></p>
 </li>
-<li>[ ] Luck</li>
+<li>
+<p>[ ] Luck</p>
+</li>
 <li>[x] Mature CI/CD with good quality gates</li>
 <li>[ ] Metrics are broken</li>
 <li>
@@ -5801,7 +5839,9 @@ Continue iteration...
 <li>
 <p><strong>How often should you review DORA metrics?</strong></p>
 </li>
-<li>[ ] Annually</li>
+<li>
+<p>[ ] Annually</p>
+</li>
 <li>[ ] When problems occur</li>
 <li>[x] Weekly or monthly for trends</li>
 <li>
@@ -5840,14 +5880,18 @@ Continue iteration...
 <li><strong>Review regularly</strong> - Weekly trends reveal improvement opportunities</li>
 </ol>
 <h3 id="real-world-impact">Real-World Impact</h3>
-<p>"After implementing comprehensive DORA tracking:
-- <strong>Identified bottleneck</strong>: Code review was 40% of lead time
-- <strong>Action</strong>: Reduced PR size, added auto-approval for trivial changes
-- <strong>Result</strong>: Lead time decreased 35% in 60 days
-- <strong>Visibility</strong>: Leadership now tracks metrics quarterly
-- <strong>Culture</strong>: Teams compete (healthily) to improve metrics</p>
-<p>Metrics transformed from vanity to value."
-- <em>Engineering Director, Tech Company</em></p>
+<p>"After implementing comprehensive DORA tracking:</p>
+<ul>
+<li><strong>Identified bottleneck</strong>: Code review was 40% of lead time</li>
+<li><strong>Action</strong>: Reduced PR size, added auto-approval for trivial changes</li>
+<li><strong>Result</strong>: Lead time decreased 35% in 60 days</li>
+<li><strong>Visibility</strong>: Leadership now tracks metrics quarterly</li>
+<li><strong>Culture</strong>: Teams compete (healthily) to improve metrics</li>
+</ul>
+<p>Metrics transformed from vanity to value."</p>
+<ul>
+<li><em>Engineering Director, Tech Company</em></li>
+</ul>
 <hr />
 <h2 id="additional-resources">📚 Additional Resources</h2>
 <h3 id="tools">Tools</h3>
@@ -5866,8 +5910,12 @@ Continue iteration...
 <h2 id="module-completion">🏅 Module Completion</h2>
 <h3 id="assessment-checklist">Assessment Checklist</h3>
 <ul>
-<li>[ ] <strong>Conceptual Understanding</strong></li>
-<li>[ ] Calculate all 4 metrics correctly</li>
+<li>
+<p>[ ] <strong>Conceptual Understanding</strong></p>
+</li>
+<li>
+<p>[ ] Calculate all 4 metrics correctly</p>
+</li>
 <li>[ ] Understand P50/P95/P99 distributions</li>
 <li>
 <p>[ ] Explain metric correlations</p>

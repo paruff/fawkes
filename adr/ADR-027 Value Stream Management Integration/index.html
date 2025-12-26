@@ -5201,9 +5201,11 @@
 </code></pre></div>
 <p><strong>Pull Request Description</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gu">## Related Work Items</span>
+
 <span class="k">-</span><span class="w"> </span>Focalboard: FOC-123
 
 <span class="gu">## Changes</span>
+
 ...
 </code></pre></div>
 <p><strong>Automation</strong>:</p>
@@ -5582,76 +5584,160 @@ vsm_flow_efficiency{team=&quot;payments&quot;} 0.38
 <h2 id="consequences">Consequences</h2>
 <h3 id="positive">Positive</h3>
 <ol>
-<li><strong>End-to-End Visibility</strong>: Teams and leaders see work flow from idea to production</li>
-<li>Reduces “where is my feature?” questions</li>
+<li>
+<p><strong>End-to-End Visibility</strong>: Teams and leaders see work flow from idea to production</p>
+</li>
+<li>
+<p>Reduces “where is my feature?” questions</p>
+</li>
 <li>Identifies bottlenecks quickly</li>
-<li>Enables data-driven process improvements</li>
-<li><strong>Automated Data Collection</strong>: No manual tracking required</li>
-<li>Developers continue existing workflows</li>
+<li>
+<p>Enables data-driven process improvements</p>
+</li>
+<li>
+<p><strong>Automated Data Collection</strong>: No manual tracking required</p>
+</li>
+<li>
+<p>Developers continue existing workflows</p>
+</li>
 <li>Metrics calculated automatically</li>
-<li>Real-time updates</li>
-<li><strong>Actionable Insights</strong>: Not just dashboards, but alerts and recommendations</li>
-<li>Bottleneck alerts notify teams immediately</li>
+<li>
+<p>Real-time updates</p>
+</li>
+<li>
+<p><strong>Actionable Insights</strong>: Not just dashboards, but alerts and recommendations</p>
+</li>
+<li>
+<p>Bottleneck alerts notify teams immediately</p>
+</li>
 <li>Trend analysis predicts future issues</li>
-<li>Benchmarking against industry standards</li>
-<li><strong>Business Value Connection</strong>: Links engineering work to business outcomes</li>
-<li>Product managers see value delivery rates</li>
+<li>
+<p>Benchmarking against industry standards</p>
+</li>
+<li>
+<p><strong>Business Value Connection</strong>: Links engineering work to business outcomes</p>
+</li>
+<li>
+<p>Product managers see value delivery rates</p>
+</li>
 <li>Executives understand ROI of platform improvements</li>
-<li>Prioritization driven by value, not just urgency</li>
-<li><strong>Competitive Differentiation</strong>: Few open-source IDPs offer integrated VSM</li>
-<li>Attracts organizations serious about flow metrics</li>
+<li>
+<p>Prioritization driven by value, not just urgency</p>
+</li>
+<li>
+<p><strong>Competitive Differentiation</strong>: Few open-source IDPs offer integrated VSM</p>
+</li>
+<li>
+<p>Attracts organizations serious about flow metrics</p>
+</li>
 <li>Aligns with 2025 DORA findings</li>
-<li>Positions Fawkes as cutting-edge</li>
-<li><strong>Platform-as-Product Enablement</strong>: Measures platform’s own value delivery</li>
-<li>Internal customers can see platform team throughput</li>
+<li>
+<p>Positions Fawkes as cutting-edge</p>
+</li>
+<li>
+<p><strong>Platform-as-Product Enablement</strong>: Measures platform’s own value delivery</p>
+</li>
+<li>
+<p>Internal customers can see platform team throughput</p>
+</li>
 <li>Continuous improvement becomes data-driven</li>
 <li>Justifies platform investment with metrics</li>
 </ol>
 <h3 id="negative">Negative</h3>
 <ol>
-<li><strong>Implementation Complexity</strong>: Significant development effort required</li>
-<li>New service (VSM Hub) to build and maintain</li>
+<li>
+<p><strong>Implementation Complexity</strong>: Significant development effort required</p>
+</li>
+<li>
+<p>New service (VSM Hub) to build and maintain</p>
+</li>
 <li>Multiple integrations to implement</li>
 <li>Data model to design and evolve</li>
-<li><strong>Mitigation</strong>: Phased rollout, start with 2-3 integrations</li>
-<li><strong>Convention Enforcement</strong>: Requires consistent work item ID usage</li>
-<li>Teams must adopt naming conventions</li>
+<li>
+<p><strong>Mitigation</strong>: Phased rollout, start with 2-3 integrations</p>
+</li>
+<li>
+<p><strong>Convention Enforcement</strong>: Requires consistent work item ID usage</p>
+</li>
+<li>
+<p>Teams must adopt naming conventions</p>
+</li>
 <li>Pre-commit hooks needed</li>
 <li>Change management required</li>
-<li><strong>Mitigation</strong>: Automation (Git hooks), clear documentation, training</li>
-<li><strong>Data Quality Dependency</strong>: Metrics only as good as input data</li>
-<li>Missed commit messages → broken correlation</li>
+<li>
+<p><strong>Mitigation</strong>: Automation (Git hooks), clear documentation, training</p>
+</li>
+<li>
+<p><strong>Data Quality Dependency</strong>: Metrics only as good as input data</p>
+</li>
+<li>
+<p>Missed commit messages → broken correlation</p>
+</li>
 <li>Inconsistent Focalboard updates → wrong stage timings</li>
 <li>Webhooks failures → missing events</li>
-<li><strong>Mitigation</strong>: Data quality monitoring, event replay, manual correction UI</li>
-<li><strong>Performance Concerns</strong>: Real-time correlation at scale</li>
-<li>High event volume from CI/CD (100s per hour)</li>
+<li>
+<p><strong>Mitigation</strong>: Data quality monitoring, event replay, manual correction UI</p>
+</li>
+<li>
+<p><strong>Performance Concerns</strong>: Real-time correlation at scale</p>
+</li>
+<li>
+<p>High event volume from CI/CD (100s per hour)</p>
+</li>
 <li>Complex joins across data sources</li>
 <li>Dashboard query performance</li>
-<li><strong>Mitigation</strong>: Event streaming (Kafka), caching (Redis), query optimization</li>
-<li><strong>Privacy Considerations</strong>: Individual developer performance visibility</li>
-<li>Metrics could be misused for surveillance</li>
+<li>
+<p><strong>Mitigation</strong>: Event streaming (Kafka), caching (Redis), query optimization</p>
+</li>
+<li>
+<p><strong>Privacy Considerations</strong>: Individual developer performance visibility</p>
+</li>
+<li>
+<p>Metrics could be misused for surveillance</p>
+</li>
 <li>Team metrics, not individual metrics</li>
 <li>Requires careful communication</li>
-<li><strong>Mitigation</strong>: Team-level aggregation only, explicit privacy policy</li>
-<li><strong>Maintenance Overhead</strong>: Another system to operate</li>
-<li>VSM Hub needs monitoring, scaling, updates</li>
+<li>
+<p><strong>Mitigation</strong>: Team-level aggregation only, explicit privacy policy</p>
+</li>
+<li>
+<p><strong>Maintenance Overhead</strong>: Another system to operate</p>
+</li>
+<li>
+<p>VSM Hub needs monitoring, scaling, updates</p>
+</li>
 <li>Additional PostgreSQL database</li>
 <li>Integration maintenance as tools evolve</li>
 <li><strong>Mitigation</strong>: Observability from day one, runbooks, automation</li>
 </ol>
 <h3 id="neutral">Neutral</h3>
 <ol>
-<li><strong>Learning Curve</strong>: Teams need to understand VSM concepts</li>
-<li>Training required on flow metrics</li>
+<li>
+<p><strong>Learning Curve</strong>: Teams need to understand VSM concepts</p>
+</li>
+<li>
+<p>Training required on flow metrics</p>
+</li>
 <li>Dojo module needed (“Value Stream Management”)</li>
-<li><strong>Action</strong>: Include in Yellow Belt curriculum</li>
-<li><strong>Cultural Change</strong>: Shifts focus from velocity to flow</li>
-<li>Story points de-emphasized</li>
+<li>
+<p><strong>Action</strong>: Include in Yellow Belt curriculum</p>
+</li>
+<li>
+<p><strong>Cultural Change</strong>: Shifts focus from velocity to flow</p>
+</li>
+<li>
+<p>Story points de-emphasized</p>
+</li>
 <li>Flow efficiency becomes key metric</li>
-<li><strong>Action</strong>: Leadership buy-in, communicate why</li>
-<li><strong>Tool Dependencies</strong>: Relies on existing tool quality</li>
-<li>Focalboard API stability</li>
+<li>
+<p><strong>Action</strong>: Leadership buy-in, communicate why</p>
+</li>
+<li>
+<p><strong>Tool Dependencies</strong>: Relies on existing tool quality</p>
+</li>
+<li>
+<p>Focalboard API stability</p>
+</li>
 <li>GitHub webhook reliability</li>
 <li>Jenkins plugin ecosystem</li>
 <li><strong>Action</strong>: Contribute improvements upstream</li>
@@ -5752,21 +5838,43 @@ The 2025 DORA Report makes clear that VSM is a key differentiator for high-perfo
 <p><strong>Goal</strong>: Basic correlation and cycle time measurement</p>
 <p><strong>Deliverables</strong>:</p>
 <ol>
-<li>VSM Hub service (Go)</li>
-<li>Webhook receiver</li>
+<li>
+<p>VSM Hub service (Go)</p>
+</li>
+<li>
+<p>Webhook receiver</p>
+</li>
 <li>Work item correlation engine</li>
 <li>Basic API (REST)</li>
-<li>PostgreSQL schema</li>
-<li>Integrations (simplified):</li>
-<li>Focalboard webhook → VSM Hub</li>
+<li>
+<p>PostgreSQL schema</p>
+</li>
+<li>
+<p>Integrations (simplified):</p>
+</li>
+<li>
+<p>Focalboard webhook → VSM Hub</p>
+</li>
 <li>GitHub webhook → VSM Hub</li>
-<li>Jenkins webhook → VSM Hub</li>
-<li>Metrics:</li>
-<li>Cycle time (end-to-end)</li>
+<li>
+<p>Jenkins webhook → VSM Hub</p>
+</li>
+<li>
+<p>Metrics:</p>
+</li>
+<li>
+<p>Cycle time (end-to-end)</p>
+</li>
 <li>Lead time (commit → deploy)</li>
-<li>WIP by stage</li>
-<li>Visualization:</li>
-<li>Simple Grafana dashboard (flow metrics)</li>
+<li>
+<p>WIP by stage</p>
+</li>
+<li>
+<p>Visualization:</p>
+</li>
+<li>
+<p>Simple Grafana dashboard (flow metrics)</p>
+</li>
 <li>Backstage plugin (minimal - work item list)</li>
 </ol>
 <p><strong>Success Criteria</strong>:</p>
@@ -5779,19 +5887,41 @@ The 2025 DORA Report makes clear that VSM is a key differentiator for high-perfo
 <p><strong>Goal</strong>: Bottleneck detection and alerts</p>
 <p><strong>Deliverables</strong>:</p>
 <ol>
-<li>Bottleneck detection algorithm</li>
-<li>Statistical anomaly detection</li>
-<li>Rule-based alerts</li>
-<li>Enhanced metrics:</li>
-<li>Flow efficiency</li>
+<li>
+<p>Bottleneck detection algorithm</p>
+</li>
+<li>
+<p>Statistical anomaly detection</p>
+</li>
+<li>
+<p>Rule-based alerts</p>
+</li>
+<li>
+<p>Enhanced metrics:</p>
+</li>
+<li>
+<p>Flow efficiency</p>
+</li>
 <li>Stage-level cycle times</li>
-<li>Wait time vs. active time</li>
-<li>Alerting:</li>
-<li>Mattermost notifications for bottlenecks</li>
+<li>
+<p>Wait time vs. active time</p>
+</li>
+<li>
+<p>Alerting:</p>
+</li>
+<li>
+<p>Mattermost notifications for bottlenecks</p>
+</li>
 <li>Email alerts for leadership</li>
-<li>In-app alerts (Backstage)</li>
-<li>Enhanced Backstage plugin:</li>
-<li>Value stream visualization</li>
+<li>
+<p>In-app alerts (Backstage)</p>
+</li>
+<li>
+<p>Enhanced Backstage plugin:</p>
+</li>
+<li>
+<p>Value stream visualization</p>
+</li>
 <li>Bottleneck alerts</li>
 <li>Team health dashboard</li>
 </ol>
@@ -5805,20 +5935,42 @@ The 2025 DORA Report makes clear that VSM is a key differentiator for high-perfo
 <p><strong>Goal</strong>: Link work items to business outcomes</p>
 <p><strong>Deliverables</strong>:</p>
 <ol>
-<li>Business value tracking</li>
-<li>Value assignment in Focalboard</li>
+<li>
+<p>Business value tracking</p>
+</li>
+<li>
+<p>Value assignment in Focalboard</p>
+</li>
 <li>Value delivery metrics</li>
-<li>Value velocity trends</li>
-<li>Customer feedback integration</li>
-<li>NPS per feature</li>
+<li>
+<p>Value velocity trends</p>
+</li>
+<li>
+<p>Customer feedback integration</p>
+</li>
+<li>
+<p>NPS per feature</p>
+</li>
 <li>Feature usage tracking</li>
-<li>Incident correlation</li>
-<li>Advanced dashboards:</li>
-<li>Executive value stream overview</li>
+<li>
+<p>Incident correlation</p>
+</li>
+<li>
+<p>Advanced dashboards:</p>
+</li>
+<li>
+<p>Executive value stream overview</p>
+</li>
 <li>Value delivery trends</li>
-<li>Feature success scores</li>
-<li>Dojo module: “Value Stream Management”</li>
-<li>VSM concepts and metrics</li>
+<li>
+<p>Feature success scores</p>
+</li>
+<li>
+<p>Dojo module: “Value Stream Management”</p>
+</li>
+<li>
+<p>VSM concepts and metrics</p>
+</li>
 <li>Hands-on lab: Optimize a value stream</li>
 <li>Certification: “Fawkes VSM Practitioner”</li>
 </ol>

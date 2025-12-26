@@ -4982,77 +4982,97 @@
 <h2 id="context">Context</h2>
 <p>Fawkes requires an Infrastructure as Code (IaC) tool to provision and manage cloud infrastructure declaratively. IaC is fundamental to platform engineering, enabling repeatable, version-controlled, auditable infrastructure management across multiple clouds.</p>
 <h3 id="the-need-for-infrastructure-as-code">The Need for Infrastructure as Code</h3>
-<p><strong>Current Challenges Without IaC</strong>:
-- <strong>Manual Provisioning</strong>: Error-prone, time-consuming, not documented
-- <strong>Configuration Drift</strong>: Infrastructure diverges from documented state
-- <strong>No Version Control</strong>: Can't track infrastructure changes over time
-- <strong>No Code Review</strong>: Infrastructure changes not peer-reviewed
-- <strong>Environment Inconsistencies</strong>: Dev, staging, prod configured differently
-- <strong>Disaster Recovery</strong>: Rebuilding infrastructure from scratch is slow/impossible
-- <strong>No Self-Service</strong>: Developers can't provision infrastructure without tickets
-- <strong>Tribal Knowledge</strong>: Infrastructure setup exists only in operators' heads</p>
-<p><strong>What Infrastructure as Code Provides</strong>:
-1. <strong>Declarative Configuration</strong>: Describe desired state, tool handles how to achieve it
-2. <strong>Version Control</strong>: All infrastructure changes tracked in Git
-3. <strong>Code Review</strong>: Infrastructure changes go through PR process
-4. <strong>Repeatability</strong>: Provision identical infrastructure multiple times
-5. <strong>Environment Parity</strong>: Dev/staging/prod from same code with different variables
-6. <strong>Disaster Recovery</strong>: Rebuild entire infrastructure from code
-7. <strong>Documentation</strong>: Code is documentation (always up-to-date)
-8. <strong>Automation</strong>: Integrate with CI/CD for automated infrastructure changes</p>
+<p><strong>Current Challenges Without IaC</strong>:</p>
+<ul>
+<li><strong>Manual Provisioning</strong>: Error-prone, time-consuming, not documented</li>
+<li><strong>Configuration Drift</strong>: Infrastructure diverges from documented state</li>
+<li><strong>No Version Control</strong>: Can't track infrastructure changes over time</li>
+<li><strong>No Code Review</strong>: Infrastructure changes not peer-reviewed</li>
+<li><strong>Environment Inconsistencies</strong>: Dev, staging, prod configured differently</li>
+<li><strong>Disaster Recovery</strong>: Rebuilding infrastructure from scratch is slow/impossible</li>
+<li><strong>No Self-Service</strong>: Developers can't provision infrastructure without tickets</li>
+<li><strong>Tribal Knowledge</strong>: Infrastructure setup exists only in operators' heads</li>
+</ul>
+<p><strong>What Infrastructure as Code Provides</strong>:</p>
+<ol>
+<li><strong>Declarative Configuration</strong>: Describe desired state, tool handles how to achieve it</li>
+<li><strong>Version Control</strong>: All infrastructure changes tracked in Git</li>
+<li><strong>Code Review</strong>: Infrastructure changes go through PR process</li>
+<li><strong>Repeatability</strong>: Provision identical infrastructure multiple times</li>
+<li><strong>Environment Parity</strong>: Dev/staging/prod from same code with different variables</li>
+<li><strong>Disaster Recovery</strong>: Rebuild entire infrastructure from code</li>
+<li><strong>Documentation</strong>: Code is documentation (always up-to-date)</li>
+<li><strong>Automation</strong>: Integrate with CI/CD for automated infrastructure changes</li>
+</ol>
 <h3 id="requirements-for-iac-tool">Requirements for IaC Tool</h3>
-<p><strong>Core Requirements</strong>:
-- <strong>Multi-Cloud</strong>: Support AWS, Azure, GCP with consistent workflow
-- <strong>Declarative</strong>: Describe desired state, not procedural steps
-- <strong>State Management</strong>: Track current infrastructure state
-- <strong>Plan/Preview</strong>: Show changes before applying
-- <strong>Modular</strong>: Reusable modules for common patterns
-- <strong>Mature Ecosystem</strong>: Providers for 100+ services
-- <strong>Large Community</strong>: Extensive documentation, examples, support
-- <strong>Open Source</strong>: Transparent, no vendor lock-in</p>
-<p><strong>DORA Alignment</strong>:
-- <strong>Infrastructure Changes</strong>: Version-controlled, reviewable infrastructure
-- <strong>Deployment Frequency</strong>: Automated infrastructure enables faster deployments
-- <strong>Lead Time</strong>: Infrastructure provisioning no longer bottleneck
-- <strong>Change Failure Rate</strong>: Preview changes before applying reduces errors</p>
-<p><strong>Integration Requirements</strong>:
-- <strong>GitHub</strong>: Store modules and configurations
-- <strong>Jenkins</strong>: Automate terraform apply in pipelines
-- <strong>Kubernetes</strong>: Provision clusters, configure resources
-- <strong>Cloud Providers</strong>: AWS, Azure, GCP
-- <strong>Backstage</strong>: Show infrastructure status (future)</p>
+<p><strong>Core Requirements</strong>:</p>
+<ul>
+<li><strong>Multi-Cloud</strong>: Support AWS, Azure, GCP with consistent workflow</li>
+<li><strong>Declarative</strong>: Describe desired state, not procedural steps</li>
+<li><strong>State Management</strong>: Track current infrastructure state</li>
+<li><strong>Plan/Preview</strong>: Show changes before applying</li>
+<li><strong>Modular</strong>: Reusable modules for common patterns</li>
+<li><strong>Mature Ecosystem</strong>: Providers for 100+ services</li>
+<li><strong>Large Community</strong>: Extensive documentation, examples, support</li>
+<li><strong>Open Source</strong>: Transparent, no vendor lock-in</li>
+</ul>
+<p><strong>DORA Alignment</strong>:</p>
+<ul>
+<li><strong>Infrastructure Changes</strong>: Version-controlled, reviewable infrastructure</li>
+<li><strong>Deployment Frequency</strong>: Automated infrastructure enables faster deployments</li>
+<li><strong>Lead Time</strong>: Infrastructure provisioning no longer bottleneck</li>
+<li><strong>Change Failure Rate</strong>: Preview changes before applying reduces errors</li>
+</ul>
+<p><strong>Integration Requirements</strong>:</p>
+<ul>
+<li><strong>GitHub</strong>: Store modules and configurations</li>
+<li><strong>Jenkins</strong>: Automate terraform apply in pipelines</li>
+<li><strong>Kubernetes</strong>: Provision clusters, configure resources</li>
+<li><strong>Cloud Providers</strong>: AWS, Azure, GCP</li>
+<li><strong>Backstage</strong>: Show infrastructure status (future)</li>
+</ul>
 <h3 id="forces-at-play">Forces at Play</h3>
-<p><strong>Technical Forces</strong>:
-- Need multi-cloud support for flexibility
-- State management critical for tracking resources
-- Preview capability reduces risk of changes
-- Modular approach enables code reuse</p>
-<p><strong>Operational Forces</strong>:
-- Platform team can't manually provision everything
-- Need disaster recovery capabilities
-- Environment parity critical for testing
-- Self-service infrastructure reduces tickets</p>
-<p><strong>Developer Experience Forces</strong>:
-- Developers want infrastructure on-demand
-- Need clear documentation of infrastructure
-- Want confidence changes won't break production
-- Prefer familiar tools and workflows</p>
-<p><strong>Ecosystem Forces</strong>:
-- Terraform has dominant market share
-- Extensive provider ecosystem
-- Large community and knowledge base
-- Enterprise adoption provides credibility</p>
+<p><strong>Technical Forces</strong>:</p>
+<ul>
+<li>Need multi-cloud support for flexibility</li>
+<li>State management critical for tracking resources</li>
+<li>Preview capability reduces risk of changes</li>
+<li>Modular approach enables code reuse</li>
+</ul>
+<p><strong>Operational Forces</strong>:</p>
+<ul>
+<li>Platform team can't manually provision everything</li>
+<li>Need disaster recovery capabilities</li>
+<li>Environment parity critical for testing</li>
+<li>Self-service infrastructure reduces tickets</li>
+</ul>
+<p><strong>Developer Experience Forces</strong>:</p>
+<ul>
+<li>Developers want infrastructure on-demand</li>
+<li>Need clear documentation of infrastructure</li>
+<li>Want confidence changes won't break production</li>
+<li>Prefer familiar tools and workflows</li>
+</ul>
+<p><strong>Ecosystem Forces</strong>:</p>
+<ul>
+<li>Terraform has dominant market share</li>
+<li>Extensive provider ecosystem</li>
+<li>Large community and knowledge base</li>
+<li>Enterprise adoption provides credibility</li>
+</ul>
 <h2 id="decision">Decision</h2>
 <p><strong>We will use Terraform as the primary Infrastructure as Code tool for Fawkes.</strong></p>
-<p>Specifically:
-- <strong>Terraform OSS</strong> (Open Source, latest stable version)
-- <strong>HCL</strong> (HashiCorp Configuration Language)
-- <strong>Terraform Cloud</strong> for state management (free tier, 5 users)
-- <strong>Modular approach</strong> with reusable modules
-- <strong>Multi-environment</strong> support (dev, staging, prod)
-- <strong>Version pinning</strong> for providers and modules
-- <strong>Automated testing</strong> with Terratest (critical modules)
-- <strong>Crossplane</strong> for Kubernetes-native IaC (roadmap, Phase 2)</p>
+<p>Specifically:</p>
+<ul>
+<li><strong>Terraform OSS</strong> (Open Source, latest stable version)</li>
+<li><strong>HCL</strong> (HashiCorp Configuration Language)</li>
+<li><strong>Terraform Cloud</strong> for state management (free tier, 5 users)</li>
+<li><strong>Modular approach</strong> with reusable modules</li>
+<li><strong>Multi-environment</strong> support (dev, staging, prod)</li>
+<li><strong>Version pinning</strong> for providers and modules</li>
+<li><strong>Automated testing</strong> with Terratest (critical modules)</li>
+<li><strong>Crossplane</strong> for Kubernetes-native IaC (roadmap, Phase 2)</li>
+</ul>
 <h3 id="rationale">Rationale</h3>
 <ol>
 <li>
@@ -5061,7 +5081,9 @@
 <li>
 <p><strong>True Multi-Cloud</strong>: Consistent workflow across clouds:</p>
 </li>
-<li>Same HCL syntax for AWS, Azure, GCP</li>
+<li>
+<p>Same HCL syntax for AWS, Azure, GCP</p>
+</li>
 <li>Unified state management</li>
 <li>Single tool to learn</li>
 <li>
@@ -5070,7 +5092,9 @@
 <li>
 <p><strong>Mature and Battle-Tested</strong>:</p>
 </li>
-<li>10+ years of development</li>
+<li>
+<p>10+ years of development</p>
+</li>
 <li>Production-proven at enterprise scale</li>
 <li>Extensive real-world validation</li>
 <li>
@@ -5079,7 +5103,9 @@
 <li>
 <p><strong>Declarative Language</strong>: HCL describes desired state:</p>
 </li>
-<li>Easy to read and understand</li>
+<li>
+<p>Easy to read and understand</p>
+</li>
 <li>Predictable behavior</li>
 <li>Idempotent operations</li>
 <li>
@@ -5088,7 +5114,9 @@
 <li>
 <p><strong>State Management</strong>:</p>
 </li>
-<li>Tracks actual infrastructure state</li>
+<li>
+<p>Tracks actual infrastructure state</p>
+</li>
 <li>Enables drift detection</li>
 <li>Supports team collaboration</li>
 <li>
@@ -5097,7 +5125,9 @@
 <li>
 <p><strong>Plan Before Apply</strong>:</p>
 </li>
-<li>Preview changes before executing</li>
+<li>
+<p>Preview changes before executing</p>
+</li>
 <li>Reduces fear of infrastructure changes</li>
 <li>Catch mistakes before they happen</li>
 <li>
@@ -5106,7 +5136,9 @@
 <li>
 <p><strong>Massive Provider Ecosystem</strong>:</p>
 </li>
-<li>AWS: 1,000+ resources</li>
+<li>
+<p>AWS: 1,000+ resources</p>
+</li>
 <li>Azure: 1,500+ resources</li>
 <li>GCP: 800+ resources</li>
 <li>Kubernetes: Full support</li>
@@ -5116,7 +5148,9 @@
 <li>
 <p><strong>Module Registry</strong>:</p>
 </li>
-<li>Public registry with 10,000+ modules</li>
+<li>
+<p>Public registry with 10,000+ modules</p>
+</li>
 <li>Reusable, community-validated code</li>
 <li>Can publish private modules</li>
 <li>
@@ -5125,7 +5159,9 @@
 <li>
 <p><strong>Large Community</strong>:</p>
 </li>
-<li>Extensive documentation</li>
+<li>
+<p>Extensive documentation</p>
+</li>
 <li>Thousands of tutorials and examples</li>
 <li>Active forums and Slack channels</li>
 <li>
@@ -5189,8 +5225,12 @@
 <p>◽ <strong>HashiCorp Business</strong>: Company behind Terraform has commercial interests</p>
 <h3 id="mitigation-strategies">Mitigation Strategies</h3>
 <ol>
-<li><strong>State Management</strong>:</li>
-<li>Use remote state backend (Terraform Cloud or S3)</li>
+<li>
+<p><strong>State Management</strong>:</p>
+</li>
+<li>
+<p>Use remote state backend (Terraform Cloud or S3)</p>
+</li>
 <li>Enable state locking (DynamoDB for S3)</li>
 <li>Never manually edit state files</li>
 <li>Regular state backups</li>
@@ -5200,7 +5240,9 @@
 <li>
 <p><strong>Learning Curve</strong>:</p>
 </li>
-<li>Provide Terraform training workshops</li>
+<li>
+<p>Provide Terraform training workshops</p>
+</li>
 <li>Create comprehensive module documentation</li>
 <li>Use module examples extensively</li>
 <li>Start simple, add complexity gradually</li>
@@ -5210,7 +5252,9 @@
 <li>
 <p><strong>State Drift</strong>:</p>
 </li>
-<li>Educate team: never make manual changes</li>
+<li>
+<p>Educate team: never make manual changes</p>
+</li>
 <li>Run terraform plan regularly to detect drift</li>
 <li>Use cloud provider guard rails (SCPs, policies)</li>
 <li>Consider drift detection automation</li>
@@ -5220,7 +5264,9 @@
 <li>
 <p><strong>Breaking Changes</strong>:</p>
 </li>
-<li>Pin provider versions in code</li>
+<li>
+<p>Pin provider versions in code</p>
+</li>
 <li>Test updates in non-production first</li>
 <li>Follow Terraform upgrade guides carefully</li>
 <li>Subscribe to provider changelogs</li>
@@ -5230,7 +5276,9 @@
 <li>
 <p><strong>Cost of Mistakes</strong>:</p>
 </li>
-<li>Protect production with different credentials</li>
+<li>
+<p>Protect production with different credentials</p>
+</li>
 <li>Use terraform plan before every apply</li>
 <li>Require PR approval for production changes</li>
 <li>Enable deletion protection on critical resources</li>
@@ -5247,107 +5295,135 @@
 </ol>
 <h2 id="alternatives-considered">Alternatives Considered</h2>
 <h3 id="alternative-1-pulumi">Alternative 1: Pulumi</h3>
-<p><strong>Pros</strong>:
-- Use real programming languages (Python, TypeScript, Go, C#)
-- Familiar to developers (no new language to learn)
-- Strong typing and IDE support
-- Good testing story (use language's test framework)
-- Modern architecture
-- Growing quickly</p>
-<p><strong>Cons</strong>:
-- <strong>Smaller Community</strong>: Much smaller than Terraform
-- <strong>Fewer Providers</strong>: 100+ providers vs. Terraform's 3,000+
-- <strong>Less Mature</strong>: Newer (2018 vs. Terraform 2014)
-- <strong>SaaS State Backend</strong>: Free tier limited, paid for self-hosted
-- <strong>Steeper Troubleshooting</strong>: Stack traces vs. Terraform's clear errors
-- <strong>Less Enterprise Adoption</strong>: Fewer large-scale production examples</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Use real programming languages (Python, TypeScript, Go, C#)</li>
+<li>Familiar to developers (no new language to learn)</li>
+<li>Strong typing and IDE support</li>
+<li>Good testing story (use language's test framework)</li>
+<li>Modern architecture</li>
+<li>Growing quickly</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Smaller Community</strong>: Much smaller than Terraform</li>
+<li><strong>Fewer Providers</strong>: 100+ providers vs. Terraform's 3,000+</li>
+<li><strong>Less Mature</strong>: Newer (2018 vs. Terraform 2014)</li>
+<li><strong>SaaS State Backend</strong>: Free tier limited, paid for self-hosted</li>
+<li><strong>Steeper Troubleshooting</strong>: Stack traces vs. Terraform's clear errors</li>
+<li><strong>Less Enterprise Adoption</strong>: Fewer large-scale production examples</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Pulumi philosophically appealing (real languages), but Terraform's maturity, ecosystem, and community provide more value. Pulumi excellent for organizations with strong programming culture, but Terraform's declarative approach and larger ecosystem better fit for Fawkes' needs. May revisit in 2-3 years as Pulumi matures.</p>
 <h3 id="alternative-2-aws-cloudformation">Alternative 2: AWS CloudFormation</h3>
-<p><strong>Pros</strong>:
-- Native AWS integration
-- No state management needed
-- AWS-supported and maintained
-- Free (no additional cost)
-- Stack rollback on failure
-- AWS console integration</p>
-<p><strong>Cons</strong>:
-- <strong>AWS Only</strong>: Cannot manage Azure, GCP, or other providers
-- <strong>Verbose YAML/JSON</strong>: Much more verbose than Terraform HCL
-- <strong>Limited Features</strong>: Fewer advanced features than Terraform
-- <strong>Slow Updates</strong>: New AWS features delayed in CloudFormation
-- <strong>Poor Error Messages</strong>: Debugging difficult
-- <strong>No Multi-Cloud</strong>: Complete rewrite needed for other clouds</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Native AWS integration</li>
+<li>No state management needed</li>
+<li>AWS-supported and maintained</li>
+<li>Free (no additional cost)</li>
+<li>Stack rollback on failure</li>
+<li>AWS console integration</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>AWS Only</strong>: Cannot manage Azure, GCP, or other providers</li>
+<li><strong>Verbose YAML/JSON</strong>: Much more verbose than Terraform HCL</li>
+<li><strong>Limited Features</strong>: Fewer advanced features than Terraform</li>
+<li><strong>Slow Updates</strong>: New AWS features delayed in CloudFormation</li>
+<li><strong>Poor Error Messages</strong>: Debugging difficult</li>
+<li><strong>No Multi-Cloud</strong>: Complete rewrite needed for other clouds</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: CloudFormation fine for AWS-only, but Fawkes multi-cloud from start. Vendor lock-in to AWS unacceptable. Terraform provides consistent multi-cloud experience. May use CloudFormation for AWS-specific features but not as primary IaC tool.</p>
 <h3 id="alternative-3-azure-resource-manager-arm-templates">Alternative 3: Azure Resource Manager (ARM) Templates</h3>
-<p><strong>Pros</strong>:
-- Native Azure integration
-- Free (included with Azure)
-- Azure portal integration
-- What-if preview capability</p>
-<p><strong>Cons</strong>:
-- <strong>Azure Only</strong>: Cannot manage AWS, GCP
-- <strong>JSON Verbose</strong>: Very verbose JSON syntax
-- <strong>Complex Syntax</strong>: Difficult to write and maintain
-- <strong>Poor Error Messages</strong>: Debugging challenging
-- <strong>Limited Community</strong>: Smaller than Terraform</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Native Azure integration</li>
+<li>Free (included with Azure)</li>
+<li>Azure portal integration</li>
+<li>What-if preview capability</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Azure Only</strong>: Cannot manage AWS, GCP</li>
+<li><strong>JSON Verbose</strong>: Very verbose JSON syntax</li>
+<li><strong>Complex Syntax</strong>: Difficult to write and maintain</li>
+<li><strong>Poor Error Messages</strong>: Debugging challenging</li>
+<li><strong>Limited Community</strong>: Smaller than Terraform</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Same issues as CloudFormation—Azure lock-in, verbose syntax, single-cloud only. Terraform multi-cloud approach much better.</p>
 <h3 id="alternative-4-ansible">Alternative 4: Ansible</h3>
-<p><strong>Pros</strong>:
-- General-purpose automation (not just infrastructure)
-- Agentless (SSH-based)
-- YAML syntax (familiar)
-- Large community
-- Can manage configuration in addition to infrastructure</p>
-<p><strong>Cons</strong>:
-- <strong>Imperative, Not Declarative</strong>: Procedural scripts vs. desired state
-- <strong>No Built-In State</strong>: Doesn't track infrastructure state
-- <strong>Idempotency Issues</strong>: Not guaranteed idempotent
-- <strong>Not Designed for IaC</strong>: Configuration management tool, not IaC tool
-- <strong>No Plan Preview</strong>: Can't preview changes before applying
-- <strong>Slower</strong>: SSH-based approach slower than API calls</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>General-purpose automation (not just infrastructure)</li>
+<li>Agentless (SSH-based)</li>
+<li>YAML syntax (familiar)</li>
+<li>Large community</li>
+<li>Can manage configuration in addition to infrastructure</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Imperative, Not Declarative</strong>: Procedural scripts vs. desired state</li>
+<li><strong>No Built-In State</strong>: Doesn't track infrastructure state</li>
+<li><strong>Idempotency Issues</strong>: Not guaranteed idempotent</li>
+<li><strong>Not Designed for IaC</strong>: Configuration management tool, not IaC tool</li>
+<li><strong>No Plan Preview</strong>: Can't preview changes before applying</li>
+<li><strong>Slower</strong>: SSH-based approach slower than API calls</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Ansible excellent for configuration management, but not purpose-built for infrastructure provisioning. Terraform's declarative approach and state management much better for IaC. May use Ansible for post-provisioning configuration alongside Terraform.</p>
 <h3 id="alternative-5-crossplane">Alternative 5: Crossplane</h3>
-<p><strong>Pros</strong>:
-- Kubernetes-native (CRDs)
-- Declarative, Kubernetes-style
-- GitOps integration native
-- Composable infrastructure
-- Cloud-agnostic abstractions
-- CNCF project (good governance)</p>
-<p><strong>Cons</strong>:
-- <strong>Less Mature</strong>: Newer than Terraform (2018)
-- <strong>Smaller Ecosystem</strong>: Fewer providers than Terraform
-- <strong>Steeper Learning Curve</strong>: Kubernetes CRDs more complex than HCL
-- <strong>Debugging Harder</strong>: Kubernetes abstraction makes troubleshooting difficult
-- <strong>Smaller Community</strong>: Fewer examples and tutorials
-- <strong>Requires Kubernetes</strong>: Can't use without Kubernetes cluster</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Kubernetes-native (CRDs)</li>
+<li>Declarative, Kubernetes-style</li>
+<li>GitOps integration native</li>
+<li>Composable infrastructure</li>
+<li>Cloud-agnostic abstractions</li>
+<li>CNCF project (good governance)</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Less Mature</strong>: Newer than Terraform (2018)</li>
+<li><strong>Smaller Ecosystem</strong>: Fewer providers than Terraform</li>
+<li><strong>Steeper Learning Curve</strong>: Kubernetes CRDs more complex than HCL</li>
+<li><strong>Debugging Harder</strong>: Kubernetes abstraction makes troubleshooting difficult</li>
+<li><strong>Smaller Community</strong>: Fewer examples and tutorials</li>
+<li><strong>Requires Kubernetes</strong>: Can't use without Kubernetes cluster</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Crossplane philosophically aligned (Kubernetes-native, cloud-agnostic), but less mature and harder to use. Terraform provides better starting point. <strong>However</strong>, Crossplane is our Phase 2 goal—we'll use Terraform initially, transition to Crossplane as it matures and team gains Kubernetes expertise. Terraform experience will inform Crossplane composition design.</p>
 <h3 id="alternative-6-opentofu">Alternative 6: OpenTofu</h3>
-<p><strong>Pros</strong>:
-- Terraform fork (fully compatible)
-- Open source (Linux Foundation)
-- Community-driven
-- No vendor control concerns
-- Free forever</p>
-<p><strong>Cons</strong>:
-- <strong>Very New</strong>: Fork created August 2023
-- <strong>Uncertain Future</strong>: Will it maintain compatibility?
-- <strong>Smaller Team</strong>: Fewer contributors than Terraform
-- <strong>Provider Ecosystem</strong>: May diverge from Terraform providers
-- <strong>Less Proven</strong>: No significant production usage yet</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Terraform fork (fully compatible)</li>
+<li>Open source (Linux Foundation)</li>
+<li>Community-driven</li>
+<li>No vendor control concerns</li>
+<li>Free forever</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Very New</strong>: Fork created August 2023</li>
+<li><strong>Uncertain Future</strong>: Will it maintain compatibility?</li>
+<li><strong>Smaller Team</strong>: Fewer contributors than Terraform</li>
+<li><strong>Provider Ecosystem</strong>: May diverge from Terraform providers</li>
+<li><strong>Less Proven</strong>: No significant production usage yet</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: OpenTofu created in response to Terraform license change (BSL). While philosophically appealing (truly open source), too new and unproven. Terraform OSS (pre-license change) still available and sufficient for Fawkes. Will monitor OpenTofu and may switch if it proves mature and sustainable.</p>
 <h3 id="alternative-7-terraform-cdk-cloud-development-kit">Alternative 7: Terraform CDK (Cloud Development Kit)</h3>
-<p><strong>Pros</strong>:
-- Use programming languages (TypeScript, Python, Java, C#, Go)
-- Generates Terraform JSON
-- Familiar to developers
-- HashiCorp-maintained</p>
-<p><strong>Cons</strong>:
-- <strong>Additional Layer</strong>: Complexity of language + Terraform
-- <strong>Less Mature</strong>: Newer than core Terraform
-- <strong>Smaller Community</strong>: Fewer examples than HCL
-- <strong>Debugging Harder</strong>: Two layers to debug (code + generated JSON)
-- <strong>Provider Support</strong>: Not all providers well-supported</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Use programming languages (TypeScript, Python, Java, C#, Go)</li>
+<li>Generates Terraform JSON</li>
+<li>Familiar to developers</li>
+<li>HashiCorp-maintained</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Additional Layer</strong>: Complexity of language + Terraform</li>
+<li><strong>Less Mature</strong>: Newer than core Terraform</li>
+<li><strong>Smaller Community</strong>: Fewer examples than HCL</li>
+<li><strong>Debugging Harder</strong>: Two layers to debug (code + generated JSON)</li>
+<li><strong>Provider Support</strong>: Not all providers well-supported</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Terraform CDK interesting but adds complexity. HCL's declarative nature and large ecosystem of HCL modules provide more value. If we wanted programming languages, would choose Pulumi directly. Terraform CDK feels like compromise without clear benefits.</p>
 <h2 id="related-decisions">Related Decisions</h2>
 <ul>
@@ -5539,8 +5615,8 @@
 <span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;environments/**&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;modules/**&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;environments/**&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;modules/**&quot;</span>
 
 <span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">plan</span><span class="p">:</span>
@@ -5655,35 +5731,43 @@
 <li><strong>Document Modules</strong>: README with examples</li>
 </ol>
 <h3 id="migration-to-crossplane-phase-2">Migration to Crossplane (Phase 2)</h3>
-<p><strong>Path Forward</strong>:
-1. <strong>Phase 1</strong> (Months 1-6): Use Terraform exclusively
-2. <strong>Phase 2</strong> (Months 7-12): Evaluate Crossplane maturity
-3. <strong>Phase 3</strong> (Year 2): Gradual migration:
-   - Start with new resources in Crossplane
-   - Keep existing resources in Terraform
-   - Create Crossplane compositions based on Terraform modules
-   - Migrate non-critical resources first
-4. <strong>Phase 4</strong> (Year 2-3): Complete migration to Crossplane</p>
-<p><strong>Why Crossplane Eventually</strong>:
-- Kubernetes-native (consistent with platform)
-- GitOps integration seamless
-- Better abstraction for self-service
-- Cloud-agnostic compositions
-- Unified control plane</p>
-<p><strong>Why Terraform First</strong>:
-- Mature and proven today
-- Larger ecosystem and community
-- Easier learning curve
-- Better debugging and documentation
-- Lower risk for MVP</p>
+<p><strong>Path Forward</strong>:</p>
+<ol>
+<li><strong>Phase 1</strong> (Months 1-6): Use Terraform exclusively</li>
+<li><strong>Phase 2</strong> (Months 7-12): Evaluate Crossplane maturity</li>
+<li><strong>Phase 3</strong> (Year 2): Gradual migration:</li>
+<li>Start with new resources in Crossplane</li>
+<li>Keep existing resources in Terraform</li>
+<li>Create Crossplane compositions based on Terraform modules</li>
+<li>Migrate non-critical resources first</li>
+<li><strong>Phase 4</strong> (Year 2-3): Complete migration to Crossplane</li>
+</ol>
+<p><strong>Why Crossplane Eventually</strong>:</p>
+<ul>
+<li>Kubernetes-native (consistent with platform)</li>
+<li>GitOps integration seamless</li>
+<li>Better abstraction for self-service</li>
+<li>Cloud-agnostic compositions</li>
+<li>Unified control plane</li>
+</ul>
+<p><strong>Why Terraform First</strong>:</p>
+<ul>
+<li>Mature and proven today</li>
+<li>Larger ecosystem and community</li>
+<li>Easier learning curve</li>
+<li>Better debugging and documentation</li>
+<li>Lower risk for MVP</li>
+</ul>
 <h2 id="monitoring-this-decision">Monitoring This Decision</h2>
-<p>We will revisit this ADR if:
-- Terraform license changes make OSS version unusable
-- Crossplane reaches maturity level where migration makes sense
-- Pulumi ecosystem and community significantly grow
-- Team expertise shifts toward different tool
-- OpenTofu becomes mature and clearly sustainable
-- Multi-cloud requirements change significantly</p>
+<p>We will revisit this ADR if:</p>
+<ul>
+<li>Terraform license changes make OSS version unusable</li>
+<li>Crossplane reaches maturity level where migration makes sense</li>
+<li>Pulumi ecosystem and community significantly grow</li>
+<li>Team expertise shifts toward different tool</li>
+<li>OpenTofu becomes mature and clearly sustainable</li>
+<li>Multi-cloud requirements change significantly</li>
+</ul>
 <p><strong>Next Review Date</strong>: April 8, 2026 (6 months)
 <strong>Crossplane Evaluation</strong>: October 2026 (12 months)</p>
 <h2 id="references">References</h2>
@@ -5697,42 +5781,56 @@
 </ul>
 <h2 id="notes">Notes</h2>
 <h3 id="terraform-vs-pulumi-the-debate">Terraform vs. Pulumi: The Debate</h3>
-<p><strong>Use Terraform when</strong>:
-- Want largest ecosystem and community
-- Prefer declarative DSL over programming
-- Need maximum provider coverage
-- Want battle-tested maturity</p>
-<p><strong>Use Pulumi when</strong>:
-- Strong programming culture in organization
-- Want to use existing language (Python, TypeScript, Go)
-- Need complex logic in infrastructure code
-- Prefer general-purpose language testing</p>
+<p><strong>Use Terraform when</strong>:</p>
+<ul>
+<li>Want largest ecosystem and community</li>
+<li>Prefer declarative DSL over programming</li>
+<li>Need maximum provider coverage</li>
+<li>Want battle-tested maturity</li>
+</ul>
+<p><strong>Use Pulumi when</strong>:</p>
+<ul>
+<li>Strong programming culture in organization</li>
+<li>Want to use existing language (Python, TypeScript, Go)</li>
+<li>Need complex logic in infrastructure code</li>
+<li>Prefer general-purpose language testing</li>
+</ul>
 <p><strong>For Fawkes</strong>: Terraform's maturity, ecosystem, and community provide more value. Pulumi excellent choice for many organizations, but Terraform better fits Fawkes' needs as open source platform.</p>
 <h3 id="terraform-license-change-context">Terraform License Change Context</h3>
-<p>In August 2023, HashiCorp changed Terraform license from MPL to BSL (Business Source License). This prevents:
-- Using Terraform in commercial competing products
-- Hosting Terraform as paid service</p>
-<p>For Fawkes:
-- <strong>Not Affected</strong>: Using Terraform for our platform is permitted
-- <strong>No Commercial Product</strong>: We're not selling Terraform itself
-- <strong>OpenTofu Available</strong>: Fork exists if needed</p>
+<p>In August 2023, HashiCorp changed Terraform license from MPL to BSL (Business Source License). This prevents:</p>
+<ul>
+<li>Using Terraform in commercial competing products</li>
+<li>Hosting Terraform as paid service</li>
+</ul>
+<p>For Fawkes:</p>
+<ul>
+<li><strong>Not Affected</strong>: Using Terraform for our platform is permitted</li>
+<li><strong>No Commercial Product</strong>: We're not selling Terraform itself</li>
+<li><strong>OpenTofu Available</strong>: Fork exists if needed</li>
+</ul>
 <p>This decision may be revisited if BSL becomes more restrictive or OpenTofu proves more sustainable.</p>
 <h3 id="state-management-is-critical">State Management is Critical</h3>
-<p><strong>State file contains</strong>:
-- All provisioned resource IDs
-- Resource attributes and metadata
-- Dependencies between resources
-- Terraform version used</p>
-<p><strong>If state file is lost</strong>:
-- Terraform can't manage existing resources
-- Must import all resources manually (tedious)
-- Or destroy and recreate everything (disruptive)</p>
-<p><strong>Protection strategies</strong>:
-- Remote state backend (S3, Terraform Cloud)
-- State file versioning enabled
-- Regular backups
-- Never edit state manually
-- State locking to prevent corruption</p>
+<p><strong>State file contains</strong>:</p>
+<ul>
+<li>All provisioned resource IDs</li>
+<li>Resource attributes and metadata</li>
+<li>Dependencies between resources</li>
+<li>Terraform version used</li>
+</ul>
+<p><strong>If state file is lost</strong>:</p>
+<ul>
+<li>Terraform can't manage existing resources</li>
+<li>Must import all resources manually (tedious)</li>
+<li>Or destroy and recreate everything (disruptive)</li>
+</ul>
+<p><strong>Protection strategies</strong>:</p>
+<ul>
+<li>Remote state backend (S3, Terraform Cloud)</li>
+<li>State file versioning enabled</li>
+<li>Regular backups</li>
+<li>Never edit state manually</li>
+<li>State locking to prevent corruption</li>
+</ul>
 <hr />
 <p><strong>Decision Made By</strong>: Platform Architecture Team
 <strong>Approved By</strong>: Project Lead

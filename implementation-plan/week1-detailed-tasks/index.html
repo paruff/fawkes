@@ -4746,15 +4746,15 @@
 <strong>Estimated Time</strong>: 6-8 hours
 <strong>Goal</strong>: Functional 4-node local K8s cluster with ingress and storage</p>
 <h4 id="morning-4-hours-issue-1-k8s-cluster">Morning (4 hours): Issue #1 - K8s Cluster</h4>
-<p><strong>Task 1.1: Create Terraform module</strong> (90 min)
+<p><strong>Task 1.1: Create Terraform module</strong> (90 min)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Location: infra/local/cluster/</span>
 
 <span class="c1"># Create directory structure</span>
 mkdir<span class="w"> </span>-p<span class="w"> </span>infra/local/cluster/<span class="o">{</span>terraform,inspec/controls,scripts<span class="o">}</span>
 
 <span class="c1"># File: infra/local/cluster/terraform/main.tf</span>
-</code></pre></div></p>
-<p><strong>Copilot Prompt for main.tf</strong>:
+</code></pre></div>
+<p><strong>Copilot Prompt for main.tf</strong>:</p>
 <div class="highlight"><pre><span></span><code>Create a Terraform configuration for deploying a local Kubernetes cluster using kind:
 
 Requirements:
@@ -4772,11 +4772,11 @@ Include:
 
 Use kind_cluster resource from tehcyx/kind provider.
 Add comments explaining each configuration block.
-</code></pre></div></p>
-<p><strong>Task 1.2: Create InSpec validation</strong> (45 min)
+</code></pre></div>
+<p><strong>Task 1.2: Create InSpec validation</strong> (45 min)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Location: infra/local/cluster/inspec/controls/cluster.rb</span>
-</code></pre></div></p>
-<p><strong>Copilot Prompt</strong>:
+</code></pre></div>
+<p><strong>Copilot Prompt</strong>:</p>
 <div class="highlight"><pre><span></span><code>Create an InSpec test suite for validating Kubernetes cluster deployment:
 
 Test cases:
@@ -4789,11 +4789,11 @@ Test cases:
 
 Use kubectl commands via command() InSpec resource.
 Include descriptive test descriptions and impact levels.
-</code></pre></div></p>
-<p><strong>Task 1.3: Create deployment script</strong> (90 min)
+</code></pre></div>
+<p><strong>Task 1.3: Create deployment script</strong> (90 min)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Location: scripts/deploy-local-cluster.sh</span>
-</code></pre></div></p>
-<p><strong>Copilot Prompt</strong>:
+</code></pre></div>
+<p><strong>Copilot Prompt</strong>:</p>
 <div class="highlight"><pre><span></span><code>Create a bash deployment script that:
 
 1. Checks prerequisites:
@@ -4823,11 +4823,11 @@ Include descriptive test descriptions and impact levels.
 
 Use colors for output (green=success, red=error, yellow=warning).
 Include functions for each major step.
-</code></pre></div></p>
-<p><strong>Task 1.4: Create documentation</strong> (45 min)
+</code></pre></div>
+<p><strong>Task 1.4: Create documentation</strong> (45 min)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Location: docs/runbooks/local-cluster-setup.md</span>
-</code></pre></div></p>
-<p><strong>Copilot Prompt</strong>:
+</code></pre></div>
+<p><strong>Copilot Prompt</strong>:</p>
 <div class="highlight"><pre><span></span><code>Create comprehensive documentation for local K8s cluster setup:
 
 Sections:
@@ -4848,8 +4848,8 @@ Add troubleshooting for:
 - Insufficient resources
 - Port conflicts
 - StorageClass issues
-</code></pre></div></p>
-<p><strong>Validation Commands</strong>:
+</code></pre></div>
+<p><strong>Validation Commands</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Test Terraform</span>
 <span class="nb">cd</span><span class="w"> </span>infra/local/cluster/terraform
 terraform<span class="w"> </span>init
@@ -4875,13 +4875,13 @@ inspec<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <span class="c1"># Check resource usage</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>nodes
 <span class="c1"># Expected: &lt;50% CPU, &lt;50% Memory</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="afternoon-2-3-hours-issues-2-3-ingress-storage">Afternoon (2-3 hours): Issues #2 &amp; #3 - Ingress &amp; Storage</h4>
-<p><strong>Task 2.1: Deploy nginx-ingress</strong> (90 min)
+<p><strong>Task 2.1: Deploy nginx-ingress</strong> (90 min)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Location: platform/apps/ingress-nginx/</span>
 mkdir<span class="w"> </span>-p<span class="w"> </span>platform/apps/ingress-nginx
-</code></pre></div></p>
-<p><strong>Copilot Prompt</strong>:
+</code></pre></div>
+<p><strong>Copilot Prompt</strong>:</p>
 <div class="highlight"><pre><span></span><code>Create ArgoCD Application and Helm values for nginx-ingress-controller:
 
 Files needed:
@@ -4905,11 +4905,11 @@ Files needed:
    - Include TLS with self-signed cert
 
 4. README.md - Setup and usage instructions
-</code></pre></div></p>
-<p><strong>Task 3.1: Configure persistent storage</strong> (60 min)
+</code></pre></div>
+<p><strong>Task 3.1: Configure persistent storage</strong> (60 min)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Location: platform/apps/local-path-storage/</span>
-</code></pre></div></p>
-<p><strong>Copilot Prompt</strong>:
+</code></pre></div>
+<p><strong>Copilot Prompt</strong>:</p>
 <div class="highlight"><pre><span></span><code>Create configuration for local-path-provisioner:
 
 Files:
@@ -4930,8 +4930,8 @@ Files:
    - Create test file in /data
 
 Include cleanup script to delete test resources.
-</code></pre></div></p>
-<p><strong>End of Day 1 Validation</strong>:
+</code></pre></div>
+<p><strong>End of Day 1 Validation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Cluster healthy</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>nodes
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A
@@ -4947,17 +4947,17 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pvc
 
 <span class="c1"># Run acceptance test AT-E1-001</span>
 ./tests/acceptance/run-test.sh<span class="w"> </span>AT-E1-001
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="day-2-argocd-deployment-git-structure">Day 2: ArgoCD Deployment &amp; Git Structure</h3>
 <p><strong>Issues</strong>: #5, #6, #7
 <strong>Estimated Time</strong>: 6-8 hours
 <strong>Goal</strong>: ArgoCD managing all platform components via GitOps</p>
 <h4 id="morning-4-hours-issue-5-deploy-argocd">Morning (4 hours): Issue #5 - Deploy ArgoCD</h4>
-<p><strong>Task 5.1: Deploy ArgoCD</strong> (90 min)
+<p><strong>Task 5.1: Deploy ArgoCD</strong> (90 min)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Location: platform/apps/argocd/</span>
-</code></pre></div></p>
-<p><strong>Copilot Prompt</strong>:
+</code></pre></div>
+<p><strong>Copilot Prompt</strong>:</p>
 <div class="highlight"><pre><span></span><code>Create ArgoCD deployment configuration:
 
 1. install.yaml - ArgoCD installation manifest
@@ -4992,11 +4992,11 @@ Include README with:
 - How to access UI
 - How to login via CLI
 - Initial configuration steps
-</code></pre></div></p>
-<p><strong>Task 5.2: Configure ArgoCD CLI</strong> (30 min)
+</code></pre></div>
+<p><strong>Task 5.2: Configure ArgoCD CLI</strong> (30 min)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Location: scripts/configure-argocd.sh</span>
-</code></pre></div></p>
-<p><strong>Copilot Prompt</strong>:
+</code></pre></div>
+<p><strong>Copilot Prompt</strong>:</p>
 <div class="highlight"><pre><span></span><code>Create script to configure ArgoCD CLI:
 
 1. Install argocd CLI if not present
@@ -5008,8 +5008,8 @@ Include README with:
 7. Verify configuration
 
 Include error handling and validation steps.
-</code></pre></div></p>
-<p><strong>Validation</strong>:
+</code></pre></div>
+<p><strong>Validation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Deploy ArgoCD</span>
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/argocd/install.yaml
 kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="o">=</span><span class="nv">condition</span><span class="o">=</span>Ready<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>--all<span class="w"> </span>--timeout<span class="o">=</span>300s
@@ -5024,12 +5024,12 @@ argocd<span class="w"> </span>login<span class="w"> </span>localhost:8080<span c
 <span class="c1"># Verify</span>
 argocd<span class="w"> </span>cluster<span class="w"> </span>list
 argocd<span class="w"> </span>app<span class="w"> </span>list
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="afternoon-3-4-hours-issues-6-7-git-structure-app-of-apps">Afternoon (3-4 hours): Issues #6 &amp; #7 - Git Structure &amp; App-of-Apps</h4>
-<p><strong>Task 6.1: Create Git repository structure</strong> (90 min)
+<p><strong>Task 6.1: Create Git repository structure</strong> (90 min)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Location: platform/apps/</span>
-</code></pre></div></p>
-<p><strong>Copilot Prompt</strong>:
+</code></pre></div>
+<p><strong>Copilot Prompt</strong>:</p>
 <div class="highlight"><pre><span></span><code>Create comprehensive Git repository structure for platform components:
 
 Directory structure:
@@ -5058,11 +5058,11 @@ Each app directory contains:
 
 Create placeholder directories for future apps.
 Add .gitkeep files to maintain empty directories.
-</code></pre></div></p>
-<p><strong>Task 6.2: Create app templates</strong> (60 min)
+</code></pre></div>
+<p><strong>Task 6.2: Create app templates</strong> (60 min)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Location: platform/templates/</span>
-</code></pre></div></p>
-<p><strong>Copilot Prompt</strong>:
+</code></pre></div>
+<p><strong>Copilot Prompt</strong>:</p>
 <div class="highlight"><pre><span></span><code>Create reusable templates for ArgoCD Applications:
 
 1. helm-app-template.yaml
@@ -5080,11 +5080,11 @@ Add .gitkeep files to maintain empty directories.
    - Usage: ./generate-app.sh --name myapp --type helm --chart mychart
 
 Include documentation on template usage.
-</code></pre></div></p>
-<p><strong>Task 7.1: Implement app-of-apps pattern</strong> (90 min)
+</code></pre></div>
+<p><strong>Task 7.1: Implement app-of-apps pattern</strong> (90 min)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Location: platform/bootstrap/</span>
-</code></pre></div></p>
-<p><strong>Copilot Prompt</strong>:
+</code></pre></div>
+<p><strong>Copilot Prompt</strong>:</p>
 <div class="highlight"><pre><span></span><code>Create app-of-apps pattern for managing all platform applications:
 
 1. app-of-apps.yaml - Root ArgoCD Application
@@ -5118,8 +5118,8 @@ Include sync waves:
 - Wave 1: Platform services (Backstage, Jenkins)
 - Wave 2: Observability (Prometheus, Grafana)
 - Wave 3: Applications
-</code></pre></div></p>
-<p><strong>End of Day 2 Validation</strong>:
+</code></pre></div>
+<p><strong>End of Day 2 Validation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Apply app-of-apps</span>
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/bootstrap/app-of-apps.yaml
 
@@ -5137,7 +5137,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>applications<span clas
 
 <span class="c1"># Run acceptance test AT-E1-002</span>
 ./tests/acceptance/run-test.sh<span class="w"> </span>AT-E1-002
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="day-3-documentation-validation">Day 3: Documentation &amp; Validation</h3>
 <p><strong>Issue</strong>: #8, plus documentation
@@ -5146,16 +5146,18 @@ kubectl<span class="w"> </span>get<span class="w"> </span>applications<span clas
 <h4 id="morning-4-hours-documentation">Morning (4 hours): Documentation</h4>
 <p><strong>Task: Create comprehensive Week 1 documentation</strong></p>
 <ol>
-<li><strong>Architecture Diagrams</strong> (90 min)
-<div class="highlight"><pre><span></span><code><span class="c1"># Location: docs/architecture/diagrams/</span>
-</code></pre></div></li>
+<li><strong>Architecture Diagrams</strong> (90 min)</li>
 </ol>
-<p>Create:
-- infrastructure-overview.mermaid (C4 Context)
-- kubernetes-cluster.mermaid (Nodes, pods, services)
-- gitops-workflow.mermaid (Git → ArgoCD → K8s)
-- network-topology.mermaid (Ingress, services, pods)</p>
-<p><strong>Copilot Prompt</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Location: docs/architecture/diagrams/</span>
+</code></pre></div>
+<p>Create:</p>
+<ul>
+<li>infrastructure-overview.mermaid (C4 Context)</li>
+<li>kubernetes-cluster.mermaid (Nodes, pods, services)</li>
+<li>gitops-workflow.mermaid (Git → ArgoCD → K8s)</li>
+<li>network-topology.mermaid (Ingress, services, pods)</li>
+</ul>
+<p><strong>Copilot Prompt</strong>:</p>
 <div class="highlight"><pre><span></span><code>Create Mermaid diagrams for Fawkes architecture:
 
 1. infrastructure-overview.mermaid
@@ -5179,22 +5181,28 @@ kubectl<span class="w"> </span>get<span class="w"> </span>applications<span clas
    - Service mesh (if applicable)
    - Pod networking
    - External access points
-</code></pre></div></p>
+</code></pre></div>
 <ol>
 <li><strong>Runbook Updates</strong> (90 min)</li>
 </ol>
-<p>Update these runbooks:
-- docs/runbooks/local-cluster-setup.md
-- docs/runbooks/argocd-management.md (new)
-- docs/runbooks/gitops-workflow.md (new)
-- docs/runbooks/troubleshooting-week1.md (new)</p>
-<ol>
-<li><strong>README Updates</strong> (60 min)</li>
-</ol>
-<p>Update:
-- platform/apps/README.md
-- infra/README.md
-- Root README.md (add Week 1 status)</p>
+<p>Update these runbooks:</p>
+<ul>
+<li>docs/runbooks/local-cluster-setup.md</li>
+<li>docs/runbooks/argocd-management.md (new)</li>
+<li>docs/runbooks/gitops-workflow.md (new)</li>
+<li>
+<p>docs/runbooks/troubleshooting-week1.md (new)</p>
+</li>
+<li>
+<p><strong>README Updates</strong> (60 min)</p>
+</li>
+</ul>
+<p>Update:</p>
+<ul>
+<li>platform/apps/README.md</li>
+<li>infra/README.md</li>
+<li>Root README.md (add Week 1 status)</li>
+</ul>
 <h4 id="afternoon-3-4-hours-validation-testing">Afternoon (3-4 hours): Validation &amp; Testing</h4>
 <p><strong>Task 8.1: Run all acceptance tests</strong> (90 min)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run AT-E1-001</span>
@@ -5220,14 +5228,16 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> <
 <span class="c1"># docs/optimization/week1-resource-tuning.md</span>
 </code></pre></div>
 <p><strong>Task 8.3: Create demo video</strong> (90 min)</p>
-<p>Record screen capture demonstrating:
-1. Cluster deployment (2 min)
-2. ArgoCD UI tour (3 min)
-3. Deploying an app via GitOps (5 min)
-4. Viewing synced resources (2 min)
-5. Rollback demonstration (3 min)</p>
+<p>Record screen capture demonstrating:</p>
+<ol>
+<li>Cluster deployment (2 min)</li>
+<li>ArgoCD UI tour (3 min)</li>
+<li>Deploying an app via GitOps (5 min)</li>
+<li>Viewing synced resources (2 min)</li>
+<li>Rollback demonstration (3 min)</li>
+</ol>
 <p>Upload to: docs/videos/week1-demo.mp4</p>
-<p><strong>End of Day 3 Validation</strong>:
+<p><strong>End of Day 3 Validation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># All tests passing</span>
 ./tests/acceptance/run-all-week1.sh
 
@@ -5239,15 +5249,17 @@ kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w"> 
 
 <span class="c1"># Demo video created</span>
 <span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>docs/videos/week1-demo.mp4
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="days-4-5-buffer-week-2-prep">Days 4-5: Buffer &amp; Week 2 Prep</h3>
-<p><strong>Use for</strong>:
-- Catching up on any delayed tasks
-- Fixing bugs discovered during testing
-- Additional documentation
-- Preparing for Week 2 (Backstage, Jenkins)
-- Team review (if applicable)</p>
+<p><strong>Use for</strong>:</p>
+<ul>
+<li>Catching up on any delayed tasks</li>
+<li>Fixing bugs discovered during testing</li>
+<li>Additional documentation</li>
+<li>Preparing for Week 2 (Backstage, Jenkins)</li>
+<li>Team review (if applicable)</li>
+</ul>
 <hr />
 <h2 id="week-1-definition-of-done">✅ Week 1 Definition of Done</h2>
 <ul>
@@ -5270,16 +5282,19 @@ kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w"> 
 <div class="highlight"><pre><span></span><code><span class="gu">### Week 1 Progress</span>
 
 <span class="gs">**Day 1**</span>: ✅ Cluster deployment complete
+
 <span class="k">-</span><span class="w"> </span>Issue <span class="ni">#1:</span> ✅ Complete
 <span class="k">-</span><span class="w"> </span>Issue <span class="ni">#2:</span> ✅ Complete
 <span class="k">-</span><span class="w"> </span>Issue <span class="ni">#3:</span> ✅ Complete
 
 <span class="gs">**Day 2**</span>: ✅ ArgoCD and GitOps complete
+
 <span class="k">-</span><span class="w"> </span>Issue <span class="ni">#5:</span> ✅ Complete
 <span class="k">-</span><span class="w"> </span>Issue <span class="ni">#6:</span> ✅ Complete
 <span class="k">-</span><span class="w"> </span>Issue <span class="ni">#7:</span> ✅ Complete
 
 <span class="gs">**Day 3**</span>: ✅ Documentation and validation
+
 <span class="k">-</span><span class="w"> </span>Issue <span class="ni">#8:</span> ✅ Complete
 <span class="k">-</span><span class="w"> </span>All Week 1 docs: ✅ Complete
 
@@ -5290,15 +5305,19 @@ kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w"> 
 <hr />
 <h2 id="handoff-to-week-2">🚀 Handoff to Week 2</h2>
 <p>Once Week 1 is complete, you're ready for:</p>
-<p><strong>Week 2 Focus</strong>: Developer Portal &amp; CI/CD
-- Issue #9: Deploy Backstage
-- Issue #14: Deploy Jenkins
-- Issue #17: Deploy Harbor</p>
-<p><strong>Prerequisites Met</strong>:
-- ✅ K8s cluster operational
-- ✅ GitOps workflow established
-- ✅ Can deploy new apps via ArgoCD</p>
-<p><strong>Start Week 2 with</strong>:
+<p><strong>Week 2 Focus</strong>: Developer Portal &amp; CI/CD</p>
+<ul>
+<li>Issue #9: Deploy Backstage</li>
+<li>Issue #14: Deploy Jenkins</li>
+<li>Issue #17: Deploy Harbor</li>
+</ul>
+<p><strong>Prerequisites Met</strong>:</p>
+<ul>
+<li>✅ K8s cluster operational</li>
+<li>✅ GitOps workflow established</li>
+<li>✅ Can deploy new apps via ArgoCD</li>
+</ul>
+<p><strong>Start Week 2 with</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Begin Backstage deployment</span>
 argocd<span class="w"> </span>app<span class="w"> </span>create<span class="w"> </span>backstage<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--repo<span class="w"> </span>https://github.com/paruff/fawkes<span class="w"> </span><span class="se">\</span>
@@ -5306,7 +5325,7 @@ argocd<span class="w"> </span>app<span class="w"> </span>create<span class="w"> 
 <span class="w">  </span>--dest-server<span class="w"> </span>https://kubernetes.default.svc<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--dest-namespace<span class="w"> </span>backstage<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--sync-policy<span class="w"> </span>automated
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="getting-help">🆘 Getting Help</h2>
 <p>If stuck on any task:</p>
@@ -5317,7 +5336,7 @@ argocd<span class="w"> </span>app<span class="w"> </span>create<span class="w"> 
 <li><strong>New chat</strong>: Start fresh chat with specific question</li>
 <li><strong>GitHub search</strong>: Look for similar issues/PRs</li>
 </ol>
-<p><strong>Chat template</strong>:
+<p><strong>Chat template</strong>:</p>
 <div class="highlight"><pre><span></span><code>Working on Fawkes Epic 1, Week 1, Day X.
 
 Current task: Issue #Y - [Title]
@@ -5326,7 +5345,7 @@ What I&#39;ve tried: [Commands/approaches]
 Error message: [If applicable]
 
 Context: See Week 1 Detailed Tasks document.
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <p><strong>END OF WEEK 1 DETAILED TASKS</strong></p>
 

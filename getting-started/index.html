@@ -4973,13 +4973,13 @@
 <h2 id="3-infrastructure-deployment">3. Infrastructure Deployment</h2>
 <p>We use a GitOps approach for infrastructure management. Changes are made through pull requests:</p>
 <ol>
-<li>
-<p>Create a feature branch:
+<li>Create a feature branch:</li>
+</ol>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/add-new-service
-</code></pre></div></p>
-</li>
-<li>
-<p>Make changes to infrastructure definitions in <code>platform/iac/</code>:
+</code></pre></div>
+<ol>
+<li>Make changes to infrastructure definitions in <code>platform/iac/</code>:</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="c1"># Example service definition</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
@@ -4988,18 +4988,16 @@
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Commit and push changes:
+</code></pre></div>
+<ol>
+<li>Commit and push changes:</li>
+</ol>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new service deployment&quot;</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/add-new-service
-</code></pre></div></p>
-</li>
-<li>
-<p>Create a pull request and wait for CI checks and review</p>
-</li>
+</code></pre></div>
+<ol>
+<li>Create a pull request and wait for CI checks and review</li>
 </ol>
 <h2 id="4-platform-services">4. Platform Services</h2>
 <h3 id="deploy-core-services">Deploy Core Services</h3>
@@ -5024,8 +5022,8 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <h3 id="deploy-services">Deploy Services</h3>
 <p>To deploy or add a new service:</p>
 <ol>
-<li>
-<p>Define the service in <code>platform/apps/</code>:
+<li>Define the service in <code>platform/apps/</code>:</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="c1"># Example service manifest</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Application</span>
@@ -5039,11 +5037,9 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <span class="w">  </span><span class="nt">destination</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://kubernetes.default.svc</span>
 <span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Commit and push through the GitOps workflow</p>
-</li>
+</code></pre></div>
+<ol>
+<li>Commit and push through the GitOps workflow</li>
 </ol>
 <h2 id="5-verify-deployment">5. Verify Deployment</h2>
 <p>Monitor deployments through:</p>

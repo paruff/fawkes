@@ -853,6 +853,50 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#building-with-buildpacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building with Buildpacks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#owner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Owner
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#step-5-publish-the-template" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4799,6 +4843,50 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#building-with-buildpacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building with Buildpacks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#owner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Owner
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#step-5-publish-the-template" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4915,8 +5003,8 @@
 </ul>
 <div class="admonition info">
 <p class="admonition-title">What is a Golden Path?</p>
-<p>A "Golden Path" is a supported, opinionated, well-documented way to build and deploy software. It reduces cognitive load by providing sensible defaults while still allowing customization when needed.</p>
 </div>
+<p>A "Golden Path" is a supported, opinionated, well-documented way to build and deploy software. It reduces cognitive load by providing sensible defaults while still allowing customization when needed.</p>
 <h2 id="step-1-understand-backstage-templates">Step 1: Understand Backstage Templates</h2>
 <p>Backstage templates use a declarative format to scaffold new projects.</p>
 <ol>
@@ -4926,7 +5014,9 @@
 <li>
 <p>Browse the existing templates:</p>
 </li>
-<li>What information do they collect?</li>
+<li>
+<p>What information do they collect?</p>
+</li>
 <li>What files do they generate?</li>
 <li>
 <p>How do they integrate with the platform?</p>
@@ -4940,36 +5030,36 @@
 </ol>
 <div class="admonition info">
 <p class="admonition-title">Template Philosophy</p>
-<p>Templates should make it easy to do the right thing and hard to do the wrong thing. Embed security, observability, and compliance by default.</p>
 </div>
+<p>Templates should make it easy to do the right thing and hard to do the wrong thing. Embed security, observability, and compliance by default.</p>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You understand what Backstage templates do and how they work.</p>
 </div>
+<p>You understand what Backstage templates do and how they work.</p>
 <h2 id="step-2-create-template-repository-structure">Step 2: Create Template Repository Structure</h2>
 <p>Let's create a template for Node.js services that includes all Fawkes best practices.</p>
 <ol>
-<li>
-<p>Create a new directory for your template:
-   <div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>fawkes-nodejs-template
+<li>Create a new directory for your template:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>fawkes-nodejs-template
 <span class="nb">cd</span><span class="w"> </span>fawkes-nodejs-template
-</code></pre></div></p>
-</li>
-<li>
-<p>Create the directory structure:
-   <div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>skeleton
+</code></pre></div>
+<ol>
+<li>Create the directory structure:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>skeleton
 mkdir<span class="w"> </span>-p<span class="w"> </span>skeleton/k8s
 mkdir<span class="w"> </span>-p<span class="w"> </span>skeleton/.github/workflows
-</code></pre></div></p>
-</li>
-<li>
-<p>Initialize a git repository:
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>init
-</code></pre></div></p>
-</li>
-<li>
-<p>Create a <code>template.yaml</code> at the root:
-   <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scaffolder.backstage.io/v1beta3</span>
+</code></pre></div>
+<ol>
+<li>Initialize a git repository:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>init
+</code></pre></div>
+<ol>
+<li>Create a <code>template.yaml</code> at the root:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scaffolder.backstage.io/v1beta3</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Template</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-nodejs-service</span>
@@ -4993,7 +5083,7 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>skeleton/.github/workflow
 <span class="w">          </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name</span>
 <span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
 <span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Unique name for this service (lowercase, hyphens only)</span>
-<span class="w">          </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;^[a-z0-9-]+$&#39;</span>
+<span class="w">          </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;^[a-z0-9-]+$&quot;</span>
 <span class="w">          </span><span class="nt">ui:autofocus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">        </span><span class="nt">description</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Description</span>
@@ -5069,7 +5159,7 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>skeleton/.github/workflow
 <span class="w">      </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">catalog:register</span>
 <span class="w">      </span><span class="nt">input</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">repoContentsUrl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ steps.publish.output.repoContentsUrl }}</span>
-<span class="w">        </span><span class="nt">catalogInfoPath</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/catalog-info.yaml&#39;</span>
+<span class="w">        </span><span class="nt">catalogInfoPath</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/catalog-info.yaml&quot;</span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">create-argocd-app</span>
 <span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create ArgoCD Application</span>
@@ -5088,19 +5178,17 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>skeleton/.github/workflow
 <span class="w">        </span><span class="nt">entityRef</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ steps.register.output.entityRef }}</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ArgoCD</span>
 <span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://argocd.fawkes.yourdomain.com/applications/${{ parameters.component_id }}</span>
-</code></pre></div></p>
-</li>
-</ol>
+</code></pre></div>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Template metadata and parameters are defined.</p>
 </div>
+<p>Template metadata and parameters are defined.</p>
 <h2 id="step-3-create-skeleton-files">Step 3: Create Skeleton Files</h2>
 <p>Now let's create the actual files that will be generated.</p>
 <ol>
-<li>
-<p>Create <code>skeleton/catalog-info.yaml</code>:
-   <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage.io/v1alpha1</span>
+<li>Create <code>skeleton/catalog-info.yaml</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage.io/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Component</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ values.component_id }}</span>
@@ -5116,11 +5204,11 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>skeleton/.github/workflow
 <span class="w">  </span><span class="nt">lifecycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">experimental</span>
 <span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ values.owner }}</span>
 <span class="w">  </span><span class="nt">system</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-platform</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Create <code>skeleton/package.json</code>:
-   <div class="highlight"><pre><span></span><code><span class="p">{</span>
+</code></pre></div>
+<ol>
+<li>Create <code>skeleton/package.json</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${{ values.component_id }}&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${{ values.description }}&quot;</span><span class="p">,</span>
@@ -5138,11 +5226,11 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>skeleton/.github/workflow
 <span class="w">    </span><span class="nt">&quot;node-vault&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^0.10.2&quot;</span><span class="p">{</span><span class="err">%</span><span class="w"> </span><span class="err">e</span><span class="kc">n</span><span class="err">di</span><span class="kc">f</span><span class="w"> </span><span class="err">%</span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Create <code>skeleton/server.js</code>:
-   <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="o">%</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">values</span><span class="p">.</span><span class="nx">enable_tracing</span><span class="w"> </span><span class="o">%</span><span class="p">}</span><span class="c1">// Load tracing before anything else</span>
+</code></pre></div>
+<ol>
+<li>Create <code>skeleton/server.js</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="o">%</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">values</span><span class="p">.</span><span class="nx">enable_tracing</span><span class="w"> </span><span class="o">%</span><span class="p">}</span><span class="c1">// Load tracing before anything else</span>
 <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./tracing&#39;</span><span class="p">);</span>
 <span class="p">{</span><span class="o">%</span><span class="w"> </span><span class="nx">endif</span><span class="w"> </span><span class="o">%</span><span class="p">}</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
@@ -5193,11 +5281,11 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>skeleton/.github/workflow
 <span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="p">{</span><span class="w"> </span><span class="nx">values</span><span class="p">.</span><span class="nx">component_id</span><span class="w"> </span><span class="si">}</span><span class="sb">} listening on port </span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
 <span class="w">  </span><span class="p">});</span>
 <span class="p">})();</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>If tracing is enabled, create <code>skeleton/tracing.js</code>:
-   <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="o">%</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">values</span><span class="p">.</span><span class="nx">enable_tracing</span><span class="w"> </span><span class="o">%</span><span class="p">}</span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/sdk-node&#39;</span><span class="p">);</span>
+</code></pre></div>
+<ol>
+<li>If tracing is enabled, create <code>skeleton/tracing.js</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="o">%</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">values</span><span class="p">.</span><span class="nx">enable_tracing</span><span class="w"> </span><span class="o">%</span><span class="p">}</span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/sdk-node&#39;</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/auto-instrumentations-node&#39;</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/exporter-trace-otlp-http&#39;</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Resource</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/resources&#39;</span><span class="p">);</span>
@@ -5221,11 +5309,11 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>skeleton/.github/workflow
 <span class="nx">sdk</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;OpenTelemetry tracing initialized&#39;</span><span class="p">);</span>
 <span class="p">{</span><span class="o">%</span><span class="w"> </span><span class="nx">endif</span><span class="w"> </span><span class="o">%</span><span class="p">}</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>If Vault is enabled, create <code>skeleton/vault-client.js</code>:
-   <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="o">%</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">values</span><span class="p">.</span><span class="nx">enable_vault</span><span class="w"> </span><span class="o">%</span><span class="p">}</span><span class="kd">const</span><span class="w"> </span><span class="nx">vault</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;node-vault&#39;</span><span class="p">);</span>
+</code></pre></div>
+<ol>
+<li>If Vault is enabled, create <code>skeleton/vault-client.js</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="o">%</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">values</span><span class="p">.</span><span class="nx">enable_vault</span><span class="w"> </span><span class="o">%</span><span class="p">}</span><span class="kd">const</span><span class="w"> </span><span class="nx">vault</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;node-vault&#39;</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">fs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">getK8sToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -5264,18 +5352,16 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>skeleton/.github/workflow
 
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">initVaultClient</span><span class="p">,</span><span class="w"> </span><span class="nx">getSecret</span><span class="w"> </span><span class="p">};</span>
 <span class="p">{</span><span class="o">%</span><span class="w"> </span><span class="nx">endif</span><span class="w"> </span><span class="o">%</span><span class="p">}</span>
-</code></pre></div></p>
-</li>
-</ol>
+</code></pre></div>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Skeleton application files are created with conditional features.</p>
 </div>
+<p>Skeleton application files are created with conditional features.</p>
 <h2 id="step-4-create-kubernetes-manifests">Step 4: Create Kubernetes Manifests</h2>
 <ol>
-<li>
-<p>Create <code>skeleton/k8s/deployment.yaml</code>:
-   <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<li>Create <code>skeleton/k8s/deployment.yaml</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ values.component_id }}</span>
@@ -5334,58 +5420,62 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>skeleton/.github/workflow
 <span class="w">          </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
 <span class="w">          </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">          </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p>Create other Kubernetes manifests (service, ingress, serviceaccount if needed).</p>
 </li>
 <li>
-<p>Create <code>skeleton/README.md</code>:
-   <div class="highlight"><pre><span></span><code><span class="gh"># ${{ values.component_id }}</span>
+<p>Create <code>skeleton/README.md</code>:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="gh"># ${{ values.component_id }}</span>
 
 ${{ values.description }}
 
 <span class="gu">## Quick Start</span>
 
-```bash
-npm install
-npm start
-</code></pre></div></p>
-</li>
-</ol>
-<p>## Building with Buildpacks</p>
+<span class="sb">```bash</span>
+npm<span class="w"> </span>install
+npm<span class="w"> </span>start
+<span class="sb">```</span>
+</code></pre></div>
+<h2 id="building-with-buildpacks">Building with Buildpacks</h2>
 <div class="highlight"><pre><span></span><code>pack<span class="w"> </span>build<span class="w"> </span><span class="si">${</span><span class="p">{ values.component_id </span><span class="si">}</span><span class="o">}</span>:latest<span class="w"> </span>--builder<span class="w"> </span>paketobuildpacks/builder:base
 </code></pre></div>
-<p>## Deployment</p>
+<h2 id="deployment">Deployment</h2>
 <p>This service is deployed using ArgoCD. Push to <code>main</code> branch to trigger deployment.</p>
-<p>## Features</p>
+<h2 id="features">Features</h2>
 <ul>
 <li>✅ Express.js REST API
-   {% if values.enable_tracing %}- ✅ OpenTelemetry distributed tracing
-   {% endif %}{% if values.enable_vault %}- ✅ HashiCorp Vault secret management
-   {% endif %}- ✅ Cloud Native Buildpacks</li>
+  {% if values.enable_tracing %}- ✅ OpenTelemetry distributed tracing
+  {% endif %}{% if values.enable_vault %}- ✅ HashiCorp Vault secret management
+  {% endif %}- ✅ Cloud Native Buildpacks</li>
 <li>✅ Kubernetes-ready with health checks</li>
 <li>✅ Security best practices (non-root, read-only filesystem)</li>
 </ul>
-<p>## Owner</p>
-<p>Team: ${{ values.owner }}
-   ```</p>
+<h2 id="owner">Owner</h2>
+<p>Team: ${{ values.owner }}</p>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Complete skeleton with Kubernetes manifests and README.</p>
 </div>
+<p>Complete skeleton with Kubernetes manifests and README.</p>
 <h2 id="step-5-publish-the-template">Step 5: Publish the Template</h2>
 <ol>
-<li>
-<p>Commit all files:
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.
+<li>Commit all files:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Initial Fawkes Node.js template&quot;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p>Create a GitHub repository:</p>
 </li>
-<li>Go to github.com</li>
+<li>
+<p>Go to github.com</p>
+</li>
 <li>Create a new repository: <code>fawkes-nodejs-template</code></li>
 <li>
 <p>Push your code:
@@ -5404,8 +5494,8 @@ git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Your template is published and available in Backstage!</p>
 </div>
+<p>Your template is published and available in Backstage!</p>
 <h2 id="step-6-use-your-template">Step 6: Use Your Template</h2>
 <p>Let's create a new service using your template.</p>
 <ol>
@@ -5418,7 +5508,9 @@ git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span
 <li>
 <p>Fill in the form:</p>
 </li>
-<li>Name: <code>my-awesome-service</code></li>
+<li>
+<p>Name: <code>my-awesome-service</code></p>
+</li>
 <li>Description: <code>A service created from the Golden Path template</code></li>
 <li>Owner: Select your team</li>
 <li>Enable Tracing: ✅ Yes</li>
@@ -5432,7 +5524,9 @@ git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span
 <li>
 <p>Watch Backstage:</p>
 </li>
-<li>Fetch the skeleton</li>
+<li>
+<p>Fetch the skeleton</p>
+</li>
 <li>Substitute variables</li>
 <li>Create GitHub repository</li>
 <li>Register in catalog</li>
@@ -5445,8 +5539,8 @@ git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You've used your Golden Path template to create a production-ready service in minutes!</p>
 </div>
+<p>You've used your Golden Path template to create a production-ready service in minutes!</p>
 <h2 id="what-youve-accomplished">What You've Accomplished</h2>
 <p>Congratulations! You've successfully:</p>
 <ul>

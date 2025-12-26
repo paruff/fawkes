@@ -5186,15 +5186,19 @@
 
 <h1 id="unified-telemetry-the-opentelemetry-standard">Unified Telemetry: The OpenTelemetry Standard</h1>
 <h2 id="context">Context</h2>
-<p>Modern applications emit three types of telemetry data:
-- <strong>Metrics</strong> - Numeric measurements (CPU usage, request count, error rate)
-- <strong>Logs</strong> - Event records (application logs, audit logs)
-- <strong>Traces</strong> - Request flow across services (distributed tracing)</p>
-<p>Historically, each observability vendor provided its own agent to collect this data:
-- Datadog Agent (proprietary)
-- New Relic Agent (proprietary)
-- Dynatrace OneAgent (proprietary)
-- APM Insight (proprietary)</p>
+<p>Modern applications emit three types of telemetry data:</p>
+<ul>
+<li><strong>Metrics</strong> - Numeric measurements (CPU usage, request count, error rate)</li>
+<li><strong>Logs</strong> - Event records (application logs, audit logs)</li>
+<li><strong>Traces</strong> - Request flow across services (distributed tracing)</li>
+</ul>
+<p>Historically, each observability vendor provided its own agent to collect this data:</p>
+<ul>
+<li>Datadog Agent (proprietary)</li>
+<li>New Relic Agent (proprietary)</li>
+<li>Dynatrace OneAgent (proprietary)</li>
+<li>APM Insight (proprietary)</li>
+</ul>
 <p><strong>The Problem</strong>: Vendor lock-in, duplication, and complexity.</p>
 <p>Fawkes adopted <strong>OpenTelemetry (OTel)</strong> as the <strong>single standard</strong> for telemetry collection, replacing vendor-specific agents. This document explains why OpenTelemetry is a strategic architectural decision, not just a tool choice.</p>
 <h2 id="the-problem-vendor-agent-chaos">The Problem: Vendor Agent Chaos</h2>
@@ -5213,8 +5217,12 @@
     style A fill:#ff6b6b</code></pre>
 <p><strong>What's Wrong Here?</strong></p>
 <ol>
-<li><strong>Resource Duplication</strong></li>
-<li>4 agents per pod = 4x memory/CPU overhead</li>
+<li>
+<p><strong>Resource Duplication</strong></p>
+</li>
+<li>
+<p>4 agents per pod = 4x memory/CPU overhead</p>
+</li>
 <li>Each agent has its own buffer, config, credentials</li>
 <li>
 <p><strong>Cost</strong>: 200-400MB RAM per pod just for agents</p>
@@ -5222,7 +5230,9 @@
 <li>
 <p><strong>Vendor Lock-In</strong></p>
 </li>
-<li>Proprietary instrumentation libraries</li>
+<li>
+<p>Proprietary instrumentation libraries</p>
+</li>
 <li>Can't switch backends without re-instrumenting code</li>
 <li>
 <p><strong>Risk</strong>: Vendor pricing changes, service degradation, or shutdown</p>
@@ -5230,7 +5240,9 @@
 <li>
 <p><strong>Inconsistent Data</strong></p>
 </li>
-<li>Each vendor collects slightly differently</li>
+<li>
+<p>Each vendor collects slightly differently</p>
+</li>
 <li>Metric names don't match across tools</li>
 <li>
 <p><strong>Problem</strong>: "Datadog shows 500 req/sec, but New Relic shows 520. Which is right?"</p>
@@ -5238,7 +5250,9 @@
 <li>
 <p><strong>Configuration Sprawl</strong></p>
 </li>
-<li>4 agents = 4 config files per service</li>
+<li>
+<p>4 agents = 4 config files per service</p>
+</li>
 <li>Updating sampling rate? Touch all 4 configs</li>
 <li>
 <p><strong>Toil</strong>: Platform team maintains multiple agent configs</p>
@@ -5253,20 +5267,24 @@
 <h3 id="real-world-vendor-lock-in-example">Real-World Vendor Lock-In Example</h3>
 <p><strong>2019</strong>: Company X uses Datadog, instruments all apps with Datadog APM libraries</p>
 <p><strong>2022</strong>: Datadog raises prices 40%. Company X evaluates alternatives.</p>
-<p><strong>Discovery</strong>:
-- 200 microservices instrumented with <code>dd-trace</code> library
-- Custom dashboards use Datadog-specific query language
-- Alerts depend on Datadog metric names
-- <strong>Estimated Migration Cost</strong>: 6 months, $500K+ engineering time</p>
+<p><strong>Discovery</strong>:</p>
+<ul>
+<li>200 microservices instrumented with <code>dd-trace</code> library</li>
+<li>Custom dashboards use Datadog-specific query language</li>
+<li>Alerts depend on Datadog metric names</li>
+<li><strong>Estimated Migration Cost</strong>: 6 months, $500K+ engineering time</li>
+</ul>
 <p><strong>Outcome</strong>: Stuck with Datadog despite cost increase (lock-in worked as designed)</p>
 <h2 id="the-solution-opentelemetry-as-the-standard">The Solution: OpenTelemetry as the Standard</h2>
 <h3 id="what-is-opentelemetry">What is OpenTelemetry?</h3>
-<p><strong>OpenTelemetry (OTel)</strong> is a <strong>vendor-neutral, open-source observability framework</strong> that provides:
-- <strong>Standardized APIs</strong> - Uniform way to instrument code
-- <strong>SDKs for all languages</strong> - Java, Python, Go, Node.js, .NET, Ruby, PHP, etc.
-- <strong>Automatic instrumentation</strong> - Zero-code instrumentation for frameworks
-- <strong>Collector</strong> - Vendor-agnostic telemetry pipeline
-- <strong>Export to any backend</strong> - Prometheus, Grafana, Datadog, Jaeger, etc.</p>
+<p><strong>OpenTelemetry (OTel)</strong> is a <strong>vendor-neutral, open-source observability framework</strong> that provides:</p>
+<ul>
+<li><strong>Standardized APIs</strong> - Uniform way to instrument code</li>
+<li><strong>SDKs for all languages</strong> - Java, Python, Go, Node.js, .NET, Ruby, PHP, etc.</li>
+<li><strong>Automatic instrumentation</strong> - Zero-code instrumentation for frameworks</li>
+<li><strong>Collector</strong> - Vendor-agnostic telemetry pipeline</li>
+<li><strong>Export to any backend</strong> - Prometheus, Grafana, Datadog, Jaeger, etc.</li>
+</ul>
 <p><strong>Created by</strong>: CNCF (merger of OpenTracing and OpenCensus)
 <strong>Status</strong>: CNCF Graduated (highest maturity)
 <strong>Backed by</strong>: Google, Microsoft, AWS, Splunk, Datadog, New Relic, etc.</p>
@@ -5286,15 +5304,21 @@
     style E fill:#2196F3</code></pre>
 <p><strong>How It Works:</strong></p>
 <ol>
-<li><strong>Instrument Once</strong></li>
-<li>App uses OTel SDK (vendor-neutral)</li>
+<li>
+<p><strong>Instrument Once</strong></p>
+</li>
+<li>
+<p>App uses OTel SDK (vendor-neutral)</p>
+</li>
 <li>
 <p>Emits metrics, logs, traces in OTLP format (OpenTelemetry Protocol)</p>
 </li>
 <li>
 <p><strong>Centralized Collection</strong></p>
 </li>
-<li>OTel Collector receives all telemetry</li>
+<li>
+<p>OTel Collector receives all telemetry</p>
+</li>
 <li>
 <p>Runs as DaemonSet (one per node) or sidecar</p>
 </li>
@@ -5305,17 +5329,19 @@
 <li>Want to switch from Datadog to Prometheus? Change collector config, not app code</li>
 <li>Want to send to multiple backends? Configure multiple exporters</li>
 </ol>
-<p><strong>Benefits:</strong>
-- ✅ <strong>Single agent</strong> - OTel Collector replaces all vendor agents
-- ✅ <strong>No vendor lock-in</strong> - Switch backends without code changes
-- ✅ <strong>Consistent data</strong> - Same telemetry regardless of backend
-- ✅ <strong>Future-proof</strong> - Industry standard, not vendor-specific</p>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>✅ <strong>Single agent</strong> - OTel Collector replaces all vendor agents</li>
+<li>✅ <strong>No vendor lock-in</strong> - Switch backends without code changes</li>
+<li>✅ <strong>Consistent data</strong> - Same telemetry regardless of backend</li>
+<li>✅ <strong>Future-proof</strong> - Industry standard, not vendor-specific</li>
+</ul>
 <h3 id="fawkes-telemetry-stack">Fawkes Telemetry Stack</h3>
 <p><strong>Metrics</strong>: Prometheus (via OTel Collector)
 <strong>Logs</strong>: Loki (via OTel Collector)
 <strong>Traces</strong>: Grafana Tempo (via OTel Collector)
 <strong>Visualization</strong>: Grafana (unified dashboard)</p>
-<p><strong>All data flows through OTel Collector:</strong>
+<p><strong>All data flows through OTel Collector:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># OTel Collector config</span>
 <span class="nt">receivers</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">otlp</span><span class="p">:</span>
@@ -5366,7 +5392,7 @@
 <span class="w">      </span><span class="nt">receivers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">otlp</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">processors</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">batch</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">attributes</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">exporters</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">loki</span><span class="p p-Indicator">]</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Effect</strong>: Single configuration controls all telemetry routing.</p>
 <h2 id="trade-offs-standardization-vs-vendor-features">Trade-Offs: Standardization vs. Vendor Features</h2>
 <h3 id="what-opentelemetry-gives-you">What OpenTelemetry Gives You</h3>
@@ -5441,22 +5467,26 @@
 </table>
 <h3 id="when-to-use-vendor-agents-anyway">When to Use Vendor Agents Anyway</h3>
 <p>OpenTelemetry is the <strong>default</strong>, but vendor agents allowed for specific use cases:</p>
-<p><strong>Use OTel When (90% of cases):</strong>
-- ✅ Standard metrics, logs, traces
-- ✅ Application performance monitoring
-- ✅ Distributed tracing
-- ✅ Custom instrumentation</p>
-<p><strong>Use Vendor Agent When:</strong>
-- ⚠️ Need proprietary features (e.g., Datadog Real User Monitoring, synthetic tests)
-- ⚠️ Backend vendor requires their agent for full functionality
-- ⚠️ Compliance/legal requirement mandates specific vendor</p>
+<p><strong>Use OTel When (90% of cases):</strong></p>
+<ul>
+<li>✅ Standard metrics, logs, traces</li>
+<li>✅ Application performance monitoring</li>
+<li>✅ Distributed tracing</li>
+<li>✅ Custom instrumentation</li>
+</ul>
+<p><strong>Use Vendor Agent When:</strong></p>
+<ul>
+<li>⚠️ Need proprietary features (e.g., Datadog Real User Monitoring, synthetic tests)</li>
+<li>⚠️ Backend vendor requires their agent for full functionality</li>
+<li>⚠️ Compliance/legal requirement mandates specific vendor</li>
+</ul>
 <p><strong>Hybrid Approach</strong>: Run OTel Collector for core telemetry, add vendor sidecar only where needed.</p>
 <h2 id="practical-implications">Practical Implications</h2>
 <h3 id="for-developers">For Developers</h3>
 <p><strong>Q: How do I instrument my application?</strong></p>
 <p><strong>A: Auto-Instrumentation (Preferred)</strong></p>
 <p>Most frameworks supported automatically:</p>
-<p><strong>Java (Spring Boot, Quarkus, Micronaut):</strong>
+<p><strong>Java (Spring Boot, Quarkus, Micronaut):</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Download OTel Java agent</span>
 curl<span class="w"> </span>-L<span class="w"> </span>https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar<span class="w"> </span>-o<span class="w"> </span>agent.jar
 
@@ -5465,24 +5495,24 @@ java<span class="w"> </span>-javaagent:agent.jar<span class="w"> </span><span cl
 <span class="w">  </span>-Dotel.service.name<span class="o">=</span>my-service<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-Dotel.exporter.otlp.endpoint<span class="o">=</span>http://otel-collector:4317<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-jar<span class="w"> </span>app.jar
-</code></pre></div></p>
-<p><strong>Node.js (Express, Fastify, NestJS):</strong>
+</code></pre></div>
+<p><strong>Node.js (Express, Fastify, NestJS):</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1">// tracing.js</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/sdk-node&#39;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/auto-instrumentations-node&#39;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/exporter-trace-otlp-grpc&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/sdk-node&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/auto-instrumentations-node&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/exporter-trace-otlp-grpc&quot;</span><span class="p">);</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">sdk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">serviceName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">serviceName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-service&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">traceExporter</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;http://otel-collector:4317&#39;</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;http://otel-collector:4317&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}),</span>
-<span class="w">  </span><span class="nx">instrumentations</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">getNodeAutoInstrumentations</span><span class="p">()]</span>
+<span class="w">  </span><span class="nx">instrumentations</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">getNodeAutoInstrumentations</span><span class="p">()],</span>
 <span class="p">});</span>
 
 <span class="nx">sdk</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
-</code></pre></div></p>
-<p><strong>Python (Flask, Django, FastAPI):</strong>
+</code></pre></div>
+<p><strong>Python (Flask, Django, FastAPI):</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Install OTel packages</span>
 pip<span class="w"> </span>install<span class="w"> </span>opentelemetry-distro<span class="w"> </span>opentelemetry-exporter-otlp
 
@@ -5494,7 +5524,7 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--service_name<span class="o">=</span>my-service<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--exporter_otlp_endpoint<span class="o">=</span>http://otel-collector:4317<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>python<span class="w"> </span>app.py
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>No code changes required!</strong> Framework calls automatically traced.</p>
 <p><strong>Q: What if I need custom spans?</strong></p>
 <p><strong>A: Manual Instrumentation</strong></p>
@@ -5536,8 +5566,8 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">otel-collector</span>
 <span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">otel/opentelemetry-collector-contrib:0.88.0</span>
 <span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4317</span><span class="w">  </span><span class="c1"># OTLP gRPC</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4318</span><span class="w">  </span><span class="c1"># OTLP HTTP</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4317</span><span class="w"> </span><span class="c1"># OTLP gRPC</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4318</span><span class="w"> </span><span class="c1"># OTLP HTTP</span>
 <span class="w">          </span><span class="nt">volumeMounts</span><span class="p">:</span>
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config</span>
 <span class="w">              </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/otel</span>
@@ -5579,15 +5609,21 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <p><strong>Client Question: "Why not just use Datadog/New Relic? It's easier."</strong></p>
 <p><strong>Response:</strong></p>
 <ol>
-<li><strong>Short-Term vs. Long-Term</strong></li>
-<li><em>Short-Term</em>: Vendor agent easier (pre-built dashboards, support)</li>
+<li>
+<p><strong>Short-Term vs. Long-Term</strong></p>
+</li>
+<li>
+<p><em>Short-Term</em>: Vendor agent easier (pre-built dashboards, support)</p>
+</li>
 <li>
 <p><em>Long-Term</em>: Vendor lock-in, pricing pressure, limited flexibility</p>
 </li>
 <li>
 <p><strong>Cost Control</strong></p>
 </li>
-<li>Datadog pricing: $15-31/host/month + $1.27/million spans</li>
+<li>
+<p>Datadog pricing: $15-31/host/month + $1.27/million spans</p>
+</li>
 <li>100 hosts, 10M spans/day = <strong>$50K+/year</strong></li>
 <li>
 <p>OTel + Grafana Cloud: $0-8K/year (or self-hosted = $0)</p>
@@ -5595,7 +5631,9 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <li>
 <p><strong>Strategic Flexibility</strong></p>
 </li>
-<li>Want to switch vendors? OTel makes it a config change</li>
+<li>
+<p>Want to switch vendors? OTel makes it a config change</p>
+</li>
 <li>Vendor raises prices? No re-instrumentation needed</li>
 <li>
 <p>Multi-cloud? Same telemetry stack everywhere</p>
@@ -5607,39 +5645,49 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <li><strong>Even Datadog supports OTel</strong> (they know it's the future)</li>
 </ol>
 <p><strong>Analogy</strong>: "Would you write SQL queries in Oracle PL/SQL or ANSI SQL? ANSI SQL works across databases. OTel is the ANSI SQL of observability."</p>
-<p><strong>Objection Handling:</strong>
-- <em>"OTel is immature"</em> → Graduated project, 100+ companies contributing
-- <em>"We lose vendor features"</em> → Hybrid approach: OTel + vendor agent only where needed
-- <em>"Our team knows Datadog"</em> → Training investment pays off via flexibility</p>
+<p><strong>Objection Handling:</strong></p>
+<ul>
+<li><em>"OTel is immature"</em> → Graduated project, 100+ companies contributing</li>
+<li><em>"We lose vendor features"</em> → Hybrid approach: OTel + vendor agent only where needed</li>
+<li><em>"Our team knows Datadog"</em> → Training investment pays off via flexibility</li>
+</ul>
 <h2 id="historical-context-from-vendor-agents-to-otel">Historical Context: From Vendor Agents to OTel</h2>
 <h3 id="fawkes-10-2022-prometheus-vendor-sprawl">Fawkes 1.0 (2022): Prometheus + Vendor Sprawl</h3>
 <p><strong>Metrics</strong>: Prometheus exporters (custom per service)
 <strong>Logs</strong>: Fluentd + Elasticsearch
 <strong>Traces</strong>: Jaeger (limited adoption)</p>
-<p><strong>Problems:</strong>
-- Developers didn't instrument traces (too complex)
-- Logs disconnected from metrics/traces
-- No unified view of system state
-- <strong>MTTR</strong>: High (couldn't correlate data across tools)</p>
+<p><strong>Problems:</strong></p>
+<ul>
+<li>Developers didn't instrument traces (too complex)</li>
+<li>Logs disconnected from metrics/traces</li>
+<li>No unified view of system state</li>
+<li><strong>MTTR</strong>: High (couldn't correlate data across tools)</li>
+</ul>
 <h3 id="fawkes-20-2023-opentelemetry-adoption">Fawkes 2.0 (2023): OpenTelemetry Adoption</h3>
 <p><strong>Decision</strong>: Bet on OpenTelemetry as standard</p>
-<p><strong>Migration:</strong>
-1. Deploy OTel Collector (DaemonSet)
-2. Auto-instrument new services with OTel SDKs
-3. Migrate existing services incrementally
-4. Sunset Jaeger, direct Prometheus exporters</p>
-<p><strong>Results:</strong>
-- <strong>Unified data model</strong>: Metrics, logs, traces use same attributes
-- <strong>Correlation</strong>: Trace ID in logs, link from Grafana to Tempo
-- <strong>Developer adoption</strong>: Auto-instrumentation = zero friction
-- <strong>MTTR</strong>: ⬇️ 40% (faster root cause analysis)
-- <strong>Cost</strong>: ⬇️ $30K/year (avoided Datadog expansion)</p>
+<p><strong>Migration:</strong></p>
+<ol>
+<li>Deploy OTel Collector (DaemonSet)</li>
+<li>Auto-instrument new services with OTel SDKs</li>
+<li>Migrate existing services incrementally</li>
+<li>Sunset Jaeger, direct Prometheus exporters</li>
+</ol>
+<p><strong>Results:</strong></p>
+<ul>
+<li><strong>Unified data model</strong>: Metrics, logs, traces use same attributes</li>
+<li><strong>Correlation</strong>: Trace ID in logs, link from Grafana to Tempo</li>
+<li><strong>Developer adoption</strong>: Auto-instrumentation = zero friction</li>
+<li><strong>MTTR</strong>: ⬇️ 40% (faster root cause analysis)</li>
+<li><strong>Cost</strong>: ⬇️ $30K/year (avoided Datadog expansion)</li>
+</ul>
 <h3 id="fawkes-30-2024-present-grafana-lgtm-stack">Fawkes 3.0 (2024-Present): Grafana LGTM Stack</h3>
-<p><strong>Full Observability Stack:</strong>
-- <strong>Loki</strong> (Logs)
-- <strong>Grafana</strong> (Visualization)
-- <strong>Tempo</strong> (Traces)
-- <strong>Mimir/Prometheus</strong> (Metrics)</p>
+<p><strong>Full Observability Stack:</strong></p>
+<ul>
+<li><strong>Loki</strong> (Logs)</li>
+<li><strong>Grafana</strong> (Visualization)</li>
+<li><strong>Tempo</strong> (Traces)</li>
+<li><strong>Mimir/Prometheus</strong> (Metrics)</li>
+</ul>
 <p><strong>All powered by OTel Collector as the telemetry ingestion layer.</strong></p>
 <h2 id="the-mental-model-otel-as-the-telemetry-layer">The Mental Model: OTel as the Telemetry Layer</h2>
 <p>Think of OpenTelemetry like the <strong>OSI Network Model</strong>:</p>
@@ -5703,11 +5751,13 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 </ul>
 <h2 id="conclusion">Conclusion</h2>
 <p>OpenTelemetry is not just a tool—it's a <strong>strategic architectural decision</strong> that prevents vendor lock-in while enabling world-class observability.</p>
-<p><strong>The Core Principle</strong>: Instrument once with a vendor-neutral standard, then send telemetry to any backend. This gives you:
-- <strong>Flexibility</strong>: Switch backends without code changes
-- <strong>Cost Control</strong>: Vendors compete on backend quality, not ecosystem lock-in
-- <strong>Future-Proofing</strong>: Industry standard, backed by CNCF and all major vendors
-- <strong>Simplicity</strong>: One agent (OTel Collector) instead of many vendor agents</p>
+<p><strong>The Core Principle</strong>: Instrument once with a vendor-neutral standard, then send telemetry to any backend. This gives you:</p>
+<ul>
+<li><strong>Flexibility</strong>: Switch backends without code changes</li>
+<li><strong>Cost Control</strong>: Vendors compete on backend quality, not ecosystem lock-in</li>
+<li><strong>Future-Proofing</strong>: Industry standard, backed by CNCF and all major vendors</li>
+<li><strong>Simplicity</strong>: One agent (OTel Collector) instead of many vendor agents</li>
+</ul>
 <p><strong>The Trade-Off</strong>: You may lose some proprietary vendor features, but you gain strategic independence. For Fawkes, that's the right trade.</p>
 <p><strong>The Future</strong>: As Datadog, New Relic, and others adopt OTel (they already are), the ecosystem converges on the standard. Choosing OTel today means you're ahead of the curve, not behind it.</p>
 <p><strong>Unified Telemetry = OpenTelemetry.</strong> This is the way.</p>

@@ -5117,32 +5117,32 @@
 </ol>
 <p><strong>When to use</strong>: Quick feedback while using the platform</p>
 <h4 id="2-cli-tool-for-terminal-users">2. CLI Tool (For Terminal Users)</h4>
-<p><strong>Installation</strong>:
+<p><strong>Installation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>services/feedback-cli
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</code></pre></div></p>
-<p><strong>Quick Submit</strong>:
+</code></pre></div>
+<p><strong>Quick Submit</strong>:</p>
 <div class="highlight"><pre><span></span><code>fawkes-feedback<span class="w"> </span>submit<span class="w"> </span>-r<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;CI/CD&quot;</span><span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Pipeline is much faster now!&quot;</span>
-</code></pre></div></p>
-<p><strong>Interactive Mode</strong>:
+</code></pre></div>
+<p><strong>Interactive Mode</strong>:</p>
 <div class="highlight"><pre><span></span><code>fawkes-feedback<span class="w"> </span>submit<span class="w"> </span>-i
 <span class="c1"># Follow the prompts</span>
-</code></pre></div></p>
-<p><strong>View Your Feedback</strong>:
+</code></pre></div>
+<p><strong>View Your Feedback</strong>:</p>
 <div class="highlight"><pre><span></span><code>fawkes-feedback<span class="w"> </span>list
 fawkes-feedback<span class="w"> </span>stats
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>When to use</strong>: You're already in the terminal, or you want offline queueing</p>
 <p>📖 <strong>Detailed Guide</strong>: <a href="../reference/feedback-cli.md">Feedback CLI Documentation</a></p>
 <h4 id="3-mattermost-bot-most-conversational">3. Mattermost Bot (Most Conversational)</h4>
-<p><strong>In any channel</strong>:
+<p><strong>In any channel</strong>:</p>
 <div class="highlight"><pre><span></span><code>@feedback The new dashboard is really helpful for tracking deployments
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Direct Message</strong>:
 Just DM <code>@feedback</code> with your feedback</p>
-<p><strong>Check Status</strong>:
+<p><strong>Check Status</strong>:</p>
 <div class="highlight"><pre><span></span><code>@feedback status
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>When to use</strong>: You're already chatting in Mattermost, or you want a conversational experience</p>
 <h4 id="4-nps-surveys-quarterly">4. NPS Surveys (Quarterly)</h4>
 <p>Every quarter, you'll receive an NPS survey via Mattermost DM:</p>
@@ -5153,7 +5153,7 @@ Just DM <code>@feedback</code> with your feedback</p>
 <p><strong>When to use</strong>: When prompted quarterly</p>
 <h3 id="logging-friction-points">Logging Friction Points</h3>
 <p>Encountered something frustrating? Log it so we can improve:</p>
-<p><strong>Via API</strong> (if you have access):
+<p><strong>Via API</strong> (if you have access):</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://space-metrics:8000/api/v1/friction-log/submit<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
@@ -5162,23 +5162,25 @@ Just DM <code>@feedback</code> with your feedback</p>
 <span class="s1">    &quot;severity&quot;: &quot;medium&quot;,</span>
 <span class="s1">    &quot;time_lost_minutes&quot;: 15</span>
 <span class="s1">  }&#39;</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Via Feedback Widget</strong>: Select category "Friction/Blocker" and describe the issue</p>
 <h3 id="cognitive-load-assessment">Cognitive Load Assessment</h3>
-<p>Occasionally, you may be invited to take a cognitive load assessment (NASA-TLX) after completing a task like:
-- Deploying to production
-- Debugging a critical issue
-- Onboarding as a new team member
-- Setting up a new service</p>
+<p>Occasionally, you may be invited to take a cognitive load assessment (NASA-TLX) after completing a task like:</p>
+<ul>
+<li>Deploying to production</li>
+<li>Debugging a critical issue</li>
+<li>Onboarding as a new team member</li>
+<li>Setting up a new service</li>
+</ul>
 <p>This takes 2-3 minutes and helps us understand and reduce mental workload.</p>
 <h3 id="using-the-design-system">Using the Design System</h3>
 <p>If you're building UIs for the platform:</p>
-<p><strong>Installation</strong>:
+<p><strong>Installation</strong>:</p>
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>@fawkes/design-system
-</code></pre></div></p>
-<p><strong>Import Components</strong>:
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Button</span><span class="p">,</span><span class="w"> </span><span class="nx">Card</span><span class="p">,</span><span class="w"> </span><span class="nx">Modal</span><span class="p">,</span><span class="w"> </span><span class="nx">Alert</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system&#39;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/dist/styles.css&#39;</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Import Components</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Button</span><span class="p">,</span><span class="w"> </span><span class="nx">Card</span><span class="p">,</span><span class="w"> </span><span class="nx">Modal</span><span class="p">,</span><span class="w"> </span><span class="nx">Alert</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system/dist/styles.css&quot;</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">MyComponent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
@@ -5189,36 +5191,42 @@ Just DM <code>@feedback</code> with your feedback</p>
 <span class="w">    </span><span class="o">&lt;</span><span class="err">/Card&gt;</span>
 <span class="w">  </span><span class="p">);</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Browse Components</strong>: Visit https://storybook.fawkes.local</p>
 <p>📖 <strong>Detailed Guide</strong>: <a href="../deploy-design-system-storybook/">Deploy Design System Storybook</a></p>
 <h3 id="feature-flags-advanced">Feature Flags (Advanced)</h3>
 <p>If you're building features that need gradual rollout or A/B testing:</p>
-<p><strong>Check if Feature is Enabled</strong>:
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@openfeature/sdk&#39;</span><span class="p">;</span>
+<p><strong>Check if Feature is Enabled</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openfeature/sdk&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">getClient</span><span class="p">();</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">isEnabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s1">&#39;my-new-feature&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">isEnabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s2">&quot;my-new-feature&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
 
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">isEnabled</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="c1">// New feature code</span>
 <span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="c1">// Old feature code</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Request a Feature Flag</strong>: Create a GitHub issue or ask in #platform-team</p>
 <p>📖 <strong>Detailed Guide</strong>: <a href="../reference/unleash-guide.md">Feature Flags with Unleash</a></p>
 <hr />
 <h2 id="for-product-managers">For Product Managers</h2>
 <h3 id="understanding-developer-experience-space-metrics">Understanding Developer Experience (SPACE Metrics)</h3>
-<p><strong>Access the Dashboard</strong>:
-1. Go to Grafana: https://grafana.127.0.0.1.nip.io
-2. Navigate to Dashboards → SPACE Metrics Dashboard
-3. Select your team from the dropdown</p>
+<p><strong>Access the Dashboard</strong>:</p>
+<ol>
+<li>Go to Grafana: https://grafana.127.0.0.1.nip.io</li>
+<li>Navigate to Dashboards → SPACE Metrics Dashboard</li>
+<li>Select your team from the dropdown</li>
+</ol>
 <p><strong>The Five Dimensions</strong>:</p>
 <ol>
-<li><strong>Satisfaction</strong> - How developers feel</li>
-<li>eNPS score (goal: &gt;20)</li>
+<li>
+<p><strong>Satisfaction</strong> - How developers feel</p>
+</li>
+<li>
+<p>eNPS score (goal: &gt;20)</p>
+</li>
 <li>Average feedback rating (goal: &gt;4.0)</li>
 <li>
 <p>Based on surveys and feedback</p>
@@ -5226,7 +5234,9 @@ Just DM <code>@feedback</code> with your feedback</p>
 <li>
 <p><strong>Performance</strong> - System and delivery metrics</p>
 </li>
-<li>Deployment frequency (higher is better)</li>
+<li>
+<p>Deployment frequency (higher is better)</p>
+</li>
 <li>Lead time (lower is better)</li>
 <li>
 <p>Build success rate (goal: &gt;90%)</p>
@@ -5234,7 +5244,9 @@ Just DM <code>@feedback</code> with your feedback</p>
 <li>
 <p><strong>Activity</strong> - Development activity levels</p>
 </li>
-<li>Commits per week</li>
+<li>
+<p>Commits per week</p>
+</li>
 <li>PRs merged</li>
 <li>
 <p>Active development days</p>
@@ -5242,7 +5254,9 @@ Just DM <code>@feedback</code> with your feedback</p>
 <li>
 <p><strong>Communication</strong> - Collaboration effectiveness</p>
 </li>
-<li>Mattermost messages</li>
+<li>
+<p>Mattermost messages</p>
+</li>
 <li>PR comments and discussions</li>
 <li>
 <p>Documentation contributions</p>
@@ -5254,23 +5268,27 @@ Just DM <code>@feedback</code> with your feedback</p>
 <li>Time to production</li>
 <li>Cognitive load index (goal: &lt;5.0)</li>
 </ol>
-<p><strong>Interpreting Trends</strong>:
-- Look for week-over-week changes
-- Compare against baseline (first measurement)
-- Correlate with platform changes or team events
-- All data is aggregated (minimum 5 developers) for privacy</p>
+<p><strong>Interpreting Trends</strong>:</p>
+<ul>
+<li>Look for week-over-week changes</li>
+<li>Compare against baseline (first measurement)</li>
+<li>Correlate with platform changes or team events</li>
+<li>All data is aggregated (minimum 5 developers) for privacy</li>
+</ul>
 <p>📖 <strong>Detailed Guide</strong>: <a href="../space-metrics-guide/">SPACE Metrics Guide</a></p>
 <h3 id="analyzing-feedback">Analyzing Feedback</h3>
-<p><strong>Access Feedback Analytics</strong>:
-1. Go to Grafana: https://grafana.127.0.0.1.nip.io
-2. Navigate to Dashboards → Feedback Analytics
-3. Review metrics:
-   - Feedback volume over time
-   - Rating distribution (1-5 stars)
-   - Category breakdown
-   - Sentiment analysis (positive/neutral/negative)
-   - Top pain points and feature requests</p>
-<p><strong>Using Feedback API</strong> (for deeper analysis):
+<p><strong>Access Feedback Analytics</strong>:</p>
+<ol>
+<li>Go to Grafana: https://grafana.127.0.0.1.nip.io</li>
+<li>Navigate to Dashboards → Feedback Analytics</li>
+<li>Review metrics:</li>
+<li>Feedback volume over time</li>
+<li>Rating distribution (1-5 stars)</li>
+<li>Category breakdown</li>
+<li>Sentiment analysis (positive/neutral/negative)</li>
+<li>Top pain points and feature requests</li>
+</ol>
+<p><strong>Using Feedback API</strong> (for deeper analysis):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Port forward to feedback service</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>svc/feedback-service<span class="w"> </span><span class="m">8080</span>:8080
 
@@ -5279,45 +5297,59 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/feedback/stats<span cla
 
 <span class="c1"># List recent feedback</span>
 curl<span class="w"> </span>http://localhost:8080/api/v1/feedback?status<span class="o">=</span>validated<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-</code></pre></div></p>
-<p><strong>Acting on Feedback</strong>:
-1. Review validated feedback weekly
-2. Look for patterns across multiple submissions
-3. Prioritize based on severity and frequency
-4. Create GitHub issues for actionable items
-5. Close the loop: respond to feedback submitters</p>
+</code></pre></div>
+<p><strong>Acting on Feedback</strong>:</p>
+<ol>
+<li>Review validated feedback weekly</li>
+<li>Look for patterns across multiple submissions</li>
+<li>Prioritize based on severity and frequency</li>
+<li>Create GitHub issues for actionable items</li>
+<li>Close the loop: respond to feedback submitters</li>
+</ol>
 <h3 id="product-analytics">Product Analytics</h3>
-<p><strong>Access Analytics Dashboard</strong> (if deployed):
-1. Go to https://analytics.fawkes.local
-2. Navigate to relevant dashboards:
-   - Usage Trends
-   - Feature Adoption
-   - User Journeys
-   - Funnels
-   - Retention</p>
-<p><strong>Key Metrics to Track</strong>:
-- <strong>Activation</strong>: Time to first value for new users
-- <strong>Adoption</strong>: % of users using new features
-- <strong>Engagement</strong>: Session duration, feature usage frequency
-- <strong>Retention</strong>: Weekly/Monthly Active Users
-- <strong>Discovery</strong>: Time to feature discovery</p>
+<p><strong>Access Analytics Dashboard</strong> (if deployed):</p>
+<ol>
+<li>Go to https://analytics.fawkes.local</li>
+<li>Navigate to relevant dashboards:</li>
+<li>Usage Trends</li>
+<li>Feature Adoption</li>
+<li>User Journeys</li>
+<li>Funnels</li>
+<li>Retention</li>
+</ol>
+<p><strong>Key Metrics to Track</strong>:</p>
+<ul>
+<li><strong>Activation</strong>: Time to first value for new users</li>
+<li><strong>Adoption</strong>: % of users using new features</li>
+<li><strong>Engagement</strong>: Session duration, feature usage frequency</li>
+<li><strong>Retention</strong>: Weekly/Monthly Active Users</li>
+<li><strong>Discovery</strong>: Time to feature discovery</li>
+</ul>
 <p>📖 <strong>Detailed Guide</strong>: <a href="../product-analytics-quickstart/">Product Analytics Quickstart</a>
 📖 <strong>Detailed Guide</strong>: <a href="../event-tracking-integration/">Event Tracking Integration</a></p>
 <h3 id="feature-flags-experimentation">Feature Flags &amp; Experimentation</h3>
-<p><strong>Access Unleash</strong>:
-1. Go to https://unleash.fawkes.local
-2. Log in with your credentials</p>
-<p><strong>Creating a Feature Flag</strong>:
-1. Click "New feature toggle"
-2. Name: <code>feature-name</code> (use kebab-case)
-3. Description: What does this flag control?
-4. Type: Release, Experiment, Operational, Kill Switch, or Permission
-5. Enable: Start with OFF unless testing in dev
-6. Save</p>
+<p><strong>Access Unleash</strong>:</p>
+<ol>
+<li>Go to https://unleash.fawkes.local</li>
+<li>Log in with your credentials</li>
+</ol>
+<p><strong>Creating a Feature Flag</strong>:</p>
+<ol>
+<li>Click "New feature toggle"</li>
+<li>Name: <code>feature-name</code> (use kebab-case)</li>
+<li>Description: What does this flag control?</li>
+<li>Type: Release, Experiment, Operational, Kill Switch, or Permission</li>
+<li>Enable: Start with OFF unless testing in dev</li>
+<li>Save</li>
+</ol>
 <p><strong>Rollout Strategies</strong>:</p>
 <ol>
-<li><strong>Gradual Rollout</strong>:</li>
-<li>Start at 10%</li>
+<li>
+<p><strong>Gradual Rollout</strong>:</p>
+</li>
+<li>
+<p>Start at 10%</p>
+</li>
 <li>Monitor metrics for 1-2 days</li>
 <li>
 <p>Increase to 25%, 50%, 100% gradually</p>
@@ -5325,7 +5357,9 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/feedback?status<span cl
 <li>
 <p><strong>User Targeting</strong>:</p>
 </li>
-<li>Enable for specific users or teams first</li>
+<li>
+<p>Enable for specific users or teams first</p>
+</li>
 <li>Beta testers, friendly users</li>
 <li>
 <p>Gather feedback before wider rollout</p>
@@ -5337,20 +5371,24 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/feedback?status<span cl
 <li>Staging: ON for testing</li>
 <li>Production: Gradual or gated</li>
 </ol>
-<p><strong>A/B Testing</strong>:
-1. Create feature flag with variants (e.g., "control", "variant-a", "variant-b")
-2. Set equal distribution (33% each)
-3. Track outcomes in product analytics
-4. Choose winner based on data
-5. Roll out winner to 100%</p>
+<p><strong>A/B Testing</strong>:</p>
+<ol>
+<li>Create feature flag with variants (e.g., "control", "variant-a", "variant-b")</li>
+<li>Set equal distribution (33% each)</li>
+<li>Track outcomes in product analytics</li>
+<li>Choose winner based on data</li>
+<li>Roll out winner to 100%</li>
+</ol>
 <h3 id="customer-advisory-board">Customer Advisory Board</h3>
 <p><strong>Purpose</strong>: Get strategic feedback from power users</p>
 <p><strong>Meeting Cadence</strong>: Quarterly (4 times per year)</p>
-<p><strong>Agenda Template</strong>:
-1. Platform updates (15 min)
-2. Roadmap preview (20 min)
-3. Discussion topics (20 min)
-4. Open feedback (5 min)</p>
+<p><strong>Agenda Template</strong>:</p>
+<ol>
+<li>Platform updates (15 min)</li>
+<li>Roadmap preview (20 min)</li>
+<li>Discussion topics (20 min)</li>
+<li>Open feedback (5 min)</li>
+</ol>
 <p>📖 <strong>Detailed Guide</strong>: <a href="../run-advisory-board-meetings/">Run Advisory Board Meetings</a></p>
 <hr />
 <h2 id="for-ux-researchers">For UX Researchers</h2>
@@ -5366,79 +5404,107 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/feedback?status<span cl
 └── assets/            # Images and diagrams
 </code></pre></div>
 <h3 id="conducting-user-interviews">Conducting User Interviews</h3>
-<p><strong>1. Prepare</strong>:
-   - Use template: <code>docs/research/templates/interview-guide.md</code>
-   - Schedule 45-60 minute sessions
-   - Get consent for recording (if applicable)</p>
-<p><strong>2. Conduct</strong>:
-   - Build rapport (5 min)
-   - Ask open-ended questions
-   - Listen actively, probe deeper
-   - Observe behaviors, not just words</p>
-<p><strong>3. Document</strong>:
-   - Take detailed notes during interview
-   - Create summary document: <code>interviews/YYYY-MM-DD-participant-role.md</code>
-   - Include quotes, observations, and insights
-   - Tag with relevant themes</p>
-<p><strong>4. Share</strong>:
-   - Post summary in #ux-research Mattermost channel
-   - Add insights to weekly synthesis</p>
+<p><strong>1. Prepare</strong>:</p>
+<ul>
+<li>Use template: <code>docs/research/templates/interview-guide.md</code></li>
+<li>Schedule 45-60 minute sessions</li>
+<li>Get consent for recording (if applicable)</li>
+</ul>
+<p><strong>2. Conduct</strong>:</p>
+<ul>
+<li>Build rapport (5 min)</li>
+<li>Ask open-ended questions</li>
+<li>Listen actively, probe deeper</li>
+<li>Observe behaviors, not just words</li>
+</ul>
+<p><strong>3. Document</strong>:</p>
+<ul>
+<li>Take detailed notes during interview</li>
+<li>Create summary document: <code>interviews/YYYY-MM-DD-participant-role.md</code></li>
+<li>Include quotes, observations, and insights</li>
+<li>Tag with relevant themes</li>
+</ul>
+<p><strong>4. Share</strong>:</p>
+<ul>
+<li>Post summary in #ux-research Mattermost channel</li>
+<li>Add insights to weekly synthesis</li>
+</ul>
 <h3 id="creating-and-updating-personas">Creating and Updating Personas</h3>
 <p><strong>Location</strong>: <code>docs/research/personas/</code></p>
 <p><strong>Template</strong>: <code>docs/research/templates/persona-template.md</code></p>
-<p><strong>Structure</strong>:
-- Name and photo (use generic/stock)
-- Role and demographics
-- Goals and motivations
-- Pain points and frustrations
-- Current tools and workflows
-- Quotes from real users
-- Validation: Number of interviews</p>
+<p><strong>Structure</strong>:</p>
+<ul>
+<li>Name and photo (use generic/stock)</li>
+<li>Role and demographics</li>
+<li>Goals and motivations</li>
+<li>Pain points and frustrations</li>
+<li>Current tools and workflows</li>
+<li>Quotes from real users</li>
+<li>Validation: Number of interviews</li>
+</ul>
 <p><strong>Example</strong>: See <code>personas/persona-new-developer.md</code></p>
-<p><strong>When to Update</strong>:
-- Quarterly review
-- After major feature launches
-- When user base changes significantly</p>
+<p><strong>When to Update</strong>:</p>
+<ul>
+<li>Quarterly review</li>
+<li>After major feature launches</li>
+<li>When user base changes significantly</li>
+</ul>
 <h3 id="journey-mapping">Journey Mapping</h3>
 <p><strong>Location</strong>: <code>docs/research/journey-maps/</code></p>
 <p><strong>Template</strong>: <code>docs/research/templates/journey-map.md</code></p>
-<p><strong>The 5 Key Journeys</strong>:
-1. Developer Onboarding
-2. Deploying First App
-3. Debugging Production Issue
-4. Requesting Platform Feature
-5. Contributing to Platform</p>
-<p><strong>Journey Map Components</strong>:
-- <strong>Stages</strong>: Key phases in the journey
-- <strong>Actions</strong>: What user does at each stage
-- <strong>Touchpoints</strong>: Where they interact with platform
-- <strong>Pain Points</strong>: Frustrations (⚠️)
-- <strong>Opportunities</strong>: Improvements (✨)
-- <strong>Emotions</strong>: How user feels (😊😐😟)
-- <strong>Metrics</strong>: How we measure success</p>
-<p><strong>Creating a Journey Map</strong>:
-1. Identify the journey to map
-2. Interview 5-10 users who've completed this journey
-3. List out stages, actions, touchpoints
-4. Identify pain points and emotions
-5. Brainstorm opportunities
-6. Define success metrics
-7. Create visual representation
-8. Validate with users
-9. Document in markdown</p>
+<p><strong>The 5 Key Journeys</strong>:</p>
+<ol>
+<li>Developer Onboarding</li>
+<li>Deploying First App</li>
+<li>Debugging Production Issue</li>
+<li>Requesting Platform Feature</li>
+<li>Contributing to Platform</li>
+</ol>
+<p><strong>Journey Map Components</strong>:</p>
+<ul>
+<li><strong>Stages</strong>: Key phases in the journey</li>
+<li><strong>Actions</strong>: What user does at each stage</li>
+<li><strong>Touchpoints</strong>: Where they interact with platform</li>
+<li><strong>Pain Points</strong>: Frustrations (⚠️)</li>
+<li><strong>Opportunities</strong>: Improvements (✨)</li>
+<li><strong>Emotions</strong>: How user feels (😊😐😟)</li>
+<li><strong>Metrics</strong>: How we measure success</li>
+</ul>
+<p><strong>Creating a Journey Map</strong>:</p>
+<ol>
+<li>Identify the journey to map</li>
+<li>Interview 5-10 users who've completed this journey</li>
+<li>List out stages, actions, touchpoints</li>
+<li>Identify pain points and emotions</li>
+<li>Brainstorm opportunities</li>
+<li>Define success metrics</li>
+<li>Create visual representation</li>
+<li>Validate with users</li>
+<li>Document in markdown</li>
+</ol>
 <p><strong>Example</strong>: See <code>journey-maps/01-developer-onboarding.md</code></p>
 <h3 id="weekly-synthesis">Weekly Synthesis</h3>
 <p><strong>Purpose</strong>: Distill weekly learnings into actionable insights</p>
 <p><strong>Location</strong>: <code>docs/research/insights/YYYY-week-WW-insights.md</code></p>
-<p><strong>Process</strong>:
-1. <strong>Collect</strong> (Monday):
-   - Review feedback from all channels
-   - Read interview notes
-   - Check analytics data
-   - Review SPACE metrics</p>
+<p><strong>Process</strong>:</p>
 <ol>
-<li><strong>Synthesize</strong> (Monday-Tuesday):</li>
-<li>Identify patterns and themes</li>
+<li>
+<p><strong>Collect</strong> (Monday):</p>
+</li>
+<li>
+<p>Review feedback from all channels</p>
+</li>
+<li>Read interview notes</li>
+<li>Check analytics data</li>
+<li>
+<p>Review SPACE metrics</p>
+</li>
+<li>
+<p><strong>Synthesize</strong> (Monday-Tuesday):</p>
+</li>
+<li>
+<p>Identify patterns and themes</p>
+</li>
 <li>Cluster related feedback</li>
 <li>
 <p>Prioritize by impact and frequency</p>
@@ -5446,7 +5512,9 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/feedback?status<span cl
 <li>
 <p><strong>Document</strong> (Tuesday):</p>
 </li>
-<li>Create insights document</li>
+<li>
+<p>Create insights document</p>
+</li>
 <li>Include quotes and data</li>
 <li>
 <p>Suggest next steps</p>
@@ -5458,10 +5526,11 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/feedback?status<span cl
 <li>Present at weekly sync</li>
 <li>Create GitHub issues for actions</li>
 </ol>
-<p><strong>Insight Format</strong>:
+<p><strong>Insight Format</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gu">## Insight: [Theme/Pattern Name]</span>
 
 <span class="gs">**Evidence**</span>:
+
 <span class="k">-</span><span class="w"> </span>Feedback submissions: 5 users mentioned X
 <span class="k">-</span><span class="w"> </span>Interview quotes: &quot;quote from user&quot;
 <span class="k">-</span><span class="w"> </span>Metrics: Y decreased by Z%
@@ -5471,28 +5540,34 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/feedback?status<span cl
 <span class="gs">**Recommendation**</span>: [What should we do?]
 
 <span class="gs">**Next Steps**</span>: [Specific actions]
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="usability-testing">Usability Testing</h3>
-<p><strong>When to Test</strong>:
-- Before major feature launches
-- When redesigning existing features
-- After receiving repeated negative feedback
-- Quarterly platform health checks</p>
-<p><strong>How to Test</strong>:
-1. Define goals and tasks
-2. Recruit 5-8 participants
-3. Prepare test script
-4. Conduct moderated sessions
-5. Observe and take notes
-6. Synthesize findings
-7. Create recommendations</p>
+<p><strong>When to Test</strong>:</p>
+<ul>
+<li>Before major feature launches</li>
+<li>When redesigning existing features</li>
+<li>After receiving repeated negative feedback</li>
+<li>Quarterly platform health checks</li>
+</ul>
+<p><strong>How to Test</strong>:</p>
+<ol>
+<li>Define goals and tasks</li>
+<li>Recruit 5-8 participants</li>
+<li>Prepare test script</li>
+<li>Conduct moderated sessions</li>
+<li>Observe and take notes</li>
+<li>Synthesize findings</li>
+<li>Create recommendations</li>
+</ol>
 <p>📖 <strong>Detailed Guide</strong>: <a href="../usability-testing-guide/">Usability Testing Guide</a></p>
 <h3 id="accessibility-testing">Accessibility Testing</h3>
 <p>All designs and implementations must meet WCAG 2.1 AA standards.</p>
-<p><strong>Tools</strong>:
-- <strong>Automated</strong>: axe-core, Lighthouse CI
-- <strong>Manual</strong>: Keyboard navigation, screen reader testing
-- <strong>Integrated</strong>: Storybook a11y addon</p>
+<p><strong>Tools</strong>:</p>
+<ul>
+<li><strong>Automated</strong>: axe-core, Lighthouse CI</li>
+<li><strong>Manual</strong>: Keyboard navigation, screen reader testing</li>
+<li><strong>Integrated</strong>: Storybook a11y addon</li>
+</ul>
 <p>📖 <strong>Detailed Guide</strong>: <a href="../accessibility-testing-guide/">Accessibility Testing Guide</a></p>
 <hr />
 <h2 id="for-platform-engineers">For Platform Engineers</h2>
@@ -5553,24 +5628,26 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/feedback?status<span cl
 </tr>
 </tbody>
 </table>
-<p><strong>Health Check</strong>:
+<p><strong>Health Check</strong>:</p>
 <div class="highlight"><pre><span></span><code>./scripts/health-check-epic3.sh
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Troubleshooting</strong>: See <a href="../../runbooks/epic-3-product-discovery-operations/">Epic 3 Operations Runbook</a></p>
 <h3 id="monitoring-and-observability">Monitoring and Observability</h3>
-<p><strong>Prometheus Metrics</strong>:
+<p><strong>Prometheus Metrics</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># SPACE metrics</span>
 curl<span class="w"> </span>http://space-metrics:8000/metrics
 
 <span class="c1"># Feedback service</span>
 curl<span class="w"> </span>http://feedback-service:8080/metrics
-</code></pre></div></p>
-<p><strong>Grafana Dashboards</strong>:
-- Epic 3 Resource Usage
-- SPACE Metrics Dashboard
-- Feedback Analytics Dashboard
-- Discovery Metrics Dashboard</p>
-<p><strong>Logs</strong>:
+</code></pre></div>
+<p><strong>Grafana Dashboards</strong>:</p>
+<ul>
+<li>Epic 3 Resource Usage</li>
+<li>SPACE Metrics Dashboard</li>
+<li>Feedback Analytics Dashboard</li>
+<li>Discovery Metrics Dashboard</li>
+</ul>
+<p><strong>Logs</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># SPACE metrics logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>space-metrics<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
 
@@ -5579,10 +5656,10 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 
 <span class="c1"># Feedback bot logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>feedback-bot<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Alerts</strong>: See <a href="../observability/alert-rules.md">Alert Rules</a></p>
 <h3 id="backup-and-recovery">Backup and Recovery</h3>
-<p><strong>Databases</strong>:
+<p><strong>Databases</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Backup SPACE metrics DB</span>
 kubectl<span class="w"> </span>cnpg<span class="w"> </span>backup<span class="w"> </span>space-metrics-pg<span class="w"> </span>-n<span class="w"> </span>fawkes-local
 
@@ -5591,21 +5668,21 @@ kubectl<span class="w"> </span>cnpg<span class="w"> </span>backup<span class="w"
 
 <span class="c1"># Backup Unleash DB</span>
 kubectl<span class="w"> </span>cnpg<span class="w"> </span>backup<span class="w"> </span>db-unleash<span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Restore</strong>: See <a href="../../runbooks/epic-3-product-discovery-operations/#disaster-recovery">Disaster Recovery</a></p>
 <h3 id="api-access-and-integration">API Access and Integration</h3>
-<p><strong>SPACE Metrics API</strong>:
+<p><strong>SPACE Metrics API</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>svc/space-metrics<span class="w"> </span><span class="m">8000</span>:8000
 curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space
-</code></pre></div></p>
-<p><strong>Feedback API</strong>:
+</code></pre></div>
+<p><strong>Feedback API</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>svc/feedback-service<span class="w"> </span><span class="m">8080</span>:8080
 curl<span class="w"> </span>http://localhost:8080/api/v1/feedback
-</code></pre></div></p>
-<p><strong>Unleash API</strong>:
+</code></pre></div>
+<p><strong>Unleash API</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>svc/unleash<span class="w"> </span><span class="m">4242</span>:4242
 curl<span class="w"> </span>http://localhost:4242/api/admin/features
-</code></pre></div></p>
+</code></pre></div>
 <p>📖 <strong>Detailed Reference</strong>: <a href="../../reference/api/epic-3-product-discovery-apis/">Epic 3 API Reference</a></p>
 <hr />
 <h2 id="quick-reference">Quick Reference</h2>
@@ -5779,26 +5856,36 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 </code></pre></div>
 <hr />
 <h2 id="related-documentation">Related Documentation</h2>
-<p><strong>Runbooks &amp; Operations</strong>:
-- <a href="../../runbooks/epic-3-product-discovery-operations/">Epic 3 Operations Runbook</a>
-- <a href="../../runbooks/epic-3-architecture-diagrams/">Epic 3 Architecture Diagrams</a></p>
-<p><strong>API References</strong>:
-- <a href="../../reference/api/epic-3-product-discovery-apis/">Epic 3 API Reference</a></p>
-<p><strong>How-To Guides</strong>:
-- <a href="../space-metrics-guide/">SPACE Metrics Guide</a>
-- <a href="../product-analytics-quickstart/">Product Analytics Quickstart</a>
-- <a href="../deploy-design-system-storybook/">Deploy Design System Storybook</a>
-- <a href="../run-advisory-board-meetings/">Run Advisory Board Meetings</a>
-- <a href="../usability-testing-guide/">Usability Testing Guide</a>
-- <a href="../accessibility-testing-guide/">Accessibility Testing Guide</a>
-- <a href="../event-tracking-integration/">Event Tracking Integration</a></p>
-<p><strong>Validation Documents</strong>:
-- <a href="../../validation/AT-E3-002-IMPLEMENTATION/">AT-E3-002: SPACE Framework</a>
-- <a href="../../validation/AT-E3-003-IMPLEMENTATION/">AT-E3-003: Feedback System</a>
-- <a href="../../validation/AT-E3-004-005-009-IMPLEMENTATION/">AT-E3-004/005/009: Design System</a></p>
-<p><strong>Video Resources</strong>:
-- <a href="../../tutorials/epic-3-demo-video/">Epic 3 Demo Video</a>
-- <a href="../../tutorials/epic-3-demo-video-script/">Epic 3 Demo Script</a></p>
+<p><strong>Runbooks &amp; Operations</strong>:</p>
+<ul>
+<li><a href="../../runbooks/epic-3-product-discovery-operations/">Epic 3 Operations Runbook</a></li>
+<li><a href="../../runbooks/epic-3-architecture-diagrams/">Epic 3 Architecture Diagrams</a></li>
+</ul>
+<p><strong>API References</strong>:</p>
+<ul>
+<li><a href="../../reference/api/epic-3-product-discovery-apis/">Epic 3 API Reference</a></li>
+</ul>
+<p><strong>How-To Guides</strong>:</p>
+<ul>
+<li><a href="../space-metrics-guide/">SPACE Metrics Guide</a></li>
+<li><a href="../product-analytics-quickstart/">Product Analytics Quickstart</a></li>
+<li><a href="../deploy-design-system-storybook/">Deploy Design System Storybook</a></li>
+<li><a href="../run-advisory-board-meetings/">Run Advisory Board Meetings</a></li>
+<li><a href="../usability-testing-guide/">Usability Testing Guide</a></li>
+<li><a href="../accessibility-testing-guide/">Accessibility Testing Guide</a></li>
+<li><a href="../event-tracking-integration/">Event Tracking Integration</a></li>
+</ul>
+<p><strong>Validation Documents</strong>:</p>
+<ul>
+<li><a href="../../validation/AT-E3-002-IMPLEMENTATION/">AT-E3-002: SPACE Framework</a></li>
+<li><a href="../../validation/AT-E3-003-IMPLEMENTATION/">AT-E3-003: Feedback System</a></li>
+<li><a href="../../validation/AT-E3-004-005-009-IMPLEMENTATION/">AT-E3-004/005/009: Design System</a></li>
+</ul>
+<p><strong>Video Resources</strong>:</p>
+<ul>
+<li><a href="../../tutorials/epic-3-demo-video/">Epic 3 Demo Video</a></li>
+<li><a href="../../tutorials/epic-3-demo-video-script/">Epic 3 Demo Script</a></li>
+</ul>
 <hr />
 <h2 id="feedback-on-this-guide">Feedback on This Guide</h2>
 <p>This guide itself can be improved! If you have suggestions:</p>

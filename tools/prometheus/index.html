@@ -4978,11 +4978,13 @@
 <p><img alt="Prometheus Logo" src="../assets/images/tools/prometheus.png" width="300" /></p>
 <p>Prometheus is an open-source monitoring and alerting toolkit designed for reliability and scalability in modern cloud environments.</p>
 <h2 id="overview">Overview</h2>
-<p>Prometheus provides essential monitoring capabilities:
-- <strong>Time-Series Database</strong> - Store and query metrics data
-- <strong>PromQL</strong> - Powerful query language for metrics analysis
-- <strong>Alert Manager</strong> - Handle alerts and notifications
-- <strong>Service Discovery</strong> - Automatic target discovery</p>
+<p>Prometheus provides essential monitoring capabilities:</p>
+<ul>
+<li><strong>Time-Series Database</strong> - Store and query metrics data</li>
+<li><strong>PromQL</strong> - Powerful query language for metrics analysis</li>
+<li><strong>Alert Manager</strong> - Handle alerts and notifications</li>
+<li><strong>Service Discovery</strong> - Automatic target discovery</li>
+</ul>
 <h2 id="key-features">Key Features</h2>
 <table>
 <thead>
@@ -5028,7 +5030,7 @@ helm<span class="w"> </span>install<span class="w"> </span>prometheus<span class
 <span class="w">  </span>--create-namespace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--values<span class="w"> </span>prometheus-values.yaml
 </code></pre></div>
-<p>Example <code>prometheus-values.yaml</code>:
+<p>Example <code>prometheus-values.yaml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">prometheus</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">prometheusSpec</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">retention</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15d</span>
@@ -5051,48 +5053,52 @@ helm<span class="w"> </span>install<span class="w"> </span>prometheus<span class
 <span class="w">    </span><span class="nt">global</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">resolve_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
 <span class="w">    </span><span class="nt">route</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">group_by</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;job&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">group_by</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;job&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">group_wait</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
 <span class="w">      </span><span class="nt">group_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
 <span class="w">      </span><span class="nt">repeat_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12h</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="configuring-prometheus-rules">Configuring Prometheus Rules</h2>
 <h3 id="basic-recording-rules">Basic Recording Rules</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">groups</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-recording-rules</span>
-<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">job:http_requests_total:rate5m</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(http_requests_total[5m])</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">job:http_errors_total:rate5m</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(http_errors_total[5m])</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-recording-rules</span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">job:http_requests_total:rate5m</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(http_requests_total[5m])</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">job:http_errors_total:rate5m</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(http_errors_total[5m])</span>
 </code></pre></div>
 <h3 id="alert-rules">Alert Rules</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">groups</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-alerts</span>
-<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighErrorRate</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">job:http_errors_total:rate5m / job:http_requests_total:rate5m &gt; 0.1</span>
-<span class="w">    </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
-<span class="w">    </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
-<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">High error rate detected</span>
-<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Error rate is above 10% for 5 minutes</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-alerts</span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighErrorRate</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">job:http_errors_total:rate5m / job:http_requests_total:rate5m &gt; 0.1</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">High error rate detected</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Error rate is above 10% for 5 minutes</span>
 </code></pre></div>
 <h2 id="monitoring-dora-metrics">Monitoring DORA Metrics</h2>
 <h3 id="deployment-frequency">Deployment Frequency</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">groups</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-metrics</span>
-<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora:deployment_frequency:count24h</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">count_over_time(deployment_success_total[24h])</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora:lead_time_seconds:avg24h</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avg_over_time(deployment_lead_time_seconds[24h])</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-metrics</span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora:deployment_frequency:count24h</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">count_over_time(deployment_success_total[24h])</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora:lead_time_seconds:avg24h</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avg_over_time(deployment_lead_time_seconds[24h])</span>
 </code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <ol>
-<li><strong>Data Retention</strong></li>
-<li>Set appropriate retention periods</li>
+<li>
+<p><strong>Data Retention</strong></p>
+</li>
+<li>
+<p>Set appropriate retention periods</p>
+</li>
 <li>Use persistent storage</li>
 <li>
 <p>Implement data compaction</p>
@@ -5100,7 +5106,9 @@ helm<span class="w"> </span>install<span class="w"> </span>prometheus<span class
 <li>
 <p><strong>Query Optimization</strong></p>
 </li>
-<li>Use recording rules for complex queries</li>
+<li>
+<p>Use recording rules for complex queries</p>
+</li>
 <li>Limit the use of high-cardinality labels</li>
 <li>
 <p>Cache frequently used queries</p>

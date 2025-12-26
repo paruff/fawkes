@@ -4548,15 +4548,14 @@
 <h1 id="githubworkflowsciyml-template-for-students">.github/workflows/ci.yml template for students</h1>
 <p>name: CI Pipeline</p>
 <p>on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]</p>
+push:
+branches: [ main, develop ]
+pull_request:
+branches: [ main ]</p>
 <p>jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3</p>
+test:
+runs-on: ubuntu-latest
+steps: - uses: actions/checkout@v3</p>
 <pre><code>  - name: Setup Node.js
     uses: actions/setup-node@v3
     with:
@@ -4578,9 +4577,8 @@
       fi
 </code></pre>
 <p>security-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3</p>
+runs-on: ubuntu-latest
+steps: - uses: actions/checkout@v3</p>
 <pre><code>  - name: Run Semgrep
     uses: returntocorp/semgrep-action@v1
     with:
@@ -4590,10 +4588,9 @@
     run: npm audit --audit-level=high
 </code></pre>
 <p>build:
-    needs: [test, security-scan]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3</p>
+needs: [test, security-scan]
+runs-on: ubuntu-latest
+steps: - uses: actions/checkout@v3</p>
 <pre><code>  - name: Set up Docker Buildx
     uses: docker/setup-buildx-action@v2
 
@@ -4619,29 +4616,22 @@
 <p>apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: ci-pipeline
-  namespace: tekton-pipelines
+name: ci-pipeline
+namespace: tekton-pipelines
 spec:
-  params:
-    - name: git-url
-      type: string
-    - name: git-revision
-      type: string
-      default: main
-  workspaces:
-    - name: shared-data
-  tasks:
-    - name: fetch-source
-      taskRef:
-        name: git-clone
-      workspaces:
-        - name: output
-          workspace: shared-data
-      params:
-        - name: url
-          value: $(params.git-url)
-        - name: revision
-          value: $(params.git-revision)</p>
+params: - name: git-url
+type: string - name: git-revision
+type: string
+default: main
+workspaces: - name: shared-data
+tasks: - name: fetch-source
+taskRef:
+name: git-clone
+workspaces: - name: output
+workspace: shared-data
+params: - name: url
+value: $(params.git-url) - name: revision
+value: $(params.git-revision)</p>
 <pre><code>- name: run-tests
   runAfter: [fetch-source]
   taskRef:
@@ -4675,14 +4665,14 @@ spec:
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: quality-gates
-  namespace: lab-module-5
+name: quality-gates
+namespace: lab-module-5
 data:
-  gates.yaml: |
-    gates:
-      test_coverage:
-        threshold: 80
-        action: block</p>
+gates.yaml: |
+gates:
+test_coverage:
+threshold: 80
+action: block</p>
 <pre><code>  security_vulnerabilities:
     critical: 0
     high: 0
@@ -4709,12 +4699,11 @@ data:
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: golden-path-template
-  namespace: lab-module-6
+name: golden-path-template
+namespace: lab-module-6
 data:
-  node-service.yaml: |
-    # Golden Path for Node.js Services
-    name: Node.js Service Pipeline</p>
+node-service.yaml: | # Golden Path for Node.js Services
+name: Node.js Service Pipeline</p>
 <pre><code>on:
   push:
     branches: [main, develop]
@@ -4730,9 +4719,8 @@ jobs:
     secrets:
       REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
 </code></pre>
-<p>python-service.yaml: |
-    # Golden Path for Python Services
-    name: Python Service Pipeline</p>
+<p>python-service.yaml: | # Golden Path for Python Services
+name: Python Service Pipeline</p>
 <pre><code>on:
   push:
     branches: [main]
@@ -4758,17 +4746,14 @@ jobs:
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: semgrep-config
-  namespace: lab-module-7
+name: semgrep-config
+namespace: lab-module-7
 data:
-  .semgrep.yml: |
-    rules:
-      - id: hardcoded-secret
-        patterns:
-          - pattern: password = "..."
-          - pattern: api_key = "..."
-        message: Hardcoded secret detected
-        severity: ERROR</p>
+.semgrep.yml: |
+rules: - id: hardcoded-secret
+patterns: - pattern: password = "..." - pattern: api_key = "..."
+message: Hardcoded secret detected
+severity: ERROR</p>
 <pre><code>  - id: sql-injection
     patterns:
       - pattern: execute($SQL + $INPUT)
@@ -4787,14 +4772,11 @@ data:
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: trivy-config
-  namespace: lab-module-7
+name: trivy-config
+namespace: lab-module-7
 data:
-  trivy.yaml: |
-    severity:
-      - CRITICAL
-      - HIGH
-      - MEDIUM</p>
+trivy.yaml: |
+severity: - CRITICAL - HIGH - MEDIUM</p>
 <pre><code>vulnerability:
   type:
     - os
@@ -4812,15 +4794,15 @@ cache:
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: sonarqube-config
-  namespace: lab-module-7
+name: sonarqube-config
+namespace: lab-module-7
 data:
-  sonar-project.properties: |
-    sonar.projectKey=my-first-app
-    sonar.projectName=My First App
-    sonar.sources=src
-    sonar.tests=test
-    sonar.javascript.lcov.reportPaths=coverage/lcov.info</p>
+sonar-project.properties: |
+sonar.projectKey=my-first-app
+sonar.projectName=My First App
+sonar.sources=src
+sonar.tests=test
+sonar.javascript.lcov.reportPaths=coverage/lcov.info</p>
 <pre><code># Quality Gates
 sonar.qualitygate.wait=true
 sonar.coverage.minimum=80
@@ -4838,23 +4820,23 @@ sonar.vulnerabilities.critical.max=0
 <p>apiVersion: v1
 kind: Secret
 metadata:
-  name: registry-credentials
-  namespace: lab-module-8
+name: registry-credentials
+namespace: lab-module-8
 type: kubernetes.io/dockerconfigjson
 data:
-  .dockerconfigjson: BASE64_ENCODED_CONFIG</p>
+.dockerconfigjson: BASE64_ENCODED_CONFIG</p>
 <hr />
 <h1 id="labsmodule-08image-signing-setupyaml">labs/module-08/image-signing-setup.yaml</h1>
 <h1 id="cosign-image-signing-configuration">Cosign image signing configuration</h1>
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cosign-config
-  namespace: lab-module-8
+name: cosign-config
+namespace: lab-module-8
 data:
-  sign-image.sh: |
-    #!/bin/bash
-    set -e</p>
+sign-image.sh: |</p>
+<h1 id="binbash">!/bin/bash</h1>
+<p>set -e</p>
 <pre><code>IMAGE=$1
 
 echo "Signing image: $IMAGE"
@@ -4887,79 +4869,73 @@ echo "Verify with: cosign verify --key cosign.pub $IMAGE"
 <p>apiVersion: v1
 kind: Namespace
 metadata:
-  name: lab-module-9
-  labels:
-    fawkes.io/module: "9"
-    fawkes.io/belt: "green"</p>
+name: lab-module-9
+labels:
+fawkes.io/module: "9"
+fawkes.io/belt: "green"</p>
 <hr />
 <h1 id="labsmodule-09argocd-applicationyaml">labs/module-09/argocd-application.yaml</h1>
 <p>apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: my-app-gitops
-  namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+name: my-app-gitops
+namespace: argocd
+finalizers: - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default</p>
+project: default</p>
 <p>source:
-    repoURL: https://github.com/student/my-app
-    targetRevision: HEAD
-    path: k8s/base</p>
+repoURL: https://github.com/student/my-app
+targetRevision: HEAD
+path: k8s/base</p>
 <p>destination:
-    server: https://kubernetes.default.svc
-    namespace: lab-module-9</p>
+server: https://kubernetes.default.svc
+namespace: lab-module-9</p>
 <p>syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-      allowEmpty: false
-    syncOptions:
-      - CreateNamespace=true
-      - PrunePropagationPolicy=foreground
-      - PruneLast=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m</p>
+automated:
+prune: true
+selfHeal: true
+allowEmpty: false
+syncOptions: - CreateNamespace=true - PrunePropagationPolicy=foreground - PruneLast=true
+retry:
+limit: 5
+backoff:
+duration: 5s
+factor: 2
+maxDuration: 3m</p>
 <hr />
 <h1 id="labsmodule-09sync-waves-exampleyaml">labs/module-09/sync-waves-example.yaml</h1>
 <h1 id="demonstrates-argocd-sync-waves">Demonstrates ArgoCD sync waves</h1>
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: database-config
-  namespace: lab-module-9
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"  # Deploy first
+name: database-config
+namespace: lab-module-9
+annotations:
+argocd.argoproj.io/sync-wave: "1" # Deploy first
 data:
-  database: "postgres"</p>
+database: "postgres"</p>
 <hr />
 <p>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
-  namespace: lab-module-9
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"  # Deploy after config
+name: backend
+namespace: lab-module-9
+annotations:
+argocd.argoproj.io/sync-wave: "2" # Deploy after config
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: backend
-  template:
-    metadata:
-      labels:
-        app: backend
-    spec:
-      containers:
-      - name: app
-        image: backend:v1.0.0
-        envFrom:
-        - configMapRef:
-            name: database-config</p>
+replicas: 2
+selector:
+matchLabels:
+app: backend
+template:
+metadata:
+labels:
+app: backend
+spec:
+containers: - name: app
+image: backend:v1.0.0
+envFrom: - configMapRef:
+name: database-config</p>
 <hr />
 <h1 id="_15">=============================================================================</h1>
 <h1 id="module-10-lab-2-deployment-strategies">MODULE 10 - LAB 2: Deployment Strategies</h1>
@@ -4971,155 +4947,152 @@ spec:
 <p>apiVersion: v1
 kind: Service
 metadata:
-  name: my-app
-  namespace: lab-module-10
+name: my-app
+namespace: lab-module-10
 spec:
-  selector:
-    app: my-app
-    version: blue  # Switch to 'green' for blue-green switch
-  ports:
-  - port: 80
-    targetPort: 8080</p>
+selector:
+app: my-app
+version: blue # Switch to 'green' for blue-green switch
+ports:</p>
+<ul>
+<li>port: 80
+  targetPort: 8080</li>
+</ul>
 <hr />
 <p>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app-blue
-  namespace: lab-module-10
-  labels:
-    app: my-app
-    version: blue
+name: my-app-blue
+namespace: lab-module-10
+labels:
+app: my-app
+version: blue
 spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: my-app
-      version: blue
-  template:
-    metadata:
-      labels:
-        app: my-app
-        version: blue
-    spec:
-      containers:
-      - name: app
-        image: my-app:v1.0.0
-        ports:
-        - containerPort: 8080</p>
+replicas: 3
+selector:
+matchLabels:
+app: my-app
+version: blue
+template:
+metadata:
+labels:
+app: my-app
+version: blue
+spec:
+containers: - name: app
+image: my-app:v1.0.0
+ports: - containerPort: 8080</p>
 <hr />
 <p>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app-green
-  namespace: lab-module-10
-  labels:
-    app: my-app
-    version: green
+name: my-app-green
+namespace: lab-module-10
+labels:
+app: my-app
+version: green
 spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: my-app
-      version: green
-  template:
-    metadata:
-      labels:
-        app: my-app
-        version: green
-    spec:
-      containers:
-      - name: app
-        image: my-app:v2.0.0  # New version
-        ports:
-        - containerPort: 8080</p>
+replicas: 3
+selector:
+matchLabels:
+app: my-app
+version: green
+template:
+metadata:
+labels:
+app: my-app
+version: green
+spec:
+containers: - name: app
+image: my-app:v2.0.0 # New version
+ports: - containerPort: 8080</p>
 <hr />
 <h1 id="labsmodule-10canary-deploymentyaml">labs/module-10/canary-deployment.yaml</h1>
 <h1 id="manual-canary-deployment-before-flagger">Manual canary deployment (before Flagger)</h1>
 <p>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app-stable
-  namespace: lab-module-10
+name: my-app-stable
+namespace: lab-module-10
 spec:
-  replicas: 9  # 90% of traffic
-  selector:
-    matchLabels:
-      app: my-app
-      track: stable
-  template:
-    metadata:
-      labels:
-        app: my-app
-        track: stable
-    spec:
-      containers:
-      - name: app
-        image: my-app:v1.0.0</p>
+replicas: 9 # 90% of traffic
+selector:
+matchLabels:
+app: my-app
+track: stable
+template:
+metadata:
+labels:
+app: my-app
+track: stable
+spec:
+containers: - name: app
+image: my-app:v1.0.0</p>
 <hr />
 <p>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app-canary
-  namespace: lab-module-10
+name: my-app-canary
+namespace: lab-module-10
 spec:
-  replicas: 1  # 10% of traffic
-  selector:
-    matchLabels:
-      app: my-app
-      track: canary
-  template:
-    metadata:
-      labels:
-        app: my-app
-        track: canary
-    spec:
-      containers:
-      - name: app
-        image: my-app:v2.0.0</p>
+replicas: 1 # 10% of traffic
+selector:
+matchLabels:
+app: my-app
+track: canary
+template:
+metadata:
+labels:
+app: my-app
+track: canary
+spec:
+containers: - name: app
+image: my-app:v2.0.0</p>
 <hr />
 <p>apiVersion: v1
 kind: Service
 metadata:
-  name: my-app
-  namespace: lab-module-10
+name: my-app
+namespace: lab-module-10
 spec:
-  selector:
-    app: my-app  # Routes to both stable and canary
-  ports:
-  - port: 80
-    targetPort: 8080</p>
+selector:
+app: my-app # Routes to both stable and canary
+ports:</p>
+<ul>
+<li>port: 80
+  targetPort: 8080</li>
+</ul>
 <hr />
 <h1 id="labsmodule-10rolling-updateyaml">labs/module-10/rolling-update.yaml</h1>
 <h1 id="rolling-update-strategy">Rolling update strategy</h1>
 <p>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app-rolling
-  namespace: lab-module-10
+name: my-app-rolling
+namespace: lab-module-10
 spec:
-  replicas: 5
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1        # 1 extra pod during update
-      maxUnavailable: 1  # 1 pod can be unavailable
-  selector:
-    matchLabels:
-      app: my-app
-  template:
-    metadata:
-      labels:
-        app: my-app
-    spec:
-      containers:
-      - name: app
-        image: my-app:v2.0.0
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5</p>
+replicas: 5
+strategy:
+type: RollingUpdate
+rollingUpdate:
+maxSurge: 1 # 1 extra pod during update
+maxUnavailable: 1 # 1 pod can be unavailable
+selector:
+matchLabels:
+app: my-app
+template:
+metadata:
+labels:
+app: my-app
+spec:
+containers: - name: app
+image: my-app:v2.0.0
+readinessProbe:
+httpGet:
+path: /health
+port: 8080
+initialDelaySeconds: 5
+periodSeconds: 5</p>
 <hr />
 <h1 id="_17">=============================================================================</h1>
 <h1 id="module-11-lab-3-progressive-delivery-with-flagger">MODULE 11 - LAB 3: Progressive Delivery with Flagger</h1>
@@ -5130,27 +5103,26 @@ spec:
 <p>apiVersion: flagger.app/v1beta1
 kind: Canary
 metadata:
-  name: my-app
-  namespace: lab-module-11
-spec:
-  # deployment reference
-  targetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: my-app</p>
-<p># HPA reference (optional)
-  autoscalerRef:
-    apiVersion: autoscaling/v2
-    kind: HorizontalPodAutoscaler
-    name: my-app</p>
-<p># service port
-  service:
-    port: 80
-    targetPort: 8080</p>
-<p># canary analysis
-  analysis:
-    # schedule interval
-    interval: 1m</p>
+name: my-app
+namespace: lab-module-11
+spec:</p>
+<h1 id="deployment-reference">deployment reference</h1>
+<p>targetRef:
+apiVersion: apps/v1
+kind: Deployment
+name: my-app</p>
+<h1 id="hpa-reference-optional">HPA reference (optional)</h1>
+<p>autoscalerRef:
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+name: my-app</p>
+<h1 id="service-port">service port</h1>
+<p>service:
+port: 80
+targetPort: 8080</p>
+<h1 id="canary-analysis">canary analysis</h1>
+<p>analysis: # schedule interval
+interval: 1m</p>
 <pre><code># max number of failed metric checks before rollback
 threshold: 5
 
@@ -5187,58 +5159,56 @@ webhooks:
 <p>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flagger-loadtester
-  namespace: lab-module-11
+name: flagger-loadtester
+namespace: lab-module-11
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: flagger-loadtester
-  template:
-    metadata:
-      labels:
-        app: flagger-loadtester
-    spec:
-      containers:
-      - name: loadtester
-        image: ghcr.io/fluxcd/flagger-loadtester:0.29.0
-        ports:
-        - name: http
-          containerPort: 8080
-        command:
-        - ./loadtester
-        - -port=8080
-        - -log-level=info
-        - -timeout=1h</p>
+replicas: 1
+selector:
+matchLabels:
+app: flagger-loadtester
+template:
+metadata:
+labels:
+app: flagger-loadtester
+spec:
+containers: - name: loadtester
+image: ghcr.io/fluxcd/flagger-loadtester:0.29.0
+ports: - name: http
+containerPort: 8080
+command: - ./loadtester - -port=8080 - -log-level=info - -timeout=1h</p>
 <hr />
 <p>apiVersion: v1
 kind: Service
 metadata:
-  name: flagger-loadtester
-  namespace: lab-module-11
+name: flagger-loadtester
+namespace: lab-module-11
 spec:
-  type: ClusterIP
-  selector:
-    app: flagger-loadtester
-  ports:
-  - name: http
-    port: 80
-    targetPort: http</p>
+type: ClusterIP
+selector:
+app: flagger-loadtester
+ports:</p>
+<ul>
+<li>name: http
+  port: 80
+  targetPort: http</li>
+</ul>
 <hr />
 <h1 id="labsmodule-11prometheus-metricsyaml">labs/module-11/prometheus-metrics.yaml</h1>
 <h1 id="servicemonitor-for-prometheus-metrics">ServiceMonitor for Prometheus metrics</h1>
 <p>apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: my-app
-  namespace: lab-module-11
+name: my-app
+namespace: lab-module-11
 spec:
-  selector:
-    matchLabels:
-      app: my-app
-  endpoints:
-  - port: http-metrics
-    interval: 15s</p>
+selector:
+matchLabels:
+app: my-app
+endpoints:</p>
+<ul>
+<li>port: http-metrics
+  interval: 15s</li>
+</ul>
 <hr />
 <h1 id="_19">=============================================================================</h1>
 <h1 id="module-12-lab-4-rollback-incident-response">MODULE 12 - LAB 4: Rollback &amp; Incident Response</h1>
@@ -5250,46 +5220,43 @@ spec:
 <p>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: broken-app
-  namespace: lab-module-12
-  labels:
-    app: broken-app
+name: broken-app
+namespace: lab-module-12
+labels:
+app: broken-app
 spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: broken-app
-  template:
-    metadata:
-      labels:
-        app: broken-app
-    spec:
-      containers:
-      - name: app
-        image: nginx:latest
-        ports:
-        - containerPort: 80
-        env:
-        - name: CRASH_ON_START
-          value: "true"  # This will cause the app to crash
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          failureThreshold: 3</p>
+replicas: 3
+selector:
+matchLabels:
+app: broken-app
+template:
+metadata:
+labels:
+app: broken-app
+spec:
+containers: - name: app
+image: nginx:latest
+ports: - containerPort: 80
+env: - name: CRASH_ON_START
+value: "true" # This will cause the app to crash
+livenessProbe:
+httpGet:
+path: /health
+port: 8080
+initialDelaySeconds: 5
+periodSeconds: 5
+failureThreshold: 3</p>
 <hr />
 <h1 id="labsmodule-12rollback-scriptyaml">labs/module-12/rollback-script.yaml</h1>
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: rollback-scripts
-  namespace: lab-module-12
+name: rollback-scripts
+namespace: lab-module-12
 data:
-  rollback-deployment.sh: |
-    #!/bin/bash
-    set -e</p>
+rollback-deployment.sh: |</p>
+<h1 id="binbash_1">!/bin/bash</h1>
+<p>set -e</p>
 <pre><code>DEPLOYMENT_NAME=$1
 NAMESPACE=${2:-default}
 
@@ -5310,9 +5277,9 @@ echo "Rollback completed successfully"
 # Verify pods are running
 kubectl get pods -n $NAMESPACE -l app=$DEPLOYMENT_NAME
 </code></pre>
-<p>rollback-argocd.sh: |
-    #!/bin/bash
-    set -e</p>
+<p>rollback-argocd.sh: |</p>
+<h1 id="binbash_2">!/bin/bash</h1>
+<p>set -e</p>
 <pre><code>APP_NAME=$1
 
 echo "Rolling back ArgoCD application: $APP_NAME"
@@ -5338,11 +5305,10 @@ echo "ArgoCD rollback completed"
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: incident-playbook
-  namespace: lab-module-12
+name: incident-playbook
+namespace: lab-module-12
 data:
-  playbook.md: |
-    # Incident Response Playbook</p>
+playbook.md: | # Incident Response Playbook</p>
 <pre><code>## Phase 1: Detection (0-2 minutes)
 - [ ] Alert received
 - [ ] Acknowledge incident
@@ -5379,46 +5345,54 @@ data:
 <p>apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: app-alerts
-  namespace: lab-module-12
+name: app-alerts
+namespace: lab-module-12
 spec:
-  groups:
-  - name: app-health
-    interval: 30s
-    rules:
-    - alert: HighErrorRate
-      expr: |
-        (
-          rate(http_requests_total{status=~"5.."}[5m])
-          /
-          rate(http_requests_total[5m])
-        ) &gt; 0.05
-      for: 2m
-      labels:
-        severity: critical
-      annotations:
-        summary: "High error rate detected"
-        description: "Error rate is {{ $value | humanizePercentage }}"</p>
-<pre><code>- alert: PodCrashLooping
-  expr: |
+groups:</p>
+<ul>
+<li>
+<p>name: app-health
+  interval: 30s
+  rules:</p>
+</li>
+<li>
+<p>alert: HighErrorRate
+    expr: |
+    (
+    rate(http_requests_total{status=~"5.."}[5m])
+    /
+    rate(http_requests_total[5m])
+    ) &gt; 0.05
+    for: 2m
+    labels:
+    severity: critical
+    annotations:
+    summary: "High error rate detected"
+    description: "Error rate is {{ $value | humanizePercentage }}"</p>
+</li>
+<li>
+<p>alert: PodCrashLooping
+    expr: |
     rate(kube_pod_container_status_restarts_total[15m]) &gt; 0
-  for: 5m
-  labels:
+    for: 5m
+    labels:
     severity: warning
-  annotations:
+    annotations:
     summary: "Pod is crash looping"
-    description: "Pod {{ $labels.pod }} is restarting frequently"
-
-- alert: DeploymentReplicasMismatch
-  expr: |
+    description: "Pod {{ $labels.pod }} is restarting frequently"</p>
+</li>
+<li>
+<p>alert: DeploymentReplicasMismatch
+    expr: |
     kube_deployment_spec_replicas != kube_deployment_status_replicas_available
-  for: 10m
-  labels:
+    for: 10m
+    labels:
     severity: warning
-  annotations:
+    annotations:
     summary: "Deployment replicas mismatch"
-    description: "Deployment {{ $labels.deployment }} has mismatched replicas"
-</code></pre>
+    description: "Deployment {{ $labels.deployment }} has mismatched replicas"</p>
+</li>
+</ul>
 <hr />
 <h1 id="_21">=============================================================================</h1>
 <h1 id="shared-green-belt-resources">SHARED GREEN BELT RESOURCES</h1>
@@ -5430,159 +5404,150 @@ spec:
 <p>apiVersion: v1
 kind: Namespace
 metadata:
-  name: flagger-system</p>
+name: flagger-system</p>
 <hr />
 <p>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flagger
-  namespace: flagger-system
+name: flagger
+namespace: flagger-system
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: flagger
-  template:
-    metadata:
-      labels:
-        app: flagger
-    spec:
-      serviceAccountName: flagger
-      containers:
-      - name: flagger
-        image: ghcr.io/fluxcd/flagger:1.32.0
-        ports:
-        - name: http
-          containerPort: 8080
-        command:
-        - ./flagger
-        - -mesh-provider=kubernetes
-        - -metrics-server=http://prometheus.monitoring:9090</p>
+replicas: 1
+selector:
+matchLabels:
+app: flagger
+template:
+metadata:
+labels:
+app: flagger
+spec:
+serviceAccountName: flagger
+containers: - name: flagger
+image: ghcr.io/fluxcd/flagger:1.32.0
+ports: - name: http
+containerPort: 8080
+command: - ./flagger - -mesh-provider=kubernetes - -metrics-server=http://prometheus.monitoring:9090</p>
 <hr />
 <h1 id="labsgreen-belt-sharedargocd-configyaml">labs/green-belt-shared/argocd-config.yaml</h1>
 <h1 id="argocd-configuration-for-labs">ArgoCD configuration for labs</h1>
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: argocd-cm
-  namespace: argocd
-data:
-  # Enable anonymous access for lab environment
-  users.anonymous.enabled: "true"</p>
-<p># Increase timeout for sync operations
-  timeout.reconciliation: "300s"</p>
-<p># Resource customizations
-  resource.customizations: |
-    apps/Deployment:
-      health.lua: |
-        hs = {}
-        if obj.status ~= nil then
-          if obj.status.updatedReplicas == obj.spec.replicas then
-            hs.status = "Healthy"
-            hs.message = "Deployment is healthy"
-            return hs
-          end
-        end
-        hs.status = "Progressing"
-        hs.message = "Waiting for deployment"
-        return hs</p>
+name: argocd-cm
+namespace: argocd
+data:</p>
+<h1 id="enable-anonymous-access-for-lab-environment">Enable anonymous access for lab environment</h1>
+<p>users.anonymous.enabled: "true"</p>
+<h1 id="increase-timeout-for-sync-operations">Increase timeout for sync operations</h1>
+<p>timeout.reconciliation: "300s"</p>
+<h1 id="resource-customizations">Resource customizations</h1>
+<p>resource.customizations: |
+apps/Deployment:
+health.lua: |
+hs = {}
+if obj.status ~= nil then
+if obj.status.updatedReplicas == obj.spec.replicas then
+hs.status = "Healthy"
+hs.message = "Deployment is healthy"
+return hs
+end
+end
+hs.status = "Progressing"
+hs.message = "Waiting for deployment"
+return hs</p>
 <hr />
 <h1 id="labsgreen-belt-sharedlab-app-baseyaml">labs/green-belt-shared/lab-app-base.yaml</h1>
 <h1 id="base-application-used-across-multiple-labs">Base application used across multiple labs</h1>
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: app-config
+name: app-config
 data:
-  config.json: |
-    {
-      "environment": "lab",
-      "logging": {
-        "level": "info",
-        "format": "json"
-      },
-      "metrics": {
-        "enabled": true,
-        "port": 8080
-      },
-      "health": {
-        "endpoint": "/health",
-        "liveness": "/health/live",
-        "readiness": "/health/ready"
-      }
-    }</p>
+config.json: |
+{
+"environment": "lab",
+"logging": {
+"level": "info",
+"format": "json"
+},
+"metrics": {
+"enabled": true,
+"port": 8080
+},
+"health": {
+"endpoint": "/health",
+"liveness": "/health/live",
+"readiness": "/health/ready"
+}
+}</p>
 <hr />
 <p>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sample-app
+name: sample-app
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: sample-app
-  template:
-    metadata:
-      labels:
-        app: sample-app
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "8080"
-        prometheus.io/path: "/metrics"
-    spec:
-      containers:
-      - name: app
-        image: ghcr.io/fawkes/sample-app:v1.0.0
-        ports:
-        - name: http
-          containerPort: 8080
-        - name: metrics
-          containerPort: 9090
-        env:
-        - name: CONFIG_PATH
-          value: /config/config.json
-        volumeMounts:
-        - name: config
-          mountPath: /config
-        livenessProbe:
-          httpGet:
-            path: /health/live
-            port: 8080
-          initialDelaySeconds: 10
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health/ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "500m"
-      volumes:
-      - name: config
-        configMap:
-          name: app-config</p>
+replicas: 2
+selector:
+matchLabels:
+app: sample-app
+template:
+metadata:
+labels:
+app: sample-app
+annotations:
+prometheus.io/scrape: "true"
+prometheus.io/port: "8080"
+prometheus.io/path: "/metrics"
+spec:
+containers: - name: app
+image: ghcr.io/fawkes/sample-app:v1.0.0
+ports: - name: http
+containerPort: 8080 - name: metrics
+containerPort: 9090
+env: - name: CONFIG_PATH
+value: /config/config.json
+volumeMounts: - name: config
+mountPath: /config
+livenessProbe:
+httpGet:
+path: /health/live
+port: 8080
+initialDelaySeconds: 10
+periodSeconds: 10
+readinessProbe:
+httpGet:
+path: /health/ready
+port: 8080
+initialDelaySeconds: 5
+periodSeconds: 5
+resources:
+requests:
+memory: "128Mi"
+cpu: "100m"
+limits:
+memory: "256Mi"
+cpu: "500m"
+volumes: - name: config
+configMap:
+name: app-config</p>
 <hr />
 <p>apiVersion: v1
 kind: Service
 metadata:
-  name: sample-app
+name: sample-app
 spec:
-  type: ClusterIP
-  selector:
-    app: sample-app
-  ports:
-  - name: http
-    port: 80
-    targetPort: http
-  - name: metrics
-    port: 9090
-    targetPort: metrics</p>
+type: ClusterIP
+selector:
+app: sample-app
+ports:</p>
+<ul>
+<li>name: http
+  port: 80
+  targetPort: http</li>
+<li>name: metrics
+  port: 9090
+  targetPort: metrics</li>
+</ul>
 <hr />
 <h1 id="_23">=============================================================================</h1>
 <h1 id="lab-setup-automation">LAB SETUP AUTOMATION</h1>
@@ -5592,13 +5557,12 @@ spec:
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: lab-setup-scripts
-  namespace: fawkes-system
+name: lab-setup-scripts
+namespace: fawkes-system
 data:
-  setup-module.sh: |
-    #!/bin/bash
-    # Automated lab setup script
-    set -e</p>
+setup-module.sh: |</p>
+<h1 id="binbash-automated-lab-setup-script">!/bin/bash # Automated lab setup script</h1>
+<p>set -e</p>
 <pre><code>MODULE=$1
 STUDENT_EMAIL=$2
 
@@ -5636,10 +5600,9 @@ fi
 echo "Lab setup complete!"
 echo "Access with: kubectl config set-context --current --namespace=$NAMESPACE"
 </code></pre>
-<p>cleanup-lab.sh: |
-    #!/bin/bash
-    # Cleanup lab environment
-    set -e</p>
+<p>cleanup-lab.sh: |</p>
+<h1 id="binbash-cleanup-lab-environment">!/bin/bash # Cleanup lab environment</h1>
+<p>set -e</p>
 <pre><code>MODULE=$1
 STUDENT_EMAIL=$2
 

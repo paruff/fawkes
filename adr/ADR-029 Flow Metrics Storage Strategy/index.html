@@ -5114,7 +5114,7 @@
   <a href="#key-decisions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Decisions:
+        Key Decisions
       
     </span>
   </a>
@@ -5125,7 +5125,7 @@
   <a href="#trade-offs-accepted" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Trade-offs Accepted:
+        Trade-offs Accepted
       
     </span>
   </a>
@@ -5136,7 +5136,7 @@
   <a href="#future-considerations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Future Considerations:
+        Future Considerations
       
     </span>
   </a>
@@ -5147,7 +5147,7 @@
   <a href="#success-metrics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Success Metrics:
+        Success Metrics
       
     </span>
   </a>
@@ -6754,7 +6754,7 @@ python<span class="w"> </span>scripts/validate_runbooks.py
 <hr />
 <h2 id="conclusion">Conclusion</h2>
 <p>This ADR documents the decision to use a <strong>hybrid storage architecture</strong> combining <strong>PostgreSQL for relational data</strong> and <strong>Prometheus for time-series metrics</strong>, with <strong>S3 for archival storage</strong>.</p>
-<h3 id="key-decisions">Key Decisions:</h3>
+<h3 id="key-decisions">Key Decisions</h3>
 <ol>
 <li><strong>PostgreSQL</strong> as primary storage for flow items and detailed event data</li>
 <li><strong>Prometheus</strong> for real-time time-series metrics and alerting</li>
@@ -6763,20 +6763,20 @@ python<span class="w"> </span>scripts/validate_runbooks.py
 <li><strong>Partitioning</strong> for webhook_events table</li>
 <li><strong>90-day retention</strong> in hot storage, 1-year in warm, 3+ years in cold</li>
 </ol>
-<h3 id="trade-offs-accepted">Trade-offs Accepted:</h3>
+<h3 id="trade-offs-accepted">Trade-offs Accepted</h3>
 <ul>
 <li>Operational complexity of managing two storage systems (PostgreSQL + Prometheus)</li>
 <li>Manual coordination needed between systems (no automatic sync)</li>
 <li>Prometheus retention limited (15 days) - acceptable for MVP</li>
 </ul>
-<h3 id="future-considerations">Future Considerations:</h3>
+<h3 id="future-considerations">Future Considerations</h3>
 <ul>
 <li><strong>TimescaleDB</strong> if consolidation desired</li>
 <li><strong>ClickHouse</strong> if scale reaches 100M+ flow items</li>
 <li><strong>Thanos</strong> if Prometheus retention becomes issue</li>
 <li><strong>Aurora PostgreSQL</strong> if RDS scaling limits reached</li>
 </ul>
-<h3 id="success-metrics">Success Metrics:</h3>
+<h3 id="success-metrics">Success Metrics</h3>
 <ul>
 <li>Query latency P95 &lt; 500ms ✅</li>
 <li>Write throughput &gt; 100 events/sec ✅</li>

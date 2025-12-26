@@ -6144,11 +6144,13 @@
 <strong>Module</strong>: 1 of 4 (Yellow Belt)
 <strong>Duration</strong>: 60 minutes
 <strong>Difficulty</strong>: Intermediate
-<strong>Prerequisites</strong>:
-- White Belt certification complete
-- Basic understanding of Git workflows
-- Familiarity with build tools (Maven, npm, etc.)
-- Command line comfort</p>
+<strong>Prerequisites</strong>:</p>
+<ul>
+<li>White Belt certification complete</li>
+<li>Basic understanding of Git workflows</li>
+<li>Familiarity with build tools (Maven, npm, etc.)</li>
+<li>Command line comfort</li>
+</ul>
 <hr />
 <h2 id="learning-objectives">📚 Learning Objectives</h2>
 <p>By the end of this module, you will:</p>
@@ -6161,14 +6163,16 @@
 <li>✅ Understand how CI improves DORA metrics</li>
 <li>✅ Troubleshoot common CI pipeline failures</li>
 </ol>
-<p><strong>DORA Capabilities Addressed</strong>:
-- ✓ CD3: Implement continuous integration
-- ✓ CD1: Use version control for all production artifacts
-- ✓ CD5: Trunk-based development methods</p>
+<p><strong>DORA Capabilities Addressed</strong>:</p>
+<ul>
+<li>✓ CD3: Implement continuous integration</li>
+<li>✓ CD1: Use version control for all production artifacts</li>
+<li>✓ CD5: Trunk-based development methods</li>
+</ul>
 <hr />
 <h2 id="part-1-what-is-continuous-integration">📖 Part 1: What is Continuous Integration?</h2>
 <h3 id="the-problem-integration-hell">The Problem: Integration Hell</h3>
-<p><strong>Traditional development workflow</strong>:
+<p><strong>Traditional development workflow</strong>:</p>
 <div class="highlight"><pre><span></span><code>Developer A writes code for 2 weeks → Commits
 Developer B writes code for 2 weeks → Commits
 Developer C writes code for 2 weeks → Commits
@@ -6179,12 +6183,14 @@ Developer C writes code for 2 weeks → Commits
       Incompatible changes, missing dependencies
                 ↓
         Weekend fixing integration issues
-</code></pre></div></p>
-<p><strong>Result</strong>:
-- Integration becomes painful and risky
-- Feedback delayed by weeks
-- Bugs found late, expensive to fix
-- Releases delayed, stress increases</p>
+</code></pre></div>
+<p><strong>Result</strong>:</p>
+<ul>
+<li>Integration becomes painful and risky</li>
+<li>Feedback delayed by weeks</li>
+<li>Bugs found late, expensive to fix</li>
+<li>Releases delayed, stress increases</li>
+</ul>
 <h3 id="continuous-integration-solution">Continuous Integration Solution</h3>
 <blockquote>
 <p><strong>"Integrate early, integrate often"</strong></p>
@@ -6201,8 +6207,12 @@ Developer C writes code for 2 weeks → Commits
 </code></pre></div>
 <h3 id="core-ci-principles">Core CI Principles</h3>
 <ol>
-<li><strong>Maintain a Single Source Repository</strong></li>
-<li>All code in version control</li>
+<li>
+<p><strong>Maintain a Single Source Repository</strong></p>
+</li>
+<li>
+<p>All code in version control</p>
+</li>
 <li>One repo truth source</li>
 <li>
 <p>Branches short-lived (&lt;1 day)</p>
@@ -6210,7 +6220,9 @@ Developer C writes code for 2 weeks → Commits
 <li>
 <p><strong>Automate the Build</strong></p>
 </li>
-<li>One command builds everything</li>
+<li>
+<p>One command builds everything</p>
+</li>
 <li>No manual steps</li>
 <li>
 <p>Repeatable and reliable</p>
@@ -6218,7 +6230,9 @@ Developer C writes code for 2 weeks → Commits
 <li>
 <p><strong>Make Your Build Self-Testing</strong></p>
 </li>
-<li>Automated unit tests</li>
+<li>
+<p>Automated unit tests</p>
+</li>
 <li>Integration tests</li>
 <li>
 <p>Build fails if tests fail</p>
@@ -6226,7 +6240,9 @@ Developer C writes code for 2 weeks → Commits
 <li>
 <p><strong>Everyone Commits to Mainline Every Day</strong></p>
 </li>
-<li>Small, frequent commits</li>
+<li>
+<p>Small, frequent commits</p>
+</li>
 <li>Merge conflicts minimized</li>
 <li>
 <p>Continuous integration (the name!)</p>
@@ -6234,7 +6250,9 @@ Developer C writes code for 2 weeks → Commits
 <li>
 <p><strong>Every Commit Should Build on Integration Machine</strong></p>
 </li>
-<li>Not "works on my machine"</li>
+<li>
+<p>Not "works on my machine"</p>
+</li>
 <li>Clean environment every time</li>
 <li>
 <p>Same as production</p>
@@ -6242,7 +6260,9 @@ Developer C writes code for 2 weeks → Commits
 <li>
 <p><strong>Keep the Build Fast</strong></p>
 </li>
-<li>Target: &lt;10 minutes</li>
+<li>
+<p>Target: &lt;10 minutes</p>
+</li>
 <li>Developers wait for feedback</li>
 <li>
 <p>Slow builds = ignored builds</p>
@@ -6250,7 +6270,9 @@ Developer C writes code for 2 weeks → Commits
 <li>
 <p><strong>Test in Clone of Production Environment</strong></p>
 </li>
-<li>Same OS, same dependencies</li>
+<li>
+<p>Same OS, same dependencies</p>
+</li>
 <li>Containers/VMs for consistency</li>
 <li>
 <p>"Shift left" on environment issues</p>
@@ -6258,7 +6280,9 @@ Developer C writes code for 2 weeks → Commits
 <li>
 <p><strong>Make it Easy to Get Latest Deliverables</strong></p>
 </li>
-<li>Artifacts automatically published</li>
+<li>
+<p>Artifacts automatically published</p>
+</li>
 <li>Always available for testing</li>
 <li>
 <p>Clear versioning</p>
@@ -6266,7 +6290,9 @@ Developer C writes code for 2 weeks → Commits
 <li>
 <p><strong>Everyone Can See What's Happening</strong></p>
 </li>
-<li>Build status visible to all</li>
+<li>
+<p>Build status visible to all</p>
+</li>
 <li>Radiator dashboards</li>
 <li>
 <p>Notifications on failures</p>
@@ -6317,12 +6343,14 @@ Developer C writes code for 2 weeks → Commits
 <h2 id="part-2-jenkins-architecture">🏗️ Part 2: Jenkins Architecture</h2>
 <h3 id="what-is-jenkins">What is Jenkins?</h3>
 <p>Jenkins is an open-source automation server that enables CI/CD pipelines.</p>
-<p><strong>Key Features</strong>:
-- Pipeline as Code (Jenkinsfile)
-- 1,800+ plugins for integration
-- Distributed builds (controller + agents)
-- Kubernetes-native (Fawkes uses Kubernetes Plugin)
-- Web UI for monitoring and management</p>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Pipeline as Code (Jenkinsfile)</li>
+<li>1,800+ plugins for integration</li>
+<li>Distributed builds (controller + agents)</li>
+<li>Kubernetes-native (Fawkes uses Kubernetes Plugin)</li>
+<li>Web UI for monitoring and management</li>
+</ul>
 <h3 id="jenkins-architecture-in-fawkes">Jenkins Architecture in Fawkes</h3>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────┐
 │           Fawkes Platform (Kubernetes)              │
@@ -6361,34 +6389,42 @@ Developer C writes code for 2 weeks → Commits
 └─────────────────────────────────────────────────────┘
 </code></pre></div>
 <h3 id="jenkins-controller-vs-agents">Jenkins Controller vs. Agents</h3>
-<p><strong>Controller (Master)</strong>:
-- Orchestrates builds
-- Manages plugins and configuration
-- Serves Web UI
-- Should NOT run builds (security + resource management)</p>
-<p><strong>Agents (Slaves/Pods)</strong>:
-- Execute actual build work
-- Ephemeral in Kubernetes
-- Isolated from each other
-- Deleted after build completes</p>
+<p><strong>Controller (Master)</strong>:</p>
+<ul>
+<li>Orchestrates builds</li>
+<li>Manages plugins and configuration</li>
+<li>Serves Web UI</li>
+<li>Should NOT run builds (security + resource management)</li>
+</ul>
+<p><strong>Agents (Slaves/Pods)</strong>:</p>
+<ul>
+<li>Execute actual build work</li>
+<li>Ephemeral in Kubernetes</li>
+<li>Isolated from each other</li>
+<li>Deleted after build completes</li>
+</ul>
 <p><strong>Fawkes Advantage</strong>: Using Kubernetes Plugin, agents are dynamic pods. No pre-provisioned VMs needed!</p>
 <h3 id="pipeline-as-code-jenkinsfile">Pipeline as Code: Jenkinsfile</h3>
 <p>Modern Jenkins uses <strong>declarative pipelines</strong> defined in <code>Jenkinsfile</code>:</p>
-<p><strong>Benefits</strong>:
-- ✅ Version controlled with code
-- ✅ Code review for pipeline changes
-- ✅ Consistent across projects
-- ✅ Auditable (Git history)
-- ✅ Portable across Jenkins instances</p>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>✅ Version controlled with code</li>
+<li>✅ Code review for pipeline changes</li>
+<li>✅ Consistent across projects</li>
+<li>✅ Auditable (Git history)</li>
+<li>✅ Portable across Jenkins instances</li>
+</ul>
 <hr />
 <h2 id="part-3-hands-on-lab-your-first-pipeline">🛠️ Part 3: Hands-On Lab - Your First Pipeline</h2>
 <h3 id="lab-scenario">Lab Scenario</h3>
-<p>You'll create a CI pipeline for a sample Java Spring Boot application that:
-1. Checks out code from Git
-2. Compiles the application
-3. Runs unit tests
-4. Packages as Docker image
-5. Pushes to Harbor registry</p>
+<p>You'll create a CI pipeline for a sample Java Spring Boot application that:</p>
+<ol>
+<li>Checks out code from Git</li>
+<li>Compiles the application</li>
+<li>Runs unit tests</li>
+<li>Packages as Docker image</li>
+<li>Pushes to Harbor registry</li>
+</ol>
 <h3 id="step-1-access-your-lab-environment">Step 1: Access Your Lab Environment</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Access Jenkins in Fawkes platform</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>svc/jenkins<span class="w"> </span><span class="m">8080</span>:8080
@@ -6409,10 +6445,12 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 <li>Type: "Pipeline"</li>
 <li>Click "OK"</li>
 </ol>
-<p><strong>Pipeline Configuration</strong>:
-- Scroll to "Pipeline" section
-- Definition: "Pipeline script"
-- Paste the following script:</p>
+<p><strong>Pipeline Configuration</strong>:</p>
+<ul>
+<li>Scroll to "Pipeline" section</li>
+<li>Definition: "Pipeline script"</li>
+<li>Paste the following script:</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span>
@@ -6493,11 +6531,13 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 <li>Click "Build Now"</li>
 </ol>
 <h3 id="step-3-watch-your-pipeline-execute">Step 3: Watch Your Pipeline Execute</h3>
-<p><strong>In the Jenkins UI</strong>:
-- Click on the build number (e.g., #1)
-- Click "Console Output" to see logs in real-time
-- Watch as stages progress: Checkout → Build → Test → Package</p>
-<p><strong>Expected Output</strong>:
+<p><strong>In the Jenkins UI</strong>:</p>
+<ul>
+<li>Click on the build number (e.g., #1)</li>
+<li>Click "Console Output" to see logs in real-time</li>
+<li>Watch as stages progress: Checkout → Build → Test → Package</li>
+</ul>
+<p><strong>Expected Output</strong>:</p>
 <div class="highlight"><pre><span></span><code>Started by user admin
 Running in Durability level: MAX_SURVIVABILITY
 [Pipeline] Start of Pipeline
@@ -6527,11 +6567,11 @@ Building application...
 ...
 [INFO] BUILD SUCCESS
 ...
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="step-4-understanding-the-jenkinsfile">Step 4: Understanding the Jenkinsfile</h3>
 <p>Let's break down each section:</p>
 <h4 id="agent-definition">Agent Definition</h4>
-<p><div class="highlight"><pre><span></span><code><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
+<div class="highlight"><pre><span></span><code><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">yaml</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">        ...</span>
@@ -6539,43 +6579,51 @@ Building application...
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-- Tells Jenkins to run this pipeline on a Kubernetes pod
-- Defines container images needed (Maven, Docker)
-- Containers are ephemeral - created for this build, deleted after</p>
+<ul>
+<li>Tells Jenkins to run this pipeline on a Kubernetes pod</li>
+<li>Defines container images needed (Maven, Docker)</li>
+<li>Containers are ephemeral - created for this build, deleted after</li>
+</ul>
 <h4 id="stages">Stages</h4>
-<p><div class="highlight"><pre><span></span><code><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<div class="highlight"><pre><span></span><code><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Checkout&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
 <span class="w">    </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
 <span class="w">    </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
 <span class="w">    </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Package&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-- Sequential steps in your pipeline
-- Each stage appears as a column in Jenkins UI
-- Stages fail fast - if one fails, subsequent stages don't run</p>
+<ul>
+<li>Sequential steps in your pipeline</li>
+<li>Each stage appears as a column in Jenkins UI</li>
+<li>Stages fail fast - if one fails, subsequent stages don't run</li>
+</ul>
 <h4 id="steps">Steps</h4>
-<p><div class="highlight"><pre><span></span><code><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<div class="highlight"><pre><span></span><code><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn clean compile&#39;</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-- Actual commands executed
-- <code>container('maven')</code> - runs inside Maven container
-- <code>sh</code> - executes shell command
-- Can use <code>echo</code>, <code>git</code>, custom plugins</p>
+<ul>
+<li>Actual commands executed</li>
+<li><code>container('maven')</code> - runs inside Maven container</li>
+<li><code>sh</code> - executes shell command</li>
+<li>Can use <code>echo</code>, <code>git</code>, custom plugins</li>
+</ul>
 <h4 id="post-actions">Post Actions</h4>
-<p><div class="highlight"><pre><span></span><code><span class="n">post</span><span class="w"> </span><span class="o">{</span>
+<div class="highlight"><pre><span></span><code><span class="n">post</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">success</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
 <span class="w">    </span><span class="n">failure</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
 <span class="w">    </span><span class="n">always</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-- Runs after all stages complete
-- <code>success</code> - only if pipeline succeeded
-- <code>failure</code> - only if pipeline failed
-- <code>always</code> - regardless of outcome
-- Perfect for notifications, cleanup</p>
+<ul>
+<li>Runs after all stages complete</li>
+<li><code>success</code> - only if pipeline succeeded</li>
+<li><code>failure</code> - only if pipeline failed</li>
+<li><code>always</code> - regardless of outcome</li>
+<li>Perfect for notifications, cleanup</li>
+</ul>
 <hr />
 <h2 id="part-4-understanding-build-stages">📊 Part 4: Understanding Build Stages</h2>
 <h3 id="standard-ci-pipeline-stages">Standard CI Pipeline Stages</h3>
@@ -6594,10 +6642,12 @@ Building application...
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>Best Practices</strong>:
-- Always specify branch explicitly
-- Use shallow clone for speed: <code>git clone --depth 1</code>
-- Store credentials in Jenkins Credentials Store (never in Jenkinsfile!)</p>
+<p><strong>Best Practices</strong>:</p>
+<ul>
+<li>Always specify branch explicitly</li>
+<li>Use shallow clone for speed: <code>git clone --depth 1</code></li>
+<li>Store credentials in Jenkins Credentials Store (never in Jenkinsfile!)</li>
+</ul>
 <h3 id="stage-2-buildcompile">Stage 2: Build/Compile</h3>
 <p><strong>Purpose</strong>: Compile source code, resolve dependencies</p>
 <div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
@@ -6613,15 +6663,19 @@ Building application...
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>Key Flags</strong>:
-- <code>-DskipTests</code> - Skip tests during compile (run separately)
-- <code>-B</code> / <code>--batch-mode</code> - Non-interactive, better for CI logs
-- <code>clean</code> - Remove previous build artifacts</p>
-<p><strong>Build Duration Targets</strong>:
-- Small projects: &lt;2 minutes
-- Medium projects: 2-5 minutes
-- Large projects: 5-10 minutes
-- If &gt;10 minutes, optimize (covered in Module 6)</p>
+<p><strong>Key Flags</strong>:</p>
+<ul>
+<li><code>-DskipTests</code> - Skip tests during compile (run separately)</li>
+<li><code>-B</code> / <code>--batch-mode</code> - Non-interactive, better for CI logs</li>
+<li><code>clean</code> - Remove previous build artifacts</li>
+</ul>
+<p><strong>Build Duration Targets</strong>:</p>
+<ul>
+<li>Small projects: &lt;2 minutes</li>
+<li>Medium projects: 2-5 minutes</li>
+<li>Large projects: 5-10 minutes</li>
+<li>If &gt;10 minutes, optimize (covered in Module 6)</li>
+</ul>
 <h3 id="stage-3-test">Stage 3: Test</h3>
 <p><strong>Purpose</strong>: Run automated tests, verify functionality</p>
 <div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
@@ -6637,15 +6691,19 @@ Building application...
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>Test Types in CI</strong>:
-- <strong>Unit Tests</strong>: Fast (&lt;1s each), no external dependencies
-- <strong>Integration Tests</strong>: Slower (1-10s), may use database/APIs
-- <strong>Contract Tests</strong>: Verify API contracts between services</p>
-<p><strong>Best Practices</strong>:
-- Run unit tests in every build (fast feedback)
-- Run integration tests in parallel or on schedule
-- Fail build if tests fail (quality gate)
-- Publish test reports with <code>junit</code> step</p>
+<p><strong>Test Types in CI</strong>:</p>
+<ul>
+<li><strong>Unit Tests</strong>: Fast (&lt;1s each), no external dependencies</li>
+<li><strong>Integration Tests</strong>: Slower (1-10s), may use database/APIs</li>
+<li><strong>Contract Tests</strong>: Verify API contracts between services</li>
+</ul>
+<p><strong>Best Practices</strong>:</p>
+<ul>
+<li>Run unit tests in every build (fast feedback)</li>
+<li>Run integration tests in parallel or on schedule</li>
+<li>Fail build if tests fail (quality gate)</li>
+<li>Publish test reports with <code>junit</code> step</li>
+</ul>
 <h3 id="stage-4-package">Stage 4: Package</h3>
 <p><strong>Purpose</strong>: Create deployable artifact (JAR, Docker image, etc.)</p>
 <div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Package&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
@@ -6662,10 +6720,12 @@ Building application...
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>Artifact Versioning</strong>:
-- Use <code>${BUILD_NUMBER}</code> - Jenkins build number (e.g., <code>myapp:142</code>)
-- Use <code>${GIT_COMMIT}</code> - Git commit SHA (e.g., <code>myapp:abc1234</code>)
-- Use semantic versioning for releases (e.g., <code>myapp:1.2.3</code>)</p>
+<p><strong>Artifact Versioning</strong>:</p>
+<ul>
+<li>Use <code>${BUILD_NUMBER}</code> - Jenkins build number (e.g., <code>myapp:142</code>)</li>
+<li>Use <code>${GIT_COMMIT}</code> - Git commit SHA (e.g., <code>myapp:abc1234</code>)</li>
+<li>Use semantic versioning for releases (e.g., <code>myapp:1.2.3</code>)</li>
+</ul>
 <h3 id="stage-5-publish-optional-for-module-5">Stage 5: Publish (Optional for Module 5)</h3>
 <p><strong>Purpose</strong>: Push artifacts to registry</p>
 <div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Publish&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
@@ -6684,15 +6744,17 @@ Building application...
 <h2 id="part-5-error-handling-debugging">🔍 Part 5: Error Handling &amp; Debugging</h2>
 <h3 id="common-pipeline-failures">Common Pipeline Failures</h3>
 <h4 id="issue-1-checkout-fails">Issue 1: Checkout Fails</h4>
-<p><strong>Error</strong>:
+<p><strong>Error</strong>:</p>
 <div class="highlight"><pre><span></span><code>ERROR: Error cloning remote repo &#39;origin&#39;
 hudson.plugins.git.GitException: Command &quot;git fetch&quot; returned status code 128
-</code></pre></div></p>
-<p><strong>Causes</strong>:
-- Repository URL incorrect
-- No access credentials configured
-- Network issues</p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Causes</strong>:</p>
+<ul>
+<li>Repository URL incorrect</li>
+<li>No access credentials configured</li>
+<li>Network issues</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Option 1: Use credentials</span>
 <span class="n">git</span><span class="w"> </span><span class="nl">branch:</span><span class="w"> </span><span class="s1">&#39;main&#39;</span><span class="o">,</span>
 <span class="w">    </span><span class="nl">url:</span><span class="w"> </span><span class="s1">&#39;https://github.com/org/private-repo.git&#39;</span><span class="o">,</span>
@@ -6705,18 +6767,20 @@ hudson.plugins.git.GitException: Command &quot;git fetch&quot; returned status c
 
 <span class="c1">// Option 3: Check connectivity</span>
 <span class="n">sh</span><span class="w"> </span><span class="s1">&#39;git ls-remote https://github.com/org/repo.git HEAD&#39;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-2-build-fails">Issue 2: Build Fails</h4>
-<p><strong>Error</strong>:
+<p><strong>Error</strong>:</p>
 <div class="highlight"><pre><span></span><code>[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.1:compile
 [ERROR] Compilation failure: Compilation failure:
 [ERROR] /src/main/java/App.java:[10,8] cannot find symbol
-</code></pre></div></p>
-<p><strong>Causes</strong>:
-- Compilation errors in code
-- Missing dependencies
-- Wrong Java version</p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Causes</strong>:</p>
+<ul>
+<li>Compilation errors in code</li>
+<li>Missing dependencies</li>
+<li>Wrong Java version</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Specify Java version</span>
 <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
@@ -6740,17 +6804,19 @@ hudson.plugins.git.GitException: Command &quot;git fetch&quot; returned status c
 <span class="s1">        &#39;&#39;&#39;</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-3-tests-fail">Issue 3: Tests Fail</h4>
-<p><strong>Error</strong>:
+<p><strong>Error</strong>:</p>
 <div class="highlight"><pre><span></span><code>[ERROR] Tests run: 10, Failures: 2, Errors: 0, Skipped: 0
 [INFO] BUILD FAILURE
-</code></pre></div></p>
-<p><strong>Causes</strong>:
-- Actual bugs in code (good thing CI caught it!)
-- Test environment not set up correctly
-- Flaky tests (tests that randomly fail)</p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Causes</strong>:</p>
+<ul>
+<li>Actual bugs in code (good thing CI caught it!)</li>
+<li>Test environment not set up correctly</li>
+<li>Flaky tests (tests that randomly fail)</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
@@ -6772,15 +6838,17 @@ hudson.plugins.git.GitException: Command &quot;git fetch&quot; returned status c
 <span class="w">        </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-4-resource-limits">Issue 4: Resource Limits</h4>
-<p><strong>Error</strong>:
+<p><strong>Error</strong>:</p>
 <div class="highlight"><pre><span></span><code>java.lang.OutOfMemoryError: Java heap space
-</code></pre></div></p>
-<p><strong>Causes</strong>:
-- Build requires more memory than allocated
-- Memory leak in build process</p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Causes</strong>:</p>
+<ul>
+<li>Build requires more memory than allocated</li>
+<li>Memory leak in build process</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">yaml</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
@@ -6800,9 +6868,9 @@ hudson.plugins.git.GitException: Command &quot;git fetch&quot; returned status c
 <span class="s1">        &#39;&#39;&#39;</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="debugging-techniques">Debugging Techniques</h3>
-<p><strong>1. Add Verbose Logging</strong>
+<p><strong>1. Add Verbose Logging</strong></p>
 <div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Debug&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
@@ -6818,8 +6886,8 @@ hudson.plugins.git.GitException: Command &quot;git fetch&quot; returned status c
 <span class="s1">        &#39;&#39;&#39;</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div></p>
-<p><strong>2. Use Try-Catch</strong>
+</code></pre></div>
+<p><strong>2. Use Try-Catch</strong></p>
 <div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build with Error Handling&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
@@ -6833,8 +6901,8 @@ hudson.plugins.git.GitException: Command &quot;git fetch&quot; returned status c
 <span class="w">        </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div></p>
-<p><strong>3. Access Agent Shell</strong>
+</code></pre></div>
+<p><strong>3. Access Agent Shell</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Add this stage temporarily for debugging</span>
 <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Debug Shell&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
@@ -6846,16 +6914,18 @@ hudson.plugins.git.GitException: Command &quot;git fetch&quot; returned status c
 
 <span class="c1">// Then connect to pod:</span>
 <span class="c1">// kubectl exec -it &lt;pod-name&gt; -c maven -- /bin/bash</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="part-6-ci-best-practices">🎯 Part 6: CI Best Practices</h2>
 <h3 id="1-keep-builds-fast">1. Keep Builds Fast</h3>
 <p><strong>Target</strong>: &lt;10 minutes total</p>
-<p><strong>Techniques</strong>:
-- Run only essential tests in CI (unit tests)
-- Parallelize independent stages
-- Cache dependencies
-- Use incremental compilation</p>
+<p><strong>Techniques</strong>:</p>
+<ul>
+<li>Run only essential tests in CI (unit tests)</li>
+<li>Parallelize independent stages</li>
+<li>Cache dependencies</li>
+<li>Use incremental compilation</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">options</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">timestamps</span><span class="o">()</span>
@@ -6972,7 +7042,7 @@ hudson.plugins.git.GitException: Command &quot;git fetch&quot; returned status c
 <hr />
 <h2 id="part-7-ci-impact-on-dora-metrics">📈 Part 7: CI Impact on DORA Metrics</h2>
 <h3 id="how-ci-improves-each-metric">How CI Improves Each Metric</h3>
-<p><strong>1. Deployment Frequency</strong>
+<p><strong>1. Deployment Frequency</strong></p>
 <div class="highlight"><pre><span></span><code>Without CI:
 - Manual testing before each deploy
 - Fear of breaking production
@@ -6982,8 +7052,8 @@ With CI:
 - Automated testing on every commit
 - Confidence in code quality
 - Result: Deploy 10x per day
-</code></pre></div></p>
-<p><strong>2. Lead Time for Changes</strong>
+</code></pre></div>
+<p><strong>2. Lead Time for Changes</strong></p>
 <div class="highlight"><pre><span></span><code>Without CI:
 Commit → Manual build (30 min) → Manual test (2 hours) → Package (30 min)
 = 3+ hours before deploy-ready
@@ -6991,8 +7061,8 @@ Commit → Manual build (30 min) → Manual test (2 hours) → Package (30 min)
 With CI:
 Commit → Auto build (3 min) → Auto test (2 min) → Auto package (1 min)
 = 6 minutes before deploy-ready
-</code></pre></div></p>
-<p><strong>3. Change Failure Rate</strong>
+</code></pre></div>
+<p><strong>3. Change Failure Rate</strong></p>
 <div class="highlight"><pre><span></span><code>Without CI:
 - No automated testing
 - Bugs reach production
@@ -7002,8 +7072,8 @@ With CI:
 - Automated tests catch 80% of bugs
 - Code review before merge
 - Result: 5% of deploys fail
-</code></pre></div></p>
-<p><strong>4. MTTR (Mean Time to Restore)</strong>
+</code></pre></div>
+<p><strong>4. MTTR (Mean Time to Restore)</strong></p>
 <div class="highlight"><pre><span></span><code>Without CI:
 - Large commits, hard to isolate issue
 - Manual rollback process
@@ -7013,7 +7083,7 @@ With CI:
 - Small commits, easy to identify culprit
 - Automated rollback
 - Result: 10 minutes to restore
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="measuring-ci-effectiveness">Measuring CI Effectiveness</h3>
 <p>Track these metrics in your Jenkins/Fawkes dashboard:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Add to pipeline for metrics collection</span>
@@ -7043,13 +7113,15 @@ With CI:
 <h3 id="exercise-build-your-first-real-pipeline">Exercise: Build Your First Real Pipeline</h3>
 <p><strong>Objective</strong>: Create a CI pipeline for a sample application</p>
 <p><strong>Scenario</strong>: You have a Java Spring Boot REST API that needs CI.</p>
-<p><strong>Requirements</strong>:
-1. Checkout code from Git
-2. Compile with Maven
-3. Run unit tests
-4. Package as JAR
-5. Build Docker image
-6. Send Slack notification on failure</p>
+<p><strong>Requirements</strong>:</p>
+<ol>
+<li>Checkout code from Git</li>
+<li>Compile with Maven</li>
+<li>Run unit tests</li>
+<li>Package as JAR</li>
+<li>Build Docker image</li>
+<li>Send Slack notification on failure</li>
+</ol>
 <p><strong>Starter Code</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
@@ -7087,23 +7159,31 @@ With CI:
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>Validation Criteria</strong>:
-- [ ] Pipeline runs successfully
-- [ ] All stages complete in &lt;8 minutes
-- [ ] Test results published to Jenkins
-- [ ] Docker image created
-- [ ] Notification sent (Slack or email)</p>
-<p><strong>Submission</strong>:
-1. Save your Jenkinsfile to Git repository
-2. Run pipeline successfully (screenshot)
-3. Show console output
-4. Submit repository link</p>
+<p><strong>Validation Criteria</strong>:</p>
+<ul>
+<li>[ ] Pipeline runs successfully</li>
+<li>[ ] All stages complete in &lt;8 minutes</li>
+<li>[ ] Test results published to Jenkins</li>
+<li>[ ] Docker image created</li>
+<li>[ ] Notification sent (Slack or email)</li>
+</ul>
+<p><strong>Submission</strong>:</p>
+<ol>
+<li>Save your Jenkinsfile to Git repository</li>
+<li>Run pipeline successfully (screenshot)</li>
+<li>Show console output</li>
+<li>Submit repository link</li>
+</ol>
 <hr />
 <h2 id="part-9-knowledge-check">🎓 Part 9: Knowledge Check</h2>
 <h3 id="quiz-questions">Quiz Questions</h3>
 <ol>
-<li><strong>What is the primary goal of Continuous Integration?</strong></li>
-<li>[ ] Deploy to production automatically</li>
+<li>
+<p><strong>What is the primary goal of Continuous Integration?</strong></p>
+</li>
+<li>
+<p>[ ] Deploy to production automatically</p>
+</li>
 <li>[x] Integrate code changes frequently and catch issues early</li>
 <li>[ ] Write better documentation</li>
 <li>
@@ -7112,7 +7192,9 @@ With CI:
 <li>
 <p><strong>How often should developers commit to mainline in CI?</strong></p>
 </li>
-<li>[ ] Once per week</li>
+<li>
+<p>[ ] Once per week</p>
+</li>
 <li>[ ] Once per sprint</li>
 <li>[x] At least once per day</li>
 <li>
@@ -7121,7 +7203,9 @@ With CI:
 <li>
 <p><strong>What is the recommended maximum build time?</strong></p>
 </li>
-<li>[ ] 30 minutes</li>
+<li>
+<p>[ ] 30 minutes</p>
+</li>
 <li>[x] 10 minutes</li>
 <li>[ ] 1 hour</li>
 <li>
@@ -7130,7 +7214,9 @@ With CI:
 <li>
 <p><strong>In Jenkins Kubernetes Plugin, what happens to build agents after build?</strong></p>
 </li>
-<li>[ ] They remain running for next build</li>
+<li>
+<p>[ ] They remain running for next build</p>
+</li>
 <li>[x] They are automatically deleted</li>
 <li>[ ] They are paused</li>
 <li>
@@ -7139,7 +7225,9 @@ With CI:
 <li>
 <p><strong>Which stage should run first in a CI pipeline?</strong></p>
 </li>
-<li>[ ] Test</li>
+<li>
+<p>[ ] Test</p>
+</li>
 <li>[ ] Package</li>
 <li>[x] Checkout</li>
 <li>
@@ -7148,7 +7236,9 @@ With CI:
 <li>
 <p><strong>What does "fail fast" mean in CI?</strong></p>
 </li>
-<li>[ ] Make builds run faster</li>
+<li>
+<p>[ ] Make builds run faster</p>
+</li>
 <li>[x] Stop pipeline immediately when critical issue found</li>
 <li>[ ] Skip tests to save time</li>
 <li>
@@ -7157,7 +7247,9 @@ With CI:
 <li>
 <p><strong>What file defines Jenkins Pipeline as Code?</strong></p>
 </li>
-<li>[ ] pipeline.yaml</li>
+<li>
+<p>[ ] pipeline.yaml</p>
+</li>
 <li>[x] Jenkinsfile</li>
 <li>[ ] build.xml</li>
 <li>
@@ -7197,13 +7289,17 @@ With CI:
 <li><strong>Make failures visible</strong> - Everyone should see broken builds immediately</li>
 </ol>
 <h3 id="real-world-impact">Real-World Impact</h3>
-<p>"Before CI, our integration process took 2-3 days and often failed. After implementing CI with Jenkins:
-- <strong>Build time</strong>: 3 hours → 8 minutes
-- <strong>Integration time</strong>: 3 days → Continuous
-- <strong>Bug detection</strong>: Post-production → Pre-commit
-- <strong>Deploy confidence</strong>: Low → High</p>
-<p>We went from monthly releases to daily deploys."
-- <em>Engineering Team, SaaS Company</em></p>
+<p>"Before CI, our integration process took 2-3 days and often failed. After implementing CI with Jenkins:</p>
+<ul>
+<li><strong>Build time</strong>: 3 hours → 8 minutes</li>
+<li><strong>Integration time</strong>: 3 days → Continuous</li>
+<li><strong>Bug detection</strong>: Post-production → Pre-commit</li>
+<li><strong>Deploy confidence</strong>: Low → High</li>
+</ul>
+<p>We went from monthly releases to daily deploys."</p>
+<ul>
+<li><em>Engineering Team, SaaS Company</em></li>
+</ul>
 <hr />
 <h2 id="additional-resources">📚 Additional Resources</h2>
 <h3 id="official-documentation">Official Documentation</h3>
@@ -7229,8 +7325,12 @@ With CI:
 <h3 id="assessment-checklist">Assessment Checklist</h3>
 <p>To complete this module, you must:</p>
 <ul>
-<li>[ ] <strong>Conceptual Understanding</strong></li>
-<li>[ ] Explain the 10 principles of CI</li>
+<li>
+<p>[ ] <strong>Conceptual Understanding</strong></p>
+</li>
+<li>
+<p>[ ] Explain the 10 principles of CI</p>
+</li>
 <li>[ ] Describe Jenkins controller vs. agent architecture</li>
 <li>
 <p>[ ] Explain how CI improves DORA metrics</p>
@@ -7238,7 +7338,9 @@ With CI:
 <li>
 <p>[ ] <strong>Practical Skills</strong></p>
 </li>
-<li>[ ] Create a Jenkinsfile from scratch</li>
+<li>
+<p>[ ] Create a Jenkinsfile from scratch</p>
+</li>
 <li>[ ] Configure Kubernetes agent pod template</li>
 <li>[ ] Implement checkout, build, test, package stages</li>
 <li>[ ] Add error handling and notifications</li>
@@ -7248,7 +7350,9 @@ With CI:
 <li>
 <p>[ ] <strong>Hands-On Lab</strong></p>
 </li>
-<li>[ ] Complete the first pipeline lab</li>
+<li>
+<p>[ ] Complete the first pipeline lab</p>
+</li>
 <li>[ ] Pipeline runs successfully (&lt;10 min)</li>
 <li>[ ] All tests pass</li>
 <li>
@@ -7260,10 +7364,12 @@ With CI:
 <li>[ ] Score 80% or higher (6/8 questions)</li>
 </ul>
 <h3 id="certification-credit">Certification Credit</h3>
-<p>Upon completion, you earn:
-- <strong>5 points</strong> toward Yellow Belt certification (25% complete)
-- <strong>Badge</strong>: "CI Practitioner"
-- <strong>Skill Unlocked</strong>: Jenkins Pipeline Creation</p>
+<p>Upon completion, you earn:</p>
+<ul>
+<li><strong>5 points</strong> toward Yellow Belt certification (25% complete)</li>
+<li><strong>Badge</strong>: "CI Practitioner"</li>
+<li><strong>Skill Unlocked</strong>: Jenkins Pipeline Creation</li>
+</ul>
 <hr />
 <h2 id="yellow-belt-progress">🎖️ Yellow Belt Progress</h2>
 <div class="highlight"><pre><span></span><code>Yellow Belt: CI/CD Mastery

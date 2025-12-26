@@ -7044,12 +7044,14 @@
 <strong>Module</strong>: 1 of 4 (Green Belt)
 <strong>Duration</strong>: 2 hours
 <strong>Difficulty</strong>: Intermediate
-<strong>Prerequisites</strong>:
-- White Belt completion (Modules 1-4)
-- Yellow Belt Modules 5-8 completion
-- Working Fawkes platform deployment
-- Basic Git knowledge
-- Understanding of Kubernetes deployments</p>
+<strong>Prerequisites</strong>:</p>
+<ul>
+<li>White Belt completion (Modules 1-4)</li>
+<li>Yellow Belt Modules 5-8 completion</li>
+<li>Working Fawkes platform deployment</li>
+<li>Basic Git knowledge</li>
+<li>Understanding of Kubernetes deployments</li>
+</ul>
 <hr />
 <p><strong>NOTE</strong>: This module was previously numbered as "Module 6" but has been renumbered to Module 9 to align with the Dojo Architecture where Green Belt begins at Module 9.</p>
 <hr />
@@ -7066,25 +7068,29 @@
 <li>✅ Troubleshoot common ArgoCD sync issues</li>
 <li>✅ Understand how GitOps improves DORA metrics</li>
 </ol>
-<p><strong>DORA Capabilities Addressed</strong>:
-- ✓ CD1: Use version control for all production artifacts
-- ✓ CD2: Automate your deployment process
-- ✓ CD3: Implement continuous integration
-- ✓ CD5: Use trunk-based development methods</p>
+<p><strong>DORA Capabilities Addressed</strong>:</p>
+<ul>
+<li>✓ CD1: Use version control for all production artifacts</li>
+<li>✓ CD2: Automate your deployment process</li>
+<li>✓ CD3: Implement continuous integration</li>
+<li>✓ CD5: Use trunk-based development methods</li>
+</ul>
 <hr />
 <h2 id="part-1-what-is-gitops">📖 Part 1: What is GitOps?</h2>
 <h3 id="the-traditional-deployment-problem">The Traditional Deployment Problem</h3>
-<p><strong>Traditional approach (Push-based)</strong>:
+<p><strong>Traditional approach (Push-based)</strong>:</p>
 <div class="highlight"><pre><span></span><code>Developer → Commits Code → CI Pipeline Runs → Pipeline Pushes to Cluster
                                                     ↓
                                             Cluster Updates
-</code></pre></div></p>
-<p><strong>Problems with push-based deployments</strong>:
-- CI/CD system needs cluster credentials (security risk)
-- No single source of truth for cluster state
-- Drift detection requires external tools
-- Hard to audit who deployed what
-- Rollback is manual and error-prone</p>
+</code></pre></div>
+<p><strong>Problems with push-based deployments</strong>:</p>
+<ul>
+<li>CI/CD system needs cluster credentials (security risk)</li>
+<li>No single source of truth for cluster state</li>
+<li>Drift detection requires external tools</li>
+<li>Hard to audit who deployed what</li>
+<li>Rollback is manual and error-prone</li>
+</ul>
 <h3 id="the-gitops-solution-pull-based">The GitOps Solution (Pull-based)</h3>
 <div class="highlight"><pre><span></span><code>Developer → Commits Code → Git Repository
                               ↓
@@ -7166,8 +7172,12 @@
 </code></pre></div>
 <p><strong>Key Components Explained</strong>:</p>
 <ol>
-<li><strong>API Server</strong>:</li>
-<li>gRPC/REST API for all operations</li>
+<li>
+<p><strong>API Server</strong>:</p>
+</li>
+<li>
+<p>gRPC/REST API for all operations</p>
+</li>
 <li>Authentication and authorization</li>
 <li>
 <p>Application management</p>
@@ -7175,7 +7185,9 @@
 <li>
 <p><strong>Repository Server</strong>:</p>
 </li>
-<li>Clones Git repositories</li>
+<li>
+<p>Clones Git repositories</p>
+</li>
 <li>Generates Kubernetes manifests (Helm, Kustomize, plain YAML)</li>
 <li>
 <p>Caches repository contents</p>
@@ -7183,7 +7195,9 @@
 <li>
 <p><strong>Application Controller</strong>:</p>
 </li>
-<li>Monitors applications</li>
+<li>
+<p>Monitors applications</p>
+</li>
 <li>Compares desired state (Git) vs actual state (cluster)</li>
 <li>Initiates sync operations</li>
 <li>
@@ -7233,9 +7247,11 @@ kubectl<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> 
 <span class="c1"># Port-forward to access ArgoCD UI</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/argocd-server<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span><span class="m">8080</span>:443
 </code></pre></div>
-<p>Access ArgoCD UI: <code>https://localhost:8080</code>
-- Username: <code>admin</code>
-- Password: (from command above)</p>
+<p>Access ArgoCD UI: <code>https://localhost:8080</code></p>
+<ul>
+<li>Username: <code>admin</code></li>
+<li>Password: (from command above)</li>
+</ul>
 <h3 id="step-1-prepare-your-git-repository">Step 1: Prepare Your Git Repository</h3>
 <p>Create a new Git repository for your application manifests:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create repository structure</span>
@@ -7321,7 +7337,7 @@ argocd<span class="w"> </span>app<span class="w"> </span>create<span class="w"> 
 <span class="c1"># Check application status</span>
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>guestbook
 </code></pre></div>
-<p><strong>Expected Output</strong>:
+<p><strong>Expected Output</strong>:</p>
 <div class="highlight"><pre><span></span><code>Name:               guestbook
 Project:            default
 Server:             https://kubernetes.default.svc
@@ -7334,7 +7350,7 @@ SyncWindow:         Sync Allowed
 Sync Policy:        Automated (Prune)
 Sync Status:        Synced to HEAD (abc1234)
 Health Status:      Healthy
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="step-3-create-argocd-application-via-yaml-declarative">Step 3: Create ArgoCD Application via YAML (Declarative)</h3>
 <p>Alternatively, create using a manifest:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># argocd-application.yaml</span>
@@ -7360,14 +7376,14 @@ Health Status:      Healthy
 <span class="w">  </span><span class="c1"># Sync policy</span>
 <span class="w">  </span><span class="nt">syncPolicy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">automated</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">      </span><span class="c1"># Delete resources not in Git</span>
-<span class="w">      </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">   </span><span class="c1"># Force sync if manual changes detected</span>
+<span class="w">      </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># Delete resources not in Git</span>
+<span class="w">      </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># Force sync if manual changes detected</span>
 <span class="w">      </span><span class="nt">allowEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">    </span><span class="nt">syncOptions</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate=true</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PrunePropagationPolicy=foreground</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PruneLast=true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate=true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PrunePropagationPolicy=foreground</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PruneLast=true</span>
 
 <span class="w">    </span><span class="nt">retry</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
@@ -7376,12 +7392,12 @@ Health Status:      Healthy
 <span class="w">        </span><span class="nt">factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 <span class="w">        </span><span class="nt">maxDuration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3m</span>
 </code></pre></div>
-<p>Apply it:
+<p>Apply it:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>argocd-application.yaml
 
 <span class="c1"># Watch the sync</span>
 argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </span>guestbook<span class="w"> </span>--watch
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="step-4-verify-deployment">Step 4: Verify Deployment</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check application in ArgoCD</span>
 argocd<span class="w"> </span>app<span class="w"> </span>list
@@ -7425,10 +7441,10 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Application</span>
 <span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span><span class="w">                    </span><span class="c1"># Application name</span>
-<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd</span><span class="w">               </span><span class="c1"># Must be in argocd namespace</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span><span class="w"> </span><span class="c1"># Application name</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd</span><span class="w"> </span><span class="c1"># Must be in argocd namespace</span>
 <span class="w">  </span><span class="nt">finalizers</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resources-finalizer.argocd.argoproj.io</span><span class="w">  </span><span class="c1"># Cleanup on deletion</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resources-finalizer.argocd.argoproj.io</span><span class="w"> </span><span class="c1"># Cleanup on deletion</span>
 
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># Project (multi-tenancy)</span>
@@ -7437,23 +7453,23 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <span class="w">  </span><span class="c1"># Source configuration</span>
 <span class="w">  </span><span class="nt">source</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">repoURL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/org/repo.git</span>
-<span class="w">    </span><span class="nt">targetRevision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HEAD</span><span class="w">          </span><span class="c1"># Branch, tag, or commit SHA</span>
-<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manifests/app</span><span class="w">           </span><span class="c1"># Path within repository</span>
+<span class="w">    </span><span class="nt">targetRevision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HEAD</span><span class="w"> </span><span class="c1"># Branch, tag, or commit SHA</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manifests/app</span><span class="w"> </span><span class="c1"># Path within repository</span>
 
 <span class="w">    </span><span class="c1"># For Helm charts</span>
 <span class="w">    </span><span class="nt">helm</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">valueFiles</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">values.yaml</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">values-prod.yaml</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">values.yaml</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">values-prod.yaml</span>
 <span class="w">      </span><span class="nt">parameters</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image.tag</span>
-<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.2.3</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image.tag</span>
+<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.2.3</span>
 
 <span class="w">    </span><span class="c1"># For Kustomize</span>
 <span class="w">    </span><span class="nt">kustomize</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">namePrefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod-</span>
 <span class="w">      </span><span class="nt">images</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcr.io/app:v1.2.3</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcr.io/app:v1.2.3</span>
 
 <span class="w">  </span><span class="c1"># Destination</span>
 <span class="w">  </span><span class="nt">destination</span><span class="p">:</span>
@@ -7463,49 +7479,57 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <span class="w">  </span><span class="c1"># Sync policy</span>
 <span class="w">  </span><span class="nt">syncPolicy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">automated</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                 </span><span class="c1"># Delete removed resources</span>
-<span class="w">      </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">              </span><span class="c1"># Correct manual changes</span>
+<span class="w">      </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># Delete removed resources</span>
+<span class="w">      </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># Correct manual changes</span>
 <span class="w">    </span><span class="nt">syncOptions</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span><span class="w">        </span><span class="c1"># Auto-create namespace</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PruneLast=true</span><span class="w">              </span><span class="c1"># Delete resources last</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span><span class="w"> </span><span class="c1"># Auto-create namespace</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PruneLast=true</span><span class="w"> </span><span class="c1"># Delete resources last</span>
 
 <span class="w">  </span><span class="c1"># Ignore differences (for fields that change automatically)</span>
 <span class="w">  </span><span class="nt">ignoreDifferences</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps</span>
-<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
-<span class="w">    </span><span class="nt">jsonPointers</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/spec/replicas</span><span class="w">              </span><span class="c1"># Ignore replica changes (HPA)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps</span>
+<span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="w">      </span><span class="nt">jsonPointers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/spec/replicas</span><span class="w"> </span><span class="c1"># Ignore replica changes (HPA)</span>
 </code></pre></div>
 <h3 id="sync-policies-explained">Sync Policies Explained</h3>
-<p><strong>1. Manual Sync</strong>
+<p><strong>1. Manual Sync</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">syncPolicy</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 </code></pre></div>
-- ArgoCD detects drift but doesn't sync automatically
-- User must click "Sync" in UI or run CLI command
-- Best for: Production environments requiring approval</p>
-<p><strong>2. Automated Sync</strong>
+<ul>
+<li>ArgoCD detects drift but doesn't sync automatically</li>
+<li>User must click "Sync" in UI or run CLI command</li>
+<li>Best for: Production environments requiring approval</li>
+</ul>
+<p><strong>2. Automated Sync</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">syncPolicy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">automated</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 </code></pre></div>
-- ArgoCD syncs when Git changes
-- User can still make manual changes to cluster
-- Best for: Development environments</p>
-<p><strong>3. Automated with Self-Heal</strong>
+<ul>
+<li>ArgoCD syncs when Git changes</li>
+<li>User can still make manual changes to cluster</li>
+<li>Best for: Development environments</li>
+</ul>
+<p><strong>3. Automated with Self-Heal</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">syncPolicy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">automated</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
-- Syncs on Git changes AND reverts manual cluster changes
-- Enforces Git as single source of truth
-- Best for: Strict GitOps enforcement</p>
-<p><strong>4. Automated with Prune</strong>
+<ul>
+<li>Syncs on Git changes AND reverts manual cluster changes</li>
+<li>Enforces Git as single source of truth</li>
+<li>Best for: Strict GitOps enforcement</li>
+</ul>
+<p><strong>4. Automated with Prune</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">syncPolicy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">automated</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
-- Deletes resources removed from Git
-- Dangerous if Git is incomplete
-- Best for: Complete application definitions in Git</p>
+<ul>
+<li>Deletes resources removed from Git</li>
+<li>Dangerous if Git is incomplete</li>
+<li>Best for: Complete application definitions in Git</li>
+</ul>
 <h3 id="health-assessment">Health Assessment</h3>
 <p>ArgoCD assesses application health based on resource status:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Custom health check (for CRDs)</span>
@@ -7518,40 +7542,42 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 
 <span class="w">  </span><span class="c1"># Custom resource health</span>
 <span class="w">  </span><span class="nt">info</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Custom Health</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">      </span><span class="no">hs = {}</span>
-<span class="w">      </span><span class="no">if obj.status ~= nil then</span>
-<span class="w">        </span><span class="no">if obj.status.phase == &quot;Running&quot; then</span>
-<span class="w">          </span><span class="no">hs.status = &quot;Healthy&quot;</span>
-<span class="w">          </span><span class="no">hs.message = &quot;Application is running&quot;</span>
-<span class="w">          </span><span class="no">return hs</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Custom Health</span>
+<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">hs = {}</span>
+<span class="w">        </span><span class="no">if obj.status ~= nil then</span>
+<span class="w">          </span><span class="no">if obj.status.phase == &quot;Running&quot; then</span>
+<span class="w">            </span><span class="no">hs.status = &quot;Healthy&quot;</span>
+<span class="w">            </span><span class="no">hs.message = &quot;Application is running&quot;</span>
+<span class="w">            </span><span class="no">return hs</span>
+<span class="w">          </span><span class="no">end</span>
 <span class="w">        </span><span class="no">end</span>
-<span class="w">      </span><span class="no">end</span>
-<span class="w">      </span><span class="no">hs.status = &quot;Progressing&quot;</span>
-<span class="w">      </span><span class="no">hs.message = &quot;Waiting for application&quot;</span>
-<span class="w">      </span><span class="no">return hs</span>
+<span class="w">        </span><span class="no">hs.status = &quot;Progressing&quot;</span>
+<span class="w">        </span><span class="no">hs.message = &quot;Waiting for application&quot;</span>
+<span class="w">        </span><span class="no">return hs</span>
 </code></pre></div>
-<p><strong>Health Statuses</strong>:
-- 🟢 <strong>Healthy</strong>: All resources are healthy
-- 🟡 <strong>Progressing</strong>: Resources are being created/updated
-- 🟡 <strong>Degraded</strong>: Some resources are unhealthy
-- 🟡 <strong>Suspended</strong>: Application is suspended
-- ⚪ <strong>Missing</strong>: Resources not found in cluster
-- 🔴 <strong>Unknown</strong>: Health cannot be determined</p>
+<p><strong>Health Statuses</strong>:</p>
+<ul>
+<li>🟢 <strong>Healthy</strong>: All resources are healthy</li>
+<li>🟡 <strong>Progressing</strong>: Resources are being created/updated</li>
+<li>🟡 <strong>Degraded</strong>: Some resources are unhealthy</li>
+<li>🟡 <strong>Suspended</strong>: Application is suspended</li>
+<li>⚪ <strong>Missing</strong>: Resources not found in cluster</li>
+<li>🔴 <strong>Unknown</strong>: Health cannot be determined</li>
+</ul>
 <hr />
 <h2 id="part-5-troubleshooting-argocd">🔍 Part 5: Troubleshooting ArgoCD</h2>
 <h3 id="common-issues-and-solutions">Common Issues and Solutions</h3>
 <h4 id="issue-1-application-out-of-sync">Issue 1: Application Out of Sync</h4>
 <p><strong>Symptom</strong>: ArgoCD shows "OutOfSync" status</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check sync status</span>
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>my-app
 
 <span class="c1"># See differences</span>
 argocd<span class="w"> </span>app<span class="w"> </span>diff<span class="w"> </span>my-app
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Option 1: Sync the application</span>
 argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </span>my-app
 
@@ -7560,33 +7586,33 @@ argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </s
 
 <span class="c1"># Option 3: Check for ignored differences</span>
 argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w"> </span>my-app
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-2-sync-fails-with-hook-failed">Issue 2: Sync Fails with "Hook Failed"</h4>
 <p><strong>Symptom</strong>: PreSync/PostSync hooks fail</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># View sync operation details</span>
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>my-app<span class="w"> </span>--show-operation
 
 <span class="c1"># Check hook logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>&lt;hook-pod-name&gt;
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Delete failed hook annotation</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">argocd.argoproj.io/hook</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PreSync</span>
-<span class="w">    </span><span class="nt">argocd.argoproj.io/hook-delete-policy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HookSucceeded</span><span class="w">  </span><span class="c1"># Add this</span>
-</code></pre></div></p>
+<span class="w">    </span><span class="nt">argocd.argoproj.io/hook-delete-policy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HookSucceeded</span><span class="w"> </span><span class="c1"># Add this</span>
+</code></pre></div>
 <h4 id="issue-3-git-repository-not-accessible">Issue 3: Git Repository Not Accessible</h4>
 <p><strong>Symptom</strong>: "Repository not found" or authentication errors</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># List configured repositories</span>
 argocd<span class="w"> </span>repo<span class="w"> </span>list
 
 <span class="c1"># Test repository connectivity</span>
 argocd<span class="w"> </span>repo<span class="w"> </span>get<span class="w"> </span>https://github.com/org/repo.git
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Add repository with credentials</span>
 argocd<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>https://github.com/org/private-repo.git<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--username<span class="w"> </span>&lt;username&gt;<span class="w"> </span><span class="se">\</span>
@@ -7595,17 +7621,17 @@ argocd<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </
 <span class="c1"># Or use SSH key</span>
 argocd<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>git@github.com:org/private-repo.git<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--ssh-private-key-path<span class="w"> </span>~/.ssh/id_rsa
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-4-resource-stuck-in-progressing">Issue 4: Resource Stuck in "Progressing"</h4>
 <p><strong>Symptom</strong>: Application never reaches "Healthy" state</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check resource events</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>&lt;resource-type&gt;<span class="w"> </span>&lt;resource-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 
 <span class="c1"># Check pod logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Manually delete stuck resource</span>
 kubectl<span class="w"> </span>delete<span class="w"> </span>&lt;resource-type&gt;<span class="w"> </span>&lt;resource-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 
@@ -7614,7 +7640,7 @@ argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </
 
 <span class="c1"># Check for resource quotas</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>resourcequota<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="argocd-cli-troubleshooting-commands">ArgoCD CLI Troubleshooting Commands</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get detailed application information</span>
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>&lt;app-name&gt;
@@ -7640,7 +7666,7 @@ argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w
 <hr />
 <h2 id="part-6-best-practices">🏆 Part 6: Best Practices</h2>
 <h3 id="1-repository-structure">1. Repository Structure</h3>
-<p><strong>Recommended structure</strong>:
+<p><strong>Recommended structure</strong>:</p>
 <div class="highlight"><pre><span></span><code>fawkes-apps/
 ├── base/                    # Base manifests
 │   ├── deployment.yaml
@@ -7657,7 +7683,7 @@ argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w
     ├── dev-app.yaml
     ├── staging-app.yaml
     └── prod-app.yaml
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="2-use-projects-for-multi-tenancy">2. Use Projects for Multi-Tenancy</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AppProject</span>
@@ -7669,22 +7695,22 @@ argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w
 
 <span class="w">  </span><span class="c1"># Source repositories</span>
 <span class="w">  </span><span class="nt">sourceRepos</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/org/team-alpha-*</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/org/team-alpha-*</span>
 
 <span class="w">  </span><span class="c1"># Destination clusters and namespaces</span>
 <span class="w">  </span><span class="nt">destinations</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-*</span>
-<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://kubernetes.default.svc</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-*</span>
+<span class="w">      </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://kubernetes.default.svc</span>
 
 <span class="w">  </span><span class="c1"># Allowed resource types</span>
 <span class="w">  </span><span class="nt">clusterResourceWhitelist</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
-<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Namespace</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Namespace</span>
 <span class="w">  </span><span class="nt">namespaceResourceWhitelist</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;apps&#39;</span>
-<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
-<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;apps&quot;</span>
+<span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
 </code></pre></div>
 <h3 id="3-implement-progressive-delivery">3. Implement Progressive Delivery</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Canary deployment with Argo Rollouts</span>
@@ -7697,14 +7723,14 @@ argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w
 <span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">canary</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">    </span><span class="c1"># 20% traffic to new version</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w"> </span><span class="c1"># 20% traffic to new version</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="w"> </span><span class="p p-Indicator">}</span>
 </code></pre></div>
 <h3 id="4-use-sync-windows">4. Use Sync Windows</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Only allow syncs during business hours</span>
@@ -7714,11 +7740,11 @@ argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">syncWindows</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">allow</span>
-<span class="w">    </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0</span><span class="nv"> </span><span class="s">9-17</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1-5&#39;</span><span class="w">  </span><span class="c1"># 9 AM - 5 PM, Mon-Fri</span>
-<span class="w">    </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8h</span>
-<span class="w">    </span><span class="nt">applications</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">allow</span>
+<span class="w">      </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">9-17</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1-5&quot;</span><span class="w"> </span><span class="c1"># 9 AM - 5 PM, Mon-Fri</span>
+<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8h</span>
+<span class="w">      </span><span class="nt">applications</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;*&quot;</span>
 </code></pre></div>
 <h3 id="5-implement-notification-hooks">5. Implement Notification Hooks</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># ConfigMap for notifications</span>
@@ -7741,16 +7767,20 @@ argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w
 <hr />
 <h2 id="part-7-gitops-impact-on-dora-metrics">📈 Part 7: GitOps Impact on DORA Metrics</h2>
 <h3 id="measuring-the-impact">Measuring the Impact</h3>
-<p><strong>Before GitOps</strong>:
-- Manual deployments via kubectl or CI/CD pipelines
-- No audit trail of who deployed what
-- Manual rollback procedures
-- Configuration drift common</p>
-<p><strong>After GitOps</strong>:
-- Automated deployments from Git commits
-- Complete audit trail (Git history)
-- Instant rollback (Git revert)
-- Self-healing prevents drift</p>
+<p><strong>Before GitOps</strong>:</p>
+<ul>
+<li>Manual deployments via kubectl or CI/CD pipelines</li>
+<li>No audit trail of who deployed what</li>
+<li>Manual rollback procedures</li>
+<li>Configuration drift common</li>
+</ul>
+<p><strong>After GitOps</strong>:</p>
+<ul>
+<li>Automated deployments from Git commits</li>
+<li>Complete audit trail (Git history)</li>
+<li>Instant rollback (Git revert)</li>
+<li>Self-healing prevents drift</li>
+</ul>
 <h3 id="tracking-metrics-with-argocd">Tracking Metrics with ArgoCD</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Custom metric exporter for ArgoCD</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
@@ -7774,7 +7804,7 @@ argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w
 <span class="w">      </span><span class="no">type: counter</span>
 <span class="w">      </span><span class="no">help: Total failed syncs</span>
 </code></pre></div>
-<p><strong>Query in Prometheus</strong>:
+<p><strong>Query in Prometheus</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Deployment frequency (per day)</span>
 <span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">[</span><span class="s">1d</span><span class="p">]</span><span class="o">))</span>
 
@@ -7783,13 +7813,17 @@ argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w
 
 <span class="c1"># Change failure rate (%)</span>
 <span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">argocd_app_sync_failed_total</span><span class="p">[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="part-8-knowledge-check">🎓 Part 8: Knowledge Check</h2>
 <h3 id="quiz-questions">Quiz Questions</h3>
 <ol>
-<li><strong>What are the four GitOps principles?</strong></li>
-<li>[ ] Push-based, Manual, Versioned, Automated</li>
+<li>
+<p><strong>What are the four GitOps principles?</strong></p>
+</li>
+<li>
+<p>[ ] Push-based, Manual, Versioned, Automated</p>
+</li>
 <li>[x] Declarative, Versioned, Pulled, Reconciled</li>
 <li>
 <p>[ ] Scripted, Immutable, Pushed, Monitored</p>
@@ -7797,7 +7831,9 @@ argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w
 <li>
 <p><strong>Which sync policy enforces Git as the single source of truth?</strong></p>
 </li>
-<li>[ ] Automated</li>
+<li>
+<p>[ ] Automated</p>
+</li>
 <li>[ ] Automated with Prune</li>
 <li>[x] Automated with Self-Heal</li>
 <li>
@@ -7806,7 +7842,9 @@ argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w
 <li>
 <p><strong>What happens when you enable <code>prune: true</code>?</strong></p>
 </li>
-<li>[ ] ArgoCD removes old versions from Git</li>
+<li>
+<p>[ ] ArgoCD removes old versions from Git</p>
+</li>
 <li>[x] ArgoCD deletes resources removed from Git</li>
 <li>[ ] ArgoCD archives deleted resources</li>
 <li>
@@ -7815,7 +7853,9 @@ argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w
 <li>
 <p><strong>How does GitOps improve Lead Time for Changes?</strong></p>
 </li>
-<li>[ ] By requiring manual approval</li>
+<li>
+<p>[ ] By requiring manual approval</p>
+</li>
 <li>[x] By automating deployment from Git commits</li>
 <li>[ ] By adding more testing</li>
 <li>
@@ -7834,12 +7874,14 @@ argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w
 <h2 id="part-9-practical-exercises">💪 Part 9: Practical Exercises</h2>
 <h3 id="exercise-1-multi-environment-deployment">Exercise 1: Multi-Environment Deployment</h3>
 <p><strong>Objective</strong>: Deploy the same application to dev, staging, and prod using Kustomize overlays.</p>
-<p><strong>Tasks</strong>:
-1. Create base Kubernetes manifests
-2. Create environment-specific overlays with Kustomize
-3. Create ArgoCD Application for each environment
-4. Make a change and watch it propagate through environments</p>
-<p><strong>Solution Template</strong>:
+<p><strong>Tasks</strong>:</p>
+<ol>
+<li>Create base Kubernetes manifests</li>
+<li>Create environment-specific overlays with Kustomize</li>
+<li>Create ArgoCD Application for each environment</li>
+<li>Make a change and watch it propagate through environments</li>
+</ol>
+<p><strong>Solution Template</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Repository structure</span>
 mkdir<span class="w"> </span>-p<span class="w"> </span>my-app/<span class="o">{</span>base,overlays/<span class="o">{</span>dev,staging,prod<span class="o">}}</span>
 
@@ -7850,21 +7892,25 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>my-app/<span class="o">{<
 argocd<span class="w"> </span>app<span class="w"> </span>create<span class="w"> </span>my-app-dev<span class="w"> </span>--repo<span class="w"> </span>...<span class="w"> </span>--path<span class="w"> </span>overlays/dev
 argocd<span class="w"> </span>app<span class="w"> </span>create<span class="w"> </span>my-app-staging<span class="w"> </span>--repo<span class="w"> </span>...<span class="w"> </span>--path<span class="w"> </span>overlays/staging
 argocd<span class="w"> </span>app<span class="w"> </span>create<span class="w"> </span>my-app-prod<span class="w"> </span>--repo<span class="w"> </span>...<span class="w"> </span>--path<span class="w"> </span>overlays/prod
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="exercise-2-implement-blue-green-deployment">Exercise 2: Implement Blue-Green Deployment</h3>
 <p><strong>Objective</strong>: Use ArgoCD to orchestrate a blue-green deployment.</p>
-<p><strong>Tasks</strong>:
-1. Deploy "blue" version of application
-2. Deploy "green" version alongside blue
-3. Switch traffic from blue to green using Service selector
-4. Verify zero downtime</p>
+<p><strong>Tasks</strong>:</p>
+<ol>
+<li>Deploy "blue" version of application</li>
+<li>Deploy "green" version alongside blue</li>
+<li>Switch traffic from blue to green using Service selector</li>
+<li>Verify zero downtime</li>
+</ol>
 <h3 id="exercise-3-rollback-scenario">Exercise 3: Rollback Scenario</h3>
 <p><strong>Objective</strong>: Practice rolling back a failed deployment.</p>
-<p><strong>Tasks</strong>:
-1. Deploy a working application (v1)
-2. Deploy a broken version (v2) that fails health checks
-3. Observe ArgoCD detecting unhealthy state
-4. Rollback to v1 using Git revert or ArgoCD CLI</p>
+<p><strong>Tasks</strong>:</p>
+<ol>
+<li>Deploy a working application (v1)</li>
+<li>Deploy a broken version (v2) that fails health checks</li>
+<li>Observe ArgoCD detecting unhealthy state</li>
+<li>Rollback to v1 using Git revert or ArgoCD CLI</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="c1"># View history</span>
 argocd<span class="w"> </span>app<span class="w"> </span><span class="nb">history</span><span class="w"> </span>my-app
 
@@ -7873,10 +7919,12 @@ argocd<span class="w"> </span>app<span class="w"> </span>rollback<span class="w"
 </code></pre></div>
 <h3 id="exercise-4-custom-health-check">Exercise 4: Custom Health Check</h3>
 <p><strong>Objective</strong>: Define custom health assessment for a CRD.</p>
-<p><strong>Tasks</strong>:
-1. Deploy a custom resource (e.g., database operator)
-2. Define custom health check in ArgoCD ConfigMap
-3. Verify ArgoCD correctly reports health status</p>
+<p><strong>Tasks</strong>:</p>
+<ol>
+<li>Deploy a custom resource (e.g., database operator)</li>
+<li>Define custom health check in ArgoCD ConfigMap</li>
+<li>Verify ArgoCD correctly reports health status</li>
+</ol>
 <hr />
 <h2 id="part-10-module-summary-next-steps">🎯 Part 10: Module Summary &amp; Next Steps</h2>
 <h3 id="what-you-learned">What You Learned</h3>
@@ -7902,13 +7950,17 @@ argocd<span class="w"> </span>app<span class="w"> </span>rollback<span class="w"
 <li><strong>Declarative state simplifies rollback</strong> - just revert the Git commit</li>
 </ol>
 <h3 id="real-world-impact">Real-World Impact</h3>
-<p>"After implementing GitOps with ArgoCD, we went from:
-- <strong>Deployment Frequency</strong>: 1x per week → 10x per day
-- <strong>Lead Time</strong>: 2-3 hours → 5-10 minutes
-- <strong>Change Failure Rate</strong>: 15% → 3%
-- <strong>MTTR</strong>: 45 minutes → 5 minutes (Git revert)</p>
-<p>The biggest win: junior developers can now deploy confidently because Git history provides instant rollback."
-- <em>Platform Engineering Team, Fortune 500 Company</em></p>
+<p>"After implementing GitOps with ArgoCD, we went from:</p>
+<ul>
+<li><strong>Deployment Frequency</strong>: 1x per week → 10x per day</li>
+<li><strong>Lead Time</strong>: 2-3 hours → 5-10 minutes</li>
+<li><strong>Change Failure Rate</strong>: 15% → 3%</li>
+<li><strong>MTTR</strong>: 45 minutes → 5 minutes (Git revert)</li>
+</ul>
+<p>The biggest win: junior developers can now deploy confidently because Git history provides instant rollback."</p>
+<ul>
+<li><em>Platform Engineering Team, Fortune 500 Company</em></li>
+</ul>
 <hr />
 <h2 id="additional-resources">📚 Additional Resources</h2>
 <h3 id="official-documentation">Official Documentation</h3>
@@ -7940,8 +7992,12 @@ argocd<span class="w"> </span>app<span class="w"> </span>rollback<span class="w"
 <h3 id="assessment-checklist">Assessment Checklist</h3>
 <p>To complete this module, you must:</p>
 <ul>
-<li>[ ] <strong>Conceptual Understanding</strong></li>
-<li>[ ] Explain the four GitOps principles</li>
+<li>
+<p>[ ] <strong>Conceptual Understanding</strong></p>
+</li>
+<li>
+<p>[ ] Explain the four GitOps principles</p>
+</li>
 <li>[ ] Describe push vs pull deployment models</li>
 <li>[ ] Explain how GitOps improves DORA metrics</li>
 <li>
@@ -7950,7 +8006,9 @@ argocd<span class="w"> </span>app<span class="w"> </span>rollback<span class="w"
 <li>
 <p>[ ] <strong>Practical Skills</strong></p>
 </li>
-<li>[ ] Deploy an application using ArgoCD CLI</li>
+<li>
+<p>[ ] Deploy an application using ArgoCD CLI</p>
+</li>
 <li>[ ] Create an ArgoCD Application manifest</li>
 <li>[ ] Configure automated sync with self-heal</li>
 <li>[ ] Make a Git change and observe automatic sync</li>
@@ -7961,7 +8019,9 @@ argocd<span class="w"> </span>app<span class="w"> </span>rollback<span class="w"
 <li>
 <p>[ ] <strong>Hands-On Lab</strong></p>
 </li>
-<li>[ ] Complete the guestbook deployment exercise</li>
+<li>
+<p>[ ] Complete the guestbook deployment exercise</p>
+</li>
 <li>[ ] Successfully scale application via Git commit</li>
 <li>[ ] View application in ArgoCD UI</li>
 <li>
@@ -7973,10 +8033,12 @@ argocd<span class="w"> </span>app<span class="w"> </span>rollback<span class="w"
 <li>[ ] Score 80% or higher on knowledge check questions</li>
 </ul>
 <h3 id="certification-credit">Certification Credit</h3>
-<p>Upon completion, you earn:
-- <strong>5 points</strong> toward Green Belt certification
-- <strong>Badge</strong>: "GitOps Practitioner"
-- <strong>Skill Unlocked</strong>: ArgoCD Application Management</p>
+<p>Upon completion, you earn:</p>
+<ul>
+<li><strong>5 points</strong> toward Green Belt certification</li>
+<li><strong>Badge</strong>: "GitOps Practitioner"</li>
+<li><strong>Skill Unlocked</strong>: ArgoCD Application Management</li>
+</ul>
 <hr />
 <h2 id="green-belt-progress">🎖️ Green Belt Progress</h2>
 <div class="highlight"><pre><span></span><code>Green Belt: GitOps &amp; Deployment
@@ -7999,21 +8061,23 @@ Module 4: Progressive Delivery     ░░░░░░░░░░░░  0%
 <li>
 <p><strong>Git Repository Link</strong> with:</p>
 </li>
-<li>Application manifests (deployment.yaml, service.yaml)</li>
+<li>
+<p>Application manifests (deployment.yaml, service.yaml)</p>
+</li>
 <li>ArgoCD Application manifest</li>
 <li>
 <p>Commit history showing at least 2 commits</p>
 </li>
 <li>
-<p><strong>CLI Output</strong> showing:
-   <div class="highlight"><pre><span></span><code>argocd<span class="w"> </span>app<span class="w"> </span>list
+<p><strong>CLI Output</strong> showing:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>argocd<span class="w"> </span>app<span class="w"> </span>list
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>&lt;your-app-name&gt;
 kubectl<span class="w"> </span>get<span class="w"> </span>all<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>&lt;your-app&gt;
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Written Reflection</strong> (200-300 words):</p>
-</li>
+</code></pre></div>
+<ol>
+<li><strong>Written Reflection</strong> (200-300 words):</li>
 <li>What surprised you about GitOps?</li>
 <li>How does this differ from your current deployment process?</li>
 <li>What challenges do you anticipate in production?</li>
@@ -8044,35 +8108,43 @@ tar<span class="w"> </span>-czf<span class="w"> </span>module6-submission.tar.gz
 <p>For ambitious learners who want to go deeper:</p>
 <h3 id="challenge-1-multi-environment-pipeline">Challenge 1: Multi-Environment Pipeline</h3>
 <p><strong>Difficulty</strong>: ⭐⭐⭐</p>
-<p>Deploy the same app to dev → staging → prod with promotion workflows:
-- Auto-sync in dev
-- Manual sync in staging (requires approval)
-- Sync window in prod (only during business hours)
-- Progressive rollout in prod (canary → full deployment)</p>
+<p>Deploy the same app to dev → staging → prod with promotion workflows:</p>
+<ul>
+<li>Auto-sync in dev</li>
+<li>Manual sync in staging (requires approval)</li>
+<li>Sync window in prod (only during business hours)</li>
+<li>Progressive rollout in prod (canary → full deployment)</li>
+</ul>
 <p><strong>Hint</strong>: Use ArgoCD Projects and sync windows</p>
 <h3 id="challenge-2-secrets-management">Challenge 2: Secrets Management</h3>
 <p><strong>Difficulty</strong>: ⭐⭐⭐⭐</p>
-<p>Integrate secrets management with GitOps:
-- Install Sealed Secrets or External Secrets Operator
-- Encrypt secrets before committing to Git
-- Have ArgoCD automatically sync encrypted secrets
-- Verify application can read decrypted secrets</p>
+<p>Integrate secrets management with GitOps:</p>
+<ul>
+<li>Install Sealed Secrets or External Secrets Operator</li>
+<li>Encrypt secrets before committing to Git</li>
+<li>Have ArgoCD automatically sync encrypted secrets</li>
+<li>Verify application can read decrypted secrets</li>
+</ul>
 <p><strong>Hint</strong>: Research <code>bitnami-labs/sealed-secrets</code></p>
 <h3 id="challenge-3-custom-resource-deployment">Challenge 3: Custom Resource Deployment</h3>
 <p><strong>Difficulty</strong>: ⭐⭐⭐⭐⭐</p>
-<p>Deploy a complex application with CRDs:
-- Install an operator (e.g., Postgres Operator)
-- Create custom resources (e.g., PostgresCluster)
-- Define custom health checks for ArgoCD
-- Implement backup/restore via Git</p>
+<p>Deploy a complex application with CRDs:</p>
+<ul>
+<li>Install an operator (e.g., Postgres Operator)</li>
+<li>Create custom resources (e.g., PostgresCluster)</li>
+<li>Define custom health checks for ArgoCD</li>
+<li>Implement backup/restore via Git</li>
+</ul>
 <p><strong>Hint</strong>: Look at Zalando Postgres Operator</p>
 <h3 id="challenge-4-gitops-everything">Challenge 4: GitOps Everything</h3>
 <p><strong>Difficulty</strong>: ⭐⭐⭐⭐⭐</p>
-<p>Bootstrap ArgoCD to manage itself:
-- Deploy ArgoCD via ArgoCD (meta!)
-- Manage all cluster infrastructure as code
-- Include cert-manager, ingress-nginx, monitoring stack
-- Implement disaster recovery via Git</p>
+<p>Bootstrap ArgoCD to manage itself:</p>
+<ul>
+<li>Deploy ArgoCD via ArgoCD (meta!)</li>
+<li>Manage all cluster infrastructure as code</li>
+<li>Include cert-manager, ingress-nginx, monitoring stack</li>
+<li>Implement disaster recovery via Git</li>
+</ul>
 <p><strong>Hint</strong>: Research "App of Apps" pattern</p>
 <hr />
 <h2 id="community-support">🤝 Community &amp; Support</h2>
@@ -8093,11 +8165,13 @@ tar<span class="w"> </span>-czf<span class="w"> </span>module6-submission.tar.gz
 <li><strong>Mattermost</strong>: Share screenshots in #show-and-tell</li>
 </ul>
 <h3 id="help-others">Help Others</h3>
-<p>The best way to solidify your learning:
-- Answer questions in #dojo-green-belt channel
-- Review peer submissions
-- Contribute troubleshooting tips to the docs
-- Create supplementary learning materials</p>
+<p>The best way to solidify your learning:</p>
+<ul>
+<li>Answer questions in #dojo-green-belt channel</li>
+<li>Review peer submissions</li>
+<li>Contribute troubleshooting tips to the docs</li>
+<li>Create supplementary learning materials</li>
+</ul>
 <hr />
 <h2 id="module-metrics">📊 Module Metrics</h2>
 <p>This module contributes to the following DORA metrics:</p>
@@ -8151,33 +8225,39 @@ tar<span class="w"> </span>-czf<span class="w"> </span>module6-submission.tar.gz
 </tbody>
 </table>
 <h3 id="your-learning-metrics">Your Learning Metrics</h3>
-<p>Track your progress:
+<p>Track your progress:</p>
 <div class="highlight"><pre><span></span><code>Time Investment:     2 hours (target)
 Concepts Covered:    12
 Hands-On Labs:       3
 CLI Commands Used:   15+
 Resources Deployed:  5+ Kubernetes objects
 Git Commits:         3+ required
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="instructor-notes">🎓 Instructor Notes</h2>
 <p><em>For Fawkes Dojo facilitators and mentors:</em></p>
 <h3 id="teaching-tips">Teaching Tips</h3>
-<p><strong>Common Student Struggles</strong>:
-1. <strong>Git vs GitOps confusion</strong> - Emphasize GitOps is a deployment pattern, not Git itself
-2. <strong>Sync vs Refresh</strong> - Use the car analogy: refresh checks the map, sync drives to the destination
-3. <strong>When to use manual vs automated sync</strong> - Production = manual, dev/staging = automated</p>
-<p><strong>Live Demo Checklist</strong>:
-- [ ] Show ArgoCD UI application graph visualization
-- [ ] Demonstrate real-time sync during Git push
-- [ ] Show self-heal correcting manual kubectl change
-- [ ] Demonstrate rollback via Git revert
-- [ ] Show sync failure and troubleshooting process</p>
-<p><strong>Discussion Questions</strong>:
-- "What happens if Git repository becomes unavailable?"
-- "How would you handle secrets in Git?"
-- "What's the blast radius if ArgoCD is compromised?"
-- "How does GitOps work with database migrations?"</p>
+<p><strong>Common Student Struggles</strong>:</p>
+<ol>
+<li><strong>Git vs GitOps confusion</strong> - Emphasize GitOps is a deployment pattern, not Git itself</li>
+<li><strong>Sync vs Refresh</strong> - Use the car analogy: refresh checks the map, sync drives to the destination</li>
+<li><strong>When to use manual vs automated sync</strong> - Production = manual, dev/staging = automated</li>
+</ol>
+<p><strong>Live Demo Checklist</strong>:</p>
+<ul>
+<li>[ ] Show ArgoCD UI application graph visualization</li>
+<li>[ ] Demonstrate real-time sync during Git push</li>
+<li>[ ] Show self-heal correcting manual kubectl change</li>
+<li>[ ] Demonstrate rollback via Git revert</li>
+<li>[ ] Show sync failure and troubleshooting process</li>
+</ul>
+<p><strong>Discussion Questions</strong>:</p>
+<ul>
+<li>"What happens if Git repository becomes unavailable?"</li>
+<li>"How would you handle secrets in Git?"</li>
+<li>"What's the blast radius if ArgoCD is compromised?"</li>
+<li>"How does GitOps work with database migrations?"</li>
+</ul>
 <h3 id="assessment-rubric">Assessment Rubric</h3>
 <table>
 <thead>
@@ -8229,41 +8309,49 @@ Git Commits:         3+ required
 </table>
 <p><strong>Passing Score</strong>: 15/25 points minimum</p>
 <h3 id="lab-environment-notes">Lab Environment Notes</h3>
-<p><strong>Resource Requirements</strong>:
-- Kubernetes cluster: 3 nodes, 4 vCPU, 8GB RAM each
-- ArgoCD: ~500MB memory, ~0.5 CPU
-- Sample apps: ~200MB memory total</p>
-<p><strong>Pre-Lab Setup</strong>:
+<p><strong>Resource Requirements</strong>:</p>
+<ul>
+<li>Kubernetes cluster: 3 nodes, 4 vCPU, 8GB RAM each</li>
+<li>ArgoCD: ~500MB memory, ~0.5 CPU</li>
+<li>Sample apps: ~200MB memory total</li>
+</ul>
+<p><strong>Pre-Lab Setup</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Instructor should pre-create these</span>
 kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>argocd
 kubectl<span class="w"> </span>apply<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 <span class="c1"># Create student Git repositories template</span>
 <span class="c1"># Provide each student with their repo URL</span>
-</code></pre></div></p>
-<p><strong>Cleanup</strong>:
+</code></pre></div>
+<p><strong>Cleanup</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># After lab session</span>
 kubectl<span class="w"> </span>delete<span class="w"> </span>namespace<span class="w"> </span>argocd<span class="w"> </span>--cascade
 kubectl<span class="w"> </span>delete<span class="w"> </span>applications<span class="w"> </span>--all<span class="w"> </span>-n<span class="w"> </span>argocd
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="success-stories">🌟 Success Stories</h2>
 <h3 id="real-implementations">Real Implementations</h3>
-<p><strong>Company A - Financial Services</strong>
-- <strong>Before</strong>: 2-week release cycles, manual deployments
-- <strong>After</strong>: Daily deployments, 99.9% success rate
-- <strong>Impact</strong>: Lead time reduced from 2 weeks to 4 hours
-- <strong>Quote</strong>: "GitOps gave us the confidence to deploy to production daily"</p>
-<p><strong>Company B - E-Commerce Platform</strong>
-- <strong>Before</strong>: Frequent production incidents from manual changes
-- <strong>After</strong>: Zero drift incidents in 6 months
-- <strong>Impact</strong>: MTTR reduced from 45 min to 3 min (Git revert)
-- <strong>Quote</strong>: "Self-heal eliminated configuration drift completely"</p>
-<p><strong>Company C - Healthcare SaaS</strong>
-- <strong>Before</strong>: No audit trail, compliance challenges
-- <strong>After</strong>: Complete deployment history in Git
-- <strong>Impact</strong>: Passed SOC 2 audit with GitOps evidence
-- <strong>Quote</strong>: "Git history became our deployment audit trail"</p>
+<p><strong>Company A - Financial Services</strong></p>
+<ul>
+<li><strong>Before</strong>: 2-week release cycles, manual deployments</li>
+<li><strong>After</strong>: Daily deployments, 99.9% success rate</li>
+<li><strong>Impact</strong>: Lead time reduced from 2 weeks to 4 hours</li>
+<li><strong>Quote</strong>: "GitOps gave us the confidence to deploy to production daily"</li>
+</ul>
+<p><strong>Company B - E-Commerce Platform</strong></p>
+<ul>
+<li><strong>Before</strong>: Frequent production incidents from manual changes</li>
+<li><strong>After</strong>: Zero drift incidents in 6 months</li>
+<li><strong>Impact</strong>: MTTR reduced from 45 min to 3 min (Git revert)</li>
+<li><strong>Quote</strong>: "Self-heal eliminated configuration drift completely"</li>
+</ul>
+<p><strong>Company C - Healthcare SaaS</strong></p>
+<ul>
+<li><strong>Before</strong>: No audit trail, compliance challenges</li>
+<li><strong>After</strong>: Complete deployment history in Git</li>
+<li><strong>Impact</strong>: Passed SOC 2 audit with GitOps evidence</li>
+<li><strong>Quote</strong>: "Git history became our deployment audit trail"</li>
+</ul>
 <hr />
 <h2 id="module-changelog">📅 Module Changelog</h2>
 <h3 id="version-10-current">Version 1.0 (Current)</h3>
@@ -8279,31 +8367,39 @@ kubectl<span class="w"> </span>delete<span class="w"> </span>applications<span c
 <li><strong>v1.3</strong> (Q3 2026): Advanced security (RBAC, SSO)</li>
 </ul>
 <h3 id="feedback-welcome">Feedback Welcome</h3>
-<p>Found an issue or have suggestions?
-- Open issue: https://github.com/paruff/fawkes/issues
-- Email: dojo@fawkes-platform.io
-- Slack: #dojo-feedback</p>
+<p>Found an issue or have suggestions?</p>
+<ul>
+<li>Open issue: https://github.com/paruff/fawkes/issues</li>
+<li>Email: dojo@fawkes-platform.io</li>
+<li>Slack: #dojo-feedback</li>
+</ul>
 <hr />
 <h2 id="conclusion">🎬 Conclusion</h2>
 <p><strong>Congratulations!</strong> You've completed Module 6 and learned the fundamentals of GitOps with ArgoCD.</p>
 <h3 id="whats-next">What's Next?</h3>
-<p>You're now ready to:
-1. ✅ Deploy applications using GitOps patterns
-2. ✅ Configure ArgoCD sync policies appropriately
-3. ✅ Troubleshoot common ArgoCD issues
-4. ✅ Understand how GitOps improves DORA metrics</p>
+<p>You're now ready to:</p>
+<ol>
+<li>✅ Deploy applications using GitOps patterns</li>
+<li>✅ Configure ArgoCD sync policies appropriately</li>
+<li>✅ Troubleshoot common ArgoCD issues</li>
+<li>✅ Understand how GitOps improves DORA metrics</li>
+</ol>
 <h3 id="continue-your-journey">Continue Your Journey</h3>
-<p><strong>Module 7 Preview</strong>: Advanced ArgoCD Patterns
-- Helm chart deployments with ArgoCD
-- Kustomize advanced patterns
-- ApplicationSets for multi-cluster
-- App of Apps pattern
-- Monorepo vs polyrepo strategies</p>
-<p><strong>Green Belt Roadmap</strong>:
-- Module 6: Introduction to GitOps ✅ (You are here)
-- Module 7: Advanced ArgoCD Patterns
-- Module 8: Multi-Cluster &amp; Multi-Tenant GitOps
-- Module 9: Progressive Delivery with Argo Rollouts</p>
+<p><strong>Module 7 Preview</strong>: Advanced ArgoCD Patterns</p>
+<ul>
+<li>Helm chart deployments with ArgoCD</li>
+<li>Kustomize advanced patterns</li>
+<li>ApplicationSets for multi-cluster</li>
+<li>App of Apps pattern</li>
+<li>Monorepo vs polyrepo strategies</li>
+</ul>
+<p><strong>Green Belt Roadmap</strong>:</p>
+<ul>
+<li>Module 6: Introduction to GitOps ✅ (You are here)</li>
+<li>Module 7: Advanced ArgoCD Patterns</li>
+<li>Module 8: Multi-Cluster &amp; Multi-Tenant GitOps</li>
+<li>Module 9: Progressive Delivery with Argo Rollouts</li>
+</ul>
 <h3 id="take-action-now">Take Action Now</h3>
 <ol>
 <li><strong>Complete the lab</strong> - Deploy your first ArgoCD application today</li>

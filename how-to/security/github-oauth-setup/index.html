@@ -4975,18 +4975,20 @@
 <h2 id="step-1-create-github-oauth-application">Step 1: Create GitHub OAuth Application</h2>
 <h3 id="option-a-organization-oauth-app-recommended-for-teams">Option A: Organization OAuth App (Recommended for Teams)</h3>
 <ol>
-<li>
-<p>Navigate to your GitHub organization settings:
-   <div class="highlight"><pre><span></span><code>https://github.com/organizations/YOUR_ORG/settings/applications
-</code></pre></div></p>
-</li>
+<li>Navigate to your GitHub organization settings:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>https://github.com/organizations/YOUR_ORG/settings/applications
+</code></pre></div>
+<ol>
 <li>
 <p>Click <strong>"New OAuth App"</strong> under OAuth Apps</p>
 </li>
 <li>
 <p>Fill in the application details:</p>
 </li>
-<li><strong>Application name</strong>: <code>Fawkes Backstage - [Environment]</code><ul>
+<li>
+<p><strong>Application name</strong>: <code>Fawkes Backstage - [Environment]</code></p>
+<ul>
 <li>Example: <code>Fawkes Backstage - Development</code> or <code>Fawkes Backstage - Production</code></li>
 </ul>
 </li>
@@ -5015,11 +5017,11 @@
 </ol>
 <h3 id="option-b-personal-oauth-app-for-testingdevelopment">Option B: Personal OAuth App (For Testing/Development)</h3>
 <ol>
-<li>
-<p>Navigate to your personal settings:
-   <div class="highlight"><pre><span></span><code>https://github.com/settings/developers
-</code></pre></div></p>
-</li>
+<li>Navigate to your personal settings:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>https://github.com/settings/developers
+</code></pre></div>
+<ol>
 <li>
 <p>Click <strong>"OAuth Apps"</strong> in the sidebar</p>
 </li>
@@ -5112,8 +5114,12 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <h2 id="step-4-verify-oauth-configuration">Step 4: Verify OAuth Configuration</h2>
 <h3 id="test-authentication-flow">Test Authentication Flow</h3>
 <ol>
-<li>Access Backstage UI:</li>
-<li>Local: http://backstage.127.0.0.1.nip.io or http://localhost:7007</li>
+<li>
+<p>Access Backstage UI:</p>
+</li>
+<li>
+<p>Local: http://backstage.127.0.0.1.nip.io or http://localhost:7007</p>
+</li>
 <li>
 <p>Production: https://backstage.fawkes.idp</p>
 </li>
@@ -5166,18 +5172,22 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="error-invalid-redirect_uri">Error: "Invalid redirect_uri"</h3>
 <p><strong>Cause</strong>: The callback URL in GitHub OAuth app doesn't match the one Backstage is using.</p>
-<p><strong>Solution</strong>:
-1. Check the URL in your GitHub OAuth app settings
-2. Ensure it matches exactly: <code>https://backstage.fawkes.idp/api/auth/github/handler/frame</code>
-3. Check for trailing slashes or http vs https mismatch</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Check the URL in your GitHub OAuth app settings</li>
+<li>Ensure it matches exactly: <code>https://backstage.fawkes.idp/api/auth/github/handler/frame</code></li>
+<li>Check for trailing slashes or http vs https mismatch</li>
+</ol>
 <h3 id="error-failed-to-authenticate-with-github">Error: "Failed to authenticate with GitHub"</h3>
 <p><strong>Cause</strong>: Client ID or Client Secret is incorrect.</p>
-<p><strong>Solution</strong>:
-1. Verify the secret values in Kubernetes:
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Verify the secret values in Kubernetes:
    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>backstage-oauth-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.github-client-id}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
-</code></pre></div>
-2. Compare with your GitHub OAuth app
-3. Regenerate client secret if necessary and update Kubernetes secret</p>
+</code></pre></div></li>
+<li>Compare with your GitHub OAuth app</li>
+<li>Regenerate client secret if necessary and update Kubernetes secret</li>
+</ol>
 <h3 id="error-user-not-found-in-catalog">Error: "User not found in catalog"</h3>
 <p><strong>Cause</strong>: Backstage can't find a User entity matching your GitHub username.</p>
 <p><strong>Solution</strong>:</p>
@@ -5214,31 +5224,41 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 </ol>
 <h2 id="security-best-practices">Security Best Practices</h2>
 <h3 id="1-separate-oauth-apps-per-environment">1. Separate OAuth Apps per Environment</h3>
-<p>Create separate OAuth apps for each environment:
-- <code>Fawkes Backstage - Development</code> (http://localhost:7007)
-- <code>Fawkes Backstage - Staging</code> (https://backstage-staging.fawkes.idp)
-- <code>Fawkes Backstage - Production</code> (https://backstage.fawkes.idp)</p>
+<p>Create separate OAuth apps for each environment:</p>
+<ul>
+<li><code>Fawkes Backstage - Development</code> (http://localhost:7007)</li>
+<li><code>Fawkes Backstage - Staging</code> (https://backstage-staging.fawkes.idp)</li>
+<li><code>Fawkes Backstage - Production</code> (https://backstage.fawkes.idp)</li>
+</ul>
 <h3 id="2-restrict-organization-access">2. Restrict Organization Access</h3>
-<p>For organization OAuth apps, configure organization access:
-1. Go to OAuth app settings
-2. Under "Organization access", configure which organizations can use the app
-3. For internal platforms, restrict to your organization only</p>
+<p>For organization OAuth apps, configure organization access:</p>
+<ol>
+<li>Go to OAuth app settings</li>
+<li>Under "Organization access", configure which organizations can use the app</li>
+<li>For internal platforms, restrict to your organization only</li>
+</ol>
 <h3 id="3-review-authorized-users">3. Review Authorized Users</h3>
-<p>Periodically review which users have authorized the application:
-1. Users can revoke access at: https://github.com/settings/applications
-2. Admins can view all authorized users in the OAuth app settings</p>
+<p>Periodically review which users have authorized the application:</p>
+<ol>
+<li>Users can revoke access at: https://github.com/settings/applications</li>
+<li>Admins can view all authorized users in the OAuth app settings</li>
+</ol>
 <h3 id="4-use-vault-for-production-secrets">4. Use Vault for Production Secrets</h3>
-<p>Never commit OAuth client secrets to Git. Use one of:
-- External Secrets Operator with Vault (recommended)
-- Sealed Secrets
-- Cloud provider secret managers (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager)</p>
+<p>Never commit OAuth client secrets to Git. Use one of:</p>
+<ul>
+<li>External Secrets Operator with Vault (recommended)</li>
+<li>Sealed Secrets</li>
+<li>Cloud provider secret managers (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager)</li>
+</ul>
 <h3 id="5-rotate-secrets-regularly">5. Rotate Secrets Regularly</h3>
-<p>Establish a rotation schedule:
-1. Generate new client secret in GitHub
-2. Update Kubernetes secret
-3. Restart Backstage
-4. Delete old client secret after verifying new one works
-5. Recommended: Rotate every 90 days</p>
+<p>Establish a rotation schedule:</p>
+<ol>
+<li>Generate new client secret in GitHub</li>
+<li>Update Kubernetes secret</li>
+<li>Restart Backstage</li>
+<li>Delete old client secret after verifying new one works</li>
+<li>Recommended: Rotate every 90 days</li>
+</ol>
 <h2 id="testing-oauth-configuration">Testing OAuth Configuration</h2>
 <h3 id="manual-test">Manual Test</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. Port-forward Backstage</span>

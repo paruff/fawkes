@@ -5765,23 +5765,27 @@
 <ol>
 <li>Navigate to your organization settings: <code>https://github.com/organizations/[YOUR-ORG]/settings/copilot</code></li>
 <li>Click <strong>"Enable GitHub Copilot"</strong></li>
-<li>Configure access policies:</li>
-<li><strong>Allowed for</strong>: Select teams or all organization members</li>
+<li>
+<p>Configure access policies:</p>
+</li>
+<li>
+<p><strong>Allowed for</strong>: Select teams or all organization members</p>
+</li>
 <li><strong>Public code matching</strong>: Enable/disable suggestions matching public code</li>
 <li>
 <p><strong>Block suggestions</strong>: Configure to block suggestions matching public code (recommended for security)</p>
 </li>
 <li>
-<p>Review and configure policies:
-   <div class="highlight"><pre><span></span><code>Settings → Copilot → Policies
+<p>Review and configure policies:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>Settings → Copilot → Policies
 - Enable/Disable for all members
 - Allow/Block public code suggestions
 - Configure content exclusions (optional)
-</code></pre></div></p>
-</li>
-<li>
-<p>Set up billing:</p>
-</li>
+</code></pre></div>
+<ol>
+<li>Set up billing:</li>
 <li>Navigate to <strong>Billing and Plans</strong></li>
 <li>Add payment method</li>
 <li>Confirm Copilot subscription for users</li>
@@ -5819,8 +5823,12 @@ Permission:<span class="w"> </span>Full<span class="w"> </span>Access
 </ol>
 <p><strong>Configuration:</strong></p>
 <ol>
-<li>Sign in to GitHub:</li>
-<li>Click <strong>Accounts</strong> icon (bottom left)</li>
+<li>
+<p>Sign in to GitHub:</p>
+</li>
+<li>
+<p>Click <strong>Accounts</strong> icon (bottom left)</p>
+</li>
 <li>Select <strong>Sign in with GitHub</strong></li>
 <li>
 <p>Authorize VSCode</p>
@@ -5846,7 +5854,7 @@ Permission:<span class="w"> </span>Full<span class="w"> </span>Access
 <span class="w">  </span><span class="nt">&quot;github.copilot.advanced&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;debug.overrideEngine&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;debug.overrideProxyUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">500</span><span class="w">  </span><span class="c1">// Max suggestion length</span>
+<span class="w">    </span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">500</span><span class="w"> </span><span class="c1">// Max suggestion length</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -5869,8 +5877,12 @@ Permission:<span class="w"> </span>Full<span class="w"> </span>Access
 </ol>
 <p><strong>Configuration:</strong></p>
 <ol>
-<li>Authenticate:</li>
-<li><strong>Settings</strong> → <strong>Tools</strong> → <strong>GitHub Copilot</strong></li>
+<li>
+<p>Authenticate:</p>
+</li>
+<li>
+<p><strong>Settings</strong> → <strong>Tools</strong> → <strong>GitHub Copilot</strong></p>
+</li>
 <li>Click <strong>Sign in to GitHub</strong></li>
 <li>
 <p>Complete OAuth flow</p>
@@ -5901,9 +5913,9 @@ Permission:<span class="w"> </span>Full<span class="w"> </span>Access
 <div class="highlight"><pre><span></span><code><span class="c">&quot; GitHub Copilot</span>
 Plug <span class="s1">&#39;github/copilot.vim&#39;</span>
 </code></pre></div>
-<p>Then run:
+<p>Then run:</p>
 <div class="highlight"><pre><span></span><code><span class="p">:</span>PlugInstall
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Authentication:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">:</span>Copilot setup
 </code></pre></div>
@@ -5942,15 +5954,13 @@ Plug <span class="s1">&#39;github/copilot.vim&#39;</span>
 <p><strong>Strategy</strong>: Keep relevant documentation in workspace</p>
 <p>GitHub Copilot uses open files and workspace context for suggestions. To leverage internal documentation:</p>
 <ol>
-<li>
-<p><strong>Open relevant docs</strong> alongside code:
-   <div class="highlight"><pre><span></span><code><span class="c1"># Open in split panes</span>
+<li><strong>Open relevant docs</strong> alongside code:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Open in split panes</span>
 code<span class="w"> </span>docs/architecture.md<span class="w"> </span>src/service.py
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Use workspace-relative paths</strong>:</p>
-</li>
+</code></pre></div>
+<ol>
+<li><strong>Use workspace-relative paths</strong>:</li>
 <li>Keep docs in same workspace</li>
 <li>Reference docs in comments</li>
 <li>Copilot will use open files as context</li>
@@ -5998,12 +6008,12 @@ code<span class="w"> </span>/tmp/context.txt
 <span class="c1"># Now use Copilot with context loaded</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Context loaded. Start coding with Copilot.&quot;</span>
 </code></pre></div>
-<p><strong>Usage:</strong>
+<p><strong>Usage:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Load context before coding</span>
 ./rag-query.sh<span class="w"> </span><span class="s2">&quot;How to deploy ArgoCD applications&quot;</span>
 
 <span class="c1"># Copilot now has context from open file</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="approach-4-custom-copilot-instructions-future">Approach 4: Custom Copilot Instructions (Future)</h3>
 <p>GitHub is developing workspace-level instructions for Copilot. When available:</p>
 <ol>
@@ -6015,17 +6025,20 @@ code<span class="w"> </span>/tmp/context.txt
 <div class="highlight"><pre><span></span><code><span class="gh"># Fawkes Coding Guidelines for Copilot</span>
 
 <span class="gu">## Architecture Principles</span>
+
 <span class="k">-</span><span class="w"> </span>GitOps-first: All config in Git
 <span class="k">-</span><span class="w"> </span>Declarative over imperative
 <span class="k">-</span><span class="w"> </span>Kubernetes-native patterns
 
 <span class="gu">## Conventions</span>
+
 <span class="k">-</span><span class="w"> </span>Use ErrKind for error handling
 <span class="k">-</span><span class="w"> </span>Terraform 1.6+ syntax
 <span class="k">-</span><span class="w"> </span>Kustomize for K8s overlays
 <span class="k">-</span><span class="w"> </span>BDD tests with Gherkin
 
 <span class="gu">## Security</span>
+
 <span class="k">-</span><span class="w"> </span>Never commit secrets
 <span class="k">-</span><span class="w"> </span>Use External Secrets Operator
 <span class="k">-</span><span class="w"> </span>Scan with Trivy
@@ -6113,55 +6126,73 @@ code<span class="w"> </span>/tmp/test-copilot.py
 </code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="1-security-best-practices">1. Security Best Practices</h3>
-<p><strong>✅ DO:</strong>
-- Review all Copilot suggestions before accepting
-- Scan for hardcoded credentials or secrets
-- Use Copilot for boilerplate, verify for security-critical code
-- Enable "Block public code suggestions" for sensitive projects</p>
-<p><strong>❌ DON'T:</strong>
-- Blindly accept suggestions without review
-- Use Copilot-generated code in production without testing
-- Share proprietary code patterns publicly
-- Disable security scanning tools</p>
+<p><strong>✅ DO:</strong></p>
+<ul>
+<li>Review all Copilot suggestions before accepting</li>
+<li>Scan for hardcoded credentials or secrets</li>
+<li>Use Copilot for boilerplate, verify for security-critical code</li>
+<li>Enable "Block public code suggestions" for sensitive projects</li>
+</ul>
+<p><strong>❌ DON'T:</strong></p>
+<ul>
+<li>Blindly accept suggestions without review</li>
+<li>Use Copilot-generated code in production without testing</li>
+<li>Share proprietary code patterns publicly</li>
+<li>Disable security scanning tools</li>
+</ul>
 <h3 id="2-code-quality-best-practices">2. Code Quality Best Practices</h3>
-<p><strong>✅ DO:</strong>
-- Use descriptive variable and function names (helps Copilot context)
-- Write clear comments explaining intent
-- Provide examples in comments for complex logic
-- Test all generated code
-- Refactor suggestions to match team style</p>
-<p><strong>❌ DON'T:</strong>
-- Accept verbose or overly complex suggestions
-- Skip code review for Copilot-generated code
-- Ignore linting warnings on generated code
-- Use outdated patterns suggested by Copilot</p>
+<p><strong>✅ DO:</strong></p>
+<ul>
+<li>Use descriptive variable and function names (helps Copilot context)</li>
+<li>Write clear comments explaining intent</li>
+<li>Provide examples in comments for complex logic</li>
+<li>Test all generated code</li>
+<li>Refactor suggestions to match team style</li>
+</ul>
+<p><strong>❌ DON'T:</strong></p>
+<ul>
+<li>Accept verbose or overly complex suggestions</li>
+<li>Skip code review for Copilot-generated code</li>
+<li>Ignore linting warnings on generated code</li>
+<li>Use outdated patterns suggested by Copilot</li>
+</ul>
 <h3 id="3-productivity-best-practices">3. Productivity Best Practices</h3>
-<p><strong>✅ DO:</strong>
-- Learn keyboard shortcuts for faster workflow
-- Use Copilot Chat for explaining complex code
-- Leverage Copilot for documentation and tests
-- Provide context through comments and open files
-- Iterate on suggestions (reject and try again)</p>
-<p><strong>❌ DON'T:</strong>
-- Rely solely on Copilot without understanding code
-- Spend more time fixing suggestions than writing code
-- Accept first suggestion without exploring alternatives
-- Use Copilot as a substitute for learning</p>
+<p><strong>✅ DO:</strong></p>
+<ul>
+<li>Learn keyboard shortcuts for faster workflow</li>
+<li>Use Copilot Chat for explaining complex code</li>
+<li>Leverage Copilot for documentation and tests</li>
+<li>Provide context through comments and open files</li>
+<li>Iterate on suggestions (reject and try again)</li>
+</ul>
+<p><strong>❌ DON'T:</strong></p>
+<ul>
+<li>Rely solely on Copilot without understanding code</li>
+<li>Spend more time fixing suggestions than writing code</li>
+<li>Accept first suggestion without exploring alternatives</li>
+<li>Use Copilot as a substitute for learning</li>
+</ul>
 <h3 id="4-privacy-and-compliance">4. Privacy and Compliance</h3>
-<p><strong>✅ DO:</strong>
-- Review organization's Copilot policies
-- Opt-in to telemetry collection (helps improve Copilot)
-- Report inappropriate or problematic suggestions
-- Use content exclusions for sensitive files</p>
-<p><strong>❌ DON'T:</strong>
-- Share Copilot suggestions containing sensitive data
-- Use Copilot on code with export restrictions
-- Ignore licensing concerns for suggested code
-- Disable audit logging (if required by org)</p>
+<p><strong>✅ DO:</strong></p>
+<ul>
+<li>Review organization's Copilot policies</li>
+<li>Opt-in to telemetry collection (helps improve Copilot)</li>
+<li>Report inappropriate or problematic suggestions</li>
+<li>Use content exclusions for sensitive files</li>
+</ul>
+<p><strong>❌ DON'T:</strong></p>
+<ul>
+<li>Share Copilot suggestions containing sensitive data</li>
+<li>Use Copilot on code with export restrictions</li>
+<li>Ignore licensing concerns for suggested code</li>
+<li>Disable audit logging (if required by org)</li>
+</ul>
 <h2 id="limitations-and-known-issues">Limitations and Known Issues</h2>
 <h3 id="current-limitations">Current Limitations</h3>
 <ol>
-<li><strong>Context Window</strong>: Limited to open files and immediate workspace</li>
+<li>
+<p><strong>Context Window</strong>: Limited to open files and immediate workspace</p>
+</li>
 <li>
 <p><strong>Mitigation</strong>: Keep relevant docs open in workspace</p>
 </li>
@@ -6202,8 +6233,9 @@ code<span class="w"> </span>/tmp/test-copilot.py
 <p><strong>Issue 3: Copilot Not Working</strong></p>
 <ul>
 <li><strong>Symptom</strong>: No suggestions appearing</li>
-<li><strong>Fixes</strong>:
-  <div class="highlight"><pre><span></span><code><span class="c1"># Check authentication</span>
+<li><strong>Fixes</strong>:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check authentication</span>
 <span class="c1"># VSCode: Cmd+Shift+P → &quot;GitHub Copilot: Sign In&quot;</span>
 
 <span class="c1"># Check status</span>
@@ -6211,8 +6243,7 @@ code<span class="w"> </span>/tmp/test-copilot.py
 
 <span class="c1"># Restart extension</span>
 <span class="c1"># VSCode: Cmd+Shift+P → &quot;Developer: Reload Window&quot;</span>
-</code></pre></div></li>
-</ul>
+</code></pre></div>
 <p><strong>Issue 4: High Latency</strong></p>
 <ul>
 <li><strong>Symptom</strong>: Slow suggestion response</li>
@@ -6254,19 +6285,21 @@ open<span class="w"> </span>http://grafana.fawkes.local/d/ai-telemetry
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="copilot-not-suggesting">Copilot Not Suggesting</h3>
 <ol>
-<li>
-<p><strong>Check authentication</strong>:
-   <div class="highlight"><pre><span></span><code><span class="c1"># VSCode</span>
+<li><strong>Check authentication</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># VSCode</span>
 Cmd+Shift+P<span class="w"> </span>→<span class="w"> </span><span class="s2">&quot;GitHub Copilot: Check Status&quot;</span>
 
 <span class="c1"># CLI</span>
 gh<span class="w"> </span>copilot<span class="w"> </span>status
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Verify subscription</strong>:</p>
 </li>
-<li>Check organization settings</li>
+<li>
+<p>Check organization settings</p>
+</li>
 <li>Confirm user has access</li>
 <li>
 <p>Review billing status</p>
@@ -6274,7 +6307,9 @@ gh<span class="w"> </span>copilot<span class="w"> </span>status
 <li>
 <p><strong>Check file type</strong>:</p>
 </li>
-<li>Ensure file extension is supported</li>
+<li>
+<p>Ensure file extension is supported</p>
+</li>
 <li>Check language mode in IDE</li>
 <li>
 <p>Try <code>.py</code>, <code>.js</code>, <code>.tf</code> files</p>
@@ -6288,20 +6323,22 @@ gh<span class="w"> </span>copilot<span class="w"> </span>status
 </ol>
 <h3 id="suggestions-not-relevant">Suggestions Not Relevant</h3>
 <ol>
-<li>
-<p><strong>Add more context</strong>:
-   <div class="highlight"><pre><span></span><code><span class="c1"># Add detailed comment</span>
+<li><strong>Add more context</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Add detailed comment</span>
 <span class="c1"># Function to query Weaviate for Fawkes docs</span>
 <span class="c1"># Uses semantic search with vector embeddings</span>
 <span class="c1"># Returns top 5 results with certainty &gt; 0.7</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">search_fawkes_docs</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="c1"># Copilot now has better context</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Open reference files</strong>:</p>
 </li>
-<li>Open similar existing code</li>
+<li>
+<p>Open similar existing code</p>
+</li>
 <li>Open relevant documentation</li>
 <li>
 <p>Keep examples in workspace</p>
@@ -6310,7 +6347,7 @@ gh<span class="w"> </span>copilot<span class="w"> </span>status
 <p><strong>Adjust settings</strong>:
    <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;github.copilot.advanced&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="w">  </span><span class="c1">// Increase for more complete suggestions</span>
+<span class="w">    </span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="c1">// Increase for more complete suggestions</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></p>
@@ -6318,25 +6355,29 @@ gh<span class="w"> </span>copilot<span class="w"> </span>status
 </ol>
 <h3 id="performance-issues">Performance Issues</h3>
 <ol>
-<li><strong>Reduce file size</strong>:</li>
-<li>Close large files</li>
+<li>
+<p><strong>Reduce file size</strong>:</p>
+</li>
+<li>
+<p>Close large files</p>
+</li>
 <li>Split complex files</li>
 <li>
 <p>Work in smaller modules</p>
 </li>
 <li>
-<p><strong>Disable for specific files</strong>:
-   <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<p><strong>Disable for specific files</strong>:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;github.copilot.enable&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;log&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;xml&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Check system resources</strong>:</p>
-</li>
+</code></pre></div>
+<ol>
+<li><strong>Check system resources</strong>:</li>
 <li>Close unused applications</li>
 <li>Increase IDE memory</li>
 <li>Monitor CPU usage</li>
@@ -6367,56 +6408,74 @@ gh<span class="w"> </span>copilot<span class="w"> </span>status
 </ul>
 <h2 id="faq">FAQ</h2>
 <h3 id="q-is-my-code-sent-to-githubopenai">Q: Is my code sent to GitHub/OpenAI?</h3>
-<p><strong>A:</strong> Yes, code snippets are sent to GitHub's Copilot service for processing. GitHub states that:
-- Copilot for Business: Code snippets are NOT used for model training
-- Copilot for Individuals: Code may be used for training (can opt out)
-- All transmission is encrypted (HTTPS)</p>
+<p><strong>A:</strong> Yes, code snippets are sent to GitHub's Copilot service for processing. GitHub states that:</p>
+<ul>
+<li>Copilot for Business: Code snippets are NOT used for model training</li>
+<li>Copilot for Individuals: Code may be used for training (can opt out)</li>
+<li>All transmission is encrypted (HTTPS)</li>
+</ul>
 <h3 id="q-can-i-use-copilot-for-proprietaryconfidential-code">Q: Can I use Copilot for proprietary/confidential code?</h3>
-<p><strong>A:</strong> With Copilot for Business, yes. GitHub provides:
-- No training on your code
-- No code retention after processing
-- SOC 2 Type II compliance
-- Enterprise-grade security</p>
+<p><strong>A:</strong> With Copilot for Business, yes. GitHub provides:</p>
+<ul>
+<li>No training on your code</li>
+<li>No code retention after processing</li>
+<li>SOC 2 Type II compliance</li>
+<li>Enterprise-grade security</li>
+</ul>
 <p>Verify your organization's policy before using on sensitive code.</p>
 <h3 id="q-what-if-copilot-suggests-copyrighted-code">Q: What if Copilot suggests copyrighted code?</h3>
-<p><strong>A:</strong> GitHub provides:
-- Copyright filter to block verbatim code from public repos
-- Legal protection for Business users (in some plans)
-- Attribution for code similar to public sources</p>
+<p><strong>A:</strong> GitHub provides:</p>
+<ul>
+<li>Copyright filter to block verbatim code from public repos</li>
+<li>Legal protection for Business users (in some plans)</li>
+<li>Attribution for code similar to public sources</li>
+</ul>
 <p>Best practice: Review suggestions, add attribution, and run license compliance tools.</p>
 <h3 id="q-how-accurate-is-copilot">Q: How accurate is Copilot?</h3>
-<p><strong>A:</strong> Accuracy varies by:
-- Language (better for popular languages like Python, JavaScript)
-- Context (better with clear comments and examples)
-- Complexity (better for common patterns than novel algorithms)</p>
-<p><strong>Typical acceptance rates:</strong>
-- Simple boilerplate: 70-90%
-- Business logic: 40-60%
-- Complex algorithms: 20-40%</p>
+<p><strong>A:</strong> Accuracy varies by:</p>
+<ul>
+<li>Language (better for popular languages like Python, JavaScript)</li>
+<li>Context (better with clear comments and examples)</li>
+<li>Complexity (better for common patterns than novel algorithms)</li>
+</ul>
+<p><strong>Typical acceptance rates:</strong></p>
+<ul>
+<li>Simple boilerplate: 70-90%</li>
+<li>Business logic: 40-60%</li>
+<li>Complex algorithms: 20-40%</li>
+</ul>
 <p>Always review and test suggested code.</p>
 <h3 id="q-can-i-customize-copilot-for-fawkes-conventions">Q: Can I customize Copilot for Fawkes conventions?</h3>
-<p><strong>A:</strong> Currently limited, but you can:
-- Use detailed comments with conventions
-- Keep style guides in workspace
-- Open example files for context
-- Wait for workspace-level instructions feature (coming soon)</p>
+<p><strong>A:</strong> Currently limited, but you can:</p>
+<ul>
+<li>Use detailed comments with conventions</li>
+<li>Keep style guides in workspace</li>
+<li>Open example files for context</li>
+<li>Wait for workspace-level instructions feature (coming soon)</li>
+</ul>
 <h3 id="q-does-copilot-replace-code-review">Q: Does Copilot replace code review?</h3>
-<p><strong>A:</strong> No. Code review is still essential:
-- Verify logic correctness
-- Check security implications
-- Ensure style consistency
-- Validate test coverage</p>
+<p><strong>A:</strong> No. Code review is still essential:</p>
+<ul>
+<li>Verify logic correctness</li>
+<li>Check security implications</li>
+<li>Ensure style consistency</li>
+<li>Validate test coverage</li>
+</ul>
 <p>Treat Copilot as a pair programmer, not a replacement for review.</p>
 <h3 id="q-how-do-i-report-problematic-suggestions">Q: How do I report problematic suggestions?</h3>
-<p><strong>A:</strong>
-1. In VSCode: Right-click suggestion → "Report Issue"
-2. Via GitHub: <a href="https://github.com/github/feedback/discussions/categories/copilot-feedback">GitHub Copilot Feedback</a>
-3. Internal: Post in #ai-coding-help Slack channel</p>
+<p><strong>A:</strong></p>
+<ol>
+<li>In VSCode: Right-click suggestion → "Report Issue"</li>
+<li>Via GitHub: <a href="https://github.com/github/feedback/discussions/categories/copilot-feedback">GitHub Copilot Feedback</a></li>
+<li>Internal: Post in #ai-coding-help Slack channel</li>
+</ol>
 <h3 id="q-can-i-use-copilot-offline">Q: Can I use Copilot offline?</h3>
-<p><strong>A:</strong> No, Copilot requires internet connection to:
-- Send code context to GitHub's servers
-- Receive AI-generated suggestions
-- Authenticate your account</p>
+<p><strong>A:</strong> No, Copilot requires internet connection to:</p>
+<ul>
+<li>Send code context to GitHub's servers</li>
+<li>Receive AI-generated suggestions</li>
+<li>Authenticate your account</li>
+</ul>
 <p>For offline development, Copilot will be unavailable.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>GitHub Copilot is a powerful tool for accelerating development in the Fawkes platform. By following this guide and best practices, you can:</p>

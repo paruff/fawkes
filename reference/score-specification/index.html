@@ -5213,12 +5213,12 @@
 <p><strong>Fawkes Implementation</strong>: The Fawkes platform translates SCORE workload specifications into Kubernetes manifests using the SCORE transformer component.</p>
 <h2 id="document-structure">Document Structure</h2>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score.dev/v1b1</span>
-<span class="nt">metadata</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">...</span><span class="p p-Indicator">}</span>
-<span class="nt">containers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">...</span><span class="p p-Indicator">}</span>
-<span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">...</span><span class="p p-Indicator">}</span>
-<span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">...</span><span class="p p-Indicator">}</span>
-<span class="nt">route</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">...</span><span class="p p-Indicator">}</span>
-<span class="nt">extensions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">...</span><span class="p p-Indicator">}</span>
+<span class="nt">metadata</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">...</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="nt">containers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">...</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">...</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">...</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="nt">route</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">...</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="nt">extensions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">...</span><span class="w"> </span><span class="p p-Indicator">}</span>
 </code></pre></div>
 <hr />
 <h2 id="core-fields-score-standard">Core Fields (SCORE Standard)</h2>
@@ -5227,9 +5227,9 @@
 <strong>Required</strong>: Yes
 <strong>Supported Values</strong>: <code>score.dev/v1b1</code></p>
 <p>Specifies the SCORE API version.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score.dev/v1b1</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="metadata">metadata</h3>
 <p><strong>Type</strong>: <code>object</code>
@@ -5238,15 +5238,17 @@
 <h4 id="metadataname">metadata.name</h4>
 <p><strong>Type</strong>: <code>string</code>
 <strong>Required</strong>: Yes
-<strong>Constraints</strong>:
-- Must be a valid Kubernetes resource name
-- Lowercase alphanumeric characters, <code>-</code> only
-- Max 63 characters</p>
+<strong>Constraints</strong>:</p>
+<ul>
+<li>Must be a valid Kubernetes resource name</li>
+<li>Lowercase alphanumeric characters, <code>-</code> only</li>
+<li>Max 63 characters</li>
+</ul>
 <p>The name of the workload. This becomes the base name for all generated Kubernetes resources.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-service</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="containers">containers</h3>
 <p><strong>Type</strong>: <code>object</code>
@@ -5256,39 +5258,41 @@
 <p><strong>Type</strong>: <code>string</code>
 <strong>Required</strong>: Yes</p>
 <p>Container image reference.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">containers</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">web</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;harbor.fawkes.local/my-team/my-app:v1.0.0&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="containerscommand">containers.<name>.command</h4>
 <p><strong>Type</strong>: <code>array of strings</code>
 <strong>Required</strong>: No</p>
 <p>Override the container's entrypoint.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">containers</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">web</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;/app/server&quot;</span><span class="p p-Indicator">]</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="containersargs">containers.<name>.args</h4>
 <p><strong>Type</strong>: <code>array of strings</code>
 <strong>Required</strong>: No</p>
 <p>Override the container's arguments.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">containers</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">web</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;--port&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;8080&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;--workers&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;4&quot;</span><span class="p p-Indicator">]</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="containersresources">containers.<name>.resources</h4>
 <p><strong>Type</strong>: <code>object</code>
 <strong>Required</strong>: Recommended</p>
 <p>Resource requests and limits.</p>
-<p><strong>Sub-fields</strong>:
-- <code>requests.cpu</code>: CPU request (e.g., <code>"100m"</code>, <code>"0.5"</code>)
-- <code>requests.memory</code>: Memory request (e.g., <code>"128Mi"</code>, <code>"1Gi"</code>)
-- <code>limits.cpu</code>: CPU limit
-- <code>limits.memory</code>: Memory limit</p>
-<p><strong>Example</strong>:
+<p><strong>Sub-fields</strong>:</p>
+<ul>
+<li><code>requests.cpu</code>: CPU request (e.g., <code>"100m"</code>, <code>"0.5"</code>)</li>
+<li><code>requests.memory</code>: Memory request (e.g., <code>"128Mi"</code>, <code>"1Gi"</code>)</li>
+<li><code>limits.cpu</code>: CPU limit</li>
+<li><code>limits.memory</code>: Memory limit</li>
+</ul>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">containers</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">web</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">resources</span><span class="p">:</span>
@@ -5298,16 +5302,18 @@
 <span class="w">      </span><span class="nt">limits</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span>
 <span class="w">        </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span>
-</code></pre></div></p>
-<p><strong>Best Practices</strong>:
-- Always set both requests and limits
-- Memory limits should be 1.5-2x requests
-- CPU limits can be higher for burstable workloads</p>
+</code></pre></div>
+<p><strong>Best Practices</strong>:</p>
+<ul>
+<li>Always set both requests and limits</li>
+<li>Memory limits should be 1.5-2x requests</li>
+<li>CPU limits can be higher for burstable workloads</li>
+</ul>
 <h4 id="containersvariables">containers.<name>.variables</h4>
 <p><strong>Type</strong>: <code>object</code>
 <strong>Required</strong>: No</p>
 <p>Environment variables for the container. Values can reference resources using <code>${resources.&lt;name&gt;.&lt;field&gt;}</code>.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">containers</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">web</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">variables</span><span class="p">:</span>
@@ -5315,16 +5321,18 @@
 <span class="w">      </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${resources.db.connection_string}&quot;</span>
 <span class="w">      </span><span class="nt">REDIS_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${resources.cache.connection_string}&quot;</span>
 <span class="w">      </span><span class="nt">ENVIRONMENT</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${ENVIRONMENT}&quot;</span>
-</code></pre></div></p>
-<p><strong>Variable Interpolation</strong>:
-- <code>${ENVIRONMENT}</code>: Replaced with target environment (dev, staging, prod)
-- <code>${resources.&lt;resource-name&gt;.&lt;field&gt;}</code>: Replaced with resource field values</p>
+</code></pre></div>
+<p><strong>Variable Interpolation</strong>:</p>
+<ul>
+<li><code>${ENVIRONMENT}</code>: Replaced with target environment (dev, staging, prod)</li>
+<li><code>${resources.&lt;resource-name&gt;.&lt;field&gt;}</code>: Replaced with resource field values</li>
+</ul>
 <h4 id="containerslivenessprobe">containers.<name>.livenessProbe</h4>
 <p><strong>Type</strong>: <code>object</code>
 <strong>Required</strong>: Recommended</p>
 <p>Liveness probe configuration.</p>
 <p><strong>Supported Types</strong>: <code>httpGet</code> only (in current implementation)</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">containers</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">web</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">livenessProbe</span><span class="p">:</span>
@@ -5335,12 +5343,12 @@
 <span class="w">      </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 <span class="w">      </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
 <span class="w">      </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="containersreadinessprobe">containers.<name>.readinessProbe</h4>
 <p><strong>Type</strong>: <code>object</code>
 <strong>Required</strong>: Recommended</p>
 <p>Readiness probe configuration.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">containers</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">web</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">readinessProbe</span><span class="p">:</span>
@@ -5349,7 +5357,7 @@
 <span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
 <span class="w">      </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 <span class="w">      </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="service">service</h3>
 <p><strong>Type</strong>: <code>object</code>
@@ -5359,11 +5367,13 @@
 <p><strong>Type</strong>: <code>object</code>
 <strong>Required</strong>: Yes (if <code>service</code> is defined)</p>
 <p>Map of port definitions. Each key is the port name.</p>
-<p><strong>Sub-fields</strong>:
-- <code>port</code>: External port (on the Service)
-- <code>targetPort</code>: Container port
-- <code>protocol</code>: Protocol (<code>tcp</code>, <code>udp</code>)</p>
-<p><strong>Example</strong>:
+<p><strong>Sub-fields</strong>:</p>
+<ul>
+<li><code>port</code>: External port (on the Service)</li>
+<li><code>targetPort</code>: Container port</li>
+<li><code>protocol</code>: Protocol (<code>tcp</code>, <code>udp</code>)</li>
+</ul>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">service</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">http</span><span class="p">:</span>
@@ -5374,7 +5384,7 @@
 <span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090</span>
 <span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090</span>
 <span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tcp</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="resources">resources</h3>
 <p><strong>Type</strong>: <code>object</code>
@@ -5382,7 +5392,7 @@
 <p>Map of infrastructure resources required by the workload.</p>
 <h4 id="resource-type-postgres">Resource Type: postgres</h4>
 <p>PostgreSQL database provisioned via CloudNativePG.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">db</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
@@ -5392,17 +5402,21 @@
 <span class="w">        </span><span class="nt">fawkes.dev/version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;15&quot;</span>
 <span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;myapp&quot;</span>
-</code></pre></div></p>
-<p><strong>Generated Resources</strong>:
-- CloudNativePG Cluster (managed externally)
-- ExternalSecret with connection credentials
-- Environment variable: <code>${resources.db.connection_string}</code></p>
-<p><strong>Fawkes Annotations</strong>:
-- <code>fawkes.dev/storage-size</code>: Persistent volume size (default: <code>10Gi</code>)
-- <code>fawkes.dev/version</code>: PostgreSQL version (default: <code>15</code>)</p>
+</code></pre></div>
+<p><strong>Generated Resources</strong>:</p>
+<ul>
+<li>CloudNativePG Cluster (managed externally)</li>
+<li>ExternalSecret with connection credentials</li>
+<li>Environment variable: <code>${resources.db.connection_string}</code></li>
+</ul>
+<p><strong>Fawkes Annotations</strong>:</p>
+<ul>
+<li><code>fawkes.dev/storage-size</code>: Persistent volume size (default: <code>10Gi</code>)</li>
+<li><code>fawkes.dev/version</code>: PostgreSQL version (default: <code>15</code>)</li>
+</ul>
 <h4 id="resource-type-redis">Resource Type: redis</h4>
 <p>Redis cache provisioned via Redis Helm Chart.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">cache</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
@@ -5411,14 +5425,16 @@
 <span class="w">        </span><span class="nt">fawkes.dev/storage-size</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2Gi&quot;</span>
 <span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">maxmemory-policy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;allkeys-lru&quot;</span>
-</code></pre></div></p>
-<p><strong>Generated Resources</strong>:
-- Redis StatefulSet (managed externally)
-- ExternalSecret with connection credentials
-- Environment variable: <code>${resources.cache.connection_string}</code></p>
+</code></pre></div>
+<p><strong>Generated Resources</strong>:</p>
+<ul>
+<li>Redis StatefulSet (managed externally)</li>
+<li>ExternalSecret with connection credentials</li>
+<li>Environment variable: <code>${resources.cache.connection_string}</code></li>
+</ul>
 <h4 id="resource-type-secret">Resource Type: secret</h4>
 <p>Secrets from HashiCorp Vault provisioned via External Secrets Operator.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">api-keys</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret</span>
@@ -5429,16 +5445,20 @@
 <span class="w">      </span><span class="nt">keys</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">API_KEY</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">JWT_SECRET</span>
-</code></pre></div></p>
-<p><strong>Generated Resources</strong>:
-- ExternalSecret referencing Vault
-- Kubernetes Secret with specified keys
-- Environment variables: <code>${resources.api-keys.API_KEY}</code>, etc.</p>
-<p><strong>Fawkes Annotations</strong>:
-- <code>fawkes.dev/vault-path</code>: Path in Vault (required)</p>
+</code></pre></div>
+<p><strong>Generated Resources</strong>:</p>
+<ul>
+<li>ExternalSecret referencing Vault</li>
+<li>Kubernetes Secret with specified keys</li>
+<li>Environment variables: <code>${resources.api-keys.API_KEY}</code>, etc.</li>
+</ul>
+<p><strong>Fawkes Annotations</strong>:</p>
+<ul>
+<li><code>fawkes.dev/vault-path</code>: Path in Vault (required)</li>
+</ul>
 <h4 id="resource-type-volume">Resource Type: volume</h4>
 <p>Persistent volume provisioned via PersistentVolumeClaim.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">uploads</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span>
@@ -5449,16 +5469,22 @@
 <span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;5Gi&quot;</span>
 <span class="w">      </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/app/uploads&quot;</span>
-</code></pre></div></p>
-<p><strong>Generated Resources</strong>:
-- PersistentVolumeClaim
-- Volume mount in container</p>
-<p><strong>Fawkes Annotations</strong>:
-- <code>fawkes.dev/storage-class</code>: StorageClass (default: <code>standard</code>)
-- <code>fawkes.dev/access-mode</code>: Access mode (default: <code>ReadWriteOnce</code>)</p>
-<p><strong>Properties</strong>:
-- <code>size</code>: Storage size (required)
-- <code>mountPath</code>: Path in container (required)</p>
+</code></pre></div>
+<p><strong>Generated Resources</strong>:</p>
+<ul>
+<li>PersistentVolumeClaim</li>
+<li>Volume mount in container</li>
+</ul>
+<p><strong>Fawkes Annotations</strong>:</p>
+<ul>
+<li><code>fawkes.dev/storage-class</code>: StorageClass (default: <code>standard</code>)</li>
+<li><code>fawkes.dev/access-mode</code>: Access mode (default: <code>ReadWriteOnce</code>)</li>
+</ul>
+<p><strong>Properties</strong>:</p>
+<ul>
+<li><code>size</code>: Storage size (required)</li>
+<li><code>mountPath</code>: Path in container (required)</li>
+</ul>
 <hr />
 <h3 id="route">route</h3>
 <p><strong>Type</strong>: <code>object</code>
@@ -5468,10 +5494,10 @@
 <p><strong>Type</strong>: <code>string</code>
 <strong>Required</strong>: Yes (if <code>route</code> is defined)</p>
 <p>Hostname for the Ingress. Use <code>${ENVIRONMENT}</code> for environment interpolation.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">route</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;my-service.${ENVIRONMENT}.fawkes.idp&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Dev</strong>: <code>my-service.dev.fawkes.idp</code>
 <strong>Prod</strong>: <code>my-service.prod.fawkes.idp</code></p>
 <h4 id="routepath">route.path</h4>
@@ -5479,24 +5505,28 @@
 <strong>Required</strong>: No
 <strong>Default</strong>: <code>"/"</code></p>
 <p>Path prefix for routing.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">route</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/api&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="routetls">route.tls</h4>
 <p><strong>Type</strong>: <code>object</code>
 <strong>Required</strong>: No</p>
 <p>TLS/HTTPS configuration.</p>
-<p><strong>Sub-fields</strong>:
-- <code>enabled</code>: Boolean (default: <code>true</code>)</p>
-<p><strong>Example</strong>:
+<p><strong>Sub-fields</strong>:</p>
+<ul>
+<li><code>enabled</code>: Boolean (default: <code>true</code>)</li>
+</ul>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">route</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">tls</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div></p>
-<p><strong>Generated Resources</strong>:
-- Ingress with TLS configuration
-- Certificate automatically provisioned via cert-manager</p>
+</code></pre></div>
+<p><strong>Generated Resources</strong>:</p>
+<ul>
+<li>Ingress with TLS configuration</li>
+<li>Certificate automatically provisioned via cert-manager</li>
+</ul>
 <hr />
 <h2 id="fawkes-extensions">Fawkes Extensions</h2>
 <p>The <code>extensions.fawkes</code> section provides Fawkes-specific features beyond the SCORE standard.</p>
@@ -5504,11 +5534,11 @@
 <p><strong>Type</strong>: <code>string</code>
 <strong>Required</strong>: Recommended</p>
 <p>Team name for RBAC and billing.</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">extensions</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">fawkes</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-team</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="extensionsfawkesdeployment">extensions.fawkes.deployment</h3>
 <p><strong>Type</strong>: <code>object</code>
@@ -5527,13 +5557,15 @@
 <p><strong>Type</strong>: <code>object</code>
 <strong>Required</strong>: No</p>
 <p>Horizontal Pod Autoscaler configuration.</p>
-<p><strong>Sub-fields</strong>:
-- <code>enabled</code>: Boolean (default: <code>false</code>)
-- <code>minReplicas</code>: Minimum replicas (default: <code>2</code>)
-- <code>maxReplicas</code>: Maximum replicas (default: <code>10</code>)
-- <code>targetCPUUtilizationPercentage</code>: CPU target (default: <code>70</code>)
-- <code>targetMemoryUtilizationPercentage</code>: Memory target (default: <code>80</code>)</p>
-<p><strong>Example</strong>:
+<p><strong>Sub-fields</strong>:</p>
+<ul>
+<li><code>enabled</code>: Boolean (default: <code>false</code>)</li>
+<li><code>minReplicas</code>: Minimum replicas (default: <code>2</code>)</li>
+<li><code>maxReplicas</code>: Maximum replicas (default: <code>10</code>)</li>
+<li><code>targetCPUUtilizationPercentage</code>: CPU target (default: <code>70</code>)</li>
+<li><code>targetMemoryUtilizationPercentage</code>: Memory target (default: <code>80</code>)</li>
+</ul>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">extensions</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">fawkes</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">deployment</span><span class="p">:</span>
@@ -5543,7 +5575,7 @@
 <span class="w">        </span><span class="nt">maxReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
 <span class="w">        </span><span class="nt">targetCPUUtilizationPercentage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">70</span>
 <span class="w">        </span><span class="nt">targetMemoryUtilizationPercentage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="extensionsfawkesobservability">extensions.fawkes.observability</h3>
 <p><strong>Type</strong>: <code>object</code>
@@ -5552,11 +5584,13 @@
 <h4 id="observabilitymetrics">observability.metrics</h4>
 <p><strong>Type</strong>: <code>object</code></p>
 <p>Prometheus metrics scraping configuration.</p>
-<p><strong>Sub-fields</strong>:
-- <code>enabled</code>: Boolean (default: <code>false</code>)
-- <code>port</code>: Metrics port (default: <code>9090</code>)
-- <code>path</code>: Metrics path (default: <code>"/metrics"</code>)</p>
-<p><strong>Example</strong>:
+<p><strong>Sub-fields</strong>:</p>
+<ul>
+<li><code>enabled</code>: Boolean (default: <code>false</code>)</li>
+<li><code>port</code>: Metrics port (default: <code>9090</code>)</li>
+<li><code>path</code>: Metrics path (default: <code>"/metrics"</code>)</li>
+</ul>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">extensions</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">fawkes</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">observability</span><span class="p">:</span>
@@ -5564,34 +5598,38 @@
 <span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090</span>
 <span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/metrics&quot;</span>
-</code></pre></div></p>
-<p><strong>Generated Annotations</strong>:
+</code></pre></div>
+<p><strong>Generated Annotations</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">annotations</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">prometheus.io/scrape</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
 <span class="w">  </span><span class="nt">prometheus.io/port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;9090&quot;</span>
 <span class="w">  </span><span class="nt">prometheus.io/path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/metrics&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="observabilitytracing">observability.tracing</h4>
 <p><strong>Type</strong>: <code>object</code></p>
 <p>OpenTelemetry distributed tracing configuration.</p>
-<p><strong>Sub-fields</strong>:
-- <code>enabled</code>: Boolean (default: <code>false</code>)
-- <code>samplingRate</code>: Sampling rate (0.0-1.0, default: <code>0.1</code>)</p>
-<p><strong>Example</strong>:
+<p><strong>Sub-fields</strong>:</p>
+<ul>
+<li><code>enabled</code>: Boolean (default: <code>false</code>)</li>
+<li><code>samplingRate</code>: Sampling rate (0.0-1.0, default: <code>0.1</code>)</li>
+</ul>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">extensions</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">fawkes</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">observability</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">tracing</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">        </span><span class="nt">samplingRate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="observabilitylogging">observability.logging</h4>
 <p><strong>Type</strong>: <code>object</code></p>
 <p>Logging configuration.</p>
-<p><strong>Sub-fields</strong>:
-- <code>enabled</code>: Boolean (default: <code>true</code>)
-- <code>format</code>: Log format (<code>json</code>, <code>text</code>, default: <code>json</code>)
-- <code>level</code>: Log level (<code>debug</code>, <code>info</code>, <code>warn</code>, <code>error</code>, default: <code>info</code>)</p>
+<p><strong>Sub-fields</strong>:</p>
+<ul>
+<li><code>enabled</code>: Boolean (default: <code>true</code>)</li>
+<li><code>format</code>: Log format (<code>json</code>, <code>text</code>, default: <code>json</code>)</li>
+<li><code>level</code>: Log level (<code>debug</code>, <code>info</code>, <code>warn</code>, <code>error</code>, default: <code>info</code>)</li>
+</ul>
 <hr />
 <h3 id="extensionsfawkessecurity">extensions.fawkes.security</h3>
 <p><strong>Type</strong>: <code>object</code>
@@ -5613,10 +5651,12 @@
 <h4 id="securitynetworkpolicy">security.networkPolicy</h4>
 <p><strong>Type</strong>: <code>object</code></p>
 <p>NetworkPolicy configuration.</p>
-<p><strong>Sub-fields</strong>:
-- <code>enabled</code>: Boolean (default: <code>false</code>)
-- <code>allowedNamespaces</code>: Array of allowed namespaces</p>
-<p><strong>Example</strong>:
+<p><strong>Sub-fields</strong>:</p>
+<ul>
+<li><code>enabled</code>: Boolean (default: <code>false</code>)</li>
+<li><code>allowedNamespaces</code>: Array of allowed namespaces</li>
+</ul>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">extensions</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">fawkes</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">security</span><span class="p">:</span>
@@ -5627,20 +5667,22 @@
 <span class="w">        </span><span class="nt">allowedNamespaces</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;my-team&quot;</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;fawkes&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="extensionsfawkesdora">extensions.fawkes.dora</h3>
 <p><strong>Type</strong>: <code>object</code>
 <strong>Required</strong>: No</p>
 <p>DORA metrics tracking configuration.</p>
-<p><strong>Sub-fields</strong>:
-- <code>enabled</code>: Boolean (default: <code>true</code>)</p>
-<p><strong>Example</strong>:
+<p><strong>Sub-fields</strong>:</p>
+<ul>
+<li><code>enabled</code>: Boolean (default: <code>true</code>)</li>
+</ul>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">extensions</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">fawkes</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dora</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="complete-example">Complete Example</h2>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score.dev/v1b1</span>
@@ -5652,28 +5694,28 @@
 <span class="w">  </span><span class="nt">web</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;harbor.fawkes.local/team-a/app:v2.1.0&quot;</span>
 <span class="w">    </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">requests</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span><span class="p p-Indicator">,</span><span class="nt"> memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="nt">limits</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1000m&quot;</span><span class="p p-Indicator">,</span><span class="nt"> memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1Gi&quot;</span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">requests</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span><span class="p p-Indicator">,</span><span class="nt"> memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">limits</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1000m&quot;</span><span class="p p-Indicator">,</span><span class="nt"> memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1Gi&quot;</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">    </span><span class="nt">variables</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">LOG_LEVEL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;info&quot;</span>
 <span class="w">      </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${resources.db.connection_string}&quot;</span>
 <span class="w">      </span><span class="nt">REDIS_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${resources.cache.connection_string}&quot;</span>
 <span class="w">      </span><span class="nt">API_KEY</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${resources.secrets.API_KEY}&quot;</span>
 <span class="w">    </span><span class="nt">livenessProbe</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">httpGet</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="nv">/health</span><span class="p p-Indicator">,</span><span class="nt"> port</span><span class="p">:</span><span class="w"> </span><span class="nv">8080</span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">httpGet</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> path</span><span class="p">:</span><span class="w"> </span><span class="nv">/health</span><span class="p p-Indicator">,</span><span class="nt"> port</span><span class="p">:</span><span class="w"> </span><span class="nv">8080</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">      </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
 <span class="w">    </span><span class="nt">readinessProbe</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">httpGet</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="nv">/ready</span><span class="p p-Indicator">,</span><span class="nt"> port</span><span class="p">:</span><span class="w"> </span><span class="nv">8080</span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">httpGet</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> path</span><span class="p">:</span><span class="w"> </span><span class="nv">/ready</span><span class="p p-Indicator">,</span><span class="nt"> port</span><span class="p">:</span><span class="w"> </span><span class="nv">8080</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">      </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 
 <span class="nt">service</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">http</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="nv">80</span><span class="p p-Indicator">,</span><span class="nt"> targetPort</span><span class="p">:</span><span class="w"> </span><span class="nv">8080</span><span class="p p-Indicator">,</span><span class="nt"> protocol</span><span class="p">:</span><span class="w"> </span><span class="nv">tcp</span><span class="p p-Indicator">}</span>
+<span class="w">    </span><span class="nt">http</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> port</span><span class="p">:</span><span class="w"> </span><span class="nv">80</span><span class="p p-Indicator">,</span><span class="nt"> targetPort</span><span class="p">:</span><span class="w"> </span><span class="nv">8080</span><span class="p p-Indicator">,</span><span class="nt"> protocol</span><span class="p">:</span><span class="w"> </span><span class="nv">tcp</span><span class="w"> </span><span class="p p-Indicator">}</span>
 
 <span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">db</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
-<span class="w">    </span><span class="nt">properties</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;appdb&quot;</span><span class="p p-Indicator">}</span>
+<span class="w">    </span><span class="nt">properties</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> database</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;appdb&quot;</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">  </span><span class="nt">cache</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
 <span class="w">  </span><span class="nt">secrets</span><span class="p">:</span>
@@ -5685,12 +5727,12 @@
 <span class="w">      </span><span class="nt">keys</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">API_KEY</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">JWT_SECRET</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">uploads</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">volume</span>
-<span class="w">    </span><span class="nt">properties</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10Gi&quot;</span><span class="p p-Indicator">,</span><span class="nt"> mountPath</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/app/uploads&quot;</span><span class="p p-Indicator">}</span>
+<span class="w">    </span><span class="nt">properties</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> size</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10Gi&quot;</span><span class="p p-Indicator">,</span><span class="nt"> mountPath</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/app/uploads&quot;</span><span class="w"> </span><span class="p p-Indicator">}</span>
 
 <span class="nt">route</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;app.${ENVIRONMENT}.fawkes.idp&quot;</span>
 <span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/&quot;</span>
-<span class="w">  </span><span class="nt">tls</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">tls</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> enabled</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="w"> </span><span class="p p-Indicator">}</span>
 
 <span class="nt">extensions</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">fawkes</span><span class="p">:</span>
@@ -5701,8 +5743,8 @@
 <span class="w">        </span><span class="nt">minReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 <span class="w">        </span><span class="nt">maxReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
 <span class="w">    </span><span class="nt">observability</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">metrics</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">,</span><span class="nt"> port</span><span class="p">:</span><span class="w"> </span><span class="nv">9090</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="nt">tracing</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">,</span><span class="nt"> samplingRate</span><span class="p">:</span><span class="w"> </span><span class="nv">0.1</span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">metrics</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> enabled</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">,</span><span class="nt"> port</span><span class="p">:</span><span class="w"> </span><span class="nv">9090</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">tracing</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> enabled</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">,</span><span class="nt"> samplingRate</span><span class="p">:</span><span class="w"> </span><span class="nv">0.1</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">    </span><span class="nt">security</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">networkPolicy</span><span class="p">:</span>
@@ -5779,21 +5821,23 @@ diff<span class="w"> </span>/tmp/generated/deployment.yaml<span class="w"> </spa
 <h3 id="common-issues">Common Issues</h3>
 <h4 id="invalid-score-file">Invalid SCORE File</h4>
 <p><strong>Error</strong>: <code>ValueError: score.yaml must have 'apiVersion' field</code></p>
-<p><strong>Solution</strong>: Ensure your file starts with:
+<p><strong>Solution</strong>: Ensure your file starts with:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score.dev/v1b1</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="environment-variable-not-interpolated">Environment Variable Not Interpolated</h4>
 <p><strong>Problem</strong>: <code>${ENVIRONMENT}</code> appears literally in generated manifests</p>
-<p><strong>Solution</strong>: The transformer replaces this automatically. Check you're using the correct syntax:
+<p><strong>Solution</strong>: The transformer replaces this automatically. Check you're using the correct syntax:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">route</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;app.${ENVIRONMENT}.fawkes.idp&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="resource-not-provisioned">Resource Not Provisioned</h4>
 <p><strong>Problem</strong>: Database/cache not created</p>
-<p><strong>Solution</strong>: Resource provisioning happens externally to the SCORE transformer. The transformer only generates ExternalSecret references. Ensure:
-1. CloudNativePG operator is installed (for postgres)
-2. Redis is deployed (for redis)
-3. External Secrets Operator is configured (for secrets)</p>
+<p><strong>Solution</strong>: Resource provisioning happens externally to the SCORE transformer. The transformer only generates ExternalSecret references. Ensure:</p>
+<ol>
+<li>CloudNativePG operator is installed (for postgres)</li>
+<li>Redis is deployed (for redis)</li>
+<li>External Secrets Operator is configured (for secrets)</li>
+</ol>
 <hr />
 <h2 id="further-reading">Further Reading</h2>
 <ul>

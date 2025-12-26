@@ -5015,93 +5015,121 @@
 <h2 id="context">Context</h2>
 <p>Fawkes platform components require a relational database for persistent data storage. Multiple components need databases: Backstage (service catalog), Mattermost (messages and boards), Jenkins (build metadata), SonarQube (code analysis), and custom services (DORA metrics, dojo progress). We need to choose a database that's reliable, performant, open source, and well-supported across our technology stack.</p>
 <h3 id="database-requirements-across-components">Database Requirements Across Components</h3>
-<p><strong>Backstage</strong>:
-- Service catalog entities and relationships
-- User preferences and settings
-- Plugin data storage
-- Search indexes
-- Moderate write load, high read load</p>
-<p><strong>Mattermost + Focalboard</strong>:
-- Messages, channels, users
-- Project boards, cards, properties
-- File metadata
-- High write and read load
-- Real-time updates</p>
-<p><strong>DORA Metrics Service</strong>:
-- Build events, deployment events
-- Historical metrics data
-- Team aggregations
-- Time-series queries
-- Write-heavy, analytical reads</p>
-<p><strong>Dojo Progress Tracking</strong>:
-- Learner progress, assessment scores
-- Lab completion status
-- Certification records
-- Moderate write, frequent reads</p>
-<p><strong>SonarQube</strong>:
-- Code analysis results
-- Quality metrics history
-- Security findings
-- High write during scans, read for dashboards</p>
-<p><strong>Jenkins</strong> (optional, can use file system):
-- Build metadata and history
-- Job configurations
-- Plugin data</p>
+<p><strong>Backstage</strong>:</p>
+<ul>
+<li>Service catalog entities and relationships</li>
+<li>User preferences and settings</li>
+<li>Plugin data storage</li>
+<li>Search indexes</li>
+<li>Moderate write load, high read load</li>
+</ul>
+<p><strong>Mattermost + Focalboard</strong>:</p>
+<ul>
+<li>Messages, channels, users</li>
+<li>Project boards, cards, properties</li>
+<li>File metadata</li>
+<li>High write and read load</li>
+<li>Real-time updates</li>
+</ul>
+<p><strong>DORA Metrics Service</strong>:</p>
+<ul>
+<li>Build events, deployment events</li>
+<li>Historical metrics data</li>
+<li>Team aggregations</li>
+<li>Time-series queries</li>
+<li>Write-heavy, analytical reads</li>
+</ul>
+<p><strong>Dojo Progress Tracking</strong>:</p>
+<ul>
+<li>Learner progress, assessment scores</li>
+<li>Lab completion status</li>
+<li>Certification records</li>
+<li>Moderate write, frequent reads</li>
+</ul>
+<p><strong>SonarQube</strong>:</p>
+<ul>
+<li>Code analysis results</li>
+<li>Quality metrics history</li>
+<li>Security findings</li>
+<li>High write during scans, read for dashboards</li>
+</ul>
+<p><strong>Jenkins</strong> (optional, can use file system):</p>
+<ul>
+<li>Build metadata and history</li>
+<li>Job configurations</li>
+<li>Plugin data</li>
+</ul>
 <h3 id="requirements-for-database">Requirements for Database</h3>
-<p><strong>Technical Requirements</strong>:
-- <strong>ACID Compliance</strong>: Data consistency and reliability
-- <strong>SQL Support</strong>: Complex queries, joins, transactions
-- <strong>JSON Support</strong>: Flexible schema for plugin data
-- <strong>Full-Text Search</strong>: Search across catalog, messages, documentation
-- <strong>High Availability</strong>: Replication, failover
-- <strong>Backup/Restore</strong>: Point-in-time recovery
-- <strong>Performance</strong>: Handle 1000+ concurrent connections
-- <strong>Scalability</strong>: Vertical and horizontal scaling options</p>
-<p><strong>Operational Requirements</strong>:
-- <strong>Open Source</strong>: Transparent, no licensing costs
-- <strong>Mature</strong>: Production-proven, stable
-- <strong>Well-Documented</strong>: Extensive documentation and community
-- <strong>Cloud-Native</strong>: Works well in Kubernetes
-- <strong>Monitoring</strong>: Prometheus metrics, logging integration
-- <strong>Security</strong>: Encryption at rest and in transit, RBAC</p>
-<p><strong>Integration Requirements</strong>:
-- Supported by Backstage, Mattermost, SonarQube, Jenkins
-- Kubernetes Operator available
-- Terraform provider for provisioning
-- Helm charts for deployment
-- Backup tools mature and reliable</p>
+<p><strong>Technical Requirements</strong>:</p>
+<ul>
+<li><strong>ACID Compliance</strong>: Data consistency and reliability</li>
+<li><strong>SQL Support</strong>: Complex queries, joins, transactions</li>
+<li><strong>JSON Support</strong>: Flexible schema for plugin data</li>
+<li><strong>Full-Text Search</strong>: Search across catalog, messages, documentation</li>
+<li><strong>High Availability</strong>: Replication, failover</li>
+<li><strong>Backup/Restore</strong>: Point-in-time recovery</li>
+<li><strong>Performance</strong>: Handle 1000+ concurrent connections</li>
+<li><strong>Scalability</strong>: Vertical and horizontal scaling options</li>
+</ul>
+<p><strong>Operational Requirements</strong>:</p>
+<ul>
+<li><strong>Open Source</strong>: Transparent, no licensing costs</li>
+<li><strong>Mature</strong>: Production-proven, stable</li>
+<li><strong>Well-Documented</strong>: Extensive documentation and community</li>
+<li><strong>Cloud-Native</strong>: Works well in Kubernetes</li>
+<li><strong>Monitoring</strong>: Prometheus metrics, logging integration</li>
+<li><strong>Security</strong>: Encryption at rest and in transit, RBAC</li>
+</ul>
+<p><strong>Integration Requirements</strong>:</p>
+<ul>
+<li>Supported by Backstage, Mattermost, SonarQube, Jenkins</li>
+<li>Kubernetes Operator available</li>
+<li>Terraform provider for provisioning</li>
+<li>Helm charts for deployment</li>
+<li>Backup tools mature and reliable</li>
+</ul>
 <h3 id="forces-at-play">Forces at Play</h3>
-<p><strong>Technical Forces</strong>:
-- Multiple components need databases
-- Could use single shared database or separate instances
-- Need balance between operational simplicity and isolation
-- Performance critical for developer experience</p>
-<p><strong>Operational Forces</strong>:
-- Platform team capacity limited
-- Need reliable backups and disaster recovery
-- Monitoring and troubleshooting must be straightforward
-- Upgrades should be low-risk</p>
-<p><strong>Cost Forces</strong>:
-- Open source preferred (no licensing)
-- Cloud-managed services convenient but expensive
-- Self-hosted requires operational overhead
-- Need cost-effective solution that scales</p>
-<p><strong>Ecosystem Forces</strong>:
-- PostgreSQL has massive adoption in cloud-native space
-- Most tools support PostgreSQL natively
-- Large knowledge base and community
-- Cloud providers offer managed PostgreSQL</p>
+<p><strong>Technical Forces</strong>:</p>
+<ul>
+<li>Multiple components need databases</li>
+<li>Could use single shared database or separate instances</li>
+<li>Need balance between operational simplicity and isolation</li>
+<li>Performance critical for developer experience</li>
+</ul>
+<p><strong>Operational Forces</strong>:</p>
+<ul>
+<li>Platform team capacity limited</li>
+<li>Need reliable backups and disaster recovery</li>
+<li>Monitoring and troubleshooting must be straightforward</li>
+<li>Upgrades should be low-risk</li>
+</ul>
+<p><strong>Cost Forces</strong>:</p>
+<ul>
+<li>Open source preferred (no licensing)</li>
+<li>Cloud-managed services convenient but expensive</li>
+<li>Self-hosted requires operational overhead</li>
+<li>Need cost-effective solution that scales</li>
+</ul>
+<p><strong>Ecosystem Forces</strong>:</p>
+<ul>
+<li>PostgreSQL has massive adoption in cloud-native space</li>
+<li>Most tools support PostgreSQL natively</li>
+<li>Large knowledge base and community</li>
+<li>Cloud providers offer managed PostgreSQL</li>
+</ul>
 <h2 id="decision">Decision</h2>
 <p><strong>We will use PostgreSQL as the standard relational database for Fawkes platform components.</strong></p>
-<p>Specifically:
-- <strong>PostgreSQL 15+</strong> (latest stable version)
-- <strong>CloudNativePG Operator</strong> for Kubernetes-native management
-- <strong>Separate databases per component</strong> (single cluster, multiple databases)
-- <strong>Automated backups</strong> to S3/MinIO with point-in-time recovery
-- <strong>High Availability</strong> configuration (primary + replica)
-- <strong>Connection pooling</strong> via PgBouncer
-- <strong>Prometheus metrics</strong> for monitoring
-- <strong>Cloud-managed option</strong> available for production (AWS RDS, Azure Database, Google Cloud SQL)</p>
+<p>Specifically:</p>
+<ul>
+<li><strong>PostgreSQL 15+</strong> (latest stable version)</li>
+<li><strong>CloudNativePG Operator</strong> for Kubernetes-native management</li>
+<li><strong>Separate databases per component</strong> (single cluster, multiple databases)</li>
+<li><strong>Automated backups</strong> to S3/MinIO with point-in-time recovery</li>
+<li><strong>High Availability</strong> configuration (primary + replica)</li>
+<li><strong>Connection pooling</strong> via PgBouncer</li>
+<li><strong>Prometheus metrics</strong> for monitoring</li>
+<li><strong>Cloud-managed option</strong> available for production (AWS RDS, Azure Database, Google Cloud SQL)</li>
+</ul>
 <h3 id="rationale">Rationale</h3>
 <ol>
 <li>
@@ -5110,7 +5138,9 @@
 <li>
 <p><strong>Universal Compatibility</strong>: All Fawkes components support PostgreSQL:</p>
 </li>
-<li>Backstage: Officially supported, recommended database</li>
+<li>
+<p>Backstage: Officially supported, recommended database</p>
+</li>
 <li>Mattermost: Full support, production-ready</li>
 <li>Focalboard: Built-in support (uses Mattermost database)</li>
 <li>SonarQube: Officially supported</li>
@@ -5121,7 +5151,9 @@
 <li>
 <p><strong>Advanced Features</strong>:</p>
 </li>
-<li><strong>JSONB</strong>: Flexible schema for plugin data, semi-structured content</li>
+<li>
+<p><strong>JSONB</strong>: Flexible schema for plugin data, semi-structured content</p>
+</li>
 <li><strong>Full-Text Search</strong>: Built-in search without external tools</li>
 <li><strong>CTEs and Window Functions</strong>: Complex analytical queries</li>
 <li><strong>LISTEN/NOTIFY</strong>: Real-time event notifications</li>
@@ -5132,7 +5164,9 @@
 <li>
 <p><strong>ACID Compliance</strong>:</p>
 </li>
-<li>Strong consistency guarantees</li>
+<li>
+<p>Strong consistency guarantees</p>
+</li>
 <li>Transaction support</li>
 <li>Data integrity and reliability</li>
 <li>
@@ -5141,7 +5175,9 @@
 <li>
 <p><strong>Performance</strong>:</p>
 </li>
-<li>Excellent query optimizer</li>
+<li>
+<p>Excellent query optimizer</p>
+</li>
 <li>Efficient indexing (B-tree, GiST, GIN, BRIN)</li>
 <li>Parallel queries</li>
 <li>Materialized views for aggregations</li>
@@ -5151,7 +5187,9 @@
 <li>
 <p><strong>High Availability</strong>:</p>
 </li>
-<li>Streaming replication (synchronous and asynchronous)</li>
+<li>
+<p>Streaming replication (synchronous and asynchronous)</p>
+</li>
 <li>Automatic failover</li>
 <li>Point-in-time recovery</li>
 <li>
@@ -5160,7 +5198,9 @@
 <li>
 <p><strong>Cloud-Native</strong>:</p>
 </li>
-<li>CloudNativePG operator for Kubernetes</li>
+<li>
+<p>CloudNativePG operator for Kubernetes</p>
+</li>
 <li>Runs well in containers</li>
 <li>Horizontal scaling via read replicas</li>
 <li>
@@ -5169,7 +5209,9 @@
 <li>
 <p><strong>Mature and Stable</strong>:</p>
 </li>
-<li>35+ years of development</li>
+<li>
+<p>35+ years of development</p>
+</li>
 <li>Production-proven at massive scale</li>
 <li>Backward compatibility commitment</li>
 <li>
@@ -5178,7 +5220,9 @@
 <li>
 <p><strong>Excellent Tooling</strong>:</p>
 </li>
-<li>pgAdmin (GUI administration)</li>
+<li>
+<p>pgAdmin (GUI administration)</p>
+</li>
 <li>psql (powerful CLI)</li>
 <li>pg_dump/pg_restore (backup/restore)</li>
 <li>Prometheus exporters (monitoring)</li>
@@ -5243,8 +5287,12 @@
 <p>◽ <strong>Storage Growth</strong>: Need to monitor and manage storage capacity</p>
 <h3 id="mitigation-strategies">Mitigation Strategies</h3>
 <ol>
-<li><strong>Write Scalability</strong>:</li>
-<li>Use connection pooling (PgBouncer)</li>
+<li>
+<p><strong>Write Scalability</strong>:</p>
+</li>
+<li>
+<p>Use connection pooling (PgBouncer)</p>
+</li>
 <li>Optimize queries and indexes</li>
 <li>Consider read replicas for reporting</li>
 <li>Partition large tables if needed</li>
@@ -5254,7 +5302,9 @@
 <li>
 <p><strong>Operational Overhead</strong>:</p>
 </li>
-<li>Use CloudNativePG operator (automates backups, failover)</li>
+<li>
+<p>Use CloudNativePG operator (automates backups, failover)</p>
+</li>
 <li>Implement automated monitoring and alerting</li>
 <li>Document runbooks for common operations</li>
 <li>Consider managed services for production (AWS RDS)</li>
@@ -5264,7 +5314,9 @@
 <li>
 <p><strong>Maintenance</strong>:</p>
 </li>
-<li>Configure autovacuum appropriately</li>
+<li>
+<p>Configure autovacuum appropriately</p>
+</li>
 <li>Monitor bloat with pg_stat_user_tables</li>
 <li>Regular ANALYZE for query planning</li>
 <li>Reindex periodically if needed</li>
@@ -5274,7 +5326,9 @@
 <li>
 <p><strong>Connection Pooling</strong>:</p>
 </li>
-<li>Deploy PgBouncer for connection pooling</li>
+<li>
+<p>Deploy PgBouncer for connection pooling</p>
+</li>
 <li>Configure appropriate pool sizes</li>
 <li>Use transaction pooling for most apps</li>
 <li>
@@ -5283,7 +5337,9 @@
 <li>
 <p><strong>Monitoring</strong>:</p>
 </li>
-<li>Deploy postgres_exporter for Prometheus</li>
+<li>
+<p>Deploy postgres_exporter for Prometheus</p>
+</li>
 <li>Create Grafana dashboards</li>
 <li>Alert on key metrics (connections, replication lag, disk usage)</li>
 <li>
@@ -5300,100 +5356,128 @@
 </ol>
 <h2 id="alternatives-considered">Alternatives Considered</h2>
 <h3 id="alternative-1-mysqlmariadb">Alternative 1: MySQL/MariaDB</h3>
-<p><strong>Pros</strong>:
-- Very popular, large community
-- Good performance for read-heavy workloads
-- MariaDB fully open source
-- Wide adoption
-- Familiar to many developers</p>
-<p><strong>Cons</strong>:
-- <strong>Weaker JSON Support</strong>: JSON type less powerful than PostgreSQL JSONB
-- <strong>Limited Full-Text Search</strong>: Not as robust as PostgreSQL
-- <strong>Fewer Advanced Features</strong>: Less support for CTEs, window functions
-- <strong>Fragmentation</strong>: MySQL (Oracle) vs. MariaDB (community) split
-- <strong>Less Cloud-Native</strong>: Kubernetes operators less mature</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Very popular, large community</li>
+<li>Good performance for read-heavy workloads</li>
+<li>MariaDB fully open source</li>
+<li>Wide adoption</li>
+<li>Familiar to many developers</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Weaker JSON Support</strong>: JSON type less powerful than PostgreSQL JSONB</li>
+<li><strong>Limited Full-Text Search</strong>: Not as robust as PostgreSQL</li>
+<li><strong>Fewer Advanced Features</strong>: Less support for CTEs, window functions</li>
+<li><strong>Fragmentation</strong>: MySQL (Oracle) vs. MariaDB (community) split</li>
+<li><strong>Less Cloud-Native</strong>: Kubernetes operators less mature</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: PostgreSQL's superior JSON support, full-text search, and advanced SQL features better fit Fawkes needs. Backstage and Mattermost work better with PostgreSQL. MySQL excellent database but PostgreSQL better alignment with cloud-native ecosystem.</p>
 <h3 id="alternative-2-mongodb">Alternative 2: MongoDB</h3>
-<p><strong>Pros</strong>:
-- Document-oriented (flexible schema)
-- Excellent for JSON data
-- Horizontal scaling built-in
-- High write throughput
-- Popular for modern applications</p>
-<p><strong>Cons</strong>:
-- <strong>NoSQL</strong>: Not all components support MongoDB
-- <strong>No ACID Across Collections</strong>: Weak consistency by default
-- <strong>Limited Joins</strong>: Embedding vs. referencing trade-offs
-- <strong>Operational Complexity</strong>: Sharding complex to manage
-- <strong>Backstage Not Supported</strong>: Backstage requires SQL database
-- <strong>License Concerns</strong>: SSPL license controversial</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Document-oriented (flexible schema)</li>
+<li>Excellent for JSON data</li>
+<li>Horizontal scaling built-in</li>
+<li>High write throughput</li>
+<li>Popular for modern applications</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>NoSQL</strong>: Not all components support MongoDB</li>
+<li><strong>No ACID Across Collections</strong>: Weak consistency by default</li>
+<li><strong>Limited Joins</strong>: Embedding vs. referencing trade-offs</li>
+<li><strong>Operational Complexity</strong>: Sharding complex to manage</li>
+<li><strong>Backstage Not Supported</strong>: Backstage requires SQL database</li>
+<li><strong>License Concerns</strong>: SSPL license controversial</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: MongoDB excellent for document storage but incompatible with key components (Backstage, SonarQube). ACID properties critical for catalog and metrics. SQL relationships important for service dependencies. PostgreSQL JSONB provides flexible schema when needed while maintaining SQL strengths.</p>
 <h3 id="alternative-3-sqlite">Alternative 3: SQLite</h3>
-<p><strong>Pros</strong>:
-- Zero configuration
-- No separate server process
-- Very lightweight
-- Fast for single-user scenarios
-- Embedded database</p>
-<p><strong>Cons</strong>:
-- <strong>No Concurrency</strong>: Limited concurrent writes
-- <strong>No Network Access</strong>: File-based only
-- <strong>No Replication</strong>: No built-in HA
-- <strong>Not Kubernetes-Native</strong>: File-based doesn't fit pods well
-- <strong>Scalability Limits</strong>: Not designed for multi-user systems</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Zero configuration</li>
+<li>No separate server process</li>
+<li>Very lightweight</li>
+<li>Fast for single-user scenarios</li>
+<li>Embedded database</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>No Concurrency</strong>: Limited concurrent writes</li>
+<li><strong>No Network Access</strong>: File-based only</li>
+<li><strong>No Replication</strong>: No built-in HA</li>
+<li><strong>Not Kubernetes-Native</strong>: File-based doesn't fit pods well</li>
+<li><strong>Scalability Limits</strong>: Not designed for multi-user systems</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: SQLite excellent for local development and embedded use cases but not suitable for multi-user platform services. Need concurrent access, network access, and high availability. PostgreSQL designed for exactly these scenarios.</p>
 <h3 id="alternative-4-cockroachdb">Alternative 4: CockroachDB</h3>
-<p><strong>Pros</strong>:
-- PostgreSQL-compatible
-- Distributed SQL (horizontal scaling)
-- Built-in replication
-- Multi-region support
-- Strong consistency
-- Cloud-native architecture</p>
-<p><strong>Cons</strong>:
-- <strong>Operational Complexity</strong>: More complex than PostgreSQL
-- <strong>Resource Intensive</strong>: Higher overhead than PostgreSQL
-- <strong>Less Mature</strong>: Newer (2015 vs. PostgreSQL 1986)
-- <strong>Smaller Community</strong>: Fewer examples and resources
-- <strong>Learning Curve</strong>: Distributed systems concepts required
-- <strong>Overkill</strong>: More than we need initially</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>PostgreSQL-compatible</li>
+<li>Distributed SQL (horizontal scaling)</li>
+<li>Built-in replication</li>
+<li>Multi-region support</li>
+<li>Strong consistency</li>
+<li>Cloud-native architecture</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Operational Complexity</strong>: More complex than PostgreSQL</li>
+<li><strong>Resource Intensive</strong>: Higher overhead than PostgreSQL</li>
+<li><strong>Less Mature</strong>: Newer (2015 vs. PostgreSQL 1986)</li>
+<li><strong>Smaller Community</strong>: Fewer examples and resources</li>
+<li><strong>Learning Curve</strong>: Distributed systems concepts required</li>
+<li><strong>Overkill</strong>: More than we need initially</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: CockroachDB philosophically appealing (distributed, PostgreSQL-compatible) but operationally complex and resource-intensive for our scale. PostgreSQL sufficient for foreseeable future. CockroachDB excellent choice at massive scale but unnecessary complexity for Fawkes. May revisit if we need multi-region or massive horizontal scale.</p>
 <h3 id="alternative-5-timescaledb">Alternative 5: TimescaleDB</h3>
-<p><strong>Pros</strong>:
-- PostgreSQL extension (full compatibility)
-- Optimized for time-series data
-- Excellent for metrics and logs
-- Compression and retention policies
-- Continuous aggregates</p>
-<p><strong>Cons</strong>:
-- <strong>Not Needed for All Data</strong>: Only beneficial for time-series
-- <strong>Additional Complexity</strong>: Extension to install and manage
-- <strong>License</strong>: Some features require license (Cloud only)</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>PostgreSQL extension (full compatibility)</li>
+<li>Optimized for time-series data</li>
+<li>Excellent for metrics and logs</li>
+<li>Compression and retention policies</li>
+<li>Continuous aggregates</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Not Needed for All Data</strong>: Only beneficial for time-series</li>
+<li><strong>Additional Complexity</strong>: Extension to install and manage</li>
+<li><strong>License</strong>: Some features require license (Cloud only)</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: TimescaleDB excellent for DORA metrics time-series data. However, not needed for Backstage, Mattermost, or other components. Can add TimescaleDB extension to DORA metrics database if needed, but standard PostgreSQL sufficient initially. Good option to consider for Phase 2 optimization.</p>
 <h3 id="alternative-6-cloud-managed-services-only-aws-rds-azure-database-cloud-sql">Alternative 6: Cloud-Managed Services Only (AWS RDS, Azure Database, Cloud SQL)</h3>
-<p><strong>Pros</strong>:
-- Fully managed (no operational overhead)
-- Automated backups and failover
-- Easy scaling
-- Security managed
-- High availability guaranteed
-- Support included</p>
-<p><strong>Cons</strong>:
-- <strong>Cost</strong>: Much more expensive than self-hosted ($100-500+/month per database)
-- <strong>Vendor Lock-In</strong>: Specific to cloud provider
-- <strong>Less Control</strong>: Can't customize everything
-- <strong>Not Self-Hosted</strong>: Conflicts with open source platform values</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Fully managed (no operational overhead)</li>
+<li>Automated backups and failover</li>
+<li>Easy scaling</li>
+<li>Security managed</li>
+<li>High availability guaranteed</li>
+<li>Support included</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Cost</strong>: Much more expensive than self-hosted ($100-500+/month per database)</li>
+<li><strong>Vendor Lock-In</strong>: Specific to cloud provider</li>
+<li><strong>Less Control</strong>: Can't customize everything</li>
+<li><strong>Not Self-Hosted</strong>: Conflicts with open source platform values</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Managed services convenient but expensive and create vendor lock-in. Self-hosted PostgreSQL with CloudNativePG provides similar benefits at fraction of cost. However, we support managed services as option for production deployments. Fawkes flexible: can use self-hosted for cost-conscious deployments, managed for convenience.</p>
 <h3 id="alternative-7-multiple-database-types-polyglot-persistence">Alternative 7: Multiple Database Types (polyglot persistence)</h3>
-<p><strong>Pros</strong>:
-- Best tool for each job
-- PostgreSQL for relational, MongoDB for documents, Redis for cache
-- Optimized for specific use cases</p>
-<p><strong>Cons</strong>:
-- <strong>Operational Complexity</strong>: Multiple databases to manage, monitor, backup
-- <strong>Increased Overhead</strong>: More expertise required
-- <strong>Cost</strong>: More resources needed
-- <strong>Not Necessary</strong>: PostgreSQL JSONB handles semi-structured data well</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Best tool for each job</li>
+<li>PostgreSQL for relational, MongoDB for documents, Redis for cache</li>
+<li>Optimized for specific use cases</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Operational Complexity</strong>: Multiple databases to manage, monitor, backup</li>
+<li><strong>Increased Overhead</strong>: More expertise required</li>
+<li><strong>Cost</strong>: More resources needed</li>
+<li><strong>Not Necessary</strong>: PostgreSQL JSONB handles semi-structured data well</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Polyglot persistence has merits but increases operational complexity significantly. PostgreSQL versatile enough to handle all current needs (relational + JSON + full-text search). Simpler to have single database technology. May add Redis for caching in Phase 2, but one primary database reduces complexity.</p>
 <h2 id="related-decisions">Related Decisions</h2>
 <ul>
@@ -5412,7 +5496,7 @@
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-postgres</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-data</span>
 <span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">instances</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">  </span><span class="c1"># 1 primary + 2 replicas</span>
+<span class="w">  </span><span class="nt">instances</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"> </span><span class="c1"># 1 primary + 2 replicas</span>
 
 <span class="w">  </span><span class="nt">postgresql</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">parameters</span><span class="p">:</span>
@@ -5466,11 +5550,13 @@
 ├── dojo_progress_db (Learner progress)
 └── jenkins_db (optional, Jenkins metadata)
 </code></pre></div>
-<p><strong>Rationale</strong>:
-- Logical isolation between components
-- Easier to backup/restore individual databases
-- Resource sharing (connection pooling benefits)
-- Single cluster to manage (operational simplicity)</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Logical isolation between components</li>
+<li>Easier to backup/restore individual databases</li>
+<li>Resource sharing (connection pooling benefits)</li>
+<li>Single cluster to manage (operational simplicity)</li>
+</ul>
 <h3 id="connection-pooling-with-pgbouncer">Connection Pooling with PgBouncer</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
@@ -5482,35 +5568,37 @@
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pgbouncer</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">edoburu/pgbouncer:latest</span>
-<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB_HOST</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-postgres-rw</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB_PORT</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;5432&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POOL_MODE</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">transaction</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MAX_CLIENT_CONN</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1000&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEFAULT_POOL_SIZE</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;25&quot;</span>
-<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;64Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
-<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pgbouncer</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">edoburu/pgbouncer:latest</span>
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB_HOST</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-postgres-rw</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB_PORT</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;5432&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POOL_MODE</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">transaction</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MAX_CLIENT_CONN</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1000&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEFAULT_POOL_SIZE</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;25&quot;</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;64Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
+<span class="w">            </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
 </code></pre></div>
 <h3 id="backup-configuration">Backup Configuration</h3>
-<p><strong>Automated Backups</strong>:
-- Full backup: Daily at 2 AM UTC
-- WAL archiving: Continuous
-- Retention: 30 days
-- Destination: S3/MinIO bucket
-- Encryption: At rest (S3 SSE)</p>
-<p><strong>Backup Verification</strong>:
+<p><strong>Automated Backups</strong>:</p>
+<ul>
+<li>Full backup: Daily at 2 AM UTC</li>
+<li>WAL archiving: Continuous</li>
+<li>Retention: 30 days</li>
+<li>Destination: S3/MinIO bucket</li>
+<li>Encryption: At rest (S3 SSE)</li>
+</ul>
+<p><strong>Backup Verification</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Weekly automated restore test</span>
 kubectl<span class="w"> </span>cnpg<span class="w"> </span>backup<span class="w"> </span>fawkes-postgres-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
 
@@ -5518,89 +5606,97 @@ kubectl<span class="w"> </span>cnpg<span class="w"> </span>backup<span class="w"
 kubectl<span class="w"> </span>cnpg<span class="w"> </span>restore<span class="w"> </span>fawkes-postgres-test<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--backup<span class="w"> </span>fawkes-postgres-20251008<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--cluster<span class="w"> </span>fawkes-postgres
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="monitoring-alerting">Monitoring &amp; Alerting</h3>
-<p><strong>Prometheus Metrics</strong> (via postgres_exporter):
-- <code>pg_up</code> - Database reachable
-- <code>pg_stat_database_*</code> - Database statistics
-- <code>pg_stat_replication_*</code> - Replication lag
-- <code>pg_locks_*</code> - Lock contention
-- <code>pg_stat_user_tables_*</code> - Table statistics</p>
-<p><strong>Key Alerts</strong>:
+<p><strong>Prometheus Metrics</strong> (via postgres_exporter):</p>
+<ul>
+<li><code>pg_up</code> - Database reachable</li>
+<li><code>pg_stat_database_*</code> - Database statistics</li>
+<li><code>pg_stat_replication_*</code> - Replication lag</li>
+<li><code>pg_locks_*</code> - Lock contention</li>
+<li><code>pg_stat_user_tables_*</code> - Table statistics</li>
+</ul>
+<p><strong>Key Alerts</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">groups</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
-<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PostgreSQLDown</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pg_up == 0</span>
-<span class="w">    </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
-<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;PostgreSQL</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">down&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PostgreSQLDown</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pg_up == 0</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;PostgreSQL</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">down&quot;</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PostgreSQLReplicationLag</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pg_replication_lag &gt; 30</span>
-<span class="w">    </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
-<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Replication</span><span class="nv"> </span><span class="s">lag</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}s&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PostgreSQLReplicationLag</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pg_replication_lag &gt; 30</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Replication</span><span class="nv"> </span><span class="s">lag</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}s&quot;</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PostgreSQLConnectionsHigh</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pg_stat_database_numbackends &gt; 180</span>
-<span class="w">    </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
-<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">connection</span><span class="nv"> </span><span class="s">count:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PostgreSQLConnectionsHigh</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pg_stat_database_numbackends &gt; 180</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">connection</span><span class="nv"> </span><span class="s">count:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}&quot;</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PostgreSQLDiskUsageHigh</span>
-<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pg_database_size_bytes / pg_settings_max_wal_size &gt; 0.8</span>
-<span class="w">    </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
-<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Database</span><span class="nv"> </span><span class="s">disk</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">high&quot;</span>
-</code></pre></div></p>
-<p><strong>Grafana Dashboard</strong>:
-- Connection count and usage
-- Query performance (slow queries)
-- Replication lag
-- Database size growth
-- Cache hit ratio
-- Transaction rate
-- Lock contention</p>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PostgreSQLDiskUsageHigh</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pg_database_size_bytes / pg_settings_max_wal_size &gt; 0.8</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Database</span><span class="nv"> </span><span class="s">disk</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">high&quot;</span>
+</code></pre></div>
+<p><strong>Grafana Dashboard</strong>:</p>
+<ul>
+<li>Connection count and usage</li>
+<li>Query performance (slow queries)</li>
+<li>Replication lag</li>
+<li>Database size growth</li>
+<li>Cache hit ratio</li>
+<li>Transaction rate</li>
+<li>Lock contention</li>
+</ul>
 <h3 id="maintenance-tasks">Maintenance Tasks</h3>
-<p><strong>Automated</strong> (via CronJobs):
+<p><strong>Automated</strong> (via CronJobs):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Daily vacuum analyze</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">batch/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CronJob</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres-vacuum</span>
 <span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">3</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&quot;</span><span class="w">  </span><span class="c1"># 3 AM daily</span>
+<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">3</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&quot;</span><span class="w"> </span><span class="c1"># 3 AM daily</span>
 <span class="w">  </span><span class="nt">jobTemplate</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vacuum</span>
-<span class="w">            </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15</span>
-<span class="w">            </span><span class="nt">command</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/bin/sh</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-c</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">              </span><span class="no">psql -h fawkes-postgres-rw -U postgres -c &quot;VACUUM ANALYZE&quot;</span>
-</code></pre></div></p>
-<p><strong>Manual</strong> (quarterly):
-- Reindex large tables
-- Analyze table bloat
-- Review and optimize slow queries
-- Update statistics manually if needed</p>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vacuum</span>
+<span class="w">              </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15</span>
+<span class="w">              </span><span class="nt">command</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/bin/sh</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-c</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">                  </span><span class="no">psql -h fawkes-postgres-rw -U postgres -c &quot;VACUUM ANALYZE&quot;</span>
+</code></pre></div>
+<p><strong>Manual</strong> (quarterly):</p>
+<ul>
+<li>Reindex large tables</li>
+<li>Analyze table bloat</li>
+<li>Review and optimize slow queries</li>
+<li>Update statistics manually if needed</li>
+</ul>
 <h3 id="security-configuration">Security Configuration</h3>
-<p><strong>Authentication</strong>:
+<p><strong>Authentication</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># PostgreSQL pg_hba.conf</span>
 <span class="l l-Scalar l-Scalar-Plain">host    all             all             10.0.0.0/8            scram-sha-256</span>
 <span class="l l-Scalar l-Scalar-Plain">host    replication     all             10.0.0.0/8            scram-sha-256</span>
 <span class="l l-Scalar l-Scalar-Plain">hostssl all             all             0.0.0.0/0             scram-sha-256</span>
-</code></pre></div></p>
-<p><strong>Encryption</strong>:
-- TLS/SSL for connections (enforced)
-- Encryption at rest (storage level)
-- Backup encryption (S3 SSE)</p>
-<p><strong>Access Control</strong>:
+</code></pre></div>
+<p><strong>Encryption</strong>:</p>
+<ul>
+<li>TLS/SSL for connections (enforced)</li>
+<li>Encryption at rest (storage level)</li>
+<li>Backup encryption (S3 SSE)</li>
+</ul>
+<p><strong>Access Control</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Create role per application</span>
 <span class="k">CREATE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">backstage</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;secure_password&#39;</span><span class="p">;</span>
 <span class="k">GRANT</span><span class="w"> </span><span class="k">CONNECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">backstage_db</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">backstage</span><span class="p">;</span>
@@ -5610,16 +5706,16 @@ kubectl<span class="w"> </span>cnpg<span class="w"> </span>restore<span class="w
 <span class="k">CREATE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">monitoring</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;secure_password&#39;</span><span class="p">;</span>
 <span class="k">GRANT</span><span class="w"> </span><span class="k">CONNECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">backstage_db</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">monitoring</span><span class="p">;</span>
 <span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="n">TABLES</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">monitoring</span><span class="p">;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="performance-tuning">Performance Tuning</h3>
-<p><strong>Connection Settings</strong>:
+<p><strong>Connection Settings</strong>:</p>
 <div class="highlight"><pre><span></span><code>max_connections = 200
 shared_buffers = 256MB          # 25% of RAM
 effective_cache_size = 1GB      # 50-75% of RAM
 work_mem = 16MB                 # RAM / max_connections / 2
 maintenance_work_mem = 128MB    # RAM / 16
-</code></pre></div></p>
-<p><strong>Query Optimization</strong>:
+</code></pre></div>
+<p><strong>Query Optimization</strong>:</p>
 <div class="highlight"><pre><span></span><code># Enable query logging for slow queries
 log_min_duration_statement = 1000  # Log queries &gt; 1s
 log_statement = &#39;all&#39;              # Log all statements (dev only)
@@ -5627,20 +5723,22 @@ log_statement = &#39;all&#39;              # Log all statements (dev only)
 # Query planning
 random_page_cost = 1.1            # SSD storage
 effective_io_concurrency = 200    # SSD capability
-</code></pre></div></p>
-<p><strong>Autovacuum</strong>:
+</code></pre></div>
+<p><strong>Autovacuum</strong>:</p>
 <div class="highlight"><pre><span></span><code>autovacuum = on
 autovacuum_max_workers = 3
 autovacuum_naptime = 1min
 autovacuum_vacuum_cost_delay = 20ms
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="migration-strategy">Migration Strategy</h3>
-<p><strong>Schema Migrations</strong>:
-- Use Flyway or Liquibase for versioned migrations
-- Store migrations in Git
-- Apply migrations in CI/CD pipeline
-- Never modify schema manually</p>
-<p><strong>Example Flyway Migration</strong>:
+<p><strong>Schema Migrations</strong>:</p>
+<ul>
+<li>Use Flyway or Liquibase for versioned migrations</li>
+<li>Store migrations in Git</li>
+<li>Apply migrations in CI/CD pipeline</li>
+<li>Never modify schema manually</li>
+</ul>
+<p><strong>Example Flyway Migration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- V1__create_users_table.sql</span>
 <span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
@@ -5650,50 +5748,62 @@ autovacuum_vacuum_cost_delay = 20ms
 <span class="p">);</span>
 
 <span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_users_email</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">email</span><span class="p">);</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="disaster-recovery">Disaster Recovery</h3>
 <p><strong>Recovery Time Objective (RTO)</strong>: 4 hours
 <strong>Recovery Point Objective (RPO)</strong>: 1 hour (WAL archiving)</p>
-<p><strong>Recovery Procedure</strong>:
-1. Create new PostgreSQL cluster
-2. Restore from latest backup
-3. Apply WAL files for point-in-time recovery
-4. Verify data integrity
-5. Update application connection strings
-6. Resume operations</p>
-<p><strong>Automated DR Testing</strong>:
-- Monthly restore test to separate cluster
-- Verify data integrity checks pass
-- Document any issues and resolution</p>
+<p><strong>Recovery Procedure</strong>:</p>
+<ol>
+<li>Create new PostgreSQL cluster</li>
+<li>Restore from latest backup</li>
+<li>Apply WAL files for point-in-time recovery</li>
+<li>Verify data integrity</li>
+<li>Update application connection strings</li>
+<li>Resume operations</li>
+</ol>
+<p><strong>Automated DR Testing</strong>:</p>
+<ul>
+<li>Monthly restore test to separate cluster</li>
+<li>Verify data integrity checks pass</li>
+<li>Document any issues and resolution</li>
+</ul>
 <h3 id="managed-service-alternative">Managed Service Alternative</h3>
 <p><strong>For Production Deployments</strong>:</p>
-<p><strong>AWS RDS PostgreSQL</strong>:
-- Multi-AZ for high availability
-- Automated backups with point-in-time recovery
-- Read replicas for scaling
-- Enhanced monitoring
-- Estimated cost: $200-400/month (db.t3.large)</p>
-<p><strong>Azure Database for PostgreSQL</strong>:
-- Flexible Server with HA
-- Automated backups and patching
-- Read replicas
-- Advanced Threat Protection
-- Estimated cost: $180-350/month (similar specs)</p>
-<p><strong>Google Cloud SQL for PostgreSQL</strong>:
-- High availability configuration
-- Automated backups
-- Read replicas
-- Cloud SQL Proxy for secure connections
-- Estimated cost: $190-370/month (similar specs)</p>
+<p><strong>AWS RDS PostgreSQL</strong>:</p>
+<ul>
+<li>Multi-AZ for high availability</li>
+<li>Automated backups with point-in-time recovery</li>
+<li>Read replicas for scaling</li>
+<li>Enhanced monitoring</li>
+<li>Estimated cost: $200-400/month (db.t3.large)</li>
+</ul>
+<p><strong>Azure Database for PostgreSQL</strong>:</p>
+<ul>
+<li>Flexible Server with HA</li>
+<li>Automated backups and patching</li>
+<li>Read replicas</li>
+<li>Advanced Threat Protection</li>
+<li>Estimated cost: $180-350/month (similar specs)</li>
+</ul>
+<p><strong>Google Cloud SQL for PostgreSQL</strong>:</p>
+<ul>
+<li>High availability configuration</li>
+<li>Automated backups</li>
+<li>Read replicas</li>
+<li>Cloud SQL Proxy for secure connections</li>
+<li>Estimated cost: $190-370/month (similar specs)</li>
+</ul>
 <p><strong>Decision</strong>: Support both self-hosted and managed options. Documentation for both approaches. Recommend self-hosted for dev/staging, managed for production (optional).</p>
 <h2 id="monitoring-this-decision">Monitoring This Decision</h2>
-<p>We will revisit this ADR if:
-- PostgreSQL performance becomes bottleneck that can't be resolved
-- Write scalability becomes critical requirement
-- Operational burden exceeds team capacity
-- Cloud-managed services become cost-competitive with self-hosted
-- Alternative database provides significantly better features
-- Components add requirements PostgreSQL can't meet</p>
+<p>We will revisit this ADR if:</p>
+<ul>
+<li>PostgreSQL performance becomes bottleneck that can't be resolved</li>
+<li>Write scalability becomes critical requirement</li>
+<li>Operational burden exceeds team capacity</li>
+<li>Cloud-managed services become cost-competitive with self-hosted</li>
+<li>Alternative database provides significantly better features</li>
+<li>Components add requirements PostgreSQL can't meet</li>
+</ul>
 <p><strong>Next Review Date</strong>: April 8, 2026 (6 months)</p>
 <h2 id="references">References</h2>
 <ul>
@@ -5706,42 +5816,56 @@ autovacuum_vacuum_cost_delay = 20ms
 </ul>
 <h2 id="notes">Notes</h2>
 <h3 id="why-postgresql-over-mysql">Why PostgreSQL Over MySQL?</h3>
-<p><strong>PostgreSQL advantages</strong>:
-- Better JSON support (JSONB with indexing)
-- Full-text search built-in
-- More advanced SQL features (CTEs, window functions)
-- Better for complex queries
-- Stronger in cloud-native ecosystem</p>
-<p><strong>MySQL advantages</strong>:
-- Slightly simpler for basic use cases
-- Some argue faster for simple reads
-- More familiar to some developers</p>
+<p><strong>PostgreSQL advantages</strong>:</p>
+<ul>
+<li>Better JSON support (JSONB with indexing)</li>
+<li>Full-text search built-in</li>
+<li>More advanced SQL features (CTEs, window functions)</li>
+<li>Better for complex queries</li>
+<li>Stronger in cloud-native ecosystem</li>
+</ul>
+<p><strong>MySQL advantages</strong>:</p>
+<ul>
+<li>Slightly simpler for basic use cases</li>
+<li>Some argue faster for simple reads</li>
+<li>More familiar to some developers</li>
+</ul>
 <p><strong>For Fawkes</strong>: PostgreSQL's advanced features (especially JSONB and full-text search) align better with platform needs. Both excellent databases, but PostgreSQL slight edge for our use cases.</p>
 <h3 id="single-cluster-vs-multiple-clusters">Single Cluster vs. Multiple Clusters</h3>
-<p><strong>Single Cluster Approach</strong> (chosen):
-- Operational simplicity (one cluster to manage)
-- Resource efficiency (shared resources)
-- Easier monitoring and backup
-- Lower infrastructure costs</p>
-<p><strong>Multiple Clusters Approach</strong>:
-- Complete isolation between components
-- Independent scaling
-- Failure isolation
-- Higher operational overhead</p>
+<p><strong>Single Cluster Approach</strong> (chosen):</p>
+<ul>
+<li>Operational simplicity (one cluster to manage)</li>
+<li>Resource efficiency (shared resources)</li>
+<li>Easier monitoring and backup</li>
+<li>Lower infrastructure costs</li>
+</ul>
+<p><strong>Multiple Clusters Approach</strong>:</p>
+<ul>
+<li>Complete isolation between components</li>
+<li>Independent scaling</li>
+<li>Failure isolation</li>
+<li>Higher operational overhead</li>
+</ul>
 <p><strong>Decision</strong>: Single cluster with multiple databases provides good balance. Can split into multiple clusters later if needed.</p>
 <h3 id="when-to-consider-alternative-databases">When to Consider Alternative Databases</h3>
-<p><strong>Consider MySQL/MariaDB</strong>:
-- Team has strong MySQL expertise
-- Simple transactional workloads only
-- No need for advanced PostgreSQL features</p>
-<p><strong>Consider MongoDB</strong>:
-- Truly schemaless data needed
-- Horizontal write scaling critical
-- All components support NoSQL (not our case)</p>
-<p><strong>Consider CockroachDB</strong>:
-- Multi-region requirements
-- Massive horizontal scaling needed
-- Can absorb operational complexity</p>
+<p><strong>Consider MySQL/MariaDB</strong>:</p>
+<ul>
+<li>Team has strong MySQL expertise</li>
+<li>Simple transactional workloads only</li>
+<li>No need for advanced PostgreSQL features</li>
+</ul>
+<p><strong>Consider MongoDB</strong>:</p>
+<ul>
+<li>Truly schemaless data needed</li>
+<li>Horizontal write scaling critical</li>
+<li>All components support NoSQL (not our case)</li>
+</ul>
+<p><strong>Consider CockroachDB</strong>:</p>
+<ul>
+<li>Multi-region requirements</li>
+<li>Massive horizontal scaling needed</li>
+<li>Can absorb operational complexity</li>
+</ul>
 <p><strong>For most teams</strong>: PostgreSQL is the pragmatic, proven choice.</p>
 <hr />
 <p><strong>Decision Made By</strong>: Platform Architecture Team

@@ -5154,38 +5154,48 @@
 
 <h1 id="policy-as-code-tiers-audit-vs-enforce">Policy as Code Tiers: Audit vs. Enforce</h1>
 <h2 id="context">Context</h2>
-<p>Security policies are necessary but <strong>enforcement is a spectrum</strong>, not binary. Enforcing every security best practice from day one would:
-- Block legitimate developer workflows
-- Create change resistance ("Platform team said NO again")
-- Slow down delivery (waiting for exceptions, workarounds)
-- Reduce platform adoption (developers route around strict controls)</p>
+<p>Security policies are necessary but <strong>enforcement is a spectrum</strong>, not binary. Enforcing every security best practice from day one would:</p>
+<ul>
+<li>Block legitimate developer workflows</li>
+<li>Create change resistance ("Platform team said NO again")</li>
+<li>Slow down delivery (waiting for exceptions, workarounds)</li>
+<li>Reduce platform adoption (developers route around strict controls)</li>
+</ul>
 <p>The solution is <strong>tiered policy enforcement</strong>: critical policies enforced immediately, important policies audited before enforced, best practices remain advisory.</p>
 <p>This document explains Fawkes' <strong>Policy-as-Code Tiers</strong> framework using Kyverno, and why <strong>gradual enforcement</strong> is better than "big bang" compliance.</p>
 <h2 id="the-problem-all-or-nothing-enforcement-fails">The Problem: All-or-Nothing Enforcement Fails</h2>
 <h3 id="scenario-1-the-zero-tolerance-trap">Scenario 1: The Zero-Tolerance Trap</h3>
 <p><strong>Platform Team Decision</strong>: "All pods must be non-root, no exceptions. Security is non-negotiable."</p>
 <p><strong>Week 1</strong>: Policy enforced across all namespaces</p>
-<p><strong>Week 2</strong>: Developers revolt
-- Legacy app runs as root (vendor-provided image, can't change)
-- Database StatefulSets need elevated privileges
-- Debugging containers blocked (troubleshooting tools need root)</p>
-<p><strong>Week 3</strong>: Platform team creates exception process
-- Developers submit tickets requesting policy exemptions
-- Platform team reviews each request manually
-- <strong>Ticket backlog</strong>: 40+ exception requests</p>
-<p><strong>Week 4</strong>: Developers route around platform
-- Deploy to "dev" namespace (policies disabled to "not slow down development")
-- Promote to prod via kubectl (bypassing GitOps)
-- Shadow IT: Run workloads in separate clusters outside platform team control</p>
+<p><strong>Week 2</strong>: Developers revolt</p>
+<ul>
+<li>Legacy app runs as root (vendor-provided image, can't change)</li>
+<li>Database StatefulSets need elevated privileges</li>
+<li>Debugging containers blocked (troubleshooting tools need root)</li>
+</ul>
+<p><strong>Week 3</strong>: Platform team creates exception process</p>
+<ul>
+<li>Developers submit tickets requesting policy exemptions</li>
+<li>Platform team reviews each request manually</li>
+<li><strong>Ticket backlog</strong>: 40+ exception requests</li>
+</ul>
+<p><strong>Week 4</strong>: Developers route around platform</p>
+<ul>
+<li>Deploy to "dev" namespace (policies disabled to "not slow down development")</li>
+<li>Promote to prod via kubectl (bypassing GitOps)</li>
+<li>Shadow IT: Run workloads in separate clusters outside platform team control</li>
+</ul>
 <p><strong>Outcome</strong>: Policy exists on paper, violated in practice. Worse security posture than gradual enforcement.</p>
 <h3 id="scenario-2-the-permissive-paralysis">Scenario 2: The Permissive Paralysis</h3>
 <p><strong>Platform Team Decision</strong>: "We'll make policies advisory-only. Developers know best."</p>
 <p><strong>Week 1</strong>: Policies in audit mode, violations logged</p>
 <p><strong>Month 3</strong>: 10,000+ policy violations logged, nobody fixes them</p>
-<p><strong>Month 6</strong>: Real security incident
-- Privileged container exploited
-- Attacker pivots to other workloads
-- <strong>Root cause</strong>: Container ran as root (policy violation ignored for 6 months)</p>
+<p><strong>Month 6</strong>: Real security incident</p>
+<ul>
+<li>Privileged container exploited</li>
+<li>Attacker pivots to other workloads</li>
+<li><strong>Root cause</strong>: Container ran as root (policy violation ignored for 6 months)</li>
+</ul>
 <p><strong>Outcome</strong>: Audit-only policies without enforcement roadmap = no improvement.</p>
 <h2 id="the-solution-tiered-enforcement-model">The Solution: Tiered Enforcement Model</h2>
 <p>Fawkes uses a <strong>three-tier policy framework</strong>:</p>
@@ -5241,7 +5251,7 @@
 <span class="w">    </span><span class="nt">policies.kyverno.io/tier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
 <span class="w">    </span><span class="nt">policies.kyverno.io/severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">high</span>
 <span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enforce</span><span class="w">  </span><span class="c1"># Block deployment</span>
+<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enforce</span><span class="w"> </span><span class="c1"># Block deployment</span>
 <span class="w">  </span><span class="nt">background</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">privileged-containers</span>
@@ -5258,11 +5268,13 @@
 <span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">=(securityContext)</span><span class="p">:</span>
 <span class="w">                  </span><span class="nt">=(privileged)</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
 </code></pre></div>
-<p><strong>Rationale</strong>:
-- Privileged containers can break out to host
-- Virtually no legitimate use case (0.1% of workloads)
-- <strong>Risk of blocking</strong>: Very low
-- <strong>Risk of allowing</strong>: Very high</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Privileged containers can break out to host</li>
+<li>Virtually no legitimate use case (0.1% of workloads)</li>
+<li><strong>Risk of blocking</strong>: Very low</li>
+<li><strong>Risk of allowing</strong>: Very high</li>
+</ul>
 <p><strong>2. No Host Namespaces</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kyverno.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterPolicy</span>
@@ -5285,10 +5297,12 @@
 <span class="w">            </span><span class="nt">=(hostIPC)</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
 <span class="w">            </span><span class="nt">=(hostPID)</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
 </code></pre></div>
-<p><strong>Rationale</strong>:
-- Host network/PID/IPC access = container breakout vector
-- Legitimate use cases: &lt;1% (CNI plugins, monitoring agents)
-- Those exceptions: Platform team manages, not developers</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Host network/PID/IPC access = container breakout vector</li>
+<li>Legitimate use cases: &lt;1% (CNI plugins, monitoring agents)</li>
+<li>Those exceptions: Platform team manages, not developers</li>
+</ul>
 <p><strong>3. Images from Approved Registries Only</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kyverno.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterPolicy</span>
@@ -5310,10 +5324,12 @@
 <span class="w">            </span><span class="nt">containers</span><span class="p">:</span>
 <span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;harbor.fawkes.io/*</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">gcr.io/fawkes/*&quot;</span>
 </code></pre></div>
-<p><strong>Rationale</strong>:
-- Public Docker Hub images: unvetted, potential supply chain attacks
-- Approved registries: scanned for vulnerabilities, signed
-- <strong>Risk</strong>: Developer pulls <code>random/cryptominer:latest</code> (supply chain attack)</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Public Docker Hub images: unvetted, potential supply chain attacks</li>
+<li>Approved registries: scanned for vulnerabilities, signed</li>
+<li><strong>Risk</strong>: Developer pulls <code>random/cryptominer:latest</code> (supply chain attack)</li>
+</ul>
 <p><strong>Tier 1 Exception Process</strong>: Manual approval by security team, documented justification, time-limited exemption.</p>
 <h3 id="tier-2-important-audit-enforce">Tier 2: Important (Audit → Enforce)</h3>
 <p><strong>Philosophy</strong>: Security hardening that requires migration time for existing workloads.</p>
@@ -5363,7 +5379,7 @@
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">policies.kyverno.io/tier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">important</span>
 <span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Audit</span><span class="w">  </span><span class="c1"># Will become Enforce after migration period</span>
+<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Audit</span><span class="w"> </span><span class="c1"># Will become Enforce after migration period</span>
 <span class="w">  </span><span class="nt">background</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-resource-limits</span>
@@ -5382,22 +5398,26 @@
 <span class="w">                    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;?*&quot;</span>
 <span class="w">                    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;?*&quot;</span>
 </code></pre></div>
-<p><strong>Why Gradual</strong>:
-- <strong>Legacy apps</strong> may not have limits set (works fine, but risky)
-- <strong>Impact analysis needed</strong>: What limits are appropriate?
-- <strong>Migration time</strong>: Teams need to test with limits, adjust</p>
-<p><strong>Rollout</strong>:
-1. <strong>Month 1 (Audit)</strong>: Platform team identifies 120 pods without limits
-2. <strong>Month 2 (Alert)</strong>: Teams notified via Slack, given template configs
-3. <strong>Month 3 (Warn)</strong>: Deployments warn but succeed, countdown timer shown
-4. <strong>Month 4 (Enforce)</strong>: Policy enforced, non-compliant deployments blocked</p>
+<p><strong>Why Gradual</strong>:</p>
+<ul>
+<li><strong>Legacy apps</strong> may not have limits set (works fine, but risky)</li>
+<li><strong>Impact analysis needed</strong>: What limits are appropriate?</li>
+<li><strong>Migration time</strong>: Teams need to test with limits, adjust</li>
+</ul>
+<p><strong>Rollout</strong>:</p>
+<ol>
+<li><strong>Month 1 (Audit)</strong>: Platform team identifies 120 pods without limits</li>
+<li><strong>Month 2 (Alert)</strong>: Teams notified via Slack, given template configs</li>
+<li><strong>Month 3 (Warn)</strong>: Deployments warn but succeed, countdown timer shown</li>
+<li><strong>Month 4 (Enforce)</strong>: Policy enforced, non-compliant deployments blocked</li>
+</ol>
 <p><strong>2. Non-Root Users</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kyverno.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterPolicy</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">require-non-root</span>
 <span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Audit</span><span class="w">  </span><span class="c1"># Gradual rollout</span>
+<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Audit</span><span class="w"> </span><span class="c1"># Gradual rollout</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">non-root-user</span>
 <span class="w">      </span><span class="nt">match</span><span class="p">:</span>
@@ -5413,10 +5433,12 @@
 <span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">securityContext</span><span class="p">:</span>
 <span class="w">                  </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
-<p><strong>Why Gradual</strong>:
-- Many images default to root user
-- Developer needs to rebuild image or override in security context
-- <strong>Migration</strong>: Takes time to rebuild images</p>
+<p><strong>Why Gradual</strong>:</p>
+<ul>
+<li>Many images default to root user</li>
+<li>Developer needs to rebuild image or override in security context</li>
+<li><strong>Migration</strong>: Takes time to rebuild images</li>
+</ul>
 <p><strong>3. Read-Only Root Filesystem</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kyverno.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterPolicy</span>
@@ -5439,9 +5461,11 @@
 <span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">securityContext</span><span class="p">:</span>
 <span class="w">                  </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
-<p><strong>Why Gradual</strong>:
-- Apps that write to local filesystem must be refactored (write to emptyDir volume instead)
-- Requires code changes, testing</p>
+<p><strong>Why Gradual</strong>:</p>
+<ul>
+<li>Apps that write to local filesystem must be refactored (write to emptyDir volume instead)</li>
+<li>Requires code changes, testing</li>
+</ul>
 <p><strong>Tier 2 Exception Process</strong>: Team lead approval, documented technical reason, review every 90 days.</p>
 <h3 id="tier-3-best-practice-audit-only">Tier 3: Best Practice (Audit Only)</h3>
 <p><strong>Philosophy</strong>: Encourage good practices but never block. Use visibility to drive cultural change.</p>
@@ -5452,7 +5476,7 @@
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recommended-labels</span>
 <span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Audit</span><span class="w">  </span><span class="c1"># Never enforced</span>
+<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Audit</span><span class="w"> </span><span class="c1"># Never enforced</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-labels</span>
 <span class="w">      </span><span class="nt">match</span><span class="p">:</span>
@@ -5469,10 +5493,12 @@
 <span class="w">              </span><span class="nt">app.kubernetes.io/version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;?*&quot;</span>
 <span class="w">              </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;?*&quot;</span>
 </code></pre></div>
-<p><strong>Why Audit-Only</strong>:
-- Labels helpful for observability, cost allocation, ownership
-- But lack of labels doesn't create security risk
-- <strong>Carrot, not stick</strong>: Show teams their compliance score, let them improve voluntarily</p>
+<p><strong>Why Audit-Only</strong>:</p>
+<ul>
+<li>Labels helpful for observability, cost allocation, ownership</li>
+<li>But lack of labels doesn't create security risk</li>
+<li><strong>Carrot, not stick</strong>: Show teams their compliance score, let them improve voluntarily</li>
+</ul>
 <p><strong>2. Deployment Strategies</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kyverno.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterPolicy</span>
@@ -5494,10 +5520,12 @@
 <span class="w">            </span><span class="nt">strategy</span><span class="p">:</span>
 <span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RollingUpdate</span>
 </code></pre></div>
-<p><strong>Why Audit-Only</strong>:
-- RollingUpdate preferred (zero-downtime deployments)
-- But Recreate valid for stateful apps, development environments
-- <strong>Education</strong>: Show metric "85% of deployments use RollingUpdate", team can improve</p>
+<p><strong>Why Audit-Only</strong>:</p>
+<ul>
+<li>RollingUpdate preferred (zero-downtime deployments)</li>
+<li>But Recreate valid for stateful apps, development environments</li>
+<li><strong>Education</strong>: Show metric "85% of deployments use RollingUpdate", team can improve</li>
+</ul>
 <p><strong>3. Cost Allocation Tags</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kyverno.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterPolicy</span>
@@ -5519,10 +5547,12 @@
 <span class="w">            </span><span class="nt">labels</span><span class="p">:</span>
 <span class="w">              </span><span class="nt">cost-center</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;?*&quot;</span>
 </code></pre></div>
-<p><strong>Why Audit-Only</strong>:
-- Helps finance team allocate cloud costs
-- But not a security requirement
-- <strong>Gradual adoption</strong>: Teams add cost-center labels for accurate chargeback</p>
+<p><strong>Why Audit-Only</strong>:</p>
+<ul>
+<li>Helps finance team allocate cloud costs</li>
+<li>But not a security requirement</li>
+<li><strong>Gradual adoption</strong>: Teams add cost-center labels for accurate chargeback</li>
+</ul>
 <h2 id="policy-lifecycle-from-audit-to-enforce">Policy Lifecycle: From Audit to Enforce</h2>
 <h3 id="the-migration-path">The Migration Path</h3>
 <pre class="mermaid"><code>graph LR
@@ -5536,18 +5566,20 @@
 
     style F fill:#4CAF50</code></pre>
 <p><strong>Example: "Require Non-Root Users" Policy</strong></p>
-<p><strong>Week 1-4: Audit Phase</strong>
-- Policy deployed in audit mode
-- Violations logged to PolicyReport CRD
-- Platform team analyzes impact</p>
-<p><strong>Report:</strong>
+<p><strong>Week 1-4: Audit Phase</strong></p>
+<ul>
+<li>Policy deployed in audit mode</li>
+<li>Violations logged to PolicyReport CRD</li>
+<li>Platform team analyzes impact</li>
+</ul>
+<p><strong>Report:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wgpolicyk8s.io/v1alpha2</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PolicyReport</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">require-non-root-violations</span>
 <span class="nt">summary</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">pass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
-<span class="w">  </span><span class="nt">fail</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">18</span><span class="w">  </span><span class="c1"># 18 pods violating policy</span>
+<span class="w">  </span><span class="nt">fail</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">18</span><span class="w"> </span><span class="c1"># 18 pods violating policy</span>
 <span class="w">  </span><span class="nt">warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 <span class="w">  </span><span class="nt">error</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 <span class="nt">results</span><span class="p">:</span>
@@ -5559,12 +5591,18 @@
 <span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-gateway</span>
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-pod-abc123</span>
 <span class="w">    </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Container</span><span class="nv"> </span><span class="s">&#39;api&#39;</span><span class="nv"> </span><span class="s">runs</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">root</span><span class="nv"> </span><span class="s">user&quot;</span>
-</code></pre></div></p>
-<p><strong>Week 5-8: Migration Phase</strong>
-1. <strong>Communication</strong>: Email teams with violations
-   - "Your <code>api-gateway</code> service runs as root. Here's how to fix..."
-   - Link to documentation, example configs</p>
+</code></pre></div>
+<p><strong>Week 5-8: Migration Phase</strong></p>
 <ol>
+<li>
+<p><strong>Communication</strong>: Email teams with violations</p>
+</li>
+<li>
+<p>"Your <code>api-gateway</code> service runs as root. Here's how to fix..."</p>
+</li>
+<li>
+<p>Link to documentation, example configs</p>
+</li>
 <li>
 <p><strong>Office Hours</strong>: Weekly drop-in sessions for teams needing help</p>
 </li>
@@ -5575,57 +5613,73 @@
 <li>Week 6: 80% compliant</li>
 <li>Week 7: 90% compliant</li>
 </ol>
-<p><strong>Week 9: Enforcement Decision</strong>
-- ✅ 90%+ compliant → Switch to enforce mode
-- ⚠️ &lt;90% compliant → Extend migration timeline</p>
-<p><strong>Week 10+: Enforce Mode</strong>
+<p><strong>Week 9: Enforcement Decision</strong></p>
+<ul>
+<li>✅ 90%+ compliant → Switch to enforce mode</li>
+<li>⚠️ &lt;90% compliant → Extend migration timeline</li>
+</ul>
+<p><strong>Week 10+: Enforce Mode</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enforce</span><span class="w">  </span><span class="c1"># Now blocking</span>
-</code></pre></div></p>
+<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enforce</span><span class="w"> </span><span class="c1"># Now blocking</span>
+</code></pre></div>
 <p><strong>Remaining violations</strong>: Platform team works 1-on-1 with teams or grants time-limited exemptions.</p>
 <h2 id="governance-who-decides-what-tier">Governance: Who Decides What Tier?</h2>
 <h3 id="policy-review-board">Policy Review Board</h3>
-<p><strong>Members</strong>:
-- Platform Lead
-- Security Engineer
-- 2x Developer Representatives (rotates quarterly)</p>
-<p><strong>Responsibilities</strong>:
-1. <strong>Review new policies</strong>: Assign tier (Critical, Important, Best Practice)
-2. <strong>Monitor audit-to-enforce transitions</strong>: Are teams ready?
-3. <strong>Handle exception requests</strong>: Approve/deny Tier 1 exemptions
-4. <strong>Quarterly policy review</strong>: Should Tier 2 policies move to Tier 1? Retire unused policies?</p>
+<p><strong>Members</strong>:</p>
+<ul>
+<li>Platform Lead</li>
+<li>Security Engineer</li>
+<li>2x Developer Representatives (rotates quarterly)</li>
+</ul>
+<p><strong>Responsibilities</strong>:</p>
+<ol>
+<li><strong>Review new policies</strong>: Assign tier (Critical, Important, Best Practice)</li>
+<li><strong>Monitor audit-to-enforce transitions</strong>: Are teams ready?</li>
+<li><strong>Handle exception requests</strong>: Approve/deny Tier 1 exemptions</li>
+<li><strong>Quarterly policy review</strong>: Should Tier 2 policies move to Tier 1? Retire unused policies?</li>
+</ol>
 <p><strong>Example Decision:</strong></p>
 <p><strong>Proposed Policy</strong>: "All deployments must use Argo Rollouts for canary deployments"</p>
-<p><strong>Discussion</strong>:
-- <strong>Security</strong>: Not a security issue (Tier 3 at most)
-- <strong>Developer</strong>: This would block 80% of current deployments, high friction
-- <strong>Platform</strong>: Canary is best practice but not mandatory for low-traffic apps</p>
-<p><strong>Decision</strong>: <strong>Tier 3 (Audit Only)</strong>
-- Encourage adoption via education
-- Show metric: "Teams using canary have 50% lower CFR"
-- Don't enforce (too disruptive for marginal benefit)</p>
+<p><strong>Discussion</strong>:</p>
+<ul>
+<li><strong>Security</strong>: Not a security issue (Tier 3 at most)</li>
+<li><strong>Developer</strong>: This would block 80% of current deployments, high friction</li>
+<li><strong>Platform</strong>: Canary is best practice but not mandatory for low-traffic apps</li>
+</ul>
+<p><strong>Decision</strong>: <strong>Tier 3 (Audit Only)</strong></p>
+<ul>
+<li>Encourage adoption via education</li>
+<li>Show metric: "Teams using canary have 50% lower CFR"</li>
+<li>Don't enforce (too disruptive for marginal benefit)</li>
+</ul>
 <h3 id="exception-request-process">Exception Request Process</h3>
-<p><strong>Tier 1 (Critical) Exception:</strong>
-1. Submit ticket with justification
-2. Security team reviews
-3. Approval requires:
-   - Technical necessity (no alternative)
-   - Compensating controls (extra monitoring, isolated namespace)
-   - Time limit (expires in 90 days, must re-justify)
-4. Documented in audit log</p>
-<p><strong>Tier 2 (Important) Exception:</strong>
-1. Team lead approves via annotation
+<p><strong>Tier 1 (Critical) Exception:</strong></p>
+<ol>
+<li>Submit ticket with justification</li>
+<li>Security team reviews</li>
+<li>Approval requires:</li>
+<li>Technical necessity (no alternative)</li>
+<li>Compensating controls (extra monitoring, isolated namespace)</li>
+<li>Time limit (expires in 90 days, must re-justify)</li>
+<li>Documented in audit log</li>
+</ol>
+<p><strong>Tier 2 (Important) Exception:</strong></p>
+<ol>
+<li>Team lead approves via annotation
    <div class="highlight"><pre><span></span><code><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">policy.fawkes.io/exception</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;require-non-root&quot;</span>
 <span class="w">    </span><span class="nt">policy.fawkes.io/reason</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Legacy</span><span class="nv"> </span><span class="s">vendor</span><span class="nv"> </span><span class="s">image,</span><span class="nv"> </span><span class="s">migration</span><span class="nv"> </span><span class="s">planned</span><span class="nv"> </span><span class="s">Q2&quot;</span>
 <span class="w">    </span><span class="nt">policy.fawkes.io/expires</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2024-06-30&quot;</span>
-</code></pre></div>
-2. Reviewed quarterly
-3. Exemption expires automatically, must renew</p>
-<p><strong>Tier 3 (Best Practice) Exception:</strong>
-- No exception needed (audit-only)
-- Teams can ignore violations without approval</p>
+</code></pre></div></li>
+<li>Reviewed quarterly</li>
+<li>Exemption expires automatically, must renew</li>
+</ol>
+<p><strong>Tier 3 (Best Practice) Exception:</strong></p>
+<ul>
+<li>No exception needed (audit-only)</li>
+<li>Teams can ignore violations without approval</li>
+</ul>
 <h2 id="trade-offs-security-vs-velocity">Trade-Offs: Security vs. Velocity</h2>
 <h3 id="what-tiered-enforcement-gives-you">What Tiered Enforcement Gives You</h3>
 <table>
@@ -5761,15 +5815,19 @@
 </ul>
 <h2 id="conclusion">Conclusion</h2>
 <p>Security policies are necessary, but <strong>enforcement is an art, not a science</strong>.</p>
-<p>The tiered enforcement model recognizes that:
-1. <strong>Not all policies are equal</strong> - Some prevent immediate breaches (enforce now), others harden over time (audit first)
-2. <strong>Developers need migration time</strong> - Sudden enforcement creates resistance and shadow IT
-3. <strong>Culture beats compliance</strong> - Gradual adoption builds trust, all-or-nothing breeds resentment
-4. <strong>Perfect is the enemy of good</strong> - 90% compliance with partnership beats 50% compliance with force</p>
-<p><strong>The Framework:</strong>
-- <strong>Tier 1 (Critical)</strong>: Enforce immediately, exceptions rare
-- <strong>Tier 2 (Important)</strong>: Audit → Enforce with migration timeline
-- <strong>Tier 3 (Best Practice)</strong>: Audit only, encourage via visibility</p>
+<p>The tiered enforcement model recognizes that:</p>
+<ol>
+<li><strong>Not all policies are equal</strong> - Some prevent immediate breaches (enforce now), others harden over time (audit first)</li>
+<li><strong>Developers need migration time</strong> - Sudden enforcement creates resistance and shadow IT</li>
+<li><strong>Culture beats compliance</strong> - Gradual adoption builds trust, all-or-nothing breeds resentment</li>
+<li><strong>Perfect is the enemy of good</strong> - 90% compliance with partnership beats 50% compliance with force</li>
+</ol>
+<p><strong>The Framework:</strong></p>
+<ul>
+<li><strong>Tier 1 (Critical)</strong>: Enforce immediately, exceptions rare</li>
+<li><strong>Tier 2 (Important)</strong>: Audit → Enforce with migration timeline</li>
+<li><strong>Tier 3 (Best Practice)</strong>: Audit only, encourage via visibility</li>
+</ul>
 <p><strong>The Philosophy</strong>: Security is a journey, not a destination. Meet developers where they are, guide them to where they should be.</p>
 <p><strong>This is Policy-as-Code with empathy.</strong></p>
 

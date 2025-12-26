@@ -5216,11 +5216,13 @@
 <strong>Module</strong>: 2 of 4 (Green Belt)
 <strong>Duration</strong>: 60 minutes
 <strong>Difficulty</strong>: Intermediate
-<strong>Prerequisites</strong>:
-- Module 9: GitOps with ArgoCD complete
-- Understanding of Kubernetes Deployments
-- Familiarity with service routing
-- Basic knowledge of load balancing</p>
+<strong>Prerequisites</strong>:</p>
+<ul>
+<li>Module 9: GitOps with ArgoCD complete</li>
+<li>Understanding of Kubernetes Deployments</li>
+<li>Familiarity with service routing</li>
+<li>Basic knowledge of load balancing</li>
+</ul>
 <hr />
 <h2 id="learning-objectives">📚 Learning Objectives</h2>
 <p>By the end of this module, you will:</p>
@@ -5233,21 +5235,23 @@
 <li>✅ Use feature flags for progressive rollouts</li>
 <li>✅ Choose the right strategy for different scenarios</li>
 </ol>
-<p><strong>DORA Capabilities Addressed</strong>:
-- ✓ CD2: Automate deployment process (advanced)
-- ✓ Work in Small Batches
-- ✓ Team Experimentation</p>
+<p><strong>DORA Capabilities Addressed</strong>:</p>
+<ul>
+<li>✓ CD2: Automate deployment process (advanced)</li>
+<li>✓ Work in Small Batches</li>
+<li>✓ Team Experimentation</li>
+</ul>
 <hr />
 <h2 id="part-1-deployment-strategy-overview">📖 Part 1: Deployment Strategy Overview</h2>
 <h3 id="the-problem-high-risk-deployments">The Problem: High-Risk Deployments</h3>
-<p><strong>Traditional "Big Bang" deployment</strong>:
+<p><strong>Traditional "Big Bang" deployment</strong>:</p>
 <div class="highlight"><pre><span></span><code>Old Version (100% traffic) → SWITCH → New Version (100% traffic)
                                 ↓
                           If something breaks:
                           ALL users affected
                           Immediate rollback needed
                           High stress, high risk
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Result</strong>: Fear of deploying, slow release cycles, weekend deployments</p>
 <h3 id="the-solution-progressive-deployment-strategies">The Solution: Progressive Deployment Strategies</h3>
 <p>Different strategies for different needs:</p>
@@ -5302,9 +5306,11 @@
 <hr />
 <h2 id="part-2-blue-green-deployment">🔵🟢 Part 2: Blue-Green Deployment</h2>
 <h3 id="what-is-blue-green">What is Blue-Green?</h3>
-<p>Run two identical production environments:
-- <strong>Blue</strong>: Current production version
-- <strong>Green</strong>: New version being deployed</p>
+<p>Run two identical production environments:</p>
+<ul>
+<li><strong>Blue</strong>: Current production version</li>
+<li><strong>Green</strong>: New version being deployed</li>
+</ul>
 <p>Switch traffic from Blue → Green when ready.</p>
 <div class="highlight"><pre><span></span><code>┌─────────────┐
 │   Users     │
@@ -5373,20 +5379,20 @@
 <span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blue</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v1.0</span>
-<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VERSION</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;v1.0-blue&quot;</span>
-<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
-<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v1.0</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VERSION</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;v1.0-blue&quot;</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
+<span class="w">            </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
@@ -5395,19 +5401,19 @@
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blue</span><span class="w">  </span><span class="c1"># Points to blue initially</span>
+<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blue</span><span class="w"> </span><span class="c1"># Points to blue initially</span>
 <span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LoadBalancer</span>
 </code></pre></div>
-<p>Deploy:
+<p>Deploy:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>blue-deployment.yaml
 
 <span class="c1"># Verify</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">version</span><span class="o">=</span>blue
 kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>myapp
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="step-2-deploy-green-environment">Step 2: Deploy Green Environment</h3>
 <p>Create <code>green-deployment.yaml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
@@ -5430,27 +5436,27 @@ kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </
 <span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">green</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v2.0</span><span class="w">  </span><span class="c1"># New version</span>
-<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VERSION</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;v2.0-green&quot;</span>
-<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
-<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v2.0</span><span class="w"> </span><span class="c1"># New version</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VERSION</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;v2.0-green&quot;</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
+<span class="w">            </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
 </code></pre></div>
-<p>Deploy Green (without switching traffic):
+<p>Deploy Green (without switching traffic):</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>green-deployment.yaml
 
 <span class="c1"># Verify both running</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>myapp
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="step-3-test-green-environment">Step 3: Test Green Environment</h3>
 <p>Create a test service to access Green directly:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
@@ -5462,11 +5468,11 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">green</span>
 <span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LoadBalancer</span>
 </code></pre></div>
-<p>Test Green:
+<p>Test Green:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>green-test-service.yaml
 
 <span class="c1"># Get test service URL</span>
@@ -5479,7 +5485,7 @@ curl<span class="w"> </span>http://<span class="nv">$TEST_URL</span>/version
 
 <span class="c1"># Run load test</span>
 ab<span class="w"> </span>-n<span class="w"> </span><span class="m">1000</span><span class="w"> </span>-c<span class="w"> </span><span class="m">10</span><span class="w"> </span>http://<span class="nv">$TEST_URL</span>/
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="step-4-switch-traffic-to-green">Step 4: Switch Traffic to Green</h3>
 <p>Update the main service selector:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Patch service to point to green</span>
@@ -5561,8 +5567,8 @@ Step 5:
 <span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RollingUpdate</span>
 <span class="w">    </span><span class="nt">rollingUpdate</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">maxSurge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">        </span><span class="c1"># Max 1 extra pod during update</span>
-<span class="w">      </span><span class="nt">maxUnavailable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">  </span><span class="c1"># Max 1 pod can be unavailable</span>
+<span class="w">      </span><span class="nt">maxSurge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># Max 1 extra pod during update</span>
+<span class="w">      </span><span class="nt">maxUnavailable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># Max 1 pod can be unavailable</span>
 <span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
@@ -5572,47 +5578,46 @@ Step 5:
 <span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v2.0</span>
-<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">        </span><span class="nt">livenessProbe</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">httpGet</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
-<span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="w">        </span><span class="nt">readinessProbe</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">httpGet</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/ready</span>
-<span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v2.0</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">          </span><span class="nt">livenessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">          </span><span class="nt">readinessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/ready</span>
+<span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 </code></pre></div>
 <h3 id="controlling-rolling-update-speed">Controlling Rolling Update Speed</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">strategy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RollingUpdate</span>
 <span class="w">  </span><span class="nt">rollingUpdate</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">maxSurge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">        </span><span class="c1"># Update 2 pods at a time</span>
-<span class="w">    </span><span class="nt">maxUnavailable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">  </span><span class="c1"># Keep all pods available</span>
+<span class="w">    </span><span class="nt">maxSurge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"> </span><span class="c1"># Update 2 pods at a time</span>
+<span class="w">    </span><span class="nt">maxUnavailable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"> </span><span class="c1"># Keep all pods available</span>
 
 <span class="c1"># This means:</span>
 <span class="c1"># - Always maintain at least 5 pods available</span>
 <span class="c1"># - Can temporarily have up to 7 pods (5 + 2 surge)</span>
 <span class="c1"># - Faster rollout but more resources used</span>
 </code></pre></div>
-<p><strong>Conservative rollout</strong>:
+<p><strong>Conservative rollout</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">strategy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RollingUpdate</span>
 <span class="w">  </span><span class="nt">rollingUpdate</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">maxSurge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 <span class="w">    </span><span class="nt">maxUnavailable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-
 <span class="c1"># This means:</span>
 <span class="c1"># - Update only 1 pod at a time</span>
 <span class="c1"># - Never reduce capacity</span>
 <span class="c1"># - Slower but safer</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="performing-rolling-update">Performing Rolling Update</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Update image version</span>
 kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>image<span class="w"> </span>deployment/myapp<span class="w"> </span><span class="nv">myapp</span><span class="o">=</span>myapp:v2.0
@@ -5749,25 +5754,25 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">  </span><span class="nt">http</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">headers</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">x-canary</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">exact</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">    </span><span class="nt">route</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">        </span><span class="nt">subset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">canary</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">route</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">        </span><span class="nt">subset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">baseline</span>
-<span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">95</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">        </span><span class="nt">subset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">canary</span>
-<span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">headers</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">x-canary</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">exact</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">      </span><span class="nt">route</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">            </span><span class="nt">subset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">canary</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">route</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">            </span><span class="nt">subset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">baseline</span>
+<span class="w">          </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">95</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">            </span><span class="nt">subset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">canary</span>
+<span class="w">          </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1beta1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DestinationRule</span>
@@ -5776,12 +5781,12 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">  </span><span class="nt">subsets</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">baseline</span>
-<span class="w">    </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.0</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">canary</span>
-<span class="w">    </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2.0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">baseline</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">canary</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2.0</span>
 </code></pre></div>
 <hr />
 <h2 id="part-6-recreate-deployment">🔨 Part 6: Recreate Deployment</h2>
@@ -5816,7 +5821,7 @@ Phase 3: Start new
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 <span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recreate</span><span class="w">  </span><span class="c1"># Simple!</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recreate</span><span class="w"> </span><span class="c1"># Simple!</span>
 <span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
@@ -5826,8 +5831,8 @@ Phase 3: Start new
 <span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v2.0</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v2.0</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Update deployment</span>
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>deployment.yaml
@@ -5937,16 +5942,20 @@ Can you accept downtime?
 <h2 id="part-8-practical-exercise">💪 Part 8: Practical Exercise</h2>
 <h3 id="exercise-implement-multiple-deployment-strategies">Exercise: Implement Multiple Deployment Strategies</h3>
 <p><strong>Objective</strong>: Deploy same application using 3 different strategies</p>
-<p><strong>Scenario</strong>: You have a web application with:
-- Frontend (stateless)
-- API (stateless)
-- Database (stateful)</p>
-<p><strong>Requirements</strong>:
-1. Deploy frontend with <strong>Blue-Green</strong>
-2. Deploy API with <strong>Canary</strong> (10% → 50% → 100%)
-3. Deploy database with <strong>Recreate</strong> (maintenance window)
-4. Document decision reasoning
-5. Demonstrate rollback for each</p>
+<p><strong>Scenario</strong>: You have a web application with:</p>
+<ul>
+<li>Frontend (stateless)</li>
+<li>API (stateless)</li>
+<li>Database (stateful)</li>
+</ul>
+<p><strong>Requirements</strong>:</p>
+<ol>
+<li>Deploy frontend with <strong>Blue-Green</strong></li>
+<li>Deploy API with <strong>Canary</strong> (10% → 50% → 100%)</li>
+<li>Deploy database with <strong>Recreate</strong> (maintenance window)</li>
+<li>Document decision reasoning</li>
+<li>Demonstrate rollback for each</li>
+</ol>
 <p><strong>Starter Template</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># frontend-bluegreen.yaml</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
@@ -5974,18 +5983,24 @@ Can you accept downtime?
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recreate</span>
 <span class="c1"># TODO: Complete recreate setup</span>
 </code></pre></div>
-<p><strong>Validation Criteria</strong>:
-- [ ] Frontend: Blue and Green deployed, traffic switchable
-- [ ] API: Canary at 10%, metrics monitored, promotable
-- [ ] Database: Recreate strategy, downtime measured
-- [ ] All: Rollback procedures documented and tested
-- [ ] Decision matrix: Justify each strategy choice</p>
+<p><strong>Validation Criteria</strong>:</p>
+<ul>
+<li>[ ] Frontend: Blue and Green deployed, traffic switchable</li>
+<li>[ ] API: Canary at 10%, metrics monitored, promotable</li>
+<li>[ ] Database: Recreate strategy, downtime measured</li>
+<li>[ ] All: Rollback procedures documented and tested</li>
+<li>[ ] Decision matrix: Justify each strategy choice</li>
+</ul>
 <hr />
 <h2 id="part-9-knowledge-check">🎓 Part 9: Knowledge Check</h2>
 <h3 id="quiz-questions">Quiz Questions</h3>
 <ol>
-<li><strong>What is the main benefit of Blue-Green deployment?</strong></li>
-<li>[ ] Lowest cost</li>
+<li>
+<p><strong>What is the main benefit of Blue-Green deployment?</strong></p>
+</li>
+<li>
+<p>[ ] Lowest cost</p>
+</li>
 <li>[x] Instant rollback</li>
 <li>[ ] No infrastructure changes</li>
 <li>
@@ -5994,7 +6009,9 @@ Can you accept downtime?
 <li>
 <p><strong>In a Rolling Update, what does maxSurge: 2 mean?</strong></p>
 </li>
-<li>[ ] Maximum 2 pods total</li>
+<li>
+<p>[ ] Maximum 2 pods total</p>
+</li>
 <li>[ ] Update 2 pods per minute</li>
 <li>[x] Can have 2 extra pods temporarily during update</li>
 <li>
@@ -6003,7 +6020,9 @@ Can you accept downtime?
 <li>
 <p><strong>When should you use Recreate strategy?</strong></p>
 </li>
-<li>[ ] Production critical apps</li>
+<li>
+<p>[ ] Production critical apps</p>
+</li>
 <li>[ ] Never, it's deprecated</li>
 <li>[x] When downtime is acceptable or for incompatible versions</li>
 <li>
@@ -6012,7 +6031,9 @@ Can you accept downtime?
 <li>
 <p><strong>What's the primary advantage of Canary deployment?</strong></p>
 </li>
-<li>[ ] Fastest deployment</li>
+<li>
+<p>[ ] Fastest deployment</p>
+</li>
 <li>[ ] Simplest to implement</li>
 <li>[x] Lowest risk with gradual rollout</li>
 <li>
@@ -6021,7 +6042,9 @@ Can you accept downtime?
 <li>
 <p><strong>In Blue-Green, when do you delete the Blue environment?</strong></p>
 </li>
-<li>[ ] Immediately after switching</li>
+<li>
+<p>[ ] Immediately after switching</p>
+</li>
 <li>[ ] Never</li>
 <li>[x] After Green is validated in production</li>
 <li>
@@ -6030,7 +6053,9 @@ Can you accept downtime?
 <li>
 <p><strong>What's required for precise canary traffic control?</strong></p>
 </li>
-<li>[ ] Multiple data centers</li>
+<li>
+<p>[ ] Multiple data centers</p>
+</li>
 <li>[x] Advanced routing (like Istio or ingress controller)</li>
 <li>[ ] Minimum 100 pods</li>
 <li>
@@ -6039,7 +6064,9 @@ Can you accept downtime?
 <li>
 <p><strong>Which strategy has the highest infrastructure cost during deployment?</strong></p>
 </li>
-<li>[x] Blue-Green</li>
+<li>
+<p>[x] Blue-Green</p>
+</li>
 <li>[ ] Rolling Update</li>
 <li>[ ] Canary</li>
 <li>
@@ -6078,13 +6105,17 @@ Can you accept downtime?
 <li><strong>Test in production</strong> - Canary and Blue-Green enable this safely</li>
 </ol>
 <h3 id="real-world-impact">Real-World Impact</h3>
-<p>"After implementing deployment strategies:
-- <strong>Deployment confidence</strong>: 60% → 95%
-- <strong>Production incidents from deploys</strong>: 15 per month → 2 per month
-- <strong>Rollback time</strong>: 30 minutes → 30 seconds (Blue-Green)
-- <strong>User impact from bad deploys</strong>: 100% → 5% (Canary)</p>
-<p>We now deploy during business hours with confidence."
-- <em>Platform Team, Financial Services</em></p>
+<p>"After implementing deployment strategies:</p>
+<ul>
+<li><strong>Deployment confidence</strong>: 60% → 95%</li>
+<li><strong>Production incidents from deploys</strong>: 15 per month → 2 per month</li>
+<li><strong>Rollback time</strong>: 30 minutes → 30 seconds (Blue-Green)</li>
+<li><strong>User impact from bad deploys</strong>: 100% → 5% (Canary)</li>
+</ul>
+<p>We now deploy during business hours with confidence."</p>
+<ul>
+<li><em>Platform Team, Financial Services</em></li>
+</ul>
 <hr />
 <h2 id="additional-resources">📚 Additional Resources</h2>
 <h3 id="documentation">Documentation</h3>
@@ -6103,8 +6134,12 @@ Can you accept downtime?
 <h2 id="module-completion">🏅 Module Completion</h2>
 <h3 id="assessment-checklist">Assessment Checklist</h3>
 <ul>
-<li>[ ] <strong>Conceptual Understanding</strong></li>
-<li>[ ] Explain each deployment strategy</li>
+<li>
+<p>[ ] <strong>Conceptual Understanding</strong></p>
+</li>
+<li>
+<p>[ ] Explain each deployment strategy</p>
+</li>
 <li>[ ] Choose appropriate strategy for scenarios</li>
 <li>
 <p>[ ] Understand trade-offs</p>
@@ -6112,7 +6147,9 @@ Can you accept downtime?
 <li>
 <p>[ ] <strong>Practical Skills</strong></p>
 </li>
-<li>[ ] Implement Blue-Green deployment</li>
+<li>
+<p>[ ] Implement Blue-Green deployment</p>
+</li>
 <li>[ ] Configure Rolling Update parameters</li>
 <li>[ ] Set up basic Canary deployment</li>
 <li>
@@ -6121,7 +6158,9 @@ Can you accept downtime?
 <li>
 <p>[ ] <strong>Hands-On Lab</strong></p>
 </li>
-<li>[ ] Deploy using multiple strategies</li>
+<li>
+<p>[ ] Deploy using multiple strategies</p>
+</li>
 <li>[ ] Switch traffic between versions</li>
 <li>
 <p>[ ] Perform successful rollback</p>
@@ -6132,10 +6171,12 @@ Can you accept downtime?
 <li>[ ] Score 80% or higher (6/8 questions)</li>
 </ul>
 <h3 id="certification-credit">Certification Credit</h3>
-<p>Upon completion, you earn:
-- <strong>5 points</strong> toward Green Belt certification (50% complete)
-- <strong>Badge</strong>: "Deployment Strategist"
-- <strong>Skill Unlocked</strong>: Advanced Deployment Patterns</p>
+<p>Upon completion, you earn:</p>
+<ul>
+<li><strong>5 points</strong> toward Green Belt certification (50% complete)</li>
+<li><strong>Badge</strong>: "Deployment Strategist"</li>
+<li><strong>Skill Unlocked</strong>: Advanced Deployment Patterns</li>
+</ul>
 <hr />
 <h2 id="green-belt-progress">🎖️ Green Belt Progress</h2>
 <div class="highlight"><pre><span></span><code>Green Belt: GitOps &amp; Deployment

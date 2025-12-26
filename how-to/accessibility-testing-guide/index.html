@@ -5130,21 +5130,25 @@ npm<span class="w"> </span>run<span class="w"> </span>lighthouse:ci
 <h2 id="testing-tools">Testing Tools</h2>
 <h3 id="axe-core">Axe-Core</h3>
 <p><a href="https://github.com/dequelabs/axe-core">axe-core</a> is a fast, lightweight accessibility testing engine that runs automated WCAG 2.0, 2.1, and Section 508 accessibility tests.</p>
-<p><strong>What it tests:</strong>
-- Color contrast
-- ARIA attributes
-- Semantic HTML
-- Keyboard navigation
-- Form labels
-- Image alt text
-- And 90+ other rules</p>
+<p><strong>What it tests:</strong></p>
+<ul>
+<li>Color contrast</li>
+<li>ARIA attributes</li>
+<li>Semantic HTML</li>
+<li>Keyboard navigation</li>
+<li>Form labels</li>
+<li>Image alt text</li>
+<li>And 90+ other rules</li>
+</ul>
 <h3 id="lighthouse-ci">Lighthouse CI</h3>
 <p><a href="https://github.com/GoogleChrome/lighthouse-ci">Lighthouse CI</a> provides automated auditing, performance metrics, and best practices for web pages.</p>
-<p><strong>What it tests:</strong>
-- Accessibility score (0-100)
-- WCAG compliance
-- Best practices
-- SEO fundamentals</p>
+<p><strong>What it tests:</strong></p>
+<ul>
+<li>Accessibility score (0-100)</li>
+<li>WCAG compliance</li>
+<li>Best practices</li>
+<li>SEO fundamentals</li>
+</ul>
 <h2 id="running-tests-locally">Running Tests Locally</h2>
 <h3 id="prerequisites">Prerequisites</h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>design-system
@@ -5199,11 +5203,13 @@ npm<span class="w"> </span>run<span class="w"> </span>lighthouse:assert
 </code></pre></div>
 <h2 id="cicd-integration">CI/CD Integration</h2>
 <h3 id="github-actions">GitHub Actions</h3>
-<p>Accessibility tests run automatically on:
-- Every pull request
-- Push to main branch
-- Daily at 9 AM UTC (scheduled)
-- Manual workflow dispatch</p>
+<p>Accessibility tests run automatically on:</p>
+<ul>
+<li>Every pull request</li>
+<li>Push to main branch</li>
+<li>Daily at 9 AM UTC (scheduled)</li>
+<li>Manual workflow dispatch</li>
+</ul>
 <p><strong>Workflow:</strong> <code>.github/workflows/accessibility-testing.yml</code></p>
 <h3 id="jenkins-pipeline">Jenkins Pipeline</h3>
 <p>For services using the Golden Path pipeline, add accessibility testing:</p>
@@ -5292,70 +5298,66 @@ npm<span class="w"> </span>run<span class="w"> </span>lighthouse:assert
 <li><strong>70-89</strong>: ⚠️ Needs improvement</li>
 <li><strong>0-69</strong>: ❌ Poor (does not meet requirements)</li>
 </ul>
-<p>Reports include:
-- Overall accessibility score
-- Detailed audit results
-- Opportunities for improvement
-- Passed audits</p>
+<p>Reports include:</p>
+<ul>
+<li>Overall accessibility score</li>
+<li>Detailed audit results</li>
+<li>Opportunities for improvement</li>
+<li>Passed audits</li>
+</ul>
 <h2 id="fixing-violations">Fixing Violations</h2>
 <h3 id="common-violations-and-fixes">Common Violations and Fixes</h3>
 <h4 id="1-missing-alt-text">1. Missing Alt Text</h4>
-<p><strong>Problem:</strong>
+<p><strong>Problem:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;logo.png&quot;</span> <span class="p">/&gt;</span>
-</code></pre></div></p>
-<p><strong>Fix:</strong>
+</code></pre></div>
+<p><strong>Fix:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;logo.png&quot;</span> <span class="na">alt</span><span class="o">=</span><span class="s">&quot;Company logo&quot;</span> <span class="p">/&gt;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="2-poor-color-contrast">2. Poor Color Contrast</h4>
-<p><strong>Problem:</strong>
+<p><strong>Problem:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">.</span><span class="nc">text</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#999</span><span class="p">;</span>
 <span class="w">  </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="mh">#fff</span><span class="p">;</span>
 <span class="w">  </span><span class="c">/* Contrast ratio: 2.85:1 (fails) */</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Fix:</strong>
+</code></pre></div>
+<p><strong>Fix:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">.</span><span class="nc">text</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#666</span><span class="p">;</span>
 <span class="w">  </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="mh">#fff</span><span class="p">;</span>
 <span class="w">  </span><span class="c">/* Contrast ratio: 5.74:1 (passes) */</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="3-missing-form-labels">3. Missing Form Labels</h4>
-<p><strong>Problem:</strong>
+<p><strong>Problem:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;email&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;email&quot;</span> <span class="p">/&gt;</span>
-</code></pre></div></p>
-<p><strong>Fix:</strong>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">label</span> <span class="na">htmlFor</span><span class="o">=</span><span class="s">&quot;email&quot;</span><span class="p">&gt;</span>Email Address<span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;email&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;email&quot;</span> <span class="p">/&gt;</span>
-</code></pre></div></p>
-<p>Or use aria-label:
+</code></pre></div>
+<p><strong>Fix:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">label</span> <span class="na">htmlFor</span><span class="o">=</span><span class="s">&quot;email&quot;</span><span class="p">&gt;</span>Email Address<span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;email&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;email&quot;</span> <span class="p">/&gt;</span>
+</code></pre></div>
+<p>Or use aria-label:</p>
 <div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;email&quot;</span> <span class="na">aria-label</span><span class="o">=</span><span class="s">&quot;Email Address&quot;</span> <span class="p">/&gt;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="4-invalid-aria-attributes">4. Invalid ARIA Attributes</h4>
-<p><strong>Problem:</strong>
+<p><strong>Problem:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">role</span><span class="o">=</span><span class="s">&quot;button&quot;</span> <span class="na">aria-pressed</span><span class="o">=</span><span class="s">&quot;yes&quot;</span><span class="p">&gt;</span>Click me<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</code></pre></div></p>
-<p><strong>Fix:</strong>
+</code></pre></div>
+<p><strong>Fix:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">aria-pressed</span><span class="o">=</span><span class="s">&quot;true&quot;</span><span class="p">&gt;</span>Click me<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="5-missing-keyboard-access">5. Missing Keyboard Access</h4>
-<p><strong>Problem:</strong>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">onClick</span><span class="o">=</span><span class="s">{handleClick}</span><span class="p">&gt;</span>Clickable<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</code></pre></div></p>
-<p><strong>Fix:</strong>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="o">=</span><span class="s">{handleClick}</span><span class="p">&gt;</span>Clickable<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-</code></pre></div></p>
-<p>Or make div keyboard accessible:
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span>
-  <span class="na">role</span><span class="o">=</span><span class="s">&quot;button&quot;</span>
-  <span class="na">tabIndex</span><span class="o">=</span><span class="s">{0}</span>
-  <span class="na">onClick</span><span class="o">=</span><span class="s">{handleClick}</span>
-  <span class="na">onKeyPress</span><span class="o">=</span><span class="s">{(e)</span> <span class="err">=</span><span class="p">&gt;</span> e.key === &#39;Enter&#39; <span class="err">&amp;&amp;</span> handleClick()}
-&gt;
-  Clickable
+<p><strong>Problem:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">onClick</span><span class="o">=</span><span class="s">&quot;{handleClick}&quot;</span><span class="p">&gt;</span>Clickable<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div>
+<p><strong>Fix:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="o">=</span><span class="s">&quot;{handleClick}&quot;</span><span class="p">&gt;</span>Clickable<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</code></pre></div>
+<p>Or make div keyboard accessible:</p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">role</span><span class="o">=</span><span class="s">&quot;button&quot;</span> <span class="na">tabindex</span><span class="o">=</span><span class="s">&quot;{0}&quot;</span> <span class="na">onClick</span><span class="o">=</span><span class="s">&quot;{handleClick}&quot;</span> <span class="na">onKeyPress</span><span class="o">=</span><span class="s">&quot;{(e)&quot;</span> <span class="err">=&quot;&quot;</span><span class="p">&gt;</span>
+  e.key === &#39;Enter&#39; <span class="err">&amp;&amp;</span> handleClick()} &gt; Clickable
 <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="testing-your-fixes">Testing Your Fixes</h3>
 <ol>
 <li>Make the fix in your component</li>
@@ -5368,16 +5370,18 @@ npm<span class="w"> </span>run<span class="w"> </span>lighthouse:assert
 </ol>
 <h2 id="dashboard-and-metrics">Dashboard and Metrics</h2>
 <h3 id="grafana-dashboard">Grafana Dashboard</h3>
-<p>Access the accessibility dashboard at:
+<p>Access the accessibility dashboard at:</p>
 <div class="highlight"><pre><span></span><code>https://grafana.fawkes.idp/d/accessibility
-</code></pre></div></p>
-<p><strong>Dashboard features:</strong>
-- Overall accessibility score trend
-- Test pass/fail rate
-- Violations by severity
-- Violations by component
-- WCAG 2.1 AA compliance status
-- Historical metrics</p>
+</code></pre></div>
+<p><strong>Dashboard features:</strong></p>
+<ul>
+<li>Overall accessibility score trend</li>
+<li>Test pass/fail rate</li>
+<li>Violations by severity</li>
+<li>Violations by component</li>
+<li>WCAG 2.1 AA compliance status</li>
+<li>Historical metrics</li>
+</ul>
 <h3 id="prometheus-metrics">Prometheus Metrics</h3>
 <p>Query these metrics in Prometheus:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Accessibility score</span>
@@ -5398,49 +5402,58 @@ npm<span class="w"> </span>run<span class="w"> </span>lighthouse:assert
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="tests-pass-locally-but-fail-in-ci">Tests Pass Locally But Fail in CI</h3>
 <p><strong>Cause</strong>: Environment differences, missing dependencies, or timing issues.</p>
-<p><strong>Solution</strong>:
-1. Check CI logs for specific errors
-2. Ensure all dependencies are in <code>package.json</code>
-3. Run tests with CI flag locally:
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Check CI logs for specific errors</li>
+<li>Ensure all dependencies are in <code>package.json</code></li>
+<li>Run tests with CI flag locally:
    <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>test:a11y:ci
-</code></pre></div>
-4. Check for race conditions in async tests</p>
+</code></pre></div></li>
+<li>Check for race conditions in async tests</li>
+</ol>
 <h3 id="lighthouse-score-is-lower-than-expected">Lighthouse Score is Lower Than Expected</h3>
 <p><strong>Cause</strong>: Storybook build issues, network problems, or threshold too high.</p>
-<p><strong>Solution</strong>:
-1. Build Storybook locally and inspect:
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Build Storybook locally and inspect:
    <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>build-storybook
 npx<span class="w"> </span>http-server<span class="w"> </span>storybook-static
-</code></pre></div>
-2. Check Lighthouse report for specific issues
-3. Review <code>lighthouserc.json</code> configuration
-4. Temporarily lower threshold while fixing issues</p>
+</code></pre></div></li>
+<li>Check Lighthouse report for specific issues</li>
+<li>Review <code>lighthouserc.json</code> configuration</li>
+<li>Temporarily lower threshold while fixing issues</li>
+</ol>
 <h3 id="false-positives">False Positives</h3>
 <p><strong>Cause</strong>: Axe-core might flag valid patterns as violations.</p>
-<p><strong>Solution</strong>:
-1. Review the violation carefully
-2. Check if it's a legitimate issue
-3. If it's a false positive, add to <code>.axerc.json</code>:
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Review the violation carefully</li>
+<li>Check if it's a legitimate issue</li>
+<li>If it's a false positive, add to <code>.axerc.json</code>:
    <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;rule-id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div>
-4. Document why you disabled the rule</p>
+</code></pre></div></li>
+<li>Document why you disabled the rule</li>
+</ol>
 <h3 id="github-actions-workflow-failing">GitHub Actions Workflow Failing</h3>
 <p><strong>Cause</strong>: Workflow configuration issues or missing secrets.</p>
-<p><strong>Solution</strong>:
-1. Check workflow logs in GitHub Actions
-2. Verify all required secrets are set
-3. Check file paths are correct
-4. Ensure Node version is compatible
-5. Re-run workflow after fixes</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Check workflow logs in GitHub Actions</li>
+<li>Verify all required secrets are set</li>
+<li>Check file paths are correct</li>
+<li>Ensure Node version is compatible</li>
+<li>Re-run workflow after fixes</li>
+</ol>
 <h3 id="jenkins-pipeline-hanging">Jenkins Pipeline Hanging</h3>
 <p><strong>Cause</strong>: Lighthouse might be waiting for user input or timing out.</p>
-<p><strong>Solution</strong>:
-1. Check Jenkins console output
-2. Increase timeout in <code>lighthouserc.json</code>:
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Check Jenkins console output</li>
+<li>Increase timeout in <code>lighthouserc.json</code>:
    <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;ci&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;collect&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -5448,8 +5461,9 @@ npx<span class="w"> </span>http-server<span class="w"> </span>storybook-static
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div>
-3. Use headless mode in Jenkins agent</p>
+</code></pre></div></li>
+<li>Use headless mode in Jenkins agent</li>
+</ol>
 <h2 id="resources">Resources</h2>
 <h3 id="wcag-guidelines">WCAG Guidelines</h3>
 <ul>

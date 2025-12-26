@@ -5196,11 +5196,13 @@
 <li><strong>Collaboration</strong>: Share knowledge about data through descriptions, tags, and documentation</li>
 <li><strong>Impact Analysis</strong>: Understand downstream impacts before making changes</li>
 </ol>
-<p>DataHub integrates seamlessly with our existing platform components:
-- <strong>PostgreSQL databases</strong> for application data
-- <strong>Kafka/event streams</strong> for real-time data (future)
-- <strong>S3/object storage</strong> for data lakes (future)
-- <strong>dbt models</strong> for transformation lineage (future)</p>
+<p>DataHub integrates seamlessly with our existing platform components:</p>
+<ul>
+<li><strong>PostgreSQL databases</strong> for application data</li>
+<li><strong>Kafka/event streams</strong> for real-time data (future)</li>
+<li><strong>S3/object storage</strong> for data lakes (future)</li>
+<li><strong>dbt models</strong> for transformation lineage (future)</li>
+</ul>
 <hr />
 <h2 id="architecture-overview">Architecture Overview</h2>
 <p>DataHub follows a microservices architecture with the following key components:</p>
@@ -5289,13 +5291,15 @@
 <hr />
 <h2 id="how-to-access-datahub">How to Access DataHub</h2>
 <h3 id="local-development">Local Development</h3>
-<p>DataHub UI is accessible at:
+<p>DataHub UI is accessible at:</p>
 <div class="highlight"><pre><span></span><code>http://datahub.127.0.0.1.nip.io
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="default-credentials-mvp">Default Credentials (MVP)</h3>
-<p>For the initial MVP deployment, authentication is simplified:
-- <strong>Username</strong>: <code>datahub</code>
-- <strong>Password</strong>: <code>datahub</code></p>
+<p>For the initial MVP deployment, authentication is simplified:</p>
+<ul>
+<li><strong>Username</strong>: <code>datahub</code></li>
+<li><strong>Password</strong>: <code>datahub</code></li>
+</ul>
 <blockquote>
 <p><strong>⚠️ Production Note</strong>: For production deployments, enable OIDC authentication with GitHub OAuth or use other enterprise SSO solutions.</p>
 </blockquote>
@@ -5314,43 +5318,55 @@ curl<span class="w"> </span>http://datahub-datahub-gms.fawkes.svc:8080/entities
 <h2 id="how-to-search-for-data">How to Search for Data</h2>
 <p>DataHub provides multiple ways to discover data assets:</p>
 <h3 id="1-search-by-keywords">1. Search by Keywords</h3>
-<p>Navigate to the search bar and enter keywords:
-- Dataset names (e.g., "backstage_users")
-- Column names (e.g., "email")
-- Descriptions
-- Tags</p>
-<p><strong>Example Searches:</strong>
-- <code>backstage</code> - Find all assets related to Backstage
-- <code>user email</code> - Find datasets containing user email data
-- <code>tag:PII</code> - Find all assets tagged as PII</p>
+<p>Navigate to the search bar and enter keywords:</p>
+<ul>
+<li>Dataset names (e.g., "backstage_users")</li>
+<li>Column names (e.g., "email")</li>
+<li>Descriptions</li>
+<li>Tags</li>
+</ul>
+<p><strong>Example Searches:</strong></p>
+<ul>
+<li><code>backstage</code> - Find all assets related to Backstage</li>
+<li><code>user email</code> - Find datasets containing user email data</li>
+<li><code>tag:PII</code> - Find all assets tagged as PII</li>
+</ul>
 <h3 id="2-browse-by-platform">2. Browse by Platform</h3>
-<p>Click on "Browse" and navigate through:
-- <strong>Platforms</strong>: PostgreSQL, Kafka, S3, etc.
-- <strong>Domains</strong>: Analytics, Operations, Product, etc.
-- <strong>Ownership</strong>: Filter by team or owner</p>
+<p>Click on "Browse" and navigate through:</p>
+<ul>
+<li><strong>Platforms</strong>: PostgreSQL, Kafka, S3, etc.</li>
+<li><strong>Domains</strong>: Analytics, Operations, Product, etc.</li>
+<li><strong>Ownership</strong>: Filter by team or owner</li>
+</ul>
 <h3 id="3-advanced-filters">3. Advanced Filters</h3>
-<p>Use the filter panel to refine searches:
-- <strong>Entity Type</strong>: Dataset, Dashboard, Pipeline, etc.
-- <strong>Platform</strong>: PostgreSQL, MySQL, BigQuery, etc.
-- <strong>Domain</strong>: Engineering, Marketing, Finance, etc.
-- <strong>Tags</strong>: PII, Critical, Deprecated, etc.
-- <strong>Ownership</strong>: Team or individual</p>
+<p>Use the filter panel to refine searches:</p>
+<ul>
+<li><strong>Entity Type</strong>: Dataset, Dashboard, Pipeline, etc.</li>
+<li><strong>Platform</strong>: PostgreSQL, MySQL, BigQuery, etc.</li>
+<li><strong>Domain</strong>: Engineering, Marketing, Finance, etc.</li>
+<li><strong>Tags</strong>: PII, Critical, Deprecated, etc.</li>
+<li><strong>Ownership</strong>: Team or individual</li>
+</ul>
 <h3 id="4-using-the-cli">4. Using the CLI</h3>
-<p>Install DataHub CLI:
+<p>Install DataHub CLI:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;acryl-datahub[all]&#39;</span>
-</code></pre></div></p>
-<p>Search from command line:
+</code></pre></div>
+<p>Search from command line:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Search for datasets</span>
 datahub<span class="w"> </span>get<span class="w"> </span>--urn<span class="w"> </span><span class="s2">&quot;urn:li:dataset:(urn:li:dataPlatform:postgres,backstage.users,PROD)&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="how-to-add-metadata">How to Add Metadata</h2>
 <h3 id="method-1-through-the-ui">Method 1: Through the UI</h3>
 <ol>
 <li><strong>Navigate to an Asset</strong>: Search or browse to find the dataset</li>
 <li><strong>Click "Edit"</strong>: Located in the top-right corner</li>
-<li><strong>Add Information</strong>:</li>
-<li><strong>Description</strong>: Explain what this dataset contains</li>
+<li>
+<p><strong>Add Information</strong>:</p>
+</li>
+<li>
+<p><strong>Description</strong>: Explain what this dataset contains</p>
+</li>
 <li><strong>Tags</strong>: Add relevant tags (e.g., PII, Critical, Deprecated)</li>
 <li><strong>Domain</strong>: Assign to a business domain</li>
 <li><strong>Owners</strong>: Add technical and business owners</li>
@@ -5382,14 +5398,14 @@ datahub<span class="w"> </span>get<span class="w"> </span>--urn<span class="w"> 
 <span class="w">  </span><span class="nt">config</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://datahub-datahub-gms.fawkes.svc:8080&quot;</span>
 </code></pre></div>
-<p>Run ingestion:
+<p>Run ingestion:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Set credentials</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">POSTGRES_USER</span><span class="o">=</span><span class="s2">&quot;backstage_user&quot;</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span><span class="s2">&quot;your-password&quot;</span>
 
 <span class="c1"># Ingest metadata</span>
 datahub<span class="w"> </span>ingest<span class="w"> </span>-c<span class="w"> </span>postgres-recipe.yml
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="method-3-programmatic-api">Method 3: Programmatic API</h3>
 <p>Use Python SDK:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datahub.emitter.mce_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_dataset_urn</span>
@@ -5424,10 +5440,12 @@ datahub<span class="w"> </span>ingest<span class="w"> </span>-c<span class="w"> 
 </code></pre></div>
 <hr />
 <h2 id="understanding-lineage-graphs">Understanding Lineage Graphs</h2>
-<p>Data lineage shows how data flows through your systems, helping you understand:
-- <strong>Upstream dependencies</strong>: What data sources feed into this dataset?
-- <strong>Downstream consumers</strong>: What processes or dashboards depend on this dataset?
-- <strong>Transformation logic</strong>: How data changes as it moves through pipelines</p>
+<p>Data lineage shows how data flows through your systems, helping you understand:</p>
+<ul>
+<li><strong>Upstream dependencies</strong>: What data sources feed into this dataset?</li>
+<li><strong>Downstream consumers</strong>: What processes or dashboards depend on this dataset?</li>
+<li><strong>Transformation logic</strong>: How data changes as it moves through pipelines</li>
+</ul>
 <h3 id="viewing-lineage">Viewing Lineage</h3>
 <ol>
 <li><strong>Navigate to a Dataset</strong>: Search for the dataset</li>
@@ -5502,38 +5520,46 @@ datahub<span class="w"> </span>ingest<span class="w"> </span>-c<span class="w"> 
 <h2 id="common-use-cases">Common Use Cases</h2>
 <h3 id="use-case-1-finding-pii-data">Use Case 1: Finding PII Data</h3>
 <p><strong>Scenario</strong>: You need to identify all tables containing personally identifiable information for GDPR compliance.</p>
-<p><strong>Steps</strong>:
-1. Search for <code>tag:PII</code> in the search bar
-2. Review all results
-3. Verify ownership and access controls
-4. Document data retention policies</p>
+<p><strong>Steps</strong>:</p>
+<ol>
+<li>Search for <code>tag:PII</code> in the search bar</li>
+<li>Review all results</li>
+<li>Verify ownership and access controls</li>
+<li>Document data retention policies</li>
+</ol>
 <h3 id="use-case-2-impact-analysis-before-schema-change">Use Case 2: Impact Analysis Before Schema Change</h3>
 <p><strong>Scenario</strong>: You want to change a column in the <code>users</code> table but need to know what will break.</p>
-<p><strong>Steps</strong>:
-1. Navigate to the <code>users</code> dataset
-2. Click the "Lineage" tab
-3. Set depth to 3-4 hops
-4. Identify all downstream consumers
-5. Coordinate with downstream owners before making changes</p>
+<p><strong>Steps</strong>:</p>
+<ol>
+<li>Navigate to the <code>users</code> dataset</li>
+<li>Click the "Lineage" tab</li>
+<li>Set depth to 3-4 hops</li>
+<li>Identify all downstream consumers</li>
+<li>Coordinate with downstream owners before making changes</li>
+</ol>
 <h3 id="use-case-3-data-quality-monitoring">Use Case 3: Data Quality Monitoring</h3>
 <p><strong>Scenario</strong>: Track data quality metrics for critical datasets.</p>
-<p><strong>Steps</strong>:
-1. Integrate Great Expectations with DataHub
-2. Run validation checks
-3. View results in DataHub UI under "Validation" tab
-4. Set up alerts for failures</p>
+<p><strong>Steps</strong>:</p>
+<ol>
+<li>Integrate Great Expectations with DataHub</li>
+<li>Run validation checks</li>
+<li>View results in DataHub UI under "Validation" tab</li>
+<li>Set up alerts for failures</li>
+</ol>
 <h3 id="use-case-4-new-team-member-onboarding">Use Case 4: New Team Member Onboarding</h3>
 <p><strong>Scenario</strong>: A new data engineer joins and needs to understand data assets.</p>
-<p><strong>Steps</strong>:
-1. Browse by domain (e.g., "User Analytics")
-2. Review dataset descriptions and schemas
-3. Check lineage to understand data flows
-4. Contact dataset owners for questions</p>
+<p><strong>Steps</strong>:</p>
+<ol>
+<li>Browse by domain (e.g., "User Analytics")</li>
+<li>Review dataset descriptions and schemas</li>
+<li>Check lineage to understand data flows</li>
+<li>Contact dataset owners for questions</li>
+</ol>
 <hr />
 <h2 id="troubleshooting-common-issues">Troubleshooting Common Issues</h2>
 <h3 id="issue-1-datahub-ui-not-loading">Issue 1: DataHub UI Not Loading</h3>
 <p><strong>Symptoms</strong>: Browser shows connection error or blank page</p>
-<p><strong>Checks</strong>:
+<p><strong>Checks</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check if pods are running</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>datahub
 
@@ -5545,15 +5571,17 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 
 <span class="c1"># Check ingress</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>datahub-datahub-frontend
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
-1. Verify PostgreSQL is running: <code>kubectl get pods -n fawkes | grep db-datahub</code>
-2. Verify OpenSearch is accessible: <code>kubectl get pods -n logging | grep opensearch</code>
-3. Check resource limits aren't exceeded
-4. Review pod events: <code>kubectl describe pod -n fawkes &lt;pod-name&gt;</code></p>
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Verify PostgreSQL is running: <code>kubectl get pods -n fawkes | grep db-datahub</code></li>
+<li>Verify OpenSearch is accessible: <code>kubectl get pods -n logging | grep opensearch</code></li>
+<li>Check resource limits aren't exceeded</li>
+<li>Review pod events: <code>kubectl describe pod -n fawkes &lt;pod-name&gt;</code></li>
+</ol>
 <h3 id="issue-2-search-not-returning-results">Issue 2: Search Not Returning Results</h3>
 <p><strong>Symptoms</strong>: Metadata exists but search returns empty results</p>
-<p><strong>Checks</strong>:
+<p><strong>Checks</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check OpenSearch is healthy</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>-n<span class="w"> </span>logging<span class="w"> </span>opensearch-cluster-master-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>curl<span class="w"> </span>-XGET<span class="w"> </span><span class="s2">&quot;http://localhost:9200/_cluster/health?pretty&quot;</span>
@@ -5561,32 +5589,36 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="c1"># Check indices exist</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>-n<span class="w"> </span>logging<span class="w"> </span>opensearch-cluster-master-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>curl<span class="w"> </span>-XGET<span class="w"> </span><span class="s2">&quot;http://localhost:9200/_cat/indices?v&quot;</span>
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
-1. Rebuild search index:
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Rebuild search index:
    <div class="highlight"><pre><span></span><code><span class="c1"># Access DataHub pod and trigger reindex</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>deployment/datahub-datahub-gms<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/gms/operations?action<span class="o">=</span>restoreIndices
-</code></pre></div>
-2. Verify OpenSearch connectivity from DataHub pods
-3. Check OpenSearch resource limits</p>
+</code></pre></div></li>
+<li>Verify OpenSearch connectivity from DataHub pods</li>
+<li>Check OpenSearch resource limits</li>
+</ol>
 <h3 id="issue-3-ingestion-failures">Issue 3: Ingestion Failures</h3>
 <p><strong>Symptoms</strong>: DataHub CLI ingestion fails or doesn't show metadata</p>
-<p><strong>Checks</strong>:
+<p><strong>Checks</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run with debug mode</span>
 datahub<span class="w"> </span>ingest<span class="w"> </span>-c<span class="w"> </span>recipe.yml<span class="w"> </span>--debug
 
 <span class="c1"># Check GMS logs during ingestion</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>deployment/datahub-datahub-gms<span class="w"> </span>-f
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
-1. Verify database credentials are correct
-2. Check network connectivity from ingestion source
-3. Ensure ingestion recipe format is correct
-4. Review DataHub version compatibility</p>
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Verify database credentials are correct</li>
+<li>Check network connectivity from ingestion source</li>
+<li>Ensure ingestion recipe format is correct</li>
+<li>Review DataHub version compatibility</li>
+</ol>
 <h3 id="issue-4-slow-performance">Issue 4: Slow Performance</h3>
 <p><strong>Symptoms</strong>: UI is slow, searches take long time</p>
-<p><strong>Checks</strong>:
+<p><strong>Checks</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check resource usage</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>datahub
 kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>logging<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>opensearch
@@ -5594,26 +5626,30 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> <
 <span class="c1"># Check database connections</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-datahub-dev-1<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>datahub_user<span class="w"> </span>-d<span class="w"> </span>datahub<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_stat_activity;&quot;</span>
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
-1. Increase resource limits for DataHub components
-2. Scale OpenSearch replicas if needed
-3. Optimize PostgreSQL queries
-4. Enable query result caching</p>
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Increase resource limits for DataHub components</li>
+<li>Scale OpenSearch replicas if needed</li>
+<li>Optimize PostgreSQL queries</li>
+<li>Enable query result caching</li>
+</ol>
 <h3 id="issue-5-authentication-problems">Issue 5: Authentication Problems</h3>
 <p><strong>Symptoms</strong>: Cannot log in or access is denied</p>
-<p><strong>Checks</strong>:
+<p><strong>Checks</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check frontend environment variables</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>datahub-datahub-frontend<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span>env
 
 <span class="c1"># Check GMS auth settings</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>datahub-datahub-gms<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>AUTH
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
-1. For MVP: Verify basic auth is enabled (<code>AUTH_JAAS_ENABLED: false</code>)
-2. For production: Configure OIDC with GitHub OAuth
-3. Check user exists in DataHub user management
-4. Reset admin password if needed</p>
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>For MVP: Verify basic auth is enabled (<code>AUTH_JAAS_ENABLED: false</code>)</li>
+<li>For production: Configure OIDC with GitHub OAuth</li>
+<li>Check user exists in DataHub user management</li>
+<li>Reset admin password if needed</li>
+</ol>
 <hr />
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="1-metadata-governance">1. Metadata Governance</h3>

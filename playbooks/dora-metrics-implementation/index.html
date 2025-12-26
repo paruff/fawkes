@@ -5498,8 +5498,8 @@
 <h2 id="i-business-objective">I. Business Objective</h2>
 <div class="admonition info">
 <p class="admonition-title">Diátaxis: Explanation / Conceptual</p>
-<p>This section defines the "why"—the risk mitigated, compliance goal achieved, and value delivered.</p>
 </div>
+<p>This section defines the "why"—the risk mitigated, compliance goal achieved, and value delivered.</p>
 <h3 id="what-were-solving">What We're Solving</h3>
 <p>Organizations often struggle to objectively measure their software delivery performance. Without data, improvement efforts are based on intuition rather than evidence, making it impossible to identify true bottlenecks, demonstrate progress to stakeholders, or justify investment in engineering improvements.</p>
 <p>DORA (DevOps Research and Assessment) research has identified four key metrics that reliably predict software delivery and organizational performance. This playbook implements automated collection and visualization of these metrics within the Fawkes platform.</p>
@@ -5584,8 +5584,8 @@
 <h2 id="ii-technical-prerequisites">II. Technical Prerequisites</h2>
 <div class="admonition abstract">
 <p class="admonition-title">Diátaxis: Reference</p>
-<p>This section lists required Fawkes components, versions, and environment specifications.</p>
 </div>
+<p>This section lists required Fawkes components, versions, and environment specifications.</p>
 <h3 id="required-fawkes-components">Required Fawkes Components</h3>
 <table>
 <thead>
@@ -5665,8 +5665,8 @@
 <h2 id="iii-implementation-steps">III. Implementation Steps</h2>
 <div class="admonition tip">
 <p class="admonition-title">Diátaxis: How-to Guide (Core)</p>
-<p>This is the core of the playbook—step-by-step procedures using Fawkes components.</p>
 </div>
+<p>This is the core of the playbook—step-by-step procedures using Fawkes components.</p>
 <h3 id="step-1-configure-deployment-event-collection">Step 1: Configure Deployment Event Collection</h3>
 <p><strong>Objective</strong>: Capture deployment events from ArgoCD to measure deployment frequency and lead time.</p>
 <p><strong>Estimated Time</strong>: 45 minutes</p>
@@ -5714,17 +5714,17 @@
 <span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">collector</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/dora-collector:v1.0.0</span>
-<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config</span>
-<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/dora</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">collector</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/dora-collector:v1.0.0</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">          </span><span class="nt">volumeMounts</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config</span>
+<span class="w">              </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/dora</span>
 <span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config</span>
-<span class="w">        </span><span class="nt">configMap</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector-config</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config</span>
+<span class="w">          </span><span class="nt">configMap</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector-config</span>
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
@@ -5735,8 +5735,8 @@
 <span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
 <span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
 </code></pre></div>
 <ol>
 <li>Apply the configuration:</li>
@@ -5748,10 +5748,9 @@
 </code></pre></div>
 <details class="example">
 <summary>Expected Output</summary>
-<div class="highlight"><pre><span></span><code>NAME                              READY   STATUS    RESTARTS   AGE
-dora-collector-7d9f8b6c4f-x2k9j   1/1     Running   0          30s
-</code></pre></div>
 </details>
+<p><code>NAME                              READY   STATUS    RESTARTS   AGEE
+    dora-collector-7d9f8b6c4f-x2k9j   1/1     Running   0          30s</code></p>
 <h3 id="step-2-configure-argocd-webhooks">Step 2: Configure ArgoCD Webhooks</h3>
 <p><strong>Objective</strong>: Connect ArgoCD deployment events to the DORA collector.</p>
 <p><strong>Estimated Time</strong>: 30 minutes</p>
@@ -5876,8 +5875,8 @@ dora-collector-7d9f8b6c4f-x2k9j   1/1     Running   0          30s
 <p><strong>Verification</strong>: Run a pipeline and verify metrics are being collected.</p>
 <div class="admonition warning">
 <p class="admonition-title">Common Pitfall</p>
-<p>Ensure the Jenkins service account has network access to the dora-collector service. If using network policies, create appropriate rules.</p>
 </div>
+<p>Ensure the Jenkins service account has network access to the dora-collector service. If using network policies, create appropriate rules.</p>
 <h3 id="step-4-configure-incident-tracking-for-mttr">Step 4: Configure Incident Tracking for MTTR</h3>
 <p><strong>Objective</strong>: Track incident detection and resolution for Mean Time to Restore measurement.</p>
 <p><strong>Estimated Time</strong>: 30 minutes</p>
@@ -5892,25 +5891,25 @@ dora-collector-7d9f8b6c4f-x2k9j   1/1     Running   0          30s
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">groups</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-incidents</span>
-<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceDown</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">up{job=~&quot;.*production.*&quot;} == 0</span>
-<span class="w">      </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
-<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
-<span class="w">        </span><span class="nt">dora_incident</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Service</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">down&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-incidents</span>
+<span class="w">      </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceDown</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">up{job=~&quot;.*production.*&quot;} == 0</span>
+<span class="w">          </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
+<span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
+<span class="w">            </span><span class="nt">dora_incident</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Service</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">down&quot;</span>
 
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighErrorRate</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(http_requests_total{status=~&quot;5..&quot;}[5m]) &gt; 0.1</span>
-<span class="w">      </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2m</span>
-<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
-<span class="w">        </span><span class="nt">dora_incident</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.service</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighErrorRate</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(http_requests_total{status=~&quot;5..&quot;}[5m]) &gt; 0.1</span>
+<span class="w">          </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2m</span>
+<span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
+<span class="w">            </span><span class="nt">dora_incident</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.service</span><span class="nv"> </span><span class="s">}}&quot;</span>
 </code></pre></div>
 <ol>
 <li>Configure Alertmanager to notify DORA collector:</li>
@@ -5919,7 +5918,7 @@ dora-collector-7d9f8b6c4f-x2k9j   1/1     Running   0          30s
 <span class="nt">receivers</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
 <span class="w">    </span><span class="nt">webhook_configs</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;http://dora-collector.dora-metrics:8080/webhooks/alertmanager&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://dora-collector.dora-metrics:8080/webhooks/alertmanager&quot;</span>
 <span class="w">        </span><span class="nt">send_resolved</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
 <span class="nt">route</span><span class="p">:</span>
@@ -5990,8 +5989,8 @@ dora-collector-7d9f8b6c4f-x2k9j   1/1     Running   0          30s
 <h2 id="iv-validation-success-metrics">IV. Validation &amp; Success Metrics</h2>
 <div class="admonition check">
 <p class="admonition-title">Diátaxis: How-to Guide / Reference</p>
-<p>Instructions for verifying the implementation and measuring success.</p>
 </div>
+<p>Instructions for verifying the implementation and measuring success.</p>
 <h3 id="functional-validation">Functional Validation</h3>
 <h4 id="test-1-deployment-frequency-collection">Test 1: Deployment Frequency Collection</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Trigger a test deployment</span>
@@ -6094,8 +6093,8 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <h2 id="v-client-presentation-talking-points">V. Client Presentation Talking Points</h2>
 <div class="admonition quote">
 <p class="admonition-title">Diátaxis: Explanation / Conceptual</p>
-<p>Ready-to-use business language for communicating success to client executives.</p>
 </div>
+<p>Ready-to-use business language for communicating success to client executives.</p>
 <h3 id="executive-summary">Executive Summary</h3>
 <blockquote>
 <p>We've implemented automated measurement of software delivery performance using the industry-standard DORA metrics framework. Your organization now has real-time visibility into deployment frequency, lead time, change failure rate, and recovery time—the four metrics that DORA research proves correlate with business performance. This data-driven foundation enables targeted improvements and demonstrates engineering progress to stakeholders.</p>
@@ -6137,20 +6136,20 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <h3 id="common-executive-questions-answers">Common Executive Questions &amp; Answers</h3>
 <details class="question">
 <summary>How does this compare to industry benchmarks?</summary>
-<p>According to the 2023 State of DevOps Report from DORA, elite performers deploy on demand (often multiple times per day), have lead times under one hour, a change failure rate of 0-15%, and recover from failures in under one hour. Your current metrics place you in the [Elite/High/Medium/Low] performance category, which aligns with approximately [X%] of organizations studied.</p>
 </details>
+<p>According to the 2023 State of DevOps Report from DORA, elite performers deploy on demand (often multiple times per day), have lead times under one hour, a change failure rate of 0-15%, and recover from failures in under one hour. Your current metrics place you in the [Elite/High/Medium/Low] performance category, which aligns with approximately [X%] of organizations studied.</p>
 <details class="question">
 <summary>What's the ROI on this implementation?</summary>
-<p>The primary ROI is in enabling data-driven improvement. Organizations that improve from Medium to Elite performance see 2x improvement in organizational performance goals according to DORA research. Additionally, by identifying bottlenecks, we typically see 20-30% improvement in developer productivity within the first quarter.</p>
 </details>
+<p>The primary ROI is in enabling data-driven improvement. Organizations that improve from Medium to Elite performance see 2x improvement in organizational performance goals according to DORA research. Additionally, by identifying bottlenecks, we typically see 20-30% improvement in developer productivity within the first quarter.</p>
 <details class="question">
 <summary>What's the risk if we don't maintain this?</summary>
-<p>Without continued attention, metrics data quality may degrade as systems change. We recommend quarterly reviews of data collection configuration as part of normal platform maintenance. The cost of maintenance is minimal compared to the value of continued visibility.</p>
 </details>
+<p>Without continued attention, metrics data quality may degrade as systems change. We recommend quarterly reviews of data collection configuration as part of normal platform maintenance. The cost of maintenance is minimal compared to the value of continued visibility.</p>
 <details class="question">
 <summary>What's the next step after implementing metrics?</summary>
-<p>With baseline metrics established, the next step is to identify your primary bottleneck. Typically, this is either deployment frequency (solved by automation) or lead time (solved by pipeline optimization). We can run a focused improvement sprint targeting your biggest constraint.</p>
 </details>
+<p>With baseline metrics established, the next step is to identify your primary bottleneck. Typically, this is either deployment frequency (solved by automation) or lead time (solved by pipeline optimization). We can run a focused improvement sprint targeting your biggest constraint.</p>
 <h3 id="follow-up-actions">Follow-Up Actions</h3>
 <table>
 <thead>

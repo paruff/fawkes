@@ -5901,10 +5901,12 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Indexes</strong>:
-- <code>idx_insights_status_priority</code> (status, priority)
-- <code>idx_insights_category_status</code> (category_id, status)
-- <code>idx_insights_author_status</code> (author, status)</p>
+<p><strong>Indexes</strong>:</p>
+<ul>
+<li><code>idx_insights_status_priority</code> (status, priority)</li>
+<li><code>idx_insights_category_status</code> (category_id, status)</li>
+<li><code>idx_insights_author_status</code> (author, status)</li>
+</ul>
 <h4 id="categories">categories</h4>
 <p>Hierarchical categories for organizing insights.</p>
 <table>
@@ -6034,9 +6036,11 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Indexes</strong>:
-- <code>idx_insight_tags_insight_id</code> (insight_id)
-- <code>idx_insight_tags_tag_id</code> (tag_id)</p>
+<p><strong>Indexes</strong>:</p>
+<ul>
+<li><code>idx_insight_tags_insight_id</code> (insight_id)</li>
+<li><code>idx_insight_tags_tag_id</code> (tag_id)</li>
+</ul>
 <hr />
 <h2 id="api-reference">API Reference</h2>
 <h3 id="insights-endpoints">Insights Endpoints</h3>
@@ -6056,7 +6060,7 @@
 <span class="err">  &quot;tag_ids&quot;: [1, 2, 3]</span>
 <span class="err">}</span>
 </code></pre></div>
-<p><strong>Response</strong>: <code>201 Created</code>
+<p><strong>Response</strong>: <code>201 Created</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Performance optimization in PostgreSQL&quot;</span><span class="p">,</span>
@@ -6073,18 +6077,18 @@
 <span class="w">  </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">],</span>
 <span class="w">  </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="list-insights">List Insights</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /insights?page=1&amp;page_size=20&amp;status=published&amp;priority=high</span>
 </code></pre></div>
-<p><strong>Response</strong>: <code>200 OK</code>
+<p><strong>Response</strong>: <code>200 OK</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;page_size&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;insights&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="search-insights">Search Insights</h4>
 <div class="highlight"><pre><span></span><code><span class="err">POST /insights/search</span>
 <span class="err">Content-Type: application/json</span>
@@ -6172,7 +6176,7 @@
 <h4 id="get-statistics">Get Statistics</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /statistics</span>
 </code></pre></div>
-<p><strong>Response</strong>: <code>200 OK</code>
+<p><strong>Response</strong>: <code>200 OK</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;total_insights&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">156</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;insights_by_status&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -6196,28 +6200,30 @@
 <span class="w">  </span><span class="nt">&quot;total_categories&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;recent_insights&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="health-metrics">Health &amp; Metrics</h3>
 <h4 id="health-check">Health Check</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /health</span>
 </code></pre></div>
-<p><strong>Response</strong>: <code>200 OK</code>
+<p><strong>Response</strong>: <code>200 OK</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;service&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;insights&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;database_connected&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="prometheus-metrics">Prometheus Metrics</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /metrics</span>
 </code></pre></div>
-<p><strong>Metrics Exposed</strong>:
-- <code>insights_created_total</code>: Total insights created
-- <code>insights_updated_total</code>: Total insights updated
-- <code>insights_deleted_total</code>: Total insights deleted
-- <code>api_requests_total</code>: Total API requests by method and endpoint
-- <code>request_duration_seconds</code>: Request duration histogram</p>
+<p><strong>Metrics Exposed</strong>:</p>
+<ul>
+<li><code>insights_created_total</code>: Total insights created</li>
+<li><code>insights_updated_total</code>: Total insights updated</li>
+<li><code>insights_deleted_total</code>: Total insights deleted</li>
+<li><code>api_requests_total</code>: Total API requests by method and endpoint</li>
+<li><code>request_duration_seconds</code>: Request duration histogram</li>
+</ul>
 <hr />
 <h2 id="aggregation-process">Aggregation Process</h2>
 <p>The insights system provides multiple aggregation mechanisms:</p>
@@ -6279,12 +6285,8 @@
 <div class="highlight"><pre><span></span><code><span class="c"># Query insights with filters</span>
 <span class="k">query</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">insights</span><span class="p">(</span>
-<span class="w">    </span><span class="n">where</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="n">status</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">_eq</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;published&quot;</span><span class="p">}</span>
-<span class="w">      </span><span class="n">priority</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">_eq</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;high&quot;</span><span class="p">}</span>
-<span class="w">      </span><span class="n">category</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">_eq</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Technical&quot;</span><span class="p">}}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">order_by</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">created_at</span><span class="p">:</span><span class="w"> </span><span class="no">desc</span><span class="p">}</span>
+<span class="w">    </span><span class="n">where</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">status</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">_eq</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;published&quot;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">priority</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">_eq</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;high&quot;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">category</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">_eq</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Technical&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">order_by</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">created_at</span><span class="p">:</span><span class="w"> </span><span class="no">desc</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="n">limit</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span>
 <span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">id</span>
@@ -6328,9 +6330,9 @@
 <span class="w">  </span><span class="n">insights</span><span class="p">(</span>
 <span class="w">    </span><span class="n">where</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="n">_or</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="n">title</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">_ilike</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;%performance%&quot;</span><span class="p">}}</span>
-<span class="w">        </span><span class="p">{</span><span class="n">description</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">_ilike</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;%performance%&quot;</span><span class="p">}}</span>
-<span class="w">        </span><span class="p">{</span><span class="n">content</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">_ilike</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;%performance%&quot;</span><span class="p">}}</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="n">title</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">_ilike</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;%performance%&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="n">description</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">_ilike</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;%performance%&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="n">content</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">_ilike</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;%performance%&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -6342,61 +6344,77 @@
 </code></pre></div>
 <h3 id="dashboard-view-components">Dashboard View Components</h3>
 <h4 id="1-insights-overview-dashboard">1. Insights Overview Dashboard</h4>
-<p><strong>Components</strong>:
-- Total insights count
-- Insights by status (pie chart)
-- Insights by priority (bar chart)
-- Insights by category (horizontal bar chart)
-- Recent insights list
-- Top tags (tag cloud)</p>
+<p><strong>Components</strong>:</p>
+<ul>
+<li>Total insights count</li>
+<li>Insights by status (pie chart)</li>
+<li>Insights by priority (bar chart)</li>
+<li>Insights by category (horizontal bar chart)</li>
+<li>Recent insights list</li>
+<li>Top tags (tag cloud)</li>
+</ul>
 <p><strong>Data Source</strong>: <code>/statistics</code> endpoint</p>
 <h4 id="2-insights-list-view">2. Insights List View</h4>
-<p><strong>Components</strong>:
-- Filterable table/grid
-- Search bar
-- Category filter dropdown
-- Tag filter multi-select
-- Priority filter
-- Status filter
-- Author filter
-- Pagination controls</p>
+<p><strong>Components</strong>:</p>
+<ul>
+<li>Filterable table/grid</li>
+<li>Search bar</li>
+<li>Category filter dropdown</li>
+<li>Tag filter multi-select</li>
+<li>Priority filter</li>
+<li>Status filter</li>
+<li>Author filter</li>
+<li>Pagination controls</li>
+</ul>
 <p><strong>Data Source</strong>: <code>/insights</code> or <code>/insights/search</code> endpoints</p>
 <h4 id="3-insight-detail-view">3. Insight Detail View</h4>
-<p><strong>Components</strong>:
-- Full insight content
-- Metadata (author, dates, source)
-- Category badge
-- Tag badges
-- Priority indicator
-- Status badge
-- Related insights (same category/tags)</p>
+<p><strong>Components</strong>:</p>
+<ul>
+<li>Full insight content</li>
+<li>Metadata (author, dates, source)</li>
+<li>Category badge</li>
+<li>Tag badges</li>
+<li>Priority indicator</li>
+<li>Status badge</li>
+<li>Related insights (same category/tags)</li>
+</ul>
 <p><strong>Data Source</strong>: <code>/insights/{insight_id}</code> endpoint</p>
 <h4 id="4-category-tree-view">4. Category Tree View</h4>
-<p><strong>Components</strong>:
-- Hierarchical category display
-- Insight count per category
-- Color-coded categories
-- Expandable/collapsible tree
-- Click to filter insights</p>
+<p><strong>Components</strong>:</p>
+<ul>
+<li>Hierarchical category display</li>
+<li>Insight count per category</li>
+<li>Color-coded categories</li>
+<li>Expandable/collapsible tree</li>
+<li>Click to filter insights</li>
+</ul>
 <p><strong>Data Source</strong>: <code>/categories</code> endpoint</p>
 <h4 id="5-tag-cloud-view">5. Tag Cloud View</h4>
-<p><strong>Components</strong>:
-- Size-based tag visualization (by usage_count)
-- Color-coded tags
-- Click to filter insights
-- Tag usage statistics</p>
+<p><strong>Components</strong>:</p>
+<ul>
+<li>Size-based tag visualization (by usage_count)</li>
+<li>Color-coded tags</li>
+<li>Click to filter insights</li>
+<li>Tag usage statistics</li>
+</ul>
 <p><strong>Data Source</strong>: <code>/tags</code> endpoint</p>
 <h3 id="dashboard-refresh-strategy">Dashboard Refresh Strategy</h3>
-<p><strong>Real-Time Data</strong>:
-- Health status: Poll <code>/health</code> every 30s
-- Statistics: Poll <code>/statistics</code> every 60s</p>
-<p><strong>On-Demand Data</strong>:
-- Insights list: Fetch on page load and filter changes
-- Search results: Fetch on search submission
-- Detail view: Fetch on insight selection</p>
-<p><strong>Metrics</strong>:
-- Prometheus metrics: Scrape <code>/metrics</code> every 15s
-- Display in monitoring dashboard (Grafana)</p>
+<p><strong>Real-Time Data</strong>:</p>
+<ul>
+<li>Health status: Poll <code>/health</code> every 30s</li>
+<li>Statistics: Poll <code>/statistics</code> every 60s</li>
+</ul>
+<p><strong>On-Demand Data</strong>:</p>
+<ul>
+<li>Insights list: Fetch on page load and filter changes</li>
+<li>Search results: Fetch on search submission</li>
+<li>Detail view: Fetch on insight selection</li>
+</ul>
+<p><strong>Metrics</strong>:</p>
+<ul>
+<li>Prometheus metrics: Scrape <code>/metrics</code> every 15s</li>
+<li>Display in monitoring dashboard (Grafana)</li>
+</ul>
 <hr />
 <h2 id="insight-template">Insight Template</h2>
 <h3 id="standard-insight-template">Standard Insight Template</h3>
@@ -6414,21 +6432,27 @@
 </code></pre></div>
 <h3 id="content-structure-template">Content Structure Template</h3>
 <div class="highlight"><pre><span></span><code><span class="gu">## Context</span>
+
 [What was the situation or problem?]
 
 <span class="gu">## Insight</span>
+
 [What did we learn or discover?]
 
 <span class="gu">## Impact</span>
+
 [What was the result or benefit?]
 
 <span class="gu">## Action Items</span>
+
 <span class="k">-</span><span class="w"> </span>[Specific actions taken or recommended]
 
 <span class="gu">## References</span>
+
 <span class="k">-</span><span class="w"> </span>[Links to related documentation, incidents, PRs, etc.]
 
 <span class="gu">## Related</span>
+
 <span class="k">-</span><span class="w"> </span>[Links to related insights]
 </code></pre></div>
 <h3 id="example-insight">Example Insight</h3>
@@ -6574,31 +6598,31 @@
 </code></pre></div>
 <h3 id="javascripttypescript-client">JavaScript/TypeScript Client</h3>
 <div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nx">InsightsClient</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="k">private</span><span class="w"> </span><span class="nx">baseUrl</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;http://localhost:8000&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="k">private</span><span class="w"> </span><span class="nx">baseUrl</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;http://localhost:8000&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
 
 <span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">createInsight</span><span class="p">(</span><span class="nx">insightData</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">baseUrl</span><span class="si">}</span><span class="sb">/insights`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;POST&#39;</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/json&#39;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">      </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">JSON.stringify</span><span class="p">(</span><span class="nx">insightData</span><span class="p">)</span>
+<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">JSON.stringify</span><span class="p">(</span><span class="nx">insightData</span><span class="p">),</span>
 <span class="w">    </span><span class="p">});</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Failed to create insight&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;Failed to create insight&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">searchInsights</span><span class="p">(</span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">filters</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{})</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">baseUrl</span><span class="si">}</span><span class="sb">/insights/search`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;POST&#39;</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/json&#39;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">      </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">JSON.stringify</span><span class="p">({</span><span class="w"> </span><span class="nx">query</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nx">filters</span><span class="w"> </span><span class="p">})</span>
+<span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">JSON.stringify</span><span class="p">({</span><span class="w"> </span><span class="nx">query</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nx">filters</span><span class="w"> </span><span class="p">}),</span>
 <span class="w">    </span><span class="p">});</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Search failed&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;Search failed&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">getStatistics</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">baseUrl</span><span class="si">}</span><span class="sb">/statistics`</span><span class="p">);</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Failed to get statistics&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;Failed to get statistics&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -6608,19 +6632,19 @@
 
 <span class="c1">// Create insight</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">insight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">createInsight</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;My Learning&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;What I learned&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">author</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;me&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;My Learning&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;What I learned&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">author</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;me&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">category_id</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">priority</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;medium&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;published&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">tag_ids</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">]</span>
+<span class="w">  </span><span class="nx">priority</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;published&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">tag_ids</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">],</span>
 <span class="p">});</span>
 
 <span class="c1">// Search insights</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">searchInsights</span><span class="p">(</span><span class="s1">&#39;performance&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;published&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">priority</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;high&#39;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">searchInsights</span><span class="p">(</span><span class="s2">&quot;performance&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;published&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">priority</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;high&quot;</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="c1">// Get statistics</span>
@@ -6630,8 +6654,12 @@
 <h2 id="performance-considerations">Performance Considerations</h2>
 <h3 id="query-optimization">Query Optimization</h3>
 <ol>
-<li><strong>Composite Indexes</strong>: Used for common multi-column queries</li>
-<li><code>(status, priority)</code> for filtering</li>
+<li>
+<p><strong>Composite Indexes</strong>: Used for common multi-column queries</p>
+</li>
+<li>
+<p><code>(status, priority)</code> for filtering</p>
+</li>
 <li><code>(category_id, status)</code> for category-based queries</li>
 <li>
 <p><code>(author, status)</code> for author-based queries</p>
@@ -6645,7 +6673,9 @@
 <li>
 <p><strong>Pagination</strong>: All list endpoints support pagination</p>
 </li>
-<li>Maximum page size: 100 items</li>
+<li>
+<p>Maximum page size: 100 items</p>
+</li>
 <li>
 <p>Default page size: 20 items</p>
 </li>
@@ -6663,7 +6693,9 @@
 <li>
 <p><strong>Caching</strong>: Add Redis caching for:</p>
 </li>
-<li>Statistics endpoint (TTL: 60s)</li>
+<li>
+<p>Statistics endpoint (TTL: 60s)</p>
+</li>
 <li>Popular searches (TTL: 300s)</li>
 <li>
 <p>Tag and category lists (TTL: 600s)</p>
@@ -6738,7 +6770,7 @@ curl<span class="w"> </span>http://localhost:8000/health
 <h3 id="common-issues">Common Issues</h3>
 <h4 id="database-connection-failed">Database Connection Failed</h4>
 <p><strong>Symptom</strong>: <code>database_connected: false</code> in health check</p>
-<p><strong>Solution</strong>:
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check DATABASE_URL</span>
 <span class="nb">echo</span><span class="w"> </span><span class="nv">$DATABASE_URL</span>
 
@@ -6747,10 +6779,10 @@ psql<span class="w"> </span><span class="nv">$DATABASE_URL</span><span class="w"
 
 <span class="c1"># Check PostgreSQL is running</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>postgres
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="slow-queries">Slow Queries</h4>
 <p><strong>Symptom</strong>: High API latency</p>
-<p><strong>Solution</strong>:
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Enable query logging</span>
 <span class="k">SET</span><span class="w"> </span><span class="n">log_statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;all&#39;</span><span class="p">;</span>
 <span class="k">SET</span><span class="w"> </span><span class="n">log_duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">on</span><span class="p">;</span>
@@ -6760,10 +6792,10 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 
 <span class="c1">-- Analyze query plans</span>
 <span class="k">EXPLAIN</span><span class="w"> </span><span class="k">ANALYZE</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">insights</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;published&#39;</span><span class="p">;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="tag-usage-count-inconsistency">Tag Usage Count Inconsistency</h4>
 <p><strong>Symptom</strong>: <code>usage_count</code> doesn't match actual usage</p>
-<p><strong>Solution</strong>:
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Recalculate usage counts</span>
 <span class="k">UPDATE</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="n">t</span>
 <span class="k">SET</span><span class="w"> </span><span class="n">usage_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>
@@ -6771,7 +6803,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">insight_tags</span><span class="w"> </span><span class="n">it</span>
 <span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">it</span><span class="p">.</span><span class="n">tag_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">id</span>
 <span class="p">);</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>

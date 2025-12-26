@@ -4665,68 +4665,86 @@
 <p>Accepted</p>
 <h2 id="context">Context</h2>
 <p>The Fawkes platform requires comprehensive metrics monitoring to support multiple critical use cases:</p>
-<p><strong>Platform Monitoring Needs</strong>:
-- Kubernetes cluster health (nodes, pods, deployments, resource utilization)
-- Core service availability (Backstage, ArgoCD, Jenkins, Mattermost, Focalboard, Harbor)
-- Infrastructure performance (CPU, memory, disk, network across all nodes)
-- Service-level indicators (SLIs) for platform components
-- Capacity planning data (growth trends, resource forecasting)
-- Cost allocation and optimization metrics</p>
-<p><strong>DORA Metrics Requirements</strong> (Core Platform Value Proposition):
-- <strong>Deployment Frequency</strong>: Deployments per day/week/month by team
-- <strong>Lead Time for Changes</strong>: Time from commit to production deployment
-- <strong>Change Failure Rate</strong>: Percentage of deployments causing incidents
-- <strong>Time to Restore Service</strong>: Mean time to recovery (MTTR) from incidents</p>
-<p><strong>Application Monitoring Needs</strong>:
-- Application-specific metrics (request rates, latency, error rates)
-- Custom business metrics defined by teams
-- Service dependency mapping
-- Distributed tracing correlation
-- Database performance metrics
-- Message queue depths and processing rates</p>
-<p><strong>Developer Experience Metrics</strong>:
-- Build duration (P50, P95, P99 percentiles)
-- Pipeline success/failure rates
-- Time spent in code review
-- Environment provisioning time
-- Developer onboarding time</p>
-<p><strong>Security &amp; Compliance Metrics</strong>:
-- Failed authentication attempts
-- Privileged access usage
-- Security scan results over time
-- Vulnerability remediation time
-- Certificate expiration tracking</p>
-<p><strong>Learner/Dojo Metrics</strong>:
-- Lab environment resource usage
-- Module completion times
-- Assessment success rates
-- Active learners by belt level
-- Infrastructure costs per learner</p>
-<p><strong>Technical Requirements</strong>:
-- Multi-dimensional metrics (labels/tags for filtering)
-- Long-term retention (13+ months for year-over-year analysis)
-- High cardinality support (per-team, per-service, per-environment)
-- PromQL-compatible query language for flexibility
-- Alert rule engine with notification routing
-- Horizontal scalability for growing metric volumes
-- Multi-tenancy (team-level metric isolation)
-- Integration with Kubernetes service discovery
-- Support for push and pull metric collection models</p>
-<p><strong>Operational Requirements</strong>:
-- Self-service dashboarding for teams
-- Alerting without constant platform team intervention
-- Backup and disaster recovery
-- Low operational overhead
-- Works across cloud providers and on-premises
-- GitOps-compatible configuration
-- Cost-effective at scale</p>
-<p><strong>Integration Requirements</strong>:
-- Native Kubernetes integration (kube-state-metrics, node-exporter)
-- OpenTelemetry compatibility
-- Grafana for visualization
-- Jenkins, ArgoCD, Backstage metrics exporters
-- Custom application instrumentation (Go, Java, Python, Node.js)
-- Webhook receivers for DORA metrics calculation</p>
+<p><strong>Platform Monitoring Needs</strong>:</p>
+<ul>
+<li>Kubernetes cluster health (nodes, pods, deployments, resource utilization)</li>
+<li>Core service availability (Backstage, ArgoCD, Jenkins, Mattermost, Focalboard, Harbor)</li>
+<li>Infrastructure performance (CPU, memory, disk, network across all nodes)</li>
+<li>Service-level indicators (SLIs) for platform components</li>
+<li>Capacity planning data (growth trends, resource forecasting)</li>
+<li>Cost allocation and optimization metrics</li>
+</ul>
+<p><strong>DORA Metrics Requirements</strong> (Core Platform Value Proposition):</p>
+<ul>
+<li><strong>Deployment Frequency</strong>: Deployments per day/week/month by team</li>
+<li><strong>Lead Time for Changes</strong>: Time from commit to production deployment</li>
+<li><strong>Change Failure Rate</strong>: Percentage of deployments causing incidents</li>
+<li><strong>Time to Restore Service</strong>: Mean time to recovery (MTTR) from incidents</li>
+</ul>
+<p><strong>Application Monitoring Needs</strong>:</p>
+<ul>
+<li>Application-specific metrics (request rates, latency, error rates)</li>
+<li>Custom business metrics defined by teams</li>
+<li>Service dependency mapping</li>
+<li>Distributed tracing correlation</li>
+<li>Database performance metrics</li>
+<li>Message queue depths and processing rates</li>
+</ul>
+<p><strong>Developer Experience Metrics</strong>:</p>
+<ul>
+<li>Build duration (P50, P95, P99 percentiles)</li>
+<li>Pipeline success/failure rates</li>
+<li>Time spent in code review</li>
+<li>Environment provisioning time</li>
+<li>Developer onboarding time</li>
+</ul>
+<p><strong>Security &amp; Compliance Metrics</strong>:</p>
+<ul>
+<li>Failed authentication attempts</li>
+<li>Privileged access usage</li>
+<li>Security scan results over time</li>
+<li>Vulnerability remediation time</li>
+<li>Certificate expiration tracking</li>
+</ul>
+<p><strong>Learner/Dojo Metrics</strong>:</p>
+<ul>
+<li>Lab environment resource usage</li>
+<li>Module completion times</li>
+<li>Assessment success rates</li>
+<li>Active learners by belt level</li>
+<li>Infrastructure costs per learner</li>
+</ul>
+<p><strong>Technical Requirements</strong>:</p>
+<ul>
+<li>Multi-dimensional metrics (labels/tags for filtering)</li>
+<li>Long-term retention (13+ months for year-over-year analysis)</li>
+<li>High cardinality support (per-team, per-service, per-environment)</li>
+<li>PromQL-compatible query language for flexibility</li>
+<li>Alert rule engine with notification routing</li>
+<li>Horizontal scalability for growing metric volumes</li>
+<li>Multi-tenancy (team-level metric isolation)</li>
+<li>Integration with Kubernetes service discovery</li>
+<li>Support for push and pull metric collection models</li>
+</ul>
+<p><strong>Operational Requirements</strong>:</p>
+<ul>
+<li>Self-service dashboarding for teams</li>
+<li>Alerting without constant platform team intervention</li>
+<li>Backup and disaster recovery</li>
+<li>Low operational overhead</li>
+<li>Works across cloud providers and on-premises</li>
+<li>GitOps-compatible configuration</li>
+<li>Cost-effective at scale</li>
+</ul>
+<p><strong>Integration Requirements</strong>:</p>
+<ul>
+<li>Native Kubernetes integration (kube-state-metrics, node-exporter)</li>
+<li>OpenTelemetry compatibility</li>
+<li>Grafana for visualization</li>
+<li>Jenkins, ArgoCD, Backstage metrics exporters</li>
+<li>Custom application instrumentation (Go, Java, Python, Node.js)</li>
+<li>Webhook receivers for DORA metrics calculation</li>
+</ul>
 <h2 id="decision">Decision</h2>
 <p>We will use <strong>Prometheus</strong> as the core metrics collection and storage engine, deployed via the <strong>kube-prometheus-stack</strong> Helm chart, with <strong>Thanos</strong> for long-term storage and multi-cluster querying.</p>
 <h3 id="architecture">Architecture</h3>
@@ -4811,35 +4829,47 @@
 └─────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h3 id="component-breakdown">Component Breakdown</h3>
-<p><strong>1. Prometheus Core (kube-prometheus-stack)</strong>
-- <strong>Prometheus Server</strong>: Metrics collection and short-term storage (15-30 days)
-- <strong>Prometheus Operator</strong>: Manages Prometheus instances via CRDs
-- <strong>kube-state-metrics</strong>: Kubernetes object state metrics
-- <strong>node-exporter</strong>: Node-level system metrics (CPU, memory, disk, network)
-- <strong>Alertmanager</strong>: Alert routing, grouping, and notification
-- <strong>Grafana</strong>: Pre-configured dashboards and visualization</p>
-<p><strong>2. Thanos (Long-term Storage &amp; Global Query)</strong>
-- <strong>Thanos Sidecar</strong>: Uploads Prometheus data to object storage
-- <strong>Thanos Store Gateway</strong>: Queries historical data from object storage
-- <strong>Thanos Query</strong>: Provides global query interface across all Prometheus instances
-- <strong>Thanos Compactor</strong>: Downsamples and compacts historical data
-- <strong>Thanos Ruler</strong>: Evaluates recording rules on historical data</p>
+<p><strong>1. Prometheus Core (kube-prometheus-stack)</strong></p>
+<ul>
+<li><strong>Prometheus Server</strong>: Metrics collection and short-term storage (15-30 days)</li>
+<li><strong>Prometheus Operator</strong>: Manages Prometheus instances via CRDs</li>
+<li><strong>kube-state-metrics</strong>: Kubernetes object state metrics</li>
+<li><strong>node-exporter</strong>: Node-level system metrics (CPU, memory, disk, network)</li>
+<li><strong>Alertmanager</strong>: Alert routing, grouping, and notification</li>
+<li><strong>Grafana</strong>: Pre-configured dashboards and visualization</li>
+</ul>
+<p><strong>2. Thanos (Long-term Storage &amp; Global Query)</strong></p>
+<ul>
+<li><strong>Thanos Sidecar</strong>: Uploads Prometheus data to object storage</li>
+<li><strong>Thanos Store Gateway</strong>: Queries historical data from object storage</li>
+<li><strong>Thanos Query</strong>: Provides global query interface across all Prometheus instances</li>
+<li><strong>Thanos Compactor</strong>: Downsamples and compacts historical data</li>
+<li><strong>Thanos Ruler</strong>: Evaluates recording rules on historical data</li>
+</ul>
 <p><strong>3. Service Monitors (Automated Discovery)</strong>
-Kubernetes-native ServiceMonitor CRDs for automatic metric collection:
-- Platform services (ArgoCD, Jenkins, Backstage, Harbor, etc.)
-- Application services (auto-discovered via labels)
-- Custom exporters (database, message queue, etc.)</p>
+Kubernetes-native ServiceMonitor CRDs for automatic metric collection:</p>
+<ul>
+<li>Platform services (ArgoCD, Jenkins, Backstage, Harbor, etc.)</li>
+<li>Application services (auto-discovered via labels)</li>
+<li>Custom exporters (database, message queue, etc.)</li>
+</ul>
 <p><strong>4. DORA Metrics Service</strong>
-Custom microservice for DORA metrics calculation:
-- Receives webhooks from Git, CI/CD, incident management
-- Calculates and exposes the 4 key metrics as Prometheus metrics
-- Stores raw event data for audit and recalculation
-- Provides team-level aggregation</p>
+Custom microservice for DORA metrics calculation:</p>
+<ul>
+<li>Receives webhooks from Git, CI/CD, incident management</li>
+<li>Calculates and exposes the 4 key metrics as Prometheus metrics</li>
+<li>Stores raw event data for audit and recalculation</li>
+<li>Provides team-level aggregation</li>
+</ul>
 <h3 id="deployment-strategy">Deployment Strategy</h3>
 <p><strong>Multi-Prometheus Architecture</strong>:</p>
 <ol>
-<li><strong>Prometheus-Core</strong> (fawkes-monitoring namespace)</li>
-<li>Platform infrastructure metrics</li>
+<li>
+<p><strong>Prometheus-Core</strong> (fawkes-monitoring namespace)</p>
+</li>
+<li>
+<p>Platform infrastructure metrics</p>
+</li>
 <li>Kubernetes cluster metrics</li>
 <li>Core service metrics (ArgoCD, Jenkins, Backstage)</li>
 <li>
@@ -4848,7 +4878,9 @@ Custom microservice for DORA metrics calculation:
 <li>
 <p><strong>Prometheus-Apps</strong> (fawkes-monitoring namespace)</p>
 </li>
-<li>Application team metrics</li>
+<li>
+<p>Application team metrics</p>
+</li>
 <li>Custom business metrics</li>
 <li>Tenant-scoped via namespace labels</li>
 <li>
@@ -4864,7 +4896,7 @@ Custom microservice for DORA metrics calculation:
 </ol>
 <p><strong>Federation</strong>: Thanos Query provides unified interface across all Prometheus instances</p>
 <h3 id="example-configurations">Example Configurations</h3>
-<p><strong>ServiceMonitor for ArgoCD</strong>:
+<p><strong>ServiceMonitor for ArgoCD</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring.coreos.com/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceMonitor</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -4877,11 +4909,11 @@ Custom microservice for DORA metrics calculation:
 <span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd-server</span>
 <span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
-<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/metrics</span>
-</code></pre></div></p>
-<p><strong>PrometheusRule for Platform Alerts</strong>:
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
+<span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/metrics</span>
+</code></pre></div>
+<p><strong>PrometheusRule for Platform Alerts</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring.coreos.com/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PrometheusRule</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -4889,39 +4921,39 @@ Custom microservice for DORA metrics calculation:
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-monitoring</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">groups</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
-<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PlatformServiceDown</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">up{job=~&quot;argocd|jenkins|backstage&quot;} == 0</span>
-<span class="w">      </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
-<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
-<span class="w">        </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform</span>
-<span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Platform</span><span class="nv"> </span><span class="s">service</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">down&quot;</span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">been</span><span class="nv"> </span><span class="s">unavailable</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">5</span><span class="nv"> </span><span class="s">minutes&quot;</span>
-<span class="w">        </span><span class="nt">runbook_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://docs.fawkes.io/runbooks/service-down&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
+<span class="w">      </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PlatformServiceDown</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">up{job=~&quot;argocd|jenkins|backstage&quot;} == 0</span>
+<span class="w">          </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
+<span class="w">            </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform</span>
+<span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Platform</span><span class="nv"> </span><span class="s">service</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">down&quot;</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">been</span><span class="nv"> </span><span class="s">unavailable</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">5</span><span class="nv"> </span><span class="s">minutes&quot;</span>
+<span class="w">            </span><span class="nt">runbook_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://docs.fawkes.io/runbooks/service-down&quot;</span>
 
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighMemoryUsage</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes &gt; 0.85</span>
-<span class="w">      </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
-<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
-<span class="w">        </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform</span>
-<span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.instance</span><span class="nv"> </span><span class="s">}}&quot;</span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">85%</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">10</span><span class="nv"> </span><span class="s">minutes&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighMemoryUsage</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes &gt; 0.85</span>
+<span class="w">          </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
+<span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
+<span class="w">            </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform</span>
+<span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.instance</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">85%</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">10</span><span class="nv"> </span><span class="s">minutes&quot;</span>
 
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PodCrashLooping</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(kube_pod_container_status_restarts_total[15m]) &gt; 0</span>
-<span class="w">      </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15m</span>
-<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
-<span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pod</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.namespace</span><span class="nv"> </span><span class="s">}}/{{</span><span class="nv"> </span><span class="s">$labels.pod</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">crash</span><span class="nv"> </span><span class="s">looping&quot;</span>
-</code></pre></div></p>
-<p><strong>DORA Metrics Recording Rules</strong>:
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PodCrashLooping</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(kube_pod_container_status_restarts_total[15m]) &gt; 0</span>
+<span class="w">          </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15m</span>
+<span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
+<span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pod</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.namespace</span><span class="nv"> </span><span class="s">}}/{{</span><span class="nv"> </span><span class="s">$labels.pod</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">crash</span><span class="nv"> </span><span class="s">looping&quot;</span>
+</code></pre></div>
+<p><strong>DORA Metrics Recording Rules</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring.coreos.com/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PrometheusRule</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -4929,44 +4961,44 @@ Custom microservice for DORA metrics calculation:
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-monitoring</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">groups</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora_deployment_frequency</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
-<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:deployment_frequency:per_day</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">        </span><span class="no">sum(rate(fawkes_deployment_total[24h])) by (team, environment)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora_deployment_frequency</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
+<span class="w">      </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:deployment_frequency:per_day</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">sum(rate(fawkes_deployment_total[24h])) by (team, environment)</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora_lead_time</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
-<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:lead_time_seconds:p50</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">        </span><span class="no">histogram_quantile(0.50,</span>
-<span class="w">          </span><span class="no">sum(rate(fawkes_lead_time_seconds_bucket[1h])) by (team, le))</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora_lead_time</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
+<span class="w">      </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:lead_time_seconds:p50</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">histogram_quantile(0.50,</span>
+<span class="w">              </span><span class="no">sum(rate(fawkes_lead_time_seconds_bucket[1h])) by (team, le))</span>
 
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:lead_time_seconds:p95</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">        </span><span class="no">histogram_quantile(0.95,</span>
-<span class="w">          </span><span class="no">sum(rate(fawkes_lead_time_seconds_bucket[1h])) by (team, le))</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:lead_time_seconds:p95</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">histogram_quantile(0.95,</span>
+<span class="w">              </span><span class="no">sum(rate(fawkes_lead_time_seconds_bucket[1h])) by (team, le))</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora_change_failure_rate</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
-<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:change_failure_rate</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">        </span><span class="no">sum(rate(fawkes_deployment_failed_total[7d])) by (team)</span>
-<span class="w">        </span><span class="no">/</span>
-<span class="w">        </span><span class="no">sum(rate(fawkes_deployment_total[7d])) by (team)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora_change_failure_rate</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">      </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:change_failure_rate</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">sum(rate(fawkes_deployment_failed_total[7d])) by (team)</span>
+<span class="w">            </span><span class="no">/</span>
+<span class="w">            </span><span class="no">sum(rate(fawkes_deployment_total[7d])) by (team)</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora_mttr</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
-<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:mttr_seconds:median</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">        </span><span class="no">histogram_quantile(0.50,</span>
-<span class="w">          </span><span class="no">sum(rate(fawkes_incident_resolution_seconds_bucket[7d])) by (team, le))</span>
-</code></pre></div></p>
-<p><strong>Thanos Configuration</strong>:
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora_mttr</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">      </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:mttr_seconds:median</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">histogram_quantile(0.50,</span>
+<span class="w">              </span><span class="no">sum(rate(fawkes_incident_resolution_seconds_bucket[7d])) by (team, le))</span>
+</code></pre></div>
+<p><strong>Thanos Configuration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># thanos-storage-secret.yaml</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
@@ -4982,7 +5014,7 @@ Custom microservice for DORA metrics calculation:
 <span class="w">      </span><span class="no">region: us-west-2</span>
 <span class="w">      </span><span class="no">access_key: ${AWS_ACCESS_KEY_ID}</span>
 <span class="w">      </span><span class="no">secret_key: ${AWS_SECRET_ACCESS_KEY}</span>
-</code></pre></div></p>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># prometheus-with-thanos.yaml</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring.coreos.com/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prometheus</span>
@@ -5031,8 +5063,12 @@ Custom microservice for DORA metrics calculation:
 <h3 id="grafana-dashboard-strategy">Grafana Dashboard Strategy</h3>
 <p><strong>Pre-configured Dashboards</strong> (Included in MVP):</p>
 <ol>
-<li><strong>Platform Overview Dashboard</strong></li>
-<li>Cluster resource utilization (CPU, memory, disk)</li>
+<li>
+<p><strong>Platform Overview Dashboard</strong></p>
+</li>
+<li>
+<p>Cluster resource utilization (CPU, memory, disk)</p>
+</li>
 <li>Node health status</li>
 <li>Pod count by namespace</li>
 <li>Top resource consumers</li>
@@ -5042,7 +5078,9 @@ Custom microservice for DORA metrics calculation:
 <li>
 <p><strong>DORA Metrics Dashboard</strong></p>
 </li>
-<li>4 key metrics with benchmark comparison</li>
+<li>
+<p>4 key metrics with benchmark comparison</p>
+</li>
 <li>Team-level breakdown</li>
 <li>Trend analysis (7d, 30d, 90d)</li>
 <li>Elite/High/Medium/Low performer classification</li>
@@ -5052,7 +5090,9 @@ Custom microservice for DORA metrics calculation:
 <li>
 <p><strong>Service Health Dashboard</strong></p>
 </li>
-<li>Service availability (uptime %)</li>
+<li>
+<p>Service availability (uptime %)</p>
+</li>
 <li>Request rate, latency (P50, P95, P99)</li>
 <li>Error rate (4xx, 5xx)</li>
 <li>Saturation metrics</li>
@@ -5062,7 +5102,9 @@ Custom microservice for DORA metrics calculation:
 <li>
 <p><strong>Kubernetes Cluster Dashboard</strong></p>
 </li>
-<li>Node resource usage</li>
+<li>
+<p>Node resource usage</p>
+</li>
 <li>Pod status distribution</li>
 <li>Persistent volume usage</li>
 <li>Network I/O</li>
@@ -5072,7 +5114,9 @@ Custom microservice for DORA metrics calculation:
 <li>
 <p><strong>CI/CD Pipeline Dashboard</strong></p>
 </li>
-<li>Build duration trends</li>
+<li>
+<p>Build duration trends</p>
+</li>
 <li>Success/failure rates</li>
 <li>Queue depth and wait time</li>
 <li>Test coverage trends</li>
@@ -5087,28 +5131,34 @@ Custom microservice for DORA metrics calculation:
 <li>Idle resource identification</li>
 <li>Cost trends and forecasting</li>
 </ol>
-<p><strong>Self-Service Dashboarding</strong>:
-- Teams can create custom dashboards using Grafana UI
-- Dashboard-as-code via ConfigMaps for GitOps
-- Dashboard templates for common patterns
-- Export/import for sharing across teams</p>
+<p><strong>Self-Service Dashboarding</strong>:</p>
+<ul>
+<li>Teams can create custom dashboards using Grafana UI</li>
+<li>Dashboard-as-code via ConfigMaps for GitOps</li>
+<li>Dashboard templates for common patterns</li>
+<li>Export/import for sharing across teams</li>
+</ul>
 <h3 id="dora-metrics-service-architecture">DORA Metrics Service Architecture</h3>
 <p>Custom Go microservice for DORA metrics calculation:</p>
-<p><strong>Components</strong>:
-1. <strong>Webhook Receiver</strong>: Accepts events from Git, CI/CD, incident management
-2. <strong>Event Store</strong>: PostgreSQL database for raw event storage
-3. <strong>Metrics Calculator</strong>: Aggregates events into DORA metrics
-4. <strong>Prometheus Exporter</strong>: Exposes metrics on /metrics endpoint
-5. <strong>REST API</strong>: Provides historical data and drill-down capabilities</p>
-<p><strong>Event Types</strong>:
-- <code>commit</code> - Git commit with author, timestamp, repository
-- <code>build_started</code> - CI pipeline initiated
-- <code>build_completed</code> - CI pipeline finished (success/failure)
-- <code>deployment_started</code> - Deployment initiated
-- <code>deployment_completed</code> - Deployment finished (success/failure)
-- <code>incident_created</code> - Production incident reported
-- <code>incident_resolved</code> - Incident closed</p>
-<p><strong>Metrics Exposed</strong>:
+<p><strong>Components</strong>:</p>
+<ol>
+<li><strong>Webhook Receiver</strong>: Accepts events from Git, CI/CD, incident management</li>
+<li><strong>Event Store</strong>: PostgreSQL database for raw event storage</li>
+<li><strong>Metrics Calculator</strong>: Aggregates events into DORA metrics</li>
+<li><strong>Prometheus Exporter</strong>: Exposes metrics on /metrics endpoint</li>
+<li><strong>REST API</strong>: Provides historical data and drill-down capabilities</li>
+</ol>
+<p><strong>Event Types</strong>:</p>
+<ul>
+<li><code>commit</code> - Git commit with author, timestamp, repository</li>
+<li><code>build_started</code> - CI pipeline initiated</li>
+<li><code>build_completed</code> - CI pipeline finished (success/failure)</li>
+<li><code>deployment_started</code> - Deployment initiated</li>
+<li><code>deployment_completed</code> - Deployment finished (success/failure)</li>
+<li><code>incident_created</code> - Production incident reported</li>
+<li><code>incident_resolved</code> - Incident closed</li>
+</ul>
+<p><strong>Metrics Exposed</strong>:</p>
 <div class="highlight"><pre><span></span><code># Deployment Frequency
 fawkes_deployment_total{team=&quot;teamA&quot;,environment=&quot;production&quot;} 45
 
@@ -5126,24 +5176,30 @@ fawkes_incident_resolution_seconds_bucket{team=&quot;teamA&quot;,le=&quot;1800&q
 fawkes_incident_resolution_seconds_bucket{team=&quot;teamA&quot;,le=&quot;3600&quot;} 18
 fawkes_incident_resolution_seconds_sum{team=&quot;teamA&quot;} 54000
 fawkes_incident_resolution_seconds_count{team=&quot;teamA&quot;} 20
-</code></pre></div></p>
-<p><strong>API Endpoints</strong>:
-- <code>POST /webhook/commit</code> - Receive Git commit events
-- <code>POST /webhook/build</code> - Receive CI build events
-- <code>POST /webhook/deployment</code> - Receive deployment events
-- <code>POST /webhook/incident</code> - Receive incident events
-- <code>GET /metrics</code> - Prometheus metrics endpoint
-- <code>GET /api/v1/dora/{team}</code> - DORA metrics for specific team
-- <code>GET /api/v1/deployments/{team}</code> - Deployment history</p>
+</code></pre></div>
+<p><strong>API Endpoints</strong>:</p>
+<ul>
+<li><code>POST /webhook/commit</code> - Receive Git commit events</li>
+<li><code>POST /webhook/build</code> - Receive CI build events</li>
+<li><code>POST /webhook/deployment</code> - Receive deployment events</li>
+<li><code>POST /webhook/incident</code> - Receive incident events</li>
+<li><code>GET /metrics</code> - Prometheus metrics endpoint</li>
+<li><code>GET /api/v1/dora/{team}</code> - DORA metrics for specific team</li>
+<li><code>GET /api/v1/deployments/{team}</code> - Deployment history</li>
+</ul>
 <h3 id="application-instrumentation">Application Instrumentation</h3>
-<p><strong>Supported Languages</strong> (Client Libraries):
-- <strong>Go</strong>: <code>prometheus/client_golang</code>
-- <strong>Java</strong>: <code>micrometer</code> with Prometheus registry
-- <strong>Python</strong>: <code>prometheus_client</code>
-- <strong>Node.js</strong>: <code>prom-client</code>
-- <strong>.NET</strong>: <code>prometheus-net</code></p>
-<p><strong>Standard Metrics</strong> (RED Method):
-- **Rate</p>
+<p><strong>Supported Languages</strong> (Client Libraries):</p>
+<ul>
+<li><strong>Go</strong>: <code>prometheus/client_golang</code></li>
+<li><strong>Java</strong>: <code>micrometer</code> with Prometheus registry</li>
+<li><strong>Python</strong>: <code>prometheus_client</code></li>
+<li><strong>Node.js</strong>: <code>prom-client</code></li>
+<li><strong>.NET</strong>: <code>prometheus-net</code></li>
+</ul>
+<p><strong>Standard Metrics</strong> (RED Method):</p>
+<ul>
+<li>**Rate</li>
+</ul>
 
 
 

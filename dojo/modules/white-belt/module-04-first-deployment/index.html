@@ -5197,7 +5197,7 @@
   <a href="#youve-completed-module-4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ✅ You've Completed Module 4!
+        ✅ You've Completed Module 4
       
     </span>
   </a>
@@ -5245,10 +5245,12 @@
 </ul>
 <h3 id="why-it-matters">Why It Matters</h3>
 <p><strong>The Milestone</strong>: This is the moment you've been building toward—your first end-to-end deployment on the Fawkes platform.</p>
-<p><strong>Real-World Impact</strong>: According to DORA research, organizations that master deployment automation:
-- Deploy <strong>417 times more frequently</strong> than low performers
-- Have <strong>5,788 times lower</strong> change failure rates
-- Reduce lead time from <strong>months to minutes</strong></p>
+<p><strong>Real-World Impact</strong>: According to DORA research, organizations that master deployment automation:</p>
+<ul>
+<li>Deploy <strong>417 times more frequently</strong> than low performers</li>
+<li>Have <strong>5,788 times lower</strong> change failure rates</li>
+<li>Reduce lead time from <strong>months to minutes</strong></li>
+</ul>
 <p><strong>Your Journey</strong>: In the next hour, you'll experience what elite performers do dozens of times per day—safely deploying code to production with full observability.</p>
 <h3 id="success-criteria">Success Criteria</h3>
 <p>You've mastered this module when you can:</p>
@@ -5263,14 +5265,15 @@
 <h2 id="2-theory-concepts-15-minutes">2. Theory &amp; Concepts (15 minutes)</h2>
 <h3 id="video-the-fawkes-deployment-pipeline-7-minutes">📺 Video: The Fawkes Deployment Pipeline (7 minutes)</h3>
 <blockquote>
-<p><strong>[VIDEO PLACEHOLDER]</strong>
-<strong>Script Summary</strong>:
-- Opening: Show the full deployment pipeline diagram
-- Code commit → Jenkins build → Harbor registry → ArgoCD sync
-- Each stage explained with real-time visualization
-- Observability: Where to find logs and metrics at each stage
-- DORA metrics: How they're automatically captured
-- Closing: "From commit to production in minutes, not months"</p>
+<p><strong>[VIDEO PLACEHOLDER]</strong> &gt; <strong>Script Summary</strong>:</p>
+<ul>
+<li>Opening: Show the full deployment pipeline diagram</li>
+<li>Code commit → Jenkins build → Harbor registry → ArgoCD sync</li>
+<li>Each stage explained with real-time visualization</li>
+<li>Observability: Where to find logs and metrics at each stage</li>
+<li>DORA metrics: How they're automatically captured</li>
+<li>Closing: "From commit to production in minutes, not months"</li>
+</ul>
 </blockquote>
 <h3 id="the-fawkes-deployment-pipeline">The Fawkes Deployment Pipeline</h3>
 <p>When you deploy on Fawkes, your code flows through a carefully orchestrated pipeline:</p>
@@ -5280,188 +5283,237 @@
 <p>Let's break down each stage:</p>
 <h4 id="stage-1-code-commit-git">Stage 1: Code Commit (Git)</h4>
 <p><strong>What Happens</strong>: You push code to a Git repository (GitHub, GitLab, etc.)</p>
-<p><strong>Behind the Scenes</strong>:
-- Git webhook triggers Jenkins
-- Commit SHA becomes the version identifier
-- Timestamp recorded (start of lead time measurement)</p>
+<p><strong>Behind the Scenes</strong>:</p>
+<ul>
+<li>Git webhook triggers Jenkins</li>
+<li>Commit SHA becomes the version identifier</li>
+<li>Timestamp recorded (start of lead time measurement)</li>
+</ul>
 <p><strong>Your Role</strong>: <code>git push origin main</code></p>
 <p><strong>Time</strong>: &lt; 1 second</p>
 <hr />
 <h4 id="stage-2-build-test-jenkins">Stage 2: Build &amp; Test (Jenkins)</h4>
 <p><strong>What Happens</strong>: Jenkins automatically builds and tests your code</p>
-<p><strong>Behind the Scenes</strong>:
-1. <strong>Checkout</strong>: Jenkins clones your repository
-2. <strong>Build</strong>: Compiles code, runs tests
-3. <strong>Security Scan</strong>: Checks for vulnerabilities (Trivy)
-4. <strong>Quality Check</strong>: SonarQube analysis (if configured)
-5. <strong>Package</strong>: Creates container image
-6. <strong>Push</strong>: Uploads image to Harbor registry</p>
+<p><strong>Behind the Scenes</strong>:</p>
+<ol>
+<li><strong>Checkout</strong>: Jenkins clones your repository</li>
+<li><strong>Build</strong>: Compiles code, runs tests</li>
+<li><strong>Security Scan</strong>: Checks for vulnerabilities (Trivy)</li>
+<li><strong>Quality Check</strong>: SonarQube analysis (if configured)</li>
+<li><strong>Package</strong>: Creates container image</li>
+<li><strong>Push</strong>: Uploads image to Harbor registry</li>
+</ol>
 <p><strong>Your Role</strong>: None! It's automated by the golden path pipeline.</p>
 <p><strong>Time</strong>: 3-8 minutes (depending on project size)</p>
-<p><strong>Success Indicators</strong>:
-- ✅ All tests pass
-- ✅ No critical security vulnerabilities
-- ✅ Code quality meets threshold
-- ✅ Container image tagged with commit SHA</p>
+<p><strong>Success Indicators</strong>:</p>
+<ul>
+<li>✅ All tests pass</li>
+<li>✅ No critical security vulnerabilities</li>
+<li>✅ Code quality meets threshold</li>
+<li>✅ Container image tagged with commit SHA</li>
+</ul>
 <hr />
 <h4 id="stage-3-registry-storage-harbor">Stage 3: Registry Storage (Harbor)</h4>
 <p><strong>What Happens</strong>: Your container image is stored in Harbor registry</p>
-<p><strong>Behind the Scenes</strong>:
-- Image tagged: <code>harbor.fawkes.local/myapp:abc123</code>
-- Vulnerability scan runs automatically
-- Image signed (cryptographic verification)
-- Available for deployment</p>
+<p><strong>Behind the Scenes</strong>:</p>
+<ul>
+<li>Image tagged: <code>harbor.fawkes.local/myapp:abc123</code></li>
+<li>Vulnerability scan runs automatically</li>
+<li>Image signed (cryptographic verification)</li>
+<li>Available for deployment</li>
+</ul>
 <p><strong>Your Role</strong>: None! Fully automated.</p>
 <p><strong>Time</strong>: &lt; 30 seconds</p>
 <p><strong>Important</strong>: The image is immutable—same image moves through all environments (dev → staging → prod). This ensures consistency.</p>
 <hr />
 <h4 id="stage-4-gitops-deployment-argocd">Stage 4: GitOps Deployment (ArgoCD)</h4>
 <p><strong>What Happens</strong>: ArgoCD detects the new image and deploys to Kubernetes</p>
-<p><strong>Behind the Scenes</strong>:
-1. <strong>Detection</strong>: ArgoCD polls Git repository every 3 minutes (or webhook triggers immediately)
-2. <strong>Sync</strong>: Compares desired state (Git) with actual state (Kubernetes)
-3. <strong>Apply</strong>: Creates/updates Kubernetes resources
-4. <strong>Health Check</strong>: Monitors pod startup and readiness
-5. <strong>Metrics</strong>: Records deployment event for DORA metrics</p>
+<p><strong>Behind the Scenes</strong>:</p>
+<ol>
+<li><strong>Detection</strong>: ArgoCD polls Git repository every 3 minutes (or webhook triggers immediately)</li>
+<li><strong>Sync</strong>: Compares desired state (Git) with actual state (Kubernetes)</li>
+<li><strong>Apply</strong>: Creates/updates Kubernetes resources</li>
+<li><strong>Health Check</strong>: Monitors pod startup and readiness</li>
+<li><strong>Metrics</strong>: Records deployment event for DORA metrics</li>
+</ol>
 <p><strong>Your Role</strong>: Review sync status in ArgoCD UI</p>
 <p><strong>Time</strong>: 1-5 minutes (depending on pod startup time)</p>
-<p><strong>Success Indicators</strong>:
-- ✅ Sync status: "Synced"
-- ✅ Health status: "Healthy"
-- ✅ Pods running: All replicas ready</p>
+<p><strong>Success Indicators</strong>:</p>
+<ul>
+<li>✅ Sync status: "Synced"</li>
+<li>✅ Health status: "Healthy"</li>
+<li>✅ Pods running: All replicas ready</li>
+</ul>
 <hr />
 <h4 id="stage-5-running-application-kubernetes">Stage 5: Running Application (Kubernetes)</h4>
 <p><strong>What Happens</strong>: Your application runs in Kubernetes, accessible via ingress</p>
-<p><strong>Behind the Scenes</strong>:
-- Pods scheduled across nodes for HA
-- Service provides stable network endpoint
-- Ingress routes traffic from external load balancer
-- Probes monitor health (liveness, readiness)
-- Metrics collected by Prometheus
-- Logs shipped to OpenSearch
-- Traces sent to Grafana Tempo</p>
+<p><strong>Behind the Scenes</strong>:</p>
+<ul>
+<li>Pods scheduled across nodes for HA</li>
+<li>Service provides stable network endpoint</li>
+<li>Ingress routes traffic from external load balancer</li>
+<li>Probes monitor health (liveness, readiness)</li>
+<li>Metrics collected by Prometheus</li>
+<li>Logs shipped to OpenSearch</li>
+<li>Traces sent to Grafana Tempo</li>
+</ul>
 <p><strong>Your Role</strong>: Access application, verify functionality</p>
 <p><strong>Time</strong>: Immediate once pods are ready</p>
-<p><strong>Success Indicators</strong>:
-- ✅ Application responds to requests
-- ✅ Health check endpoints return 200 OK
-- ✅ No errors in logs</p>
+<p><strong>Success Indicators</strong>:</p>
+<ul>
+<li>✅ Application responds to requests</li>
+<li>✅ Health check endpoints return 200 OK</li>
+<li>✅ No errors in logs</li>
+</ul>
 <hr />
 <h3 id="golden-path-templates">Golden Path Templates</h3>
 <p>Fawkes provides <strong>golden path templates</strong>—pre-configured application scaffolds that include everything you need:</p>
-<p><strong>What's Included</strong>:
-- ✅ Application code structure
-- ✅ Dockerfile (container image build)
-- ✅ Jenkinsfile (CI/CD pipeline)
-- ✅ Kubernetes manifests (deployment, service, ingress)
-- ✅ Helm chart (configuration management)
-- ✅ README with instructions
-- ✅ Automated testing setup
-- ✅ Monitoring and observability configuration</p>
-<p><strong>Why Golden Paths?</strong>
-- <strong>Consistency</strong>: Every app follows the same patterns
-- <strong>Best Practices</strong>: Security, testing, monitoring built-in
-- <strong>Speed</strong>: Start from working example, customize as needed
-- <strong>Learning</strong>: See how the pieces fit together</p>
-<p><strong>Available Templates</strong> (in Fawkes MVP):
-- <code>spring-boot-api</code>: Java REST API with Spring Boot
-- <code>python-flask-api</code>: Python REST API with Flask
-- <code>nodejs-express-api</code>: Node.js REST API with Express
-- <code>static-website</code>: Static HTML/CSS/JS site</p>
+<p><strong>What's Included</strong>:</p>
+<ul>
+<li>✅ Application code structure</li>
+<li>✅ Dockerfile (container image build)</li>
+<li>✅ Jenkinsfile (CI/CD pipeline)</li>
+<li>✅ Kubernetes manifests (deployment, service, ingress)</li>
+<li>✅ Helm chart (configuration management)</li>
+<li>✅ README with instructions</li>
+<li>✅ Automated testing setup</li>
+<li>✅ Monitoring and observability configuration</li>
+</ul>
+<p><strong>Why Golden Paths?</strong></p>
+<ul>
+<li><strong>Consistency</strong>: Every app follows the same patterns</li>
+<li><strong>Best Practices</strong>: Security, testing, monitoring built-in</li>
+<li><strong>Speed</strong>: Start from working example, customize as needed</li>
+<li><strong>Learning</strong>: See how the pieces fit together</li>
+</ul>
+<p><strong>Available Templates</strong> (in Fawkes MVP):</p>
+<ul>
+<li><code>spring-boot-api</code>: Java REST API with Spring Boot</li>
+<li><code>python-flask-api</code>: Python REST API with Flask</li>
+<li><code>nodejs-express-api</code>: Node.js REST API with Express</li>
+<li><code>static-website</code>: Static HTML/CSS/JS site</li>
+</ul>
 <hr />
 <h3 id="dora-metrics-automatic-capture">DORA Metrics: Automatic Capture</h3>
 <p>Every deployment automatically updates your DORA metrics:</p>
-<p><strong>Deployment Frequency</strong>:
-- Incremented when ArgoCD successfully syncs to production
-- Visible in real-time on DORA dashboard</p>
-<p><strong>Lead Time for Changes</strong>:
-- Start: Git commit timestamp
-- End: ArgoCD sync completion timestamp
-- Calculated automatically, no manual tracking</p>
-<p><strong>Change Failure Rate</strong>:
-- If deployment rolls back within 24 hours → counted as failure
-- If incident created within 24 hours of deploy → counted as failure
-- Visible as percentage on dashboard</p>
-<p><strong>Mean Time to Restore (MTTR)</strong>:
-- Start: Incident created timestamp
-- End: Incident resolved timestamp (successful deploy or rollback)
-- Only measured if incident occurs</p>
+<p><strong>Deployment Frequency</strong>:</p>
+<ul>
+<li>Incremented when ArgoCD successfully syncs to production</li>
+<li>Visible in real-time on DORA dashboard</li>
+</ul>
+<p><strong>Lead Time for Changes</strong>:</p>
+<ul>
+<li>Start: Git commit timestamp</li>
+<li>End: ArgoCD sync completion timestamp</li>
+<li>Calculated automatically, no manual tracking</li>
+</ul>
+<p><strong>Change Failure Rate</strong>:</p>
+<ul>
+<li>If deployment rolls back within 24 hours → counted as failure</li>
+<li>If incident created within 24 hours of deploy → counted as failure</li>
+<li>Visible as percentage on dashboard</li>
+</ul>
+<p><strong>Mean Time to Restore (MTTR)</strong>:</p>
+<ul>
+<li>Start: Incident created timestamp</li>
+<li>End: Incident resolved timestamp (successful deploy or rollback)</li>
+<li>Only measured if incident occurs</li>
+</ul>
 <p><strong>No Manual Work Required</strong>: The platform captures everything automatically.</p>
 <hr />
 <h3 id="common-deployment-patterns">Common Deployment Patterns</h3>
 <h4 id="pattern-1-direct-to-production-mvp">Pattern 1: Direct to Production (MVP)</h4>
-<p><div class="highlight"><pre><span></span><code>Git → Jenkins → Harbor → ArgoCD → Production
+<div class="highlight"><pre><span></span><code>Git → Jenkins → Harbor → ArgoCD → Production
 </code></pre></div>
-<strong>When to Use</strong>: MVP, small teams, low-risk changes
+<p><strong>When to Use</strong>: MVP, small teams, low-risk changes
 <strong>Risk Level</strong>: Medium (no staging environment)</p>
 <h4 id="pattern-2-dev-production-recommended">Pattern 2: Dev → Production (Recommended)</h4>
-<p><div class="highlight"><pre><span></span><code>Git → Jenkins → Harbor → ArgoCD → Dev → Production
+<div class="highlight"><pre><span></span><code>Git → Jenkins → Harbor → ArgoCD → Dev → Production
 </code></pre></div>
-<strong>When to Use</strong>: Small teams, moderate risk
+<p><strong>When to Use</strong>: Small teams, moderate risk
 <strong>Risk Level</strong>: Low (dev environment for testing)</p>
 <h4 id="pattern-3-full-pipeline-enterprise">Pattern 3: Full Pipeline (Enterprise)</h4>
-<p><div class="highlight"><pre><span></span><code>Git → Jenkins → Harbor → ArgoCD → Dev → Staging → Production
+<div class="highlight"><pre><span></span><code>Git → Jenkins → Harbor → ArgoCD → Dev → Staging → Production
 </code></pre></div>
-<strong>When to Use</strong>: Large teams, high-risk changes, compliance requirements
+<p><strong>When to Use</strong>: Large teams, high-risk changes, compliance requirements
 <strong>Risk Level</strong>: Very Low (multiple validation stages)</p>
 <p><strong>Fawkes MVP</strong>: Uses Pattern 1 or 2 by default. Pattern 3 configured in production.</p>
 <hr />
 <h3 id="troubleshooting-where-to-look">Troubleshooting: Where to Look</h3>
-<p><strong>Build Failed</strong>:
-- <strong>Where</strong>: Jenkins build logs
-- <strong>How</strong>: Click on build number in Jenkins UI
-- <strong>Common Issues</strong>: Test failures, dependency errors, Docker build errors</p>
-<p><strong>Image Scan Failed</strong>:
-- <strong>Where</strong>: Harbor UI → Images → Scan Results
-- <strong>How</strong>: Click on image tag, view vulnerabilities
-- <strong>Common Issues</strong>: Critical CVEs in base image or dependencies</p>
-<p><strong>Deployment Failed</strong>:
-- <strong>Where</strong>: ArgoCD UI → Application → Events
-- <strong>How</strong>: Check sync status and pod events
-- <strong>Common Issues</strong>: Image pull errors, insufficient resources, configuration errors</p>
-<p><strong>Application Not Responding</strong>:
-- <strong>Where</strong>: Kubernetes pod logs, Grafana dashboards
-- <strong>How</strong>: <code>kubectl logs &lt;pod-name&gt;</code> or Backstage component view
-- <strong>Common Issues</strong>: Application crashes, database connection failures, port misconfigurations</p>
+<p><strong>Build Failed</strong>:</p>
+<ul>
+<li><strong>Where</strong>: Jenkins build logs</li>
+<li><strong>How</strong>: Click on build number in Jenkins UI</li>
+<li><strong>Common Issues</strong>: Test failures, dependency errors, Docker build errors</li>
+</ul>
+<p><strong>Image Scan Failed</strong>:</p>
+<ul>
+<li><strong>Where</strong>: Harbor UI → Images → Scan Results</li>
+<li><strong>How</strong>: Click on image tag, view vulnerabilities</li>
+<li><strong>Common Issues</strong>: Critical CVEs in base image or dependencies</li>
+</ul>
+<p><strong>Deployment Failed</strong>:</p>
+<ul>
+<li><strong>Where</strong>: ArgoCD UI → Application → Events</li>
+<li><strong>How</strong>: Check sync status and pod events</li>
+<li><strong>Common Issues</strong>: Image pull errors, insufficient resources, configuration errors</li>
+</ul>
+<p><strong>Application Not Responding</strong>:</p>
+<ul>
+<li><strong>Where</strong>: Kubernetes pod logs, Grafana dashboards</li>
+<li><strong>How</strong>: <code>kubectl logs &lt;pod-name&gt;</code> or Backstage component view</li>
+<li><strong>Common Issues</strong>: Application crashes, database connection failures, port misconfigurations</li>
+</ul>
 <hr />
 <h2 id="3-demonstration-10-minutes">3. Demonstration (10 minutes)</h2>
 <h3 id="video-deploying-the-sample-application-10-minutes">📺 Video: Deploying the Sample Application (10 minutes)</h3>
 <blockquote>
-<p><strong>[VIDEO PLACEHOLDER]</strong>
-<strong>Script</strong>: Instructor performs a complete deployment showing:</p>
-<p><strong>Part 1: Create from Template (2 min)</strong>
-- Open Backstage
-- Click "Create" → "Choose a template"
-- Select "Spring Boot API" template
-- Fill in details: name, description, repository
-- Click "Create"
-- Show generated repository in GitHub</p>
-<p><strong>Part 2: Trigger Build (2 min)</strong>
-- Show Jenkins detecting the new repository
-- Build starts automatically
-- Walk through build stages in Jenkins UI
-- Show build logs for each stage
-- Highlight test results and security scan</p>
-<p><strong>Part 3: Image Registry (1 min)</strong>
-- Switch to Harbor UI
-- Show new image with commit SHA tag
-- Open vulnerability scan results
-- Explain image signing</p>
-<p><strong>Part 4: ArgoCD Deployment (3 min)</strong>
-- Open ArgoCD UI
-- Show application appearing in list
-- Watch sync in real-time
-- Explain "Out of Sync" → "Syncing" → "Synced" → "Healthy"
-- Show Kubernetes resources created</p>
-<p><strong>Part 5: Access Application (1 min)</strong>
-- Get application URL from Backstage
-- Open in browser, show it works
-- Make a test API call</p>
-<p><strong>Part 6: Observe Metrics (1 min)</strong>
-- Open DORA dashboard
-- Show deployment frequency incremented
-- Show lead time calculated
-- Point out where to find logs, traces, metrics</p>
+<p><strong>[VIDEO PLACEHOLDER]</strong> &gt; <strong>Script</strong>: Instructor performs a complete deployment showing:</p>
+<p><strong>Part 1: Create from Template (2 min)</strong></p>
+<ul>
+<li>Open Backstage</li>
+<li>Click "Create" → "Choose a template"</li>
+<li>Select "Spring Boot API" template</li>
+<li>Fill in details: name, description, repository</li>
+<li>Click "Create"</li>
+<li>Show generated repository in GitHub</li>
+</ul>
+<p><strong>Part 2: Trigger Build (2 min)</strong></p>
+<ul>
+<li>Show Jenkins detecting the new repository</li>
+<li>Build starts automatically</li>
+<li>Walk through build stages in Jenkins UI</li>
+<li>Show build logs for each stage</li>
+<li>Highlight test results and security scan</li>
+</ul>
+<p><strong>Part 3: Image Registry (1 min)</strong></p>
+<ul>
+<li>Switch to Harbor UI</li>
+<li>Show new image with commit SHA tag</li>
+<li>Open vulnerability scan results</li>
+<li>Explain image signing</li>
+</ul>
+<p><strong>Part 4: ArgoCD Deployment (3 min)</strong></p>
+<ul>
+<li>Open ArgoCD UI</li>
+<li>Show application appearing in list</li>
+<li>Watch sync in real-time</li>
+<li>Explain "Out of Sync" → "Syncing" → "Synced" → "Healthy"</li>
+<li>Show Kubernetes resources created</li>
+</ul>
+<p><strong>Part 5: Access Application (1 min)</strong></p>
+<ul>
+<li>Get application URL from Backstage</li>
+<li>Open in browser, show it works</li>
+<li>Make a test API call</li>
+</ul>
+<p><strong>Part 6: Observe Metrics (1 min)</strong></p>
+<ul>
+<li>Open DORA dashboard</li>
+<li>Show deployment frequency incremented</li>
+<li>Show lead time calculated</li>
+<li>Point out where to find logs, traces, metrics</li>
+</ul>
 </blockquote>
 <h3 id="key-takeaways-from-demo">Key Takeaways from Demo</h3>
 <ol>
@@ -5480,13 +5532,15 @@
 <strong>Auto-Graded</strong>: Yes
 <strong>Points</strong>: 100</p>
 <h3 id="lab-environment">Lab Environment</h3>
-<p>When you click "Start Lab", we'll provision:
-- ✅ Access to Backstage (create templates)
-- ✅ Git repository for your application
-- ✅ Jenkins pipeline (automatic)
-- ✅ ArgoCD application (automatic)
-- ✅ Kubernetes namespace: <code>dojo-learner-{username}</code>
-- ✅ Application URL (via ingress)</p>
+<p>When you click "Start Lab", we'll provision:</p>
+<ul>
+<li>✅ Access to Backstage (create templates)</li>
+<li>✅ Git repository for your application</li>
+<li>✅ Jenkins pipeline (automatic)</li>
+<li>✅ ArgoCD application (automatic)</li>
+<li>✅ Kubernetes namespace: <code>dojo-learner-{username}</code></li>
+<li>✅ Application URL (via ingress)</li>
+</ul>
 <p><strong>Environment will be available for 24 hours from start time.</strong></p>
 <h3 id="lab-instructions">Lab Instructions</h3>
 <h4 id="part-1-create-application-from-template-5-minutes">Part 1: Create Application from Template (5 minutes)</h4>
@@ -5528,20 +5582,24 @@
 <li>This opens Jenkins UI</li>
 </ol>
 <p><strong>Step 6</strong>: Watch Build Progress</p>
-<p>Observe the build stages:
-1. <strong>Checkout</strong>: Jenkins clones your repository
-2. <strong>Build</strong>: Compiles code, runs tests
-3. <strong>Test</strong>: Executes unit tests
-4. <strong>Security Scan</strong>: Trivy scans for vulnerabilities
-5. <strong>Docker Build</strong>: Creates container image
-6. <strong>Push to Harbor</strong>: Uploads image</p>
+<p>Observe the build stages:</p>
+<ol>
+<li><strong>Checkout</strong>: Jenkins clones your repository</li>
+<li><strong>Build</strong>: Compiles code, runs tests</li>
+<li><strong>Test</strong>: Executes unit tests</li>
+<li><strong>Security Scan</strong>: Trivy scans for vulnerabilities</li>
+<li><strong>Docker Build</strong>: Creates container image</li>
+<li><strong>Push to Harbor</strong>: Uploads image</li>
+</ol>
 <p><strong>Wait for build to complete</strong> (~5-8 minutes). You can move to the next part while waiting.</p>
 <p><strong>Step 7</strong>: Review Build Results</p>
-<p>Once complete, note:
-- Build status (hopefully "Success" ✅)
-- Build duration
-- Test results (how many tests ran, passed/failed)
-- Security scan results (vulnerabilities found)</p>
+<p>Once complete, note:</p>
+<ul>
+<li>Build status (hopefully "Success" ✅)</li>
+<li>Build duration</li>
+<li>Test results (how many tests ran, passed/failed)</li>
+<li>Security scan results (vulnerabilities found)</li>
+</ul>
 <p>✅ <strong>Validation</strong>: We'll check that your build completed successfully</p>
 <p>📝 <strong>Submit</strong>: Build number and status</p>
 <hr />
@@ -5584,11 +5642,13 @@
 <li>Click on your app to see detailed view</li>
 </ol>
 <p><strong>Step 12</strong>: Inspect Kubernetes Resources</p>
-<p>In ArgoCD detailed view, you should see:
-- <strong>Deployment</strong>: Your application deployment
-- <strong>Service</strong>: Network endpoint for your app
-- <strong>Ingress</strong>: External URL routing
-- <strong>Pods</strong>: Individual application instances (should be 2 replicas)</p>
+<p>In ArgoCD detailed view, you should see:</p>
+<ul>
+<li><strong>Deployment</strong>: Your application deployment</li>
+<li><strong>Service</strong>: Network endpoint for your app</li>
+<li><strong>Ingress</strong>: External URL routing</li>
+<li><strong>Pods</strong>: Individual application instances (should be 2 replicas)</li>
+</ul>
 <p>Wait for all resources to show <strong>"Healthy"</strong> status.</p>
 <p>✅ <strong>Validation</strong>: We'll check that your app is synced and healthy in ArgoCD</p>
 <p>📝 <strong>Submit</strong>: ArgoCD sync status and health status</p>
@@ -5654,45 +5714,61 @@ curl<span class="w"> </span>https://my-first-app.dojo-learner-<span class="o">{<
 <li>Double-check that your application is still running</li>
 <li>Click <strong>"Submit Lab"</strong> button in Backstage</li>
 </ol>
-<p><strong>Grading</strong>:
-- Part 1 (Component created): 15 points
-- Part 2 (Build completed): 20 points
-- Part 3 (Image in Harbor): 15 points
-- Part 4 (ArgoCD synced): 20 points
-- Part 5 (App responding): 20 points
-- Part 6 (Metrics recorded): 10 points</p>
+<p><strong>Grading</strong>:</p>
+<ul>
+<li>Part 1 (Component created): 15 points</li>
+<li>Part 2 (Build completed): 20 points</li>
+<li>Part 3 (Image in Harbor): 15 points</li>
+<li>Part 4 (ArgoCD synced): 20 points</li>
+<li>Part 5 (App responding): 20 points</li>
+<li>Part 6 (Metrics recorded): 10 points</li>
+</ul>
 <p><strong>Passing score</strong>: 80/100 (80%)</p>
-<p><strong>Auto-grading runs within 2 minutes.</strong> You'll see:
-- ✅ Checks that passed (green)
-- ❌ Checks that failed (red) with hints
-- Final score
-- Option to retry if score &lt; 80</p>
+<p><strong>Auto-grading runs within 2 minutes.</strong> You'll see:</p>
+<ul>
+<li>✅ Checks that passed (green)</li>
+<li>❌ Checks that failed (red) with hints</li>
+<li>Final score</li>
+<li>Option to retry if score &lt; 80</li>
+</ul>
 <hr />
 <h3 id="troubleshooting-hints">Troubleshooting Hints</h3>
-<p><strong>Build Failed in Jenkins?</strong>
-- Click on build number → "Console Output"
-- Look for red error messages
-- Common fix: Tests might fail on first run; click "Rebuild"</p>
-<p><strong>Image Not in Harbor?</strong>
-- Check Jenkins logs for "Push to Harbor" stage
-- Verify Jenkins completed successfully
-- Wait 1-2 minutes after build completes</p>
-<p><strong>ArgoCD Stuck "Out of Sync"?</strong>
-- Click "Refresh" in ArgoCD
-- If still stuck, click "Sync" → "Synchronize"
-- ArgoCD polls every 3 minutes; you can force manual sync</p>
-<p><strong>Pods Not Starting?</strong>
-- In ArgoCD, click on pod → "Logs"
-- Look for error messages (image pull errors, crashes)
-- Common issue: Image tag mismatch (check Harbor vs. deployment manifest)</p>
-<p><strong>Application Not Responding?</strong>
-- Verify pods are "Running" in ArgoCD
-- Check pod logs for errors
-- Verify ingress configuration (ArgoCD → Ingress resource)</p>
-<p><strong>Can't Access Application URL?</strong>
-- Verify ingress is "Healthy" in ArgoCD
-- Check ingress annotations
-- Try health check endpoint first: <code>/actuator/health</code></p>
+<p><strong>Build Failed in Jenkins?</strong></p>
+<ul>
+<li>Click on build number → "Console Output"</li>
+<li>Look for red error messages</li>
+<li>Common fix: Tests might fail on first run; click "Rebuild"</li>
+</ul>
+<p><strong>Image Not in Harbor?</strong></p>
+<ul>
+<li>Check Jenkins logs for "Push to Harbor" stage</li>
+<li>Verify Jenkins completed successfully</li>
+<li>Wait 1-2 minutes after build completes</li>
+</ul>
+<p><strong>ArgoCD Stuck "Out of Sync"?</strong></p>
+<ul>
+<li>Click "Refresh" in ArgoCD</li>
+<li>If still stuck, click "Sync" → "Synchronize"</li>
+<li>ArgoCD polls every 3 minutes; you can force manual sync</li>
+</ul>
+<p><strong>Pods Not Starting?</strong></p>
+<ul>
+<li>In ArgoCD, click on pod → "Logs"</li>
+<li>Look for error messages (image pull errors, crashes)</li>
+<li>Common issue: Image tag mismatch (check Harbor vs. deployment manifest)</li>
+</ul>
+<p><strong>Application Not Responding?</strong></p>
+<ul>
+<li>Verify pods are "Running" in ArgoCD</li>
+<li>Check pod logs for errors</li>
+<li>Verify ingress configuration (ArgoCD → Ingress resource)</li>
+</ul>
+<p><strong>Can't Access Application URL?</strong></p>
+<ul>
+<li>Verify ingress is "Healthy" in ArgoCD</li>
+<li>Check ingress annotations</li>
+<li>Try health check endpoint first: <code>/actuator/health</code></li>
+</ul>
 <hr />
 <h2 id="5-knowledge-check-5-minutes">5. Knowledge Check (5 minutes)</h2>
 <h3 id="quiz-first-deployment-mastery">Quiz: First Deployment Mastery</h3>
@@ -5808,37 +5884,51 @@ curl<span class="w"> </span>https://my-first-app.dojo-learner-<span class="o">{<
 <h2 id="6-reflection-next-steps-5-minutes">6. Reflection &amp; Next Steps (5 minutes)</h2>
 <h3 id="what-you-learned">What You Learned</h3>
 <p>Congratulations! 🎉 You've completed your first deployment on Fawkes. Let's recap:</p>
-<p>✅ <strong>You now know</strong>:
-- The complete deployment pipeline from code to production
-- How Jenkins, Harbor, ArgoCD, and Kubernetes work together
-- Where to find logs, metrics, and traces at each stage
-- How DORA metrics are automatically captured
-- What golden path templates provide
-- How to troubleshoot common deployment issues</p>
-<p>✅ <strong>You can now</strong>:
-- Deploy applications end-to-end without assistance
-- Monitor deployment progress across multiple tools
-- Verify application health and functionality
-- Interpret success/failure at each pipeline stage</p>
+<p>✅ <strong>You now know</strong>:</p>
+<ul>
+<li>The complete deployment pipeline from code to production</li>
+<li>How Jenkins, Harbor, ArgoCD, and Kubernetes work together</li>
+<li>Where to find logs, metrics, and traces at each stage</li>
+<li>How DORA metrics are automatically captured</li>
+<li>What golden path templates provide</li>
+<li>How to troubleshoot common deployment issues</li>
+</ul>
+<p>✅ <strong>You can now</strong>:</p>
+<ul>
+<li>Deploy applications end-to-end without assistance</li>
+<li>Monitor deployment progress across multiple tools</li>
+<li>Verify application health and functionality</li>
+<li>Interpret success/failure at each pipeline stage</li>
+</ul>
 <h3 id="how-this-connects-to-your-work">How This Connects to Your Work</h3>
-<p><strong>For Developers</strong>:
-- You can now deploy code multiple times per day
-- No more waiting for ops team to deploy for you
-- Immediate feedback on every change
-- Full visibility into deployment status</p>
-<p><strong>For Platform Engineers</strong>:
-- You understand how the golden path works
-- You can help teams troubleshoot deployment issues
-- You see how observability is built into the pipeline</p>
-<p><strong>For Leaders</strong>:
-- You've seen how automation enables high deployment frequency
-- You understand how DORA metrics are captured automatically
-- You can articulate the business value of the platform</p>
+<p><strong>For Developers</strong>:</p>
+<ul>
+<li>You can now deploy code multiple times per day</li>
+<li>No more waiting for ops team to deploy for you</li>
+<li>Immediate feedback on every change</li>
+<li>Full visibility into deployment status</li>
+</ul>
+<p><strong>For Platform Engineers</strong>:</p>
+<ul>
+<li>You understand how the golden path works</li>
+<li>You can help teams troubleshoot deployment issues</li>
+<li>You see how observability is built into the pipeline</li>
+</ul>
+<p><strong>For Leaders</strong>:</p>
+<ul>
+<li>You've seen how automation enables high deployment frequency</li>
+<li>You understand how DORA metrics are captured automatically</li>
+<li>You can articulate the business value of the platform</li>
+</ul>
 <h3 id="real-world-application-exercise">Real-World Application Exercise</h3>
 <p><strong>This Week, Try This</strong>:</p>
 <ol>
-<li><strong>Deploy a Real Feature</strong></li>
-<li>Pick a small feature or bug fix from your backlog</li>
+<li>
+<p><strong>Deploy a Real Feature</strong></p>
+</li>
+<li>
+<p>Pick a small feature or bug fix from your backlog</p>
+</li>
 <li>Deploy it using the Fawkes platform</li>
 <li>
 <p>Measure your lead time (commit to production)</p>
@@ -5846,7 +5936,9 @@ curl<span class="w"> </span>https://my-first-app.dojo-learner-<span class="o">{<
 <li>
 <p><strong>Compare Before and After</strong></p>
 </li>
-<li>How long did deployments take before Fawkes?</li>
+<li>
+<p>How long did deployments take before Fawkes?</p>
+</li>
 <li>How long now?</li>
 <li>
 <p>Calculate time saved</p>
@@ -5861,22 +5953,30 @@ curl<span class="w"> </span>https://my-first-app.dojo-learner-<span class="o">{<
 <h3 id="reflection-questions">Reflection Questions</h3>
 <p>Take 2 minutes to think about:</p>
 <ol>
-<li><strong>What surprised you most?</strong></li>
-<li>Was the deployment faster or slower than expected?</li>
+<li>
+<p><strong>What surprised you most?</strong></p>
+</li>
+<li>
+<p>Was the deployment faster or slower than expected?</p>
+</li>
 <li>
 <p>Which part was easiest? Hardest?</p>
 </li>
 <li>
 <p><strong>What would you change?</strong></p>
 </li>
-<li>If you could modify the golden path template, what would you add?</li>
+<li>
+<p>If you could modify the golden path template, what would you add?</p>
+</li>
 <li>
 <p>What additional automation would be helpful?</p>
 </li>
 <li>
 <p><strong>What's your next deployment?</strong></p>
 </li>
-<li>What will you deploy next on Fawkes?</li>
+<li>
+<p>What will you deploy next on Fawkes?</p>
+</li>
 <li>
 <p>Can you deploy to production confidently now?</p>
 </li>
@@ -5887,51 +5987,67 @@ curl<span class="w"> </span>https://my-first-app.dojo-learner-<span class="o">{<
 <li>What new capabilities does it provide?</li>
 </ol>
 <h3 id="additional-resources">Additional Resources</h3>
-<p><strong>📚 Further Reading</strong>:
-- <a href="https://docs.fawkes.io/deployment-strategies">Deployment Strategies</a> - Blue-green, canary, rolling
-- <a href="https://docs.fawkes.io/templates">Golden Path Templates</a> - Creating custom templates
-- <a href="https://docs.fawkes.io/troubleshooting">Troubleshooting Guide</a> - Common issues and fixes
-- <a href="https://www.weave.works/technologies/gitops/">GitOps Best Practices</a> - ArgoCD patterns</p>
-<p><strong>🎥 Videos to Watch</strong>:
-- "Advanced Deployment Patterns" (15 min)
-- "Customizing Golden Path Templates" (20 min)
-- "Zero-Downtime Deployments" (10 min)</p>
-<p><strong>🛠️ Hands-On Practice</strong>:
-- Deploy the Python Flask template
-- Deploy the Node.js Express template
-- Customize a template (add database, change ports)
-- Practice rolling back a deployment</p>
-<p><strong>💬 Community</strong>:
-- Share your first deployment in <code>#dojo-achievements</code>
-- Help others in <code>#dojo-white-belt</code>
-- Ask questions in daily office hours</p>
+<p><strong>📚 Further Reading</strong>:</p>
+<ul>
+<li><a href="https://docs.fawkes.io/deployment-strategies">Deployment Strategies</a> - Blue-green, canary, rolling</li>
+<li><a href="https://docs.fawkes.io/templates">Golden Path Templates</a> - Creating custom templates</li>
+<li><a href="https://docs.fawkes.io/troubleshooting">Troubleshooting Guide</a> - Common issues and fixes</li>
+<li><a href="https://www.weave.works/technologies/gitops/">GitOps Best Practices</a> - ArgoCD patterns</li>
+</ul>
+<p><strong>🎥 Videos to Watch</strong>:</p>
+<ul>
+<li>"Advanced Deployment Patterns" (15 min)</li>
+<li>"Customizing Golden Path Templates" (20 min)</li>
+<li>"Zero-Downtime Deployments" (10 min)</li>
+</ul>
+<p><strong>🛠️ Hands-On Practice</strong>:</p>
+<ul>
+<li>Deploy the Python Flask template</li>
+<li>Deploy the Node.js Express template</li>
+<li>Customize a template (add database, change ports)</li>
+<li>Practice rolling back a deployment</li>
+</ul>
+<p><strong>💬 Community</strong>:</p>
+<ul>
+<li>Share your first deployment in <code>#dojo-achievements</code></li>
+<li>Help others in <code>#dojo-white-belt</code></li>
+<li>Ask questions in daily office hours</li>
+</ul>
 <h3 id="preview-white-belt-assessment">Preview: White Belt Assessment</h3>
 <p><strong>You've Completed All 4 White Belt Modules!</strong></p>
-<p>Next up is the <strong>White Belt Assessment</strong> (2 hours):
-- Deploy 2 additional applications (different languages)
-- Written exam (30 questions covering modules 1-4)
-- Practical troubleshooting scenario
-- Passing score: 80%</p>
-<p><strong>What You'll Need to Do</strong>:
-1. Deploy a Python application
-2. Deploy a Node.js application
-3. Troubleshoot a broken deployment
-4. Answer questions on platform concepts
-5. Demonstrate DORA metrics knowledge</p>
-<p><strong>Get Ready</strong>:
-- Review all 4 modules
-- Practice deploying different templates
-- Make sure you understand the full pipeline
-- Be comfortable with troubleshooting</p>
+<p>Next up is the <strong>White Belt Assessment</strong> (2 hours):</p>
+<ul>
+<li>Deploy 2 additional applications (different languages)</li>
+<li>Written exam (30 questions covering modules 1-4)</li>
+<li>Practical troubleshooting scenario</li>
+<li>Passing score: 80%</li>
+</ul>
+<p><strong>What You'll Need to Do</strong>:</p>
+<ol>
+<li>Deploy a Python application</li>
+<li>Deploy a Node.js application</li>
+<li>Troubleshoot a broken deployment</li>
+<li>Answer questions on platform concepts</li>
+<li>Demonstrate DORA metrics knowledge</li>
+</ol>
+<p><strong>Get Ready</strong>:</p>
+<ul>
+<li>Review all 4 modules</li>
+<li>Practice deploying different templates</li>
+<li>Make sure you understand the full pipeline</li>
+<li>Be comfortable with troubleshooting</li>
+</ul>
 <p><strong>When You're Ready</strong>: Click "Start White Belt Assessment" in your Dojo dashboard.</p>
 <hr />
 <h2 id="module-completion">Module Completion</h2>
-<h3 id="youve-completed-module-4">✅ You've Completed Module 4!</h3>
-<p><strong>Next Steps</strong>:
-1. ✅ Mark this module complete in your Backstage profile
-2. 📊 View your progress on the Dojo dashboard
-3. 💬 Share your first deployment in <code>#dojo-achievements</code>!
-4. ➡️ <strong>Prepare for White Belt Assessment</strong> when ready</p>
+<h3 id="youve-completed-module-4">✅ You've Completed Module 4</h3>
+<p><strong>Next Steps</strong>:</p>
+<ol>
+<li>✅ Mark this module complete in your Backstage profile</li>
+<li>📊 View your progress on the Dojo dashboard</li>
+<li>💬 Share your first deployment in <code>#dojo-achievements</code>!</li>
+<li>➡️ <strong>Prepare for White Belt Assessment</strong> when ready</li>
+</ol>
 <p><strong>Time Investment</strong>: 60 minutes
 <strong>Skills Gained</strong>: End-to-end deployment, pipeline understanding, troubleshooting
 <strong>Progress</strong>: 4 of 4 modules complete (100% - Ready for White Belt Assessment!)</p>
@@ -5939,14 +6055,18 @@ curl<span class="w"> </span>https://my-first-app.dojo-learner-<span class="o">{<
 <strong>Lead Time</strong>: ~15 minutes (from commit to production)
 <strong>DORA Metrics</strong>: Automatically captured ✅</p>
 <hr />
-<p><strong>Questions or Issues?</strong>
-- 💬 Ask in <code>#dojo-white-belt</code> on Mattermost
-- 📧 Email: dojo@fawkes.io
-- 🐛 Report bugs: <a href="https://github.com/paruff/fawkes/issues">GitHub Issues</a></p>
-<p><strong>Feedback?</strong>
-- Rate this module (takes 30 seconds)
-- What worked well? What could be better?
-- Help us improve the learning experience!</p>
+<p><strong>Questions or Issues?</strong></p>
+<ul>
+<li>💬 Ask in <code>#dojo-white-belt</code> on Mattermost</li>
+<li>📧 Email: dojo@fawkes.io</li>
+<li>🐛 Report bugs: <a href="https://github.com/paruff/fawkes/issues">GitHub Issues</a></li>
+</ul>
+<p><strong>Feedback?</strong></p>
+<ul>
+<li>Rate this module (takes 30 seconds)</li>
+<li>What worked well? What could be better?</li>
+<li>Help us improve the learning experience!</li>
+</ul>
 <hr />
 <p><strong>Module Author</strong>: Fawkes Learning Team
 <strong>Last Updated</strong>: October 2025

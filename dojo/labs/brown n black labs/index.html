@@ -4547,15 +4547,15 @@
 <h1 id="labsmodule-13prometheus-valuesyaml">labs/module-13/prometheus-values.yaml</h1>
 <h1 id="helm-values-for-prometheus-stack">Helm values for Prometheus stack</h1>
 <p>prometheus:
-  prometheusSpec:
-    retention: 15d
-    storageSpec:
-      volumeClaimTemplate:
-        spec:
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 50Gi</p>
+prometheusSpec:
+retention: 15d
+storageSpec:
+volumeClaimTemplate:
+spec:
+accessModes: ["ReadWriteOnce"]
+resources:
+requests:
+storage: 50Gi</p>
 <pre><code>additionalScrapeConfigs:
 - job_name: 'fawkes-apps'
   kubernetes_sd_configs:
@@ -4571,32 +4571,29 @@
     replacement: $1:$2
 </code></pre>
 <p>grafana:
-  adminPassword: "fawkes-dojo"
-  datasources:
-    datasources.yaml:
-      apiVersion: 1
-      datasources:
-      - name: Prometheus
-        type: prometheus
-        url: http://prometheus-operated:9090
-        isDefault: true
-      - name: Loki
-        type: loki
-        url: http://loki:3100
-      - name: Tempo
-        type: tempo
-        url: http://tempo:3100</p>
+adminPassword: "fawkes-dojo"
+datasources:
+datasources.yaml:
+apiVersion: 1
+datasources: - name: Prometheus
+type: prometheus
+url: http://prometheus-operated:9090
+isDefault: true - name: Loki
+type: loki
+url: http://loki:3100 - name: Tempo
+type: tempo
+url: http://tempo:3100</p>
 <hr />
 <h1 id="labsmodule-13loki-stackyaml">labs/module-13/loki-stack.yaml</h1>
 <h1 id="loki-for-log-aggregation">Loki for log aggregation</h1>
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: loki-config
-  namespace: monitoring
+name: loki-config
+namespace: monitoring
 data:
-  loki.yaml: |
-    auth_enabled: false</p>
+loki.yaml: |
+auth_enabled: false</p>
 <pre><code>server:
   http_listen_port: 3100
 
@@ -4636,54 +4633,51 @@ limits_config:
 <p>apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: loki
-  namespace: monitoring
+name: loki
+namespace: monitoring
 spec:
-  serviceName: loki
-  replicas: 1
-  selector:
-    matchLabels:
-      app: loki
-  template:
-    metadata:
-      labels:
-        app: loki
-    spec:
-      containers:
-      - name: loki
-        image: grafana/loki:2.9.0
-        ports:
-        - containerPort: 3100
-          name: http
-        volumeMounts:
-        - name: config
-          mountPath: /etc/loki
-        - name: storage
-          mountPath: /loki
-      volumes:
-      - name: config
-        configMap:
-          name: loki-config
-  volumeClaimTemplates:
-  - metadata:
-      name: storage
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 10Gi</p>
+serviceName: loki
+replicas: 1
+selector:
+matchLabels:
+app: loki
+template:
+metadata:
+labels:
+app: loki
+spec:
+containers: - name: loki
+image: grafana/loki:2.9.0
+ports: - containerPort: 3100
+name: http
+volumeMounts: - name: config
+mountPath: /etc/loki - name: storage
+mountPath: /loki
+volumes: - name: config
+configMap:
+name: loki-config
+volumeClaimTemplates:</p>
+<ul>
+<li>metadata:
+  name: storage
+  spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+  requests:
+  storage: 10Gi</li>
+</ul>
 <hr />
 <h1 id="labsmodule-13tempo-configyaml">labs/module-13/tempo-config.yaml</h1>
 <h1 id="tempo-for-distributed-tracing">Tempo for distributed tracing</h1>
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: tempo-config
-  namespace: monitoring
+name: tempo-config
+namespace: monitoring
 data:
-  tempo.yaml: |
-    server:
-      http_listen_port: 3100</p>
+tempo.yaml: |
+server:
+http_listen_port: 3100</p>
 <pre><code>distributor:
   receivers:
     jaeger:
@@ -4720,75 +4714,61 @@ storage:
 <p>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tempo
-  namespace: monitoring
+name: tempo
+namespace: monitoring
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: tempo
-  template:
-    metadata:
-      labels:
-        app: tempo
-    spec:
-      containers:
-      - name: tempo
-        image: grafana/tempo:2.2.0
-        ports:
-        - containerPort: 3100
-          name: http
-        - containerPort: 14268
-          name: jaeger-http
-        - containerPort: 4318
-          name: otlp-http
-        volumeMounts:
-        - name: config
-          mountPath: /etc/tempo
-        - name: storage
-          mountPath: /var/tempo
-      volumes:
-      - name: config
-        configMap:
-          name: tempo-config
-      - name: storage
-        emptyDir: {}</p>
+replicas: 1
+selector:
+matchLabels:
+app: tempo
+template:
+metadata:
+labels:
+app: tempo
+spec:
+containers: - name: tempo
+image: grafana/tempo:2.2.0
+ports: - containerPort: 3100
+name: http - containerPort: 14268
+name: jaeger-http - containerPort: 4318
+name: otlp-http
+volumeMounts: - name: config
+mountPath: /etc/tempo - name: storage
+mountPath: /var/tempo
+volumes: - name: config
+configMap:
+name: tempo-config - name: storage
+emptyDir: {}</p>
 <hr />
 <h1 id="labsmodule-13instrumented-appyaml">labs/module-13/instrumented-app.yaml</h1>
 <h1 id="sample-app-with-full-instrumentation">Sample app with full instrumentation</h1>
 <p>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: instrumented-app
-  namespace: lab-module-13
+name: instrumented-app
+namespace: lab-module-13
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: instrumented-app
-  template:
-    metadata:
-      labels:
-        app: instrumented-app
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9090"
-        prometheus.io/path: "/metrics"
-    spec:
-      containers:
-      - name: app
-        image: ghcr.io/fawkes/instrumented-app:v1.0.0
-        ports:
-        - containerPort: 8080
-          name: http
-        - containerPort: 9090
-          name: metrics
-        env:
-        # Prometheus metrics
-        - name: METRICS_ENABLED
-          value: "true"
-        - name: METRICS_PORT
-          value: "9090"</p>
+replicas: 2
+selector:
+matchLabels:
+app: instrumented-app
+template:
+metadata:
+labels:
+app: instrumented-app
+annotations:
+prometheus.io/scrape: "true"
+prometheus.io/port: "9090"
+prometheus.io/path: "/metrics"
+spec:
+containers: - name: app
+image: ghcr.io/fawkes/instrumented-app:v1.0.0
+ports: - containerPort: 8080
+name: http - containerPort: 9090
+name: metrics
+env: # Prometheus metrics - name: METRICS_ENABLED
+value: "true" - name: METRICS_PORT
+value: "9090"</p>
 <pre><code>    # Logging to Loki
     - name: LOG_FORMAT
       value: "json"
@@ -4813,148 +4793,144 @@ spec:
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: dora-queries
-  namespace: lab-module-14
+name: dora-queries
+namespace: lab-module-14
 data:
-  deployment-frequency.promql: |
-    # Deployments per day
-    sum(increase(deployments_total[1d]))</p>
+deployment-frequency.promql: | # Deployments per day
+sum(increase(deployments_total[1d]))</p>
 <pre><code># By team
 sum by (team) (increase(deployments_total[1d]))
 
 # Trend over 30 days
 sum_over_time(increase(deployments_total[1d])[30d:1d])
 </code></pre>
-<p>lead-time.promql: |
-    # P95 lead time
-    histogram_quantile(0.95,
-      rate(lead_time_seconds_bucket[1d])
-    )</p>
+<p>lead-time.promql: | # P95 lead time
+histogram_quantile(0.95,
+rate(lead_time_seconds_bucket[1d])
+)</p>
 <pre><code># Average lead time
 rate(lead_time_seconds_sum[1d]) /
 rate(lead_time_seconds_count[1d])
 </code></pre>
-<p>mttr.promql: |
-    # P95 MTTR
-    histogram_quantile(0.95,
-      rate(incident_resolution_seconds_bucket[7d])
-    )</p>
+<p>mttr.promql: | # P95 MTTR
+histogram_quantile(0.95,
+rate(incident_resolution_seconds_bucket[7d])
+)</p>
 <pre><code># Average incidents per week
 sum(increase(incidents_total[7d]))
 </code></pre>
-<p>change-failure-rate.promql: |
-    # Change failure rate percentage
-    (
-      sum(increase(deployments_failed_total[7d]))
-      /
-      sum(increase(deployments_total[7d]))
-    ) * 100</p>
+<p>change-failure-rate.promql: | # Change failure rate percentage
+(
+sum(increase(deployments_failed_total[7d]))
+/
+sum(increase(deployments_total[7d]))
+) * 100</p>
 <hr />
 <h1 id="labsmodule-14grafana-dora-dashboardjson">labs/module-14/grafana-dora-dashboard.json</h1>
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: dora-dashboard
-  namespace: monitoring
-  labels:
-    grafana_dashboard: "1"
+name: dora-dashboard
+namespace: monitoring
+labels:
+grafana_dashboard: "1"
 data:
-  dora-dashboard.json: |
-    {
-      "dashboard": {
-        "title": "DORA Metrics - Comprehensive",
-        "tags": ["dora", "platform-engineering"],
-        "timezone": "browser",
-        "panels": [
-          {
-            "id": 1,
-            "title": "Deployment Frequency",
-            "type": "stat",
-            "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0},
-            "targets": [{
-              "expr": "sum(increase(deployments_total[1d]))"
-            }],
-            "fieldConfig": {
-              "defaults": {
-                "unit": "short",
-                "thresholds": {
-                  "steps": [
-                    {"value": 0, "color": "red"},
-                    {"value": 1, "color": "yellow"},
-                    {"value": 5, "color": "green"}
-                  ]
-                }
-              }
-            }
-          },
-          {
-            "id": 2,
-            "title": "Lead Time (P95)",
-            "type": "gauge",
-            "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0},
-            "targets": [{
-              "expr": "histogram_quantile(0.95, rate(lead_time_seconds_bucket[1d]))"
-            }],
-            "fieldConfig": {
-              "defaults": {
-                "unit": "s",
-                "max": 3600,
-                "thresholds": {
-                  "steps": [
-                    {"value": 0, "color": "green"},
-                    {"value": 3600, "color": "yellow"},
-                    {"value": 86400, "color": "red"}
-                  ]
-                }
-              }
-            }
-          },
-          {
-            "id": 3,
-            "title": "MTTR (P95)",
-            "type": "stat",
-            "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0},
-            "targets": [{
-              "expr": "histogram_quantile(0.95, rate(incident_resolution_seconds_bucket[7d]))"
-            }],
-            "fieldConfig": {
-              "defaults": {
-                "unit": "s",
-                "thresholds": {
-                  "steps": [
-                    {"value": 0, "color": "green"},
-                    {"value": 3600, "color": "yellow"},
-                    {"value": 14400, "color": "red"}
-                  ]
-                }
-              }
-            }
-          },
-          {
-            "id": 4,
-            "title": "Change Failure Rate",
-            "type": "gauge",
-            "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0},
-            "targets": [{
-              "expr": "(sum(increase(deployments_failed_total[7d])) / sum(increase(deployments_total[7d]))) * 100"
-            }],
-            "fieldConfig": {
-              "defaults": {
-                "unit": "percent",
-                "max": 100,
-                "thresholds": {
-                  "steps": [
-                    {"value": 0, "color": "green"},
-                    {"value": 15, "color": "yellow"},
-                    {"value": 30, "color": "red"}
-                  ]
-                }
-              }
-            }
-          }
-        ]
-      }
-    }</p>
+dora-dashboard.json: |
+{
+"dashboard": {
+"title": "DORA Metrics - Comprehensive",
+"tags": ["dora", "platform-engineering"],
+"timezone": "browser",
+"panels": [
+{
+"id": 1,
+"title": "Deployment Frequency",
+"type": "stat",
+"gridPos": {"h": 8, "w": 6, "x": 0, "y": 0},
+"targets": [{
+"expr": "sum(increase(deployments_total[1d]))"
+}],
+"fieldConfig": {
+"defaults": {
+"unit": "short",
+"thresholds": {
+"steps": [
+{"value": 0, "color": "red"},
+{"value": 1, "color": "yellow"},
+{"value": 5, "color": "green"}
+]
+}
+}
+}
+},
+{
+"id": 2,
+"title": "Lead Time (P95)",
+"type": "gauge",
+"gridPos": {"h": 8, "w": 6, "x": 6, "y": 0},
+"targets": [{
+"expr": "histogram_quantile(0.95, rate(lead_time_seconds_bucket[1d]))"
+}],
+"fieldConfig": {
+"defaults": {
+"unit": "s",
+"max": 3600,
+"thresholds": {
+"steps": [
+{"value": 0, "color": "green"},
+{"value": 3600, "color": "yellow"},
+{"value": 86400, "color": "red"}
+]
+}
+}
+}
+},
+{
+"id": 3,
+"title": "MTTR (P95)",
+"type": "stat",
+"gridPos": {"h": 8, "w": 6, "x": 12, "y": 0},
+"targets": [{
+"expr": "histogram_quantile(0.95, rate(incident_resolution_seconds_bucket[7d]))"
+}],
+"fieldConfig": {
+"defaults": {
+"unit": "s",
+"thresholds": {
+"steps": [
+{"value": 0, "color": "green"},
+{"value": 3600, "color": "yellow"},
+{"value": 14400, "color": "red"}
+]
+}
+}
+}
+},
+{
+"id": 4,
+"title": "Change Failure Rate",
+"type": "gauge",
+"gridPos": {"h": 8, "w": 6, "x": 18, "y": 0},
+"targets": [{
+"expr": "(sum(increase(deployments_failed_total[7d])) / sum(increase(deployments_total[7d]))) * 100"
+}],
+"fieldConfig": {
+"defaults": {
+"unit": "percent",
+"max": 100,
+"thresholds": {
+"steps": [
+{"value": 0, "color": "green"},
+{"value": 15, "color": "yellow"},
+{"value": 30, "color": "red"}
+]
+}
+}
+}
+}
+]
+}
+}</p>
 <hr />
 <h1 id="_7">=============================================================================</h1>
 <h1 id="module-15-lab-3-slis-slos-error-budgets">MODULE 15 - LAB 3: SLIs, SLOs &amp; Error Budgets</h1>
@@ -4965,19 +4941,18 @@ data:
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: slo-definitions
-  namespace: lab-module-15
+name: slo-definitions
+namespace: lab-module-15
 data:
-  slos.yaml: |
-    slos:
-      - name: api-availability
-        description: API should be available 99.9% of the time
-        sli:
-          metric: http_requests_total
-          success_condition: status &lt; 500
-        slo: 99.9
-        window: 30d
-        error_budget: 0.1</p>
+slos.yaml: |
+slos: - name: api-availability
+description: API should be available 99.9% of the time
+sli:
+metric: http_requests_total
+success_condition: status &lt; 500
+slo: 99.9
+window: 30d
+error_budget: 0.1</p>
 <pre><code>  - name: api-latency
     description: 95% of requests complete in &lt;500ms
     sli:
@@ -4998,101 +4973,113 @@ data:
 <p>apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: slo-rules
-  namespace: lab-module-15
+name: slo-rules
+namespace: lab-module-15
 spec:
-  groups:
-  - name: slo-availability
-    interval: 30s
-    rules:
-    # SLI: Availability
-    - record: sli:availability:ratio_rate5m
-      expr: |
-        (
-          sum(rate(http_requests_total{status!~"5.."}[5m]))
-          /
-          sum(rate(http_requests_total[5m]))
-        )</p>
-<pre><code># Error budget remaining (30 day window)
-- record: slo:availability:error_budget_remaining
+groups:</p>
+<ul>
+<li>name: slo-availability
+  interval: 30s
+  rules:</li>
+</ul>
+<h1 id="sli-availability">SLI: Availability</h1>
+<ul>
+<li>record: sli:availability:ratio_rate5m
   expr: |
-    1 - (
-      (1 - sli:availability:ratio_rate5m)
-      /
-      (1 - 0.999)
-    )
-
-# Burn rate (how fast we're consuming error budget)
-- record: slo:availability:burn_rate
+  (
+  sum(rate(http_requests_total{status!~"5.."}[5m]))
+  /
+  sum(rate(http_requests_total[5m]))
+  )</li>
+</ul>
+<h1 id="error-budget-remaining-30-day-window">Error budget remaining (30 day window)</h1>
+<ul>
+<li>record: slo:availability:error_budget_remaining
   expr: |
-    (1 - sli:availability:ratio_rate5m)
-    /
-    (1 - 0.999)
-</code></pre>
+  1 - (
+  (1 - sli:availability:ratio_rate5m)
+  /
+  (1 - 0.999)
+  )</li>
+</ul>
+<h1 id="burn-rate-how-fast-were-consuming-error-budget">Burn rate (how fast we're consuming error budget)</h1>
 <ul>
 <li>
+<p>record: slo:availability:burn_rate
+  expr: |
+  (1 - sli:availability:ratio_rate5m)
+  /
+  (1 - 0.999)</p>
+</li>
+<li>
 <p>name: slo-latency
-    interval: 30s
-    rules:
-    # SLI: Latency P95</p>
+  interval: 30s
+  rules:</p>
+</li>
+</ul>
+<h1 id="sli-latency-p95">SLI: Latency P95</h1>
 <ul>
 <li>record: sli:latency:p95
   expr: |
-    histogram_quantile(0.95,
-      rate(http_request_duration_seconds_bucket[5m])
-    )</li>
+  histogram_quantile(0.95,
+  rate(http_request_duration_seconds_bucket[5m])
+  )</li>
 </ul>
 <h1 id="latency-slo-compliance">Latency SLO compliance</h1>
 <ul>
 <li>record: slo:latency:compliance
   expr: |
-    (sli:latency:p95 &lt;= 0.5)</li>
-</ul>
-</li>
+  (sli:latency:p95 &lt;= 0.5)</li>
 </ul>
 <hr />
 <h1 id="labsmodule-15slo-alertsyaml">labs/module-15/slo-alerts.yaml</h1>
 <p>apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: slo-alerts
-  namespace: lab-module-15
+name: slo-alerts
+namespace: lab-module-15
 spec:
-  groups:
-  - name: error-budget-alerts
-    rules:
-    # Fast burn (2% budget in 1 hour)
-    - alert: ErrorBudgetFastBurn
-      expr: |
-        slo:availability:burn_rate &gt; 14.4
-      for: 2m
-      labels:
-        severity: critical
-      annotations:
-        summary: "Error budget burning too fast"
-        description: "At current rate, error budget will be exhausted in {{ $value | humanizeDuration }}"</p>
-<pre><code># Slow burn (10% budget in 3 days)
-- alert: ErrorBudgetSlowBurn
+groups:</p>
+<ul>
+<li>name: error-budget-alerts
+  rules:</li>
+</ul>
+<h1 id="fast-burn-2-budget-in-1-hour">Fast burn (2% budget in 1 hour)</h1>
+<ul>
+<li>alert: ErrorBudgetFastBurn
   expr: |
-    slo:availability:burn_rate &gt; 6
+  slo:availability:burn_rate &gt; 14.4
+  for: 2m
+  labels:
+  severity: critical
+  annotations:
+  summary: "Error budget burning too fast"
+  description: "At current rate, error budget will be exhausted in {{ $value | humanizeDuration }}"</li>
+</ul>
+<h1 id="slow-burn-10-budget-in-3-days">Slow burn (10% budget in 3 days)</h1>
+<ul>
+<li>alert: ErrorBudgetSlowBurn
+  expr: |
+  slo:availability:burn_rate &gt; 6
   for: 1h
   labels:
-    severity: warning
+  severity: warning
   annotations:
-    summary: "Error budget burning steadily"
-    description: "Error budget consumption rate is elevated"
-
-# Budget exhausted
-- alert: ErrorBudgetExhausted
+  summary: "Error budget burning steadily"
+  description: "Error budget consumption rate is elevated"</li>
+</ul>
+<h1 id="budget-exhausted">Budget exhausted</h1>
+<ul>
+<li>alert: ErrorBudgetExhausted
   expr: |
-    slo:availability:error_budget_remaining &lt;= 0
+  slo:availability:error_budget_remaining &lt;= 0
   for: 5m
   labels:
-    severity: critical
+  severity: critical
   annotations:
-    summary: "Error budget exhausted"
-    description: "No error budget remaining. Freeze deployments!"
-</code></pre>
+  summary: "Error budget exhausted"
+  description: "No error budget remaining. Freeze deployments!"</li>
+</ul>
 <hr />
 <h1 id="_9">=============================================================================</h1>
 <h1 id="module-16-lab-4-incident-management">MODULE 16 - LAB 4: Incident Management</h1>
@@ -5104,80 +5091,79 @@ spec:
 <p>apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: incidents.fawkes.io
+name: incidents.fawkes.io
 spec:
-  group: fawkes.io
-  versions:
-  - name: v1
-    served: true
-    storage: true
-    schema:
-      openAPIV3Schema:
-        type: object
-        properties:
-          spec:
-            type: object
-            properties:
-              severity:
-                type: string
-                enum: [P0, P1, P2, P3]
-              summary:
-                type: string
-              affectedServices:
-                type: array
-                items:
-                  type: string
-              startTime:
-                type: string
-                format: date-time
-          status:
-            type: object
-            properties:
-              state:
-                type: string
-                enum: [investigating, identified, mitigating, resolved]
-              mitigationTime:
-                type: string
-                format: date-time
-              resolutionTime:
-                type: string
-                format: date-time
-              mttr:
-                type: integer
+group: fawkes.io
+versions:</p>
+<ul>
+<li>name: v1
+  served: true
+  storage: true
+  schema:
+  openAPIV3Schema:
+  type: object
+  properties:
+  spec:
+  type: object
+  properties:
+  severity:
+  type: string
+  enum: [P0, P1, P2, P3]
+  summary:
+  type: string
+  affectedServices:
+  type: array
+  items:
+  type: string
+  startTime:
+  type: string
+  format: date-time
+  status:
+  type: object
+  properties:
+  state:
+  type: string
+  enum: [investigating, identified, mitigating, resolved]
+  mitigationTime:
+  type: string
+  format: date-time
+  resolutionTime:
+  type: string
+  format: date-time
+  mttr:
+  type: integer
   scope: Namespaced
   names:
-    plural: incidents
-    singular: incident
-    kind: Incident</p>
+  plural: incidents
+  singular: incident
+  kind: Incident</li>
+</ul>
 <hr />
 <h1 id="labsmodule-16incident-exampleyaml">labs/module-16/incident-example.yaml</h1>
 <p>apiVersion: fawkes.io/v1
 kind: Incident
 metadata:
-  name: incident-20251019-001
-  namespace: lab-module-16
+name: incident-20251019-001
+namespace: lab-module-16
 spec:
-  severity: P1
-  summary: "High error rate on payment API"
-  affectedServices:
-    - payment-api
-    - checkout-service
-  startTime: "2025-10-19T10:30:00Z"
+severity: P1
+summary: "High error rate on payment API"
+affectedServices: - payment-api - checkout-service
+startTime: "2025-10-19T10:30:00Z"
 status:
-  state: resolved
-  mitigationTime: "2025-10-19T10:35:00Z"
-  resolutionTime: "2025-10-19T10:45:00Z"
-  mttr: 900  # 15 minutes in seconds</p>
+state: resolved
+mitigationTime: "2025-10-19T10:35:00Z"
+resolutionTime: "2025-10-19T10:45:00Z"
+mttr: 900 # 15 minutes in seconds</p>
 <hr />
 <h1 id="labsmodule-16postmortem-templateyaml">labs/module-16/postmortem-template.yaml</h1>
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: postmortem-template
-  namespace: lab-module-16
+name: postmortem-template
+namespace: lab-module-16
 data:
-  template.md: |
-    # Incident Postmortem: [INCIDENT-ID]</p>
+template.md: | # Incident Postmortem: [INCIDENT-ID]</p>
 <pre><code>**Date**: [YYYY-MM-DD]
 **Duration**: [START] to [END] ([DURATION])
 **Severity**: [P0/P1/P2/P3]
@@ -5252,50 +5238,51 @@ data:
 <p>apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: feedbacks.fawkes.io
+name: feedbacks.fawkes.io
 spec:
-  group: fawkes.io
-  versions:
-  - name: v1
-    served: true
-    storage: true
-    schema:
-      openAPIV3Schema:
-        type: object
-        properties:
-          spec:
-            type: object
-            properties:
-              user:
-                type: string
-              npsScore:
-                type: integer
-                minimum: 0
-                maximum: 10
-              feedback:
-                type: string
-              feature:
-                type: string
-              timestamp:
-                type: string
-                format: date-time
+group: fawkes.io
+versions:</p>
+<ul>
+<li>name: v1
+  served: true
+  storage: true
+  schema:
+  openAPIV3Schema:
+  type: object
+  properties:
+  spec:
+  type: object
+  properties:
+  user:
+  type: string
+  npsScore:
+  type: integer
+  minimum: 0
+  maximum: 10
+  feedback:
+  type: string
+  feature:
+  type: string
+  timestamp:
+  type: string
+  format: date-time
   scope: Cluster
   names:
-    plural: feedbacks
-    singular: feedback
-    kind: Feedback</p>
+  plural: feedbacks
+  singular: feedback
+  kind: Feedback</li>
+</ul>
 <hr />
 <h1 id="labsmodule-17backstage-catalog-metricsyaml">labs/module-17/backstage-catalog-metrics.yaml</h1>
 <h1 id="track-catalog-adoption-metrics">Track catalog adoption metrics</h1>
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: catalog-metrics
-  namespace: lab-module-17
+name: catalog-metrics
+namespace: lab-module-17
 data:
-  queries.promql: |
-    # Components registered
-    count(backstage_catalog_entities_total{kind="Component"})</p>
+queries.promql: | # Components registered
+count(backstage_catalog_entities_total{kind="Component"})</p>
 <pre><code># APIs documented
 count(backstage_catalog_entities_total{kind="API"})
 
@@ -5315,91 +5302,97 @@ sum by (page_type) (rate(backstage_page_view_total[1h]))
 <p>apiVersion: v1
 kind: Namespace
 metadata:
-  name: tenant-{{.TenantName}}
-  labels:
-    fawkes.io/tenant: "{{.TenantName}}"
-    fawkes.io/team: "{{.TeamName}}"</p>
+name: tenant-{{.TenantName}}
+labels:
+fawkes.io/tenant: "{{.TenantName}}"
+fawkes.io/team: "{{.TeamName}}"</p>
 <hr />
 <p>apiVersion: v1
 kind: ResourceQuota
 metadata:
-  name: tenant-quota
-  namespace: tenant-{{.TenantName}}
+name: tenant-quota
+namespace: tenant-{{.TenantName}}
 spec:
-  hard:
-    requests.cpu: "{{.CPUQuota}}"
-    requests.memory: "{{.MemoryQuota}}"
-    limits.cpu: "{{.CPULimit}}"
-    limits.memory: "{{.MemoryLimit}}"
-    persistentvolumeclaims: "{{.PVCQuota}}"
-    services.loadbalancers: "{{.LBQuota}}"</p>
+hard:
+requests.cpu: "{{.CPUQuota}}"
+requests.memory: "{{.MemoryQuota}}"
+limits.cpu: "{{.CPULimit}}"
+limits.memory: "{{.MemoryLimit}}"
+persistentvolumeclaims: "{{.PVCQuota}}"
+services.loadbalancers: "{{.LBQuota}}"</p>
 <hr />
 <p>apiVersion: v1
 kind: LimitRange
 metadata:
-  name: tenant-limits
-  namespace: tenant-{{.TenantName}}
+name: tenant-limits
+namespace: tenant-{{.TenantName}}
 spec:
-  limits:
-  - max:
-      cpu: "2"
-      memory: "4Gi"
-    min:
-      cpu: "10m"
-      memory: "10Mi"
-    default:
-      cpu: "500m"
-      memory: "512Mi"
-    defaultRequest:
-      cpu: "100m"
-      memory: "128Mi"
-    type: Container</p>
+limits:</p>
+<ul>
+<li>max:
+  cpu: "2"
+  memory: "4Gi"
+  min:
+  cpu: "10m"
+  memory: "10Mi"
+  default:
+  cpu: "500m"
+  memory: "512Mi"
+  defaultRequest:
+  cpu: "100m"
+  memory: "128Mi"
+  type: Container</li>
+</ul>
 <hr />
 <p>apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: tenant-admin
-  namespace: tenant-{{.TenantName}}
-rules:
-- apiGroups: ["<em>"]
+name: tenant-admin
+namespace: tenant-{{.TenantName}}
+rules:</p>
+<ul>
+<li>apiGroups: ["<em>"]
   resources: ["</em>"]
-  verbs: ["*"]</p>
+  verbs: ["*"]</li>
+</ul>
 <hr />
 <p>apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: tenant-admin-binding
-  namespace: tenant-{{.TenantName}}
+name: tenant-admin-binding
+namespace: tenant-{{.TenantName}}
 roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: tenant-admin
-subjects:
-- kind: Group
+apiGroup: rbac.authorization.k8s.io
+kind: Role
+name: tenant-admin
+subjects:</p>
+<ul>
+<li>kind: Group
   name: "tenant-{{.TenantName}}-admins"
-  apiGroup: rbac.authorization.k8s.io</p>
+  apiGroup: rbac.authorization.k8s.io</li>
+</ul>
 <hr />
 <h1 id="labsmodule-18hierarchical-namespaceyaml">labs/module-18/hierarchical-namespace.yaml</h1>
 <h1 id="using-hnc-hierarchical-namespace-controller">Using HNC (Hierarchical Namespace Controller)</h1>
 <p>apiVersion: hnc.x-k8s.io/v1alpha2
 kind: HierarchyConfiguration
 metadata:
-  name: hierarchy
-  namespace: org-engineering
+name: hierarchy
+namespace: org-engineering
 spec:
-  parent: org-root</p>
+parent: org-root</p>
 <hr />
 <p>apiVersion: hnc.x-k8s.io/v1alpha2
 kind: SubnamespaceAnchor
 metadata:
-  name: team-backend
-  namespace: org-engineering</p>
+name: team-backend
+namespace: org-engineering</p>
 <hr />
 <p>apiVersion: hnc.x-k8s.io/v1alpha2
 kind: SubnamespaceAnchor
 metadata:
-  name: team-frontend
-  namespace: org-engineering</p>
+name: team-frontend
+namespace: org-engineering</p>
 <hr />
 <h1 id="_17">=============================================================================</h1>
 <h1 id="module-19-implementation-zero-trust-security">MODULE 19 - Implementation: Zero Trust Security</h1>
@@ -5411,46 +5404,43 @@ metadata:
 <p>apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: payment-service
-  namespace: lab-module-19
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/payment-service</p>
+name: payment-service
+namespace: lab-module-19
+annotations:
+eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/payment-service</p>
 <hr />
 <p>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: payment-service
-  namespace: lab-module-19
+name: payment-service
+namespace: lab-module-19
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: payment-service
-  template:
-    metadata:
-      labels:
-        app: payment-service
-    spec:
-      serviceAccountName: payment-service
-      containers:
-      - name: app
-        image: payment-service:v1.0.0
-        # No AWS credentials needed - IRSA provides them</p>
+replicas: 2
+selector:
+matchLabels:
+app: payment-service
+template:
+metadata:
+labels:
+app: payment-service
+spec:
+serviceAccountName: payment-service
+containers: - name: app
+image: payment-service:v1.0.0 # No AWS credentials needed - IRSA provides them</p>
 <hr />
 <h1 id="labsmodule-19policy-as-code-gatekeeperyaml">labs/module-19/policy-as-code-gatekeeper.yaml</h1>
 <p>apiVersion: templates.gatekeeper.sh/v1
 kind: ConstraintTemplate
 metadata:
-  name: k8srequiredsignedimages
+name: k8srequiredsignedimages
 spec:
-  crd:
-    spec:
-      names:
-        kind: K8sRequiredSignedImages
-  targets:
-    - target: admission.k8s.gatekeeper.sh
-      rego: |
-        package k8srequiredsignedimages</p>
+crd:
+spec:
+names:
+kind: K8sRequiredSignedImages
+targets: - target: admission.k8s.gatekeeper.sh
+rego: |
+package k8srequiredsignedimages</p>
 <pre><code>    violation[{"msg": msg}] {
       container := input.review.object.spec.containers[_]
       not is_signed(container.image)
@@ -5467,52 +5457,53 @@ spec:
 <p>apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sRequiredSignedImages
 metadata:
-  name: must-be-signed
+name: must-be-signed
 spec:
-  match:
-    kinds:
-      - apiGroups: ["apps"]
-        kinds: ["Deployment"]</p>
+match:
+kinds: - apiGroups: ["apps"]
+kinds: ["Deployment"]</p>
 <hr />
 <h1 id="labsmodule-19external-secrets-vaultyaml">labs/module-19/external-secrets-vault.yaml</h1>
 <p>apiVersion: external-secrets.io/v1beta1
 kind: SecretStore
 metadata:
-  name: vault-backend
-  namespace: lab-module-19
+name: vault-backend
+namespace: lab-module-19
 spec:
-  provider:
-    vault:
-      server: "https://vault.fawkes.io"
-      path: "secret"
-      version: "v2"
-      auth:
-        kubernetes:
-          mountPath: "kubernetes"
-          role: "payment-service"</p>
+provider:
+vault:
+server: "https://vault.fawkes.io"
+path: "secret"
+version: "v2"
+auth:
+kubernetes:
+mountPath: "kubernetes"
+role: "payment-service"</p>
 <hr />
 <p>apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: payment-secrets
-  namespace: lab-module-19
+name: payment-secrets
+namespace: lab-module-19
 spec:
-  refreshInterval: 1h
-  secretStoreRef:
-    name: vault-backend
-    kind: SecretStore
-  target:
-    name: payment-secrets
-    creationPolicy: Owner
-  data:
-  - secretKey: stripe-api-key
-    remoteRef:
-      key: payment/stripe
-      property: api_key
-  - secretKey: database-password
-    remoteRef:
-      key: payment/database
-      property: password</p>
+refreshInterval: 1h
+secretStoreRef:
+name: vault-backend
+kind: SecretStore
+target:
+name: payment-secrets
+creationPolicy: Owner
+data:</p>
+<ul>
+<li>secretKey: stripe-api-key
+  remoteRef:
+  key: payment/stripe
+  property: api_key</li>
+<li>secretKey: database-password
+  remoteRef:
+  key: payment/database
+  property: password</li>
+</ul>
 <hr />
 <h1 id="_19">=============================================================================</h1>
 <h1 id="module-20-implementation-multi-cloud">MODULE 20 - Implementation: Multi-Cloud</h1>
@@ -5523,68 +5514,72 @@ spec:
 <p>apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: xpostgresql-aws
-  labels:
-    provider: aws
+name: xpostgresql-aws
+labels:
+provider: aws
 spec:
-  compositeTypeRef:
-    apiVersion: database.fawkes.io/v1alpha1
-    kind: XPostgreSQL
-  resources:
-  - name: rdsinstance
-    base:
-      apiVersion: database.aws.crossplane.io/v1beta1
-      kind: RDSInstance
-      spec:
-        forProvider:
-          region: us-east-1
-          dbInstanceClass: db.t3.micro
-          engine: postgres
-          engineVersion: "14"
-          masterUsername: admin
-          allocatedStorage: 20
-          storageEncrypted: true
-          publiclyAccessible: false</p>
+compositeTypeRef:
+apiVersion: database.fawkes.io/v1alpha1
+kind: XPostgreSQL
+resources:</p>
+<ul>
+<li>name: rdsinstance
+  base:
+  apiVersion: database.aws.crossplane.io/v1beta1
+  kind: RDSInstance
+  spec:
+  forProvider:
+  region: us-east-1
+  dbInstanceClass: db.t3.micro
+  engine: postgres
+  engineVersion: "14"
+  masterUsername: admin
+  allocatedStorage: 20
+  storageEncrypted: true
+  publiclyAccessible: false</li>
+</ul>
 <hr />
 <h1 id="labsmodule-20crossplane-gcp-compositionyaml">labs/module-20/crossplane-gcp-composition.yaml</h1>
 <p>apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: xpostgresql-gcp
-  labels:
-    provider: gcp
+name: xpostgresql-gcp
+labels:
+provider: gcp
 spec:
-  compositeTypeRef:
-    apiVersion: database.fawkes.io/v1alpha1
-    kind: XPostgreSQL
-  resources:
-  - name: cloudsqlinstance
-    base:
-      apiVersion: database.gcp.crossplane.io/v1beta1
-      kind: CloudSQLInstance
-      spec:
-        forProvider:
-          region: us-central1
-          databaseVersion: POSTGRES_14
-          settings:
-            tier: db-f1-micro
-            ipConfiguration:
-              ipv4Enabled: false
-              privateNetwork: projects/my-project/global/networks/default</p>
+compositeTypeRef:
+apiVersion: database.fawkes.io/v1alpha1
+kind: XPostgreSQL
+resources:</p>
+<ul>
+<li>name: cloudsqlinstance
+  base:
+  apiVersion: database.gcp.crossplane.io/v1beta1
+  kind: CloudSQLInstance
+  spec:
+  forProvider:
+  region: us-central1
+  databaseVersion: POSTGRES_14
+  settings:
+  tier: db-f1-micro
+  ipConfiguration:
+  ipv4Enabled: false
+  privateNetwork: projects/my-project/global/networks/default</li>
+</ul>
 <hr />
 <h1 id="labsmodule-20cloud-agnostic-databaseyaml">labs/module-20/cloud-agnostic-database.yaml</h1>
 <h1 id="application-uses-cloud-agnostic-api">Application uses cloud-agnostic API</h1>
 <p>apiVersion: database.fawkes.io/v1alpha1
 kind: XPostgreSQL
 metadata:
-  name: my-database
+name: my-database
 spec:
-  size: small
-  version: "14"
-  storageGB: 20
-  highAvailability: false
-  # Crossplane automatically provisions RDS on AWS or Cloud SQL on GCP
-  # based on which composition is selected</p>
+size: small
+version: "14"
+storageGB: 20
+highAvailability: false</p>
+<h1 id="crossplane-automatically-provisions-rds-on-aws-or-cloud-sql-on-gcp">Crossplane automatically provisions RDS on AWS or Cloud SQL on GCP</h1>
+<h1 id="based-on-which-composition-is-selected">based on which composition is selected</h1>
 <hr />
 <h1 id="_21">=============================================================================</h1>
 <h1 id="lab-deployment-automation">LAB DEPLOYMENT AUTOMATION</h1>
@@ -5594,13 +5589,12 @@ spec:
 <p>apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: lab-deployment-scripts
-  namespace: fawkes-system
+name: lab-deployment-scripts
+namespace: fawkes-system
 data:
-  deploy-labs.sh: |
-    #!/bin/bash
-    # Deploy all lab infrastructure
-    set -e</p>
+deploy-labs.sh: |</p>
+<h1 id="binbash-deploy-all-lab-infrastructure">!/bin/bash # Deploy all lab infrastructure</h1>
+<p>set -e</p>
 <pre><code>echo "Deploying Fawkes Dojo Lab Infrastructure..."
 
 # Install prerequisite operators

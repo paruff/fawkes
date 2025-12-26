@@ -5196,88 +5196,118 @@
 <p><strong>Total Estimated Monthly Cost</strong>: $1,847/month
 <strong>Annual Projection</strong>: $22,164/year
 <strong>AWS Activate Credit Request</strong>: $25,000 (covers 13 months of operation)</p>
-<p><strong>Primary AWS Services</strong>:
-- Amazon EKS (Kubernetes orchestration)
-- Amazon RDS (PostgreSQL databases)
-- Amazon S3 (Artifact storage)
-- Elastic Load Balancing (Application Load Balancers)
-- Amazon CloudWatch (Monitoring and logging)
-- AWS Secrets Manager (Secrets management)
-- Amazon ECR (Container registry)</p>
+<p><strong>Primary AWS Services</strong>:</p>
+<ul>
+<li>Amazon EKS (Kubernetes orchestration)</li>
+<li>Amazon RDS (PostgreSQL databases)</li>
+<li>Amazon S3 (Artifact storage)</li>
+<li>Elastic Load Balancing (Application Load Balancers)</li>
+<li>Amazon CloudWatch (Monitoring and logging)</li>
+<li>AWS Secrets Manager (Secrets management)</li>
+<li>Amazon ECR (Container registry)</li>
+</ul>
 <p><strong>Cost Optimization Strategy</strong>: Implementing Reserved Instances, Spot instances, and auto-scaling can reduce costs by 40-60% after initial 6-month validation period.</p>
 <hr />
 <h2 id="infrastructure-architecture-overview">Infrastructure Architecture Overview</h2>
-<p>Fawkes requires three distinct environments to support:
-1. <strong>Development</strong>: Active platform development and testing
-2. <strong>Staging</strong>: Pre-production validation and integration testing
-3. <strong>Production</strong>: Live platform serving community users and Dojo learners</p>
-<p>Each environment runs a complete stack including:
-- Kubernetes cluster (EKS)
-- PostgreSQL database (RDS)
-- Container registry (ECR)
-- Load balancers (ALB)
-- Monitoring and logging (CloudWatch)
-- Storage (S3, EBS)</p>
+<p>Fawkes requires three distinct environments to support:</p>
+<ol>
+<li><strong>Development</strong>: Active platform development and testing</li>
+<li><strong>Staging</strong>: Pre-production validation and integration testing</li>
+<li><strong>Production</strong>: Live platform serving community users and Dojo learners</li>
+</ol>
+<p>Each environment runs a complete stack including:</p>
+<ul>
+<li>Kubernetes cluster (EKS)</li>
+<li>PostgreSQL database (RDS)</li>
+<li>Container registry (ECR)</li>
+<li>Load balancers (ALB)</li>
+<li>Monitoring and logging (CloudWatch)</li>
+<li>Storage (S3, EBS)</li>
+</ul>
 <hr />
 <h2 id="development-environment">Development Environment</h2>
 <p><strong>Purpose</strong>: Platform engineering team development, feature testing, automated CI/CD testing</p>
 <p><strong>Traffic Profile</strong>: 5-10 concurrent users, intermittent usage (8 hours/day, 5 days/week)</p>
 <h3 id="compute-amazon-eks">Compute - Amazon EKS</h3>
-<p><strong>EKS Control Plane</strong>:
-- Cost: $0.10/hour × 730 hours = <strong>$73.00/month</strong>
-- Note: Control plane runs 24/7 regardless of node usage</p>
-<p><strong>Worker Nodes</strong> (3× t3.medium instances):
-- Instance Type: t3.medium (2 vCPU, 4GB RAM)
-- Quantity: 3 nodes (minimum for HA)
-- On-Demand Cost: $0.0416/hour × 3 × 730 hours = <strong>$91.10/month</strong>
-- Storage: 50GB EBS gp3 per node × 3 = $0.08/GB × 150GB = <strong>$12.00/month</strong></p>
+<p><strong>EKS Control Plane</strong>:</p>
+<ul>
+<li>Cost: $0.10/hour × 730 hours = <strong>$73.00/month</strong></li>
+<li>Note: Control plane runs 24/7 regardless of node usage</li>
+</ul>
+<p><strong>Worker Nodes</strong> (3× t3.medium instances):</p>
+<ul>
+<li>Instance Type: t3.medium (2 vCPU, 4GB RAM)</li>
+<li>Quantity: 3 nodes (minimum for HA)</li>
+<li>On-Demand Cost: $0.0416/hour × 3 × 730 hours = <strong>$91.10/month</strong></li>
+<li>Storage: 50GB EBS gp3 per node × 3 = $0.08/GB × 150GB = <strong>$12.00/month</strong></li>
+</ul>
 <p><strong>EKS Subtotal</strong>: $176.10/month</p>
 <h3 id="database-amazon-rds-postgresql">Database - Amazon RDS PostgreSQL</h3>
-<p><strong>Instance Configuration</strong>:
-- Instance Type: db.t3.medium (2 vCPU, 4GB RAM)
-- Engine: PostgreSQL 15.x
-- Single-AZ deployment (development only)
-- Storage: 100GB gp3 SSD
-- Cost Breakdown:
-  - Instance: $0.068/hour × 730 hours = <strong>$49.64/month</strong>
-  - Storage: 100GB × $0.115/GB = <strong>$11.50/month</strong>
-  - Backup Storage: 100GB × $0.095/GB = <strong>$9.50/month</strong></p>
+<p><strong>Instance Configuration</strong>:</p>
+<ul>
+<li>Instance Type: db.t3.medium (2 vCPU, 4GB RAM)</li>
+<li>Engine: PostgreSQL 15.x</li>
+<li>Single-AZ deployment (development only)</li>
+<li>Storage: 100GB gp3 SSD</li>
+<li>Cost Breakdown:</li>
+<li>Instance: $0.068/hour × 730 hours = <strong>$49.64/month</strong></li>
+<li>Storage: 100GB × $0.115/GB = <strong>$11.50/month</strong></li>
+<li>Backup Storage: 100GB × $0.095/GB = <strong>$9.50/month</strong></li>
+</ul>
 <p><strong>RDS Subtotal</strong>: $70.64/month</p>
 <h3 id="load-balancing">Load Balancing</h3>
-<p><strong>Application Load Balancer</strong> (1):
-- ALB Hours: $0.0225/hour × 730 hours = <strong>$16.43/month</strong>
-- LCU (Load Capacity Units): ~5 LCUs average = $0.008 × 5 × 730 = <strong>$29.20/month</strong></p>
+<p><strong>Application Load Balancer</strong> (1):</p>
+<ul>
+<li>ALB Hours: $0.0225/hour × 730 hours = <strong>$16.43/month</strong></li>
+<li>LCU (Load Capacity Units): ~5 LCUs average = $0.008 × 5 × 730 = <strong>$29.20/month</strong></li>
+</ul>
 <p><strong>ALB Subtotal</strong>: $45.63/month</p>
 <h3 id="storage-amazon-s3">Storage - Amazon S3</h3>
-<p><strong>Container Images &amp; Artifacts</strong>:
-- Standard Storage: 50GB × $0.023/GB = <strong>$1.15/month</strong>
-- PUT/GET Requests: ~10,000 requests = <strong>$0.05/month</strong></p>
-<p><strong>Backup Storage</strong>:
-- Standard-IA: 20GB × $0.0125/GB = <strong>$0.25/month</strong></p>
+<p><strong>Container Images &amp; Artifacts</strong>:</p>
+<ul>
+<li>Standard Storage: 50GB × $0.023/GB = <strong>$1.15/month</strong></li>
+<li>PUT/GET Requests: ~10,000 requests = <strong>$0.05/month</strong></li>
+</ul>
+<p><strong>Backup Storage</strong>:</p>
+<ul>
+<li>Standard-IA: 20GB × $0.0125/GB = <strong>$0.25/month</strong></li>
+</ul>
 <p><strong>S3 Subtotal</strong>: $1.45/month</p>
 <h3 id="container-registry-amazon-ecr">Container Registry - Amazon ECR</h3>
-<p><strong>Private Registry</strong>:
-- Storage: 30GB × $0.10/GB = <strong>$3.00/month</strong>
-- Data Transfer: Negligible (within VPC)</p>
+<p><strong>Private Registry</strong>:</p>
+<ul>
+<li>Storage: 30GB × $0.10/GB = <strong>$3.00/month</strong></li>
+<li>Data Transfer: Negligible (within VPC)</li>
+</ul>
 <p><strong>ECR Subtotal</strong>: $3.00/month</p>
 <h3 id="monitoring-amazon-cloudwatch">Monitoring - Amazon CloudWatch</h3>
-<p><strong>Logs</strong>:
-- Ingestion: 20GB × $0.50/GB = <strong>$10.00/month</strong>
-- Storage: 20GB × $0.03/GB = <strong>$0.60/month</strong></p>
-<p><strong>Metrics</strong>:
-- Custom Metrics: 100 metrics × $0.30 = <strong>$30.00/month</strong></p>
+<p><strong>Logs</strong>:</p>
+<ul>
+<li>Ingestion: 20GB × $0.50/GB = <strong>$10.00/month</strong></li>
+<li>Storage: 20GB × $0.03/GB = <strong>$0.60/month</strong></li>
+</ul>
+<p><strong>Metrics</strong>:</p>
+<ul>
+<li>Custom Metrics: 100 metrics × $0.30 = <strong>$30.00/month</strong></li>
+</ul>
 <p><strong>CloudWatch Subtotal</strong>: $40.60/month</p>
 <h3 id="secrets-management-aws-secrets-manager">Secrets Management - AWS Secrets Manager</h3>
-<p><strong>Secrets Storage</strong>:
-- 10 secrets × $0.40/secret = <strong>$4.00/month</strong>
-- API Calls: 10,000 × $0.05/10,000 = <strong>$0.50/month</strong></p>
+<p><strong>Secrets Storage</strong>:</p>
+<ul>
+<li>10 secrets × $0.40/secret = <strong>$4.00/month</strong></li>
+<li>API Calls: 10,000 × $0.05/10,000 = <strong>$0.50/month</strong></li>
+</ul>
 <p><strong>Secrets Manager Subtotal</strong>: $4.50/month</p>
 <h3 id="networking">Networking</h3>
-<p><strong>NAT Gateway</strong> (1):
-- Hours: $0.045/hour × 730 hours = <strong>$32.85/month</strong>
-- Data Processing: 50GB × $0.045/GB = <strong>$2.25/month</strong></p>
-<p><strong>Data Transfer</strong>:
-- Outbound to Internet: 20GB × $0.09/GB = <strong>$1.80/month</strong></p>
+<p><strong>NAT Gateway</strong> (1):</p>
+<ul>
+<li>Hours: $0.045/hour × 730 hours = <strong>$32.85/month</strong></li>
+<li>Data Processing: 50GB × $0.045/GB = <strong>$2.25/month</strong></li>
+</ul>
+<p><strong>Data Transfer</strong>:</p>
+<ul>
+<li>Outbound to Internet: 20GB × $0.09/GB = <strong>$1.80/month</strong></li>
+</ul>
 <p><strong>Networking Subtotal</strong>: $36.90/month</p>
 <h3 id="development-environment-total-37882month"><strong>Development Environment Total: $378.82/month</strong></h3>
 <hr />
@@ -5286,44 +5316,60 @@
 <p><strong>Traffic Profile</strong>: 10-20 concurrent users, continuous deployment testing, 12 hours/day operation</p>
 <h3 id="compute-amazon-eks_1">Compute - Amazon EKS</h3>
 <p><strong>EKS Control Plane</strong>: <strong>$73.00/month</strong></p>
-<p><strong>Worker Nodes</strong> (4× t3.large instances):
-- Instance Type: t3.large (2 vCPU, 8GB RAM)
-- Quantity: 4 nodes
-- On-Demand Cost: $0.0832/hour × 4 × 730 hours = <strong>$242.94/month</strong>
-- Storage: 100GB EBS gp3 per node × 4 = $0.08/GB × 400GB = <strong>$32.00/month</strong></p>
+<p><strong>Worker Nodes</strong> (4× t3.large instances):</p>
+<ul>
+<li>Instance Type: t3.large (2 vCPU, 8GB RAM)</li>
+<li>Quantity: 4 nodes</li>
+<li>On-Demand Cost: $0.0832/hour × 4 × 730 hours = <strong>$242.94/month</strong></li>
+<li>Storage: 100GB EBS gp3 per node × 4 = $0.08/GB × 400GB = <strong>$32.00/month</strong></li>
+</ul>
 <p><strong>EKS Subtotal</strong>: $347.94/month</p>
 <h3 id="database-amazon-rds-postgresql_1">Database - Amazon RDS PostgreSQL</h3>
-<p><strong>Instance Configuration</strong>:
-- Instance Type: db.t3.large (2 vCPU, 8GB RAM)
-- Single-AZ (staging environment)
-- Storage: 200GB gp3 SSD
-- Cost Breakdown:
-  - Instance: $0.136/hour × 730 hours = <strong>$99.28/month</strong>
-  - Storage: 200GB × $0.115/GB = <strong>$23.00/month</strong>
-  - Backup Storage: 200GB × $0.095/GB = <strong>$19.00/month</strong></p>
+<p><strong>Instance Configuration</strong>:</p>
+<ul>
+<li>Instance Type: db.t3.large (2 vCPU, 8GB RAM)</li>
+<li>Single-AZ (staging environment)</li>
+<li>Storage: 200GB gp3 SSD</li>
+<li>Cost Breakdown:</li>
+<li>Instance: $0.136/hour × 730 hours = <strong>$99.28/month</strong></li>
+<li>Storage: 200GB × $0.115/GB = <strong>$23.00/month</strong></li>
+<li>Backup Storage: 200GB × $0.095/GB = <strong>$19.00/month</strong></li>
+</ul>
 <p><strong>RDS Subtotal</strong>: $141.28/month</p>
 <h3 id="load-balancing_1">Load Balancing</h3>
-<p><strong>Application Load Balancers</strong> (2):
-- ALB Hours: $0.0225/hour × 2 × 730 hours = <strong>$32.85/month</strong>
-- LCU: ~8 LCUs average × 2 = $0.008 × 16 × 730 = <strong>$93.44/month</strong></p>
+<p><strong>Application Load Balancers</strong> (2):</p>
+<ul>
+<li>ALB Hours: $0.0225/hour × 2 × 730 hours = <strong>$32.85/month</strong></li>
+<li>LCU: ~8 LCUs average × 2 = $0.008 × 16 × 730 = <strong>$93.44/month</strong></li>
+</ul>
 <p><strong>ALB Subtotal</strong>: $126.29/month</p>
 <h3 id="storage-amazon-s3_1">Storage - Amazon S3</h3>
-<p><strong>Container Images &amp; Artifacts</strong>:
-- Standard Storage: 100GB × $0.023/GB = <strong>$2.30/month</strong>
-- PUT/GET Requests: ~50,000 requests = <strong>$0.25/month</strong></p>
-<p><strong>Backup Storage</strong>:
-- Standard-IA: 50GB × $0.0125/GB = <strong>$0.63/month</strong></p>
+<p><strong>Container Images &amp; Artifacts</strong>:</p>
+<ul>
+<li>Standard Storage: 100GB × $0.023/GB = <strong>$2.30/month</strong></li>
+<li>PUT/GET Requests: ~50,000 requests = <strong>$0.25/month</strong></li>
+</ul>
+<p><strong>Backup Storage</strong>:</p>
+<ul>
+<li>Standard-IA: 50GB × $0.0125/GB = <strong>$0.63/month</strong></li>
+</ul>
 <p><strong>S3 Subtotal</strong>: $3.18/month</p>
 <h3 id="container-registry-amazon-ecr_1">Container Registry - Amazon ECR</h3>
-<p><strong>Private Registry</strong>:
-- Storage: 50GB × $0.10/GB = <strong>$5.00/month</strong></p>
+<p><strong>Private Registry</strong>:</p>
+<ul>
+<li>Storage: 50GB × $0.10/GB = <strong>$5.00/month</strong></li>
+</ul>
 <p><strong>ECR Subtotal</strong>: $5.00/month</p>
 <h3 id="monitoring-amazon-cloudwatch_1">Monitoring - Amazon CloudWatch</h3>
-<p><strong>Logs</strong>:
-- Ingestion: 40GB × $0.50/GB = <strong>$20.00/month</strong>
-- Storage: 40GB × $0.03/GB = <strong>$1.20/month</strong></p>
-<p><strong>Metrics</strong>:
-- Custom Metrics: 200 metrics × $0.30 = <strong>$60.00/month</strong></p>
+<p><strong>Logs</strong>:</p>
+<ul>
+<li>Ingestion: 40GB × $0.50/GB = <strong>$20.00/month</strong></li>
+<li>Storage: 40GB × $0.03/GB = <strong>$1.20/month</strong></li>
+</ul>
+<p><strong>Metrics</strong>:</p>
+<ul>
+<li>Custom Metrics: 200 metrics × $0.30 = <strong>$60.00/month</strong></li>
+</ul>
 <p><strong>Alarms</strong>: 20 alarms × $0.10 = <strong>$2.00/month</strong></p>
 <p><strong>CloudWatch Subtotal</strong>: $83.20/month</p>
 <h3 id="aws-x-ray-distributed-tracing">AWS X-Ray (Distributed Tracing)</h3>
@@ -5331,16 +5377,22 @@
 <strong>Traces Retrieved</strong>: 100K traces × $0.50/million = <strong>$0.05/month</strong></p>
 <p><strong>X-Ray Subtotal</strong>: $5.05/month</p>
 <h3 id="secrets-management">Secrets Management</h3>
-<p><strong>Secrets Storage</strong>:
-- 15 secrets × $0.40/secret = <strong>$6.00/month</strong>
-- API Calls: 50,000 × $0.05/10,000 = <strong>$2.50/month</strong></p>
+<p><strong>Secrets Storage</strong>:</p>
+<ul>
+<li>15 secrets × $0.40/secret = <strong>$6.00/month</strong></li>
+<li>API Calls: 50,000 × $0.05/10,000 = <strong>$2.50/month</strong></li>
+</ul>
 <p><strong>Secrets Manager Subtotal</strong>: $8.50/month</p>
 <h3 id="networking_1">Networking</h3>
-<p><strong>NAT Gateway</strong> (1):
-- Hours: $0.045/hour × 730 hours = <strong>$32.85/month</strong>
-- Data Processing: 100GB × $0.045/GB = <strong>$4.50/month</strong></p>
-<p><strong>Data Transfer</strong>:
-- Outbound to Internet: 50GB × $0.09/GB = <strong>$4.50/month</strong></p>
+<p><strong>NAT Gateway</strong> (1):</p>
+<ul>
+<li>Hours: $0.045/hour × 730 hours = <strong>$32.85/month</strong></li>
+<li>Data Processing: 100GB × $0.045/GB = <strong>$4.50/month</strong></li>
+</ul>
+<p><strong>Data Transfer</strong>:</p>
+<ul>
+<li>Outbound to Internet: 50GB × $0.09/GB = <strong>$4.50/month</strong></li>
+</ul>
 <p><strong>Networking Subtotal</strong>: $41.85/month</p>
 <h3 id="staging-environment-total-76229month"><strong>Staging Environment Total: $762.29/month</strong></h3>
 <hr />
@@ -5349,52 +5401,70 @@
 <p><strong>Traffic Profile</strong>: 50-200 concurrent users, 24/7 availability, high-availability requirements</p>
 <h3 id="compute-amazon-eks_2">Compute - Amazon EKS</h3>
 <p><strong>EKS Control Plane</strong>: <strong>$73.00/month</strong></p>
-<p><strong>Worker Nodes</strong> (6× t3.xlarge instances):
-- Instance Type: t3.xlarge (4 vCPU, 16GB RAM)
-- Quantity: 6 nodes (3 per AZ, 2 AZs for HA)
-- On-Demand Cost: $0.1664/hour × 6 × 730 hours = <strong>$728.83/month</strong>
-- Storage: 200GB EBS gp3 per node × 6 = $0.08/GB × 1,200GB = <strong>$96.00/month</strong></p>
+<p><strong>Worker Nodes</strong> (6× t3.xlarge instances):</p>
+<ul>
+<li>Instance Type: t3.xlarge (4 vCPU, 16GB RAM)</li>
+<li>Quantity: 6 nodes (3 per AZ, 2 AZs for HA)</li>
+<li>On-Demand Cost: $0.1664/hour × 6 × 730 hours = <strong>$728.83/month</strong></li>
+<li>Storage: 200GB EBS gp3 per node × 6 = $0.08/GB × 1,200GB = <strong>$96.00/month</strong></li>
+</ul>
 <p><strong>Note</strong>: Production will use Reserved Instances after validation period (40% savings = $291.53/month savings)</p>
 <p><strong>EKS Subtotal</strong>: $897.83/month</p>
 <h3 id="database-amazon-rds-postgresql_2">Database - Amazon RDS PostgreSQL</h3>
-<p><strong>Instance Configuration</strong>:
-- Instance Type: db.m5.large (2 vCPU, 8GB RAM)
-- Multi-AZ deployment (high availability)
-- Storage: 500GB gp3 SSD
-- Automated backups with 7-day retention
-- Cost Breakdown:
-  - Instance (Multi-AZ): $0.190/hour × 730 hours × 2 = <strong>$277.40/month</strong>
-  - Storage: 500GB × $0.115/GB = <strong>$57.50/month</strong>
-  - Backup Storage: 500GB × $0.095/GB = <strong>$47.50/month</strong>
-  - PIOPS (Provisioned IOPS): 3000 IOPS × $0.10 = <strong>$300.00/month</strong> (optional, for high-traffic scenarios)</p>
+<p><strong>Instance Configuration</strong>:</p>
+<ul>
+<li>Instance Type: db.m5.large (2 vCPU, 8GB RAM)</li>
+<li>Multi-AZ deployment (high availability)</li>
+<li>Storage: 500GB gp3 SSD</li>
+<li>Automated backups with 7-day retention</li>
+<li>Cost Breakdown:</li>
+<li>Instance (Multi-AZ): $0.190/hour × 730 hours × 2 = <strong>$277.40/month</strong></li>
+<li>Storage: 500GB × $0.115/GB = <strong>$57.50/month</strong></li>
+<li>Backup Storage: 500GB × $0.095/GB = <strong>$47.50/month</strong></li>
+<li>PIOPS (Provisioned IOPS): 3000 IOPS × $0.10 = <strong>$300.00/month</strong> (optional, for high-traffic scenarios)</li>
+</ul>
 <p><strong>RDS Subtotal (without PIOPS)</strong>: $382.40/month
 <strong>RDS Subtotal (with PIOPS)</strong>: $682.40/month</p>
 <p><em>Using base configuration (without PIOPS) for conservative estimate</em></p>
 <h3 id="load-balancing_2">Load Balancing</h3>
-<p><strong>Application Load Balancers</strong> (3):
-- ALB Hours: $0.0225/hour × 3 × 730 hours = <strong>$49.28/month</strong>
-- LCU: ~20 LCUs average × 3 = $0.008 × 60 × 730 = <strong>$350.40/month</strong></p>
+<p><strong>Application Load Balancers</strong> (3):</p>
+<ul>
+<li>ALB Hours: $0.0225/hour × 3 × 730 hours = <strong>$49.28/month</strong></li>
+<li>LCU: ~20 LCUs average × 3 = $0.008 × 60 × 730 = <strong>$350.40/month</strong></li>
+</ul>
 <p><strong>ALB Subtotal</strong>: $399.68/month</p>
 <h3 id="storage-amazon-s3_2">Storage - Amazon S3</h3>
-<p><strong>Container Images &amp; Artifacts</strong>:
-- Standard Storage: 300GB × $0.023/GB = <strong>$6.90/month</strong>
-- PUT/GET Requests: ~200,000 requests = <strong>$1.00/month</strong></p>
-<p><strong>Backup Storage</strong>:
-- Standard-IA: 200GB × $0.0125/GB = <strong>$2.50/month</strong></p>
-<p><strong>Glacier Deep Archive</strong> (long-term backups):
-- 500GB × $0.00099/GB = <strong>$0.50/month</strong></p>
+<p><strong>Container Images &amp; Artifacts</strong>:</p>
+<ul>
+<li>Standard Storage: 300GB × $0.023/GB = <strong>$6.90/month</strong></li>
+<li>PUT/GET Requests: ~200,000 requests = <strong>$1.00/month</strong></li>
+</ul>
+<p><strong>Backup Storage</strong>:</p>
+<ul>
+<li>Standard-IA: 200GB × $0.0125/GB = <strong>$2.50/month</strong></li>
+</ul>
+<p><strong>Glacier Deep Archive</strong> (long-term backups):</p>
+<ul>
+<li>500GB × $0.00099/GB = <strong>$0.50/month</strong></li>
+</ul>
 <p><strong>S3 Subtotal</strong>: $10.90/month</p>
 <h3 id="container-registry-amazon-ecr_2">Container Registry - Amazon ECR</h3>
-<p><strong>Private Registry</strong>:
-- Storage: 100GB × $0.10/GB = <strong>$10.00/month</strong>
-- Data Transfer (within region): Included</p>
+<p><strong>Private Registry</strong>:</p>
+<ul>
+<li>Storage: 100GB × $0.10/GB = <strong>$10.00/month</strong></li>
+<li>Data Transfer (within region): Included</li>
+</ul>
 <p><strong>ECR Subtotal</strong>: $10.00/month</p>
 <h3 id="monitoring-amazon-cloudwatch_2">Monitoring - Amazon CloudWatch</h3>
-<p><strong>Logs</strong>:
-- Ingestion: 100GB × $0.50/GB = <strong>$50.00/month</strong>
-- Storage: 100GB × $0.03/GB = <strong>$3.00/month</strong></p>
-<p><strong>Metrics</strong>:
-- Custom Metrics: 500 metrics × $0.30 = <strong>$150.00/month</strong></p>
+<p><strong>Logs</strong>:</p>
+<ul>
+<li>Ingestion: 100GB × $0.50/GB = <strong>$50.00/month</strong></li>
+<li>Storage: 100GB × $0.03/GB = <strong>$3.00/month</strong></li>
+</ul>
+<p><strong>Metrics</strong>:</p>
+<ul>
+<li>Custom Metrics: 500 metrics × $0.30 = <strong>$150.00/month</strong></li>
+</ul>
 <p><strong>Alarms</strong>: 50 alarms × $0.10 = <strong>$5.00/month</strong></p>
 <p><strong>CloudWatch Subtotal</strong>: $208.00/month</p>
 <h3 id="aws-x-ray-distributed-tracing_1">AWS X-Ray (Distributed Tracing)</h3>
@@ -5402,18 +5472,26 @@
 <strong>Traces Retrieved</strong>: 500K traces × $0.50/million = <strong>$0.25/month</strong></p>
 <p><strong>X-Ray Subtotal</strong>: $25.25/month</p>
 <h3 id="secrets-management_1">Secrets Management</h3>
-<p><strong>Secrets Storage</strong>:
-- 25 secrets × $0.40/secret = <strong>$10.00/month</strong>
-- API Calls: 200,000 × $0.05/10,000 = <strong>$10.00/month</strong></p>
+<p><strong>Secrets Storage</strong>:</p>
+<ul>
+<li>25 secrets × $0.40/secret = <strong>$10.00/month</strong></li>
+<li>API Calls: 200,000 × $0.05/10,000 = <strong>$10.00/month</strong></li>
+</ul>
 <p><strong>Secrets Manager Subtotal</strong>: $20.00/month</p>
 <h3 id="networking_2">Networking</h3>
-<p><strong>NAT Gateways</strong> (2, one per AZ for HA):
-- Hours: $0.045/hour × 2 × 730 hours = <strong>$65.70/month</strong>
-- Data Processing: 300GB × $0.045/GB = <strong>$13.50/month</strong></p>
-<p><strong>Data Transfer</strong>:
-- Outbound to Internet: 200GB × $0.09/GB = <strong>$18.00/month</strong></p>
-<p><strong>VPC Endpoints</strong> (for S3, ECR):
-- 2 endpoints × $0.01/hour × 730 hours = <strong>$14.60/month</strong></p>
+<p><strong>NAT Gateways</strong> (2, one per AZ for HA):</p>
+<ul>
+<li>Hours: $0.045/hour × 2 × 730 hours = <strong>$65.70/month</strong></li>
+<li>Data Processing: 300GB × $0.045/GB = <strong>$13.50/month</strong></li>
+</ul>
+<p><strong>Data Transfer</strong>:</p>
+<ul>
+<li>Outbound to Internet: 200GB × $0.09/GB = <strong>$18.00/month</strong></li>
+</ul>
+<p><strong>VPC Endpoints</strong> (for S3, ECR):</p>
+<ul>
+<li>2 endpoints × $0.01/hour × 730 hours = <strong>$14.60/month</strong></li>
+</ul>
 <p><strong>Networking Subtotal</strong>: $111.80/month</p>
 <h3 id="aws-certificate-manager">AWS Certificate Manager</h3>
 <p><strong>SSL/TLS Certificates</strong>: Free (public certificates)</p>
@@ -5463,61 +5541,83 @@
 </tbody>
 </table>
 <h3 id="phased-rollout-recommended">Phased Rollout (Recommended)</h3>
-<p><strong>Phase 1: Months 1-3</strong> (Development Only)
-- Monthly: $378.82
-- Quarterly Total: <strong>$1,136.46</strong></p>
-<p><strong>Phase 2: Months 4-6</strong> (Development + Staging)
-- Monthly: $378.82 + $762.29 = $1,141.11
-- Quarterly Total: <strong>$3,423.33</strong></p>
-<p><strong>Phase 3: Months 7-12</strong> (All Three Environments)
-- Monthly: $3,224.97
-- Semi-Annual Total: <strong>$19,349.82</strong></p>
+<p><strong>Phase 1: Months 1-3</strong> (Development Only)</p>
+<ul>
+<li>Monthly: $378.82</li>
+<li>Quarterly Total: <strong>$1,136.46</strong></li>
+</ul>
+<p><strong>Phase 2: Months 4-6</strong> (Development + Staging)</p>
+<ul>
+<li>Monthly: $378.82 + $762.29 = $1,141.11</li>
+<li>Quarterly Total: <strong>$3,423.33</strong></li>
+</ul>
+<p><strong>Phase 3: Months 7-12</strong> (All Three Environments)</p>
+<ul>
+<li>Monthly: $3,224.97</li>
+<li>Semi-Annual Total: <strong>$19,349.82</strong></li>
+</ul>
 <p><strong>12-Month Phased Total</strong>: <strong>$23,909.61</strong></p>
 <hr />
 <h2 id="aws-activate-credit-request-justification">AWS Activate Credit Request Justification</h2>
 <h3 id="requested-amount-25000">Requested Amount: $25,000</h3>
 <p><strong>Allocation Strategy</strong>:</p>
-<p><strong>Phase 1 (Months 1-3)</strong>: $1,200 credits
-- Build production-grade reference implementation
-- Complete Terraform modules for AWS
-- Deploy and validate all platform services
-- Document deployment patterns</p>
-<p><strong>Phase 2 (Months 4-6)</strong>: $3,500 credits
-- Launch staging environment for testing
-- Begin Dojo learning platform development
-- Support initial community adopters (10-20 users)
-- Implement automated testing infrastructure</p>
-<p><strong>Phase 3 (Months 7-12)</strong>: $20,300 credits
-- Launch production environment for community
-- Scale Dojo platform to 200+ concurrent learners
-- Provide demo environments for enterprise prospects
-- Support growing open-source community</p>
+<p><strong>Phase 1 (Months 1-3)</strong>: $1,200 credits</p>
+<ul>
+<li>Build production-grade reference implementation</li>
+<li>Complete Terraform modules for AWS</li>
+<li>Deploy and validate all platform services</li>
+<li>Document deployment patterns</li>
+</ul>
+<p><strong>Phase 2 (Months 4-6)</strong>: $3,500 credits</p>
+<ul>
+<li>Launch staging environment for testing</li>
+<li>Begin Dojo learning platform development</li>
+<li>Support initial community adopters (10-20 users)</li>
+<li>Implement automated testing infrastructure</li>
+</ul>
+<p><strong>Phase 3 (Months 7-12)</strong>: $20,300 credits</p>
+<ul>
+<li>Launch production environment for community</li>
+<li>Scale Dojo platform to 200+ concurrent learners</li>
+<li>Provide demo environments for enterprise prospects</li>
+<li>Support growing open-source community</li>
+</ul>
 <p><strong>Reserve/Buffer</strong>: $0 (exact 12-month coverage)</p>
 <hr />
 <h2 id="cost-optimization-strategy">Cost Optimization Strategy</h2>
 <h3 id="immediate-optimizations-months-1-6">Immediate Optimizations (Months 1-6)</h3>
-<p><strong>Development Environment</strong>:
-- Use Spot Instances for worker nodes: <strong>30% savings</strong> = $27.33/month
-- Schedule shutdown during non-business hours (nights/weekends): <strong>60% uptime</strong> = $54.66/month saved
-- <strong>Combined Savings</strong>: $82/month or $492 over 6 months</p>
-<p><strong>Staging Environment</strong>:
-- Use Spot Instances where possible: <strong>25% savings</strong> = $60.74/month
-- Schedule shutdown outside testing windows: <strong>40% savings</strong> = $140.79/month
-- <strong>Combined Savings</strong>: $201.53/month or $1,209 over 6 months</p>
+<p><strong>Development Environment</strong>:</p>
+<ul>
+<li>Use Spot Instances for worker nodes: <strong>30% savings</strong> = $27.33/month</li>
+<li>Schedule shutdown during non-business hours (nights/weekends): <strong>60% uptime</strong> = $54.66/month saved</li>
+<li><strong>Combined Savings</strong>: $82/month or $492 over 6 months</li>
+</ul>
+<p><strong>Staging Environment</strong>:</p>
+<ul>
+<li>Use Spot Instances where possible: <strong>25% savings</strong> = $60.74/month</li>
+<li>Schedule shutdown outside testing windows: <strong>40% savings</strong> = $140.79/month</li>
+<li><strong>Combined Savings</strong>: $201.53/month or $1,209 over 6 months</li>
+</ul>
 <p><strong>Total Phase 1-2 Savings</strong>: $1,701 over 6 months</p>
 <h3 id="long-term-optimizations-months-7-12">Long-Term Optimizations (Months 7-12)</h3>
-<p><strong>Reserved Instances</strong> (1-year commitment after validation):
-- EKS Worker Nodes: <strong>40% savings</strong> = $291.53/month
-- RDS Instances: <strong>35% savings</strong> = $133.84/month
-- <strong>Combined Savings</strong>: $425.37/month or $2,552 over 6 months</p>
-<p><strong>Auto-Scaling Policies</strong>:
-- Scale down during low-traffic periods (nights): <strong>15% compute savings</strong> = $109.32/month
-- Right-size instances based on utilization: <strong>10% additional savings</strong> = $72.88/month
-- <strong>Combined Savings</strong>: $182.20/month or $1,093 over 6 months</p>
-<p><strong>Storage Optimization</strong>:
-- Lifecycle policies for S3 (move to IA after 30 days): <strong>20% savings</strong> = $2.18/month
-- EBS snapshot management (delete old snapshots): <strong>10% savings</strong> = $9.60/month
-- <strong>Combined Savings</strong>: $11.78/month or $71 over 6 months</p>
+<p><strong>Reserved Instances</strong> (1-year commitment after validation):</p>
+<ul>
+<li>EKS Worker Nodes: <strong>40% savings</strong> = $291.53/month</li>
+<li>RDS Instances: <strong>35% savings</strong> = $133.84/month</li>
+<li><strong>Combined Savings</strong>: $425.37/month or $2,552 over 6 months</li>
+</ul>
+<p><strong>Auto-Scaling Policies</strong>:</p>
+<ul>
+<li>Scale down during low-traffic periods (nights): <strong>15% compute savings</strong> = $109.32/month</li>
+<li>Right-size instances based on utilization: <strong>10% additional savings</strong> = $72.88/month</li>
+<li><strong>Combined Savings</strong>: $182.20/month or $1,093 over 6 months</li>
+</ul>
+<p><strong>Storage Optimization</strong>:</p>
+<ul>
+<li>Lifecycle policies for S3 (move to IA after 30 days): <strong>20% savings</strong> = $2.18/month</li>
+<li>EBS snapshot management (delete old snapshots): <strong>10% savings</strong> = $9.60/month</li>
+<li><strong>Combined Savings</strong>: $11.78/month or $71 over 6 months</li>
+</ul>
 <p><strong>Total Phase 3 Savings</strong>: $3,716 over 6 months</p>
 <h3 id="projected-12-month-cost-with-optimizations">Projected 12-Month Cost with Optimizations</h3>
 <ul>
@@ -5529,30 +5629,38 @@
 <hr />
 <h2 id="monitoring-and-cost-control">Monitoring and Cost Control</h2>
 <h3 id="aws-cost-management-tools">AWS Cost Management Tools</h3>
-<p><strong>AWS Budgets</strong>:
-- Set monthly budget alerts at 80%, 100%, 120% thresholds
-- Email notifications to team and AWS billing contact
-- Automatic notifications for anomaly detection</p>
-<p><strong>Cost Allocation Tags</strong>:
+<p><strong>AWS Budgets</strong>:</p>
+<ul>
+<li>Set monthly budget alerts at 80%, 100%, 120% thresholds</li>
+<li>Email notifications to team and AWS billing contact</li>
+<li>Automatic notifications for anomaly detection</li>
+</ul>
+<p><strong>Cost Allocation Tags</strong>:</p>
 <div class="highlight"><pre><span></span><code>Environment: [dev|staging|prod]
 Project: fawkes
 Component: [eks|rds|s3|alb|cloudwatch]
 Owner: platform-team
 CostCenter: engineering
-</code></pre></div></p>
-<p><strong>AWS Cost Explorer</strong>:
-- Weekly cost reviews
-- Identify cost anomalies
-- Track savings from optimizations</p>
-<p><strong>Third-Party Tools</strong> (optional):
-- CloudHealth or CloudCheckr for advanced cost optimization
-- Infracost for Terraform cost estimation in CI/CD</p>
+</code></pre></div>
+<p><strong>AWS Cost Explorer</strong>:</p>
+<ul>
+<li>Weekly cost reviews</li>
+<li>Identify cost anomalies</li>
+<li>Track savings from optimizations</li>
+</ul>
+<p><strong>Third-Party Tools</strong> (optional):</p>
+<ul>
+<li>CloudHealth or CloudCheckr for advanced cost optimization</li>
+<li>Infracost for Terraform cost estimation in CI/CD</li>
+</ul>
 <h3 id="cost-anomaly-detection">Cost Anomaly Detection</h3>
-<p><strong>Automated Alerts for</strong>:
-- Unexpected traffic spikes (LCU increases)
-- Storage growth exceeding 20% month-over-month
-- Compute utilization above 85% (scale up) or below 30% (scale down)
-- Data transfer costs exceeding $100/month</p>
+<p><strong>Automated Alerts for</strong>:</p>
+<ul>
+<li>Unexpected traffic spikes (LCU increases)</li>
+<li>Storage growth exceeding 20% month-over-month</li>
+<li>Compute utilization above 85% (scale up) or below 30% (scale down)</li>
+<li>Data transfer costs exceeding $100/month</li>
+</ul>
 <h3 id="monthly-cost-review-process">Monthly Cost Review Process</h3>
 <p><strong>Week 1</strong>: Review previous month's spend vs. budget
 <strong>Week 2</strong>: Analyze cost trends and usage patterns
@@ -5617,32 +5725,42 @@ CostCenter: engineering
 <hr />
 <h2 id="roi-analysis">ROI Analysis</h2>
 <h3 id="value-delivered-by-aws-credits">Value Delivered by AWS Credits</h3>
-<p><strong>Direct Benefits</strong>:
-- <strong>Platform Development</strong>: 12 months of uninterrupted development
-- <strong>Community Support</strong>: 200+ learners trained on Dojo platform
-- <strong>Enterprise Demos</strong>: 20+ prospect demonstrations
-- <strong>Open Source Contributions</strong>: Reference implementation for AWS deployments</p>
-<p><strong>Indirect Benefits</strong>:
-- <strong>AWS Advocacy</strong>: Every Dojo graduate learns AWS-native platform engineering
-- <strong>Ecosystem Growth</strong>: Fawkes users become AWS customers
-- <strong>Documentation</strong>: Comprehensive AWS deployment guides benefit broader community
-- <strong>Best Practices</strong>: Showcase modern AWS architecture patterns</p>
+<p><strong>Direct Benefits</strong>:</p>
+<ul>
+<li><strong>Platform Development</strong>: 12 months of uninterrupted development</li>
+<li><strong>Community Support</strong>: 200+ learners trained on Dojo platform</li>
+<li><strong>Enterprise Demos</strong>: 20+ prospect demonstrations</li>
+<li><strong>Open Source Contributions</strong>: Reference implementation for AWS deployments</li>
+</ul>
+<p><strong>Indirect Benefits</strong>:</p>
+<ul>
+<li><strong>AWS Advocacy</strong>: Every Dojo graduate learns AWS-native platform engineering</li>
+<li><strong>Ecosystem Growth</strong>: Fawkes users become AWS customers</li>
+<li><strong>Documentation</strong>: Comprehensive AWS deployment guides benefit broader community</li>
+<li><strong>Best Practices</strong>: Showcase modern AWS architecture patterns</li>
+</ul>
 <h3 id="expected-outcomes-12-month-horizon">Expected Outcomes (12-Month Horizon)</h3>
-<p><strong>Community Metrics</strong>:
-- 500+ GitHub stars
-- 50+ active contributors
-- 200+ Dojo learners certified
-- 20+ organizations adopting Fawkes on AWS</p>
-<p><strong>Business Metrics</strong>:
-- 10 enterprise pilot programs
-- $10K MRR from managed service beta
-- 5 partnerships with training organizations
-- 100+ job placements for Dojo graduates</p>
-<p><strong>AWS-Specific Outcomes</strong>:
-- 30+ organizations migrated to AWS using Fawkes
-- $500K+ annual AWS spend driven by Fawkes users
-- 200+ engineers trained on AWS services
-- Contribution to AWS EKS/RDS/CloudWatch ecosystems</p>
+<p><strong>Community Metrics</strong>:</p>
+<ul>
+<li>500+ GitHub stars</li>
+<li>50+ active contributors</li>
+<li>200+ Dojo learners certified</li>
+<li>20+ organizations adopting Fawkes on AWS</li>
+</ul>
+<p><strong>Business Metrics</strong>:</p>
+<ul>
+<li>10 enterprise pilot programs</li>
+<li>$10K MRR from managed service beta</li>
+<li>5 partnerships with training organizations</li>
+<li>100+ job placements for Dojo graduates</li>
+</ul>
+<p><strong>AWS-Specific Outcomes</strong>:</p>
+<ul>
+<li>30+ organizations migrated to AWS using Fawkes</li>
+<li>$500K+ annual AWS spend driven by Fawkes users</li>
+<li>200+ engineers trained on AWS services</li>
+<li>Contribution to AWS EKS/RDS/CloudWatch ecosystems</li>
+</ul>
 <hr />
 <h2 id="conclusion">Conclusion</h2>
 <p><strong>Total AWS Investment Required</strong>: $23,910 over 12 months (phased)
@@ -5656,24 +5774,28 @@ CostCenter: engineering
 <li><strong>Long-Term AWS Commitment</strong>: Every Fawkes user is a potential AWS customer</li>
 <li><strong>Cost-Effective</strong>: Phased approach validates value before full-scale deployment</li>
 </ol>
-<p><strong>Next Steps</strong>:
-1. Secure AWS Activate credits ($25,000)
-2. Deploy Phase 1 (Development environment)
-3. Build reference implementation and documentation
-4. Launch Dojo platform (Phase 2-3)
-5. Support community growth and enterprise adoption</p>
+<p><strong>Next Steps</strong>:</p>
+<ol>
+<li>Secure AWS Activate credits ($25,000)</li>
+<li>Deploy Phase 1 (Development environment)</li>
+<li>Build reference implementation and documentation</li>
+<li>Launch Dojo platform (Phase 2-3)</li>
+<li>Support community growth and enterprise adoption</li>
+</ol>
 <hr />
 <h2 id="appendix-aws-pricing-assumptions">Appendix: AWS Pricing Assumptions</h2>
 <p><strong>Pricing effective as of</strong>: October 2025
 <strong>Region</strong>: US-East-1 (N. Virginia)
 <strong>Currency</strong>: USD
 <strong>Pricing Model</strong>: On-Demand (with Reserved Instance projections)</p>
-<p><strong>Sources</strong>:
-- <a href="https://calculator.aws">AWS Pricing Calculator</a>
-- <a href="https://aws.amazon.com/eks/pricing/">Amazon EKS Pricing</a>
-- <a href="https://aws.amazon.com/rds/postgresql/pricing/">Amazon RDS Pricing</a>
-- <a href="https://aws.amazon.com/s3/pricing/">Amazon S3 Pricing</a>
-- <a href="https://aws.amazon.com/elasticloadbalancing/pricing/">Elastic Load Balancing Pricing</a></p>
+<p><strong>Sources</strong>:</p>
+<ul>
+<li><a href="https://calculator.aws">AWS Pricing Calculator</a></li>
+<li><a href="https://aws.amazon.com/eks/pricing/">Amazon EKS Pricing</a></li>
+<li><a href="https://aws.amazon.com/rds/postgresql/pricing/">Amazon RDS Pricing</a></li>
+<li><a href="https://aws.amazon.com/s3/pricing/">Amazon S3 Pricing</a></li>
+<li><a href="https://aws.amazon.com/elasticloadbalancing/pricing/">Elastic Load Balancing Pricing</a></li>
+</ul>
 <p><strong>Disclaimer</strong>: Actual costs may vary based on usage patterns, data transfer, and AWS pricing changes. This estimate provides a conservative baseline for planning purposes.</p>
 <hr />
 <p><strong>Document Owner</strong>: Fawkes Platform Team

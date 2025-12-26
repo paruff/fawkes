@@ -4901,90 +4901,110 @@ Epic: DORA 2023 Foundation</p>
 <h4 id="1-opentelemetry-collector-deployment">1. OpenTelemetry Collector Deployment</h4>
 <p><strong>File</strong>: <code>platform/apps/opentelemetry/otel-collector-application.yaml</code></p>
 <p>The collector is deployed as a DaemonSet with the following configuration:</p>
-<p><strong>Deployment Mode</strong>:
-- DaemonSet running on all schedulable nodes
-- Deployed in <code>monitoring</code> namespace
-- Managed via ArgoCD Application</p>
-<p><strong>Receivers</strong> (Data Ingestion):
-- ✅ <strong>OTLP gRPC</strong> (port 4317) - Receives traces, metrics, logs from instrumented applications
-- ✅ <strong>OTLP HTTP</strong> (port 4318) - Alternative HTTP endpoint for OTLP
-- ✅ <strong>Prometheus</strong> - Scrapes metrics from pods with <code>prometheus.io/scrape=true</code> annotation
-- ✅ <strong>Kubeletstats</strong> - Collects container, pod, and node metrics from Kubelet
-- ✅ <strong>Hostmetrics</strong> - Collects system-level metrics (CPU, memory, disk, network)
-- ✅ <strong>Filelog</strong> - Collects logs from container stdout/stderr via <code>/var/log/containers</code></p>
-<p><strong>Processors</strong> (Data Transformation):
-- Memory limiter (prevents OOM)
-- Batch processors (efficient export)
-- K8s attributes processor (enriches with pod/namespace/container metadata)
-- Resource detection (system and environment attributes)
-- Transform processors (adds cluster and environment context)
-- Attributes processors (log enrichment and trace security scrubbing)
-- Probabilistic sampler (configurable trace sampling)</p>
-<p><strong>Exporters</strong> (Data Export):
-- ✅ <strong>Prometheus Remote Write</strong> - Exports metrics to Prometheus at <code>prometheus-prometheus.monitoring.svc.cluster.local:9090</code>
-- ✅ <strong>OpenSearch</strong> - Exports logs to OpenSearch at <code>opensearch-cluster-master.logging.svc.cluster.local:9200</code>
-- ✅ <strong>OTLP/Tempo</strong> - Exports traces to Tempo at <code>tempo.monitoring.svc.cluster.local:4317</code></p>
-<p><strong>Pipelines</strong>:
-1. <strong>Metrics Pipeline</strong>: otlp → prometheus → kubeletstats → hostmetrics → processors → prometheusremotewrite
-2. <strong>Logs Pipeline</strong>: filelog → otlp → processors → opensearch
-3. <strong>Traces Pipeline</strong>: otlp → processors → tempo</p>
+<p><strong>Deployment Mode</strong>:</p>
+<ul>
+<li>DaemonSet running on all schedulable nodes</li>
+<li>Deployed in <code>monitoring</code> namespace</li>
+<li>Managed via ArgoCD Application</li>
+</ul>
+<p><strong>Receivers</strong> (Data Ingestion):</p>
+<ul>
+<li>✅ <strong>OTLP gRPC</strong> (port 4317) - Receives traces, metrics, logs from instrumented applications</li>
+<li>✅ <strong>OTLP HTTP</strong> (port 4318) - Alternative HTTP endpoint for OTLP</li>
+<li>✅ <strong>Prometheus</strong> - Scrapes metrics from pods with <code>prometheus.io/scrape=true</code> annotation</li>
+<li>✅ <strong>Kubeletstats</strong> - Collects container, pod, and node metrics from Kubelet</li>
+<li>✅ <strong>Hostmetrics</strong> - Collects system-level metrics (CPU, memory, disk, network)</li>
+<li>✅ <strong>Filelog</strong> - Collects logs from container stdout/stderr via <code>/var/log/containers</code></li>
+</ul>
+<p><strong>Processors</strong> (Data Transformation):</p>
+<ul>
+<li>Memory limiter (prevents OOM)</li>
+<li>Batch processors (efficient export)</li>
+<li>K8s attributes processor (enriches with pod/namespace/container metadata)</li>
+<li>Resource detection (system and environment attributes)</li>
+<li>Transform processors (adds cluster and environment context)</li>
+<li>Attributes processors (log enrichment and trace security scrubbing)</li>
+<li>Probabilistic sampler (configurable trace sampling)</li>
+</ul>
+<p><strong>Exporters</strong> (Data Export):</p>
+<ul>
+<li>✅ <strong>Prometheus Remote Write</strong> - Exports metrics to Prometheus at <code>prometheus-prometheus.monitoring.svc.cluster.local:9090</code></li>
+<li>✅ <strong>OpenSearch</strong> - Exports logs to OpenSearch at <code>opensearch-cluster-master.logging.svc.cluster.local:9200</code></li>
+<li>✅ <strong>OTLP/Tempo</strong> - Exports traces to Tempo at <code>tempo.monitoring.svc.cluster.local:4317</code></li>
+</ul>
+<p><strong>Pipelines</strong>:</p>
+<ol>
+<li><strong>Metrics Pipeline</strong>: otlp → prometheus → kubeletstats → hostmetrics → processors → prometheusremotewrite</li>
+<li><strong>Logs Pipeline</strong>: filelog → otlp → processors → opensearch</li>
+<li><strong>Traces Pipeline</strong>: otlp → processors → tempo</li>
+</ol>
 <h4 id="2-bdd-acceptance-tests">2. BDD Acceptance Tests</h4>
 <p><strong>File</strong>: <code>tests/bdd/features/opentelemetry-deployment.feature</code></p>
-<p>Created 22 comprehensive scenarios covering:
-- Namespace and ArgoCD application validation
-- DaemonSet deployment and pod readiness
-- OTLP receivers (gRPC and HTTP) accessibility
-- Prometheus receiver configuration
-- All exporter configurations (Prometheus, OpenSearch, Tempo)
-- Pipeline configurations for metrics, logs, and traces
-- Health check and diagnostic endpoints
-- Kubernetes attribute enrichment
-- Sample trace generation and validation
-- Resource limits and security context
-- Volume mounts for log collection
-- Tolerations for control plane nodes
-- ServiceMonitor/PodMonitor for self-monitoring</p>
+<p>Created 22 comprehensive scenarios covering:</p>
+<ul>
+<li>Namespace and ArgoCD application validation</li>
+<li>DaemonSet deployment and pod readiness</li>
+<li>OTLP receivers (gRPC and HTTP) accessibility</li>
+<li>Prometheus receiver configuration</li>
+<li>All exporter configurations (Prometheus, OpenSearch, Tempo)</li>
+<li>Pipeline configurations for metrics, logs, and traces</li>
+<li>Health check and diagnostic endpoints</li>
+<li>Kubernetes attribute enrichment</li>
+<li>Sample trace generation and validation</li>
+<li>Resource limits and security context</li>
+<li>Volume mounts for log collection</li>
+<li>Tolerations for control plane nodes</li>
+<li>ServiceMonitor/PodMonitor for self-monitoring</li>
+</ul>
 <h4 id="3-sample-instrumented-application">3. Sample Instrumented Application</h4>
 <p><strong>Directory</strong>: <code>platform/apps/opentelemetry/sample-app/</code></p>
 <p>Created a Python Flask application with full OpenTelemetry instrumentation:</p>
-<p><strong>Features</strong>:
-- Automatic instrumentation for Flask and HTTP requests
-- Multiple endpoints demonstrating different trace scenarios:
-  - <code>/</code> - Service information
-  - <code>/health</code> - Health check
-  - <code>/hello/&lt;name&gt;</code> - Simple greeting with basic tracing
-  - <code>/work</code> - Complex operation with nested spans (database, API, processing)
-  - <code>/error</code> - Intentional error to demonstrate error tracing
-- Structured logging with trace/span correlation
-- Configured to send traces to OTLP collector endpoint
-- Kubernetes-ready with deployment manifests</p>
-<p><strong>Files</strong>:
-- <code>app.py</code> - Flask application with OpenTelemetry instrumentation
-- <code>requirements.txt</code> - Python dependencies
-- <code>Dockerfile</code> - Container image definition
-- <code>deployment.yaml</code> - Kubernetes manifests (Namespace, Deployment, Service, ServiceAccount)
-- <code>README.md</code> - Usage documentation</p>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Automatic instrumentation for Flask and HTTP requests</li>
+<li>Multiple endpoints demonstrating different trace scenarios:</li>
+<li><code>/</code> - Service information</li>
+<li><code>/health</code> - Health check</li>
+<li><code>/hello/&lt;name&gt;</code> - Simple greeting with basic tracing</li>
+<li><code>/work</code> - Complex operation with nested spans (database, API, processing)</li>
+<li><code>/error</code> - Intentional error to demonstrate error tracing</li>
+<li>Structured logging with trace/span correlation</li>
+<li>Configured to send traces to OTLP collector endpoint</li>
+<li>Kubernetes-ready with deployment manifests</li>
+</ul>
+<p><strong>Files</strong>:</p>
+<ul>
+<li><code>app.py</code> - Flask application with OpenTelemetry instrumentation</li>
+<li><code>requirements.txt</code> - Python dependencies</li>
+<li><code>Dockerfile</code> - Container image definition</li>
+<li><code>deployment.yaml</code> - Kubernetes manifests (Namespace, Deployment, Service, ServiceAccount)</li>
+<li><code>README.md</code> - Usage documentation</li>
+</ul>
 <h4 id="4-validation-test-script">4. Validation Test Script</h4>
 <p><strong>File</strong>: <code>platform/apps/opentelemetry/test-otel-deployment.sh</code></p>
-<p>Automated validation script that:
-1. Checks monitoring namespace exists
-2. Verifies OpenTelemetry Collector DaemonSet deployment
-3. Validates OTLP ports are exposed (4317, 4318)
-4. Tests health endpoint accessibility
-5. Deploys sample application
-6. Generates sample traces
-7. Verifies exporter targets are available
-8. Checks collector logs for trace activity</p>
+<p>Automated validation script that:</p>
+<ol>
+<li>Checks monitoring namespace exists</li>
+<li>Verifies OpenTelemetry Collector DaemonSet deployment</li>
+<li>Validates OTLP ports are exposed (4317, 4318)</li>
+<li>Tests health endpoint accessibility</li>
+<li>Deploys sample application</li>
+<li>Generates sample traces</li>
+<li>Verifies exporter targets are available</li>
+<li>Checks collector logs for trace activity</li>
+</ol>
 <h4 id="5-updated-documentation">5. Updated Documentation</h4>
 <p><strong>File</strong>: <code>platform/apps/opentelemetry/README.md</code></p>
-<p>Enhanced documentation includes:
-- Deployment status and architecture
-- Configuration overview
-- Deployment verification commands
-- Testing instructions
-- Sample application usage
-- Acceptance criteria checklist
-- Links to relevant ADRs and architecture docs</p>
+<p>Enhanced documentation includes:</p>
+<ul>
+<li>Deployment status and architecture</li>
+<li>Configuration overview</li>
+<li>Deployment verification commands</li>
+<li>Testing instructions</li>
+<li>Sample application usage</li>
+<li>Acceptance criteria checklist</li>
+<li>Links to relevant ADRs and architecture docs</li>
+</ul>
 <h2 id="architecture-integration">Architecture Integration</h2>
 <h3 id="data-flow">Data Flow</h3>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
@@ -5035,10 +5055,12 @@ Epic: DORA 2023 Foundation</p>
 <li><strong>Service account authentication</strong>: Uses Kubernetes ServiceAccount for API access</li>
 </ul>
 <h3 id="resource-allocation">Resource Allocation</h3>
-<p>Per DaemonSet pod:
-- <strong>Requests</strong>: 200m CPU, 512Mi memory
-- <strong>Limits</strong>: 1000m CPU, 1Gi memory
-- Configured for 5+ minute buffer retention during backend failures</p>
+<p>Per DaemonSet pod:</p>
+<ul>
+<li><strong>Requests</strong>: 200m CPU, 512Mi memory</li>
+<li><strong>Limits</strong>: 1000m CPU, 1Gi memory</li>
+<li>Configured for 5+ minute buffer retention during backend failures</li>
+</ul>
 <h2 id="acceptance-criteria-validation">Acceptance Criteria Validation</h2>
 <table>
 <thead>
@@ -5126,11 +5148,13 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>opentelemetry-collector<span class="w"> </span>-f
 </code></pre></div>
 <h3 id="metrics">Metrics</h3>
-<p>The collector exposes self-monitoring metrics at port 8888:
-- <code>otelcol_receiver_accepted_spans</code> - Spans accepted
-- <code>otelcol_receiver_refused_spans</code> - Spans refused
-- <code>otelcol_exporter_sent_spans</code> - Spans sent to backends
-- <code>otelcol_processor_batch_batch_send_size</code> - Batch sizes</p>
+<p>The collector exposes self-monitoring metrics at port 8888:</p>
+<ul>
+<li><code>otelcol_receiver_accepted_spans</code> - Spans accepted</li>
+<li><code>otelcol_receiver_refused_spans</code> - Spans refused</li>
+<li><code>otelcol_exporter_sent_spans</code> - Spans sent to backends</li>
+<li><code>otelcol_processor_batch_batch_send_size</code> - Batch sizes</li>
+</ul>
 <h2 id="known-limitations">Known Limitations</h2>
 <ol>
 <li><strong>OpenSearch dependency</strong>: Logs exporter requires OpenSearch to be deployed (may show warnings if not available)</li>

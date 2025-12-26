@@ -5399,28 +5399,32 @@
 </ol>
 <h3 id="the-os-patching-problem">The OS Patching Problem</h3>
 <p>A critical vulnerability is discovered in <code>glibc</code> (the C library used by most Linux distros). Your images are affected.</p>
-<p><strong>Dockerfile Approach:</strong>
-1. Update base image tag in every Dockerfile (<code>FROM node:16.20.1</code> → <code>FROM node:16.20.2</code>)
-2. Rebuild every application image
-3. Re-test every application
-4. Re-deploy every application
-5. Hope you found all the Dockerfiles (did you check that archived repo?)</p>
+<p><strong>Dockerfile Approach:</strong></p>
+<ol>
+<li>Update base image tag in every Dockerfile (<code>FROM node:16.20.1</code> → <code>FROM node:16.20.2</code>)</li>
+<li>Rebuild every application image</li>
+<li>Re-test every application</li>
+<li>Re-deploy every application</li>
+<li>Hope you found all the Dockerfiles (did you check that archived repo?)</li>
+</ol>
 <p><strong>Time to Patch</strong>: Days to weeks
 <strong>MTTR Impact</strong>: ⬆️ (High)
 <strong>Deployment Frequency</strong>: ⬇️ (Slowed by rebuild toil)</p>
 <h3 id="the-works-on-my-machine-syndrome">The "Works on My Machine" Syndrome</h3>
-<p>Developers optimize for local development:
+<p>Developers optimize for local development:</p>
 <div class="highlight"><pre><span></span><code><span class="c"># &quot;I need curl for debugging&quot;</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl<span class="w"> </span>wget<span class="w"> </span>netcat<span class="w"> </span>vim
 
 <span class="c"># &quot;I&#39;ll clean this up later&quot; (Narrator: They didn&#39;t)</span>
 <span class="k">COPY</span><span class="w"> </span>devtools.sh<span class="w"> </span>/usr/local/bin/
-</code></pre></div></p>
-<p><strong>Result:</strong>
-- Production images bloated with debug tools
-- Larger attack surface
-- Slower image pulls
-- Container sprawl: 1GB+ images for 10MB applications</p>
+</code></pre></div>
+<p><strong>Result:</strong></p>
+<ul>
+<li>Production images bloated with debug tools</li>
+<li>Larger attack surface</li>
+<li>Slower image pulls</li>
+<li>Container sprawl: 1GB+ images for 10MB applications</li>
+</ul>
 <h2 id="the-solution-cloud-native-buildpacks">The Solution: Cloud Native Buildpacks</h2>
 <h3 id="what-are-buildpacks">What Are Buildpacks?</h3>
 <p>Buildpacks are <strong>pluggable, modular components</strong> that inspect your source code, detect the framework, install dependencies, and build an optimized container image—<strong>without a Dockerfile</strong>.</p>
@@ -5432,20 +5436,24 @@ pack<span class="w"> </span>build<span class="w"> </span>my-app<span class="w"> 
 <span class="c1"># Buildpack configures: Start command, environment</span>
 <span class="c1"># Buildpack outputs: Optimized multi-layer image</span>
 </code></pre></div>
-<p><strong>The Magic:</strong>
-- <strong>Detection</strong>: Buildpacks analyze source code (<code>package.json</code> → Node.js, <code>pom.xml</code> → Java)
-- <strong>Installation</strong>: Install exactly what's needed (no <code>apt-get</code> required)
-- <strong>Caching</strong>: Smart layer caching (dependencies separate from app code)
-- <strong>Optimization</strong>: Production-ready defaults (minimal base images, non-root users)</p>
+<p><strong>The Magic:</strong></p>
+<ul>
+<li><strong>Detection</strong>: Buildpacks analyze source code (<code>package.json</code> → Node.js, <code>pom.xml</code> → Java)</li>
+<li><strong>Installation</strong>: Install exactly what's needed (no <code>apt-get</code> required)</li>
+<li><strong>Caching</strong>: Smart layer caching (dependencies separate from app code)</li>
+<li><strong>Optimization</strong>: Production-ready defaults (minimal base images, non-root users)</li>
+</ul>
 <h3 id="the-rebase-superpower">The Rebase Superpower</h3>
 <p>This is where Buildpacks shine:</p>
 <p><strong>Scenario</strong>: A CVE is found in Ubuntu base layer.</p>
-<p><strong>Buildpack Approach:</strong>
-1. Paketo team publishes new base image (patched)
-2. Run <code>pack rebase my-app:v1.2.3</code> (no source code needed!)
-3. New image layers swapped in <strong>without rebuilding</strong>
-4. Push updated image to registry
-5. Deploy with confidence (app layers untouched)</p>
+<p><strong>Buildpack Approach:</strong></p>
+<ol>
+<li>Paketo team publishes new base image (patched)</li>
+<li>Run <code>pack rebase my-app:v1.2.3</code> (no source code needed!)</li>
+<li>New image layers swapped in <strong>without rebuilding</strong></li>
+<li>Push updated image to registry</li>
+<li>Deploy with confidence (app layers untouched)</li>
+</ol>
 <p><strong>Time to Patch</strong>: Minutes
 <strong>MTTR Impact</strong>: ⬇️ (Low)
 <strong>Deployment Frequency</strong>: Maintains high (no rebuild bottleneck)</p>
@@ -5456,11 +5464,13 @@ pack<span class="w"> </span>build<span class="w"> </span>my-app<span class="w"> 
 
     style C fill:#ff6b6b
     style D fill:#4CAF50</code></pre>
-<p><strong>Why This Matters:</strong>
-- <strong>No app rebuild</strong> - Don't re-run tests, don't involve developers
-- <strong>No behavior change</strong> - App code and dependencies identical
-- <strong>Fast patching</strong> - Security team can patch without developer involvement
-- <strong>Supply chain security</strong> - Base images maintained by Paketo community, not random Dockerfiles</p>
+<p><strong>Why This Matters:</strong></p>
+<ul>
+<li><strong>No app rebuild</strong> - Don't re-run tests, don't involve developers</li>
+<li><strong>No behavior change</strong> - App code and dependencies identical</li>
+<li><strong>Fast patching</strong> - Security team can patch without developer involvement</li>
+<li><strong>Supply chain security</strong> - Base images maintained by Paketo community, not random Dockerfiles</li>
+</ul>
 <h3 id="standardization-the-platform-advantage">Standardization: The Platform Advantage</h3>
 <p>With Buildpacks, Fawkes enforces <strong>sensible defaults</strong>:</p>
 <table>
@@ -5499,11 +5509,13 @@ pack<span class="w"> </span>build<span class="w"> </span>my-app<span class="w"> 
 </tr>
 </tbody>
 </table>
-<p><strong>Developer Experience:</strong>
-- <strong>No Dockerfile to write</strong> - Just push code
-- <strong>No OS knowledge required</strong> - Don't need to know Alpine vs. Debian
-- <strong>No "copy-paste from Stack Overflow"</strong> - Buildpack handles it
-- <strong>Consistent behavior</strong> - All Node.js apps built the same way</p>
+<p><strong>Developer Experience:</strong></p>
+<ul>
+<li><strong>No Dockerfile to write</strong> - Just push code</li>
+<li><strong>No OS knowledge required</strong> - Don't need to know Alpine vs. Debian</li>
+<li><strong>No "copy-paste from Stack Overflow"</strong> - Buildpack handles it</li>
+<li><strong>Consistent behavior</strong> - All Node.js apps built the same way</li>
+</ul>
 <h2 id="trade-offs-what-you-gain-and-lose">Trade-Offs: What You Gain and Lose</h2>
 <h3 id="what-buildpacks-give-you">What Buildpacks Give You</h3>
 <table>
@@ -5580,15 +5592,19 @@ pack<span class="w"> </span>build<span class="w"> </span>my-app<span class="w"> 
 </table>
 <h3 id="when-to-use-dockerfiles-anyway">When to Use Dockerfiles Anyway</h3>
 <p>Buildpacks are the <strong>Golden Path</strong>, but not the <strong>Only Path</strong>:</p>
-<p><strong>Use Buildpacks When:</strong>
-- ✅ Standard web application (Node.js, Java, Python, Go, Ruby, PHP, .NET)
-- ✅ Willing to follow framework conventions (<code>package.json</code>, <code>pom.xml</code>, etc.)
-- ✅ Value security automation over customization</p>
-<p><strong>Use Dockerfile When:</strong>
-- ⚠️ Truly unique requirements (custom OS, exotic dependencies)
-- ⚠️ Legacy app with specific build steps not automatable
-- ⚠️ Polyglot app (Node.js + Python + Java in one container—please don't)
-- ⚠️ Embedded systems or non-standard architectures</p>
+<p><strong>Use Buildpacks When:</strong></p>
+<ul>
+<li>✅ Standard web application (Node.js, Java, Python, Go, Ruby, PHP, .NET)</li>
+<li>✅ Willing to follow framework conventions (<code>package.json</code>, <code>pom.xml</code>, etc.)</li>
+<li>✅ Value security automation over customization</li>
+</ul>
+<p><strong>Use Dockerfile When:</strong></p>
+<ul>
+<li>⚠️ Truly unique requirements (custom OS, exotic dependencies)</li>
+<li>⚠️ Legacy app with specific build steps not automatable</li>
+<li>⚠️ Polyglot app (Node.js + Python + Java in one container—please don't)</li>
+<li>⚠️ Embedded systems or non-standard architectures</li>
+</ul>
 <p><strong>Fawkes Policy</strong>: Golden Path is Buildpacks. Dockerfile opt-out allowed with justification (architectural review required).</p>
 <h2 id="the-philosophy-platform-as-product">The Philosophy: Platform as Product</h2>
 <h3 id="the-paved-road-concept">The "Paved Road" Concept</h3>
@@ -5606,12 +5622,14 @@ pack<span class="w"> </span>build<span class="w"> </span>my-app<span class="w"> 
 
     style B fill:#4CAF50
     style C fill:#FFA726</code></pre>
-<p><strong>The Contract:</strong>
-- Platform team maintains buildpacks (updates, security patches, optimizations)
-- Developers follow conventions (standard project structure, framework best practices)
-- Everyone benefits (fast deploys, secure images, low cognitive load)</p>
+<p><strong>The Contract:</strong></p>
+<ul>
+<li>Platform team maintains buildpacks (updates, security patches, optimizations)</li>
+<li>Developers follow conventions (standard project structure, framework best practices)</li>
+<li>Everyone benefits (fast deploys, secure images, low cognitive load)</li>
+</ul>
 <h3 id="the-maintenance-burden-shift">The Maintenance Burden Shift</h3>
-<p><strong>Before Buildpacks (Dockerfile Era):</strong>
+<p><strong>Before Buildpacks (Dockerfile Era):</strong></p>
 <div class="highlight"><pre><span></span><code>Platform Team:
 - Writes &quot;recommended Dockerfile&quot; guide
 - Reviews 200 Dockerfiles in PRs
@@ -5621,8 +5639,8 @@ Developers:
 - Copy-paste Dockerfiles from other projects
 - Cargo-cult optimizations they don&#39;t understand
 - Ignore security patches (too much work)
-</code></pre></div></p>
-<p><strong>After Buildpacks:</strong>
+</code></pre></div>
+<p><strong>After Buildpacks:</strong></p>
 <div class="highlight"><pre><span></span><code>Platform Team:
 - Maintains 1 buildpack configuration
 - Updates platform builder when patches released
@@ -5633,7 +5651,7 @@ Developers:
 - Push code
 - Deployments happen
 - (No Dockerfile to maintain)
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Who Wins?</strong> Everyone. Platform team scales better. Developers ship faster. Security team sleeps better.</p>
 <h2 id="real-world-example-the-log4shell-response">Real-World Example: The Log4Shell Response</h2>
 <p>In December 2021, the <strong>Log4Shell</strong> vulnerability (CVE-2021-44228) was discovered in Log4j, affecting millions of Java applications.</p>
@@ -5668,14 +5686,16 @@ Developers:
 <strong>Reality</strong>: 90% follow convention happily. 10% understand enough to safely override.</p>
 <h3 id="principle-2-separation-of-concerns">Principle 2: Separation of Concerns</h3>
 <p><strong>Dockerfile</strong>: Developer is responsible for OS, runtime, dependencies, app code, optimization, security.</p>
-<p><strong>Buildpack</strong>:
-- <strong>Platform Team</strong>: Maintains OS, runtime, build tools (centralized expertise)
-- <strong>Developer</strong>: Focuses on application code and business logic
-- <strong>Clear Boundary</strong>: <code>package.json</code> is the interface; everything below is abstracted</p>
+<p><strong>Buildpack</strong>:</p>
+<ul>
+<li><strong>Platform Team</strong>: Maintains OS, runtime, build tools (centralized expertise)</li>
+<li><strong>Developer</strong>: Focuses on application code and business logic</li>
+<li><strong>Clear Boundary</strong>: <code>package.json</code> is the interface; everything below is abstracted</li>
+</ul>
 <h3 id="principle-3-scale-through-standardization">Principle 3: Scale Through Standardization</h3>
-<p><strong>The Formula:</strong>
+<p><strong>The Formula:</strong></p>
 <div class="highlight"><pre><span></span><code>Operational Efficiency = (Standard Patterns) / (Custom Snowflakes)
-</code></pre></div></p>
+</code></pre></div>
 <p>100 unique Dockerfiles = 100 maintenance burdens
 100 apps using 1 buildpack = 1 maintenance point</p>
 <p><strong>This is why platforms exist</strong>: To amortize expertise across many teams.</p>
@@ -5689,11 +5709,13 @@ Developers:
 </ol>
 <p><strong>Buildpacks are for scale</strong>, not because we doubt your skills.</p>
 <h3 id="buildpacks-are-a-black-box-i-dont-trust-what-i-dont-understand">"Buildpacks are a black box; I don't trust what I don't understand."</h3>
-<p><strong>Response</strong>:
-1. <strong>Buildpacks are open source</strong> - <a href="https://github.com/paketo-buildpacks">Paketo Buildpacks on GitHub</a>
-2. <strong>Full transparency</strong> - Run <code>pack build --verbose</code> to see every command
-3. <strong>SBOM generated</strong> - Bill of Materials shows exactly what's in your image
-4. <strong>Inspectable</strong> - <code>pack inspect-image my-app</code> shows layers, buildpacks used, metadata</p>
+<p><strong>Response</strong>:</p>
+<ol>
+<li><strong>Buildpacks are open source</strong> - <a href="https://github.com/paketo-buildpacks">Paketo Buildpacks on GitHub</a></li>
+<li><strong>Full transparency</strong> - Run <code>pack build --verbose</code> to see every command</li>
+<li><strong>SBOM generated</strong> - Bill of Materials shows exactly what's in your image</li>
+<li><strong>Inspectable</strong> - <code>pack inspect-image my-app</code> shows layers, buildpacks used, metadata</li>
+</ol>
 <p><strong>Dockerfiles can be black boxes too</strong> - How many devs actually audit <code>node:16-alpine</code>?</p>
 <h3 id="what-if-i-need-to-install-a-system-package">"What if I need to install a system package?"</h3>
 <p><strong>Response</strong>: Buildpack extensions allow custom install steps:</p>

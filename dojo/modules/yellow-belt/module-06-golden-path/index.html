@@ -5314,12 +5314,12 @@
   <a href="#congratulations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🎉 Congratulations!
+        🎉 Congratulations
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🎉 Congratulations!">
+    <nav class="md-nav" aria-label="🎉 Congratulations">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -5394,11 +5394,13 @@
 <strong>Module</strong>: 2 of 4 (Yellow Belt)
 <strong>Duration</strong>: 60 minutes
 <strong>Difficulty</strong>: Intermediate
-<strong>Prerequisites</strong>:
-- Module 5: CI Fundamentals complete
-- Basic Groovy syntax understanding
-- Experience with at least one programming language
-- Jenkins pipeline creation experience</p>
+<strong>Prerequisites</strong>:</p>
+<ul>
+<li>Module 5: CI Fundamentals complete</li>
+<li>Basic Groovy syntax understanding</li>
+<li>Experience with at least one programming language</li>
+<li>Jenkins pipeline creation experience</li>
+</ul>
 <hr />
 <h2 id="learning-objectives">📚 Learning Objectives</h2>
 <p>By the end of this module, you will:</p>
@@ -5411,15 +5413,17 @@
 <li>✅ Use parallel execution to reduce build time</li>
 <li>✅ Measure and improve pipeline performance</li>
 </ol>
-<p><strong>DORA Capabilities Addressed</strong>:
-- ✓ CD1: Version control for all production artifacts
-- ✓ CD4: Trunk-based development
-- ✓ Continuous Integration (advanced)
-- ✓ Code Review</p>
+<p><strong>DORA Capabilities Addressed</strong>:</p>
+<ul>
+<li>✓ CD1: Version control for all production artifacts</li>
+<li>✓ CD4: Trunk-based development</li>
+<li>✓ Continuous Integration (advanced)</li>
+<li>✓ Code Review</li>
+</ul>
 <hr />
 <h2 id="part-1-what-is-a-golden-path">📖 Part 1: What is a Golden Path?</h2>
 <h3 id="the-problem-pipeline-proliferation">The Problem: Pipeline Proliferation</h3>
-<p><strong>Without Golden Paths</strong>:
+<p><strong>Without Golden Paths</strong>:</p>
 <div class="highlight"><pre><span></span><code>Team A: Creates Java pipeline (500 lines)
 Team B: Creates Java pipeline (480 lines, slightly different)
 Team C: Creates Java pipeline (520 lines, more differences)
@@ -5432,7 +5436,7 @@ Result:
 - New best practice → Adoption takes months
 - No consistency across teams
 - High maintenance burden
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="golden-path-solution">Golden Path Solution</h3>
 <blockquote>
 <p><strong>"The easiest path should also be the best path"</strong></p>
@@ -5447,15 +5451,17 @@ Result:
       ↓
    Consistency + Best Practices Built-In
 </code></pre></div>
-<p><strong>Golden Path Characteristics</strong>:
-1. <strong>Opinionated</strong>: Embeds best practices by default
-2. <strong>Easy to Use</strong>: 5-10 lines to get started
-3. <strong>Batteries Included</strong>: Security, testing, quality gates built-in
-4. <strong>Customizable</strong>: Escape hatches for edge cases
-5. <strong>Self-Service</strong>: Teams can use without platform team help
-6. <strong>Maintained</strong>: Platform team keeps it updated</p>
+<p><strong>Golden Path Characteristics</strong>:</p>
+<ol>
+<li><strong>Opinionated</strong>: Embeds best practices by default</li>
+<li><strong>Easy to Use</strong>: 5-10 lines to get started</li>
+<li><strong>Batteries Included</strong>: Security, testing, quality gates built-in</li>
+<li><strong>Customizable</strong>: Escape hatches for edge cases</li>
+<li><strong>Self-Service</strong>: Teams can use without platform team help</li>
+<li><strong>Maintained</strong>: Platform team keeps it updated</li>
+</ol>
 <h3 id="golden-path-in-practice">Golden Path in Practice</h3>
-<p><strong>Instead of this</strong> (200-line Jenkinsfile):
+<p><strong>Instead of this</strong> (200-line Jenkinsfile):</p>
 <div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">yaml</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;...&#39;&#39;&#39;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="o">}</span>
 <span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
@@ -5469,8 +5475,8 @@ Result:
 <span class="w">    </span><span class="o">}</span>
 <span class="w">    </span><span class="n">post</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div></p>
-<p><strong>Teams write this</strong> (10-line Jenkinsfile):
+</code></pre></div>
+<p><strong>Teams write this</strong> (10-line Jenkinsfile):</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 
 <span class="n">goldenPathJava</span><span class="w"> </span><span class="o">{</span>
@@ -5478,18 +5484,20 @@ Result:
 <span class="w">    </span><span class="n">javaVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;17&#39;</span>
 <span class="w">    </span><span class="n">skipTests</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
 <span class="o">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Result</strong>: 95% less boilerplate, 100% best practices</p>
 <hr />
 <h2 id="part-2-jenkins-shared-libraries">🏗️ Part 2: Jenkins Shared Libraries</h2>
 <h3 id="what-are-shared-libraries">What are Shared Libraries?</h3>
 <p>Jenkins Shared Libraries are reusable Groovy code that can be imported into any Jenkinsfile.</p>
-<p><strong>Benefits</strong>:
-- 🎯 <strong>DRY Principle</strong>: Don't Repeat Yourself
-- 🔒 <strong>Security</strong>: Centralized credential management
-- 📦 <strong>Versioning</strong>: Tag releases, rollback if needed
-- 🧪 <strong>Testable</strong>: Unit test your pipeline logic
-- 📚 <strong>Documentation</strong>: Single source of truth</p>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>🎯 <strong>DRY Principle</strong>: Don't Repeat Yourself</li>
+<li>🔒 <strong>Security</strong>: Centralized credential management</li>
+<li>📦 <strong>Versioning</strong>: Tag releases, rollback if needed</li>
+<li>🧪 <strong>Testable</strong>: Unit test your pipeline logic</li>
+<li>📚 <strong>Documentation</strong>: Single source of truth</li>
+</ul>
 <h3 id="shared-library-structure">Shared Library Structure</h3>
 <div class="highlight"><pre><span></span><code>fawkes-pipeline-library/
 ├── vars/                          # Global variables (pipeline steps)
@@ -6255,13 +6263,15 @@ git<span class="w"> </span>init
 <h2 id="part-7-practical-exercise">💪 Part 7: Practical Exercise</h2>
 <h3 id="exercise-create-a-multi-language-golden-path">Exercise: Create a Multi-Language Golden Path</h3>
 <p><strong>Objective</strong>: Build a shared library that supports Java, Python, and Node.js</p>
-<p><strong>Requirements</strong>:
-1. Create <code>vars/goldenPath.groovy</code> that auto-detects language
-2. Support configuration for each language
-3. Include parallel testing and linting
-4. Implement build caching
-5. Add performance metrics
-6. Create comprehensive documentation</p>
+<p><strong>Requirements</strong>:</p>
+<ol>
+<li>Create <code>vars/goldenPath.groovy</code> that auto-detects language</li>
+<li>Support configuration for each language</li>
+<li>Include parallel testing and linting</li>
+<li>Implement build caching</li>
+<li>Add performance metrics</li>
+<li>Create comprehensive documentation</li>
+</ol>
 <p><strong>Starter Template</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// vars/goldenPath.groovy</span>
 <span class="kt">def</span><span class="w"> </span><span class="nf">call</span><span class="o">(</span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[:])</span><span class="w"> </span><span class="o">{</span>
@@ -6290,19 +6300,25 @@ git<span class="w"> </span>init
 <span class="w">    </span><span class="c1">// Check for pom.xml, requirements.txt, package.json</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>Validation Criteria</strong>:
-- [ ] Auto-detects language correctly
-- [ ] All three language templates work
-- [ ] Build time &lt;8 minutes for sample apps
-- [ ] Caching reduces build time by 50%+
-- [ ] Metrics sent to Prometheus
-- [ ] Documentation includes usage examples</p>
+<p><strong>Validation Criteria</strong>:</p>
+<ul>
+<li>[ ] Auto-detects language correctly</li>
+<li>[ ] All three language templates work</li>
+<li>[ ] Build time &lt;8 minutes for sample apps</li>
+<li>[ ] Caching reduces build time by 50%+</li>
+<li>[ ] Metrics sent to Prometheus</li>
+<li>[ ] Documentation includes usage examples</li>
+</ul>
 <hr />
 <h2 id="part-8-knowledge-check">🎓 Part 8: Knowledge Check</h2>
 <h3 id="quiz-questions">Quiz Questions</h3>
 <ol>
-<li><strong>What is a "Golden Path" in platform engineering?</strong></li>
-<li>[ ] The fastest build configuration</li>
+<li>
+<p><strong>What is a "Golden Path" in platform engineering?</strong></p>
+</li>
+<li>
+<p>[ ] The fastest build configuration</p>
+</li>
 <li>[x] An opinionated, easy-to-use template with best practices built-in</li>
 <li>[ ] A deployment strategy</li>
 <li>
@@ -6311,7 +6327,9 @@ git<span class="w"> </span>init
 <li>
 <p><strong>Where do you put reusable pipeline steps in a Shared Library?</strong></p>
 </li>
-<li>[ ] src/ directory</li>
+<li>
+<p>[ ] src/ directory</p>
+</li>
 <li>[x] vars/ directory</li>
 <li>[ ] resources/ directory</li>
 <li>
@@ -6320,7 +6338,9 @@ git<span class="w"> </span>init
 <li>
 <p><strong>What is the benefit of parallel execution in pipelines?</strong></p>
 </li>
-<li>[ ] Uses less resources</li>
+<li>
+<p>[ ] Uses less resources</p>
+</li>
 <li>[ ] More reliable</li>
 <li>[x] Reduces total build time</li>
 <li>
@@ -6329,7 +6349,9 @@ git<span class="w"> </span>init
 <li>
 <p><strong>How can you cache Maven dependencies between builds?</strong></p>
 </li>
-<li>[ ] Use a faster Maven mirror</li>
+<li>
+<p>[ ] Use a faster Maven mirror</p>
+</li>
 <li>[x] Mount a persistent volume to /root/.m2</li>
 <li>[ ] Download dependencies manually</li>
 <li>
@@ -6338,7 +6360,9 @@ git<span class="w"> </span>init
 <li>
 <p><strong>What should you do with build performance metrics?</strong></p>
 </li>
-<li>[ ] Ignore them</li>
+<li>
+<p>[ ] Ignore them</p>
+</li>
 <li>[ ] Only check when builds are slow</li>
 <li>[x] Send to Prometheus and visualize in Grafana</li>
 <li>
@@ -6347,7 +6371,9 @@ git<span class="w"> </span>init
 <li>
 <p><strong>What's the recommended maximum build time?</strong></p>
 </li>
-<li>[ ] 30 minutes</li>
+<li>
+<p>[ ] 30 minutes</p>
+</li>
 <li>[x] 10 minutes</li>
 <li>[ ] 1 hour</li>
 <li>
@@ -6356,7 +6382,9 @@ git<span class="w"> </span>init
 <li>
 <p><strong>Which stage can typically be parallelized?</strong></p>
 </li>
-<li>[ ] Checkout</li>
+<li>
+<p>[ ] Checkout</p>
+</li>
 <li>[ ] Build</li>
 <li>[x] Tests and linting</li>
 <li>
@@ -6395,13 +6423,17 @@ git<span class="w"> </span>init
 <li><strong>Maintainability &gt; Brevity</strong> - Readable pipelines are better than clever pipelines</li>
 </ol>
 <h3 id="real-world-impact">Real-World Impact</h3>
-<p>"After implementing Golden Path pipelines:
-- <strong>Pipeline creation time</strong>: 2 days → 10 minutes
-- <strong>Average build time</strong>: 25 minutes → 7 minutes
-- <strong>Pipelines maintained</strong>: 50 → 3 templates
-- <strong>Security update rollout</strong>: 2 weeks → 1 day</p>
-<p>Our developers now spend time building features, not maintaining pipelines."
-- <em>Platform Engineering Team, Tech Company</em></p>
+<p>"After implementing Golden Path pipelines:</p>
+<ul>
+<li><strong>Pipeline creation time</strong>: 2 days → 10 minutes</li>
+<li><strong>Average build time</strong>: 25 minutes → 7 minutes</li>
+<li><strong>Pipelines maintained</strong>: 50 → 3 templates</li>
+<li><strong>Security update rollout</strong>: 2 weeks → 1 day</li>
+</ul>
+<p>Our developers now spend time building features, not maintaining pipelines."</p>
+<ul>
+<li><em>Platform Engineering Team, Tech Company</em></li>
+</ul>
 <hr />
 <h2 id="additional-resources">📚 Additional Resources</h2>
 <h3 id="documentation">Documentation</h3>
@@ -6424,8 +6456,12 @@ git<span class="w"> </span>init
 <h2 id="module-completion">🏅 Module Completion</h2>
 <h3 id="assessment-checklist">Assessment Checklist</h3>
 <ul>
-<li>[ ] <strong>Conceptual Understanding</strong></li>
-<li>[ ] Explain Golden Path philosophy</li>
+<li>
+<p>[ ] <strong>Conceptual Understanding</strong></p>
+</li>
+<li>
+<p>[ ] Explain Golden Path philosophy</p>
+</li>
 <li>[ ] Describe Shared Library structure</li>
 <li>
 <p>[ ] Understand pipeline optimization techniques</p>
@@ -6433,7 +6469,9 @@ git<span class="w"> </span>init
 <li>
 <p>[ ] <strong>Practical Skills</strong></p>
 </li>
-<li>[ ] Create a Shared Library repository</li>
+<li>
+<p>[ ] Create a Shared Library repository</p>
+</li>
 <li>[ ] Build Golden Path template for at least one language</li>
 <li>[ ] Implement parallel execution</li>
 <li>[ ] Configure build caching</li>
@@ -6443,7 +6481,9 @@ git<span class="w"> </span>init
 <li>
 <p>[ ] <strong>Hands-On Lab</strong></p>
 </li>
-<li>[ ] Create reusable pipeline template</li>
+<li>
+<p>[ ] Create reusable pipeline template</p>
+</li>
 <li>[ ] Reduce build time by 50%+ through optimization</li>
 <li>
 <p>[ ] Successfully use template in 3 different projects</p>
@@ -6454,10 +6494,12 @@ git<span class="w"> </span>init
 <li>[ ] Score 80% or higher (6/8 questions)</li>
 </ul>
 <h3 id="certification-credit">Certification Credit</h3>
-<p>Upon completion, you earn:
-- <strong>5 points</strong> toward Yellow Belt certification (50% complete)
-- <strong>Badge</strong>: "Golden Path Architect"
-- <strong>Skill Unlocked</strong>: Shared Library Development</p>
+<p>Upon completion, you earn:</p>
+<ul>
+<li><strong>5 points</strong> toward Yellow Belt certification (50% complete)</li>
+<li><strong>Badge</strong>: "Golden Path Architect"</li>
+<li><strong>Skill Unlocked</strong>: Shared Library Development</li>
+</ul>
 <hr />
 <h2 id="yellow-belt-progress">🎖️ Yellow Belt Progress</h2>
 <div class="highlight"><pre><span></span><code>Yellow Belt: CI/CD Mastery
@@ -6864,14 +6906,16 @@ Module 8: Artifact Management    ░░░░░░░░░░░░  0%
 <hr />
 <h2 id="appendix-d-troubleshooting-guide">📖 Appendix D: Troubleshooting Guide</h2>
 <h3 id="issue-shared-library-not-found">Issue: Shared Library Not Found</h3>
-<p><strong>Error</strong>:
+<p><strong>Error</strong>:</p>
 <div class="highlight"><pre><span></span><code>ERROR: Library fawkes-pipelines not found
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
-1. Check library name matches in Jenkins global config
-2. Verify repository URL is correct
-3. Check branch/tag specified exists
-4. If using credentials, verify they're configured</p>
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Check library name matches in Jenkins global config</li>
+<li>Verify repository URL is correct</li>
+<li>Check branch/tag specified exists</li>
+<li>If using credentials, verify they're configured</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="c1">// Use specific version</span>
 <span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines@v1.2.3&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 
@@ -6882,13 +6926,15 @@ Module 8: Artifact Management    ░░░░░░░░░░░░  0%
 <span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines@abc1234&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 </code></pre></div>
 <h3 id="issue-class-not-found-in-src">Issue: Class Not Found in src/</h3>
-<p><strong>Error</strong>:
+<p><strong>Error</strong>:</p>
 <div class="highlight"><pre><span></span><code>unable to resolve class com.fawkes.pipeline.Docker
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
-1. Check package path matches directory structure
-2. Ensure class is Serializable
-3. Import correctly in calling code</p>
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Check package path matches directory structure</li>
+<li>Ensure class is Serializable</li>
+<li>Import correctly in calling code</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="c1">// Correct import</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">com.fawkes.pipeline.Docker</span>
 
@@ -6896,33 +6942,39 @@ Module 8: Artifact Management    ░░░░░░░░░░░░  0%
 <span class="c1">// Class must implement Serializable</span>
 </code></pre></div>
 <h3 id="issue-variable-not-found-in-vars">Issue: Variable Not Found in vars/</h3>
-<p><strong>Error</strong>:
+<p><strong>Error</strong>:</p>
 <div class="highlight"><pre><span></span><code>No such DSL method &#39;goldenPathJava&#39; found
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
-1. Check file is in vars/ directory
-2. Filename must match function name
-3. Library must be imported</p>
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Check file is in vars/ directory</li>
+<li>Filename must match function name</li>
+<li>Library must be imported</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="c1">// vars/goldenPathJava.groovy defines goldenPathJava()</span>
 <span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 <span class="n">goldenPathJava</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
 </code></pre></div>
 <h3 id="issue-slow-library-loading">Issue: Slow Library Loading</h3>
 <p><strong>Problem</strong>: Pipeline takes 2+ minutes to start</p>
-<p><strong>Solutions</strong>:
-1. Enable library caching
-2. Use specific version (not HEAD)
-3. Reduce library size</p>
-<p>In Jenkins global config:
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Enable library caching</li>
+<li>Use specific version (not HEAD)</li>
+<li>Reduce library size</li>
+</ol>
+<p>In Jenkins global config:</p>
 <div class="highlight"><pre><span></span><code>☑ Cache fetched versions on controller for quick retrieval
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="issue-cannot-modify-immutable-objects">Issue: Cannot Modify Immutable Objects</h3>
-<p><strong>Error</strong>:
+<p><strong>Error</strong>:</p>
 <div class="highlight"><pre><span></span><code>Scripts not permitted to use method groovy.lang.GroovyObject
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
-1. Approve script in Jenkins → Manage Jenkins → In-process Script Approval
-2. Use <code>@NonCPS</code> annotation for methods that manipulate complex objects</p>
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Approve script in Jenkins → Manage Jenkins → In-process Script Approval</li>
+<li>Use <code>@NonCPS</code> annotation for methods that manipulate complex objects</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="nd">@NonCPS</span>
 <span class="kt">def</span><span class="w"> </span><span class="nf">parseJson</span><span class="o">(</span><span class="n">String</span><span class="w"> </span><span class="n">json</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">slurper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JsonSlurper</span><span class="o">()</span>
@@ -6930,7 +6982,7 @@ Module 8: Artifact Management    ░░░░░░░░░░░░  0%
 <span class="o">}</span>
 </code></pre></div>
 <hr />
-<h2 id="congratulations">🎉 Congratulations!</h2>
+<h2 id="congratulations">🎉 Congratulations</h2>
 <p>You've completed <strong>Module 6: Building Golden Path Pipelines</strong>!</p>
 <h3 id="key-achievements">Key Achievements</h3>
 <p>✅ Created reusable Shared Libraries
@@ -6967,14 +7019,18 @@ After Module 6:
 <li>🎓 Take Yellow Belt Certification Exam</li>
 <li>🚀 Advance to Green Belt (GitOps &amp; Deployment)</li>
 </ol>
-<p><strong>Practice:</strong>
-- Implement Golden Paths for your team
-- Measure build time improvements
-- Share templates with community</p>
-<p><strong>Community:</strong>
-- Share your Shared Library in #show-and-tell
-- Help others in #yellow-belt channel
-- Write a blog post about your experience</p>
+<p><strong>Practice:</strong></p>
+<ul>
+<li>Implement Golden Paths for your team</li>
+<li>Measure build time improvements</li>
+<li>Share templates with community</li>
+</ul>
+<p><strong>Community:</strong></p>
+<ul>
+<li>Share your Shared Library in #show-and-tell</li>
+<li>Help others in #yellow-belt channel</li>
+<li>Write a blog post about your experience</li>
+</ul>
 <hr />
 <p><strong>Ready for Module 7?</strong> 🔒</p>
 <p>Next up: <strong>Security Scanning &amp; Quality Gates</strong> - where you'll learn SonarQube, Trivy, dependency scanning, and building security into every pipeline!</p>

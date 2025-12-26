@@ -5129,9 +5129,9 @@
 <h3 id="1-create-secrets">1. Create Secrets</h3>
 <p><strong>External Secrets Method (Recommended)</strong>:</p>
 <ul>
-<li>
-<p>[ ] Create secret in Vault/AWS Secrets Manager:
-  <div class="highlight"><pre><span></span><code><span class="c1"># Example for Vault</span>
+<li>[ ] Create secret in Vault/AWS Secrets Manager:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Example for Vault</span>
 vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </span>secret/fawkes/devlake<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>encryption-secret<span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>mysql-root-password<span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
@@ -5139,27 +5139,26 @@ vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </spa
 <span class="w">  </span>grafana-admin-password<span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>github-token<span class="o">=</span>ghp_your_token_here<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>api-token<span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Verify ExternalSecret exists:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>externalsecret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake-secrets
+</code></pre></div>
+<ul>
+<li>[ ] Verify ExternalSecret exists:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>externalsecret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake-secrets
 kubectl<span class="w"> </span>get<span class="w"> </span>externalsecret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake-db
 kubectl<span class="w"> </span>get<span class="w"> </span>externalsecret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake-grafana-secrets
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Verify secrets are synced:
+</code></pre></div>
+<ul>
+<li>[ ] Verify secrets are synced:
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake-secrets
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake-db
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake-grafana-secrets
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <p><strong>Manual Secrets Method (Development Only)</strong>:</p>
 <ul>
-<li>[ ] Create DevLake secrets manually:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>devlake-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
+<li>[ ] Create DevLake secrets manually:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>devlake-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--from-literal<span class="o">=</span>encryption-secret<span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--from-literal<span class="o">=</span>api-token<span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span>
 
@@ -5169,247 +5168,244 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 
 kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>devlake-grafana-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--from-literal<span class="o">=</span>admin-password<span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span>
-</code></pre></div></li>
-</ul>
+</code></pre></div>
 <h3 id="2-deploy-devlake-via-argocd">2. Deploy DevLake via ArgoCD</h3>
 <ul>
-<li>
-<p>[ ] Apply ArgoCD Application:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/devlake/devlake-application.yaml
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Verify Application is created:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>application<span class="w"> </span>devlake<span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Check Application status:
-  <div class="highlight"><pre><span></span><code>argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>devlake
+<li>[ ] Apply ArgoCD Application:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/devlake/devlake-application.yaml
+</code></pre></div>
+<ul>
+<li>[ ] Verify Application is created:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>application<span class="w"> </span>devlake<span class="w"> </span>-n<span class="w"> </span>fawkes
+</code></pre></div>
+<ul>
+<li>[ ] Check Application status:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>devlake
 <span class="c1"># Expected: Health Status: Healthy, Sync Status: Synced</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] If not synced, manually sync:
+</code></pre></div>
+<ul>
+<li>[ ] If not synced, manually sync:
   <div class="highlight"><pre><span></span><code>argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </span>devlake
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="3-verify-pod-deployment">3. Verify Pod Deployment</h3>
 <ul>
-<li>[ ] Check all pods are running:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>devlake
-</code></pre></div></li>
+<li>[ ] Check all pods are running:</li>
 </ul>
-<p>Expected pods:
-  - devlake-lake-0 (Running)
-  - devlake-ui-0 (Running)
-  - devlake-grafana-0 (Running)
-  - devlake-mysql-0 (Running)</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>devlake
+</code></pre></div>
+<p>Expected pods:</p>
 <ul>
+<li>devlake-lake-0 (Running)</li>
+<li>devlake-ui-0 (Running)</li>
+<li>devlake-grafana-0 (Running)</li>
 <li>
-<p>[ ] Check pod logs for errors:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/component<span class="o">=</span>lake<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
-kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/component<span class="o">=</span>mysql<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
-</code></pre></div></p>
+<p>devlake-mysql-0 (Running)</p>
 </li>
 <li>
-<p>[ ] Verify no CrashLoopBackOff or Error states:
+<p>[ ] Check pod logs for errors:</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/component<span class="o">=</span>lake<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/component<span class="o">=</span>mysql<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+</code></pre></div>
+<ul>
+<li>[ ] Verify no CrashLoopBackOff or Error states:
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>devlake<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[*].status.phase}&#39;</span>
 <span class="c1"># Expected: All &quot;Running&quot;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="4-verify-services">4. Verify Services</h3>
 <ul>
-<li>[ ] Check services are created:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>devlake
-</code></pre></div></li>
+<li>[ ] Check services are created:</li>
 </ul>
-<p>Expected services:
-  - devlake-lake (ClusterIP)
-  - devlake-ui (ClusterIP)
-  - devlake-grafana (ClusterIP)
-  - devlake-mysql (ClusterIP)</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>devlake
+</code></pre></div>
+<p>Expected services:</p>
 <ul>
-<li>[ ] Test internal connectivity:
+<li>devlake-lake (ClusterIP)</li>
+<li>devlake-ui (ClusterIP)</li>
+<li>devlake-grafana (ClusterIP)</li>
+<li>
+<p>devlake-mysql (ClusterIP)</p>
+</li>
+<li>
+<p>[ ] Test internal connectivity:
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>debug<span class="w"> </span>--image<span class="o">=</span>alpine<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>wget<span class="w"> </span>-O-<span class="w"> </span>http://devlake-lake:8080/api/ping
 <span class="c1"># Expected: {&quot;message&quot;:&quot;pong&quot;}</span>
-</code></pre></div></li>
+</code></pre></div></p>
+</li>
 </ul>
 <h3 id="5-verify-ingress">5. Verify Ingress</h3>
 <ul>
-<li>
-<p>[ ] Check ingress resources:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake
+<li>[ ] Check ingress resources:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake
 kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake-grafana
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Test external access (if DNS configured):
-  <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/ping
+</code></pre></div>
+<ul>
+<li>[ ] Test external access (if DNS configured):</li>
+</ul>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/ping
 curl<span class="w"> </span>http://devlake-grafana.127.0.0.1.nip.io/api/health
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Or use port-forward for testing:
+</code></pre></div>
+<ul>
+<li>[ ] Or use port-forward for testing:
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>svc/devlake-lake<span class="w"> </span><span class="m">8080</span>:8080
 <span class="c1"># Test: curl http://localhost:8080/api/ping</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <hr />
 <h2 id="database-schema-verification">Database Schema Verification</h2>
 <h3 id="6-verify-database-creation">6. Verify Database Creation</h3>
 <ul>
-<li>
-<p>[ ] Connect to MySQL:
-  <div class="highlight"><pre><span></span><code><span class="c1"># Get root password first</span>
+<li>[ ] Connect to MySQL:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Get root password first</span>
 <span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>devlake-db<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.mysql-root-password}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="k">)</span>
 
 <span class="c1"># Connect to MySQL</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake-mysql-0<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p
 <span class="c1"># Enter the password when prompted</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Verify database exists:
-  <div class="highlight"><pre><span></span><code><span class="k">SHOW</span><span class="w"> </span><span class="n">DATABASES</span><span class="p">;</span>
+</code></pre></div>
+<ul>
+<li>[ ] Verify database exists:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">SHOW</span><span class="w"> </span><span class="n">DATABASES</span><span class="p">;</span>
 <span class="c1">-- Expected: &#39;lake&#39; database listed</span>
-</code></pre></div></p>
+</code></pre></div>
+<ul>
+<li>[ ] Verify key tables exist:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">USE</span><span class="w"> </span><span class="n">lake</span><span class="p">;</span>
+<span class="k">SHOW</span><span class="w"> </span><span class="n">TABLES</span><span class="p">;</span>
+</code></pre></div>
+<p>Expected tables:</p>
+<ul>
+<li>deployments</li>
+<li>commits</li>
+<li>incidents</li>
+<li>cicd_deployments</li>
+<li>project_metric_settings</li>
+<li>
+<p>dora_benchmarks</p>
 </li>
 <li>
-<p>[ ] Verify key tables exist:
-  <div class="highlight"><pre><span></span><code><span class="n">USE</span><span class="w"> </span><span class="n">lake</span><span class="p">;</span>
-<span class="k">SHOW</span><span class="w"> </span><span class="n">TABLES</span><span class="p">;</span>
-</code></pre></div></p>
+<p>[ ] Check table schemas:</p>
 </li>
 </ul>
-<p>Expected tables:
-  - deployments
-  - commits
-  - incidents
-  - cicd_deployments
-  - project_metric_settings
-  - dora_benchmarks</p>
-<ul>
-<li>
-<p>[ ] Check table schemas:
-  <div class="highlight"><pre><span></span><code><span class="k">DESCRIBE</span><span class="w"> </span><span class="n">deployments</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">DESCRIBE</span><span class="w"> </span><span class="n">deployments</span><span class="p">;</span>
 <span class="k">DESCRIBE</span><span class="w"> </span><span class="n">commits</span><span class="p">;</span>
 <span class="k">DESCRIBE</span><span class="w"> </span><span class="n">incidents</span><span class="p">;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Verify indexes:
+</code></pre></div>
+<ul>
+<li>[ ] Verify indexes:
   <div class="highlight"><pre><span></span><code><span class="k">SHOW</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">deployments</span><span class="p">;</span>
 <span class="k">SHOW</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">commits</span><span class="p">;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <hr />
 <h2 id="api-endpoints-verification">API Endpoints Verification</h2>
 <h3 id="7-test-rest-api">7. Test REST API</h3>
 <ul>
-<li>
-<p>[ ] Health check:
-  <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/ping
+<li>[ ] Health check:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/ping
 <span class="c1"># Expected: {&quot;message&quot;:&quot;pong&quot;}</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Get API version:
-  <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/version
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Test authenticated endpoint (requires token):
+</code></pre></div>
+<ul>
+<li>[ ] Get API version:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/version
+</code></pre></div>
+<ul>
+<li>[ ] Test authenticated endpoint (requires token):
   <div class="highlight"><pre><span></span><code><span class="nv">API_TOKEN</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>devlake-api-token<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.token}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="k">)</span>
 curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$API_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>http://devlake.127.0.0.1.nip.io/api/projects
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="8-test-graphql-api">8. Test GraphQL API</h3>
 <ul>
-<li>
-<p>[ ] GraphQL introspection query:
-  <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/graphql<span class="w"> </span><span class="se">\</span>
+<li>[ ] GraphQL introspection query:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/graphql<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;:&quot;{ __schema { types { name } } }&quot;}&#39;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Test DORA metrics query (after data collection):
+</code></pre></div>
+<ul>
+<li>[ ] Test DORA metrics query (after data collection):
   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/graphql<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;:&quot;query { projects { name } }&quot;}&#39;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="9-test-prometheus-metrics-endpoint">9. Test Prometheus Metrics Endpoint</h3>
 <ul>
-<li>
-<p>[ ] Verify metrics endpoint:
-  <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://devlake.127.0.0.1.nip.io/metrics
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Check for DORA metrics (may be empty initially):
-  <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://devlake.127.0.0.1.nip.io/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dora
-</code></pre></div></p>
-</li>
+<li>[ ] Verify metrics endpoint:</li>
 </ul>
-<p>Expected metrics (after data collection):
-  - dora_deployment_frequency_total
-  - dora_lead_time_seconds
-  - dora_change_failure_rate
-  - dora_mttr_seconds</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://devlake.127.0.0.1.nip.io/metrics
+</code></pre></div>
+<ul>
+<li>[ ] Check for DORA metrics (may be empty initially):</li>
+</ul>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://devlake.127.0.0.1.nip.io/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dora
+</code></pre></div>
+<p>Expected metrics (after data collection):</p>
+<ul>
+<li>dora_deployment_frequency_total</li>
+<li>dora_lead_time_seconds</li>
+<li>dora_change_failure_rate</li>
+<li>dora_mttr_seconds</li>
+</ul>
 <hr />
 <h2 id="prometheus-integration">Prometheus Integration</h2>
 <h3 id="10-deploy-servicemonitor">10. Deploy ServiceMonitor</h3>
 <ul>
-<li>
-<p>[ ] Apply ServiceMonitor:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/devlake/servicemonitor-devlake.yaml
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Verify ServiceMonitor exists:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitor<span class="w"> </span>devlake-metrics<span class="w"> </span>-n<span class="w"> </span>monitoring
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Check Prometheus targets:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>svc/prometheus-kube-prometheus-prometheus<span class="w"> </span><span class="m">9090</span>:9090
+<li>[ ] Apply ServiceMonitor:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/devlake/servicemonitor-devlake.yaml
+</code></pre></div>
+<ul>
+<li>[ ] Verify ServiceMonitor exists:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitor<span class="w"> </span>devlake-metrics<span class="w"> </span>-n<span class="w"> </span>monitoring
+</code></pre></div>
+<ul>
+<li>[ ] Check Prometheus targets:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>svc/prometheus-kube-prometheus-prometheus<span class="w"> </span><span class="m">9090</span>:9090
 <span class="c1"># Open http://localhost:9090/targets</span>
 <span class="c1"># Search for &quot;devlake&quot;</span>
 <span class="c1"># Expected: Target &quot;devlake-metrics&quot; is UP</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Query DORA metrics in Prometheus (after data collection):
+</code></pre></div>
+<ul>
+<li>[ ] Query DORA metrics in Prometheus (after data collection):
   <div class="highlight"><pre><span></span><code><span class="nv">dora_deployment_frequency_total</span>
 <span class="nv">dora_lead_time_seconds_bucket</span>
 <span class="nv">dora_change_failure_rate</span>
 <span class="nv">dora_mttr_seconds_bucket</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <hr />
 <h2 id="data-source-configuration">Data Source Configuration</h2>
 <h3 id="11-configure-github-data-source">11. Configure GitHub Data Source</h3>
 <ul>
-<li>
-<p>[ ] Access DevLake UI:
-  <div class="highlight"><pre><span></span><code><span class="c1"># Open http://devlake.127.0.0.1.nip.io</span>
-</code></pre></div></p>
-</li>
+<li>[ ] Access DevLake UI:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Open http://devlake.127.0.0.1.nip.io</span>
+</code></pre></div>
+<ul>
 <li>
 <p>[ ] Add GitHub connection:</p>
 </li>
-<li>Click "Data Connections"</li>
+<li>
+<p>Click "Data Connections"</p>
+</li>
 <li>Click "Add Connection"</li>
 <li>Select "GitHub"</li>
 <li>Enter:<ul>
@@ -5430,8 +5426,12 @@ curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Aut
 </ul>
 <h3 id="12-configure-argocd-data-source">12. Configure ArgoCD Data Source</h3>
 <ul>
-<li>[ ] Add ArgoCD connection:</li>
-<li>Click "Add Connection"</li>
+<li>
+<p>[ ] Add ArgoCD connection:</p>
+</li>
+<li>
+<p>Click "Add Connection"</p>
+</li>
 <li>Select "ArgoCD"</li>
 <li>Enter:<ul>
 <li>Name: "ArgoCD - Fawkes"</li>
@@ -5470,42 +5470,46 @@ curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Aut
 <p>[ ] Enable webhook plugin in DevLake UI</p>
 </li>
 <li>
-<p>[ ] Get webhook URL:
-  <div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;http://devlake.127.0.0.1.nip.io/api/plugins/webhook/1/incidents&quot;</span>
-</code></pre></div></p>
+<p>[ ] Get webhook URL:</p>
 </li>
-<li>
-<p>[ ] Configure observability platform to send incidents to webhook</p>
-</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;http://devlake.127.0.0.1.nip.io/api/plugins/webhook/1/incidents&quot;</span>
+</code></pre></div>
+<ul>
+<li>[ ] Configure observability platform to send incidents to webhook</li>
 </ul>
 <hr />
 <h2 id="grafana-dashboard-verification">Grafana Dashboard Verification</h2>
 <h3 id="15-access-grafana">15. Access Grafana</h3>
 <ul>
-<li>
-<p>[ ] Get Grafana admin password:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>devlake-grafana-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
+<li>[ ] Get Grafana admin password:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>devlake-grafana-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.admin-password}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Access Grafana UI:
+</code></pre></div>
+<ul>
+<li>[ ] Access Grafana UI:
   <div class="highlight"><pre><span></span><code><span class="c1"># Open http://devlake-grafana.127.0.0.1.nip.io</span>
 <span class="c1"># Login: admin / &lt;password from above&gt;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="16-verify-dora-dashboards">16. Verify DORA Dashboards</h3>
 <ul>
-<li>[ ] Check pre-installed dashboards:</li>
-<li>Navigate to Dashboards → Browse</li>
+<li>
+<p>[ ] Check pre-installed dashboards:</p>
+</li>
+<li>
+<p>Navigate to Dashboards → Browse</p>
+</li>
 <li>
 <p>Look for "DORA Metrics" dashboards</p>
 </li>
 <li>
 <p>[ ] Verify dashboard folders:</p>
 </li>
-<li>DORA Metrics Overview</li>
+<li>
+<p>DORA Metrics Overview</p>
+</li>
 <li>Deployment Frequency</li>
 <li>Lead Time for Changes</li>
 <li>Change Failure Rate</li>
@@ -5523,15 +5527,17 @@ curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Aut
 <h2 id="automated-verification">Automated Verification</h2>
 <h3 id="17-run-verification-script">17. Run Verification Script</h3>
 <ul>
-<li>
-<p>[ ] Execute automated verification:
-  <div class="highlight"><pre><span></span><code>./scripts/verify-dora-metrics-service.sh
-</code></pre></div></p>
-</li>
+<li>[ ] Execute automated verification:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>./scripts/verify-dora-metrics-service.sh
+</code></pre></div>
+<ul>
 <li>
 <p>[ ] Review verification results:</p>
 </li>
-<li>All checks should pass</li>
+<li>
+<p>All checks should pass</p>
+</li>
 <li>
 <p>Address any failures before proceeding</p>
 </li>
@@ -5554,7 +5560,9 @@ curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Aut
 <li>
 <p>[ ] Configure lead time stages:</p>
 </li>
-<li>Development</li>
+<li>
+<p>Development</p>
+</li>
 <li>Review</li>
 <li>
 <p>Production</p>
@@ -5575,18 +5583,18 @@ curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Aut
 <p>[ ] Wait 5-10 minutes for data collection</p>
 </li>
 <li>
-<p>[ ] Query deployment via API:
-  <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/deployments
-</code></pre></div></p>
+<p>[ ] Query deployment via API:</p>
 </li>
-<li>
-<p>[ ] Check data in database:
-  <div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">deployments</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Verify metrics update in Grafana</p>
-</li>
+</ul>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/deployments
+</code></pre></div>
+<ul>
+<li>[ ] Check data in database:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">deployments</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</code></pre></div>
+<ul>
+<li>[ ] Verify metrics update in Grafana</li>
 </ul>
 <hr />
 <h2 id="acceptance-criteria-validation">Acceptance Criteria Validation</h2>
@@ -5599,15 +5607,13 @@ curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Aut
 </ul>
 <h3 id="21-run-bdd-tests">21. Run BDD Tests</h3>
 <ul>
-<li>
-<p>[ ] Execute BDD tests for DORA metrics:
-  <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>tests/bdd
+<li>[ ] Execute BDD tests for DORA metrics:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>tests/bdd
 pytest<span class="w"> </span>features/devlake-dora-metrics.feature
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Verify all scenarios pass:</p>
-</li>
+</code></pre></div>
+<ul>
+<li>[ ] Verify all scenarios pass:</li>
 <li>Data ingestion from ArgoCD</li>
 <li>Data ingestion from Jenkins</li>
 <li>Deployment frequency calculation</li>
@@ -5647,56 +5653,62 @@ pytest<span class="w"> </span>features/devlake-dora-metrics.feature
 <li>[ ] BDD tests passed</li>
 <li>[ ] Documentation updated</li>
 </ul>
-<p><strong>Deployed by</strong>: <strong><em>_</em></strong><strong><em>_</em></strong><strong><em>
-<strong>Date</strong>: </em></strong><strong><em>_</em></strong><strong><em>_</em></strong>
-<strong>Verified by</strong>: <strong><em>_</em></strong><strong><em>_</em></strong><strong><em>
-<strong>Date</strong>: </em></strong><strong><em>_</em></strong><strong><em>_</em></strong></p>
+<p><strong>Deployed by</strong>: <strong>****</strong>_<strong>****</strong>
+<strong>Date</strong>: <strong>****</strong>_<strong>****</strong>
+<strong>Verified by</strong>: <strong>****</strong>_<strong>****</strong>
+<strong>Date</strong>: <strong>****</strong>_<strong>****</strong></p>
 <hr />
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="common-issues">Common Issues</h3>
-<p><strong>Issue</strong>: Pods stuck in Pending state
-- <strong>Solution</strong>: Check PVC status, ensure storage class exists
+<p><strong>Issue</strong>: Pods stuck in Pending state</p>
+<ul>
+<li><strong>Solution</strong>: Check PVC status, ensure storage class exists
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>fawkes
 kubectl<span class="w"> </span>describe<span class="w"> </span>pvc<span class="w"> </span>devlake-mysql<span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
-<p><strong>Issue</strong>: Database connection errors
-- <strong>Solution</strong>: Verify MySQL pod is running, check credentials
+</code></pre></div></li>
+</ul>
+<p><strong>Issue</strong>: Database connection errors</p>
+<ul>
+<li><strong>Solution</strong>: Verify MySQL pod is running, check credentials
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake-lake-0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>mysql
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>devlake-db<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml
-</code></pre></div></p>
-<p><strong>Issue</strong>: API endpoints return 404
-- <strong>Solution</strong>: Check ingress configuration, verify routes
+</code></pre></div></li>
+</ul>
+<p><strong>Issue</strong>: API endpoints return 404</p>
+<ul>
+<li><strong>Solution</strong>: Check ingress configuration, verify routes
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>ingress<span class="w"> </span>devlake<span class="w"> </span>-n<span class="w"> </span>fawkes
 kubectl<span class="w"> </span>get<span class="w"> </span>endpoints<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake-lake
-</code></pre></div></p>
-<p><strong>Issue</strong>: Prometheus not scraping
-- <strong>Solution</strong>: Verify ServiceMonitor, check Prometheus logs
+</code></pre></div></li>
+</ul>
+<p><strong>Issue</strong>: Prometheus not scraping</p>
+<ul>
+<li><strong>Solution</strong>: Verify ServiceMonitor, check Prometheus logs
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>prometheus-kube-prometheus-prometheus-0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>devlake
-</code></pre></div></p>
+</code></pre></div></li>
+</ul>
 <hr />
 <h2 id="rollback-procedure">Rollback Procedure</h2>
 <p>If deployment fails and needs rollback:</p>
 <ol>
-<li>
-<p>Delete ArgoCD Application:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>application<span class="w"> </span>devlake<span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
-</li>
-<li>
-<p>Clean up resources:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>namespace<span class="w"> </span>fawkes-devlake
-</code></pre></div></p>
-</li>
-<li>
-<p>Remove secrets (if manually created):
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>devlake-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes
+<li>Delete ArgoCD Application:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>application<span class="w"> </span>devlake<span class="w"> </span>-n<span class="w"> </span>fawkes
+</code></pre></div>
+<ol>
+<li>Clean up resources:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>namespace<span class="w"> </span>fawkes-devlake
+</code></pre></div>
+<ol>
+<li>Remove secrets (if manually created):</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>devlake-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes
 kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>devlake-db<span class="w"> </span>-n<span class="w"> </span>fawkes
 kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>devlake-grafana-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
-</li>
-<li>
-<p>Address issues and retry deployment</p>
-</li>
+</code></pre></div>
+<ol>
+<li>Address issues and retry deployment</li>
 </ol>
 <hr />
 <h2 id="related-documentation">Related Documentation</h2>

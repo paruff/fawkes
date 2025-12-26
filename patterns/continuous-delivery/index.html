@@ -4981,29 +4981,29 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <h3 id="2-deployment-pipeline">2. Deployment Pipeline</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Example Jenkins Pipeline</span>
 <span class="l l-Scalar l-Scalar-Plain">pipeline {</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">agent any</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">stages {</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">stage(&#39;Build&#39;) {</span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">steps {</span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">sh &#39;make build&#39;</span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">}</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">}</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">stage(&#39;Test&#39;) {</span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">parallel {</span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">stage(&#39;Unit&#39;) {</span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">steps { sh &#39;make test-unit&#39; }</span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">}</span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">stage(&#39;Integration&#39;) {</span>
-<span class="w">                    </span><span class="l l-Scalar l-Scalar-Plain">steps { sh &#39;make test-integration&#39; }</span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">}</span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">}</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">}</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">stage(&#39;Deploy&#39;) {</span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">steps {</span>
-<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">sh &#39;make deploy&#39;</span>
-<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">}</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">}</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">}</span>
+<span class="l l-Scalar l-Scalar-Plain">agent any</span>
+<span class="l l-Scalar l-Scalar-Plain">stages {</span>
+<span class="l l-Scalar l-Scalar-Plain">stage(&#39;Build&#39;) {</span>
+<span class="l l-Scalar l-Scalar-Plain">steps {</span>
+<span class="l l-Scalar l-Scalar-Plain">sh &#39;make build&#39;</span>
+<span class="l l-Scalar l-Scalar-Plain">}</span>
+<span class="l l-Scalar l-Scalar-Plain">}</span>
+<span class="l l-Scalar l-Scalar-Plain">stage(&#39;Test&#39;) {</span>
+<span class="l l-Scalar l-Scalar-Plain">parallel {</span>
+<span class="l l-Scalar l-Scalar-Plain">stage(&#39;Unit&#39;) {</span>
+<span class="l l-Scalar l-Scalar-Plain">steps { sh &#39;make test-unit&#39; }</span>
+<span class="l l-Scalar l-Scalar-Plain">}</span>
+<span class="l l-Scalar l-Scalar-Plain">stage(&#39;Integration&#39;) {</span>
+<span class="l l-Scalar l-Scalar-Plain">steps { sh &#39;make test-integration&#39; }</span>
+<span class="l l-Scalar l-Scalar-Plain">}</span>
+<span class="l l-Scalar l-Scalar-Plain">}</span>
+<span class="l l-Scalar l-Scalar-Plain">}</span>
+<span class="l l-Scalar l-Scalar-Plain">stage(&#39;Deploy&#39;) {</span>
+<span class="l l-Scalar l-Scalar-Plain">steps {</span>
+<span class="l l-Scalar l-Scalar-Plain">sh &#39;make deploy&#39;</span>
+<span class="l l-Scalar l-Scalar-Plain">}</span>
+<span class="l l-Scalar l-Scalar-Plain">}</span>
+<span class="l l-Scalar l-Scalar-Plain">}</span>
 <span class="l l-Scalar l-Scalar-Plain">}</span>
 </code></pre></div>
 <h3 id="3-feature-flags">3. Feature Flags</h3>
@@ -5077,16 +5077,20 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
 </code></pre></div>
 <h2 id="common-anti-patterns">Common Anti-Patterns</h2>
-<p>❌ <strong>Avoid These Practices:</strong>
-- Long-lived feature branches
-- Manual deployment steps
-- Infrequent integration
-- Environment-specific builds</p>
-<p>✅ <strong>Instead Do This:</strong>
-- Merge to trunk daily
-- Automate everything
-- Practice continuous integration
-- Build once, deploy many times</p>
+<p>❌ <strong>Avoid These Practices:</strong></p>
+<ul>
+<li>Long-lived feature branches</li>
+<li>Manual deployment steps</li>
+<li>Infrequent integration</li>
+<li>Environment-specific builds</li>
+</ul>
+<p>✅ <strong>Instead Do This:</strong></p>
+<ul>
+<li>Merge to trunk daily</li>
+<li>Automate everything</li>
+<li>Practice continuous integration</li>
+<li>Build once, deploy many times</li>
+</ul>
 <h2 id="tools-integration">Tools Integration</h2>
 <table>
 <thead>

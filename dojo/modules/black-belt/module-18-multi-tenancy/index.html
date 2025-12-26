@@ -5156,11 +5156,13 @@
 <strong>Module</strong>: 2 of 4 (Black Belt)
 <strong>Duration</strong>: 90 minutes
 <strong>Difficulty</strong>: Expert
-<strong>Prerequisites</strong>:
-- Module 17: Platform Architecture complete
-- Deep Kubernetes knowledge
-- Security fundamentals
-- Understanding of identity systems</p>
+<strong>Prerequisites</strong>:</p>
+<ul>
+<li>Module 17: Platform Architecture complete</li>
+<li>Deep Kubernetes knowledge</li>
+<li>Security fundamentals</li>
+<li>Understanding of identity systems</li>
+</ul>
 <hr />
 <h2 id="learning-objectives">📚 Learning Objectives</h2>
 <p>By the end of this module, you will:</p>
@@ -5173,11 +5175,13 @@
 <li>✅ Design quota and resource management</li>
 <li>✅ Handle tenant lifecycle management</li>
 </ol>
-<p><strong>DORA Capabilities Addressed</strong>:
-- ✓ Security &amp; Compliance
-- ✓ Access Control
-- ✓ Team Autonomy (with guardrails)
-- ✓ Resource Efficiency</p>
+<p><strong>DORA Capabilities Addressed</strong>:</p>
+<ul>
+<li>✓ Security &amp; Compliance</li>
+<li>✓ Access Control</li>
+<li>✓ Team Autonomy (with guardrails)</li>
+<li>✓ Resource Efficiency</li>
+</ul>
 <hr />
 <h2 id="part-1-multi-tenancy-fundamentals">📖 Part 1: Multi-Tenancy Fundamentals</h2>
 <h3 id="what-is-multi-tenancy">What is Multi-Tenancy?</h3>
@@ -5204,14 +5208,18 @@
 └─ Namespace: team-gamma-prod
    └─ Deployment: service-c
 </code></pre></div>
-<p><strong>Pros</strong>:
-- ✅ Simple to implement
-- ✅ Low overhead
-- ✅ Easy cross-team communication</p>
-<p><strong>Cons</strong>:
-- ❌ Shared control plane (noisy neighbor)
-- ❌ Limited isolation
-- ❌ Version lock (same K8s version)</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>✅ Simple to implement</li>
+<li>✅ Low overhead</li>
+<li>✅ Easy cross-team communication</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>❌ Shared control plane (noisy neighbor)</li>
+<li>❌ Limited isolation</li>
+<li>❌ Version lock (same K8s version)</li>
+</ul>
 <p><strong>Best For</strong>: Internal teams, trusted tenants</p>
 <h4 id="model-2-virtual-clusters-vcluster">Model 2: Virtual Clusters (vCluster)</h4>
 <div class="highlight"><pre><span></span><code>Host Cluster
@@ -5224,15 +5232,19 @@
 │     └─ Virtual Namespace: default
 └─ Namespace: vcluster-team-gamma
 </code></pre></div>
-<p><strong>Pros</strong>:
-- ✅ Full Kubernetes API per tenant
-- ✅ Different versions possible
-- ✅ Better isolation
-- ✅ Admin-level access per tenant</p>
-<p><strong>Cons</strong>:
-- ❌ More complex
-- ❌ Higher resource overhead
-- ❌ Cross-vCluster networking tricky</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>✅ Full Kubernetes API per tenant</li>
+<li>✅ Different versions possible</li>
+<li>✅ Better isolation</li>
+<li>✅ Admin-level access per tenant</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>❌ More complex</li>
+<li>❌ Higher resource overhead</li>
+<li>❌ Cross-vCluster networking tricky</li>
+</ul>
 <p><strong>Best For</strong>: Agencies, managed services, dev environments</p>
 <h4 id="model-3-cluster-per-team">Model 3: Cluster-per-Team</h4>
 <div class="highlight"><pre><span></span><code>┌──────────────┐  ┌──────────────┐  ┌──────────────┐
@@ -5242,14 +5254,18 @@
 │ Full Control │  │ Full Control │  │ Full Control │
 └──────────────┘  └──────────────┘  └──────────────┘
 </code></pre></div>
-<p><strong>Pros</strong>:
-- ✅ Complete isolation
-- ✅ Full autonomy
-- ✅ Blast radius contained</p>
-<p><strong>Cons</strong>:
-- ❌ High cost
-- ❌ Management overhead
-- ❌ Shared services duplication</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>✅ Complete isolation</li>
+<li>✅ Full autonomy</li>
+<li>✅ Blast radius contained</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>❌ High cost</li>
+<li>❌ Management overhead</li>
+<li>❌ Shared services duplication</li>
+</ul>
 <p><strong>Best For</strong>: Large enterprises, critical workloads, external customers</p>
 <h3 id="security-boundaries">Security Boundaries</h3>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────┐
@@ -5296,25 +5312,25 @@
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">developer</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-prod</span>
 <span class="nt">rules</span><span class="p">:</span>
-<span class="c1"># Read access to most resources</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;pods&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;services&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;configmaps&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;secrets&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;watch&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="c1"># Read access to most resources</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;pods&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;services&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;configmaps&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;secrets&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;watch&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="c1"># Write access to deployments</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;apps&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;deployments&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;replicasets&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;watch&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;create&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;update&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;patch&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="c1"># Write access to deployments</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;apps&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;deployments&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;replicasets&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;watch&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;create&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;update&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;patch&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="c1"># Execute into pods for debugging</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;pods/exec&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;create&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="c1"># Execute into pods for debugging</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;pods/exec&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;create&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="c1"># View logs</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;pods/log&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="c1"># View logs</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;pods/log&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <h4 id="2-admin-role-namespace-scoped">2. Admin Role (Namespace-scoped)</h4>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io/v1</span>
@@ -5323,10 +5339,10 @@
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-admin</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-prod</span>
 <span class="nt">rules</span><span class="p">:</span>
-<span class="c1"># Full access to namespace resources</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="c1"># Full access to namespace resources</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <h4 id="3-platform-admin-role-cluster-scoped">3. Platform Admin Role (Cluster-scoped)</h4>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io/v1</span>
@@ -5334,14 +5350,14 @@
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-admin</span>
 <span class="nt">rules</span><span class="p">:</span>
-<span class="c1"># Full cluster access</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="c1"># Full cluster access</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="c1"># Access to cluster-scoped resources</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">nonResourceURLs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="c1"># Access to cluster-scoped resources</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">nonResourceURLs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <h4 id="4-read-only-role-cluster-scoped">4. Read-Only Role (Cluster-scoped)</h4>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io/v1</span>
@@ -5349,9 +5365,9 @@
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read-only</span>
 <span class="nt">rules</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;watch&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;watch&quot;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <h3 id="rolebinding-examples">RoleBinding Examples</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Bind developer role to user</span>
@@ -5361,9 +5377,9 @@
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alice-developer</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-prod</span>
 <span class="nt">subjects</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">User</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alice@company.com</span>
-<span class="w">  </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">User</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alice@company.com</span>
+<span class="w">    </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io</span>
 <span class="nt">roleRef</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Role</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">developer</span>
@@ -5377,9 +5393,9 @@
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-admins</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-prod</span>
 <span class="nt">subjects</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Group</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-leads</span>
-<span class="w">  </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Group</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-leads</span>
+<span class="w">    </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io</span>
 <span class="nt">roleRef</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Role</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-admin</span>
@@ -5392,9 +5408,9 @@
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-admins</span>
 <span class="nt">subjects</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Group</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-team</span>
-<span class="w">  </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Group</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-team</span>
+<span class="w">    </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io</span>
 <span class="nt">roleRef</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterRole</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-admin</span>
@@ -5416,12 +5432,12 @@
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deployer</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-prod</span>
 <span class="nt">rules</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;apps&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;deployments&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;update&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;patch&quot;</span><span class="p p-Indicator">]</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;pods&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;apps&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;deployments&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;update&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;patch&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;pods&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">]</span>
 
 <span class="nn">---</span>
 <span class="c1"># Bind role to service account</span>
@@ -5431,9 +5447,9 @@
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ci-deployer-binding</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-prod</span>
 <span class="nt">subjects</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ci-deployer</span>
-<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-prod</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ci-deployer</span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-prod</span>
 <span class="nt">roleRef</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Role</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deployer</span>
@@ -5490,19 +5506,19 @@ Examples:
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-prod</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">max</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;4&quot;</span>
-<span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8Gi&quot;</span>
-<span class="w">    </span><span class="nt">min</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10m&quot;</span>
-<span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10Mi&quot;</span>
-<span class="w">    </span><span class="nt">default</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span>
-<span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span>
-<span class="w">    </span><span class="nt">defaultRequest</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
-<span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Container</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">max</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;4&quot;</span>
+<span class="w">        </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8Gi&quot;</span>
+<span class="w">      </span><span class="nt">min</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10m&quot;</span>
+<span class="w">        </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10Mi&quot;</span>
+<span class="w">      </span><span class="nt">default</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span>
+<span class="w">        </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span>
+<span class="w">      </span><span class="nt">defaultRequest</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
+<span class="w">        </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Container</span>
 
 <span class="nn">---</span>
 <span class="c1"># Network Policy (deny all by default)</span>
@@ -5514,8 +5530,8 @@ Examples:
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">podSelector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 <span class="w">  </span><span class="nt">policyTypes</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Egress</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Egress</span>
 </code></pre></div>
 <h3 id="automated-namespace-provisioning">Automated Namespace Provisioning</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># namespace_provisioner.py</span>
@@ -5884,8 +5900,8 @@ Examples:
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">priorityClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
 <span class="w">  </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
-<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v1.0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
+<span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v1.0</span>
 </code></pre></div>
 <hr />
 <h2 id="part-6-network-isolation">🔒 Part 6: Network Isolation</h2>
@@ -5899,8 +5915,8 @@ Examples:
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">podSelector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 <span class="w">  </span><span class="nt">policyTypes</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Egress</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Egress</span>
 </code></pre></div>
 <p><strong>Allow Within Namespace</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
@@ -5911,10 +5927,10 @@ Examples:
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">podSelector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 <span class="w">  </span><span class="nt">policyTypes</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
 <span class="w">  </span><span class="nt">ingress</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">podSelector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">podSelector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 </code></pre></div>
 <p><strong>Allow from Ingress</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
@@ -5927,15 +5943,15 @@ Examples:
 <span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
 <span class="w">  </span><span class="nt">policyTypes</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
 <span class="w">  </span><span class="nt">ingress</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespaceSelector</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">matchLabels</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingress-nginx</span>
-<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
-<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespaceSelector</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingress-nginx</span>
+<span class="w">      </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">          </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
 </code></pre></div>
 <p><strong>Allow Egress to DNS and External</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
@@ -5946,74 +5962,94 @@ Examples:
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">podSelector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 <span class="w">  </span><span class="nt">policyTypes</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Egress</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Egress</span>
 <span class="w">  </span><span class="nt">egress</span><span class="p">:</span>
-<span class="w">  </span><span class="c1"># Allow DNS</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespaceSelector</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">matchLabels</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kube-system</span>
-<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UDP</span>
-<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">53</span>
-<span class="w">  </span><span class="c1"># Allow external HTTPS</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">podSelector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
-<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
-<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">443</span>
+<span class="w">    </span><span class="c1"># Allow DNS</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespaceSelector</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kube-system</span>
+<span class="w">      </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UDP</span>
+<span class="w">          </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">53</span>
+<span class="w">    </span><span class="c1"># Allow external HTTPS</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">podSelector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">      </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">          </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">443</span>
 </code></pre></div>
 <hr />
 <h2 id="part-7-hands-on-lab-build-multi-tenant-platform">💪 Part 7: Hands-On Lab - Build Multi-Tenant Platform</h2>
 <h3 id="scenario">Scenario</h3>
 <p>Design multi-tenancy for 10 engineering teams.</p>
-<p><strong>Requirements</strong>:
-- Namespace isolation
-- RBAC for developers and admins
-- Resource quotas per team
-- Network policies (zero-trust)
-- Policy enforcement (OPA)
-- Cost allocation per team</p>
+<p><strong>Requirements</strong>:</p>
+<ul>
+<li>Namespace isolation</li>
+<li>RBAC for developers and admins</li>
+<li>Resource quotas per team</li>
+<li>Network policies (zero-trust)</li>
+<li>Policy enforcement (OPA)</li>
+<li>Cost allocation per team</li>
+</ul>
 <h3 id="tasks">Tasks</h3>
-<p><strong>Task 1: Design Tenancy Model</strong>
-- [ ] Choose model (namespace/vcluster/cluster)
-- [ ] Define namespace naming convention
-- [ ] Create namespace template</p>
-<p><strong>Task 2: Implement RBAC</strong>
-- [ ] Create developer role
-- [ ] Create admin role
-- [ ] Create read-only role
-- [ ] Set up RoleBindings</p>
-<p><strong>Task 3: Configure Resource Management</strong>
-- [ ] Define quota tiers (small/medium/large)
-- [ ] Create LimitRanges
-- [ ] Set up PriorityClasses</p>
-<p><strong>Task 4: Implement Network Isolation</strong>
-- [ ] Default deny all traffic
-- [ ] Allow intra-namespace
-- [ ] Allow from ingress
-- [ ] Allow DNS and external</p>
-<p><strong>Task 5: Policy Enforcement</strong>
-- [ ] Require labels policy
-- [ ] Block privileged containers
-- [ ] Enforce resource limits
-- [ ] Restrict image registries</p>
-<p><strong>Task 6: Automation</strong>
-- [ ] Namespace provisioning script
-- [ ] RBAC automation
-- [ ] Onboarding documentation</p>
-<p><strong>Validation</strong>:
-- [ ] Namespace isolation working
-- [ ] RBAC permissions correct
-- [ ] Resource quotas enforced
-- [ ] Network policies blocking unauthorized traffic
-- [ ] OPA policies validating resources
-- [ ] Cost allocation labels present</p>
+<p><strong>Task 1: Design Tenancy Model</strong></p>
+<ul>
+<li>[ ] Choose model (namespace/vcluster/cluster)</li>
+<li>[ ] Define namespace naming convention</li>
+<li>[ ] Create namespace template</li>
+</ul>
+<p><strong>Task 2: Implement RBAC</strong></p>
+<ul>
+<li>[ ] Create developer role</li>
+<li>[ ] Create admin role</li>
+<li>[ ] Create read-only role</li>
+<li>[ ] Set up RoleBindings</li>
+</ul>
+<p><strong>Task 3: Configure Resource Management</strong></p>
+<ul>
+<li>[ ] Define quota tiers (small/medium/large)</li>
+<li>[ ] Create LimitRanges</li>
+<li>[ ] Set up PriorityClasses</li>
+</ul>
+<p><strong>Task 4: Implement Network Isolation</strong></p>
+<ul>
+<li>[ ] Default deny all traffic</li>
+<li>[ ] Allow intra-namespace</li>
+<li>[ ] Allow from ingress</li>
+<li>[ ] Allow DNS and external</li>
+</ul>
+<p><strong>Task 5: Policy Enforcement</strong></p>
+<ul>
+<li>[ ] Require labels policy</li>
+<li>[ ] Block privileged containers</li>
+<li>[ ] Enforce resource limits</li>
+<li>[ ] Restrict image registries</li>
+</ul>
+<p><strong>Task 6: Automation</strong></p>
+<ul>
+<li>[ ] Namespace provisioning script</li>
+<li>[ ] RBAC automation</li>
+<li>[ ] Onboarding documentation</li>
+</ul>
+<p><strong>Validation</strong>:</p>
+<ul>
+<li>[ ] Namespace isolation working</li>
+<li>[ ] RBAC permissions correct</li>
+<li>[ ] Resource quotas enforced</li>
+<li>[ ] Network policies blocking unauthorized traffic</li>
+<li>[ ] OPA policies validating resources</li>
+<li>[ ] Cost allocation labels present</li>
+</ul>
 <hr />
 <h2 id="part-8-knowledge-check">🎓 Part 8: Knowledge Check</h2>
 <ol>
-<li><strong>What's the lightest multi-tenancy model?</strong></li>
-<li>[x] Namespace-per-team</li>
+<li>
+<p><strong>What's the lightest multi-tenancy model?</strong></p>
+</li>
+<li>
+<p>[x] Namespace-per-team</p>
+</li>
 <li>[ ] vCluster</li>
 <li>[ ] Cluster-per-team</li>
 <li>
@@ -6022,7 +6058,9 @@ Examples:
 <li>
 <p><strong>What does RBAC stand for?</strong></p>
 </li>
-<li>[ ] Resource-Based Access Control</li>
+<li>
+<p>[ ] Resource-Based Access Control</p>
+</li>
 <li>[x] Role-Based Access Control</li>
 <li>[ ] Rule-Based Access Control</li>
 <li>
@@ -6031,7 +6069,9 @@ Examples:
 <li>
 <p><strong>Which is cluster-scoped?</strong></p>
 </li>
-<li>[ ] Role</li>
+<li>
+<p>[ ] Role</p>
+</li>
 <li>[x] ClusterRole</li>
 <li>[ ] RoleBinding</li>
 <li>
@@ -6040,7 +6080,9 @@ Examples:
 <li>
 <p><strong>What does OPA stand for?</strong></p>
 </li>
-<li>[ ] Optimal Policy Agent</li>
+<li>
+<p>[ ] Optimal Policy Agent</p>
+</li>
 <li>[x] Open Policy Agent</li>
 <li>[ ] Orchestrated Policy Administration</li>
 <li>
@@ -6049,7 +6091,9 @@ Examples:
 <li>
 <p><strong>What enforces resource limits per namespace?</strong></p>
 </li>
-<li>[ ] NetworkPolicy</li>
+<li>
+<p>[ ] NetworkPolicy</p>
+</li>
 <li>[ ] PodSecurityPolicy</li>
 <li>[x] ResourceQuota</li>
 <li>
@@ -6058,7 +6102,9 @@ Examples:
 <li>
 <p><strong>Default network policy should be:</strong></p>
 </li>
-<li>[x] Deny all, whitelist specific traffic</li>
+<li>
+<p>[x] Deny all, whitelist specific traffic</p>
+</li>
 <li>[ ] Allow all, blacklist bad traffic</li>
 <li>[ ] No policy needed</li>
 <li>
@@ -6067,7 +6113,9 @@ Examples:
 <li>
 <p><strong>What does vCluster provide?</strong></p>
 </li>
-<li>[ ] Virtual machines</li>
+<li>
+<p>[ ] Virtual machines</p>
+</li>
 <li>[ ] Virtual networks</li>
 <li>[x] Virtual Kubernetes control planes</li>
 <li>
@@ -6102,15 +6150,19 @@ Examples:
 <li><strong>Document everything</strong> - Clear ownership and boundaries</li>
 </ol>
 <h3 id="real-world-impact">Real-World Impact</h3>
-<p>"After implementing proper multi-tenancy:
-- <strong>Onboarding time</strong>: 2 weeks → 1 hour (automation)
-- <strong>Security incidents</strong>: 12/year → 1/year (isolation)
-- <strong>Resource waste</strong>: 40% → 10% (quotas)
-- <strong>Cost allocation</strong>: Impossible → Precise (labels)
-- <strong>Team autonomy</strong>: Limited → High (self-service)
-- <strong>Compliance</strong>: Manual → Automated (OPA)</p>
-<p>We scaled from 5 teams to 50 teams without increasing platform team size."
-- <em>Platform Director, Tech Unicorn</em></p>
+<p>"After implementing proper multi-tenancy:</p>
+<ul>
+<li><strong>Onboarding time</strong>: 2 weeks → 1 hour (automation)</li>
+<li><strong>Security incidents</strong>: 12/year → 1/year (isolation)</li>
+<li><strong>Resource waste</strong>: 40% → 10% (quotas)</li>
+<li><strong>Cost allocation</strong>: Impossible → Precise (labels)</li>
+<li><strong>Team autonomy</strong>: Limited → High (self-service)</li>
+<li><strong>Compliance</strong>: Manual → Automated (OPA)</li>
+</ul>
+<p>We scaled from 5 teams to 50 teams without increasing platform team size."</p>
+<ul>
+<li><em>Platform Director, Tech Unicorn</em></li>
+</ul>
 <hr />
 <h2 id="additional-resources">📚 Additional Resources</h2>
 <h3 id="tools">Tools</h3>
@@ -6136,8 +6188,12 @@ Examples:
 <h2 id="module-completion">🏅 Module Completion</h2>
 <h3 id="assessment-checklist">Assessment Checklist</h3>
 <ul>
-<li>[ ] <strong>Conceptual Understanding</strong></li>
-<li>[ ] Explain tenancy models</li>
+<li>
+<p>[ ] <strong>Conceptual Understanding</strong></p>
+</li>
+<li>
+<p>[ ] Explain tenancy models</p>
+</li>
 <li>[ ] Understand RBAC components</li>
 <li>
 <p>[ ] Know isolation strategies</p>
@@ -6145,7 +6201,9 @@ Examples:
 <li>
 <p>[ ] <strong>Practical Skills</strong></p>
 </li>
-<li>[ ] Design namespace strategy</li>
+<li>
+<p>[ ] Design namespace strategy</p>
+</li>
 <li>[ ] Implement RBAC</li>
 <li>[ ] Create OPA policies</li>
 <li>[ ] Configure network policies</li>
@@ -6155,7 +6213,9 @@ Examples:
 <li>
 <p>[ ] <strong>Hands-On Lab</strong></p>
 </li>
-<li>[ ] Multi-tenant platform designed</li>
+<li>
+<p>[ ] Multi-tenant platform designed</p>
+</li>
 <li>[ ] RBAC implemented correctly</li>
 <li>[ ] Policies enforcing rules</li>
 <li>
@@ -6167,10 +6227,12 @@ Examples:
 <li>[ ] Score 80% or higher (6/8 questions)</li>
 </ul>
 <h3 id="certification-credit">Certification Credit</h3>
-<p>Upon completion, you earn:
-- <strong>10 points</strong> toward Black Belt certification (50% complete)
-- <strong>Badge</strong>: "Multi-Tenancy Architect"
-- <strong>Skill Unlocked</strong>: Enterprise Platform Design</p>
+<p>Upon completion, you earn:</p>
+<ul>
+<li><strong>10 points</strong> toward Black Belt certification (50% complete)</li>
+<li><strong>Badge</strong>: "Multi-Tenancy Architect"</li>
+<li><strong>Skill Unlocked</strong>: Enterprise Platform Design</li>
+</ul>
 <hr />
 <h2 id="black-belt-progress">🎖️ Black Belt Progress</h2>
 <div class="highlight"><pre><span></span><code>Black Belt: Platform Architecture

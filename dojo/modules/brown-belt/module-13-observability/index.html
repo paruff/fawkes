@@ -6102,18 +6102,24 @@
 <hr />
 <h2 id="part-1-understanding-observability-in-platform-engineering">Part 1: Understanding Observability in Platform Engineering</h2>
 <h3 id="the-three-pillars-of-observability">The Three Pillars of Observability</h3>
-<p><strong>Metrics</strong>: Numerical measurements over time
-- Infrastructure metrics (CPU, memory, disk, network)
-- Application metrics (request rate, error rate, latency)
-- Business metrics (deployments, lead time, failure rate)</p>
-<p><strong>Logs</strong>: Event records from systems and applications
-- Structured vs. unstructured logs
-- Log aggregation and centralization
-- Log levels and filtering</p>
-<p><strong>Traces</strong>: Request flows through distributed systems
-- Distributed tracing concepts
-- Span and trace relationships
-- Performance bottleneck identification</p>
+<p><strong>Metrics</strong>: Numerical measurements over time</p>
+<ul>
+<li>Infrastructure metrics (CPU, memory, disk, network)</li>
+<li>Application metrics (request rate, error rate, latency)</li>
+<li>Business metrics (deployments, lead time, failure rate)</li>
+</ul>
+<p><strong>Logs</strong>: Event records from systems and applications</p>
+<ul>
+<li>Structured vs. unstructured logs</li>
+<li>Log aggregation and centralization</li>
+<li>Log levels and filtering</li>
+</ul>
+<p><strong>Traces</strong>: Request flows through distributed systems</p>
+<ul>
+<li>Distributed tracing concepts</li>
+<li>Span and trace relationships</li>
+<li>Performance bottleneck identification</li>
+</ul>
 <h3 id="why-observability-matters-for-dora">Why Observability Matters for DORA</h3>
 <p>The Four Key Metrics require robust observability:</p>
 <ol>
@@ -6197,11 +6203,13 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>svc/prometheus-grafana<span class="w"> </span><span class="m">3000</span>:80
 </code></pre></div>
 <p>Visit <code>http://localhost:3000</code> and log in with admin credentials.</p>
-<p><strong>Add Loki Data Source:</strong>
-1. Go to Configuration → Data Sources
-2. Add data source → Loki
-3. URL: <code>http://loki:3100</code>
-4. Save &amp; Test</p>
+<p><strong>Add Loki Data Source:</strong></p>
+<ol>
+<li>Go to Configuration → Data Sources</li>
+<li>Add data source → Loki</li>
+<li>URL: <code>http://loki:3100</code></li>
+<li>Save &amp; Test</li>
+</ol>
 <h3 id="step-4-verify-metrics-collection">Step 4: Verify Metrics Collection</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Prometheus targets</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>svc/prometheus-kube-prometheus-prometheus<span class="w"> </span><span class="m">9090</span>:9090
@@ -6209,13 +6217,15 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 <span class="c1"># Open http://localhost:9090/targets</span>
 <span class="c1"># Verify all targets are &quot;UP&quot;</span>
 </code></pre></div>
-<p><strong>Expected targets:</strong>
-- kubernetes-apiservers
-- kubernetes-nodes
-- kubernetes-pods
-- kubernetes-service-endpoints
-- kube-state-metrics
-- node-exporter</p>
+<p><strong>Expected targets:</strong></p>
+<ul>
+<li>kubernetes-apiservers</li>
+<li>kubernetes-nodes</li>
+<li>kubernetes-pods</li>
+<li>kubernetes-service-endpoints</li>
+<li>kube-state-metrics</li>
+<li>node-exporter</li>
+</ul>
 <hr />
 <h2 id="part-4-configuring-dora-metrics-dashboards">Part 4: Configuring DORA Metrics Dashboards</h2>
 <h3 id="creating-custom-metrics">Creating Custom Metrics</h3>
@@ -6312,12 +6322,12 @@ cat<span class="w"> </span><span class="s">&lt;&lt;EOF | curl --data-binary @- h
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Import into Grafana:
+<p>Import into Grafana:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Import dashboard</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://admin:admin123@localhost:3000/api/dashboards/db<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-d<span class="w"> </span>@dora-metrics-dashboard.json
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="part-5-alerting-and-incident-response">Part 5: Alerting and Incident Response</h2>
 <h3 id="configuring-alertmanager">Configuring AlertManager</h3>
@@ -6325,45 +6335,45 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 <div class="highlight"><pre><span></span><code><span class="c1"># alertmanager-config.yaml</span>
 <span class="nt">global</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">resolve_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
-<span class="w">  </span><span class="nt">slack_api_url</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK&#39;</span>
+<span class="w">  </span><span class="nt">slack_api_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK&quot;</span>
 
 <span class="nt">route</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">group_by</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;alertname&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;cluster&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;service&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">group_by</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;alertname&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cluster&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;service&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">group_wait</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
 <span class="w">  </span><span class="nt">group_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
 <span class="w">  </span><span class="nt">repeat_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12h</span>
-<span class="w">  </span><span class="nt">receiver</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;default&#39;</span>
+<span class="w">  </span><span class="nt">receiver</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;default&quot;</span>
 <span class="w">  </span><span class="nt">routes</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
-<span class="w">    </span><span class="nt">receiver</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;pagerduty-critical&#39;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
-<span class="w">    </span><span class="nt">receiver</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;slack-warnings&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
+<span class="w">      </span><span class="nt">receiver</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pagerduty-critical&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
+<span class="w">      </span><span class="nt">receiver</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;slack-warnings&quot;</span>
 
 <span class="nt">receivers</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;default&#39;</span>
-<span class="w">  </span><span class="nt">slack_configs</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;#alerts&#39;</span>
-<span class="w">    </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Alert:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">.GroupLabels.alertname</span><span class="nv"> </span><span class="s">}}&#39;</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">range</span><span class="nv"> </span><span class="s">.Alerts</span><span class="nv"> </span><span class="s">}}{{</span><span class="nv"> </span><span class="s">.Annotations.description</span><span class="nv"> </span><span class="s">}}{{</span><span class="nv"> </span><span class="s">end</span><span class="nv"> </span><span class="s">}}&#39;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;default&quot;</span>
+<span class="w">    </span><span class="nt">slack_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#alerts&quot;</span>
+<span class="w">        </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Alert:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">.GroupLabels.alertname</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">        </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">range</span><span class="nv"> </span><span class="s">.Alerts</span><span class="nv"> </span><span class="s">}}{{</span><span class="nv"> </span><span class="s">.Annotations.description</span><span class="nv"> </span><span class="s">}}{{</span><span class="nv"> </span><span class="s">end</span><span class="nv"> </span><span class="s">}}&quot;</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;pagerduty-critical&#39;</span>
-<span class="w">  </span><span class="nt">pagerduty_configs</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">service_key</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;YOUR_PAGERDUTY_KEY&#39;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pagerduty-critical&quot;</span>
+<span class="w">    </span><span class="nt">pagerduty_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">service_key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;YOUR_PAGERDUTY_KEY&quot;</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;slack-warnings&#39;</span>
-<span class="w">  </span><span class="nt">slack_configs</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;#warnings&#39;</span>
-<span class="w">    </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Warning:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">.GroupLabels.alertname</span><span class="nv"> </span><span class="s">}}&#39;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;slack-warnings&quot;</span>
+<span class="w">    </span><span class="nt">slack_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#warnings&quot;</span>
+<span class="w">        </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Warning:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">.GroupLabels.alertname</span><span class="nv"> </span><span class="s">}}&quot;</span>
 </code></pre></div>
-<p>Apply configuration:
+<p>Apply configuration:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>alertmanager-config<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--from-file<span class="o">=</span>alertmanager.yaml<span class="o">=</span>alertmanager-config.yaml<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-n<span class="w"> </span>monitoring
 
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>statefulset/alertmanager-prometheus-kube-prometheus-alertmanager<span class="w"> </span>-n<span class="w"> </span>monitoring
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="creating-alert-rules">Creating Alert Rules</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># prometheus-rules.yaml</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring.coreos.com/v1</span>
@@ -6373,59 +6383,59 @@ kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">groups</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform_health</span>
-<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
-<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighPodCrashRate</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(kube_pod_container_status_restarts_total[15m]) &gt; 0.1</span>
-<span class="w">      </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
-<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
-<span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">pod</span><span class="nv"> </span><span class="s">crash</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">detected&quot;</span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pod</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.pod</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">crash-looping&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform_health</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
+<span class="w">      </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighPodCrashRate</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(kube_pod_container_status_restarts_total[15m]) &gt; 0.1</span>
+<span class="w">          </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
+<span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">pod</span><span class="nv"> </span><span class="s">crash</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">detected&quot;</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pod</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.pod</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">crash-looping&quot;</span>
 
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DeploymentFailed</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">increase(deployment_result{status=&quot;failure&quot;}[5m]) &gt; 0</span>
-<span class="w">      </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
-<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
-<span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Deployment</span><span class="nv"> </span><span class="s">failure</span><span class="nv"> </span><span class="s">detected&quot;</span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Deployment</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.application</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">failed&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DeploymentFailed</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">increase(deployment_result{status=&quot;failure&quot;}[5m]) &gt; 0</span>
+<span class="w">          </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
+<span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
+<span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Deployment</span><span class="nv"> </span><span class="s">failure</span><span class="nv"> </span><span class="s">detected&quot;</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Deployment</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.application</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">failed&quot;</span>
 
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighChangeFailureRate</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">        </span><span class="no">sum(rate(deployment_result{status=&quot;failure&quot;}[7d]))</span>
-<span class="w">        </span><span class="no">/ sum(rate(deployment_result[7d])) * 100 &gt; 15</span>
-<span class="w">      </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
-<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
-<span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Change</span><span class="nv"> </span><span class="s">failure</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">exceeds</span><span class="nv"> </span><span class="s">15%&quot;</span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Current</span><span class="nv"> </span><span class="s">CFR:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}%&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighChangeFailureRate</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">sum(rate(deployment_result{status=&quot;failure&quot;}[7d]))</span>
+<span class="w">            </span><span class="no">/ sum(rate(deployment_result[7d])) * 100 &gt; 15</span>
+<span class="w">          </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
+<span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
+<span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Change</span><span class="nv"> </span><span class="s">failure</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">exceeds</span><span class="nv"> </span><span class="s">15%&quot;</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Current</span><span class="nv"> </span><span class="s">CFR:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}%&quot;</span>
 
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LowDeploymentFrequency</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sum(rate(deployment_total[1d])) &lt; 0.1</span>
-<span class="w">      </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1h</span>
-<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
-<span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Deployment</span><span class="nv"> </span><span class="s">frequency</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">low&quot;</span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Less</span><span class="nv"> </span><span class="s">than</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">deployment</span><span class="nv"> </span><span class="s">per</span><span class="nv"> </span><span class="s">10</span><span class="nv"> </span><span class="s">days&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LowDeploymentFrequency</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sum(rate(deployment_total[1d])) &lt; 0.1</span>
+<span class="w">          </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1h</span>
+<span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
+<span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Deployment</span><span class="nv"> </span><span class="s">frequency</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">low&quot;</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Less</span><span class="nv"> </span><span class="s">than</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">deployment</span><span class="nv"> </span><span class="s">per</span><span class="nv"> </span><span class="s">10</span><span class="nv"> </span><span class="s">days&quot;</span>
 
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighLeadTime</span>
-<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avg(lead_time_seconds) &gt; 86400</span>
-<span class="w">      </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1h</span>
-<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
-<span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Lead</span><span class="nv"> </span><span class="s">time</span><span class="nv"> </span><span class="s">exceeds</span><span class="nv"> </span><span class="s">24</span><span class="nv"> </span><span class="s">hours&quot;</span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Average</span><span class="nv"> </span><span class="s">lead</span><span class="nv"> </span><span class="s">time:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}s&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighLeadTime</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avg(lead_time_seconds) &gt; 86400</span>
+<span class="w">          </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1h</span>
+<span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
+<span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Lead</span><span class="nv"> </span><span class="s">time</span><span class="nv"> </span><span class="s">exceeds</span><span class="nv"> </span><span class="s">24</span><span class="nv"> </span><span class="s">hours&quot;</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Average</span><span class="nv"> </span><span class="s">lead</span><span class="nv"> </span><span class="s">time:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}s&quot;</span>
 </code></pre></div>
-<p>Apply rules:
+<p>Apply rules:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>prometheus-rules.yaml
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="part-6-application-performance-monitoring-with-tracing">Part 6: Application Performance Monitoring with Tracing</h2>
 <h3 id="deploy-tempo-for-distributed-tracing">Deploy Tempo for Distributed Tracing</h3>
@@ -6476,15 +6486,15 @@ helm<span class="w"> </span>install<span class="w"> </span>tempo<span class="w">
 <hr />
 <h2 id="part-7-log-analysis-and-troubleshooting">Part 7: Log Analysis and Troubleshooting</h2>
 <h3 id="effective-log-queries-with-logql">Effective Log Queries with LogQL</h3>
-<p><strong>Find errors in the last hour:</strong>
+<p><strong>Find errors in the last hour:</strong></p>
 <div class="highlight"><pre><span></span><code>{namespace=&quot;fawkes-platform&quot;} |= &quot;ERROR&quot; | json | line_format &quot;{{.timestamp}} {{.level}} {{.message}}&quot;
-</code></pre></div></p>
-<p><strong>Track deployment events:</strong>
+</code></pre></div>
+<p><strong>Track deployment events:</strong></p>
 <div class="highlight"><pre><span></span><code>{job=&quot;deployment-controller&quot;} |= &quot;deployment&quot; | json | status=&quot;success&quot;
-</code></pre></div></p>
-<p><strong>Analyze slow requests:</strong>
+</code></pre></div>
+<p><strong>Analyze slow requests:</strong></p>
 <div class="highlight"><pre><span></span><code>{app=&quot;api-gateway&quot;} | json | duration &gt; 1000 | line_format &quot;Slow request: {{.path}} took {{.duration}}ms&quot;
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="creating-log-based-alerts">Creating Log-Based Alerts</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Grafana alert from logs</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighErrorRate</span>
@@ -6539,15 +6549,17 @@ helm<span class="w"> </span>install<span class="w"> </span>tempo<span class="w">
 <p><strong>Objective</strong>: Implement end-to-end observability for a sample application deployed on Fawkes.</p>
 <p><strong>Steps:</strong></p>
 <ol>
-<li>
-<p><strong>Deploy Sample Application</strong>
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>exercises/sample-app/
-</code></pre></div></p>
-</li>
+<li><strong>Deploy Sample Application</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>exercises/sample-app/
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Configure Application Metrics</strong></p>
 </li>
-<li>Expose Prometheus metrics endpoint</li>
+<li>
+<p>Expose Prometheus metrics endpoint</p>
+</li>
 <li>Add custom business metrics</li>
 <li>
 <p>Verify scraping in Prometheus</p>
@@ -6555,7 +6567,9 @@ helm<span class="w"> </span>install<span class="w"> </span>tempo<span class="w">
 <li>
 <p><strong>Set Up Logging</strong></p>
 </li>
-<li>Ensure structured JSON logs</li>
+<li>
+<p>Ensure structured JSON logs</p>
+</li>
 <li>Verify logs appear in Loki</li>
 <li>
 <p>Create useful log queries</p>
@@ -6563,7 +6577,9 @@ helm<span class="w"> </span>install<span class="w"> </span>tempo<span class="w">
 <li>
 <p><strong>Create Dashboard</strong></p>
 </li>
-<li>Import base dashboard template</li>
+<li>
+<p>Import base dashboard template</p>
+</li>
 <li>Add custom panels for your app</li>
 <li>
 <p>Configure variables for filtering</p>
@@ -6571,7 +6587,9 @@ helm<span class="w"> </span>install<span class="w"> </span>tempo<span class="w">
 <li>
 <p><strong>Configure Alerts</strong></p>
 </li>
-<li>Create alert for high error rate</li>
+<li>
+<p>Create alert for high error rate</p>
+</li>
 <li>Create alert for deployment failures</li>
 <li>
 <p>Test alert firing and resolution</p>
@@ -6579,7 +6597,9 @@ helm<span class="w"> </span>install<span class="w"> </span>tempo<span class="w">
 <li>
 <p><strong>Implement Tracing</strong></p>
 </li>
-<li>Add OpenTelemetry instrumentation</li>
+<li>
+<p>Add OpenTelemetry instrumentation</p>
+</li>
 <li>Generate sample traces</li>
 <li>
 <p>Correlate traces with logs</p>
@@ -6592,28 +6612,30 @@ helm<span class="w"> </span>install<span class="w"> </span>tempo<span class="w">
 <li>Calculate all four metrics</li>
 <li>Identify improvement opportunities</li>
 </ol>
-<p><strong>Validation Checklist:</strong>
-- [ ] Application metrics visible in Prometheus
-- [ ] Logs searchable in Grafana/Loki
-- [ ] Dashboard shows real-time data
-- [ ] Alerts fire and resolve correctly
-- [ ] Traces show request flows
-- [ ] DORA metrics calculated and displayed</p>
+<p><strong>Validation Checklist:</strong></p>
+<ul>
+<li>[ ] Application metrics visible in Prometheus</li>
+<li>[ ] Logs searchable in Grafana/Loki</li>
+<li>[ ] Dashboard shows real-time data</li>
+<li>[ ] Alerts fire and resolve correctly</li>
+<li>[ ] Traces show request flows</li>
+<li>[ ] DORA metrics calculated and displayed</li>
+</ul>
 <hr />
 <h2 id="part-10-advanced-topics">Part 10: Advanced Topics</h2>
 <h3 id="cost-optimization">Cost Optimization</h3>
-<p><strong>Reduce metric cardinality:</strong>
+<p><strong>Reduce metric cardinality:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Drop unnecessary labels</span>
 <span class="nt">metric_relabel_configs</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">__name__</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">regex</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;go_.*&#39;</span>
+<span class="w">    </span><span class="nt">regex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;go_.*&quot;</span>
 <span class="w">    </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">drop</span>
-</code></pre></div></p>
-<p><strong>Adjust retention:</strong>
+</code></pre></div>
+<p><strong>Adjust retention:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Shorter retention for high-volume metrics</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aggregated:deployment_total:sum</span>
 <span class="w">  </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sum(rate(deployment_total[5m])) by (environment)</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="high-availability-setup">High Availability Setup</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Prometheus HA with Thanos</span>
 <span class="nt">prometheus</span><span class="p">:</span>
@@ -6634,7 +6656,7 @@ helm<span class="w"> </span>install<span class="w"> </span>thanos<span class="w"
 <h2 id="part-11-troubleshooting-common-issues">Part 11: Troubleshooting Common Issues</h2>
 <h3 id="prometheus-not-scraping-targets">Prometheus Not Scraping Targets</h3>
 <p><strong>Symptom</strong>: Targets show as "DOWN" in Prometheus</p>
-<p><strong>Solution:</strong>
+<p><strong>Solution:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check ServiceMonitor configuration</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitors<span class="w"> </span>-n<span class="w"> </span>monitoring
 
@@ -6643,19 +6665,19 @@ kubectl<span class="w"> </span>describe<span class="w"> </span>servicemonitor<sp
 
 <span class="c1"># Check network policies</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>networkpolicies<span class="w"> </span>-n<span class="w"> </span>monitoring
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="high-cardinality-problems">High Cardinality Problems</h3>
 <p><strong>Symptom</strong>: Prometheus using excessive memory</p>
-<p><strong>Solution:</strong>
+<p><strong>Solution:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Identify high-cardinality metrics</span>
 curl<span class="w"> </span>http://localhost:9090/api/v1/status/tsdb<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 
 <span class="c1"># Drop or aggregate problematic metrics</span>
 <span class="c1"># Add to prometheus-values.yaml</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="missing-logs-in-loki">Missing Logs in Loki</h3>
 <p><strong>Symptom</strong>: No logs appearing in Grafana</p>
-<p><strong>Solution:</strong>
+<p><strong>Solution:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Promtail is running</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>promtail
 
@@ -6664,7 +6686,7 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 
 <span class="c1"># Check Loki ingester</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>loki<span class="w"> </span>-c<span class="w"> </span>ingester
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="part-12-summary-and-next-steps">Part 12: Summary and Next Steps</h2>
 <h3 id="key-takeaways">Key Takeaways</h3>
@@ -6677,24 +6699,30 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 <li>DORA metrics drive continuous improvement</li>
 </ol>
 <h3 id="measuring-success">Measuring Success</h3>
-<p>After completing this module, you should have:
-- ✅ Working Prometheus + Grafana + Loki stack
-- ✅ Custom dashboards for DORA metrics
-- ✅ Configured alerts for platform health
-- ✅ Application instrumentation for tracing
-- ✅ Log aggregation and search capability
-- ✅ Understanding of observability best practices</p>
+<p>After completing this module, you should have:</p>
+<ul>
+<li>✅ Working Prometheus + Grafana + Loki stack</li>
+<li>✅ Custom dashboards for DORA metrics</li>
+<li>✅ Configured alerts for platform health</li>
+<li>✅ Application instrumentation for tracing</li>
+<li>✅ Log aggregation and search capability</li>
+<li>✅ Understanding of observability best practices</li>
+</ul>
 <h3 id="continuous-improvement">Continuous Improvement</h3>
-<p><strong>Weekly Activities:</strong>
-- Review DORA metrics trends
-- Analyze alert patterns
-- Optimize slow queries
-- Update dashboards based on team feedback</p>
-<p><strong>Monthly Activities:</strong>
-- Review and adjust alert thresholds
-- Archive old metrics data
-- Update documentation
-- Train team members on new features</p>
+<p><strong>Weekly Activities:</strong></p>
+<ul>
+<li>Review DORA metrics trends</li>
+<li>Analyze alert patterns</li>
+<li>Optimize slow queries</li>
+<li>Update dashboards based on team feedback</li>
+</ul>
+<p><strong>Monthly Activities:</strong></p>
+<ul>
+<li>Review and adjust alert thresholds</li>
+<li>Archive old metrics data</li>
+<li>Update documentation</li>
+<li>Train team members on new features</li>
+</ul>
 <h3 id="additional-resources">Additional Resources</h3>
 <ul>
 <li><a href="https://prometheus.io/docs/">Prometheus Documentation</a></li>
@@ -6718,20 +6746,24 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 <li>How can you reduce monitoring costs?</li>
 </ol>
 <h3 id="practical-assessment">Practical Assessment</h3>
-<p>Complete the following tasks:
-1. Deploy a complete monitoring stack
-2. Create a custom dashboard with DORA metrics
-3. Configure three meaningful alerts
-4. Instrument an application with tracing
-5. Write five useful LogQL queries
-6. Generate a weekly DORA metrics report</p>
+<p>Complete the following tasks:</p>
+<ol>
+<li>Deploy a complete monitoring stack</li>
+<li>Create a custom dashboard with DORA metrics</li>
+<li>Configure three meaningful alerts</li>
+<li>Instrument an application with tracing</li>
+<li>Write five useful LogQL queries</li>
+<li>Generate a weekly DORA metrics report</li>
+</ol>
 <h3 id="bonus-challenge">Bonus Challenge</h3>
-<p>Implement a complete observability solution for a multi-service application that:
-- Tracks deployments across three environments
-- Correlates traces across microservices
-- Provides SLO/SLA dashboards
-- Alerts on DORA metric degradation
-- Exports metrics to external systems</p>
+<p>Implement a complete observability solution for a multi-service application that:</p>
+<ul>
+<li>Tracks deployments across three environments</li>
+<li>Correlates traces across microservices</li>
+<li>Provides SLO/SLA dashboards</li>
+<li>Alerts on DORA metric degradation</li>
+<li>Exports metrics to external systems</li>
+</ul>
 <hr />
 <h2 id="appendix-a-metric-examples-reference">Appendix A: Metric Examples Reference</h2>
 <h3 id="infrastructure-metrics">Infrastructure Metrics</h3>
@@ -6766,11 +6798,13 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 </code></pre></div>
 <hr />
 <h2 id="appendix-b-dashboard-json-templates">Appendix B: Dashboard JSON Templates</h2>
-<p>See the Fawkes repository for complete dashboard templates:
-- <code>dashboards/platform-overview.json</code>
-- <code>dashboards/dora-metrics.json</code>
-- <code>dashboards/application-health.json</code>
-- <code>dashboards/infrastructure.json</code></p>
+<p>See the Fawkes repository for complete dashboard templates:</p>
+<ul>
+<li><code>dashboards/platform-overview.json</code></li>
+<li><code>dashboards/dora-metrics.json</code></li>
+<li><code>dashboards/application-health.json</code></li>
+<li><code>dashboards/infrastructure.json</code></li>
+</ul>
 <hr />
 <h2 id="feedback-and-contributions">Feedback and Contributions</h2>
 <p>Have feedback on this module? Found errors or want to suggest improvements?</p>

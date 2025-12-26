@@ -4972,92 +4972,84 @@
 <h2 id="task-21-nginx-ingress-controller">Task 2.1: nginx-ingress Controller</h2>
 <h3 id="deployment">Deployment</h3>
 <ul>
-<li>
-<p>[ ] Applied ingress-nginx ArgoCD Application:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/ingress-nginx/ingress-nginx-azure-application.yaml
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Namespace created:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>namespace<span class="w"> </span>ingress-nginx
+<li>[ ] Applied ingress-nginx ArgoCD Application:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/ingress-nginx/ingress-nginx-azure-application.yaml
+</code></pre></div>
+<ul>
+<li>[ ] Namespace created:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>namespace<span class="w"> </span>ingress-nginx
 <span class="c1"># Expected: ingress-nginx namespace exists</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Deployment is ready:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
+</code></pre></div>
+<ul>
+<li>[ ] Deployment is ready:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
 <span class="c1"># Expected: 2/2 READY</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Pods are running:
+</code></pre></div>
+<ul>
+<li>[ ] Pods are running:
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
 <span class="c1"># Expected: 2+ controller pods in Running state</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="load-balancer-configuration">Load Balancer Configuration</h3>
 <ul>
-<li>
-<p>[ ] Service type is LoadBalancer:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.type}&#39;</span>
+<li>[ ] Service type is LoadBalancer:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.type}&#39;</span>
 <span class="c1"># Expected: LoadBalancer</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] External IP is assigned:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span>
+</code></pre></div>
+<ul>
+<li>[ ] External IP is assigned:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span>
 <span class="c1"># Expected: IP address (not &lt;pending&gt;)</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Azure Load Balancer health probe is configured:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.metadata.annotations.service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path}&#39;</span>
+</code></pre></div>
+<ul>
+<li>[ ] Azure Load Balancer health probe is configured:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.metadata.annotations.service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path}&#39;</span>
 <span class="c1"># Expected: /healthz</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] External traffic policy is Local:
+</code></pre></div>
+<ul>
+<li>[ ] External traffic policy is Local:
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.externalTrafficPolicy}&#39;</span>
 <span class="c1"># Expected: Local</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="high-availability">High Availability</h3>
 <ul>
-<li>
-<p>[ ] HorizontalPodAutoscaler is configured:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>hpa<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
+<li>[ ] HorizontalPodAutoscaler is configured:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>hpa<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
 <span class="c1"># Expected: HPA exists with min=2, max=10</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Pod anti-affinity is configured:
+</code></pre></div>
+<ul>
+<li>[ ] Pod anti-affinity is configured:
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.template.spec.affinity}&#39;</span>
 <span class="c1"># Expected: podAntiAffinity configuration present</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="metrics-and-monitoring">Metrics and Monitoring</h3>
 <ul>
-<li>
-<p>[ ] Metrics service exists:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller-metrics<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
+<li>[ ] Metrics service exists:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller-metrics<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
 <span class="c1"># Expected: Service exists</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] ServiceMonitor is created (requires Prometheus Operator):
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitor<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
+</code></pre></div>
+<ul>
+<li>[ ] ServiceMonitor is created (requires Prometheus Operator):</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitor<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
 <span class="c1"># Expected: ServiceMonitor exists (or skip if Prometheus Operator not installed)</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] PrometheusRule is created:
+</code></pre></div>
+<ul>
+<li>[ ] PrometheusRule is created:
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>prometheusrule<span class="w"> </span>ingress-nginx<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
 <span class="c1"># Expected: PrometheusRule exists (or skip if Prometheus Operator not installed)</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="validation-script">Validation Script</h3>
 <ul>
@@ -5076,54 +5068,50 @@
 <h2 id="task-22-azure-dns-optional">Task 2.2: Azure DNS (Optional)</h2>
 <h3 id="terraform-configuration">Terraform Configuration</h3>
 <ul>
-<li>
-<p>[ ] DNS variables configured in <code>infra/azure/terraform.tfvars</code>:
-  <div class="highlight"><pre><span></span><code>dns_zone_name = &quot;fawkes.yourdomain.com&quot;
+<li>[ ] DNS variables configured in <code>infra/azure/terraform.tfvars</code>:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>dns_zone_name = &quot;fawkes.yourdomain.com&quot;
 create_dns_records = true
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Terraform initialized:
-  <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra/azure<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>terraform<span class="w"> </span>init
+</code></pre></div>
+<ul>
+<li>[ ] Terraform initialized:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra/azure<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>terraform<span class="w"> </span>init
 <span class="c1"># Expected: Success</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Terraform planned:
+</code></pre></div>
+<ul>
+<li>[ ] Terraform planned:
   <div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>plan
 <span class="c1"># Expected: Shows DNS zone and A records to be created</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="dns-deployment">DNS Deployment</h3>
 <ul>
-<li>
-<p>[ ] Terraform applied:
-  <div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>apply
+<li>[ ] Terraform applied:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>apply
 <span class="c1"># Expected: DNS zone and A records created</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] DNS zone exists:
-  <div class="highlight"><pre><span></span><code>az<span class="w"> </span>network<span class="w"> </span>dns<span class="w"> </span>zone<span class="w"> </span>show<span class="w"> </span>-g<span class="w"> </span>fawkes-rg<span class="w"> </span>-n<span class="w"> </span>fawkes.yourdomain.com
+</code></pre></div>
+<ul>
+<li>[ ] DNS zone exists:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>network<span class="w"> </span>dns<span class="w"> </span>zone<span class="w"> </span>show<span class="w"> </span>-g<span class="w"> </span>fawkes-rg<span class="w"> </span>-n<span class="w"> </span>fawkes.yourdomain.com
 <span class="c1"># Expected: DNS zone details</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] A records created:
+</code></pre></div>
+<ul>
+<li>[ ] A records created:
   <div class="highlight"><pre><span></span><code>az<span class="w"> </span>network<span class="w"> </span>dns<span class="w"> </span>record-set<span class="w"> </span>a<span class="w"> </span>list<span class="w"> </span>-g<span class="w"> </span>fawkes-rg<span class="w"> </span>-z<span class="w"> </span>fawkes.yourdomain.com<span class="w"> </span>-o<span class="w"> </span>table
 <span class="c1"># Expected: @ and * records pointing to ingress IP</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="dns-delegation">DNS Delegation</h3>
 <ul>
-<li>
-<p>[ ] Nameservers obtained:
-  <div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>output<span class="w"> </span>dns_zone_name_servers
+<li>[ ] Nameservers obtained:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>output<span class="w"> </span>dns_zone_name_servers
 <span class="c1"># Expected: 4 Azure DNS nameservers</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ul>
 <li>
 <p>[ ] Domain registrar updated with nameservers</p>
 </li>
@@ -5137,29 +5125,27 @@ create_dns_records = true
 <h2 id="task-23-cert-manager">Task 2.3: cert-manager</h2>
 <h3 id="deployment_1">Deployment</h3>
 <ul>
-<li>
-<p>[ ] Applied cert-manager ArgoCD Application:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/cert-manager/cert-manager-application.yaml
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Namespace created:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>namespace<span class="w"> </span>cert-manager
+<li>[ ] Applied cert-manager ArgoCD Application:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/cert-manager/cert-manager-application.yaml
+</code></pre></div>
+<ul>
+<li>[ ] Namespace created:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>namespace<span class="w"> </span>cert-manager
 <span class="c1"># Expected: cert-manager namespace exists</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Deployments are ready:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>cert-manager
+</code></pre></div>
+<ul>
+<li>[ ] Deployments are ready:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>cert-manager
 <span class="c1"># Expected: cert-manager, cert-manager-webhook, cert-manager-cainjector all ready</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Pods are running:
+</code></pre></div>
+<ul>
+<li>[ ] Pods are running:
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>cert-manager
 <span class="c1"># Expected: All pods in Running state</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="crds-installation">CRDs Installation</h3>
 <ul>
@@ -5170,24 +5156,22 @@ create_dns_records = true
 </ul>
 <h3 id="clusterissuers-configuration">ClusterIssuers Configuration</h3>
 <ul>
-<li>
-<p>[ ] Email address updated in ClusterIssuer files:
-  <div class="highlight"><pre><span></span><code>grep<span class="w"> </span><span class="s2">&quot;email:&quot;</span><span class="w"> </span>platform/apps/cert-manager/cluster-issuer-*.yaml
+<li>[ ] Email address updated in ClusterIssuer files:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span><span class="s2">&quot;email:&quot;</span><span class="w"> </span>platform/apps/cert-manager/cluster-issuer-*.yaml
 <span class="c1"># Expected: Your actual email, not platform-team@example.com</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] ClusterIssuers applied:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/cert-manager/cluster-issuer-letsencrypt-staging.yaml
+</code></pre></div>
+<ul>
+<li>[ ] ClusterIssuers applied:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/cert-manager/cluster-issuer-letsencrypt-staging.yaml
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/cert-manager/cluster-issuer-letsencrypt-prod.yaml
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] ClusterIssuers are ready:
+</code></pre></div>
+<ul>
+<li>[ ] ClusterIssuers are ready:
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>clusterissuer
 <span class="c1"># Expected: letsencrypt-staging and letsencrypt-prod both Ready=True</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="validation-script_1">Validation Script</h3>
 <ul>
@@ -5199,94 +5183,86 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 <h2 id="testing">Testing</h2>
 <h3 id="test-ingress-deployment">Test Ingress Deployment</h3>
 <ul>
-<li>
-<p>[ ] Deploy test echo server:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/ingress-nginx/test-ingress.yaml
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Test namespace created:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>namespace<span class="w"> </span>ingress-test
+<li>[ ] Deploy test echo server:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/ingress-nginx/test-ingress.yaml
+</code></pre></div>
+<ul>
+<li>[ ] Test namespace created:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>namespace<span class="w"> </span>ingress-test
 <span class="c1"># Expected: Namespace exists</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Echo server running:
+</code></pre></div>
+<ul>
+<li>[ ] Echo server running:
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ingress-test
 <span class="c1"># Expected: echo-server pod in Running state</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="http-testing">HTTP Testing</h3>
 <ul>
-<li>
-<p>[ ] Test HTTP access with nip.io:
-  <div class="highlight"><pre><span></span><code><span class="nv">EXTERNAL_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
+<li>[ ] Test HTTP access with nip.io:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nv">EXTERNAL_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
 curl<span class="w"> </span>http://test.<span class="si">${</span><span class="nv">EXTERNAL_IP</span><span class="si">}</span>.nip.io
 <span class="c1"># Expected: Echo server response (JSON with request details)</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Test HTTP access with custom domain (if DNS configured):
+</code></pre></div>
+<ul>
+<li>[ ] Test HTTP access with custom domain (if DNS configured):
   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://test.fawkes.yourdomain.com
 <span class="c1"># Expected: Echo server response</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="tls-certificate-testing">TLS Certificate Testing</h3>
 <ul>
-<li>
-<p>[ ] Create test ingress with TLS:
-  <div class="highlight"><pre><span></span><code><span class="c1"># Create ingress with cert-manager annotation</span>
+<li>[ ] Create test ingress with TLS:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create ingress with cert-manager annotation</span>
 <span class="c1"># Use letsencrypt-staging first!</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Certificate resource created:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>certificate<span class="w"> </span>-n<span class="w"> </span>ingress-test
+</code></pre></div>
+<ul>
+<li>[ ] Certificate resource created:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>certificate<span class="w"> </span>-n<span class="w"> </span>ingress-test
 <span class="c1"># Expected: Certificate resource exists</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] CertificateRequest created:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>certificaterequest<span class="w"> </span>-n<span class="w"> </span>ingress-test
+</code></pre></div>
+<ul>
+<li>[ ] CertificateRequest created:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>certificaterequest<span class="w"> </span>-n<span class="w"> </span>ingress-test
 <span class="c1"># Expected: CertificateRequest exists</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Certificate issued (may take 1-2 minutes):
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>certificate<span class="w"> </span>-n<span class="w"> </span>ingress-test<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[0].status.conditions[?(@.type==&quot;Ready&quot;)].status}&#39;</span>
+</code></pre></div>
+<ul>
+<li>[ ] Certificate issued (may take 1-2 minutes):</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>certificate<span class="w"> </span>-n<span class="w"> </span>ingress-test<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[0].status.conditions[?(@.type==&quot;Ready&quot;)].status}&#39;</span>
 <span class="c1"># Expected: True</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] TLS secret created:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>ingress-test<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>tls
+</code></pre></div>
+<ul>
+<li>[ ] TLS secret created:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>ingress-test<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>tls
 <span class="c1"># Expected: TLS secret exists</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Test HTTPS access:
+</code></pre></div>
+<ul>
+<li>[ ] Test HTTPS access:
   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>https://test.fawkes.yourdomain.com
 <span class="c1"># Expected: Successful HTTPS connection</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h2 id="azure-resources-verification">Azure Resources Verification</h2>
 <h3 id="load-balancer">Load Balancer</h3>
 <ul>
-<li>
-<p>[ ] Load Balancer rules exist:
-  <div class="highlight"><pre><span></span><code>az<span class="w"> </span>network<span class="w"> </span>lb<span class="w"> </span>rule<span class="w"> </span>list<span class="w"> </span>--resource-group<span class="w"> </span>MC_fawkes-rg_fawkes-aks_eastus<span class="w"> </span>--lb-name<span class="w"> </span>kubernetes<span class="w"> </span>-o<span class="w"> </span>table
+<li>[ ] Load Balancer rules exist:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>network<span class="w"> </span>lb<span class="w"> </span>rule<span class="w"> </span>list<span class="w"> </span>--resource-group<span class="w"> </span>MC_fawkes-rg_fawkes-aks_eastus<span class="w"> </span>--lb-name<span class="w"> </span>kubernetes<span class="w"> </span>-o<span class="w"> </span>table
 <span class="c1"># Expected: Rules for ports 80 and 443</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] Health probes configured:
+</code></pre></div>
+<ul>
+<li>[ ] Health probes configured:
   <div class="highlight"><pre><span></span><code>az<span class="w"> </span>network<span class="w"> </span>lb<span class="w"> </span>probe<span class="w"> </span>list<span class="w"> </span>--resource-group<span class="w"> </span>MC_fawkes-rg_fawkes-aks_eastus<span class="w"> </span>--lb-name<span class="w"> </span>kubernetes<span class="w"> </span>-o<span class="w"> </span>table
 <span class="c1"># Expected: Health probe for /healthz</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="public-ip">Public IP</h3>
 <ul>
@@ -5298,20 +5274,18 @@ curl<span class="w"> </span>http://test.<span class="si">${</span><span class="n
 <h2 id="monitoring-and-alerting">Monitoring and Alerting</h2>
 <h3 id="prometheus-metrics">Prometheus Metrics</h3>
 <ul>
-<li>
-<p>[ ] Metrics endpoints accessible:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>svc/ingress-nginx-controller-metrics<span class="w"> </span><span class="m">9402</span>:10254<span class="w"> </span><span class="p">&amp;</span>
+<li>[ ] Metrics endpoints accessible:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>svc/ingress-nginx-controller-metrics<span class="w"> </span><span class="m">9402</span>:10254<span class="w"> </span><span class="p">&amp;</span>
 curl<span class="w"> </span>http://localhost:9402/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nginx_ingress_controller_requests
 <span class="c1"># Expected: Metrics data returned</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>[ ] cert-manager metrics accessible:
+</code></pre></div>
+<ul>
+<li>[ ] cert-manager metrics accessible:
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>cert-manager<span class="w"> </span>svc/cert-manager<span class="w"> </span><span class="m">9402</span>:9402<span class="w"> </span><span class="p">&amp;</span>
 curl<span class="w"> </span>http://localhost:9402/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>certmanager_certificate
 <span class="c1"># Expected: Certificate metrics data</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <h3 id="alerts">Alerts</h3>
 <ul>
@@ -5357,21 +5331,25 @@ kubectl<span class="w"> </span>get<span class="w"> </span>prometheusrule<span cl
 </ul>
 <h2 id="final-verification">Final Verification</h2>
 <p>All items checked? You're ready to use Azure Load Balancer and Ingress!</p>
-<p>Summary:
-- ✅ nginx-ingress deployed with Azure Load Balancer
-- ✅ Azure Load Balancer created with health probes
-- ✅ Public IP assigned
-- ✅ DNS configured (if enabled)
-- ✅ cert-manager deployed
-- ✅ Let's Encrypt ClusterIssuers configured
-- ✅ Test ingress working
-- ✅ TLS certificates issuing</p>
-<p>Next steps:
-1. Deploy your application services
-2. Create Ingress resources with cert-manager annotations
-3. Monitor certificate status
-4. Set up alerts for expiring certificates
-5. Configure rate limiting and WAF (optional)</p>
+<p>Summary:</p>
+<ul>
+<li>✅ nginx-ingress deployed with Azure Load Balancer</li>
+<li>✅ Azure Load Balancer created with health probes</li>
+<li>✅ Public IP assigned</li>
+<li>✅ DNS configured (if enabled)</li>
+<li>✅ cert-manager deployed</li>
+<li>✅ Let's Encrypt ClusterIssuers configured</li>
+<li>✅ Test ingress working</li>
+<li>✅ TLS certificates issuing</li>
+</ul>
+<p>Next steps:</p>
+<ol>
+<li>Deploy your application services</li>
+<li>Create Ingress resources with cert-manager annotations</li>
+<li>Monitor certificate status</li>
+<li>Set up alerts for expiring certificates</li>
+<li>Configure rate limiting and WAF (optional)</li>
+</ol>
 
 
 

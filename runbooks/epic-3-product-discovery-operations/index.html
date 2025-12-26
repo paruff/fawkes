@@ -5415,12 +5415,14 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 curl<span class="w"> </span>http://localhost:8000/health
 curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space
 </code></pre></div>
-<p><strong>Expected State</strong>:
-- Deployment: 2/2 replicas ready
-- Pods: Running
-- Service: ClusterIP accessible
-- Database: PostgreSQL cluster healthy
-- API: Health endpoint returns <code>{"status": "healthy"}</code></p>
+<p><strong>Expected State</strong>:</p>
+<ul>
+<li>Deployment: 2/2 replicas ready</li>
+<li>Pods: Running</li>
+<li>Service: ClusterIP accessible</li>
+<li>Database: PostgreSQL cluster healthy</li>
+<li>API: Health endpoint returns <code>{"status": "healthy"}</code></li>
+</ul>
 <h4 id="2-feedback-service">2. Feedback Service</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check feedback service deployment</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>feedback-service<span class="w"> </span>-n<span class="w"> </span>fawkes
@@ -5435,12 +5437,14 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 curl<span class="w"> </span>http://localhost:8080/health
 curl<span class="w"> </span>http://localhost:8080/api/v1/feedback
 </code></pre></div>
-<p><strong>Expected State</strong>:
-- Deployment: 2/2 replicas ready
-- Pods: Running
-- Service: ClusterIP accessible
-- Database: CloudNativePG cluster healthy
-- API: Health endpoint returns <code>200 OK</code></p>
+<p><strong>Expected State</strong>:</p>
+<ul>
+<li>Deployment: 2/2 replicas ready</li>
+<li>Pods: Running</li>
+<li>Service: ClusterIP accessible</li>
+<li>Database: CloudNativePG cluster healthy</li>
+<li>API: Health endpoint returns <code>200 OK</code></li>
+</ul>
 <h4 id="3-feedback-bot-mattermost">3. Feedback Bot (Mattermost)</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check feedback bot deployment</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>feedback-bot<span class="w"> </span>-n<span class="w"> </span>fawkes
@@ -5451,11 +5455,13 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 <span class="c1"># Check bot logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>feedback-bot<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
 </code></pre></div>
-<p><strong>Expected State</strong>:
-- Deployment: 1/1 replicas ready
-- Pods: Running
-- ConfigMap and Secret: Present
-- Logs: No errors, bot connected to Mattermost</p>
+<p><strong>Expected State</strong>:</p>
+<ul>
+<li>Deployment: 1/1 replicas ready</li>
+<li>Pods: Running</li>
+<li>ConfigMap and Secret: Present</li>
+<li>Logs: No errors, bot connected to Mattermost</li>
+</ul>
 <h4 id="4-feedback-automation-cronjob">4. Feedback Automation (CronJob)</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check feedback automation CronJob</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>cronjob<span class="w"> </span>feedback-automation<span class="w"> </span>-n<span class="w"> </span>fawkes
@@ -5465,10 +5471,12 @@ kubectl<span class="w"> </span>get<span class="w"> </span><span class="nb">jobs<
 <span class="nv">LATEST_JOB</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">cronjob</span><span class="o">=</span>feedback-automation<span class="w"> </span>--sort-by<span class="o">=</span>.metadata.creationTimestamp<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[-1].metadata.name}&#39;</span><span class="k">)</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>job/<span class="nv">$LATEST_JOB</span>
 </code></pre></div>
-<p><strong>Expected State</strong>:
-- CronJob: Active, runs hourly
-- Jobs: Completed successfully
-- Logs: Feedback items processed, GitHub issues created</p>
+<p><strong>Expected State</strong>:</p>
+<ul>
+<li>CronJob: Active, runs hourly</li>
+<li>Jobs: Completed successfully</li>
+<li>Logs: Feedback items processed, GitHub issues created</li>
+</ul>
 <h4 id="5-unleash-feature-flags">5. Unleash (Feature Flags)</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Unleash deployment</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>unleash<span class="w"> </span>-n<span class="w"> </span>fawkes
@@ -5482,12 +5490,14 @@ kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>svc/unleash<span class="w"> </span><span class="m">4242</span>:4242<span class="w"> </span><span class="p">&amp;</span>
 curl<span class="w"> </span>http://localhost:4242/health
 </code></pre></div>
-<p><strong>Expected State</strong>:
-- Deployment: 2/2 replicas ready
-- Pods: Running
-- Service: ClusterIP accessible
-- Database: PostgreSQL cluster healthy
-- UI: Accessible at http://localhost:4242</p>
+<p><strong>Expected State</strong>:</p>
+<ul>
+<li>Deployment: 2/2 replicas ready</li>
+<li>Pods: Running</li>
+<li>Service: ClusterIP accessible</li>
+<li>Database: PostgreSQL cluster healthy</li>
+<li>UI: Accessible at http://localhost:4242</li>
+</ul>
 <h4 id="6-design-system-storybook">6. Design System (Storybook)</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Storybook deployment</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>storybook<span class="w"> </span>-n<span class="w"> </span>fawkes
@@ -5499,12 +5509,14 @@ kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>svc/storybook<span class="w"> </span><span class="m">6006</span>:80<span class="w"> </span><span class="p">&amp;</span>
 curl<span class="w"> </span>http://localhost:6006
 </code></pre></div>
-<p><strong>Expected State</strong>:
-- Deployment: 1/1 replicas ready
-- Pods: Running
-- Service: ClusterIP accessible
-- Ingress: Configured with TLS
-- UI: Storybook accessible</p>
+<p><strong>Expected State</strong>:</p>
+<ul>
+<li>Deployment: 1/1 replicas ready</li>
+<li>Pods: Running</li>
+<li>Service: ClusterIP accessible</li>
+<li>Ingress: Configured with TLS</li>
+<li>UI: Storybook accessible</li>
+</ul>
 <h4 id="7-product-analytics-platform">7. Product Analytics Platform</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check if PostHog/analytics platform is deployed</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;posthog|analytics&#39;</span>
@@ -5513,11 +5525,13 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <span class="c1"># Check analytics ingress</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;analytics|posthog&#39;</span>
 </code></pre></div>
-<p><strong>Expected State</strong>:
-- Deployment: Running
-- Pods: All containers ready
-- Ingress: Configured
-- UI: Analytics dashboard accessible</p>
+<p><strong>Expected State</strong>:</p>
+<ul>
+<li>Deployment: Running</li>
+<li>Pods: All containers ready</li>
+<li>Ingress: Configured</li>
+<li>UI: Analytics dashboard accessible</li>
+</ul>
 <hr />
 <h2 id="common-operations">Common Operations</h2>
 <h3 id="startingstopping-components">Starting/Stopping Components</h3>
@@ -5628,15 +5642,17 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 <h3 id="space-metrics-issues">SPACE Metrics Issues</h3>
 <h4 id="issue-space-metrics-service-not-starting">Issue: SPACE metrics service not starting</h4>
 <p><strong>Symptoms</strong>: Pods in CrashLoopBackOff</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>space-metrics
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>space-metrics
-</code></pre></div></p>
-<p><strong>Common Causes</strong>:
-1. Database connection failure
-2. Missing environment variables
-3. Configuration errors</p>
-<p><strong>Resolution</strong>:
+</code></pre></div>
+<p><strong>Common Causes</strong>:</p>
+<ol>
+<li>Database connection failure</li>
+<li>Missing environment variables</li>
+<li>Configuration errors</li>
+</ol>
+<p><strong>Resolution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check database status</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>space-metrics-pg<span class="w"> </span>-n<span class="w"> </span>fawkes-local
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span>cnpg.io/cluster<span class="o">=</span>space-metrics-pg
@@ -5649,13 +5665,13 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 
 <span class="c1"># Restart deployment</span>
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>space-metrics<span class="w"> </span>-n<span class="w"> </span>fawkes-local
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-no-space-metrics-data-being-collected">Issue: No SPACE metrics data being collected</h4>
 <p><strong>Symptoms</strong>: API returns empty results</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>space-metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;collect\|error&quot;</span>
-</code></pre></div></p>
-<p><strong>Resolution</strong>:
+</code></pre></div>
+<p><strong>Resolution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check if data collection jobs are running</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">job</span><span class="o">=</span>space-metrics-collector
 
@@ -5665,18 +5681,20 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 
 <span class="c1"># Manually trigger collection</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-it<span class="w"> </span>deployment/space-metrics<span class="w"> </span>--<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from app.collectors import collect_all; collect_all()&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="feedback-system-issues">Feedback System Issues</h3>
 <h4 id="issue-feedback-submissions-failing">Issue: Feedback submissions failing</h4>
 <p><strong>Symptoms</strong>: 500 errors on POST /api/v1/feedback</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>feedback-service<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
-</code></pre></div></p>
-<p><strong>Common Causes</strong>:
-1. Database connection issues
-2. Schema migration pending
-3. Resource constraints</p>
-<p><strong>Resolution</strong>:
+</code></pre></div>
+<p><strong>Common Causes</strong>:</p>
+<ol>
+<li>Database connection issues</li>
+<li>Schema migration pending</li>
+<li>Resource constraints</li>
+</ol>
+<p><strong>Resolution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check database</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>feedback-db<span class="w"> </span>-n<span class="w"> </span>fawkes
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>cnpg.io/cluster<span class="o">=</span>feedback-db
@@ -5686,14 +5704,14 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 
 <span class="c1"># Check resource usage</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>feedback-service
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-feedback-bot-not-responding-in-mattermost">Issue: Feedback bot not responding in Mattermost</h4>
 <p><strong>Symptoms</strong>: Bot appears offline or doesn't respond</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>feedback-bot<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>feedback-bot
-</code></pre></div></p>
-<p><strong>Resolution</strong>:
+</code></pre></div>
+<p><strong>Resolution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check bot token secret</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>feedback-bot-secret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.MATTERMOST_TOKEN}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
 
@@ -5702,14 +5720,14 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 
 <span class="c1"># Restart bot</span>
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>feedback-bot<span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-feedback-automation-not-creating-github-issues">Issue: Feedback automation not creating GitHub issues</h4>
 <p><strong>Symptoms</strong>: CronJob runs but no issues created</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">LATEST_JOB</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">cronjob</span><span class="o">=</span>feedback-automation<span class="w"> </span>--sort-by<span class="o">=</span>.metadata.creationTimestamp<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[-1].metadata.name}&#39;</span><span class="k">)</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>job/<span class="nv">$LATEST_JOB</span>
-</code></pre></div></p>
-<p><strong>Resolution</strong>:
+</code></pre></div>
+<p><strong>Resolution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check GitHub token</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>feedback-automation-github<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.GITHUB_TOKEN}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-c
 
@@ -5718,16 +5736,16 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 
 <span class="c1"># Manually trigger job</span>
 kubectl<span class="w"> </span>create<span class="w"> </span>job<span class="w"> </span>--from<span class="o">=</span>cronjob/feedback-automation<span class="w"> </span>manual-run-<span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="unleash-feature-flags-issues">Unleash (Feature Flags) Issues</h3>
 <h4 id="issue-unleash-ui-not-accessible">Issue: Unleash UI not accessible</h4>
 <p><strong>Symptoms</strong>: Cannot access Unleash dashboard</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>unleash<span class="w"> </span>-n<span class="w"> </span>fawkes
 kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>unleash<span class="w"> </span>-n<span class="w"> </span>fawkes
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>unleash
-</code></pre></div></p>
-<p><strong>Resolution</strong>:
+</code></pre></div>
+<p><strong>Resolution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check ingress configuration</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>ingress<span class="w"> </span>unleash<span class="w"> </span>-n<span class="w"> </span>fawkes
 
@@ -5737,32 +5755,32 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 <span class="c1"># Check database connectivity</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>db-unleash<span class="w"> </span>-n<span class="w"> </span>fawkes
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>cnpg.io/cluster<span class="o">=</span>db-unleash
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-feature-flags-not-updating">Issue: Feature flags not updating</h4>
 <p><strong>Symptoms</strong>: Flag changes in UI not reflected in applications</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Unleash logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>unleash
 
 <span class="c1"># Check client SDK connectivity</span>
 <span class="c1"># (from application pod)</span>
 curl<span class="w"> </span>http://unleash.fawkes.svc.cluster.local:4242/api/client/features
-</code></pre></div></p>
-<p><strong>Resolution</strong>:
+</code></pre></div>
+<p><strong>Resolution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Restart Unleash to clear cache</span>
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>unleash<span class="w"> </span>-n<span class="w"> </span>fawkes
 
 <span class="c1"># Verify database integrity</span>
 kubectl<span class="w"> </span>cnpg<span class="w"> </span>psql<span class="w"> </span>db-unleash<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT * FROM features;&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="design-system-storybook-issues">Design System (Storybook) Issues</h3>
 <h4 id="issue-storybook-not-loading">Issue: Storybook not loading</h4>
 <p><strong>Symptoms</strong>: 404 or blank page</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>storybook
 kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>storybook<span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
-<p><strong>Resolution</strong>:
+</code></pre></div>
+<p><strong>Resolution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check if build succeeded</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>deployment<span class="w"> </span>storybook<span class="w"> </span>-n<span class="w"> </span>fawkes
 
@@ -5771,7 +5789,7 @@ kubectl<span class="w"> </span>describe<span class="w"> </span>deployment<span c
 npm<span class="w"> </span>run<span class="w"> </span>build-storybook
 docker<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>Dockerfile.prebuilt<span class="w"> </span>-t<span class="w"> </span>storybook:latest<span class="w"> </span>.
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>storybook<span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="maintenance-procedures">Maintenance Procedures</h2>
 <h3 id="monthly-maintenance-tasks">Monthly Maintenance Tasks</h3>
@@ -5864,31 +5882,31 @@ kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class
 </ul>
 <h4 id="sev-1-critical-outage-response">SEV-1: Critical Outage Response</h4>
 <ol>
-<li>
-<p><strong>Initial Response</strong> (0-5 minutes)
-   <div class="highlight"><pre><span></span><code><span class="c1"># Check overall cluster health</span>
+<li><strong>Initial Response</strong> (0-5 minutes)</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check overall cluster health</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>nodes
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running
 
 <span class="c1"># Identify affected Epic 3 components</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">epic</span><span class="o">=</span><span class="m">3</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">epic</span><span class="o">=</span><span class="m">3</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Diagnosis</strong> (5-15 minutes)
-   <div class="highlight"><pre><span></span><code><span class="c1"># Check recent events</span>
+</code></pre></div>
+<ol>
+<li><strong>Diagnosis</strong> (5-15 minutes)</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check recent events</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 
 <span class="c1"># Review logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">epic</span><span class="o">=</span><span class="m">3</span><span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">epic</span><span class="o">=</span><span class="m">3</span><span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Immediate Mitigation</strong> (15-30 minutes)
-   <div class="highlight"><pre><span></span><code><span class="c1"># Rollback to last known good version</span>
+</code></pre></div>
+<ol>
+<li><strong>Immediate Mitigation</strong> (15-30 minutes)</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Rollback to last known good version</span>
 kubectl<span class="w"> </span>rollout<span class="w"> </span>undo<span class="w"> </span>deployment/&lt;component-name&gt;<span class="w"> </span>-n<span class="w"> </span>fawkes
 
 <span class="c1"># Scale up if resource constraints</span>
@@ -5896,12 +5914,14 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment/&lt;compo
 
 <span class="c1"># Restart if necessary</span>
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/&lt;component-name&gt;<span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Communication</strong></p>
 </li>
-<li>Post incident in #platform-status Mattermost channel</li>
+<li>
+<p>Post incident in #platform-status Mattermost channel</p>
+</li>
 <li>Update status page</li>
 <li>
 <p>Notify stakeholders</p>
@@ -5915,7 +5935,7 @@ kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class
 </ol>
 <h3 id="disaster-recovery">Disaster Recovery</h3>
 <h4 id="database-restore-procedures">Database Restore Procedures</h4>
-<p><strong>Restore SPACE Metrics Database</strong>:
+<p><strong>Restore SPACE Metrics Database</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Stop application to prevent writes</span>
 kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>space-metrics<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>--replicas<span class="o">=</span><span class="m">0</span>
 
@@ -5933,8 +5953,8 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
 
 <span class="c1"># Scale application back up</span>
 kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>space-metrics<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>--replicas<span class="o">=</span><span class="m">2</span>
-</code></pre></div></p>
-<p><strong>Restore Feedback Database</strong>:
+</code></pre></div>
+<p><strong>Restore Feedback Database</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Stop application</span>
 kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>feedback-service<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--replicas<span class="o">=</span><span class="m">0</span>
 
@@ -5950,7 +5970,7 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
 
 <span class="c1"># Scale back up</span>
 kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>feedback-service<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--replicas<span class="o">=</span><span class="m">2</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="health-checks">Health Checks</h2>
 <h3 id="automated-health-check-script">Automated Health Check Script</h3>
@@ -6005,10 +6025,10 @@ kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"
 
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Health Check Complete ===&quot;</span>
 </code></pre></div>
-<p>Usage:
+<p>Usage:</p>
 <div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>scripts/health-check-epic3.sh
 ./scripts/health-check-epic3.sh
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="appendix">Appendix</h2>
 <h3 id="related-documentation">Related Documentation</h3>

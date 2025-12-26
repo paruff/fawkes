@@ -4960,51 +4960,65 @@
 <h2 id="context">Context</h2>
 <p>Fawkes is evolving from an infrastructure-focused Internal Delivery Platform to a comprehensive <strong>Internal Product Delivery Platform</strong>. To support product delivery effectively, teams need integrated collaboration capabilities that go beyond code and CI/CD pipelines.</p>
 <h3 id="the-need-for-integrated-collaboration">The Need for Integrated Collaboration</h3>
-<p><strong>Current Gap</strong>: Teams using Fawkes must use external tools for:
-- <strong>Real-time communication</strong>: Slack, Microsoft Teams, Discord
-- <strong>Bot integrations and ChatOps</strong>: Limited integration with external tools
-- <strong>Platform notifications</strong>: Email or external chat platforms
-- <strong>Community building</strong>: Fragmented across multiple platforms
-- <strong>Dojo learning support</strong>: No integrated space for learner discussions</p>
-<p><strong>Requirements for Collaboration Tool</strong>:
-1. <strong>Self-Hosted</strong>: Data sovereignty, no vendor lock-in, customizable
-2. <strong>Open Source</strong>: Aligns with Fawkes' values, community-driven
-3. <strong>Platform Integration</strong>: Webhooks, bots, API for CI/CD notifications
-4. <strong>ChatOps</strong>: Trigger platform actions from chat
-5. <strong>Rich Features</strong>: Threads, search, file sharing, video calls
-6. <strong>Dojo Integration</strong>: Dedicated channels for learning, mentorship
-7. <strong>Project Management Integration</strong>: Connect with Focalboard seamlessly
-8. <strong>Scalable</strong>: Support growing communities (100+ users initially, 1000+ future)
-9. <strong>Mobile Support</strong>: Native iOS and Android apps
-10. <strong>Cost Effective</strong>: Free or low-cost at scale</p>
+<p><strong>Current Gap</strong>: Teams using Fawkes must use external tools for:</p>
+<ul>
+<li><strong>Real-time communication</strong>: Slack, Microsoft Teams, Discord</li>
+<li><strong>Bot integrations and ChatOps</strong>: Limited integration with external tools</li>
+<li><strong>Platform notifications</strong>: Email or external chat platforms</li>
+<li><strong>Community building</strong>: Fragmented across multiple platforms</li>
+<li><strong>Dojo learning support</strong>: No integrated space for learner discussions</li>
+</ul>
+<p><strong>Requirements for Collaboration Tool</strong>:</p>
+<ol>
+<li><strong>Self-Hosted</strong>: Data sovereignty, no vendor lock-in, customizable</li>
+<li><strong>Open Source</strong>: Aligns with Fawkes' values, community-driven</li>
+<li><strong>Platform Integration</strong>: Webhooks, bots, API for CI/CD notifications</li>
+<li><strong>ChatOps</strong>: Trigger platform actions from chat</li>
+<li><strong>Rich Features</strong>: Threads, search, file sharing, video calls</li>
+<li><strong>Dojo Integration</strong>: Dedicated channels for learning, mentorship</li>
+<li><strong>Project Management Integration</strong>: Connect with Focalboard seamlessly</li>
+<li><strong>Scalable</strong>: Support growing communities (100+ users initially, 1000+ future)</li>
+<li><strong>Mobile Support</strong>: Native iOS and Android apps</li>
+<li><strong>Cost Effective</strong>: Free or low-cost at scale</li>
+</ol>
 <h3 id="forces-at-play">Forces at Play</h3>
-<p><strong>Technical Forces</strong>:
-- Need real-time communication for incident response
-- ChatOps capabilities increasingly expected in platforms
-- Notification fatigue from email-only communications
-- Integration complexity with external tools</p>
-<p><strong>Business Forces</strong>:
-- Data sovereignty and security concerns with SaaS tools
-- Cost at scale (Slack pricing: $7.25-$12.50/user/month × 100 users = $725-$1,250/month)
-- Vendor lock-in risks with proprietary platforms
-- Open source preference for transparency and control</p>
-<p><strong>Community Forces</strong>:
-- Community members prefer familiar platforms (Slack, Discord)
-- Learning curve for new platforms
-- Network effects (everyone uses Slack already)
-- Need for inclusive, welcoming community space</p>
-<p><strong>Organizational Forces</strong>:
-- Platform team wants to avoid platform sprawl
-- Desire for single integrated platform experience
-- Need to model self-hosted, open-source values</p>
+<p><strong>Technical Forces</strong>:</p>
+<ul>
+<li>Need real-time communication for incident response</li>
+<li>ChatOps capabilities increasingly expected in platforms</li>
+<li>Notification fatigue from email-only communications</li>
+<li>Integration complexity with external tools</li>
+</ul>
+<p><strong>Business Forces</strong>:</p>
+<ul>
+<li>Data sovereignty and security concerns with SaaS tools</li>
+<li>Cost at scale (Slack pricing: $7.25-$12.50/user/month × 100 users = $725-$1,250/month)</li>
+<li>Vendor lock-in risks with proprietary platforms</li>
+<li>Open source preference for transparency and control</li>
+</ul>
+<p><strong>Community Forces</strong>:</p>
+<ul>
+<li>Community members prefer familiar platforms (Slack, Discord)</li>
+<li>Learning curve for new platforms</li>
+<li>Network effects (everyone uses Slack already)</li>
+<li>Need for inclusive, welcoming community space</li>
+</ul>
+<p><strong>Organizational Forces</strong>:</p>
+<ul>
+<li>Platform team wants to avoid platform sprawl</li>
+<li>Desire for single integrated platform experience</li>
+<li>Need to model self-hosted, open-source values</li>
+</ul>
 <h2 id="decision">Decision</h2>
 <p><strong>We will use Mattermost as the integrated team collaboration platform for Fawkes.</strong></p>
-<p>Specifically:
-- <strong>Self-hosted deployment</strong> in Kubernetes alongside other Fawkes components
-- <strong>Mattermost Team Edition</strong> (open source) with optional Enterprise upgrade path
-- <strong>Native Focalboard integration</strong> for project management
-- <strong>Deep platform integration</strong> via webhooks, slash commands, and bots
-- <strong>Backstage integration</strong> via iframe or custom plugin</p>
+<p>Specifically:</p>
+<ul>
+<li><strong>Self-hosted deployment</strong> in Kubernetes alongside other Fawkes components</li>
+<li><strong>Mattermost Team Edition</strong> (open source) with optional Enterprise upgrade path</li>
+<li><strong>Native Focalboard integration</strong> for project management</li>
+<li><strong>Deep platform integration</strong> via webhooks, slash commands, and bots</li>
+<li><strong>Backstage integration</strong> via iframe or custom plugin</li>
+</ul>
 <h3 id="rationale">Rationale</h3>
 <ol>
 <li>
@@ -5019,7 +5033,9 @@
 <li>
 <p><strong>Strong Integration Capabilities</strong>:</p>
 </li>
-<li>Webhooks (incoming/outgoing)</li>
+<li>
+<p>Webhooks (incoming/outgoing)</p>
+</li>
 <li>Slash commands for ChatOps</li>
 <li>REST API for custom integrations</li>
 <li>Bot framework</li>
@@ -5035,7 +5051,9 @@
 <li>
 <p><strong>Cost Effectiveness</strong>:</p>
 </li>
-<li>Team Edition: Free, unlimited users</li>
+<li>
+<p>Team Edition: Free, unlimited users</p>
+</li>
 <li>Enterprise: Optional, $10/user/year (10x cheaper than Slack at scale)</li>
 <li>
 <p>Self-hosted: No per-user fees, only infrastructure costs (~$50-100/month)</p>
@@ -5088,8 +5106,12 @@
 <p>◽ <strong>Enterprise Features</strong>: Some features require Enterprise license (can start with Team Edition)</p>
 <h3 id="mitigation-strategies">Mitigation Strategies</h3>
 <ol>
-<li><strong>Operational Overhead</strong>:</li>
-<li>Use Mattermost Operator for Kubernetes (automated deployment, upgrades)</li>
+<li>
+<p><strong>Operational Overhead</strong>:</p>
+</li>
+<li>
+<p>Use Mattermost Operator for Kubernetes (automated deployment, upgrades)</p>
+</li>
 <li>Include in platform monitoring and backup strategy</li>
 <li>
 <p>Document runbooks for common operations</p>
@@ -5097,7 +5119,9 @@
 <li>
 <p><strong>Learning Curve</strong>:</p>
 </li>
-<li>Create onboarding guide with screenshots</li>
+<li>
+<p>Create onboarding guide with screenshots</p>
+</li>
 <li>Highlight Slack-compatible shortcuts</li>
 <li>Provide comparison guide (Slack vs. Mattermost)</li>
 <li>
@@ -5106,7 +5130,9 @@
 <li>
 <p><strong>Adoption</strong>:</p>
 </li>
-<li>Lead by example (maintainers active in Mattermost)</li>
+<li>
+<p>Lead by example (maintainers active in Mattermost)</p>
+</li>
 <li>Showcase platform integration benefits</li>
 <li>Make it the official channel for announcements</li>
 <li>
@@ -5115,7 +5141,9 @@
 <li>
 <p><strong>Integration Gaps</strong>:</p>
 </li>
-<li>Build custom integrations where needed</li>
+<li>
+<p>Build custom integrations where needed</p>
+</li>
 <li>Contribute integrations back to community</li>
 <li>
 <p>Document integration patterns</p>
@@ -5129,104 +5157,128 @@
 </ol>
 <h2 id="alternatives-considered">Alternatives Considered</h2>
 <h3 id="alternative-1-slack-saas">Alternative 1: Slack (SaaS)</h3>
-<p><strong>Pros</strong>:
-- Most popular enterprise chat platform
-- Excellent user experience and mobile apps
-- Huge integration marketplace (2,400+ apps)
-- Familiar to most users (minimal learning curve)
-- Best-in-class search and features
-- Strong voice/video calling</p>
-<p><strong>Cons</strong>:
-- <strong>Cost</strong>: $7.25-$12.50/user/month (prohibitively expensive at scale)
-- <strong>Vendor Lock-In</strong>: Proprietary platform, terms can change
-- <strong>Data Privacy</strong>: All data on Slack's servers, compliance concerns
-- <strong>Message History Limits</strong>: Free tier limited to 90 days history
-- <strong>No Self-Hosting</strong>: Must use Slack's infrastructure
-- <strong>Misaligned Values</strong>: SaaS, proprietary, not open source</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Most popular enterprise chat platform</li>
+<li>Excellent user experience and mobile apps</li>
+<li>Huge integration marketplace (2,400+ apps)</li>
+<li>Familiar to most users (minimal learning curve)</li>
+<li>Best-in-class search and features</li>
+<li>Strong voice/video calling</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Cost</strong>: $7.25-$12.50/user/month (prohibitively expensive at scale)</li>
+<li><strong>Vendor Lock-In</strong>: Proprietary platform, terms can change</li>
+<li><strong>Data Privacy</strong>: All data on Slack's servers, compliance concerns</li>
+<li><strong>Message History Limits</strong>: Free tier limited to 90 days history</li>
+<li><strong>No Self-Hosting</strong>: Must use Slack's infrastructure</li>
+<li><strong>Misaligned Values</strong>: SaaS, proprietary, not open source</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Cost at scale is prohibitive for open source project. At 500 users (medium-term goal), cost would be $43,500-$75,000/year. Data sovereignty and vendor lock-in concerns conflict with platform values. Slack doesn't integrate with self-hosted Focalboard.</p>
 <h3 id="alternative-2-discord">Alternative 2: Discord</h3>
-<p><strong>Pros</strong>:
-- Free for unlimited users
-- Excellent voice/video quality
-- Popular with developer communities
-- Great mobile apps
-- Rich media support (embeds, reactions, GIFs)
-- Screen sharing and streaming</p>
-<p><strong>Cons</strong>:
-- <strong>Gaming-Centric UX</strong>: Designed for gaming, not professional collaboration
-- <strong>Limited Integrations</strong>: Fewer business integrations than Slack/Mattermost
-- <strong>No Self-Hosting</strong>: SaaS only, data on Discord servers
-- <strong>Professional Perception</strong>: Less professional than Slack/Mattermost
-- <strong>Search Limitations</strong>: Search not as powerful as Slack/Mattermost
-- <strong>No Project Management</strong>: No Focalboard equivalent
-- <strong>Organization Features</strong>: Weaker organization/threading than alternatives</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Free for unlimited users</li>
+<li>Excellent voice/video quality</li>
+<li>Popular with developer communities</li>
+<li>Great mobile apps</li>
+<li>Rich media support (embeds, reactions, GIFs)</li>
+<li>Screen sharing and streaming</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Gaming-Centric UX</strong>: Designed for gaming, not professional collaboration</li>
+<li><strong>Limited Integrations</strong>: Fewer business integrations than Slack/Mattermost</li>
+<li><strong>No Self-Hosting</strong>: SaaS only, data on Discord servers</li>
+<li><strong>Professional Perception</strong>: Less professional than Slack/Mattermost</li>
+<li><strong>Search Limitations</strong>: Search not as powerful as Slack/Mattermost</li>
+<li><strong>No Project Management</strong>: No Focalboard equivalent</li>
+<li><strong>Organization Features</strong>: Weaker organization/threading than alternatives</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: While free and popular with developers, Discord's gaming focus, lack of self-hosting, and limited business integrations make it suboptimal for a professional platform engineering community. No project management integration path.</p>
 <h3 id="alternative-3-rocketchat">Alternative 3: Rocket.Chat</h3>
-<p><strong>Pros</strong>:
-- Open source and self-hosted
-- Feature-complete (channels, threads, video calls)
-- Strong security features
-- Active community
-- Free and scalable
-- Slack-compatible (can import)</p>
-<p><strong>Cons</strong>:
-- <strong>Less Mature</strong>: Smaller community than Mattermost
-- <strong>Integration Ecosystem</strong>: Fewer integrations available
-- <strong>Performance</strong>: Can be slower with large communities
-- <strong>Documentation</strong>: Less comprehensive than Mattermost
-- <strong>Mobile Apps</strong>: Not as polished
-- <strong>No Project Management</strong>: No integrated project management tool
-- <strong>Smaller Development Team</strong>: Less resourced than Mattermost</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Open source and self-hosted</li>
+<li>Feature-complete (channels, threads, video calls)</li>
+<li>Strong security features</li>
+<li>Active community</li>
+<li>Free and scalable</li>
+<li>Slack-compatible (can import)</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Less Mature</strong>: Smaller community than Mattermost</li>
+<li><strong>Integration Ecosystem</strong>: Fewer integrations available</li>
+<li><strong>Performance</strong>: Can be slower with large communities</li>
+<li><strong>Documentation</strong>: Less comprehensive than Mattermost</li>
+<li><strong>Mobile Apps</strong>: Not as polished</li>
+<li><strong>No Project Management</strong>: No integrated project management tool</li>
+<li><strong>Smaller Development Team</strong>: Less resourced than Mattermost</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: While solid open source alternative, Rocket.Chat has smaller ecosystem, less mature integrations, and no project management integration like Focalboard. Mattermost has stronger momentum and backing.</p>
 <h3 id="alternative-4-microsoft-teams">Alternative 4: Microsoft Teams</h3>
-<p><strong>Pros</strong>:
-- Deep Microsoft 365 integration
-- Excellent voice/video (backed by Skype)
-- Widely used in enterprises
-- Strong security and compliance
-- File collaboration (SharePoint integration)
-- Free tier available</p>
-<p><strong>Cons</strong>:
-- <strong>Microsoft Ecosystem Lock-In</strong>: Strongly tied to Microsoft services
-- <strong>Complex Self-Hosting</strong>: Teams self-hosting extremely complex
-- <strong>Not Truly Open Source</strong>: Proprietary platform
-- <strong>Resource Heavy</strong>: High resource requirements
-- <strong>Overly Complex</strong>: Feature bloat, steep learning curve
-- <strong>Poor UX for Chat</strong>: Optimized for meetings, not async chat
-- <strong>Limited Customization</strong>: Restricted API, hard to integrate deeply</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Deep Microsoft 365 integration</li>
+<li>Excellent voice/video (backed by Skype)</li>
+<li>Widely used in enterprises</li>
+<li>Strong security and compliance</li>
+<li>File collaboration (SharePoint integration)</li>
+<li>Free tier available</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Microsoft Ecosystem Lock-In</strong>: Strongly tied to Microsoft services</li>
+<li><strong>Complex Self-Hosting</strong>: Teams self-hosting extremely complex</li>
+<li><strong>Not Truly Open Source</strong>: Proprietary platform</li>
+<li><strong>Resource Heavy</strong>: High resource requirements</li>
+<li><strong>Overly Complex</strong>: Feature bloat, steep learning curve</li>
+<li><strong>Poor UX for Chat</strong>: Optimized for meetings, not async chat</li>
+<li><strong>Limited Customization</strong>: Restricted API, hard to integrate deeply</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Teams is designed for Microsoft ecosystem and prioritizes video meetings over chat. Self-hosting is impractical, not open source, and doesn't align with platform values. Poor fit for developer community.</p>
 <h3 id="alternative-5-matrixelement">Alternative 5: Matrix/Element</h3>
-<p><strong>Pros</strong>:
-- Fully open source and decentralized
-- Strong encryption and privacy
-- Federation support (connect multiple servers)
-- Active development
-- Growing community
-- Modern protocol (Matrix)</p>
-<p><strong>Cons</strong>:
-- <strong>Immature Features</strong>: Missing some expected features (threads, polls)
-- <strong>Complex Setup</strong>: Federation and encryption add complexity
-- <strong>Performance</strong>: Can be slow with large communities
-- <strong>Mobile Apps</strong>: Still improving
-- <strong>Integration Ecosystem</strong>: Limited compared to Mattermost
-- <strong>No Project Management</strong>: No Focalboard equivalent
-- <strong>Learning Curve</strong>: Decentralization concepts unfamiliar to most users</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Fully open source and decentralized</li>
+<li>Strong encryption and privacy</li>
+<li>Federation support (connect multiple servers)</li>
+<li>Active development</li>
+<li>Growing community</li>
+<li>Modern protocol (Matrix)</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Immature Features</strong>: Missing some expected features (threads, polls)</li>
+<li><strong>Complex Setup</strong>: Federation and encryption add complexity</li>
+<li><strong>Performance</strong>: Can be slow with large communities</li>
+<li><strong>Mobile Apps</strong>: Still improving</li>
+<li><strong>Integration Ecosystem</strong>: Limited compared to Mattermost</li>
+<li><strong>No Project Management</strong>: No Focalboard equivalent</li>
+<li><strong>Learning Curve</strong>: Decentralization concepts unfamiliar to most users</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: While philosophically aligned (decentralized, encrypted), Matrix/Element is still maturing and has a steeper learning curve. Mattermost provides better immediate user experience while remaining open source and self-hosted.</p>
 <h3 id="alternative-6-zulip">Alternative 6: Zulip</h3>
-<p><strong>Pros</strong>:
-- Open source and self-hosted
-- Unique threading model (topic-based)
-- Excellent for asynchronous communication
-- Strong search capabilities
-- Free and scalable
-- Good integrations</p>
-<p><strong>Cons</strong>:
-- <strong>Unusual UX</strong>: Topic-based threading very different from Slack
-- <strong>Smaller Community</strong>: Less widely known/adopted
-- <strong>Learning Curve</strong>: Unique model requires mindset shift
-- <strong>Integration Ecosystem</strong>: Smaller than Mattermost
-- <strong>No Project Management</strong>: No integrated project management
-- <strong>Mobile Apps</strong>: Good but less mature than alternatives</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Open source and self-hosted</li>
+<li>Unique threading model (topic-based)</li>
+<li>Excellent for asynchronous communication</li>
+<li>Strong search capabilities</li>
+<li>Free and scalable</li>
+<li>Good integrations</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Unusual UX</strong>: Topic-based threading very different from Slack</li>
+<li><strong>Smaller Community</strong>: Less widely known/adopted</li>
+<li><strong>Learning Curve</strong>: Unique model requires mindset shift</li>
+<li><strong>Integration Ecosystem</strong>: Smaller than Mattermost</li>
+<li><strong>No Project Management</strong>: No integrated project management</li>
+<li><strong>Mobile Apps</strong>: Good but less mature than alternatives</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Zulip's topic-based threading, while powerful for some use cases, is a significant departure from familiar chat UX. Would increase friction for community adoption. No project management integration.</p>
 <h2 id="related-decisions">Related Decisions</h2>
 <ul>
@@ -5254,42 +5306,54 @@
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">focalboard (built-in integration)</span>
 </code></pre></div>
 <h3 id="initial-channel-structure">Initial Channel Structure</h3>
-<p><strong>System Channels</strong>:
-- 📢 <code>announcements</code> - Official announcements (maintainers only post)
-- 💬 <code>general</code> - General discussion
-- 🆘 <code>help-and-support</code> - Q&amp;A and troubleshooting
-- 👥 <code>introductions</code> - New member introductions</p>
-<p><strong>Platform Component Channels</strong>:
-- <code>backstage</code>
-- <code>jenkins-cicd</code>
-- <code>argocd-gitops</code>
-- <code>observability</code>
-- <code>security</code>
-- <code>infrastructure</code></p>
-<p><strong>Dojo Learning Channels</strong>:
-- 🎓 <code>dojo-general</code> - Learning discussions
-- 🥋 <code>dojo-white-belt</code>
-- 🟡 <code>dojo-yellow-belt</code>
-- 🟢 <code>dojo-green-belt</code>
-- 🟤 <code>dojo-brown-belt</code>
-- ⚫ <code>dojo-black-belt</code>
-- 🏆 <code>dojo-achievements</code> - Celebrate completions</p>
-<p><strong>Contributor Channels</strong>:
-- 👨‍💻 <code>contributors</code> - General contributor discussion
-- 🐛 <code>good-first-issues</code> - Synced from GitHub
-- 📝 <code>documentation</code>
-- 🔒 <code>security-private</code> (private channel)</p>
-<p><strong>Cloud Provider Channels</strong>:
-- ☁️ <code>aws</code>
-- ☁️ <code>azure</code>
-- ☁️ <code>gcp</code>
-- ☁️ <code>multi-cloud</code></p>
-<p><strong>Community Channels</strong>:
-- 🎉 <code>random</code> - Off-topic, fun
-- 🎊 <code>wins</code> - Celebrate successes
-- 📚 <code>resources</code> - Share articles, talks, etc.</p>
+<p><strong>System Channels</strong>:</p>
+<ul>
+<li>📢 <code>announcements</code> - Official announcements (maintainers only post)</li>
+<li>💬 <code>general</code> - General discussion</li>
+<li>🆘 <code>help-and-support</code> - Q&amp;A and troubleshooting</li>
+<li>👥 <code>introductions</code> - New member introductions</li>
+</ul>
+<p><strong>Platform Component Channels</strong>:</p>
+<ul>
+<li><code>backstage</code></li>
+<li><code>jenkins-cicd</code></li>
+<li><code>argocd-gitops</code></li>
+<li><code>observability</code></li>
+<li><code>security</code></li>
+<li><code>infrastructure</code></li>
+</ul>
+<p><strong>Dojo Learning Channels</strong>:</p>
+<ul>
+<li>🎓 <code>dojo-general</code> - Learning discussions</li>
+<li>🥋 <code>dojo-white-belt</code></li>
+<li>🟡 <code>dojo-yellow-belt</code></li>
+<li>🟢 <code>dojo-green-belt</code></li>
+<li>🟤 <code>dojo-brown-belt</code></li>
+<li>⚫ <code>dojo-black-belt</code></li>
+<li>🏆 <code>dojo-achievements</code> - Celebrate completions</li>
+</ul>
+<p><strong>Contributor Channels</strong>:</p>
+<ul>
+<li>👨‍💻 <code>contributors</code> - General contributor discussion</li>
+<li>🐛 <code>good-first-issues</code> - Synced from GitHub</li>
+<li>📝 <code>documentation</code></li>
+<li>🔒 <code>security-private</code> (private channel)</li>
+</ul>
+<p><strong>Cloud Provider Channels</strong>:</p>
+<ul>
+<li>☁️ <code>aws</code></li>
+<li>☁️ <code>azure</code></li>
+<li>☁️ <code>gcp</code></li>
+<li>☁️ <code>multi-cloud</code></li>
+</ul>
+<p><strong>Community Channels</strong>:</p>
+<ul>
+<li>🎉 <code>random</code> - Off-topic, fun</li>
+<li>🎊 <code>wins</code> - Celebrate successes</li>
+<li>📚 <code>resources</code> - Share articles, talks, etc.</li>
+</ul>
 <h3 id="platform-integration-examples">Platform Integration Examples</h3>
-<p><strong>1. CI/CD Notifications</strong>:
+<p><strong>1. CI/CD Notifications</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Jenkins pipeline sends to Mattermost</span>
 <span class="nx">POST</span><span class="w"> </span><span class="nx">https</span><span class="o">:</span><span class="c1">//mattermost.fawkes.io/hooks/jenkins</span>
 <span class="p">{</span>
@@ -5299,29 +5363,29 @@
 <span class="w">          </span><span class="s2">&quot;Deployment time: 2m 15s\n&quot;</span><span class="w"> </span><span class="o">+</span>
 <span class="w">          </span><span class="s2">&quot;DORA Lead Time: 8m 42s&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>2. ChatOps - Deploy from Chat</strong>:
+</code></pre></div>
+<p><strong>2. ChatOps - Deploy from Chat</strong>:</p>
 <div class="highlight"><pre><span></span><code>User: /deploy sample-app to production
 Bot: 🚀 Deploying sample-app to production...
      Using image: registry.fawkes.io/sample-app:v1.2.3
      Triggering ArgoCD sync...
      ✅ Deployment successful! (2m 18s)
      📊 DORA Metrics updated
-</code></pre></div></p>
-<p><strong>3. DORA Metric Alerts</strong>:
+</code></pre></div>
+<p><strong>3. DORA Metric Alerts</strong>:</p>
 <div class="highlight"><pre><span></span><code>DORA Bot: ⚠️ Change Failure Rate Alert
           Team: platform-team
           Current: 18% (threshold: 15%)
           Last 24h: 3 failed deployments out of 17
           Action: Review recent changes in #platform-team
-</code></pre></div></p>
-<p><strong>4. Dojo Lab Completion</strong>:
+</code></pre></div>
+<p><strong>4. Dojo Lab Completion</strong>:</p>
 <div class="highlight"><pre><span></span><code>Dojo Bot: 🎉 @john completed Lab 3: Deploy with GitOps!
           Belt: White Belt
           Score: 48/50 (96%)
           Time: 18 minutes
           Say congrats in #dojo-white-belt!
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="sso-integration">SSO Integration</h3>
 <ul>
 <li><strong>Phase 1 (MVP)</strong>: Email/password authentication</li>
@@ -5336,29 +5400,37 @@ Bot: 🚀 Deploying sample-app to production...
 <li>Test mobile experience regularly</li>
 </ul>
 <h3 id="migration-from-external-platforms">Migration from External Platforms</h3>
-<p>For communities using Slack/Discord:
-1. <strong>Export data</strong> from existing platform
-2. <strong>Import into Mattermost</strong> using Slack import tool
-3. <strong>Run bridge bot</strong> for transition period (messages mirrored)
-4. <strong>Sunset bridge</strong> after 30 days</p>
+<p>For communities using Slack/Discord:</p>
+<ol>
+<li><strong>Export data</strong> from existing platform</li>
+<li><strong>Import into Mattermost</strong> using Slack import tool</li>
+<li><strong>Run bridge bot</strong> for transition period (messages mirrored)</li>
+<li><strong>Sunset bridge</strong> after 30 days</li>
+</ol>
 <h3 id="resource-requirements">Resource Requirements</h3>
-<p><strong>Minimum</strong> (100 users):
-- 2 CPU cores
-- 4GB RAM
-- 20GB storage
-- PostgreSQL database</p>
-<p><strong>Recommended</strong> (500 users):
-- 4 CPU cores
-- 8GB RAM
-- 100GB storage
-- PostgreSQL with replication</p>
-<p><strong>Enterprise</strong> (1000+ users):
-- 8+ CPU cores
-- 16GB+ RAM
-- 500GB+ storage
-- PostgreSQL cluster
-- Redis cache
-- S3/MinIO for file storage</p>
+<p><strong>Minimum</strong> (100 users):</p>
+<ul>
+<li>2 CPU cores</li>
+<li>4GB RAM</li>
+<li>20GB storage</li>
+<li>PostgreSQL database</li>
+</ul>
+<p><strong>Recommended</strong> (500 users):</p>
+<ul>
+<li>4 CPU cores</li>
+<li>8GB RAM</li>
+<li>100GB storage</li>
+<li>PostgreSQL with replication</li>
+</ul>
+<p><strong>Enterprise</strong> (1000+ users):</p>
+<ul>
+<li>8+ CPU cores</li>
+<li>16GB+ RAM</li>
+<li>500GB+ storage</li>
+<li>PostgreSQL cluster</li>
+<li>Redis cache</li>
+<li>S3/MinIO for file storage</li>
+</ul>
 <h3 id="monitoring-observability">Monitoring &amp; Observability</h3>
 <ul>
 <li>Prometheus metrics endpoint enabled</li>
@@ -5379,12 +5451,14 @@ Bot: 🚀 Deploying sample-app to production...
 <li><strong>Recovery Point Objective (RPO)</strong>: &lt;24 hours</li>
 </ul>
 <h2 id="monitoring-this-decision">Monitoring This Decision</h2>
-<p>We will revisit this ADR if:
-- Community adoption is below 60% after 6 months
-- Operational burden is significantly higher than alternatives
-- Critical features are missing that block workflows
-- A superior open source alternative emerges
-- Cost of running Mattermost exceeds $200/month at scale</p>
+<p>We will revisit this ADR if:</p>
+<ul>
+<li>Community adoption is below 60% after 6 months</li>
+<li>Operational burden is significantly higher than alternatives</li>
+<li>Critical features are missing that block workflows</li>
+<li>A superior open source alternative emerges</li>
+<li>Cost of running Mattermost exceeds $200/month at scale</li>
+</ul>
 <p><strong>Next Review Date</strong>: April 7, 2026 (6 months)</p>
 <h2 id="references">References</h2>
 <ul>
@@ -5396,17 +5470,21 @@ Bot: 🚀 Deploying sample-app to production...
 </ul>
 <h2 id="notes">Notes</h2>
 <h3 id="why-not-start-with-slackdiscord">Why Not Start with Slack/Discord?</h3>
-<p>We considered using Slack or Discord initially and migrating later, but:
-- <strong>Migration Pain</strong>: Moving established communities is difficult and disruptive
-- <strong>Platform Fragmentation</strong>: Running collaboration outside main platform defeats integration purpose
-- <strong>Cost Trap</strong>: Once on Slack, hard to justify migration due to sunk costs
-- <strong>Value Demonstration</strong>: Integrated Mattermost showcases complete platform vision from day one</p>
+<p>We considered using Slack or Discord initially and migrating later, but:</p>
+<ul>
+<li><strong>Migration Pain</strong>: Moving established communities is difficult and disruptive</li>
+<li><strong>Platform Fragmentation</strong>: Running collaboration outside main platform defeats integration purpose</li>
+<li><strong>Cost Trap</strong>: Once on Slack, hard to justify migration due to sunk costs</li>
+<li><strong>Value Demonstration</strong>: Integrated Mattermost showcases complete platform vision from day one</li>
+</ul>
 <h3 id="open-source-community-expectations">Open Source Community Expectations</h3>
-<p>The open source community increasingly expects:
-- Self-hosted communication options (data sovereignty)
-- No reliance on proprietary platforms
-- Transparency and control
-- Alignment with open source values</p>
+<p>The open source community increasingly expects:</p>
+<ul>
+<li>Self-hosted communication options (data sovereignty)</li>
+<li>No reliance on proprietary platforms</li>
+<li>Transparency and control</li>
+<li>Alignment with open source values</li>
+</ul>
 <p>Mattermost aligns with these expectations while providing enterprise-grade features.</p>
 <hr />
 <p><strong>Decision Made By</strong>: Platform Architecture Team

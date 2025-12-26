@@ -4881,13 +4881,13 @@
 <h2 id="setup">Setup</h2>
 <h3 id="1-initialize-the-tracker">1. Initialize the Tracker</h3>
 <p>Add initialization to your Backstage app's entry point (e.g., <code>packages/app/src/App.tsx</code> or <code>packages/app/src/index.tsx</code>):</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">initializeTracker</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">initializeTracker</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system/analytics&quot;</span><span class="p">;</span>
 
 <span class="c1">// Initialize tracker early in app lifecycle</span>
 <span class="nx">initializeTracker</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">baseUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://plausible.fawkes.idp&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">domain</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;backstage.fawkes.idp&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">debug</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.NODE_ENV</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;development&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">baseUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://plausible.fawkes.idp&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">domain</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;backstage.fawkes.idp&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">debug</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.NODE_ENV</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;development&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">trackLocalhost</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="c1">// Enable for development</span>
 <span class="p">});</span>
 </code></pre></div>
@@ -4901,7 +4901,7 @@
 
 <span class="nt">proxy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
-<span class="w">    </span><span class="s">&#39;/plausible/api&#39;</span><span class="p p-Indicator">:</span>
+<span class="w">    </span><span class="s">&quot;/plausible/api&quot;</span><span class="p p-Indicator">:</span>
 <span class="w">      </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://plausible.fawkes.svc:8000/api/</span>
 <span class="w">      </span><span class="nt">changeOrigin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">secure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
@@ -5266,7 +5266,7 @@
 <span class="w">  </span><span class="nx">privacyMiddleware</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">enrichmentMiddleware</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">userContextMiddleware</span><span class="p">,</span>
-<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system/analytics&quot;</span><span class="p">;</span>
 
 <span class="c1">// Create custom middleware</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">customMiddleware</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -5275,7 +5275,7 @@
 <span class="w">    </span><span class="p">...</span><span class="nx">event</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="p">...</span><span class="nx">event</span><span class="p">.</span><span class="nx">properties</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">appVersion</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;1.0.0&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">appVersion</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">  </span><span class="p">};</span>
 <span class="p">};</span>
@@ -5284,17 +5284,19 @@
 <span class="kd">const</span><span class="w"> </span><span class="nx">chain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">MiddlewareChain</span><span class="p">();</span>
 <span class="nx">chain</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">validationMiddleware</span><span class="p">);</span>
 <span class="nx">chain</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">privacyMiddleware</span><span class="p">);</span>
-<span class="nx">chain</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">enrichmentMiddleware</span><span class="p">({</span><span class="w"> </span><span class="nx">platform</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;fawkes&#39;</span><span class="w"> </span><span class="p">}));</span>
-<span class="nx">chain</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">userContextMiddleware</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
-<span class="w">  </span><span class="nx">userId</span><span class="o">:</span><span class="w"> </span><span class="kt">getCurrentUser</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">team</span><span class="o">:</span><span class="w"> </span><span class="kt">getCurrentUser</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="nx">team</span><span class="p">,</span>
-<span class="p">})));</span>
+<span class="nx">chain</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">enrichmentMiddleware</span><span class="p">({</span><span class="w"> </span><span class="nx">platform</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;fawkes&quot;</span><span class="w"> </span><span class="p">}));</span>
+<span class="nx">chain</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">userContextMiddleware</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<span class="w">    </span><span class="nx">userId</span><span class="o">:</span><span class="w"> </span><span class="kt">getCurrentUser</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">team</span><span class="o">:</span><span class="w"> </span><span class="kt">getCurrentUser</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="nx">team</span><span class="p">,</span>
+<span class="w">  </span><span class="p">}))</span>
+<span class="p">);</span>
 <span class="nx">chain</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">customMiddleware</span><span class="p">);</span>
 
 <span class="c1">// Initialize tracker</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">tracker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">initializeTracker</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">baseUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://plausible.fawkes.idp&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">domain</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;backstage.fawkes.idp&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">baseUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://plausible.fawkes.idp&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">domain</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;backstage.fawkes.idp&quot;</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="c1">// Track with middleware</span>
@@ -5304,16 +5306,16 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="custom-events">Custom Events</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackEvent</span><span class="p">,</span><span class="w"> </span><span class="nx">EventCategory</span><span class="p">,</span><span class="w"> </span><span class="nx">EventAction</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackEvent</span><span class="p">,</span><span class="w"> </span><span class="nx">EventCategory</span><span class="p">,</span><span class="w"> </span><span class="nx">EventAction</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system/analytics&quot;</span><span class="p">;</span>
 
 <span class="c1">// Track custom event</span>
 <span class="nx">trackEvent</span><span class="p">({</span>
 <span class="w">  </span><span class="nx">category</span><span class="o">:</span><span class="w"> </span><span class="kt">EventCategory.FEATURE_USAGE</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="kt">EventAction.CLICK</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Custom Feature&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Custom Feature&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">featureName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;my-custom-feature&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;2.0&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">featureName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-custom-feature&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
 <span class="p">});</span>

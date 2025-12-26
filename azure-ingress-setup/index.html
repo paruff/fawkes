@@ -5080,26 +5080,32 @@ Kubernetes Services (backstage, jenkins, etc.)
 </ul>
 <h2 id="components">Components</h2>
 <h3 id="1-nginx-ingress-controller">1. nginx-ingress Controller</h3>
-<p>The nginx-ingress controller provides:
-- Layer 7 HTTP/HTTPS routing
-- TLS termination
-- Load balancing across service pods
-- High availability with multiple replicas
-- Auto-scaling based on CPU/memory
-- Prometheus metrics</p>
+<p>The nginx-ingress controller provides:</p>
+<ul>
+<li>Layer 7 HTTP/HTTPS routing</li>
+<li>TLS termination</li>
+<li>Load balancing across service pods</li>
+<li>High availability with multiple replicas</li>
+<li>Auto-scaling based on CPU/memory</li>
+<li>Prometheus metrics</li>
+</ul>
 <h3 id="2-azure-load-balancer">2. Azure Load Balancer</h3>
-<p>Azure automatically creates a Standard SKU Load Balancer when you deploy a LoadBalancer service:
-- Public IP assignment
-- Health probes
-- Port forwarding (80, 443)
-- Session affinity
-- Zone redundancy (in supported regions)</p>
+<p>Azure automatically creates a Standard SKU Load Balancer when you deploy a LoadBalancer service:</p>
+<ul>
+<li>Public IP assignment</li>
+<li>Health probes</li>
+<li>Port forwarding (80, 443)</li>
+<li>Session affinity</li>
+<li>Zone redundancy (in supported regions)</li>
+</ul>
 <h3 id="3-cert-manager">3. cert-manager</h3>
-<p>Automates TLS certificate management:
-- Let's Encrypt integration
-- Automatic certificate issuance and renewal
-- HTTP-01 and DNS-01 challenge support
-- Azure DNS integration for wildcard certificates</p>
+<p>Automates TLS certificate management:</p>
+<ul>
+<li>Let's Encrypt integration</li>
+<li>Automatic certificate issuance and renewal</li>
+<li>HTTP-01 and DNS-01 challenge support</li>
+<li>Azure DNS integration for wildcard certificates</li>
+</ul>
 <h2 id="deployment-steps">Deployment Steps</h2>
 <h3 id="step-1-deploy-nginx-ingress-controller">Step 1: Deploy nginx-ingress Controller</h3>
 <h4 id="option-a-using-argocd-recommended">Option A: Using ArgoCD (Recommended)</h4>
@@ -5231,7 +5237,7 @@ curl<span class="w"> </span>http://test.fawkes.yourdomain.com
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test-app-tls</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingress-test</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cert-manager.io/cluster-issuer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt-staging</span><span class="w">  </span><span class="c1"># Use staging first!</span>
+<span class="w">    </span><span class="nt">cert-manager.io/cluster-issuer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt-staging</span><span class="w"> </span><span class="c1"># Use staging first!</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
 <span class="w">  </span><span class="nt">tls</span><span class="p">:</span>
@@ -5325,15 +5331,15 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 </code></pre></div>
 <h3 id="internal-load-balancer">Internal Load Balancer</h3>
 <p>For private ingress (only accessible within VNet):</p>
-<p>Add annotation to service:
+<p>Add annotation to service:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">service.beta.kubernetes.io/azure-load-balancer-internal</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="proxy-protocol">PROXY Protocol</h3>
 <p>If your Azure Load Balancer uses PROXY protocol:</p>
-<p>Update values-azure.yaml:
+<p>Update values-azure.yaml:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">config</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">use-proxy-protocol</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="monitoring">Monitoring</h2>
 <h3 id="prometheus-metrics">Prometheus Metrics</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Port-forward to metrics endpoint</span>
@@ -5344,13 +5350,17 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 curl<span class="w"> </span>http://localhost:9402/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nginx_ingress
 </code></pre></div>
 <h3 id="grafana-dashboards">Grafana Dashboards</h3>
-<p>Import the official nginx-ingress dashboard:
-- Dashboard ID: 9614 (from grafana.com)</p>
+<p>Import the official nginx-ingress dashboard:</p>
+<ul>
+<li>Dashboard ID: 9614 (from grafana.com)</li>
+</ul>
 <h3 id="alerts">Alerts</h3>
-<p>PrometheusRules are configured for:
-- Controller down alert
-- High error rate alert
-- Certificate expiration alert (via cert-manager)</p>
+<p>PrometheusRules are configured for:</p>
+<ul>
+<li>Controller down alert</li>
+<li>High error rate alert</li>
+<li>Certificate expiration alert (via cert-manager)</li>
+</ul>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="external-ip-not-assigned">External IP Not Assigned</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check service events</span>

@@ -5130,79 +5130,93 @@ kubectl<span class="w"> </span>get<span class="w"> </span>nodes
 </ul>
 <h2 id="acceptance-criteria-validation-at-e1-001">Acceptance Criteria Validation (AT-E1-001)</h2>
 <h3 id="1-aks-cluster-deployed-in-azure">1. AKS cluster deployed in Azure</h3>
-<p><div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
-- [ ] Cluster exists
-- [ ] Provisioning state is "Succeeded"
-- [ ] Power state is "Running"</p>
+<ul>
+<li>[ ] Cluster exists</li>
+<li>[ ] Provisioning state is "Succeeded"</li>
+<li>[ ] Power state is "Running"</li>
+</ul>
 <h3 id="2-3-5-nodes-running-and-schedulable">2. 3-5 nodes running and schedulable</h3>
-<p><div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
 kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.items | length&#39;</span>
 </code></pre></div>
-- [ ] Total node count is 4+ (2 system + 2+ user)
-- [ ] All nodes show STATUS=Ready
-- [ ] Nodes are schedulable (not cordoned)</p>
+<ul>
+<li>[ ] Total node count is 4+ (2 system + 2+ user)</li>
+<li>[ ] All nodes show STATUS=Ready</li>
+<li>[ ] Nodes are schedulable (not cordoned)</li>
+</ul>
 <h3 id="3-azure-cni-networking-configured">3. Azure CNI networking configured</h3>
-<p><div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;networkProfile.networkPlugin&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>tsv
 </code></pre></div>
-- [ ] Network plugin is "azure"
-- [ ] Network policy is configured (azure or calico)
-- [ ] Service CIDR is 10.1.0.0/16</p>
+<ul>
+<li>[ ] Network plugin is "azure"</li>
+<li>[ ] Network policy is configured (azure or calico)</li>
+<li>[ ] Service CIDR is 10.1.0.0/16</li>
+</ul>
 <h3 id="4-system-node-pool-and-user-node-pool-separated">4. System node pool and user node pool separated</h3>
-<p><div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>--show-labels<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nodepool-type
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>--show-labels<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nodepool-type
 az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
-- [ ] System pool exists with mode=System
-- [ ] User pool exists with mode=User
-- [ ] Nodes have appropriate labels (nodepool-type)
-- [ ] System pool has 2 nodes (fixed)
-- [ ] User pool has auto-scaling enabled</p>
+<ul>
+<li>[ ] System pool exists with mode=System</li>
+<li>[ ] User pool exists with mode=User</li>
+<li>[ ] Nodes have appropriate labels (nodepool-type)</li>
+<li>[ ] System pool has 2 nodes (fixed)</li>
+<li>[ ] User pool has auto-scaling enabled</li>
+</ul>
 <h3 id="5-kubectl-configured-and-working">5. kubectl configured and working</h3>
-<p><div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A
 kubectl<span class="w"> </span>get<span class="w"> </span>services<span class="w"> </span>-A
 kubectl<span class="w"> </span>cluster-info
 </code></pre></div>
-- [ ] Can list all pods
-- [ ] Can list all services
-- [ ] API server is reachable
-- [ ] System pods are Running</p>
+<ul>
+<li>[ ] Can list all pods</li>
+<li>[ ] Can list all services</li>
+<li>[ ] API server is reachable</li>
+<li>[ ] System pods are Running</li>
+</ul>
 <h3 id="6-cluster-metrics-available-via-azure-monitor">6. Cluster metrics available via Azure Monitor</h3>
-<p><div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;addonProfiles.omsagent.enabled&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>tsv
 </code></pre></div>
-- [ ] OMS agent addon is enabled
-- [ ] Log Analytics workspace exists
-- [ ] Container insights collecting data
-- [ ] Can view metrics in Azure Portal</p>
+<ul>
+<li>[ ] OMS agent addon is enabled</li>
+<li>[ ] Log Analytics workspace exists</li>
+<li>[ ] Container insights collecting data</li>
+<li>[ ] Can view metrics in Azure Portal</li>
+</ul>
 <h3 id="7-azure-ad-integration-configured">7. Azure AD integration configured</h3>
-<p><div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;aadProfile&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>json
 </code></pre></div>
-- [ ] AAD profile exists
-- [ ] Managed AAD is enabled
-- [ ] Azure RBAC is enabled
-- [ ] RBAC is enabled on cluster</p>
+<ul>
+<li>[ ] AAD profile exists</li>
+<li>[ ] Managed AAD is enabled</li>
+<li>[ ] Azure RBAC is enabled</li>
+<li>[ ] RBAC is enabled on cluster</li>
+</ul>
 <h3 id="8-cluster-passes-at-e1-001">8. Cluster passes AT-E1-001</h3>
 <p>Run all validation checks - this is the comprehensive validation.</p>
 <h2 id="resource-integration-validation">Resource Integration Validation</h2>
 <h3 id="azure-container-registry-integration">Azure Container Registry Integration</h3>
-<p><div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>check-acr<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>check-acr<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--acr<span class="w"> </span>fawkesacr.azurecr.io
@@ -5211,23 +5225,27 @@ az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w">
 <span class="w">  </span>--scope<span class="w"> </span><span class="k">$(</span>az<span class="w"> </span>acr<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>fawkesacr<span class="w"> </span>--query<span class="w"> </span>id<span class="w"> </span>-o<span class="w"> </span>tsv<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
-- [ ] ACR check passes
-- [ ] AcrPull role assigned to AKS kubelet identity
-- [ ] Can pull images from ACR</p>
+<ul>
+<li>[ ] ACR check passes</li>
+<li>[ ] AcrPull role assigned to AKS kubelet identity</li>
+<li>[ ] Can pull images from ACR</li>
+</ul>
 <h3 id="key-vault-integration">Key Vault Integration</h3>
-<p><div class="highlight"><pre><span></span><code>az<span class="w"> </span>keyvault<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>fawkes-kv<span class="w"> </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>keyvault<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>fawkes-kv<span class="w"> </span>--output<span class="w"> </span>table
 
 az<span class="w"> </span>keyvault<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>fawkes-kv<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;properties.enableSoftDelete&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>tsv
 </code></pre></div>
-- [ ] Key Vault exists
-- [ ] Soft delete is enabled
-- [ ] Access policies configured for deployer
-- [ ] Access policies configured for AKS
-- [ ] Network ACLs configured appropriately</p>
+<ul>
+<li>[ ] Key Vault exists</li>
+<li>[ ] Soft delete is enabled</li>
+<li>[ ] Access policies configured for deployer</li>
+<li>[ ] Access policies configured for AKS</li>
+<li>[ ] Network ACLs configured appropriately</li>
+</ul>
 <h3 id="storage-account">Storage Account</h3>
-<p><div class="highlight"><pre><span></span><code>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>fawkestfstate<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>table
@@ -5236,20 +5254,24 @@ az<span class="w"> </span>storage<span class="w"> </span>container<span class="w
 <span class="w">  </span>--account-name<span class="w"> </span>fawkestfstate<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
-- [ ] Storage account exists
-- [ ] Container "tfstate" exists
-- [ ] Replication type is correct (LRS/GRS)
-- [ ] Terraform state is stored there</p>
+<ul>
+<li>[ ] Storage account exists</li>
+<li>[ ] Container "tfstate" exists</li>
+<li>[ ] Replication type is correct (LRS/GRS)</li>
+<li>[ ] Terraform state is stored there</li>
+</ul>
 <h3 id="log-analytics">Log Analytics</h3>
-<p><div class="highlight"><pre><span></span><code>az<span class="w"> </span>monitor<span class="w"> </span>log-analytics<span class="w"> </span>workspace<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>monitor<span class="w"> </span>log-analytics<span class="w"> </span>workspace<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--workspace-name<span class="w"> </span>fawkes-aks-logs<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
-- [ ] Log Analytics workspace exists
-- [ ] Retention period is configured
-- [ ] Linked to AKS cluster
-- [ ] Receiving container logs</p>
+<ul>
+<li>[ ] Log Analytics workspace exists</li>
+<li>[ ] Retention period is configured</li>
+<li>[ ] Linked to AKS cluster</li>
+<li>[ ] Receiving container logs</li>
+</ul>
 <h2 id="compliance-testing">Compliance Testing</h2>
 <h3 id="inspec-tests">InSpec Tests</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Install InSpec and Azure plugin if needed</span>
@@ -5263,44 +5285,52 @@ inspec<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <span class="w">  </span>--input<span class="w"> </span><span class="nv">cluster_name</span><span class="o">=</span>fawkes-aks<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--reporter<span class="w"> </span>cli<span class="w"> </span>json:reports/aks-inspec.json
 </code></pre></div>
-<p>Critical controls that must pass:
-- [ ] aks-cluster-exists: Cluster exists and running
-- [ ] aks-node-count: Minimum 2+ nodes
-- [ ] aks-node-pool-separation: System and user pools separated
-- [ ] aks-azure-cni: Azure CNI configured
-- [ ] aks-managed-identity: Managed identity enabled
-- [ ] aks-rbac-enabled: RBAC enabled
-- [ ] k8s-nodes-ready: All nodes Ready
-- [ ] k8s-system-pods-running: System pods Running</p>
+<p>Critical controls that must pass:</p>
+<ul>
+<li>[ ] aks-cluster-exists: Cluster exists and running</li>
+<li>[ ] aks-node-count: Minimum 2+ nodes</li>
+<li>[ ] aks-node-pool-separation: System and user pools separated</li>
+<li>[ ] aks-azure-cni: Azure CNI configured</li>
+<li>[ ] aks-managed-identity: Managed identity enabled</li>
+<li>[ ] aks-rbac-enabled: RBAC enabled</li>
+<li>[ ] k8s-nodes-ready: All nodes Ready</li>
+<li>[ ] k8s-system-pods-running: System pods Running</li>
+</ul>
 <h3 id="bdd-tests">BDD Tests</h3>
-<p><div class="highlight"><pre><span></span><code><span class="c1"># From repository root</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># From repository root</span>
 pytest<span class="w"> </span>tests/bdd/features/azure_aks_provisioning.feature<span class="w"> </span>-v
 
 <span class="c1"># Or run specific scenarios</span>
 pytest<span class="w"> </span>tests/bdd/features/azure_aks_provisioning.feature<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;AT-E1-001&quot;</span>
 </code></pre></div>
-- [ ] All test scenarios pass
-- [ ] No skipped tests (if authenticated)</p>
+<ul>
+<li>[ ] All test scenarios pass</li>
+<li>[ ] No skipped tests (if authenticated)</li>
+</ul>
 <h2 id="cost-validation">Cost Validation</h2>
 <h3 id="cost-estimation">Cost Estimation</h3>
-<p><div class="highlight"><pre><span></span><code>./scripts/azure-cost-estimate.sh
+<div class="highlight"><pre><span></span><code>./scripts/azure-cost-estimate.sh
 </code></pre></div>
-- [ ] Script completes successfully
-- [ ] Cost breakdown displayed
-- [ ] Total cost within budget expectations
-- [ ] Optimization suggestions reviewed (if over budget)</p>
+<ul>
+<li>[ ] Script completes successfully</li>
+<li>[ ] Cost breakdown displayed</li>
+<li>[ ] Total cost within budget expectations</li>
+<li>[ ] Optimization suggestions reviewed (if over budget)</li>
+</ul>
 <h3 id="actual-cost-check">Actual Cost Check</h3>
-<p><div class="highlight"><pre><span></span><code>az<span class="w"> </span>consumption<span class="w"> </span>usage<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>consumption<span class="w"> </span>usage<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--start-date<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;1 day ago&#39;</span><span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--end-date<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
-- [ ] Can view usage data
-- [ ] Costs align with estimates
-- [ ] Resource tags present for cost tracking</p>
+<ul>
+<li>[ ] Can view usage data</li>
+<li>[ ] Costs align with estimates</li>
+<li>[ ] Resource tags present for cost tracking</li>
+</ul>
 <h2 id="operational-validation">Operational Validation</h2>
 <h3 id="scaling-tests">Scaling Tests</h3>
-<p><div class="highlight"><pre><span></span><code><span class="c1"># Scale user pool</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Scale user pool</span>
 az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>scale<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
@@ -5309,56 +5339,70 @@ az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </
 
 kubectl<span class="w"> </span>get<span class="w"> </span>nodes
 </code></pre></div>
-- [ ] User pool scales up successfully
-- [ ] New nodes become Ready
-- [ ] Auto-scaler works within min/max limits</p>
+<ul>
+<li>[ ] User pool scales up successfully</li>
+<li>[ ] New nodes become Ready</li>
+<li>[ ] Auto-scaler works within min/max limits</li>
+</ul>
 <h3 id="pod-scheduling">Pod Scheduling</h3>
-<p><div class="highlight"><pre><span></span><code><span class="c1"># Deploy a test workload</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Deploy a test workload</span>
 kubectl<span class="w"> </span>create<span class="w"> </span>deployment<span class="w"> </span>nginx<span class="w"> </span>--image<span class="o">=</span>nginx<span class="w"> </span>--replicas<span class="o">=</span><span class="m">3</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-o<span class="w"> </span>wide
 </code></pre></div>
-- [ ] Pods schedule across nodes
-- [ ] Pods run successfully
-- [ ] Can access pod logs</p>
+<ul>
+<li>[ ] Pods schedule across nodes</li>
+<li>[ ] Pods run successfully</li>
+<li>[ ] Can access pod logs</li>
+</ul>
 <h3 id="network-connectivity">Network Connectivity</h3>
-<p><div class="highlight"><pre><span></span><code><span class="c1"># Test pod-to-pod connectivity</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Test pod-to-pod connectivity</span>
 kubectl<span class="w"> </span>run<span class="w"> </span>test-pod<span class="w"> </span>--image<span class="o">=</span>busybox<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>--<span class="w"> </span>/bin/sh
 <span class="c1"># In pod: nslookup kubernetes.default</span>
 <span class="c1"># In pod: wget -O- kubernetes.default</span>
 </code></pre></div>
-- [ ] DNS resolution works
-- [ ] Pod can reach Kubernetes API
-- [ ] Network policy allows expected traffic</p>
+<ul>
+<li>[ ] DNS resolution works</li>
+<li>[ ] Pod can reach Kubernetes API</li>
+<li>[ ] Network policy allows expected traffic</li>
+</ul>
 <h3 id="monitoring">Monitoring</h3>
-<p><div class="highlight"><pre><span></span><code><span class="c1"># Check metrics</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check metrics</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>nodes
 kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A
 </code></pre></div>
-- [ ] Metrics server working
-- [ ] Node metrics available
-- [ ] Pod metrics available</p>
+<ul>
+<li>[ ] Metrics server working</li>
+<li>[ ] Node metrics available</li>
+<li>[ ] Pod metrics available</li>
+</ul>
 <h2 id="security-validation">Security Validation</h2>
 <h3 id="rbac">RBAC</h3>
-<p><div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>list<span class="w"> </span>pods<span class="w"> </span>--as<span class="o">=</span>system:anonymous
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>list<span class="w"> </span>pods<span class="w"> </span>--as<span class="o">=</span>system:anonymous
 kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>list<span class="w"> </span>pods<span class="w"> </span>--as<span class="o">=</span>system:serviceaccount:default:default
 </code></pre></div>
-- [ ] Anonymous access properly restricted
-- [ ] Service account permissions appropriate
-- [ ] Azure RBAC enforced</p>
+<ul>
+<li>[ ] Anonymous access properly restricted</li>
+<li>[ ] Service account permissions appropriate</li>
+<li>[ ] Azure RBAC enforced</li>
+</ul>
 <h3 id="network-security">Network Security</h3>
-<p><div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>networkpolicies<span class="w"> </span>-A
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>networkpolicies<span class="w"> </span>-A
 az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>list<span class="w"> </span>--resource-group<span class="w"> </span>MC_fawkes-rg_*
 </code></pre></div>
-- [ ] Network policies configured (if using)
-- [ ] NSGs created by AKS
-- [ ] Only required ports open</p>
+<ul>
+<li>[ ] Network policies configured (if using)</li>
+<li>[ ] NSGs created by AKS</li>
+<li>[ ] Only required ports open</li>
+</ul>
 <h3 id="secrets-management">Secrets Management</h3>
-<p><div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"> </span>-A
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"> </span>-A
 az<span class="w"> </span>keyvault<span class="w"> </span>secret<span class="w"> </span>list<span class="w"> </span>--vault-name<span class="w"> </span>fawkes-kv
 </code></pre></div>
-- [ ] No plaintext secrets in cluster
-- [ ] Secrets stored in Key Vault
-- [ ] CSI driver configured (optional)</p>
+<ul>
+<li>[ ] No plaintext secrets in cluster</li>
+<li>[ ] Secrets stored in Key Vault</li>
+<li>[ ] CSI driver configured (optional)</li>
+</ul>
 <h2 id="documentation-validation">Documentation Validation</h2>
 <h3 id="runbook">Runbook</h3>
 <ul>
@@ -5385,8 +5429,8 @@ az<span class="w"> </span>group<span class="w"> </span>delete<span class="w"> </
 </code></pre></div>
 <p><strong>WARNING</strong>: This will delete all resources. Ensure you have backups if needed.</p>
 <h2 id="sign-off">Sign-Off</h2>
-<p>Validated by: <strong><em>_</em></strong><strong><em>_</em></strong><strong><em>
-Date: </em></strong><strong><em>_</em></strong><strong><em>_</em></strong>
+<p>Validated by: <strong>****</strong>_<strong>****</strong>
+Date: <strong>****</strong>_<strong>****</strong>
 Environment: [ ] Dev [ ] Stage [ ] Prod
 All critical checks passed: [ ] Yes [ ] No</p>
 <p>Notes:</p>

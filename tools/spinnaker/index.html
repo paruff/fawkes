@@ -5062,10 +5062,12 @@
 <h1 id="spinnaker-deprecated">Spinnaker (Deprecated)</h1>
 <div class="admonition warning">
 <p class="admonition-title">Deprecated Tool</p>
-<p><strong>Spinnaker is no longer used in Fawkes.</strong> This documentation is retained for historical reference only.</p>
-<p><strong>Migration Path</strong>: Use <a href="https://argo-cd.readthedocs.io/">ArgoCD</a> for GitOps-based continuous delivery.</p>
-<p>See the migration guide below for transitioning from Spinnaker to ArgoCD.</p>
 </div>
+<p><strong>Spinnaker is no longer used in Fawkes.</strong> This documentation is retained for historical reference only.</p>
+<pre><code>**Migration Path**: Use [ArgoCD](https://argo-cd.readthedocs.io/) for GitOps-based continuous delivery.
+
+See the migration guide below for transitioning from Spinnaker to ArgoCD.
+</code></pre>
 <hr />
 <h2 id="migration-from-spinnaker-to-argocd">Migration from Spinnaker to ArgoCD</h2>
 <p>Fawkes has migrated from Spinnaker to ArgoCD for the following reasons:</p>
@@ -5122,19 +5124,19 @@
 <span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">canary</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app:v2.0.0</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app:v2.0.0</span>
 </code></pre></div>
 <h3 id="migration-steps">Migration Steps</h3>
 <ol>
@@ -5159,9 +5161,11 @@
 <p><img alt="Spinnaker Logo" src="../assets/images/tools/spinnaker.png" width="300" /></p>
 <p>Spinnaker is an open-source continuous delivery platform that helps you release software changes with high velocity and confidence.</p>
 <h2 id="overview">Overview</h2>
-<p>Spinnaker provides two core sets of features:
-- <strong>Application Management</strong> - Deploy and manage cloud resources
-- <strong>Application Deployment</strong> - Construct and manage continuous delivery workflows</p>
+<p>Spinnaker provides two core sets of features:</p>
+<ul>
+<li><strong>Application Management</strong> - Deploy and manage cloud resources</li>
+<li><strong>Application Deployment</strong> - Construct and manage continuous delivery workflows</li>
+</ul>
 <h2 id="key-features">Key Features</h2>
 <table>
 <thead>
@@ -5207,32 +5211,36 @@ helm<span class="w"> </span>install<span class="w"> </span>spinnaker<span class=
 <span class="w">  </span>--create-namespace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--values<span class="w"> </span>values.yaml
 </code></pre></div>
-<p>Example <code>values.yaml</code>:
+<p>Example <code>values.yaml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">spinnakerConfig</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">profiles</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">clouddriver</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">kubernetes</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">        </span><span class="nt">accounts</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-cluster</span>
-<span class="w">          </span><span class="nt">requiredGroupMembership</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
-<span class="w">          </span><span class="nt">providerVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">V2</span>
-<span class="w">          </span><span class="nt">permissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
-<span class="w">          </span><span class="nt">dockerRegistries</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
-<span class="w">          </span><span class="nt">configureImagePullSecrets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">          </span><span class="nt">cacheThreads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="w">          </span><span class="nt">namespaces</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
-<span class="w">          </span><span class="nt">omitNamespaces</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
-<span class="w">          </span><span class="nt">kinds</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
-<span class="w">          </span><span class="nt">omitKinds</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
-<span class="w">          </span><span class="nt">customResources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
-</code></pre></div></p>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-cluster</span>
+<span class="w">            </span><span class="nt">requiredGroupMembership</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">            </span><span class="nt">providerVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">V2</span>
+<span class="w">            </span><span class="nt">permissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">            </span><span class="nt">dockerRegistries</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">            </span><span class="nt">configureImagePullSecrets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">cacheThreads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">            </span><span class="nt">namespaces</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">            </span><span class="nt">omitNamespaces</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">            </span><span class="nt">kinds</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">            </span><span class="nt">omitKinds</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">            </span><span class="nt">customResources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</code></pre></div>
 <h2 id="using-spinnaker-with-fawkes">Using Spinnaker with Fawkes</h2>
 <h3 id="creating-a-deployment-pipeline">Creating a Deployment Pipeline</h3>
 <ol>
 <li>Navigate to Spinnaker UI</li>
-<li>Create a new application:</li>
-<li>Name: <code>fawkes-app</code></li>
+<li>
+<p>Create a new application:</p>
+</li>
+<li>
+<p>Name: <code>fawkes-app</code></p>
+</li>
 <li>Owner Email: <code>team@fawkes.io</code></li>
 <li>
 <p>Cloud Providers: <code>Kubernetes V2</code></p>
@@ -5268,8 +5276,12 @@ helm<span class="w"> </span>install<span class="w"> </span>spinnaker<span class=
 </ol>
 <h2 id="best-practices">Best Practices</h2>
 <ol>
-<li><strong>Pipeline Templates</strong></li>
-<li>Use pipeline templates for consistency</li>
+<li>
+<p><strong>Pipeline Templates</strong></p>
+</li>
+<li>
+<p>Use pipeline templates for consistency</p>
+</li>
 <li>Version control your templates</li>
 <li>
 <p>Share common deployment patterns</p>
@@ -5277,7 +5289,9 @@ helm<span class="w"> </span>install<span class="w"> </span>spinnaker<span class=
 <li>
 <p><strong>Security</strong></p>
 </li>
-<li>Enable RBAC</li>
+<li>
+<p>Enable RBAC</p>
+</li>
 <li>Use service accounts</li>
 <li>
 <p>Implement least privilege access</p>

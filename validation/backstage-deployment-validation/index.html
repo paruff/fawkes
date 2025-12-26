@@ -4671,65 +4671,81 @@
 <h3 id="acceptance-criteria-validation">Acceptance Criteria Validation</h3>
 <h4 id="backstage-deployed-via-argocd">✅ Backstage deployed via ArgoCD</h4>
 <p><strong>Status:</strong> Complete</p>
-<p><strong>Evidence:</strong>
-- ArgoCD Application manifest exists: <code>platform/apps/backstage-application.yaml</code>
-- Configured with:
-  - Helm chart: <code>backstage/backstage</code> version 1.10.0
-  - Replicas: 2 (HA configuration)
-  - Sync policy: Automated with prune and self-heal
-  - Sync wave: 5 (after PostgreSQL at wave -4)</p>
-<p><strong>Validation Steps:</strong>
+<p><strong>Evidence:</strong></p>
+<ul>
+<li>ArgoCD Application manifest exists: <code>platform/apps/backstage-application.yaml</code></li>
+<li>Configured with:</li>
+<li>Helm chart: <code>backstage/backstage</code> version 1.10.0</li>
+<li>Replicas: 2 (HA configuration)</li>
+<li>Sync policy: Automated with prune and self-heal</li>
+<li>Sync wave: 5 (after PostgreSQL at wave -4)</li>
+</ul>
+<p><strong>Validation Steps:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check ArgoCD application exists</span>
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>backstage
 
 <span class="c1"># Verify deployment</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>application<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>backstage
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="postgresql-backend-configured">✅ PostgreSQL backend configured</h4>
 <p><strong>Status:</strong> Complete</p>
-<p><strong>Evidence:</strong>
-- CloudNativePG operator deployment: <code>platform/apps/postgresql/cloudnativepg-operator-application.yaml</code>
-- PostgreSQL cluster manifest: <code>platform/apps/postgresql/db-backstage-cluster.yaml</code>
-  - 3 instances (1 primary, 2 standby)
-  - Database: <code>backstage_db</code>
-  - User: <code>backstage_user</code>
-  - Storage: 20Gi per instance
-- Credentials secret: <code>platform/apps/postgresql/db-backstage-credentials.yaml</code>
-- Backstage configured to use PostgreSQL:
-  - Connection via environment variables (POSTGRES_HOST, POSTGRES_USER, etc.)
-  - External PostgreSQL enabled (embedded PostgreSQL disabled)</p>
+<p><strong>Evidence:</strong></p>
+<ul>
+<li>CloudNativePG operator deployment: <code>platform/apps/postgresql/cloudnativepg-operator-application.yaml</code></li>
+<li>PostgreSQL cluster manifest: <code>platform/apps/postgresql/db-backstage-cluster.yaml</code></li>
+<li>3 instances (1 primary, 2 standby)</li>
+<li>Database: <code>backstage_db</code></li>
+<li>User: <code>backstage_user</code></li>
+<li>Storage: 20Gi per instance</li>
+<li>Credentials secret: <code>platform/apps/postgresql/db-backstage-credentials.yaml</code></li>
+<li>Backstage configured to use PostgreSQL:</li>
+<li>Connection via environment variables (POSTGRES_HOST, POSTGRES_USER, etc.)</li>
+<li>External PostgreSQL enabled (embedded PostgreSQL disabled)</li>
+</ul>
 <h4 id="backstage-ui-accessible">✅ Backstage UI accessible</h4>
 <p><strong>Status:</strong> Complete</p>
-<p><strong>Evidence:</strong>
-- Ingress configured in <code>platform/apps/backstage-application.yaml</code>:
-  - Host: <code>backstage.fawkes.idp</code>
-  - TLS enabled with cert-manager
-  - HTTPS redirect enabled
-  - Nginx ingress class
-- Health check endpoints configured:
-  - Liveness probe: <code>/healthcheck</code> on port 7007
-  - Readiness probe: <code>/healthcheck</code> on port 7007</p>
+<p><strong>Evidence:</strong></p>
+<ul>
+<li>Ingress configured in <code>platform/apps/backstage-application.yaml</code>:</li>
+<li>Host: <code>backstage.fawkes.idp</code></li>
+<li>TLS enabled with cert-manager</li>
+<li>HTTPS redirect enabled</li>
+<li>Nginx ingress class</li>
+<li>Health check endpoints configured:</li>
+<li>Liveness probe: <code>/healthcheck</code> on port 7007</li>
+<li>Readiness probe: <code>/healthcheck</code> on port 7007</li>
+</ul>
 <h4 id="initial-catalog-populated">✅ Initial catalog populated</h4>
 <p><strong>Status:</strong> Complete</p>
-<p><strong>Evidence:</strong>
-- Root catalog file created: <code>catalog-info.yaml</code>
-- Catalog configured in <code>platform/apps/backstage/app-config.yaml</code></p>
-<p><strong>Catalog Contents:</strong>
-- <strong>System:</strong> fawkes-platform
-- <strong>Domain:</strong> platform-engineering
-- <strong>Group:</strong> platform-team
-- <strong>Components:</strong> backstage, argocd, jenkins, prometheus, grafana, sonarqube
-- <strong>Resource:</strong> db-backstage-dev (PostgreSQL database)
-- <strong>API:</strong> backstage-api
-- <strong>Location:</strong> fawkes-templates (Software templates)</p>
-<p><strong>Software Templates Created:</strong>
-- <code>templates/python-service/template.yaml</code> - Python FastAPI microservice
-- <code>templates/java-service/template.yaml</code> - Java Spring Boot microservice
-- <code>templates/nodejs-service/template.yaml</code> - Node.js Express microservice</p>
+<p><strong>Evidence:</strong></p>
+<ul>
+<li>Root catalog file created: <code>catalog-info.yaml</code></li>
+<li>Catalog configured in <code>platform/apps/backstage/app-config.yaml</code></li>
+</ul>
+<p><strong>Catalog Contents:</strong></p>
+<ul>
+<li><strong>System:</strong> fawkes-platform</li>
+<li><strong>Domain:</strong> platform-engineering</li>
+<li><strong>Group:</strong> platform-team</li>
+<li><strong>Components:</strong> backstage, argocd, jenkins, prometheus, grafana, sonarqube</li>
+<li><strong>Resource:</strong> db-backstage-dev (PostgreSQL database)</li>
+<li><strong>API:</strong> backstage-api</li>
+<li><strong>Location:</strong> fawkes-templates (Software templates)</li>
+</ul>
+<p><strong>Software Templates Created:</strong></p>
+<ul>
+<li><code>templates/python-service/template.yaml</code> - Python FastAPI microservice</li>
+<li><code>templates/java-service/template.yaml</code> - Java Spring Boot microservice</li>
+<li><code>templates/nodejs-service/template.yaml</code> - Node.js Express microservice</li>
+</ul>
 <h3 id="definition-of-done-checklist">Definition of Done Checklist</h3>
 <ul>
-<li>[x] <strong>Code implemented and committed</strong></li>
-<li>All manifests exist and are properly configured</li>
+<li>
+<p>[x] <strong>Code implemented and committed</strong></p>
+</li>
+<li>
+<p>All manifests exist and are properly configured</p>
+</li>
 <li>Catalog file created with platform components</li>
 <li>
 <p>Software templates created for golden paths</p>
@@ -4737,7 +4753,9 @@ kubectl<span class="w"> </span>get<span class="w"> </span>application<span class
 <li>
 <p>[x] <strong>Tests written and passing</strong></p>
 </li>
-<li>BDD acceptance tests exist: <code>tests/bdd/features/backstage-deployment.feature</code></li>
+<li>
+<p>BDD acceptance tests exist: <code>tests/bdd/features/backstage-deployment.feature</code></p>
+</li>
 <li>Step definitions implemented: <code>tests/bdd/step_definitions/backstage_steps.py</code></li>
 <li>
 <p>9 test scenarios covering all acceptance criteria</p>
@@ -4745,7 +4763,9 @@ kubectl<span class="w"> </span>get<span class="w"> </span>application<span class
 <li>
 <p>[x] <strong>Documentation updated</strong></p>
 </li>
-<li>Comprehensive deployment guide: <code>docs/deployment/backstage-postgresql.md</code></li>
+<li>
+<p>Comprehensive deployment guide: <code>docs/deployment/backstage-postgresql.md</code></p>
+</li>
 <li>Deployment directory README: <code>docs/deployment/README.md</code></li>
 <li>Architecture documented in: <code>docs/architecture.md</code></li>
 <li>
@@ -4785,40 +4805,40 @@ kubectl<span class="w"> </span>get<span class="w"> </span>application<span class
 </code></pre></div>
 <h3 id="next-steps-for-deployment">Next Steps for Deployment</h3>
 <ol>
-<li>
-<p><strong>Update Secrets (Critical):</strong>
-   <div class="highlight"><pre><span></span><code>vim<span class="w"> </span>platform/apps/postgresql/db-backstage-credentials.yaml
+<li><strong>Update Secrets (Critical):</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code>vim<span class="w"> </span>platform/apps/postgresql/db-backstage-credentials.yaml
 vim<span class="w"> </span>platform/apps/backstage/secrets.yaml
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Deploy via ArgoCD:</strong>
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/bootstrap/app-of-apps.yaml
+</code></pre></div>
+<ol>
+<li><strong>Deploy via ArgoCD:</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/bootstrap/app-of-apps.yaml
 argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </span>platform-bootstrap
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Monitor Deployment:</strong>
-   <div class="highlight"><pre><span></span><code>watch<span class="w"> </span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes
+</code></pre></div>
+<ol>
+<li><strong>Monitor Deployment:</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code>watch<span class="w"> </span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes
 argocd<span class="w"> </span>app<span class="w"> </span>list
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Access Backstage:</strong>
-   <div class="highlight"><pre><span></span><code><span class="c1"># Local: Port-forward</span>
+</code></pre></div>
+<ol>
+<li><strong>Access Backstage:</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Local: Port-forward</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>svc/backstage<span class="w"> </span><span class="m">7007</span>:7007
 
 <span class="c1"># Production: Access via ingress</span>
 <span class="c1"># https://backstage.fawkes.idp</span>
-</code></pre></div></p>
-</li>
-</ol>
+</code></pre></div>
 <h3 id="conclusion">Conclusion</h3>
-<p>All acceptance criteria have been met:
-- ✅ Backstage deployed via ArgoCD
-- ✅ PostgreSQL backend configured
-- ✅ Backstage UI accessible
-- ✅ Initial catalog populated</p>
+<p>All acceptance criteria have been met:</p>
+<ul>
+<li>✅ Backstage deployed via ArgoCD</li>
+<li>✅ PostgreSQL backend configured</li>
+<li>✅ Backstage UI accessible</li>
+<li>✅ Initial catalog populated</li>
+</ul>
 <p>The deployment is <strong>READY</strong> for execution. All manifests, documentation, and tests are in place.</p>
 
 

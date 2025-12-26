@@ -4863,8 +4863,12 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <h3 id="6-verify-github-oauth-app-configuration">6. Verify GitHub OAuth App Configuration</h3>
 <p>Manually verify in GitHub:</p>
 <ol>
-<li>Go to your OAuth app settings:</li>
-<li>Personal: https://github.com/settings/developers</li>
+<li>
+<p>Go to your OAuth app settings:</p>
+</li>
+<li>
+<p>Personal: https://github.com/settings/developers</p>
+</li>
 <li>
 <p>Organization: https://github.com/organizations/YOUR_ORG/settings/applications</p>
 </li>
@@ -4880,19 +4884,21 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <p><strong>Expected Result</strong>: ✅ All OAuth app settings are correct</p>
 <h3 id="7-test-login-flow-manual">7. Test Login Flow (Manual)</h3>
 <ol>
-<li>
-<p><strong>Access Backstage</strong>:
-   <div class="highlight"><pre><span></span><code><span class="c1"># If using port-forward for local testing:</span>
+<li><strong>Access Backstage</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># If using port-forward for local testing:</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>svc/backstage<span class="w"> </span><span class="m">7007</span>:7007
 
 <span class="c1"># Open browser to: http://localhost:7007</span>
 <span class="c1"># Or for production: https://backstage.fawkes.idp</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Verify Login Button</strong>:</p>
 </li>
-<li>[ ] "Sign in with GitHub" button is visible on the page</li>
+<li>
+<p>[ ] "Sign in with GitHub" button is visible on the page</p>
+</li>
 <li>
 <p>[ ] No error messages are displayed on the login page</p>
 </li>
@@ -4911,8 +4917,12 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 <h3 id="8-test-permissions-manual">8. Test Permissions (Manual)</h3>
 <p>After logging in:</p>
 <ol>
-<li><strong>Access Service Catalog</strong>:</li>
-<li>[ ] Navigate to "Catalog" section</li>
+<li>
+<p><strong>Access Service Catalog</strong>:</p>
+</li>
+<li>
+<p>[ ] Navigate to "Catalog" section</p>
+</li>
 <li>[ ] Can view catalog entities</li>
 <li>
 <p>[ ] Username/identity is displayed correctly</p>
@@ -4952,45 +4962,53 @@ behave<span class="w"> </span>tests/bdd/features/backstage-deployment.feature<sp
 <h2 id="common-issues-and-solutions">Common Issues and Solutions</h2>
 <h3 id="issue-1-invalid-redirect_uri-error">Issue 1: "Invalid redirect_uri" Error</h3>
 <p><strong>Symptoms</strong>: Error when clicking "Sign in with GitHub"</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check callback URL in secret</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>backstage-oauth-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.github-client-id}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
-</code></pre></div></p>
-<p><strong>Solution</strong>:
-- Verify callback URL in GitHub OAuth app matches: <code>https://backstage.fawkes.idp/api/auth/github/handler/frame</code>
-- Check protocol (http vs https)
-- Check for trailing slashes
-- Update GitHub OAuth app if needed</p>
+</code></pre></div>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Verify callback URL in GitHub OAuth app matches: <code>https://backstage.fawkes.idp/api/auth/github/handler/frame</code></li>
+<li>Check protocol (http vs https)</li>
+<li>Check for trailing slashes</li>
+<li>Update GitHub OAuth app if needed</li>
+</ul>
 <h3 id="issue-2-github-oauth-configuration-error">Issue 2: "GitHub OAuth configuration error"</h3>
 <p><strong>Symptoms</strong>: Error in logs about OAuth configuration</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check if secrets contain placeholder values</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>backstage-oauth-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>CHANGE_ME
-</code></pre></div></p>
-<p><strong>Solution</strong>:
-- Update secrets with real GitHub OAuth credentials
-- Apply updated secret: <code>kubectl apply -f platform/apps/backstage/secrets.yaml</code>
-- Restart Backstage: <code>kubectl rollout restart deployment/backstage -n fawkes</code></p>
+</code></pre></div>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Update secrets with real GitHub OAuth credentials</li>
+<li>Apply updated secret: <code>kubectl apply -f platform/apps/backstage/secrets.yaml</code></li>
+<li>Restart Backstage: <code>kubectl rollout restart deployment/backstage -n fawkes</code></li>
+</ul>
 <h3 id="issue-3-login-button-not-visible">Issue 3: Login Button Not Visible</h3>
 <p><strong>Symptoms</strong>: No "Sign in with GitHub" button on login page</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check app-config has auth section</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>backstage-app-config<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;auth:&quot;</span>
-</code></pre></div></p>
-<p><strong>Solution</strong>:
-- Verify app-config.yaml has auth.providers.github section
-- Check environment variables are properly injected
-- Restart Backstage pods</p>
+</code></pre></div>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Verify app-config.yaml has auth.providers.github section</li>
+<li>Check environment variables are properly injected</li>
+<li>Restart Backstage pods</li>
+</ul>
 <h3 id="issue-4-500-error-on-callback">Issue 4: 500 Error on Callback</h3>
 <p><strong>Symptoms</strong>: After GitHub authorization, get 500 error</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Backstage logs for errors</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>backstage<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
-</code></pre></div></p>
-<p><strong>Solution</strong>:
-- Verify client secret is correct (regenerate if needed)
-- Check database connectivity
-- Ensure all environment variables are set correctly</p>
+</code></pre></div>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Verify client secret is correct (regenerate if needed)</li>
+<li>Check database connectivity</li>
+<li>Ensure all environment variables are set correctly</li>
+</ul>
 <h2 id="success-criteria">Success Criteria</h2>
 <p>All of the following must be true:</p>
 <ul>
@@ -5009,10 +5027,10 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 </ul>
 <h2 id="sign-off">Sign-Off</h2>
 <ul>
-<li>[ ] Validated by: <strong><em>_</em></strong><strong><em>_</em></strong>__</li>
-<li>[ ] Date: <strong><em>_</em></strong><strong><em>_</em></strong>__</li>
+<li>[ ] Validated by: <strong>**</strong>____<strong>**</strong></li>
+<li>[ ] Date: <strong>**</strong>____<strong>**</strong></li>
 <li>[ ] Environment: [ ] Development [ ] Staging [ ] Production</li>
-<li>[ ] Issues found: <strong><em>_</em></strong><strong><em>_</em></strong>__</li>
+<li>[ ] Issues found: <strong>**</strong>____<strong>**</strong></li>
 <li>[ ] All issues resolved: [ ] Yes [ ] No</li>
 </ul>
 <h2 id="references">References</h2>
