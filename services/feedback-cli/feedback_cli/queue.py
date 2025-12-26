@@ -41,11 +41,7 @@ class OfflineQueue:
         """
         queue = self._load_queue()
 
-        queued_feedback = QueuedFeedback(
-            **feedback_data,
-            queued_at=datetime.now(timezone.utc).isoformat(),
-            attempts=0
-        )
+        queued_feedback = QueuedFeedback(**feedback_data, queued_at=datetime.now(timezone.utc).isoformat(), attempts=0)
 
         queue.append(queued_feedback.model_dump())
         self._save_queue(queue)

@@ -5,16 +5,14 @@ description: "[Brief description of what this playbook achieves]"
 
 # Playbook: [TITLE]
 
-> **Estimated Duration**: [X hours/days]
-> **Complexity**: ⭐⭐ [Low/Medium/High]
-> **Target Audience**: [Platform Engineers / DevOps Engineers / Consultants]
+> **Estimated Duration**: [X hours/days] > **Complexity**: ⭐⭐ [Low/Medium/High] > **Target Audience**: [Platform Engineers / DevOps Engineers / Consultants]
 
 ---
 
 ## I. Business Objective
 
 !!! info "Diátaxis: Explanation / Conceptual"
-    This section defines the "why"—the risk mitigated, compliance goal achieved, and value delivered.
+This section defines the "why"—the risk mitigated, compliance goal achieved, and value delivered.
 
 ### What We're Solving
 
@@ -24,10 +22,10 @@ description: "[Brief description of what this playbook achieves]"
 
 ### Risk Mitigation
 
-| Risk | Impact Without Action | How This Playbook Helps |
-|------|----------------------|------------------------|
-| [Risk 1] | [Impact] | [Mitigation] |
-| [Risk 2] | [Impact] | [Mitigation] |
+| Risk     | Impact Without Action | How This Playbook Helps |
+| -------- | --------------------- | ----------------------- |
+| [Risk 1] | [Impact]              | [Mitigation]            |
+| [Risk 2] | [Impact]              | [Mitigation]            |
 
 ### Expected Outcomes
 
@@ -37,8 +35,8 @@ description: "[Brief description of what this playbook achieves]"
 
 ### Business Value
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
+| Metric     | Before     | After    | Improvement          |
+| ---------- | ---------- | -------- | -------------------- |
 | [Metric 1] | [Baseline] | [Target] | [% or X improvement] |
 | [Metric 2] | [Baseline] | [Target] | [% or X improvement] |
 
@@ -47,15 +45,15 @@ description: "[Brief description of what this playbook achieves]"
 ## II. Technical Prerequisites
 
 !!! abstract "Diátaxis: Reference"
-    This section lists required Fawkes components, versions, and environment specifications.
+This section lists required Fawkes components, versions, and environment specifications.
 
 ### Required Fawkes Components
 
-| Component | Minimum Version | Required | Documentation |
-|-----------|-----------------|----------|---------------|
-| Kubernetes | 1.28+ | ✅ | *Link to reference docs* |
-| [Component 2] | [Version] | ✅ | *Link to reference docs* |
-| [Component 3] | [Version] | ⬜ Optional | *Link to reference docs* |
+| Component     | Minimum Version | Required    | Documentation            |
+| ------------- | --------------- | ----------- | ------------------------ |
+| Kubernetes    | 1.28+           | ✅          | _Link to reference docs_ |
+| [Component 2] | [Version]       | ✅          | _Link to reference docs_ |
+| [Component 3] | [Version]       | ⬜ Optional | _Link to reference docs_ |
 
 ### Environment Requirements
 
@@ -91,7 +89,7 @@ certificates: cert-manager recommended
 ## III. Implementation Steps
 
 !!! tip "Diátaxis: How-to Guide (Core)"
-    This is the core of the playbook—step-by-step procedures using Fawkes components.
+This is the core of the playbook—step-by-step procedures using Fawkes components.
 
 ### Step 1: [First Major Step]
 
@@ -107,9 +105,8 @@ kubectl apply -f [manifest]
 **Verification**: [How to confirm this step completed successfully]
 
 ??? example "Expected Output"
-    ```
-    [Example of what successful output looks like]
-    ```
+`[Example of what successful output looks like]]
+    `
 
 ### Step 2: [Second Major Step]
 
@@ -142,14 +139,14 @@ data:
 [Detailed instructions with code examples, screenshots, or diagrams as needed]
 
 !!! warning "Common Pitfall"
-    [Describe a common mistake and how to avoid it]
+[Describe a common mistake and how to avoid it]
 
 ---
 
 ## IV. Validation & Success Metrics
 
 !!! check "Diátaxis: How-to Guide / Reference"
-    Instructions for verifying the implementation and measuring success.
+Instructions for verifying the implementation and measuring success.
 
 ### Functional Validation
 
@@ -173,10 +170,10 @@ data:
 
 ### Success Metrics
 
-| Metric | How to Measure | Target Value | Dashboard Link |
-|--------|----------------|--------------|----------------|
-| [Metric 1] | [Measurement method] | [Target] | [Link to dashboard] |
-| [Metric 2] | [Measurement method] | [Target] | [Link to dashboard] |
+| Metric     | How to Measure       | Target Value | Dashboard Link      |
+| ---------- | -------------------- | ------------ | ------------------- |
+| [Metric 1] | [Measurement method] | [Target]     | [Link to dashboard] |
+| [Metric 2] | [Measurement method] | [Target]     | [Link to dashboard] |
 
 ### Verification Checklist
 
@@ -189,19 +186,19 @@ data:
 
 After implementation, expect to see improvement in these DORA metrics:
 
-| DORA Metric | Expected Impact | Measurement Timeline |
-|-------------|-----------------|---------------------|
-| Deployment Frequency | [X% improvement] | [2-4 weeks] |
-| Lead Time for Changes | [X% reduction] | [2-4 weeks] |
-| Change Failure Rate | [X% reduction] | [4-8 weeks] |
-| Time to Restore | [X% reduction] | [4-8 weeks] |
+| DORA Metric           | Expected Impact  | Measurement Timeline |
+| --------------------- | ---------------- | -------------------- |
+| Deployment Frequency  | [X% improvement] | [2-4 weeks]          |
+| Lead Time for Changes | [X% reduction]   | [2-4 weeks]          |
+| Change Failure Rate   | [X% reduction]   | [4-8 weeks]          |
+| Time to Restore       | [X% reduction]   | [4-8 weeks]          |
 
 ---
 
 ## V. Client Presentation Talking Points
 
 !!! quote "Diátaxis: Explanation / Conceptual"
-    Ready-to-use business language for communicating success to client executives.
+Ready-to-use business language for communicating success to client executives.
 
 ### Executive Summary
 
@@ -231,21 +228,21 @@ After implementation, expect to see improvement in these DORA metrics:
 ### Common Executive Questions & Answers
 
 ??? question "How does this compare to industry benchmarks?"
-    According to DORA research, organizations with [this capability] are [X times] more likely to achieve their organizational performance goals. Your current metrics place you in the [Elite/High/Medium/Low] performance category.
+According to DORA research, organizations with [this capability] are [X times] more likely to achieve their organizational performance goals. Your current metrics place you in the [Elite/High/Medium/Low] performance category.
 
 ??? question "What's the ROI on this implementation?"
-    Based on [metrics], this implementation delivers [X% improvement] which translates to approximately [time/cost savings]. Industry research suggests organizations see [typical ROI] from similar investments.
+Based on [metrics], this implementation delivers [X% improvement] which translates to approximately [time/cost savings]. Industry research suggests organizations see [typical ROI] from similar investments.
 
 ??? question "What's the risk if we don't maintain this?"
-    Without continued attention, [specific degradation risk]. We recommend [maintenance activities] to sustain these improvements.
+Without continued attention, [specific degradation risk]. We recommend [maintenance activities] to sustain these improvements.
 
 ### Follow-Up Actions
 
-| Action | Owner | Timeline |
-|--------|-------|----------|
-| Schedule review meeting | Consultant | [+1 week] |
-| Begin [next phase] | Client team | [+2 weeks] |
-| Conduct training | Consultant | [+1-2 weeks] |
+| Action                  | Owner       | Timeline     |
+| ----------------------- | ----------- | ------------ |
+| Schedule review meeting | Consultant  | [+1 week]    |
+| Begin [next phase]      | Client team | [+2 weeks]   |
+| Conduct training        | Consultant  | [+1-2 weeks] |
 
 ---
 
@@ -262,13 +259,13 @@ When creating a playbook, link to relevant existing documentation:
 
 ### Troubleshooting
 
-| Issue | Possible Cause | Resolution |
-|-------|---------------|------------|
-| [Issue 1] | [Cause] | [Steps to resolve] |
-| [Issue 2] | [Cause] | [Steps to resolve] |
+| Issue     | Possible Cause | Resolution         |
+| --------- | -------------- | ------------------ |
+| [Issue 1] | [Cause]        | [Steps to resolve] |
+| [Issue 2] | [Cause]        | [Steps to resolve] |
 
 ### Change Log
 
-| Date | Version | Changes |
-|------|---------|---------|
-| YYYY-MM-DD | 1.0 | Initial release |
+| Date       | Version | Changes         |
+| ---------- | ------- | --------------- |
+| YYYY-MM-DD | 1.0     | Initial release |

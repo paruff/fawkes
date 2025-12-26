@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Validation script for Issue #109 - Code Quality Standards and Linting
-set -uo pipefail  # Removed -e to allow script to continue on errors
+set -uo pipefail # Removed -e to allow script to continue on errors
 
 echo "=========================================="
 echo "Validating Code Quality Standards (Issue #109)"
@@ -12,43 +12,43 @@ PASSED=0
 FAILED=0
 
 validate_file() {
-    local file=$1
-    local description=$2
-    
-    if [ -f "$file" ]; then
-        echo "✅ PASS: $description"
-        ((PASSED++))
-    else
-        echo "❌ FAIL: $description - File not found: $file"
-        ((FAILED++))
-    fi
+  local file=$1
+  local description=$2
+
+  if [ -f "$file" ]; then
+    echo "✅ PASS: $description"
+    ((PASSED++))
+  else
+    echo "❌ FAIL: $description - File not found: $file"
+    ((FAILED++))
+  fi
 }
 
 validate_command() {
-    local cmd=$1
-    local description=$2
-    
-    if command -v "$cmd" &> /dev/null || which "$cmd" &> /dev/null; then
-        echo "✅ PASS: $description"
-        ((PASSED++))
-    else
-        echo "⚠️  SKIP: $description - Command not available (optional for contributors)"
-        # Don't count as failure - not all developers need all tools installed
-    fi
+  local cmd=$1
+  local description=$2
+
+  if command -v "$cmd" &> /dev/null || which "$cmd" &> /dev/null; then
+    echo "✅ PASS: $description"
+    ((PASSED++))
+  else
+    echo "⚠️  SKIP: $description - Command not available (optional for contributors)"
+    # Don't count as failure - not all developers need all tools installed
+  fi
 }
 
 validate_config() {
-    local config=$1
-    local pattern=$2
-    local description=$3
-    
-    if grep -q "$pattern" "$config"; then
-        echo "✅ PASS: $description"
-        ((PASSED++))
-    else
-        echo "❌ FAIL: $description"
-        ((FAILED++))
-    fi
+  local config=$1
+  local pattern=$2
+  local description=$3
+
+  if grep -q "$pattern" "$config"; then
+    echo "✅ PASS: $description"
+    ((PASSED++))
+  else
+    echo "❌ FAIL: $description"
+    ((FAILED++))
+  fi
 }
 
 echo "## 1. Linting Rules Defined for All Languages"
@@ -108,17 +108,17 @@ echo "----------------------------------------------"
 echo "Checking code quality standards documentation completeness..."
 DOC="docs/how-to/development/code-quality-standards.md"
 if [ -f "$DOC" ]; then
-    validate_config "$DOC" "Bash" "Bash standards documented"
-    validate_config "$DOC" "Python" "Python standards documented"
-    validate_config "$DOC" "Go" "Go standards documented"
-    validate_config "$DOC" "YAML" "YAML standards documented"
-    validate_config "$DOC" "JSON" "JSON standards documented"
-    validate_config "$DOC" "Markdown" "Markdown standards documented"
-    validate_config "$DOC" "Terraform" "Terraform standards documented"
-    validate_config "$DOC" "IDE Integration" "IDE integration documented"
-    validate_config "$DOC" "VS Code" "VS Code integration documented"
-    validate_config "$DOC" "Common Issues\|Troubleshooting" "Troubleshooting section included"
-    validate_config "$DOC" "Common Issues" "Common issues documented"
+  validate_config "$DOC" "Bash" "Bash standards documented"
+  validate_config "$DOC" "Python" "Python standards documented"
+  validate_config "$DOC" "Go" "Go standards documented"
+  validate_config "$DOC" "YAML" "YAML standards documented"
+  validate_config "$DOC" "JSON" "JSON standards documented"
+  validate_config "$DOC" "Markdown" "Markdown standards documented"
+  validate_config "$DOC" "Terraform" "Terraform standards documented"
+  validate_config "$DOC" "IDE Integration" "IDE integration documented"
+  validate_config "$DOC" "VS Code" "VS Code integration documented"
+  validate_config "$DOC" "Common Issues\|Troubleshooting" "Troubleshooting section included"
+  validate_config "$DOC" "Common Issues" "Common issues documented"
 fi
 echo ""
 
@@ -150,21 +150,21 @@ echo "❌ FAILED: $FAILED"
 echo ""
 
 if [ $FAILED -eq 0 ]; then
-    echo "🎉 SUCCESS: All code quality standards validations passed!"
-    echo ""
-    echo "Acceptance Criteria Status:"
-    echo "  ✅ Linting rules defined for all languages"
-    echo "  ✅ Pre-commit hooks configured"
-    echo "  ✅ CI/CD quality gates"
-    echo "  ✅ Developer setup guide complete"
-    echo "  ⏳ All code passes linting (run 'make lint' to check)"
-    echo ""
-    echo "To complete setup:"
-    echo "  1. Run: make pre-commit-setup"
-    echo "  2. Run: make lint"
-    echo "  3. Install optional tools as needed (see docs)"
-    exit 0
+  echo "🎉 SUCCESS: All code quality standards validations passed!"
+  echo ""
+  echo "Acceptance Criteria Status:"
+  echo "  ✅ Linting rules defined for all languages"
+  echo "  ✅ Pre-commit hooks configured"
+  echo "  ✅ CI/CD quality gates"
+  echo "  ✅ Developer setup guide complete"
+  echo "  ⏳ All code passes linting (run 'make lint' to check)"
+  echo ""
+  echo "To complete setup:"
+  echo "  1. Run: make pre-commit-setup"
+  echo "  2. Run: make lint"
+  echo "  3. Install optional tools as needed (see docs)"
+  exit 0
 else
-    echo "❌ FAILURE: $FAILED validation(s) failed"
-    exit 1
+  echo "❌ FAILURE: $FAILED validation(s) failed"
+  exit 1
 fi

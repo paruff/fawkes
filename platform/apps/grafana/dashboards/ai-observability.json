@@ -134,34 +134,34 @@
         "id": 1,
         "type": "row",
         "title": "Active Anomalies Feed (Real-Time)",
-        "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 2,
         "title": "Active Anomalies Count",
         "type": "stat",
-        "gridPos": {"x": 0, "y": 1, "w": 6, "h": 4},
+        "gridPos": { "x": 0, "y": 1, "w": 6, "h": 4 },
         "description": "Current number of active anomalies detected",
         "targets": [
           {
             "expr": "sum(anomaly_detection_total{severity=~\"$severity\",metric=~\"$metric\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "Total Anomalies"
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 5},
-                {"color": "orange", "value": 10},
-                {"color": "red", "value": 20}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 5 },
+                { "color": "orange", "value": 10 },
+                { "color": "red", "value": 20 }
               ]
             }
           }
@@ -177,24 +177,24 @@
         "id": 3,
         "title": "Critical Anomalies",
         "type": "stat",
-        "gridPos": {"x": 6, "y": 1, "w": 6, "h": 4},
+        "gridPos": { "x": 6, "y": 1, "w": 6, "h": 4 },
         "description": "Number of critical severity anomalies",
         "targets": [
           {
             "expr": "sum(anomaly_detection_total{severity=\"critical\",metric=~\"$metric\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "red", "value": 1}
+                { "color": "green", "value": null },
+                { "color": "red", "value": 1 }
               ]
             }
           }
@@ -210,26 +210,26 @@
         "id": 4,
         "title": "Active Alert Groups",
         "type": "stat",
-        "gridPos": {"x": 12, "y": 1, "w": 6, "h": 4},
+        "gridPos": { "x": 12, "y": 1, "w": 6, "h": 4 },
         "description": "Current number of active smart alert groups",
         "targets": [
           {
             "expr": "sum(smart_alerting_grouped_total)",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 3},
-                {"color": "orange", "value": 8},
-                {"color": "red", "value": 15}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 3 },
+                { "color": "orange", "value": 8 },
+                { "color": "red", "value": 15 }
               ]
             }
           }
@@ -245,13 +245,13 @@
         "id": 5,
         "title": "Mean Time to Detection",
         "type": "gauge",
-        "gridPos": {"x": 18, "y": 1, "w": 6, "h": 4},
+        "gridPos": { "x": 18, "y": 1, "w": 6, "h": 4 },
         "description": "Average time to detect incidents (lower is better)",
         "targets": [
           {
             "expr": "avg(anomaly_detection_duration_seconds_sum / anomaly_detection_duration_seconds_count)",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -259,14 +259,14 @@
             "unit": "s",
             "min": 0,
             "max": 300,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 60},
-                {"color": "orange", "value": 120},
-                {"color": "red", "value": 180}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 60 },
+                { "color": "orange", "value": 120 },
+                { "color": "red", "value": 180 }
               ]
             }
           }
@@ -280,13 +280,13 @@
         "id": 6,
         "title": "Real-Time Anomaly Feed",
         "type": "table",
-        "gridPos": {"x": 0, "y": 5, "w": 24, "h": 8},
+        "gridPos": { "x": 0, "y": 5, "w": 24, "h": 8 },
         "description": "Live feed of detected anomalies with details",
         "targets": [
           {
             "expr": "sum by (metric, severity) (anomaly_detection_total{severity=~\"$severity\",metric=~\"$metric\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "format": "table",
             "instant": true
           }
@@ -300,9 +300,7 @@
             "mappings": [],
             "thresholds": {
               "mode": "absolute",
-              "steps": [
-                {"color": "green", "value": null}
-              ]
+              "steps": [{ "color": "green", "value": null }]
             },
             "color": {
               "mode": "thresholds"
@@ -310,7 +308,7 @@
           },
           "overrides": [
             {
-              "matcher": {"id": "byName", "options": "severity"},
+              "matcher": { "id": "byName", "options": "severity" },
               "properties": [
                 {
                   "id": "custom.displayMode",
@@ -319,10 +317,10 @@
                 {
                   "id": "mappings",
                   "value": [
-                    {"type": "value", "value": "critical", "text": "CRITICAL", "color": "dark-red"},
-                    {"type": "value", "value": "high", "text": "HIGH", "color": "dark-orange"},
-                    {"type": "value", "value": "medium", "text": "MEDIUM", "color": "dark-yellow"},
-                    {"type": "value", "value": "low", "text": "LOW", "color": "dark-blue"}
+                    { "type": "value", "value": "critical", "text": "CRITICAL", "color": "dark-red" },
+                    { "type": "value", "value": "high", "text": "HIGH", "color": "dark-orange" },
+                    { "type": "value", "value": "medium", "text": "MEDIUM", "color": "dark-yellow" },
+                    { "type": "value", "value": "low", "text": "LOW", "color": "dark-blue" }
                   ]
                 }
               ]
@@ -363,20 +361,20 @@
         "id": 7,
         "type": "row",
         "title": "Anomaly Detection Performance",
-        "gridPos": {"x": 0, "y": 13, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 13, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 8,
         "title": "Anomaly Detection Accuracy",
         "type": "gauge",
-        "gridPos": {"x": 0, "y": 14, "w": 8, "h": 6},
+        "gridPos": { "x": 0, "y": 14, "w": 8, "h": 6 },
         "description": "Detection accuracy (100% - false positive rate)",
         "targets": [
           {
             "expr": "100 - (anomaly_detection_false_positive_rate * 100)",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -384,14 +382,14 @@
             "unit": "percent",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "orange", "value": 85},
-                {"color": "yellow", "value": 92},
-                {"color": "green", "value": 95}
+                { "color": "red", "value": null },
+                { "color": "orange", "value": 85 },
+                { "color": "yellow", "value": 92 },
+                { "color": "green", "value": 95 }
               ]
             }
           }
@@ -409,27 +407,27 @@
         "id": 9,
         "title": "False Positive Rate",
         "type": "stat",
-        "gridPos": {"x": 8, "y": 14, "w": 8, "h": 6},
+        "gridPos": { "x": 8, "y": 14, "w": 8, "h": 6 },
         "description": "Current false positive rate (target <5%)",
         "targets": [
           {
             "expr": "anomaly_detection_false_positive_rate * 100",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "percent",
             "decimals": 2,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 3},
-                {"color": "orange", "value": 5},
-                {"color": "red", "value": 8}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 3 },
+                { "color": "orange", "value": 5 },
+                { "color": "red", "value": 8 }
               ]
             }
           }
@@ -445,25 +443,25 @@
         "id": 10,
         "title": "ML Models Loaded",
         "type": "stat",
-        "gridPos": {"x": 16, "y": 14, "w": 8, "h": 6},
+        "gridPos": { "x": 16, "y": 14, "w": 8, "h": 6 },
         "description": "Number of ML models currently loaded and active",
         "targets": [
           {
             "expr": "anomaly_detection_models_loaded",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 3},
-                {"color": "green", "value": 5}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 3 },
+                { "color": "green", "value": 5 }
               ]
             }
           }
@@ -479,32 +477,32 @@
         "id": 11,
         "title": "Anomaly Detection Processing Time",
         "type": "timeseries",
-        "gridPos": {"x": 0, "y": 20, "w": 12, "h": 8},
+        "gridPos": { "x": 0, "y": 20, "w": 12, "h": 8 },
         "description": "Detection processing latency over time (P50, P95, P99)",
         "targets": [
           {
             "expr": "histogram_quantile(0.50, sum(rate(anomaly_detection_duration_seconds_bucket[5m])) by (le))",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "P50"
           },
           {
             "expr": "histogram_quantile(0.95, sum(rate(anomaly_detection_duration_seconds_bucket[5m])) by (le))",
             "refId": "B",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "P95"
           },
           {
             "expr": "histogram_quantile(0.99, sum(rate(anomaly_detection_duration_seconds_bucket[5m])) by (le))",
             "refId": "C",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "P99"
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "s",
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "lineInterpolation": "smooth",
               "showPoints": "auto",
@@ -526,20 +524,20 @@
         "id": 12,
         "title": "Anomalies by Severity Over Time",
         "type": "timeseries",
-        "gridPos": {"x": 12, "y": 20, "w": 12, "h": 8},
+        "gridPos": { "x": 12, "y": 20, "w": 12, "h": 8 },
         "description": "Trend of anomalies detected by severity level",
         "targets": [
           {
             "expr": "sum by (severity) (rate(anomaly_detection_total{severity=~\"$severity\"}[5m]))",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "{{severity}}"
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "ops",
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "lineInterpolation": "smooth",
               "showPoints": "auto",
@@ -551,20 +549,20 @@
           },
           "overrides": [
             {
-              "matcher": {"id": "byName", "options": "critical"},
-              "properties": [{"id": "color", "value": {"fixedColor": "dark-red", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "critical" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "dark-red", "mode": "fixed" } }]
             },
             {
-              "matcher": {"id": "byName", "options": "high"},
-              "properties": [{"id": "color", "value": {"fixedColor": "dark-orange", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "high" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "dark-orange", "mode": "fixed" } }]
             },
             {
-              "matcher": {"id": "byName", "options": "medium"},
-              "properties": [{"id": "color", "value": {"fixedColor": "dark-yellow", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "medium" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "dark-yellow", "mode": "fixed" } }]
             },
             {
-              "matcher": {"id": "byName", "options": "low"},
-              "properties": [{"id": "color", "value": {"fixedColor": "dark-blue", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "low" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "dark-blue", "mode": "fixed" } }]
             }
           ]
         },
@@ -582,32 +580,32 @@
         "id": 13,
         "type": "row",
         "title": "Smart Alert Groups",
-        "gridPos": {"x": 0, "y": 28, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 28, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 14,
         "title": "Alert Grouping Efficiency",
         "type": "stat",
-        "gridPos": {"x": 0, "y": 29, "w": 6, "h": 4},
+        "gridPos": { "x": 0, "y": 29, "w": 6, "h": 4 },
         "description": "Total alert groups created vs individual alerts",
         "targets": [
           {
             "expr": "sum(smart_alerting_grouped_total)",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 10},
-                {"color": "red", "value": 20}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 10 },
+                { "color": "red", "value": 20 }
               ]
             }
           }
@@ -623,24 +621,22 @@
         "id": 15,
         "title": "Alerts Suppressed",
         "type": "stat",
-        "gridPos": {"x": 6, "y": 29, "w": 6, "h": 4},
+        "gridPos": { "x": 6, "y": 29, "w": 6, "h": 4 },
         "description": "Total alerts suppressed by suppression engine",
         "targets": [
           {
             "expr": "sum(smart_alerting_suppressed_total)",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
-              "steps": [
-                {"color": "green", "value": null}
-              ]
+              "steps": [{ "color": "green", "value": null }]
             }
           }
         },
@@ -655,13 +651,13 @@
         "id": 16,
         "title": "Alert Fatigue Reduction",
         "type": "gauge",
-        "gridPos": {"x": 12, "y": 29, "w": 6, "h": 4},
+        "gridPos": { "x": 12, "y": 29, "w": 6, "h": 4 },
         "description": "Percentage of alert noise reduced (target >50%)",
         "targets": [
           {
             "expr": "smart_alerting_fatigue_reduction * 100",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -669,13 +665,13 @@
             "unit": "percent",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 30},
-                {"color": "green", "value": 50}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 30 },
+                { "color": "green", "value": 50 }
               ]
             }
           }
@@ -689,24 +685,22 @@
         "id": 17,
         "title": "Alerts Routed",
         "type": "stat",
-        "gridPos": {"x": 18, "y": 29, "w": 6, "h": 4},
+        "gridPos": { "x": 18, "y": 29, "w": 6, "h": 4 },
         "description": "Total alerts routed to channels",
         "targets": [
           {
             "expr": "sum(smart_alerting_routed_total)",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
-              "steps": [
-                {"color": "green", "value": null}
-              ]
+              "steps": [{ "color": "green", "value": null }]
             }
           }
         },
@@ -721,13 +715,13 @@
         "id": 18,
         "title": "Alert Groups by Service",
         "type": "piechart",
-        "gridPos": {"x": 0, "y": 33, "w": 8, "h": 8},
+        "gridPos": { "x": 0, "y": 33, "w": 8, "h": 8 },
         "description": "Distribution of alert groups across services",
         "targets": [
           {
             "expr": "sum by (service) (smart_alerting_grouped_total)",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "{{service}}"
           }
         ],
@@ -755,20 +749,20 @@
         "id": 19,
         "title": "Alerts by Source Over Time",
         "type": "timeseries",
-        "gridPos": {"x": 8, "y": 33, "w": 8, "h": 8},
+        "gridPos": { "x": 8, "y": 33, "w": 8, "h": 8 },
         "description": "Incoming alerts by source (Prometheus, Grafana, DataHub, etc.)",
         "targets": [
           {
             "expr": "sum by (source) (rate(smart_alerting_received_total{source=~\"$alert_source\"}[5m]))",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "{{source}}"
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "ops",
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "lineInterpolation": "smooth",
               "showPoints": "auto",
@@ -793,13 +787,13 @@
         "id": 20,
         "title": "Suppression Reasons",
         "type": "piechart",
-        "gridPos": {"x": 16, "y": 33, "w": 8, "h": 8},
+        "gridPos": { "x": 16, "y": 33, "w": 8, "h": 8 },
         "description": "Distribution of why alerts are suppressed",
         "targets": [
           {
             "expr": "sum by (reason) (smart_alerting_suppressed_total)",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "{{reason}}"
           }
         ],
@@ -827,20 +821,20 @@
         "id": 21,
         "type": "row",
         "title": "Root Cause Analysis",
-        "gridPos": {"x": 0, "y": 41, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 41, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 22,
         "title": "Root Cause Analysis Success Rate",
         "type": "gauge",
-        "gridPos": {"x": 0, "y": 42, "w": 8, "h": 6},
+        "gridPos": { "x": 0, "y": 42, "w": 8, "h": 6 },
         "description": "Percentage of RCA analyses completed successfully",
         "targets": [
           {
             "expr": "(sum(anomaly_detection_rca_total{status=\"success\"}) / sum(anomaly_detection_rca_total)) * 100",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -848,13 +842,13 @@
             "unit": "percent",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 60},
-                {"color": "green", "value": 80}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 60 },
+                { "color": "green", "value": 80 }
               ]
             }
           }
@@ -872,24 +866,22 @@
         "id": 23,
         "title": "RCA Executions",
         "type": "stat",
-        "gridPos": {"x": 8, "y": 42, "w": 8, "h": 6},
+        "gridPos": { "x": 8, "y": 42, "w": 8, "h": 6 },
         "description": "Total root cause analyses performed",
         "targets": [
           {
             "expr": "sum(anomaly_detection_rca_total)",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
-              "steps": [
-                {"color": "green", "value": null}
-              ]
+              "steps": [{ "color": "green", "value": null }]
             }
           }
         },
@@ -904,13 +896,13 @@
         "id": 24,
         "title": "RCA Status Distribution",
         "type": "piechart",
-        "gridPos": {"x": 16, "y": 42, "w": 8, "h": 6},
+        "gridPos": { "x": 16, "y": 42, "w": 8, "h": 6 },
         "description": "Success vs failure rate of root cause analyses",
         "targets": [
           {
             "expr": "sum by (status) (anomaly_detection_rca_total)",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "{{status}}"
           }
         ],
@@ -934,12 +926,12 @@
           },
           "overrides": [
             {
-              "matcher": {"id": "byName", "options": "success"},
-              "properties": [{"id": "color", "value": {"fixedColor": "green", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "success" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }]
             },
             {
-              "matcher": {"id": "byName", "options": "failure"},
-              "properties": [{"id": "color", "value": {"fixedColor": "red", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "failure" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }]
             }
           ]
         }
@@ -948,27 +940,27 @@
         "id": 25,
         "type": "row",
         "title": "Historical Trends",
-        "gridPos": {"x": 0, "y": 48, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 48, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 26,
         "title": "Historical Anomaly Trends (7 Days)",
         "type": "timeseries",
-        "gridPos": {"x": 0, "y": 49, "w": 24, "h": 8},
+        "gridPos": { "x": 0, "y": 49, "w": 24, "h": 8 },
         "description": "7-day trend of anomaly detection rate by severity",
         "targets": [
           {
             "expr": "sum by (severity) (increase(anomaly_detection_total{severity=~\"$severity\"}[1d]))",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "{{severity}}"
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "lineInterpolation": "smooth",
               "showPoints": "auto",
@@ -977,20 +969,20 @@
           },
           "overrides": [
             {
-              "matcher": {"id": "byName", "options": "critical"},
-              "properties": [{"id": "color", "value": {"fixedColor": "dark-red", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "critical" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "dark-red", "mode": "fixed" } }]
             },
             {
-              "matcher": {"id": "byName", "options": "high"},
-              "properties": [{"id": "color", "value": {"fixedColor": "dark-orange", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "high" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "dark-orange", "mode": "fixed" } }]
             },
             {
-              "matcher": {"id": "byName", "options": "medium"},
-              "properties": [{"id": "color", "value": {"fixedColor": "dark-yellow", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "medium" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "dark-yellow", "mode": "fixed" } }]
             },
             {
-              "matcher": {"id": "byName", "options": "low"},
-              "properties": [{"id": "color", "value": {"fixedColor": "dark-blue", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "low" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "dark-blue", "mode": "fixed" } }]
             }
           ]
         },
@@ -1008,13 +1000,13 @@
         "id": 27,
         "title": "Alert Reduction Rate Trend",
         "type": "timeseries",
-        "gridPos": {"x": 0, "y": 57, "w": 12, "h": 8},
+        "gridPos": { "x": 0, "y": 57, "w": 12, "h": 8 },
         "description": "Historical trend of alert fatigue reduction",
         "targets": [
           {
             "expr": "smart_alerting_fatigue_reduction * 100",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "Fatigue Reduction %"
           }
         ],
@@ -1023,7 +1015,7 @@
             "unit": "percent",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "custom": {
               "lineInterpolation": "smooth",
               "showPoints": "auto",
@@ -1032,9 +1024,9 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 30},
-                {"color": "green", "value": 50}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 30 },
+                { "color": "green", "value": 50 }
               ]
             }
           }
@@ -1053,20 +1045,20 @@
         "id": 28,
         "title": "Anomaly Detection Latency Trend",
         "type": "timeseries",
-        "gridPos": {"x": 12, "y": 57, "w": 12, "h": 8},
+        "gridPos": { "x": 12, "y": 57, "w": 12, "h": 8 },
         "description": "Time to detection trend over the last 7 days",
         "targets": [
           {
             "expr": "avg(rate(anomaly_detection_duration_seconds_sum[5m]) / rate(anomaly_detection_duration_seconds_count[5m]))",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "Avg Detection Time"
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "s",
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "lineInterpolation": "smooth",
               "showPoints": "auto",

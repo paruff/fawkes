@@ -14,7 +14,7 @@ def test_create_category(db_session):
         color="#3B82F6",
         icon="code",
         created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc)
+        updated_at=datetime.now(timezone.utc),
     )
     db_session.add(category)
     db_session.commit()
@@ -31,7 +31,7 @@ def test_create_tag(db_session):
         slug="best-practice",
         description="Recommended best practice",
         color="#10B981",
-        created_at=datetime.now(timezone.utc)
+        created_at=datetime.now(timezone.utc),
     )
     db_session.add(tag)
     db_session.commit()
@@ -53,7 +53,7 @@ def test_create_insight(db_session, sample_category):
         priority="high",
         status="published",
         created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc)
+        updated_at=datetime.now(timezone.utc),
     )
     db_session.add(insight)
     db_session.commit()
@@ -74,7 +74,7 @@ def test_insight_with_tags(db_session, sample_category, sample_tag):
         priority="medium",
         status="draft",
         created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc)
+        updated_at=datetime.now(timezone.utc),
     )
     insight.tags = [sample_tag]
     db_session.add(insight)
@@ -87,10 +87,7 @@ def test_insight_with_tags(db_session, sample_category, sample_tag):
 def test_category_hierarchy(db_session):
     """Test category parent-child relationships."""
     parent = Category(
-        name="Parent",
-        slug="parent",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc)
+        name="Parent", slug="parent", created_at=datetime.now(timezone.utc), updated_at=datetime.now(timezone.utc)
     )
     db_session.add(parent)
     db_session.commit()
@@ -100,7 +97,7 @@ def test_category_hierarchy(db_session):
         slug="child",
         parent_id=parent.id,
         created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc)
+        updated_at=datetime.now(timezone.utc),
     )
     db_session.add(child)
     db_session.commit()

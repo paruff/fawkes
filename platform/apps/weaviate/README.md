@@ -64,18 +64,9 @@ mutation {
       description: "Fawkes platform documentation"
       vectorizer: "text2vec-transformers"
       properties: [
-        {
-          name: "title"
-          dataType: ["string"]
-        }
-        {
-          name: "content"
-          dataType: ["text"]
-        }
-        {
-          name: "url"
-          dataType: ["string"]
-        }
+        { name: "title", dataType: ["string"] }
+        { name: "content", dataType: ["text"] }
+        { name: "url", dataType: ["string"] }
       ]
     }
   )
@@ -105,12 +96,7 @@ client.data_object.create(
 ```graphql
 {
   Get {
-    Documentation(
-      nearText: {
-        concepts: ["deploy kubernetes application"]
-      }
-      limit: 5
-    ) {
+    Documentation(nearText: { concepts: ["deploy kubernetes application"] }, limit: 5) {
       title
       content
       url
@@ -167,11 +153,7 @@ Search code by semantic meaning:
 ```graphql
 {
   Get {
-    CodeSnippet(
-      nearText: {
-        concepts: ["kubernetes deployment configuration"]
-      }
-    ) {
+    CodeSnippet(nearText: { concepts: ["kubernetes deployment configuration"] }) {
       code
       language
       description
@@ -187,11 +169,7 @@ Find similar issues and tickets:
 ```graphql
 {
   Get {
-    Issue(
-      nearText: {
-        concepts: ["ArgoCD sync failure"]
-      }
-    ) {
+    Issue(nearText: { concepts: ["ArgoCD sync failure"] }) {
       title
       description
       resolution
@@ -251,6 +229,7 @@ spec:
 ```
 
 Key metrics:
+
 - `weaviate_vector_dimensions` - Vector dimensions
 - `weaviate_objects_total` - Total objects stored
 - `weaviate_query_duration_seconds` - Query latency
@@ -272,6 +251,7 @@ resources:
 ### Slow Queries
 
 Optimize with:
+
 - Increase `maxConnections` in HNSW config
 - Use hybrid search for better performance
 - Add filters to reduce search space

@@ -29,11 +29,7 @@ Before you begin, ensure you have:
 - [ ] At least a few deployments of your service (from previous tutorials)
 
 !!! info "What are DORA Metrics?"
-    DORA (DevOps Research and Assessment) identified four key metrics that predict software delivery performance:
-    1. **Deployment Frequency** - How often you deploy to production
-    2. **Lead Time for Changes** - Time from commit to production
-    3. **Change Failure Rate** - % of deployments causing failures
-    4. **Time to Restore Service** - Time to recover from failures
+DORA (DevOps Research and Assessment) identified four key metrics that predict software delivery performance: 1. **Deployment Frequency** - How often you deploy to production 2. **Lead Time for Changes** - Time from commit to production 3. **Change Failure Rate** - % of deployments causing failures 4. **Time to Restore Service** - Time to recover from failures
 
     [Learn more about DORA capabilities](../capabilities.md).
 
@@ -49,6 +45,7 @@ Let's review what each metric measures and why it matters.
 **Industry Average**: Between once per week and once per month
 
 **Why it matters**:
+
 - High frequency = smaller changes
 - Smaller changes = lower risk
 - Lower risk = faster feedback
@@ -61,6 +58,7 @@ Let's review what each metric measures and why it matters.
 **Industry Average**: Between one week and one month
 
 **Why it matters**:
+
 - Short lead time = fast feedback
 - Fast feedback = rapid iteration
 - Rapid iteration = better products
@@ -73,6 +71,7 @@ Let's review what each metric measures and why it matters.
 **Industry Average**: 31-45%
 
 **Why it matters**:
+
 - Low failure rate = stable releases
 - Stable releases = customer trust
 - Customer trust = business success
@@ -85,18 +84,20 @@ Let's review what each metric measures and why it matters.
 **Industry Average**: Less than one day
 
 **Why it matters**:
+
 - Fast recovery = minimized impact
 - Minimized impact = satisfied customers
 - Satisfied customers = retained revenue
 
 !!! success "Checkpoint"
-    You understand what DORA metrics are and why they matter.
+You understand what DORA metrics are and why they matter.
 
 ## Step 2: Access DevLake Dashboard
 
 Apache DevLake is Fawkes' data platform for DORA metrics.
 
 1. Navigate to DevLake in your browser:
+
    ```
    https://devlake.127.0.0.1.nip.io
    ```
@@ -104,6 +105,7 @@ Apache DevLake is Fawkes' data platform for DORA metrics.
 2. Log in with your credentials (ask your platform team if you don't have them).
 
 3. You should see the main dashboard with:
+
    - Projects list
    - DORA metrics overview
    - Trend graphs
@@ -116,10 +118,10 @@ Apache DevLake is Fawkes' data platform for DORA metrics.
    - Time Range: Last 30 days
 
 !!! tip "No Data Yet?"
-    If this is your first deployment, you may not see much data yet. That's okay! We'll generate more data in this tutorial.
+If this is your first deployment, you may not see much data yet. That's okay! We'll generate more data in this tutorial.
 
 !!! success "Checkpoint"
-    You can access the DevLake DORA dashboard and filter by your service.
+You can access the DevLake DORA dashboard and filter by your service.
 
 ## Step 3: Configure Data Collection
 
@@ -128,6 +130,7 @@ Fawkes automatically collects most DORA data, but let's verify the configuration
 1. Check that your ArgoCD application has DORA annotations.
 
    View `argocd-app.yaml`:
+
    ```yaml
    apiVersion: argoproj.io/v1alpha1
    kind: Application
@@ -144,6 +147,7 @@ Fawkes automatically collects most DORA data, but let's verify the configuration
    ```
 
 2. If annotations are missing, add them:
+
    ```bash
    kubectl annotate application hello-fawkes -n argocd \
      dora/team=platform-team \
@@ -152,6 +156,7 @@ Fawkes automatically collects most DORA data, but let's verify the configuration
    ```
 
 3. Verify ArgoCD notifications are configured:
+
    ```bash
    kubectl get configmap argocd-notifications-cm -n argocd -o yaml
    ```
@@ -164,27 +169,29 @@ Fawkes automatically collects most DORA data, but let's verify the configuration
    - If not, add it following the platform team's instructions
 
 !!! success "Checkpoint"
-    Your service is configured for automatic DORA data collection.
+Your service is configured for automatic DORA data collection.
 
 ## Step 4: Generate Deployment Data
 
 Let's create some deployments to populate the metrics.
 
 1. Make a small code change to `server.js`:
+
    ```javascript
-   app.get('/', (req, res) => {
+   app.get("/", (req, res) => {
      res.json({
-       message: 'Hello from Fawkes!',
+       message: "Hello from Fawkes!",
        timestamp: new Date().toISOString(),
-       version: '4.0.0',  // Bump version
-       tracing: 'enabled',
-       secrets: 'managed by Vault',
-       dora: 'tracking enabled'  // New field
+       version: "4.0.0", // Bump version
+       tracing: "enabled",
+       secrets: "managed by Vault",
+       dora: "tracking enabled", // New field
      });
    });
    ```
 
 2. Commit and push:
+
    ```bash
    git add server.js
    git commit -m "Add DORA tracking indicator"
@@ -192,16 +199,19 @@ Let's create some deployments to populate the metrics.
    ```
 
 3. This triggers:
+
    - Git webhook to DevLake (Lead Time starts)
    - ArgoCD sync (Deployment happens)
    - Deployment notification to DevLake (Deployment Frequency recorded)
 
 4. Wait for ArgoCD to sync (check in ArgoCD UI or CLI):
+
    ```bash
    kubectl get application hello-fawkes -n argocd -w
    ```
 
 5. Make a few more changes to generate more data points:
+
    ```bash
    # Change 2
    git commit --allow-empty -m "Trigger deployment 2"
@@ -215,10 +225,10 @@ Let's create some deployments to populate the metrics.
    ```
 
 !!! info "Why Multiple Deployments?"
-    DORA metrics are trends, not single data points. The more deployments you have, the more meaningful the metrics become.
+DORA metrics are trends, not single data points. The more deployments you have, the more meaningful the metrics become.
 
 !!! success "Checkpoint"
-    You've generated deployment data for DORA analysis.
+You've generated deployment data for DORA analysis.
 
 ## Step 5: View Deployment Frequency
 
@@ -227,6 +237,7 @@ Let's analyze how often you're deploying.
 1. In DevLake, navigate to **DORA Dashboard** → **Deployment Frequency**.
 
 2. You should see:
+
    - A timeline graph showing deployments over time
    - Total deployments in the selected period
    - Average deployments per day/week
@@ -242,14 +253,10 @@ Let's analyze how often you're deploying.
    - "We're at 'Medium' performance tier (weekly deploys)"
    - "Goal: Reach 'High' tier (daily deploys)"
 
-!!! tip "Interpreting the Data"
-    - **Elite**: On-demand (multiple per day)
-    - **High**: Between once per day and once per week
-    - **Medium**: Between once per week and once per month
-    - **Low**: Less than once per month
+!!! tip "Interpreting the Data" - **Elite**: On-demand (multiple per day) - **High**: Between once per day and once per week - **Medium**: Between once per week and once per month - **Low**: Less than once per month
 
 !!! success "Checkpoint"
-    You can view and interpret your deployment frequency metrics.
+You can view and interpret your deployment frequency metrics.
 
 ## Step 6: Analyze Lead Time for Changes
 
@@ -258,6 +265,7 @@ Now let's see how long it takes from commit to production.
 1. In DevLake, navigate to **DORA Dashboard** → **Lead Time for Changes**.
 
 2. The dashboard shows:
+
    - Median lead time (p50)
    - 95th percentile lead time (p95)
    - Breakdown by stage:
@@ -267,6 +275,7 @@ Now let's see how long it takes from commit to production.
      - Merge to deployment
 
 3. Click on a specific deployment to see its journey:
+
    ```
    Commit: 2025-12-06 10:00:00
    ├─ PR Created: +5 minutes
@@ -283,10 +292,10 @@ Now let's see how long it takes from commit to production.
    - If "Commit to PR" is long → Smaller changesets
 
 !!! info "Lead Time Stages"
-    Fawkes tracks each stage separately so you can identify exactly where delays occur.
+Fawkes tracks each stage separately so you can identify exactly where delays occur.
 
 !!! success "Checkpoint"
-    You understand your lead time and where time is spent.
+You understand your lead time and where time is spent.
 
 ## Step 7: Monitor Change Failure Rate
 
@@ -295,17 +304,20 @@ Let's see how often deployments cause problems.
 1. In DevLake, navigate to **DORA Dashboard** → **Change Failure Rate**.
 
 2. The dashboard shows:
+
    - Percentage of failed deployments
    - Failed vs. successful deployments over time
    - Correlation with deployment frequency
 
 3. What counts as a "failure"?
+
    - Deployment rollback
    - Hotfix deployed within 24 hours
    - Production incident tagged to a deployment
    - Pod crash loops after deployment
 
 4. Example analysis:
+
    - "3 deployments, 0 failures = 0% failure rate ✅ Elite"
    - Or: "10 deployments, 3 failures = 30% failure rate ⚠️ Medium"
 
@@ -314,14 +326,10 @@ Let's see how often deployments cause problems.
    - What was the error?
    - How long until it was fixed?
 
-!!! tip "Improving Change Failure Rate"
-    - Increase test coverage
-    - Add canary deployments
-    - Implement feature flags
-    - Improve staging environment parity
+!!! tip "Improving Change Failure Rate" - Increase test coverage - Add canary deployments - Implement feature flags - Improve staging environment parity
 
 !!! success "Checkpoint"
-    You can track how often your deployments fail.
+You can track how often your deployments fail.
 
 ## Step 8: Measure Time to Restore Service
 
@@ -330,17 +338,20 @@ Finally, let's look at recovery time when failures do occur.
 1. In DevLake, navigate to **DORA Dashboard** → **Mean Time to Restore**.
 
 2. The dashboard shows:
+
    - Average time from incident detection to resolution
    - Trend over time
    - Incidents by severity
 
 3. What counts as an "incident"?
+
    - Service downtime (health check failures)
    - Error rate spike
    - Performance degradation
    - Manual incident creation in PagerDuty/Mattermost
 
 4. Example incident timeline:
+
    ```
    Incident Detected: 2025-12-06 14:00:00 (Automated alert)
    ├─ Team Notified: +1 minute (Mattermost alert)
@@ -353,6 +364,7 @@ Finally, let's look at recovery time when failures do occur.
    ```
 
 5. If you don't have incidents yet (great!), you can simulate one:
+
    ```bash
    # Break the service temporarily
    kubectl scale deployment hello-fawkes -n my-first-app --replicas=0
@@ -364,29 +376,33 @@ Finally, let's look at recovery time when failures do occur.
    ```
 
 !!! warning "Simulated Incidents"
-    Only simulate incidents in development/staging. Never in production!
+Only simulate incidents in development/staging. Never in production!
 
 !!! success "Checkpoint"
-    You can measure how quickly your team recovers from incidents.
+You can measure how quickly your team recovers from incidents.
 
 ## Step 9: Create a DORA Improvement Plan
 
 Based on your metrics, create an action plan.
 
 1. In DevLake or Grafana, export your current DORA metrics:
+
    - Deployment Frequency: X per week
    - Lead Time: X minutes
    - Change Failure Rate: X%
    - MTTR: X minutes
 
 2. Identify your current performance tier:
+
    - Elite, High, Medium, or Low for each metric
 
 3. Choose one metric to improve first:
+
    - Pick the one farthest from Elite
    - Or the one with the biggest business impact
 
 4. Set a SMART goal:
+
    - **Specific**: Increase deployment frequency
    - **Measurable**: From 3/week to 1/day
    - **Achievable**: By automating tests
@@ -399,7 +415,7 @@ Based on your metrics, create an action plan.
    - Celebrate improvements!
 
 !!! success "Checkpoint"
-    You have a data-driven plan to improve your DORA metrics.
+You have a data-driven plan to improve your DORA metrics.
 
 ## What You've Accomplished
 
@@ -472,7 +488,7 @@ What did you learn from your DORA metrics? What surprised you? Share your insigh
 
 ---
 
-## 🎉 You've Completed All Six Tutorials!
+## 🎉 You've Completed All Six Tutorials
 
 Congratulations on completing the entire Fawkes tutorial series! You now have:
 

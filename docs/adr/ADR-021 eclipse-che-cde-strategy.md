@@ -130,10 +130,10 @@ Fawkes.
 Eclipse Che uses Devfiles to define development environments. We will provide
 two initial Golden Path Devfiles:
 
-| Devfile | Purpose | Resources | Tools |
-|---------|---------|-----------|-------|
-| `goldenpath-python` | General Python development | 2 CPU, 4Gi Memory | Python 3.11, pip, Language Server |
-| `goldenpath-ai` | AI/ML development | 8 CPU, 16Gi Memory, GPU | TensorFlow, PyTorch, Jupyter, CUDA |
+| Devfile             | Purpose                    | Resources               | Tools                              |
+| ------------------- | -------------------------- | ----------------------- | ---------------------------------- |
+| `goldenpath-python` | General Python development | 2 CPU, 4Gi Memory       | Python 3.11, pip, Language Server  |
+| `goldenpath-ai`     | AI/ML development          | 8 CPU, 16Gi Memory, GPU | TensorFlow, PyTorch, Jupyter, CUDA |
 
 ### Deployment Configuration
 
@@ -251,13 +251,13 @@ metadata:
 
 ### Edge Cases
 
-| Scenario | Behavior |
-|----------|----------|
-| Quota exceeded | Clear error message, workspace launch blocked |
-| Git access denied | Prompt for credentials, SSO token refresh |
-| Workspace idle timeout | Auto-stop after 30 minutes, state preserved |
-| Devfile not found | Fallback to Universal Developer Image |
-| GPU unavailable | Queue workspace, notify when resources free |
+| Scenario               | Behavior                                      |
+| ---------------------- | --------------------------------------------- |
+| Quota exceeded         | Clear error message, workspace launch blocked |
+| Git access denied      | Prompt for credentials, SSO token refresh     |
+| Workspace idle timeout | Auto-stop after 30 minutes, state preserved   |
+| Devfile not found      | Fallback to Universal Developer Image         |
+| GPU unavailable        | Queue workspace, notify when resources free   |
 
 ## Consequences
 
@@ -278,12 +278,12 @@ metadata:
 
 ### Risks and Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Workspace sprawl | Auto-stop idle workspaces, quota enforcement |
-| Performance issues | Node affinity, SSD storage for workspaces |
-| Security exposure | Network policies, namespace isolation, RBAC |
-| Vendor lock-in | Devfile is CNCF standard, portable |
+| Risk               | Mitigation                                   |
+| ------------------ | -------------------------------------------- |
+| Workspace sprawl   | Auto-stop idle workspaces, quota enforcement |
+| Performance issues | Node affinity, SSD storage for workspaces    |
+| Security exposure  | Network policies, namespace isolation, RBAC  |
+| Vendor lock-in     | Devfile is CNCF standard, portable           |
 
 ## Alternatives Considered
 

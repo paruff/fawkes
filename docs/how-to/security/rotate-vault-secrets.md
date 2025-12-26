@@ -342,13 +342,13 @@ vault list sys/leases/lookup/database/creds/my-app-role
 
 ### 1. Rotation Frequency
 
-| Secret Type | Recommended Frequency |
-|-------------|---------------------|
-| Database passwords | Every 90 days |
-| API keys | Every 90 days or on breach |
-| TLS certificates | Every 90 days (automated with cert-manager) |
-| Service account tokens | Every 30 days |
-| Root credentials | Annually or on personnel change |
+| Secret Type            | Recommended Frequency                       |
+| ---------------------- | ------------------------------------------- |
+| Database passwords     | Every 90 days                               |
+| API keys               | Every 90 days or on breach                  |
+| TLS certificates       | Every 90 days (automated with cert-manager) |
+| Service account tokens | Every 30 days                               |
+| Root credentials       | Annually or on personnel change             |
 
 ### 2. Zero-Downtime Rotation
 

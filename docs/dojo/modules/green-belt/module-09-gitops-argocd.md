@@ -7,6 +7,7 @@
 **Duration**: 2 hours
 **Difficulty**: Intermediate
 **Prerequisites**:
+
 - White Belt completion (Modules 1-4)
 - Yellow Belt Modules 5-8 completion
 - Working Fawkes platform deployment
@@ -36,6 +37,7 @@ By the end of this module, you will:
 7. ✅ Understand how GitOps improves DORA metrics
 
 **DORA Capabilities Addressed**:
+
 - ✓ CD1: Use version control for all production artifacts
 - ✓ CD2: Automate your deployment process
 - ✓ CD3: Implement continuous integration
@@ -48,6 +50,7 @@ By the end of this module, you will:
 ### The Traditional Deployment Problem
 
 **Traditional approach (Push-based)**:
+
 ```
 Developer → Commits Code → CI Pipeline Runs → Pipeline Pushes to Cluster
                                                     ↓
@@ -55,6 +58,7 @@ Developer → Commits Code → CI Pipeline Runs → Pipeline Pushes to Cluster
 ```
 
 **Problems with push-based deployments**:
+
 - CI/CD system needs cluster credentials (security risk)
 - No single source of truth for cluster state
 - Drift detection requires external tools
@@ -84,12 +88,12 @@ Developer → Commits Code → Git Repository
 
 ### Why GitOps Matters for DORA
 
-| DORA Metric | GitOps Impact |
-|-------------|---------------|
-| **Deployment Frequency** | Automated sync enables multiple deployments per day |
-| **Lead Time for Changes** | Commit to deploy time drastically reduced |
-| **Change Failure Rate** | Git history enables instant rollback, reducing failures |
-| **MTTR** | Declarative state makes issues easier to diagnose and fix |
+| DORA Metric               | GitOps Impact                                             |
+| ------------------------- | --------------------------------------------------------- |
+| **Deployment Frequency**  | Automated sync enables multiple deployments per day       |
+| **Lead Time for Changes** | Commit to deploy time drastically reduced                 |
+| **Change Failure Rate**   | Git history enables instant rollback, reducing failures   |
+| **MTTR**                  | Declarative state makes issues easier to diagnose and fix |
 
 ---
 
@@ -133,16 +137,19 @@ Developer → Commits Code → Git Repository
 **Key Components Explained**:
 
 1. **API Server**:
+
    - gRPC/REST API for all operations
    - Authentication and authorization
    - Application management
 
 2. **Repository Server**:
+
    - Clones Git repositories
    - Generates Kubernetes manifests (Helm, Kustomize, plain YAML)
    - Caches repository contents
 
 3. **Application Controller**:
+
    - Monitors applications
    - Compares desired state (Git) vs actual state (cluster)
    - Initiates sync operations
@@ -201,6 +208,7 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 ```
 
 Access ArgoCD UI: `https://localhost:8080`
+
 - Username: `admin`
 - Password: (from command above)
 
@@ -297,6 +305,7 @@ argocd app get guestbook
 ```
 
 **Expected Output**:
+
 ```
 Name:               guestbook
 Project:            default
@@ -340,14 +349,14 @@ spec:
   # Sync policy
   syncPolicy:
     automated:
-      prune: true      # Delete resources not in Git
-      selfHeal: true   # Force sync if manual changes detected
+      prune: true # Delete resources not in Git
+      selfHeal: true # Force sync if manual changes detected
       allowEmpty: false
     syncOptions:
-    - Validate=true
-    - CreateNamespace=true
-    - PrunePropagationPolicy=foreground
-    - PruneLast=true
+      - Validate=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
 
     retry:
       limit: 5
@@ -358,6 +367,7 @@ spec:
 ```
 
 Apply it:
+
 ```bash
 kubectl apply -f argocd-application.yaml
 
@@ -419,10 +429,10 @@ kubectl get pods -l app=guestbook-ui
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: my-app                    # Application name
-  namespace: argocd               # Must be in argocd namespace
+  name: my-app # Application name
+  namespace: argocd # Must be in argocd namespace
   finalizers:
-  - resources-finalizer.argocd.argoproj.io  # Cleanup on deletion
+    - resources-finalizer.argocd.argoproj.io # Cleanup on deletion
 
 spec:
   # Project (multi-tenancy)
@@ -431,23 +441,23 @@ spec:
   # Source configuration
   source:
     repoURL: https://github.com/org/repo.git
-    targetRevision: HEAD          # Branch, tag, or commit SHA
-    path: manifests/app           # Path within repository
+    targetRevision: HEAD # Branch, tag, or commit SHA
+    path: manifests/app # Path within repository
 
     # For Helm charts
     helm:
       valueFiles:
-      - values.yaml
-      - values-prod.yaml
+        - values.yaml
+        - values-prod.yaml
       parameters:
-      - name: image.tag
-        value: v1.2.3
+        - name: image.tag
+          value: v1.2.3
 
     # For Kustomize
     kustomize:
       namePrefix: prod-
       images:
-      - gcr.io/app:v1.2.3
+        - gcr.io/app:v1.2.3
 
   # Destination
   destination:
@@ -457,55 +467,63 @@ spec:
   # Sync policy
   syncPolicy:
     automated:
-      prune: true                 # Delete removed resources
-      selfHeal: true              # Correct manual changes
+      prune: true # Delete removed resources
+      selfHeal: true # Correct manual changes
     syncOptions:
-    - CreateNamespace=true        # Auto-create namespace
-    - PruneLast=true              # Delete resources last
+      - CreateNamespace=true # Auto-create namespace
+      - PruneLast=true # Delete resources last
 
   # Ignore differences (for fields that change automatically)
   ignoreDifferences:
-  - group: apps
-    kind: Deployment
-    jsonPointers:
-    - /spec/replicas              # Ignore replica changes (HPA)
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas # Ignore replica changes (HPA)
 ```
 
 ### Sync Policies Explained
 
 **1. Manual Sync**
+
 ```yaml
 syncPolicy: {}
 ```
+
 - ArgoCD detects drift but doesn't sync automatically
 - User must click "Sync" in UI or run CLI command
 - Best for: Production environments requiring approval
 
 **2. Automated Sync**
+
 ```yaml
 syncPolicy:
   automated: {}
 ```
+
 - ArgoCD syncs when Git changes
 - User can still make manual changes to cluster
 - Best for: Development environments
 
 **3. Automated with Self-Heal**
+
 ```yaml
 syncPolicy:
   automated:
     selfHeal: true
 ```
+
 - Syncs on Git changes AND reverts manual cluster changes
 - Enforces Git as single source of truth
 - Best for: Strict GitOps enforcement
 
 **4. Automated with Prune**
+
 ```yaml
 syncPolicy:
   automated:
     prune: true
 ```
+
 - Deletes resources removed from Git
 - Dangerous if Git is incomplete
 - Best for: Complete application definitions in Git
@@ -525,22 +543,23 @@ spec:
 
   # Custom resource health
   info:
-  - name: Custom Health
-    value: |
-      hs = {}
-      if obj.status ~= nil then
-        if obj.status.phase == "Running" then
-          hs.status = "Healthy"
-          hs.message = "Application is running"
-          return hs
+    - name: Custom Health
+      value: |
+        hs = {}
+        if obj.status ~= nil then
+          if obj.status.phase == "Running" then
+            hs.status = "Healthy"
+            hs.message = "Application is running"
+            return hs
+          end
         end
-      end
-      hs.status = "Progressing"
-      hs.message = "Waiting for application"
-      return hs
+        hs.status = "Progressing"
+        hs.message = "Waiting for application"
+        return hs
 ```
 
 **Health Statuses**:
+
 - 🟢 **Healthy**: All resources are healthy
 - 🟡 **Progressing**: Resources are being created/updated
 - 🟡 **Degraded**: Some resources are unhealthy
@@ -559,6 +578,7 @@ spec:
 **Symptom**: ArgoCD shows "OutOfSync" status
 
 **Diagnosis**:
+
 ```bash
 # Check sync status
 argocd app get my-app
@@ -568,6 +588,7 @@ argocd app diff my-app
 ```
 
 **Solutions**:
+
 ```bash
 # Option 1: Sync the application
 argocd app sync my-app
@@ -584,6 +605,7 @@ argocd app manifests my-app
 **Symptom**: PreSync/PostSync hooks fail
 
 **Diagnosis**:
+
 ```bash
 # View sync operation details
 argocd app get my-app --show-operation
@@ -593,12 +615,13 @@ kubectl logs -n argocd <hook-pod-name>
 ```
 
 **Solutions**:
+
 ```yaml
 # Delete failed hook annotation
 metadata:
   annotations:
     argocd.argoproj.io/hook: PreSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded  # Add this
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded # Add this
 ```
 
 #### Issue 3: Git Repository Not Accessible
@@ -606,6 +629,7 @@ metadata:
 **Symptom**: "Repository not found" or authentication errors
 
 **Diagnosis**:
+
 ```bash
 # List configured repositories
 argocd repo list
@@ -615,6 +639,7 @@ argocd repo get https://github.com/org/repo.git
 ```
 
 **Solutions**:
+
 ```bash
 # Add repository with credentials
 argocd repo add https://github.com/org/private-repo.git \
@@ -631,6 +656,7 @@ argocd repo add git@github.com:org/private-repo.git \
 **Symptom**: Application never reaches "Healthy" state
 
 **Diagnosis**:
+
 ```bash
 # Check resource events
 kubectl describe <resource-type> <resource-name> -n <namespace>
@@ -640,6 +666,7 @@ kubectl logs <pod-name> -n <namespace>
 ```
 
 **Solutions**:
+
 ```bash
 # Manually delete stuck resource
 kubectl delete <resource-type> <resource-name> -n <namespace>
@@ -683,6 +710,7 @@ argocd app manifests <app-name>
 ### 1. Repository Structure
 
 **Recommended structure**:
+
 ```
 fawkes-apps/
 ├── base/                    # Base manifests
@@ -715,22 +743,22 @@ spec:
 
   # Source repositories
   sourceRepos:
-  - https://github.com/org/team-alpha-*
+    - https://github.com/org/team-alpha-*
 
   # Destination clusters and namespaces
   destinations:
-  - namespace: team-alpha-*
-    server: https://kubernetes.default.svc
+    - namespace: team-alpha-*
+      server: https://kubernetes.default.svc
 
   # Allowed resource types
   clusterResourceWhitelist:
-  - group: ''
-    kind: Namespace
+    - group: ""
+      kind: Namespace
   namespaceResourceWhitelist:
-  - group: 'apps'
-    kind: Deployment
-  - group: ''
-    kind: Service
+    - group: "apps"
+      kind: Deployment
+    - group: ""
+      kind: Service
 ```
 
 ### 3. Implement Progressive Delivery
@@ -746,14 +774,14 @@ spec:
   strategy:
     canary:
       steps:
-      - setWeight: 20    # 20% traffic to new version
-      - pause: {duration: 5m}
-      - setWeight: 40
-      - pause: {duration: 5m}
-      - setWeight: 60
-      - pause: {duration: 5m}
-      - setWeight: 80
-      - pause: {duration: 5m}
+        - setWeight: 20 # 20% traffic to new version
+        - pause: { duration: 5m }
+        - setWeight: 40
+        - pause: { duration: 5m }
+        - setWeight: 60
+        - pause: { duration: 5m }
+        - setWeight: 80
+        - pause: { duration: 5m }
 ```
 
 ### 4. Use Sync Windows
@@ -766,11 +794,11 @@ metadata:
   name: production
 spec:
   syncWindows:
-  - kind: allow
-    schedule: '0 9-17 * * 1-5'  # 9 AM - 5 PM, Mon-Fri
-    duration: 8h
-    applications:
-    - '*'
+    - kind: allow
+      schedule: "0 9-17 * * 1-5" # 9 AM - 5 PM, Mon-Fri
+      duration: 8h
+      applications:
+        - "*"
 ```
 
 ### 5. Implement Notification Hooks
@@ -801,12 +829,14 @@ data:
 ### Measuring the Impact
 
 **Before GitOps**:
+
 - Manual deployments via kubectl or CI/CD pipelines
 - No audit trail of who deployed what
 - Manual rollback procedures
 - Configuration drift common
 
 **After GitOps**:
+
 - Automated deployments from Git commits
 - Complete audit trail (Git history)
 - Instant rollback (Git revert)
@@ -839,6 +869,7 @@ data:
 ```
 
 **Query in Prometheus**:
+
 ```promql
 # Deployment frequency (per day)
 sum(rate(argocd_app_sync_total[1d]))
@@ -857,23 +888,27 @@ sum(rate(argocd_app_sync_failed_total[7d])) / sum(rate(argocd_app_sync_total[7d]
 ### Quiz Questions
 
 1. **What are the four GitOps principles?**
+
    - [ ] Push-based, Manual, Versioned, Automated
    - [x] Declarative, Versioned, Pulled, Reconciled
    - [ ] Scripted, Immutable, Pushed, Monitored
 
 2. **Which sync policy enforces Git as the single source of truth?**
+
    - [ ] Automated
    - [ ] Automated with Prune
    - [x] Automated with Self-Heal
    - [ ] Manual
 
 3. **What happens when you enable `prune: true`?**
+
    - [ ] ArgoCD removes old versions from Git
    - [x] ArgoCD deletes resources removed from Git
    - [ ] ArgoCD archives deleted resources
    - [ ] Nothing, it's a deprecated option
 
 4. **How does GitOps improve Lead Time for Changes?**
+
    - [ ] By requiring manual approval
    - [x] By automating deployment from Git commits
    - [ ] By adding more testing
@@ -896,12 +931,14 @@ sum(rate(argocd_app_sync_failed_total[7d])) / sum(rate(argocd_app_sync_total[7d]
 **Objective**: Deploy the same application to dev, staging, and prod using Kustomize overlays.
 
 **Tasks**:
+
 1. Create base Kubernetes manifests
 2. Create environment-specific overlays with Kustomize
 3. Create ArgoCD Application for each environment
 4. Make a change and watch it propagate through environments
 
 **Solution Template**:
+
 ```bash
 # Repository structure
 mkdir -p my-app/{base,overlays/{dev,staging,prod}}
@@ -920,6 +957,7 @@ argocd app create my-app-prod --repo ... --path overlays/prod
 **Objective**: Use ArgoCD to orchestrate a blue-green deployment.
 
 **Tasks**:
+
 1. Deploy "blue" version of application
 2. Deploy "green" version alongside blue
 3. Switch traffic from blue to green using Service selector
@@ -930,6 +968,7 @@ argocd app create my-app-prod --repo ... --path overlays/prod
 **Objective**: Practice rolling back a failed deployment.
 
 **Tasks**:
+
 1. Deploy a working application (v1)
 2. Deploy a broken version (v2) that fails health checks
 3. Observe ArgoCD detecting unhealthy state
@@ -948,6 +987,7 @@ argocd app rollback my-app <revision-number>
 **Objective**: Define custom health assessment for a CRD.
 
 **Tasks**:
+
 1. Deploy a custom resource (e.g., database operator)
 2. Define custom health check in ArgoCD ConfigMap
 3. Verify ArgoCD correctly reports health status
@@ -983,34 +1023,40 @@ argocd app rollback my-app <revision-number>
 ### Real-World Impact
 
 "After implementing GitOps with ArgoCD, we went from:
+
 - **Deployment Frequency**: 1x per week → 10x per day
 - **Lead Time**: 2-3 hours → 5-10 minutes
 - **Change Failure Rate**: 15% → 3%
 - **MTTR**: 45 minutes → 5 minutes (Git revert)
 
 The biggest win: junior developers can now deploy confidently because Git history provides instant rollback."
-- *Platform Engineering Team, Fortune 500 Company*
+
+- _Platform Engineering Team, Fortune 500 Company_
 
 ---
 
 ## 📚 Additional Resources
 
 ### Official Documentation
+
 - [ArgoCD Documentation](https://argo-cd.readthedocs.io/)
 - [GitOps Principles](https://opengitops.dev/)
 - [CNCF GitOps Working Group](https://github.com/cncf/tag-app-delivery/tree/main/gitops-wg)
 
 ### Advanced Topics
+
 - [Argo Rollouts](https://argoproj.github.io/argo-rollouts/) - Progressive delivery
 - [ApplicationSets](https://argocd-applicationset.readthedocs.io/) - Multi-cluster management
 - [Argo CD Image Updater](https://argocd-image-updater.readthedocs.io/) - Automated image updates
 
 ### Video Tutorials
+
 - "GitOps with ArgoCD" - CNCF YouTube
 - "Scaling ArgoCD" - KubeCon talks
 - "Progressive Delivery Patterns" - Argo Project
 
 ### Community
+
 - [ArgoCD Slack](https://argoproj.github.io/community/join-slack)
 - [CNCF Slack #gitops](https://slack.cncf.io/)
 - [GitHub Discussions](https://github.com/argoproj/argo-cd/discussions)
@@ -1024,12 +1070,14 @@ The biggest win: junior developers can now deploy confidently because Git histor
 To complete this module, you must:
 
 - [ ] **Conceptual Understanding**
+
   - [ ] Explain the four GitOps principles
   - [ ] Describe push vs pull deployment models
   - [ ] Explain how GitOps improves DORA metrics
   - [ ] Understand ArgoCD architecture components
 
 - [ ] **Practical Skills**
+
   - [ ] Deploy an application using ArgoCD CLI
   - [ ] Create an ArgoCD Application manifest
   - [ ] Configure automated sync with self-heal
@@ -1038,6 +1086,7 @@ To complete this module, you must:
   - [ ] Troubleshoot an OutOfSync application
 
 - [ ] **Hands-On Lab**
+
   - [ ] Complete the guestbook deployment exercise
   - [ ] Successfully scale application via Git commit
   - [ ] View application in ArgoCD UI
@@ -1049,6 +1098,7 @@ To complete this module, you must:
 ### Certification Credit
 
 Upon completion, you earn:
+
 - **5 points** toward Green Belt certification
 - **Badge**: "GitOps Practitioner"
 - **Skill Unlocked**: ArgoCD Application Management
@@ -1080,11 +1130,13 @@ To receive completion credit, submit the following artifacts:
 1. **Screenshot of ArgoCD UI** showing your deployed application in "Synced" and "Healthy" state
 
 2. **Git Repository Link** with:
+
    - Application manifests (deployment.yaml, service.yaml)
    - ArgoCD Application manifest
    - Commit history showing at least 2 commits
 
 3. **CLI Output** showing:
+
    ```bash
    argocd app list
    argocd app get <your-app-name>
@@ -1127,9 +1179,11 @@ tar -czf module6-submission.tar.gz module6-submission/
 For ambitious learners who want to go deeper:
 
 ### Challenge 1: Multi-Environment Pipeline
+
 **Difficulty**: ⭐⭐⭐
 
 Deploy the same app to dev → staging → prod with promotion workflows:
+
 - Auto-sync in dev
 - Manual sync in staging (requires approval)
 - Sync window in prod (only during business hours)
@@ -1138,9 +1192,11 @@ Deploy the same app to dev → staging → prod with promotion workflows:
 **Hint**: Use ArgoCD Projects and sync windows
 
 ### Challenge 2: Secrets Management
+
 **Difficulty**: ⭐⭐⭐⭐
 
 Integrate secrets management with GitOps:
+
 - Install Sealed Secrets or External Secrets Operator
 - Encrypt secrets before committing to Git
 - Have ArgoCD automatically sync encrypted secrets
@@ -1149,9 +1205,11 @@ Integrate secrets management with GitOps:
 **Hint**: Research `bitnami-labs/sealed-secrets`
 
 ### Challenge 3: Custom Resource Deployment
+
 **Difficulty**: ⭐⭐⭐⭐⭐
 
 Deploy a complex application with CRDs:
+
 - Install an operator (e.g., Postgres Operator)
 - Create custom resources (e.g., PostgresCluster)
 - Define custom health checks for ArgoCD
@@ -1160,9 +1218,11 @@ Deploy a complex application with CRDs:
 **Hint**: Look at Zalando Postgres Operator
 
 ### Challenge 4: GitOps Everything
+
 **Difficulty**: ⭐⭐⭐⭐⭐
 
 Bootstrap ArgoCD to manage itself:
+
 - Deploy ArgoCD via ArgoCD (meta!)
 - Manage all cluster infrastructure as code
 - Include cert-manager, ingress-nginx, monitoring stack
@@ -1195,6 +1255,7 @@ Completed the module? Share with the community!
 ### Help Others
 
 The best way to solidify your learning:
+
 - Answer questions in #dojo-green-belt channel
 - Review peer submissions
 - Contribute troubleshooting tips to the docs
@@ -1207,24 +1268,27 @@ The best way to solidify your learning:
 This module contributes to the following DORA metrics:
 
 ### Direct Impact
+
 - ✅ **Deployment Frequency**: Automated sync enables 10x+ deployments
 - ✅ **Lead Time for Changes**: Commit-to-deploy reduced to minutes
 - ✅ **Change Failure Rate**: Git revert provides instant rollback
 - ✅ **MTTR**: Declarative state simplifies troubleshooting
 
 ### DORA Capabilities Unlocked
-| Capability | Description | Status |
-|------------|-------------|--------|
-| CD1 | Version control for production artifacts | ✅ Complete |
-| CD2 | Automate deployment process | ✅ Complete |
-| CD3 | Continuous integration | 🟡 Partial |
-| CD5 | Trunk-based development | ✅ Complete |
-| CD6 | Test automation | ⬜ Next module |
-| CD7 | Test data management | ⬜ Next module |
+
+| Capability | Description                              | Status         |
+| ---------- | ---------------------------------------- | -------------- |
+| CD1        | Version control for production artifacts | ✅ Complete    |
+| CD2        | Automate deployment process              | ✅ Complete    |
+| CD3        | Continuous integration                   | 🟡 Partial     |
+| CD5        | Trunk-based development                  | ✅ Complete    |
+| CD6        | Test automation                          | ⬜ Next module |
+| CD7        | Test data management                     | ⬜ Next module |
 
 ### Your Learning Metrics
 
 Track your progress:
+
 ```
 Time Investment:     2 hours (target)
 Concepts Covered:    12
@@ -1238,16 +1302,18 @@ Git Commits:         3+ required
 
 ## 🎓 Instructor Notes
 
-*For Fawkes Dojo facilitators and mentors:*
+_For Fawkes Dojo facilitators and mentors:_
 
 ### Teaching Tips
 
 **Common Student Struggles**:
+
 1. **Git vs GitOps confusion** - Emphasize GitOps is a deployment pattern, not Git itself
 2. **Sync vs Refresh** - Use the car analogy: refresh checks the map, sync drives to the destination
 3. **When to use manual vs automated sync** - Production = manual, dev/staging = automated
 
 **Live Demo Checklist**:
+
 - [ ] Show ArgoCD UI application graph visualization
 - [ ] Demonstrate real-time sync during Git push
 - [ ] Show self-heal correcting manual kubectl change
@@ -1255,6 +1321,7 @@ Git Commits:         3+ required
 - [ ] Show sync failure and troubleshooting process
 
 **Discussion Questions**:
+
 - "What happens if Git repository becomes unavailable?"
 - "How would you handle secrets in Git?"
 - "What's the blast radius if ArgoCD is compromised?"
@@ -1262,24 +1329,26 @@ Git Commits:         3+ required
 
 ### Assessment Rubric
 
-| Criteria | Excellent (5) | Good (4) | Satisfactory (3) | Needs Work (1-2) |
-|----------|---------------|----------|------------------|------------------|
-| Conceptual Understanding | Explains GitOps principles clearly with examples | Explains principles correctly | Basic understanding with gaps | Confused concepts |
-| ArgoCD Application Creation | Perfect YAML syntax, appropriate sync policies | Working config with minor issues | Functional but not optimized | Errors or incomplete |
-| Troubleshooting Skills | Independently debugs issues using CLI/UI | Debugs with occasional hints | Requires significant guidance | Unable to troubleshoot |
-| Git Workflow | Multiple meaningful commits, proper messages | Clean commits, good messages | Basic Git usage | Poor Git practices |
-| Reflection Quality | Deep insights, connects to DORA metrics | Good observations | Surface-level reflection | Missing or inadequate |
+| Criteria                    | Excellent (5)                                    | Good (4)                         | Satisfactory (3)              | Needs Work (1-2)       |
+| --------------------------- | ------------------------------------------------ | -------------------------------- | ----------------------------- | ---------------------- |
+| Conceptual Understanding    | Explains GitOps principles clearly with examples | Explains principles correctly    | Basic understanding with gaps | Confused concepts      |
+| ArgoCD Application Creation | Perfect YAML syntax, appropriate sync policies   | Working config with minor issues | Functional but not optimized  | Errors or incomplete   |
+| Troubleshooting Skills      | Independently debugs issues using CLI/UI         | Debugs with occasional hints     | Requires significant guidance | Unable to troubleshoot |
+| Git Workflow                | Multiple meaningful commits, proper messages     | Clean commits, good messages     | Basic Git usage               | Poor Git practices     |
+| Reflection Quality          | Deep insights, connects to DORA metrics          | Good observations                | Surface-level reflection      | Missing or inadequate  |
 
 **Passing Score**: 15/25 points minimum
 
 ### Lab Environment Notes
 
 **Resource Requirements**:
+
 - Kubernetes cluster: 3 nodes, 4 vCPU, 8GB RAM each
 - ArgoCD: ~500MB memory, ~0.5 CPU
 - Sample apps: ~200MB memory total
 
 **Pre-Lab Setup**:
+
 ```bash
 # Instructor should pre-create these
 kubectl create namespace argocd
@@ -1290,6 +1359,7 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 ```
 
 **Cleanup**:
+
 ```bash
 # After lab session
 kubectl delete namespace argocd --cascade
@@ -1303,18 +1373,21 @@ kubectl delete applications --all -n argocd
 ### Real Implementations
 
 **Company A - Financial Services**
+
 - **Before**: 2-week release cycles, manual deployments
 - **After**: Daily deployments, 99.9% success rate
 - **Impact**: Lead time reduced from 2 weeks to 4 hours
 - **Quote**: "GitOps gave us the confidence to deploy to production daily"
 
 **Company B - E-Commerce Platform**
+
 - **Before**: Frequent production incidents from manual changes
 - **After**: Zero drift incidents in 6 months
 - **Impact**: MTTR reduced from 45 min to 3 min (Git revert)
 - **Quote**: "Self-heal eliminated configuration drift completely"
 
 **Company C - Healthcare SaaS**
+
 - **Before**: No audit trail, compliance challenges
 - **After**: Complete deployment history in Git
 - **Impact**: Passed SOC 2 audit with GitOps evidence
@@ -1325,17 +1398,21 @@ kubectl delete applications --all -n argocd
 ## 📅 Module Changelog
 
 ### Version 1.0 (Current)
+
 - Initial release
 - Covers ArgoCD 2.9+
 - Kubernetes 1.28+ compatible
 
 ### Planned Updates
+
 - **v1.1** (Q1 2026): Add Argo Rollouts integration
 - **v1.2** (Q2 2026): Multi-cluster GitOps patterns
 - **v1.3** (Q3 2026): Advanced security (RBAC, SSO)
 
 ### Feedback Welcome
+
 Found an issue or have suggestions?
+
 - Open issue: https://github.com/paruff/fawkes/issues
 - Email: dojo@fawkes-platform.io
 - Slack: #dojo-feedback
@@ -1349,6 +1426,7 @@ Found an issue or have suggestions?
 ### What's Next?
 
 You're now ready to:
+
 1. ✅ Deploy applications using GitOps patterns
 2. ✅ Configure ArgoCD sync policies appropriately
 3. ✅ Troubleshoot common ArgoCD issues
@@ -1357,6 +1435,7 @@ You're now ready to:
 ### Continue Your Journey
 
 **Module 7 Preview**: Advanced ArgoCD Patterns
+
 - Helm chart deployments with ArgoCD
 - Kustomize advanced patterns
 - ApplicationSets for multi-cluster
@@ -1364,6 +1443,7 @@ You're now ready to:
 - Monorepo vs polyrepo strategies
 
 **Green Belt Roadmap**:
+
 - Module 6: Introduction to GitOps ✅ (You are here)
 - Module 7: Advanced ArgoCD Patterns
 - Module 8: Multi-Cluster & Multi-Tenant GitOps
@@ -1454,14 +1534,14 @@ syncPolicy:
 
 ### Health Status Reference
 
-| Icon | Status | Meaning |
-|------|--------|---------|
-| 🟢 | Healthy | All resources operational |
-| 🟡 | Progressing | Resources being created/updated |
-| 🟠 | Degraded | Some resources unhealthy |
-| 🟡 | Suspended | Application suspended |
-| ⚪ | Missing | Resources not found |
-| 🔴 | Unknown | Cannot determine health |
+| Icon | Status      | Meaning                         |
+| ---- | ----------- | ------------------------------- |
+| 🟢   | Healthy     | All resources operational       |
+| 🟡   | Progressing | Resources being created/updated |
+| 🟠   | Degraded    | Some resources unhealthy        |
+| 🟡   | Suspended   | Application suspended           |
+| ⚪   | Missing     | Resources not found             |
+| 🔴   | Unknown     | Cannot determine health         |
 
 ---
 
@@ -1642,6 +1722,6 @@ You've mastered the fundamentals of GitOps with ArgoCD. You're now equipped to d
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*
-*Version 1.0 | Last Updated: October 2025*
-*License: MIT | https://github.com/paruff/fawkes*
+_Fawkes Dojo - Where Platform Engineers Are Forged_
+_Version 1.0 | Last Updated: October 2025_
+_License: MIT | https://github.com/paruff/fawkes_

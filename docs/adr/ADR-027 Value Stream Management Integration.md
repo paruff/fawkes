@@ -12,7 +12,7 @@
 
 **Informed**: All Engineering, Executive Leadership
 
------
+---
 
 ## Context
 
@@ -99,7 +99,7 @@ Organizations with **high VSM maturity** (6-8 capabilities) significantly outper
 1. **Competitive Advantage**: Few open-source IDPs offer integrated VSM
 1. **Data-Driven Improvement**: Can’t improve what we don’t measure
 
------
+---
 
 ## Decision
 
@@ -219,9 +219,11 @@ git checkout -b feature/FOC-123-user-auth
 
 ```markdown
 ## Related Work Items
+
 - Focalboard: FOC-123
 
 ## Changes
+
 ...
 ```
 
@@ -648,33 +650,44 @@ vsm_items_completed_total{type="feature", team="payments"} 45
 vsm_flow_efficiency{team="payments"} 0.38
 ```
 
------
+---
 
 ## Consequences
 
 ### Positive
 
 1. **End-to-End Visibility**: Teams and leaders see work flow from idea to production
+
 - Reduces “where is my feature?” questions
 - Identifies bottlenecks quickly
 - Enables data-driven process improvements
+
 1. **Automated Data Collection**: No manual tracking required
+
 - Developers continue existing workflows
 - Metrics calculated automatically
 - Real-time updates
+
 1. **Actionable Insights**: Not just dashboards, but alerts and recommendations
+
 - Bottleneck alerts notify teams immediately
 - Trend analysis predicts future issues
 - Benchmarking against industry standards
+
 1. **Business Value Connection**: Links engineering work to business outcomes
+
 - Product managers see value delivery rates
 - Executives understand ROI of platform improvements
 - Prioritization driven by value, not just urgency
+
 1. **Competitive Differentiation**: Few open-source IDPs offer integrated VSM
+
 - Attracts organizations serious about flow metrics
 - Aligns with 2025 DORA findings
 - Positions Fawkes as cutting-edge
+
 1. **Platform-as-Product Enablement**: Measures platform’s own value delivery
+
 - Internal customers can see platform team throughput
 - Continuous improvement becomes data-driven
 - Justifies platform investment with metrics
@@ -682,31 +695,42 @@ vsm_flow_efficiency{team="payments"} 0.38
 ### Negative
 
 1. **Implementation Complexity**: Significant development effort required
+
 - New service (VSM Hub) to build and maintain
 - Multiple integrations to implement
 - Data model to design and evolve
 - **Mitigation**: Phased rollout, start with 2-3 integrations
+
 1. **Convention Enforcement**: Requires consistent work item ID usage
+
 - Teams must adopt naming conventions
 - Pre-commit hooks needed
 - Change management required
 - **Mitigation**: Automation (Git hooks), clear documentation, training
+
 1. **Data Quality Dependency**: Metrics only as good as input data
+
 - Missed commit messages → broken correlation
 - Inconsistent Focalboard updates → wrong stage timings
 - Webhooks failures → missing events
 - **Mitigation**: Data quality monitoring, event replay, manual correction UI
+
 1. **Performance Concerns**: Real-time correlation at scale
+
 - High event volume from CI/CD (100s per hour)
 - Complex joins across data sources
 - Dashboard query performance
 - **Mitigation**: Event streaming (Kafka), caching (Redis), query optimization
+
 1. **Privacy Considerations**: Individual developer performance visibility
+
 - Metrics could be misused for surveillance
 - Team metrics, not individual metrics
 - Requires careful communication
 - **Mitigation**: Team-level aggregation only, explicit privacy policy
+
 1. **Maintenance Overhead**: Another system to operate
+
 - VSM Hub needs monitoring, scaling, updates
 - Additional PostgreSQL database
 - Integration maintenance as tools evolve
@@ -715,20 +739,25 @@ vsm_flow_efficiency{team="payments"} 0.38
 ### Neutral
 
 1. **Learning Curve**: Teams need to understand VSM concepts
+
 - Training required on flow metrics
 - Dojo module needed (“Value Stream Management”)
 - **Action**: Include in Yellow Belt curriculum
+
 1. **Cultural Change**: Shifts focus from velocity to flow
+
 - Story points de-emphasized
 - Flow efficiency becomes key metric
 - **Action**: Leadership buy-in, communicate why
+
 1. **Tool Dependencies**: Relies on existing tool quality
+
 - Focalboard API stability
 - GitHub webhook reliability
 - Jenkins plugin ecosystem
 - **Action**: Contribute improvements upstream
 
------
+---
 
 ## Alternatives Considered
 
@@ -813,7 +842,7 @@ VSM requires real-time event processing, data aggregation, and ML-based analysis
 - ❌ Not designed for learning (dojo integration)
 
 **Why Partially Considered**:
-We could use these as *inspiration* or even *components* (e.g., Faros’s data model), but not as drop-in replacements. We’ll evaluate their architectures and adopt patterns that fit Fawkes.
+We could use these as _inspiration_ or even _components_ (e.g., Faros’s data model), but not as drop-in replacements. We’ll evaluate their architectures and adopt patterns that fit Fawkes.
 
 ### Alternative 5: Delayed Implementation (Post-MVP)
 
@@ -835,7 +864,7 @@ We could use these as *inspiration* or even *components* (e.g., Faros’s data m
 **Why Rejected**:
 The 2025 DORA Report makes clear that VSM is a key differentiator for high-performing organizations. Delaying this means Fawkes won’t be competitive with modern expectations. However, we will use a **phased approach** (see Implementation Plan).
 
------
+---
 
 ## Implementation Plan
 
@@ -846,19 +875,26 @@ The 2025 DORA Report makes clear that VSM is a key differentiator for high-perfo
 **Deliverables**:
 
 1. VSM Hub service (Go)
+
 - Webhook receiver
 - Work item correlation engine
 - Basic API (REST)
 - PostgreSQL schema
+
 1. Integrations (simplified):
+
 - Focalboard webhook → VSM Hub
 - GitHub webhook → VSM Hub
 - Jenkins webhook → VSM Hub
+
 1. Metrics:
+
 - Cycle time (end-to-end)
 - Lead time (commit → deploy)
 - WIP by stage
+
 1. Visualization:
+
 - Simple Grafana dashboard (flow metrics)
 - Backstage plugin (minimal - work item list)
 
@@ -875,17 +911,24 @@ The 2025 DORA Report makes clear that VSM is a key differentiator for high-perfo
 **Deliverables**:
 
 1. Bottleneck detection algorithm
+
 - Statistical anomaly detection
 - Rule-based alerts
+
 1. Enhanced metrics:
+
 - Flow efficiency
 - Stage-level cycle times
 - Wait time vs. active time
+
 1. Alerting:
+
 - Mattermost notifications for bottlenecks
 - Email alerts for leadership
 - In-app alerts (Backstage)
+
 1. Enhanced Backstage plugin:
+
 - Value stream visualization
 - Bottleneck alerts
 - Team health dashboard
@@ -903,18 +946,25 @@ The 2025 DORA Report makes clear that VSM is a key differentiator for high-perfo
 **Deliverables**:
 
 1. Business value tracking
+
 - Value assignment in Focalboard
 - Value delivery metrics
 - Value velocity trends
+
 1. Customer feedback integration
+
 - NPS per feature
 - Feature usage tracking
 - Incident correlation
+
 1. Advanced dashboards:
+
 - Executive value stream overview
 - Value delivery trends
 - Feature success scores
+
 1. Dojo module: “Value Stream Management”
+
 - VSM concepts and metrics
 - Hands-on lab: Optimize a value stream
 - Certification: “Fawkes VSM Practitioner”

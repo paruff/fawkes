@@ -70,7 +70,7 @@ verbose_log() {
 
 # Check if command exists
 command_exists() {
-  command -v "$1" >/dev/null 2>&1
+  command -v "$1" > /dev/null 2>&1
 }
 
 # Validation functions
@@ -96,7 +96,7 @@ check_prerequisites() {
 check_namespace() {
   log_info "Checking namespace '$NAMESPACE'..."
 
-  if ! kubectl get namespace "$NAMESPACE" >/dev/null 2>&1; then
+  if ! kubectl get namespace "$NAMESPACE" > /dev/null 2>&1; then
     log_error "Namespace '$NAMESPACE' does not exist"
     exit 1
   fi
@@ -107,7 +107,7 @@ check_namespace() {
 check_postgresql_cluster() {
   log_info "Checking PostgreSQL cluster 'db-unleash-dev'..."
 
-  if ! kubectl get cluster db-unleash-dev -n "$NAMESPACE" >/dev/null 2>&1; then
+  if ! kubectl get cluster db-unleash-dev -n "$NAMESPACE" > /dev/null 2>&1; then
     log_error "PostgreSQL cluster 'db-unleash-dev' not found"
     return 1
   fi
@@ -130,7 +130,7 @@ check_postgresql_cluster() {
 check_unleash_deployment() {
   log_info "Checking Unleash deployment..."
 
-  if ! kubectl get deployment unleash -n "$NAMESPACE" >/dev/null 2>&1; then
+  if ! kubectl get deployment unleash -n "$NAMESPACE" > /dev/null 2>&1; then
     log_error "Unleash deployment not found"
     return 1
   fi
@@ -192,7 +192,7 @@ check_unleash_pods() {
 check_unleash_service() {
   log_info "Checking Unleash service..."
 
-  if ! kubectl get service unleash -n "$NAMESPACE" >/dev/null 2>&1; then
+  if ! kubectl get service unleash -n "$NAMESPACE" > /dev/null 2>&1; then
     log_error "Unleash service not found"
     return 1
   fi
@@ -211,7 +211,7 @@ check_unleash_service() {
 check_unleash_ingress() {
   log_info "Checking Unleash ingress..."
 
-  if ! kubectl get ingress unleash -n "$NAMESPACE" >/dev/null 2>&1; then
+  if ! kubectl get ingress unleash -n "$NAMESPACE" > /dev/null 2>&1; then
     log_error "Unleash ingress not found"
     return 1
   fi
@@ -234,14 +234,14 @@ check_unleash_health() {
 
   # Port forward to Unleash service
   local port_forward_pid
-  kubectl port-forward -n "$NAMESPACE" service/unleash 4242:4242 >/dev/null 2>&1 &
+  kubectl port-forward -n "$NAMESPACE" service/unleash 4242:4242 > /dev/null 2>&1 &
   port_forward_pid=$!
 
   # Give port-forward time to establish
   sleep 3
 
   local health_status=1
-  if curl -sf http://localhost:4242/health >/dev/null 2>&1; then
+  if curl -sf http://localhost:4242/health > /dev/null 2>&1; then
     log_success "Unleash API health check passed"
     health_status=0
   else
@@ -250,7 +250,7 @@ check_unleash_health() {
   fi
 
   # Clean up port-forward
-  kill "$port_forward_pid" 2>/dev/null || true
+  kill "$port_forward_pid" 2> /dev/null || true
 
   return $health_status
 }
@@ -280,13 +280,13 @@ check_secrets() {
   log_info "Checking Unleash secrets..."
 
   # Check Unleash application secret
-  if ! kubectl get secret unleash-secret -n "$NAMESPACE" >/dev/null 2>&1; then
+  if ! kubectl get secret unleash-secret -n "$NAMESPACE" > /dev/null 2>&1; then
     log_error "Unleash secret 'unleash-secret' not found"
     return 1
   fi
 
   # Check database credentials secret
-  if ! kubectl get secret db-unleash-credentials -n "$NAMESPACE" >/dev/null 2>&1; then
+  if ! kubectl get secret db-unleash-credentials -n "$NAMESPACE" > /dev/null 2>&1; then
     log_error "Database credentials secret 'db-unleash-credentials' not found"
     return 1
   fi
@@ -307,10 +307,10 @@ check_resource_usage() {
 
   while IFS= read -r pod_name; do
     local cpu_usage
-    cpu_usage=$(kubectl top pod "$pod_name" -n "$NAMESPACE" 2>/dev/null | tail -n 1 | awk '{print $2}' | sed 's/m//')
+    cpu_usage=$(kubectl top pod "$pod_name" -n "$NAMESPACE" 2> /dev/null | tail -n 1 | awk '{print $2}' | sed 's/m//')
 
     local memory_usage
-    memory_usage=$(kubectl top pod "$pod_name" -n "$NAMESPACE" 2>/dev/null | tail -n 1 | awk '{print $3}' | sed 's/Mi//')
+    memory_usage=$(kubectl top pod "$pod_name" -n "$NAMESPACE" 2> /dev/null | tail -n 1 | awk '{print $3}' | sed 's/Mi//')
 
     if [[ -n "$cpu_usage" && -n "$memory_usage" ]]; then
       # CPU request is 200m, target is 70% = 140m
@@ -343,7 +343,7 @@ check_resource_usage() {
 check_monitoring() {
   log_info "Checking Unleash monitoring configuration..."
 
-  if ! kubectl get servicemonitor unleash -n "$NAMESPACE" >/dev/null 2>&1; then
+  if ! kubectl get servicemonitor unleash -n "$NAMESPACE" > /dev/null 2>&1; then
     log_warning "ServiceMonitor 'unleash' not found (Prometheus may not be installed)"
     return 0
   fi

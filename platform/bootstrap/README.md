@@ -47,14 +47,14 @@ The app-of-apps pattern is an ArgoCD best practice where a single "root" Applica
 
 ### Core Bootstrap Files
 
-| File | Purpose |
-|------|---------|
-| `app-of-apps.yaml` | Root Application that manages the platform |
-| `applicationset.yaml` | Auto-discovers apps in platform/apps/ |
-| `root-apps.yaml` | Static root Applications (networking, infra) |
-| `project-default.yaml` | Default ArgoCD Project definition |
-| `kustomization.yaml` | Kustomize configuration for bootstrap |
-| `README.md` | This documentation |
+| File                   | Purpose                                      |
+| ---------------------- | -------------------------------------------- |
+| `app-of-apps.yaml`     | Root Application that manages the platform   |
+| `applicationset.yaml`  | Auto-discovers apps in platform/apps/        |
+| `root-apps.yaml`       | Static root Applications (networking, infra) |
+| `project-default.yaml` | Default ArgoCD Project definition            |
+| `kustomization.yaml`   | Kustomize configuration for bootstrap        |
+| `README.md`            | This documentation                           |
 
 ### app-of-apps.yaml
 
@@ -103,16 +103,16 @@ spec:
 
 Applications deploy in phases using sync waves:
 
-| Wave | Phase | Components |
-|------|-------|------------|
-| `-10` | Infrastructure | ingress-nginx, storage, cert-manager |
-| `-5` | Core Services | postgresql-operator |
-| `-4` | Security | kyverno |
-| `-3` | Secrets & Monitoring | vault, prometheus, cert-manager |
-| `-2` | Platform Services | vault-csi-driver, ingress, tempo |
-| `0` | Default | Most platform apps |
-| `5` | Developer Tools | backstage, eclipse-che |
-| `10` | Applications | User applications |
+| Wave  | Phase                | Components                           |
+| ----- | -------------------- | ------------------------------------ |
+| `-10` | Infrastructure       | ingress-nginx, storage, cert-manager |
+| `-5`  | Core Services        | postgresql-operator                  |
+| `-4`  | Security             | kyverno                              |
+| `-3`  | Secrets & Monitoring | vault, prometheus, cert-manager      |
+| `-2`  | Platform Services    | vault-csi-driver, ingress, tempo     |
+| `0`   | Default              | Most platform apps                   |
+| `5`   | Developer Tools      | backstage, eclipse-che               |
+| `10`  | Applications         | User applications                    |
 
 ## Usage
 
@@ -183,6 +183,7 @@ argocd app list
 ```
 
 Expected output:
+
 ```
 NAME                  SYNC STATUS   HEALTH STATUS
 platform-bootstrap    Synced        Healthy
@@ -201,11 +202,13 @@ jenkins              Synced        Healthy
 The ApplicationSet automatically discovers applications in `platform/apps/`. To add a new app:
 
 1. **Create app directory**:
+
    ```bash
    mkdir -p platform/apps/my-app
    ```
 
 2. **Add application manifest**:
+
    ```bash
    cat > platform/apps/my-app/my-app-application.yaml <<EOF
    apiVersion: argoproj.io/v1alpha1
@@ -234,6 +237,7 @@ The ApplicationSet automatically discovers applications in `platform/apps/`. To 
    ```
 
 3. **Commit and push**:
+
    ```bash
    git add platform/apps/my-app/
    git commit -m "Add my-app application"
@@ -256,10 +260,11 @@ Choose the appropriate sync wave for your application:
 - **Wave 10+**: User applications
 
 Example:
+
 ```yaml
 metadata:
   annotations:
-    argocd.argoproj.io/sync-wave: "-5"  # Deploy early
+    argocd.argoproj.io/sync-wave: "-5" # Deploy early
 ```
 
 ## Troubleshooting
@@ -267,11 +272,13 @@ metadata:
 ### Applications Not Appearing
 
 Check ApplicationSet status:
+
 ```bash
 kubectl describe applicationset platform-applications -n fawkes
 ```
 
 Force ApplicationSet refresh:
+
 ```bash
 argocd appset refresh platform-applications
 ```
@@ -279,16 +286,19 @@ argocd appset refresh platform-applications
 ### Sync Failures
 
 Check application status:
+
 ```bash
 kubectl describe application <app-name> -n fawkes
 ```
 
 View sync errors:
+
 ```bash
 argocd app get <app-name>
 ```
 
 Manual sync:
+
 ```bash
 argocd app sync <app-name>
 ```
@@ -296,16 +306,19 @@ argocd app sync <app-name>
 ### Bootstrap Failed
 
 Check if ArgoCD is running:
+
 ```bash
 kubectl get pods -n fawkes -l app.kubernetes.io/name=argocd-server
 ```
 
 Check bootstrap kustomization:
+
 ```bash
 kubectl kustomize platform/bootstrap
 ```
 
 Re-apply bootstrap:
+
 ```bash
 kubectl apply -k platform/bootstrap
 ```
@@ -313,16 +326,19 @@ kubectl apply -k platform/bootstrap
 ### ApplicationSet Not Creating Apps
 
 Verify ApplicationSet exists:
+
 ```bash
 kubectl get applicationset -n fawkes
 ```
 
 Check ApplicationSet logs:
+
 ```bash
 kubectl logs -n fawkes -l app.kubernetes.io/name=argocd-applicationset-controller
 ```
 
 Verify git generator configuration:
+
 ```bash
 kubectl get applicationset platform-applications -n fawkes -o yaml
 ```
@@ -339,8 +355,8 @@ spec:
     spec:
       syncPolicy:
         automated:
-          prune: true      # Auto-delete resources
-          selfHeal: true   # Auto-revert manual changes
+          prune: true # Auto-delete resources
+          selfHeal: true # Auto-revert manual changes
         syncOptions:
           - CreateNamespace=true
 ```
@@ -396,11 +412,13 @@ Open http://localhost:8080
 ### CLI Monitoring
 
 List all applications:
+
 ```bash
 argocd app list
 ```
 
 Watch application sync:
+
 ```bash
 argocd app sync platform-bootstrap --async
 argocd app wait platform-bootstrap
@@ -417,6 +435,7 @@ curl http://localhost:8082/metrics
 ```
 
 Key metrics:
+
 - `argocd_app_sync_total`: Number of syncs
 - `argocd_app_health_status`: Application health
 - `argocd_app_sync_status`: Sync status
@@ -435,13 +454,13 @@ metadata:
   namespace: fawkes
 spec:
   destinations:
-    - namespace: 'fawkes-*'
+    - namespace: "fawkes-*"
       server: https://kubernetes.default.svc
   sourceRepos:
     - https://github.com/paruff/fawkes.git
   clusterResourceWhitelist:
-    - group: '*'
-      kind: 'Namespace'
+    - group: "*"
+      kind: "Namespace"
 ```
 
 ### Secrets Management

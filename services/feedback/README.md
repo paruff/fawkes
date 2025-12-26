@@ -39,27 +39,32 @@ FastAPI-based feedback collection and management service for Backstage with NPS 
 The service exports the following metrics for monitoring and analytics:
 
 ### NPS Metrics
+
 - `nps_score{period}` - NPS score (-100 to +100) for overall, last_30d, last_90d
 - `nps_promoters_percentage{period}` - Percentage of promoters (5-star ratings)
 - `nps_passives_percentage{period}` - Percentage of passives (4-star ratings)
 - `nps_detractors_percentage{period}` - Percentage of detractors (1-3 star ratings)
 
 ### Feedback Metrics
+
 - `feedback_submissions_total{category,rating}` - Total submissions by category and rating
 - `feedback_by_category_total{category}` - Total feedback count by category
 - `feedback_response_rate{status}` - Response rate by status (overall, open, resolved, etc.)
 
 ### Time-to-Action Metrics
+
 - `feedback_time_to_action_seconds{category}` - Histogram of time from submission to first action (status change from 'open')
   - Buckets: 1min, 5min, 15min, 30min, 1h, 2h, 4h, 8h, 24h, 48h, 7d
 - `feedback_avg_time_to_action_hours{status,category}` - Average time to action in hours by status and category
 
 ### Sentiment Metrics
+
 - `feedback_sentiment_score{category,sentiment}` - Average sentiment scores by category
   - Sentiment: positive (≥0.05), neutral (-0.05 to 0.05), negative (≤-0.05)
   - Score: -1.0 (most negative) to +1.0 (most positive)
 
 ### Request Metrics
+
 - `feedback_request_duration_seconds{endpoint}` - Request processing time histogram
 
 ## Sentiment Analysis
@@ -71,6 +76,7 @@ The service uses VADER (Valence Aware Dictionary and sEntiment Reasoner) to auto
 - **Negative**: Compound score ≤ -0.05 (😞)
 
 Sentiment data is stored with each feedback submission and available in:
+
 - API responses
 - Database queries
 - Prometheus metrics
@@ -79,6 +85,7 @@ Sentiment data is stored with each feedback submission and available in:
 ## NPS Calculation
 
 NPS is calculated from 1-5 star ratings:
+
 - **Promoters**: 5 stars (would recommend)
 - **Passives**: 4 stars (satisfied but not enthusiastic)
 - **Detractors**: 1-3 stars (unhappy customers)
@@ -86,6 +93,7 @@ NPS is calculated from 1-5 star ratings:
 **Formula**: NPS = (% Promoters - % Detractors) × 100
 
 **Score Interpretation**:
+
 - Above 0: Good
 - Above 50: Excellent
 - Above 70: World-class
@@ -95,6 +103,7 @@ NPS is calculated from 1-5 star ratings:
 A comprehensive analytics dashboard is available at `/grafana/d/feedback-analytics`:
 
 **Key Panels**:
+
 - Current NPS score with color-coded thresholds
 - NPS trend over time (90-day view)
 - NPS components distribution (promoters/passives/detractors)
@@ -107,6 +116,7 @@ A comprehensive analytics dashboard is available at `/grafana/d/feedback-analyti
 - Time-to-action distribution histogram
 
 **Dashboard Features**:
+
 - Auto-refresh every 5 minutes for real-time updates
 - 7-day default time range
 - Color-coded thresholds for quick insights
@@ -189,6 +199,7 @@ curl -X POST http://localhost:8000/api/v1/feedback \
 ```
 
 Response includes sentiment analysis:
+
 ```json
 {
   "id": 1,
@@ -247,13 +258,13 @@ make validate-at-e2-010
 ```
 
 This validates:
+
 - ✓ Feedback analytics dashboard created
 - ✓ NPS trends visible
 - ✓ Feedback categorization shown
 - ✓ Sentiment analysis working
 - ✓ Top issues highlighted
 - ✓ Metrics exported to Prometheus
-
 
 ## AI Triage and Automation
 
@@ -264,12 +275,14 @@ The feedback service includes an AI-powered triage system that automatically ana
 ### AI Triage Features
 
 #### Priority Scoring
+
 - **P0 (Critical)**: Security issues, data loss, outages, severe bugs
 - **P1 (High)**: Major bugs, blocking issues, important features
 - **P2 (Medium)**: Enhancements, non-blocking issues
 - **P3 (Low)**: Minor improvements, nice-to-have features
 
 Priority is calculated based on:
+
 - Feedback type (bug_report, feature_request, feedback)
 - User rating (1-5)
 - Sentiment analysis (negative sentiment increases priority)
@@ -277,13 +290,16 @@ Priority is calculated based on:
 - Category (Security, Performance categories get higher priority)
 
 #### Auto-Labeling
+
 Automatically suggests GitHub labels based on:
+
 - Feedback type (bug, enhancement)
 - Priority level (P0-P3)
 - Category (category:ui-ux, category:performance, etc.)
 - Content keywords (security, performance, documentation, accessibility)
 
 #### Duplicate Detection
+
 - Searches existing open GitHub issues
 - Uses text similarity matching (fuzzy matching)
 - Configurable similarity threshold (default: 70%)
@@ -292,6 +308,7 @@ Automatically suggests GitHub labels based on:
 ### API Endpoints
 
 #### Triage Specific Feedback
+
 ```bash
 POST /api/v1/feedback/{id}/triage
 Authorization: Bearer {admin-token}
@@ -313,6 +330,7 @@ Response:
 ```
 
 #### Automated Processing
+
 ```bash
 POST /api/v1/automation/process-validated?limit=20&min_rating=3
 Authorization: Bearer {admin-token}
@@ -331,7 +349,9 @@ Response:
 ### Automation Pipeline
 
 #### CronJob Configuration
+
 A Kubernetes CronJob runs every 15 minutes to:
+
 1. Fetch validated feedback (status='open', no GitHub issue)
 2. Run AI triage on each item
 3. Skip duplicates with notifications
@@ -340,11 +360,13 @@ A Kubernetes CronJob runs every 15 minutes to:
 6. Provide summary report
 
 #### Manual Trigger
+
 ```bash
 kubectl create job --from=cronjob/feedback-automation feedback-automation-manual -n fawkes
 ```
 
 #### Environment Variables
+
 ```yaml
 GITHUB_TOKEN: GitHub personal access token (required for automation)
 GITHUB_OWNER: Repository owner (default: paruff)
@@ -356,16 +378,19 @@ NOTIFICATION_ENABLED: Enable/disable notifications (default: true)
 ### Notification System
 
 #### Supported Channels
+
 - **Mattermost**: Via incoming webhooks
 - **Future**: Slack, email, custom webhooks
 
 #### Notification Types
+
 1. **Issue Created**: Sent when new issue is created from feedback
 2. **Duplicate Detected**: Sent when duplicate issues are found
 3. **High Priority**: Immediate alert for P0/P1 feedback
 4. **Automation Summary**: Report after scheduled processing
 
 #### Configuration
+
 ```yaml
 # In deployment.yaml
 - name: MATTERMOST_WEBHOOK_URL
@@ -380,12 +405,14 @@ NOTIFICATION_ENABLED: Enable/disable notifications (default: true)
 ### Testing
 
 #### Unit Tests
+
 ```bash
 cd services/feedback
 pytest tests/unit/test_ai_triage.py -v
 ```
 
 #### BDD Tests
+
 ```bash
 behave tests/bdd/features/feedback-automation.feature
 ```
@@ -393,11 +420,13 @@ behave tests/bdd/features/feedback-automation.feature
 ### Monitoring
 
 #### Key Metrics to Watch
+
 - `feedback_submissions_total`: Track incoming feedback volume
 - `nps_score`: Monitor user satisfaction trends
 - `feedback_sentiment_score`: Identify negative sentiment patterns
 
 #### Recommended Alerts
+
 - P0 feedback submitted (immediate action)
 - NPS score drops below threshold
 - High volume of negative sentiment feedback
@@ -450,6 +479,7 @@ behave tests/bdd/features/feedback-automation.feature
 ### Troubleshooting
 
 #### Automation Not Running
+
 ```bash
 # Check CronJob status
 kubectl get cronjob feedback-automation -n fawkes
@@ -462,6 +492,7 @@ kubectl logs -n fawkes -l app=feedback-automation --tail=100
 ```
 
 #### GitHub Integration Issues
+
 ```bash
 # Verify token is set
 kubectl get secret feedback-github-token -n fawkes -o yaml
@@ -471,6 +502,7 @@ curl -H "Authorization: Bearer ${GITHUB_TOKEN}" https://api.github.com/user
 ```
 
 #### No Notifications Sent
+
 ```bash
 # Check if notifications are enabled
 curl http://feedback-service:8000/ | jq '.features.notifications'

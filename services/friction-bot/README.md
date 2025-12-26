@@ -161,6 +161,7 @@ curl http://friction-bot.fawkes.svc.cluster.local:8000/metrics
 ```
 
 Response:
+
 ```
 ✅ Friction point logged!
 
@@ -185,6 +186,7 @@ Thanks for helping us improve the platform! 🎯
 ```
 
 Uses defaults:
+
 - Description: Same as title
 - Category: Developer Experience
 - Priority: medium
@@ -192,6 +194,7 @@ Uses defaults:
 ## Help Command
 
 Get usage instructions:
+
 ```
 /friction
 ```
@@ -267,6 +270,7 @@ The friction bot integrates with:
 4. **Kubernetes**: Deployed as a service with health checks and auto-scaling
 
 All friction points logged via the bot:
+
 - Are tagged with `friction` and the platform name (slack/mattermost)
 - Include author information from the chat platform
 - Are categorized and prioritized
@@ -278,6 +282,7 @@ All friction points logged via the bot:
 ### Slash Command Not Working
 
 1. **Check bot deployment:**
+
    ```bash
    kubectl get pods -n fawkes -l app=friction-bot
    kubectl logs -n fawkes -l app=friction-bot
@@ -299,6 +304,7 @@ All friction points logged via the bot:
 ### Connection to Insights API Fails
 
 1. Check Insights service is running:
+
    ```bash
    kubectl get svc -n fawkes insights-service
    ```

@@ -1,6 +1,7 @@
 # ADR-004: Jenkins for CI/CD
 
 ## Status
+
 **Accepted** - October 8, 2025
 
 ## Context
@@ -10,6 +11,7 @@ Fawkes requires a Continuous Integration and Continuous Delivery (CI/CD) platfor
 ### The Need for CI/CD Automation
 
 **Current Challenges Without CI/CD**:
+
 - **Manual Builds**: Error-prone, time-consuming, not repeatable
 - **Inconsistent Testing**: Tests run locally (or not at all), vary by developer
 - **Security Gaps**: No automated security scanning, vulnerabilities reach production
@@ -18,6 +20,7 @@ Fawkes requires a Continuous Integration and Continuous Delivery (CI/CD) platfor
 - **No Audit Trail**: Can't trace which code produced which artifact
 
 **What CI/CD Provides**:
+
 1. **Automated Builds**: Code commit triggers automatic build and test
 2. **Quality Gates**: Automated testing, linting, security scanning block bad code
 3. **Fast Feedback**: Developers know within minutes if changes work
@@ -30,6 +33,7 @@ Fawkes requires a Continuous Integration and Continuous Delivery (CI/CD) platfor
 ### Requirements for CI/CD Platform
 
 **Core Requirements**:
+
 - **Pipeline as Code**: Jenkinsfiles in Git, version controlled
 - **Kubernetes Native**: Dynamic agents in Kubernetes pods
 - **Golden Paths**: Reusable pipeline templates for common scenarios
@@ -40,12 +44,14 @@ Fawkes requires a Continuous Integration and Continuous Delivery (CI/CD) platfor
 - **DORA Metrics**: Report build/deployment events
 
 **DORA Alignment**:
+
 - **Deployment Frequency**: Automated pipelines enable frequent deployments
 - **Lead Time**: Fast builds reduce time from commit to production
 - **Change Failure Rate**: Quality gates catch issues before deployment
 - **Time to Restore**: Fast pipelines enable quick hotfix deployment
 
 **Integration Requirements**:
+
 - **GitHub**: Webhook triggers, status checks
 - **ArgoCD**: Trigger GitOps sync after successful build
 - **SonarQube**: Code quality and security analysis
@@ -58,24 +64,28 @@ Fawkes requires a Continuous Integration and Continuous Delivery (CI/CD) platfor
 ### Forces at Play
 
 **Technical Forces**:
+
 - Need pipeline-as-code for version control and review
 - Kubernetes-native approach reduces infrastructure overhead
 - Security scanning must be automated and enforced
 - Multi-language support critical for polyglot teams
 
 **Developer Experience Forces**:
+
 - Fast feedback loops improve developer productivity
 - Clear error messages reduce debugging time
 - Consistent builds reduce "works on my machine" issues
 - Self-service pipelines reduce dependency on platform team
 
 **Operational Forces**:
+
 - Platform team can't manually build everything
 - Need scalability (100+ concurrent builds)
 - Resource efficiency matters (cost optimization)
 - Maintenance burden should be minimized
 
 **Enterprise Forces**:
+
 - Many enterprises already use Jenkins
 - Familiarity reduces adoption friction
 - Extensive plugin ecosystem meets diverse needs
@@ -86,6 +96,7 @@ Fawkes requires a Continuous Integration and Continuous Delivery (CI/CD) platfor
 **We will use Jenkins with Kubernetes plugin as the CI/CD platform for Fawkes.**
 
 Specifically:
+
 - **Jenkins LTS** (Long-Term Support, latest stable)
 - **Kubernetes Plugin** for dynamic agent provisioning
 - **Configuration as Code (JCasC)** for declarative Jenkins setup
@@ -99,6 +110,7 @@ Specifically:
 1. **Industry Standard**: Jenkins is the most widely adopted CI/CD tool, with 20+ years of development, used by 70%+ of enterprises
 
 2. **Kubernetes Native**: Jenkins Kubernetes plugin provides:
+
    - Dynamic agent provisioning (pods created on-demand)
    - Isolated build environments (each build in separate pod)
    - Resource efficiency (agents destroyed after build)
@@ -106,6 +118,7 @@ Specifically:
    - Cost optimization (only pay for active builds)
 
 3. **Pipeline as Code**: Jenkinsfile DSL enables:
+
    - Version-controlled pipelines
    - Code review of pipeline changes
    - Reusable shared libraries
@@ -113,6 +126,7 @@ Specifically:
    - Mature, battle-tested
 
 4. **Massive Plugin Ecosystem**: 1,800+ plugins covering:
+
    - SCM: GitHub, GitLab, Bitbucket
    - Build tools: Maven, Gradle, npm, pip
    - Quality: SonarQube, Checkstyle, PMD
@@ -121,6 +135,7 @@ Specifically:
    - Notifications: Mattermost, email, Slack
 
 5. **Configuration as Code (JCasC)**:
+
    - Declarative YAML configuration
    - Version controlled in Git
    - Reproducible Jenkins setup
@@ -128,18 +143,21 @@ Specifically:
    - Easy disaster recovery
 
 6. **Proven at Scale**: Used by massive organizations:
+
    - Netflix (2,000+ builds/day)
    - CloudBees customers (enterprise scale)
    - Thousands of open source projects
    - Can handle 100+ concurrent builds easily
 
 7. **Shared Libraries**: Reusable pipeline code:
+
    - DRY principle for pipelines
    - Golden path templates
    - Consistent build patterns
    - Centralized updates (change once, apply everywhere)
 
 8. **Enterprise Features Available**:
+
    - RBAC and folder-based security
    - Audit logging
    - Blue Ocean UI (modern interface)
@@ -147,6 +165,7 @@ Specifically:
    - Extensive reporting
 
 9. **Strong Community**:
+
    - Active development (monthly releases)
    - Large user community
    - Extensive documentation
@@ -154,12 +173,14 @@ Specifically:
    - Commercial support available (CloudBees)
 
 10. **Backstage Integration**: Official Jenkins plugin shows:
+
     - Build status and history
     - Console logs
     - Test results
     - Direct links to Jenkins
 
 11. **Familiarity**: Most developers have used Jenkins:
+
     - Reduces learning curve
     - Easier contributor onboarding
     - Extensive knowledge base (Stack Overflow, blogs)
@@ -228,24 +249,28 @@ Specifically:
 ### Mitigation Strategies
 
 1. **UI Complexity**:
+
    - Use Blue Ocean for modern UI
    - Standardize on pipeline-as-code (minimize UI usage)
    - Create clear documentation and screenshots
    - Consider Backstage as primary interface (show status there)
 
 2. **Plugin Management**:
+
    - Use dependabot or similar for plugin updates
    - Test updates in staging before production
    - Limit plugin count to essential ones
    - Document which plugins are used and why
 
 3. **Groovy DSL Learning Curve**:
+
    - Provide Jenkinsfile templates for common scenarios
    - Create shared library with high-level abstractions
    - Include examples and comments in templates
    - Run workshops for developers
 
 4. **Security**:
+
    - Subscribe to Jenkins security advisories
    - Automate Jenkins updates (test first)
    - Use RBAC to limit permissions
@@ -253,6 +278,7 @@ Specifically:
    - Keep plugins updated
 
 5. **Configuration**:
+
    - Use JCasC for all configuration
    - Store configuration in Git
    - Use Infrastructure as Code for Jenkins deployment
@@ -269,6 +295,7 @@ Specifically:
 ### Alternative 1: GitHub Actions
 
 **Pros**:
+
 - Native GitHub integration (no webhooks)
 - YAML-based, simple syntax
 - Matrix builds for testing multiple versions
@@ -277,6 +304,7 @@ Specifically:
 - Modern, fast, cloud-native
 
 **Cons**:
+
 - **GitHub Lock-In**: Only works with GitHub
 - **Limited Self-Hosting**: Self-hosted runners less mature than Jenkins
 - **Cost**: Expensive for private repos at scale ($0.008/minute, adds up)
@@ -290,6 +318,7 @@ Specifically:
 ### Alternative 2: GitLab CI
 
 **Pros**:
+
 - Native GitLab integration
 - YAML-based pipelines
 - Built-in container registry
@@ -298,6 +327,7 @@ Specifically:
 - Free tier generous
 
 **Cons**:
+
 - **GitLab Required**: We use GitHub, not GitLab
 - **Migration Overhead**: Would need to migrate or mirror repos
 - **Less Flexible**: More opinionated than Jenkins
@@ -309,6 +339,7 @@ Specifically:
 ### Alternative 3: Tekton Pipelines
 
 **Pros**:
+
 - Kubernetes-native (CRDs)
 - Cloud-native, modern architecture
 - Pipeline-as-code (YAML)
@@ -317,6 +348,7 @@ Specifically:
 - True cloud-native approach
 
 **Cons**:
+
 - **Immature**: Newer project, less proven at scale
 - **Steeper Learning Curve**: CRDs and Tasks/Pipelines concepts unfamiliar
 - **No UI**: Requires separate UI (Tekton Dashboard basic)
@@ -330,6 +362,7 @@ Specifically:
 ### Alternative 4: CircleCI (SaaS)
 
 **Pros**:
+
 - Fast builds (optimized infrastructure)
 - Good UI and developer experience
 - Docker-first approach
@@ -338,6 +371,7 @@ Specifically:
 - Popular with startups
 
 **Cons**:
+
 - **SaaS Only**: No self-hosted option (CircleCI Server discontinued)
 - **Cost**: $15-60/user/month depending on tier (expensive at scale)
 - **Vendor Lock-In**: Proprietary platform
@@ -349,6 +383,7 @@ Specifically:
 ### Alternative 5: Drone CI
 
 **Pros**:
+
 - Open source and self-hosted
 - Container-native (Docker)
 - YAML-based pipelines
@@ -357,6 +392,7 @@ Specifically:
 - Good GitHub integration
 
 **Cons**:
+
 - **Smaller Community**: Much smaller than Jenkins
 - **Limited Plugins**: Fewer integrations than Jenkins
 - **Less Mature**: Newer, less battle-tested
@@ -369,6 +405,7 @@ Specifically:
 ### Alternative 6: Concourse CI
 
 **Pros**:
+
 - Pipeline-as-code (YAML)
 - Resource-based model (interesting approach)
 - Reproducible builds
@@ -376,6 +413,7 @@ Specifically:
 - Kubernetes support
 
 **Cons**:
+
 - **Steep Learning Curve**: Resource model unintuitive
 - **Small Community**: Very small compared to Jenkins
 - **Limited Plugins**: Minimal ecosystem
@@ -388,12 +426,14 @@ Specifically:
 ### Alternative 7: Spinnaker
 
 **Pros**:
+
 - Continuous delivery focus
 - Multi-cloud native
 - Advanced deployment strategies
 - Netflix-proven
 
 **Cons**:
+
 - **Not CI Tool**: Continuous delivery only, not continuous integration
 - **Very Complex**: Difficult to set up and maintain
 - **Resource Heavy**: 10+ microservices, high overhead
@@ -465,7 +505,7 @@ jenkins:
 # jenkins-casc.yaml
 jenkins:
   systemMessage: "Fawkes Platform CI/CD"
-  numExecutors: 0  # Use Kubernetes agents only
+  numExecutors: 0 # Use Kubernetes agents only
 
   securityRealm:
     github:
@@ -762,6 +802,7 @@ spec:
 ### Plugin List (Essential)
 
 **Core Plugins**:
+
 - Kubernetes Plugin (dynamic agents)
 - Pipeline Plugin (Jenkinsfile support)
 - Git Plugin (Git integration)
@@ -770,32 +811,38 @@ spec:
 - Configuration as Code Plugin (JCasC)
 
 **Quality & Security**:
+
 - SonarQube Scanner Plugin
 - Warnings Next Generation Plugin
 - JUnit Plugin
 - Code Coverage Plugin
 
 **Build Tools**:
+
 - Maven Integration Plugin
 - NodeJS Plugin
 - Python Plugin
 - Docker Plugin
 
 **Deployment**:
+
 - Kubernetes CLI Plugin
 - HTTP Request Plugin (ArgoCD API)
 
 **Notifications**:
+
 - Mattermost Plugin
 - Email Extension Plugin
 
 **UI**:
+
 - Blue Ocean Plugin (modern UI)
 - Dashboard View Plugin
 
 ### Monitoring & Observability
 
 **Prometheus Metrics** (via Jenkins Prometheus plugin):
+
 - jenkins_builds_total
 - jenkins_builds_duration_seconds
 - jenkins_queue_size
@@ -803,6 +850,7 @@ spec:
 - jenkins_job_success_rate
 
 **Grafana Dashboard**:
+
 - Build success/failure rates
 - Build duration trends (P50, P95, P99)
 - Queue size over time
@@ -810,6 +858,7 @@ spec:
 - Plugin health
 
 **Alerts**:
+
 - Build queue >10 for >15 minutes
 - Build failure rate >20% (rolling 24h)
 - Jenkins controller down >5 minutes
@@ -818,12 +867,14 @@ spec:
 ### Backup & Disaster Recovery
 
 **Backup Strategy**:
+
 - Jenkins configuration in Git (JCasC)
 - Persistent volume snapshots (daily)
 - Plugin list documented
 - Job configurations in Git (Jenkinsfile per repo)
 
 **Recovery**:
+
 1. Redeploy Jenkins from Helm + JCasC
 2. Restore persistent volume from snapshot (job history)
 3. Plugins auto-installed via JCasC
@@ -835,18 +886,21 @@ spec:
 ### Performance Optimization
 
 **Build Caching**:
+
 - Maven local repository cache (PV)
 - npm cache (PV)
 - Docker layer caching
 - Workspace caching for reuse
 
 **Agent Optimization**:
+
 - Right-size agent resources
 - Use pod templates with pre-pulled images
 - Implement build timeouts
 - Limit concurrent builds per agent
 
 **Controller Optimization**:
+
 - Increase heap size for large installations
 - Use separate build agents (don't build on controller)
 - Regular cleanup of old builds
@@ -855,6 +909,7 @@ spec:
 ## Monitoring This Decision
 
 We will revisit this ADR if:
+
 - Jenkins development significantly slows or stops
 - A cloud-native alternative (Tekton, Dagger) becomes significantly more mature
 - Operational burden (updates, plugins) exceeds benefits
@@ -880,11 +935,13 @@ We will revisit this ADR if:
 Most common question: "Why not just use GitHub Actions?"
 
 **GitHub Actions excellent for**:
+
 - GitHub-hosted open source projects
 - Simple CI workflows
 - GitHub-centric organizations
 
 **Jenkins better for Fawkes because**:
+
 - **Vendor neutral**: Works with any Git provider
 - **Self-hosted first**: True control, no SaaS lock-in
 - **More flexible**: Less opinionated, more customizable

@@ -51,12 +51,14 @@ annotations:
 ```
 
 This enables automatic tracking of:
+
 - Deployment Frequency
 - Lead Time for Changes
 - Change Failure Rate
 - Mean Time to Restore
 
 Metrics can be viewed in:
+
 - DevLake: https://devlake.fawkes.idp
 - Grafana: https://grafana.fawkes.idp/d/dora-metrics
 

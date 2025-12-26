@@ -312,9 +312,7 @@ def ensure_schema(client: weaviate.Client) -> None:
         sys.exit(1)
 
 
-def check_if_needs_reindex(
-    client: weaviate.Client, filepath: str, file_hash: str, force: bool = False
-) -> bool:
+def check_if_needs_reindex(client: weaviate.Client, filepath: str, file_hash: str, force: bool = False) -> bool:
     """Check if file needs re-indexing based on hash."""
     if force:
         return True
@@ -322,13 +320,14 @@ def check_if_needs_reindex(
     try:
         # Query for existing document with same filepath
         result = (
-            client.query
-            .get(SCHEMA_NAME, ["fileHash", "filepath"])
-            .with_where({
-                "path": ["filepath"],
-                "operator": "Equal",
-                "valueString": filepath,
-            })
+            client.query.get(SCHEMA_NAME, ["fileHash", "filepath"])
+            .with_where(
+                {
+                    "path": ["filepath"],
+                    "operator": "Equal",
+                    "valueString": filepath,
+                }
+            )
             .with_limit(1)
             .do()
         )
@@ -352,13 +351,14 @@ def delete_existing_chunks(client: weaviate.Client, filepath: str) -> int:
     try:
         # Get all UUIDs for this filepath
         result = (
-            client.query
-            .get(SCHEMA_NAME, ["filepath"])
-            .with_where({
-                "path": ["filepath"],
-                "operator": "Equal",
-                "valueString": filepath,
-            })
+            client.query.get(SCHEMA_NAME, ["filepath"])
+            .with_where(
+                {
+                    "path": ["filepath"],
+                    "operator": "Equal",
+                    "valueString": filepath,
+                }
+            )
             .with_additional(["id"])
             .with_limit(100)  # Assume max 100 chunks per file
             .do()
@@ -472,9 +472,7 @@ def index_file(
 
 def main():
     """Main execution function."""
-    parser = argparse.ArgumentParser(
-        description="Index Fawkes internal documentation into Weaviate"
-    )
+    parser = argparse.ArgumentParser(description="Index Fawkes internal documentation into Weaviate")
     parser.add_argument(
         "--weaviate-url",
         default=DEFAULT_WEAVIATE_URL,
@@ -531,9 +529,7 @@ def main():
     for i, filepath in enumerate(files_to_index, 1):
         print(f"[{i}/{len(files_to_index)}] Processing: {filepath.name}")
 
-        success, chunks = index_file(
-            client, filepath, args.base_path, args.dry_run, args.force_reindex
-        )
+        success, chunks = index_file(client, filepath, args.base_path, args.dry_run, args.force_reindex)
 
         if success:
             if chunks > 0:

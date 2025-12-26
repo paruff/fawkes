@@ -5,6 +5,7 @@
 ### ✅ All Acceptance Criteria Met
 
 #### 1. SonarQube deployed via ArgoCD ✅
+
 - **Location:** `platform/apps/sonarqube-application.yaml`
 - **Configuration:**
   - Helm chart: sonarqube/sonarqube v2025.1.0
@@ -20,6 +21,7 @@
   - sonar-yaml-plugin (IaC analysis)
 
 #### 2. PostgreSQL backend configured ✅
+
 - **Operator:** `platform/apps/postgresql/cloudnativepg-operator-application.yaml`
 - **Cluster:** `platform/apps/postgresql/db-sonarqube-cluster.yaml`
   - 3 instances (1 primary + 2 standby)
@@ -32,6 +34,7 @@
 - **Connection:** JDBC URL via external PostgreSQL (disabled embedded DB)
 
 #### 3. Quality profiles created ✅
+
 - **Documentation:** `platform/apps/sonarqube/quality-profiles.md`
 - **Profiles Defined:**
   - **Fawkes Java** - Spring Boot optimized rules
@@ -47,6 +50,7 @@
 - **Export/Import:** Backup procedures documented
 
 #### 4. SonarQube UI accessible ✅
+
 - **Ingress:** http://sonarqube.127.0.0.1.nip.io (local)
 - **TLS:** Configured via NGINX ingress annotations
 - **Health Checks:** /api/system/health endpoint
@@ -64,6 +68,7 @@
 All three golden path templates already integrated with SonarQube:
 
 #### Java Template Integration
+
 - **File:** `templates/java-service/skeleton/Jenkinsfile`
 - **Configuration:**
   - sonarProject parameter set to service name
@@ -72,6 +77,7 @@ All three golden path templates already integrated with SonarQube:
   - Quality Gate enforcement
 
 #### Python Template Integration
+
 - **File:** `templates/python-service/skeleton/Jenkinsfile`
 - **Configuration:**
   - sonarProject parameter set to service name
@@ -80,6 +86,7 @@ All three golden path templates already integrated with SonarQube:
   - Branch-aware analysis
 
 #### Node.js Template Integration
+
 - **File:** `templates/nodejs-service/skeleton/Jenkinsfile`
 - **Configuration:**
   - sonarProject parameter set to service name
@@ -92,7 +99,9 @@ All three golden path templates already integrated with SonarQube:
 **File:** `jenkins-shared-library/vars/goldenPathPipeline.groovy`
 
 **SonarQube Integration Stages:**
+
 1. **SonarQube Analysis Stage** (lines 150-167):
+
    - Executes within `withSonarQubeEnv('SonarQube')` context
    - Language-specific scanner execution
    - Branch and commit tracking
@@ -106,12 +115,14 @@ All three golden path templates already integrated with SonarQube:
    - Posts results to Mattermost
 
 **Supported Languages:**
+
 - Java (Maven sonar:sonar)
 - Python (sonar-scanner CLI)
 - Node.js (npx sonar-scanner)
 - Go (sonar-scanner CLI)
 
 **Scanner Functions** (lines 509-565):
+
 - `runSonarScan()` - Language-aware scanner execution
 - Branch name detection
 - Commit SHA tracking
@@ -130,6 +141,7 @@ All three golden path templates already integrated with SonarQube:
 | New Maintainability Rating | Is Worse Than | A | FAIL |
 
 **Pipeline Enforcement:**
+
 - Main branch commits MUST pass Quality Gate
 - PR builds report status (informational)
 - Pipeline fails immediately on Quality Gate failure
@@ -139,6 +151,7 @@ All three golden path templates already integrated with SonarQube:
 ### 🔒 Security Configuration
 
 **Pod Security:**
+
 - Non-root user (UID 1000, GID 1000)
 - fsGroup: 1000
 - Dropped capabilities (ALL)
@@ -146,12 +159,14 @@ All three golden path templates already integrated with SonarQube:
 - No privilege escalation
 
 **Network Security:**
+
 - ClusterIP service (internal only)
 - External access via Ingress with TLS
 - PostgreSQL connection over internal network
 - Security tokens for CI/CD integration
 
 **Secrets Management:**
+
 - Database credentials: Kubernetes secrets (dev/local)
 - Admin credentials: Manual rotation required
 - Scanner tokens: Jenkins credentials store
@@ -160,6 +175,7 @@ All three golden path templates already integrated with SonarQube:
 ### 🔗 Integration Points
 
 **Configured:**
+
 - ✅ Jenkins CI/CD (shared library integration)
 - ✅ PostgreSQL (CloudNativePG cluster)
 - ✅ GitHub (SCM plugin for repository linking)
@@ -167,6 +183,7 @@ All three golden path templates already integrated with SonarQube:
 - ✅ NGINX Ingress (external access with TLS)
 
 **Ready for Configuration:**
+
 - 🟡 OAuth/SSO (documentation provided)
 - 🟡 Webhooks (for external integrations)
 - 🟡 PR Decoration (requires GitHub App setup)
@@ -175,6 +192,7 @@ All three golden path templates already integrated with SonarQube:
 ### 📊 Observability
 
 **Metrics:**
+
 - PodMonitor enabled for Prometheus scraping
 - Metrics endpoint: /api/monitoring/metrics
 - Scrape interval: 30 seconds
@@ -184,11 +202,13 @@ All three golden path templates already integrated with SonarQube:
   - sonarqube_database_connections
 
 **Health Checks:**
+
 - Liveness probe: /api/system/liveness (90s initial, 30s period)
 - Readiness probe: /api/system/health (90s initial, 30s period)
 - Failure threshold: 6
 
 **Logging:**
+
 - SonarQube logs to stdout/stderr
 - PostgreSQL logs via CloudNativePG operator
 - Ready for Fluent Bit collection
@@ -197,6 +217,7 @@ All three golden path templates already integrated with SonarQube:
 ### 📚 Documentation Created
 
 1. **Quality Profiles Guide** (`platform/apps/sonarqube/quality-profiles.md`)
+
    - Detailed profile definitions for Java, Python, JavaScript
    - Setup instructions via UI and API
    - Export/import procedures
@@ -204,6 +225,7 @@ All three golden path templates already integrated with SonarQube:
    - 9,602 characters
 
 2. **Deployment Guide** (`docs/deployment/sonarqube-deployment.md`)
+
    - Complete step-by-step deployment instructions
    - Architecture diagrams
    - Configuration details
@@ -222,7 +244,9 @@ All three golden path templates already integrated with SonarQube:
 **BDD Tests:** `tests/bdd/features/sonarqube-integration.feature`
 
 5 test scenarios covering:
+
 1. **Service Deployment & Persistence**
+
    - PostgreSQL provisioning
    - SonarQube Helm deployment
    - Service startup
@@ -230,6 +254,7 @@ All three golden path templates already integrated with SonarQube:
    - Ingress accessibility
 
 2. **Jenkins Integration (Golden Path)**
+
    - Jenkins Shared Library update verification
    - Security Scan stage execution
    - SonarQube Scanner CLI execution
@@ -237,11 +262,13 @@ All three golden path templates already integrated with SonarQube:
    - Quality Gate status retrieval
 
 3. **Quality Gate Enforcement (Success)**
+
    - Code commit meets criteria
    - Pipeline status check
    - Successful progression to Build Image stage
 
 4. **Quality Gate Enforcement (Failure)**
+
    - Code commit with critical vulnerability
    - Pipeline status check
    - Immediate pipeline failure
@@ -254,11 +281,13 @@ All three golden path templates already integrated with SonarQube:
    - SSO/OAuth access
 
 **Test Implementation:** `tests/bdd/step_definitions/test_sonarqube.py`
+
 - All step definitions implemented
 - Context-based test fixtures
 - Assertion-based validations
 
 **Run Tests:**
+
 ```bash
 # Run all SonarQube tests
 behave tests/bdd/features/sonarqube-integration.feature
@@ -273,6 +302,7 @@ behave tests/bdd/features/sonarqube-integration.feature --tags=@quality-gate
 ### 🎯 Definition of Done Checklist
 
 - [x] **Code implemented and committed**
+
   - SonarQube ArgoCD Application manifest
   - PostgreSQL cluster and credentials
   - Jenkins Shared Library integration
@@ -280,12 +310,14 @@ behave tests/bdd/features/sonarqube-integration.feature --tags=@quality-gate
   - Quality profile documentation
 
 - [x] **Tests written and passing**
+
   - BDD feature file with 5 scenarios
   - Step definitions implemented
   - All scenarios executable
   - Tests validate acceptance criteria
 
 - [x] **Documentation updated**
+
   - Quality profiles guide created
   - Deployment guide created
   - README with quick start
@@ -300,14 +332,17 @@ behave tests/bdd/features/sonarqube-integration.feature --tags=@quality-gate
 ### 📦 Files Changed/Created
 
 **ArgoCD Applications:**
+
 - `platform/apps/sonarqube-application.yaml` (already exists)
 
 **PostgreSQL:**
+
 - `platform/apps/postgresql/db-sonarqube-cluster.yaml` (already exists)
 - `platform/apps/postgresql/db-sonarqube-credentials.yaml` (already exists)
 - Referenced in `platform/apps/postgresql/kustomization.yaml` (already exists)
 
 **Documentation:**
+
 - ✨ `platform/apps/sonarqube/quality-profiles.md` (NEW)
 - ✨ `docs/deployment/sonarqube-deployment.md` (NEW)
 - `platform/apps/sonarqube/README.md` (already exists)
@@ -315,14 +350,17 @@ behave tests/bdd/features/sonarqube-integration.feature --tags=@quality-gate
 - `docs/adr/ADR-014 sonarqube quality gates.md` (already exists)
 
 **Jenkins Integration:**
+
 - `jenkins-shared-library/vars/goldenPathPipeline.groovy` (already exists)
 
 **Templates:**
+
 - `templates/java-service/skeleton/Jenkinsfile` (already exists)
 - `templates/python-service/skeleton/Jenkinsfile` (already exists)
 - `templates/nodejs-service/skeleton/Jenkinsfile` (already exists)
 
 **Tests:**
+
 - `tests/bdd/features/sonarqube-integration.feature` (already exists)
 - `tests/bdd/step_definitions/test_sonarqube.py` (already exists)
 
@@ -354,6 +392,7 @@ echo "Password: admin (change immediately!)"
 #### Production Deployment
 
 See `docs/deployment/sonarqube-deployment.md` for complete instructions including:
+
 - Security hardening
 - External Secrets Operator integration
 - Backup configuration
@@ -363,27 +402,32 @@ See `docs/deployment/sonarqube-deployment.md` for complete instructions includin
 ### 🎓 Post-Deployment Tasks
 
 1. **Change Admin Password:**
+
    - Login to SonarQube UI
    - Navigate to My Account → Security
    - Change password immediately
 
 2. **Generate Scanner Token:**
+
    - My Account → Security → Generate Tokens
    - Name: "jenkins-scanner"
    - Type: "Global Analysis Token"
    - Save token to Jenkins credentials
 
 3. **Create Quality Profiles:**
+
    - Follow `platform/apps/sonarqube/quality-profiles.md`
    - Create Fawkes profiles for Java, Python, JavaScript
    - Set as default for each language
 
 4. **Configure Jenkins:**
+
    - Add SonarQube token to Jenkins credentials
    - Verify Jenkins SonarQube server configuration
    - Test with a sample project
 
 5. **Validate Integration:**
+
    - Create a test service from golden path template
    - Trigger Jenkins build
    - Verify SonarQube analysis executes
@@ -397,6 +441,7 @@ See `docs/deployment/sonarqube-deployment.md` for complete instructions includin
 ### 🔗 Related Issues
 
 - **Depends on:**
+
   - #1 - K8s cluster deployment
   - #3 - ArgoCD setup
   - #7 - PostgreSQL operator
@@ -409,37 +454,41 @@ See `docs/deployment/sonarqube-deployment.md` for complete instructions includin
 ### 📈 Success Metrics
 
 **Technical Metrics:**
+
 - ✅ Deployment time: < 5 minutes (after PostgreSQL ready)
 - ✅ Analysis time: < 5 minutes per project (target)
 - ✅ UI response time: < 2 seconds
 - ✅ Resource utilization: Within allocated limits
 
 **Quality Metrics:**
+
 - Quality Gate pass rate target: > 95%
 - Security vulnerabilities blocked: 100%
 - Code coverage minimum: 80%
 - Technical debt ratio: < 5%
 
 **Adoption Metrics:**
+
 - All golden path templates integrated: 3/3 ✅
 - Projects analyzed: TBD (post-deployment)
 - Developer satisfaction: TBD (gather feedback)
 
 ### 🎯 Acceptance Criteria Summary
 
-| Criterion | Status | Evidence |
-|-----------|--------|----------|
-| SonarQube deployed via ArgoCD | ✅ | `sonarqube-application.yaml` |
-| PostgreSQL backend configured | ✅ | `db-sonarqube-cluster.yaml`, `db-sonarqube-credentials.yaml` |
-| Quality profiles created | ✅ | `quality-profiles.md` documentation |
-| SonarQube UI accessible | ✅ | Ingress configured with TLS |
-| Integrated into golden paths | ✅ | All 3 templates have SonarQube config |
+| Criterion                     | Status | Evidence                                                     |
+| ----------------------------- | ------ | ------------------------------------------------------------ |
+| SonarQube deployed via ArgoCD | ✅     | `sonarqube-application.yaml`                                 |
+| PostgreSQL backend configured | ✅     | `db-sonarqube-cluster.yaml`, `db-sonarqube-credentials.yaml` |
+| Quality profiles created      | ✅     | `quality-profiles.md` documentation                          |
+| SonarQube UI accessible       | ✅     | Ingress configured with TLS                                  |
+| Integrated into golden paths  | ✅     | All 3 templates have SonarQube config                        |
 
 ---
 
 ## Summary
 
 SonarQube has been successfully configured for deployment on the Fawkes platform with:
+
 - ✅ Complete ArgoCD Application definition
 - ✅ High-availability PostgreSQL backend
 - ✅ Comprehensive Jenkins CI/CD integration
@@ -451,6 +500,7 @@ SonarQube has been successfully configured for deployment on the Fawkes platform
 **Status**: ✅ Ready for Deployment
 
 **Next Steps**:
+
 1. Deploy to cluster via ArgoCD
 2. Complete initial configuration (passwords, tokens)
 3. Create and activate quality profiles

@@ -39,6 +39,7 @@ pip install -r requirements.txt
 ```
 
 For development:
+
 ```bash
 pip install -r requirements-dev.txt
 ```
@@ -65,6 +66,7 @@ python scripts/index-docs.py --dry-run
 ```
 
 The indexing script will:
+
 1. Scan `docs/`, `platform/`, `infra/` directories
 2. Extract markdown, YAML, and code files
 3. Chunk documents into 512-token segments
@@ -127,6 +129,7 @@ python scripts/test-indexing.py
 ```
 
 The test script will:
+
 1. Connect to Weaviate
 2. Create a test schema for documents
 3. Index sample documents (ADRs, README, docs)
@@ -144,6 +147,7 @@ kubectl port-forward -n fawkes svc/weaviate 8080:80
 ### GraphQL Endpoint
 
 Access the GraphQL API at:
+
 - Local: `http://localhost:8080/v1/graphql`
 - Kubernetes: `http://weaviate.fawkes.svc:80/v1/graphql`
 
@@ -187,12 +191,7 @@ result = (
 ```graphql
 {
   Get {
-    FawkesDocument(
-      nearText: {
-        concepts: ["kubernetes deployment"]
-      }
-      limit: 5
-    ) {
+    FawkesDocument(nearText: { concepts: ["kubernetes deployment"] }, limit: 5) {
       title
       filepath
       content
@@ -212,11 +211,13 @@ result = (
 If you can't connect to Weaviate:
 
 1. Check pod status:
+
    ```bash
    kubectl get pods -n fawkes -l app.kubernetes.io/name=weaviate
    ```
 
 2. Check pod logs:
+
    ```bash
    kubectl logs -n fawkes -l app.kubernetes.io/name=weaviate
    ```
@@ -231,11 +232,13 @@ If you can't connect to Weaviate:
 If indexing fails:
 
 1. Ensure Weaviate is ready:
+
    ```bash
    curl http://localhost:8080/v1/.well-known/ready
    ```
 
 2. Check transformers module:
+
    ```bash
    kubectl get pods -n fawkes -l app=weaviate-t2v-transformers
    ```
@@ -252,15 +255,17 @@ If indexing fails:
 Query endpoint for context retrieval.
 
 **Request Body:**
+
 ```json
 {
-  "query": "string",           // Search query (required)
-  "top_k": 5,                  // Number of results (optional, default: 5)
-  "threshold": 0.7             // Min relevance score (optional, default: 0.7)
+  "query": "string", // Search query (required)
+  "top_k": 5, // Number of results (optional, default: 5)
+  "threshold": 0.7 // Min relevance score (optional, default: 0.7)
 }
 ```
 
 **Response:**
+
 ```json
 {
   "query": "string",
@@ -279,6 +284,7 @@ Query endpoint for context retrieval.
 ```
 
 **Performance:**
+
 - Target response time: <500ms
 - Minimum relevance score: >0.7
 
@@ -287,6 +293,7 @@ Query endpoint for context retrieval.
 Health check endpoint.
 
 **Response:**
+
 ```json
 {
   "status": "UP",

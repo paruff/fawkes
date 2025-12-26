@@ -26,13 +26,13 @@ All platform components are deployed using GitOps with ArgoCD. The general patte
 
 ArgoCD sync waves ensure proper ordering:
 
-| Wave | Components | Purpose |
-|------|------------|---------|
-| -10  | Networking | Ingress controller, cert-manager |
-| -5   | Operators | CloudNativePG, External Secrets |
-| -4   | Databases | PostgreSQL clusters |
-| 0    | Core Apps | Jenkins, SonarQube, Harbor |
-| 5    | Portal | Backstage, Grafana |
+| Wave | Components | Purpose                             |
+| ---- | ---------- | ----------------------------------- |
+| -10  | Networking | Ingress controller, cert-manager    |
+| -5   | Operators  | CloudNativePG, External Secrets     |
+| -4   | Databases  | PostgreSQL clusters                 |
+| 0    | Core Apps  | Jenkins, SonarQube, Harbor          |
+| 5    | Portal     | Backstage, Grafana                  |
 | 10   | Additional | Mattermost, Focalboard, Eclipse Che |
 
 ## Security Note
@@ -40,6 +40,7 @@ ArgoCD sync waves ensure proper ordering:
 **Never commit real secrets to Git!**
 
 For production deployments:
+
 - Use External Secrets Operator with Vault
 - Use sealed secrets or SOPS
 - Use cloud-native secret management (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager)
@@ -49,5 +50,6 @@ See [docs/how-to/manage-secrets.md](../how-to/manage-secrets.md) for details.
 ## Support
 
 For issues or questions:
+
 - GitHub Issues: https://github.com/paruff/fawkes/issues
 - Documentation: https://github.com/paruff/fawkes/tree/main/docs

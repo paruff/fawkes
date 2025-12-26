@@ -7,6 +7,7 @@
 **Duration**: 60 minutes
 **Difficulty**: Intermediate
 **Prerequisites**:
+
 - Module 5 & 6 complete
 - Understanding of CI/CD pipelines
 - Basic security awareness
@@ -27,6 +28,7 @@ By the end of this module, you will:
 7. ✅ Integrate security scanning into Golden Path pipelines
 
 **DORA Capabilities Addressed**:
+
 - ✓ CD6: Shift Left on Security
 - ✓ CD8: Test Data Management
 - ✓ Security & Compliance Automation
@@ -46,6 +48,7 @@ Develop → Build → Test → Deploy → [SECURITY SCAN] → Production
 ```
 
 **Problems**:
+
 - Security as afterthought
 - Issues found late, expensive to fix
 - Security team bottleneck
@@ -61,6 +64,7 @@ Develop → Build → Test → Deploy → [SECURITY SCAN] → Production
 ```
 
 **Benefits**:
+
 - ✅ Catch issues early (cheaper to fix)
 - ✅ Developer ownership of security
 - ✅ Automated enforcement
@@ -69,12 +73,12 @@ Develop → Build → Test → Deploy → [SECURITY SCAN] → Production
 
 ### Cost of Finding Bugs by Stage
 
-| Stage | Cost to Fix | Time to Fix | Impact |
-|-------|-------------|-------------|--------|
-| **IDE/Dev** | $1 | Minutes | None |
-| **CI/CD** | $10 | Hours | Blocks build |
-| **QA/Test** | $100 | Days | Delays release |
-| **Production** | $1,000+ | Weeks | Customer impact, reputation damage |
+| Stage          | Cost to Fix | Time to Fix | Impact                             |
+| -------------- | ----------- | ----------- | ---------------------------------- |
+| **IDE/Dev**    | $1          | Minutes     | None                               |
+| **CI/CD**      | $10         | Hours       | Blocks build                       |
+| **QA/Test**    | $100        | Days        | Delays release                     |
+| **Production** | $1,000+     | Weeks       | Customer impact, reputation damage |
 
 **10x-100x cheaper to catch early!**
 
@@ -87,6 +91,7 @@ Develop → Build → Test → Deploy → [SECURITY SCAN] → Production
 **Static Analysis**: Analyze source code without executing it
 
 **Detects**:
+
 - Security vulnerabilities (SQL injection, XSS, etc.)
 - Code quality issues (dead code, duplicates)
 - Code smells (complex methods, poor structure)
@@ -98,6 +103,7 @@ Develop → Build → Test → Deploy → [SECURITY SCAN] → Production
 SonarQube is the SAST tool integrated into Fawkes platform.
 
 **Key Features**:
+
 - 30+ language support
 - 5,000+ rules
 - Quality gates
@@ -106,6 +112,7 @@ SonarQube is the SAST tool integrated into Fawkes platform.
 - Pull request decoration
 
 **Architecture**:
+
 ```
 ┌────────────────────────────────────────┐
 │         Jenkins Pipeline               │
@@ -303,48 +310,56 @@ stage('Dependency Scan') {
 ### SonarQube Metrics Explained
 
 **1. Bugs** 🐛
+
 - Code that is demonstrably wrong
 - Example: Null pointer dereference
 - **Standard**: 0 bugs
 
 **2. Vulnerabilities** 🔓
+
 - Security-related issues
 - Example: SQL injection risk
 - **Standard**: 0 vulnerabilities
 
 **3. Code Smells** 👃
+
 - Maintainability issues
 - Example: Method too complex
 - **Standard**: < 5% code smells
 
 **4. Security Hotspots** 🔥
+
 - Security-sensitive code requiring review
 - Example: Cryptographic operations
 - **Standard**: 100% reviewed
 
 **5. Coverage** 📊
+
 - % of code covered by tests
 - **Standard**: > 80%
 
 **6. Duplications** ©️
+
 - Duplicate code blocks
 - **Standard**: < 3%
 
 **7. Technical Debt** 💸
+
 - Time to fix all issues
 - **Standard**: < 5% debt ratio
 
 ### Trivy Severity Levels
 
-| Severity | CVSS Score | Action Required |
-|----------|------------|-----------------|
-| **CRITICAL** | 9.0-10.0 | Block deployment immediately |
-| **HIGH** | 7.0-8.9 | Fix within 7 days |
-| **MEDIUM** | 4.0-6.9 | Fix within 30 days |
-| **LOW** | 0.1-3.9 | Fix when convenient |
-| **UNKNOWN** | N/A | Investigate |
+| Severity     | CVSS Score | Action Required              |
+| ------------ | ---------- | ---------------------------- |
+| **CRITICAL** | 9.0-10.0   | Block deployment immediately |
+| **HIGH**     | 7.0-8.9    | Fix within 7 days            |
+| **MEDIUM**   | 4.0-6.9    | Fix within 30 days           |
+| **LOW**      | 0.1-3.9    | Fix when convenient          |
+| **UNKNOWN**  | N/A        | Investigate                  |
 
 **Trivy Output Example**:
+
 ```
 myapp:1.0 (alpine 3.18.0)
 ═══════════════════════════════════════
@@ -367,12 +382,14 @@ Total: 2 (HIGH: 1, CRITICAL: 1)
 > **"Quality gates should prevent bad code from progressing, not punish developers"**
 
 **Good Quality Gates**:
+
 - ✅ Focus on new code (not legacy)
 - ✅ Achievable standards
 - ✅ Fast feedback (<5 min)
 - ✅ Clear remediation steps
 
 **Bad Quality Gates**:
+
 - ❌ Unrealistic standards (100% coverage)
 - ❌ Block on legacy debt
 - ❌ Slow feedback (>30 min)
@@ -381,6 +398,7 @@ Total: 2 (HIGH: 1, CRITICAL: 1)
 ### Recommended Quality Gates by Stage
 
 **Development (IDE/PR)**:
+
 ```yaml
 gates:
   - New Bugs: 0
@@ -390,6 +408,7 @@ gates:
 ```
 
 **CI/CD (Main Branch)**:
+
 ```yaml
 gates:
   - Overall Bugs: < 10
@@ -400,4 +419,7 @@ gates:
 ```
 
 **Production (Release)**:
+
 ```yaml
+
+```

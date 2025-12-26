@@ -7,6 +7,7 @@
 **Duration**: 60 minutes
 **Difficulty**: Intermediate
 **Prerequisites**:
+
 - Modules 5, 6, 7 complete
 - Understanding of Docker and containers
 - Familiarity with versioning concepts
@@ -27,6 +28,7 @@ By the end of this module, you will:
 7. ✅ Optimize storage costs and performance
 
 **DORA Capabilities Addressed**:
+
 - ✓ CD1: Version control for production artifacts
 - ✓ CD2: Automate deployment process
 - ✓ Artifact Traceability
@@ -38,6 +40,7 @@ By the end of this module, you will:
 ### The Problem: Ad-Hoc Artifact Storage
 
 **Without proper artifact management**:
+
 ```
 Team A: Stores Docker images on local machines
 Team B: Uses random Docker Hub accounts
@@ -70,6 +73,7 @@ Result:
 ```
 
 **Benefits**:
+
 - ✅ Single source of truth
 - ✅ Immutable artifacts
 - ✅ Complete audit trail
@@ -87,6 +91,7 @@ Result:
 Harbor is an open-source container registry that secures artifacts with policies and role-based access control.
 
 **Key Features**:
+
 - 🐳 Docker/OCI image storage
 - 🔒 Integrated security scanning (Trivy)
 - 📊 Vulnerability management
@@ -258,11 +263,13 @@ def call(Map config = [:]) {
 Access Harbor: `https://harbor.fawkes.internal`
 
 **Navigate to your image**:
+
 1. Projects → Your Project
 2. Repositories → Your Image
 3. Click on tag (e.g., `123-abc1234`)
 
 **View Details**:
+
 - 📋 Vulnerabilities scan results
 - 🏷️ Labels and metadata
 - 📊 Layer information
@@ -286,6 +293,7 @@ v1.2.3
 ```
 
 **Examples**:
+
 - `v1.0.0` → Initial release
 - `v1.0.1` → Bug fix
 - `v1.1.0` → New feature added
@@ -500,6 +508,7 @@ stage('Approve Production Deploy') {
 ### Why Retention Policies Matter
 
 **Without retention**:
+
 ```
 Day 1:   10 images  → 1 GB
 Day 30:  300 images → 30 GB
@@ -508,6 +517,7 @@ Day 365: 3650 images → 365 GB 💸💸💸
 ```
 
 **With retention**:
+
 ```
 Day 1:   10 images → 1 GB
 Day 365: 100 images → 10 GB ✅
@@ -518,13 +528,14 @@ Day 365: 100 images → 10 GB ✅
 Configure in Harbor UI or via API:
 
 **Example Policy**:
+
 ```yaml
 retention_policy:
-  - scope: "**"  # All repositories
+  - scope: "**" # All repositories
     rules:
       # Keep production images indefinitely
       - tag: "production"
-        retain: -1  # Forever
+        retain: -1 # Forever
 
       # Keep staging images for 30 days
       - tag: "staging"
@@ -609,6 +620,7 @@ stage('Configure Retention') {
 ### Why Sign Artifacts?
 
 **Without signing**:
+
 ```
 ❌ Can't verify artifact authenticity
 ❌ Don't know who published it
@@ -617,6 +629,7 @@ stage('Configure Retention') {
 ```
 
 **With signing**:
+
 ```
 ✅ Cryptographically verify origin
 ✅ Detect any modifications
@@ -627,6 +640,7 @@ stage('Configure Retention') {
 ### Signing with Cosign
 
 **Install Cosign**:
+
 ```bash
 # In pipeline
 curl -sSL https://github.com/sigstore/cosign/releases/download/v2.0.0/cosign-linux-amd64 \
@@ -635,6 +649,7 @@ chmod +x /usr/local/bin/cosign
 ```
 
 **Generate Key Pair** (one-time setup):
+
 ```bash
 cosign generate-key-pair
 # Creates: cosign.key (private) and cosign.pub (public)
@@ -642,6 +657,7 @@ cosign generate-key-pair
 ```
 
 **Sign Image in Pipeline**:
+
 ```groovy
 stage('Sign Image') {
     steps {
@@ -663,6 +679,7 @@ stage('Sign Image') {
 ```
 
 **Verify Signature**:
+
 ```bash
 # In deployment pipeline
 cosign verify \
@@ -683,21 +700,21 @@ metadata:
 spec:
   validationFailureAction: enforce
   rules:
-  - name: verify-signature
-    match:
-      resources:
-        kinds:
-        - Pod
-    verifyImages:
-    - imageReferences:
-      - "harbor.fawkes.internal/*"
-      attestors:
-      - entries:
-        - keys:
-            publicKeys: |-
-              -----BEGIN PUBLIC KEY-----
-              [Your Cosign Public Key]
-              -----END PUBLIC KEY-----
+    - name: verify-signature
+      match:
+        resources:
+          kinds:
+            - Pod
+      verifyImages:
+        - imageReferences:
+            - "harbor.fawkes.internal/*"
+          attestors:
+            - entries:
+                - keys:
+                    publicKeys: |-
+                      -----BEGIN PUBLIC KEY-----
+                      [Your Cosign Public Key]
+                      -----END PUBLIC KEY-----
 ```
 
 ---
@@ -735,31 +752,39 @@ time() - artifact_push_timestamp_seconds
     "panels": [
       {
         "title": "Daily Artifact Publishes",
-        "targets": [{
-          "expr": "sum(rate(artifacts_published_total[1d]))"
-        }],
+        "targets": [
+          {
+            "expr": "sum(rate(artifacts_published_total[1d]))"
+          }
+        ],
         "type": "graph"
       },
       {
         "title": "Storage Usage by Project",
-        "targets": [{
-          "expr": "sum(storage_used_bytes) by (project) / 1024/1024/1024"
-        }],
+        "targets": [
+          {
+            "expr": "sum(storage_used_bytes) by (project) / 1024/1024/1024"
+          }
+        ],
         "type": "piechart",
         "unit": "GB"
       },
       {
         "title": "Most Pulled Images",
-        "targets": [{
-          "expr": "topk(10, sum(rate(artifact_pulls_total[7d])) by (repository))"
-        }],
+        "targets": [
+          {
+            "expr": "topk(10, sum(rate(artifact_pulls_total[7d])) by (repository))"
+          }
+        ],
         "type": "table"
       },
       {
         "title": "Vulnerabilities by Severity",
-        "targets": [{
-          "expr": "sum(vulnerabilities_total) by (severity)"
-        }],
+        "targets": [
+          {
+            "expr": "sum(vulnerabilities_total) by (severity)"
+          }
+        ],
         "type": "bargauge"
       }
     ]
@@ -805,6 +830,7 @@ groups:
 **Objective**: Implement full artifact management lifecycle
 
 **Requirements**:
+
 1. Build and tag Docker image with multiple tags
 2. Push to Harbor with metadata labels
 3. Trigger and verify Harbor security scan
@@ -880,6 +906,7 @@ spec:
 ```
 
 **Validation Criteria**:
+
 - [ ] Image built and tagged correctly
 - [ ] All tags pushed to Harbor
 - [ ] Harbor scan completed successfully
@@ -896,42 +923,49 @@ spec:
 ### Quiz Questions
 
 1. **What is the purpose of an artifact registry?**
+
    - [ ] Store source code
    - [x] Store and manage build artifacts (images, packages)
    - [ ] Run containers
    - [ ] Deploy applications
 
 2. **What is semantic versioning format?**
+
    - [ ] BUILD.DATE.TIME
    - [x] MAJOR.MINOR.PATCH
    - [ ] YEAR.MONTH.DAY
    - [ ] VERSION.RELEASE.BUILD
 
 3. **Why should you use the same artifact across environments?**
+
    - [ ] Save disk space
    - [ ] Faster builds
    - [x] Ensure consistency and avoid "works on my machine"
    - [ ] Easier to debug
 
 4. **What does artifact signing provide?**
+
    - [ ] Faster downloads
    - [ ] Smaller file size
    - [x] Verification of authenticity and integrity
    - [ ] Automatic deployment
 
 5. **Why implement retention policies?**
+
    - [x] Control storage costs and remove unused artifacts
    - [ ] Make builds faster
    - [ ] Improve security
    - [ ] All of the above
 
 6. **What is artifact promotion?**
+
    - [ ] Marketing the artifact
    - [x] Moving same artifact through environments without rebuilding
    - [ ] Upgrading to newer version
    - [ ] Deleting old versions
 
 7. **What tool does Fawkes use for container registry?**
+
    - [ ] Docker Hub
    - [ ] Artifactory
    - [x] Harbor
@@ -976,6 +1010,7 @@ spec:
 ### Real-World Impact
 
 "After implementing proper artifact management:
+
 - **Build reproducibility**: 60% → 100%
 - **Deployment confidence**: 70% → 95%
 - **Storage costs**: $5,000/month → $800/month
@@ -983,15 +1018,17 @@ spec:
 - **Supply chain security**: Significantly improved with signing
 
 We can now trace every production artifact back to exact source code commit."
-- *DevOps Team, E-Commerce Platform*
+
+- _DevOps Team, E-Commerce Platform_
 
 ---
 
-## 🎉 Yellow Belt Complete!
+## 🎉 Yellow Belt Complete
 
-### 🏆 Congratulations!
+### 🏆 Congratulations
 
 You've completed all four Yellow Belt modules:
+
 - ✅ Module 5: CI Fundamentals
 - ✅ Module 6: Golden Path Pipelines
 - ✅ Module 7: Security Scanning & Quality Gates
@@ -1014,17 +1051,20 @@ Module 8: Artifact Management    ████████████ 100% ✓
 **You're now ready for the Yellow Belt Certification Exam!**
 
 **Exam Format**:
+
 - 40 multiple choice questions
 - 3 hands-on challenges
 - 85% passing score required
 - 2-hour time limit
 
 **Exam Challenges**:
+
 1. Build a production-ready CI/CD pipeline from scratch
 2. Optimize existing pipeline to <5 minute build time
 3. Implement complete security scanning and artifact management
 
 **Schedule Your Exam**:
+
 - Visit Fawkes Dojo Portal
 - Navigate to Certifications → Yellow Belt
 - Click "Schedule Exam"
@@ -1032,6 +1072,7 @@ Module 8: Artifact Management    ████████████ 100% ✓
 ### 🎓 What You've Achieved
 
 **Skills Mastered**:
+
 - ✅ Jenkins pipeline development
 - ✅ Shared library creation
 - ✅ Security scanning integration
@@ -1040,6 +1081,7 @@ Module 8: Artifact Management    ████████████ 100% ✓
 - ✅ CI/CD best practices
 
 **DORA Impact**:
+
 - **Deployment Frequency**: Can deploy multiple times per day
 - **Lead Time**: Reduced to minutes with optimized pipelines
 - **Change Failure Rate**: Security gates prevent bad code
@@ -1048,17 +1090,20 @@ Module 8: Artifact Management    ████████████ 100% ✓
 ### 🚀 What's Next?
 
 **Option 1: Take Yellow Belt Certification Exam**
+
 - Validate your learning
 - Earn "Fawkes CI/CD Specialist" badge
 - Get LinkedIn-verified credential
 
 **Option 2: Continue to Green Belt**
+
 - Module 9: GitOps with ArgoCD
 - Module 10: Deployment Strategies
 - Module 11: Progressive Delivery
 - Module 12: Rollback & Incident Response
 
 **Option 3: Practice & Contribute**
+
 - Apply learnings to your team's pipelines
 - Share your shared library with community
 - Write blog post about your journey
@@ -1069,17 +1114,20 @@ Module 8: Artifact Management    ████████████ 100% ✓
 ## 📚 Additional Resources
 
 ### Tools & Documentation
+
 - [Harbor Documentation](https://goharbor.io/docs/)
 - [Cosign Documentation](https://docs.sigstore.dev/cosign/overview/)
 - [Semantic Versioning](https://semver.org/)
 - [OCI Image Spec](https://github.com/opencontainers/image-spec)
 
 ### Learning Resources
+
 - [Artifact Management Best Practices](https://www.jfrog.com/confluence/display/JFROG/Best+Practices)
 - [Supply Chain Security](https://slsa.dev/)
 - [Container Signing Tutorial](https://www.sigstore.dev/get-started)
 
 ### Community
+
 - [Fawkes Mattermost](https://mattermost.fawkes.internal) - #yellow-belt
 - Share your certification achievement!
 - Help newcomers in #white-belt
@@ -1091,6 +1139,7 @@ Module 8: Artifact Management    ████████████ 100% ✓
 ### Quick Reference Commands
 
 **Harbor CLI (via API)**:
+
 ```bash
 # List repositories
 curl -u user:pass https://harbor.fawkes.internal/api/v2.0/projects/library/repositories
@@ -1106,6 +1155,7 @@ curl -X DELETE -u user:pass https://harbor.fawkes.internal/api/v2.0/projects/lib
 ```
 
 **Cosign Commands**:
+
 ```bash
 # Sign image
 cosign sign --key cosign.key myapp:v1.2.3
@@ -1121,6 +1171,7 @@ cosign download sbom myapp:v1.2.3
 ```
 
 **Docker Tag Management**:
+
 ```bash
 # Create multiple tags
 docker tag myapp:123 myapp:v1.2.3
@@ -1155,8 +1206,8 @@ Module 9: Introduction to GitOps with ArgoCD awaits! You'll learn declarative de
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*
-*Version 1.0 | Last Updated: October 2025*
-*License: MIT | https://github.com/paruff/fawkes*
+_Fawkes Dojo - Where Platform Engineers Are Forged_
+_Version 1.0 | Last Updated: October 2025_
+_License: MIT | https://github.com/paruff/fawkes_
 
 **🎉 Yellow Belt Complete - Congratulations, CI/CD Specialist! 🎉**

@@ -10,7 +10,7 @@ ACCEPT_DRIVER_PERMS=0
 DEPRECATED_NO_LOCK=0
 
 usage() {
-  cat <<EOF
+  cat << EOF
 Usage: $0 [options]
 
 Options:
@@ -27,19 +27,31 @@ EOF
 ARGS=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -y|--yes)
-      NON_INTERACTIVE=1; shift ;;
+    -y | --yes)
+      NON_INTERACTIVE=1
+      shift
+      ;;
     --accept-driver-permissions)
-      ACCEPT_DRIVER_PERMS=1; shift ;;
-    -f|--file)
-      BREWFILE_PATH="${2:-}"; shift 2 ;;
+      ACCEPT_DRIVER_PERMS=1
+      shift
+      ;;
+    -f | --file)
+      BREWFILE_PATH="${2:-}"
+      shift 2
+      ;;
     --no-lock)
-      DEPRECATED_NO_LOCK=1; shift ;;
-    -h|--help)
-      usage; exit 0 ;;
+      DEPRECATED_NO_LOCK=1
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
     *)
       # Ignore unknown args to be friendly with wrappers
-      ARGS+=("$1"); shift ;;
+      ARGS+=("$1")
+      shift
+      ;;
   esac
 done
 
@@ -55,7 +67,7 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
   exit 2
 fi
 
-if ! command -v brew >/dev/null 2>&1; then
+if ! command -v brew > /dev/null 2>&1; then
   echo "Homebrew not found. Installing Homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   # Try to make brew available in this shell
@@ -64,7 +76,7 @@ if ! command -v brew >/dev/null 2>&1; then
   elif [[ -x /usr/local/bin/brew ]]; then
     eval "$(/usr/local/bin/brew shellenv)"
   fi
-  if ! command -v brew >/dev/null 2>&1; then
+  if ! command -v brew > /dev/null 2>&1; then
     echo "Brew installed but not on PATH yet. Follow the installer output to add it, then re-run this script." >&2
     exit 1
   fi
@@ -79,7 +91,8 @@ echo "Using Brewfile: ${BREWFILE_PATH}"
 if [[ ${NON_INTERACTIVE} -eq 0 ]]; then
   echo "Preview of Brewfile contents:" && echo "--------------------------------" && cat "${BREWFILE_PATH}" && echo
   if ! confirm "Proceed to install the above packages via Homebrew?"; then
-    echo "Aborted by user."; exit 1
+    echo "Aborted by user."
+    exit 1
   fi
 fi
 
@@ -92,7 +105,7 @@ fi
 brew bundle "${bundle_args[@]}"
 
 echo "Post-install: hyperkit driver check (only relevant on Intel macs with hyperkit installed)"
-if command -v docker-machine-driver-hyperkit >/dev/null 2>&1; then
+if command -v docker-machine-driver-hyperkit > /dev/null 2>&1; then
   DRIVER_PATH="$(command -v docker-machine-driver-hyperkit)"
   echo "Found hyperkit driver at ${DRIVER_PATH}."
   if [[ ${NON_INTERACTIVE} -eq 1 || ${ACCEPT_DRIVER_PERMS} -eq 1 ]]; then
@@ -119,7 +132,7 @@ if [[ "${ARCH}" == "arm64" ]]; then
   echo "Done. Recommended for Apple Silicon (arm64):"
   echo "  minikube start --driver=docker --memory=8192 --cpus=4"
 else
-  if command -v docker-machine-driver-hyperkit >/dev/null 2>&1; then
+  if command -v docker-machine-driver-hyperkit > /dev/null 2>&1; then
     echo "Done. Recommended on Intel with hyperkit:"
     echo "  minikube start --driver=hyperkit --memory=8192 --cpus=4"
   else

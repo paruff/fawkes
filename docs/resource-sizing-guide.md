@@ -17,53 +17,54 @@ This guide provides recommended resource allocations for different deployment sc
 
 #### Core Platform Components
 
-| Component | Replicas | CPU Request | CPU Limit | Memory Request | Memory Limit | Notes |
-|-----------|----------|-------------|-----------|----------------|--------------|-------|
-| **Backstage** | 2 | 300m | 1 | 384Mi | 1Gi | Developer portal |
-| **Jenkins Controller** | 1 | 500m | 1500m | 1Gi | 2Gi | CI/CD orchestration |
-| **ArgoCD** | 1 | 250m | 500m | 256Mi | 512Mi | GitOps deployment |
+| Component              | Replicas | CPU Request | CPU Limit | Memory Request | Memory Limit | Notes               |
+| ---------------------- | -------- | ----------- | --------- | -------------- | ------------ | ------------------- |
+| **Backstage**          | 2        | 300m        | 1         | 384Mi          | 1Gi          | Developer portal    |
+| **Jenkins Controller** | 1        | 500m        | 1500m     | 1Gi            | 2Gi          | CI/CD orchestration |
+| **ArgoCD**             | 1        | 250m        | 500m      | 256Mi          | 512Mi        | GitOps deployment   |
 
 #### Observability Stack
 
-| Component | Replicas | CPU Request | CPU Limit | Memory Request | Memory Limit | Notes |
-|-----------|----------|-------------|-----------|----------------|--------------|-------|
-| **Prometheus** | 1 | 300m | 800m | 768Mi | 1536Mi | Metrics collection (7d retention) |
-| **Prometheus Operator** | 1 | 80m | 150m | 100Mi | 200Mi | Operator for Prometheus |
-| **Grafana** | 1 | 80m | 150m | 200Mi | 400Mi | Visualization |
-| **Alertmanager** | 1 | 30m | 80m | 48Mi | 100Mi | Alert routing |
-| **Node Exporter** | DaemonSet | 40m | 80m | 50Mi | 100Mi | Per-node metrics |
-| **Kube State Metrics** | 1 | 40m | 80m | 50Mi | 100Mi | Kubernetes metrics |
-| **OpenTelemetry Collector** | DaemonSet | 150m | 800m | 384Mi | 768Mi | Log/trace collection |
-| **Grafana Tempo** | 1 | 100m | 500m | 256Mi | 512Mi | Distributed tracing |
-| **OpenSearch** | 1 | 400m | 800m | 1536Mi | 1536Mi | Log aggregation/search |
+| Component                   | Replicas  | CPU Request | CPU Limit | Memory Request | Memory Limit | Notes                             |
+| --------------------------- | --------- | ----------- | --------- | -------------- | ------------ | --------------------------------- |
+| **Prometheus**              | 1         | 300m        | 800m      | 768Mi          | 1536Mi       | Metrics collection (7d retention) |
+| **Prometheus Operator**     | 1         | 80m         | 150m      | 100Mi          | 200Mi        | Operator for Prometheus           |
+| **Grafana**                 | 1         | 80m         | 150m      | 200Mi          | 400Mi        | Visualization                     |
+| **Alertmanager**            | 1         | 30m         | 80m       | 48Mi           | 100Mi        | Alert routing                     |
+| **Node Exporter**           | DaemonSet | 40m         | 80m       | 50Mi           | 100Mi        | Per-node metrics                  |
+| **Kube State Metrics**      | 1         | 40m         | 80m       | 50Mi           | 100Mi        | Kubernetes metrics                |
+| **OpenTelemetry Collector** | DaemonSet | 150m        | 800m      | 384Mi          | 768Mi        | Log/trace collection              |
+| **Grafana Tempo**           | 1         | 100m        | 500m      | 256Mi          | 512Mi        | Distributed tracing               |
+| **OpenSearch**              | 1         | 400m        | 800m      | 1536Mi         | 1536Mi       | Log aggregation/search            |
 
 #### Data Persistence
 
-| Component | Replicas | CPU Request | CPU Limit | Memory Request | Memory Limit | Storage | Notes |
-|-----------|----------|-------------|-----------|----------------|--------------|---------|-------|
-| **PostgreSQL (Backstage)** | 3 | 300m | 1 | 384Mi | 1Gi | 20Gi | Catalog database |
-| **PostgreSQL (Harbor)** | 3 | 300m | 1 | 768Mi | 1536Mi | 20Gi | Registry database |
-| **PostgreSQL (SonarQube)** | 3 | 300m | 1 | 384Mi | 1Gi | 20Gi | Code analysis data |
-| **PostgreSQL (Focalboard)** | 3 | 300m | 1 | 384Mi | 1Gi | 20Gi | Project management |
+| Component                   | Replicas | CPU Request | CPU Limit | Memory Request | Memory Limit | Storage | Notes              |
+| --------------------------- | -------- | ----------- | --------- | -------------- | ------------ | ------- | ------------------ |
+| **PostgreSQL (Backstage)**  | 3        | 300m        | 1         | 384Mi          | 1Gi          | 20Gi    | Catalog database   |
+| **PostgreSQL (Harbor)**     | 3        | 300m        | 1         | 768Mi          | 1536Mi       | 20Gi    | Registry database  |
+| **PostgreSQL (SonarQube)**  | 3        | 300m        | 1         | 384Mi          | 1Gi          | 20Gi    | Code analysis data |
+| **PostgreSQL (Focalboard)** | 3        | 300m        | 1         | 384Mi          | 1Gi          | 20Gi    | Project management |
 
 #### Security Components
 
-| Component | Replicas | CPU Request | CPU Limit | Memory Request | Memory Limit | Notes |
-|-----------|----------|-------------|-----------|----------------|--------------|-------|
-| **Vault Server** | 3 | 200m | 800m | 200Mi | 400Mi | Secrets management |
-| **Vault Injector** | 2 | 40m | 200m | 50Mi | 200Mi | Secret injection |
-| **CSI Driver** | DaemonSet | 50m | 200m | 64Mi | 128Mi | Volume-based secrets |
-| **Kyverno Admission** | 3 | 80m | 400m | 200Mi | 400Mi | Policy admission control |
-| **Kyverno Background** | 2 | 80m | 400m | 100Mi | 200Mi | Policy reconciliation |
-| **Kyverno Reports** | 1 | 80m | 400m | 100Mi | 200Mi | Policy reporting |
-| **Kyverno Cleanup** | 1 | 80m | 400m | 100Mi | 200Mi | Resource cleanup |
-| **SonarQube** | 1 | 500m | 1500m | 1536Mi | 3Gi | Code analysis |
+| Component              | Replicas  | CPU Request | CPU Limit | Memory Request | Memory Limit | Notes                    |
+| ---------------------- | --------- | ----------- | --------- | -------------- | ------------ | ------------------------ |
+| **Vault Server**       | 3         | 200m        | 800m      | 200Mi          | 400Mi        | Secrets management       |
+| **Vault Injector**     | 2         | 40m         | 200m      | 50Mi           | 200Mi        | Secret injection         |
+| **CSI Driver**         | DaemonSet | 50m         | 200m      | 64Mi           | 128Mi        | Volume-based secrets     |
+| **Kyverno Admission**  | 3         | 80m         | 400m      | 200Mi          | 400Mi        | Policy admission control |
+| **Kyverno Background** | 2         | 80m         | 400m      | 100Mi          | 200Mi        | Policy reconciliation    |
+| **Kyverno Reports**    | 1         | 80m         | 400m      | 100Mi          | 200Mi        | Policy reporting         |
+| **Kyverno Cleanup**    | 1         | 80m         | 400m      | 100Mi          | 200Mi        | Resource cleanup         |
+| **SonarQube**          | 1         | 500m        | 1500m     | 1536Mi         | 3Gi          | Code analysis            |
 
 ### Total Resource Requirements by Scale
 
 #### MVP Scale (5 teams, 25 services)
 
 **Platform Core Services:**
+
 - CPU Requests: ~5.5 cores
 - CPU Limits: ~15 cores
 - Memory Requests: ~11 GB
@@ -71,6 +72,7 @@ This guide provides recommended resource allocations for different deployment sc
 - Storage: ~150 GB
 
 **Recommended Cluster Configuration:**
+
 - Nodes: 3-5 worker nodes
 - Node Size: 4 vCPU, 16 GB RAM each
 - Total Cluster: 12-20 vCPU, 48-80 GB RAM
@@ -81,16 +83,17 @@ This guide provides recommended resource allocations for different deployment sc
 
 **Scaling Recommendations:**
 
-| Component | MVP → Production Change | Rationale |
-|-----------|------------------------|-----------|
-| Backstage | 2→3 replicas, +50% resources | More concurrent users |
-| Prometheus | 1→2 replicas, 2x storage | HA and data retention |
-| Grafana | 1→2 replicas | HA for dashboards |
-| PostgreSQL | +50% resources per cluster | Larger datasets |
-| OpenSearch | 1→3 nodes, 3x storage | Data volume and HA |
-| Jenkins | +50% controller resources | More pipelines |
+| Component  | MVP → Production Change      | Rationale             |
+| ---------- | ---------------------------- | --------------------- |
+| Backstage  | 2→3 replicas, +50% resources | More concurrent users |
+| Prometheus | 1→2 replicas, 2x storage     | HA and data retention |
+| Grafana    | 1→2 replicas                 | HA for dashboards     |
+| PostgreSQL | +50% resources per cluster   | Larger datasets       |
+| OpenSearch | 1→3 nodes, 3x storage        | Data volume and HA    |
+| Jenkins    | +50% controller resources    | More pipelines        |
 
 **Recommended Cluster Configuration:**
+
 - Nodes: 10-20 worker nodes
 - Node Size: 8 vCPU, 32 GB RAM each
 - Total Cluster: 80-160 vCPU, 320-640 GB RAM
@@ -102,12 +105,14 @@ This guide provides recommended resource allocations for different deployment sc
 ### When to Scale Up
 
 **CPU:**
+
 - Sustained usage >70% of limits
 - Increased request latency (P95 >2x baseline)
 - Container throttling metrics increasing
 - Queue depths growing
 
 **Memory:**
+
 - Sustained usage >70% of limits
 - Increasing GC frequency (for JVM apps)
 - OOM kill events
@@ -116,11 +121,13 @@ This guide provides recommended resource allocations for different deployment sc
 ### When to Scale Down
 
 **CPU:**
+
 - Sustained usage <30% of requests
 - No performance degradation observed
 - After workload analysis over 7+ days
 
 **Memory:**
+
 - Sustained usage <40% of requests
 - No OOM events for 30+ days
 - After workload analysis over 7+ days
@@ -128,6 +135,7 @@ This guide provides recommended resource allocations for different deployment sc
 ### Monitoring Metrics
 
 **Key Metrics to Track:**
+
 ```
 # CPU
 container_cpu_usage_seconds_total
@@ -150,18 +158,20 @@ kube_pod_status_reason{reason="Evicted"}
 ### Resource Request/Limit Ratio Guidelines
 
 **Recommended Ratios:**
+
 - CPU: Request = 30-50% of Limit (allows bursting)
 - Memory: Request = 70-100% of Limit (memory is not compressible)
 
 **Example:**
+
 ```yaml
 resources:
   requests:
-    cpu: 300m      # 30% of limit
-    memory: 768Mi  # 75% of limit
+    cpu: 300m # 30% of limit
+    memory: 768Mi # 75% of limit
   limits:
-    cpu: 1         # Allows 3x burst
-    memory: 1Gi    # Prevents OOM
+    cpu: 1 # Allows 3x burst
+    memory: 1Gi # Prevents OOM
 ```
 
 ## Pod Disruption Budgets
@@ -226,7 +236,7 @@ spec:
     kind: Deployment
     name: backstage
   updatePolicy:
-    updateMode: "Auto"  # or "Recreate" or "Initial"
+    updateMode: "Auto" # or "Recreate" or "Initial"
   resourcePolicy:
     containerPolicies:
       - containerName: backstage
@@ -305,14 +315,14 @@ groups:
 
 ### Expected Performance After Optimization
 
-| Metric | Target | Measurement Window |
-|--------|--------|-------------------|
-| Backstage Page Load | <2s | P95 |
-| Jenkins Build Queue Time | <30s | P95 |
-| ArgoCD Sync Time | <30s | P95 |
-| Prometheus Query Time | <5s | P95 |
-| Grafana Dashboard Load | <3s | P95 |
-| API Response Time | <200ms | P95 |
+| Metric                   | Target | Measurement Window |
+| ------------------------ | ------ | ------------------ |
+| Backstage Page Load      | <2s    | P95                |
+| Jenkins Build Queue Time | <30s   | P95                |
+| ArgoCD Sync Time         | <30s   | P95                |
+| Prometheus Query Time    | <5s    | P95                |
+| Grafana Dashboard Load   | <3s    | P95                |
+| API Response Time        | <200ms | P95                |
 
 ### Load Testing
 
@@ -335,11 +345,13 @@ watch kubectl top pods -n fawkes
 ### Pod Evictions
 
 **Symptoms:**
+
 - Pods restarting frequently
 - Status: `Evicted`
 - Reason: `OutOfMemory` or `DiskPressure`
 
 **Solution:**
+
 1. Check memory limits: `kubectl describe pod <pod-name> -n fawkes`
 2. Increase memory requests/limits
 3. Check for memory leaks in application code
@@ -347,11 +359,13 @@ watch kubectl top pods -n fawkes
 ### CPU Throttling
 
 **Symptoms:**
+
 - Slow application response times
 - High CPU throttling metrics
 - No increase in actual CPU usage
 
 **Solution:**
+
 1. Check throttling: `kubectl top pods -n fawkes --containers`
 2. Increase CPU limits (but keep requests low for scheduling)
 3. Consider HPA for scaling out instead of up
@@ -359,10 +373,12 @@ watch kubectl top pods -n fawkes
 ### Out of Memory (OOM)
 
 **Symptoms:**
+
 - Pod terminated with exit code 137
 - `OOMKilled` in pod status
 
 **Solution:**
+
 1. Increase memory limits
 2. Review application memory consumption
 3. Check for memory leaks
@@ -377,6 +393,6 @@ watch kubectl top pods -n fawkes
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0 | 2025-12-16 | Initial resource optimization for Issue #35 |
+| Version | Date       | Changes                                     |
+| ------- | ---------- | ------------------------------------------- |
+| 1.0     | 2025-12-16 | Initial resource optimization for Issue #35 |

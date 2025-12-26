@@ -25,10 +25,7 @@ from .suppression import SuppressionEngine
 from .routing import AlertRouter
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Configuration from environment
@@ -53,6 +50,7 @@ router: Optional[AlertRouter] = None
 # Pydantic models
 class AlertLabel(BaseModel):
     """Alert labels."""
+
     alertname: str
     service: Optional[str] = None
     severity: Optional[str] = "medium"
@@ -62,6 +60,7 @@ class AlertLabel(BaseModel):
 
 class AlertAnnotation(BaseModel):
     """Alert annotations."""
+
     summary: Optional[str] = None
     description: Optional[str] = None
     runbook_url: Optional[str] = None
@@ -69,6 +68,7 @@ class AlertAnnotation(BaseModel):
 
 class Alert(BaseModel):
     """Alert model."""
+
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     labels: Dict[str, Any]
     annotations: Dict[str, Any] = Field(default_factory=dict)
@@ -81,6 +81,7 @@ class Alert(BaseModel):
 
 class AlertGroup(BaseModel):
     """Grouped alerts."""
+
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     alerts: List[Alert]
     grouping_key: str
@@ -95,6 +96,7 @@ class AlertGroup(BaseModel):
 
 class PrometheusAlertPayload(BaseModel):
     """Prometheus webhook alert payload."""
+
     alerts: List[Alert]
     status: str = "firing"
     groupLabels: Dict[str, str] = Field(default_factory=dict)
@@ -104,6 +106,7 @@ class PrometheusAlertPayload(BaseModel):
 
 class SuppressionRule(BaseModel):
     """Suppression rule model."""
+
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     type: str  # maintenance_window, known_issue, flapping, cascade, time_based
@@ -124,6 +127,7 @@ class SuppressionRule(BaseModel):
 
 class HealthResponse(BaseModel):
     """Health check response."""
+
     status: str
     service: str
     version: str
@@ -132,43 +136,20 @@ class HealthResponse(BaseModel):
 
 
 # Prometheus metrics
-ALERTS_RECEIVED = Counter(
-    'smart_alerting_received_total',
-    'Total alerts received',
-    ['source']
-)
+ALERTS_RECEIVED = Counter("smart_alerting_received_total", "Total alerts received", ["source"])
 
-ALERTS_SUPPRESSED = Counter(
-    'smart_alerting_suppressed_total',
-    'Total alerts suppressed',
-    ['reason']
-)
+ALERTS_SUPPRESSED = Counter("smart_alerting_suppressed_total", "Total alerts suppressed", ["reason"])
 
-ALERT_GROUPS_CREATED = Counter(
-    'smart_alerting_grouped_total',
-    'Total alert groups created'
-)
+ALERT_GROUPS_CREATED = Counter("smart_alerting_grouped_total", "Total alert groups created")
 
-ALERTS_ROUTED = Counter(
-    'smart_alerting_routed_total',
-    'Total alerts routed',
-    ['channel']
-)
+ALERTS_ROUTED = Counter("smart_alerting_routed_total", "Total alerts routed", ["channel"])
 
-ALERT_FATIGUE_REDUCTION = Gauge(
-    'smart_alerting_fatigue_reduction',
-    'Alert fatigue reduction percentage'
-)
+ALERT_FATIGUE_REDUCTION = Gauge("smart_alerting_fatigue_reduction", "Alert fatigue reduction percentage")
 
-FALSE_ALERT_RATE = Gauge(
-    'smart_alerting_false_alert_rate',
-    'False alert rate'
-)
+FALSE_ALERT_RATE = Gauge("smart_alerting_false_alert_rate", "False alert rate")
 
 PROCESSING_DURATION = Histogram(
-    'smart_alerting_processing_duration_seconds',
-    'Alert processing duration',
-    buckets=[0.1, 0.5, 1.0, 2.0, 5.0, 10.0]
+    "smart_alerting_processing_duration_seconds", "Alert processing duration", buckets=[0.1, 0.5, 1.0, 2.0, 5.0, 10.0]
 )
 
 
@@ -182,12 +163,7 @@ async def lifespan(app: FastAPI):
 
     # Initialize Redis
     try:
-        redis_client = redis.Redis(
-            host=REDIS_HOST,
-            port=REDIS_PORT,
-            db=REDIS_DB,
-            decode_responses=True
-        )
+        redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)
         await redis_client.ping()
         logger.info("✅ Connected to Redis successfully")
     except Exception as e:
@@ -205,7 +181,7 @@ async def lifespan(app: FastAPI):
         backstage_url=BACKSTAGE_URL,
         mattermost_webhook=MATTERMOST_WEBHOOK_URL,
         slack_webhook=SLACK_WEBHOOK_URL,
-        pagerduty_api_key=PAGERDUTY_API_KEY
+        pagerduty_api_key=PAGERDUTY_API_KEY,
     )
 
     # Load suppression rules
@@ -227,7 +203,7 @@ app = FastAPI(
     title="Smart Alerting Service",
     description="Intelligent alerting that reduces noise and groups related alerts",
     version="0.1.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Add prometheus metrics endpoint
@@ -238,11 +214,7 @@ app.mount("/metrics", metrics_app)
 @app.get("/", include_in_schema=False)
 async def root():
     """Root endpoint."""
-    return {
-        "service": "smart-alerting",
-        "status": "running",
-        "version": "0.1.0"
-    }
+    return {"service": "smart-alerting", "status": "running", "version": "0.1.0"}
 
 
 @app.get("/health")
@@ -266,7 +238,7 @@ async def health() -> HealthResponse:
         service="smart-alerting",
         version="0.1.0",
         redis_connected=redis_connected,
-        rules_loaded=rules_loaded
+        rules_loaded=rules_loaded,
     )
 
 
@@ -287,10 +259,7 @@ async def ready():
     if not correlator:
         raise HTTPException(status_code=503, detail="Correlator not initialized")
 
-    return {
-        "status": "READY",
-        "service": "smart-alerting"
-    }
+    return {"status": "READY", "service": "smart-alerting"}
 
 
 @app.post("/api/v1/alerts/prometheus")
@@ -300,10 +269,7 @@ async def ingest_prometheus_alerts(payload: PrometheusAlertPayload, background_t
 
     background_tasks.add_task(process_alerts, payload.alerts, "prometheus")
 
-    return {
-        "message": f"Received {len(payload.alerts)} alerts",
-        "status": "processing"
-    }
+    return {"message": f"Received {len(payload.alerts)} alerts", "status": "processing"}
 
 
 @app.post("/api/v1/alerts/grafana")
@@ -313,10 +279,7 @@ async def ingest_grafana_alerts(alerts: List[Alert], background_tasks: Backgroun
 
     background_tasks.add_task(process_alerts, alerts, "grafana")
 
-    return {
-        "message": f"Received {len(alerts)} alerts",
-        "status": "processing"
-    }
+    return {"message": f"Received {len(alerts)} alerts", "status": "processing"}
 
 
 @app.post("/api/v1/alerts/datahub")
@@ -326,10 +289,7 @@ async def ingest_datahub_alerts(alerts: List[Alert], background_tasks: Backgroun
 
     background_tasks.add_task(process_alerts, alerts, "datahub")
 
-    return {
-        "message": f"Received {len(alerts)} alerts",
-        "status": "processing"
-    }
+    return {"message": f"Received {len(alerts)} alerts", "status": "processing"}
 
 
 @app.post("/api/v1/alerts/generic")
@@ -339,10 +299,7 @@ async def ingest_generic_alerts(alerts: List[Alert], background_tasks: Backgroun
 
     background_tasks.add_task(process_alerts, alerts, "generic")
 
-    return {
-        "message": f"Received {len(alerts)} alerts",
-        "status": "processing"
-    }
+    return {"message": f"Received {len(alerts)} alerts", "status": "processing"}
 
 
 @app.get("/api/v1/alert-groups")
@@ -379,6 +336,7 @@ async def get_alert(alert_id: str) -> Alert:
         raise HTTPException(status_code=404, detail="Alert not found")
 
     import json
+
     return Alert(**json.loads(alert_data))
 
 
@@ -417,8 +375,8 @@ async def get_suppression_rules() -> List[SuppressionRule]:
     for rule in suppression_engine.rules:
         if isinstance(rule, dict):
             # Add id if missing
-            if 'id' not in rule:
-                rule['id'] = str(uuid.uuid4())
+            if "id" not in rule:
+                rule["id"] = str(uuid.uuid4())
             result.append(SuppressionRule(**rule))
         else:
             result.append(rule)
@@ -445,7 +403,7 @@ async def get_suppression_rule(rule_id: str) -> SuppressionRule:
 
     for rule in suppression_engine.rules:
         # Handle both dict and Pydantic models
-        rid = rule.get('id') if isinstance(rule, dict) else getattr(rule, 'id', None)
+        rid = rule.get("id") if isinstance(rule, dict) else getattr(rule, "id", None)
         if rid == rule_id:
             # Convert to Pydantic model if it's a dict
             if isinstance(rule, dict):
@@ -502,7 +460,7 @@ async def get_stats():
         "total_suppressed": total_suppressed_int,
         "total_grouped": int(total_grouped),
         "total_routed": int(total_routed),
-        "fatigue_reduction_percent": round(reduction, 2)
+        "fatigue_reduction_percent": round(reduction, 2),
     }
 
 
@@ -513,7 +471,7 @@ async def get_reduction_stats():
     return {
         "fatigue_reduction_percent": stats["fatigue_reduction_percent"],
         "target": 50.0,
-        "target_met": stats["fatigue_reduction_percent"] >= 50.0
+        "target_met": stats["fatigue_reduction_percent"] >= 50.0,
     }
 
 
@@ -559,4 +517,5 @@ async def process_alerts(alerts: List[Alert], source: str):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

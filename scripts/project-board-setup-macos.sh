@@ -53,41 +53,41 @@ echo ""
 
 # Check prerequisites
 if ! command -v gh &> /dev/null; then
-    echo -e "${RED}Error: GitHub CLI (gh) not installed${NC}"
-    exit 1
+  echo -e "${RED}Error: GitHub CLI (gh) not installed${NC}"
+  exit 1
 fi
 
 if ! gh auth status &> /dev/null; then
-    echo -e "${RED}Error: Not authenticated with GitHub CLI${NC}"
-    exit 1
+  echo -e "${RED}Error: Not authenticated with GitHub CLI${NC}"
+  exit 1
 fi
 
 # Extract owner and repo
 IFS='/' read -r OWNER REPO_NAME <<< "$REPO"
 
 if [ "$DRY_RUN" = true ]; then
-    echo -e "${YELLOW}=== DRY RUN MODE ===${NC}"
-    echo "Would create project: $PROJECT_NAME"
-    echo "Would create 18 milestones (6 per epic)"
-    echo "Would create 45+ labels"
-    echo "Would configure 6 columns with automation"
-    echo "Would create 4 views (All Issues, By Epic, By Priority, Timeline)"
-    exit 0
+  echo -e "${YELLOW}=== DRY RUN MODE ===${NC}"
+  echo "Would create project: $PROJECT_NAME"
+  echo "Would create 18 milestones (6 per epic)"
+  echo "Would create 45+ labels"
+  echo "Would configure 6 columns with automation"
+  echo "Would create 4 views (All Issues, By Epic, By Priority, Timeline)"
+  exit 0
 fi
 
 # Step 1: Create Labels
 echo -e "${BLUE}Step 1: Creating labels...${NC}"
 
 create_label() {
-    local name=$1
-    local color=$2
-    local description=$3
+  local name=$1
+  local color=$2
+  local description=$3
 
-    gh label create "$name" \
-        --repo "$REPO" \
-        --color "$color" \
-        --description "$description" \
-        --force 2>/dev/null || true
+  gh label create "$name" \
+    --repo "$REPO" \
+    --color "$color" \
+    --description "$description" \
+    --force 2> /dev/null || true
 }
 
 # Epic labels
@@ -128,24 +128,24 @@ echo -e "${GREEN}✓ Labels created${NC}"
 echo -e "${BLUE}Step 2: Creating milestones...${NC}"
 
 create_milestone() {
-    local title=$1
-    local description=$2
-    local due_date=$3
+  local title=$1
+  local description=$2
+  local due_date=$3
 
-    gh api repos/"$REPO"/milestones \
-        -X POST \
-        -f title="$title" \
-        -f description="$description" \
-        -f due_on="$due_date" 2>/dev/null || true
+  gh api repos/"$REPO"/milestones \
+    -X POST \
+    -f title="$title" \
+    -f description="$description" \
+    -f due_on="$due_date" 2> /dev/null || true
 }
 
 # Calculate due dates (4 weeks per epic) - macOS/BSD compatible
-if date --version >/dev/null 2>&1; then
-    # GNU date (Linux)
-    calc_date() { date -u -d "$1" +"%Y-%m-%dT23:59:59Z"; }
+if date --version > /dev/null 2>&1; then
+  # GNU date (Linux)
+  calc_date() { date -u -d "$1" +"%Y-%m-%dT23:59:59Z"; }
 else
-    # BSD date (macOS)
-    calc_date() { date -u -v "$1" +"%Y-%m-%dT23:59:59Z"; }
+  # BSD date (macOS)
+  calc_date() { date -u -v "$1" +"%Y-%m-%dT23:59:59Z"; }
 fi
 
 # Epic 1 milestones
@@ -172,13 +172,13 @@ echo -e "${GREEN}✓ Milestones created${NC}"
 echo -e "${BLUE}Step 3: Creating project board...${NC}"
 
 PROJECT_ID=$(gh project create \
-    --owner "$OWNER" \
-    --title "$PROJECT_NAME" \
-    --format json | jq -r '.id')
+  --owner "$OWNER" \
+  --title "$PROJECT_NAME" \
+  --format json | jq -r '.id')
 
 if [ -z "$PROJECT_ID" ]; then
-    echo -e "${RED}Failed to create project${NC}"
-    exit 1
+  echo -e "${RED}Failed to create project${NC}"
+  exit 1
 fi
 
 echo -e "${GREEN}✓ Project created (ID: $PROJECT_ID)${NC}"
@@ -186,7 +186,7 @@ echo -e "${GREEN}✓ Project created (ID: $PROJECT_ID)${NC}"
 # Step 4: Link project to repository
 echo -e "${BLUE}Step 4: Linking project to repository...${NC}"
 
-gh project link "$PROJECT_ID" --repo "$REPO" 2>/dev/null || true
+gh project link "$PROJECT_ID" --repo "$REPO" 2> /dev/null || true
 
 echo -e "${GREEN}✓ Project linked to repository${NC}"
 
@@ -195,19 +195,19 @@ echo -e "${BLUE}Step 5: Creating custom fields...${NC}"
 
 # Epic field (single select)
 gh project field-create "$PROJECT_ID" \
-    --name "Epic" \
-    --data-type "SINGLE_SELECT" \
-    --single-select-options "Epic 1,Epic 2,Epic 3" 2>/dev/null || true
+  --name "Epic" \
+  --data-type "SINGLE_SELECT" \
+  --single-select-options "Epic 1,Epic 2,Epic 3" 2> /dev/null || true
 
 # Acceptance Test field
 gh project field-create "$PROJECT_ID" \
-    --name "Acceptance Test" \
-    --data-type "TEXT" 2>/dev/null || true
+  --name "Acceptance Test" \
+  --data-type "TEXT" 2> /dev/null || true
 
 # Estimated Effort field
 gh project field-create "$PROJECT_ID" \
-    --name "Estimated Effort (hours)" \
-    --data-type "NUMBER" 2>/dev/null || true
+  --name "Estimated Effort (hours)" \
+  --data-type "NUMBER" 2> /dev/null || true
 
 echo -e "${GREEN}✓ Custom fields created${NC}"
 
@@ -293,7 +293,7 @@ jobs:
             })
 EOF
 
-git add .github/workflows/project-automation.yml 2>/dev/null || true
+git add .github/workflows/project-automation.yml 2> /dev/null || true
 
 echo -e "${GREEN}✓ Automation workflow created${NC}"
 

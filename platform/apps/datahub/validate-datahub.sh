@@ -131,7 +131,7 @@ validate_opensearch() {
   # Check if OpenSearch pods are running
   if command -v jq &> /dev/null; then
     local pod_count
-    pod_count=$(kubectl get pods -n "$LOGGING_NAMESPACE" -l "app=opensearch" --field-selector=status.phase=Running -o json 2>/dev/null | jq '.items | length' 2>/dev/null || echo "0")
+    pod_count=$(kubectl get pods -n "$LOGGING_NAMESPACE" -l "app=opensearch" --field-selector=status.phase=Running -o json 2> /dev/null | jq '.items | length' 2> /dev/null || echo "0")
 
     if [ "$pod_count" -lt 1 ]; then
       log_error "No OpenSearch pods are running in namespace '$LOGGING_NAMESPACE'"
@@ -141,7 +141,7 @@ validate_opensearch() {
     log_info "✓ OpenSearch has $pod_count running pod(s)"
   else
     # Fallback without jq
-    if kubectl get pods -n "$LOGGING_NAMESPACE" -l "app=opensearch" --field-selector=status.phase=Running 2>/dev/null | grep -q "opensearch"; then
+    if kubectl get pods -n "$LOGGING_NAMESPACE" -l "app=opensearch" --field-selector=status.phase=Running 2> /dev/null | grep -q "opensearch"; then
       log_info "✓ OpenSearch pods are running"
     else
       log_error "No OpenSearch pods are running in namespace '$LOGGING_NAMESPACE'"
@@ -233,7 +233,7 @@ validate_api_health() {
 
   # Try to access GMS health endpoint (internal)
   local gms_health
-  if gms_health=$(kubectl exec -n "$NAMESPACE" deployment/datahub-datahub-gms -- curl -s -f http://localhost:8080/health 2>/dev/null); then
+  if gms_health=$(kubectl exec -n "$NAMESPACE" deployment/datahub-datahub-gms -- curl -s -f http://localhost:8080/health 2> /dev/null); then
     log_info "✓ DataHub GMS health check passed"
   else
     log_warn "DataHub GMS health check failed (this might be expected during initial startup)"
@@ -241,7 +241,7 @@ validate_api_health() {
 
   # Try to access Frontend health endpoint (internal)
   local frontend_health
-  if frontend_health=$(kubectl exec -n "$NAMESPACE" deployment/datahub-datahub-frontend -- curl -s -f http://localhost:9002/admin 2>/dev/null); then
+  if frontend_health=$(kubectl exec -n "$NAMESPACE" deployment/datahub-datahub-frontend -- curl -s -f http://localhost:9002/admin 2> /dev/null); then
     log_info "✓ DataHub Frontend health check passed"
   else
     log_warn "DataHub Frontend health check failed (this might be expected during initial startup)"
@@ -261,7 +261,7 @@ validate_graphql_api() {
 
   # Port-forward to access the API
   log_info "Setting up port-forward to test API..."
-  kubectl port-forward -n "$NAMESPACE" service/datahub-datahub-gms 8080:8080 &>/dev/null &
+  kubectl port-forward -n "$NAMESPACE" service/datahub-datahub-gms 8080:8080 &> /dev/null &
   local pf_pid=$!
 
   # Wait for port-forward to be ready
@@ -269,7 +269,7 @@ validate_graphql_api() {
 
   # Test GraphQL endpoint
   local response
-  if response=$(curl -s -X POST http://localhost:8080/api/graphql -H "Content-Type: application/json" -d "$query" 2>/dev/null); then
+  if response=$(curl -s -X POST http://localhost:8080/api/graphql -H "Content-Type: application/json" -d "$query" 2> /dev/null); then
     if echo "$response" | grep -q "queryType"; then
       log_info "✓ DataHub GraphQL API is responding"
     else
@@ -280,7 +280,7 @@ validate_graphql_api() {
   fi
 
   # Clean up port-forward
-  kill $pf_pid 2>/dev/null || true
+  kill $pf_pid 2> /dev/null || true
 
   return 0
 }
@@ -289,7 +289,7 @@ validate_resource_usage() {
   log_info "Checking resource usage..."
 
   # Check CPU and memory usage if metrics-server is available
-  if kubectl top pods -n "$NAMESPACE" --no-headers 2>/dev/null | grep datahub &>/dev/null; then
+  if kubectl top pods -n "$NAMESPACE" --no-headers 2> /dev/null | grep datahub &> /dev/null; then
     log_info "DataHub resource usage:"
     kubectl top pods -n "$NAMESPACE" --no-headers | grep datahub | while read -r line; do
       echo "  $line"

@@ -15,21 +15,25 @@ Hasura provides fine-grained access control at multiple levels:
 ## Roles
 
 ### Admin Role
+
 - **Access**: Full access to all data and operations
 - **Use case**: Platform administrators, DevOps team
 - **Rate limit**: 10,000 requests/minute
 
 ### Developer Role
+
 - **Access**: Read/write to most tables, filtered by team ownership
 - **Use case**: Application developers, engineers
 - **Rate limit**: 1,000 requests/minute
 
 ### Viewer Role
+
 - **Access**: Read-only access to non-sensitive data
 - **Use case**: Product managers, stakeholders, reporting tools
 - **Rate limit**: 100 requests/minute
 
 ### Anonymous Role
+
 - **Access**: Very limited read access to public data
 - **Use case**: Public documentation, unauthenticated API access
 - **Rate limit**: 10 requests/minute
@@ -51,11 +55,11 @@ These are typically set by an authentication service (e.g., Backstage, OAuth).
 table: <table_name>
 role: <role_name>
 permission:
-  columns: [col1, col2, ...]       # Which columns can be accessed
-  filter: { ... }                   # Row-level filter (WHERE clause)
-  check: { ... }                    # Insert/update validation
-  allow_aggregations: true/false    # Allow count/sum/avg queries
-  limit: N                          # Max rows returned
+  columns: [col1, col2, ...] # Which columns can be accessed
+  filter: { ... } # Row-level filter (WHERE clause)
+  check: { ... } # Insert/update validation
+  allow_aggregations: true/false # Allow count/sum/avg queries
+  limit: N # Max rows returned
 ```
 
 ## Example Permissions
@@ -63,16 +67,18 @@ permission:
 ### VSM Work Items
 
 #### Admin Role
+
 ```yaml
 table: work_items
 role: admin
 select:
-  columns: '*'  # All columns
-  filter: {}    # No filter, see all rows
+  columns: "*" # All columns
+  filter: {} # No filter, see all rows
   allow_aggregations: true
 ```
 
 #### Developer Role
+
 ```yaml
 table: work_items
 role: developer
@@ -111,6 +117,7 @@ update:
 ```
 
 #### Viewer Role
+
 ```yaml
 table: work_items
 role: viewer
@@ -134,21 +141,23 @@ select:
 ### Backstage Catalog
 
 #### Admin Role
+
 ```yaml
 table: catalog_entities
 role: admin
 select:
-  columns: '*'
+  columns: "*"
   filter: {}
   allow_aggregations: true
 ```
 
 #### Developer Role
+
 ```yaml
 table: catalog_entities
 role: developer
 select:
-  columns: '*'
+  columns: "*"
   filter:
     _or:
       - spec: { owner: { _eq: "X-Hasura-Team-Id" } }
@@ -157,6 +166,7 @@ select:
 ```
 
 #### Viewer Role
+
 ```yaml
 table: catalog_entities
 role: viewer
@@ -178,16 +188,18 @@ select:
 ### DORA Metrics
 
 #### Admin Role
+
 ```yaml
 table: deployments
 role: admin
 select:
-  columns: '*'
+  columns: "*"
   filter: {}
   allow_aggregations: true
 ```
 
 #### Developer Role
+
 ```yaml
 table: deployments
 role: developer
@@ -208,6 +220,7 @@ select:
 ```
 
 #### Viewer Role
+
 ```yaml
 table: deployments
 role: viewer
@@ -381,24 +394,28 @@ curl http://hasura.local/v1/graphql \
 ## Common Patterns
 
 ### Team-Based Access
+
 ```yaml
 filter:
   team: { _eq: "X-Hasura-Team-Id" }
 ```
 
 ### Multi-Team Access
+
 ```yaml
 filter:
   team: { _in: "X-Hasura-Allowed-Teams" }
 ```
 
 ### Owner-Based Access
+
 ```yaml
 filter:
   created_by: { _eq: "X-Hasura-User-Id" }
 ```
 
 ### Public + Owned
+
 ```yaml
 filter:
   _or:
@@ -407,6 +424,7 @@ filter:
 ```
 
 ### Environment-Based Access
+
 ```yaml
 filter:
   _or:
@@ -421,6 +439,7 @@ filter:
 ### Permission Denied Errors
 
 Check:
+
 1. Correct role header is sent
 2. Session variables are set correctly
 3. Row-level filter allows access
@@ -429,6 +448,7 @@ Check:
 ### Rate Limit Exceeded
 
 Check:
+
 1. Current rate limit for role
 2. Consider upgrading role or requesting limit increase
 3. Implement client-side caching

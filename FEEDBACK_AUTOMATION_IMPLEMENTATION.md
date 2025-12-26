@@ -17,9 +17,11 @@ Successfully implemented a comprehensive feedback-to-issue automation system wit
 ## Acceptance Criteria Validation
 
 ### ✅ AC1: Automation Pipeline Deployed
+
 **Status**: Complete
 
 **Implementation**:
+
 - Kubernetes CronJob (`cronjob-automation.yaml`) runs every 15 minutes
 - REST API endpoint: `POST /api/v1/automation/process-validated`
 - Batch processing with configurable limits and filters
@@ -27,12 +29,14 @@ Successfully implemented a comprehensive feedback-to-issue automation system wit
 - Error handling and comprehensive logging
 
 **Validation**:
+
 ```bash
 kubectl apply -f platform/apps/feedback-service/cronjob-automation.yaml
 kubectl get cronjob feedback-automation -n fawkes
 ```
 
 **Features**:
+
 - Automatic retry on failure
 - Job history retention (3 successful, 1 failed)
 - Prevents concurrent runs
@@ -41,9 +45,11 @@ kubectl get cronjob feedback-automation -n fawkes
 ---
 
 ### ✅ AC2: AI Triage Functional
+
 **Status**: Complete
 
 **Implementation**:
+
 - Multi-factor priority scoring algorithm in `ai_triage.py`
 - 5 scoring factors with configurable weights:
   - Type scoring (40%): bug_report > feature_request > feedback
@@ -53,12 +59,14 @@ kubectl get cronjob feedback-automation -n fawkes
   - Category scoring (5%): Security, Performance prioritized
 
 **Priority Levels**:
+
 - **P0** (score ≥ 0.65): Critical issues, security, outages
 - **P1** (score ≥ 0.45): Major bugs, blockers
 - **P2** (score ≥ 0.25): Enhancements, non-blocking
 - **P3** (score < 0.25): Minor improvements
 
 **Testing**:
+
 ```bash
 cd services/feedback
 pytest tests/unit/test_ai_triage.py -v
@@ -66,6 +74,7 @@ pytest tests/unit/test_ai_triage.py -v
 ```
 
 **API Endpoint**:
+
 ```bash
 POST /api/v1/feedback/{id}/triage
 Authorization: Bearer {admin-token}
@@ -74,9 +83,11 @@ Authorization: Bearer {admin-token}
 ---
 
 ### ✅ AC3: Auto-Labeling Working
+
 **Status**: Complete
 
 **Implementation**:
+
 - Smart label suggestions based on multiple factors
 - Label categories:
   - **Type**: bug, enhancement
@@ -85,47 +96,53 @@ Authorization: Bearer {admin-token}
   - **Keywords**: security, performance, documentation, accessibility, ux
 
 **Label Logic**:
+
 - Automatic type-based labels from feedback_type
 - Priority labels from AI triage score
 - Normalized category labels (spaces → hyphens, lowercase)
 - Content-aware labels from keyword detection
 
 **Examples**:
+
 ```json
 {
   "feedback_type": "bug_report",
   "category": "Security",
   "priority": "P0",
   "comment": "Critical security vulnerability in UI",
-  "labels": ["feedback", "automated", "bug", "P0",
-             "category:security", "security", "ux"]
+  "labels": ["feedback", "automated", "bug", "P0", "category:security", "security", "ux"]
 }
 ```
 
 ---
 
 ### ✅ AC4: Duplicate Detection
+
 **Status**: Complete
 
 **Implementation**:
+
 - Text similarity matching using Python's `SequenceMatcher`
 - GitHub API integration to search existing open issues
 - Configurable similarity threshold (default: 70%)
 - Category-based search filtering for accuracy
 
 **Algorithm**:
+
 1. Search GitHub for open issues with matching category label
 2. Calculate similarity score for title and body
 3. Return ranked list of potential duplicates
 4. Skip issue creation if similarity ≥ threshold
 
 **Features**:
+
 - Fuzzy text matching handles typos and variations
 - Context-aware (searches within same category)
 - Returns similarity percentage for manual review
 - Prevents duplicate issue creation automatically
 
 **Testing**:
+
 ```python
 # Test cases cover:
 - No duplicates found
@@ -137,9 +154,11 @@ Authorization: Bearer {admin-token}
 ---
 
 ### ✅ AC5: Notification System
+
 **Status**: Complete
 
 **Implementation**:
+
 - Mattermost webhook integration in `notifications.py`
 - Four notification types:
   1. **Issue Created**: New GitHub issue from feedback
@@ -148,6 +167,7 @@ Authorization: Bearer {admin-token}
   4. **Automation Summary**: Batch processing report
 
 **Configuration**:
+
 ```yaml
 env:
   - name: MATTERMOST_WEBHOOK_URL
@@ -160,6 +180,7 @@ env:
 ```
 
 **Notification Features**:
+
 - Rich markdown formatting
 - Priority-based emoji indicators (🚨 P0, ⚠️ P1, 📋 P2, 💡 P3)
 - Issue links for quick access
@@ -167,6 +188,7 @@ env:
 - Summary statistics for automation runs
 
 **Example Notification**:
+
 ```markdown
 ### 🚨 New Issue Created from Feedback
 
@@ -227,11 +249,13 @@ env:
 ### Data Flow
 
 1. **Feedback Submission**
+
    - User submits feedback via API/UI
    - Sentiment analysis performed (VADER)
    - Stored in PostgreSQL with metadata
 
 2. **AI Triage** (Manual or Automated)
+
    - Calculate priority score (0-1)
    - Determine priority label (P0-P3)
    - Suggest GitHub labels
@@ -239,10 +263,12 @@ env:
    - Determine milestone
 
 3. **Decision Point**
+
    - If duplicate found → Skip, notify
    - If unique → Create GitHub issue
 
 4. **GitHub Issue Creation**
+
    - Create issue with smart labels
    - Attach metadata (feedback ID, rating, etc.)
    - Link issue URL back to feedback
@@ -261,6 +287,7 @@ env:
 ### Files Created (5)
 
 1. **`services/feedback/app/ai_triage.py`** (428 lines)
+
    - Priority scoring algorithm
    - Label suggestion logic
    - Duplicate detection
@@ -268,18 +295,21 @@ env:
    - Main triage orchestration
 
 2. **`services/feedback/app/notifications.py`** (266 lines)
+
    - Mattermost webhook client
    - Notification formatting
    - Multiple notification types
    - Error handling
 
 3. **`services/feedback/tests/unit/test_ai_triage.py`** (452 lines)
+
    - 27 comprehensive unit tests
    - 100% test coverage of triage logic
    - Mock GitHub API responses
    - Edge case handling
 
 4. **`tests/bdd/features/feedback-automation.feature`** (268 lines)
+
    - 19 BDD scenarios
    - End-to-end automation tests
    - Integration test scenarios
@@ -292,24 +322,28 @@ env:
 ### Files Modified (5)
 
 1. **`services/feedback/app/main.py`**
+
    - Added triage endpoint
    - Added automation endpoint
    - Integrated notifications
    - Updated feature flags
 
 2. **`services/feedback/README.md`**
+
    - Comprehensive automation documentation
    - API endpoint documentation
    - Configuration guides
    - Troubleshooting section
 
 3. **`platform/apps/feedback-service/deployment.yaml`**
+
    - Added GitHub token environment variable
    - Added Mattermost webhook URL
    - Added notification enable flag
    - Added repository configuration
 
 4. **`platform/apps/feedback-service/secrets.yaml`**
+
    - Added GitHub token secret
    - Added Mattermost webhook secret
    - Placeholder values with warnings
@@ -322,6 +356,7 @@ env:
 ## Testing Results
 
 ### Unit Tests
+
 ```bash
 $ pytest services/feedback/tests/unit/ -v
 ============================== 66 passed in 0.92s ==============================
@@ -336,6 +371,7 @@ Breakdown:
 ### Test Coverage
 
 **AI Triage Module**:
+
 - ✅ Priority calculation (P0-P3)
 - ✅ Label suggestion
 - ✅ Duplicate detection
@@ -344,6 +380,7 @@ Breakdown:
 - ✅ Error handling
 
 **GitHub Integration**:
+
 - ✅ Issue creation
 - ✅ Label application
 - ✅ Issue status updates
@@ -351,6 +388,7 @@ Breakdown:
 - ✅ API error handling
 
 **Automation Pipeline**:
+
 - ✅ Batch processing
 - ✅ Filtering (rating, type, status)
 - ✅ Duplicate skipping
@@ -364,23 +402,27 @@ Breakdown:
 ### ✅ Implemented
 
 1. **Secret Management**
+
    - GitHub token stored in Kubernetes secret
    - Mattermost webhook URL in secret
    - Optional secret references (graceful degradation)
    - Placeholder warnings in YAML
 
 2. **API Security**
+
    - Admin token required for triage/automation
    - Bearer token authentication
    - Input validation via Pydantic
 
 3. **Container Security**
+
    - Non-root user (UID 65534)
    - Read-only root filesystem
    - Capabilities dropped (ALL)
    - Seccomp profile applied
 
 4. **Resource Limits**
+
    - CPU: 10m request, 100m limit
    - Memory: 16Mi request, 64Mi limit
    - Prevents DoS via resource exhaustion
@@ -406,12 +448,14 @@ Breakdown:
 ### Prerequisites
 
 1. Kubernetes cluster with:
+
    - Namespace: `fawkes`
    - CloudNativePG operator (for database)
    - Ingress controller (nginx)
    - Prometheus operator (for metrics)
 
 2. GitHub:
+
    - Personal access token with `repo` scope
    - Write access to issues
 
@@ -509,6 +553,7 @@ curl -X POST http://feedback-service:8000/api/v1/feedback/123/triage \
 ```
 
 Response:
+
 ```json
 {
   "status": "success",
@@ -533,6 +578,7 @@ curl -X POST "http://feedback-service:8000/api/v1/automation/process-validated?l
 ```
 
 Response:
+
 ```json
 {
   "status": "success",
@@ -567,6 +613,7 @@ feedback_request_duration_seconds{endpoint="submit_feedback"}
 ### Recommended Alerts
 
 1. **High Priority Feedback**
+
    ```yaml
    alert: HighPriorityFeedbackReceived
    expr: increase(feedback_submissions_total{rating="1"}[5m]) > 0
@@ -576,6 +623,7 @@ feedback_request_duration_seconds{endpoint="submit_feedback"}
    ```
 
 2. **NPS Drop**
+
    ```yaml
    alert: NPSDropped
    expr: nps_score{period="last_30d"} < 0
@@ -599,16 +647,19 @@ feedback_request_duration_seconds{endpoint="submit_feedback"}
 ### Resource Usage
 
 **Feedback Service Pod**:
+
 - CPU: ~50m average, 100m limit
 - Memory: ~80Mi average, 128Mi limit
 - Well within 70% target utilization
 
 **CronJob**:
+
 - CPU: ~10m average, 100m limit
 - Memory: ~8Mi average, 64Mi limit
 - Minimal overhead for automation
 
 **Database**:
+
 - CPU: ~100m average, 500m limit
 - Memory: ~200Mi average, 512Mi limit
 - Handles 1000+ feedback items efficiently
@@ -631,18 +682,22 @@ feedback_request_duration_seconds{endpoint="submit_feedback"}
 ## Known Limitations
 
 1. **Single Repository**
+
    - Currently supports one GitHub repository
    - Future: Multi-repo support with routing
 
 2. **Text-Based Similarity**
+
    - Uses basic fuzzy matching
    - Future: ML embeddings for better accuracy
 
 3. **Static Priority Thresholds**
+
    - Fixed scoring weights
    - Future: ML-based priority prediction
 
 4. **No Auto-Assignment**
+
    - Issues not automatically assigned to team members
    - Future: Team routing based on category/expertise
 
@@ -712,6 +767,7 @@ feedback_request_duration_seconds{endpoint="submit_feedback"}
 ### Common Issues
 
 **Issue**: Automation not running
+
 ```bash
 # Check CronJob schedule
 kubectl get cronjob feedback-automation -n fawkes -o yaml | grep schedule
@@ -724,6 +780,7 @@ kubectl describe cronjob feedback-automation -n fawkes
 ```
 
 **Issue**: No GitHub issues created
+
 ```bash
 # Verify GitHub token
 kubectl get secret feedback-github-token -n fawkes
@@ -738,6 +795,7 @@ kubectl logs -n fawkes -l app=feedback-service | grep -i github
 ```
 
 **Issue**: No notifications sent
+
 ```bash
 # Check if notifications are enabled
 curl http://feedback-service:8000/ | jq '.features.notifications'
@@ -754,6 +812,7 @@ kubectl exec -n fawkes deployment/feedback-service -- \
 ### Debug Mode
 
 Enable verbose logging:
+
 ```yaml
 env:
   - name: LOG_LEVEL

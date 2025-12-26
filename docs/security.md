@@ -21,6 +21,7 @@ This document outlines the security model, practices, and recommendations for th
 - Add secret files and templates to `.gitignore`.
 
 **Automated Secret Detection:**
+
 - Fawkes uses **Gitleaks** and **detect-secrets** in pre-commit hooks and CI/CD pipelines
 - Pipelines **fail immediately** if secrets are detected
 - See the [Secrets Management Guide](how-to/security/secrets-management.md) for detailed information

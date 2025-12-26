@@ -1,3 +1,23 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
 # ============================================================================
 # FILE: templates/golden-path-service/score.yaml
 # PURPOSE: SCORE workload specification for Golden Path services
@@ -11,13 +31,13 @@ apiVersion: score.dev/v1b1
 
 # Metadata about the workload
 metadata:
-  name: "my-service"  # Replace with your service name
+  name: "my-service" # Replace with your service name
 
 # Container definitions
 containers:
   # Main application container
   web:
-    image: "harbor.fawkes.local/my-team/my-service:latest"  # Replace with your image
+    image: "harbor.fawkes.local/my-team/my-service:latest" # Replace with your image
 
     # Command to run (optional, uses image default if not specified)
     # command: ["/app/server"]
@@ -36,7 +56,7 @@ containers:
     variables:
       # Static environment variables
       LOG_LEVEL: "info"
-      ENVIRONMENT: "${ENVIRONMENT}"  # Injected by platform based on deployment environment
+      ENVIRONMENT: "${ENVIRONMENT}" # Injected by platform based on deployment environment
 
       # Variables from resources (databases, caches, etc.)
       # These are automatically populated when resources are provisioned
@@ -76,14 +96,13 @@ containers:
 service:
   ports:
     web:
-      port: 80        # External port (e.g., on the Service)
-      targetPort: 8080  # Container port
+      port: 80 # External port (e.g., on the Service)
+      targetPort: 8080 # Container port
       protocol: tcp
 
 # Resources required by the application
 # The platform translates these into actual infrastructure
 resources:
-
   # PostgreSQL database
   # Platform provisions this via CloudNativePG operator
   db:
@@ -179,7 +198,7 @@ extensions:
       # Distributed tracing
       tracing:
         enabled: true
-        samplingRate: 0.1  # 10% of requests
+        samplingRate: 0.1 # 10% of requests
 
       # Logging
       logging:
@@ -208,7 +227,6 @@ extensions:
       enabled: true
       # Deployment frequency tracked automatically
       # Change failure rate tracked via rollback detection
-
 # ============================================================================
 # USAGE EXAMPLES
 # ============================================================================

@@ -31,13 +31,13 @@ Edit `score.yaml` to define your application:
 ```yaml
 apiVersion: score.dev/v1b1
 metadata:
-  name: my-new-service  # Change this
+  name: my-new-service # Change this
 
 containers:
   web:
-    image: "harbor.fawkes.local/my-team/my-new-service:latest"  # Change this
+    image: "harbor.fawkes.local/my-team/my-new-service:latest" # Change this
     resources:
-      limits: {memory: "512Mi", cpu: "500m"}
+      limits: { memory: "512Mi", cpu: "500m" }
     variables:
       LOG_LEVEL: "info"
       DATABASE_URL: "${resources.db.connection_string}"
@@ -50,11 +50,11 @@ resources:
 
 service:
   ports:
-    web: {port: 80, targetPort: 8080}
+    web: { port: 80, targetPort: 8080 }
 
 route:
   host: "my-new-service.${ENVIRONMENT}.fawkes.idp"
-  tls: {enabled: true}
+  tls: { enabled: true }
 ```
 
 ### 3. Deploy
@@ -110,8 +110,8 @@ containers:
   web:
     image: "my-app:v1.0.0"
     resources:
-      limits: {memory: "512Mi", cpu: "500m"}
-      requests: {memory: "256Mi", cpu: "250m"}
+      limits: { memory: "512Mi", cpu: "500m" }
+      requests: { memory: "256Mi", cpu: "250m" }
     variables:
       LOG_LEVEL: "info"
 ```
@@ -123,16 +123,17 @@ Declare infrastructure resources your app needs:
 ```yaml
 resources:
   db:
-    type: postgres           # Platform provisions CloudNativePG
+    type: postgres # Platform provisions CloudNativePG
   cache:
-    type: redis             # Platform provisions Redis
+    type: redis # Platform provisions Redis
   api-secret:
-    type: secret            # Platform provisions from Vault
+    type: secret # Platform provisions from Vault
   uploads:
-    type: volume            # Platform provisions PVC
+    type: volume # Platform provisions PVC
 ```
 
 The platform automatically:
+
 - Provisions the resource (database, cache, etc.)
 - Creates credentials and connection strings
 - Injects them into your container as environment variables
@@ -144,12 +145,12 @@ Expose your application:
 ```yaml
 service:
   ports:
-    http: {port: 80, targetPort: 8080}
+    http: { port: 80, targetPort: 8080 }
 
 route:
   host: "my-service.${ENVIRONMENT}.fawkes.idp"
   path: "/"
-  tls: {enabled: true}
+  tls: { enabled: true }
 ```
 
 ### Environment Portability
@@ -157,17 +158,20 @@ route:
 The same `score.yaml` works across all environments. Environment-specific values are injected automatically:
 
 **score.yaml** (same everywhere):
+
 ```yaml
 route:
   host: "my-service.${ENVIRONMENT}.fawkes.idp"
 ```
 
 **Dev deployment**:
+
 - Hostname: `my-service.dev.fawkes.idp`
 - Replicas: 1
 - Resources: Small
 
 **Prod deployment**:
+
 - Hostname: `my-service.prod.fawkes.idp`
 - Replicas: 3 (with autoscaling)
 - Resources: Large
@@ -230,11 +234,11 @@ containers:
   web:
     image: "nginx:latest"
     resources:
-      limits: {memory: "128Mi", cpu: "100m"}
+      limits: { memory: "128Mi", cpu: "100m" }
 
 service:
   ports:
-    http: {port: 80, targetPort: 80}
+    http: { port: 80, targetPort: 80 }
 
 route:
   host: "simple-web.${ENVIRONMENT}.fawkes.idp"
@@ -262,7 +266,7 @@ resources:
 
 service:
   ports:
-    api: {port: 8080, targetPort: 8080}
+    api: { port: 8080, targetPort: 8080 }
 ```
 
 ### Pattern 3: Background Worker (No Ingress)
@@ -281,7 +285,6 @@ containers:
 resources:
   queue:
     type: redis
-
 # No service.ports or route - internal workload
 ```
 
@@ -296,7 +299,7 @@ containers:
   web:
     image: "fullstack-app:v1.0.0"
     resources:
-      limits: {memory: "1Gi", cpu: "1000m"}
+      limits: { memory: "1Gi", cpu: "1000m" }
     variables:
       DATABASE_URL: "${resources.db.connection_string}"
       REDIS_URL: "${resources.cache.connection_string}"
@@ -319,11 +322,11 @@ resources:
 
 service:
   ports:
-    http: {port: 80, targetPort: 8080}
+    http: { port: 80, targetPort: 8080 }
 
 route:
   host: "app.${ENVIRONMENT}.fawkes.idp"
-  tls: {enabled: true}
+  tls: { enabled: true }
 
 extensions:
   fawkes:
@@ -357,6 +360,7 @@ ls -la /tmp/manifests/
 ### Issue: "Invalid SCORE apiVersion"
 
 **Solution**: Ensure `score.yaml` starts with:
+
 ```yaml
 apiVersion: score.dev/v1b1
 ```
@@ -364,6 +368,7 @@ apiVersion: score.dev/v1b1
 ### Issue: Environment variables not interpolated
 
 **Solution**: Use the `${ENVIRONMENT}` placeholder:
+
 ```yaml
 route:
   host: "my-service.${ENVIRONMENT}.fawkes.idp"
@@ -372,6 +377,7 @@ route:
 ### Issue: Resource not provisioned
 
 **Solution**: Check supported resource types:
+
 - `postgres`, `redis`, `secret`, `volume`
 
 For other types, use Terraform to provision infrastructure separately.

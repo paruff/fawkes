@@ -5,6 +5,7 @@ Intelligent alerting system that reduces noise and groups related alerts for the
 ## Overview
 
 The Smart Alerting System provides:
+
 - **Alert Correlation**: Groups related alerts by time, service, and symptom
 - **Alert Suppression**: Reduces noise through intelligent suppression rules
 - **Priority Scoring**: Calculates alert priority based on severity × impact × frequency
@@ -119,22 +120,22 @@ The Smart Alerting System provides:
 
 Environment variables:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `REDIS_HOST` | `redis` | Redis host |
-| `REDIS_PORT` | `6379` | Redis port |
-| `REDIS_DB` | `0` | Redis database number |
-| `PROMETHEUS_URL` | `http://prometheus-kube-prometheus-prometheus.fawkes.svc:9090` | Prometheus URL |
-| `GRAFANA_URL` | `http://grafana.fawkes.svc:80` | Grafana URL |
-| `BACKSTAGE_URL` | `http://backstage.fawkes.svc:7007` | Backstage API URL |
-| `MATTERMOST_WEBHOOK_URL` | - | Mattermost webhook URL |
-| `SLACK_WEBHOOK_URL` | - | Slack webhook URL |
-| `PAGERDUTY_API_KEY` | - | PagerDuty API key |
-| `CORRELATION_TIME_WINDOW` | `300` | Time window for correlation (seconds) |
-| `FLAPPING_THRESHOLD` | `3` | Number of alerts to consider flapping |
-| `FLAPPING_WINDOW` | `600` | Time window for flapping detection (seconds) |
-| `ESCALATION_TIMEOUT` | `900` | Time before escalation (seconds, 15 min) |
-| `ALERT_FATIGUE_TARGET` | `0.5` | Target alert reduction (50%) |
+| Variable                  | Default                                                        | Description                                  |
+| ------------------------- | -------------------------------------------------------------- | -------------------------------------------- |
+| `REDIS_HOST`              | `redis`                                                        | Redis host                                   |
+| `REDIS_PORT`              | `6379`                                                         | Redis port                                   |
+| `REDIS_DB`                | `0`                                                            | Redis database number                        |
+| `PROMETHEUS_URL`          | `http://prometheus-kube-prometheus-prometheus.fawkes.svc:9090` | Prometheus URL                               |
+| `GRAFANA_URL`             | `http://grafana.fawkes.svc:80`                                 | Grafana URL                                  |
+| `BACKSTAGE_URL`           | `http://backstage.fawkes.svc:7007`                             | Backstage API URL                            |
+| `MATTERMOST_WEBHOOK_URL`  | -                                                              | Mattermost webhook URL                       |
+| `SLACK_WEBHOOK_URL`       | -                                                              | Slack webhook URL                            |
+| `PAGERDUTY_API_KEY`       | -                                                              | PagerDuty API key                            |
+| `CORRELATION_TIME_WINDOW` | `300`                                                          | Time window for correlation (seconds)        |
+| `FLAPPING_THRESHOLD`      | `3`                                                            | Number of alerts to consider flapping        |
+| `FLAPPING_WINDOW`         | `600`                                                          | Time window for flapping detection (seconds) |
+| `ESCALATION_TIMEOUT`      | `900`                                                          | Time before escalation (seconds, 15 min)     |
+| `ALERT_FATIGUE_TARGET`    | `0.5`                                                          | Target alert reduction (50%)                 |
 
 ## Deployment
 
@@ -277,8 +278,8 @@ Rules are defined in YAML format in the `rules/` directory.
 name: "Weekly Maintenance Window"
 type: maintenance_window
 enabled: true
-schedule: "0 2 * * 0"  # Every Sunday at 2 AM
-duration: 7200  # 2 hours
+schedule: "0 2 * * 0" # Every Sunday at 2 AM
+duration: 7200 # 2 hours
 services:
   - api-gateway
   - database
@@ -308,7 +309,7 @@ name: "Flapping Network Alerts"
 type: flapping
 enabled: true
 threshold: 3
-window: 600  # 10 minutes
+window: 600 # 10 minutes
 alert_pattern: "NetworkLatency*"
 action: suppress
 ```
@@ -324,7 +325,7 @@ dependent_alerts:
   - "HighLatency"
   - "ConnectionTimeout"
   - "ServiceUnavailable"
-suppress_duration: 1800  # 30 minutes
+suppress_duration: 1800 # 30 minutes
 ```
 
 ## Alert Reduction Targets
@@ -339,11 +340,13 @@ suppress_duration: 1800  # 30 minutes
 ### Service not starting
 
 Check logs:
+
 ```bash
 kubectl logs -n fawkes -l app=smart-alerting
 ```
 
 Common issues:
+
 - Redis connection failed: Check REDIS_HOST and REDIS_PORT
 - Failed to load rules: Check rules syntax in `rules/` directory
 

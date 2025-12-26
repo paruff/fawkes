@@ -27,7 +27,7 @@ class TestGreatExpectationsConfig:
     def test_gx_config_valid_yaml(self):
         """Test that Great Expectations config is valid YAML."""
         config_file = GX_DIR / "great_expectations.yml"
-        with open(config_file, 'r') as f:
+        with open(config_file, "r") as f:
             config = yaml.safe_load(f)
 
         assert config is not None
@@ -42,7 +42,7 @@ class TestGreatExpectationsConfig:
     def test_datasources_config_valid(self):
         """Test that datasources config is valid."""
         datasources_file = GX_DIR / "datasources.yml"
-        with open(datasources_file, 'r') as f:
+        with open(datasources_file, "r") as f:
             config = yaml.safe_load(f)
 
         assert "datasources" in config
@@ -66,7 +66,7 @@ class TestExpectationSuites:
             "harbor_db_suite.json",
             "datahub_db_suite.json",
             "dora_metrics_suite.json",
-            "sonarqube_db_suite.json"
+            "sonarqube_db_suite.json",
         ]
 
         for suite_file in suites:
@@ -76,7 +76,7 @@ class TestExpectationSuites:
     def test_expectation_suites_valid_json(self):
         """Test that expectation suites are valid JSON."""
         for suite_file in EXPECTATIONS_DIR.glob("*.json"):
-            with open(suite_file, 'r') as f:
+            with open(suite_file, "r") as f:
                 suite = json.load(f)
 
             assert "expectation_suite_name" in suite
@@ -87,7 +87,7 @@ class TestExpectationSuites:
     def test_backstage_suite_expectations(self):
         """Test Backstage suite has required expectations."""
         suite_file = EXPECTATIONS_DIR / "backstage_db_suite.json"
-        with open(suite_file, 'r') as f:
+        with open(suite_file, "r") as f:
             suite = json.load(f)
 
         expectation_types = [exp["expectation_type"] for exp in suite["expectations"]]
@@ -109,7 +109,7 @@ class TestCheckpoints:
             "datahub_db_checkpoint.yml",
             "dora_metrics_checkpoint.yml",
             "sonarqube_db_checkpoint.yml",
-            "all_databases_checkpoint.yml"
+            "all_databases_checkpoint.yml",
         ]
 
         for checkpoint_file in checkpoints:
@@ -119,7 +119,7 @@ class TestCheckpoints:
     def test_checkpoints_valid_yaml(self):
         """Test that checkpoints are valid YAML."""
         for checkpoint_file in CHECKPOINTS_DIR.glob("*.yml"):
-            with open(checkpoint_file, 'r') as f:
+            with open(checkpoint_file, "r") as f:
                 checkpoint = yaml.safe_load(f)
 
             assert "name" in checkpoint
@@ -130,7 +130,7 @@ class TestCheckpoints:
     def test_all_databases_checkpoint_complete(self):
         """Test that all databases checkpoint includes all validations."""
         checkpoint_file = CHECKPOINTS_DIR / "all_databases_checkpoint.yml"
-        with open(checkpoint_file, 'r') as f:
+        with open(checkpoint_file, "r") as f:
             checkpoint = yaml.safe_load(f)
 
         validations = checkpoint["validations"]
@@ -156,7 +156,7 @@ class TestAlertConfiguration:
     def test_alerting_config_valid(self):
         """Test that alerting config is valid YAML."""
         alerting_file = BASE_DIR / "alerting.yaml"
-        with open(alerting_file, 'r') as f:
+        with open(alerting_file, "r") as f:
             config = yaml.safe_load(f)
 
         assert "rules" in config
@@ -177,7 +177,7 @@ class TestRequirements:
     def test_requirements_has_gx(self):
         """Test that requirements.txt includes Great Expectations."""
         requirements_file = BASE_DIR / "requirements.txt"
-        with open(requirements_file, 'r') as f:
+        with open(requirements_file, "r") as f:
             content = f.read()
 
         assert "great-expectations" in content

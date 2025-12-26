@@ -17,11 +17,11 @@ from datetime import datetime
 from typing import Dict, List, Tuple
 
 # Colors for output
-GREEN = '\033[92m'
-RED = '\033[91m'
-YELLOW = '\033[93m'
-BLUE = '\033[94m'
-RESET = '\033[0m'
+GREEN = "\033[92m"
+RED = "\033[91m"
+YELLOW = "\033[93m"
+BLUE = "\033[94m"
+RESET = "\033[0m"
 
 
 def print_test(name: str, passed: bool, message: str = ""):
@@ -69,16 +69,23 @@ async def check_database_tables():
         columns = await conn.fetch(
             "SELECT column_name FROM information_schema.columns WHERE table_name = 'nasa_tlx_assessments'"
         )
-        column_names = [col['column_name'] for col in columns]
+        column_names = [col["column_name"] for col in columns]
 
         required_columns = [
-            'id', 'user_id', 'task_type', 'mental_demand', 'physical_demand',
-            'temporal_demand', 'performance', 'effort', 'frustration', 'overall_workload'
+            "id",
+            "user_id",
+            "task_type",
+            "mental_demand",
+            "physical_demand",
+            "temporal_demand",
+            "performance",
+            "effort",
+            "frustration",
+            "overall_workload",
         ]
 
         all_present = all(col in column_names for col in required_columns)
-        print_test("All required columns present", all_present,
-                  f"Columns: {', '.join(required_columns)}")
+        print_test("All required columns present", all_present, f"Columns: {', '.join(required_columns)}")
 
         await conn.close()
         return True
@@ -105,8 +112,7 @@ async def check_api_endpoints():
 
             # Check NASA-TLX form endpoint
             response = await client.get(f"{base_url}/nasa-tlx?task_type=test&user_id=validator")
-            print_test("NASA-TLX form page accessible", response.status_code == 200,
-                      f"Status: {response.status_code}")
+            print_test("NASA-TLX form page accessible", response.status_code == 200, f"Status: {response.status_code}")
 
             # Check metrics endpoint
             response = await client.get(f"{base_url}/metrics")
@@ -146,28 +152,27 @@ async def test_submit_assessment():
             "effort": 50.0,
             "frustration": 30.0,
             "duration_minutes": 15,
-            "comment": "Automated validation test"
+            "comment": "Automated validation test",
         }
 
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                f"{base_url}/api/v1/nasa-tlx/submit?user_id=validator",
-                json=test_data,
-                timeout=10.0
+                f"{base_url}/api/v1/nasa-tlx/submit?user_id=validator", json=test_data, timeout=10.0
             )
 
             success = response.status_code == 200
-            print_test("Assessment submission", success,
-                      f"Status: {response.status_code}")
+            print_test("Assessment submission", success, f"Status: {response.status_code}")
 
             if success:
                 result = response.json()
-                print_test("Overall workload calculated",
-                          "overall_workload" in result,
-                          f"Workload: {result.get('overall_workload', 'N/A')}")
-                print_test("Assessment ID returned",
-                          "assessment_id" in result,
-                          f"ID: {result.get('assessment_id', 'N/A')}")
+                print_test(
+                    "Overall workload calculated",
+                    "overall_workload" in result,
+                    f"Workload: {result.get('overall_workload', 'N/A')}",
+                )
+                print_test(
+                    "Assessment ID returned", "assessment_id" in result, f"ID: {result.get('assessment_id', 'N/A')}"
+                )
 
         return True
 
@@ -189,23 +194,19 @@ async def check_analytics_endpoints():
         async with httpx.AsyncClient() as client:
             # Check analytics endpoint
             response = await client.get(f"{base_url}/api/v1/nasa-tlx/analytics?weeks=4")
-            print_test("Analytics endpoint", response.status_code == 200,
-                      f"Status: {response.status_code}")
+            print_test("Analytics endpoint", response.status_code == 200, f"Status: {response.status_code}")
 
             # Check trends endpoint
             response = await client.get(f"{base_url}/api/v1/nasa-tlx/trends?weeks=12")
-            print_test("Trends endpoint", response.status_code == 200,
-                      f"Status: {response.status_code}")
+            print_test("Trends endpoint", response.status_code == 200, f"Status: {response.status_code}")
 
             # Check task types endpoint
             response = await client.get(f"{base_url}/api/v1/nasa-tlx/task-types")
-            print_test("Task types stats endpoint", response.status_code == 200,
-                      f"Status: {response.status_code}")
+            print_test("Task types stats endpoint", response.status_code == 200, f"Status: {response.status_code}")
 
             if response.status_code == 200:
                 stats = response.json()
-                print_test("Task types data returned", len(stats) >= 0,
-                          f"Found {len(stats)} task type(s)")
+                print_test("Task types data returned", len(stats) >= 0, f"Found {len(stats)} task type(s)")
 
         return True
 
@@ -227,18 +228,18 @@ def check_dashboard_file():
 
     if exists:
         try:
-            with open(dashboard_path, 'r') as f:
+            with open(dashboard_path, "r") as f:
                 dashboard = json.load(f)
 
             # Check key fields
             has_title = "dashboard" in dashboard and "title" in dashboard["dashboard"]
-            print_test("Dashboard has title", has_title,
-                      dashboard["dashboard"].get("title", "N/A") if has_title else "")
+            print_test(
+                "Dashboard has title", has_title, dashboard["dashboard"].get("title", "N/A") if has_title else ""
+            )
 
             has_panels = "dashboard" in dashboard and "panels" in dashboard["dashboard"]
             panel_count = len(dashboard["dashboard"]["panels"]) if has_panels else 0
-            print_test("Dashboard has panels", has_panels,
-                      f"Panel count: {panel_count}")
+            print_test("Dashboard has panels", has_panels, f"Panel count: {panel_count}")
 
             # Check for NASA-TLX metrics in panels
             if has_panels:
@@ -265,7 +266,7 @@ def check_documentation():
         "NASA-TLX README": "services/devex-survey-automation/NASA_TLX_README.md",
         "Integration Guide": "services/devex-survey-automation/NASA_TLX_INTEGRATION_GUIDE.md",
         "BDD Feature Tests": "tests/bdd/features/nasa_tlx_cognitive_load.feature",
-        "Unit Tests": "services/devex-survey-automation/tests/unit/test_nasa_tlx.py"
+        "Unit Tests": "services/devex-survey-automation/tests/unit/test_nasa_tlx.py",
     }
 
     all_exist = True

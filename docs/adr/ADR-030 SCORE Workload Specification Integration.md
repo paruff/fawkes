@@ -1,6 +1,7 @@
 # ADR-030: SCORE Workload Specification Integration
 
 ## Status
+
 **Accepted** - December 6, 2025
 
 ## Context
@@ -31,18 +32,21 @@ The Fawkes platform currently generates Kubernetes manifests directly in the Gol
 ### Forces at Play
 
 **Technical Forces**:
+
 - Need for platform-agnostic workload definitions
 - Balance between abstraction and control
 - Integration with existing GitOps workflows (ArgoCD)
 - Tooling maturity and ecosystem support
 
 **Business Forces**:
+
 - Reduce time-to-production for application teams
 - Improve developer experience and satisfaction
 - Enable multi-cloud and hybrid deployments
 - Reduce platform lock-in
 
 **Organizational Forces**:
+
 - Varying Kubernetes expertise across teams
 - Platform engineering team capacity for supporting multiple deployment patterns
 - Need for backwards compatibility with existing applications

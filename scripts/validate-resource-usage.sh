@@ -186,7 +186,7 @@ for pod in $pods; do
 
     # Get current usage if metrics are available
     if [ "$METRICS_AVAILABLE" = true ]; then
-      metrics=$(kubectl top pod "$pod" -n "$NAMESPACE" --containers 2>/dev/null | grep "$container" || echo "")
+      metrics=$(kubectl top pod "$pod" -n "$NAMESPACE" --containers 2> /dev/null | grep "$container" || echo "")
 
       if [ -n "$metrics" ]; then
         cpu_usage=$(echo "$metrics" | awk '{print $2}')

@@ -50,13 +50,13 @@ def send_mattermost_alert(validation_result_suite: Any, data_docs_url: str = Non
     # Create Mattermost message
     message = {
         "text": f"## 🚨 Data Quality Validation Failed\n\n"
-                f"**Suite:** {expectation_suite_name}\n"
-                f"**Time:** {run_time}\n"
-                f"**Status:** ❌ Failed\n\n"
-                f"**Results:**\n"
-                f"- Total Expectations: {total_expectations}\n"
-                f"- Successful: ✅ {successful_expectations}\n"
-                f"- Failed: ❌ {failed_expectations}\n\n"
+        f"**Suite:** {expectation_suite_name}\n"
+        f"**Time:** {run_time}\n"
+        f"**Status:** ❌ Failed\n\n"
+        f"**Results:**\n"
+        f"- Total Expectations: {total_expectations}\n"
+        f"- Successful: ✅ {successful_expectations}\n"
+        f"- Failed: ❌ {failed_expectations}\n\n"
     }
 
     if data_docs_url:
@@ -66,18 +66,10 @@ def send_mattermost_alert(validation_result_suite: Any, data_docs_url: str = Non
     try:
         response = requests.post(webhook_url, json=message, timeout=10)
         response.raise_for_status()
-        return {
-            "status": "sent",
-            "webhook_url": webhook_url,
-            "success": success,
-            "statistics": statistics
-        }
+        return {"status": "sent", "webhook_url": webhook_url, "success": success, "statistics": statistics}
     except Exception as e:
         print(f"ERROR: Failed to send alert to Mattermost: {e}")
-        return {
-            "status": "error",
-            "error": str(e)
-        }
+        return {"status": "error", "error": str(e)}
 
 
 def send_daily_summary(summary_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -99,11 +91,11 @@ def send_daily_summary(summary_data: Dict[str, Any]) -> Dict[str, Any]:
     # Build summary message
     message = {
         "text": f"## 📊 Daily Data Quality Summary\n\n"
-                f"**Date:** {datetime.now().strftime('%Y-%m-%d')}\n\n"
-                f"**Validations Run:** {summary_data.get('total_validations', 0)}\n"
-                f"**Passed:** ✅ {summary_data.get('passed_validations', 0)}\n"
-                f"**Failed:** ❌ {summary_data.get('failed_validations', 0)}\n\n"
-                f"**Databases Checked:**\n"
+        f"**Date:** {datetime.now().strftime('%Y-%m-%d')}\n\n"
+        f"**Validations Run:** {summary_data.get('total_validations', 0)}\n"
+        f"**Passed:** ✅ {summary_data.get('passed_validations', 0)}\n"
+        f"**Failed:** ❌ {summary_data.get('failed_validations', 0)}\n\n"
+        f"**Databases Checked:**\n"
     }
 
     for db, status in summary_data.get("databases", {}).items():
@@ -126,14 +118,8 @@ if __name__ == "__main__":
     # Mock validation result for testing
     class MockValidationResult:
         success = False
-        statistics = {
-            "evaluated_expectations": 10,
-            "successful_expectations": 7,
-            "unsuccessful_expectations": 3
-        }
-        meta = {
-            "expectation_suite_name": "test_suite"
-        }
+        statistics = {"evaluated_expectations": 10, "successful_expectations": 7, "unsuccessful_expectations": 3}
+        meta = {"expectation_suite_name": "test_suite"}
 
     result = send_mattermost_alert(MockValidationResult())
     print(f"Alert result: {json.dumps(result, indent=2)}")

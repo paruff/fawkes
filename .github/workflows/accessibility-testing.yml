@@ -3,18 +3,18 @@ name: Accessibility Testing
 on:
   pull_request:
     paths:
-      - 'design-system/**'
-      - 'platform/apps/backstage/**'
-      - '.github/workflows/accessibility-testing.yml'
+      - "design-system/**"
+      - "platform/apps/backstage/**"
+      - ".github/workflows/accessibility-testing.yml"
   push:
     branches:
       - main
     paths:
-      - 'design-system/**'
-      - 'platform/apps/backstage/**'
+      - "design-system/**"
+      - "platform/apps/backstage/**"
   schedule:
     # Run daily at 9 AM UTC
-    - cron: '0 9 * * *'
+    - cron: "0 9 * * *"
   workflow_dispatch:
 
 permissions:
@@ -40,9 +40,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: 'design-system/package-lock.json'
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "design-system/package-lock.json"
 
       - name: Install dependencies
         working-directory: ./design-system
@@ -81,9 +81,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: 'design-system/package-lock.json'
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "design-system/package-lock.json"
 
       - name: Install dependencies
         working-directory: ./design-system

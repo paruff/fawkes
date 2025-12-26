@@ -57,20 +57,21 @@ Jenkins is configured entirely through code using the JCasC plugin. This provide
 
 ### JCasC Configuration Sections
 
-| Section | Purpose | Configured Items |
-|---------|---------|------------------|
-| `jenkins` | Core settings | System message, executors, mode |
-| `clouds` | Kubernetes plugin | Agent templates, pod specs |
-| `credentials` | Secret management | GitHub, SonarQube, Docker credentials |
-| `securityRealm` | Authentication | Local users, OAuth/OIDC |
-| `authorizationStrategy` | Access control | Permissions, RBAC |
-| `unclassified` | Integrations | Libraries, SonarQube, Mattermost |
-| `tool` | Build tools | Git, Maven, Node.js |
-| `security` | Script approval | Whitelisted methods |
+| Section                 | Purpose           | Configured Items                      |
+| ----------------------- | ----------------- | ------------------------------------- |
+| `jenkins`               | Core settings     | System message, executors, mode       |
+| `clouds`                | Kubernetes plugin | Agent templates, pod specs            |
+| `credentials`           | Secret management | GitHub, SonarQube, Docker credentials |
+| `securityRealm`         | Authentication    | Local users, OAuth/OIDC               |
+| `authorizationStrategy` | Access control    | Permissions, RBAC                     |
+| `unclassified`          | Integrations      | Libraries, SonarQube, Mattermost      |
+| `tool`                  | Build tools       | Git, Maven, Node.js                   |
+| `security`              | Script approval   | Whitelisted methods                   |
 
 ### Documentation
 
 📚 **Comprehensive Guide**: See [docs/how-to/jenkins-casc-configuration.md](../../../docs/how-to/jenkins-casc-configuration.md) for:
+
 - Architecture overview
 - Configuration examples
 - Credentials management
@@ -90,12 +91,12 @@ Jenkins uses the Kubernetes plugin for dynamic agent provisioning:
 
 ### Pre-configured Agent Templates
 
-| Agent | Labels | Languages/Tools |
-|-------|--------|-----------------|
-| maven-agent | `maven`, `java` | Java, Maven |
-| python-agent | `python` | Python, pip |
-| node-agent | `node`, `nodejs` | Node.js, npm |
-| go-agent | `go`, `golang` | Go |
+| Agent        | Labels           | Languages/Tools |
+| ------------ | ---------------- | --------------- |
+| maven-agent  | `maven`, `java`  | Java, Maven     |
+| python-agent | `python`         | Python, pip     |
+| node-agent   | `node`, `nodejs` | Node.js, npm    |
+| go-agent     | `go`, `golang`   | Go              |
 
 ### Shared Library
 
@@ -135,6 +136,7 @@ globalLibraries:
 **⚠️ Development Credentials:**
 
 The default configuration uses placeholder credentials that must be changed:
+
 - Username: `admin`
 - Password: `CHANGE_ME_jenkins_admin_password`
 
@@ -143,6 +145,7 @@ The default configuration uses placeholder credentials that must be changed:
 For production deployments, you MUST:
 
 1. Update the secrets file:
+
    ```bash
    # Edit platform/apps/jenkins/secrets.yaml
    # Replace CHANGE_ME_jenkins_admin_password with a strong password
@@ -152,6 +155,7 @@ For production deployments, you MUST:
    ```
 
 2. Update jenkins-application.yaml to reference the secret:
+
    ```yaml
    extraEnv:
      - name: ADMIN_PASSWORD
@@ -161,12 +165,13 @@ For production deployments, you MUST:
            key: password
 
    admin:
-     password: "{{ .Values.adminPassword }}"  # Reference from secret
+     password: "{{ .Values.adminPassword }}" # Reference from secret
 
    JENKINS_OPTS: "--argumentsRealm.passwd.admin={{ .Values.adminPassword }} -Djenkins.install.runSetupWizard=false"
    ```
 
 3. For production, use External Secrets Operator:
+
    ```bash
    # Configure external secret to pull from AWS Secrets Manager or Azure Key Vault
    kubectl apply -f platform/apps/external-secrets/externalsecret-jenkins-admin.yaml
@@ -194,10 +199,12 @@ kubectl logs -n fawkes deployment/jenkins -f
 ### Access Jenkins
 
 Local development:
+
 ```
 http://jenkins.127.0.0.1.nip.io
 ```
 
 Credentials:
+
 - Username: `admin`
 - Password: Set in `platform/apps/jenkins/secrets.yaml` (must be configured before deployment)

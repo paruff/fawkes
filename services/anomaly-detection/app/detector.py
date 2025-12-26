@@ -40,13 +40,13 @@ async def run_continuous_detection():
                 # Deployment failures (error rate spikes)
                 'rate(http_requests_total{status=~"5.."}[5m])',
                 # Build time anomalies
-                'jenkins_job_duration_seconds',
+                "jenkins_job_duration_seconds",
                 # Resource usage spikes (CPU)
-                'rate(container_cpu_usage_seconds_total[5m])',
+                "rate(container_cpu_usage_seconds_total[5m])",
                 # Resource usage spikes (Memory)
-                'container_memory_usage_bytes',
+                "container_memory_usage_bytes",
                 # API latency increases
-                'http_request_duration_seconds',
+                "http_request_duration_seconds",
                 # Log error rate spikes
                 'rate(log_messages_total{level="error"}[5m])',
             ]
@@ -67,10 +67,7 @@ async def run_continuous_detection():
                 from .main import AnomalyDetection
 
                 anomaly_detection = AnomalyDetection(
-                    id=str(uuid.uuid4()),
-                    anomaly=anomaly_score,
-                    detected_at=datetime.now(),
-                    alerted=False
+                    id=str(uuid.uuid4()), anomaly=anomaly_score, detected_at=datetime.now(), alerted=False
                 )
 
                 # Add to recent anomalies
@@ -79,13 +76,10 @@ async def run_continuous_detection():
                     recent_anomalies.pop()
 
                 # Track metrics
-                ANOMALIES_DETECTED.labels(
-                    metric=anomaly_score.metric,
-                    severity=anomaly_score.severity
-                ).inc()
+                ANOMALIES_DETECTED.labels(metric=anomaly_score.metric, severity=anomaly_score.severity).inc()
 
                 # Send alert if severity is high or critical
-                if anomaly_score.severity in ['critical', 'high']:
+                if anomaly_score.severity in ["critical", "high"]:
                     try:
                         await send_alert(anomaly_detection, http_client)
                         anomaly_detection.alerted = True
@@ -93,20 +87,20 @@ async def run_continuous_detection():
                         logger.error(f"Failed to send alert: {e}")
 
                 # Trigger RCA for critical anomalies
-                if anomaly_score.severity == 'critical':
+                if anomaly_score.severity == "critical":
                     try:
                         from . import rca as rca_module
-                        await rca_module.perform_root_cause_analysis(
-                            anomaly_detection,
-                            recent_anomalies
-                        )
+
+                        await rca_module.perform_root_cause_analysis(anomaly_detection, recent_anomalies)
                     except Exception as e:
                         logger.error(f"Failed to perform RCA: {e}")
 
             # Update false positive rate estimate
             if len(recent_anomalies) > 10:
                 # Simple heuristic: anomalies with low confidence are likely false positives
-                low_confidence = sum(1 for a in recent_anomalies[:50] if a.anomaly.confidence < CONFIDENCE_LOW_THRESHOLD)
+                low_confidence = sum(
+                    1 for a in recent_anomalies[:50] if a.anomaly.confidence < CONFIDENCE_LOW_THRESHOLD
+                )
                 fp_rate = low_confidence / min(50, len(recent_anomalies))
                 FALSE_POSITIVE_RATE_GAUGE.set(fp_rate)
 
@@ -155,11 +149,7 @@ async def send_alert(anomaly_detection, http_client):
     }
 
     try:
-        response = await http_client.post(
-            f"{ALERTMANAGER_URL}/api/v2/alerts",
-            json=[alert],
-            timeout=10.0
-        )
+        response = await http_client.post(f"{ALERTMANAGER_URL}/api/v2/alerts", json=[alert], timeout=10.0)
 
         if response.status_code in [200, 202]:
             logger.info(f"Alert sent for anomaly {anomaly_detection.id}")

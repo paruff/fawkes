@@ -29,10 +29,10 @@ Creates a new Eclipse Che workspace from a Devfile.
 
 **Headers:**
 
-| Header | Required | Description |
-|--------|----------|-------------|
-| `Authorization` | Yes | Bearer token from Backstage session. |
-| `Content-Type` | Yes | `application/json` |
+| Header          | Required | Description                          |
+| --------------- | -------- | ------------------------------------ |
+| `Authorization` | Yes      | Bearer token from Backstage session. |
+| `Content-Type`  | Yes      | `application/json`                   |
 
 **Request Body:**
 
@@ -44,11 +44,11 @@ Creates a new Eclipse Che workspace from a Devfile.
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `devfileUrl` | String | Yes | URL to Devfile 2.2.2 YAML file. |
-| `namespace` | String | No | Kubernetes namespace for workspace. Default: `{user}-workspaces`. |
-| `name` | String | No | Workspace name. Default: auto-generated. |
+| Field        | Type   | Required | Description                                                       |
+| ------------ | ------ | -------- | ----------------------------------------------------------------- |
+| `devfileUrl` | String | Yes      | URL to Devfile 2.2.2 YAML file.                                   |
+| `namespace`  | String | No       | Kubernetes namespace for workspace. Default: `{user}-workspaces`. |
+| `name`       | String | No       | Workspace name. Default: auto-generated.                          |
 
 #### Response
 
@@ -97,15 +97,15 @@ Lists all workspaces for the authenticated user.
 
 **Headers:**
 
-| Header | Required | Description |
-|--------|----------|-------------|
-| `Authorization` | Yes | Bearer token. |
+| Header          | Required | Description   |
+| --------------- | -------- | ------------- |
+| `Authorization` | Yes      | Bearer token. |
 
 **Query Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `status` | String | No | Filter by status: `Running`, `Stopped`, `Starting`, `Stopping`. |
+| Parameter | Type   | Required | Description                                                     |
+| --------- | ------ | -------- | --------------------------------------------------------------- |
+| `status`  | String | No       | Filter by status: `Running`, `Stopped`, `Starting`, `Stopping`. |
 
 #### Response
 
@@ -145,9 +145,9 @@ Deletes a workspace.
 
 **Headers:**
 
-| Header | Required | Description |
-|--------|----------|-------------|
-| `Authorization` | Yes | Bearer token. |
+| Header          | Required | Description   |
+| --------------- | -------- | ------------- |
+| `Authorization` | Yes      | Bearer token. |
 
 #### Response
 
@@ -179,18 +179,18 @@ Retrieves DORA metrics for a project or team.
 
 **Headers:**
 
-| Header | Required | Description |
-|--------|----------|-------------|
-| `Authorization` | Yes | Bearer token. |
+| Header          | Required | Description   |
+| --------------- | -------- | ------------- |
+| `Authorization` | Yes      | Bearer token. |
 
 **Query Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `project` | String | No | Project name (from Backstage catalog). |
-| `team` | String | No | Team name. |
-| `startDate` | String | No | Start date (ISO 8601). Default: 30 days ago. |
-| `endDate` | String | No | End date (ISO 8601). Default: today. |
+| Parameter   | Type   | Required | Description                                  |
+| ----------- | ------ | -------- | -------------------------------------------- |
+| `project`   | String | No       | Project name (from Backstage catalog).       |
+| `team`      | String | No       | Team name.                                   |
+| `startDate` | String | No       | Start date (ISO 8601). Default: 30 days ago. |
+| `endDate`   | String | No       | End date (ISO 8601). Default: today.         |
 
 #### Response
 
@@ -254,17 +254,17 @@ Retrieves deployment history for a service.
 
 **Headers:**
 
-| Header | Required | Description |
-|--------|----------|-------------|
-| `Authorization` | Yes | Bearer token. |
+| Header          | Required | Description   |
+| --------------- | -------- | ------------- |
+| `Authorization` | Yes      | Bearer token. |
 
 **Query Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `service` | String | Yes | Service name. |
-| `environment` | String | No | Filter by environment (`dev`, `staging`, `prod`). |
-| `limit` | Integer | No | Number of results. Default: `20`. Max: `100`. |
+| Parameter     | Type    | Required | Description                                       |
+| ------------- | ------- | -------- | ------------------------------------------------- |
+| `service`     | String  | Yes      | Service name.                                     |
+| `environment` | String  | No       | Filter by environment (`dev`, `staging`, `prod`). |
+| `limit`       | Integer | No       | Number of results. Default: `20`. Max: `100`.     |
 
 #### Response
 
@@ -310,10 +310,10 @@ Registers a new entity location (e.g., Git repository with `catalog-info.yaml`).
 
 **Headers:**
 
-| Header | Required | Description |
-|--------|----------|-------------|
-| `Authorization` | Yes | Bearer token. |
-| `Content-Type` | Yes | `application/json` |
+| Header          | Required | Description        |
+| --------------- | -------- | ------------------ |
+| `Authorization` | Yes      | Bearer token.      |
+| `Content-Type`  | Yes      | `application/json` |
 
 **Request Body:**
 
@@ -324,10 +324,10 @@ Registers a new entity location (e.g., Git repository with `catalog-info.yaml`).
 }
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `type` | String | Yes | Location type: `url`, `file`. |
-| `target` | String | Yes | URL or file path to `catalog-info.yaml`. |
+| Field    | Type   | Required | Description                              |
+| -------- | ------ | -------- | ---------------------------------------- |
+| `type`   | String | Yes      | Location type: `url`, `file`.            |
+| `target` | String | Yes      | URL or file path to `catalog-info.yaml`. |
 
 #### Response
 
@@ -364,16 +364,16 @@ Retrieves entities from the software catalog.
 
 **Headers:**
 
-| Header | Required | Description |
-|--------|----------|-------------|
-| `Authorization` | Yes | Bearer token. |
+| Header          | Required | Description   |
+| --------------- | -------- | ------------- |
+| `Authorization` | Yes      | Bearer token. |
 
 **Query Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `filter` | String | No | Filter expression (e.g., `kind=Component,metadata.name=my-service`). |
-| `fields` | String | No | Comma-separated list of fields to include. |
+| Parameter | Type   | Required | Description                                                          |
+| --------- | ------ | -------- | -------------------------------------------------------------------- |
+| `filter`  | String | No       | Filter expression (e.g., `kind=Component,metadata.name=my-service`). |
+| `fields`  | String | No       | Comma-separated list of fields to include.                           |
 
 #### Response
 
@@ -426,17 +426,17 @@ kubectl create secret generic backstage-service-token \
 
 ## Error Codes
 
-| HTTP Code | Meaning | Common Causes |
-|-----------|---------|---------------|
-| 200 OK | Success | Valid request. |
-| 201 Created | Resource created | Workspace or entity created. |
-| 204 No Content | Success (no data) | Resource deleted. |
-| 400 Bad Request | Invalid request | Malformed JSON, missing fields. |
-| 401 Unauthorized | Authentication failed | Invalid or missing token. |
-| 403 Forbidden | Permission denied | User lacks access to resource. |
-| 404 Not Found | Resource not found | Invalid workspace ID, entity not in catalog. |
-| 409 Conflict | Resource already exists | Duplicate workspace or entity. |
-| 500 Internal Server Error | Server error | Check Backstage backend logs. |
+| HTTP Code                 | Meaning                 | Common Causes                                |
+| ------------------------- | ----------------------- | -------------------------------------------- |
+| 200 OK                    | Success                 | Valid request.                               |
+| 201 Created               | Resource created        | Workspace or entity created.                 |
+| 204 No Content            | Success (no data)       | Resource deleted.                            |
+| 400 Bad Request           | Invalid request         | Malformed JSON, missing fields.              |
+| 401 Unauthorized          | Authentication failed   | Invalid or missing token.                    |
+| 403 Forbidden             | Permission denied       | User lacks access to resource.               |
+| 404 Not Found             | Resource not found      | Invalid workspace ID, entity not in catalog. |
+| 409 Conflict              | Resource already exists | Duplicate workspace or entity.               |
+| 500 Internal Server Error | Server error            | Check Backstage backend logs.                |
 
 ---
 

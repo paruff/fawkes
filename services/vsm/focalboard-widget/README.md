@@ -82,17 +82,20 @@ curl http://vsm-service.fawkes.svc:8000/api/v1/metrics?days=7
 The widget shows:
 
 ### Overall Metrics (7-day period)
+
 - **Throughput**: Number of items completed
 - **WIP**: Current work in progress
 - **Cycle Time P50**: Median cycle time
 - **Cycle Time P85**: 85th percentile cycle time
 
 ### Stage Metrics
+
 - Each VSM stage with current WIP count
 - WIP limit for each stage (if configured)
 - Bottleneck warning (⚠️) when stage is at 80%+ of WIP limit
 
 ### Bottleneck Warnings
+
 When enabled, shows alert if any stages are approaching/exceeding WIP limits.
 
 ## Configuration
@@ -123,6 +126,7 @@ The widget communicates with the VSM service REST API:
 ## Grafana Dashboard Link
 
 The widget includes a link to the full VSM flow metrics Grafana dashboard:
+
 - Default URL: `http://grafana.fawkes.svc/d/vsm-flow-metrics`
 - Shows detailed cumulative flow diagrams, cycle time trends, and bottleneck analysis
 
@@ -131,6 +135,7 @@ The widget includes a link to the full VSM flow metrics Grafana dashboard:
 ### Widget Shows Error
 
 1. Check VSM service is accessible:
+
    ```bash
    curl http://vsm-service.fawkes.svc:8000/api/v1/health
    ```
@@ -178,5 +183,6 @@ MIT
 ## Support
 
 For issues or questions:
+
 - GitHub Issues: https://github.com/paruff/fawkes/issues
 - Documentation: https://github.com/paruff/fawkes/docs

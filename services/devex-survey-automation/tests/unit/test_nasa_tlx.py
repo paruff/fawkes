@@ -19,7 +19,7 @@ def test_nasa_tlx_request_validation():
         effort=45.0,
         frustration=30.0,
         duration_minutes=15,
-        comment="Test deployment was smooth"
+        comment="Test deployment was smooth",
     )
     assert valid_request.task_type == "deployment"
     assert valid_request.mental_demand == 50.0
@@ -35,7 +35,7 @@ def test_nasa_tlx_request_out_of_range():
             temporal_demand=60.0,
             performance=85.0,
             effort=45.0,
-            frustration=30.0
+            frustration=30.0,
         )
 
 
@@ -48,7 +48,7 @@ def test_nasa_tlx_request_minimal():
         temporal_demand=30.0,
         performance=90.0,
         effort=35.0,
-        frustration=15.0
+        frustration=15.0,
     )
     assert minimal_request.task_id is None
     assert minimal_request.duration_minutes is None
@@ -66,7 +66,7 @@ def test_overall_workload_calculation():
         temporal_demand=90.0,
         performance=70.0,  # Inverted to 30.0 in calculation
         effort=75.0,
-        frustration=85.0
+        frustration=85.0,
     )
 
     # Manual calculation: (80 + 40 + 90 + 30 + 75 + 85) / 6 = 400 / 6 = 66.67
@@ -76,15 +76,7 @@ def test_overall_workload_calculation():
 
 def test_task_types():
     """Test common platform task types"""
-    task_types = [
-        "deployment",
-        "pr_review",
-        "incident_response",
-        "build",
-        "debug",
-        "configuration",
-        "onboarding"
-    ]
+    task_types = ["deployment", "pr_review", "incident_response", "build", "debug", "configuration", "onboarding"]
 
     for task_type in task_types:
         request = NASATLXRequest(
@@ -94,7 +86,7 @@ def test_task_types():
             temporal_demand=50.0,
             performance=75.0,
             effort=50.0,
-            frustration=40.0
+            frustration=40.0,
         )
         assert request.task_type == task_type
 
@@ -115,7 +107,7 @@ def test_nasa_tlx_response_schema():
         "overall_workload": 45.0,
         "duration_minutes": 15,
         "comment": "Test comment",
-        "submitted_at": datetime.now()
+        "submitted_at": datetime.now(),
     }
 
     response = NASATLXResponse(**response_data)
@@ -138,7 +130,7 @@ def test_comment_length_validation():
             performance=85.0,
             effort=45.0,
             frustration=30.0,
-            comment=long_comment
+            comment=long_comment,
         )
 
 
@@ -153,7 +145,7 @@ def test_negative_duration():
             performance=85.0,
             effort=45.0,
             frustration=30.0,
-            duration_minutes=-5
+            duration_minutes=-5,
         )
 
 
@@ -170,7 +162,7 @@ def test_performance_interpretation():
         temporal_demand=0.0,
         performance=100.0,  # Perfect performance
         effort=0.0,
-        frustration=0.0
+        frustration=0.0,
     )
     # Workload = (0 + 0 + 0 + (100-100) + 0 + 0) / 6 = 0
     expected_workload_high = (0.0 + 0.0 + 0.0 + 0.0 + 0.0 + 0.0) / 6.0
@@ -183,7 +175,7 @@ def test_performance_interpretation():
         temporal_demand=0.0,
         performance=0.0,  # Complete failure
         effort=0.0,
-        frustration=0.0
+        frustration=0.0,
     )
     # Workload = (0 + 0 + 0 + (100-0) + 0 + 0) / 6 = 16.67
     expected_workload_low = (0.0 + 0.0 + 0.0 + 100.0 + 0.0 + 0.0) / 6.0

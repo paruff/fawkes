@@ -1,6 +1,7 @@
 # OpenTelemetry Collector Deployment - Implementation Summary
 
 ## Issue
+
 **#25 - Deploy OpenTelemetry Collector**
 Priority: p0-critical
 Milestone: 1.3 - Security & Observability
@@ -15,16 +16,19 @@ The OpenTelemetry Collector has been deployed as a DaemonSet to collect, process
 ### ✅ Completed Components
 
 #### 1. OpenTelemetry Collector Deployment
+
 **File**: `platform/apps/opentelemetry/otel-collector-application.yaml`
 
 The collector is deployed as a DaemonSet with the following configuration:
 
 **Deployment Mode**:
+
 - DaemonSet running on all schedulable nodes
 - Deployed in `monitoring` namespace
 - Managed via ArgoCD Application
 
 **Receivers** (Data Ingestion):
+
 - ✅ **OTLP gRPC** (port 4317) - Receives traces, metrics, logs from instrumented applications
 - ✅ **OTLP HTTP** (port 4318) - Alternative HTTP endpoint for OTLP
 - ✅ **Prometheus** - Scrapes metrics from pods with `prometheus.io/scrape=true` annotation
@@ -33,6 +37,7 @@ The collector is deployed as a DaemonSet with the following configuration:
 - ✅ **Filelog** - Collects logs from container stdout/stderr via `/var/log/containers`
 
 **Processors** (Data Transformation):
+
 - Memory limiter (prevents OOM)
 - Batch processors (efficient export)
 - K8s attributes processor (enriches with pod/namespace/container metadata)
@@ -42,19 +47,23 @@ The collector is deployed as a DaemonSet with the following configuration:
 - Probabilistic sampler (configurable trace sampling)
 
 **Exporters** (Data Export):
+
 - ✅ **Prometheus Remote Write** - Exports metrics to Prometheus at `prometheus-prometheus.monitoring.svc.cluster.local:9090`
 - ✅ **OpenSearch** - Exports logs to OpenSearch at `opensearch-cluster-master.logging.svc.cluster.local:9200`
 - ✅ **OTLP/Tempo** - Exports traces to Tempo at `tempo.monitoring.svc.cluster.local:4317`
 
 **Pipelines**:
+
 1. **Metrics Pipeline**: otlp → prometheus → kubeletstats → hostmetrics → processors → prometheusremotewrite
 2. **Logs Pipeline**: filelog → otlp → processors → opensearch
 3. **Traces Pipeline**: otlp → processors → tempo
 
 #### 2. BDD Acceptance Tests
+
 **File**: `tests/bdd/features/opentelemetry-deployment.feature`
 
 Created 22 comprehensive scenarios covering:
+
 - Namespace and ArgoCD application validation
 - DaemonSet deployment and pod readiness
 - OTLP receivers (gRPC and HTTP) accessibility
@@ -70,11 +79,13 @@ Created 22 comprehensive scenarios covering:
 - ServiceMonitor/PodMonitor for self-monitoring
 
 #### 3. Sample Instrumented Application
+
 **Directory**: `platform/apps/opentelemetry/sample-app/`
 
 Created a Python Flask application with full OpenTelemetry instrumentation:
 
 **Features**:
+
 - Automatic instrumentation for Flask and HTTP requests
 - Multiple endpoints demonstrating different trace scenarios:
   - `/` - Service information
@@ -87,6 +98,7 @@ Created a Python Flask application with full OpenTelemetry instrumentation:
 - Kubernetes-ready with deployment manifests
 
 **Files**:
+
 - `app.py` - Flask application with OpenTelemetry instrumentation
 - `requirements.txt` - Python dependencies
 - `Dockerfile` - Container image definition
@@ -94,9 +106,11 @@ Created a Python Flask application with full OpenTelemetry instrumentation:
 - `README.md` - Usage documentation
 
 #### 4. Validation Test Script
+
 **File**: `platform/apps/opentelemetry/test-otel-deployment.sh`
 
 Automated validation script that:
+
 1. Checks monitoring namespace exists
 2. Verifies OpenTelemetry Collector DaemonSet deployment
 3. Validates OTLP ports are exposed (4317, 4318)
@@ -107,9 +121,11 @@ Automated validation script that:
 8. Checks collector logs for trace activity
 
 #### 5. Updated Documentation
+
 **File**: `platform/apps/opentelemetry/README.md`
 
 Enhanced documentation includes:
+
 - Deployment status and architecture
 - Configuration overview
 - Deployment verification commands
@@ -174,34 +190,38 @@ Enhanced documentation includes:
 ### Resource Allocation
 
 Per DaemonSet pod:
+
 - **Requests**: 200m CPU, 512Mi memory
 - **Limits**: 1000m CPU, 1Gi memory
 - Configured for 5+ minute buffer retention during backend failures
 
 ## Acceptance Criteria Validation
 
-| Criterion | Status | Evidence |
-|-----------|--------|----------|
-| OTel Collector deployed as DaemonSet | ✅ DONE | `otel-collector-application.yaml` with `mode: daemonset` |
-| Receivers configured (OTLP, Prometheus) | ✅ DONE | OTLP (4317/4318), Prometheus, Kubeletstats, Hostmetrics configured |
-| Exporters configured (Prometheus, OpenSearch) | ✅ DONE | Prometheus Remote Write, OpenSearch, Tempo exporters configured |
-| Sample traces flowing | ✅ DONE | Sample app with OTLP instrumentation provided |
+| Criterion                                     | Status  | Evidence                                                           |
+| --------------------------------------------- | ------- | ------------------------------------------------------------------ |
+| OTel Collector deployed as DaemonSet          | ✅ DONE | `otel-collector-application.yaml` with `mode: daemonset`           |
+| Receivers configured (OTLP, Prometheus)       | ✅ DONE | OTLP (4317/4318), Prometheus, Kubeletstats, Hostmetrics configured |
+| Exporters configured (Prometheus, OpenSearch) | ✅ DONE | Prometheus Remote Write, OpenSearch, Tempo exporters configured    |
+| Sample traces flowing                         | ✅ DONE | Sample app with OTLP instrumentation provided                      |
 
 ## Testing
 
 ### BDD Tests
+
 ```bash
 # Run OpenTelemetry-specific BDD tests
 behave tests/bdd/features/opentelemetry-deployment.feature
 ```
 
 ### Validation Script
+
 ```bash
 # Run comprehensive validation
 ./platform/apps/opentelemetry/test-otel-deployment.sh
 ```
 
 ### Manual Testing
+
 ```bash
 # 1. Deploy sample application
 kubectl apply -f platform/apps/opentelemetry/sample-app/deployment.yaml
@@ -221,12 +241,14 @@ curl http://localhost:8080/work
 ## Dependencies
 
 ### Upstream Services
+
 - **Prometheus**: Metrics storage and querying
 - **OpenSearch**: Log aggregation and search
 - **Tempo**: Trace storage and querying
 - **Grafana**: Unified visualization
 
 ### Related ADRs
+
 - [ADR-011: Centralized Log Management](../../docs/adr/ADR-011%20Centralized%20Log%20Management.md)
 - [ADR-012: Metrics Monitoring](../../docs/adr/ADR-012-metrics-monitoring.md)
 - [ADR-013: Distributed Tracing](../../docs/adr/ADR-013%20Distributed%20Tracing.md)
@@ -234,6 +256,7 @@ curl http://localhost:8080/work
 ## Monitoring & Operations
 
 ### Health Checks
+
 ```bash
 # Check collector health
 kubectl exec -n monitoring <collector-pod> -- wget -qO- http://localhost:13133
@@ -244,6 +267,7 @@ kubectl port-forward -n monitoring <collector-pod> 55679:55679
 ```
 
 ### Logs
+
 ```bash
 # View collector logs
 kubectl logs -n monitoring -l app.kubernetes.io/name=opentelemetry-collector --tail=100
@@ -253,7 +277,9 @@ kubectl logs -n monitoring -l app.kubernetes.io/name=opentelemetry-collector -f
 ```
 
 ### Metrics
+
 The collector exposes self-monitoring metrics at port 8888:
+
 - `otelcol_receiver_accepted_spans` - Spans accepted
 - `otelcol_receiver_refused_spans` - Spans refused
 - `otelcol_exporter_sent_spans` - Spans sent to backends

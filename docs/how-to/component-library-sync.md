@@ -5,6 +5,7 @@ This document describes how the Fawkes Design System components are synchronized
 ## Overview
 
 The component library sync ensures that:
+
 1. Design system components match Penpot designs
 2. Component documentation includes design references
 3. Storybook includes embedded design previews
@@ -40,6 +41,7 @@ The component library sync ensures that:
 **Frequency**: Every hour (configurable)
 
 **Steps**:
+
 1. Fetch list of projects from Penpot API
 2. Identify projects tagged with `design-system`
 3. Extract all components and their properties
@@ -93,6 +95,7 @@ pipeline {
 **Mapping File**: `platform/apps/backstage/plugins/penpot-viewer.yaml`
 
 **Mapping Logic**:
+
 ```python
 # Example mapping logic
 def map_components(penpot_components, design_system_components):
@@ -133,15 +136,18 @@ def map_components(penpot_components, design_system_components):
 **Checks Performed**:
 
 1. **Name Consistency**
+
    - Penpot component name matches Design System component name
    - Variants are consistently named
 
 2. **Property Validation**
+
    - Props in Penpot match component API
    - Required props are present
    - Prop types are compatible
 
 3. **Design Token Validation**
+
    - Colors match design token values
    - Spacing uses token scale
    - Typography uses defined scales
@@ -153,6 +159,7 @@ def map_components(penpot_components, design_system_components):
    - Responsive breakpoints align
 
 **Validation Script**:
+
 ```python
 # scripts/validate-component-sync.py
 import json
@@ -206,11 +213,13 @@ def validate_component(penpot_component: Dict, design_system_component: Dict) ->
 **Actions**:
 
 1. **Update Component Metadata**
+
    - Add Penpot design ID to component files
    - Update design preview URLs
    - Add design version tags
 
 2. **Update Storybook Documentation**
+
    - Embed Penpot design previews
    - Add links to source designs
    - Include design specifications
@@ -221,6 +230,7 @@ def validate_component(penpot_component: Dict, design_system_component: Dict) ->
    - List color and typography values
 
 **Storybook Integration**:
+
 ```typescript
 // Example: Adding Penpot preview to Storybook
 import React from 'react';
@@ -293,6 +303,7 @@ sync_report:
 ```
 
 **Notification**:
+
 ```json
 {
   "channel": "#design-system",
@@ -375,7 +386,7 @@ Configure validation strictness:
 validation:
   design_tokens:
     enabled: true
-    level: warning  # warning | error
+    level: warning # warning | error
 
   accessibility:
     enabled: true
@@ -407,11 +418,13 @@ kubectl create job --from=cronjob/penpot-sync penpot-sync-manual -n fawkes
 ### Sync Job Failing
 
 **Check logs**:
+
 ```bash
 kubectl logs -n fawkes jobs/penpot-sync
 ```
 
 **Common issues**:
+
 1. **API token expired**: Regenerate token in Penpot
 2. **Network connectivity**: Check Penpot service is reachable
 3. **Invalid mapping config**: Validate YAML syntax
@@ -419,11 +432,13 @@ kubectl logs -n fawkes jobs/penpot-sync
 ### Components Not Mapping
 
 **Reasons**:
+
 1. **Name mismatch**: Check component names in Penpot vs. Design System
 2. **Missing tags**: Ensure Penpot project is tagged with `design-system`
 3. **Exclusion rules**: Check if component is excluded in config
 
 **Fix**:
+
 ```yaml
 # Add explicit mapping
 mappings:
@@ -434,11 +449,12 @@ mappings:
 ### False Validation Errors
 
 **Adjust thresholds**:
+
 ```yaml
 validation:
   design_tokens:
-    color_tolerance: 5  # Allow 5% color difference
-    spacing_tolerance: 2  # Allow 2px spacing difference
+    color_tolerance: 5 # Allow 5% color difference
+    spacing_tolerance: 2 # Allow 2px spacing difference
 ```
 
 ## Best Practices

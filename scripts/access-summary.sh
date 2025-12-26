@@ -36,16 +36,16 @@ print_service_header() {
 
 get_password() {
   local secret="$1" namespace="$2" key="${3:-password}"
-  kubectl get secret "$secret" -n "$namespace" -o jsonpath="{.data.$key}" 2>/dev/null | base64 -d 2>/dev/null || echo "N/A"
+  kubectl get secret "$secret" -n "$namespace" -o jsonpath="{.data.$key}" 2> /dev/null | base64 -d 2> /dev/null || echo "N/A"
 }
 
 check_namespace() {
-  kubectl get namespace "$1" >/dev/null 2>&1
+  kubectl get namespace "$1" > /dev/null 2>&1
 }
 
 get_ingress_host() {
   local name="$1" namespace="$2"
-  kubectl get ingress -n "$namespace" "$name" -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo ""
+  kubectl get ingress -n "$namespace" "$name" -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo ""
 }
 
 port_forward() {
@@ -244,21 +244,21 @@ show_cluster_info() {
   print_service_header "📍 Cluster Information"
 
   local ctx
-  ctx=$(kubectl config current-context 2>/dev/null || echo "unknown")
+  ctx=$(kubectl config current-context 2> /dev/null || echo "unknown")
   echo "   Context:      $ctx"
 
   local nodes
-  nodes=$(kubectl get nodes --no-headers 2>/dev/null | wc -l | tr -d ' ')
+  nodes=$(kubectl get nodes --no-headers 2> /dev/null | wc -l | tr -d ' ')
   echo "   Nodes:        $nodes"
 
   local version
-  version=$(kubectl version --short 2>/dev/null | grep "Server Version" | awk '{print $3}' || echo "unknown")
+  version=$(kubectl version --short 2> /dev/null | grep "Server Version" | awk '{print $3}' || echo "unknown")
   echo "   K8s Version:  $version"
   echo ""
 }
 
 show_azure_info() {
-  if ! command -v az >/dev/null 2>&1; then
+  if ! command -v az > /dev/null 2>&1; then
     return 0
   fi
 
@@ -267,7 +267,7 @@ show_azure_info() {
   local rg="${TF_VAR_resource_group_name:-fawkes-rg}"
   local cluster="${TF_VAR_cluster_name:-fawkes-dev}"
 
-  if az aks show -g "$rg" -n "$cluster" >/dev/null 2>&1; then
+  if az aks show -g "$rg" -n "$cluster" > /dev/null 2>&1; then
     echo "   Resource Group: $rg"
     echo "   Cluster Name:   $cluster"
     echo ""

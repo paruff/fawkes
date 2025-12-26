@@ -140,6 +140,7 @@ scope:
 ```
 
 **What it provides**:
+
 - Commit timestamps (for lead time start)
 - Pull request data
 - Code review metrics
@@ -157,6 +158,7 @@ scope:
 ```
 
 **What it provides**:
+
 - Deployment frequency (sync events)
 - Lead time (commit → sync completion)
 - Change failure rate (failed syncs)
@@ -176,6 +178,7 @@ scope:
 ```
 
 **What it provides**:
+
 - Build success rate
 - Rework rate (retry builds)
 - Quality gate pass rate
@@ -192,6 +195,7 @@ endpoint: /api/plugins/webhook/1/incidents
 ```
 
 **What it provides**:
+
 - Production incidents
 - Incident resolution times
 - MTTR calculation data
@@ -219,10 +223,7 @@ curl -X GET "http://devlake.127.0.0.1.nip.io/api/dora/deployment-frequency?proje
 
 ```graphql
 query {
-  deploymentFrequency(
-    project: "payment-service"
-    timeRange: "last30days"
-  ) {
+  deploymentFrequency(project: "payment-service", timeRange: "last30days") {
     value
     unit
     level
@@ -235,6 +236,7 @@ query {
 ```
 
 **Performance Levels**:
+
 - **Elite**: Multiple deploys per day
 - **High**: Once per day to once per week
 - **Medium**: Once per week to once per month
@@ -255,10 +257,7 @@ curl -X GET "http://devlake.127.0.0.1.nip.io/api/dora/lead-time?project=payment-
 
 ```graphql
 query {
-  leadTimeForChanges(
-    project: "payment-service"
-    timeRange: "last30days"
-  ) {
+  leadTimeForChanges(project: "payment-service", timeRange: "last30days") {
     value
     unit
     level
@@ -273,6 +272,7 @@ query {
 ```
 
 **Performance Levels**:
+
 - **Elite**: Less than one hour
 - **High**: Less than one day
 - **Medium**: Less than one week
@@ -280,7 +280,7 @@ query {
 
 ### 3. Change Failure Rate
 
-**Calculation**: (Failed ArgoCD syncs + Production incidents) / Total syncs * 100
+**Calculation**: (Failed ArgoCD syncs + Production incidents) / Total syncs \* 100
 
 **Query via REST**:
 
@@ -290,6 +290,7 @@ curl -X GET "http://devlake.127.0.0.1.nip.io/api/dora/change-failure-rate?projec
 ```
 
 **Performance Levels**:
+
 - **Elite**: 0-15%
 - **High**: 16-30%
 - **Medium**: 31-45%
@@ -307,6 +308,7 @@ curl -X GET "http://devlake.127.0.0.1.nip.io/api/dora/mttr?project=payment-servi
 ```
 
 **Performance Levels**:
+
 - **Elite**: Less than one hour
 - **High**: Less than one day
 - **Medium**: Less than one week
@@ -385,6 +387,7 @@ histogram_quantile(0.95, dora_mttr_seconds_bucket) / 60
 DevLake uses MySQL 8.0 with InnoDB engine.
 
 **Key Tables**:
+
 - `deployments`: ArgoCD sync events, Jenkins deployments
 - `commits`: Git commit data from GitHub
 - `incidents`: Production incidents for MTTR

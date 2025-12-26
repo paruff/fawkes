@@ -32,11 +32,13 @@ We are conducting user research to understand how people use the Fawkes Internal
 **Duration**: Approximately 45-60 minutes
 
 **Format**:
+
 - [ ] Remote video call (Zoom, Google Meet, Microsoft Teams)
 - [ ] In-person meeting
 - [ ] Phone call
 
 **Activities**:
+
 - Answer questions about your experience with the platform
 - Share examples of your workflows and processes
 - Demonstrate how you use platform tools (optional)
@@ -58,6 +60,7 @@ We are conducting user research to understand how people use the Fawkes Internal
 ### Data Usage
 
 Your responses will be used to:
+
 - Identify patterns and themes across multiple interviews
 - Inform platform feature development and prioritization
 - Create user personas and journey maps
@@ -75,6 +78,7 @@ Your responses will be used to:
 ### Data Sharing
 
 **Anonymized insights will be shared with**:
+
 - Product team for feature prioritization
 - Engineering team for platform improvements
 - Design team for user experience enhancements
@@ -147,6 +151,7 @@ Your responses will be used to:
 ### Minimal Risks
 
 Participation in this research involves minimal risk:
+
 - Time commitment of 45-60 minutes
 - Potential minor discomfort discussing challenges or frustrations
 - No anticipated physical, psychological, or professional risks
@@ -165,18 +170,21 @@ Participation in this research involves minimal risk:
 ### Audio Recording
 
 I consent to audio recording of this interview:
+
 - [ ] **Yes**, I consent to audio recording
 - [ ] **No**, I do not consent to audio recording
 
 ### Video Recording
 
 I consent to video recording of this interview:
+
 - [ ] **Yes**, I consent to video recording
 - [ ] **No**, I do not consent to video recording
 
 ### Screen Recording
 
 I consent to screen recording if I demonstrate platform usage:
+
 - [ ] **Yes**, I consent to screen recording
 - [ ] **No**, I do not consent to screen recording
 
@@ -189,10 +197,12 @@ I consent to screen recording if I demonstrate platform usage:
 ### Anonymized Quotes
 
 I consent to the use of my anonymized quotes in research reports, presentations, and documentation:
+
 - [ ] **Yes**, you may use my anonymized quotes
 - [ ] **No**, please do not use my quotes
 
 **Example of anonymized quote**:
+
 > "The deployment process is stressful because I never know if it's going to work on the first try."
 > — Senior Application Developer, 5 years experience
 
@@ -203,24 +213,28 @@ I consent to the use of my anonymized quotes in research reports, presentations,
 ### Future Participation
 
 I am willing to be contacted for follow-up interviews or usability testing:
+
 - [ ] **Yes**, you may contact me for future research
 - [ ] **No**, please do not contact me again
 
 If yes, preferred contact method:
-- [ ] Email: ______________________________
-- [ ] Slack: ______________________________
-- [ ] Other: ______________________________
+
+- [ ] Email: **\*\***\*\***\*\***\_\_**\*\***\*\***\*\***
+- [ ] Slack: **\*\***\*\***\*\***\_\_**\*\***\*\***\*\***
+- [ ] Other: **\*\***\*\***\*\***\_\_**\*\***\*\***\*\***
 
 ---
 
 ## Incentive Information
 
 **Incentive** (if applicable):
+
 - [ ] $[amount] gift card to [retailer]
 - [ ] Company swag (t-shirt, mug, etc.)
 - [ ] No incentive offered
 
 **Incentive Distribution**:
+
 - Incentive will be provided within [timeframe] after interview completion
 - Delivered via [email / mail / in-person]
 
@@ -260,25 +274,25 @@ By signing below, I acknowledge that:
 
 ## Participant Information
 
-**Date**: _____ / _____ / _________
+**Date**: **\_** / **\_** / \***\*\_\*\***
 
-**Participant Name** (printed): _______________________________________
+**Participant Name** (printed): **\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***
 
-**Participant Signature**: _______________________________________
+**Participant Signature**: **\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***
 
-**Role/Title**: _______________________________________
+**Role/Title**: **\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***
 
-**Email** (optional, for incentive delivery): _______________________________________
+**Email** (optional, for incentive delivery): **\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***
 
 ---
 
 ## Researcher Information
 
-**Researcher Name** (printed): _______________________________________
+**Researcher Name** (printed): **\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***
 
-**Researcher Signature**: _______________________________________
+**Researcher Signature**: **\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***
 
-**Date**: _____ / _____ / _________
+**Date**: **\_** / **\_** / \***\*\_\*\***
 
 ---
 
@@ -287,18 +301,21 @@ By signing below, I acknowledge that:
 If this interview is conducted remotely, verbal consent is acceptable:
 
 **Verbal Consent Statement** (read by researcher):
+
 > "Before we begin, I want to confirm that you've received and reviewed the consent form. Do you consent to participate in this research interview? Do you consent to [audio/video/screen] recording?"
 
 **Participant Response**:
+
 - [ ] Yes, I consent to participate and to recording as indicated above
 - [ ] No, I do not consent
 
 **Researcher Notes**:
-- Participant verbally consented: Yes / No
-- Time of consent: _____ : _____ [AM/PM]
-- Recording started at: _____ : _____ [AM/PM]
 
-**Researcher Signature**: _______________________________________
+- Participant verbally consented: Yes / No
+- Time of consent: **\_** : **\_** [AM/PM]
+- Recording started at: **\_** : **\_** [AM/PM]
+
+**Researcher Signature**: **\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***
 
 ---
 
@@ -314,16 +331,19 @@ If this interview is conducted remotely, verbal consent is acceptable:
 To help you understand how we'll protect your privacy, here are examples:
 
 ### What We'll Record
+
 - "I'm a senior developer on the payments team"
 - "I've been with the company for 3 years"
 - "Our team deploys about twice a week"
 
 ### How We'll Anonymize It
+
 - "Senior Application Developer, financial services domain"
 - "3 years of platform experience"
 - "Team deploys 2x per week"
 
 ### Direct Quotes (Anonymized)
+
 - Original: "I'm John, and I work on the checkout service..."
 - Anonymized: "A mid-level developer working on e-commerce services..."
 
@@ -339,6 +359,7 @@ To help you understand how we'll protect your privacy, here are examples:
 ## Additional Notes for Researchers
 
 ### Before the Interview
+
 - [ ] Send consent form to participant 24 hours in advance
 - [ ] Review consent form at start of interview
 - [ ] Answer any participant questions
@@ -346,17 +367,21 @@ To help you understand how we'll protect your privacy, here are examples:
 - [ ] Start recording only after consent is given
 
 ### During the Interview
+
 - [ ] Announce when recording starts
 - [ ] Remind participant they can stop at any time
 - [ ] Respect any topics participant declines to discuss
 
 ### After the Interview
+
 - [ ] Store signed consent form securely
 - [ ] Note consent status in interview metadata
 - [ ] Honor any special requests (e.g., "don't record specific parts")
 
 ### Withdrawal Process
+
 If a participant withdraws consent:
+
 1. Stop using their data immediately
 2. Delete recordings and transcripts within 7 days
 3. Remove any quotes or insights attributed to them

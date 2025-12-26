@@ -15,6 +15,7 @@ Implemented a complete feedback collection system for Backstage, enabling users 
 A FastAPI-based REST API service that provides feedback collection and management capabilities.
 
 **Key Features**:
+
 - Submit feedback with ratings (1-5), categories, and comments
 - Optional email field for follow-up
 - Admin endpoints for feedback management (list, update status, statistics)
@@ -25,6 +26,7 @@ A FastAPI-based REST API service that provides feedback collection and managemen
 - Automatic database schema initialization
 
 **API Endpoints**:
+
 - `POST /api/v1/feedback` - Submit feedback (public)
 - `GET /api/v1/feedback` - List all feedback (admin)
 - `PUT /api/v1/feedback/{id}/status` - Update feedback status (admin)
@@ -33,6 +35,7 @@ A FastAPI-based REST API service that provides feedback collection and managemen
 - `GET /metrics` - Prometheus metrics
 
 **Files Created**:
+
 - `services/feedback/app/main.py` - Main FastAPI application (17KB)
 - `services/feedback/app/__init__.py` - Package init
 - `services/feedback/Dockerfile` - Multi-stage Docker build
@@ -43,6 +46,7 @@ A FastAPI-based REST API service that provides feedback collection and managemen
 - `services/feedback/.gitignore` - Git ignore rules
 
 **Testing**:
+
 - `services/feedback/tests/unit/test_main.py` - Comprehensive unit tests (12 tests)
 - ✅ All unit tests passing
 - ✅ No security vulnerabilities in dependencies
@@ -52,6 +56,7 @@ A FastAPI-based REST API service that provides feedback collection and managemen
 Complete Kubernetes deployment infrastructure following Fawkes patterns.
 
 **Components**:
+
 - **Deployment** (`deployment.yaml`): 2 replicas, non-root security context, resource limits
 - **Service** (`service.yaml`): ClusterIP service on port 8000
 - **Ingress** (`ingress.yaml`): Nginx ingress at `feedback.127.0.0.1.nip.io`
@@ -63,10 +68,12 @@ Complete Kubernetes deployment infrastructure following Fawkes patterns.
 - **Kustomization** (`kustomization.yaml`): Kustomize configuration
 
 **Resource Allocation** (within 70% target):
+
 - Feedback Service: 100m CPU / 128Mi memory (requests), 500m CPU / 512Mi memory (limits)
 - Database: 100m CPU / 256Mi memory (requests), 500m CPU / 512Mi memory (limits)
 
 **Security**:
+
 - Non-root user (UID 65534)
 - Read-only root filesystem where possible
 - Capabilities dropped (ALL)
@@ -75,6 +82,7 @@ Complete Kubernetes deployment infrastructure following Fawkes patterns.
 - Secrets management via Kubernetes secrets (ready for External Secrets Operator)
 
 **Files Created**:
+
 - 9 Kubernetes manifest files
 - 1 comprehensive README with deployment, testing, and troubleshooting guides
 
@@ -85,6 +93,7 @@ GitOps deployment configuration.
 **File**: `platform/apps/feedback-service-application.yaml`
 
 **Features**:
+
 - Automated sync with prune and self-heal
 - Retry policy with exponential backoff
 - Namespace auto-creation
@@ -93,20 +102,23 @@ GitOps deployment configuration.
 ### 4. Backstage Integration
 
 **Proxy Configuration** (`platform/apps/backstage/app-config.yaml`):
+
 ```yaml
 proxy:
   endpoints:
-    '/feedback/api':
+    "/feedback/api":
       target: http://feedback-service.fawkes.svc:8000/
       changeOrigin: true
       secure: false
 ```
 
 **Plugin Configuration**:
+
 - `platform/apps/backstage/plugins/feedback-widget.yaml` - Plugin configuration
 - `platform/apps/backstage/plugins/README-feedback.md` - Integration documentation
 
 **Categories Supported**:
+
 - UI/UX
 - Performance
 - Documentation
@@ -121,6 +133,7 @@ proxy:
 **Feature File**: `tests/bdd/features/feedback-widget.feature`
 
 **Test Scenarios** (15 scenarios):
+
 1. ✅ Feedback service deployment and health
 2. ✅ Database cluster running
 3. ✅ Submit feedback successfully
@@ -158,6 +171,7 @@ CREATE INDEX idx_feedback_created_at ON feedback(created_at DESC);
 ```
 
 **Status Values**:
+
 - `open` - New feedback
 - `in_progress` - Being reviewed
 - `resolved` - Addressed
@@ -166,15 +180,18 @@ CREATE INDEX idx_feedback_created_at ON feedback(created_at DESC);
 ## Metrics and Observability
 
 **Prometheus Metrics**:
+
 - `feedback_submissions_total` - Counter by category and rating
 - `feedback_request_duration_seconds` - Histogram by endpoint
 
 **Logging**:
+
 - Structured logging with timestamps
 - Request/response logging
 - Error tracking
 
 **Health Checks**:
+
 - Liveness probe on `/health`
 - Readiness probe on `/health`
 - Database connectivity checks
@@ -182,12 +199,14 @@ CREATE INDEX idx_feedback_created_at ON feedback(created_at DESC);
 ## Deployment Instructions
 
 ### Prerequisites
+
 1. Kubernetes cluster with ArgoCD
 2. CloudNativePG operator
 3. Ingress controller (nginx)
 4. Prometheus operator
 
 ### Deploy via ArgoCD (Recommended)
+
 ```bash
 # Apply ArgoCD application
 kubectl apply -f platform/apps/feedback-service-application.yaml
@@ -200,6 +219,7 @@ argocd app sync feedback-service
 ```
 
 ### Manual Deployment
+
 ```bash
 # Build and push Docker image
 cd services/feedback
@@ -212,7 +232,9 @@ kubectl apply -k platform/apps/feedback-service/
 ```
 
 ### Configuration
+
 Update secrets before production deployment:
+
 ```bash
 # Admin token
 kubectl create secret generic feedback-admin-token \
@@ -227,6 +249,7 @@ kubectl create secret generic db-feedback-credentials \
 ## Testing
 
 ### Unit Tests
+
 ```bash
 cd services/feedback
 pip install -r requirements.txt -r requirements-dev.txt
@@ -236,12 +259,14 @@ pytest tests/unit -v
 **Result**: ✅ 12/12 tests passing
 
 ### BDD Tests
+
 ```bash
 # From repository root
 behave tests/bdd/features/feedback-widget.feature --tags=@feedback
 ```
 
 ### Manual API Testing
+
 ```bash
 # Submit feedback
 curl -X POST http://feedback.127.0.0.1.nip.io/api/v1/feedback \
@@ -282,6 +307,7 @@ From issue #62:
 ## Architecture Decisions
 
 ### Why FastAPI?
+
 - Consistent with existing services (RAG service uses FastAPI)
 - Automatic OpenAPI documentation
 - Built-in validation with Pydantic
@@ -289,6 +315,7 @@ From issue #62:
 - Easy testing with TestClient
 
 ### Why CloudNativePG?
+
 - Consistent with Fawkes database strategy
 - Automatic HA with 2+ instances
 - Built-in backup and recovery
@@ -296,12 +323,14 @@ From issue #62:
 - Kubernetes-native operator
 
 ### Why asyncpg?
+
 - High-performance async PostgreSQL driver
 - Native prepared statements
 - Connection pooling
 - Better performance than psycopg2
 
 ### Why Bearer Token Auth?
+
 - Simple and effective for internal services
 - Easy to rotate and manage
 - Can be upgraded to JWT or OAuth later
@@ -312,31 +341,35 @@ From issue #62:
 **Total**: 27 files created, 1 file modified
 
 **Services** (9 files):
+
 - services/feedback/app/main.py
-- services/feedback/app/__init__.py
+- services/feedback/app/**init**.py
 - services/feedback/Dockerfile
 - services/feedback/requirements.txt
 - services/feedback/requirements-dev.txt
 - services/feedback/pytest.ini
 - services/feedback/README.md
 - services/feedback/.gitignore
-- services/feedback/tests/unit/test_main.py (+ 3 __init__.py files)
+- services/feedback/tests/unit/test_main.py (+ 3 **init**.py files)
 
 **Platform/Kubernetes** (15 files):
+
 - platform/apps/feedback-service-application.yaml
-- platform/apps/feedback-service/*.yaml (9 manifests)
+- platform/apps/feedback-service/\*.yaml (9 manifests)
 - platform/apps/feedback-service/README.md
 - platform/apps/backstage/app-config.yaml (modified)
 - platform/apps/backstage/plugins/feedback-widget.yaml
 - platform/apps/backstage/plugins/README-feedback.md
 
 **Tests** (2 files):
+
 - tests/bdd/features/feedback-widget.feature
 - tests/bdd/step_definitions/feedback_steps.py
 
 ## Security Considerations
 
 ✅ **Implemented**:
+
 - Non-root container user
 - Resource limits to prevent DoS
 - Bearer token authentication
@@ -347,6 +380,7 @@ From issue #62:
 - Secrets stored in Kubernetes secrets
 
 ⚠️ **Production Recommendations**:
+
 - Use External Secrets Operator for secrets management
 - Implement rate limiting
 - Add network policies
@@ -381,6 +415,7 @@ From issue #62:
 ## Monitoring and Alerts
 
 **Metrics to Monitor**:
+
 - Feedback submission rate
 - Average rating over time
 - Category distribution
@@ -389,6 +424,7 @@ From issue #62:
 - Error rates
 
 **Suggested Alerts**:
+
 - Service down (no successful health checks)
 - High error rate (>5% of requests)
 - Database connection failures
@@ -412,6 +448,7 @@ From issue #62:
 ## Summary
 
 ✅ **Complete implementation** of feedback collection system with:
+
 - Production-ready FastAPI service
 - Comprehensive Kubernetes deployment
 - Database with HA and backups

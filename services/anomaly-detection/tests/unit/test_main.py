@@ -10,16 +10,17 @@ async def test_health_endpoint():
     from fastapi.testclient import TestClient
 
     # Mock the lifespan to avoid actual startup
-    with patch('app.main.lifespan'):
+    with patch("app.main.lifespan"):
         from app.main import app
+
         client = TestClient(app)
 
         response = client.get("/health")
 
         assert response.status_code == 200
         data = response.json()
-        assert data['status'] == 'UP'
-        assert data['service'] == 'anomaly-detection'
+        assert data["status"] == "UP"
+        assert data["service"] == "anomaly-detection"
 
 
 @pytest.mark.asyncio
@@ -27,16 +28,17 @@ async def test_root_endpoint():
     """Test root endpoint."""
     from fastapi.testclient import TestClient
 
-    with patch('app.main.lifespan'):
+    with patch("app.main.lifespan"):
         from app.main import app
+
         client = TestClient(app)
 
         response = client.get("/")
 
         assert response.status_code == 200
         data = response.json()
-        assert data['service'] == 'anomaly-detection'
-        assert data['status'] == 'running'
+        assert data["service"] == "anomaly-detection"
+        assert data["status"] == "running"
 
 
 @pytest.mark.asyncio
@@ -45,7 +47,7 @@ async def test_get_anomalies():
     from fastapi.testclient import TestClient
     from app.main import AnomalyScore, AnomalyDetection
 
-    with patch('app.main.lifespan'):
+    with patch("app.main.lifespan"):
         from app.main import app, recent_anomalies
 
         # Add test anomaly
@@ -56,14 +58,11 @@ async def test_get_anomalies():
             confidence=0.9,
             value=500.0,
             expected_value=100.0,
-            severity="high"
+            severity="high",
         )
 
         anomaly_detection = AnomalyDetection(
-            id="test-123",
-            anomaly=anomaly_score,
-            detected_at=datetime.now(),
-            alerted=False
+            id="test-123", anomaly=anomaly_score, detected_at=datetime.now(), alerted=False
         )
 
         recent_anomalies.insert(0, anomaly_detection)
@@ -74,7 +73,7 @@ async def test_get_anomalies():
         assert response.status_code == 200
         data = response.json()
         assert len(data) > 0
-        assert data[0]['id'] == 'test-123'
+        assert data[0]["id"] == "test-123"
 
 
 @pytest.mark.asyncio
@@ -83,13 +82,13 @@ async def test_get_anomalies_with_filters():
     from fastapi.testclient import TestClient
     from app.main import AnomalyScore, AnomalyDetection
 
-    with patch('app.main.lifespan'):
+    with patch("app.main.lifespan"):
         from app.main import app, recent_anomalies
 
         # Clear and add test anomalies
         recent_anomalies.clear()
 
-        for i, severity in enumerate(['critical', 'high', 'medium']):
+        for i, severity in enumerate(["critical", "high", "medium"]):
             anomaly_score = AnomalyScore(
                 metric=f"test_metric_{i}",
                 timestamp=datetime.now(),
@@ -97,14 +96,11 @@ async def test_get_anomalies_with_filters():
                 confidence=0.9,
                 value=500.0,
                 expected_value=100.0,
-                severity=severity
+                severity=severity,
             )
 
             anomaly_detection = AnomalyDetection(
-                id=f"test-{i}",
-                anomaly=anomaly_score,
-                detected_at=datetime.now(),
-                alerted=False
+                id=f"test-{i}", anomaly=anomaly_score, detected_at=datetime.now(), alerted=False
             )
 
             recent_anomalies.insert(0, anomaly_detection)
@@ -115,13 +111,13 @@ async def test_get_anomalies_with_filters():
         response = client.get("/api/v1/anomalies?severity=critical")
         assert response.status_code == 200
         data = response.json()
-        assert all(a['anomaly']['severity'] == 'critical' for a in data)
+        assert all(a["anomaly"]["severity"] == "critical" for a in data)
 
         # Test metric filter
         response = client.get("/api/v1/anomalies?metric=test_metric_0")
         assert response.status_code == 200
         data = response.json()
-        assert all(a['anomaly']['metric'] == 'test_metric_0' for a in data)
+        assert all(a["anomaly"]["metric"] == "test_metric_0" for a in data)
 
 
 @pytest.mark.asyncio
@@ -130,7 +126,7 @@ async def test_get_anomaly_by_id():
     from fastapi.testclient import TestClient
     from app.main import AnomalyScore, AnomalyDetection
 
-    with patch('app.main.lifespan'):
+    with patch("app.main.lifespan"):
         from app.main import app, recent_anomalies
 
         recent_anomalies.clear()
@@ -142,14 +138,11 @@ async def test_get_anomaly_by_id():
             confidence=0.9,
             value=500.0,
             expected_value=100.0,
-            severity="high"
+            severity="high",
         )
 
         anomaly_detection = AnomalyDetection(
-            id="test-specific",
-            anomaly=anomaly_score,
-            detected_at=datetime.now(),
-            alerted=False
+            id="test-specific", anomaly=anomaly_score, detected_at=datetime.now(), alerted=False
         )
 
         recent_anomalies.insert(0, anomaly_detection)
@@ -160,7 +153,7 @@ async def test_get_anomaly_by_id():
         response = client.get("/api/v1/anomalies/test-specific")
         assert response.status_code == 200
         data = response.json()
-        assert data['id'] == 'test-specific'
+        assert data["id"] == "test-specific"
 
         # Test getting non-existent anomaly
         response = client.get("/api/v1/anomalies/non-existent")
@@ -173,7 +166,7 @@ async def test_get_stats():
     from fastapi.testclient import TestClient
     from app.main import AnomalyScore, AnomalyDetection
 
-    with patch('app.main.lifespan'):
+    with patch("app.main.lifespan"):
         from app.main import app, recent_anomalies
 
         recent_anomalies.clear()
@@ -187,14 +180,11 @@ async def test_get_stats():
                 confidence=0.9,
                 value=500.0,
                 expected_value=100.0,
-                severity="high" if i % 2 == 0 else "medium"
+                severity="high" if i % 2 == 0 else "medium",
             )
 
             anomaly_detection = AnomalyDetection(
-                id=f"test-{i}",
-                anomaly=anomaly_score,
-                detected_at=datetime.now(),
-                alerted=(i % 3 == 0)
+                id=f"test-{i}", anomaly=anomaly_score, detected_at=datetime.now(), alerted=(i % 3 == 0)
             )
 
             recent_anomalies.insert(0, anomaly_detection)
@@ -204,9 +194,9 @@ async def test_get_stats():
 
         assert response.status_code == 200
         data = response.json()
-        assert data['total_anomalies'] == 5
-        assert 'severity_counts' in data
-        assert 'alerts_sent' in data
+        assert data["total_anomalies"] == 5
+        assert "severity_counts" in data
+        assert "alerts_sent" in data
 
 
 @pytest.mark.asyncio
@@ -221,5 +211,5 @@ async def test_get_models():
     models = detector_module.get_model_info()
 
     assert len(models) == 5
-    assert all('name' in m for m in models)
+    assert all("name" in m for m in models)
     assert detector_module.models_initialized is True

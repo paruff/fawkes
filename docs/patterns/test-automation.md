@@ -11,13 +11,13 @@ Test automation is a critical capability identified in DORA research that enable
 
 ## Core Principles
 
-| Principle | Description | Implementation |
-|-----------|-------------|----------------|
-| ![](../assets/images/icons/pyramid.png){ width="24" } **Test Pyramid** | Balance test types for optimal coverage | Unit (70%), Integration (20%), E2E (10%) |
-| ![](../assets/images/icons/shift-left.png){ width="24" } **Shift Left** | Test early in development cycle | CI pipeline integration |
-| ![](../assets/images/icons/reliable.png){ width="24" } **Reliability** | Tests should be deterministic | Avoid flaky tests |
-| ![](../assets/images/icons/fast.png){ width="24" } **Speed** | Quick feedback loops | Parallel test execution |
-| ![](../assets/images/icons/trunk.png){ width="24" } **Trunk-Based** | Support frequent integration | Pre-merge testing |
+| Principle                                                               | Description                             | Implementation                           |
+| ----------------------------------------------------------------------- | --------------------------------------- | ---------------------------------------- |
+| ![](../assets/images/icons/pyramid.png){ width="24" } **Test Pyramid**  | Balance test types for optimal coverage | Unit (70%), Integration (20%), E2E (10%) |
+| ![](../assets/images/icons/shift-left.png){ width="24" } **Shift Left** | Test early in development cycle         | CI pipeline integration                  |
+| ![](../assets/images/icons/reliable.png){ width="24" } **Reliability**  | Tests should be deterministic           | Avoid flaky tests                        |
+| ![](../assets/images/icons/fast.png){ width="24" } **Speed**            | Quick feedback loops                    | Parallel test execution                  |
+| ![](../assets/images/icons/trunk.png){ width="24" } **Trunk-Based**     | Support frequent integration            | Pre-merge testing                        |
 
 ## Implementation Guide
 
@@ -83,39 +83,37 @@ class DeploymentRepositoryTest {
 ### 3. End-to-End Testing with Cypress
 
 ```javascript
-describe('Deployment Pipeline', () => {
+describe("Deployment Pipeline", () => {
   beforeEach(() => {
-    cy.intercept('GET', '/api/deployments').as('getDeployments');
+    cy.intercept("GET", "/api/deployments").as("getDeployments");
     cy.login(); // Custom command for authentication
   });
 
-  it('shows deployment metrics dashboard', () => {
+  it("shows deployment metrics dashboard", () => {
     // Arrange
-    cy.visit('/dashboard');
+    cy.visit("/dashboard");
 
     // Act
-    cy.wait('@getDeployments');
+    cy.wait("@getDeployments");
 
     // Assert
-    cy.get('[data-testid="deployment-frequency"]').should('be.visible');
-    cy.get('[data-testid="lead-time"]').should('be.visible');
-    cy.get('[data-testid="change-failure-rate"]').should('be.visible');
-    cy.get('[data-testid="mttr"]').should('be.visible');
+    cy.get('[data-testid="deployment-frequency"]').should("be.visible");
+    cy.get('[data-testid="lead-time"]').should("be.visible");
+    cy.get('[data-testid="change-failure-rate"]').should("be.visible");
+    cy.get('[data-testid="mttr"]').should("be.visible");
   });
 
-  it('creates new deployment', () => {
+  it("creates new deployment", () => {
     // Arrange
-    cy.visit('/deployments/new');
+    cy.visit("/deployments/new");
 
     // Act
-    cy.get('[data-testid="service-name"]').type('fawkes-web');
-    cy.get('[data-testid="version"]').type('1.0.0');
+    cy.get('[data-testid="service-name"]').type("fawkes-web");
+    cy.get('[data-testid="version"]').type("1.0.0");
     cy.get('[data-testid="submit"]').click();
 
     // Assert
-    cy.get('[data-testid="success-message"]')
-      .should('be.visible')
-      .and('contain', 'Deployment created successfully');
+    cy.get('[data-testid="success-message"]').should("be.visible").and("contain", "Deployment created successfully");
   });
 });
 ```
@@ -136,8 +134,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          java-version: "17"
+          distribution: "temurin"
 
       - name: Unit Tests
         run: ./gradlew test
@@ -161,11 +159,11 @@ jobs:
 
 ## Test Coverage Goals
 
-| Test Type | Coverage Target | Run Frequency | Max Duration |
-|-----------|----------------|---------------|--------------|
-| Unit | 80% | Every commit | 3 minutes |
-| Integration | 60% | Every PR | 10 minutes |
-| E2E | 40% | Daily | 30 minutes |
+| Test Type   | Coverage Target | Run Frequency | Max Duration |
+| ----------- | --------------- | ------------- | ------------ |
+| Unit        | 80%             | Every commit  | 3 minutes    |
+| Integration | 60%             | Every PR      | 10 minutes   |
+| E2E         | 40%             | Daily         | 30 minutes   |
 
 ## Performance Metrics
 

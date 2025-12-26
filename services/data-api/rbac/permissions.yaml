@@ -1,3 +1,23 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
 # ============================================================================
 # FILE: services/data-api/rbac/permissions.yaml
 # PURPOSE: Hasura permission definitions for all roles
@@ -14,14 +34,14 @@
   role: admin
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter: {}
       allow_aggregations: true
     insert:
-      columns: '*'
+      columns: "*"
       check: {}
     update:
-      columns: '*'
+      columns: "*"
       filter: {}
     delete:
       filter: {}
@@ -91,11 +111,11 @@
   role: admin
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter: {}
       allow_aggregations: true
     insert:
-      columns: '*'
+      columns: "*"
       check: {}
 
 - table:
@@ -104,7 +124,7 @@
   role: developer
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter:
         workItem:
           team: { _eq: X-Hasura-Team-Id }
@@ -125,7 +145,7 @@
   role: viewer
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter:
         workItem:
           team: { _eq: X-Hasura-Team-Id }
@@ -139,14 +159,14 @@
   role: admin
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter: {}
       allow_aggregations: true
     insert:
-      columns: '*'
+      columns: "*"
       check: {}
     update:
-      columns: '*'
+      columns: "*"
       filter: {}
     delete:
       filter: {}
@@ -157,7 +177,7 @@
   role: developer
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter: {}
       allow_aggregations: false
 
@@ -167,7 +187,7 @@
   role: viewer
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter: {}
       allow_aggregations: false
 
@@ -191,7 +211,7 @@
   role: admin
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter: {}
       allow_aggregations: true
 
@@ -201,7 +221,7 @@
   role: developer
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter: {}
       allow_aggregations: true
       limit: 1000
@@ -233,7 +253,7 @@
   role: admin
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter: {}
       allow_aggregations: true
 
@@ -243,7 +263,7 @@
   role: developer
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter:
         _or:
           - final_entity->spec->owner: { _eq: X-Hasura-Team-Id }
@@ -293,7 +313,7 @@
   role: admin
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter: {}
       allow_aggregations: true
 
@@ -341,7 +361,7 @@
   role: admin
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter: {}
       allow_aggregations: true
 
@@ -385,7 +405,7 @@
   role: admin
   permission:
     select:
-      columns: '*'
+      columns: "*"
       filter: {}
       allow_aggregations: true
 

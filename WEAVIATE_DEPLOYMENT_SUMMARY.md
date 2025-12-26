@@ -11,6 +11,7 @@ This document summarizes the Weaviate vector database deployment for the Fawkes 
 **Location**: `platform/apps/weaviate-application.yaml`
 
 **Configuration**:
+
 - **Chart**: Weaviate Helm chart v16.8.8
 - **Image**: semitechnologies/weaviate:1.24.1
 - **Resources**: 1 CPU, 2Gi memory
@@ -20,6 +21,7 @@ This document summarizes the Weaviate vector database deployment for the Fawkes 
 - **Sync Wave**: 10 (deployed after core infrastructure)
 
 **Features Enabled**:
+
 - GraphQL API for flexible queries
 - text2vec-transformers module for embeddings
 - Prometheus metrics for monitoring
@@ -38,6 +40,7 @@ This document summarizes the Weaviate vector database deployment for the Fawkes 
 **Location**: `services/rag/scripts/test-indexing.py`
 
 **Capabilities**:
+
 - Connects to Weaviate GraphQL API
 - Creates test schema for documents
 - Indexes sample documents (ADRs, README, docs)
@@ -45,6 +48,7 @@ This document summarizes the Weaviate vector database deployment for the Fawkes 
 - Validates relevance scores (>0.7)
 
 **Usage**:
+
 ```bash
 # Default (localhost)
 python services/rag/scripts/test-indexing.py
@@ -60,12 +64,14 @@ python services/rag/scripts/test-indexing.py
 ### 4. Documentation
 
 **Created Files**:
+
 1. `docs/ai/vector-database.md` - Comprehensive guide (19KB)
 2. `docs/adr/ADR-031 Vector Database Selection.md` - Architecture decision record (8.7KB)
 3. `services/rag/README.md` - RAG service documentation (3.5KB)
 4. `platform/apps/weaviate/README.md` - Weaviate-specific README (updated)
 
 **Topics Covered**:
+
 - What is a vector database and why Weaviate
 - Architecture and data model
 - Deployment and configuration
@@ -81,6 +87,7 @@ python services/rag/scripts/test-indexing.py
 **Validation Script**: `scripts/validate-weaviate.sh`
 
 **Checks**:
+
 - Namespace exists
 - ArgoCD Application status
 - Pod health and status
@@ -91,6 +98,7 @@ python services/rag/scripts/test-indexing.py
 **Unit Tests**: `tests/unit/test_rag_indexing.py`
 
 **Test Coverage**:
+
 - Sample documents structure
 - Document content validation
 - Schema constants
@@ -101,6 +109,7 @@ python services/rag/scripts/test-indexing.py
 ### 6. Dependencies
 
 **Added to requirements-dev.txt**:
+
 - `weaviate-client==4.4.0` (no security vulnerabilities)
 
 ## Deployment Instructions
@@ -154,31 +163,37 @@ python services/rag/scripts/test-indexing.py
 ## Acceptance Criteria Status
 
 ✅ **AC1**: Weaviate deployed via ArgoCD
+
 - ArgoCD Application manifest created
 - Helm chart configured with proper values
 - Deployed to fawkes namespace
 
 ✅ **AC2**: GraphQL endpoint accessible
+
 - GraphQL API enabled on port 80
 - Ingress configured for external access
 - Health check endpoints available
 
 ✅ **AC3**: Test data indexed successfully
+
 - Test indexing script created
 - Sample documents prepared (5 documents)
 - Indexing logic implemented
 
 ✅ **AC4**: Search queries working with >0.7 relevance
+
 - Semantic search implemented
 - Relevance validation in test script
 - Multiple test queries defined
 
 ✅ **AC5**: Persistent storage configured (10GB)
+
 - PVC configured in Helm values
 - Storage class: standard
 - Access mode: ReadWriteOnce
 
 ⏳ **AC6**: Passes AT-E2-002 (partial)
+
 - Infrastructure ready for RAG system
 - Can be tested once deployed to cluster
 - Documentation and validation tools in place
@@ -300,6 +315,7 @@ curl http://weaviate.fawkes.svc:80/v1/meta
 ### Troubleshooting
 
 See `docs/ai/vector-database.md` section "Troubleshooting" for:
+
 - Weaviate Not Ready
 - Indexing Failures
 - Low Relevance Scores
@@ -363,7 +379,7 @@ The Weaviate vector database is ready for deployment. All code, configuration, d
 
 ---
 
-*Last Updated*: 2025-12-21
-*Issue*: paruff/fawkes#39
-*Epic*: AI & Data Platform
-*Milestone*: 2.1 - AI Foundation
+_Last Updated_: 2025-12-21
+_Issue_: paruff/fawkes#39
+_Epic_: AI & Data Platform
+_Milestone_: 2.1 - AI Foundation

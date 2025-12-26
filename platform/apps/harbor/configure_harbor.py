@@ -27,10 +27,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -46,7 +43,7 @@ class HarborConfigurer:
             username: Admin username
             password: Admin password
         """
-        self.base_url = base_url.rstrip('/')
+        self.base_url = base_url.rstrip("/")
         self.api_base = f"{self.base_url}/api/v2.0"
         self.auth = HTTPBasicAuth(username, password)
         self.session = requests.Session()
@@ -66,10 +63,7 @@ class HarborConfigurer:
         start_time = time.time()
         while time.time() - start_time < timeout:
             try:
-                response = self.session.get(
-                    f"{self.api_base}/systeminfo",
-                    timeout=5
-                )
+                response = self.session.get(f"{self.api_base}/systeminfo", timeout=5)
                 if response.status_code == 200:
                     logger.info("Harbor is ready!")
                     return True
@@ -79,12 +73,7 @@ class HarborConfigurer:
         logger.error(f"Harbor not ready after {timeout} seconds")
         return False
 
-    def create_project(
-        self,
-        name: str,
-        public: bool = False,
-        storage_limit: int = -1
-    ) -> Optional[Dict]:
+    def create_project(self, name: str, public: bool = False, storage_limit: int = -1) -> Optional[Dict]:
         """
         Create a Harbor project.
 
@@ -113,17 +102,14 @@ class HarborConfigurer:
                 "enable_content_trust": "false",
                 "prevent_vul": "false",
                 "severity": "low",
-                "auto_scan": "true"
-            }
+                "auto_scan": "true",
+            },
         }
 
         if storage_limit > 0:
             project_data["storage_limit"] = storage_limit * 1024 * 1024 * 1024
 
-        response = self.session.post(
-            f"{self.api_base}/projects",
-            json=project_data
-        )
+        response = self.session.post(f"{self.api_base}/projects", json=project_data)
 
         if response.status_code == 201:
             logger.info(f"Project '{name}' created successfully")
@@ -133,18 +119,11 @@ class HarborConfigurer:
             if response.status_code == 200 and response.json():
                 return response.json()[0]
         else:
-            logger.error(
-                f"Failed to create project '{name}': "
-                f"{response.status_code} - {response.text}"
-            )
+            logger.error(f"Failed to create project '{name}': " f"{response.status_code} - {response.text}")
         return None
 
     def create_robot_account(
-        self,
-        project_name: str,
-        robot_name: str,
-        description: str,
-        permissions: List[str]
+        self, project_name: str, robot_name: str, description: str, permissions: List[str]
     ) -> Optional[Dict]:
         """
         Create a robot account for CI/CD.
@@ -167,37 +146,24 @@ class HarborConfigurer:
             return None
 
         project = response.json()[0]
-        project_id = project['project_id']
+        project_id = project["project_id"]
 
         # Build permissions
         access = []
-        if 'pull' in permissions:
-            access.append({
-                "resource": f"/project/{project_id}/repository",
-                "action": "pull"
-            })
-        if 'push' in permissions:
-            access.append({
-                "resource": f"/project/{project_id}/repository",
-                "action": "push"
-            })
+        if "pull" in permissions:
+            access.append({"resource": f"/project/{project_id}/repository", "action": "pull"})
+        if "push" in permissions:
+            access.append({"resource": f"/project/{project_id}/repository", "action": "push"})
 
         robot_data = {
             "name": robot_name,
             "description": description,
             "duration": -1,  # Never expires
             "level": "project",
-            "permissions": [{
-                "kind": "project",
-                "namespace": project_name,
-                "access": access
-            }]
+            "permissions": [{"kind": "project", "namespace": project_name, "access": access}],
         }
 
-        response = self.session.post(
-            f"{self.api_base}/robots",
-            json=robot_data
-        )
+        response = self.session.post(f"{self.api_base}/robots", json=robot_data)
 
         if response.status_code == 201:
             robot_info = response.json()
@@ -206,10 +172,7 @@ class HarborConfigurer:
             logger.info("Robot token generated successfully (returned in response)")
             return robot_info
         else:
-            logger.error(
-                f"Failed to create robot account: "
-                f"{response.status_code} - {response.text}"
-            )
+            logger.error(f"Failed to create robot account: " f"{response.status_code} - {response.text}")
         return None
 
     def configure_scan_policy(self, project_name: str) -> bool:
@@ -231,66 +194,35 @@ class HarborConfigurer:
             return False
 
         project = response.json()[0]
-        project_id = project['project_id']
+        project_id = project["project_id"]
 
         # Update project metadata for auto-scan
-        metadata = {
-            "auto_scan": "true",
-            "severity": "low",
-            "prevent_vul": "false"
-        }
+        metadata = {"auto_scan": "true", "severity": "low", "prevent_vul": "false"}
 
-        response = self.session.put(
-            f"{self.api_base}/projects/{project_id}",
-            json={"metadata": metadata}
-        )
+        response = self.session.put(f"{self.api_base}/projects/{project_id}", json={"metadata": metadata})
 
         if response.status_code == 200:
             logger.info(f"Scan policy configured for '{project_name}'")
             return True
         else:
-            logger.error(
-                f"Failed to configure scan policy: "
-                f"{response.status_code} - {response.text}"
-            )
+            logger.error(f"Failed to configure scan policy: " f"{response.status_code} - {response.text}")
         return False
 
 
 def main():
     """Main function"""
-    parser = argparse.ArgumentParser(
-        description='Configure Harbor after deployment'
-    )
+    parser = argparse.ArgumentParser(description="Configure Harbor after deployment")
+    parser.add_argument("--harbor-url", default="http://harbor.127.0.0.1.nip.io", help="Harbor base URL")
+    parser.add_argument("--admin-username", default="admin", help="Harbor admin username")
+    parser.add_argument("--admin-password", default="Harbor12345", help="Harbor admin password")
     parser.add_argument(
-        '--harbor-url',
-        default='http://harbor.127.0.0.1.nip.io',
-        help='Harbor base URL'
-    )
-    parser.add_argument(
-        '--admin-username',
-        default='admin',
-        help='Harbor admin username'
-    )
-    parser.add_argument(
-        '--admin-password',
-        default='Harbor12345',
-        help='Harbor admin password'
-    )
-    parser.add_argument(
-        '--wait-timeout',
-        type=int,
-        default=300,
-        help='Timeout for waiting Harbor to be ready (seconds)'
+        "--wait-timeout", type=int, default=300, help="Timeout for waiting Harbor to be ready (seconds)"
     )
 
     args = parser.parse_args()
 
     # Initialize configurer
-    configurer = HarborConfigurer(
-        args.harbor_url,
-        args.admin_username,
-        args.admin_password
-    )
+    configurer = HarborConfigurer(args.harbor_url, args.admin_username, args.admin_password)
 
     # Wait for Harbor to be ready
     if not configurer.wait_for_harbor(args.wait_timeout):
@@ -301,7 +233,7 @@ def main():
     projects = [
         {"name": "fawkes", "public": False, "storage_limit": 100},
         {"name": "apps", "public": False, "storage_limit": 200},
-        {"name": "library", "public": True, "storage_limit": 50}
+        {"name": "library", "public": True, "storage_limit": 50},
     ]
 
     for project_config in projects:
@@ -316,27 +248,28 @@ def main():
             "project_name": "fawkes",
             "robot_name": "cicd-platform",
             "description": "Robot account for platform CI/CD pipelines",
-            "permissions": ["push", "pull"]
+            "permissions": ["push", "pull"],
         },
         {
             "project_name": "apps",
             "robot_name": "cicd-apps",
             "description": "Robot account for application CI/CD pipelines",
-            "permissions": ["push", "pull"]
-        }
+            "permissions": ["push", "pull"],
+        },
     ]
 
     # Create robot accounts
     # Note: Robot tokens are returned by the API but not displayed for security
     # Administrators should retrieve tokens via Harbor UI or API after creation
     import sys
+
     robot_count = 0
     robot_names = []
 
     for robot_config in robot_accounts:
         robot = configurer.create_robot_account(**robot_config)
         if robot:
-            robot_name = robot.get('name', 'unknown')
+            robot_name = robot.get("name", "unknown")
             robot_names.append(robot_name)
             logger.info(f"\n{'='*60}")
             logger.info(f"Robot Account: {robot_name}")
@@ -360,5 +293,5 @@ def main():
     logger.info("Harbor configuration completed successfully!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

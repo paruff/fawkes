@@ -47,18 +47,21 @@ Usability testing is a method to evaluate how easy and intuitive the Fawkes plat
 ### Types of Usability Tests
 
 #### 1. Moderated Remote Testing
+
 - **Best for**: In-depth feedback, complex workflows
 - **Format**: Live session with facilitator via video call
 - **Duration**: 45-60 minutes
 - **Tools**: Zoom/Teams + screen recording
 
 #### 2. Unmoderated Remote Testing
+
 - **Best for**: Quick validation, simple tasks
 - **Format**: User completes tasks independently
 - **Duration**: 15-30 minutes
 - **Tools**: Session recording platform
 
 #### 3. In-Person Testing
+
 - **Best for**: Observing physical behavior, workshop settings
 - **Format**: Face-to-face in lab or office
 - **Duration**: 60-90 minutes
@@ -71,11 +74,13 @@ Usability testing is a method to evaluate how easy and intuitive the Fawkes plat
 ### Prerequisites
 
 1. **Access to Recording Tools**
+
    - OpenReplay session recording platform (deployed via ArgoCD)
    - Video conferencing with recording (Zoom, Teams, Google Meet)
    - Screen recording software (optional backup)
 
 2. **Required Materials**
+
    - Test script template (see `docs/research/templates/usability-test-script.md`)
    - Consent form (see `docs/research/interviews/consent-form.md`)
    - Participant screener questionnaire
@@ -106,11 +111,13 @@ Usability testing is a method to evaluate how easy and intuitive the Fawkes plat
 ### 1. Define Research Objectives
 
 **Start with clear questions:**
+
 - What do we want to learn from this test?
 - What decisions will the results inform?
 - What specific workflows or features are we testing?
 
 **Example Objectives:**
+
 - "Evaluate whether new developers can deploy their first application within 30 minutes"
 - "Identify pain points in the incident response workflow"
 - "Assess if platform engineers can configure observability without documentation"
@@ -118,12 +125,14 @@ Usability testing is a method to evaluate how easy and intuitive the Fawkes plat
 ### 2. Create Task Scenarios
 
 Tasks should be:
+
 - **Realistic**: Based on actual user goals
 - **Specific**: Clear success criteria
 - **Measurable**: Can be completed or not
 - **Representative**: Cover key workflows
 
 **Task Structure:**
+
 ```markdown
 ## Task [N]: [Task Name]
 
@@ -132,6 +141,7 @@ Tasks should be:
 **Goal**: [What the user needs to accomplish]
 
 **Success Criteria**:
+
 - [ ] User completes task without assistance
 - [ ] Task completed in [X] minutes or less
 - [ ] User expresses confidence (rating 4/5 or higher)
@@ -139,6 +149,7 @@ Tasks should be:
 **Starting Point**: [Where user begins - URL or state]
 
 **Acceptance**:
+
 - Task is complete when: [specific end state]
 ```
 
@@ -152,6 +163,7 @@ Tasks should be:
 **Goal**: Use Backstage to create a new application from a template and deploy it to the development environment.
 
 **Success Criteria**:
+
 - [ ] User finds the software catalog
 - [ ] User creates new app from template
 - [ ] User triggers deployment
@@ -165,12 +177,14 @@ Tasks should be:
 ### 3. Recruit Participants
 
 **Selection Criteria:**
+
 - **Primary Users**: 5-8 participants per persona
 - **Diverse Experience**: Mix of junior, mid, senior
 - **Representative**: Different teams, tech stacks
 - **Available**: Can commit 60-90 minutes
 
 **Recruitment Methods:**
+
 - Mattermost announcement in `#platform-feedback`
 - Email to platform users
 - Personal outreach to power users
@@ -181,11 +195,13 @@ Tasks should be:
 ### 4. Schedule Sessions
 
 **Timing:**
+
 - Space sessions 30 minutes apart (for notes review)
 - Avoid Monday mornings and Friday afternoons
 - Limit to 3-4 sessions per day (avoid fatigue)
 
 **Calendar Invite Should Include:**
+
 - Purpose and duration (be honest about time commitment)
 - Video conferencing link
 - What to expect (tasks, recording, confidentiality)
@@ -199,6 +215,7 @@ Tasks should be:
 ### Before the Session
 
 **15 Minutes Before:**
+
 - [ ] Join meeting room early
 - [ ] Test screen sharing and recording
 - [ ] Open test script and observation checklist
@@ -209,6 +226,7 @@ Tasks should be:
 ### Opening (5 minutes)
 
 **Build Rapport:**
+
 ```
 "Hi [Name], thanks so much for joining me today. I'm [Your Name] from the
 Product Team, and I'm excited to learn from you.
@@ -229,12 +247,14 @@ note-taking purposes only. Are you comfortable with that?"
 ```
 
 **Get Consent:**
+
 - Explicit verbal consent to participate
 - Explicit consent to record (screen and audio)
 - Explain data retention (recordings deleted after transcription)
 - Answer any questions
 
 **Set Expectations:**
+
 ```
 "We'll spend about [45-60 minutes] today. I have [N] tasks for you to try.
 For each one, I'll give you a scenario and ask you to accomplish a goal.
@@ -254,6 +274,7 @@ Any questions before we start?"
 ### During Tasks (40-50 minutes)
 
 **Introduce Each Task:**
+
 - Read scenario and goal
 - Clarify any questions about the scenario (but not how to do it)
 - Have them share screen if not already
@@ -263,6 +284,7 @@ Any questions before we start?"
 **While They Work:**
 
 **👍 Do:**
+
 - Observe silently - let them struggle (it reveals problems)
 - Take detailed notes on actions, reactions, quotes
 - Note timestamps for video review later
@@ -270,6 +292,7 @@ Any questions before we start?"
 - Use minimal verbal encouragement ("mm-hmm", "keep going")
 
 **👎 Don't:**
+
 - Jump in to help immediately when they're stuck
 - Lead them to the solution
 - Explain how features work
@@ -278,23 +301,27 @@ Any questions before we start?"
 
 **Thinking Aloud Reminders:**
 If they go silent, gently prompt:
+
 - "What are you thinking?"
 - "What are you looking for?"
 - "Talk me through what you're doing"
 - "What do you expect to happen?"
 
 **Probing Questions (use sparingly):**
+
 - "Why did you click there?"
 - "What made you think to do that?"
 - "Is this what you expected?"
 - "How are you feeling about this?"
 
 **When to Intervene:**
+
 - After 2-3 minutes of being completely stuck
 - If they're about to do something destructive (delete prod data)
 - If they ask directly for help
 
 **When They Complete (or Give Up):**
+
 - "Okay, let's pause there. How did that feel?"
 - "On a scale of 1-5, how confident are you that you completed that correctly?"
 - "What was most confusing or frustrating?"
@@ -303,6 +330,7 @@ If they go silent, gently prompt:
 ### Post-Task Questions
 
 After all tasks:
+
 ```
 "We've completed all the tasks. I have a few wrap-up questions:
 
@@ -318,6 +346,7 @@ After all tasks:
 ### Closing (5 minutes)
 
 **Thank Participant:**
+
 ```
 "Thank you so much for your time and honest feedback. This is incredibly
 valuable for improving the platform.
@@ -331,6 +360,7 @@ with you?"
 ```
 
 **Post-Session Immediate Capture (10 minutes):**
+
 - Rate task success (success, partial, failure)
 - Note 3-5 top insights while memory is fresh
 - Flag critical issues that need immediate attention
@@ -344,6 +374,7 @@ with you?"
 ### Recording Tools
 
 #### OpenReplay Session Recording
+
 - **Best for**: Unmoderated remote tests, replay sessions
 - **Access**: https://openreplay.fawkes.local
 - **Features**:
@@ -353,6 +384,7 @@ with you?"
   - Search by user ID, session metadata
 
 **Setup:**
+
 ```bash
 # Deploy OpenReplay via ArgoCD
 kubectl apply -f platform/apps/openreplay/openreplay-application.yaml
@@ -362,6 +394,7 @@ kubectl apply -f platform/apps/openreplay/openreplay-application.yaml
 ```
 
 #### Video Recording (Zoom/Teams)
+
 - **Best for**: Moderated sessions, capturing think-aloud
 - **Settings**:
   - Enable cloud recording
@@ -375,6 +408,7 @@ kubectl apply -f platform/apps/openreplay/openreplay-application.yaml
 Use this template: `docs/research/templates/usability-observation-checklist.md`
 
 **Capture:**
+
 - [ ] Task completion (success/fail/partial)
 - [ ] Time to complete each task
 - [ ] Number of errors or wrong turns
@@ -385,6 +419,7 @@ Use this template: `docs/research/templates/usability-observation-checklist.md`
 - [ ] Features they expected but didn't find
 
 **Severity Ratings:**
+
 - **Critical**: User cannot complete task, blocks workflow
 - **Major**: Significant delay or frustration, but completable
 - **Minor**: Small confusion or inefficiency, doesn't block
@@ -395,6 +430,7 @@ Use this template: `docs/research/templates/usability-observation-checklist.md`
 #### 1. Individual Session Analysis (Within 24 Hours)
 
 **Review Recording:**
+
 - Watch at 1.5-2x speed
 - Focus on moments of confusion or delight
 - Transcribe key quotes
@@ -407,6 +443,7 @@ File: `docs/research/data/processed/usability-tests/YYYY-MM-DD-{persona}-{featur
 # Usability Test: [Feature] - [Persona] - [Date]
 
 ## Participant Profile
+
 - **Role**: [e.g., Senior Platform Engineer]
 - **Experience**: [e.g., 5 years DevOps, 1 year with platform]
 - **Tech Stack**: [e.g., Java, Kubernetes, Jenkins]
@@ -414,6 +451,7 @@ File: `docs/research/data/processed/usability-tests/YYYY-MM-DD-{persona}-{featur
 ## Task Results
 
 ### Task 1: [Task Name]
+
 - **Status**: Success / Partial / Failure
 - **Time**: [X] minutes
 - **Confidence**: [1-5]
@@ -430,6 +468,7 @@ File: `docs/research/data/processed/usability-tests/YYYY-MM-DD-{persona}-{featur
 [Repeat for each task]
 
 ## Overall Ratings
+
 - **Ease of Use**: [1-5]
 - **Would Recommend**: Yes / No / Maybe
 - **Top Insight**: [Most important finding from this session]
@@ -438,6 +477,7 @@ File: `docs/research/data/processed/usability-tests/YYYY-MM-DD-{persona}-{featur
 #### 2. Cross-Session Synthesis (After All Sessions)
 
 **Look for Patterns:**
+
 - Which issues appeared in multiple sessions?
 - Are there issues specific to certain personas?
 - What's the success rate for each task?
@@ -450,9 +490,11 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 # Usability Test Findings: [Feature] - [Date]
 
 ## Executive Summary
+
 [2-3 sentences: what we tested, who we tested with, key findings]
 
 ## Methodology
+
 - **Participants**: [N] users ([breakdown by persona])
 - **Tasks**: [N] task scenarios
 - **Format**: [Moderated remote / Unmoderated / In-person]
@@ -461,11 +503,13 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 ## Key Findings
 
 ### Finding 1: [Critical Issue]
+
 **Severity**: Critical
 **Frequency**: [X/N] participants affected
 **Impact**: [Description of user impact]
 
 **Evidence**:
+
 - Task 2: 6/8 participants failed to complete
 - Quotes: "[User quote]", "[User quote]"
 - Video: [Timestamp in recording]
@@ -476,31 +520,36 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 
 ## Task Performance Summary
 
-| Task | Success Rate | Avg Time | Avg Confidence |
-|------|-------------|----------|----------------|
-| Task 1: Deploy App | 75% (6/8) | 12 min | 4.2/5 |
-| Task 2: Configure Observability | 25% (2/8) | 18 min | 2.1/5 |
-| Task 3: Troubleshoot Error | 50% (4/8) | 22 min | 3.5/5 |
+| Task                            | Success Rate | Avg Time | Avg Confidence |
+| ------------------------------- | ------------ | -------- | -------------- |
+| Task 1: Deploy App              | 75% (6/8)    | 12 min   | 4.2/5          |
+| Task 2: Configure Observability | 25% (2/8)    | 18 min   | 2.1/5          |
+| Task 3: Troubleshoot Error      | 50% (4/8)    | 22 min   | 3.5/5          |
 
 ## Prioritized Recommendations
 
 ### Must Fix (P0)
+
 1. **[Issue]**: [Brief description]
    - Impact: [Why critical]
    - Effort: [Low/Medium/High]
    - Owner: [Team/person]
 
 ### Should Fix (P1)
+
 [Similar structure]
 
 ### Nice to Have (P2)
+
 [Similar structure]
 
 ## Positive Findings
+
 - [What users loved or found easy]
 - [Features that exceeded expectations]
 
 ## Next Steps
+
 - [ ] Create GitHub issues for P0 items
 - [ ] Schedule design review for recommendations
 - [ ] Plan follow-up test after fixes
@@ -510,12 +559,14 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 ### 3. Communicate Results
 
 **Immediate (Within 1 Week):**
+
 - Email summary to stakeholders
 - Post in `#product-research` Mattermost channel
 - Create GitHub issues for critical items
 - Add to product backlog
 
 **Monthly:**
+
 - Include in product review meeting
 - Update roadmap based on findings
 - Track issue resolution
@@ -527,6 +578,7 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 ### Planning
 
 ✅ **Do:**
+
 - Test early and often (don't wait for perfection)
 - Recruit diverse participants (experience, role, tech stack)
 - Test realistic scenarios based on actual user goals
@@ -534,6 +586,7 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 - Allow enough time between sessions for notes review
 
 ❌ **Don't:**
+
 - Test with internal team only (you're too familiar with the platform)
 - Make tasks too easy or too specific (not realistic)
 - Skip consent or recording permission
@@ -542,6 +595,7 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 ### During Tests
 
 ✅ **Do:**
+
 - Let users struggle - silence reveals problems
 - Capture exact quotes (use their language)
 - Note emotional reactions (frustration, delight, confusion)
@@ -549,6 +603,7 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 - Test in environment similar to production
 
 ❌ **Don't:**
+
 - Jump in to help immediately
 - Explain how features "should" work
 - Defend design decisions
@@ -558,6 +613,7 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 ### Analysis
 
 ✅ **Do:**
+
 - Analyze within 24 hours (while memory is fresh)
 - Look for patterns across multiple users
 - Prioritize by severity and frequency
@@ -565,6 +621,7 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 - Make specific, actionable recommendations
 
 ❌ **Don't:**
+
 - Generalize from one user's experience
 - Cherry-pick only findings that support your position
 - Focus only on what's broken (also capture what works)
@@ -577,43 +634,51 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 ### Internal Resources
 
 **Templates:**
+
 - [Usability Test Script Template](../research/templates/usability-test-script.md)
 - [Observation Checklist](../research/templates/usability-observation-checklist.md)
 - [Participant Screener](../research/templates/participant-screener.md)
 - [Analysis Template](../research/templates/usability-analysis-template.md)
 
 **Guides:**
+
 - [Interview Protocol](../research/interviews/interview-protocol.md)
 - [Consent Form](../research/interviews/consent-form.md)
 - [Research Repository](../research/README.md)
 
 **Platform Tools:**
+
 - [OpenReplay Setup Guide](./session-recording-setup.md)
 - [Recording Best Practices](./recording-best-practices.md)
 
 ### External Resources
 
 **Books:**
+
 - "Rocket Surgery Made Easy" by Steve Krug (quintessential guide)
 - "Don't Make Me Think" by Steve Krug (usability principles)
 - "The User Experience Team of One" by Leah Buley (practical tips for solo researchers)
 
 **Articles:**
+
 - [Nielsen Norman Group - Usability Testing 101](https://www.nngroup.com/articles/usability-testing-101/)
 - [How Many Test Users in a Usability Study?](https://www.nngroup.com/articles/how-many-test-users/)
 - [Thinking Aloud: The #1 Usability Tool](https://www.nngroup.com/articles/thinking-aloud-the-1-usability-tool/)
 
 **Videos:**
+
 - [Steve Krug's Usability Test Demo](https://www.youtube.com/watch?v=1UCDUOB_aS8)
 
 ### Support
 
 **Questions?**
+
 - **Mattermost**: `#product-research` channel
 - **Email**: product-team@fawkes.local
 - **Office Hours**: Wednesdays 2-3 PM
 
 **Need Help?**
+
 - **Recruiting Participants**: Post in `#platform-feedback`
 - **Technical Issues**: `#platform-support`
 - **Analysis Help**: Schedule time with Product Team
@@ -623,6 +688,7 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 ## Changelog
 
 ### Version 1.0 - December 2025
+
 - Initial usability testing guide
 - Comprehensive planning, execution, analysis guidance
 - Templates and tools reference

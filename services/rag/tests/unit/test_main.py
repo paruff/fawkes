@@ -78,10 +78,7 @@ def test_ready_endpoint_ready(client, mock_weaviate_client):
 def test_query_endpoint_no_weaviate(client):
     """Test query endpoint when Weaviate is not connected."""
     with patch("app.main.weaviate_client", None):
-        response = client.post(
-            "/api/v1/query",
-            json={"query": "test query"}
-        )
+        response = client.post("/api/v1/query", json={"query": "test query"})
         assert response.status_code == 503
         assert "Weaviate" in response.json()["detail"]
 
@@ -103,10 +100,7 @@ def test_query_endpoint_success(client, mock_weaviate_client):
                         "content": "Test content",
                         "filepath": "test/path.md",
                         "category": "doc",
-                        "_additional": {
-                            "certainty": 0.85,
-                            "distance": 0.15
-                        }
+                        "_additional": {"certainty": 0.85, "distance": 0.15},
                     }
                 ]
             }
@@ -116,14 +110,7 @@ def test_query_endpoint_success(client, mock_weaviate_client):
     mock_weaviate_client.query = mock_query
 
     with patch("app.main.weaviate_client", mock_weaviate_client):
-        response = client.post(
-            "/api/v1/query",
-            json={
-                "query": "test query",
-                "top_k": 5,
-                "threshold": 0.7
-            }
-        )
+        response = client.post("/api/v1/query", json={"query": "test query", "top_k": 5, "threshold": 0.7})
 
         assert response.status_code == 200
         data = response.json()
@@ -153,15 +140,15 @@ def test_query_endpoint_with_threshold_filter(client, mock_weaviate_client):
                         "content": "High relevance content",
                         "filepath": "test/high.md",
                         "category": "doc",
-                        "_additional": {"certainty": 0.9}
+                        "_additional": {"certainty": 0.9},
                     },
                     {
                         "title": "Low Relevance",
                         "content": "Low relevance content",
                         "filepath": "test/low.md",
                         "category": "doc",
-                        "_additional": {"certainty": 0.5}
-                    }
+                        "_additional": {"certainty": 0.5},
+                    },
                 ]
             }
         }
@@ -170,14 +157,7 @@ def test_query_endpoint_with_threshold_filter(client, mock_weaviate_client):
     mock_weaviate_client.query = mock_query
 
     with patch("app.main.weaviate_client", mock_weaviate_client):
-        response = client.post(
-            "/api/v1/query",
-            json={
-                "query": "test query",
-                "top_k": 5,
-                "threshold": 0.7
-            }
-        )
+        response = client.post("/api/v1/query", json={"query": "test query", "top_k": 5, "threshold": 0.7})
 
         assert response.status_code == 200
         data = response.json()
@@ -193,21 +173,12 @@ def test_query_endpoint_empty_results(client, mock_weaviate_client):
     mock_query.with_near_text.return_value = mock_query
     mock_query.with_limit.return_value = mock_query
     mock_query.with_additional.return_value = mock_query
-    mock_query.do.return_value = {
-        "data": {
-            "Get": {
-                SCHEMA_NAME: []
-            }
-        }
-    }
+    mock_query.do.return_value = {"data": {"Get": {SCHEMA_NAME: []}}}
 
     mock_weaviate_client.query = mock_query
 
     with patch("app.main.weaviate_client", mock_weaviate_client):
-        response = client.post(
-            "/api/v1/query",
-            json={"query": "test query"}
-        )
+        response = client.post("/api/v1/query", json={"query": "test query"})
 
         assert response.status_code == 200
         data = response.json()
@@ -226,17 +197,11 @@ def test_query_endpoint_validation_errors(client):
     assert response.status_code == 422
 
     # Invalid top_k
-    response = client.post(
-        "/api/v1/query",
-        json={"query": "test", "top_k": 0}
-    )
+    response = client.post("/api/v1/query", json={"query": "test", "top_k": 0})
     assert response.status_code == 422
 
     # Invalid threshold
-    response = client.post(
-        "/api/v1/query",
-        json={"query": "test", "threshold": 1.5}
-    )
+    response = client.post("/api/v1/query", json={"query": "test", "threshold": 1.5})
     assert response.status_code == 422
 
 
@@ -247,17 +212,12 @@ def test_query_endpoint_default_parameters(client, mock_weaviate_client):
     mock_query.with_near_text.return_value = mock_query
     mock_query.with_limit.return_value = mock_query
     mock_query.with_additional.return_value = mock_query
-    mock_query.do.return_value = {
-        "data": {"Get": {SCHEMA_NAME: []}}
-    }
+    mock_query.do.return_value = {"data": {"Get": {SCHEMA_NAME: []}}}
 
     mock_weaviate_client.query = mock_query
 
     with patch("app.main.weaviate_client", mock_weaviate_client):
-        response = client.post(
-            "/api/v1/query",
-            json={"query": "test query"}
-        )
+        response = client.post("/api/v1/query", json={"query": "test query"})
 
         assert response.status_code == 200
         # Verify default parameters were used
@@ -307,18 +267,10 @@ def test_stats_endpoint_with_data(client, mock_weaviate_client):
                     {
                         "category": "doc",
                         "indexed_at": "2024-12-21T14:00:00Z",
-                        "content": "Test content 1" * 100  # Longer content
+                        "content": "Test content 1" * 100,  # Longer content
                     },
-                    {
-                        "category": "doc",
-                        "indexed_at": "2024-12-21T15:00:00Z",
-                        "content": "Test content 2" * 100
-                    },
-                    {
-                        "category": "code",
-                        "indexed_at": "2024-12-21T14:30:00Z",
-                        "content": "Test code" * 100
-                    }
+                    {"category": "doc", "indexed_at": "2024-12-21T15:00:00Z", "content": "Test content 2" * 100},
+                    {"category": "code", "indexed_at": "2024-12-21T14:30:00Z", "content": "Test code" * 100},
                 ]
             }
         }
@@ -354,9 +306,7 @@ def test_stats_endpoint_empty_database(client, mock_weaviate_client):
     mock_query = MagicMock()
     mock_query.get.return_value = mock_query
     mock_query.with_limit.return_value = mock_query
-    mock_query.do.return_value = {
-        "data": {"Get": {SCHEMA_NAME: []}}
-    }
+    mock_query.do.return_value = {"data": {"Get": {SCHEMA_NAME: []}}}
 
     mock_weaviate_client.query = mock_query
 

@@ -17,6 +17,7 @@ assets/
 **Purpose**: Visual documentation of user research.
 
 **Contents**:
+
 - Screenshots from user testing sessions
 - Photos from workshops and interviews (with consent)
 - Exported diagrams and wireframes
@@ -26,10 +27,12 @@ assets/
 **Formats**: PNG (preferred for screenshots), JPG (for photos), SVG (for vector graphics)
 
 **Naming Convention**: `YYYY-MM-DD-{type}-{description}.{ext}`
+
 - Example: `2025-12-23-screenshot-deployment-workflow.png`
 - Example: `2025-12-23-workshop-journey-map-board.jpg`
 
 **Guidelines**:
+
 - Compress images to reasonable size (< 2MB)
 - Use descriptive filenames
 - Include alt text in markdown when referencing
@@ -41,6 +44,7 @@ assets/
 **Purpose**: Video recordings of research sessions.
 
 **Contents**:
+
 - User testing session recordings
 - Demo videos for stakeholder presentations
 - Prototype walkthroughs
@@ -51,10 +55,12 @@ assets/
 **Tracked with Git LFS**: ✅ Videos are automatically tracked by Git LFS (see `.gitattributes`)
 
 **Naming Convention**: `YYYY-MM-DD-{type}-{participant-role}.{ext}`
+
 - Example: `2025-12-23-usability-test-platform-engineer.mp4`
 - Example: `2025-12-23-workshop-persona-creation.mp4`
 
 **Guidelines**:
+
 - Obtain explicit consent before recording
 - Anonymize filenames (use role, not name)
 - Keep files under 100MB when possible
@@ -63,6 +69,7 @@ assets/
 - Include brief description in commit message
 
 **Privacy Note**:
+
 - Only commit recordings without identifiable information
 - For sensitive recordings, store in secure drive and link in docs
 - Delete recordings after 1 year or per policy
@@ -72,6 +79,7 @@ assets/
 **Purpose**: Audio recordings of interviews and discussions.
 
 **Contents**:
+
 - Interview recordings
 - Podcast-style research summaries
 - Workshop audio
@@ -81,10 +89,12 @@ assets/
 **Tracked with Git LFS**: ✅ Audio files are automatically tracked by Git LFS
 
 **Naming Convention**: `YYYY-MM-DD-{type}-{participant-role}.{ext}`
+
 - Example: `2025-12-23-interview-platform-engineer.mp3`
 - Example: `2025-12-23-feedback-session-team-lead.m4a`
 
 **Guidelines**:
+
 - Obtain consent before recording
 - Anonymize filenames
 - Compress to reduce file size (64-128 kbps for speech)
@@ -96,6 +106,7 @@ assets/
 **Purpose**: Visual representations of processes, systems, and flows.
 
 **Contents**:
+
 - Workflow diagrams
 - System architecture diagrams shown to users
 - Wireframes from design sessions
@@ -103,15 +114,18 @@ assets/
 - Concept maps
 
 **Formats**:
+
 - Mermaid (`.mmd`) - preferred for version control
 - SVG - for exported diagrams
 - PNG - for imported or screenshot diagrams
 
 **Naming Convention**: `{type}-{description}.{ext}`
+
 - Example: `workflow-deployment-process.mmd`
 - Example: `wireframe-service-catalog-page.svg`
 
 **Guidelines**:
+
 - Use Mermaid for diagrams when possible (text-based, version-friendly)
 - Export to PNG/SVG for presentations
 - Include source files (e.g., `.drawio`, `.sketch`) if applicable
@@ -124,6 +138,7 @@ Large files are tracked with Git LFS to keep the repository size manageable.
 ### LFS-Tracked File Types
 
 Automatically tracked (configured in `.gitattributes`):
+
 - Videos: `*.mp4`, `*.mov`, `*.avi`, `*.mkv`, `*.webm`
 - Audio: `*.mp3`, `*.wav`, `*.m4a`, `*.aac`, `*.flac`
 - Large images: `*.psd`, `*.ai`, `*.sketch`
@@ -131,6 +146,7 @@ Automatically tracked (configured in `.gitattributes`):
 ### Working with LFS Files
 
 **Initial Setup**:
+
 ```bash
 # Install Git LFS (one time)
 git lfs install
@@ -140,6 +156,7 @@ git clone https://github.com/paruff/fawkes.git
 ```
 
 **Pulling LFS Files**:
+
 ```bash
 # Pull all LFS objects
 git lfs pull
@@ -152,6 +169,7 @@ git lfs ls-files
 ```
 
 **Adding LFS Files**:
+
 ```bash
 # Add file (automatically tracked by LFS based on extension)
 git add assets/videos/2025-12-23-demo.mp4
@@ -166,25 +184,27 @@ git push
 ### LFS Best Practices
 
 ✅ **Do:**
+
 - Keep individual files under 100MB
 - Compress videos and audio before committing
 - Use descriptive filenames
 - Delete unused large files
 
 ❌ **Don't:**
+
 - Commit extremely large files (> 500MB)
 - Repeatedly commit small changes to large files (creates versions)
 - Forget to pull LFS objects after clone
 
 ## File Size Guidelines
 
-| Asset Type | Recommended Max Size | Notes |
-|------------|----------------------|-------|
-| Screenshots (PNG) | 2 MB | Compress if larger |
-| Photos (JPG) | 1 MB | Resize and compress |
-| SVG Diagrams | 500 KB | Usually much smaller |
-| Video (MP4) | 100 MB | Use H.264, compress for web |
-| Audio (MP3) | 10 MB | 64-128 kbps for speech |
+| Asset Type        | Recommended Max Size | Notes                       |
+| ----------------- | -------------------- | --------------------------- |
+| Screenshots (PNG) | 2 MB                 | Compress if larger          |
+| Photos (JPG)      | 1 MB                 | Resize and compress         |
+| SVG Diagrams      | 500 KB               | Usually much smaller        |
+| Video (MP4)       | 100 MB               | Use H.264, compress for web |
+| Audio (MP3)       | 10 MB                | 64-128 kbps for speech      |
 
 ## Privacy and Consent
 
@@ -209,16 +229,19 @@ git push
 ### In Markdown
 
 **Images**:
+
 ```markdown
 ![Deployment workflow screenshot](assets/images/2025-12-23-screenshot-deployment-workflow.png)
 ```
 
 **Videos** (link, not embed):
+
 ```markdown
 [User testing video](assets/videos/2025-12-23-usability-test-demo.mp4)
 ```
 
 **Diagrams**:
+
 ```mermaid
 %%{init: {'theme':'base'}}%%
 graph LR
@@ -228,6 +251,7 @@ graph LR
 ```
 
 Or reference diagram file:
+
 ```markdown
 See workflow diagram: [Deployment Process](assets/diagrams/workflow-deployment-process.png)
 ```
@@ -235,6 +259,7 @@ See workflow diagram: [Deployment Process](assets/diagrams/workflow-deployment-p
 ## Best Practices
 
 ✅ **Do:**
+
 - Get consent before recording people
 - Anonymize filenames and content
 - Compress files to reasonable sizes
@@ -244,6 +269,7 @@ See workflow diagram: [Deployment Process](assets/diagrams/workflow-deployment-p
 - Keep assets organized by date and type
 
 ❌ **Don't:**
+
 - Commit recordings with PII
 - Use generic names (e.g., `video1.mp4`)
 - Store extremely large files

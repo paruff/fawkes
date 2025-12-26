@@ -9,11 +9,13 @@ All secrets in the Penpot deployment use placeholder values prefixed with `CHANG
 ### Secrets to Configure
 
 1. **Database Password** (`platform/apps/postgresql/db-penpot-credentials.yaml`)
+
    - Location: `stringData.password`
    - Default: `CHANGE_ME_penpot_db_password`
    - Requirements: Minimum 16 characters, alphanumeric + special chars
 
 2. **Penpot Secret Key** (`platform/apps/penpot/deployment.yaml`)
+
    - Location: `penpot-secrets.stringData.PENPOT_SECRET_KEY`
    - Default: `CHANGE_ME_penpot_secret_key_min_16_chars`
    - Requirements: Minimum 16 characters, used for session encryption
@@ -155,20 +157,24 @@ spec:
 ### Security Best Practices
 
 1. **Never commit real secrets to Git**
-   - Always use placeholder values (CHANGE_ME_*)
+
+   - Always use placeholder values (CHANGE*ME*\*)
    - Use External Secrets Operator for production
 
 2. **Rotate secrets regularly**
+
    - Database passwords: Every 90 days
    - Secret keys: Every 180 days
    - Use automated rotation where possible
 
 3. **Use strong passwords**
+
    - Minimum 16 characters
    - Mix of uppercase, lowercase, numbers, special characters
    - Use password generator: `openssl rand -base64 32`
 
 4. **Restrict secret access**
+
    - Use Kubernetes RBAC to limit who can read secrets
    - Enable audit logging for secret access
    - Monitor for unauthorized access attempts
@@ -196,6 +202,7 @@ kubectl get secret penpot-db-credentials -n fawkes -o yaml | grep "CHANGE_ME_"
 **Symptom**: Backend pod logs show database authentication failures
 
 **Solution**: Verify database password matches in both secrets:
+
 ```bash
 # Get password from db credentials
 kubectl get secret penpot-db-credentials -n fawkes -o jsonpath='{.data.password}' | base64 -d
@@ -211,6 +218,7 @@ The passwords must match!
 **Symptom**: Penpot backend logs show "Invalid secret key" or session errors
 
 **Solution**: Ensure PENPOT_SECRET_KEY is at least 16 characters:
+
 ```bash
 kubectl get secret penpot-secrets -n fawkes -o jsonpath='{.data.PENPOT_SECRET_KEY}' | base64 -d | wc -c
 ```

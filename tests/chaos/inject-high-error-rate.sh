@@ -7,8 +7,8 @@ echo "🔥 Starting chaos test: Injecting high error rate"
 
 # Configuration
 NAMESPACE="${NAMESPACE:-fawkes}"
-DURATION="${DURATION:-300}"  # 5 minutes
-ERROR_RATE="${ERROR_RATE:-0.5}"  # 50% error rate
+DURATION="${DURATION:-300}"     # 5 minutes
+ERROR_RATE="${ERROR_RATE:-0.5}" # 50% error rate
 
 echo "Configuration:"
 echo "  Namespace: $NAMESPACE"

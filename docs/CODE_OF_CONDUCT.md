@@ -10,27 +10,27 @@ We pledge to act and interact in ways that contribute to an open, welcoming, div
 
 Examples of behavior that contributes to a positive environment for our community include:
 
-* Demonstrating empathy and kindness toward other people
-* Being respectful of differing opinions, viewpoints, and experiences
-* Giving and gracefully accepting constructive feedback
-* Accepting responsibility and apologizing to those affected by our mistakes, and learning from the experience
-* Focusing on what is best not just for us as individuals, but for the overall community
-* Using welcoming and inclusive language
-* Being patient with new contributors and helping them learn
-* Celebrating others' successes and contributions
-* Assuming good intent and asking clarifying questions
-* Providing credit and recognition where it's due
+- Demonstrating empathy and kindness toward other people
+- Being respectful of differing opinions, viewpoints, and experiences
+- Giving and gracefully accepting constructive feedback
+- Accepting responsibility and apologizing to those affected by our mistakes, and learning from the experience
+- Focusing on what is best not just for us as individuals, but for the overall community
+- Using welcoming and inclusive language
+- Being patient with new contributors and helping them learn
+- Celebrating others' successes and contributions
+- Assuming good intent and asking clarifying questions
+- Providing credit and recognition where it's due
 
 Examples of unacceptable behavior include:
 
-* The use of sexualized language or imagery, and sexual attention or advances of any kind
-* Trolling, insulting or derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or email address, without their explicit permission
-* Dismissing or belittling others' contributions or concerns
-* Sustained disruption of discussions, events, or community activities
-* Other conduct which could reasonably be considered inappropriate in a professional setting
-* Advocating for, or encouraging, any of the above behavior
+- The use of sexualized language or imagery, and sexual attention or advances of any kind
+- Trolling, insulting or derogatory comments, and personal or political attacks
+- Public or private harassment
+- Publishing others' private information, such as a physical or email address, without their explicit permission
+- Dismissing or belittling others' contributions or concerns
+- Sustained disruption of discussions, events, or community activities
+- Other conduct which could reasonably be considered inappropriate in a professional setting
+- Advocating for, or encouraging, any of the above behavior
 
 ## Our Responsibilities
 
@@ -42,13 +42,13 @@ Community leaders have the right and responsibility to remove, edit, or reject c
 
 This Code of Conduct applies within all community spaces, including but not limited to:
 
-* GitHub repositories (issues, pull requests, discussions, wiki)
-* Community chat platforms (Slack, Discord)
-* Mailing lists and email communications
-* Social media channels (official Fawkes accounts)
-* In-person events (meetups, conferences, workshops)
-* Virtual events (webinars, office hours, live streams)
-* Any other forums created by the project team which the community uses for communication
+- GitHub repositories (issues, pull requests, discussions, wiki)
+- Community chat platforms (Slack, Discord)
+- Mailing lists and email communications
+- Social media channels (official Fawkes accounts)
+- In-person events (meetups, conferences, workshops)
+- Virtual events (webinars, office hours, live streams)
+- Any other forums created by the project team which the community uses for communication
 
 This Code of Conduct also applies when an individual is officially representing the community in public spaces. Examples include using an official e-mail address, posting via an official social media account, or acting as an appointed representative at an online or offline event.
 
@@ -68,13 +68,13 @@ All complaints will be reviewed and investigated promptly and fairly. All commun
 
 When reporting an incident, please include as much of the following information as possible:
 
-* Your contact information (so we can get in touch with you)
-* Names (real, usernames, or pseudonyms) of any individuals involved
-* Your account of what occurred
-* If you believe this incident is ongoing
-* Any other information that may be helpful
-* Links to publicly available records (e.g., GitHub comments, mailing list archives)
-* Date and time of the incident
+- Your contact information (so we can get in touch with you)
+- Names (real, usernames, or pseudonyms) of any individuals involved
+- Your account of what occurred
+- If you believe this incident is ongoing
+- Any other information that may be helpful
+- Links to publicly available records (e.g., GitHub comments, mailing list archives)
+- Date and time of the incident
 
 ### Confidentiality
 
@@ -144,10 +144,10 @@ For answers to common questions about this code of conduct, see the FAQ at [http
 
 For questions about this Code of Conduct, contact:
 
-* **General Questions**: conduct@fawkes-project.org
-* **Enforcement Team**: conduct@fawkes-project.org
-* **Appeals**: conduct-appeals@fawkes-project.org
-* **Project Lead**: [Your Contact Information]
+- **General Questions**: conduct@fawkes-project.org
+- **Enforcement Team**: conduct@fawkes-project.org
+- **Appeals**: conduct-appeals@fawkes-project.org
+- **Project Lead**: [Your Contact Information]
 
 ---
 

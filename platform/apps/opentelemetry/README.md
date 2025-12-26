@@ -72,6 +72,7 @@ service:
 ## Application Integration
 
 ### Go
+
 ```go
 import "go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 
@@ -82,6 +83,7 @@ exporter, _ := otlptracegrpc.New(ctx,
 ```
 
 ### Python
+
 ```python
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 
@@ -121,6 +123,7 @@ Run the comprehensive test script:
 ```
 
 This will:
+
 1. Verify OpenTelemetry Collector DaemonSet is deployed
 2. Check OTLP receiver ports are exposed
 3. Validate health endpoints
@@ -146,6 +149,7 @@ curl http://localhost:8080/error
 ```
 
 View traces in Grafana by querying Tempo with:
+
 ```
 {service.name="otel-sample-app"}
 ```

@@ -75,6 +75,7 @@ kubectl port-forward -n logging svc/opensearch-dashboards 5601:5601
 ## Log Retention Policy
 
 Automatic 30-day retention via Index State Management (ISM):
+
 - **Hot** (0-7 days): Active indexing and search, rollover at 1d or 10GB
 - **Warm** (7-30 days): Reduce replicas, force merge, read-only
 - **Delete** (30+ days): Automatic deletion
@@ -92,6 +93,7 @@ fawkes-host-logs-YYYY.MM.DD  Host/system logs
 ## Integration with OpenTelemetry
 
 Logs are collected by **OpenTelemetry Collector** (not Fluent Bit):
+
 - DaemonSet on every node
 - Filelog receiver: `/var/log/containers/*.log`
 - Kubernetes metadata enrichment
@@ -110,10 +112,7 @@ Search logs with Kubernetes context and trace correlation:
 {
   "query": {
     "bool": {
-      "must": [
-        { "match": { "k8s.namespace.name": "default" }},
-        { "match": { "severityText": "ERROR" }}
-      ],
+      "must": [{ "match": { "k8s.namespace.name": "default" } }, { "match": { "severityText": "ERROR" } }],
       "filter": {
         "range": {
           "@timestamp": {
@@ -141,6 +140,7 @@ curl -X GET "http://localhost:9200/otel-logs-*/_search?pretty" \
 ```
 
 ### Simple Query
+
 ```bash
 # Search for errors in the last hour
 curl -X GET "http://localhost:9200/otel-logs-*/_search?q=severityText:ERROR&size=10"
@@ -180,11 +180,13 @@ behave tests/bdd/features/centralized-logging.feature --tags=@local
 ### No logs appearing
 
 1. Check OpenTelemetry Collector:
+
    ```bash
    kubectl logs -n monitoring -l app.kubernetes.io/name=opentelemetry-collector
    ```
 
 2. Check OpenSearch cluster health:
+
    ```bash
    kubectl exec -n logging opensearch-cluster-master-0 -- \
      curl http://localhost:9200/_cluster/health
@@ -199,6 +201,7 @@ behave tests/bdd/features/centralized-logging.feature --tags=@local
 ### High disk usage
 
 Check ISM policy is working:
+
 ```bash
 kubectl exec -n logging opensearch-cluster-master-0 -- \
   curl http://localhost:9200/_plugins/_ism/policies/fawkes-log-retention-policy

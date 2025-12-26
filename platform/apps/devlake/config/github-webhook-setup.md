@@ -1,12 +1,21 @@
 # ============================================================
+
 # GitHub Webhook Configuration for DORA Metrics
+
 # ============================================================
+
 # This document provides instructions for configuring GitHub
+
 # webhooks to send commit events to DevLake for DORA metrics
+
 #
-# Events captured:
+
+# Events captured
+
 # - Push events → Commit tracking for lead time
+
 # - Pull request merged → Release preparation tracking
+
 # ============================================================
 
 ## Overview
@@ -43,6 +52,7 @@ kubectl get secret devlake-webhook-secrets -n fawkes-devlake \
 2. Go to **Settings** → **Webhooks** → **Add webhook**
 
 3. Configure the webhook:
+
    - **Payload URL**: `https://devlake.fawkes.idp/api/plugins/webhook/1/commits`
    - **Content type**: `application/json`
    - **Secret**: (paste the secret from Step 1)
@@ -110,6 +120,7 @@ GitHub sends payloads like this:
 ```
 
 DevLake processes this to extract:
+
 - Commit SHA
 - Author
 - Timestamp (for lead time start)
@@ -135,6 +146,7 @@ X-Hub-Signature-256: sha256=<signature>
 ```
 
 The signature is computed as:
+
 ```
 HMAC-SHA256(webhook-secret, request-body)
 ```
@@ -146,6 +158,7 @@ DevLake automatically validates this header before processing events.
 **Production**: Use HTTPS with valid TLS certificate
 
 **Firewall Rules**: Allow GitHub webhook IPs
+
 ```
 # GitHub webhook IP ranges (check GitHub meta API for latest)
 192.30.252.0/22
@@ -157,6 +170,7 @@ DevLake automatically validates this header before processing events.
 ### Rate Limiting
 
 DevLake webhook endpoint has rate limits:
+
 - 1000 requests per minute per IP
 - 10000 requests per hour per repository
 
@@ -167,11 +181,13 @@ DevLake webhook endpoint has rate limits:
 **Check Recent Deliveries** in GitHub webhook settings:
 
 1. **Response code 404**:
+
    - Verify webhook URL is correct
    - Check DevLake service is running
    - Verify ingress route is configured
 
 2. **Response code 401/403**:
+
    - Verify webhook secret matches
    - Check signature validation
 
@@ -234,6 +250,7 @@ devlake_webhook_errors_total{source="github"}
 ### Grafana Dashboard
 
 View webhook health in Grafana:
+
 - Dashboard: **DevLake Webhooks**
 - Panels: Request rate, error rate, latency
 
@@ -304,23 +321,27 @@ resource "github_repository_webhook" "devlake" {
 ### Verify Webhook is Working
 
 1. **Make a test commit**:
+
    ```bash
    git commit --allow-empty -m "test: DORA webhook validation"
    git push origin main
    ```
 
 2. **Check GitHub delivery**:
+
    - Go to repository → Settings → Webhooks
    - Click on the webhook
    - Check "Recent Deliveries" tab
    - Verify response is `200 OK`
 
 3. **Check DevLake logs**:
+
    ```bash
    kubectl logs -n fawkes-devlake -l app.kubernetes.io/component=lake | grep "commit.*received"
    ```
 
 4. **Query DevLake API**:
+
    ```bash
    curl -X GET "http://devlake.127.0.0.1.nip.io/api/commits?repo=paruff/fawkes" \
      -H "Authorization: Bearer $DEVLAKE_TOKEN"

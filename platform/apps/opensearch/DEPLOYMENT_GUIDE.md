@@ -52,6 +52,7 @@ The Fawkes platform uses **OpenTelemetry Collector** for unified log collection 
 **Configuration**: `platform/apps/opentelemetry/otel-collector-application.yaml`
 
 **Key Features**:
+
 - DaemonSet deployment (runs on every node)
 - Filelog receiver for container log collection
 - Kubernetes metadata enrichment (pod name, namespace, container, etc.)
@@ -60,6 +61,7 @@ The Fawkes platform uses **OpenTelemetry Collector** for unified log collection 
 - Memory limiter for backpressure handling
 
 **Log Collection**:
+
 ```yaml
 filelog:
   include:
@@ -69,6 +71,7 @@ filelog:
 ```
 
 **Kubernetes Enrichment**:
+
 - `k8s.namespace.name`
 - `k8s.pod.name`
 - `k8s.pod.uid`
@@ -79,6 +82,7 @@ filelog:
 - `container.image.name`
 
 **Trace Correlation**:
+
 - Extracts `trace_id` and `span_id` from structured JSON logs
 - Preserves W3C trace context for correlation with Grafana Tempo
 
@@ -88,6 +92,7 @@ filelog:
 **Configuration**: `platform/apps/opensearch/opensearch-application.yaml`
 
 **Deployment Details**:
+
 - **Chart**: opensearch-project.github.io/helm-charts/opensearch v2.17.0
 - **Version**: OpenSearch 2.11.1
 - **Replicas**: 1 (MVP - single node)
@@ -96,6 +101,7 @@ filelog:
 - **Security**: Disabled for MVP (enable for production)
 
 **Configuration**:
+
 ```yaml
 clusterName: opensearch-cluster
 replicas: 1
@@ -111,6 +117,7 @@ roles: [master, ingest, data, remote_cluster_client]
 **Configuration**: `platform/apps/opensearch/opensearch-dashboards-application.yaml`
 
 **Deployment Details**:
+
 - **Chart**: opensearch-project.github.io/helm-charts/opensearch-dashboards v2.16.0
 - **Version**: 2.11.1
 - **Resources**: 200m-500m CPU, 512Mi-1Gi memory
@@ -124,6 +131,7 @@ roles: [master, ingest, data, remote_cluster_client]
 **Configuration**: `platform/apps/opensearch/ism-retention-policy.yaml`
 
 **30-Day Retention Policy**:
+
 ```yaml
 States:
   hot (0-7 days):
@@ -138,6 +146,7 @@ States:
 ```
 
 **Applied to Indices**:
+
 - `fawkes-logs-*`
 - `fawkes-host-logs-*`
 - `otel-logs-*`
@@ -152,6 +161,7 @@ States:
 **Index Templates**:
 
 **Application Logs** (`fawkes-logs-*`):
+
 ```json
 {
   "settings": {
@@ -173,6 +183,7 @@ States:
 ```
 
 **Host Logs** (`fawkes-host-logs-*`):
+
 - System logs from Kubelet
 - Node-level metrics
 
@@ -205,6 +216,7 @@ kubectl apply -f platform/apps/opensearch/configure-index-patterns.yaml
 ```
 
 **ArgoCD will automatically**:
+
 1. Deploy OpenSearch cluster
 2. Deploy OpenSearch Dashboards
 3. Wait for OpenSearch to be ready
@@ -291,11 +303,12 @@ datasources:
       timeField: "@timestamp"
       derivedFields:
         - name: TraceID
-          matcherRegex: 'trace_id=([a-fA-F0-9]{32})'
+          matcherRegex: "trace_id=([a-fA-F0-9]{32})"
           datasourceUid: tempo
 ```
 
 **View logs in Grafana**:
+
 1. Go to Explore
 2. Select OpenSearch datasource
 3. Query logs with trace correlation to Tempo
@@ -327,6 +340,7 @@ Applications instrumented with OpenTelemetry automatically include trace context
 ### No Logs Appearing in OpenSearch
 
 1. **Check OpenTelemetry Collector**:
+
 ```bash
 # View collector logs
 kubectl logs -n monitoring -l app.kubernetes.io/name=opentelemetry-collector --tail=100
@@ -336,11 +350,13 @@ kubectl exec -n monitoring <otel-pod> -- wget -qO- http://localhost:13133
 ```
 
 2. **Check OpenSearch is Ready**:
+
 ```bash
 kubectl exec -n logging opensearch-cluster-master-0 -- curl http://localhost:9200/_cluster/health
 ```
 
 3. **Verify Log Pipeline**:
+
 ```bash
 # Check if logs are being received by OpenSearch
 kubectl exec -n logging opensearch-cluster-master-0 -- curl -s "http://localhost:9200/_cat/indices?v"
@@ -349,10 +365,12 @@ kubectl exec -n logging opensearch-cluster-master-0 -- curl -s "http://localhost
 ### High Memory Usage in OTel Collector
 
 The collector has memory_limiter configured for backpressure:
+
 - Limit: 800MiB
 - Spike limit: 200MiB
 
 If hitting limits, check:
+
 ```bash
 kubectl top pods -n monitoring -l app.kubernetes.io/name=opentelemetry-collector
 ```
@@ -362,12 +380,14 @@ Adjust resources in `platform/apps/opentelemetry/otel-collector-application.yaml
 ### Index Retention Not Working
 
 Check ISM policy status:
+
 ```bash
 kubectl exec -n logging opensearch-cluster-master-0 -- \
   curl -s "http://localhost:9200/_plugins/_ism/policies/fawkes-log-retention-policy"
 ```
 
 View index states:
+
 ```bash
 kubectl exec -n logging opensearch-cluster-master-0 -- \
   curl -s "http://localhost:9200/_plugins/_ism/explain/fawkes-logs-*?pretty"
@@ -392,11 +412,13 @@ behave tests/bdd/features/centralized-logging.feature --tags=@trace-correlation
 ### Manual Testing
 
 1. **Deploy Test Application**:
+
 ```bash
 kubectl apply -f platform/apps/opentelemetry/sample-app/deployment.yaml
 ```
 
 2. **Generate Logs**:
+
 ```bash
 kubectl port-forward -n otel-demo svc/otel-sample-app 8080:80
 curl http://localhost:8080/hello/World
@@ -404,6 +426,7 @@ curl http://localhost:8080/work
 ```
 
 3. **Verify in OpenSearch**:
+
 ```bash
 # Search for test app logs
 curl -X GET "http://localhost:9200/otel-logs-*/_search?pretty" \
@@ -421,6 +444,7 @@ curl -X GET "http://localhost:9200/otel-logs-*/_search?pretty" \
 ### Security
 
 **For production, enable OpenSearch security**:
+
 ```yaml
 config:
   opensearch.yml: |
@@ -430,6 +454,7 @@ config:
 ```
 
 Configure:
+
 - TLS certificates
 - Authentication (LDAP/SAML/OIDC)
 - Role-based access control (RBAC)
@@ -438,6 +463,7 @@ Configure:
 ### High Availability
 
 **Multi-node OpenSearch cluster**:
+
 ```yaml
 replicas: 3
 minimumMasterNodes: 2
@@ -448,17 +474,20 @@ roles:
 ```
 
 **OpenTelemetry Collector scaling**:
+
 - DaemonSet handles horizontal scaling automatically
 - Increase resources per pod if needed
 
 ### Performance Tuning
 
 **OpenSearch**:
+
 - Increase JVM heap: `-Xmx4g -Xms4g`
 - More shards for high volume: `number_of_shards: 5`
 - Disable replicas in warm state: `number_of_replicas: 0`
 
 **OTel Collector**:
+
 - Increase batch size: `send_batch_size: 2000`
 - Larger queue: `queue_size: 10000`
 - More memory: `limits.memory: 2Gi`
@@ -466,18 +495,21 @@ roles:
 ### Monitoring
 
 **OpenSearch Metrics**:
+
 - Cluster health
 - Index size and count
 - Query latency
 - JVM heap usage
 
 **OTel Collector Metrics** (already exposed to Prometheus):
+
 - `otelcol_receiver_accepted_log_records`
 - `otelcol_exporter_sent_log_records`
 - `otelcol_exporter_send_failed_log_records`
 - `otelcol_processor_batch_batch_send_size`
 
 Create alerts for:
+
 - High log ingestion failures
 - OpenSearch cluster health != green
 - Disk space < 15%
@@ -496,6 +528,7 @@ Create alerts for:
 ## Support
 
 For issues or questions:
+
 1. Check logs: `kubectl logs -n monitoring -l app.kubernetes.io/name=opentelemetry-collector`
 2. Verify health: `kubectl exec -n monitoring <pod> -- wget -qO- http://localhost:13133`
 3. Review [Troubleshooting](#troubleshooting) section

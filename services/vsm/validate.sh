@@ -14,40 +14,40 @@ HEALTH=$(curl -s "$VSM_URL/api/v1/health")
 echo "   Response: $HEALTH"
 STATUS=$(echo "$HEALTH" | jq -r '.status')
 if [ "$STATUS" = "UP" ] || [ "$STATUS" = "DEGRADED" ]; then
-    echo "   ✅ Health check passed"
+  echo "   ✅ Health check passed"
 else
-    echo "   ❌ Health check failed"
-    exit 1
+  echo "   ❌ Health check failed"
+  exit 1
 fi
 echo ""
 
 # Test 2: Create work item
 echo "2️⃣  Testing work item creation..."
 WORK_ITEM=$(curl -s -X POST "$VSM_URL/api/v1/work-items" \
-    -H "Content-Type: application/json" \
-    -d '{"title": "Test feature", "type": "feature"}')
+  -H "Content-Type: application/json" \
+  -d '{"title": "Test feature", "type": "feature"}')
 echo "   Response: $WORK_ITEM"
 WORK_ITEM_ID=$(echo "$WORK_ITEM" | jq -r '.id')
 if [ ! -z "$WORK_ITEM_ID" ] && [ "$WORK_ITEM_ID" != "null" ]; then
-    echo "   ✅ Work item created: ID=$WORK_ITEM_ID"
+  echo "   ✅ Work item created: ID=$WORK_ITEM_ID"
 else
-    echo "   ❌ Work item creation failed"
-    exit 1
+  echo "   ❌ Work item creation failed"
+  exit 1
 fi
 echo ""
 
 # Test 3: Transition work item
 echo "3️⃣  Testing stage transition..."
 TRANSITION=$(curl -s -X PUT "$VSM_URL/api/v1/work-items/$WORK_ITEM_ID/transition" \
-    -H "Content-Type: application/json" \
-    -d '{"to_stage": "Development"}')
+  -H "Content-Type: application/json" \
+  -d '{"to_stage": "Development"}')
 echo "   Response: $TRANSITION"
 TO_STAGE=$(echo "$TRANSITION" | jq -r '.to_stage')
 if [ "$TO_STAGE" = "Development" ]; then
-    echo "   ✅ Work item transitioned to Development"
+  echo "   ✅ Work item transitioned to Development"
 else
-    echo "   ❌ Stage transition failed"
-    exit 1
+  echo "   ❌ Stage transition failed"
+  exit 1
 fi
 echo ""
 
@@ -57,10 +57,10 @@ HISTORY=$(curl -s "$VSM_URL/api/v1/work-items/$WORK_ITEM_ID/history")
 echo "   Response: $HISTORY"
 TRANSITIONS=$(echo "$HISTORY" | jq -r '.transitions | length')
 if [ "$TRANSITIONS" -ge "2" ]; then
-    echo "   ✅ History retrieved: $TRANSITIONS transitions"
+  echo "   ✅ History retrieved: $TRANSITIONS transitions"
 else
-    echo "   ❌ History retrieval failed"
-    exit 1
+  echo "   ❌ History retrieval failed"
+  exit 1
 fi
 echo ""
 
@@ -70,10 +70,10 @@ METRICS=$(curl -s "$VSM_URL/api/v1/metrics")
 echo "   Response: $METRICS"
 THROUGHPUT=$(echo "$METRICS" | jq -r '.throughput')
 if [ ! -z "$THROUGHPUT" ] && [ "$THROUGHPUT" != "null" ]; then
-    echo "   ✅ Flow metrics retrieved: throughput=$THROUGHPUT"
+  echo "   ✅ Flow metrics retrieved: throughput=$THROUGHPUT"
 else
-    echo "   ❌ Flow metrics retrieval failed"
-    exit 1
+  echo "   ❌ Flow metrics retrieval failed"
+  exit 1
 fi
 echo ""
 
@@ -83,10 +83,10 @@ STAGES=$(curl -s "$VSM_URL/api/v1/stages")
 echo "   Response: $STAGES"
 STAGE_COUNT=$(echo "$STAGES" | jq '. | length')
 if [ "$STAGE_COUNT" -ge "6" ]; then
-    echo "   ✅ Stages listed: $STAGE_COUNT stages"
+  echo "   ✅ Stages listed: $STAGE_COUNT stages"
 else
-    echo "   ❌ Stages listing failed"
-    exit 1
+  echo "   ❌ Stages listing failed"
+  exit 1
 fi
 echo ""
 

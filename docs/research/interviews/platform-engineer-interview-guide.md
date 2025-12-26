@@ -35,6 +35,7 @@ Use these questions to select appropriate interview participants:
 5. **Responsibilities**: What percentage of your time is spent on operations vs. new capabilities?
 
 **Selection Criteria**:
+
 - Platform engineers, DevOps engineers, SREs
 - Mix of experience levels (mid: 2-5 years, senior: 5-10 years, staff: 10+ years)
 - Various platform domains (compute, networking, security, observability)
@@ -77,19 +78,21 @@ Use these questions to select appropriate interview participants:
 **Objective**: Establish rapport and understand the participant's responsibilities
 
 1. **Can you tell me about your role and what you're responsible for?**
-   - *Follow-up*: What platforms or systems do you manage?
-   - *Follow-up*: How many developers or teams do you support?
-   - *Follow-up*: What's your team structure like?
+
+   - _Follow-up_: What platforms or systems do you manage?
+   - _Follow-up_: How many developers or teams do you support?
+   - _Follow-up_: What's your team structure like?
 
 2. **How long have you been working with the Fawkes platform?**
-   - *Follow-up*: What was your onboarding experience like?
-   - *Follow-up*: What were your first impressions of the platform architecture?
-   - *Follow-up*: How has your role evolved since you started?
+
+   - _Follow-up_: What was your onboarding experience like?
+   - _Follow-up_: What were your first impressions of the platform architecture?
+   - _Follow-up_: How has your role evolved since you started?
 
 3. **What does a typical day or week look like for you?**
-   - *Follow-up*: What percentage of time do you spend on incidents vs. proactive work?
-   - *Follow-up*: What activities take up the most time?
-   - *Follow-up*: How much time do you spend supporting developers?
+   - _Follow-up_: What percentage of time do you spend on incidents vs. proactive work?
+   - _Follow-up_: What activities take up the most time?
+   - _Follow-up_: How much time do you spend supporting developers?
 
 ---
 
@@ -100,28 +103,31 @@ Use these questions to select appropriate interview participants:
 **JTBD Focus**: "Help me keep the platform reliable and available for developers"
 
 4. **Walk me through how you ensure the platform is running smoothly.**
-   - *Follow-up*: What do you monitor? How?
-   - *Follow-up*: What does "healthy" look like for the platform?
-   - *Follow-up*: What early warning signals do you watch for?
+
+   - _Follow-up_: What do you monitor? How?
+   - _Follow-up_: What does "healthy" look like for the platform?
+   - _Follow-up_: What early warning signals do you watch for?
 
 5. **Tell me about the last significant platform incident. What happened?**
-   - *Follow-up*: How did you detect it? How long until you knew there was a problem?
-   - *Follow-up*: What was the impact on developers or end users?
-   - *Follow-up*: How long did it take to resolve?
-   - *Follow-up*: What made it difficult to troubleshoot or fix?
-   - *Pain point probe*: What information did you wish you had during this incident?
+
+   - _Follow-up_: How did you detect it? How long until you knew there was a problem?
+   - _Follow-up_: What was the impact on developers or end users?
+   - _Follow-up_: How long did it take to resolve?
+   - _Follow-up_: What made it difficult to troubleshoot or fix?
+   - _Pain point probe_: What information did you wish you had during this incident?
 
 6. **What keeps you up at night about platform reliability?**
-   - *Follow-up*: What scenarios worry you the most?
-   - *Follow-up*: How do you mitigate these risks currently?
-   - *Follow-up*: What would make you more confident in the platform's resilience?
-   - *JTBD*: What would help you sleep better at night?
+
+   - _Follow-up_: What scenarios worry you the most?
+   - _Follow-up_: How do you mitigate these risks currently?
+   - _Follow-up_: What would make you more confident in the platform's resilience?
+   - _JTBD_: What would help you sleep better at night?
 
 7. **How do you handle capacity planning and scaling?**
-   - *Follow-up*: What triggers you to scale resources?
-   - *Follow-up*: How far in advance can you predict capacity needs?
-   - *Follow-up*: What makes capacity planning difficult?
-   - *Pain point*: What surprises or unexpected growth patterns have you experienced?
+   - _Follow-up_: What triggers you to scale resources?
+   - _Follow-up_: How far in advance can you predict capacity needs?
+   - _Follow-up_: What makes capacity planning difficult?
+   - _Pain point_: What surprises or unexpected growth patterns have you experienced?
 
 ---
 
@@ -132,28 +138,31 @@ Use these questions to select appropriate interview participants:
 **JTBD Focus**: "Help me enable developers to be productive without constant hand-holding"
 
 8. **How do developers typically reach out to you for help?**
-   - *Follow-up*: What are the most common requests?
-   - *Follow-up*: How much time do you spend responding to support requests?
-   - *Follow-up*: What types of requests should developers be able to handle themselves?
-   - *Pain point*: What requests feel repetitive or unnecessary?
+
+   - _Follow-up_: What are the most common requests?
+   - _Follow-up_: How much time do you spend responding to support requests?
+   - _Follow-up_: What types of requests should developers be able to handle themselves?
+   - _Pain point_: What requests feel repetitive or unnecessary?
 
 9. **Describe a recent support request that was particularly challenging or time-consuming.**
-   - *Follow-up*: What made it difficult?
-   - *Follow-up*: How long did it take to resolve?
-   - *Follow-up*: Could the developer have solved it themselves? Why didn't they?
-   - *JTBD*: What would have prevented this request from happening?
+
+   - _Follow-up_: What made it difficult?
+   - _Follow-up_: How long did it take to resolve?
+   - _Follow-up_: Could the developer have solved it themselves? Why didn't they?
+   - _JTBD_: What would have prevented this request from happening?
 
 10. **What platform capabilities do developers not use or underutilize?**
-    - *Follow-up*: Why do you think that is?
-    - *Follow-up*: How do you educate developers about available features?
-    - *Follow-up*: What would increase adoption of self-service capabilities?
-    - *Pain point*: What tasks do developers ask you to do that the platform should enable them to do?
+
+    - _Follow-up_: Why do you think that is?
+    - _Follow-up_: How do you educate developers about available features?
+    - _Follow-up_: What would increase adoption of self-service capabilities?
+    - _Pain point_: What tasks do developers ask you to do that the platform should enable them to do?
 
 11. **How do you balance new feature requests with platform stability?**
-    - *Follow-up*: How do you prioritize platform work?
-    - *Follow-up*: What pressure do you face to add new capabilities?
-    - *Follow-up*: How do you communicate trade-offs to stakeholders?
-    - *JTBD*: What would help you make better prioritization decisions?
+    - _Follow-up_: How do you prioritize platform work?
+    - _Follow-up_: What pressure do you face to add new capabilities?
+    - _Follow-up_: How do you communicate trade-offs to stakeholders?
+    - _JTBD_: What would help you make better prioritization decisions?
 
 ---
 
@@ -164,27 +173,30 @@ Use these questions to select appropriate interview participants:
 **JTBD Focus**: "Help me automate repetitive tasks and manage complexity efficiently"
 
 12. **What tools do you use daily to manage the platform?**
-    - *Follow-up*: What do you like most about these tools?
-    - *Follow-up*: What frustrates you about them?
-    - *Follow-up*: What tool integrations are missing or broken?
+
+    - _Follow-up_: What do you like most about these tools?
+    - _Follow-up_: What frustrates you about them?
+    - _Follow-up_: What tool integrations are missing or broken?
 
 13. **What tasks do you do repeatedly that should be automated but aren't?**
-    - *Follow-up*: Why haven't these been automated?
-    - *Follow-up*: How much time would automation save?
-    - *Follow-up*: What blocks you from automating these tasks?
-    - *JTBD*: What would make it easier to automate platform operations?
+
+    - _Follow-up_: Why haven't these been automated?
+    - _Follow-up_: How much time would automation save?
+    - _Follow-up_: What blocks you from automating these tasks?
+    - _JTBD_: What would make it easier to automate platform operations?
 
 14. **How do you manage infrastructure as code (IaC) and GitOps workflows?**
-    - *Follow-up*: What works well about your current approach?
-    - *Follow-up*: What's painful or error-prone?
-    - *Follow-up*: How do you handle configuration drift?
-    - *Follow-up*: How do you test infrastructure changes before applying them?
+
+    - _Follow-up_: What works well about your current approach?
+    - _Follow-up_: What's painful or error-prone?
+    - _Follow-up_: How do you handle configuration drift?
+    - _Follow-up_: How do you test infrastructure changes before applying them?
 
 15. **Tell me about your observability setup—metrics, logs, traces.**
-    - *Follow-up*: What visibility do you have into platform health?
-    - *Follow-up*: What blind spots exist?
-    - *Follow-up*: How do you correlate issues across services?
-    - *Pain point*: What makes troubleshooting difficult or time-consuming?
+    - _Follow-up_: What visibility do you have into platform health?
+    - _Follow-up_: What blind spots exist?
+    - _Follow-up_: How do you correlate issues across services?
+    - _Pain point_: What makes troubleshooting difficult or time-consuming?
 
 ---
 
@@ -195,21 +207,23 @@ Use these questions to select appropriate interview participants:
 **JTBD Focus**: "Help me secure the platform without slowing down developers"
 
 16. **How do you ensure the platform is secure?**
-    - *Follow-up*: What security practices or policies do you enforce?
-    - *Follow-up*: How do you balance security with developer productivity?
-    - *Follow-up*: What security concerns keep you up at night?
-    - *Pain point*: What security tasks are manual or difficult to enforce?
+
+    - _Follow-up_: What security practices or policies do you enforce?
+    - _Follow-up_: How do you balance security with developer productivity?
+    - _Follow-up_: What security concerns keep you up at night?
+    - _Pain point_: What security tasks are manual or difficult to enforce?
 
 17. **How do you handle policy enforcement and compliance?**
-    - *Follow-up*: What policies do you need to enforce (network, access, resource limits)?
-    - *Follow-up*: How do you communicate policies to developers?
-    - *Follow-up*: How do you detect and remediate policy violations?
-    - *JTBD*: What would make policy management easier?
+
+    - _Follow-up_: What policies do you need to enforce (network, access, resource limits)?
+    - _Follow-up_: How do you communicate policies to developers?
+    - _Follow-up_: How do you detect and remediate policy violations?
+    - _JTBD_: What would make policy management easier?
 
 18. **Tell me about a time when security or compliance requirements conflicted with developer needs.**
-    - *Follow-up*: How did you resolve it?
-    - *Follow-up*: What was the impact on velocity or developer experience?
-    - *Follow-up*: What would have made this easier to navigate?
+    - _Follow-up_: How did you resolve it?
+    - _Follow-up_: What was the impact on velocity or developer experience?
+    - _Follow-up_: What would have made this easier to navigate?
 
 ---
 
@@ -220,26 +234,29 @@ Use these questions to select appropriate interview participants:
 **JTBD Focus**: "Help me evolve the platform to meet growing demands"
 
 19. **What parts of the platform are most difficult to maintain or operate?**
-    - *Follow-up*: Why are they difficult?
-    - *Follow-up*: What would simplify these areas?
-    - *Follow-up*: What's the impact of this complexity?
-    - *Pain point*: What legacy components or technical debt slows you down?
+
+    - _Follow-up_: Why are they difficult?
+    - _Follow-up_: What would simplify these areas?
+    - _Follow-up_: What's the impact of this complexity?
+    - _Pain point_: What legacy components or technical debt slows you down?
 
 20. **If you could redesign one aspect of the platform, what would it be?**
-    - *Follow-up*: Why is this the most important thing?
-    - *Follow-up*: What would the ideal state look like?
-    - *Follow-up*: What's blocking this improvement today?
-    - *JTBD*: How would this change your day-to-day work?
+
+    - _Follow-up_: Why is this the most important thing?
+    - _Follow-up_: What would the ideal state look like?
+    - _Follow-up_: What's blocking this improvement today?
+    - _JTBD_: How would this change your day-to-day work?
 
 21. **What platform capabilities are you missing that other platforms have?**
-    - *Follow-up*: What platforms do you look to as inspiration?
-    - *Follow-up*: How would these capabilities help you or developers?
-    - *Follow-up*: What's the business case for adding them?
+
+    - _Follow-up_: What platforms do you look to as inspiration?
+    - _Follow-up_: How would these capabilities help you or developers?
+    - _Follow-up_: What's the business case for adding them?
 
 22. **How do you stay current with platform engineering trends and best practices?**
-    - *Follow-up*: What communities or resources do you follow?
-    - *Follow-up*: What emerging technologies are you excited about?
-    - *Follow-up*: What innovations do you want to bring to the platform?
+    - _Follow-up_: What communities or resources do you follow?
+    - _Follow-up_: What emerging technologies are you excited about?
+    - _Follow-up_: What innovations do you want to bring to the platform?
 
 ---
 
@@ -248,10 +265,11 @@ Use these questions to select appropriate interview participants:
 **Objective**: Capture overall sentiment and additional insights
 
 23. **If you could wave a magic wand and improve one thing about the platform, what would it be?**
-    - *Follow-up*: Why is this the most important thing to you?
-    - *Follow-up*: How would your role or the developer experience change?
+    - _Follow-up_: Why is this the most important thing to you?
+    - _Follow-up_: How would your role or the developer experience change?
 
 **Wrap-up**:
+
 - "Is there anything else about platform operations or challenges that we haven't covered but you think is important?"
 - "Can we reach out to you for follow-up questions if needed?"
 - "Would you be interested in providing feedback on platform improvements before they're released?"
@@ -293,6 +311,7 @@ Use these questions to select appropriate interview participants:
 Ensure all interviews cover these critical areas:
 
 ### Jobs to be Done (JTBD)
+
 - [ ] Keep the platform reliable and available for developers
 - [ ] Enable developers to be productive without constant support
 - [ ] Automate repetitive tasks and manage complexity efficiently
@@ -302,6 +321,7 @@ Ensure all interviews cover these critical areas:
 - [ ] Plan and scale capacity proactively
 
 ### Pain Points
+
 - [ ] Time spent on repetitive support requests
 - [ ] Difficulty troubleshooting complex distributed systems
 - [ ] Lack of observability or blind spots
@@ -313,6 +333,7 @@ Ensure all interviews cover these critical areas:
 - [ ] Incident response and mean time to recovery (MTTR)
 
 ### Workarounds
+
 - [ ] Manual scripts for common operations
 - [ ] Custom tooling built outside the platform
 - [ ] Responding to every support request personally
@@ -338,6 +359,7 @@ Ensure all interviews cover these critical areas:
 ### Sentiment Analysis
 
 Track emotional responses to:
+
 - Platform reliability (confidence, anxiety)
 - Support burden (frustration, satisfaction)
 - Tooling effectiveness (efficiency, struggle)
@@ -348,6 +370,7 @@ Track emotional responses to:
 ### Pattern Identification
 
 Look for common themes across interviews:
+
 - Recurring pain points (3+ participants mention)
 - Similar workarounds (indicates systemic issue)
 - Consistent capability gaps (prioritization signal)
@@ -359,6 +382,7 @@ Look for common themes across interviews:
 ## Tips for Effective Interviewing
 
 ### Do's ✅
+
 - **Respect their expertise**: Platform engineers are technical experts—value their insights
 - **Ask for demonstrations**: "Can you show me your monitoring dashboard?"
 - **Explore trade-offs**: Understand their decision-making process
@@ -368,6 +392,7 @@ Look for common themes across interviews:
 - **Explore team dynamics**: How do they work with security, networking, etc.?
 
 ### Don'ts ❌
+
 - **Don't assume they know everything**: Some areas may be owned by others
 - **Don't skip emotional responses**: Frustration and pride are valuable signals
 - **Don't ignore technical details**: Deep dive into architecture and tools
@@ -377,6 +402,7 @@ Look for common themes across interviews:
 - **Don't focus only on problems**: Understand what works well too
 
 ### Effective Follow-up Questions
+
 - "Can you show me an example in your monitoring system?"
 - "What would you do differently if you could start over?"
 - "How does this impact developer productivity?"
@@ -404,6 +430,7 @@ Look for common themes across interviews:
 ## Changelog
 
 ### Version 1.0 - December 2025
+
 - Initial interview guide created for platform engineers
 - 23 main questions across 6 sections
 - Focus on JTBD, pain points, reliability, and developer enablement

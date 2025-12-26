@@ -8,6 +8,7 @@ description: Understanding the Internal Platform Product Discovery and Delivery 
 ## Context
 
 Most internal developer platforms (IDPs) fail not because of technical problems, but because of **product problems**:
+
 - Built features nobody uses
 - Solved problems teams don't have
 - Ignored the problems teams actually face
@@ -32,12 +33,14 @@ Fawkes introduces the **IP3dP** framework: **Internal Platform Product Discovery
 ### The Feature Factory Trap
 
 Platform team operates like a feature factory:
+
 1. Stakeholder requests feature ("We need Vault integration!")
 2. Team builds feature
 3. Ship feature, move to next request
 4. Repeat indefinitely
 
 **Missing**:
+
 - **Discovery**: Is this solving a real pain point?
 - **Validation**: Will developers actually use this?
 - **Measurement**: Did this improve productivity?
@@ -48,11 +51,13 @@ Platform team operates like a feature factory:
 ### The Metrics Mirage
 
 Platform teams measure the **wrong things**:
+
 - ❌ **Deployment frequency** (platform metric, not developer outcome)
 - ❌ **Number of features shipped** (output, not outcome)
 - ❌ **Uptime of platform services** (necessary but not sufficient)
 
 **What Should Be Measured**:
+
 - ✅ **Developer productivity** (time from idea to production)
 - ✅ **Cognitive load** (how many tools/concepts to learn)
 - ✅ **Task success rate** (can devs complete common tasks?)
@@ -84,12 +89,15 @@ graph TB
 **Methods:**
 
 **User Research (Qualitative)**:
+
 - **Developer Interviews**: 1-on-1 conversations (30-45 min)
+
   - "Walk me through your last deployment"
   - "What's the most frustrating part of your workflow?"
   - "If you had a magic wand, what would you change?"
 
 - **Shadowing**: Sit with developers, observe their workflow
+
   - Watch them struggle with `kubectl` copy-pasting from Slack
   - See them waste 20 minutes finding the right config file
   - Notice they rebuild images unnecessarily because unclear when cache invalidated
@@ -99,11 +107,14 @@ graph TB
   - Net Promoter Score: "How likely are you to recommend this platform to a colleague?"
 
 **Data Analysis (Quantitative)**:
+
 - **Platform Analytics**: What features are used? What's ignored?
+
   - Backstage: 80% use service catalog, 10% use docs, 2% use templates
   - Jenkins: 60% of pipelines copy-pasted from "blessed-pipeline" repo (hint: make template)
 
 - **Support Tickets**: What breaks? What confuses people?
+
   - 40% of tickets: "How do I deploy to production?" (hint: docs/onboarding problem)
   - 25% of tickets: "My build is slow" (hint: buildpack caching issue)
 
@@ -115,21 +126,22 @@ graph TB
 
 Instead of "What features do you want?", ask "What job are you trying to do?"
 
-| Developer Says | What They Want | Actual Job-to-be-Done | Platform Solution |
-|----------------|----------------|----------------------|-------------------|
-| "I need a Kubernetes dashboard" | UI to see pods | **Monitor application health** | Grafana dashboard showing SLIs, not low-level K8s resources |
-| "I need SSH access to pods" | Debug production | **Troubleshoot application issues** | Structured logs in Loki, traces in Tempo, ephemeral debug containers |
-| "I need a faster build" | Reduce CI time | **Deploy changes quickly** | Buildpack layer caching, parallel test execution |
+| Developer Says                  | What They Want   | Actual Job-to-be-Done               | Platform Solution                                                    |
+| ------------------------------- | ---------------- | ----------------------------------- | -------------------------------------------------------------------- |
+| "I need a Kubernetes dashboard" | UI to see pods   | **Monitor application health**      | Grafana dashboard showing SLIs, not low-level K8s resources          |
+| "I need SSH access to pods"     | Debug production | **Troubleshoot application issues** | Structured logs in Loki, traces in Tempo, ephemeral debug containers |
+| "I need a faster build"         | Reduce CI time   | **Deploy changes quickly**          | Buildpack layer caching, parallel test execution                     |
 
 **Example Discovery Insight**:
 
 **Initial Request**: "We need a feature flag service"
 **Discovery Conversation**:
-- *Why do you need feature flags?*
+
+- _Why do you need feature flags?_
 - "To deploy without breaking production"
-- *What breaks today when you deploy?*
+- _What breaks today when you deploy?_
 - "We push code Friday, it breaks, we roll back"
-- *Why Friday? Why not earlier in the week?*
+- _Why Friday? Why not earlier in the week?_
 - "Deployment process takes 2 hours, only time we have is end-of-sprint"
 
 **Real Problem**: Deployment is too slow and risky, so teams batch changes and deploy infrequently.
@@ -141,27 +153,28 @@ Instead of "What features do you want?", ask "What job are you trying to do?"
 
 **Prioritization Framework: RICE**
 
-| Factor | Measurement | Example |
-|--------|-------------|---------|
-| **Reach** | How many developers affected? | 80% of teams deploy daily (high reach) |
-| **Impact** | How much does it improve productivity? | Saves 2 hours/week per developer (high impact) |
+| Factor         | Measurement                                 | Example                                        |
+| -------------- | ------------------------------------------- | ---------------------------------------------- |
+| **Reach**      | How many developers affected?               | 80% of teams deploy daily (high reach)         |
+| **Impact**     | How much does it improve productivity?      | Saves 2 hours/week per developer (high impact) |
 | **Confidence** | How certain are we this solves the problem? | Validated via user interviews (80% confidence) |
-| **Effort** | How long to build? | 2 sprints (medium effort) |
+| **Effort**     | How long to build?                          | 2 sprints (medium effort)                      |
 
 **RICE Score** = (Reach × Impact × Confidence) / Effort
 
 **Example:**
 
-| Initiative | Reach | Impact | Confidence | Effort | RICE Score | Priority |
-|------------|-------|--------|-----------|--------|------------|----------|
-| **Auto-deploy on merge** | 200 devs | 3 (high) | 90% | 3 weeks | 180 | **1** |
-| **Custom Backstage theme** | 200 devs | 1 (low) | 100% | 1 week | 200 | **2** |
-| **Vault auto-rotation** | 50 devs | 3 (high) | 70% | 4 weeks | 26 | **3** |
-| **AI code assistant** | 200 devs | 2 (med) | 50% | 8 weeks | 25 | **4** |
+| Initiative                 | Reach    | Impact   | Confidence | Effort  | RICE Score | Priority |
+| -------------------------- | -------- | -------- | ---------- | ------- | ---------- | -------- |
+| **Auto-deploy on merge**   | 200 devs | 3 (high) | 90%        | 3 weeks | 180        | **1**    |
+| **Custom Backstage theme** | 200 devs | 1 (low)  | 100%       | 1 week  | 200        | **2**    |
+| **Vault auto-rotation**    | 50 devs  | 3 (high) | 70%        | 4 weeks | 26         | **3**    |
+| **AI code assistant**      | 200 devs | 2 (med)  | 50%        | 8 weeks | 25         | **4**    |
 
 **Decision**: Build auto-deploy first (highest impact, reasonable effort).
 
 **Ruthless De-Prioritization**:
+
 - "We won't build feature flags this quarter" (low confidence it solves real problem)
 - "We won't support Python 2.7" (reach is 2 legacy apps, sunset them instead)
 
@@ -172,35 +185,40 @@ Instead of "What features do you want?", ask "What job are you trying to do?"
 **Lean Delivery Approach:**
 
 **Week 1-2: Spike / Prototype**
+
 - Build minimal proof-of-concept
 - Test with 2-3 friendly developer teams
 - **Question**: "Does this solve your problem?"
 
 **Week 3-4: Alpha**
+
 - Functional but rough
 - 10-20 early adopters
 - **Measurement**: Can they complete the task? Where do they struggle?
 
 **Week 5-6: Beta**
+
 - Polished UX, docs, error messages
 - Opt-in for all teams
 - **Measurement**: Adoption rate, support tickets
 
 **Week 7-8: General Availability**
+
 - Default for new services
 - Gradual rollout to existing services
 - **Measurement**: DORA metrics, developer satisfaction
 
 **Example: GitOps Rollout**
 
-| Phase | Timeline | Audience | Success Criteria |
-|-------|----------|----------|------------------|
-| **Prototype** | Week 1-2 | 2 teams | Can deploy via Git commit (manual sync) |
-| **Alpha** | Week 3-4 | 10 teams | Auto-sync working, 80% uptime |
-| **Beta** | Week 5-8 | 50 teams | Self-service onboarding docs, <5 min to onboard |
-| **GA** | Week 9+ | All teams | Default for new services, 99.5% uptime |
+| Phase         | Timeline | Audience  | Success Criteria                                |
+| ------------- | -------- | --------- | ----------------------------------------------- |
+| **Prototype** | Week 1-2 | 2 teams   | Can deploy via Git commit (manual sync)         |
+| **Alpha**     | Week 3-4 | 10 teams  | Auto-sync working, 80% uptime                   |
+| **Beta**      | Week 5-8 | 50 teams  | Self-service onboarding docs, <5 min to onboard |
+| **GA**        | Week 9+  | All teams | Default for new services, 99.5% uptime          |
 
 **Feedback Loops:**
+
 - **Office Hours**: Weekly drop-in for developers to ask questions
 - **Retrospectives**: After each phase, what worked? What didn't?
 - **Metrics Dashboard**: Real-time visibility into adoption, errors
@@ -212,6 +230,7 @@ Instead of "What features do you want?", ask "What job are you trying to do?"
 **North Star Metric: Developer Productivity**
 
 Operationalized as:
+
 - **Lead Time for Changes** (DORA) - Time from commit to production
 - **Deployment Frequency** (DORA) - How often teams deploy
 - **Change Failure Rate** (DORA) - % of deployments requiring rollback
@@ -219,13 +238,13 @@ Operationalized as:
 
 **SPACE Framework (Developer Experience)**
 
-| Dimension | Metric | Target |
-|-----------|--------|--------|
-| **S**atisfaction | NPS, survey scores | >40 NPS |
-| **P**erformance | DORA metrics | Elite tier (deploy multiple/day, <15% CFR) |
-| **A**ctivity | Commits, PRs, deploys | Trending up over time |
-| **C**ommunication | Slack messages, support tickets | Trending down (less confusion) |
-| **E**fficiency | Time to complete tasks | <5 min to deploy, <30 min to onboard new service |
+| Dimension         | Metric                          | Target                                           |
+| ----------------- | ------------------------------- | ------------------------------------------------ |
+| **S**atisfaction  | NPS, survey scores              | >40 NPS                                          |
+| **P**erformance   | DORA metrics                    | Elite tier (deploy multiple/day, <15% CFR)       |
+| **A**ctivity      | Commits, PRs, deploys           | Trending up over time                            |
+| **C**ommunication | Slack messages, support tickets | Trending down (less confusion)                   |
+| **E**fficiency    | Time to complete tasks          | <5 min to deploy, <30 min to onboard new service |
 
 **Example Dashboard:**
 
@@ -307,22 +326,22 @@ gantt
 
 ### What IP3dP Gives You
 
-| Benefit | Impact |
-|---------|--------|
-| **Build the Right Thing** | Solve actual problems, not imagined ones |
-| **Higher Adoption** | Developers use features you validate with them |
+| Benefit                   | Impact                                         |
+| ------------------------- | ---------------------------------------------- |
+| **Build the Right Thing** | Solve actual problems, not imagined ones       |
+| **Higher Adoption**       | Developers use features you validate with them |
 | **Better Prioritization** | Focus on high-impact work, not loudest request |
-| **Measurable Value** | Quantify platform impact on business outcomes |
-| **Developer Trust** | Teams see you listen and respond to feedback |
+| **Measurable Value**      | Quantify platform impact on business outcomes  |
+| **Developer Trust**       | Teams see you listen and respond to feedback   |
 
 ### What IP3dP Costs You
 
-| Challenge | Mitigation |
-|-----------|------------|
+| Challenge                   | Mitigation                                                                                                        |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | **Slower Initial Delivery** | Discovery takes time before building. **Mitigation**: Better to ship right feature slowly than wrong feature fast |
-| **Complexity** | User research, surveys, data analysis. **Mitigation**: Start small (10 interviews vs. 100), scale as you learn |
-| **Saying "No"** | Can't build every request. **Mitigation**: Transparent prioritization (RICE scores public) |
-| **Measurement Overhead** | Setting up metrics, analyzing results. **Mitigation**: DORA metrics automated, NPS surveys quarterly |
+| **Complexity**              | User research, surveys, data analysis. **Mitigation**: Start small (10 interviews vs. 100), scale as you learn    |
+| **Saying "No"**             | Can't build every request. **Mitigation**: Transparent prioritization (RICE scores public)                        |
+| **Measurement Overhead**    | Setting up metrics, analyzing results. **Mitigation**: DORA metrics automated, NPS surveys quarterly              |
 
 **The Bet**: Spending 20% time on discovery prevents 80% waste on wrong features.
 
@@ -337,10 +356,12 @@ gantt
 **IP3dP Approach**:
 
 1. **Discovery**: Why do they need to see pods?
+
    - Interview reveals: "Want to know if my app is healthy"
    - Real job-to-be-done: **Monitor application health**
 
 2. **Prioritization**:
+
    - Reach: All teams (200 devs)
    - Impact: High (currently checking Slack or kubectl)
    - Confidence: Medium (is Grafana better than K8s Dashboard?)
@@ -348,6 +369,7 @@ gantt
    - **RICE**: High priority
 
 3. **Delivery**:
+
    - Prototype: Grafana dashboard showing service SLIs (latency, error rate, throughput)
    - Alpha: 5 teams test, feedback: "This is what we actually need!"
    - Beta: Template for all services
@@ -369,10 +391,12 @@ gantt
 **IP3dP Approach**:
 
 1. **Discovery**: What makes builds slow?
+
    - Data analysis: 70% of build time is `npm install` (Node.js dependency download)
    - 50% of builds fetch identical dependencies (no caching)
 
 2. **Prioritization**:
+
    - Reach: 30 teams (Node.js services)
    - Impact: Very high (40 min → 8 min builds)
    - Confidence: High (buildpack caching proven)
@@ -380,6 +404,7 @@ gantt
    - **RICE**: Highest priority
 
 3. **Delivery**:
+
    - Implement buildpack layer caching
    - Alpha: 5 teams, validate caching works
    - Beta: Gradual rollout to all Node.js services
@@ -405,6 +430,7 @@ gantt
 **Internal Platform ≠ Just Infrastructure**—it's a **product** with developers as customers.
 
 The IP3dP framework (Product Discovery and Delivery Process) ensures you:
+
 1. **Discover** real developer problems (not imagined ones)
 2. **Prioritize** high-impact solutions (not every request)
 3. **Deliver** iteratively (prototype → alpha → beta → GA)

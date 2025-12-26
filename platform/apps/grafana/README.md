@@ -18,12 +18,14 @@ Grafana provides powerful visualization and analytics for metrics, logs, and tra
 ### Accessing Grafana
 
 Local development:
+
 ```bash
 # Access UI
 http://grafana.127.0.0.1.nip.io
 ```
 
 Default credentials:
+
 - Username: `admin`
 - Password: `fawkesidp`
 
@@ -117,6 +119,7 @@ Template dashboard based on the Golden Signals approach for monitoring applicati
 - **Custom Metrics**: Placeholder panels for application-specific metrics
 
 **How to Use**:
+
 1. Clone this dashboard and rename it for your application
 2. Update the `service` and `namespace` variables
 3. Customize queries to match your application's metric names
@@ -217,7 +220,7 @@ notifiers:
     org_id: 1
     settings:
       url: https://hooks.slack.com/services/YOUR/WEBHOOK/URL
-      recipient: '#alerts'
+      recipient: "#alerts"
       username: Grafana
 ```
 
@@ -240,6 +243,7 @@ refresh: on_time_range_change
 ```
 
 Use in queries:
+
 ```promql
 rate(http_requests_total{namespace="$namespace", service="$service"}[5m])
 ```
@@ -256,6 +260,7 @@ Ad-hoc querying for troubleshooting:
 ### Example Queries
 
 **Find slow requests:**
+
 ```promql
 histogram_quantile(0.99,
   rate(http_request_duration_seconds_bucket[5m])
@@ -263,11 +268,13 @@ histogram_quantile(0.99,
 ```
 
 **Search logs:**
+
 ```
 namespace:"fawkes" AND level:"ERROR" AND service:"myapp"
 ```
 
 **Trace lookup:**
+
 ```
 {service.name="myapp" && http.status_code>=500}
 ```

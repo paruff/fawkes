@@ -15,17 +15,18 @@ def utcnow():
 
 # Association table for many-to-many relationship between insights and tags
 insight_tags = Table(
-    'insight_tags',
+    "insight_tags",
     Base.metadata,
-    Column('insight_id', Integer, ForeignKey('insights.id', ondelete='CASCADE'), primary_key=True),
-    Column('tag_id', Integer, ForeignKey('tags.id', ondelete='CASCADE'), primary_key=True),
-    Index('idx_insight_tags_insight_id', 'insight_id'),
-    Index('idx_insight_tags_tag_id', 'tag_id')
+    Column("insight_id", Integer, ForeignKey("insights.id", ondelete="CASCADE"), primary_key=True),
+    Column("tag_id", Integer, ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True),
+    Index("idx_insight_tags_insight_id", "insight_id"),
+    Index("idx_insight_tags_tag_id", "tag_id"),
 )
 
 
 class InsightStatus(str, enum.Enum):
     """Insight status types."""
+
     DRAFT = "draft"
     PUBLISHED = "published"
     ARCHIVED = "archived"
@@ -33,6 +34,7 @@ class InsightStatus(str, enum.Enum):
 
 class InsightPriority(str, enum.Enum):
     """Insight priority levels."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -41,6 +43,7 @@ class InsightPriority(str, enum.Enum):
 
 class Insight(Base):
     """Insight model - stores captured insights and learnings."""
+
     __tablename__ = "insights"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -64,14 +67,15 @@ class Insight(Base):
 
     # Add composite indexes for common queries
     __table_args__ = (
-        Index('idx_insights_status_priority', 'status', 'priority'),
-        Index('idx_insights_category_status', 'category_id', 'status'),
-        Index('idx_insights_author_status', 'author', 'status'),
+        Index("idx_insights_status_priority", "status", "priority"),
+        Index("idx_insights_category_status", "category_id", "status"),
+        Index("idx_insights_author_status", "author", "status"),
     )
 
 
 class Category(Base):
     """Category model - hierarchical categorization for insights."""
+
     __tablename__ = "categories"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -93,6 +97,7 @@ class Category(Base):
 
 class Tag(Base):
     """Tag model - flexible tagging system for insights."""
+
     __tablename__ = "tags"
 
     id = Column(Integer, primary_key=True, index=True)

@@ -23,17 +23,11 @@ from prometheus_client import make_asgi_app, Counter, Histogram, Gauge
 import asyncpg
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Configuration from environment
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://nps:nps@db-nps-dev-rw.fawkes.svc.cluster.local:5432/nps_db"
-)
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://nps:nps@db-nps-dev-rw.fawkes.svc.cluster.local:5432/nps_db")
 SURVEY_EXPIRY_DAYS = int(os.getenv("SURVEY_EXPIRY_DAYS", "30"))
 REMINDER_DAYS = int(os.getenv("REMINDER_DAYS", "7"))
 
@@ -44,31 +38,25 @@ db_pool = None
 
 # Prometheus metrics
 nps_responses = Counter(
-    'nps_responses_total',
-    'Total number of NPS responses',
-    ['score_type']  # promoter, passive, detractor
+    "nps_responses_total", "Total number of NPS responses", ["score_type"]  # promoter, passive, detractor
 )
-nps_score_gauge = Gauge(
-    'nps_score',
-    'Current NPS score',
-    ['period']  # quarterly, overall
-)
+nps_score_gauge = Gauge("nps_score", "Current NPS score", ["period"])  # quarterly, overall
 survey_request_duration = Histogram(
-    'nps_survey_request_duration_seconds',
-    'Time spent processing NPS survey requests',
-    ['endpoint']
+    "nps_survey_request_duration_seconds", "Time spent processing NPS survey requests", ["endpoint"]
 )
 
 
 # Pydantic models
 class SurveyResponse(BaseModel):
     """Request model for NPS survey response."""
+
     score: int = Field(..., description="NPS score from 0-10", ge=0, le=10)
     comment: Optional[str] = Field(None, description="Optional feedback comment", max_length=2000)
 
 
 class SurveyResponseOut(BaseModel):
     """Response model for survey response."""
+
     id: int
     user_id: str
     score: int
@@ -79,6 +67,7 @@ class SurveyResponseOut(BaseModel):
 
 class SurveyLink(BaseModel):
     """Survey link model."""
+
     token: str
     user_id: str
     email: str
@@ -89,6 +78,7 @@ class SurveyLink(BaseModel):
 
 class NPSMetrics(BaseModel):
     """NPS metrics calculation."""
+
     nps_score: float = Field(..., description="NPS score (-100 to 100)")
     total_responses: int
     promoters: int
@@ -101,6 +91,7 @@ class NPSMetrics(BaseModel):
 
 class HealthResponse(BaseModel):
     """Health check response."""
+
     status: str
     service: str
     version: str
@@ -117,7 +108,8 @@ async def init_database():
 
         # Create tables if not exists
         async with db_pool.acquire() as conn:
-            await conn.execute("""
+            await conn.execute(
+                """
                 -- Survey links table
                 CREATE TABLE IF NOT EXISTS survey_links (
                     id SERIAL PRIMARY KEY,
@@ -162,7 +154,8 @@ async def init_database():
                 CREATE INDEX IF NOT EXISTS idx_survey_links_expires ON survey_links(expires_at);
                 CREATE INDEX IF NOT EXISTS idx_survey_responses_created ON survey_responses(created_at DESC);
                 CREATE INDEX IF NOT EXISTS idx_survey_responses_score_type ON survey_responses(score_type);
-            """)
+            """
+            )
             logger.info("✅ Database schema initialized")
     except Exception as e:
         logger.error(f"❌ Failed to connect to database: {e}")
@@ -180,9 +173,7 @@ def calculate_score_type(score: int) -> str:
 
 
 async def calculate_nps(
-    conn: asyncpg.Connection,
-    start_date: Optional[datetime] = None,
-    end_date: Optional[datetime] = None
+    conn: asyncpg.Connection, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None
 ) -> NPSMetrics:
     """Calculate NPS metrics for a given period."""
     if not start_date:
@@ -191,7 +182,8 @@ async def calculate_nps(
         end_date = datetime.now()
 
     # Get response counts by score type
-    stats = await conn.fetchrow("""
+    stats = await conn.fetchrow(
+        """
         SELECT
             COUNT(*) FILTER (WHERE score_type = 'promoter') as promoters,
             COUNT(*) FILTER (WHERE score_type = 'passive') as passives,
@@ -199,19 +191,29 @@ async def calculate_nps(
             COUNT(*) as total_responses
         FROM survey_responses
         WHERE created_at >= $1 AND created_at <= $2
-    """, start_date, end_date)
+    """,
+        start_date,
+        end_date,
+    )
 
     # Get total sent count
-    total_sent = await conn.fetchval("""
+    total_sent = (
+        await conn.fetchval(
+            """
         SELECT SUM(total_sent)
         FROM survey_campaigns
         WHERE started_at >= $1 AND started_at <= $2
-    """, start_date, end_date) or 0
+    """,
+            start_date,
+            end_date,
+        )
+        or 0
+    )
 
-    promoters = stats['promoters'] or 0
-    passives = stats['passives'] or 0
-    detractors = stats['detractors'] or 0
-    total_responses = stats['total_responses'] or 0
+    promoters = stats["promoters"] or 0
+    passives = stats["passives"] or 0
+    detractors = stats["detractors"] or 0
+    total_responses = stats["total_responses"] or 0
 
     # Calculate NPS: (% promoters - % detractors) * 100
     if total_responses > 0:
@@ -232,7 +234,7 @@ async def calculate_nps(
         detractors=detractors,
         response_rate=round(response_rate, 2),
         period_start=start_date,
-        period_end=end_date
+        period_end=end_date,
     )
 
 
@@ -254,7 +256,7 @@ app = FastAPI(
     title="NPS Survey Service",
     description="NPS survey automation with quarterly scheduling and Mattermost integration",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Add CORS middleware
@@ -291,7 +293,7 @@ async def health_check():
         status="healthy" if db_connected else "degraded",
         service="nps-survey-service",
         version="1.0.0",
-        database_connected=db_connected
+        database_connected=db_connected,
     )
 
 
@@ -304,13 +306,11 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
 
     try:
         async with db_pool.acquire() as conn:
-            link = await conn.fetchrow(
-                "SELECT * FROM survey_links WHERE token = $1",
-                token
-            )
+            link = await conn.fetchrow("SELECT * FROM survey_links WHERE token = $1", token)
 
             if not link:
-                return HTMLResponse(content="""
+                return HTMLResponse(
+                    content="""
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -326,10 +326,12 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <p>This survey link is not valid. Please check the link and try again.</p>
                     </body>
                     </html>
-                """)
+                """
+                )
 
-            if link['responded']:
-                return HTMLResponse(content="""
+            if link["responded"]:
+                return HTMLResponse(
+                    content="""
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -345,10 +347,12 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <p>You have already completed this survey.</p>
                     </body>
                     </html>
-                """)
+                """
+                )
 
-            if datetime.now() > link['expires_at']:
-                return HTMLResponse(content="""
+            if datetime.now() > link["expires_at"]:
+                return HTMLResponse(
+                    content="""
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -364,10 +368,12 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <p>This survey link has expired. Please contact support if you believe this is an error.</p>
                     </body>
                     </html>
-                """)
+                """
+                )
 
             # Render survey form
-            return HTMLResponse(content=f"""
+            return HTMLResponse(
+                content=f"""
                 <!DOCTYPE html>
                 <html>
                 <head>
@@ -580,7 +586,8 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                     </script>
                 </body>
                 </html>
-            """)
+            """
+            )
     except Exception as e:
         logger.error(f"Error rendering survey page: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
@@ -590,7 +597,8 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
 @app.get("/survey/{token}/thanks", response_class=HTMLResponse, tags=["Survey"])
 async def thank_you_page(token: str = Path(..., description="Survey token")):
     """Thank you page after survey submission."""
-    return HTMLResponse(content="""
+    return HTMLResponse(
+        content="""
         <!DOCTYPE html>
         <html>
         <head>
@@ -635,15 +643,13 @@ async def thank_you_page(token: str = Path(..., description="Survey token")):
             </div>
         </body>
         </html>
-    """)
+    """
+    )
 
 
 # Submit survey response
 @app.post("/api/v1/survey/{token}/submit", response_model=SurveyResponseOut, tags=["Survey"])
-async def submit_survey_response(
-    token: str = Path(..., description="Survey token"),
-    response: SurveyResponse = None
-):
+async def submit_survey_response(token: str = Path(..., description="Survey token"), response: SurveyResponse = None):
     """Submit a survey response."""
     if not db_pool:
         raise HTTPException(status_code=503, detail="Service unavailable")
@@ -652,18 +658,15 @@ async def submit_survey_response(
         try:
             async with db_pool.acquire() as conn:
                 # Validate token
-                link = await conn.fetchrow(
-                    "SELECT * FROM survey_links WHERE token = $1",
-                    token
-                )
+                link = await conn.fetchrow("SELECT * FROM survey_links WHERE token = $1", token)
 
                 if not link:
                     raise HTTPException(status_code=404, detail="Invalid survey token")
 
-                if link['responded']:
+                if link["responded"]:
                     raise HTTPException(status_code=400, detail="Survey already completed")
 
-                if datetime.now() > link['expires_at']:
+                if datetime.now() > link["expires_at"]:
                     raise HTTPException(status_code=400, detail="Survey link expired")
 
                 # Calculate score type
@@ -671,30 +674,39 @@ async def submit_survey_response(
 
                 # Insert response
                 async with conn.transaction():
-                    result = await conn.fetchrow("""
+                    result = await conn.fetchrow(
+                        """
                         INSERT INTO survey_responses (user_id, token, score, score_type, comment)
                         VALUES ($1, $2, $3, $4, $5)
                         RETURNING id, user_id, score, score_type, comment, created_at
-                    """, link['user_id'], token, response.score, score_type, response.comment)
+                    """,
+                        link["user_id"],
+                        token,
+                        response.score,
+                        score_type,
+                        response.comment,
+                    )
 
                     # Mark link as responded
                     await conn.execute(
                         "UPDATE survey_links SET responded = TRUE, updated_at = CURRENT_TIMESTAMP WHERE token = $1",
-                        token
+                        token,
                     )
 
                 # Update metrics
                 nps_responses.labels(score_type=score_type).inc()
 
-                logger.info(f"Survey response submitted: user={link['user_id']}, score={response.score}, type={score_type}")
+                logger.info(
+                    f"Survey response submitted: user={link['user_id']}, score={response.score}, type={score_type}"
+                )
 
                 return SurveyResponseOut(
-                    id=result['id'],
-                    user_id=result['user_id'],
-                    score=result['score'],
-                    comment=result['comment'],
-                    score_type=result['score_type'],
-                    created_at=result['created_at']
+                    id=result["id"],
+                    user_id=result["user_id"],
+                    score=result["score"],
+                    comment=result["comment"],
+                    score_type=result["score_type"],
+                    created_at=result["created_at"],
                 )
         except HTTPException:
             raise
@@ -707,7 +719,7 @@ async def submit_survey_response(
 @app.get("/api/v1/nps/metrics", response_model=NPSMetrics, tags=["NPS"])
 async def get_nps_metrics(
     start_date: Optional[datetime] = Query(None, description="Period start date"),
-    end_date: Optional[datetime] = Query(None, description="Period end date")
+    end_date: Optional[datetime] = Query(None, description="Period end date"),
 ):
     """Get NPS metrics for a given period."""
     if not db_pool:
@@ -739,10 +751,16 @@ async def generate_survey_link(user_id: str, email: str):
         expires_at = datetime.now() + timedelta(days=SURVEY_EXPIRY_DAYS)
 
         async with db_pool.acquire() as conn:
-            await conn.execute("""
+            await conn.execute(
+                """
                 INSERT INTO survey_links (token, user_id, email, expires_at)
                 VALUES ($1, $2, $3, $4)
-            """, token, user_id, email, expires_at)
+            """,
+                token,
+                user_id,
+                email,
+                expires_at,
+            )
 
         survey_url = f"/survey/{token}"
         logger.info(f"Generated survey link for user {user_id}")
@@ -767,6 +785,6 @@ async def root():
             "submit_response": "POST /api/v1/survey/{token}/submit",
             "nps_metrics": "GET /api/v1/nps/metrics",
             "generate_link": "POST /api/v1/survey/generate",
-            "metrics": "/metrics"
-        }
+            "metrics": "/metrics",
+        },
     }

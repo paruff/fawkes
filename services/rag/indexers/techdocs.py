@@ -70,7 +70,7 @@ class BackstageIndexer:
         backstage_url: str,
         weaviate_url: str = DEFAULT_WEAVIATE_URL,
         auth_token: Optional[str] = None,
-        dry_run: bool = False
+        dry_run: bool = False,
     ):
         """
         Initialize Backstage indexer.
@@ -88,20 +88,14 @@ class BackstageIndexer:
 
         # Setup requests session with retry
         self.session = requests.Session()
-        retry = Retry(
-            total=3,
-            backoff_factor=1,
-            status_forcelist=[429, 500, 502, 503, 504]
-        )
+        retry = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
         adapter = HTTPAdapter(max_retries=retry)
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
 
         # Add auth header if token provided
         if auth_token:
-            self.session.headers.update({
-                "Authorization": f"Bearer {auth_token}"
-            })
+            self.session.headers.update({"Authorization": f"Bearer {auth_token}"})
 
         # Weaviate client
         self.weaviate_client = None
@@ -202,11 +196,7 @@ class BackstageIndexer:
         techdocs_metadata = self._backstage_request(metadata_path)
 
         if techdocs_metadata:
-            return {
-                "entity_ref": f"{kind}:{namespace}/{name}",
-                "metadata": techdocs_metadata,
-                "docs_path": path
-            }
+            return {"entity_ref": f"{kind}:{namespace}/{name}", "metadata": techdocs_metadata, "docs_path": path}
 
         return None
 
@@ -244,25 +234,25 @@ class BackstageIndexer:
         """
         try:
             # Parse HTML with BeautifulSoup
-            soup = BeautifulSoup(html, 'lxml')
+            soup = BeautifulSoup(html, "lxml")
 
             # Remove script and style elements
-            for element in soup(['script', 'style', 'meta', 'link', 'noscript']):
+            for element in soup(["script", "style", "meta", "link", "noscript"]):
                 element.decompose()
 
             # Get text content
-            text = soup.get_text(separator=' ', strip=True)
+            text = soup.get_text(separator=" ", strip=True)
 
             # Clean up whitespace
-            text = re.sub(r'\s+', ' ', text)
+            text = re.sub(r"\s+", " ", text)
             text = text.strip()
 
             return text
         except Exception as e:
             print(f"  ⚠️  Failed to parse HTML with BeautifulSoup: {e}")
             # Fallback to simple text extraction if parsing fails
-            text = re.sub(r'<[^>]+>', ' ', html)
-            text = re.sub(r'\s+', ' ', text)
+            text = re.sub(r"<[^>]+>", " ", html)
+            text = re.sub(r"\s+", " ", text)
             return text.strip()
 
     def extract_sections(self, content: str) -> List[Dict[str, str]]:
@@ -282,7 +272,7 @@ class BackstageIndexer:
         lines = content.split("\n")
         for line in lines:
             # Check for heading (# or ##)
-            heading_match = re.match(r'^(#{1,6})\s+(.+)$', line.strip())
+            heading_match = re.match(r"^(#{1,6})\s+(.+)$", line.strip())
             if heading_match:
                 # Save previous section if it has content
                 if current_section["content"].strip():
@@ -290,10 +280,7 @@ class BackstageIndexer:
 
                 # Start new section
                 heading_text = heading_match.group(2)
-                current_section = {
-                    "heading": heading_text,
-                    "content": ""
-                }
+                current_section = {"heading": heading_text, "content": ""}
             else:
                 # Add to current section
                 current_section["content"] += line + "\n"
@@ -347,11 +334,7 @@ class BackstageIndexer:
         return hashlib.md5(content.encode("utf-8")).hexdigest()
 
     def index_techdocs(
-        self,
-        entity_ref: str,
-        content: str,
-        backstage_url: str,
-        force: bool = False
+        self, entity_ref: str, content: str, backstage_url: str, force: bool = False
     ) -> Tuple[bool, int]:
         """
         Index TechDocs content.
@@ -445,13 +428,14 @@ class BackstageIndexer:
         """Check if content needs re-indexing."""
         try:
             result = (
-                self.weaviate_client.query
-                .get(SCHEMA_NAME, ["fileHash"])
-                .with_where({
-                    "path": ["filepath"],
-                    "operator": "Equal",
-                    "valueString": filepath,
-                })
+                self.weaviate_client.query.get(SCHEMA_NAME, ["fileHash"])
+                .with_where(
+                    {
+                        "path": ["filepath"],
+                        "operator": "Equal",
+                        "valueString": filepath,
+                    }
+                )
                 .with_limit(1)
                 .do()
             )
@@ -470,13 +454,14 @@ class BackstageIndexer:
         """Delete existing chunks for a filepath."""
         try:
             result = (
-                self.weaviate_client.query
-                .get(SCHEMA_NAME, ["filepath"])
-                .with_where({
-                    "path": ["filepath"],
-                    "operator": "Equal",
-                    "valueString": filepath,
-                })
+                self.weaviate_client.query.get(SCHEMA_NAME, ["filepath"])
+                .with_where(
+                    {
+                        "path": ["filepath"],
+                        "operator": "Equal",
+                        "valueString": filepath,
+                    }
+                )
                 .with_additional(["id"])
                 .with_limit(200)  # TechDocs can have many chunks
                 .do()
@@ -533,8 +518,7 @@ class BackstageIndexer:
             # Check if entity has TechDocs annotation
             annotations = metadata.get("annotations", {})
             has_techdocs = (
-                "backstage.io/techdocs-ref" in annotations or
-                "backstage.io/managed-by-location" in annotations
+                "backstage.io/techdocs-ref" in annotations or "backstage.io/managed-by-location" in annotations
             )
 
             if not has_techdocs:
@@ -566,9 +550,7 @@ class BackstageIndexer:
             backstage_url = f"{self.backstage_url}/docs/{entity_ref.replace(':', '/')}"
 
             # Index
-            success, chunks = self.index_techdocs(
-                entity_ref, content, backstage_url, force
-            )
+            success, chunks = self.index_techdocs(entity_ref, content, backstage_url, force)
 
             if success:
                 if chunks > 0:
@@ -596,9 +578,7 @@ class BackstageIndexer:
 
 def main():
     """Main execution function."""
-    parser = argparse.ArgumentParser(
-        description="Index Backstage TechDocs into Weaviate RAG system"
-    )
+    parser = argparse.ArgumentParser(description="Index Backstage TechDocs into Weaviate RAG system")
     parser.add_argument(
         "--backstage-url",
         required=True,
@@ -634,10 +614,7 @@ def main():
 
     # Create indexer
     indexer = BackstageIndexer(
-        backstage_url=args.backstage_url,
-        weaviate_url=args.weaviate_url,
-        auth_token=args.token,
-        dry_run=args.dry_run
+        backstage_url=args.backstage_url, weaviate_url=args.weaviate_url, auth_token=args.token, dry_run=args.dry_run
     )
 
     start_time = time.time()
@@ -650,6 +627,7 @@ def main():
     except Exception as e:
         print(f"\n\n❌ Fatal error: {e}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)
 

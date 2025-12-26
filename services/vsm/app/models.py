@@ -15,6 +15,7 @@ def utcnow():
 
 class WorkItemType(str, enum.Enum):
     """Work item types."""
+
     FEATURE = "feature"
     BUG = "bug"
     TASK = "task"
@@ -23,6 +24,7 @@ class WorkItemType(str, enum.Enum):
 
 class StageType(str, enum.Enum):
     """Stage types in value stream."""
+
     BACKLOG = "backlog"
     ANALYSIS = "analysis"
     DEVELOPMENT = "development"
@@ -33,6 +35,7 @@ class StageType(str, enum.Enum):
 
 class StageCategory(str, enum.Enum):
     """Stage category types for flow metrics."""
+
     WAIT = "wait"
     ACTIVE = "active"
     DONE = "done"
@@ -40,6 +43,7 @@ class StageCategory(str, enum.Enum):
 
 class WorkItem(Base):
     """Work item model."""
+
     __tablename__ = "work_items"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -54,6 +58,7 @@ class WorkItem(Base):
 
 class Stage(Base):
     """Stage model."""
+
     __tablename__ = "stages"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -67,19 +72,16 @@ class Stage(Base):
 
     # Relationships
     transitions_from = relationship(
-        "StageTransition",
-        foreign_keys="StageTransition.from_stage_id",
-        back_populates="from_stage"
+        "StageTransition", foreign_keys="StageTransition.from_stage_id", back_populates="from_stage"
     )
     transitions_to = relationship(
-        "StageTransition",
-        foreign_keys="StageTransition.to_stage_id",
-        back_populates="to_stage"
+        "StageTransition", foreign_keys="StageTransition.to_stage_id", back_populates="to_stage"
     )
 
 
 class StageTransition(Base):
     """Stage transition model."""
+
     __tablename__ = "stage_transitions"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -96,6 +98,7 @@ class StageTransition(Base):
 
 class FlowMetrics(Base):
     """Flow metrics aggregated by time period."""
+
     __tablename__ = "flow_metrics"
 
     id = Column(Integer, primary_key=True, index=True)

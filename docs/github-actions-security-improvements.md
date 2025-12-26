@@ -9,24 +9,27 @@ This document explains the security and efficiency improvements made to the GitH
 Every job now has explicit `permissions` blocks following the principle of least privilege.
 
 **Security Benefits:**
+
 - **Least Privilege**: Jobs only get the minimum permissions they need
 - **Blast Radius Reduction**: If a job is compromised, the attacker's access is limited
 - **Clear Intent**: Makes it explicit what permissions each job requires
 - **Prevents Privilege Escalation**: GitHub tokens are scoped to only what's declared
 
 **Example:**
+
 ```yaml
 jobs:
   validate-and-scan:
     runs-on: ubuntu-latest
     permissions:
-      contents: read          # Can read repository contents
-      security-events: write  # Can upload SARIF results
+      contents: read # Can read repository contents
+      security-events: write # Can upload SARIF results
     steps:
       # ... steps that need these permissions
 ```
 
 **Default Permissions Set:**
+
 - Workflow-level: `contents: read` (most restrictive by default)
 - Job-level: Explicitly declared based on needs
 - Common patterns:
@@ -40,22 +43,25 @@ jobs:
 Added caching for Python dependencies and Terraform providers to speed up workflows.
 
 **Efficiency Benefits:**
+
 - **Faster Builds**: Reduce pip install time from 30-60s to 5-10s
 - **Reduced Network Load**: Fewer downloads from PyPI and Terraform Registry
 - **Cost Savings**: Shorter workflow execution times mean lower GitHub Actions costs
 - **Better Developer Experience**: Faster feedback on PRs
 
 **Python Dependency Caching:**
+
 ```yaml
 - name: Set up Python
   uses: actions/setup-python@v5
   with:
-    python-version: '3.11'
-    cache: 'pip'
-    cache-dependency-path: 'requirements.txt'
+    python-version: "3.11"
+    cache: "pip"
+    cache-dependency-path: "requirements.txt"
 ```
 
 **Terraform Provider Caching:**
+
 ```yaml
 - name: Cache Terraform providers
   uses: actions/cache@v4
@@ -69,6 +75,7 @@ Added caching for Python dependencies and Terraform providers to speed up workfl
 ```
 
 **Cache Key Strategy:**
+
 - Python: Hash of requirements files ensures cache invalidation on dependency changes
 - Terraform: Hash of lock files ensures correct provider versions
 - Restore keys provide fallback for partial cache hits
@@ -78,24 +85,27 @@ Added caching for Python dependencies and Terraform providers to speed up workfl
 Security and Terraform workflows now only run when relevant files change.
 
 **Efficiency Benefits:**
+
 - **Reduced CI Load**: Don't run infrastructure tests when only docs change
 - **Faster Feedback**: Only run what's necessary for a given change
 - **Resource Conservation**: Saves GitHub Actions minutes
 
 **Example:**
+
 ```yaml
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'infra/**'                                    # Infrastructure code
-      - '.github/workflows/security-and-terraform.yml' # This workflow
-      - '**/*.tf'                                     # Any Terraform files
+      - "infra/**" # Infrastructure code
+      - ".github/workflows/security-and-terraform.yml" # This workflow
+      - "**/*.tf" # Any Terraform files
   pull_request:
-    branches: [ main ]
+    branches: [main]
 ```
 
 **Path Patterns:**
+
 - `infra/**` - All files under infra directory
 - `**/*.tf` - All Terraform files anywhere in the repo
 - `.github/workflows/*.yml` - The workflow file itself
@@ -105,12 +115,14 @@ on:
 TFLint and Gitleaks now run on every PR without `continue-on-error`.
 
 **Security Benefits:**
+
 - **Prevent Misconfigurations**: TFLint catches Terraform errors before merge
 - **Secret Leak Prevention**: Gitleaks detects accidentally committed secrets
 - **Enforce Best Practices**: Security checks are required, not optional
 - **Shift Left**: Catch issues in PRs before they reach production
 
 **TFLint Configuration:**
+
 ```yaml
 - name: Run TFLint (recursive)
   run: tflint --recursive
@@ -118,6 +130,7 @@ TFLint and Gitleaks now run on every PR without `continue-on-error`.
 ```
 
 **Gitleaks Configuration:**
+
 ```yaml
 - name: Run Gitleaks (secret scan)
   run: |
@@ -136,18 +149,20 @@ TFLint and Gitleaks now run on every PR without `continue-on-error`.
 When AWS integration is added, use OIDC instead of long-lived access keys:
 
 **Security Benefits:**
+
 - **No Static Secrets**: No `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` in GitHub Secrets
 - **Short-Lived Tokens**: Credentials expire automatically after workflow completes
 - **Audit Trail**: All AWS actions tied to GitHub workflow identity
 - **Principle of Least Privilege**: IAM roles can be scoped to specific repos/branches
 
 **Implementation Template:**
+
 ```yaml
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write  # Required for OIDC
+      id-token: write # Required for OIDC
       contents: read
     steps:
       - uses: actions/checkout@34e11480ae1e31caa3f43c6f6043d4daa6e1148a
@@ -165,6 +180,7 @@ jobs:
 ```
 
 **Setup Requirements:**
+
 1. Create OIDC provider in AWS IAM
 2. Create IAM role with trust policy for GitHub
 3. Grant role permissions for required AWS services
@@ -173,6 +189,7 @@ jobs:
 ## Workflow-Specific Changes
 
 ### security-and-terraform.yml
+
 - ✅ Pinned all actions to commit SHAs
 - ✅ Added job-level permissions
 - ✅ Added Terraform provider caching
@@ -181,23 +198,27 @@ jobs:
 - ✅ Made Gitleaks required on PRs
 
 ### deploy.yml
+
 - ✅ Pinned all actions to commit SHAs
 - ✅ Added job-level permissions
 - ✅ Added Python dependency caching with `cache-dependency-path`
 
 ### idp-e2e-tests.yml
+
 - ✅ Pinned all actions to commit SHAs
 - ✅ Added job-level permissions
 - ✅ Already had Python caching configured
 - ✅ Already had path-based triggers
 
 ### pre-commit.yml
+
 - ✅ Pinned all actions to commit SHAs
 - ✅ Added job-level permissions to all jobs
 - ✅ Added Python dependency caching
 - ✅ Added Terraform provider caching
 
 ### build-mcp-k8s-server.yml
+
 - ✅ Pinned all actions to commit SHAs
 - ✅ Added job-level permissions
 - ✅ Only runs on tag pushes (already efficient)
@@ -206,17 +227,18 @@ jobs:
 
 These changes improve the repository's OpenSSF Scorecard score:
 
-| Check | Before | After | Improvement |
-|-------|--------|-------|-------------|
-| Pinned-Dependencies | ⚠️ Warning | ✅ Pass | Actions pinned to SHAs |
-| Token-Permissions | ⚠️ Warning | ✅ Pass | Explicit least-privilege |
-| Dangerous-Workflow | ⚠️ Warning | ✅ Pass | Path-based triggers reduce attack surface |
+| Check               | Before     | After   | Improvement                               |
+| ------------------- | ---------- | ------- | ----------------------------------------- |
+| Pinned-Dependencies | ⚠️ Warning | ✅ Pass | Actions pinned to SHAs                    |
+| Token-Permissions   | ⚠️ Warning | ✅ Pass | Explicit least-privilege                  |
+| Dangerous-Workflow  | ⚠️ Warning | ✅ Pass | Path-based triggers reduce attack surface |
 
 ## Maintenance Best Practices
 
 ### Keeping Actions Up-to-Date
 
 1. **Enable Dependabot for GitHub Actions**:
+
    ```yaml
    # .github/dependabot.yml
    version: 2
@@ -229,6 +251,7 @@ These changes improve the repository's OpenSSF Scorecard score:
    ```
 
 2. **Review Security Advisories**:
+
    - Check GitHub Security Advisories before updating
    - Review changelogs for breaking changes
    - Test workflows in a branch before merging
@@ -264,15 +287,18 @@ These changes improve the repository's OpenSSF Scorecard score:
 If issues arise from these changes:
 
 1. **Action Version Issues**:
+
    - Comment out SHA, uncomment tag temporarily
    - Investigate and update to correct SHA
 
 2. **Permission Issues**:
+
    - Check workflow logs for permission errors
    - Add minimal required permissions to job
    - Document why permission is needed
 
 3. **Cache Issues**:
+
    - Clear cache manually via GitHub UI
    - Adjust cache key if needed
    - Disable caching temporarily if blocking

@@ -16,18 +16,18 @@ repos:
         name: Fix end of files
       - id: check-yaml
         name: Check YAML syntax
-        args: ['--allow-multiple-documents']
+        args: ["--allow-multiple-documents"]
         exclude: '^(infra/kubernetes/.*helm.*|.*templates?/.*\.ya?ml)$'
       - id: check-json
         name: Check JSON syntax
       - id: check-added-large-files
         name: Check for large files
-        args: ['--maxkb=1024']
+        args: ["--maxkb=1024"]
       - id: check-merge-conflict
         name: Check for merge conflicts
       - id: mixed-line-ending
         name: Fix mixed line endings
-        args: ['--fix=lf']
+        args: ["--fix=lf"]
       - id: detect-private-key
         name: Detect private keys
 
@@ -39,7 +39,7 @@ repos:
     hooks:
       - id: yamllint
         name: Lint YAML files
-        args: ['-c', '.yamllint']
+        args: ["-c", ".yamllint"]
         types: [yaml]
 
   # ============================================================================
@@ -50,7 +50,19 @@ repos:
     hooks:
       - id: markdownlint
         name: Lint Markdown files
-        args: ['--config', '.markdownlint.json', '--fix']
+        args: ["--config", ".markdownlint.json", "--fix"]
+
+  # ============================================================================
+  # Prettier (JSON/YAML/Markdown Formatting)
+  # ============================================================================
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        name: Format with Prettier
+        types_or: [json, yaml, markdown]
+        exclude: '^(package-lock\.json|.*\.catalog-info\.yaml|catalog-info\.yaml|mkdocs\.yml|\.trunk/.*)'
+        args: ["--write", "--ignore-unknown"]
 
   # ============================================================================
   # Terraform Formatting & Validation
@@ -104,7 +116,7 @@ repos:
           - --license-filepath
           - LICENSE
           - --comment-style
-          - '#'
+          - "#"
         exclude: '^(\.github/|\.pre-commit-config\.yaml|\.yamllint)'
 
   # ============================================================================
@@ -121,7 +133,7 @@ repos:
     hooks:
       - id: detect-secrets
         name: Detect secrets
-        args: ['--baseline', '.secrets.baseline']
+        args: ["--baseline", ".secrets.baseline"]
         exclude: package-lock.json
 
   # ============================================================================
@@ -133,23 +145,32 @@ repos:
       - id: black
         name: Format Python code with Black
         language_version: python3
+        exclude: '^templates/.*/skeleton/.*\.py$'
 
   - repo: https://github.com/pycqa/flake8
     rev: 7.0.0
     hooks:
       - id: flake8
         name: Lint Python with Flake8
-        args: ['--max-line-length=120', '--extend-ignore=E203,W503']
+        args: ["--max-line-length=120", "--extend-ignore=E203,W503"]
 
   # ============================================================================
-  # Shell Script Validation
+  # Shell Script Validation & Formatting
   # ============================================================================
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.9.0.6
     hooks:
       - id: shellcheck
         name: Lint shell scripts
-        args: ['--severity=warning']
+        args: ["--severity=warning"]
+
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.8.0-1
+    hooks:
+      - id: shfmt
+        name: Format shell scripts with shfmt
+        args: ["-i", "2", "-ci", "-bn", "-sr", "-w"]
+        exclude: '^scripts/buildplatform\.sh$'
 
   # ============================================================================
   # Go Code Quality
@@ -159,7 +180,7 @@ repos:
     hooks:
       - id: golangci-lint
         name: Lint Go code
-        args: ['--fast']
+        args: ["--fast"]
 
   # ============================================================================
   # Custom Local Hooks for Fawkes-Specific Validation
@@ -229,8 +250,8 @@ ci:
 
     for more information, see https://pre-commit.ci
   autofix_prs: true
-  autoupdate_branch: ''
-  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_branch: ""
+  autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
   autoupdate_schedule: monthly
   skip: [terraform_tflint, terraform_tfsec, kubeval, kustomize-validate, helm-lint, mkdocs-validate]
   submodules: false

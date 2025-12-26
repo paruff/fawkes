@@ -26,6 +26,7 @@ After deployment, you can access services such as Jenkins, SonarQube, and the Ku
 - **Jenkins:**
   Access Jenkins via the provided URL (e.g., `http://<jenkins-lb>:8080`).
   Retrieve the admin password using:
+
   ```sh
   kubectl get secret --namespace <namespace> jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode
   ```
@@ -46,6 +47,7 @@ After deployment, you can access services such as Jenkins, SonarQube, and the Ku
 
 - **Provisioning Infrastructure:**
   Use the provided scripts in the `infra/` directory to provision or update infrastructure:
+
   ```sh
   cd infra
   ./scripts/ignite.sh --provider aws dev
@@ -53,6 +55,7 @@ After deployment, you can access services such as Jenkins, SonarQube, and the Ku
 
 - **Destroying Infrastructure:**
   To tear down infrastructure:
+
   ```sh
   cd infra
   ./scripts/ignite.sh --provider aws dev  # see docs for destroy guidance
@@ -73,6 +76,7 @@ After deployment, you can access services such as Jenkins, SonarQube, and the Ku
 
 - **Jenkins Deployment:**
   Deploy Jenkins using the provided script:
+
   ```sh
   cd platform/jenkins
   ./jenkins-delta.sh -i
@@ -89,6 +93,7 @@ After deployment, service URLs and credentials are displayed in the terminal.
 You can also retrieve them using:
 
 - **Terraform Outputs:**
+
   ```sh
   terraform output
   ```
@@ -119,7 +124,7 @@ Fawkes is designed to help teams measure and improve the [Four Key DORA Metrics]
 - **Change Failure Rate**
 - **Mean Time to Restore (MTTR)**
 
-### How Fawkes Helps:
+### How Fawkes Helps
 
 - **Automated CI/CD Pipelines:** Jenkins and other integrated tools provide metrics on deployment frequency and lead time.
 - **Quality Gates:** SonarQube and automated tests help reduce change failure rate.

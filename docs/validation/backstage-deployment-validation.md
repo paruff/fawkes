@@ -9,6 +9,7 @@
 **Status:** Complete
 
 **Evidence:**
+
 - ArgoCD Application manifest exists: `platform/apps/backstage-application.yaml`
 - Configured with:
   - Helm chart: `backstage/backstage` version 1.10.0
@@ -17,6 +18,7 @@
   - Sync wave: 5 (after PostgreSQL at wave -4)
 
 **Validation Steps:**
+
 ```bash
 # Check ArgoCD application exists
 argocd app get backstage
@@ -30,6 +32,7 @@ kubectl get application -n fawkes backstage
 **Status:** Complete
 
 **Evidence:**
+
 - CloudNativePG operator deployment: `platform/apps/postgresql/cloudnativepg-operator-application.yaml`
 - PostgreSQL cluster manifest: `platform/apps/postgresql/db-backstage-cluster.yaml`
   - 3 instances (1 primary, 2 standby)
@@ -46,6 +49,7 @@ kubectl get application -n fawkes backstage
 **Status:** Complete
 
 **Evidence:**
+
 - Ingress configured in `platform/apps/backstage-application.yaml`:
   - Host: `backstage.fawkes.idp`
   - TLS enabled with cert-manager
@@ -60,10 +64,12 @@ kubectl get application -n fawkes backstage
 **Status:** Complete
 
 **Evidence:**
+
 - Root catalog file created: `catalog-info.yaml`
 - Catalog configured in `platform/apps/backstage/app-config.yaml`
 
 **Catalog Contents:**
+
 - **System:** fawkes-platform
 - **Domain:** platform-engineering
 - **Group:** platform-team
@@ -73,6 +79,7 @@ kubectl get application -n fawkes backstage
 - **Location:** fawkes-templates (Software templates)
 
 **Software Templates Created:**
+
 - `templates/python-service/template.yaml` - Python FastAPI microservice
 - `templates/java-service/template.yaml` - Java Spring Boot microservice
 - `templates/nodejs-service/template.yaml` - Node.js Express microservice
@@ -80,16 +87,19 @@ kubectl get application -n fawkes backstage
 ### Definition of Done Checklist
 
 - [x] **Code implemented and committed**
+
   - All manifests exist and are properly configured
   - Catalog file created with platform components
   - Software templates created for golden paths
 
 - [x] **Tests written and passing**
+
   - BDD acceptance tests exist: `tests/bdd/features/backstage-deployment.feature`
   - Step definitions implemented: `tests/bdd/step_definitions/backstage_steps.py`
   - 9 test scenarios covering all acceptance criteria
 
 - [x] **Documentation updated**
+
   - Comprehensive deployment guide: `docs/deployment/backstage-postgresql.md`
   - Deployment directory README: `docs/deployment/README.md`
   - Architecture documented in: `docs/architecture.md`
@@ -131,24 +141,28 @@ kubectl get application -n fawkes backstage
 ### Next Steps for Deployment
 
 1. **Update Secrets (Critical):**
+
    ```bash
    vim platform/apps/postgresql/db-backstage-credentials.yaml
    vim platform/apps/backstage/secrets.yaml
    ```
 
 2. **Deploy via ArgoCD:**
+
    ```bash
    kubectl apply -f platform/bootstrap/app-of-apps.yaml
    argocd app sync platform-bootstrap
    ```
 
 3. **Monitor Deployment:**
+
    ```bash
    watch kubectl get pods -n fawkes
    argocd app list
    ```
 
 4. **Access Backstage:**
+
    ```bash
    # Local: Port-forward
    kubectl port-forward -n fawkes svc/backstage 7007:7007
@@ -160,6 +174,7 @@ kubectl get application -n fawkes backstage
 ### Conclusion
 
 All acceptance criteria have been met:
+
 - ✅ Backstage deployed via ArgoCD
 - ✅ PostgreSQL backend configured
 - ✅ Backstage UI accessible

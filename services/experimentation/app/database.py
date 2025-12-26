@@ -6,8 +6,7 @@ from sqlalchemy.orm import sessionmaker
 
 # Database connection URL from environment
 DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://experiment_user:changeme-experiment-password@db-experiment-dev-rw:5432/experiment"
+    "DATABASE_URL", "postgresql://experiment_user:changeme-experiment-password@db-experiment-dev-rw:5432/experiment"
 )
 
 # Create SQLAlchemy engine

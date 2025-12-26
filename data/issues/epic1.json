@@ -8,7 +8,14 @@
       "milestone": "1.1 - Azure Infrastructure",
       "priority": "p0-critical",
       "effort": 6,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-kubernetes", "comp-azure", "type-ai-agent"],
+      "labels": [
+        "epic-1-dora-2023",
+        "p0-critical",
+        "type-infrastructure",
+        "comp-kubernetes",
+        "comp-azure",
+        "type-ai-agent"
+      ],
       "depends_on": [],
       "blocks": [2, 3, 4, 5, 6, 7, 8, 9],
       "description": "Deploy Azure Kubernetes Service (AKS) cluster using Terraform with proper networking, node pools, and Azure integrations.",
@@ -62,7 +69,14 @@
       "milestone": "1.1 - Azure Infrastructure",
       "priority": "p0-critical",
       "effort": 3,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-kubernetes", "comp-azure", "type-ai-agent"],
+      "labels": [
+        "epic-1-dora-2023",
+        "p0-critical",
+        "type-infrastructure",
+        "comp-kubernetes",
+        "comp-azure",
+        "type-ai-agent"
+      ],
       "depends_on": [1],
       "blocks": [5, 9, 14],
       "description": "Configure Azure Load Balancer and deploy nginx-ingress controller for external access.",
@@ -102,7 +116,14 @@
       "milestone": "1.1 - Azure Infrastructure",
       "priority": "p0-critical",
       "effort": 3,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-kubernetes", "comp-azure", "type-ai-agent"],
+      "labels": [
+        "epic-1-dora-2023",
+        "p0-critical",
+        "type-infrastructure",
+        "comp-kubernetes",
+        "comp-azure",
+        "type-ai-agent"
+      ],
       "depends_on": [1],
       "blocks": [9, 14, 19],
       "description": "Configure Azure Disk and Azure Files storage classes for persistent storage.",
@@ -433,25 +454,25 @@
           "prompt": "Configure Jenkins Azure Key Vault plugin:\n1. Install Azure Key Vault plugin\n2. Configure workload identity\n3. Reference secrets from Key Vault in JCasC\n4. Test secret retrieval\n5. Rotate secrets policy\nSecrets: GitHub token, ACR credentials, etc."
         }
       ],
-          "validation": "# Same as local plus verify Key Vault integration\naz keyvault secret list --vault-name fawkes-kv"
-        },
-        {
-          "number": 16,
-          "title": "Create shared Jenkins pipeline library",
-          "milestone": "1.2 - Developer Portal & CI/CD",
-          "priority": "p0-critical",
-          "effort": 5,
-          "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-jenkins", "type-ai-agent"],
-          "depends_on": [14, 15],
-          "blocks": [33],
-          "description": "Create reusable Jenkins pipeline library for common CI/CD tasks.",
-          "acceptance_criteria": [
-            "Shared library repository created",
-            "Jenkins configured to use library",
-            "Common pipeline steps available",
-            "Documentation for library usage"
-          ],
-          "validation": "# Verify shared library is loaded\n# Test pipeline using library functions"
-        }
-      ]
+      "validation": "# Same as local plus verify Key Vault integration\naz keyvault secret list --vault-name fawkes-kv"
+    },
+    {
+      "number": 16,
+      "title": "Create shared Jenkins pipeline library",
+      "milestone": "1.2 - Developer Portal & CI/CD",
+      "priority": "p0-critical",
+      "effort": 5,
+      "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-jenkins", "type-ai-agent"],
+      "depends_on": [14, 15],
+      "blocks": [33],
+      "description": "Create reusable Jenkins pipeline library for common CI/CD tasks.",
+      "acceptance_criteria": [
+        "Shared library repository created",
+        "Jenkins configured to use library",
+        "Common pipeline steps available",
+        "Documentation for library usage"
+      ],
+      "validation": "# Verify shared library is loaded\n# Test pipeline using library functions"
     }
+  ]
+}

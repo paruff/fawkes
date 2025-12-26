@@ -5,6 +5,7 @@ This directory contains the NGINX Ingress Controller deployment for the Fawkes p
 ## Overview
 
 The NGINX Ingress Controller provides Layer 7 HTTP/HTTPS routing for Kubernetes services with:
+
 - High availability (2 replicas with pod anti-affinity)
 - TLS termination
 - Prometheus metrics
@@ -24,11 +25,13 @@ The NGINX Ingress Controller provides Layer 7 HTTP/HTTPS routing for Kubernetes 
 ### Via ArgoCD
 
 For local development:
+
 ```bash
 kubectl apply -f ingress-nginx-application.yaml
 ```
 
 For Azure AKS:
+
 ```bash
 kubectl apply -f ingress-nginx-azure-application.yaml
 ```
@@ -36,6 +39,7 @@ kubectl apply -f ingress-nginx-azure-application.yaml
 ### Via Helm (for local testing)
 
 For local development:
+
 ```bash
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
@@ -46,6 +50,7 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
 ```
 
 For Azure AKS:
+
 ```bash
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
@@ -116,6 +121,7 @@ curl -k https://test-tls.127.0.0.1.nip.io
 ### Local Development
 
 For local development (Docker Desktop, Minikube, etc.):
+
 - Single replica for resource efficiency
 - Reduced resource requests/limits
 - TLS redirect disabled
@@ -124,6 +130,7 @@ For local development (Docker Desktop, Minikube, etc.):
 ### Azure AKS
 
 For Azure AKS environments, use `ingress-nginx-azure-application.yaml` which includes:
+
 - Azure Load Balancer annotations
 - Health probe configuration
 - High availability (2+ replicas with auto-scaling)
@@ -133,12 +140,14 @@ For Azure AKS environments, use `ingress-nginx-azure-application.yaml` which inc
 - Session affinity for better performance
 
 Azure-specific configuration options (in values-azure.yaml):
+
 - Static public IP (requires pre-created IP in node resource group)
 - Internal Load Balancer (for private ingress)
 - PROXY protocol support (if needed)
 - External-DNS integration (for automatic DNS management)
 
 To use a static public IP:
+
 1. Create a public IP in the node resource group:
    ```bash
    az network public-ip create \
@@ -161,6 +170,7 @@ curl http://localhost:10254/metrics
 ```
 
 Key metrics:
+
 - `nginx_ingress_controller_requests` - Total requests
 - `nginx_ingress_controller_request_duration_seconds` - Request latency
 - `nginx_ingress_controller_ssl_expire_time_seconds` - Certificate expiration
@@ -177,11 +187,13 @@ kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller
 ### Ingress not accessible
 
 1. Check service status:
+
    ```bash
    kubectl get svc -n ingress-nginx
    ```
 
 2. Check ingress resources:
+
    ```bash
    kubectl get ingress -A
    kubectl describe ingress <name> -n <namespace>

@@ -98,27 +98,27 @@ async def test_detect_anomalies_integration(mock_http_client):
     mock_response = MagicMock()
     mock_response.status_code = 200
     mock_response.json.return_value = {
-        'status': 'success',
-        'data': {
-            'result': [
+        "status": "success",
+        "data": {
+            "result": [
                 {
-                    'metric': {'__name__': 'test_metric'},
-                    'values': [
-                        [datetime.now().timestamp() - i, str(100.0 if i != 30 else 500.0)]
-                        for i in range(60, 0, -1)
-                    ]
+                    "metric": {"__name__": "test_metric"},
+                    "values": [
+                        [datetime.now().timestamp() - i, str(100.0 if i != 30 else 500.0)] for i in range(60, 0, -1)
+                    ],
                 }
             ]
-        }
+        },
     }
 
     mock_http_client.get = AsyncMock(return_value=mock_response)
 
     # Mock PROMETHEUS_URL
     import os
-    os.environ['PROMETHEUS_URL'] = 'http://test'
 
-    anomalies = await detect_anomalies('test_query', mock_http_client)
+    os.environ["PROMETHEUS_URL"] = "http://test"
+
+    anomalies = await detect_anomalies("test_query", mock_http_client)
 
     # Should detect anomalies
     assert isinstance(anomalies, list)
@@ -129,18 +129,13 @@ async def test_format_metric_name():
     """Test metric name formatting."""
     from models.detector import _format_metric_name
 
-    metric_dict = {
-        '__name__': 'http_requests_total',
-        'job': 'api',
-        'namespace': 'fawkes',
-        'status': '500'
-    }
+    metric_dict = {"__name__": "http_requests_total", "job": "api", "namespace": "fawkes", "status": "500"}
 
-    name = _format_metric_name(metric_dict, 'test_query')
+    name = _format_metric_name(metric_dict, "test_query")
 
-    assert 'http_requests_total' in name
-    assert 'job=api' in name
-    assert 'namespace=fawkes' in name
+    assert "http_requests_total" in name
+    assert "job=api" in name
+    assert "namespace=fawkes" in name
 
 
 def test_model_initialization():
@@ -163,9 +158,9 @@ def test_get_model_info():
     models = get_model_info()
 
     assert len(models) == 5
-    assert all('name' in m for m in models)
-    assert all('type' in m for m in models)
-    assert all('description' in m for m in models)
+    assert all("name" in m for m in models)
+    assert all("type" in m for m in models)
+    assert all("description" in m for m in models)
 
 
 @pytest.mark.asyncio
@@ -209,16 +204,11 @@ async def test_empty_prometheus_response(mock_http_client):
 
     mock_response = MagicMock()
     mock_response.status_code = 200
-    mock_response.json.return_value = {
-        'status': 'success',
-        'data': {
-            'result': []
-        }
-    }
+    mock_response.json.return_value = {"status": "success", "data": {"result": []}}
 
     mock_http_client.get = AsyncMock(return_value=mock_response)
 
-    os.environ['PROMETHEUS_URL'] = 'http://test'
-    anomalies = await detect_anomalies('test_query', mock_http_client)
+    os.environ["PROMETHEUS_URL"] = "http://test"
+    anomalies = await detect_anomalies("test_query", mock_http_client)
 
     assert anomalies == []

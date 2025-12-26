@@ -84,14 +84,14 @@ kubectl get clusterpolicy require-non-root -o jsonpath='{.spec.rules[*].validate
 
 Common Kyverno policies in Fawkes:
 
-| Policy | Purpose | Validation Rule |
-|--------|---------|----------------|
-| `require-non-root` | Security: Prevent root containers | `securityContext.runAsNonRoot == true` |
-| `require-resource-limits` | Resource management | `resources.limits` must be set |
-| `require-labels` | Organization | Required labels: `app`, `team`, `env` |
-| `disallow-latest-tag` | Stability | Image tag cannot be `latest` |
-| `require-probes` | Reliability | `livenessProbe` and `readinessProbe` required |
-| `restrict-ingress-classes` | Security | Only approved Ingress classes allowed |
+| Policy                     | Purpose                           | Validation Rule                               |
+| -------------------------- | --------------------------------- | --------------------------------------------- |
+| `require-non-root`         | Security: Prevent root containers | `securityContext.runAsNonRoot == true`        |
+| `require-resource-limits`  | Resource management               | `resources.limits` must be set                |
+| `require-labels`           | Organization                      | Required labels: `app`, `team`, `env`         |
+| `disallow-latest-tag`      | Stability                         | Image tag cannot be `latest`                  |
+| `require-probes`           | Reliability                       | `livenessProbe` and `readinessProbe` required |
+| `restrict-ingress-classes` | Security                          | Only approved Ingress classes allowed         |
 
 ### 3. Fix Common Policy Violations
 
@@ -114,20 +114,20 @@ spec:
       # Add security context
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000      # Non-root user ID
-        fsGroup: 1000        # File system group
+        runAsUser: 1000 # Non-root user ID
+        fsGroup: 1000 # File system group
 
       containers:
-      - name: my-app
-        image: my-app:v1.0.0
-        # Container-level security context (optional)
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 1000
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - ALL
+        - name: my-app
+          image: my-app:v1.0.0
+          # Container-level security context (optional)
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
 ```
 
 #### Violation: "resource limits must be set"
@@ -147,16 +147,16 @@ spec:
   template:
     spec:
       containers:
-      - name: my-app
-        image: my-app:v1.0.0
-        # Add resource limits
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "128Mi"
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
+        - name: my-app
+          image: my-app:v1.0.0
+          # Add resource limits
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
 ```
 
 #### Violation: "required labels missing"
@@ -210,11 +210,11 @@ spec:
   template:
     spec:
       containers:
-      - name: my-app
-        # Use specific version tag, SHA, or semantic version
-        image: my-app:v1.2.3
-        # Or use SHA
-        # image: my-app@sha256:abc123...
+        - name: my-app
+          # Use specific version tag, SHA, or semantic version
+          image: my-app:v1.2.3
+          # Or use SHA
+          # image: my-app@sha256:abc123...
 ```
 
 #### Violation: "probes required"
@@ -234,28 +234,28 @@ spec:
   template:
     spec:
       containers:
-      - name: my-app
-        image: my-app:v1.0.0
+        - name: my-app
+          image: my-app:v1.0.0
 
-        # Add liveness probe
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
+          # Add liveness probe
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
 
-        # Add readiness probe
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 8080
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
+          # Add readiness probe
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
 ```
 
 ### 4. Request Policy Exception
@@ -274,19 +274,19 @@ spec:
   # Which resources to exclude
   match:
     any:
-    - resources:
-        kinds:
-          - Deployment
-        namespaces:
-          - my-namespace
-        names:
-          - legacy-app*  # Wildcard supported
+      - resources:
+          kinds:
+            - Deployment
+          namespaces:
+            - my-namespace
+          names:
+            - legacy-app* # Wildcard supported
 
   # Which policies to exclude from
   exceptions:
-  - policyName: require-non-root
-    ruleNames:
-    - validate-runAsNonRoot
+    - policyName: require-non-root
+      ruleNames:
+        - validate-runAsNonRoot
 
   # Justification (good practice)
   background: "Legacy database container requires root for initialization scripts"
@@ -413,7 +413,7 @@ Policy violations are logged but not blocked:
 
 ```yaml
 spec:
-  validationFailureAction: Audit  # Log violations, don't block
+  validationFailureAction: Audit # Log violations, don't block
 ```
 
 Resources are created, but violations appear in PolicyReports.
@@ -424,7 +424,7 @@ Policy violations block resource creation:
 
 ```yaml
 spec:
-  validationFailureAction: Enforce  # Block non-compliant resources
+  validationFailureAction: Enforce # Block non-compliant resources
 ```
 
 Resources fail to create if they violate the policy.
@@ -458,18 +458,18 @@ spec:
 ```yaml
 spec:
   rules:
-  - name: require-deployment-annotations
-    match:
-      resources:
-        kinds:
-        - Deployment
-    validate:
-      message: "Deployments must have 'owner' and 'cost-center' annotations"
-      pattern:
-        metadata:
-          annotations:
-            owner: "?*"
-            cost-center: "?*"
+    - name: require-deployment-annotations
+      match:
+        resources:
+          kinds:
+            - Deployment
+      validate:
+        message: "Deployments must have 'owner' and 'cost-center' annotations"
+        pattern:
+          metadata:
+            annotations:
+              owner: "?*"
+              cost-center: "?*"
 ```
 
 ### Mutate Resources (Auto-Fix)
@@ -481,22 +481,22 @@ metadata:
   name: add-default-resources
 spec:
   rules:
-  - name: add-resource-limits
-    match:
-      resources:
-        kinds:
-        - Deployment
-    mutate:
-      patchStrategicMerge:
-        spec:
-          template:
-            spec:
-              containers:
-              - (name): "*"
-                resources:
-                  limits:
-                    +(memory): "512Mi"
-                    +(cpu): "500m"
+    - name: add-resource-limits
+      match:
+        resources:
+          kinds:
+            - Deployment
+      mutate:
+        patchStrategicMerge:
+          spec:
+            template:
+              spec:
+                containers:
+                  - (name): "*"
+                    resources:
+                      limits:
+                        +(memory): "512Mi"
+                        +(cpu): "500m"
 ```
 
 ## Troubleshooting

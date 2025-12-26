@@ -18,7 +18,7 @@ import requests
 from pytest_bdd import given, when, then, parsers, scenarios
 
 # Load all scenarios from the feature file
-scenarios('../features/argocd-deployment.feature')
+scenarios("../features/argocd-deployment.feature")
 
 
 def _kubectl_json(args: list[str]) -> Dict:
@@ -44,6 +44,7 @@ def _kubectl_text(args: list[str]) -> str:
 
 # Background steps
 
+
 @given("I have kubectl configured for the cluster")
 def kubectl_configured():
     """Verify kubectl is configured and can reach the cluster."""
@@ -53,14 +54,14 @@ def kubectl_configured():
 @given("the ingress-nginx controller is deployed and running")
 def ingress_nginx_running():
     """Verify ingress-nginx is running."""
-    data = _kubectl_json(["-n", "ingress-nginx", "get", "deployment",
-                          "ingress-nginx-controller", "-o", "json"])
+    data = _kubectl_json(["-n", "ingress-nginx", "get", "deployment", "ingress-nginx-controller", "-o", "json"])
     status = data.get("status", {})
     ready_replicas = status.get("readyReplicas", 0)
     assert ready_replicas > 0, "ingress-nginx controller not ready"
 
 
 # Namespace scenario steps
+
 
 @when("I check for the argocd namespace")
 def check_argocd_namespace(context: Dict):
@@ -88,6 +89,7 @@ def namespace_active(namespace: str, context: Dict):
 
 
 # Pods scenario steps
+
 
 @given(parsers.cfparse('ArgoCD is deployed in namespace "{namespace}"'))
 def argocd_deployed(namespace: str):
@@ -117,16 +119,25 @@ def pods_running(namespace: str, table, context: Dict):
         assert found, f"Pod with component '{component}' not found in namespace {namespace}"
 
 
-@then(parsers.cfparse('all ArgoCD pods should be in Ready state within {timeout:d} seconds'))
+@then(parsers.cfparse("all ArgoCD pods should be in Ready state within {timeout:d} seconds"))
 def pods_ready(timeout: int):
     """Wait for all ArgoCD pods to be ready."""
-    cmd = ["kubectl", "wait", "--for=condition=ready", "pod",
-           "-l", "app.kubernetes.io/part-of=argocd",
-           "-n", "argocd", f"--timeout={timeout}s"]
+    cmd = [
+        "kubectl",
+        "wait",
+        "--for=condition=ready",
+        "pod",
+        "-l",
+        "app.kubernetes.io/part-of=argocd",
+        "-n",
+        "argocd",
+        f"--timeout={timeout}s",
+    ]
     subprocess.check_call(cmd)
 
 
 # Ingress scenario steps
+
 
 @given("ArgoCD is deployed with ingress enabled")
 def argocd_ingress_enabled():
@@ -184,7 +195,7 @@ def ui_accessible(url: str):
         if not parsed.scheme or not parsed.netloc:
             pytest.skip(f"Invalid URL format: {url}")
         # Verify hostname starts with argocd for security
-        if not parsed.netloc.startswith('argocd.'):
+        if not parsed.netloc.startswith("argocd."):
             pytest.skip(f"URL hostname must start with 'argocd.' for security: {url}")
     except Exception as e:
         pytest.skip(f"Failed to parse URL {url}: {e}")
@@ -193,7 +204,7 @@ def ui_accessible(url: str):
     # Consider it a soft check or skip in certain environments
     try:
         # For HTTPS, verify SSL; for HTTP (local dev), allow insecure
-        verify_ssl = parsed.scheme == 'https'
+        verify_ssl = parsed.scheme == "https"
         response = requests.get(url, timeout=10, allow_redirects=True, verify=verify_ssl)
         # ArgoCD UI should return something (200, 301, etc.)
         assert response.status_code < 500, f"ArgoCD UI returned {response.status_code}"
@@ -205,12 +216,12 @@ def ui_accessible(url: str):
 
 # CLI scenario steps
 
+
 @when("I retrieve the initial admin password")
 def retrieve_admin_password(context: Dict):
     """Retrieve admin password from secret."""
     try:
-        secret = _kubectl_json(["-n", "argocd", "get", "secret",
-                               "argocd-initial-admin-secret", "-o", "json"])
+        secret = _kubectl_json(["-n", "argocd", "get", "secret", "argocd-initial-admin-secret", "-o", "json"])
         context["admin_secret"] = secret
     except RuntimeError:
         context["admin_secret"] = None
@@ -243,20 +254,19 @@ def argocd_cli_login(context: Dict):
     # This is a basic check - full login test would require more setup
     # Just verify the CLI can reach the server
     try:
-        subprocess.check_output(["argocd", "version", "--client"],
-                               stderr=subprocess.DEVNULL)
+        subprocess.check_output(["argocd", "version", "--client"], stderr=subprocess.DEVNULL)
     except subprocess.CalledProcessError:
         pytest.skip("argocd CLI not functional")
 
 
 # Security scenario steps
 
+
 @when("I check the admin credentials storage")
 def check_credentials_storage(context: Dict):
     """Check how admin credentials are stored."""
     try:
-        secret = _kubectl_json(["-n", "argocd", "get", "secret",
-                               "argocd-initial-admin-secret", "-o", "json"])
+        secret = _kubectl_json(["-n", "argocd", "get", "secret", "argocd-initial-admin-secret", "-o", "json"])
         context["admin_secret"] = secret
     except RuntimeError:
         context["admin_secret"] = None
@@ -299,11 +309,11 @@ def password_base64_encoded(context: Dict):
 
 # Health scenario steps
 
+
 @given(parsers.cfparse('ArgoCD server is running in namespace "{namespace}"'))
 def argocd_server_running(namespace: str):
     """Verify ArgoCD server is running."""
-    data = _kubectl_json(["-n", namespace, "get", "deployment",
-                         "argocd-server", "-o", "json"])
+    data = _kubectl_json(["-n", namespace, "get", "deployment", "argocd-server", "-o", "json"])
     status = data.get("status", {})
     ready = status.get("readyReplicas", 0)
     assert ready > 0, "ArgoCD server not ready"
@@ -315,8 +325,7 @@ def check_health_endpoint(context: Dict):
     # Port forward would be needed for full health check
     # For now, just verify the deployment is healthy
     try:
-        data = _kubectl_json(["-n", "argocd", "get", "deployment",
-                             "argocd-server", "-o", "json"])
+        data = _kubectl_json(["-n", "argocd", "get", "deployment", "argocd-server", "-o", "json"])
         context["server_deployment"] = data
     except RuntimeError:
         context["server_deployment"] = None
@@ -330,8 +339,7 @@ def health_status(status: str, context: Dict):
 
     # Check deployment conditions
     conditions = deployment.get("status", {}).get("conditions", [])
-    available = any(c.get("type") == "Available" and c.get("status") == "True"
-                   for c in conditions)
+    available = any(c.get("type") == "Available" and c.get("status") == "True" for c in conditions)
     assert available, f"ArgoCD server not available. Expected health status: {status}"
 
 
@@ -347,7 +355,8 @@ def api_server_responsive(context: Dict):
 
 # Resources scenario steps
 
-@when(parsers.cfparse('I check the resource specifications for ArgoCD deployments'))
+
+@when(parsers.cfparse("I check the resource specifications for ArgoCD deployments"))
 def check_resource_specs(context: Dict):
     """Get resource specifications for ArgoCD deployments."""
     data = _kubectl_json(["-n", "argocd", "get", "deployments", "-o", "json"])
@@ -375,7 +384,9 @@ def deployments_have_memory_requests(context: Dict):
         for container in containers:
             resources = container.get("resources", {})
             requests = resources.get("requests", {})
-            assert "memory" in requests, f"Memory request not defined for {deploy['metadata']['name']}/{container['name']}"
+            assert (
+                "memory" in requests
+            ), f"Memory request not defined for {deploy['metadata']['name']}/{container['name']}"
 
 
 @then("all deployments should have CPU limits defined")
@@ -403,6 +414,7 @@ def deployments_have_memory_limits(context: Dict):
 
 
 # CRDs scenario steps
+
 
 @given("ArgoCD is deployed")
 def argocd_deployed_simple():
@@ -439,14 +451,14 @@ def crds_established(context: Dict):
 
     for crd in argocd_crds:
         conditions = crd.get("status", {}).get("conditions", [])
-        established = any(c.get("type") == "Established" and c.get("status") == "True"
-                         for c in conditions)
+        established = any(c.get("type") == "Established" and c.get("status") == "True" for c in conditions)
         assert established, f"CRD {crd['metadata']['name']} not established"
 
 
 # Service scenario steps
 
-@when(parsers.cfparse('I check the ArgoCD services'))
+
+@when(parsers.cfparse("I check the ArgoCD services"))
 def check_argocd_services(context: Dict):
     """Get ArgoCD services."""
     data = _kubectl_json(["-n", "argocd", "get", "services", "-o", "json"])
@@ -475,7 +487,7 @@ def service_type(service_name: str, svc_type: str, context: Dict):
     assert actual_type == svc_type, f"Expected type {svc_type}, got {actual_type}"
 
 
-@then(parsers.cfparse('the service should expose port {port:d} for {protocol}'))
+@then(parsers.cfparse("the service should expose port {port:d} for {protocol}"))
 def service_exposes_port(port: int, protocol: str, context: Dict):
     """Verify service exposes the specified port."""
     service = context.get("argocd_server_service")

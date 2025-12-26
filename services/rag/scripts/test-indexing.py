@@ -311,8 +311,7 @@ def test_queries(client: weaviate.Client) -> bool:
 
         try:
             result = (
-                client.query
-                .get(SCHEMA_NAME, ["title", "filepath", "category"])
+                client.query.get(SCHEMA_NAME, ["title", "filepath", "category"])
                 .with_near_text({"concepts": [query]})
                 .with_limit(3)
                 .with_additional(["certainty", "distance"])
@@ -368,9 +367,7 @@ def test_queries(client: weaviate.Client) -> bool:
 
 def main():
     """Main execution function."""
-    parser = argparse.ArgumentParser(
-        description="Test Weaviate indexing and search functionality"
-    )
+    parser = argparse.ArgumentParser(description="Test Weaviate indexing and search functionality")
     parser.add_argument(
         "--weaviate-url",
         default=DEFAULT_WEAVIATE_URL,

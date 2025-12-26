@@ -12,10 +12,7 @@ from app.main import app
 # Use in-memory SQLite for tests
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False}
-)
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -38,6 +35,7 @@ def db_session():
 @pytest.fixture(scope="function")
 def client(db_session):
     """Create a test client with database dependency override."""
+
     def override_get_db():
         try:
             yield db_session
@@ -65,7 +63,7 @@ def sample_category(db_session):
         color="#3B82F6",
         icon="test",
         created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc)
+        updated_at=datetime.now(timezone.utc),
     )
     db_session.add(category)
     db_session.commit()
@@ -84,7 +82,7 @@ def sample_tag(db_session):
         slug="test-tag",
         description="Test tag description",
         color="#10B981",
-        created_at=datetime.now(timezone.utc)
+        created_at=datetime.now(timezone.utc),
     )
     db_session.add(tag)
     db_session.commit()
@@ -108,7 +106,7 @@ def sample_insight(db_session, sample_category, sample_tag):
         priority="medium",
         status="draft",
         created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc)
+        updated_at=datetime.now(timezone.utc),
     )
     insight.tags = [sample_tag]
     db_session.add(insight)

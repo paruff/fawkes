@@ -118,9 +118,7 @@ async def expose_prometheus_metrics() -> str:
             communication = await collect_communication_metrics(session, start_time, now)
             efficiency = await collect_efficiency_metrics(session, start_time, now)
 
-            health_score = calculate_devex_health_score(
-                satisfaction, performance, activity, communication, efficiency
-            )
+            health_score = calculate_devex_health_score(satisfaction, performance, activity, communication, efficiency)
 
         metrics = []
 

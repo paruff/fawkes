@@ -66,11 +66,14 @@ def test_list_operations():
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("input,expected", [
-    ("hello", "HELLO"),
-    ("world", "WORLD"),
-    ("fawkes", "FAWKES"),
-])
+@pytest.mark.parametrize(
+    "input,expected",
+    [
+        ("hello", "HELLO"),
+        ("world", "WORLD"),
+        ("fawkes", "FAWKES"),
+    ],
+)
 def test_uppercase_parametrized(input, expected):
     """Parametrized test for uppercase conversion."""
     assert input.upper() == expected

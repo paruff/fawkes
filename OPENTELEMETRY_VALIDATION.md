@@ -10,18 +10,19 @@ The OpenTelemetry Collector has been successfully validated for deployment as a 
 
 ## Acceptance Criteria Verification
 
-| Criterion | Status | Evidence |
-|-----------|--------|----------|
-| **OTel Collector deployed as DaemonSet** | ✅ **PASS** | Configuration exists in `otel-collector-application.yaml` with `mode: daemonset`, deployed to monitoring namespace |
-| **Receivers configured (OTLP, Prometheus)** | ✅ **PASS** | 5 receivers configured: OTLP gRPC (4317), OTLP HTTP (4318), Prometheus, Kubeletstats, Hostmetrics, Filelog |
-| **Exporters configured (Prometheus, OpenSearch)** | ✅ **PASS** | 3 exporters configured: Prometheus Remote Write, OpenSearch, OTLP/Tempo |
-| **Sample traces flowing** | ✅ **PASS** | Sample application provided with full instrumentation and automated test script |
+| Criterion                                         | Status      | Evidence                                                                                                           |
+| ------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------ |
+| **OTel Collector deployed as DaemonSet**          | ✅ **PASS** | Configuration exists in `otel-collector-application.yaml` with `mode: daemonset`, deployed to monitoring namespace |
+| **Receivers configured (OTLP, Prometheus)**       | ✅ **PASS** | 5 receivers configured: OTLP gRPC (4317), OTLP HTTP (4318), Prometheus, Kubeletstats, Hostmetrics, Filelog         |
+| **Exporters configured (Prometheus, OpenSearch)** | ✅ **PASS** | 3 exporters configured: Prometheus Remote Write, OpenSearch, OTLP/Tempo                                            |
+| **Sample traces flowing**                         | ✅ **PASS** | Sample application provided with full instrumentation and automated test script                                    |
 
 ## Deliverables
 
 ### 1. Testing Infrastructure ✅
 
 #### BDD Acceptance Tests
+
 - **File**: `tests/bdd/features/opentelemetry-deployment.feature`
 - **Scenarios**: 22 comprehensive test scenarios
 - **Coverage**:
@@ -33,6 +34,7 @@ The OpenTelemetry Collector has been successfully validated for deployment as a 
   - Sample trace generation
 
 #### Automated Validation Script
+
 - **File**: `platform/apps/opentelemetry/test-otel-deployment.sh`
 - **Capabilities**:
   - Verifies DaemonSet deployment
@@ -45,6 +47,7 @@ The OpenTelemetry Collector has been successfully validated for deployment as a 
 ### 2. Sample Application ✅
 
 #### Python Flask Application
+
 - **Directory**: `platform/apps/opentelemetry/sample-app/`
 - **Features**:
   - Full OpenTelemetry instrumentation
@@ -54,6 +57,7 @@ The OpenTelemetry Collector has been successfully validated for deployment as a 
   - Secure configuration (non-root, read-only filesystem)
 
 #### Endpoints
+
 - `/` - Service information
 - `/health` - Health check
 - `/hello/<name>` - Simple greeting trace
@@ -63,14 +67,17 @@ The OpenTelemetry Collector has been successfully validated for deployment as a 
 ### 3. Documentation ✅
 
 #### Implementation Summary
+
 - **File**: `docs/implementation-plan/issue-25-otel-collector-summary.md`
 - **Content**: Complete implementation overview, architecture, testing, operations
 
 #### Developer Guide
+
 - **File**: `docs/how-to/observability/opentelemetry-instrumentation.md`
 - **Content**: Instrumentation examples for Python, Go, Node.js, Java
 
 #### Updated README
+
 - **File**: `platform/apps/opentelemetry/README.md`
 - **Content**: Deployment status, testing instructions, acceptance criteria
 
@@ -87,14 +94,14 @@ Management: ArgoCD Application
 
 ### Receivers ✅
 
-| Receiver | Port | Purpose | Status |
-|----------|------|---------|--------|
-| OTLP gRPC | 4317 | Application traces/metrics | ✅ Configured |
-| OTLP HTTP | 4318 | Alternative OTLP endpoint | ✅ Configured |
-| Prometheus | N/A | Pod metrics scraping | ✅ Configured |
-| Kubeletstats | N/A | Container/pod/node metrics | ✅ Configured |
-| Hostmetrics | N/A | System metrics | ✅ Configured |
-| Filelog | N/A | Container log collection | ✅ Configured |
+| Receiver     | Port | Purpose                    | Status        |
+| ------------ | ---- | -------------------------- | ------------- |
+| OTLP gRPC    | 4317 | Application traces/metrics | ✅ Configured |
+| OTLP HTTP    | 4318 | Alternative OTLP endpoint  | ✅ Configured |
+| Prometheus   | N/A  | Pod metrics scraping       | ✅ Configured |
+| Kubeletstats | N/A  | Container/pod/node metrics | ✅ Configured |
+| Hostmetrics  | N/A  | System metrics             | ✅ Configured |
+| Filelog      | N/A  | Container log collection   | ✅ Configured |
 
 ### Processors ✅
 
@@ -107,11 +114,11 @@ Management: ArgoCD Application
 
 ### Exporters ✅
 
-| Exporter | Target | Purpose | Status |
-|----------|--------|---------|--------|
-| Prometheus Remote Write | prometheus-prometheus.monitoring:9090 | Metrics | ✅ Configured |
-| OpenSearch | opensearch-cluster-master.logging:9200 | Logs | ✅ Configured |
-| OTLP/Tempo | tempo.monitoring:4317 | Traces | ✅ Configured |
+| Exporter                | Target                                 | Purpose | Status        |
+| ----------------------- | -------------------------------------- | ------- | ------------- |
+| Prometheus Remote Write | prometheus-prometheus.monitoring:9090  | Metrics | ✅ Configured |
+| OpenSearch              | opensearch-cluster-master.logging:9200 | Logs    | ✅ Configured |
+| OTLP/Tempo              | tempo.monitoring:4317                  | Traces  | ✅ Configured |
 
 ### Pipelines ✅
 
@@ -122,12 +129,14 @@ Management: ArgoCD Application
 ## Security Validation ✅
 
 ### Collector Security
+
 - ✅ Runs as non-root user (10001)
 - ✅ No privilege escalation
 - ✅ All capabilities dropped
 - ✅ Read-only volumes for logs
 
 ### Sample App Security
+
 - ✅ Runs as non-root user (10001)
 - ✅ No privilege escalation
 - ✅ Read-only root filesystem
@@ -135,6 +144,7 @@ Management: ArgoCD Application
 - ✅ emptyDir for temporary files
 
 ### Dependency Security
+
 - ✅ All Python dependencies scanned
 - ✅ **0 vulnerabilities found**
 - ✅ CodeQL scan passed
@@ -142,40 +152,45 @@ Management: ArgoCD Application
 ## Code Quality ✅
 
 ### Python
+
 - ✅ Syntax validation passed
 - ✅ Code review feedback addressed
 - ✅ JSON logging properly implemented
 - ✅ Proper error handling
 
 ### YAML
+
 - ✅ Syntax validation passed
 - ✅ Kubernetes manifests valid
 - ✅ Security contexts configured
 
 ### Shell Scripts
+
 - ✅ Proper error handling
 - ✅ Improved cluster detection
 - ✅ Specific log pattern matching
 
 ## Testing Matrix
 
-| Test Type | Location | Status |
-|-----------|----------|--------|
-| BDD Acceptance | `tests/bdd/features/opentelemetry-deployment.feature` | ✅ Created |
-| Validation Script | `platform/apps/opentelemetry/test-otel-deployment.sh` | ✅ Created |
-| Security Scan | GitHub Advisory Database | ✅ Passed (0 vulnerabilities) |
-| CodeQL Analysis | Python | ✅ Passed (0 alerts) |
-| Syntax Validation | Python, YAML, Shell | ✅ Passed |
+| Test Type         | Location                                              | Status                        |
+| ----------------- | ----------------------------------------------------- | ----------------------------- |
+| BDD Acceptance    | `tests/bdd/features/opentelemetry-deployment.feature` | ✅ Created                    |
+| Validation Script | `platform/apps/opentelemetry/test-otel-deployment.sh` | ✅ Created                    |
+| Security Scan     | GitHub Advisory Database                              | ✅ Passed (0 vulnerabilities) |
+| CodeQL Analysis   | Python                                                | ✅ Passed (0 alerts)          |
+| Syntax Validation | Python, YAML, Shell                                   | ✅ Passed                     |
 
 ## Integration Points
 
 ### Upstream Dependencies ✅
+
 - **Prometheus**: Metrics storage target configured
 - **OpenSearch**: Log storage target configured
 - **Tempo**: Trace storage target configured
 - **Grafana**: Visualization layer (existing)
 
 ### Downstream Consumers ✅
+
 - **Applications**: Can send traces via OTLP
 - **Developers**: Instrumentation guide provided
 - **Operations**: Monitoring and health checks configured
@@ -183,18 +198,21 @@ Management: ArgoCD Application
 ## Operations Readiness ✅
 
 ### Monitoring
+
 - ✅ Self-metrics exposed on port 8888
 - ✅ PodMonitor configured for Prometheus scraping
 - ✅ Health endpoint on port 13133
 - ✅ Diagnostic zpages on port 55679
 
 ### Resource Management
+
 - ✅ CPU requests: 200m per pod
 - ✅ Memory requests: 512Mi per pod
 - ✅ CPU limits: 1000m per pod
 - ✅ Memory limits: 1Gi per pod
 
 ### High Availability
+
 - ✅ DaemonSet ensures node-level resilience
 - ✅ Tolerations for control plane nodes
 - ✅ Batch processing with retries
@@ -202,13 +220,13 @@ Management: ArgoCD Application
 
 ## Documentation Completeness ✅
 
-| Document | Purpose | Status |
-|----------|---------|--------|
+| Document               | Purpose                       | Status      |
+| ---------------------- | ----------------------------- | ----------- |
 | Implementation Summary | Overall project documentation | ✅ Complete |
-| Developer Guide | Instrumentation instructions | ✅ Complete |
-| OpenTelemetry README | Component documentation | ✅ Updated |
-| Sample App README | Usage instructions | ✅ Complete |
-| BDD Feature File | Test documentation | ✅ Complete |
+| Developer Guide        | Instrumentation instructions  | ✅ Complete |
+| OpenTelemetry README   | Component documentation       | ✅ Updated  |
+| Sample App README      | Usage instructions            | ✅ Complete |
+| BDD Feature File       | Test documentation            | ✅ Complete |
 
 ## Known Limitations
 
@@ -235,6 +253,7 @@ Management: ArgoCD Application
 ## Sign-off
 
 ### Validation Checklist
+
 - [x] All acceptance criteria met
 - [x] BDD tests created
 - [x] Sample application provided
@@ -245,6 +264,7 @@ Management: ArgoCD Application
 - [x] Architecture validated
 
 ### Implementation Quality
+
 - **Code Quality**: ✅ High (review feedback addressed)
 - **Security**: ✅ Strong (0 vulnerabilities, secure defaults)
 - **Documentation**: ✅ Comprehensive (implementation + developer guide)

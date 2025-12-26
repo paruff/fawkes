@@ -121,8 +121,8 @@ metadata:
   namespace: myapp-namespace
 spec:
   secretName: myapp-tls
-  duration: 2160h  # 90 days
-  renewBefore: 360h  # 15 days
+  duration: 2160h # 90 days
+  renewBefore: 360h # 15 days
   commonName: myapp.fawkes.yourdomain.com
   dnsNames:
     - myapp.fawkes.yourdomain.com
@@ -160,6 +160,7 @@ For wildcard certificates (e.g., `*.fawkes.yourdomain.com`), you must use DNS-01
 ### Configure Azure DNS Issuer
 
 1. Update `cluster-issuer-letsencrypt-dns-azure.yaml` with your Azure details:
+
    - Subscription ID
    - Resource Group
    - DNS Zone Name
@@ -229,6 +230,7 @@ curl http://localhost:9402/metrics
 ```
 
 Key metrics:
+
 - `certmanager_certificate_expiration_timestamp_seconds` - Certificate expiration time
 - `certmanager_certificate_ready_status` - Certificate ready status
 
@@ -237,17 +239,20 @@ Key metrics:
 ### Certificate Not Issuing
 
 1. Check Certificate status:
+
    ```bash
    kubectl describe certificate myapp-tls -n myapp-namespace
    ```
 
 2. Check CertificateRequest:
+
    ```bash
    kubectl get certificaterequest -n myapp-namespace
    kubectl describe certificaterequest <name> -n myapp-namespace
    ```
 
 3. Check Order and Challenge (for ACME):
+
    ```bash
    kubectl get order -n myapp-namespace
    kubectl get challenge -n myapp-namespace
@@ -277,6 +282,7 @@ Key metrics:
 ### Rate Limiting
 
 Let's Encrypt has rate limits:
+
 - 50 certificates per registered domain per week
 - 5 duplicate certificates per week
 
@@ -287,6 +293,7 @@ Use staging issuer for testing to avoid hitting limits.
 cert-manager automatically renews certificates when `renewBefore` time is reached (default: 30 days before expiration).
 
 Check:
+
 ```bash
 kubectl get certificate myapp-tls -n myapp-namespace -o yaml
 ```

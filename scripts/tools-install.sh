@@ -19,7 +19,7 @@ echo "Detected OS: ${OS}"
 if [[ "$OS" == "Darwin" ]]; then
   echo "macOS detected. Recommended flow: install Homebrew, then install Nix, then use Nix devShell."
 
-  if ! command -v brew >/dev/null 2>&1; then
+  if ! command -v brew > /dev/null 2>&1; then
     echo "Homebrew not found. Many dev tools install via Homebrew on macOS."
     if confirm "Install Homebrew now?"; then
       echo "Running Homebrew installer..."
@@ -47,7 +47,7 @@ if [[ "$OS" == "Darwin" ]]; then
         echo "Appending experimental-features to $HOME/.config/nix/nix.conf"
         echo "experimental-features = nix-command flakes" >> "$HOME/.config/nix/nix.conf"
       else
-        cat > "$HOME/.config/nix/nix.conf" <<EOF
+        cat > "$HOME/.config/nix/nix.conf" << EOF
 experimental-features = nix-command flakes
 EOF
       fi
@@ -69,7 +69,7 @@ elif [[ "$OS" == "Linux" ]]; then
     echo "Nix installer finished. Consider enabling flakes: add 'experimental-features = nix-command flakes' to /etc/nix/nix.conf or ~/.config/nix/nix.conf"
     if confirm "Add 'experimental-features = nix-command flakes' to your user nix config (~/.config/nix/nix.conf)?"; then
       mkdir -p "$HOME/.config/nix"
-      cat > "$HOME/.config/nix/nix.conf" <<EOF
+      cat > "$HOME/.config/nix/nix.conf" << EOF
 experimental-features = nix-command flakes
 EOF
       echo "Wrote $HOME/.config/nix/nix.conf"
@@ -91,7 +91,7 @@ else
   echo
   echo "Alternatively, install required tools natively (kubectl/helm/terraform) via Chocolatey or winget, but Nix support on native Windows is experimental."
   if confirm "Show chocolatey/winget example commands?"; then
-    cat <<'EOF'
+    cat << 'EOF'
 choco install -y kubernetes-cli terraform kubectl-helm
 # or using winget
 winget install HashiCorp.Terraform

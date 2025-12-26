@@ -1,6 +1,7 @@
 # ADR-002: Backstage for Developer Portal
 
 ## Status
+
 **Accepted** - October 8, 2025
 
 ## Context
@@ -10,6 +11,7 @@ Fawkes is an Internal Product Delivery Platform that needs a unified interfaceâ€
 ### The Need for a Developer Portal
 
 **Current Challenges Without a Portal**:
+
 - **Tool Sprawl**: Developers jump between GitHub, Jenkins, ArgoCD, Grafana, Mattermost, documentation sites
 - **Service Discovery**: No central catalog of services, APIs, dependencies, ownership
 - **Self-Service Barriers**: Provisioning requires knowing where to go, what to do, who to ask
@@ -19,6 +21,7 @@ Fawkes is an Internal Product Delivery Platform that needs a unified interfaceâ€
 - **Dojo Integration**: Learning content needs a central hub accessible alongside work
 
 **What Teams Need**:
+
 1. **Service Catalog**: Comprehensive view of all services, APIs, libraries, and resources
 2. **Software Templates**: Self-service scaffolding for new services ("golden paths")
 3. **Documentation Hub**: Centralized, searchable, always up-to-date technical docs
@@ -31,6 +34,7 @@ Fawkes is an Internal Product Delivery Platform that needs a unified interfaceâ€
 ### Requirements for Developer Portal
 
 **Technical Requirements**:
+
 - **Open Source**: Aligns with Fawkes values, no vendor lock-in
 - **Extensible**: Plugin architecture to integrate all platform components
 - **Kubernetes-Native**: Designed for cloud-native environments
@@ -40,6 +44,7 @@ Fawkes is an Internal Product Delivery Platform that needs a unified interfaceâ€
 - **Enterprise-Grade**: Production-ready, scalable, secure
 
 **User Experience Requirements**:
+
 - **Intuitive UI**: Developers can use without extensive training
 - **Fast**: Page loads <2 seconds, search instant
 - **Mobile-Friendly**: Accessible on phones/tablets
@@ -47,6 +52,7 @@ Fawkes is an Internal Product Delivery Platform that needs a unified interfaceâ€
 - **Accessible**: WCAG compliance, keyboard navigation
 
 **Integration Requirements**:
+
 - **GitHub**: Repository discovery, authentication
 - **Jenkins/CI**: Pipeline status, trigger builds
 - **ArgoCD**: Deployment status, sync applications
@@ -60,24 +66,28 @@ Fawkes is an Internal Product Delivery Platform that needs a unified interfaceâ€
 ### Forces at Play
 
 **Technical Forces**:
+
 - Need to integrate with dozens of tools (existing and future)
 - Developer portal is mission-critical (high availability required)
 - Must scale from 10 to 1000+ services
 - Security critical (access to sensitive information)
 
 **User Experience Forces**:
+
 - Developers resist using clunky, slow tools
 - Cognitive load already high; portal must reduce, not increase
 - Mobile access increasingly important
 - Dark mode preference widespread among developers
 
 **Business Forces**:
+
 - Developer productivity directly impacts business outcomes
 - Portal adoption critical for platform success
 - Open source preference to avoid vendor lock-in
 - Total cost of ownership matters (licensing, maintenance)
 
 **Community Forces**:
+
 - Backstage has largest, most active community in this space
 - CNCF incubating status provides credibility
 - Spotify's success story is compelling
@@ -88,6 +98,7 @@ Fawkes is an Internal Product Delivery Platform that needs a unified interfaceâ€
 **We will use Backstage as the developer portal and dojo learning hub for Fawkes.**
 
 Specifically:
+
 - **Backstage Core** (latest stable version)
 - **PostgreSQL backend** for catalog storage
 - **Custom Fawkes theme** with branding
@@ -101,12 +112,14 @@ Specifically:
 1. **Industry Leading**: Backstage is the de facto standard for developer portals, originated at Spotify, now CNCF Incubating project with 100+ adopters including American Airlines, Netflix, Expedia
 
 2. **Purpose-Built for IDPs**: Specifically designed for internal developer platforms, not retrofitted from another use case. Core features align perfectly with Fawkes needs:
+
    - Service catalog with relationships and ownership
    - Software templates for scaffolding
    - TechDocs for documentation
    - Plugin architecture for extensibility
 
 3. **Massive Plugin Ecosystem**: 100+ plugins available, covering most tools:
+
    - CI/CD: Jenkins, GitHub Actions, CircleCI, GitLab
    - Deployment: ArgoCD, Flux, Spinnaker, Kubernetes
    - Monitoring: Grafana, Prometheus, Datadog, PagerDuty
@@ -114,12 +127,14 @@ Specifically:
    - And many more
 
 4. **CNCF Incubating Status**: Under Cloud Native Computing Foundation governance:
+
    - Long-term sustainability assured
    - Neutral governance (not single-vendor controlled)
    - Rigorous security and quality standards
    - Growing adoption and contribution
 
 5. **Active Development & Community**:
+
    - 1,000+ contributors
    - Monthly releases
    - 27,000+ GitHub stars
@@ -127,24 +142,28 @@ Specifically:
    - Excellent documentation
 
 6. **Open Source & Self-Hosted**:
+
    - Apache 2.0 license
    - Complete control over data and deployment
    - No per-user licensing fees
    - Customizable to exact needs
 
 7. **Perfect for Dojo Integration**:
+
    - Can build custom plugin for learning hub
    - TechDocs perfect for module content
    - Catalog can track learner progress
    - Plugins can integrate with lab environment
 
 8. **Developer Experience**:
+
    - Beautiful, modern UI (React-based)
    - Fast, responsive
    - Intuitive navigation
    - Developers actually enjoy using it
 
 9. **Extensibility**:
+
    - Plugin architecture allows infinite customization
    - Frontend and backend plugins
    - Can build exactly what we need
@@ -153,6 +172,7 @@ Specifically:
 10. **Enterprise Adoption**: Used by major enterprises proves production-readiness, scalability, security
 
 11. **Software Templates**: Golden paths built-in, can create custom templates for:
+
     - Microservices (Java, Python, Node.js, Go)
     - Infrastructure (Terraform modules)
     - Dojo labs (pre-configured learning environments)
@@ -223,30 +243,35 @@ Specifically:
 ### Mitigation Strategies
 
 1. **Learning Curve**:
+
    - Allocate 1 week for Backstage training (official docs, tutorials)
    - Start with core features, add plugins incrementally
    - Leverage community Discord for questions
    - Consider Backstage training from Spotify (if available)
 
 2. **Initial Setup**:
+
    - Use official Helm charts for deployment
    - Start with minimal plugin set, expand over time
    - Document configuration as Infrastructure as Code
    - Create runbooks for common operations
 
 3. **Custom Plugin Development**:
+
    - Hire contractor if TypeScript/React skills lacking
    - Use plugin templates and examples from community
    - Contribute plugin back to community (get feedback, maintenance help)
    - Budget 40 hours for dojo plugin development
 
 4. **Performance**:
+
    - Implement PostgreSQL optimization (indexing, connection pooling)
    - Use caching for expensive queries
    - Consider read replicas for large deployments
    - Monitor performance, optimize bottlenecks
 
 5. **Plugin Quality**:
+
    - Vet plugins before adoption (GitHub stars, maintainer responsiveness, recent commits)
    - Fork and customize plugins if needed
    - Contribute improvements back to community
@@ -263,6 +288,7 @@ Specifically:
 ### Alternative 1: Port.io (SaaS)
 
 **Pros**:
+
 - Purpose-built for developer portals
 - Beautiful, modern UI
 - SaaS (no operational overhead)
@@ -271,6 +297,7 @@ Specifically:
 - AI-powered search
 
 **Cons**:
+
 - **SaaS Only**: No self-hosted option, data on Port's servers
 - **Cost**: $20-50/developer/month depending on tier (expensive at scale)
 - **Vendor Lock-In**: Proprietary platform, hard to migrate off
@@ -284,6 +311,7 @@ Specifically:
 ### Alternative 2: Humanitec (SaaS)
 
 **Pros**:
+
 - Complete IDP platform (more than just portal)
 - Score-based environment management
 - Strong GitOps integration
@@ -291,6 +319,7 @@ Specifically:
 - Active development
 
 **Cons**:
+
 - **SaaS Only**: No self-hosted option
 - **Very Expensive**: Enterprise pricing ($50-100k+ annually)
 - **Opinionated**: Prescriptive workflows, less flexible
@@ -303,6 +332,7 @@ Specifically:
 ### Alternative 3: Cortex (SaaS)
 
 **Pros**:
+
 - Service catalog with scorecards
 - On-call integration
 - Incident management
@@ -310,6 +340,7 @@ Specifically:
 - Growing adoption
 
 **Cons**:
+
 - **SaaS Only**: No self-hosted option
 - **Cost**: $15-30/service/month (expensive at scale)
 - **Narrow Focus**: More focused on service management than full portal
@@ -322,12 +353,14 @@ Specifically:
 ### Alternative 4: OpsLevel (SaaS)
 
 **Pros**:
+
 - Service maturity scoring
 - Good for service ownership tracking
 - Integrations with common tools
 - Nice UI
 
 **Cons**:
+
 - **SaaS Only**: No self-hosted
 - **Cost**: $15-25/service/month
 - **Narrow Focus**: Primarily service catalog, not full portal
@@ -339,6 +372,7 @@ Specifically:
 ### Alternative 5: Build Custom Portal from Scratch
 
 **Pros**:
+
 - Complete control and customization
 - Exact features we want
 - No external dependencies
@@ -346,6 +380,7 @@ Specifically:
 - Learning opportunity for team
 
 **Cons**:
+
 - **Massive Time Investment**: 6-12 months full-time development for MVP
 - **Opportunity Cost**: Time not spent on platform features
 - **Maintenance Burden**: Ongoing development, security patches, features
@@ -359,12 +394,14 @@ Specifically:
 ### Alternative 6: Compass by Atlassian (SaaS)
 
 **Pros**:
+
 - From Atlassian (established company)
 - Service catalog with health scores
 - Integrates with Jira, Confluence, Bitbucket
 - Good for Atlassian shops
 
 **Cons**:
+
 - **SaaS Only**: No self-hosted
 - **Cost**: Part of Atlassian Cloud, pricing unclear
 - **Atlassian Ecosystem**: Designed for Atlassian tools (Jira, Confluence)
@@ -378,6 +415,7 @@ Specifically:
 ### Alternative 7: GitLab (Self-Hosted or SaaS)
 
 **Pros**:
+
 - All-in-one DevOps platform
 - Self-hosted option available
 - Service catalog feature
@@ -385,6 +423,7 @@ Specifically:
 - Open source core (Community Edition)
 
 **Cons**:
+
 - **CI/CD Centric**: Designed around GitLab CI/CD, we use Jenkins
 - **Heavy**: GitLab is massive, resource-intensive
 - **Portal Secondary**: Developer portal is add-on, not core feature
@@ -448,6 +487,7 @@ backstage:
 ### Initial Plugin Set
 
 **Core Plugins** (included with Backstage):
+
 - **catalog**: Service catalog with relationships
 - **scaffolder**: Software templates
 - **techdocs**: Documentation as code
@@ -455,6 +495,7 @@ backstage:
 - **kubernetes**: Pod logs, resource status
 
 **Community Plugins** (install via npm):
+
 - `@backstage/plugin-jenkins`: CI/CD pipeline status
 - `@backstage/plugin-argo-cd`: Deployment status
 - `@backstage/plugin-grafana`: Embed dashboards
@@ -462,6 +503,7 @@ backstage:
 - `@backstage/plugin-tech-radar`: Technology adoption tracking
 
 **Custom Plugins** (build ourselves):
+
 - `@fawkes/plugin-dojo`: Learning hub, lab launcher, progress tracking
 - `@fawkes/plugin-dora-metrics`: DORA dashboards and insights
 - `@fawkes/plugin-mattermost`: Chat integration and notifications
@@ -470,25 +512,30 @@ backstage:
 ### Software Templates
 
 **Initial Templates**:
+
 1. **Microservice - Java Spring Boot**
+
    - Spring Boot starter with best practices
    - Dockerfile, Jenkinsfile, K8s manifests
    - Tests, logging, metrics instrumentation
    - README with runbook
 
 2. **Microservice - Python FastAPI**
+
    - FastAPI with async support
    - pytest, coverage, linting
    - Container, pipeline, manifests
    - Documentation template
 
 3. **Microservice - Node.js Express**
+
    - Express.js with TypeScript
    - Jest tests, ESLint, Prettier
    - CI/CD and deployment configs
    - OpenAPI specification
 
 4. **Terraform Module**
+
    - Terraform module structure
    - Testing with Terratest
    - Documentation and examples
@@ -533,6 +580,7 @@ docs/
 ### Catalog Structure
 
 **Entity Types**:
+
 - **Component**: Microservices, libraries, websites
 - **API**: REST, GraphQL, gRPC interfaces
 - **Resource**: Databases, queues, storage buckets
@@ -543,6 +591,7 @@ docs/
 - **Template**: Software templates for scaffolding
 
 **Example Component**:
+
 ```yaml
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -571,16 +620,19 @@ spec:
 ### Authentication Strategy
 
 **Phase 1** (MVP): GitHub OAuth
+
 - Simple setup
 - Most developers have GitHub accounts
 - Scopes: read:user, read:org
 
 **Phase 2** (Month 2): Add providers
+
 - Google OAuth (Gmail accounts)
 - GitLab OAuth (if using GitLab)
 - LDAP/AD (for enterprise)
 
 **Phase 3** (Month 4): Full SSO
+
 - SAML 2.0 support
 - OIDC support
 - Integration with Keycloak (if deployed)
@@ -588,6 +640,7 @@ spec:
 ### Customization & Branding
 
 **Theme Configuration**:
+
 ```typescript
 // app-config.yaml
 app:
@@ -605,6 +658,7 @@ app:
 ```
 
 **Custom Homepage**:
+
 - Welcome message and quick links
 - Recent deployments
 - DORA metrics summary
@@ -615,17 +669,20 @@ app:
 ### Performance Optimization
 
 **Caching**:
+
 - Enable backend caching for catalog
 - Redis for session storage
 - CDN for static assets (logo, theme)
 
 **Database**:
+
 - PostgreSQL connection pooling
 - Read replicas for queries
 - Regular vacuum and analyze
 - Index optimization
 
 **Search**:
+
 - Elasticsearch for full-text search (optional, improves performance)
 - Incremental indexing
 - Faceted search for filtering
@@ -633,6 +690,7 @@ app:
 ### Monitoring & Observability
 
 **Metrics** (Prometheus):
+
 - HTTP request duration
 - Catalog entity count
 - Plugin load times
@@ -640,12 +698,14 @@ app:
 - Authentication success/failure
 
 **Dashboards** (Grafana):
+
 - Backstage performance dashboard
 - User activity dashboard
 - Plugin health dashboard
 - Database metrics dashboard
 
 **Alerts**:
+
 - Backstage down (>2 min)
 - High error rate (>5% in 5 min)
 - Slow response times (>2s P95)
@@ -654,11 +714,13 @@ app:
 ### Backup & Disaster Recovery
 
 **Backups**:
+
 - PostgreSQL daily backups
 - Catalog snapshots to Git (optional)
 - Configuration stored in Git (Infrastructure as Code)
 
 **Recovery**:
+
 - Restore from PostgreSQL backup
 - Redeploy from Git configuration
 - RTO: <4 hours
@@ -667,22 +729,26 @@ app:
 ### Security Considerations
 
 **Authentication**:
+
 - OAuth 2.0 for external providers
 - JWT tokens with expiration
 - Session management with secure cookies
 
 **Authorization**:
+
 - RBAC for catalog entities
 - Team-based access control
 - Read-only public catalog (optional)
 
 **Network Security**:
+
 - TLS/HTTPS only
 - Network policies to restrict access
 - Rate limiting on APIs
 - CORS configuration
 
 **Secrets Management**:
+
 - Never store secrets in Backstage config
 - Use Kubernetes secrets or Vault
 - Rotate credentials regularly
@@ -691,6 +757,7 @@ app:
 ## Monitoring This Decision
 
 We will revisit this ADR if:
+
 - Backstage becomes unmaintained or development slows significantly
 - A superior open source alternative emerges with better fit
 - Performance issues arise that cannot be resolved
@@ -718,6 +785,7 @@ The most common question: "Why not build our own portal?"
 **Build vs. Buy (Open Source) Calculation**:
 
 **Build Custom**:
+
 - Development: 6-12 months Ã— 2 engineers = $200k-$400k
 - Maintenance: Ongoing 0.5 FTE = $60k/year
 - Features: Limited to what we build
@@ -725,6 +793,7 @@ The most common question: "Why not build our own portal?"
 - Risk: May not match quality
 
 **Use Backstage**:
+
 - Setup: 2-4 weeks Ã— 1 engineer = $10k-$20k
 - Custom plugin (dojo): 40 hours = $5k
 - Maintenance: 0.1 FTE (mostly updates) = $12k/year
@@ -737,6 +806,7 @@ The most common question: "Why not build our own portal?"
 ### Backstage at Spotify Scale
 
 Spotify's experience (from their blog):
+
 - **1,300+ services** in catalog
 - **200+ software templates**
 - **200 custom plugins**
@@ -749,6 +819,7 @@ While Fawkes won't reach Spotify scale immediately, proves Backstage can scale t
 ### Plugin Development Learning Curve
 
 Building custom plugins requires TypeScript and React knowledge. However:
+
 - Official plugin templates speed development
 - Extensive documentation and examples
 - Active community for questions

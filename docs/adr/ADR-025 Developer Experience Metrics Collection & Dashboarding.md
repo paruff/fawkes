@@ -16,7 +16,7 @@ ADR-014 established the SPACE framework for measuring developer experience acros
 
 ADR-015 established qualitative feedback collection (interviews, surveys, feedback widget).
 
-Now we need the **visualization layer** that brings quantitative and qualitative data together into actionable insights. The 2025 DORA Report emphasizes that metrics alone don’t drive change—*how you visualize and act on metrics* determines success.
+Now we need the **visualization layer** that brings quantitative and qualitative data together into actionable insights. The 2025 DORA Report emphasizes that metrics alone don’t drive change—_how you visualize and act on metrics_ determines success.
 
 **The Challenge**:
 
@@ -34,7 +34,7 @@ Most organizations fail at DevEx dashboards by:
 1. **Wrong audience**: Executive dashboards shown to developers (or vice versa)
 1. **No action**: Beautiful dashboards that nobody acts on
 1. **Lagging indicators only**: By the time you see the problem, it’s too late
-1. **Missing context**: Charts without explaining *why* it matters
+1. **Missing context**: Charts without explaining _why_ it matters
 
 We need dashboards that are:
 
@@ -107,7 +107,7 @@ We will build a **three-tier DevEx Dashboard system** in Grafana that serves thr
 └─────────────────────────────────────────────────────────────┘
 ```
 
------
+---
 
 ## Dashboard 1: Executive Health Dashboard
 
@@ -220,7 +220,7 @@ We will build a **three-tier DevEx Dashboard system** in Grafana that serves thr
 - Show peer company comparisons (if available)
 - Highlight “elite performer” achievements
 
------
+---
 
 ## Dashboard 2: Platform Team Operations Dashboard
 

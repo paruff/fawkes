@@ -19,10 +19,7 @@ from prometheus_client import make_asgi_app, Counter, Histogram, Gauge
 import httpx
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Configuration from environment
@@ -43,6 +40,7 @@ http_client: Optional[httpx.AsyncClient] = None
 # Pydantic models
 class WebhookPayload(BaseModel):
     """GitHub webhook payload model."""
+
     action: str
     pull_request: Optional[Dict] = None
     repository: Optional[Dict] = None
@@ -51,6 +49,7 @@ class WebhookPayload(BaseModel):
 
 class ReviewComment(BaseModel):
     """Code review comment model."""
+
     path: str = Field(..., description="File path")
     line: int = Field(..., description="Line number")
     body: str = Field(..., description="Comment text")
@@ -61,6 +60,7 @@ class ReviewComment(BaseModel):
 
 class ReviewResult(BaseModel):
     """Review result model."""
+
     pr_number: int
     repository: str
     comments: List[ReviewComment]
@@ -71,6 +71,7 @@ class ReviewResult(BaseModel):
 
 class HealthResponse(BaseModel):
     """Health check response."""
+
     status: str
     service: str
     version: str
@@ -111,39 +112,23 @@ app = FastAPI(
     title="AI Code Review Service",
     description="AI-powered code review bot that automatically reviews pull requests",
     version="0.1.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Prometheus metrics
-WEBHOOK_COUNT = Counter(
-    'ai_review_webhooks_total',
-    'Total webhook events received',
-    ['event_type', 'action']
-)
+WEBHOOK_COUNT = Counter("ai_review_webhooks_total", "Total webhook events received", ["event_type", "action"])
 
-REVIEW_COUNT = Counter(
-    'ai_review_reviews_total',
-    'Total reviews performed',
-    ['repository', 'status']
-)
+REVIEW_COUNT = Counter("ai_review_reviews_total", "Total reviews performed", ["repository", "status"])
 
 REVIEW_DURATION = Histogram(
-    'ai_review_duration_seconds',
-    'Review processing duration',
-    buckets=[1.0, 5.0, 10.0, 30.0, 60.0, 120.0]
+    "ai_review_duration_seconds", "Review processing duration", buckets=[1.0, 5.0, 10.0, 30.0, 60.0, 120.0]
 )
 
 COMMENT_COUNT = Counter(
-    'ai_review_comments_total',
-    'Total review comments posted',
-    ['repository', 'category', 'severity']
+    "ai_review_comments_total", "Total review comments posted", ["repository", "category", "severity"]
 )
 
-FALSE_POSITIVE_RATE = Gauge(
-    'ai_review_false_positive_rate',
-    'Estimated false positive rate',
-    ['repository']
-)
+FALSE_POSITIVE_RATE = Gauge("ai_review_false_positive_rate", "Estimated false positive rate", ["repository"])
 
 # Add prometheus metrics endpoint
 metrics_app = make_asgi_app()
@@ -162,11 +147,7 @@ async def add_metrics(request, call_next):
 @app.get("/", include_in_schema=False)
 async def root():
     """Root endpoint."""
-    return {
-        "service": "ai-code-review",
-        "status": "running",
-        "version": "0.1.0"
-    }
+    return {"service": "ai-code-review", "status": "running", "version": "0.1.0"}
 
 
 @app.get("/health")
@@ -186,7 +167,7 @@ async def health() -> HealthResponse:
         version="0.1.0",
         rag_connected=rag_connected,
         github_configured=bool(GITHUB_TOKEN),
-        llm_configured=bool(LLM_API_KEY)
+        llm_configured=bool(LLM_API_KEY),
     )
 
 
@@ -198,10 +179,7 @@ async def ready():
     if not LLM_API_KEY:
         raise HTTPException(status_code=503, detail="LLM API key not configured")
 
-    return {
-        "status": "READY",
-        "service": "ai-code-review"
-    }
+    return {"status": "READY", "service": "ai-code-review"}
 
 
 def verify_github_signature(payload_body: bytes, signature_header: str) -> bool:
@@ -213,8 +191,8 @@ def verify_github_signature(payload_body: bytes, signature_header: str) -> bool:
     if not signature_header:
         return False
 
-    hash_algorithm, github_signature = signature_header.split('=')
-    algorithm = hashlib.sha256 if hash_algorithm == 'sha256' else hashlib.sha1
+    hash_algorithm, github_signature = signature_header.split("=")
+    algorithm = hashlib.sha256 if hash_algorithm == "sha256" else hashlib.sha1
     encoded_secret = GITHUB_WEBHOOK_SECRET.encode()
     mac = hmac.new(encoded_secret, msg=payload_body, digestmod=algorithm)
     return hmac.compare_digest(mac.hexdigest(), github_signature)
@@ -225,7 +203,7 @@ async def github_webhook(
     request: Request,
     background_tasks: BackgroundTasks,
     x_hub_signature_256: Optional[str] = Header(None),
-    x_github_event: Optional[str] = Header(None)
+    x_github_event: Optional[str] = Header(None),
 ):
     """Handle GitHub webhook events for pull requests."""
     # Read raw body for signature verification
@@ -244,27 +222,20 @@ async def github_webhook(
         raise HTTPException(status_code=400, detail="Invalid JSON payload")
 
     # Track webhook event
-    action = payload.get('action', 'unknown')
-    WEBHOOK_COUNT.labels(event_type=x_github_event or 'unknown', action=action).inc()
+    action = payload.get("action", "unknown")
+    WEBHOOK_COUNT.labels(event_type=x_github_event or "unknown", action=action).inc()
 
     # Process pull request events
-    if x_github_event == 'pull_request' and action in ['opened', 'synchronize', 'reopened']:
-        pr_data = payload.get('pull_request', {})
-        repo_data = payload.get('repository', {})
+    if x_github_event == "pull_request" and action in ["opened", "synchronize", "reopened"]:
+        pr_data = payload.get("pull_request", {})
+        repo_data = payload.get("repository", {})
 
         logger.info(f"Processing PR #{pr_data.get('number')} in {repo_data.get('full_name')}")
 
         # Process review in background
-        background_tasks.add_task(
-            process_pull_request_review,
-            pr_data,
-            repo_data
-        )
+        background_tasks.add_task(process_pull_request_review, pr_data, repo_data)
 
-        return JSONResponse(
-            status_code=202,
-            content={"message": "Review scheduled for processing"}
-        )
+        return JSONResponse(status_code=202, content={"message": "Review scheduled for processing"})
 
     return JSONResponse(content={"message": "Event ignored"})
 
@@ -272,8 +243,8 @@ async def github_webhook(
 async def process_pull_request_review(pr_data: Dict, repo_data: Dict):
     """Process pull request review asynchronously."""
     start_time = time.time()
-    pr_number = pr_data.get('number')
-    repo_full_name = repo_data.get('full_name')
+    pr_number = pr_data.get("number")
+    repo_full_name = repo_data.get("full_name")
 
     try:
         logger.info(f"Starting review for PR #{pr_number} in {repo_full_name}")
@@ -290,7 +261,7 @@ async def process_pull_request_review(pr_data: Dict, repo_data: Dict):
             github_token=GITHUB_TOKEN,
             sonarqube_url=SONARQUBE_URL,
             sonarqube_token=SONARQUBE_TOKEN,
-            http_client=http_client
+            http_client=http_client,
         )
 
         # Perform review
@@ -299,18 +270,12 @@ async def process_pull_request_review(pr_data: Dict, repo_data: Dict):
         # Track metrics
         duration = time.time() - start_time
         REVIEW_DURATION.observe(duration)
-        REVIEW_COUNT.labels(repository=repo_full_name, status='success').inc()
+        REVIEW_COUNT.labels(repository=repo_full_name, status="success").inc()
 
         for comment in review_result.comments:
-            COMMENT_COUNT.labels(
-                repository=repo_full_name,
-                category=comment.category,
-                severity=comment.severity
-            ).inc()
+            COMMENT_COUNT.labels(repository=repo_full_name, category=comment.category, severity=comment.severity).inc()
 
-        FALSE_POSITIVE_RATE.labels(repository=repo_full_name).set(
-            review_result.false_positive_rate
-        )
+        FALSE_POSITIVE_RATE.labels(repository=repo_full_name).set(review_result.false_positive_rate)
 
         logger.info(
             f"Review completed for PR #{pr_number}: "
@@ -320,18 +285,16 @@ async def process_pull_request_review(pr_data: Dict, repo_data: Dict):
 
     except Exception as e:
         logger.error(f"Failed to process review for PR #{pr_number}: {e}", exc_info=True)
-        REVIEW_COUNT.labels(repository=repo_full_name, status='error').inc()
+        REVIEW_COUNT.labels(repository=repo_full_name, status="error").inc()
 
 
 @app.get("/stats")
 async def get_stats():
     """Get review statistics."""
-    return {
-        "service": "ai-code-review",
-        "message": "Check /metrics endpoint for detailed statistics"
-    }
+    return {"service": "ai-code-review", "message": "Check /metrics endpoint for detailed statistics"}
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

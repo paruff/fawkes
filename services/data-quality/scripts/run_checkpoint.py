@@ -44,9 +44,9 @@ def run_checkpoint(checkpoint_name: str, gx_dir: str = "gx") -> dict:
             "evaluated_expectations": statistics.get("evaluated_expectations", 0),
             "successful_expectations": statistics.get("successful_expectations", 0),
             "unsuccessful_expectations": statistics.get("unsuccessful_expectations", 0),
-            "success_percent": statistics.get("success_percent", 0)
+            "success_percent": statistics.get("success_percent", 0),
         },
-        "run_id": str(results.run_id) if hasattr(results, "run_id") else None
+        "run_id": str(results.run_id) if hasattr(results, "run_id") else None,
     }
 
 
@@ -74,7 +74,7 @@ def main():
             print(f"  Success Rate: {results['statistics']['success_percent']:.1f}%")
 
         # Exit with non-zero code if validation failed
-        sys.exit(0 if results['success'] else 1)
+        sys.exit(0 if results["success"] else 1)
 
     except Exception as e:
         print(f"ERROR: Failed to run checkpoint: {e}", file=sys.stderr)

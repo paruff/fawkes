@@ -8,6 +8,7 @@ from typing import Optional, Dict, Any, List
 
 class PulseSurveyResponse(BaseModel):
     """Pulse survey response data"""
+
     flow_state_days: float = Field(..., ge=0, le=7, description="Days per week in flow state")
     valuable_work_pct: float = Field(..., ge=0, le=100, description="Percentage time on valuable work")
     cognitive_load: float = Field(..., ge=1, le=5, description="Cognitive load rating 1-5")
@@ -21,29 +22,27 @@ class PulseSurveyResponse(BaseModel):
                 "valuable_work_pct": 70.0,
                 "cognitive_load": 3.0,
                 "friction_incidents": False,
-                "comment": "Great week, deployment pipeline improvements helped a lot!"
+                "comment": "Great week, deployment pipeline improvements helped a lot!",
             }
         }
 
 
 class SurveyDistributionRequest(BaseModel):
     """Request to distribute surveys"""
+
     type: str = Field(..., description="Survey type: pulse or deep_dive")
     test_mode: bool = Field(False, description="Test mode sends to limited users")
     test_users: Optional[List[str]] = Field(None, description="Specific users for test mode")
 
     class Config:
         json_schema_extra = {
-            "example": {
-                "type": "pulse",
-                "test_mode": True,
-                "test_users": ["user1@example.com", "user2@example.com"]
-            }
+            "example": {"type": "pulse", "test_mode": True, "test_users": ["user1@example.com", "user2@example.com"]}
         }
 
 
 class CampaignResponse(BaseModel):
     """Campaign details response"""
+
     id: int
     type: str
     period: str
@@ -60,6 +59,7 @@ class CampaignResponse(BaseModel):
 
 class PulseAnalytics(BaseModel):
     """Pulse survey analytics"""
+
     week: int
     year: int
     avg_flow_state_days: float
@@ -74,6 +74,7 @@ class PulseAnalytics(BaseModel):
 
 class WeeklyTrend(BaseModel):
     """Weekly trend data"""
+
     weeks: List[int]
     flow_state_trend: List[float]
     valuable_work_trend: List[float]
@@ -84,6 +85,7 @@ class WeeklyTrend(BaseModel):
 
 class ResponseRateMetrics(BaseModel):
     """Response rate metrics"""
+
     survey_type: str
     period: str
     total_sent: int
@@ -95,6 +97,7 @@ class ResponseRateMetrics(BaseModel):
 
 class HealthResponse(BaseModel):
     """Health check response"""
+
     status: str
     service: str
     version: str
@@ -104,6 +107,7 @@ class HealthResponse(BaseModel):
 
 class SurveySubmissionResponse(BaseModel):
     """Response after survey submission"""
+
     success: bool
     message: str
     recipient_id: int
@@ -112,6 +116,7 @@ class SurveySubmissionResponse(BaseModel):
 
 class NASATLXRequest(BaseModel):
     """NASA-TLX assessment request"""
+
     task_type: str = Field(..., description="Type of task: deployment, pr_review, incident_response, build, etc.")
     task_id: Optional[str] = Field(None, description="Optional reference to specific task")
 
@@ -139,13 +144,14 @@ class NASATLXRequest(BaseModel):
                 "effort": 50.0,
                 "frustration": 30.0,
                 "duration_minutes": 25,
-                "comment": "Deployment went smoothly but monitoring was confusing"
+                "comment": "Deployment went smoothly but monitoring was confusing",
             }
         }
 
 
 class NASATLXResponse(BaseModel):
     """NASA-TLX assessment response"""
+
     id: int
     user_id: str
     task_type: str
@@ -169,6 +175,7 @@ class NASATLXResponse(BaseModel):
 
 class NASATLXSubmissionResponse(BaseModel):
     """Response after NASA-TLX submission"""
+
     success: bool
     message: str
     assessment_id: int
@@ -178,6 +185,7 @@ class NASATLXSubmissionResponse(BaseModel):
 
 class NASATLXAnalytics(BaseModel):
     """NASA-TLX analytics by task type"""
+
     task_type: str
     week: int
     year: int
@@ -198,6 +206,7 @@ class NASATLXAnalytics(BaseModel):
 
 class NASATLXTrendData(BaseModel):
     """NASA-TLX trend data over time"""
+
     task_type: str
     weeks: List[int]
     mental_demand_trend: List[float]
@@ -212,6 +221,7 @@ class NASATLXTrendData(BaseModel):
 
 class TaskTypeStats(BaseModel):
     """Statistics by task type"""
+
     task_type: str
     total_assessments: int
     avg_workload: float

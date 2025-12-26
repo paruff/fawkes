@@ -16,75 +16,51 @@ logger = logging.getLogger(__name__)
 
 # Basic feedback metrics
 feedback_submissions_total = Counter(
-    'feedback_submissions_total',
-    'Total number of feedback submissions',
-    ['category', 'rating']
+    "feedback_submissions_total", "Total number of feedback submissions", ["category", "rating"]
 )
 
 feedback_request_duration = Histogram(
-    'feedback_request_duration_seconds',
-    'Time spent processing feedback requests',
-    ['endpoint']
+    "feedback_request_duration_seconds", "Time spent processing feedback requests", ["endpoint"]
 )
 
 # NPS-related metrics
 nps_score = Gauge(
-    'nps_score',
-    'Current NPS score (-100 to 100) calculated from feedback ratings',
-    ['period']  # overall, last_30d, last_90d
+    "nps_score",
+    "Current NPS score (-100 to 100) calculated from feedback ratings",
+    ["period"],  # overall, last_30d, last_90d
 )
 
-nps_promoters_percentage = Gauge(
-    'nps_promoters_percentage',
-    'Percentage of promoters (ratings 5)',
-    ['period']
-)
+nps_promoters_percentage = Gauge("nps_promoters_percentage", "Percentage of promoters (ratings 5)", ["period"])
 
-nps_detractors_percentage = Gauge(
-    'nps_detractors_percentage',
-    'Percentage of detractors (ratings 1-3)',
-    ['period']
-)
+nps_detractors_percentage = Gauge("nps_detractors_percentage", "Percentage of detractors (ratings 1-3)", ["period"])
 
-nps_passives_percentage = Gauge(
-    'nps_passives_percentage',
-    'Percentage of passives (rating 4)',
-    ['period']
-)
+nps_passives_percentage = Gauge("nps_passives_percentage", "Percentage of passives (rating 4)", ["period"])
 
 # Response and engagement metrics
 feedback_response_rate = Gauge(
-    'feedback_response_rate',
-    'Rate of feedback responses that have been addressed',
-    ['status']
+    "feedback_response_rate", "Rate of feedback responses that have been addressed", ["status"]
 )
 
 # Sentiment metrics
 feedback_sentiment_score = Gauge(
-    'feedback_sentiment_score',
-    'Average sentiment score of feedback comments',
-    ['category', 'sentiment']  # positive, neutral, negative
+    "feedback_sentiment_score",
+    "Average sentiment score of feedback comments",
+    ["category", "sentiment"],  # positive, neutral, negative
 )
 
 # Category metrics
-feedback_by_category_total = Gauge(
-    'feedback_by_category_total',
-    'Total feedback count by category',
-    ['category']
-)
+feedback_by_category_total = Gauge("feedback_by_category_total", "Total feedback count by category", ["category"])
 
 # Time-to-action metrics
 feedback_time_to_action_seconds = Histogram(
-    'feedback_time_to_action_seconds',
-    'Time from feedback submission to first action (status change from open)',
-    ['category'],
-    buckets=[60, 300, 900, 1800, 3600, 7200, 14400, 28800, 86400, 172800, 604800, float("inf")]
+    "feedback_time_to_action_seconds",
+    "Time from feedback submission to first action (status change from open)",
+    ["category"],
+    buckets=[60, 300, 900, 1800, 3600, 7200, 14400, 28800, 86400, 172800, 604800, float("inf")],
 )
 
 feedback_avg_time_to_action_hours = Gauge(
-    'feedback_avg_time_to_action_hours',
-    'Average time to action in hours',
-    ['status', 'category']
+    "feedback_avg_time_to_action_hours", "Average time to action in hours", ["status", "category"]
 )
 
 
@@ -146,10 +122,10 @@ async def update_nps_metrics(conn: asyncpg.Connection, period: str = "overall"):
 
         stats = await conn.fetchrow(query)
 
-        promoters = stats['promoters'] or 0
-        passives = stats['passives'] or 0
-        detractors = stats['detractors'] or 0
-        total = stats['total'] or 0
+        promoters = stats["promoters"] or 0
+        passives = stats["passives"] or 0
+        detractors = stats["detractors"] or 0
+        total = stats["total"] or 0
 
         # Calculate NPS score
         nps = calculate_nps_from_ratings(promoters, passives, detractors)
@@ -158,15 +134,9 @@ async def update_nps_metrics(conn: asyncpg.Connection, period: str = "overall"):
         nps_score.labels(period=period).set(nps)
 
         if total > 0:
-            nps_promoters_percentage.labels(period=period).set(
-                round((promoters / total) * 100, 2)
-            )
-            nps_passives_percentage.labels(period=period).set(
-                round((passives / total) * 100, 2)
-            )
-            nps_detractors_percentage.labels(period=period).set(
-                round((detractors / total) * 100, 2)
-            )
+            nps_promoters_percentage.labels(period=period).set(round((promoters / total) * 100, 2))
+            nps_passives_percentage.labels(period=period).set(round((passives / total) * 100, 2))
+            nps_detractors_percentage.labels(period=period).set(round((detractors / total) * 100, 2))
         else:
             nps_promoters_percentage.labels(period=period).set(0)
             nps_passives_percentage.labels(period=period).set(0)
@@ -197,16 +167,16 @@ async def update_response_rate_metrics(conn: asyncpg.Connection):
         """
 
         rows = await conn.fetch(query)
-        status_counts = {row['status']: row['count'] for row in rows}
+        status_counts = {row["status"]: row["count"] for row in rows}
 
         # Calculate total and addressed count
         total = sum(status_counts.values())
-        addressed = status_counts.get('resolved', 0) + status_counts.get('in_progress', 0)
+        addressed = status_counts.get("resolved", 0) + status_counts.get("in_progress", 0)
 
         if total > 0:
             # Overall response rate (addressed / total)
             overall_rate = round((addressed / total) * 100, 2)
-            feedback_response_rate.labels(status='overall').set(overall_rate)
+            feedback_response_rate.labels(status="overall").set(overall_rate)
 
             # Individual status rates
             for status, count in status_counts.items():
@@ -236,9 +206,7 @@ async def update_category_metrics(conn: asyncpg.Connection):
         rows = await conn.fetch(query)
 
         for row in rows:
-            feedback_by_category_total.labels(
-                category=row['category']
-            ).set(row['count'])
+            feedback_by_category_total.labels(category=row["category"]).set(row["count"])
 
         logger.info(f"Updated category metrics for {len(rows)} categories")
 
@@ -255,14 +223,16 @@ async def update_sentiment_metrics(conn: asyncpg.Connection):
     """
     try:
         # Check if sentiment column exists
-        has_sentiment = await conn.fetchval("""
+        has_sentiment = await conn.fetchval(
+            """
             SELECT EXISTS (
                 SELECT 1
                 FROM information_schema.columns
                 WHERE table_name='feedback'
                 AND column_name='sentiment'
             )
-        """)
+        """
+        )
 
         if not has_sentiment:
             logger.debug("Sentiment column not available, skipping sentiment metrics")
@@ -283,10 +253,9 @@ async def update_sentiment_metrics(conn: asyncpg.Connection):
         rows = await conn.fetch(query)
 
         for row in rows:
-            feedback_sentiment_score.labels(
-                category=row['category'],
-                sentiment=row['sentiment']
-            ).set(round(row['avg_score'], 3))
+            feedback_sentiment_score.labels(category=row["category"], sentiment=row["sentiment"]).set(
+                round(row["avg_score"], 3)
+            )
 
         logger.info(f"Updated sentiment metrics for {len(rows)} category-sentiment combinations")
 
@@ -306,14 +275,16 @@ async def update_time_to_action_metrics(conn: asyncpg.Connection):
     """
     try:
         # Check if status_changed_at column exists
-        has_status_changed_at = await conn.fetchval("""
+        has_status_changed_at = await conn.fetchval(
+            """
             SELECT EXISTS (
                 SELECT 1
                 FROM information_schema.columns
                 WHERE table_name='feedback'
                 AND column_name='status_changed_at'
             )
-        """)
+        """
+        )
 
         if not has_status_changed_at:
             logger.debug("status_changed_at column not available, skipping time-to-action metrics")
@@ -335,11 +306,10 @@ async def update_time_to_action_metrics(conn: asyncpg.Connection):
         rows = await conn.fetch(query)
 
         for row in rows:
-            if row['avg_hours'] is not None:
-                feedback_avg_time_to_action_hours.labels(
-                    status=row['status'],
-                    category=row['category']
-                ).set(round(row['avg_hours'], 2))
+            if row["avg_hours"] is not None:
+                feedback_avg_time_to_action_hours.labels(status=row["status"], category=row["category"]).set(
+                    round(row["avg_hours"], 2)
+                )
 
         logger.info(f"Updated time-to-action metrics for {len(rows)} status-category combinations")
 

@@ -30,6 +30,7 @@
 ### Stage 1: Initial Access & Discovery (Day 1, 2 hours)
 
 **Actions**:
+
 1. Receives welcome email with platform access links
 2. Sets up laptop with IT department (VPN, SSO credentials)
 3. Tries to access Backstage portal - login works
@@ -39,6 +40,7 @@
 7. Attends team onboarding meeting - gets overview but too much info at once
 
 **Thoughts**:
+
 - "Where do I even start?"
 - "There are so many services - which ones are mine?"
 - "Is this documentation current?"
@@ -47,6 +49,7 @@
 **Emotions**: Overwhelmed 😟 (Intensity: 4/5)
 
 **Pain Points**:
+
 - No clear starting point or guided onboarding path
 - Backstage shows all 200+ services without filtering
 - Documentation scattered across Confluence, Backstage, GitHub
@@ -54,6 +57,7 @@
 - Information overload in first team meeting
 
 **Opportunities**:
+
 - Personalized onboarding checklist based on role
 - Smart Backstage filtering (show only team's services initially)
 - Single source of truth for documentation
@@ -62,6 +66,7 @@
 - Progressive disclosure (learn as you go, not all at once)
 
 **Touchpoints**:
+
 - Email (welcome message)
 - Backstage (portal discovery)
 - Confluence (documentation)
@@ -73,6 +78,7 @@
 ### Stage 2: Environment Setup (Day 1-2, 4 hours)
 
 **Actions**:
+
 1. Follows "Developer Setup" doc in Confluence (last updated 8 months ago)
 2. Installs Docker Desktop, kubectl, helm
 3. Gets stuck on VPN + kubectl connection - firewall blocks traffic
@@ -84,6 +90,7 @@
 9. Teammate suggests using dev environment instead
 
 **Thoughts**:
+
 - "Why isn't this working?"
 - "Am I missing something obvious?"
 - "How does everyone else do this?"
@@ -92,6 +99,7 @@
 **Emotions**: Frustrated 😟 (Intensity: 5/5)
 
 **Pain Points**:
+
 - Outdated setup documentation
 - Network/firewall issues not documented
 - Unclear which services need local dev vs remote
@@ -100,6 +108,7 @@
 - Trial and error approach wastes time
 
 **Opportunities**:
+
 - Automated environment setup script (brew bundle, etc.)
 - Pre-flight check that validates connectivity and tools
 - Dev containers or Codespaces for consistent environments
@@ -108,6 +117,7 @@
 - Video walkthrough of setup process
 
 **Touchpoints**:
+
 - Confluence (setup docs)
 - GitHub (code repositories)
 - Docker Desktop (local development)
@@ -120,6 +130,7 @@
 ### Stage 3: Learning Platform Concepts (Day 2-5, 6 hours total)
 
 **Actions**:
+
 1. Reads through "Platform Architecture" doc - many unfamiliar terms
 2. Watches recorded demo of platform features (45 minutes, info-dense)
 3. Explores Jenkins - unclear which pipelines are relevant
@@ -130,6 +141,7 @@
 8. Asks clarifying questions - finally starts to understand
 
 **Thoughts**:
+
 - "What's the difference between ArgoCD and Jenkins?"
 - "Why do we need both Kubernetes and Helm?"
 - "I understand the concepts but not how to apply them"
@@ -138,6 +150,7 @@
 **Emotions**: Confused → Learning 😐 → 😊 (Intensity: 4/5 → 2/5)
 
 **Pain Points**:
+
 - Assumes too much prior knowledge (Kubernetes, GitOps, observability)
 - Abstract explanations without concrete examples
 - Terminology overload (pods, deployments, releases, sync, etc.)
@@ -146,6 +159,7 @@
 - Unclear how concepts apply to daily work
 
 **Opportunities**:
+
 - Progressive learning path (basics → intermediate → advanced)
 - Hands-on labs after each concept section
 - Glossary of terms with simple explanations
@@ -156,6 +170,7 @@
 - Dojo learning modules with self-paced progression
 
 **Touchpoints**:
+
 - Backstage (documentation)
 - Jenkins (CI/CD exploration)
 - ArgoCD (GitOps exploration)
@@ -167,6 +182,7 @@
 ### Stage 4: First Hands-On Task (Week 2, Day 1-3, 8 hours)
 
 **Actions**:
+
 1. Assigned first task: update configuration value in existing service
 2. Finds service in Backstage catalog
 3. Reads service README - unclear where config is managed
@@ -180,6 +196,7 @@
 11. Feels accomplished after successful deployment
 
 **Thoughts**:
+
 - "Finally doing real work!"
 - "There are so many files - which one do I change?"
 - "Did I break anything?"
@@ -189,6 +206,7 @@
 **Emotions**: Nervous → Accomplished 😟 → 😊 (Intensity: 4/5 → 1/5)
 
 **Pain Points**:
+
 - Configuration scattered across multiple files/locations
 - Unclear conventions for naming and structure
 - No clear indicator of impact/risk of changes
@@ -197,6 +215,7 @@
 - Lack of confidence in changes
 
 **Opportunities**:
+
 - Configuration consolidation or clear documentation of where things live
 - Template or schema validation for configuration
 - Pre-deployment checks and impact analysis
@@ -206,6 +225,7 @@
 - Post-deployment health dashboard
 
 **Touchpoints**:
+
 - Backstage (service catalog)
 - GitHub (code and PR)
 - Jenkins (CI/CD)
@@ -218,6 +238,7 @@
 ### Stage 5: Building Confidence (Week 2-4, ongoing)
 
 **Actions**:
+
 1. Takes on increasingly complex tasks
 2. Deploys first feature (not just config change)
 3. Independently troubleshoots a dev environment issue
@@ -228,6 +249,7 @@
 8. Feels like a productive team member
 
 **Thoughts**:
+
 - "I can do this on my own now"
 - "I remember when this seemed impossible"
 - "There's still a lot to learn but I have the foundations"
@@ -236,12 +258,14 @@
 **Emotions**: Confident 😊 (Intensity: 1/5)
 
 **Pain Points**:
+
 - Still discovering features that would have helped earlier
 - Wish I had known about X sooner
 - Some advanced concepts still unclear
 - Documentation doesn't cover edge cases I encounter
 
 **Opportunities**:
+
 - "Advanced platform features" discovery session
 - Monthly platform office hours for Q&A
 - Documentation contribution flow (easy to suggest edits)
@@ -250,6 +274,7 @@
 - Mentorship program (formalize the buddy system)
 
 **Touchpoints**:
+
 - Daily development workflow
 - Backstage (regular use)
 - Jenkins, ArgoCD (confident usage)
@@ -391,6 +416,7 @@ graph LR
 ### Validation with Personas
 
 This journey map aligns with:
+
 - **Application Developer persona** (Maria Rodriguez): Pain points match documented frustrations
 - **Platform Developer persona** (Alex Chen): Supports goal of reducing developer support requests
 
@@ -399,6 +425,7 @@ This journey map aligns with:
 ## 7. Improvement Roadmap
 
 ### Phase 1 (Month 1) - Quick Wins
+
 - [ ] Create comprehensive onboarding checklist
 - [ ] Update and consolidate getting started docs
 - [ ] Implement automated setup script
@@ -406,6 +433,7 @@ This journey map aligns with:
 - [ ] Add Backstage filtering for new users
 
 ### Phase 2 (Month 2-3) - Enhanced Experience
+
 - [ ] Create video walkthrough library
 - [ ] Build hands-on sandbox environment
 - [ ] Develop beginner-friendly task backlog
@@ -413,6 +441,7 @@ This journey map aligns with:
 - [ ] Create platform glossary
 
 ### Phase 3 (Month 4-6) - Strategic Improvements
+
 - [ ] Build interactive Backstage onboarding tour
 - [ ] Develop Dojo learning modules
 - [ ] Implement dev containers

@@ -24,6 +24,7 @@ Created story files for all components organized by category:
 - **Data (2)**: Table, List
 
 Each component has:
+
 - Interactive story examples
 - TypeScript type definitions
 - Storybook autodocs enabled
@@ -32,6 +33,7 @@ Each component has:
 ### 2. Design Tokens Documentation
 
 Created comprehensive `DesignTokens.mdx` covering:
+
 - **Colors**: Primary, secondary, semantic (success, warning, error, info), neutral
 - **Typography**: Font families, sizes (xs to 4xl), weights, line heights
 - **Spacing**: 4px base unit scale (0 to 24)
@@ -60,11 +62,11 @@ Deployment:
   - Namespace: fawkes
   - Replicas: 2 (high availability)
   - Resources:
-    - CPU: 100m request, 500m limit
-    - Memory: 128Mi request, 512Mi limit
+      - CPU: 100m request, 500m limit
+      - Memory: 128Mi request, 512Mi limit
   - Health Checks:
-    - Liveness probe: HTTP GET / on port 6006
-    - Readiness probe: HTTP GET / on port 6006
+      - Liveness probe: HTTP GET / on port 6006
+      - Readiness probe: HTTP GET / on port 6006
 
 Service:
   - Type: ClusterIP
@@ -98,6 +100,7 @@ Created comprehensive test scenarios in `tests/bdd/features/design-system-storyb
 ### 6. Documentation
 
 Created `docs/how-to/deploy-design-system-storybook.md` with:
+
 - Local development instructions
 - Docker build procedures (both methods)
 - Kubernetes deployment steps
@@ -110,6 +113,7 @@ Created `docs/how-to/deploy-design-system-storybook.md` with:
 ### 7. Backstage Integration
 
 Verified existing integration in `catalog-info.yaml`:
+
 - Component registered as "design-system"
 - Storybook link: http://design-system.fawkes.local
 - Proper metadata and tags
@@ -118,14 +122,15 @@ Verified existing integration in `catalog-info.yaml`:
 ### 8. Accessibility
 
 Confirmed accessibility addon enabled in `.storybook/main.ts`:
+
 ```typescript
 addons: [
-  '@storybook/addon-links',
-  '@storybook/addon-essentials',
-  '@storybook/addon-interactions',
-  '@storybook/addon-a11y',  // ✅ Accessibility addon
-  '@storybook/addon-docs',
-]
+  "@storybook/addon-links",
+  "@storybook/addon-essentials",
+  "@storybook/addon-interactions",
+  "@storybook/addon-a11y", // ✅ Accessibility addon
+  "@storybook/addon-docs",
+];
 ```
 
 ## Technical Details
@@ -164,6 +169,7 @@ design-system/
 ### Dependencies
 
 Key Storybook dependencies:
+
 - `storybook@7.6.0`
 - `@storybook/react-vite@7.6.0`
 - `@storybook/addon-a11y@7.6.0`
@@ -172,13 +178,13 @@ Key Storybook dependencies:
 
 ## Acceptance Criteria Verification
 
-| Criteria | Status | Evidence |
-|----------|--------|----------|
-| Storybook deployed | ✅ Complete | K8s manifests ready, ArgoCD configured |
-| All components documented | ✅ Complete | 42 story files created |
-| Interactive examples | ✅ Complete | All stories include interactive examples |
-| Accessibility add-on enabled | ✅ Complete | Configured in `.storybook/main.ts` |
-| Integrated with Backstage | ✅ Complete | `catalog-info.yaml` configured |
+| Criteria                     | Status      | Evidence                                 |
+| ---------------------------- | ----------- | ---------------------------------------- |
+| Storybook deployed           | ✅ Complete | K8s manifests ready, ArgoCD configured   |
+| All components documented    | ✅ Complete | 42 story files created                   |
+| Interactive examples         | ✅ Complete | All stories include interactive examples |
+| Accessibility add-on enabled | ✅ Complete | Configured in `.storybook/main.ts`       |
+| Integrated with Backstage    | ✅ Complete | `catalog-info.yaml` configured           |
 
 ## Known Limitations
 
@@ -191,12 +197,14 @@ Key Storybook dependencies:
 ## Next Steps
 
 ### Immediate (Ready Now)
+
 1. Deploy to cluster using ArgoCD: `kubectl apply -f platform/apps/design-system-application.yaml`
 2. Verify deployment: `kubectl get pods -n fawkes -l app=design-system-storybook`
 3. Access Storybook: http://design-system.fawkes.local
 4. Run BDD acceptance tests
 
 ### Future Enhancements
+
 1. Implement full component functionality
 2. Enhance stories with more variants and examples
 3. Add interaction tests using `@storybook/addon-interactions`

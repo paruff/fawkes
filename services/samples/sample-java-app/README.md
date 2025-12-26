@@ -5,6 +5,7 @@ Sample Java Spring Boot application for testing Fawkes platform capabilities
 ## Overview
 
 This is a Spring Boot microservice following the Fawkes Golden Path. It includes:
+
 - ✅ REST API with health and info endpoints
 - ✅ Prometheus metrics via Spring Actuator
 - ✅ Docker containerization

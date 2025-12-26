@@ -5,6 +5,7 @@ This directory contains Kubernetes manifests for deploying the Discovery Metrics
 ## Overview
 
 The Discovery Metrics Service tracks continuous discovery activities including:
+
 - Interviews conducted
 - Insights captured
 - Experiments run
@@ -27,6 +28,7 @@ The Discovery Metrics Service tracks continuous discovery activities including:
 ### Database Resources
 
 See `../postgresql/`:
+
 - `db-discovery-cluster.yaml`: PostgreSQL cluster (3 replicas)
 - `db-discovery-credentials.yaml`: Database credentials
 
@@ -97,11 +99,11 @@ curl https://discovery-metrics.fawkes.idp/metrics
 
 Target: <70% CPU/Memory utilization
 
-| Component | Requests | Limits | Replicas |
-|-----------|----------|--------|----------|
-| Service | 200m CPU, 256Mi RAM | 1 CPU, 1Gi RAM | 2 |
-| PostgreSQL | 200m CPU, 256Mi RAM | 500m CPU, 512Mi RAM | 3 |
-| **Total** | 800m-2.1 CPU | 2.28-4.5 CPU | - |
+| Component  | Requests            | Limits              | Replicas |
+| ---------- | ------------------- | ------------------- | -------- |
+| Service    | 200m CPU, 256Mi RAM | 1 CPU, 1Gi RAM      | 2        |
+| PostgreSQL | 200m CPU, 256Mi RAM | 500m CPU, 512Mi RAM | 3        |
+| **Total**  | 800m-2.1 CPU        | 2.28-4.5 CPU        | -        |
 
 ## Monitoring
 
@@ -110,6 +112,7 @@ Target: <70% CPU/Memory utilization
 The ServiceMonitor configures Prometheus to scrape metrics from `/metrics` endpoint every 30s.
 
 Key metrics exposed:
+
 - `discovery_interviews_total`
 - `discovery_insights_total`
 - `discovery_experiments_total`
@@ -123,6 +126,7 @@ Key metrics exposed:
 Located at: `../grafana/dashboards/discovery-metrics-dashboard.json`
 
 Includes panels for:
+
 - Discovery overview stats
 - Activity trends
 - Status breakdowns
@@ -133,6 +137,7 @@ Includes panels for:
 ## Database Schema
 
 The service automatically creates tables on startup:
+
 - `interviews`: Interview tracking
 - `discovery_insights`: Insight management
 - `experiments`: Experiment tracking
@@ -148,6 +153,7 @@ The service automatically creates tables on startup:
 - Secrets managed via Kubernetes Secrets (Vault-ready)
 
 ⚠️ **Production Security Checklist**:
+
 - [ ] Replace default API_KEY in Secret
 - [ ] Replace default database password
 - [ ] Configure External Secrets Operator for Vault
@@ -193,6 +199,7 @@ kubectl port-forward -n monitoring svc/prometheus-prometheus 9090:9090
 ## Support
 
 For issues or questions:
+
 1. Check application logs
 2. Review Prometheus and Grafana
 3. Check database connectivity

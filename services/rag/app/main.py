@@ -21,10 +21,7 @@ import weaviate
 from weaviate.util import generate_uuid5
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Configuration from environment
@@ -40,13 +37,17 @@ weaviate_client = None
 # Pydantic models
 class QueryRequest(BaseModel):
     """Request model for context query."""
+
     query: str = Field(..., description="Search query for context retrieval", min_length=1)
     top_k: Optional[int] = Field(DEFAULT_TOP_K, description="Number of results to return", ge=1, le=20)
-    threshold: Optional[float] = Field(DEFAULT_THRESHOLD, description="Minimum relevance score threshold", ge=0.0, le=1.0)
+    threshold: Optional[float] = Field(
+        DEFAULT_THRESHOLD, description="Minimum relevance score threshold", ge=0.0, le=1.0
+    )
 
 
 class ContextResult(BaseModel):
     """Individual context result."""
+
     content: str = Field(..., description="Document content")
     relevance_score: float = Field(..., description="Relevance score (0-1)")
     source: str = Field(..., description="Source file path")
@@ -56,6 +57,7 @@ class ContextResult(BaseModel):
 
 class QueryResponse(BaseModel):
     """Response model for context query."""
+
     query: str = Field(..., description="Original query")
     results: List[ContextResult] = Field(..., description="Ranked context results")
     count: int = Field(..., description="Number of results returned")
@@ -64,6 +66,7 @@ class QueryResponse(BaseModel):
 
 class HealthResponse(BaseModel):
     """Health check response."""
+
     status: str = Field(..., description="Service status")
     service: str = Field(..., description="Service name")
     version: str = Field(..., description="Service version")
@@ -99,27 +102,15 @@ app = FastAPI(
     title="RAG Service",
     description="Retrieval Augmented Generation service for AI context",
     version="0.1.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Prometheus metrics
-REQUEST_COUNT = Counter(
-    'rag_requests_total',
-    'Total RAG requests',
-    ['method', 'endpoint', 'status']
-)
+REQUEST_COUNT = Counter("rag_requests_total", "Total RAG requests", ["method", "endpoint", "status"])
 
-QUERY_LATENCY = Histogram(
-    'rag_query_duration_seconds',
-    'RAG query latency',
-    buckets=[0.1, 0.25, 0.5, 1.0, 2.5, 5.0]
-)
+QUERY_LATENCY = Histogram("rag_query_duration_seconds", "RAG query latency", buckets=[0.1, 0.25, 0.5, 1.0, 2.5, 5.0])
 
-RELEVANCE_SCORE = Histogram(
-    'rag_relevance_score',
-    'RAG relevance scores',
-    buckets=[0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-)
+RELEVANCE_SCORE = Histogram("rag_relevance_score", "RAG relevance scores", buckets=[0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
 
 # Add prometheus metrics endpoint
 metrics_app = make_asgi_app()
@@ -133,11 +124,7 @@ async def add_metrics(request, call_next):
     response = await call_next(request)
     duration = time.time() - start_time
 
-    REQUEST_COUNT.labels(
-        method=request.method,
-        endpoint=request.url.path,
-        status=response.status_code
-    ).inc()
+    REQUEST_COUNT.labels(method=request.method, endpoint=request.url.path, status=response.status_code).inc()
 
     return response
 
@@ -155,8 +142,8 @@ async def root():
             "stats": "/api/v1/stats",
             "dashboard": "/dashboard",
             "docs": "/docs",
-            "metrics": "/metrics"
-        }
+            "metrics": "/metrics",
+        },
     }
 
 
@@ -174,13 +161,14 @@ async def dashboard():
 
     try:
         if dashboard_path.exists():
-            with open(dashboard_path, 'r') as f:
+            with open(dashboard_path, "r") as f:
                 return HTMLResponse(content=f.read())
     except Exception as e:
         logger.warning(f"Could not load dashboard from {dashboard_path}: {e}")
 
     # Fallback: return simple inline dashboard
-    return HTMLResponse(content="""
+    return HTMLResponse(
+        content="""
     <!DOCTYPE html>
     <html>
     <head>
@@ -233,7 +221,8 @@ async def dashboard():
         </script>
     </body>
     </html>
-    """)
+    """
+    )
 
 
 @app.get("/api/v1/health", response_model=HealthResponse, tags=["Health"])
@@ -255,7 +244,7 @@ async def health():
         service="rag-service",
         version="0.1.0",
         weaviate_connected=weaviate_connected,
-        weaviate_url=WEAVIATE_URL
+        weaviate_url=WEAVIATE_URL,
     )
 
 
@@ -278,23 +267,14 @@ async def query_context(request: QueryRequest):
     """
     # Check Weaviate connection
     if not weaviate_client:
-        raise HTTPException(
-            status_code=503,
-            detail="Weaviate client not initialized"
-        )
+        raise HTTPException(status_code=503, detail="Weaviate client not initialized")
 
     try:
         if not weaviate_client.is_ready():
-            raise HTTPException(
-                status_code=503,
-                detail="Weaviate is not ready"
-            )
+            raise HTTPException(status_code=503, detail="Weaviate is not ready")
     except Exception as e:
         logger.error(f"Weaviate readiness check failed: {e}")
-        raise HTTPException(
-            status_code=503,
-            detail=f"Weaviate connection error: {str(e)}"
-        )
+        raise HTTPException(status_code=503, detail=f"Weaviate connection error: {str(e)}")
 
     # Start timing
     start_time = time.time()
@@ -304,8 +284,7 @@ async def query_context(request: QueryRequest):
         logger.info(f"Executing query: '{request.query}' (top_k={request.top_k}, threshold={request.threshold})")
 
         result = (
-            weaviate_client.query
-            .get(SCHEMA_NAME, ["title", "content", "filepath", "category"])
+            weaviate_client.query.get(SCHEMA_NAME, ["title", "content", "filepath", "category"])
             .with_near_text({"concepts": [request.query]})
             .with_limit(request.top_k)
             .with_additional(["certainty", "distance"])
@@ -319,12 +298,7 @@ async def query_context(request: QueryRequest):
         # Parse results
         if "data" not in result or "Get" not in result["data"]:
             logger.warning("No data returned from Weaviate")
-            return QueryResponse(
-                query=request.query,
-                results=[],
-                count=0,
-                retrieval_time_ms=retrieval_time_ms
-            )
+            return QueryResponse(query=request.query, results=[], count=0, retrieval_time_ms=retrieval_time_ms)
 
         documents = result["data"]["Get"].get(SCHEMA_NAME, [])
 
@@ -344,7 +318,7 @@ async def query_context(request: QueryRequest):
                         relevance_score=round(certainty, 3),
                         source=doc.get("filepath", "unknown"),
                         title=doc.get("title"),
-                        category=doc.get("category")
+                        category=doc.get("category"),
                     )
                 )
 
@@ -354,15 +328,12 @@ async def query_context(request: QueryRequest):
             query=request.query,
             results=context_results,
             count=len(context_results),
-            retrieval_time_ms=round(retrieval_time_ms, 2)
+            retrieval_time_ms=round(retrieval_time_ms, 2),
         )
 
     except Exception as e:
         logger.error(f"Query execution failed: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Query execution failed: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Query execution failed: {str(e)}")
 
 
 @app.get("/ready", include_in_schema=False)
@@ -384,6 +355,7 @@ async def ready():
 
 class StatsResponse(BaseModel):
     """Statistics response."""
+
     total_documents: int = Field(..., description="Total number of documents indexed")
     total_chunks: int = Field(..., description="Total number of chunks indexed")
     categories: Dict[str, int] = Field(..., description="Document count by category")
@@ -403,23 +375,14 @@ async def get_stats():
     """
     # Check Weaviate connection
     if not weaviate_client:
-        raise HTTPException(
-            status_code=503,
-            detail="Weaviate client not initialized"
-        )
+        raise HTTPException(status_code=503, detail="Weaviate client not initialized")
 
     try:
         if not weaviate_client.is_ready():
-            raise HTTPException(
-                status_code=503,
-                detail="Weaviate is not ready"
-            )
+            raise HTTPException(status_code=503, detail="Weaviate is not ready")
     except Exception as e:
         logger.error(f"Weaviate readiness check failed: {e}")
-        raise HTTPException(
-            status_code=503,
-            detail=f"Weaviate connection error: {str(e)}"
-        )
+        raise HTTPException(status_code=503, detail=f"Weaviate connection error: {str(e)}")
 
     try:
         # Get all documents to calculate stats
@@ -427,8 +390,7 @@ async def get_stats():
         # For larger deployments, consider implementing pagination
         MAX_STATS_DOCUMENTS = 10000
         result = (
-            weaviate_client.query
-            .get(SCHEMA_NAME, ["category", "indexed_at", "content"])
+            weaviate_client.query.get(SCHEMA_NAME, ["category", "indexed_at", "content"])
             .with_limit(MAX_STATS_DOCUMENTS)
             .do()
         )
@@ -498,17 +460,15 @@ async def get_stats():
             last_indexed=last_indexed_timestamp,
             index_freshness_hours=index_freshness_hours,
             storage_usage_mb=storage_usage_mb,
-            avg_query_time_ms=avg_query_time_ms
+            avg_query_time_ms=avg_query_time_ms,
         )
 
     except Exception as e:
         logger.error(f"Failed to get stats: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to retrieve statistics: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve statistics: {str(e)}")
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

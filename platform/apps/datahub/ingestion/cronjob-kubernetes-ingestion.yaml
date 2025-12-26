@@ -1,3 +1,23 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
 # ==============================================================================
 # FILE: platform/apps/datahub/ingestion/cronjob-kubernetes-ingestion.yaml
 # PURPOSE: Kubernetes CronJob for automated Kubernetes resources ingestion
@@ -121,48 +141,48 @@ spec:
           serviceAccountName: datahub-k8s-ingestion
 
           containers:
-          - name: datahub-ingestion
-            image: acryldata/datahub-ingestion:latest
-            imagePullPolicy: IfNotPresent
+            - name: datahub-ingestion
+              image: acryldata/datahub-ingestion:latest
+              imagePullPolicy: IfNotPresent
 
-            command:
-            - /bin/bash
-            - -c
-            - |
-              set -e
-              echo "Starting Kubernetes resources metadata ingestion..."
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  set -e
+                  echo "Starting Kubernetes resources metadata ingestion..."
 
-              # Verify DataHub is accessible
-              if ! curl -f -s http://datahub-datahub-gms.fawkes.svc:8080/health > /dev/null; then
-                echo "ERROR: DataHub GMS is not accessible"
-                exit 1
-              fi
+                  # Verify DataHub is accessible
+                  if ! curl -f -s http://datahub-datahub-gms.fawkes.svc:8080/health > /dev/null; then
+                    echo "ERROR: DataHub GMS is not accessible"
+                    exit 1
+                  fi
 
-              echo "DataHub GMS is healthy"
-              echo "Ingesting Kubernetes resources from namespaces: fawkes, argocd, monitoring..."
+                  echo "DataHub GMS is healthy"
+                  echo "Ingesting Kubernetes resources from namespaces: fawkes, argocd, monitoring..."
 
-              # Run ingestion
-              datahub ingest -c /config/kubernetes.yaml
+                  # Run ingestion
+                  datahub ingest -c /config/kubernetes.yaml
 
-              echo "Kubernetes metadata ingestion completed successfully"
+                  echo "Kubernetes metadata ingestion completed successfully"
 
-            volumeMounts:
-            - name: config
-              mountPath: /config
-              readOnly: true
+              volumeMounts:
+                - name: config
+                  mountPath: /config
+                  readOnly: true
 
-            resources:
-              requests:
-                cpu: 200m
-                memory: 512Mi
-              limits:
-                cpu: 500m
-                memory: 1Gi
+              resources:
+                requests:
+                  cpu: 200m
+                  memory: 512Mi
+                limits:
+                  cpu: 500m
+                  memory: 1Gi
 
           volumes:
-          - name: config
-            configMap:
-              name: datahub-kubernetes-ingestion-config
+            - name: config
+              configMap:
+                name: datahub-kubernetes-ingestion-config
 
 ---
 # ServiceAccount for Kubernetes ingestion (needs cluster-wide read access)
@@ -185,35 +205,35 @@ metadata:
     app: datahub
     component: ingestion
 rules:
-# Read access to Kubernetes resources
-- apiGroups: [""]
-  resources:
-  - "pods"
-  - "services"
-  - "configmaps"
-  - "secrets"
-  - "persistentvolumeclaims"
-  - "namespaces"
-  verbs: ["get", "list"]
+  # Read access to Kubernetes resources
+  - apiGroups: [""]
+    resources:
+      - "pods"
+      - "services"
+      - "configmaps"
+      - "secrets"
+      - "persistentvolumeclaims"
+      - "namespaces"
+    verbs: ["get", "list"]
 
-- apiGroups: ["apps"]
-  resources:
-  - "deployments"
-  - "statefulsets"
-  - "daemonsets"
-  - "replicasets"
-  verbs: ["get", "list"]
+  - apiGroups: ["apps"]
+    resources:
+      - "deployments"
+      - "statefulsets"
+      - "daemonsets"
+      - "replicasets"
+    verbs: ["get", "list"]
 
-- apiGroups: ["batch"]
-  resources:
-  - "jobs"
-  - "cronjobs"
-  verbs: ["get", "list"]
+  - apiGroups: ["batch"]
+    resources:
+      - "jobs"
+      - "cronjobs"
+    verbs: ["get", "list"]
 
-- apiGroups: ["networking.k8s.io"]
-  resources:
-  - "ingresses"
-  verbs: ["get", "list"]
+  - apiGroups: ["networking.k8s.io"]
+    resources:
+      - "ingresses"
+    verbs: ["get", "list"]
 
 ---
 # ClusterRoleBinding for Kubernetes ingestion ServiceAccount
@@ -229,6 +249,6 @@ roleRef:
   kind: ClusterRole
   name: datahub-k8s-ingestion
 subjects:
-- kind: ServiceAccount
-  name: datahub-k8s-ingestion
-  namespace: fawkes
+  - kind: ServiceAccount
+    name: datahub-k8s-ingestion
+    namespace: fawkes

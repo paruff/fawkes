@@ -22,6 +22,7 @@ A new FastAPI microservice with complete CRUD operations for tracking discovery 
 #### Database Schema (PostgreSQL)
 
 **Tables Created**:
+
 - `interviews`: Track user interviews with participants, status, duration, insights generated
 - `discovery_insights`: Capture insights from interviews, surveys, analytics, support tickets
 - `experiments`: Track experiments with hypothesis, status, ROI, validation
@@ -29,6 +30,7 @@ A new FastAPI microservice with complete CRUD operations for tracking discovery 
 - `team_performance`: Aggregate team-level discovery metrics
 
 **Key Features**:
+
 - Multi-source insight tracking (interview, survey, analytics, support)
 - Time-to-validation and time-to-ship calculations
 - ROI tracking for experiments
@@ -37,39 +39,47 @@ A new FastAPI microservice with complete CRUD operations for tracking discovery 
 #### API Endpoints
 
 **Interviews**: `/api/v1/interviews`
+
 - POST, GET, PUT for creating, listing, updating interviews
 - Track completion status and insights generated
 
 **Discovery Insights**: `/api/v1/insights`
+
 - POST, GET, PUT for insight management
 - Filter by status, category, source
 - Automatic validation time calculation
 
 **Experiments**: `/api/v1/experiments`
+
 - POST, GET, PUT for experiment tracking
 - Status lifecycle: planned → running → completed
 - ROI percentage tracking
 
 **Feature Validations**: `/api/v1/features`
+
 - POST, GET, PUT for feature tracking
 - Status lifecycle: proposed → validated → building → shipped
 - Adoption rate and user satisfaction metrics
 
 **Team Performance**: `/api/v1/team-performance`
+
 - POST, GET for team metrics
 - Aggregated discovery activity tracking
 
 **Statistics**: `/api/v1/statistics`
+
 - Aggregated discovery statistics
 - Validation rates, success rates, averages
 
 **System**: `/health`, `/metrics`
+
 - Health check with database connectivity
 - Prometheus metrics export
 
 #### Prometheus Metrics Exported
 
 **Core Metrics** (30+ metrics):
+
 - `discovery_interviews_total` - Total interviews
 - `discovery_interviews_completed` - Completed interviews
 - `discovery_insights_total` - Total insights
@@ -80,6 +90,7 @@ A new FastAPI microservice with complete CRUD operations for tracking discovery 
 - `discovery_features_shipped` - Shipped features
 
 **Breakdown Metrics**:
+
 - `discovery_interviews_by_status{status}` - Interviews by status
 - `discovery_insights_by_status{status}` - Insights by status
 - `discovery_insights_by_category{category}` - Insights by category
@@ -88,6 +99,7 @@ A new FastAPI microservice with complete CRUD operations for tracking discovery 
 - `discovery_features_by_status{status}` - Features by status
 
 **Performance Metrics**:
+
 - `discovery_avg_time_to_validation_days` - Average validation time
 - `discovery_avg_time_to_ship_days` - Average ship time
 - `discovery_validation_rate` - Percentage validated
@@ -95,12 +107,14 @@ A new FastAPI microservice with complete CRUD operations for tracking discovery 
 - `discovery_experiments_avg_roi_percentage` - Average experiment ROI
 
 **Recent Activity**:
+
 - `discovery_interviews_last_7d` - Last 7 days interviews
 - `discovery_interviews_last_30d` - Last 30 days interviews
 - `discovery_insights_last_7d` - Last 7 days insights
 - `discovery_insights_last_30d` - Last 30 days insights
 
 **Team Metrics**:
+
 - `discovery_team_performance{team,metric}` - Team performance by metric type
 
 ### 2. Grafana Dashboard
@@ -112,6 +126,7 @@ A comprehensive 26-panel dashboard organized into 6 sections:
 #### Dashboard Sections
 
 1. **Discovery Overview** (6 panels)
+
    - Total Interviews (stat)
    - Total Insights (stat)
    - Total Experiments (stat)
@@ -120,20 +135,24 @@ A comprehensive 26-panel dashboard organized into 6 sections:
    - Validation Rate (stat)
 
 2. **Discovery Activity Trends** (2 panels)
+
    - Interviews Trend (Last 30 Days) - time series
    - Insights Trend (Last 30 Days) - time series
 
 3. **Status Breakdown** (4 panels)
+
    - Interviews by Status (pie chart)
    - Insights by Status (pie chart)
    - Experiments by Status (pie chart)
    - Features by Status (pie chart)
 
 4. **Insights Analysis** (2 panels)
+
    - Insights by Category (bar gauge)
    - Insights by Source (pie chart)
 
 5. **Performance Metrics** (4 panels)
+
    - Avg Time to Validation (stat with thresholds)
    - Avg Time to Ship (stat with thresholds)
    - Feature Adoption Rate (stat with thresholds)
@@ -146,6 +165,7 @@ A comprehensive 26-panel dashboard organized into 6 sections:
    - Insights (Last 30 Days) - stat
 
 **Dashboard Features**:
+
 - Auto-refresh every 30 seconds
 - Datasource templating (Prometheus)
 - Color-coded thresholds for metrics
@@ -153,6 +173,7 @@ A comprehensive 26-panel dashboard organized into 6 sections:
 - Interactive visualizations
 
 **Threshold Configurations**:
+
 - **Validation Rate**: Red <50%, Yellow 50-75%, Green ≥75%
 - **Time to Validation**: Green <7 days, Yellow 7-14, Red >14
 - **Time to Ship**: Green <30 days, Yellow 30-60, Red >60
@@ -165,14 +186,17 @@ A comprehensive 26-panel dashboard organized into 6 sections:
 #### Deployment (`deployment.yaml`)
 
 **ConfigMap**:
+
 - Database connection configuration
 - Service environment variables
 
 **Secret**:
+
 - API key for service authentication
 - ⚠️ Development values - replace for production
 
 **Deployment**:
+
 - 2 replicas for high availability
 - Resource requests: 200m CPU, 256Mi RAM
 - Resource limits: 1 CPU, 1Gi RAM
@@ -181,20 +205,24 @@ A comprehensive 26-panel dashboard organized into 6 sections:
 - Health checks (liveness & readiness)
 
 **Service**:
+
 - ClusterIP service on port 8000
 - Exposes HTTP endpoint
 
 **Ingress**:
+
 - HTTPS access via `discovery-metrics.fawkes.idp`
 - TLS with cert-manager
 - NGINX ingress controller
 
 **ServiceMonitor**:
+
 - Prometheus scraping configuration
 - 30-second scrape interval
 - Metrics endpoint: `/metrics`
 
 **PodDisruptionBudget**:
+
 - minAvailable: 1
 - Ensures high availability during disruptions
 
@@ -203,6 +231,7 @@ A comprehensive 26-panel dashboard organized into 6 sections:
 **Location**: `platform/apps/postgresql/`
 
 **PostgreSQL Cluster** (`db-discovery-cluster.yaml`):
+
 - 3 replicas (HA)
 - CloudNativePG operator
 - Database: `discovery_metrics`
@@ -214,6 +243,7 @@ A comprehensive 26-panel dashboard organized into 6 sections:
 - Pod monitoring enabled
 
 **Credentials** (`db-discovery-credentials.yaml`):
+
 - Database username/password
 - Connection URI
 - ⚠️ Development values - replace for production
@@ -236,6 +266,7 @@ A comprehensive 26-panel dashboard organized into 6 sections:
 **Test Coverage** (35 scenarios):
 
 **Deployment Tests**:
+
 - Service deployment health
 - Database connectivity
 - Pod status verification
@@ -244,6 +275,7 @@ A comprehensive 26-panel dashboard organized into 6 sections:
 - API documentation availability
 
 **Functional Tests**:
+
 - Interview creation and tracking
 - Interview completion with insights
 - Insight capture from interviews
@@ -256,6 +288,7 @@ A comprehensive 26-panel dashboard organized into 6 sections:
 - Statistics retrieval
 
 **Integration Tests**:
+
 - Prometheus metrics export
 - ServiceMonitor configuration
 - Grafana dashboard deployment
@@ -265,12 +298,14 @@ A comprehensive 26-panel dashboard organized into 6 sections:
 - Backstage integration
 
 **Performance Tests**:
+
 - Resource usage validation (<70% target)
 - High availability testing
 - Database resilience
 - End-to-end workflow validation
 
 **Validation Tests**:
+
 - Validation rate calculation
 - ROI calculation accuracy
 - Time-based metrics accuracy
@@ -281,6 +316,7 @@ A comprehensive 26-panel dashboard organized into 6 sections:
 **Location**: `scripts/validate-discovery-metrics.sh`
 
 **Validation Checks** (10 categories):
+
 1. PostgreSQL cluster health
 2. Service deployment (2/2 replicas)
 3. Pod status (all running)
@@ -293,6 +329,7 @@ A comprehensive 26-panel dashboard organized into 6 sections:
 10. Resource usage (<70% of limits)
 
 **Usage**:
+
 ```bash
 make validate-discovery-metrics
 # or
@@ -302,12 +339,15 @@ make validate-discovery-metrics
 ### 5. Documentation
 
 **Service Documentation**:
+
 - `services/discovery-metrics/README.md`: API documentation, local development, Docker usage
 
 **Deployment Documentation**:
+
 - `platform/apps/discovery-metrics/README.md`: Deployment guide, verification steps, troubleshooting
 
 **Related Documentation**:
+
 - References to Continuous Discovery Workflow playbook
 - Links to IP3dP framework documentation
 - Integration with existing discovery processes
@@ -315,9 +355,10 @@ make validate-discovery-metrics
 ### 6. Makefile Integration
 
 Added `validate-discovery-metrics` target to Makefile:
+
 ```makefile
 validate-discovery-metrics: ## Run validation for Discovery Metrics Dashboard (Issue #105)
-	@./scripts/validate-discovery-metrics.sh $(NAMESPACE)
+ @./scripts/validate-discovery-metrics.sh $(NAMESPACE)
 ```
 
 Updated `.PHONY` declaration to include new target.
@@ -325,11 +366,13 @@ Updated `.PHONY` declaration to include new target.
 ## Acceptance Criteria Status
 
 ✅ **Dashboard deployed**
+
 - Grafana dashboard with 26 panels across 6 sections
 - ConfigMap for automatic dashboard provisioning
 - Auto-refresh every 30 seconds
 
 ✅ **All discovery activities tracked**
+
 - Interviews: scheduling, completion, insights generated
 - Insights: capture, validation, time-to-validation
 - Experiments: planning, execution, ROI calculation
@@ -337,18 +380,21 @@ Updated `.PHONY` declaration to include new target.
 - Team performance: aggregated metrics
 
 ✅ **Trend analysis**
+
 - Time series for interviews and insights (30-day view)
 - Recent activity panels (7-day and 30-day)
 - Historical data visualization
 - Trend comparison capabilities
 
 ✅ **Team performance metrics**
+
 - Team-level aggregation
 - Discovery velocity calculation
 - Performance comparison across teams
 - Multi-metric tracking (interviews, insights, experiments, features)
 
 ✅ **ROI calculations**
+
 - Experiment-level ROI tracking (percentage)
 - Average ROI across all experiments
 - ROI visualization in dashboard
@@ -391,6 +437,7 @@ Updated `.PHONY` declaration to include new target.
 ### New Files (23)
 
 **Service Code**:
+
 - `services/discovery-metrics/app/__init__.py`
 - `services/discovery-metrics/app/database.py`
 - `services/discovery-metrics/app/models.py`
@@ -399,6 +446,7 @@ Updated `.PHONY` declaration to include new target.
 - `services/discovery-metrics/app/prometheus_exporter.py`
 
 **Service Configuration**:
+
 - `services/discovery-metrics/Dockerfile`
 - `services/discovery-metrics/requirements.txt`
 - `services/discovery-metrics/requirements-dev.txt`
@@ -407,6 +455,7 @@ Updated `.PHONY` declaration to include new target.
 - `services/discovery-metrics/README.md`
 
 **Kubernetes Manifests**:
+
 - `platform/apps/discovery-metrics/deployment.yaml`
 - `platform/apps/discovery-metrics/kustomization.yaml`
 - `platform/apps/discovery-metrics/README.md`
@@ -415,9 +464,11 @@ Updated `.PHONY` declaration to include new target.
 - `platform/apps/postgresql/db-discovery-credentials.yaml`
 
 **Dashboard**:
+
 - `platform/apps/grafana/dashboards/discovery-metrics-dashboard.json`
 
 **Testing**:
+
 - `tests/bdd/features/discovery-metrics.feature`
 - `scripts/validate-discovery-metrics.sh`
 
@@ -432,11 +483,11 @@ Updated `.PHONY` declaration to include new target.
 
 **Target**: <70% CPU/Memory utilization
 
-| Component | Requests | Limits | Replicas | Total Resources |
-|-----------|----------|--------|----------|----------------|
-| Discovery Service | 200m CPU, 256Mi | 1 CPU, 1Gi | 2 | 400m-2 CPU, 512Mi-2Gi |
-| PostgreSQL | 200m CPU, 256Mi | 500m CPU, 512Mi | 3 | 600m-1.5 CPU, 768Mi-1.5Gi |
-| **Total Platform Impact** | - | - | - | **1-3.5 CPU, 1.28-3.5Gi** |
+| Component                 | Requests        | Limits          | Replicas | Total Resources           |
+| ------------------------- | --------------- | --------------- | -------- | ------------------------- |
+| Discovery Service         | 200m CPU, 256Mi | 1 CPU, 1Gi      | 2        | 400m-2 CPU, 512Mi-2Gi     |
+| PostgreSQL                | 200m CPU, 256Mi | 500m CPU, 512Mi | 3        | 600m-1.5 CPU, 768Mi-1.5Gi |
+| **Total Platform Impact** | -               | -               | -        | **1-3.5 CPU, 1.28-3.5Gi** |
 
 ## Security Features
 
@@ -451,6 +502,7 @@ Updated `.PHONY` declaration to include new target.
 ## Deployment Instructions
 
 ### Prerequisites
+
 1. CloudNativePG operator installed
 2. Ingress controller configured
 3. cert-manager for TLS
@@ -489,20 +541,24 @@ make validate-discovery-metrics
 The Discovery Metrics Dashboard directly implements the measurement component of the IP3dP (Internal Platform Product Discovery and Delivery Process) framework:
 
 **Discovery Phase**:
+
 - Track user interviews (qualitative)
 - Capture insights from multiple sources
 - Monitor discovery velocity
 
 **Prioritization Phase**:
+
 - Validate insights before building
 - Track time-to-validation
 
 **Delivery Phase**:
+
 - Track experiments and hypotheses
 - Monitor feature validation lifecycle
 - Measure feature adoption
 
 **Measurement Phase**:
+
 - Calculate ROI on experiments
 - Track team performance
 - Measure discovery effectiveness
@@ -528,16 +584,19 @@ Potential improvements for future iterations:
 ## Testing
 
 ### Run BDD Tests
+
 ```bash
 behave tests/bdd/features/discovery-metrics.feature --tags=@local
 ```
 
 ### Run Validation
+
 ```bash
 make validate-discovery-metrics NAMESPACE=fawkes
 ```
 
 ### Manual Testing
+
 ```bash
 # Create interview
 curl -X POST https://discovery-metrics.fawkes.idp/api/v1/interviews \

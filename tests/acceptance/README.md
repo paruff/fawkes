@@ -6,47 +6,47 @@ This directory contains acceptance test runners for Fawkes platform validation.
 
 ### Epic 1: DORA 2023 Foundation
 
-| Test ID | Category | Description | Status |
-|---------|----------|-------------|--------|
-| AT-E1-001 | Infrastructure | Local 4-node K8s cluster deployed | ✅ Implemented |
-| AT-E1-002 | GitOps | ArgoCD manages all platform components | ✅ Implemented |
-| AT-E1-003 | Developer Portal | Backstage with 3 templates functional | ✅ Implemented |
-| AT-E1-004 | CI/CD | Jenkins pipelines build/test/deploy | ✅ Implemented |
-| AT-E1-005 | Security | DevSecOps scanning integrated | ✅ Implemented |
-| AT-E1-006 | Observability | Prometheus/Grafana stack deployed | 🚧 Pending |
-| AT-E1-007 | Metrics | DORA metrics automated (4 key metrics) | ✅ Implemented |
-| AT-E1-008 | Templates | 3 golden paths work end-to-end | 🚧 Pending |
-| AT-E1-009 | Registry | Harbor with security scanning | ✅ Implemented |
-| AT-E1-010 | Performance | Resource usage <70% on cluster | 🚧 Pending |
-| AT-E1-011 | Documentation | Complete docs and runbooks | 🚧 Pending |
-| AT-E1-012 | Integration | Full platform workflow validated | ✅ Implemented |
+| Test ID   | Category         | Description                            | Status         |
+| --------- | ---------------- | -------------------------------------- | -------------- |
+| AT-E1-001 | Infrastructure   | Local 4-node K8s cluster deployed      | ✅ Implemented |
+| AT-E1-002 | GitOps           | ArgoCD manages all platform components | ✅ Implemented |
+| AT-E1-003 | Developer Portal | Backstage with 3 templates functional  | ✅ Implemented |
+| AT-E1-004 | CI/CD            | Jenkins pipelines build/test/deploy    | ✅ Implemented |
+| AT-E1-005 | Security         | DevSecOps scanning integrated          | ✅ Implemented |
+| AT-E1-006 | Observability    | Prometheus/Grafana stack deployed      | 🚧 Pending     |
+| AT-E1-007 | Metrics          | DORA metrics automated (4 key metrics) | ✅ Implemented |
+| AT-E1-008 | Templates        | 3 golden paths work end-to-end         | 🚧 Pending     |
+| AT-E1-009 | Registry         | Harbor with security scanning          | ✅ Implemented |
+| AT-E1-010 | Performance      | Resource usage <70% on cluster         | 🚧 Pending     |
+| AT-E1-011 | Documentation    | Complete docs and runbooks             | 🚧 Pending     |
+| AT-E1-012 | Integration      | Full platform workflow validated       | ✅ Implemented |
 
 ### Epic 2: AI & Data Platform
 
-| Test ID | Category | Description | Status |
-|---------|----------|-------------|--------|
-| AT-E2-001 | AI Integration | GitHub Copilot configured and working | ✅ Implemented |
-| AT-E2-002 | RAG Architecture | RAG service deployed and functional | ✅ Implemented |
-| AT-E2-003 | Data Catalog | DataHub operational | ✅ Implemented |
-| AT-E2-004 | Data Quality | Great Expectations monitoring | ✅ Implemented |
-| AT-E2-005 | VSM | Value Stream Mapping tracking service | ✅ Implemented |
-| AT-E2-008 | Unified API | Unified GraphQL Data API deployed | ✅ Implemented |
-| AT-E2-009 | AI Observability | AI-powered anomaly detection | ✅ Implemented |
-| AT-E2-010 | Discovery Foundation | Feedback Analytics Dashboard | ✅ Implemented |
+| Test ID   | Category             | Description                           | Status         |
+| --------- | -------------------- | ------------------------------------- | -------------- |
+| AT-E2-001 | AI Integration       | GitHub Copilot configured and working | ✅ Implemented |
+| AT-E2-002 | RAG Architecture     | RAG service deployed and functional   | ✅ Implemented |
+| AT-E2-003 | Data Catalog         | DataHub operational                   | ✅ Implemented |
+| AT-E2-004 | Data Quality         | Great Expectations monitoring         | ✅ Implemented |
+| AT-E2-005 | VSM                  | Value Stream Mapping tracking service | ✅ Implemented |
+| AT-E2-008 | Unified API          | Unified GraphQL Data API deployed     | ✅ Implemented |
+| AT-E2-009 | AI Observability     | AI-powered anomaly detection          | ✅ Implemented |
+| AT-E2-010 | Discovery Foundation | Feedback Analytics Dashboard          | ✅ Implemented |
 
 ### Epic 3: Product Discovery & UX
 
-| Test ID | Category | Description | Status |
-|---------|----------|-------------|--------|
-| AT-E3-001 | Research Infrastructure | User research repository and tools | 🚧 Pending |
-| AT-E3-002 | SPACE Framework | SPACE metrics collection operational | ✅ Implemented |
-| AT-E3-003 | Feedback System | Multi-channel feedback system | ✅ Implemented |
-| AT-E3-006 | Feature Flags | Unleash with OpenFeature support | ✅ Implemented |
-| AT-E3-007 | Event Tracking | 60+ events with Plausible analytics | ✅ Implemented |
-| AT-E3-008 | Continuous Discovery | Discovery workflow and process operational | ✅ Implemented |
-| AT-E3-010 | Usability Testing | Usability testing infrastructure | ✅ Implemented |
-| AT-E3-011 | Product Analytics | Product analytics platform deployed | ✅ Implemented |
-| AT-E3-012 | Documentation | Complete Epic 3 documentation | ✅ Implemented |
+| Test ID   | Category                | Description                                | Status         |
+| --------- | ----------------------- | ------------------------------------------ | -------------- |
+| AT-E3-001 | Research Infrastructure | User research repository and tools         | 🚧 Pending     |
+| AT-E3-002 | SPACE Framework         | SPACE metrics collection operational       | ✅ Implemented |
+| AT-E3-003 | Feedback System         | Multi-channel feedback system              | ✅ Implemented |
+| AT-E3-006 | Feature Flags           | Unleash with OpenFeature support           | ✅ Implemented |
+| AT-E3-007 | Event Tracking          | 60+ events with Plausible analytics        | ✅ Implemented |
+| AT-E3-008 | Continuous Discovery    | Discovery workflow and process operational | ✅ Implemented |
+| AT-E3-010 | Usability Testing       | Usability testing infrastructure           | ✅ Implemented |
+| AT-E3-011 | Product Analytics       | Product analytics platform deployed        | ✅ Implemented |
+| AT-E3-012 | Documentation           | Complete Epic 3 documentation              | ✅ Implemented |
 
 ## Usage
 
@@ -89,9 +89,9 @@ make validate-at-e1-012
 - [x] PostgreSQL backend deployed and initialized
 - [x] GitHub OAuth configured
 - [x] Software catalog populated with 3 templates:
-  * Java Spring Boot
-  * Python FastAPI
-  * Node.js Express
+  - Java Spring Boot
+  - Python FastAPI
+  - Node.js Express
 - [x] TechDocs plugin enabled and rendering
 - [x] Service catalog shows deployed apps
 - [x] Backstage UI loads in <3 seconds
@@ -100,6 +100,7 @@ make validate-at-e1-012
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e1-003.sh`)
+
    - Checks prerequisites (kubectl, cluster access)
    - Validates namespace exists
    - Verifies Backstage deployment and replicas
@@ -113,6 +114,7 @@ make validate-at-e1-012
    - Validates ingress configuration
 
 2. **E2E Validation Tests** (`tests/e2e/backstage-validation-test.sh`)
+
    - Tests Backstage pods are running
    - Validates health endpoint responds
    - Checks catalog API accessibility
@@ -135,6 +137,7 @@ make validate-at-e1-012
 ### Test Reports
 
 Test reports are generated in JSON format at:
+
 ```
 reports/at-e1-003-validation-YYYYMMDD-HHMMSS.json
 ```
@@ -168,6 +171,7 @@ curl -f http://backstage.local/api/catalog/entities | \
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e1-002.sh`)
+
    - Checks prerequisites (kubectl, argocd CLI)
    - Validates cluster access
    - Verifies ArgoCD namespace and deployment
@@ -180,6 +184,7 @@ curl -f http://backstage.local/api/catalog/entities | \
    - Validates ArgoCD ingress
 
 2. **E2E Sync Tests** (`tests/e2e/argocd-sync-test.sh`)
+
    - Tests application sync operations
    - Validates sync status
    - Checks application health
@@ -192,6 +197,7 @@ curl -f http://backstage.local/api/catalog/entities | \
 ### Test Reports
 
 Test reports are generated in JSON format at:
+
 ```
 reports/at-e1-002-validation-YYYYMMDD-HHMMSS.json
 ```
@@ -220,9 +226,9 @@ kubectl get applications -n argocd -o json | \
 - [x] Jenkins deployed with Kubernetes plugin
 - [x] Jenkins Configuration as Code (JCasC) working
 - [x] 3 golden path Jenkinsfiles in shared library:
-  * Java (Maven/Gradle)
-  * Python (pytest)
-  * Node.js (npm)
+  - Java (Maven/Gradle)
+  - Python (pytest)
+  - Node.js (npm)
 - [x] Dynamic agent provisioning on K8s pods
 - [x] SonarQube integrated for code scanning
 - [x] Trivy integrated for container scanning
@@ -232,6 +238,7 @@ kubectl get applications -n argocd -o json | \
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e1-004.sh`)
+
    - Checks prerequisites (kubectl, cluster access)
    - Validates namespace exists
    - Verifies Jenkins deployment and pods
@@ -255,6 +262,7 @@ kubectl get applications -n argocd -o json | \
 ### Test Reports
 
 Test reports are generated in JSON format at:
+
 ```
 reports/at-e1-004-validation-YYYYMMDD-HHMMSS.json
 ```
@@ -293,6 +301,7 @@ jenkins-cli build golden-path-java -s -v
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e1-009.sh`)
+
    - Checks prerequisites (kubectl, cluster access)
    - Validates namespace exists
    - Verifies Harbor configuration files
@@ -326,6 +335,7 @@ jenkins-cli build golden-path-java -s -v
 ### Test Reports
 
 Test reports are generated in JSON format at:
+
 ```
 reports/at-e1-009-validation-YYYYMMDD-HHMMSS.json
 ```
@@ -356,13 +366,13 @@ docker push harbor.127.0.0.1.nip.io/library/hello-world:test
 - [x] Platform ready for Epic 2
 - [x] Final test report generated
 - [x] Synthetic user scenario:
-    1. Developer scaffolds app via Backstage
-    2. Code pushed to Git triggers Jenkins build
-    3. Jenkins builds, tests, scans, pushes to Harbor
-    4. ArgoCD detects new image and deploys
-    5. App accessible via ingress
-    6. DORA metrics updated
-    7. Observability data flowing (metrics, logs, traces)
+  1. Developer scaffolds app via Backstage
+  2. Code pushed to Git triggers Jenkins build
+  3. Jenkins builds, tests, scans, pushes to Harbor
+  4. ArgoCD detects new image and deploys
+  5. App accessible via ingress
+  6. DORA metrics updated
+  7. Observability data flowing (metrics, logs, traces)
 - [x] Full cycle completes in <20 minutes
 - [x] Zero manual interventions required
 - [x] All components health checks green
@@ -372,29 +382,32 @@ docker push harbor.127.0.0.1.nip.io/library/hello-world:test
 ### Test Components
 
 1. **Comprehensive Full Platform Test** (`tests/e2e/full-platform-test.sh`)
-    - Validates all Epic 1 deliverables (AT-E1-001 through AT-E1-011)
-    - Tests complete synthetic user scenario
-    - Verifies zero manual intervention required
-    - Checks all component health status
-    - Validates DORA metrics dashboard
-    - Scans component logs for errors
-    - Confirms platform readiness for Epic 2
-    - Generates JSON test report
+
+   - Validates all Epic 1 deliverables (AT-E1-001 through AT-E1-011)
+   - Tests complete synthetic user scenario
+   - Verifies zero manual intervention required
+   - Checks all component health status
+   - Validates DORA metrics dashboard
+   - Scans component logs for errors
+   - Confirms platform readiness for Epic 2
+   - Generates JSON test report
 
 2. **Validation Script** (`scripts/validate-at-e1-012.sh`)
-    - Wrapper script for AT-E1-012 validation
-    - Checks prerequisites (kubectl, cluster access)
-    - Calls full-platform-test.sh with appropriate options
-    - Provides convenient interface for validation
+   - Wrapper script for AT-E1-012 validation
+   - Checks prerequisites (kubectl, cluster access)
+   - Calls full-platform-test.sh with appropriate options
+   - Provides convenient interface for validation
 
 ### Test Reports
 
 Test reports are generated in JSON format at:
+
 ```
 reports/at-e1-012-validation-YYYYMMDD-HHMMSS.json
 ```
 
 The report includes:
+
 - Test execution time (must be <20 minutes)
 - Pass/fail status for each validation phase
 - Epic 1 deliverables validation results
@@ -428,10 +441,12 @@ make validate-at-e1-012
 The AT-E1-012 test validates the following phases:
 
 1. **Epic 1 Deliverables Validation**
+
    - Runs validation scripts for AT-E1-001 through AT-E1-011
    - Ensures all foundational components are working
 
 2. **Synthetic User Scenario**
+
    - Step 1: Verifies Backstage templates (≥3 templates)
    - Step 2: Validates Jenkins CI/CD pipeline configuration
    - Step 3: Checks security scanning integration (SonarQube, Trivy, secrets)
@@ -441,12 +456,14 @@ The AT-E1-012 test validates the following phases:
    - Step 7: Checks observability stack (Prometheus, Grafana, OpenTelemetry)
 
 3. **Automation Verification**
+
    - ArgoCD auto-sync enabled
    - Jenkins SCM automation
    - Pre-commit hooks configured
    - GitOps app-of-apps pattern
 
 4. **Component Health Checks**
+
    - Backstage deployment
    - Jenkins controller
    - ArgoCD server
@@ -454,10 +471,12 @@ The AT-E1-012 test validates the following phases:
    - Grafana
 
 5. **DORA Dashboard Validation**
+
    - Dashboard file exists
    - Contains 4 key metrics (deployment frequency, lead time, CFR, MTTR)
 
 6. **Component Log Analysis**
+
    - Scans logs for critical errors
    - Checks fawkes, monitoring, and devlake namespaces
    - Filters out expected/test errors
@@ -486,6 +505,7 @@ The AT-E1-012 test validates the following phases:
 ### Success Criteria
 
 The test passes when:
+
 - ✓ All Epic 1 deliverables are validated
 - ✓ Complete synthetic user workflow works end-to-end
 - ✓ Full cycle completes in <20 minutes
@@ -498,21 +518,25 @@ The test passes when:
 ### Troubleshooting
 
 **Test exceeds 20-minute limit:**
+
 - Check for slow-responding components
 - Verify cluster has sufficient resources
 - Review component logs for performance issues
 
 **Epic 1 deliverables validation fails:**
+
 - Run individual AT-E1-XXX tests to identify specific failures
 - Check component deployment status with kubectl
 - Review component-specific validation scripts
 
 **Component health checks fail:**
+
 - Verify all pods are running: `kubectl get pods -A`
 - Check pod logs for errors: `kubectl logs <pod> -n <namespace>`
 - Ensure resources are not exhausted: `kubectl top nodes`
 
 **DORA dashboard not found:**
+
 - Check if Grafana dashboard JSON exists
 - Verify DevLake deployment
 - Review platform/apps/grafana/ directory
@@ -520,6 +544,7 @@ The test passes when:
 ### Related Tests
 
 AT-E1-012 orchestrates and validates:
+
 - AT-E1-001: Infrastructure
 - AT-E1-002: GitOps/ArgoCD
 - AT-E1-003: Backstage
@@ -548,6 +573,7 @@ as separate test executions.
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e1-005.sh`)
+
    - Checks prerequisites (kubectl, cluster access)
    - Validates SonarQube deployment and database
    - Checks SonarQube accessibility and API
@@ -562,6 +588,7 @@ as separate test executions.
    - Validates BDD test coverage
 
 2. **Integration Tests** (`tests/integration/sonarqube-check.sh`)
+
    - Tests SonarQube health endpoint
    - Validates system status
    - Checks quality gates configuration
@@ -571,6 +598,7 @@ as separate test executions.
    - Validates web interface
 
 3. **Security Tests** (`tests/security/scan-all-images.sh`)
+
    - Discovers all container images in namespace
    - Scans each image with Trivy
    - Filters by HIGH,CRITICAL vulnerabilities
@@ -585,11 +613,13 @@ as separate test executions.
 ### Test Reports
 
 Test reports are generated in JSON format at:
+
 ```
 reports/at-e1-005-validation-YYYYMMDD-HHMMSS.json
 ```
 
 Trivy scan reports are generated at:
+
 ```
 reports/trivy-scans/trivy-scan-*-YYYYMMDD-HHMMSS.txt
 reports/trivy-scans/trivy-scan-*-YYYYMMDD-HHMMSS.json
@@ -638,6 +668,7 @@ make validate-at-e1-005
 ### Troubleshooting
 
 **SonarQube API not accessible:**
+
 ```bash
 # Port forward to SonarQube
 kubectl port-forward -n fawkes svc/sonarqube 9000:9000
@@ -647,6 +678,7 @@ kubectl port-forward -n fawkes svc/sonarqube 9000:9000
 ```
 
 **Trivy not installed:**
+
 ```bash
 # Install Trivy
 brew install aquasecurity/trivy/trivy  # macOS
@@ -655,6 +687,7 @@ curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/inst
 ```
 
 **Jenkins shared library not found:**
+
 - Ensure repository is cloned completely with submodules
 - Check `jenkins-shared-library/vars/` directory exists
 
@@ -664,15 +697,15 @@ curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/inst
 
 - [x] DORA metrics service deployed (DevLake microservice)
 - [x] Webhook receivers configured for:
-  * Git commits (GitHub)
-  * CI builds (Jenkins)
-  * Deployments (ArgoCD)
-  * Incidents (synthetic/manual)
+  - Git commits (GitHub)
+  - CI builds (Jenkins)
+  - Deployments (ArgoCD)
+  - Incidents (synthetic/manual)
 - [x] All 4 key metrics calculated and exposed:
-  * Deployment Frequency (per day)
-  * Lead Time for Changes (hours)
-  * Change Failure Rate (%)
-  * Time to Restore Service (hours)
+  - Deployment Frequency (per day)
+  - Lead Time for Changes (hours)
+  - Change Failure Rate (%)
+  - Time to Restore Service (hours)
 - [x] Grafana DORA dashboard deployed
 - [x] Historical data stored (PostgreSQL/MySQL)
 - [x] Metrics updated in real-time (<1 min lag)
@@ -681,6 +714,7 @@ curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/inst
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e1-007.sh`)
+
    - Validates DevLake deployment and health
    - Checks all components (lake, UI, MySQL, Grafana)
    - Verifies database schema and tables
@@ -693,6 +727,7 @@ curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/inst
    - Generates JSON test report
 
 2. **Integration Tests** (`tests/integration/validate-dora-dashboard.sh`)
+
    - Validates DORA dashboard JSON structure
    - Checks presence of all 4 key metrics
    - Verifies team-level filtering
@@ -701,6 +736,7 @@ curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/inst
    - Checks environment and service filtering
 
 3. **Webhook Tests** (`scripts/test-dora-webhooks.sh`)
+
    - Tests DevLake service accessibility
    - Validates webhook endpoints
    - Checks GitHub, Jenkins, ArgoCD webhook configuration
@@ -713,6 +749,7 @@ curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/inst
 ### Test Reports
 
 Test reports are generated in JSON format at:
+
 ```
 reports/at-e1-007-validation-YYYYMMDD-HHMMSS.json
 ```
@@ -757,6 +794,7 @@ make validate-at-e1-007
 ### Troubleshooting
 
 **DevLake API not accessible:**
+
 ```bash
 # Port forward to DevLake
 kubectl port-forward -n fawkes-devlake svc/devlake-lake 8080:8080
@@ -766,11 +804,13 @@ kubectl port-forward -n fawkes-devlake svc/devlake-lake 8080:8080
 ```
 
 **Database schema missing:**
+
 - Check DevLake logs for migration errors
 - Verify MySQL pod is running and accessible
 - Check database initialization jobs
 
 **Grafana dashboard not found:**
+
 - Verify Grafana pod is running
 - Check ConfigMap for dashboard definitions
 - Ensure dashboard JSON is valid
@@ -799,6 +839,7 @@ kubectl port-forward -n fawkes-devlake svc/devlake-lake 8080:8080
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e2-001.sh`)
+
    - Validates Copilot documentation exists and is comprehensive
    - Checks IDE extension documentation (VSCode, IntelliJ, Vim)
    - Verifies RAG integration documentation
@@ -819,6 +860,7 @@ kubectl port-forward -n fawkes-devlake svc/devlake-lake 8080:8080
 ### Test Reports
 
 Test reports are generated in JSON format at:
+
 ```
 reports/at-e2-001-validation-YYYYMMDD-HHMMSS.json
 ```
@@ -851,11 +893,13 @@ make validate-at-e2-001
 ### Troubleshooting
 
 **Documentation not found:**
+
 - Verify all required documentation files exist
 - Check file paths match expected locations
 - Ensure files are committed to repository
 
 **Code generation tests fail:**
+
 - Review test script logs
 - Check if required tools are installed
 - Verify test script has execute permissions
@@ -878,6 +922,7 @@ make validate-at-e2-001
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e2-002.sh`)
+
    - Phase 1: Prerequisites (kubectl, cluster access, namespace)
    - Phase 2: Weaviate Integration (deployment, pods ready)
    - Phase 3: RAG Service Deployment (deployment, replicas, service, ingress, ConfigMap)
@@ -934,6 +979,7 @@ pytest tests/bdd -k "rag" -v --tb=short
 ### Troubleshooting
 
 **RAG service not accessible:**
+
 ```bash
 # Check pod status
 kubectl get pods -n fawkes -l app=rag-service
@@ -949,6 +995,7 @@ kubectl port-forward -n fawkes svc/rag-service 8080:80
 ```
 
 **Weaviate connection failed:**
+
 ```bash
 # Check Weaviate status
 kubectl get pods -n fawkes -l app=weaviate
@@ -961,6 +1008,7 @@ kubectl get configmap rag-service-config -n fawkes -o yaml
 ```
 
 **Performance issues (>500ms):**
+
 - Check Weaviate resource usage
 - Verify network latency
 - Review indexed document size
@@ -977,9 +1025,9 @@ kubectl get configmap rag-service-config -n fawkes -o yaml
 - [x] GraphQL API functional
 - [x] Metadata ingestion working
 - [x] Automated ingestion CronJobs:
-  * PostgreSQL ingestion (daily)
-  * Kubernetes ingestion (hourly)
-  * Git/CI ingestion (6-hour)
+  - PostgreSQL ingestion (daily)
+  - Kubernetes ingestion (hourly)
+  - Git/CI ingestion (6-hour)
 - [x] Data lineage visualization
 - [x] Resource limits configured
 - [x] Prometheus metrics exposed
@@ -987,38 +1035,40 @@ kubectl get configmap rag-service-config -n fawkes -o yaml
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e2-003.sh`)
-    - Phase 1: Prerequisites (kubectl, cluster access, namespace)
-    - Phase 2: PostgreSQL Database (cluster health, pods, service)
-    - Phase 3: OpenSearch (pods, service)
-    - Phase 4: DataHub Deployment (GMS, Frontend replicas)
-    - Phase 5: Services (GMS service, Frontend service)
-    - Phase 6: Ingress Configuration (ingress exists, hosts configured)
-    - Phase 7: API Health (GMS health, Frontend health)
-    - Phase 8: Ingestion Automation (CronJobs for PostgreSQL, K8s, Git/CI)
-    - Phase 9: Resource Limits (CPU/memory requests and limits)
-    - Phase 10: ArgoCD Application (sync status, health status)
-    - Generates test summary with pass/fail counts and JSON report
+
+   - Phase 1: Prerequisites (kubectl, cluster access, namespace)
+   - Phase 2: PostgreSQL Database (cluster health, pods, service)
+   - Phase 3: OpenSearch (pods, service)
+   - Phase 4: DataHub Deployment (GMS, Frontend replicas)
+   - Phase 5: Services (GMS service, Frontend service)
+   - Phase 6: Ingress Configuration (ingress exists, hosts configured)
+   - Phase 7: API Health (GMS health, Frontend health)
+   - Phase 8: Ingestion Automation (CronJobs for PostgreSQL, K8s, Git/CI)
+   - Phase 9: Resource Limits (CPU/memory requests and limits)
+   - Phase 10: ArgoCD Application (sync status, health status)
+   - Generates test summary with pass/fail counts and JSON report
 
 2. **BDD Tests** (`tests/bdd/features/datahub-deployment.feature`)
-    - Service deployment and accessibility
-    - GraphQL API health
-    - Metadata storage with PostgreSQL
-    - Search indexing with OpenSearch
-    - PostgreSQL metadata ingestion
-    - Basic authentication
-    - Data lineage visualization
-    - Resource allocation and stability
-    - Prometheus metrics exposure
-    - PostgreSQL high availability
-    - Data governance with tags
-    - REST API integration
-    - UI search and discovery
-    - Automated metadata ingestion (CronJobs)
-    - End-to-end metadata lineage
+   - Service deployment and accessibility
+   - GraphQL API health
+   - Metadata storage with PostgreSQL
+   - Search indexing with OpenSearch
+   - PostgreSQL metadata ingestion
+   - Basic authentication
+   - Data lineage visualization
+   - Resource allocation and stability
+   - Prometheus metrics exposure
+   - PostgreSQL high availability
+   - Data governance with tags
+   - REST API integration
+   - UI search and discovery
+   - Automated metadata ingestion (CronJobs)
+   - End-to-end metadata lineage
 
 ### Test Reports
 
 Test reports are generated in JSON format at:
+
 ```
 reports/at-e2-003-validation-YYYYMMDD-HHMMSS.json
 ```
@@ -1054,6 +1104,7 @@ pytest tests/bdd -k "datahub" -v --tb=short
 ### Troubleshooting
 
 **DataHub pods not starting:**
+
 ```bash
 # Check pod status
 kubectl get pods -n fawkes -l "app.kubernetes.io/instance=datahub"
@@ -1066,6 +1117,7 @@ kubectl logs -n fawkes deployment/datahub-datahub-frontend
 ```
 
 **PostgreSQL connection issues:**
+
 ```bash
 # Check PostgreSQL cluster
 kubectl get cluster db-datahub-dev -n fawkes
@@ -1079,6 +1131,7 @@ kubectl exec -n fawkes deployment/datahub-datahub-gms -- \
 ```
 
 **OpenSearch not accessible:**
+
 ```bash
 # Check OpenSearch pods
 kubectl get pods -n logging -l "app=opensearch"
@@ -1088,6 +1141,7 @@ kubectl port-forward -n logging svc/opensearch 9200:9200
 ```
 
 **Ingestion jobs not running:**
+
 ```bash
 # Check CronJobs
 kubectl get cronjobs -n fawkes | grep datahub
@@ -1105,11 +1159,11 @@ kubectl logs -n fawkes job/manual-run
 
 - [x] Great Expectations configuration deployed
 - [x] Data source connections configured:
-  * Backstage database
-  * Harbor database
-  * DataHub database
-  * SonarQube database
-  * DORA metrics database
+  - Backstage database
+  - Harbor database
+  - DataHub database
+  - SonarQube database
+  - DORA metrics database
 - [x] Expectation suites created for all databases
 - [x] Validation running automatically (CronJob)
 - [x] Checkpoints configured
@@ -1120,28 +1174,30 @@ kubectl logs -n fawkes job/manual-run
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e2-004.sh`)
-    - Phase 1: Prerequisites (kubectl, cluster access, namespace)
-    - Phase 2: Great Expectations Configuration (ConfigMaps, Secrets)
-    - Phase 3: Data Sources Connected (all database clusters)
-    - Phase 4: Expectation Suites Created (5 suites for different databases)
-    - Phase 5: Validation Running Automatically (CronJob schedule)
-    - Phase 6: Checkpoints Configuration (checkpoint YAML files)
-    - Phase 7: Prometheus Exporter (deployment, service, ServiceMonitor)
-    - Phase 8: Grafana Dashboard (JSON file validation, panel count)
-    - Phase 9: ArgoCD Application (sync and health status)
-    - Generates test summary with pass/fail counts
+
+   - Phase 1: Prerequisites (kubectl, cluster access, namespace)
+   - Phase 2: Great Expectations Configuration (ConfigMaps, Secrets)
+   - Phase 3: Data Sources Connected (all database clusters)
+   - Phase 4: Expectation Suites Created (5 suites for different databases)
+   - Phase 5: Validation Running Automatically (CronJob schedule)
+   - Phase 6: Checkpoints Configuration (checkpoint YAML files)
+   - Phase 7: Prometheus Exporter (deployment, service, ServiceMonitor)
+   - Phase 8: Grafana Dashboard (JSON file validation, panel count)
+   - Phase 9: ArgoCD Application (sync and health status)
+   - Generates test summary with pass/fail counts
 
 2. **BDD Tests** (to be created in `tests/bdd/features/`)
-    - Data quality configuration
-    - Database connections
-    - Expectation suite validation
-    - Automated validation runs
-    - Prometheus metrics exposure
-    - Grafana dashboard visualization
+   - Data quality configuration
+   - Database connections
+   - Expectation suite validation
+   - Automated validation runs
+   - Prometheus metrics exposure
+   - Grafana dashboard visualization
 
 ### Test Reports
 
 Test reports are shown in terminal output. Future enhancement will generate JSON reports at:
+
 ```
 reports/at-e2-004-validation-YYYYMMDD-HHMMSS.json
 ```
@@ -1180,6 +1236,7 @@ pytest tests/bdd -k "data_quality or great_expectations" -v --tb=short
 ### Troubleshooting
 
 **ConfigMaps not found:**
+
 ```bash
 # Check ConfigMaps
 kubectl get configmap -n fawkes | grep -E "data-quality|gx-"
@@ -1189,6 +1246,7 @@ kubectl get configmap gx-full-config -n fawkes -o yaml
 ```
 
 **Database connections failing:**
+
 ```bash
 # Check database cluster status
 kubectl get clusters -n fawkes
@@ -1199,6 +1257,7 @@ kubectl exec -n fawkes deployment/data-quality-exporter -- \
 ```
 
 **CronJob not running:**
+
 ```bash
 # Check CronJob
 kubectl get cronjob data-quality-validation -n fawkes
@@ -1214,6 +1273,7 @@ kubectl logs -n fawkes job/manual-validation
 ```
 
 **Prometheus metrics not available:**
+
 ```bash
 # Check exporter deployment
 kubectl get deployment data-quality-exporter -n fawkes
@@ -1257,28 +1317,30 @@ The VSM service uses an 8-stage value stream:
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e2-005.sh`)
-    - Phase 1: Prerequisites (kubectl, cluster access, namespace)
-    - Phase 2: PostgreSQL Database (cluster health, pods, service)
-    - Phase 3: VSM Service Deployment (deployment, replicas, service, ingress, ConfigMap)
-    - Phase 4: API Health Check (health endpoint, readiness endpoint)
-    - Phase 5: API Endpoints (stages, metrics, OpenAPI docs)
-    - Phase 6: Flow Metrics (throughput, WIP, cycle time calculation)
-    - Phase 7: Prometheus Metrics (metrics exposure, ServiceMonitor)
-    - Phase 8: Resource Configuration (CPU/memory requests and limits)
-    - Phase 9: ArgoCD Application (sync and health status)
-    - Generates JSON test report
+
+   - Phase 1: Prerequisites (kubectl, cluster access, namespace)
+   - Phase 2: PostgreSQL Database (cluster health, pods, service)
+   - Phase 3: VSM Service Deployment (deployment, replicas, service, ingress, ConfigMap)
+   - Phase 4: API Health Check (health endpoint, readiness endpoint)
+   - Phase 5: API Endpoints (stages, metrics, OpenAPI docs)
+   - Phase 6: Flow Metrics (throughput, WIP, cycle time calculation)
+   - Phase 7: Prometheus Metrics (metrics exposure, ServiceMonitor)
+   - Phase 8: Resource Configuration (CPU/memory requests and limits)
+   - Phase 9: ArgoCD Application (sync and health status)
+   - Generates JSON test report
 
 2. **BDD Tests** (`tests/bdd/features/`)
-    - VSM service deployment and accessibility
-    - Work item creation and tracking
-    - Stage transitions with validation
-    - Flow metrics calculation
-    - Prometheus metrics exposure
-    - Resource allocation and stability
+   - VSM service deployment and accessibility
+   - Work item creation and tracking
+   - Stage transitions with validation
+   - Flow metrics calculation
+   - Prometheus metrics exposure
+   - Resource allocation and stability
 
 ### Test Reports
 
 Test reports are generated in JSON format at:
+
 ```
 reports/at-e2-005-validation-YYYYMMDD-HHMMSS.json
 ```
@@ -1327,6 +1389,7 @@ The VSM service provides the following endpoints:
 ### Troubleshooting
 
 **VSM service not accessible:**
+
 ```bash
 # Check pod status
 kubectl get pods -n fawkes -l app=vsm-service
@@ -1342,6 +1405,7 @@ kubectl port-forward -n fawkes svc/vsm-service 8080:80
 ```
 
 **PostgreSQL connection failed:**
+
 ```bash
 # Check PostgreSQL cluster
 kubectl get cluster db-vsm-dev -n fawkes
@@ -1354,6 +1418,7 @@ kubectl get configmap vsm-service-config -n fawkes -o yaml
 ```
 
 **Flow metrics not calculating:**
+
 - Ensure work items have been created and transitioned
 - Check database has stage transitions recorded
 - Verify metrics calculation is not failing in logs
@@ -1377,21 +1442,22 @@ kubectl get configmap vsm-service-config -n fawkes -o yaml
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e2-008.sh`)
-    - Test 1: Hasura Deployment (deployment exists, replicas ready)
-    - Test 2: Hasura Service (service exists, port configured)
-    - Test 3: Hasura Ingress (ingress configured)
-    - Test 4: Redis Cache (cache deployment, if configured)
-    - Test 5: GraphQL Endpoint Health (health check)
-    - Test 6: GraphQL Schema Introspection (type count)
-    - Test 7: Query Performance Test (P95 < 1s, 20 iterations)
-    - Test 8: GraphQL Console Access (playground/console)
-    - Test 9: RBAC Configuration (permission files, anonymous role)
-    - Test 10: Monitoring Integration (ServiceMonitor, metrics endpoint)
+
+   - Test 1: Hasura Deployment (deployment exists, replicas ready)
+   - Test 2: Hasura Service (service exists, port configured)
+   - Test 3: Hasura Ingress (ingress configured)
+   - Test 4: Redis Cache (cache deployment, if configured)
+   - Test 5: GraphQL Endpoint Health (health check)
+   - Test 6: GraphQL Schema Introspection (type count)
+   - Test 7: Query Performance Test (P95 < 1s, 20 iterations)
+   - Test 8: GraphQL Console Access (playground/console)
+   - Test 9: RBAC Configuration (permission files, anonymous role)
+   - Test 10: Monitoring Integration (ServiceMonitor, metrics endpoint)
 
 2. **Performance Tests** (`tests/performance/graphql-load-test.js`)
-    - k6 load testing for GraphQL queries
-    - Performance benchmarking
-    - Stress testing
+   - k6 load testing for GraphQL queries
+   - Performance benchmarking
+   - Stress testing
 
 ### Test Reports
 
@@ -1436,6 +1502,7 @@ The Hasura GraphQL API provides:
 ### Troubleshooting
 
 **Hasura not accessible:**
+
 ```bash
 # Check pod status
 kubectl get pods -n fawkes -l app=hasura
@@ -1451,18 +1518,21 @@ kubectl port-forward -n fawkes svc/hasura 8080:8080
 ```
 
 **GraphQL schema empty:**
+
 - Ensure database tables are tracked in Hasura
 - Access console at http://localhost:8080/console
 - Go to Data tab and track tables
 - Verify database connections are configured
 
 **Performance issues:**
+
 - Check Redis cache deployment and configuration
 - Verify database connection pooling settings
 - Review query complexity and optimize if needed
 - Check resource limits on Hasura pods
 
 **RBAC not working:**
+
 - Verify permissions.yaml file exists
 - Apply metadata: `hasura metadata apply`
 - Check role configuration in Hasura console
@@ -1482,49 +1552,51 @@ kubectl port-forward -n fawkes svc/hasura 8080:8080
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e2-010.sh`)
-    - AC1: Feedback analytics dashboard created
-      - Dashboard file exists at `platform/apps/grafana/dashboards/feedback-analytics.json`
-      - Dashboard JSON is valid
-      - Dashboard has correct title "Feedback Analytics"
-      - Dashboard has sufficient panels (>10)
-    - AC2: NPS trends visible
-      - NPS score panel exists
-      - NPS trend panel exists
-      - NPS components panel exists (promoters/passives/detractors)
-    - AC3: Feedback categorization shown
-      - Category panel exists
-      - Rating distribution panel exists
-    - AC4: Sentiment analysis working
-      - Sentiment module exists (`services/feedback/app/sentiment.py`)
-      - VADER dependency specified in requirements.txt
-      - Sentiment fields in database schema
-      - Sentiment panels in dashboard
-    - AC5: Top issues highlighted
-      - Top issues panel exists
-      - Low-rated feedback panel exists
-    - AC6: Metrics exported to Prometheus
-      - Metrics module exists (`services/feedback/app/metrics.py`)
-      - All required metrics defined (nps_score, nps_promoters_percentage, nps_detractors_percentage, feedback_response_rate, feedback_submissions_total, feedback_sentiment_score)
-      - Metrics integrated in main application
-    - Generates JSON test report
+
+   - AC1: Feedback analytics dashboard created
+     - Dashboard file exists at `platform/apps/grafana/dashboards/feedback-analytics.json`
+     - Dashboard JSON is valid
+     - Dashboard has correct title "Feedback Analytics"
+     - Dashboard has sufficient panels (>10)
+   - AC2: NPS trends visible
+     - NPS score panel exists
+     - NPS trend panel exists
+     - NPS components panel exists (promoters/passives/detractors)
+   - AC3: Feedback categorization shown
+     - Category panel exists
+     - Rating distribution panel exists
+   - AC4: Sentiment analysis working
+     - Sentiment module exists (`services/feedback/app/sentiment.py`)
+     - VADER dependency specified in requirements.txt
+     - Sentiment fields in database schema
+     - Sentiment panels in dashboard
+   - AC5: Top issues highlighted
+     - Top issues panel exists
+     - Low-rated feedback panel exists
+   - AC6: Metrics exported to Prometheus
+     - Metrics module exists (`services/feedback/app/metrics.py`)
+     - All required metrics defined (nps_score, nps_promoters_percentage, nps_detractors_percentage, feedback_response_rate, feedback_submissions_total, feedback_sentiment_score)
+     - Metrics integrated in main application
+   - Generates JSON test report
 
 2. **BDD Tests** (`tests/bdd/features/feedback-widget.feature`)
-    - Feedback service deployment and health
-    - Database cluster operational
-    - Feedback submission with validation
-    - Authorization and admin endpoints
-    - Feedback status management
-    - Statistics endpoint
-    - Ingress configuration
-    - Backstage proxy configuration
-    - Prometheus metrics exposure
-    - Resource limits and security
+   - Feedback service deployment and health
+   - Database cluster operational
+   - Feedback submission with validation
+   - Authorization and admin endpoints
+   - Feedback status management
+   - Statistics endpoint
+   - Ingress configuration
+   - Backstage proxy configuration
+   - Prometheus metrics exposure
+   - Resource limits and security
 
 ### Feedback Analytics Features
 
 The feedback analytics system includes:
 
 #### NPS Metrics
+
 - **NPS Score**: -100 to +100 scale, calculated from 1-5 star ratings
   - Promoters: 5 stars (would recommend)
   - Passives: 4 stars (satisfied but not enthusiastic)
@@ -1533,12 +1605,14 @@ The feedback analytics system includes:
 - **Tracking periods**: overall, last_30d, last_90d
 
 #### Sentiment Analysis
+
 - **AI-powered analysis** using VADER (Valence Aware Dictionary and sEntiment Reasoner)
 - **Automatic classification**: positive (≥0.05), neutral (-0.05 to 0.05), negative (≤-0.05)
 - **Compound score**: -1.0 (most negative) to +1.0 (most positive)
 - Stored with each feedback submission
 
 #### Dashboard Panels (25 total)
+
 1. **Key Metrics Overview**: NPS Score, Total Feedback, Response Rate, Average Rating
 2. **NPS Breakdown**: NPS Trend (90-day), NPS Components Distribution
 3. **Feedback Volume & Categories**: Volume Over Time, Feedback by Category
@@ -1550,6 +1624,7 @@ The feedback analytics system includes:
 ### Test Reports
 
 Test reports are generated in JSON format at:
+
 ```
 reports/at-e2-010-validation-YYYYMMDD-HHMMSS.json
 ```
@@ -1580,16 +1655,19 @@ pytest tests/bdd -k "feedback" -v --tb=short
 The feedback service provides:
 
 #### Public Endpoints
+
 - `POST /api/v1/feedback` - Submit feedback (automatically analyzes sentiment)
 - `GET /health` - Health check
 
 #### Admin Endpoints (require Bearer token)
+
 - `GET /api/v1/feedback` - List all feedback (paginated, includes sentiment)
 - `PUT /api/v1/feedback/{id}/status` - Update feedback status
 - `GET /api/v1/feedback/stats` - Get aggregated statistics
 - `POST /api/v1/metrics/refresh` - Manually refresh Prometheus metrics
 
 #### Metrics
+
 - `GET /metrics` - Prometheus metrics endpoint
 
 ### Prerequisites
@@ -1604,6 +1682,7 @@ The feedback service provides:
 ### Troubleshooting
 
 **Feedback service not accessible:**
+
 ```bash
 # Check pod status
 kubectl get pods -n fawkes -l app=feedback-service
@@ -1619,6 +1698,7 @@ kubectl port-forward -n fawkes svc/feedback-service 8080:8000
 ```
 
 **PostgreSQL connection failed:**
+
 ```bash
 # Check PostgreSQL cluster
 kubectl get cluster db-feedback-dev -n fawkes
@@ -1632,18 +1712,21 @@ kubectl exec -n fawkes deployment/feedback-service -- \
 ```
 
 **Dashboard not found in Grafana:**
+
 - Verify dashboard JSON file exists: `platform/apps/grafana/dashboards/feedback-analytics.json`
 - Check if dashboard is loaded in Grafana ConfigMap
 - Access Grafana UI and manually import the dashboard
 - Check Grafana logs for import errors
 
 **Sentiment analysis not working:**
+
 - Verify VADER dependency installed: `grep vaderSentiment services/feedback/requirements.txt`
 - Check sentiment module exists: `services/feedback/app/sentiment.py`
 - Review feedback service logs for sentiment analysis errors
 - Test sentiment API by submitting feedback with comments
 
 **Metrics not appearing in Prometheus:**
+
 - Check metrics endpoint: `curl http://feedback-service:8000/metrics`
 - Verify ServiceMonitor exists for feedback service
 - Check Prometheus targets configuration
@@ -1652,6 +1735,7 @@ kubectl exec -n fawkes deployment/feedback-service -- \
 ### Example Usage
 
 Submit feedback with sentiment analysis:
+
 ```bash
 curl -X POST http://feedback-service.fawkes.svc:8000/api/v1/feedback \
   -H "Content-Type: application/json" \
@@ -1665,6 +1749,7 @@ curl -X POST http://feedback-service.fawkes.svc:8000/api/v1/feedback \
 ```
 
 Response includes sentiment:
+
 ```json
 {
   "id": 1,
@@ -1679,6 +1764,7 @@ Response includes sentiment:
 ```
 
 View metrics:
+
 ```bash
 curl http://feedback-service:8000/metrics | grep -E "nps_|feedback_|sentiment"
 ```
@@ -1702,6 +1788,7 @@ Use the `generate-report.sh` script to create consolidated reports:
 ```
 
 Report formats:
+
 - **HTML**: Interactive report with summary cards and tables
 - **JSON**: Machine-readable format for CI/CD integration
 - **Markdown**: Documentation-friendly format
@@ -1733,6 +1820,7 @@ Reports are saved in the `reports/` directory by default.
 ### Feedback Channels
 
 1. **Backstage Widget** (`services/feedback/`)
+
    - REST API for feedback submission
    - PostgreSQL database storage
    - Admin endpoints
@@ -1740,12 +1828,14 @@ Reports are saved in the `reports/` directory by default.
    - GitHub issue creation
 
 2. **CLI Tool** (`services/feedback-cli/`)
+
    - Terminal-based feedback submission
    - Interactive mode
    - Offline queue capability
    - Configuration management
 
 3. **Mattermost Bot** (`services/feedback-bot/`)
+
    - Natural language interface
    - `/feedback` slash command
    - Auto-categorization
@@ -1753,6 +1843,7 @@ Reports are saved in the `reports/` directory by default.
    - Smart rating extraction
 
 4. **Automation Pipeline** (`platform/apps/feedback-service/cronjob-automation.yaml`)
+
    - Runs every 15 minutes
    - AI-powered triage
    - Priority calculation
@@ -1769,53 +1860,56 @@ Reports are saved in the `reports/` directory by default.
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e3-003.sh`)
-    - AC1: Backstage Widget Functional
-      - Feedback service deployment exists
-      - Database cluster operational
-      - API accessible and healthy
-      - Backstage proxy configured
-    - AC2: CLI Tool Working
-      - Code exists in repository
-      - Submit and list commands present
-      - Configuration management implemented
-    - AC3: Mattermost Bot Responsive
-      - Bot deployment exists and running
-      - Service accessible
-      - NLP and sentiment analysis capabilities
-    - AC4: Automation Creating Issues
-      - CronJob scheduled (every 15 minutes)
-      - Automation endpoint available
-      - GitHub integration configured
-    - AC5: Analytics Dashboard Showing Data
-      - Dashboard file exists and valid JSON
-      - Key metrics present (NPS, sentiment, volume, ratings)
-      - Grafana operational
-    - AC6: All Channels Integrated
-      - ServiceMonitors configured
-      - Metrics exposed
-      - Components can communicate
-      - BDD test coverage
+
+   - AC1: Backstage Widget Functional
+     - Feedback service deployment exists
+     - Database cluster operational
+     - API accessible and healthy
+     - Backstage proxy configured
+   - AC2: CLI Tool Working
+     - Code exists in repository
+     - Submit and list commands present
+     - Configuration management implemented
+   - AC3: Mattermost Bot Responsive
+     - Bot deployment exists and running
+     - Service accessible
+     - NLP and sentiment analysis capabilities
+   - AC4: Automation Creating Issues
+     - CronJob scheduled (every 15 minutes)
+     - Automation endpoint available
+     - GitHub integration configured
+   - AC5: Analytics Dashboard Showing Data
+     - Dashboard file exists and valid JSON
+     - Key metrics present (NPS, sentiment, volume, ratings)
+     - Grafana operational
+   - AC6: All Channels Integrated
+     - ServiceMonitors configured
+     - Metrics exposed
+     - Components can communicate
+     - BDD test coverage
 
 2. **BDD Tests** (`tests/bdd/features/multi-channel-feedback.feature`)
-    - Backstage widget functional
-    - CLI tool working
-    - Mattermost bot responsive
-    - Automation creating issues
-    - Analytics dashboard operational
-    - System integration verified
-    - Observability configured
-    - Security and resources validated
-    - Data flow end-to-end
-    - All channels completeness
+
+   - Backstage widget functional
+   - CLI tool working
+   - Mattermost bot responsive
+   - Automation creating issues
+   - Analytics dashboard operational
+   - System integration verified
+   - Observability configured
+   - Security and resources validated
+   - Data flow end-to-end
+   - All channels completeness
 
 3. **Individual Channel BDD Tests**
-    - `feedback-widget.feature` - Backstage widget scenarios
-    - `feedback-bot.feature` - Mattermost bot scenarios
-    - `feedback-automation.feature` - Automation pipeline scenarios
+   - `feedback-widget.feature` - Backstage widget scenarios
+   - `feedback-bot.feature` - Mattermost bot scenarios
+   - `feedback-automation.feature` - Automation pipeline scenarios
 
 ### Test Reports
 
 Test reports are generated in JSON format at:
+
 ```
 reports/at-e3-003-validation-YYYYMMDD-HHMMSS.json
 ```
@@ -1884,6 +1978,7 @@ kubectl port-forward -n monitoring svc/grafana 3000:3000
 ### Troubleshooting
 
 **Feedback service not accessible:**
+
 ```bash
 # Check deployment and logs
 kubectl get deployment feedback-service -n fawkes
@@ -1895,6 +1990,7 @@ curl http://localhost:8000/health
 ```
 
 **Bot not responding:**
+
 ```bash
 # Check bot deployment
 kubectl get deployment feedback-bot -n fawkes
@@ -1905,6 +2001,7 @@ kubectl get secret feedback-bot-secret -n fawkes
 ```
 
 **Automation not running:**
+
 ```bash
 # Check CronJob
 kubectl get cronjob feedback-automation -n fawkes
@@ -1916,6 +2013,7 @@ kubectl logs -n fawkes job/manual-test
 ```
 
 **Dashboard not showing data:**
+
 ```bash
 # Check Grafana
 kubectl get pods -n monitoring -l app.kubernetes.io/name=grafana
@@ -1931,6 +2029,7 @@ curl http://localhost:8000/metrics | grep feedback_
 ### Success Criteria
 
 The test passes when:
+
 - ✓ All 5 feedback channels are implemented
 - ✓ Code exists for all components
 - ✓ Deployments are configured correctly
@@ -1976,6 +2075,7 @@ The feature flags platform uses:
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e3-006.sh`)
+
    - Prerequisites validation (kubectl, namespace)
    - PostgreSQL cluster health check
    - Unleash deployment and replica validation
@@ -2021,21 +2121,25 @@ pytest tests/bdd -k "unleash or feature.flags" -v
 ### Key Features Validated
 
 **Feature Flag Management:**
+
 - Create, read, update, delete feature flags
 - Enable/disable flags per environment
 - Configure activation strategies
 
 **Rollout Strategies:**
+
 - Gradual rollout (percentage-based)
 - User targeting
 - Constraint-based activation
 
 **Integration:**
+
 - OpenFeature SDK compatibility
 - Consistent evaluation results
 - API and SDK parity
 
 **Observability:**
+
 - Prometheus metrics at `/internal-backstage/prometheus`
 - `unleash_feature_toggles_total` metric
 - `unleash_client_requests_total` metric
@@ -2072,6 +2176,7 @@ curl http://unleash.fawkes.idp/internal-backstage/prometheus
 ### Troubleshooting
 
 **Unleash pods not starting:**
+
 ```bash
 # Check deployment status
 kubectl get deployment unleash -n fawkes
@@ -2085,6 +2190,7 @@ kubectl get cluster db-unleash-dev -n fawkes
 ```
 
 **API not accessible:**
+
 ```bash
 # Check service
 kubectl get svc unleash -n fawkes
@@ -2098,6 +2204,7 @@ curl http://localhost:4242/health
 ```
 
 **Feature flags not persisting:**
+
 ```bash
 # Check PostgreSQL cluster health
 kubectl get cluster db-unleash-dev -n fawkes
@@ -2125,12 +2232,14 @@ kubectl exec -n fawkes deployment/unleash -- \
 The event tracking infrastructure consists of:
 
 1. **Event Schema** (`eventSchema.ts`)
+
    - 9 event categories (navigation, scaffolding, documentation, CI/CD, feedback, feature usage, errors, performance, user)
    - 26 event actions (view, click, submit, create, deploy, etc.)
    - 60+ predefined events covering all platform interactions
    - Extensible property system for custom dimensions
 
 2. **Event Tracker** (`eventTracker.ts`)
+
    - Singleton pattern for global instance
    - Plausible Analytics integration
    - Event validation before sending
@@ -2138,6 +2247,7 @@ The event tracking infrastructure consists of:
    - Queue for offline scenarios
 
 3. **React Hooks** (multiple hook files)
+
    - `useEventTracking` - General event tracking
    - `usePageViewTracking` - Automatic page view tracking
    - `useButtonClick` - Button click tracking
@@ -2153,6 +2263,7 @@ The event tracking infrastructure consists of:
 ### Test Components
 
 1. **Comprehensive Validation** (`scripts/validate-at-e3-007.sh`)
+
    - Event schema validation (60+ events, categories, actions)
    - Tracking library code verification
    - React hooks implementation check
@@ -2203,27 +2314,35 @@ pytest tests/bdd -k "event.tracking or AT-E3-007" -v
 The event tracking system covers these categories:
 
 1. **Navigation** (5 events)
+
    - Homepage views, catalog views, searches, service details
 
 2. **Scaffolding** (10 events)
+
    - Workflow start/complete/cancel, template selection, validation errors
 
 3. **Documentation** (6 events)
+
    - Docs views, searches, TechDocs, downloads
 
 4. **CI/CD** (12 events)
+
    - Pipeline views, builds, deployments, ArgoCD syncs
 
 5. **Feedback** (8 events)
+
    - Widget interactions, feedback submission, bug reports, feature requests
 
 6. **Feature Usage** (6 events)
+
    - Plugin interactions (Kubernetes, ArgoCD, Grafana), data exports
 
 7. **Errors** (5 events)
+
    - Page errors, API errors, validation errors, authentication errors
 
 8. **Performance** (4 events)
+
    - Page load times, API response times, slow operations, timeouts
 
 9. **User** (4 events)
@@ -2232,18 +2351,21 @@ The event tracking system covers these categories:
 ### Key Features Validated
 
 **Event Schema:**
+
 - Clear taxonomy with categories and actions
 - 60+ predefined events for common interactions
 - Extensible property system
 - Type-safe TypeScript definitions
 
 **Tracking Library:**
+
 - Singleton pattern for consistency
 - Automatic Plausible script injection
 - Event validation before sending
 - Serializable properties only
 
 **Middleware Chain:**
+
 - Validation middleware (rejects invalid events)
 - Privacy middleware (removes sensitive data)
 - Enrichment middleware (adds default properties)
@@ -2252,6 +2374,7 @@ The event tracking system covers these categories:
 - Deduplication middleware (prevents duplicates)
 
 **Privacy & Compliance:**
+
 - No cookies used
 - No PII collected by default
 - Sensitive fields automatically removed (email, password, API keys)
@@ -2259,6 +2382,7 @@ The event tracking system covers these categories:
 - No consent banners required
 
 **React Integration:**
+
 - Multiple hooks for different use cases
 - Automatic event tracking
 - Easy integration with components
@@ -2295,6 +2419,7 @@ curl http://localhost:8000/api/health
 ### Troubleshooting
 
 **Event schema not found:**
+
 ```bash
 # Check file exists
 ls -la design-system/backstage-plugin/src/lib/eventSchema.ts
@@ -2304,6 +2429,7 @@ cat design-system/backstage-plugin/src/lib/eventSchema.ts | head -50
 ```
 
 **Tracking library not working:**
+
 ```bash
 # Check implementation
 cat design-system/backstage-plugin/src/lib/eventTracker.ts
@@ -2313,6 +2439,7 @@ grep "plausible.io/js/script" design-system/backstage-plugin/src/lib/eventTracke
 ```
 
 **Events not appearing in Plausible:**
+
 ```bash
 # Check Plausible deployment
 kubectl get deployment plausible -n fawkes
@@ -2327,6 +2454,7 @@ curl http://localhost:8000/api/health
 ```
 
 **Privacy middleware removing too much data:**
+
 - Review privacy middleware configuration
 - Check sensitive field list
 - Adjust truncation length if needed
@@ -2338,9 +2466,6 @@ curl http://localhost:8000/api/health
 - [Event Schema Source](../../design-system/backstage-plugin/src/lib/eventSchema.ts)
 - [Event Tracker Source](../../design-system/backstage-plugin/src/lib/eventTracker.ts)
 - [BDD Feature File](../bdd/features/event-tracking.feature)
-
-
-
 
 ## AT-E3-008: Continuous Discovery Process
 
@@ -2358,6 +2483,7 @@ curl http://localhost:8000/api/health
 The continuous discovery process includes:
 
 1. **Discovery Workflow Documentation** (`docs/playbooks/continuous-discovery-workflow.md`)
+
    - Comprehensive playbook (7500+ words)
    - Business objectives and risk mitigation
    - Technical prerequisites and tools setup
@@ -2368,6 +2494,7 @@ The continuous discovery process includes:
    - Metrics and measurement
 
 2. **Usability Testing Integration**
+
    - Usability testing guide
    - 10+ testing templates
    - Session recording setup
@@ -2375,12 +2502,14 @@ The continuous discovery process includes:
    - Testing protocol
 
 3. **Advisory Board Setup**
+
    - Advisory board meeting guide (2600+ words)
    - Meeting structure and agenda
    - Member recruitment and management
    - Quarterly review process
 
 4. **Platform User Readiness**
+
    - Feedback service deployed
    - SPACE metrics service operational
    - Analytics platform accessible
@@ -2420,28 +2549,34 @@ make validate-at-e3-008
 ### Key Validations
 
 **Discovery Workflow:**
+
 - Playbook exists and is comprehensive (>2000 words)
 - Includes all required sections: Business Objective, Technical Prerequisites, Discovery Cadence, User Interviews, Advisory Board, Metrics
 - Discovery metrics documented
 
 **Usability Testing:**
+
 - Usability testing guide exists
 - Testing templates available (10+ templates)
 
 **Advisory Board:**
+
 - Advisory board guide exists and is comprehensive (>1000 words)
 - Includes meeting structure, agenda, participants, frequency
 
 **Documentation:**
+
 - All major Epic 3 docs exist: index, user guide, operations runbook, API reference, architecture diagrams, demo video resources
 
 **Platform Readiness:**
+
 - Feedback service deployed and ready
 - SPACE metrics service deployed and ready
 - Analytics platform accessible
 - Feature flags platform (Unleash) deployed
 
 **Acceptance Tests:**
+
 - All Epic 3 validation scripts exist (AT-E3-001, 002, 003, 006, 007, 010)
 
 ### Prerequisites
@@ -2453,6 +2588,7 @@ make validate-at-e3-008
 ### Troubleshooting
 
 **Services not deployed:**
+
 ```bash
 # Check namespace
 kubectl get deployments -n fawkes
@@ -2464,6 +2600,7 @@ kubectl get deployment unleash -n fawkes
 ```
 
 **Documentation not found:**
+
 - Verify all documentation files exist in expected locations
 - Check `docs/EPIC-3-DOCUMENTATION-INDEX.md` for complete list
 
@@ -2489,6 +2626,7 @@ kubectl get deployment unleash -n fawkes
 ### Usability Testing Components
 
 1. **Documentation** (`docs/how-to/usability-testing-guide.md`)
+
    - Comprehensive guide (3000+ words)
    - Testing methodologies
    - Session planning
@@ -2498,12 +2636,14 @@ kubectl get deployment unleash -n fawkes
    - Privacy and consent
 
 2. **Session Recording** (`docs/how-to/session-recording-setup.md`)
+
    - Recording tool setup
    - Technical requirements
    - Data storage and management
    - Consent processes
 
 3. **Testing Templates** (`docs/research/templates/`)
+
    - 10+ testing templates
    - Test plans
    - Session scripts
@@ -2511,6 +2651,7 @@ kubectl get deployment unleash -n fawkes
    - Analysis worksheets
 
 4. **Privacy Controls**
+
    - Consent process documentation
    - Data privacy guidelines
    - Data sanitization procedures
@@ -2536,6 +2677,7 @@ make validate-at-e3-010
 ### Success Criteria
 
 The test passes when:
+
 - ✓ Usability testing guide is comprehensive (>3000 words)
 - ✓ Session recording setup documented
 - ✓ 10+ testing templates available
@@ -2555,6 +2697,7 @@ The test passes when:
 ### Troubleshooting
 
 **Templates not found:**
+
 ```bash
 # Check templates directory
 ls -la docs/research/templates/
@@ -2564,6 +2707,7 @@ find docs/research/templates -name "*.md" -type f | wc -l
 ```
 
 **Documentation incomplete:**
+
 - Verify usability testing guide exists: `docs/how-to/usability-testing-guide.md`
 - Check session recording setup: `docs/how-to/session-recording-setup.md`
 - Review guide sections for completeness
@@ -2582,18 +2726,21 @@ find docs/research/templates -name "*.md" -type f | wc -l
 ### Product Analytics Components
 
 1. **Analytics Platform** (Plausible/PostHog)
+
    - Deployed in Kubernetes
    - Accessible via ingress
    - Health checks operational
    - API endpoints functional
 
 2. **Event Tracking** (`design-system/backstage-plugin/`)
+
    - 60+ predefined events
    - Event schema defined
    - React hooks for tracking
    - Middleware pipeline
 
 3. **Dashboards** (`platform/apps/grafana/dashboards/`)
+
    - Product analytics dashboard
    - User flow visualizations
    - Funnel analysis
@@ -2621,23 +2768,27 @@ make validate-at-e3-011
 ### Key Validations
 
 **Platform Deployment:**
+
 - Plausible or PostHog deployment exists
 - Pods are running and healthy
 - Service is accessible
 - Ingress configured
 
 **Event Tracking:**
+
 - Event schema exists with 60+ events
 - Tracking library deployed
 - React hooks available
 - Middleware configured
 
 **Dashboards:**
+
 - Product analytics dashboard exists
 - Key metrics panels present
 - Data flowing correctly
 
 **Integration:**
+
 - API endpoints accessible
 - Authentication working
 - Metrics exported to Prometheus
@@ -2652,6 +2803,7 @@ make validate-at-e3-011
 ### Troubleshooting
 
 **Platform not deployed:**
+
 ```bash
 # Check for Plausible
 kubectl get deployment plausible -n fawkes
@@ -2664,6 +2816,7 @@ kubectl get deployment analytics-dashboard -n fawkes
 ```
 
 **Event tracking not working:**
+
 - Check event schema file exists: `design-system/backstage-plugin/src/lib/eventSchema.ts`
 - Verify tracking library: `design-system/backstage-plugin/src/lib/eventTracker.ts`
 - Check React hooks: `design-system/backstage-plugin/src/hooks/`
@@ -2692,12 +2845,14 @@ kubectl get deployment analytics-dashboard -n fawkes
 Epic 3 documentation is organized in the following categories:
 
 1. **Documentation Index** (`docs/EPIC-3-DOCUMENTATION-INDEX.md`)
+
    - Overview and structure
    - Links to all major docs
    - Getting started guide
    - 1700+ words
 
 2. **User Guides** (`docs/how-to/`)
+
    - Epic 3 user guide (3000+ words)
    - Covers all 4 personas: Developer, Product Manager, UX Researcher, Platform Engineer
    - SPACE metrics guide
@@ -2707,6 +2862,7 @@ Epic 3 documentation is organized in the following categories:
    - Advisory board meeting guide
 
 3. **Operations Runbooks** (`docs/runbooks/`)
+
    - Epic 3 operations runbook (3000+ words)
    - Component status checks
    - Common operations
@@ -2715,6 +2871,7 @@ Epic 3 documentation is organized in the following categories:
    - Emergency response
 
 4. **Architecture Documentation** (`docs/runbooks/`)
+
    - Epic 3 architecture diagrams
    - SPACE metrics architecture
    - Multi-channel feedback system
@@ -2725,6 +2882,7 @@ Epic 3 documentation is organized in the following categories:
    - Integration points
 
 5. **API References** (`docs/reference/api/`)
+
    - Epic 3 API reference (2000+ words)
    - SPACE Metrics API
    - Feedback Service API
@@ -2735,12 +2893,14 @@ Epic 3 documentation is organized in the following categories:
    - Webhooks
 
 6. **Demo and Tutorial Resources** (`docs/tutorials/`)
+
    - Epic 3 demo video script (3500+ words)
    - Epic 3 demo video checklist
    - Epic 3 demo video page
    - Step-by-step walkthroughs
 
 7. **Component-Specific Documentation**
+
    - Design system deployment guide
    - Feature flags documentation
    - Experimentation framework docs
@@ -2766,40 +2926,48 @@ make validate-at-e3-012
 ### Key Validations
 
 **Documentation Index:**
+
 - Index file exists and is comprehensive (>1000 words)
 - Includes all required sections: Getting Started, Runbooks, API References, Demo, How-To Guides
 
 **User Guides:**
+
 - Epic 3 user guide exists (>3000 words preferred)
 - Covers all 4 personas: Developer, Product Manager, UX Researcher, Platform Engineer
 - All component-specific guides exist
 
 **Operations:**
+
 - Operations runbook exists (>3000 words preferred)
 - Covers all key components: SPACE Metrics, Feedback, Unleash, Analytics
 - Includes troubleshooting section
 
 **Architecture:**
+
 - Architecture diagrams exist (>1000 words preferred)
 - Covers all major systems: SPACE metrics, Feedback, Analytics, Feature flags, Discovery workflow
 
 **API References:**
+
 - API reference exists (>2000 words)
 - Documents all major APIs: SPACE Metrics, Feedback, Unleash, Analytics
 - Includes authentication details
 
 **Demo Resources:**
+
 - Demo video script exists (>2000 words)
 - Demo video checklist exists
 - Demo video page exists
 
 **Quality:**
+
 - Key documentation has adequate content (>10000 total words across key docs)
 - Most Epic 3 acceptance tests documented (10+/12)
 
 ### Success Criteria
 
 The test passes when:
+
 - ✓ All major documentation categories exist
 - ✓ Documentation is comprehensive (adequate word counts)
 - ✓ All personas covered in user guides
@@ -2817,6 +2985,7 @@ The test passes when:
 ### Troubleshooting
 
 **Documentation not found:**
+
 ```bash
 # Check documentation index
 cat docs/EPIC-3-DOCUMENTATION-INDEX.md
@@ -2832,12 +3001,14 @@ ls -la docs/reference/api/epic-3*.md
 ```
 
 **Word counts low:**
+
 - Review and expand thin documentation
 - Add more examples and details
 - Include troubleshooting sections
 - Add diagrams and visualizations
 
 **Missing sections:**
+
 - Use documentation index as checklist
 - Review similar Epic 1 and Epic 2 docs for patterns
 - Ensure all personas are covered
@@ -2848,7 +3019,6 @@ ls -la docs/reference/api/epic-3*.md
 - [Epic 3 User Guide](../../docs/how-to/epic-3-user-guide.md)
 - [Epic 3 Operations Runbook](../../docs/runbooks/epic-3-product-discovery-operations.md)
 - [Epic 3 API Reference](../../docs/reference/api/epic-3-product-discovery-apis.md)
-
 
 ## AT-E3-008: Continuous Discovery Process
 
@@ -2866,6 +3036,7 @@ ls -la docs/reference/api/epic-3*.md
 The continuous discovery process includes:
 
 1. **Discovery Workflow Documentation** (`docs/playbooks/continuous-discovery-workflow.md`)
+
    - Comprehensive playbook (7500+ words)
    - Business objectives and risk mitigation
    - Technical prerequisites and tools setup
@@ -2876,6 +3047,7 @@ The continuous discovery process includes:
    - Metrics and measurement
 
 2. **Usability Testing Integration**
+
    - Usability testing guide
    - 10+ testing templates
    - Session recording setup
@@ -2883,12 +3055,14 @@ The continuous discovery process includes:
    - Testing protocol
 
 3. **Advisory Board Setup**
+
    - Advisory board meeting guide (2600+ words)
    - Meeting structure and agenda
    - Member recruitment and management
    - Quarterly review process
 
 4. **Platform User Readiness**
+
    - Feedback service deployed
    - SPACE metrics service operational
    - Analytics platform accessible
@@ -2942,6 +3116,7 @@ See validation script `scripts/validate-at-e3-010.sh` for comprehensive validati
 See validation script `scripts/validate-product-analytics.sh` for comprehensive validation.
 
 Validates:
+
 - Analytics platform deployed (Plausible or PostHog)
 - Event tracking configured (60+ events)
 - Dashboards created

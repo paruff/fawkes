@@ -34,6 +34,7 @@
 ### Accessing [Component Name]
 
 Local development:
+
 ```bash
 # Access UI
 http://[component-name].127.0.0.1.nip.io
@@ -43,6 +44,7 @@ curl http://[component-name].127.0.0.1.nip.io/api
 ```
 
 Default credentials (if applicable):
+
 - Username: `admin`
 - Password: `[password or reference to secret]`
 
@@ -68,10 +70,10 @@ key2: value2
 
 ### Environment Variables
 
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `VAR_NAME` | Variable description | `default` | Yes |
-| `VAR_NAME_2` | Variable description | `default` | No |
+| Variable     | Description          | Default   | Required |
+| ------------ | -------------------- | --------- | -------- |
+| `VAR_NAME`   | Variable description | `default` | Yes      |
+| `VAR_NAME_2` | Variable description | `default` | No       |
 
 ## Integration Points
 
@@ -176,6 +178,7 @@ spec:
 **Cause**: [Root cause]
 
 **Solution**:
+
 ```bash
 # Commands to resolve
 [commands]
@@ -188,6 +191,7 @@ spec:
 **Cause**: [Root cause]
 
 **Solution**:
+
 ```bash
 # Commands to resolve
 [commands]

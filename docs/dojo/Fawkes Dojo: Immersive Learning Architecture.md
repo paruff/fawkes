@@ -29,6 +29,7 @@
 ### The Problem
 
 Platform engineering skills are in high demand but difficult to acquire:
+
 - **Theory vs. Practice Gap**: Reading about platform engineering ≠ doing platform engineering
 - **No Safe Practice Environment**: Production is too risky, toy examples aren't realistic
 - **Fragmented Learning**: Scattered blog posts, docs, and courses don't provide cohesive journey
@@ -52,28 +53,33 @@ The Fawkes Dojo is not a traditional course or documentation site. It's an **imm
 ### Learning Philosophy
 
 #### 1. **Production-First Learning**
+
 - Labs use the actual Fawkes platform, not simplified versions
 - Same tools, same workflows, same challenges as production
 - Mistakes have consequences (within safe boundaries)
 - Build muscle memory for real-world scenarios
 
 #### 2. **Immediate Application**
+
 - Maximum 5 minutes of theory before hands-on practice
 - Every concept demonstrated, then practiced
 - Build, break, fix—the fastest path to mastery
 
 #### 3. **Spaced Repetition & Reinforcement**
+
 - Concepts introduced multiple times in increasing complexity
 - Earlier skills reinforced in advanced modules
 - Regular reviews and retrospectives
 
 #### 4. **Deliberate Practice**
+
 - Focused on specific skills with clear goals
 - Challenging but achievable (flow state)
 - Immediate feedback on performance
 - Reflection on what worked and what didn't
 
 #### 5. **Social Learning**
+
 - Learn with cohorts (optional but encouraged)
 - Share solutions and approaches
 - Peer code review and feedback
@@ -127,16 +133,16 @@ The Fawkes Dojo is not a traditional course or documentation site. It's an **imm
 
 ### Component Responsibilities
 
-| Component | Purpose | Technology |
-|-----------|---------|------------|
-| **Dojo Portal** | Single entry point for all learning | Backstage plugin |
-| **Content System** | Modules, videos, documentation | TechDocs (Markdown + MkDocs) |
-| **Lab Environment** | Hands-on practice in isolated namespaces | Kubernetes namespaces + RBAC |
-| **Validation System** | Auto-grade labs, provide feedback | Custom Go/Python service |
-| **Progress Tracking** | Track learner progress, visualize journey | Focalboard + PostgreSQL |
-| **Achievement System** | Badges, certificates, leaderboards | Backstage plugin + database |
-| **Community Platform** | Discussion, support, collaboration | Mattermost |
-| **Analytics Engine** | Learning effectiveness, content gaps | Grafana + custom metrics |
+| Component              | Purpose                                   | Technology                   |
+| ---------------------- | ----------------------------------------- | ---------------------------- |
+| **Dojo Portal**        | Single entry point for all learning       | Backstage plugin             |
+| **Content System**     | Modules, videos, documentation            | TechDocs (Markdown + MkDocs) |
+| **Lab Environment**    | Hands-on practice in isolated namespaces  | Kubernetes namespaces + RBAC |
+| **Validation System**  | Auto-grade labs, provide feedback         | Custom Go/Python service     |
+| **Progress Tracking**  | Track learner progress, visualize journey | Focalboard + PostgreSQL      |
+| **Achievement System** | Badges, certificates, leaderboards        | Backstage plugin + database  |
+| **Community Platform** | Discussion, support, collaboration        | Mattermost                   |
+| **Analytics Engine**   | Learning effectiveness, content gaps      | Grafana + custom metrics     |
 
 ---
 
@@ -145,6 +151,7 @@ The Fawkes Dojo is not a traditional course or documentation site. It's an **imm
 ### Belt Philosophy
 
 Inspired by martial arts dojo systems, the belt progression provides:
+
 - **Clear Milestones**: Tangible goals to work toward
 - **Skill Validation**: Each belt certifies specific competencies
 - **Public Recognition**: Displayable badges and credentials
@@ -153,11 +160,13 @@ Inspired by martial arts dojo systems, the belt progression provides:
 ### Belt Levels
 
 #### 🥋 White Belt: Platform Fundamentals (8 hours)
+
 **Target Audience**: New to platform engineering or Fawkes
 **Prerequisites**: Basic command line, Git, and Docker knowledge
 **Certification**: "Fawkes Platform Operator"
 
 **Core Competencies**:
+
 - Understand what an Internal Delivery Platform is and why it matters
 - Explain DORA metrics and their business impact
 - Navigate Backstage portal and service catalog
@@ -167,12 +176,14 @@ Inspired by martial arts dojo systems, the belt progression provides:
 - Track work in Focalboard
 
 **DORA Capabilities Covered**: 4 of 24
+
 - Continuous Integration
 - Continuous Delivery
 - Monitoring and Observability
 - Deployment Automation
 
 **Assessment**:
+
 - Deploy 2 sample applications successfully
 - Demonstrate understanding of DORA metrics (quiz)
 - Complete 3 hands-on labs
@@ -181,11 +192,13 @@ Inspired by martial arts dojo systems, the belt progression provides:
 ---
 
 #### 🟡 Yellow Belt: CI/CD Mastery (8 hours)
+
 **Target Audience**: Developers ready to own their CI/CD
 **Prerequisites**: White Belt certification
 **Certification**: "Fawkes CI/CD Specialist"
 
 **Core Competencies**:
+
 - Build custom Jenkins pipelines from scratch
 - Implement security scanning (SAST, dependency check, container scanning)
 - Configure quality gates and automated testing
@@ -195,6 +208,7 @@ Inspired by martial arts dojo systems, the belt progression provides:
 - Implement pipeline-as-code best practices
 
 **DORA Capabilities Covered**: 6 of 24 (additional)
+
 - Test Automation
 - Test Data Management
 - Shift Left on Security
@@ -203,6 +217,7 @@ Inspired by martial arts dojo systems, the belt progression provides:
 - Code Review
 
 **Assessment**:
+
 - Build 3 production-ready pipelines (Java, Python, Node.js)
 - Achieve <5 min build time for sample app
 - Implement security scanning with zero critical vulnerabilities
@@ -211,11 +226,13 @@ Inspired by martial arts dojo systems, the belt progression provides:
 ---
 
 #### 🟢 Green Belt: GitOps & Deployment (8 hours)
+
 **Target Audience**: Engineers managing deployments
 **Prerequisites**: Yellow Belt certification
 **Certification**: "Fawkes Deployment Engineer"
 
 **Core Competencies**:
+
 - Implement GitOps workflows with ArgoCD
 - Configure blue-green and canary deployments
 - Implement progressive delivery with automated rollback
@@ -225,6 +242,7 @@ Inspired by martial arts dojo systems, the belt progression provides:
 - Implement deployment best practices
 
 **DORA Capabilities Covered**: 7 of 24 (additional)
+
 - Deployment Automation (advanced)
 - Infrastructure as Code
 - Empowering Teams
@@ -234,6 +252,7 @@ Inspired by martial arts dojo systems, the belt progression provides:
 - Change Approval Process
 
 **Assessment**:
+
 - Implement GitOps for 3 environments
 - Execute successful canary deployment with rollback
 - Recover from simulated deployment failure <5 min
@@ -243,11 +262,13 @@ Inspired by martial arts dojo systems, the belt progression provides:
 ---
 
 #### 🟤 Brown Belt: Observability & SRE (8 hours)
+
 **Target Audience**: Engineers responsible for reliability
 **Prerequisites**: Green Belt certification
 **Certification**: "Fawkes SRE Practitioner"
 
 **Core Competencies**:
+
 - Configure comprehensive observability (metrics, logs, traces)
 - Design and implement custom DORA metrics dashboards
 - Define and track SLIs, SLOs, and error budgets
@@ -257,6 +278,7 @@ Inspired by martial arts dojo systems, the belt progression provides:
 - Optimize platform and application performance
 
 **DORA Capabilities Covered**: 5 of 24 (additional)
+
 - Monitoring and Observability (advanced)
 - Proactive Failure Notification
 - Database Change Management
@@ -264,6 +286,7 @@ Inspired by martial arts dojo systems, the belt progression provides:
 - Visualizing Work
 
 **Assessment**:
+
 - Configure full observability stack for application
 - Create custom DORA metrics dashboard
 - Define SLOs and implement alerts
@@ -274,11 +297,13 @@ Inspired by martial arts dojo systems, the belt progression provides:
 ---
 
 #### ⚫ Black Belt: Platform Architecture (8 hours)
+
 **Target Audience**: Platform architects and tech leads
 **Prerequisites**: Brown Belt certification
 **Certification**: "Fawkes Platform Architect"
 
 **Core Competencies**:
+
 - Design platform architecture for new teams
 - Implement multi-tenancy and resource governance
 - Design security architecture (zero trust principles)
@@ -288,10 +313,12 @@ Inspired by martial arts dojo systems, the belt progression provides:
 - Contribute to platform codebase
 
 **DORA Capabilities Covered**: 2 of 24 (final)
+
 - Loosely Coupled Architecture
 - Generative Organizational Culture
 
 **Assessment**:
+
 - Design complete platform for fictional company
 - Present architecture to panel (peer + mentor review)
 - Implement multi-tenant namespace design
@@ -374,6 +401,7 @@ Total Time per Module: 45-60 minutes
 #### White Belt (8 hours total)
 
 **Module 1: Internal Delivery Platforms - What and Why** (60 min)
+
 - What is an IDP and why organizations need them
 - Platform as a Product mindset
 - Team Topologies: enabling teams
@@ -381,6 +409,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Explore Backstage catalog, navigate documentation
 
 **Module 2: DORA Metrics - The North Star** (60 min)
+
 - Four Key Metrics explained in depth
 - High performers vs. low performers data
 - How DORA metrics drive business outcomes
@@ -388,6 +417,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: View live DORA dashboard, understand metric calculations
 
 **Module 3: GitOps Principles** (60 min)
+
 - Declarative infrastructure and applications
 - Git as source of truth
 - Automated reconciliation
@@ -395,6 +425,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Make a GitOps change, watch ArgoCD sync
 
 **Module 4: Your First Deployment** (60 min)
+
 - Golden path templates
 - Step-by-step deployment process
 - Monitoring deployment progress
@@ -402,6 +433,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Deploy your first application end-to-end
 
 **White Belt Assessment** (2 hours)
+
 - Deploy 2 additional applications (different languages)
 - Written exam (30 questions)
 - Practical troubleshooting scenario
@@ -411,6 +443,7 @@ Total Time per Module: 45-60 minutes
 #### Yellow Belt (8 hours total)
 
 **Module 5: Continuous Integration Fundamentals** (60 min)
+
 - CI principles and benefits
 - Jenkins architecture
 - Pipeline-as-code (Jenkinsfile)
@@ -418,6 +451,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Create basic Jenkinsfile, run first build
 
 **Module 6: Building Golden Path Pipelines** (60 min)
+
 - Shared libraries and reusable components
 - Multi-stage pipelines (build, test, package)
 - Caching and optimization
@@ -425,6 +459,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Build optimized pipeline with <5 min runtime
 
 **Module 7: Security Scanning & Quality Gates** (60 min)
+
 - Static analysis (SonarQube)
 - Dependency scanning
 - Container image scanning (Trivy)
@@ -432,6 +467,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Add comprehensive security scanning to pipeline
 
 **Module 8: Artifact Management** (60 min)
+
 - Container registry (Harbor)
 - Versioning strategies (semantic versioning)
 - Artifact promotion across environments
@@ -439,6 +475,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Implement artifact management workflow
 
 **Yellow Belt Assessment** (2 hours)
+
 - Build 3 production-ready pipelines
 - Optimize build performance
 - Implement security scanning with zero critical CVEs
@@ -449,6 +486,7 @@ Total Time per Module: 45-60 minutes
 #### Green Belt (8 hours total)
 
 **Module 9: GitOps with ArgoCD** (60 min)
+
 - ArgoCD architecture and concepts
 - Application definitions
 - Sync policies and health assessment
@@ -456,6 +494,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Configure ArgoCD application, implement sync
 
 **Module 10: Deployment Strategies** (60 min)
+
 - Blue-green deployments
 - Canary deployments
 - Rolling updates
@@ -463,6 +502,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Implement blue-green deployment
 
 **Module 11: Progressive Delivery** (60 min)
+
 - Traffic splitting and analysis
 - Automated rollback triggers
 - Metrics-driven deployments
@@ -470,6 +510,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Configure canary deployment with automated rollback
 
 **Module 12: Rollback & Incident Response** (60 min)
+
 - When and how to rollback
 - Incident detection and alerting
 - Emergency procedures
@@ -477,6 +518,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Simulate production incident, execute rollback
 
 **Green Belt Assessment** (2 hours)
+
 - Implement GitOps for 3 environments
 - Execute canary deployment
 - Respond to simulated incident
@@ -488,6 +530,7 @@ Total Time per Module: 45-60 minutes
 #### Brown Belt (8 hours total)
 
 **Module 13: Metrics, Logs, and Traces** (60 min)
+
 - Three pillars of observability
 - Prometheus metrics collection
 - OpenSearch log aggregation
@@ -495,6 +538,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Configure full observability stack
 
 **Module 14: DORA Metrics Deep Dive** (60 min)
+
 - Advanced DORA metrics calculation
 - Custom dashboard creation
 - Team-level vs. organization-level metrics
@@ -502,6 +546,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Build custom DORA dashboard for your team
 
 **Module 15: SLIs, SLOs, and Error Budgets** (60 min)
+
 - Defining Service Level Indicators
 - Setting appropriate Service Level Objectives
 - Calculating and tracking error budgets
@@ -509,6 +554,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Define SLOs and implement monitoring
 
 **Module 16: Incident Management & Postmortems** (60 min)
+
 - Incident severity levels
 - On-call best practices
 - Effective incident response
@@ -516,6 +562,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Participate in simulated incident response
 
 **Brown Belt Assessment** (2 hours)
+
 - Configure comprehensive observability
 - Create custom dashboards
 - Define SLOs and alerts
@@ -527,6 +574,7 @@ Total Time per Module: 45-60 minutes
 #### Black Belt (8 hours total)
 
 **Module 17: Platform as a Product** (60 min)
+
 - Treating platform as product
 - Understanding customer (developer) needs
 - Platform roadmapping
@@ -534,6 +582,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Conduct developer interviews, create roadmap
 
 **Module 18: Multi-Tenancy & Resource Management** (60 min)
+
 - Namespace-based isolation
 - Resource quotas and limits
 - Network policies
@@ -541,6 +590,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Design and implement multi-tenant environment
 
 **Module 19: Security & Zero Trust** (60 min)
+
 - Zero trust principles
 - Policy as code (Kyverno/OPA)
 - Secrets management (External Secrets)
@@ -548,6 +598,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Implement zero trust policies
 
 **Module 20: Multi-Cloud Strategies** (60 min)
+
 - Multi-cloud architecture patterns
 - Crossplane for cloud abstraction
 - Disaster recovery across clouds
@@ -555,6 +606,7 @@ Total Time per Module: 45-60 minutes
 - **Lab**: Design multi-cloud deployment strategy
 
 **Black Belt Assessment** (4 hours)
+
 - Design complete platform architecture
 - Present to peer review panel
 - Implement multi-tenant design
@@ -613,6 +665,7 @@ Total Time per Module: 45-60 minutes
 ### Lab Provisioning Process
 
 1. **Learner Enrolls in Module**:
+
    ```
    User clicks "Start Lab" in Backstage
        ↓
@@ -630,6 +683,7 @@ Total Time per Module: 45-60 minutes
    ```
 
 2. **Lab Execution**:
+
    ```
    Learner follows lab instructions
        ↓
@@ -660,6 +714,7 @@ Total Time per Module: 45-60 minutes
 ### Lab Validation System
 
 **Automated Validation Types**:
+
 - **Resource Existence**: Deployment, Service, Ingress created
 - **Configuration Correctness**: Labels, annotations, replicas match spec
 - **Health Status**: Pods running, services responding
@@ -668,6 +723,7 @@ Total Time per Module: 45-60 minutes
 - **DORA Metrics**: Deployment recorded, metrics updated
 
 **Example Validation (Lab: Deploy First App)**:
+
 ```yaml
 validations:
   - name: "Deployment exists"
@@ -704,12 +760,14 @@ passing_score: 40
 ### Assessment Types
 
 **1. Continuous Assessment** (throughout module)
+
 - Knowledge check quizzes (5-10 questions per module)
 - Hands-on lab auto-grading
 - Code quality checks
 - Performance benchmarks
 
 **2. Belt Certification Assessment**
+
 - Practical exam (hands-on challenges)
 - Written exam (comprehensive knowledge check)
 - Project work (Black Belt only)
@@ -717,17 +775,18 @@ passing_score: 40
 
 ### Certification Requirements
 
-| Belt Level | Practical Exam | Written Exam | Additional Requirements |
-|-----------|----------------|--------------|-------------------------|
-| White | 2 deployments | 30 questions, 80% pass | Complete 3 labs |
-| Yellow | 3 pipelines | 40 questions, 85% pass | Build time <5 min |
-| Green | GitOps + canary | 40 questions, 85% pass | MTTR <5 min on simulation |
-| Brown | Full observability | 45 questions, 85% pass | MTTR <30 min on incident |
-| Black | Platform design | 50 questions, 90% pass | Code contribution + mentoring |
+| Belt Level | Practical Exam     | Written Exam           | Additional Requirements       |
+| ---------- | ------------------ | ---------------------- | ----------------------------- |
+| White      | 2 deployments      | 30 questions, 80% pass | Complete 3 labs               |
+| Yellow     | 3 pipelines        | 40 questions, 85% pass | Build time <5 min             |
+| Green      | GitOps + canary    | 40 questions, 85% pass | MTTR <5 min on simulation     |
+| Brown      | Full observability | 45 questions, 85% pass | MTTR <30 min on incident      |
+| Black      | Platform design    | 50 questions, 90% pass | Code contribution + mentoring |
 
 ### Digital Badges & Credentials
 
 **Earned Upon Certification**:
+
 - Digital badge (PNG with verification link)
 - Verifiable certificate (PDF with unique ID)
 - LinkedIn/Credly integration
@@ -735,6 +794,7 @@ passing_score: 40
 - Special role in Mattermost
 
 **Badge Design**:
+
 ```
 ┌─────────────────────┐
 │   🥋 White Belt    │
@@ -756,6 +816,7 @@ passing_score: 40
 All 24 DORA capabilities covered across belt progression:
 
 ### Continuous Delivery Capabilities (8)
+
 1. ✅ **Version Control** - Yellow Belt, Module 6
 2. ✅ **Deployment Automation** - White Belt (basic), Green Belt (advanced)
 3. ✅ **Continuous Integration** - Yellow Belt, Module 5-6
@@ -766,11 +827,13 @@ All 24 DORA capabilities covered across belt progression:
 8. ✅ **Continuous Delivery** - Green Belt, Module 9-11
 
 ### Architecture Capabilities (3)
+
 9. ✅ **Loosely Coupled Architecture** - Black Belt, Module 17-20
 10. ✅ **Empowering Teams** - Green Belt, Module 9
 11. ✅ **Database Change Management** - Brown Belt, Module 14
 
 ### Product & Process Capabilities (6)
+
 12. ✅ **Team Experimentation** - Green Belt, Module 11
 13. ✅ **Work in Small Batches** - Green Belt, Module 10
 14. ✅ **Visual Management** - Green Belt, Module 9
@@ -779,12 +842,14 @@ All 24 DORA capabilities covered across belt progression:
 17. ✅ **Change Approval Process** - Green Belt, Module 12
 
 ### Lean Management & Monitoring (4)
+
 18. ✅ **Monitoring and Observability** - White Belt (basic), Brown Belt (advanced)
 19. ✅ **Proactive Failure Notification** - Brown Belt, Module 16
 20. ✅ **Lightweight Change Approval** - Green Belt, Module 12
 21. ✅ **Code Review** - Yellow Belt, Module 6
 
 ### Cultural Capabilities (3)
+
 22. ✅ **Generative Organizational Culture** - Black Belt, Module 17
 23. ✅ **Learning Culture** - Entire Dojo system embodies this
 24. ✅ **Job Satisfaction** - Measured via NPS in dojo feedback
@@ -796,11 +861,13 @@ All 24 DORA capabilities covered across belt progression:
 ### Certification Alignment
 
 **Observability in Platform Engineering** → Brown Belt
+
 - Dojo modules 13-16 directly align with course content
 - Hands-on labs use same tools taught in course
 - Certificate holders get credit toward Brown Belt (skip modules 13-14)
 
 **Cloud Development Environments in Platform Engineering** → Yellow Belt
+
 - Modules 5-8 cover CDE concepts
 - Eclipse Che integration (roadmap) provides CDE experience
 - Certificate holders get credit toward Yellow Belt (skip module 5)
@@ -808,6 +875,7 @@ All 24 DORA capabilities covered across belt progression:
 ### Co-Branded Learning Paths
 
 1. **"PEU Observability → Fawkes Brown Belt" Path**:
+
    - Complete PEU Observability course
    - Get 50% credit toward Fawkes Brown Belt
    - Complete modules 15-16 only
@@ -830,29 +898,34 @@ All 24 DORA capabilities covered across belt progression:
 ## Technology Stack
 
 ### Learning Management
+
 - **Backstage Plugin**: `@fawkes/plugin-dojo` (custom)
 - **Content Storage**: GitHub repository (`fawkes-dojo-content`)
 - **Content Rendering**: TechDocs (MkDocs Material theme)
 - **Video Hosting**: YouTube (public) + self-hosted (optional)
 
 ### Lab Environment
+
 - **Orchestration**: Kubernetes 1.28+
 - **Provisioning**: Custom Go service (`dojo-provisioner`)
 - **Validation**: Custom Python service (`dojo-validator`)
 - **Isolation**: Kubernetes namespaces + Network Policies
 
 ### Progress Tracking
+
 - **Dashboard**: Focalboard boards
 - **Database**: PostgreSQL (learner progress, scores)
 - **Analytics**: Grafana dashboards
 - **Metrics**: Prometheus (completion rates, time spent)
 
 ### Communication
+
 - **Community**: Mattermost `#dojo-*` channels
 - **Notifications**: Mattermost webhooks
 - **Support**: Office hours (video + Mattermost)
 
 ### Assessment
+
 - **Quizzes**: Custom React components in Backstage
 - **Auto-Grading**: `dojo-validator` service
 - **Manual Review**: Maintainer dashboard (Black Belt)
@@ -863,6 +936,7 @@ All 24 DORA capabilities covered across belt progression:
 ## Implementation Roadmap
 
 ### Phase 1: MVP (Weeks 1-4)
+
 - ✅ Dojo architecture documented
 - [ ] Backstage dojo plugin (basic)
 - [ ] White Belt curriculum (4 modules)
@@ -873,6 +947,7 @@ All 24 DORA capabilities covered across belt progression:
 **Deliverable**: White Belt available for early adopters
 
 ### Phase 2: Expansion (Weeks 5-8)
+
 - [ ] Yellow Belt curriculum (4 modules)
 - [ ] Green Belt curriculum (4 modules)
 - [ ] Enhanced lab validation
@@ -883,6 +958,7 @@ All 24 DORA capabilities covered across belt progression:
 **Deliverable**: White + Yellow + Green Belts complete
 
 ### Phase 3: Advanced (Weeks 9-12)
+
 - [ ] Brown Belt curriculum (4 modules)
 - [ ] Black Belt curriculum (4 modules)
 - [ ] Certification system
@@ -893,6 +969,7 @@ All 24 DORA capabilities covered across belt progression:
 **Deliverable**: Complete belt system operational
 
 ### Phase 4: Scale (Months 4-6)
+
 - [ ] Cohort-based learning
 - [ ] Live workshops and events
 - [ ] Additional language support
@@ -907,18 +984,21 @@ All 24 DORA capabilities covered across belt progression:
 ## Success Metrics
 
 ### Learning Effectiveness
+
 - **Completion Rate**: % of learners who finish started belt (Target: >70%)
 - **Time to Belt**: Average time to complete each belt (Track against estimates)
 - **Assessment Pass Rate**: First-attempt pass rate (Target: 60-70%)
 - **Knowledge Retention**: Re-test after 30/90 days (Target: >80% retention)
 
 ### Platform Adoption
+
 - **Active Learners**: Monthly active users in dojo (Target: 100 by month 6)
 - **Belt Certifications**: Total certifications issued (Target: 50 White, 20 Yellow, 10 Green, 5 Brown, 2 Black by month 6)
 - **Learner NPS**: Net Promoter Score (Target: >50)
 - **Completion Time**: 95% of learners complete labs within estimated time
 
 ### Business Impact
+
 - **Skill Development**: Demonstrated DORA metric improvement for learners' teams (Target: 25% improvement)
 - **Platform Adoption**: % of dojo graduates who deploy Fawkes (Target: 60%)
 - **Community Growth**: Dojo-driven contributor pipeline (Target: 30% of contributors start as learners)

@@ -71,6 +71,7 @@ curl http://localhost:8000/api/v1/metrics/space
 ```
 
 **Expected State**:
+
 - Deployment: 2/2 replicas ready
 - Pods: Running
 - Service: ClusterIP accessible
@@ -95,6 +96,7 @@ curl http://localhost:8080/api/v1/feedback
 ```
 
 **Expected State**:
+
 - Deployment: 2/2 replicas ready
 - Pods: Running
 - Service: ClusterIP accessible
@@ -115,6 +117,7 @@ kubectl logs -n fawkes -l app=feedback-bot --tail=50
 ```
 
 **Expected State**:
+
 - Deployment: 1/1 replicas ready
 - Pods: Running
 - ConfigMap and Secret: Present
@@ -133,6 +136,7 @@ kubectl logs -n fawkes job/$LATEST_JOB
 ```
 
 **Expected State**:
+
 - CronJob: Active, runs hourly
 - Jobs: Completed successfully
 - Logs: Feedback items processed, GitHub issues created
@@ -154,6 +158,7 @@ curl http://localhost:4242/health
 ```
 
 **Expected State**:
+
 - Deployment: 2/2 replicas ready
 - Pods: Running
 - Service: ClusterIP accessible
@@ -175,6 +180,7 @@ curl http://localhost:6006
 ```
 
 **Expected State**:
+
 - Deployment: 1/1 replicas ready
 - Pods: Running
 - Service: ClusterIP accessible
@@ -193,6 +199,7 @@ kubectl get ingress -n fawkes | grep -E 'analytics|posthog'
 ```
 
 **Expected State**:
+
 - Deployment: Running
 - Pods: All containers ready
 - Ingress: Configured
@@ -353,17 +360,20 @@ kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 909
 **Symptoms**: Pods in CrashLoopBackOff
 
 **Diagnosis**:
+
 ```bash
 kubectl describe pod -n fawkes-local -l app=space-metrics
 kubectl logs -n fawkes-local -l app=space-metrics
 ```
 
 **Common Causes**:
+
 1. Database connection failure
 2. Missing environment variables
 3. Configuration errors
 
 **Resolution**:
+
 ```bash
 # Check database status
 kubectl get cluster space-metrics-pg -n fawkes-local
@@ -384,11 +394,13 @@ kubectl rollout restart deployment space-metrics -n fawkes-local
 **Symptoms**: API returns empty results
 
 **Diagnosis**:
+
 ```bash
 kubectl logs -n fawkes-local -l app=space-metrics | grep -i "collect\|error"
 ```
 
 **Resolution**:
+
 ```bash
 # Check if data collection jobs are running
 kubectl get pods -n fawkes-local -l job=space-metrics-collector
@@ -408,16 +420,19 @@ kubectl exec -n fawkes-local -it deployment/space-metrics -- python -c "from app
 **Symptoms**: 500 errors on POST /api/v1/feedback
 
 **Diagnosis**:
+
 ```bash
 kubectl logs -n fawkes -l app=feedback-service --tail=100
 ```
 
 **Common Causes**:
+
 1. Database connection issues
 2. Schema migration pending
 3. Resource constraints
 
 **Resolution**:
+
 ```bash
 # Check database
 kubectl get cluster feedback-db -n fawkes
@@ -435,12 +450,14 @@ kubectl top pods -n fawkes -l app=feedback-service
 **Symptoms**: Bot appears offline or doesn't respond
 
 **Diagnosis**:
+
 ```bash
 kubectl logs -n fawkes -l app=feedback-bot --tail=50
 kubectl describe pod -n fawkes -l app=feedback-bot
 ```
 
 **Resolution**:
+
 ```bash
 # Check bot token secret
 kubectl get secret feedback-bot-secret -n fawkes -o jsonpath='{.data.MATTERMOST_TOKEN}' | base64 -d
@@ -457,12 +474,14 @@ kubectl rollout restart deployment feedback-bot -n fawkes
 **Symptoms**: CronJob runs but no issues created
 
 **Diagnosis**:
+
 ```bash
 LATEST_JOB=$(kubectl get jobs -n fawkes -l cronjob=feedback-automation --sort-by=.metadata.creationTimestamp -o jsonpath='{.items[-1].metadata.name}')
 kubectl logs -n fawkes job/$LATEST_JOB
 ```
 
 **Resolution**:
+
 ```bash
 # Check GitHub token
 kubectl get secret feedback-automation-github -n fawkes -o jsonpath='{.data.GITHUB_TOKEN}' | base64 -d | wc -c
@@ -481,6 +500,7 @@ kubectl create job --from=cronjob/feedback-automation manual-run-$(date +%s) -n 
 **Symptoms**: Cannot access Unleash dashboard
 
 **Diagnosis**:
+
 ```bash
 kubectl get deployment unleash -n fawkes
 kubectl get ingress unleash -n fawkes
@@ -488,6 +508,7 @@ kubectl logs -n fawkes -l app=unleash
 ```
 
 **Resolution**:
+
 ```bash
 # Check ingress configuration
 kubectl describe ingress unleash -n fawkes
@@ -505,6 +526,7 @@ kubectl logs -n fawkes -l cnpg.io/cluster=db-unleash
 **Symptoms**: Flag changes in UI not reflected in applications
 
 **Diagnosis**:
+
 ```bash
 # Check Unleash logs
 kubectl logs -n fawkes -l app=unleash
@@ -515,6 +537,7 @@ curl http://unleash.fawkes.svc.cluster.local:4242/api/client/features
 ```
 
 **Resolution**:
+
 ```bash
 # Restart Unleash to clear cache
 kubectl rollout restart deployment unleash -n fawkes
@@ -530,12 +553,14 @@ kubectl cnpg psql db-unleash -n fawkes -- -c "SELECT * FROM features;"
 **Symptoms**: 404 or blank page
 
 **Diagnosis**:
+
 ```bash
 kubectl logs -n fawkes -l app=storybook
 kubectl get ingress storybook -n fawkes
 ```
 
 **Resolution**:
+
 ```bash
 # Check if build succeeded
 kubectl describe deployment storybook -n fawkes
@@ -668,6 +693,7 @@ kubectl rollout restart deployment storybook -n fawkes
 #### SEV-1: Critical Outage Response
 
 1. **Initial Response** (0-5 minutes)
+
    ```bash
    # Check overall cluster health
    kubectl get nodes
@@ -679,6 +705,7 @@ kubectl rollout restart deployment storybook -n fawkes
    ```
 
 2. **Diagnosis** (5-15 minutes)
+
    ```bash
    # Check recent events
    kubectl get events -n fawkes --sort-by='.lastTimestamp' | tail -20
@@ -690,6 +717,7 @@ kubectl rollout restart deployment storybook -n fawkes
    ```
 
 3. **Immediate Mitigation** (15-30 minutes)
+
    ```bash
    # Rollback to last known good version
    kubectl rollout undo deployment/<component-name> -n fawkes
@@ -702,6 +730,7 @@ kubectl rollout restart deployment storybook -n fawkes
    ```
 
 4. **Communication**
+
    - Post incident in #platform-status Mattermost channel
    - Update status page
    - Notify stakeholders
@@ -716,6 +745,7 @@ kubectl rollout restart deployment storybook -n fawkes
 #### Database Restore Procedures
 
 **Restore SPACE Metrics Database**:
+
 ```bash
 # Stop application to prevent writes
 kubectl scale deployment space-metrics -n fawkes-local --replicas=0
@@ -737,6 +767,7 @@ kubectl scale deployment space-metrics -n fawkes-local --replicas=2
 ```
 
 **Restore Feedback Database**:
+
 ```bash
 # Stop application
 kubectl scale deployment feedback-service -n fawkes --replicas=0
@@ -816,6 +847,7 @@ echo "=== Health Check Complete ==="
 ```
 
 Usage:
+
 ```bash
 chmod +x scripts/health-check-epic3.sh
 ./scripts/health-check-epic3.sh

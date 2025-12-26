@@ -14,11 +14,13 @@ This implementation provides a complete solution for configuring Azure Load Bala
 ### Task 2.1: Deploy nginx-ingress with Azure LB ✅
 
 **Files Created:**
+
 - `platform/apps/ingress-nginx/values-azure.yaml` - Azure-specific Helm values
 - `platform/apps/ingress-nginx/ingress-nginx-azure-application.yaml` - ArgoCD Application
 - `platform/apps/ingress-nginx/validate-azure.sh` - Validation script
 
 **Key Features:**
+
 - ✅ Azure Load Balancer integration with health probes
 - ✅ High availability (2+ replicas with pod anti-affinity)
 - ✅ Auto-scaling (HPA) from 2-10 replicas based on CPU/memory
@@ -30,23 +32,27 @@ This implementation provides a complete solution for configuring Azure Load Bala
 - ✅ Security: Snippet annotations disabled, server tokens hidden
 
 **Files Modified:**
+
 - `platform/apps/ingress-nginx/README.md` - Added Azure deployment instructions
 
 ### Task 2.2: Configure Azure DNS (Optional) ✅
 
 **Files Created:**
+
 - `infra/azure/dns.tf` - Terraform configuration for Azure DNS
 - DNS zone creation
 - A records for root domain
-- Wildcard A records (*.fawkes.yourdomain.com)
+- Wildcard A records (\*.fawkes.yourdomain.com)
 - Optional specific service records (commented examples)
 
 **Files Modified:**
+
 - `infra/azure/variables.tf` - Added DNS configuration variables
 - `infra/azure/outputs.tf` - Added DNS outputs (nameservers, zone ID, ingress IP)
 - `infra/azure/terraform.tfvars.example` - Added DNS configuration examples
 
 **Key Features:**
+
 - ✅ Optional DNS zone creation (controlled by variable)
 - ✅ Automatic A record creation pointing to ingress IP
 - ✅ Wildcard DNS support for all subdomains
@@ -56,6 +62,7 @@ This implementation provides a complete solution for configuring Azure Load Bala
 ### Task 2.3: Configure cert-manager with Let's Encrypt ✅
 
 **Files Created:**
+
 - `platform/apps/cert-manager/cert-manager-application.yaml` - Main cert-manager deployment
 - `platform/apps/cert-manager/cluster-issuers-application.yaml` - ArgoCD app for issuers
 - `platform/apps/cert-manager/cluster-issuer-letsencrypt-staging.yaml` - Staging issuer (HTTP-01)
@@ -66,6 +73,7 @@ This implementation provides a complete solution for configuring Azure Load Bala
 - `platform/apps/cert-manager/validate.sh` - Validation script
 
 **Key Features:**
+
 - ✅ cert-manager v1.15.3 deployment
 - ✅ CRD installation with Helm
 - ✅ Let's Encrypt staging issuer (for testing)
@@ -81,11 +89,13 @@ This implementation provides a complete solution for configuring Azure Load Bala
 ### Documentation ✅
 
 **Files Created:**
+
 - `docs/azure-ingress-setup.md` - Comprehensive setup guide
 - `docs/azure-ingress-quickstart.md` - Quick start guide
 - `tests/bdd/features/azure_ingress_loadbalancer.feature` - BDD acceptance tests
 
 **Content:**
+
 - ✅ Architecture overview
 - ✅ Step-by-step deployment instructions
 - ✅ Advanced configuration (static IP, wildcard certs, internal LB)
@@ -100,31 +110,37 @@ This implementation provides a complete solution for configuring Azure Load Bala
 All acceptance criteria from the issue have been met:
 
 ### nginx-ingress controller deployed ✅
+
 - ArgoCD Application created
 - Azure-specific values configured
 - High availability setup with 2+ replicas
 
 ### Azure Load Balancer created automatically ✅
+
 - LoadBalancer service type configured
 - Health probes configured
 - External traffic policy set to Local
 
 ### Public IP assigned ✅
+
 - Automatic public IP assignment by Azure
 - Optional static IP support (documented)
 
 ### Custom domain configured (optional) ✅
+
 - Terraform module for Azure DNS
 - A records and wildcard records
 - DNS delegation instructions
 
 ### TLS certificates configured ✅
+
 - cert-manager deployed
 - Let's Encrypt staging and production issuers
 - HTTP-01 and DNS-01 challenge support
 - Automatic certificate issuance and renewal
 
 ### Test ingress route working ✅
+
 - Test ingress provided (test-ingress.yaml)
 - Echo server deployment
 - HTTP and HTTPS examples
@@ -173,22 +189,26 @@ The implementation follows Fawkes architecture principles:
 ## Cost Optimization
 
 Estimated monthly cost:
+
 - Standard Load Balancer: ~$18/month
 - Public IP: ~$3/month
 - DNS Zone (optional): ~$0.50/month
 - cert-manager: Free (Let's Encrypt)
-**Total: ~$22-25/month**
+  **Total: ~$22-25/month**
 
 Resource efficiency:
+
 - Auto-scaling from 2-10 replicas based on load
 - Appropriate resource limits prevent over-provisioning
 
 ## Dependencies Satisfied
 
 This implementation depends on:
+
 - ✅ Issue #1 (Azure Infrastructure) - AKS cluster must be provisioned first
 
 This implementation blocks:
+
 - Issue #5 (blocked by this)
 - Issue #9 (blocked by this)
 - Issue #14 (blocked by this)
@@ -196,6 +216,7 @@ This implementation blocks:
 ## Testing
 
 ### Manual Testing (Requires AKS Cluster)
+
 - Deploy nginx-ingress: `kubectl apply -f ingress-nginx-azure-application.yaml`
 - Deploy cert-manager: `kubectl apply -f cert-manager-application.yaml`
 - Run validation scripts
@@ -203,16 +224,18 @@ This implementation blocks:
 - Request test certificate
 
 ### BDD Tests Created
+
 - 20+ scenarios in `azure_ingress_loadbalancer.feature`
 - Covers deployment, configuration, validation
 - Tagged with @azure, @AT-E1-002
 
 ### Validation
+
 - ✅ YAML syntax validated with yamllint
 - ✅ No linting errors
 - ✅ Code review completed
 - ✅ Security scan passed (no issues)
-- ⚠️  Live cluster testing pending (requires Azure AKS)
+- ⚠️ Live cluster testing pending (requires Azure AKS)
 
 ## Usage Example
 
@@ -244,6 +267,7 @@ spec:
 ```
 
 cert-manager automatically:
+
 1. Creates a Certificate resource
 2. Requests certificate from Let's Encrypt
 3. Completes ACME challenge (HTTP-01 or DNS-01)
@@ -253,6 +277,7 @@ cert-manager automatically:
 ## Next Steps
 
 For platform users:
+
 1. Deploy nginx-ingress and cert-manager using the ArgoCD Applications
 2. Configure DNS (if using custom domain)
 3. Update email address in ClusterIssuers
@@ -260,6 +285,7 @@ For platform users:
 5. Monitor certificate status
 
 For future enhancements:
+
 - Integrate with external-dns for automatic DNS management
 - Add WAF integration with Azure Application Gateway
 - Configure rate limiting policies
@@ -277,6 +303,7 @@ For future enhancements:
 ## Conclusion
 
 This implementation provides a production-ready solution for external access to the Fawkes platform on Azure AKS with:
+
 - Automatic Load Balancer configuration
 - High availability and auto-scaling
 - Automated TLS certificate management

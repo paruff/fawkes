@@ -8,12 +8,14 @@ from app.models import WorkItemType, StageType, StageCategory
 # Work Item Schemas
 class WorkItemCreate(BaseModel):
     """Request model for creating a work item."""
+
     title: str = Field(..., description="Work item title", min_length=1, max_length=500)
     type: WorkItemType = Field(..., description="Work item type")
 
 
 class WorkItemResponse(BaseModel):
     """Response model for work item."""
+
     model_config = ConfigDict(from_attributes=True)
 
     id: int = Field(..., description="Work item ID")
@@ -27,11 +29,13 @@ class WorkItemResponse(BaseModel):
 # Stage Transition Schemas
 class StageTransitionCreate(BaseModel):
     """Request model for stage transition."""
+
     to_stage: str = Field(..., description="Target stage name")
 
 
 class StageTransitionResponse(BaseModel):
     """Response model for stage transition."""
+
     model_config = ConfigDict(from_attributes=True)
 
     id: int = Field(..., description="Transition ID")
@@ -44,6 +48,7 @@ class StageTransitionResponse(BaseModel):
 # Work Item History Schema
 class WorkItemHistory(BaseModel):
     """Work item stage history."""
+
     work_item_id: int = Field(..., description="Work item ID")
     work_item_title: str = Field(..., description="Work item title")
     transitions: List[StageTransitionResponse] = Field(..., description="Stage transitions")
@@ -52,6 +57,7 @@ class WorkItemHistory(BaseModel):
 # Flow Metrics Schemas
 class FlowMetricsResponse(BaseModel):
     """Flow metrics response."""
+
     throughput: int = Field(..., description="Number of items completed in period")
     wip: float = Field(..., description="Average work in progress")
     cycle_time_avg: Optional[float] = Field(None, description="Average cycle time in hours")
@@ -65,6 +71,7 @@ class FlowMetricsResponse(BaseModel):
 # Stage Response
 class StageResponse(BaseModel):
     """Response model for stage."""
+
     model_config = ConfigDict(from_attributes=True)
 
     id: int = Field(..., description="Stage ID")
@@ -79,6 +86,7 @@ class StageResponse(BaseModel):
 # Health Check Schema
 class HealthResponse(BaseModel):
     """Health check response."""
+
     status: str = Field(..., description="Service status")
     service: str = Field(..., description="Service name")
     version: str = Field(..., description="Service version")
