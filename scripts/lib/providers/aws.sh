@@ -7,7 +7,6 @@ set -euo pipefail
 # =============================================================================
 
 
-set -euo pipefail
 provision_aws_cluster() {
   echo "🔧 Provider=aws selected. Applying Terraform under infra/aws..."
   local dir

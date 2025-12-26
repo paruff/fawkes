@@ -7,7 +7,6 @@ set -euo pipefail
 # =============================================================================
 
 
-set -euo pipefail
 maybe_cleanup_argocd_cluster_resources() {
   set +e
   if [[ "${ENV}" != "local" ]]; then return 0; fi

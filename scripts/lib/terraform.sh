@@ -7,7 +7,6 @@ set -euo pipefail
 # =============================================================================
 
 
-set -euo pipefail
 tf_apply_dir() {
   local dir="$1"
   if [[ ! -d "$dir" ]]; then

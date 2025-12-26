@@ -7,7 +7,6 @@ set -euo pipefail
 # =============================================================================
 
 
-set -euo pipefail
 compute_minikube_resources() {
   local default_mem=8192
   local default_cpus=4

@@ -3,8 +3,6 @@
 set -euo pipefail
 # Demo script for Fawkes Feedback CLI
 
-set -e
-
 echo "========================================"
 echo "Fawkes Feedback CLI - Feature Demo"
 echo "========================================"

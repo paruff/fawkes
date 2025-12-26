@@ -7,7 +7,6 @@ set -euo pipefail
 # =============================================================================
 
 
-set -euo pipefail
 provision_gcp_cluster() {
   echo "🔧 Provider=gcp selected. Applying Terraform under infra/gcp..."
   local dir
