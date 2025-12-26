@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 # =============================================================================
 # File: scripts/lib/terraform.sh
+
+set -euo pipefail
 # Purpose: Terraform operations - apply, destroy, output handling
 # =============================================================================
+
 
 tf_apply_dir() {
   local dir="$1"

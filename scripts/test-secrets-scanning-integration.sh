@@ -1,4 +1,6 @@
 #!/bin/bash
+
+set -euo pipefail
 # Test script to verify secrets scanning integration
 # This script validates that the configuration is correct
 

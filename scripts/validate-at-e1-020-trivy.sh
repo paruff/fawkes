@@ -3,7 +3,7 @@
 # Purpose: Validate Trivy integration with Jenkins and Harbor
 # Issue: #20
 
-set -e
+set -euo pipefail
 
 echo "=========================================="
 echo "Trivy Integration Validation"

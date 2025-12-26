@@ -1,4 +1,6 @@
 #!/bin/bash
+
+set -euo pipefail
 # Security Quality Gates Validation Script
 # Purpose: Validate security quality gates configuration and documentation
 # Issue: #22

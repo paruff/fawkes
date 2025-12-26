@@ -1,7 +1,7 @@
 #!/bin/bash
-# Fix null or missing tasks arrays in epic3.json
 
-set -e
+set -euo pipefail
+# Fix null or missing tasks arrays in epic3.json
 
 JSON_FILE="./data/issues/epic3.json"
 BACKUP_FILE="./data/issues/epic3.json.backup.$(date +%Y%m%d_%H%M%S)"

@@ -5,7 +5,7 @@
 # DESCRIPTION: Checks deployment, database, API, metrics, and dashboard
 # ============================================================================
 
-set -e
+set -euo pipefail
 
 # Colors for output
 RED='\033[0;31m'
