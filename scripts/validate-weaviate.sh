@@ -2,7 +2,7 @@
 # Validation script for Weaviate deployment
 # Usage: ./scripts/validate-weaviate.sh [--namespace NAMESPACE]
 
-set -e
+set -euo pipefail
 
 NAMESPACE="${NAMESPACE:-fawkes}"
 

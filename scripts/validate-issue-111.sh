@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+
+set -euo pipefail
 # Validation script for Issue #111: Code Quality CI/CD Pipeline
 # This script validates that the code quality pipeline is properly implemented
 

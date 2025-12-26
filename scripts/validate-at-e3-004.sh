@@ -5,7 +5,7 @@
 # design tokens, documentation, accessibility testing, and ready for npm publishing.
 #
 
-set -e
+set -euo pipefail
 
 # Colors for output
 RED='\033[0;31m'

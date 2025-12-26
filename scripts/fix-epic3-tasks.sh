@@ -1,4 +1,6 @@
 #!/bin/bash
+
+set -euo pipefail
 # Fix null or missing tasks arrays in epic3.json
 
 set -e

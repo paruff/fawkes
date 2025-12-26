@@ -1,4 +1,6 @@
 #!/bin/bash
+
+set -euo pipefail
 # Save this as: scripts/diagnose-epic3.sh
 
 #!/bin/bash

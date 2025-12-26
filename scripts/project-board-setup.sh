@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Fawkes GitHub Projects Setup Script
 # Creates project board with automation for 3-epic implementation
 # Requires: gh (GitHub CLI) version 2.20+ with projects extension

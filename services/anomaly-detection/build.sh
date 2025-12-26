@@ -1,7 +1,7 @@
 #!/bin/bash
 # Build script for Anomaly Detection Service
 
-set -e
+set -euo pipefail
 
 echo "🏗️  Building Anomaly Detection Service"
 
