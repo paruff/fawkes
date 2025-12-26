@@ -579,7 +579,7 @@ All contributions must pass:
 - ✅ **Pre-commit hooks** - Run automatically on `git commit`
 - ✅ **CI/CD checks** - GitHub Actions validate on every PR
 
-📖 **See**: [Code Quality Standards](docs/how-to/development/code-quality-standards.md) for detailed requirements
+📖 **See**: [CODING_STANDARDS.md](CODING_STANDARDS.md) - Comprehensive coding standards guide with examples and FAQs
 
 ### Recognition
 
