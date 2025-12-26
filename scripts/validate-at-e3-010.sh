@@ -1,14 +1,13 @@
 #!/bin/bash
 
-set -euo pipefail
-# Don't use set -e to prevent early exit on failures
-# We want to collect all validation results
-
 # validate-at-e3-010.sh
 # Validation script for AT-E3-010: Usability Testing Infrastructure
 #
 # This script validates that usability testing infrastructure is properly
 # set up including documentation, templates, recording tools, and processes.
+#
+# Note: Uses set -uo pipefail only (without -e) to collect all validation results
+set -uo pipefail
 
 # Color codes for output
 RED='\033[0;31m'

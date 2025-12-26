@@ -1,7 +1,7 @@
 #!/bin/bash
+# Demo script for Fawkes Feedback CLI
 
 set -euo pipefail
-# Demo script for Fawkes Feedback CLI
 
 echo "========================================"
 echo "Fawkes Feedback CLI - Feature Demo"
