@@ -21,6 +21,19 @@
   <img src="https://img.shields.io/github/stars/paruff/fawkes?style=social" alt="Stars"/>
 </p>
 
+<p align="center">
+  <a href="https://github.com/paruff/fawkes/actions/workflows/code-quality.yml">
+    <img src="https://github.com/paruff/fawkes/actions/workflows/code-quality.yml/badge.svg" alt="Code Quality"/>
+  </a>
+  <a href="https://github.com/paruff/fawkes/actions/workflows/pre-commit.yml">
+    <img src="https://github.com/paruff/fawkes/actions/workflows/pre-commit.yml/badge.svg" alt="Pre-commit"/>
+  </a>
+  <a href="https://github.com/paruff/fawkes/actions/workflows/security-and-terraform.yml">
+    <img src="https://github.com/paruff/fawkes/actions/workflows/security-and-terraform.yml/badge.svg" alt="Security"/>
+  </a>
+  <img src="https://img.shields.io/badge/coverage-60%25-yellow.svg" alt="Coverage"/>
+</p>
+
 ---
 
 ## What Makes Fawkes Different?
