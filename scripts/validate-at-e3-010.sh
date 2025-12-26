@@ -1,4 +1,6 @@
 #!/bin/bash
+
+set -euo pipefail
 # Don't use set -e to prevent early exit on failures
 # We want to collect all validation results
 

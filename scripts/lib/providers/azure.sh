@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 # =============================================================================
 # File: scripts/lib/providers/azure.sh
+
+set -euo pipefail
 # Purpose: Azure AKS cluster provisioning with RBAC and kubelogin
 # =============================================================================
 
+
+set -euo pipefail
 install_kubelogin() {
   if command -v kubelogin >/dev/null 2>&1; then
     echo "✅ kubelogin already installed"

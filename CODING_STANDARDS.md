@@ -549,6 +549,73 @@ cat file.txt | grep "pattern" | awk '{print $1}' | sort | uniq | wc -l
 # Better: Use intermediate variables for clarity
 ```
 
+#### Error Handling
+
+All Bash scripts MUST follow comprehensive error handling standards. See [Error Handling Standards](docs/standards/ERROR_HANDLING.md) for complete details.
+
+**Core Requirements**:
+
+1. **Strict Error Mode**: Start every script with `set -euo pipefail`
+2. **Error Handling Library**: Source `/scripts/lib/error_handling.sh` for utilities
+3. **Meaningful Error Messages**: Use `error_exit "message" exit_code`
+4. **Prerequisites Check**: Use `require_command`, `require_var`, `require_file`
+5. **Cleanup Functions**: Register cleanup with `register_cleanup_function`
+6. **Rollback Functions**: Register rollback with `register_rollback_function`
+
+**Standard Exit Codes**:
+- `0` - Success
+- `1` - General error  
+- `2` - Missing prerequisite
+- `3` - Validation failed
+- `4` - Network error
+- `5` - Timeout
+- `6` - User cancelled
+- `7` - Configuration error
+- `8` - Permission error
+
+**Example with Error Handling**:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source error handling library
+source "${SCRIPT_DIR}/lib/error_handling.sh"
+
+# Check prerequisites
+require_command "kubectl" "kubectl is required but not installed"
+require_var "NAMESPACE" "NAMESPACE environment variable must be set"
+
+# Register cleanup
+cleanup() {
+  log_debug "Cleaning up temporary files..."
+  rm -f /tmp/deploy-*.tmp
+}
+register_cleanup_function cleanup
+
+# Register rollback on error
+rollback() {
+  log_warn "Rolling back deployment..."
+  kubectl rollout undo deployment/myapp -n "$NAMESPACE" || true
+}
+register_rollback_function rollback
+
+# Main logic with proper error handling
+main() {
+  show_section "Deploying Application"
+  
+  if ! kubectl apply -f app.yaml -n "$NAMESPACE"; then
+    error_exit "Failed to deploy application" "$EXIT_GENERAL_ERROR"
+  fi
+  
+  log_success "Application deployed successfully!"
+}
+
+main "$@"
+```
+
 #### Common Issues
 
 | Issue              | Solution                        |
@@ -559,6 +626,8 @@ cat file.txt | grep "pattern" | awk '{print $1}' | sort | uniq | wc -l
 | Global variables   | Use `readonly` or `local`       |
 | No function docs   | Add comments above functions    |
 | Backticks          | Use `$()` instead of backticks  |
+| No cleanup         | Register cleanup functions      |
+| Generic errors     | Use specific exit codes         |
 
 ---
 

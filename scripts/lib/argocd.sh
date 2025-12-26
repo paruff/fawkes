@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 # =============================================================================
 # File: scripts/lib/argocd.sh
+
+set -euo pipefail
 # Purpose: ArgoCD deployment and management
 # =============================================================================
 
+
+set -euo pipefail
 maybe_cleanup_argocd_cluster_resources() {
   set +e
   if [[ "${ENV}" != "local" ]]; then return 0; fi

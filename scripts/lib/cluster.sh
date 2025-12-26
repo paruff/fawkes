@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 # =============================================================================
 # File: scripts/lib/cluster.sh
+
+set -euo pipefail
 # Purpose: Cluster provisioning orchestration
 # =============================================================================
 
+
+set -euo pipefail
 provision_cluster() {
   if [[ -n "${PROVIDER}" ]]; then
     case "${PROVIDER}" in

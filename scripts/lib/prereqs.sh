@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 # =============================================================================
 # File: scripts/lib/prereqs.sh
+
+set -euo pipefail
 # Purpose: Prerequisite checking and tool installation
 # =============================================================================
 
+
+set -euo pipefail
 check_prereqs() {
   echo "🔎 Validating prerequisites..."
   local script_dir="$(dirname "${BASH_SOURCE[0]}")/.."

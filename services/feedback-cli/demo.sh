@@ -1,4 +1,6 @@
 #!/bin/bash
+
+set -euo pipefail
 # Demo script for Fawkes Feedback CLI
 
 set -e
