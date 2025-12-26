@@ -114,7 +114,7 @@ create_mock_state() {
 assert_file_contains() {
   local file="$1"
   local text="$2"
-  run grep -F "${text}" "${file}"
+  run grep -F -- "${text}" "${file}"
   assert_success
 }
 
@@ -122,7 +122,7 @@ assert_file_contains() {
 assert_file_not_contains() {
   local file="$1"
   local text="$2"
-  run grep -F "${text}" "${file}"
+  run grep -F -- "${text}" "${file}"
   assert_failure
 }
 
