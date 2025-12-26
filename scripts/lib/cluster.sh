@@ -7,7 +7,6 @@ set -euo pipefail
 # =============================================================================
 
 
-set -euo pipefail
 provision_cluster() {
   if [[ -n "${PROVIDER}" ]]; then
     case "${PROVIDER}" in

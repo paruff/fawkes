@@ -7,7 +7,6 @@ set -euo pipefail
 # =============================================================================
 
 
-set -euo pipefail
 get_service_password() {
   local secret_name="$1"
   local namespace="$2"

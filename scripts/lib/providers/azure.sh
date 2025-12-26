@@ -7,7 +7,6 @@ set -euo pipefail
 # =============================================================================
 
 
-set -euo pipefail
 install_kubelogin() {
   if command -v kubelogin >/dev/null 2>&1; then
     echo "✅ kubelogin already installed"

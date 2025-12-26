@@ -1,9 +1,6 @@
 #!/bin/bash
 
 set -euo pipefail
-# Save this as: scripts/diagnose-epic3.sh
-
-#!/bin/bash
 # Script to diagnose and fix epic3.json issues
 
 echo "=== Diagnosing Epic 3 JSON Issues ==="

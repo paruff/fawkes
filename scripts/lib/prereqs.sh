@@ -7,7 +7,6 @@ set -euo pipefail
 # =============================================================================
 
 
-set -euo pipefail
 check_prereqs() {
   echo "🔎 Validating prerequisites..."
   local script_dir="$(dirname "${BASH_SOURCE[0]}")/.."

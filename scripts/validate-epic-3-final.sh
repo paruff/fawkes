@@ -1,13 +1,11 @@
 #!/bin/bash
 
-set -euo pipefail
-# Don't use set -e to prevent early exit on failures
-# We want to collect all validation results
-
 # validate-epic-3-final.sh
 # Comprehensive validation script for Final Epic 3 Validation (Issue #108)
 #
-# This script runs all four final Epic 3 acceptance tests:
+# This script runs all four final Epic 3 acceptance tests.
+# Note: Using set -uo pipefail only (without -e) to collect all validation results
+set -uo pipefail
 # - AT-E3-008: Continuous Discovery Process
 # - AT-E3-010: Usability Testing Infrastructure
 # - AT-E3-011: Product Analytics Platform
