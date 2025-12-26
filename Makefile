@@ -49,10 +49,16 @@ lint: ## Run all linters
 test-unit: ## Run unit tests
 	@pytest tests/unit -v
 
+test-bats: ## Run BATS tests for shell scripts
+	@./tests/bats/run-tests.sh
+
+test-bats-coverage: ## Run BATS tests with coverage reporting
+	@./tests/bats/run-tests.sh --coverage
+
 test-integration: ## Run integration tests
 	@pytest tests/integration -v
 
-test-all: test-unit test-bdd test-integration ## Run all tests
+test-all: test-unit test-bats test-bdd test-integration ## Run all tests
 
 test-e2e-argocd: ## Run ArgoCD E2E sync tests
 	@./tests/e2e/argocd-sync-test.sh --namespace $(ARGO_NAMESPACE)
