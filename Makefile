@@ -226,6 +226,9 @@ validate-jenkins: validate-jcasc ## Alias for validate-jcasc
 validate-issue-109: ## Validate Code Quality Standards implementation (Issue #109)
 	@./scripts/validate-issue-109.sh
 
+validate-issue-112: ## Validate Code Quality Standards Documentation (Issue #112)
+	@./scripts/validate-issue-112.sh
+
 ## Azure Infrastructure Management
 .PHONY: azure-init azure-plan azure-apply azure-destroy azure-refresh-kubeconfig azure-clean-rebuild azure-access
 
