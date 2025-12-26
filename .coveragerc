@@ -1,0 +1,82 @@
+# Coverage.py configuration for Fawkes
+# See https://coverage.readthedocs.io/en/latest/config.html
+
+[run]
+# Measure branch coverage in addition to statement coverage
+branch = True
+
+# Source code paths to measure
+source = .
+
+# Omit these paths from coverage
+omit =
+    */tests/*
+    */test_*.py
+    */.venv/*
+    */venv/*
+    */virtualenv/*
+    */node_modules/*
+    */.terraform/*
+    */build/*
+    */dist/*
+    */htmlcov/*
+    */__pycache__/*
+    */site-packages/*
+    setup.py
+    */conftest.py
+    */migrations/*
+    */.git/*
+
+[report]
+# Show missing lines in coverage report
+show_missing = True
+
+# Precision for coverage percentage
+precision = 2
+
+# Sort by name
+sort = Name
+
+# Skip covered files in report
+skip_covered = False
+
+# Skip empty files
+skip_empty = True
+
+# Exclude lines from coverage
+exclude_lines =
+    # Standard pragma
+    pragma: no cover
+
+    # Don't complain about missing debug-only code
+    def __repr__
+    def __str__
+
+    # Don't complain if tests don't hit defensive assertion code
+    raise AssertionError
+    raise NotImplementedError
+
+    # Don't complain if non-runnable code isn't run
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    if typing.TYPE_CHECKING:
+
+    # Don't complain about abstract methods
+    @(abc\.)?abstractmethod
+
+    # Don't complain about pass statements
+    pass
+
+[html]
+# Directory for HTML output
+directory = htmlcov
+
+[xml]
+# File for XML output
+output = coverage.xml
+
+[paths]
+# Map paths for different environments
+source =
+    .
+    /home/runner/work/fawkes/fawkes

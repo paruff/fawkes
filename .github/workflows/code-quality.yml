@@ -1,0 +1,324 @@
+name: Code Quality
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+  checks: write
+
+concurrency:
+  group: code-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ==========================================================================
+  # Python Code Quality
+  # ==========================================================================
+  python-quality:
+    name: Python Linting & Testing
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'requirements*.txt'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run Black (formatter check)
+        run: |
+          black --check --diff .
+        continue-on-error: true
+
+      - name: Run Flake8 (linter)
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --max-line-length=120 --extend-ignore=E203,W503 --statistics
+        continue-on-error: true
+
+      - name: Run MyPy (type checking)
+        run: |
+          mypy --install-types --non-interactive --ignore-missing-imports . || true
+        continue-on-error: true
+
+      - name: Run Pylint (advanced linting)
+        run: |
+          pylint --rcfile=/dev/null --max-line-length=120 --disable=C,R,W $(find . -name "*.py" -not -path "*/venv/*" -not -path "*/.venv/*" -not -path "*/node_modules/*") || true
+        continue-on-error: true
+
+  # ==========================================================================
+  # Python Test Coverage
+  # ==========================================================================
+  python-coverage:
+    name: Python Test Coverage
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'requirements*.txt'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run tests with coverage
+        run: |
+          pytest --cov=. --cov-report=xml --cov-report=html --cov-report=term-missing --cov-fail-under=60 tests/ || true
+        continue-on-error: true
+
+      - name: Upload coverage to artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: python-coverage-report
+          path: |
+            coverage.xml
+            htmlcov/
+
+      - name: Coverage comment on PR
+        if: github.event_name == 'pull_request'
+        uses: py-cov-action/python-coverage-comment-action@v3
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          MINIMUM_GREEN: 80
+          MINIMUM_ORANGE: 60
+        continue-on-error: true
+
+  # ==========================================================================
+  # TypeScript/JavaScript Quality (for design-system)
+  # ==========================================================================
+  typescript-quality:
+    name: TypeScript/JavaScript Linting
+    runs-on: ubuntu-latest
+    if: hashFiles('design-system/**/*.ts', 'design-system/**/*.tsx', 'design-system/**/*.js', 'design-system/**/*.jsx') != ''
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'design-system/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ./design-system
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: ./design-system
+        run: npm run lint || true
+        continue-on-error: true
+
+      - name: Run TypeScript compiler check
+        working-directory: ./design-system
+        run: npx tsc --noEmit || true
+        continue-on-error: true
+
+      - name: Run tests with coverage
+        working-directory: ./design-system
+        run: |
+          npm test -- --coverage --coverageReporters=text --coverageReporters=lcov || true
+        continue-on-error: true
+
+      - name: Upload coverage to artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: typescript-coverage-report
+          path: design-system/coverage/
+
+  # ==========================================================================
+  # Go Code Quality
+  # ==========================================================================
+  go-quality:
+    name: Go Linting
+    runs-on: ubuntu-latest
+    if: hashFiles('**/*.go') != ''
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+          cache: true
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v4
+        with:
+          version: latest
+          args: --timeout=5m
+        continue-on-error: true
+
+  # ==========================================================================
+  # Shell Script Quality
+  # ==========================================================================
+  shell-quality:
+    name: Shell Script Linting
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          severity: warning
+        continue-on-error: true
+
+  # ==========================================================================
+  # Security Scanning Integration Check
+  # ==========================================================================
+  security-integration:
+    name: Security Scanning Status
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Check security workflow exists
+        run: |
+          if [ -f ".github/workflows/security-and-terraform.yml" ]; then
+            echo "✅ Security workflow exists"
+          else
+            echo "❌ Security workflow not found"
+            exit 1
+          fi
+
+      - name: Verify Gitleaks configuration
+        run: |
+          if [ -f ".gitleaks.toml" ]; then
+            echo "✅ Gitleaks configuration exists"
+          else
+            echo "⚠️  Gitleaks configuration not found"
+          fi
+
+      - name: Verify pre-commit hooks
+        run: |
+          if [ -f ".pre-commit-config.yaml" ]; then
+            echo "✅ Pre-commit configuration exists"
+            grep -q "gitleaks" .pre-commit-config.yaml && echo "✅ Gitleaks hook configured"
+            grep -q "detect-secrets" .pre-commit-config.yaml && echo "✅ Detect-secrets hook configured"
+          else
+            echo "❌ Pre-commit configuration not found"
+            exit 1
+          fi
+
+  # ==========================================================================
+  # Quality Summary Report
+  # ==========================================================================
+  quality-summary:
+    name: Quality Summary
+    runs-on: ubuntu-latest
+    needs: [python-quality, python-coverage, typescript-quality, go-quality, shell-quality, security-integration]
+    if: always()
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Generate Quality Summary
+        id: summary
+        run: |
+          echo "## 📊 Code Quality Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Python Quality | ${{ needs.python-quality.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Python Coverage | ${{ needs.python-coverage.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| TypeScript Quality | ${{ needs.typescript-quality.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Go Quality | ${{ needs.go-quality.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Shell Quality | ${{ needs.shell-quality.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Integration | ${{ needs.security-integration.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📈 Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Review any failing checks above" >> $GITHUB_STEP_SUMMARY
+          echo "- Run \`make pre-commit-setup\` locally to catch issues early" >> $GITHUB_STEP_SUMMARY
+          echo "- Run \`make lint\` to run all linters locally" >> $GITHUB_STEP_SUMMARY
+          echo "- See [Code Quality Standards](docs/how-to/development/code-quality-standards.md) for details" >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const summary = `## 📊 Code Quality Report
+
+            | Check | Status |
+            |-------|--------|
+            | Python Quality | ${{ needs.python-quality.result }} |
+            | Python Coverage | ${{ needs.python-coverage.result }} |
+            | TypeScript Quality | ${{ needs.typescript-quality.result }} |
+            | Go Quality | ${{ needs.go-quality.result }} |
+            | Shell Quality | ${{ needs.shell-quality.result }} |
+            | Security Integration | ${{ needs.security-integration.result }} |
+
+            ### 📈 Quality Gates
+
+            ✅ **Passed**: All checks completed successfully
+            ⚠️  **Warning**: Some checks have warnings
+            ❌ **Failed**: Critical issues found
+
+            ### 🔧 How to Fix
+
+            Run locally before pushing:
+            \`\`\`bash
+            make pre-commit-setup  # Install pre-commit hooks
+            make lint              # Run all linters
+            pytest --cov=. --cov-report=term-missing  # Check coverage
+            \`\`\`
+
+            See [Code Quality Standards](docs/how-to/development/code-quality-standards.md) for more details.
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });
