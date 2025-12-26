@@ -5107,8 +5107,12 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 <p>Navigate to: <code>https://openreplay.fawkes.local</code> or <code>http://localhost:8080</code></p>
 <h3 id="2-initial-setup">2. Initial Setup</h3>
 <ol>
-<li><strong>Create Admin Account</strong>:</li>
-<li>Email: <code>admin@fawkes.local</code></li>
+<li>
+<p><strong>Create Admin Account</strong>:</p>
+</li>
+<li>
+<p>Email: <code>admin@fawkes.local</code></p>
+</li>
 <li>Password: [Set secure password]</li>
 <li>
 <p>Organization: <code>Fawkes Platform</code></p>
@@ -5116,7 +5120,9 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 <li>
 <p><strong>Create Project</strong>:</p>
 </li>
-<li>Name: <code>Fawkes Usability Testing</code></li>
+<li>
+<p>Name: <code>Fawkes Usability Testing</code></p>
+</li>
 <li>
 <p>Purpose: <code>Usability testing and user research</code></p>
 </li>
@@ -5141,45 +5147,43 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 <span class="w">    </span><span class="nt">captureConsole</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">captureNetwork</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">sanitize</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">selector</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[data-sensitive]&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">selector</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;.sensitive-data&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">selector</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;[data-sensitive]&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">selector</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;.sensitive-data&quot;</span>
 </code></pre></div>
 <p>Install tracker in Backstage frontend:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>platform/apps/backstage/packages/app
 npm<span class="w"> </span>install<span class="w"> </span>@openreplay/tracker
 </code></pre></div>
 <p>Add to <code>src/App.tsx</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">Tracker</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@openreplay/tracker&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">Tracker</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openreplay/tracker&quot;</span><span class="p">;</span>
 
 <span class="c1">// Initialize OpenReplay</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">tracker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Tracker</span><span class="p">({</span>
 <span class="w">  </span><span class="nx">projectKey</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.OPENREPLAY_PROJECT_KEY</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">ingestPoint</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://openreplay.fawkes.local/ingest&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">ingestPoint</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://openreplay.fawkes.local/ingest&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">captureConsole</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">captureNetwork</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
 <span class="w">  </span><span class="c1">// Sanitize sensitive data</span>
-<span class="w">  </span><span class="nx">sanitize</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s1">&#39;[data-sensitive]&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;.sensitive-data&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;input[type=&quot;password&quot;]&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nx">sanitize</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;[data-sensitive]&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;.sensitive-data&quot;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;input[type=&quot;password&quot;]&#39;</span><span class="p">],</span>
 <span class="p">});</span>
 
 <span class="c1">// Start tracking only in usability testing environment</span>
-<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ENABLE_SESSION_RECORDING</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ENABLE_SESSION_RECORDING</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">tracker</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
 <span class="p">}</span>
 
 <span class="c1">// Optional: Set user metadata (anonymized)</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">setUserID</span><span class="p">(</span><span class="s1">&#39;anonymous-user&#39;</span><span class="p">);</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s1">&#39;role&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;test-participant&#39;</span><span class="p">);</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s1">&#39;session_type&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;usability_test&#39;</span><span class="p">);</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">setUserID</span><span class="p">(</span><span class="s2">&quot;anonymous-user&quot;</span><span class="p">);</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s2">&quot;role&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;test-participant&quot;</span><span class="p">);</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s2">&quot;session_type&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;usability_test&quot;</span><span class="p">);</span>
 </code></pre></div>
 <h4 id="for-other-applications">For Other Applications</h4>
-<p>Similar configuration can be added to:
-- Grafana dashboards
-- Jenkins UI
-- Custom applications</p>
+<p>Similar configuration can be added to:</p>
+<ul>
+<li>Grafana dashboards</li>
+<li>Jenkins UI</li>
+<li>Custom applications</li>
+</ul>
 <p>See OpenReplay documentation for framework-specific guides.</p>
 <h3 id="4-privacy-and-data-sanitization">4. Privacy and Data Sanitization</h3>
 <p><strong>Important</strong>: Always sanitize sensitive data before recording.</p>
@@ -5188,64 +5192,68 @@ npm<span class="w"> </span>install<span class="w"> </span>@openreplay/tracker
 <span class="nx">tracker</span><span class="p">.</span><span class="nx">sanitize</span><span class="p">([</span>
 <span class="w">  </span><span class="s1">&#39;input[type=&quot;password&quot;]&#39;</span><span class="p">,</span>
 <span class="w">  </span><span class="s1">&#39;input[type=&quot;email&quot;]&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">&#39;[data-sensitive]&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">&#39;.api-key&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">&#39;.secret-token&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">&#39;.credentials&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;[data-sensitive]&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;.api-key&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;.secret-token&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;.credentials&quot;</span><span class="p">,</span>
 <span class="p">]);</span>
 
 <span class="c1">// Sanitize by regex (in network requests)</span>
 <span class="nx">tracker</span><span class="p">.</span><span class="nx">sanitizeNetwork</span><span class="p">({</span>
 <span class="w">  </span><span class="nx">requestSanitizer</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">request</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s1">&#39;/api/secrets&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">request</span><span class="p">.</span><span class="nx">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;[REDACTED]&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s2">&quot;/api/secrets&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">request</span><span class="p">.</span><span class="nx">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;[REDACTED]&quot;</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">request</span><span class="p">;</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="nx">responseSanitizer</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s1">&#39;content-type&#39;</span><span class="p">].</span><span class="nx">includes</span><span class="p">(</span><span class="s1">&#39;application/json&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s2">&quot;content-type&quot;</span><span class="p">].</span><span class="nx">includes</span><span class="p">(</span><span class="s2">&quot;application/json&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">)</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">apiKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;[REDACTED]&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">)</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">apiKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;[REDACTED]&quot;</span><span class="p">;</span>
 <span class="w">      </span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">;</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="p">});</span>
 </code></pre></div>
-<p><strong>Data to Always Sanitize</strong>:
-- Passwords
-- API keys and tokens
-- Email addresses (unless consent given)
-- Personal identifiable information (PII)
-- Internal URLs and IPs
-- Error stack traces with file paths</p>
+<p><strong>Data to Always Sanitize</strong>:</p>
+<ul>
+<li>Passwords</li>
+<li>API keys and tokens</li>
+<li>Email addresses (unless consent given)</li>
+<li>Personal identifiable information (PII)</li>
+<li>Internal URLs and IPs</li>
+<li>Error stack traces with file paths</li>
+</ul>
 <h3 id="5-session-metadata">5. Session Metadata</h3>
 <p>Tag sessions with useful metadata for filtering:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Set user role (anonymized)</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s1">&#39;participant_role&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;platform_engineer&#39;</span><span class="p">);</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s1">&#39;experience_level&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;senior&#39;</span><span class="p">);</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s1">&#39;test_scenario&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;deployment_workflow&#39;</span><span class="p">);</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s1">&#39;task_number&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;1&#39;</span><span class="p">);</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s2">&quot;participant_role&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;platform_engineer&quot;</span><span class="p">);</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s2">&quot;experience_level&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;senior&quot;</span><span class="p">);</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s2">&quot;test_scenario&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;deployment_workflow&quot;</span><span class="p">);</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s2">&quot;task_number&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">);</span>
 
 <span class="c1">// Track custom events</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s1">&#39;task_started&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">task</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;deploy_application&#39;</span><span class="w"> </span><span class="p">});</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s1">&#39;task_completed&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">task</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;deploy_application&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">duration_ms</span><span class="o">:</span><span class="w"> </span><span class="mf">120000</span><span class="w"> </span><span class="p">});</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s1">&#39;confusion_point&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">element</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;create_button&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;looking_for&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;task_started&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">task</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;deploy_application&quot;</span><span class="w"> </span><span class="p">});</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;task_completed&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">task</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;deploy_application&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">duration_ms</span><span class="o">:</span><span class="w"> </span><span class="mf">120000</span><span class="w"> </span><span class="p">});</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;confusion_point&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">element</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;create_button&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;looking_for&quot;</span><span class="w"> </span><span class="p">});</span>
 </code></pre></div>
 <h2 id="usage-for-usability-testing">Usage for Usability Testing</h2>
 <h3 id="before-testing-session">Before Testing Session</h3>
 <ol>
-<li>
-<p><strong>Enable Recording</strong>:
-   <div class="highlight"><pre><span></span><code><span class="c1"># Set environment variable to enable tracking</span>
+<li><strong>Enable Recording</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Set environment variable to enable tracking</span>
 kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>deployment/backstage<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">ENABLE_SESSION_RECORDING</span><span class="o">=</span><span class="nb">true</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Prepare Session Tags</strong>:</p>
 </li>
-<li>Create a unique session ID</li>
+<li>
+<p>Create a unique session ID</p>
+</li>
 <li>
 <p>Prepare metadata tags (participant role, task scenario)</p>
 </li>
@@ -5257,34 +5265,36 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
 </ol>
 <h3 id="during-testing-session">During Testing Session</h3>
 <ol>
-<li>
-<p><strong>Start Session with Metadata</strong>:
-   <div class="highlight"><pre><span></span><code><span class="nx">tracker</span><span class="p">.</span><span class="nx">setUserID</span><span class="p">(</span><span class="s1">&#39;P01&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">// Participant ID</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s1">&#39;test_date&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;2025-12-25&#39;</span><span class="p">);</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s1">&#39;facilitator&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;product_team&#39;</span><span class="p">);</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s1">&#39;test_type&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;moderated_remote&#39;</span><span class="p">);</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Tag Task Transitions</strong>:
-   <div class="highlight"><pre><span></span><code><span class="nx">tracker</span><span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s1">&#39;task_1_started&#39;</span><span class="p">);</span>
+<li><strong>Start Session with Metadata</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nx">tracker</span><span class="p">.</span><span class="nx">setUserID</span><span class="p">(</span><span class="s2">&quot;P01&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// Participant ID</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s2">&quot;test_date&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;2025-12-25&quot;</span><span class="p">);</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s2">&quot;facilitator&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;product_team&quot;</span><span class="p">);</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">setMetadata</span><span class="p">(</span><span class="s2">&quot;test_type&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;moderated_remote&quot;</span><span class="p">);</span>
+</code></pre></div>
+<ol>
+<li><strong>Tag Task Transitions</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nx">tracker</span><span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;task_1_started&quot;</span><span class="p">);</span>
 <span class="c1">// ... user performs task ...</span>
-<span class="nx">tracker</span><span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s1">&#39;task_1_completed&#39;</span><span class="p">);</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Mark Confusion Points</strong> (optional):
-   <div class="highlight"><pre><span></span><code><span class="nx">tracker</span><span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s1">&#39;confusion&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">location</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;navigation_menu&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">looking_for</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;create_button&#39;</span>
+<span class="nx">tracker</span><span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;task_1_completed&quot;</span><span class="p">);</span>
+</code></pre></div>
+<ol>
+<li><strong>Mark Confusion Points</strong> (optional):
+   <div class="highlight"><pre><span></span><code><span class="nx">tracker</span><span class="p">.</span><span class="nx">event</span><span class="p">(</span><span class="s2">&quot;confusion&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">location</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;navigation_menu&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">looking_for</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;create_button&quot;</span><span class="p">,</span>
 <span class="p">});</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <h3 id="after-testing-session">After Testing Session</h3>
 <ol>
-<li><strong>Find Session</strong>:</li>
-<li>Go to OpenReplay dashboard</li>
+<li>
+<p><strong>Find Session</strong>:</p>
+</li>
+<li>
+<p>Go to OpenReplay dashboard</p>
+</li>
 <li>Filter by participant ID or metadata</li>
 <li>
 <p>Example: <code>participant_role is platform_engineer AND test_date is 2025-12-25</code></p>
@@ -5292,7 +5302,9 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
 <li>
 <p><strong>Review Recording</strong>:</p>
 </li>
-<li>Watch session replay at 1x-2x speed</li>
+<li>
+<p>Watch session replay at 1x-2x speed</p>
+</li>
 <li>Note timestamps of key moments</li>
 <li>Check console logs for errors</li>
 <li>
@@ -5301,7 +5313,9 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
 <li>
 <p><strong>Share with Team</strong>:</p>
 </li>
-<li>Generate shareable link</li>
+<li>
+<p>Generate shareable link</p>
+</li>
 <li>Add to usability test notes</li>
 <li>
 <p>Include in analysis document</p>
@@ -5323,9 +5337,11 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>openreplay<span class="w"> </span>deploy/openreplay-minio<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>mc<span class="w"> </span>du<span class="w"> </span>local/openreplay
 </code></pre></div>
-<p><strong>Retention Policy</strong>:
-- Sessions older than 90 days are automatically deleted
-- Adjust in OpenReplay settings: Settings → Storage → Retention</p>
+<p><strong>Retention Policy</strong>:</p>
+<ul>
+<li>Sessions older than 90 days are automatically deleted</li>
+<li>Adjust in OpenReplay settings: Settings → Storage → Retention</li>
+</ul>
 <p><strong>Manual Cleanup</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Delete sessions older than specific date</span>
 <span class="c1"># Through OpenReplay UI: Settings → Sessions → Bulk Delete</span>
@@ -5349,24 +5365,28 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 <span class="c1"># Check ingestion</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openreplay<span class="w"> </span>deploy/openreplay-ingestor<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
 </code></pre></div>
-<p><strong>Metrics to Monitor</strong>:
-- Session ingestion rate
-- Storage usage
-- API response times
-- Error rates</p>
+<p><strong>Metrics to Monitor</strong>:</p>
+<ul>
+<li>Session ingestion rate</li>
+<li>Storage usage</li>
+<li>API response times</li>
+<li>Error rates</li>
+</ul>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="sessions-not-recording">Sessions Not Recording</h3>
 <ol>
-<li>
-<p><strong>Check Tracker Installation</strong>:
-   <div class="highlight"><pre><span></span><code><span class="c1">// Verify tracker is initialized</span>
+<li><strong>Check Tracker Installation</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1">// Verify tracker is initialized</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">tracker</span><span class="p">.</span><span class="nx">isActive</span><span class="p">());</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Check Network</strong>:</p>
 </li>
-<li>Open browser DevTools → Network</li>
+<li>
+<p>Open browser DevTools → Network</p>
+</li>
 <li>Filter for requests to <code>openreplay.fawkes.local</code></li>
 <li>
 <p>Check for 200 OK responses</p>
@@ -5380,15 +5400,21 @@ kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"
 </ol>
 <h3 id="high-storage-usage">High Storage Usage</h3>
 <ol>
-<li><strong>Check Retention Settings</strong>:</li>
-<li>OpenReplay UI → Settings → Storage</li>
+<li>
+<p><strong>Check Retention Settings</strong>:</p>
+</li>
+<li>
+<p>OpenReplay UI → Settings → Storage</p>
+</li>
 <li>
 <p>Reduce retention period</p>
 </li>
 <li>
 <p><strong>Clean Up Old Sessions</strong>:</p>
 </li>
-<li>Bulk delete through UI</li>
+<li>
+<p>Bulk delete through UI</p>
+</li>
 <li>
 <p>Or adjust retention policy</p>
 </li>
@@ -5402,23 +5428,21 @@ kubectl<span class="w"> </span>patch<span class="w"> </span>pvc<span class="w"> 
 </ol>
 <h3 id="performance-issues">Performance Issues</h3>
 <ol>
-<li>
-<p><strong>Scale Components</strong>:
-   <div class="highlight"><pre><span></span><code><span class="c1"># Scale ingestion pods</span>
+<li><strong>Scale Components</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Scale ingestion pods</span>
 kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>openreplay-ingestor<span class="w"> </span>-n<span class="w"> </span>openreplay<span class="w"> </span>--replicas<span class="o">=</span><span class="m">3</span>
 
 <span class="c1"># Scale API pods</span>
 kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>openreplay-api<span class="w"> </span>-n<span class="w"> </span>openreplay<span class="w"> </span>--replicas<span class="o">=</span><span class="m">2</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Reduce Capture Rate</strong>:
+</code></pre></div>
+<ol>
+<li><strong>Reduce Capture Rate</strong>:
    <div class="highlight"><pre><span></span><code><span class="c1">// Sample sessions (e.g., only 50% of users)</span>
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0.5</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">tracker</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
 <span class="p">}</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <h2 id="security-considerations">Security Considerations</h2>
 <h3 id="data-privacy">Data Privacy</h3>
@@ -5435,10 +5459,12 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span clas
 <span class="c1"># Configure RBAC in OpenReplay settings</span>
 <span class="c1"># Settings → Team → Roles &amp; Permissions</span>
 </code></pre></div>
-<p><strong>Roles</strong>:
-- <strong>Admin</strong>: Product owner, research lead
-- <strong>Member</strong>: Product team, researchers
-- <strong>Viewer</strong>: Stakeholders (read-only)</p>
+<p><strong>Roles</strong>:</p>
+<ul>
+<li><strong>Admin</strong>: Product owner, research lead</li>
+<li><strong>Member</strong>: Product team, researchers</li>
+<li><strong>Viewer</strong>: Stakeholders (read-only)</li>
+</ul>
 <h3 id="network-security">Network Security</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Ensure TLS is enabled</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
@@ -5456,22 +5482,30 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span clas
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="recording-strategy">Recording Strategy</h3>
 <ol>
-<li><strong>Only Record When Needed</strong>:</li>
-<li>Enable only in usability testing environment</li>
+<li>
+<p><strong>Only Record When Needed</strong>:</p>
+</li>
+<li>
+<p>Enable only in usability testing environment</p>
+</li>
 <li>
 <p>Don't record in production without explicit consent</p>
 </li>
 <li>
 <p><strong>Use Metadata Extensively</strong>:</p>
 </li>
-<li>Tag every session with relevant context</li>
+<li>
+<p>Tag every session with relevant context</p>
+</li>
 <li>
 <p>Makes finding sessions much easier</p>
 </li>
 <li>
 <p><strong>Review Recordings Promptly</strong>:</p>
 </li>
-<li>Watch within 24 hours while memory is fresh</li>
+<li>
+<p>Watch within 24 hours while memory is fresh</p>
+</li>
 <li>
 <p>Take notes with timestamps</p>
 </li>
@@ -5483,15 +5517,21 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span clas
 </ol>
 <h3 id="data-management">Data Management</h3>
 <ol>
-<li><strong>Regular Cleanup</strong>:</li>
-<li>Delete sessions after analysis is complete</li>
+<li>
+<p><strong>Regular Cleanup</strong>:</p>
+</li>
+<li>
+<p>Delete sessions after analysis is complete</p>
+</li>
 <li>
 <p>Keep only exemplary sessions for training</p>
 </li>
 <li>
 <p><strong>Anonymize Everything</strong>:</p>
 </li>
-<li>Use participant IDs, not names</li>
+<li>
+<p>Use participant IDs, not names</p>
+</li>
 <li>
 <p>Remove any PII from metadata</p>
 </li>

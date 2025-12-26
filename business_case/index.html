@@ -6317,155 +6317,207 @@
 <li><strong>Platform Adoption Barrier</strong>: Organizations struggle to implement IDPs due to complexity and lack of expertise</li>
 </ol>
 <p><strong>Our Solution</strong>: An AWS-native platform that teams can deploy in hours (not months) + a comprehensive learning system that trains the engineers who will operate it.</p>
-<p><strong>Traction to Date</strong>:
-- ✅ Complete platform architecture with 8 documented ADRs
-- ✅ 50+ pages of technical documentation
-- ✅ 5-belt Dojo curriculum (20 modules) designed and documented
-- ✅ Open-source MIT license with active GitHub repository
-- ✅ Partnership discussions with Platform Engineering University
-- ✅ Growing community interest (early stage)</p>
-<p><strong>AWS Activate Request</strong>: $25,000 in credits to:
-- Deploy production reference implementation on AWS
-- Launch Fawkes Dojo learning platform
-- Support 200+ concurrent learners
-- Enable 20+ enterprise pilots</p>
+<p><strong>Traction to Date</strong>:</p>
+<ul>
+<li>✅ Complete platform architecture with 8 documented ADRs</li>
+<li>✅ 50+ pages of technical documentation</li>
+<li>✅ 5-belt Dojo curriculum (20 modules) designed and documented</li>
+<li>✅ Open-source MIT license with active GitHub repository</li>
+<li>✅ Partnership discussions with Platform Engineering University</li>
+<li>✅ Growing community interest (early stage)</li>
+</ul>
+<p><strong>AWS Activate Request</strong>: $25,000 in credits to:</p>
+<ul>
+<li>Deploy production reference implementation on AWS</li>
+<li>Launch Fawkes Dojo learning platform</li>
+<li>Support 200+ concurrent learners</li>
+<li>Enable 20+ enterprise pilots</li>
+</ul>
 <p><strong>12-Month Goal</strong>: 500 GitHub stars, 200 certified learners, 20 enterprise adoptions, $10K MRR from managed services</p>
 <hr />
 <h2 id="problem-statement">Problem Statement</h2>
 <h3 id="the-platform-engineering-crisis">The Platform Engineering Crisis</h3>
 <p>Organizations are hemorrhaging productivity and talent due to infrastructure complexity:</p>
-<p><strong>The Skills Gap</strong>:
-- 300,000+ platform engineering jobs unfilled globally (LinkedIn, 2024)
-- Average time to hire a platform engineer: 4-6 months
-- 73% of engineering leaders cite "platform skills" as top constraint (Gartner, 2024)
-- Zero comprehensive training programs exist for platform engineering</p>
-<p><strong>The Adoption Challenge</strong>:
-- Average time to deploy an IDP: 6-12 months
-- 68% of platform initiatives fail due to complexity (McKinsey, 2023)
-- Organizations spend $500K-$2M+ building custom platforms
-- Most platforms abandoned after 18 months (lack of adoption)</p>
+<p><strong>The Skills Gap</strong>:</p>
+<ul>
+<li>300,000+ platform engineering jobs unfilled globally (LinkedIn, 2024)</li>
+<li>Average time to hire a platform engineer: 4-6 months</li>
+<li>73% of engineering leaders cite "platform skills" as top constraint (Gartner, 2024)</li>
+<li>Zero comprehensive training programs exist for platform engineering</li>
+</ul>
+<p><strong>The Adoption Challenge</strong>:</p>
+<ul>
+<li>Average time to deploy an IDP: 6-12 months</li>
+<li>68% of platform initiatives fail due to complexity (McKinsey, 2023)</li>
+<li>Organizations spend $500K-$2M+ building custom platforms</li>
+<li>Most platforms abandoned after 18 months (lack of adoption)</li>
+</ul>
 <p><strong>The Business Impact</strong>:</p>
-<p>According to DORA research (2023):
-- Low performers deploy <strong>417x less frequently</strong> than elite performers
-- Lead time for changes: <strong>6,570x longer</strong> for low performers
-- Organizations lose $1-2M annually in developer productivity
-- 35% annual developer turnover due to poor tooling/processes</p>
+<p>According to DORA research (2023):</p>
+<ul>
+<li>Low performers deploy <strong>417x less frequently</strong> than elite performers</li>
+<li>Lead time for changes: <strong>6,570x longer</strong> for low performers</li>
+<li>Organizations lose $1-2M annually in developer productivity</li>
+<li>35% annual developer turnover due to poor tooling/processes</li>
+</ul>
 <p><strong>Real-World Example</strong>:</p>
-<p>A typical 200-person engineering organization:
-- <strong>100 developers</strong> spending 70% of time on non-value-added activities
-- <strong>Lost productivity</strong>: 70 FTE × $150K loaded cost = <strong>$10.5M/year</strong>
-- <strong>Opportunity cost</strong>: Features not built, markets not entered
-- <strong>Talent drain</strong>: Top performers leave for companies with better platforms</p>
+<p>A typical 200-person engineering organization:</p>
+<ul>
+<li><strong>100 developers</strong> spending 70% of time on non-value-added activities</li>
+<li><strong>Lost productivity</strong>: 70 FTE × $150K loaded cost = <strong>$10.5M/year</strong></li>
+<li><strong>Opportunity cost</strong>: Features not built, markets not entered</li>
+<li><strong>Talent drain</strong>: Top performers leave for companies with better platforms</li>
+</ul>
 <h3 id="why-current-solutions-fail">Why Current Solutions Fail</h3>
-<p><strong>Commercial Platforms</strong> (Humanitec, Kratix, etc.):
-- ❌ Expensive ($50K-$200K/year per team)
-- ❌ Vendor lock-in and proprietary APIs
-- ❌ Limited customization for specific needs
-- ❌ No learning/training included</p>
-<p><strong>DIY Approaches</strong>:
-- ❌ Take 12-18 months to build
-- ❌ Require 3-5 FTE platform engineers
-- ❌ Often abandoned due to complexity
-- ❌ No standardization across industry</p>
-<p><strong>Training Programs</strong>:
-- ❌ Fragmented (blog posts, scattered courses)
-- ❌ Theory-only (no hands-on practice)
-- ❌ Expensive ($3K-$10K per person)
-- ❌ Not connected to real platform implementation</p>
+<p><strong>Commercial Platforms</strong> (Humanitec, Kratix, etc.):</p>
+<ul>
+<li>❌ Expensive ($50K-$200K/year per team)</li>
+<li>❌ Vendor lock-in and proprietary APIs</li>
+<li>❌ Limited customization for specific needs</li>
+<li>❌ No learning/training included</li>
+</ul>
+<p><strong>DIY Approaches</strong>:</p>
+<ul>
+<li>❌ Take 12-18 months to build</li>
+<li>❌ Require 3-5 FTE platform engineers</li>
+<li>❌ Often abandoned due to complexity</li>
+<li>❌ No standardization across industry</li>
+</ul>
+<p><strong>Training Programs</strong>:</p>
+<ul>
+<li>❌ Fragmented (blog posts, scattered courses)</li>
+<li>❌ Theory-only (no hands-on practice)</li>
+<li>❌ Expensive ($3K-$10K per person)</li>
+<li>❌ Not connected to real platform implementation</li>
+</ul>
 <h3 id="the-market-opportunity">The Market Opportunity</h3>
-<p><strong>Platform Engineering Market Size</strong>:
-- Current: $4.2B (2024)
-- Projected: $12.8B by 2028 (35% CAGR)
-- Source: Gartner Platform Engineering Market Analysis</p>
-<p><strong>Target Addressable Market</strong>:
-- <strong>Primary</strong>: 50,000 mid-size companies (100-5,000 employees) undergoing digital transformation
-- <strong>Secondary</strong>: 100,000 startups scaling engineering teams (20-100 engineers)
-- <strong>Tertiary</strong>: 5,000 enterprises seeking inner-source platform solutions</p>
-<p><strong>Revenue Opportunity</strong>:
-- <strong>Managed Service</strong>: $500-$2,000/month per organization
-- <strong>Enterprise Support</strong>: $50K-$200K/year contracts
-- <strong>Training/Certification</strong>: $500-$1,000 per learner
-- <strong>Consulting</strong>: $200-$300/hour implementation services</p>
+<p><strong>Platform Engineering Market Size</strong>:</p>
+<ul>
+<li>Current: $4.2B (2024)</li>
+<li>Projected: $12.8B by 2028 (35% CAGR)</li>
+<li>Source: Gartner Platform Engineering Market Analysis</li>
+</ul>
+<p><strong>Target Addressable Market</strong>:</p>
+<ul>
+<li><strong>Primary</strong>: 50,000 mid-size companies (100-5,000 employees) undergoing digital transformation</li>
+<li><strong>Secondary</strong>: 100,000 startups scaling engineering teams (20-100 engineers)</li>
+<li><strong>Tertiary</strong>: 5,000 enterprises seeking inner-source platform solutions</li>
+</ul>
+<p><strong>Revenue Opportunity</strong>:</p>
+<ul>
+<li><strong>Managed Service</strong>: $500-$2,000/month per organization</li>
+<li><strong>Enterprise Support</strong>: $50K-$200K/year contracts</li>
+<li><strong>Training/Certification</strong>: $500-$1,000 per learner</li>
+<li><strong>Consulting</strong>: $200-$300/hour implementation services</li>
+</ul>
 <hr />
 <h2 id="solution-fawkes-platform-dojo">Solution: Fawkes Platform + Dojo</h2>
 <h3 id="what-is-fawkes">What is Fawkes?</h3>
 <p>Fawkes is a <strong>production-ready, open-source Internal Delivery Platform</strong> that provides:</p>
-<p><strong>For Organizations</strong>:
-- 🚀 Deploy complete IDP in hours (not months)
-- 🔧 Best-practice configuration out of the box
-- 📊 Automated DORA metrics collection and visualization
-- 🔐 Security and compliance baked in (DevSecOps)
-- ☁️ AWS-native with multi-cloud roadmap
-- 📚 Comprehensive documentation and support</p>
-<p><strong>For Engineers</strong>:
-- 🎓 Learn platform engineering through hands-on Dojo system
-- 🥋 Progress through 5 belt levels (White → Yellow → Green → Brown → Black)
-- 🏆 Earn recognized certifications valued by employers
-- 👥 Join supportive community of practitioners
-- 💼 Increase earning potential (platform engineers earn 20-30% more)</p>
+<p><strong>For Organizations</strong>:</p>
+<ul>
+<li>🚀 Deploy complete IDP in hours (not months)</li>
+<li>🔧 Best-practice configuration out of the box</li>
+<li>📊 Automated DORA metrics collection and visualization</li>
+<li>🔐 Security and compliance baked in (DevSecOps)</li>
+<li>☁️ AWS-native with multi-cloud roadmap</li>
+<li>📚 Comprehensive documentation and support</li>
+</ul>
+<p><strong>For Engineers</strong>:</p>
+<ul>
+<li>🎓 Learn platform engineering through hands-on Dojo system</li>
+<li>🥋 Progress through 5 belt levels (White → Yellow → Green → Brown → Black)</li>
+<li>🏆 Earn recognized certifications valued by employers</li>
+<li>👥 Join supportive community of practitioners</li>
+<li>💼 Increase earning potential (platform engineers earn 20-30% more)</li>
+</ul>
 <h3 id="core-technology-stack">Core Technology Stack</h3>
-<p><strong>Developer Experience</strong>:
-- <strong>Backstage</strong>: Service catalog and developer portal (by Spotify)
-- <strong>TechDocs</strong>: Integrated documentation
-- <strong>Golden Path Templates</strong>: Scaffolding for new services</p>
-<p><strong>CI/CD &amp; Deployment</strong>:
-- <strong>Jenkins</strong>: Continuous integration pipelines
-- <strong>ArgoCD</strong>: GitOps-based continuous deployment
-- <strong>Harbor</strong>: Container registry and artifact management</p>
-<p><strong>Infrastructure</strong>:
-- <strong>Kubernetes/EKS</strong>: Container orchestration
-- <strong>Terraform</strong>: Infrastructure as Code
-- <strong>Helm</strong>: Package management</p>
-<p><strong>Observability</strong>:
-- <strong>Prometheus &amp; Grafana</strong>: Metrics and dashboards
-- <strong>OpenSearch</strong>: Log aggregation and analysis
-- <strong>Grafana Tempo</strong>: Distributed tracing
-- <strong>Custom DORA metrics automation</strong></p>
-<p><strong>Collaboration</strong>:
-- <strong>Mattermost</strong>: Team communication
-- <strong>Focalboard</strong>: Project tracking and kanban boards</p>
-<p><strong>Security</strong>:
-- <strong>Trivy</strong>: Container vulnerability scanning
-- <strong>Kyverno</strong>: Policy enforcement
-- <strong>AWS Secrets Manager</strong>: Secrets management</p>
+<p><strong>Developer Experience</strong>:</p>
+<ul>
+<li><strong>Backstage</strong>: Service catalog and developer portal (by Spotify)</li>
+<li><strong>TechDocs</strong>: Integrated documentation</li>
+<li><strong>Golden Path Templates</strong>: Scaffolding for new services</li>
+</ul>
+<p><strong>CI/CD &amp; Deployment</strong>:</p>
+<ul>
+<li><strong>Jenkins</strong>: Continuous integration pipelines</li>
+<li><strong>ArgoCD</strong>: GitOps-based continuous deployment</li>
+<li><strong>Harbor</strong>: Container registry and artifact management</li>
+</ul>
+<p><strong>Infrastructure</strong>:</p>
+<ul>
+<li><strong>Kubernetes/EKS</strong>: Container orchestration</li>
+<li><strong>Terraform</strong>: Infrastructure as Code</li>
+<li><strong>Helm</strong>: Package management</li>
+</ul>
+<p><strong>Observability</strong>:</p>
+<ul>
+<li><strong>Prometheus &amp; Grafana</strong>: Metrics and dashboards</li>
+<li><strong>OpenSearch</strong>: Log aggregation and analysis</li>
+<li><strong>Grafana Tempo</strong>: Distributed tracing</li>
+<li><strong>Custom DORA metrics automation</strong></li>
+</ul>
+<p><strong>Collaboration</strong>:</p>
+<ul>
+<li><strong>Mattermost</strong>: Team communication</li>
+<li><strong>Focalboard</strong>: Project tracking and kanban boards</li>
+</ul>
+<p><strong>Security</strong>:</p>
+<ul>
+<li><strong>Trivy</strong>: Container vulnerability scanning</li>
+<li><strong>Kyverno</strong>: Policy enforcement</li>
+<li><strong>AWS Secrets Manager</strong>: Secrets management</li>
+</ul>
 <h3 id="the-fawkes-dojo-immersive-learning-system">The Fawkes Dojo: Immersive Learning System</h3>
 <p><strong>Unique Value Proposition</strong>: The only platform that includes comprehensive learning.</p>
 <p><strong>5-Belt Progression System</strong>:</p>
-<p><strong>🥋 White Belt</strong> (8 hours): Platform Fundamentals
-- What IDPs are and why they matter
-- DORA metrics deep-dive
-- First deployment on Fawkes
-- <strong>Certification</strong>: "Fawkes Platform Operator"</p>
-<p><strong>🟡 Yellow Belt</strong> (8 hours): CI/CD Mastery
-- Build custom Jenkins pipelines
-- Security scanning and quality gates
-- Artifact management
-- <strong>Certification</strong>: "Fawkes CI/CD Specialist"</p>
-<p><strong>🟢 Green Belt</strong> (8 hours): GitOps &amp; Deployment
-- ArgoCD and GitOps workflows
-- Blue-green and canary deployments
-- Multi-environment management
-- <strong>Certification</strong>: "Fawkes Deployment Engineer"</p>
-<p><strong>🟤 Brown Belt</strong> (8 hours): Observability &amp; SRE
-- Full observability stack implementation
-- DORA metrics dashboards
-- SLIs, SLOs, and error budgets
-- Incident response
-- <strong>Certification</strong>: "Fawkes SRE Practitioner"</p>
-<p><strong>⚫ Black Belt</strong> (8 hours): Platform Architecture
-- Design platforms for new organizations
-- Multi-tenancy and governance
-- Security architecture
-- Mentor others
-- <strong>Certification</strong>: "Fawkes Platform Architect"</p>
+<p><strong>🥋 White Belt</strong> (8 hours): Platform Fundamentals</p>
+<ul>
+<li>What IDPs are and why they matter</li>
+<li>DORA metrics deep-dive</li>
+<li>First deployment on Fawkes</li>
+<li><strong>Certification</strong>: "Fawkes Platform Operator"</li>
+</ul>
+<p><strong>🟡 Yellow Belt</strong> (8 hours): CI/CD Mastery</p>
+<ul>
+<li>Build custom Jenkins pipelines</li>
+<li>Security scanning and quality gates</li>
+<li>Artifact management</li>
+<li><strong>Certification</strong>: "Fawkes CI/CD Specialist"</li>
+</ul>
+<p><strong>🟢 Green Belt</strong> (8 hours): GitOps &amp; Deployment</p>
+<ul>
+<li>ArgoCD and GitOps workflows</li>
+<li>Blue-green and canary deployments</li>
+<li>Multi-environment management</li>
+<li><strong>Certification</strong>: "Fawkes Deployment Engineer"</li>
+</ul>
+<p><strong>🟤 Brown Belt</strong> (8 hours): Observability &amp; SRE</p>
+<ul>
+<li>Full observability stack implementation</li>
+<li>DORA metrics dashboards</li>
+<li>SLIs, SLOs, and error budgets</li>
+<li>Incident response</li>
+<li><strong>Certification</strong>: "Fawkes SRE Practitioner"</li>
+</ul>
+<p><strong>⚫ Black Belt</strong> (8 hours): Platform Architecture</p>
+<ul>
+<li>Design platforms for new organizations</li>
+<li>Multi-tenancy and governance</li>
+<li>Security architecture</li>
+<li>Mentor others</li>
+<li><strong>Certification</strong>: "Fawkes Platform Architect"</li>
+</ul>
 <p><strong>Total Time Investment</strong>: 40 hours (1 week full-time or 5 weeks part-time)</p>
-<p><strong>Learning Features</strong>:
-- ✅ Hands-on labs in isolated Kubernetes namespaces
-- ✅ Auto-graded exercises with immediate feedback
-- ✅ Video content + written documentation
-- ✅ Real tools (not toy examples)
-- ✅ Community support via Mattermost
-- ✅ Recognized digital badges and certificates</p>
+<p><strong>Learning Features</strong>:</p>
+<ul>
+<li>✅ Hands-on labs in isolated Kubernetes namespaces</li>
+<li>✅ Auto-graded exercises with immediate feedback</li>
+<li>✅ Video content + written documentation</li>
+<li>✅ Real tools (not toy examples)</li>
+<li>✅ Community support via Mattermost</li>
+<li>✅ Recognized digital badges and certificates</li>
+</ul>
 <h3 id="competitive-advantages">Competitive Advantages</h3>
 <table>
 <thead>
@@ -6530,45 +6582,65 @@
 <hr />
 <h2 id="business-model">Business Model</h2>
 <h3 id="revenue-streams-roadmap">Revenue Streams (Roadmap)</h3>
-<p><strong>Phase 1: Open Source Foundation</strong> (Current - Months 1-6)
-- Focus: Build community, validate product-market fit
-- Revenue: $0 (investment in ecosystem)
-- Success Metrics: GitHub stars, contributors, adoptions</p>
-<p><strong>Phase 2: Managed Service (SaaS)</strong> (Months 7-12)
-- <strong>Offering</strong>: Hosted Fawkes platform managed by core team
-- <strong>Pricing</strong>: $500-$2,000/month per organization
-- <strong>Target</strong>: 10-20 pilot customers
-- <strong>Revenue Target</strong>: $10K MRR by month 12</p>
-<p><strong>Phase 3: Enterprise Support &amp; Consulting</strong> (Year 2)
-- <strong>Support Contracts</strong>: $50K-$200K/year
-  - 24/7 support
-  - Custom feature development
-  - Dedicated success manager
-- <strong>Implementation Services</strong>: $200-$300/hour
-  - Platform customization
-  - Migration from legacy systems
-  - Training and workshops
-- <strong>Revenue Target</strong>: $500K ARR by end of year 2</p>
-<p><strong>Phase 4: Certification &amp; Training</strong> (Year 2-3)
-- <strong>Individual Certification</strong>: $299-$499 per belt
-- <strong>Corporate Training</strong>: $5K-$10K per cohort (10-20 people)
-- <strong>Train-the-Trainer</strong>: $50K enterprise licensing
-- <strong>Revenue Target</strong>: $200K ARR from training by year 3</p>
-<p><strong>Phase 5: Ecosystem Expansion</strong> (Year 3+)
-- <strong>Marketplace</strong>: Platform extensions and integrations (20% commission)
-- <strong>Partnerships</strong>: Reseller agreements with consultancies
-- <strong>Advanced Features</strong>: Premium modules for enterprise (compliance, audit, advanced security)
-- <strong>Revenue Target</strong>: $2M+ ARR by year 3</p>
+<p><strong>Phase 1: Open Source Foundation</strong> (Current - Months 1-6)</p>
+<ul>
+<li>Focus: Build community, validate product-market fit</li>
+<li>Revenue: $0 (investment in ecosystem)</li>
+<li>Success Metrics: GitHub stars, contributors, adoptions</li>
+</ul>
+<p><strong>Phase 2: Managed Service (SaaS)</strong> (Months 7-12)</p>
+<ul>
+<li><strong>Offering</strong>: Hosted Fawkes platform managed by core team</li>
+<li><strong>Pricing</strong>: $500-$2,000/month per organization</li>
+<li><strong>Target</strong>: 10-20 pilot customers</li>
+<li><strong>Revenue Target</strong>: $10K MRR by month 12</li>
+</ul>
+<p><strong>Phase 3: Enterprise Support &amp; Consulting</strong> (Year 2)</p>
+<ul>
+<li><strong>Support Contracts</strong>: $50K-$200K/year</li>
+<li>24/7 support</li>
+<li>Custom feature development</li>
+<li>Dedicated success manager</li>
+<li><strong>Implementation Services</strong>: $200-$300/hour</li>
+<li>Platform customization</li>
+<li>Migration from legacy systems</li>
+<li>Training and workshops</li>
+<li><strong>Revenue Target</strong>: $500K ARR by end of year 2</li>
+</ul>
+<p><strong>Phase 4: Certification &amp; Training</strong> (Year 2-3)</p>
+<ul>
+<li><strong>Individual Certification</strong>: $299-$499 per belt</li>
+<li><strong>Corporate Training</strong>: $5K-$10K per cohort (10-20 people)</li>
+<li><strong>Train-the-Trainer</strong>: $50K enterprise licensing</li>
+<li><strong>Revenue Target</strong>: $200K ARR from training by year 3</li>
+</ul>
+<p><strong>Phase 5: Ecosystem Expansion</strong> (Year 3+)</p>
+<ul>
+<li><strong>Marketplace</strong>: Platform extensions and integrations (20% commission)</li>
+<li><strong>Partnerships</strong>: Reseller agreements with consultancies</li>
+<li><strong>Advanced Features</strong>: Premium modules for enterprise (compliance, audit, advanced security)</li>
+<li><strong>Revenue Target</strong>: $2M+ ARR by year 3</li>
+</ul>
 <h3 id="customer-acquisition-strategy">Customer Acquisition Strategy</h3>
-<p><strong>Inbound (Primary)</strong>:
-1. <strong>Open Source Community</strong>:
-   - GitHub repository with excellent documentation
-   - Weekly blog posts on platform engineering topics
-   - Conference talks and webinars
-   - YouTube tutorials and demos</p>
+<p><strong>Inbound (Primary)</strong>:</p>
 <ol>
-<li><strong>Dojo Learning Platform</strong>:</li>
-<li>Free access drives platform adoption</li>
+<li>
+<p><strong>Open Source Community</strong>:</p>
+</li>
+<li>
+<p>GitHub repository with excellent documentation</p>
+</li>
+<li>Weekly blog posts on platform engineering topics</li>
+<li>Conference talks and webinars</li>
+<li>
+<p>YouTube tutorials and demos</p>
+</li>
+<li>
+<p><strong>Dojo Learning Platform</strong>:</p>
+</li>
+<li>
+<p>Free access drives platform adoption</p>
+</li>
 <li>Certified learners become advocates in their organizations</li>
 <li>
 <p>Job placement partnerships create network effects</p>
@@ -6580,14 +6652,24 @@
 <li>DORA metrics calculators and tools</li>
 <li>Platform engineering best practices content</li>
 </ol>
-<p><strong>Outbound (Secondary)</strong>:
-1. <strong>Enterprise Pilots</strong>:
-   - Identify 50 target accounts (Fortune 2000)
-   - Offer free managed service pilot (3 months)
-   - Convert 20% to paid customers</p>
+<p><strong>Outbound (Secondary)</strong>:</p>
 <ol>
-<li><strong>Platform Engineering University Partnership</strong>:</li>
-<li>Co-branded certification program</li>
+<li>
+<p><strong>Enterprise Pilots</strong>:</p>
+</li>
+<li>
+<p>Identify 50 target accounts (Fortune 2000)</p>
+</li>
+<li>Offer free managed service pilot (3 months)</li>
+<li>
+<p>Convert 20% to paid customers</p>
+</li>
+<li>
+<p><strong>Platform Engineering University Partnership</strong>:</p>
+</li>
+<li>
+<p>Co-branded certification program</p>
+</li>
 <li>Joint webinars and events</li>
 <li>
 <p>Shared student pipeline</p>
@@ -6600,125 +6682,171 @@
 <li>Qualify for AWS co-sell programs</li>
 </ol>
 <h3 id="unit-economics-managed-service">Unit Economics (Managed Service)</h3>
-<p><strong>Customer Acquisition Cost (CAC)</strong>:
-- Inbound (organic): $500-$1,000 per customer
-- Outbound (sales): $5,000-$10,000 per customer
-- Blended CAC Target: $2,000</p>
-<p><strong>Annual Contract Value (ACV)</strong>:
-- Starter Plan: $6K/year ($500/month)
-- Growth Plan: $12K/year ($1,000/month)
-- Enterprise Plan: $24K+/year ($2,000+/month)
-- Average ACV: $12K</p>
-<p><strong>Gross Margin</strong>:
-- AWS Infrastructure: $3,200/year per customer
-- Support Costs (10% engineering time): $2,000/year
-- Gross Margin: 57%</p>
-<p><strong>Lifetime Value (LTV)</strong>:
-- Average Customer Lifetime: 3-5 years
-- Churn Rate (target): 10% annually
-- LTV: $12K × 4 years × 0.57 margin = $27,360</p>
+<p><strong>Customer Acquisition Cost (CAC)</strong>:</p>
+<ul>
+<li>Inbound (organic): $500-$1,000 per customer</li>
+<li>Outbound (sales): $5,000-$10,000 per customer</li>
+<li>Blended CAC Target: $2,000</li>
+</ul>
+<p><strong>Annual Contract Value (ACV)</strong>:</p>
+<ul>
+<li>Starter Plan: $6K/year ($500/month)</li>
+<li>Growth Plan: $12K/year ($1,000/month)</li>
+<li>Enterprise Plan: $24K+/year ($2,000+/month)</li>
+<li>Average ACV: $12K</li>
+</ul>
+<p><strong>Gross Margin</strong>:</p>
+<ul>
+<li>AWS Infrastructure: $3,200/year per customer</li>
+<li>Support Costs (10% engineering time): $2,000/year</li>
+<li>Gross Margin: 57%</li>
+</ul>
+<p><strong>Lifetime Value (LTV)</strong>:</p>
+<ul>
+<li>Average Customer Lifetime: 3-5 years</li>
+<li>Churn Rate (target): 10% annually</li>
+<li>LTV: $12K × 4 years × 0.57 margin = $27,360</li>
+</ul>
 <p><strong>LTV:CAC Ratio</strong>: 13.7:1 (target &gt; 3:1) ✅</p>
 <p><strong>Payback Period</strong>: 2.3 months (target &lt; 12 months) ✅</p>
 <hr />
 <h2 id="why-aws-activate-credits-matter">Why AWS Activate Credits Matter</h2>
 <h3 id="current-constraints">Current Constraints</h3>
-<p><strong>Bootstrap Reality</strong>:
-- <strong>Funding</strong>: $0 institutional investment (self-funded)
-- <strong>Team</strong>: 1-2 core contributors + community
-- <strong>Infrastructure</strong>: Using personal AWS accounts ($100-200/month)
-- <strong>Growth Blockers</strong>:
-  - Cannot afford 3-environment setup for production validation
-  - Cannot provide demo environments for prospects
-  - Cannot launch Dojo platform at scale
-  - Cannot support community contributor testing</p>
-<p><strong>The Chicken-and-Egg Problem</strong>:
-- Need production deployment to attract enterprise customers
-- Need enterprise customers to afford infrastructure
-- Need infrastructure to train community
-- Need trained community to build credibility</p>
+<p><strong>Bootstrap Reality</strong>:</p>
+<ul>
+<li><strong>Funding</strong>: $0 institutional investment (self-funded)</li>
+<li><strong>Team</strong>: 1-2 core contributors + community</li>
+<li><strong>Infrastructure</strong>: Using personal AWS accounts ($100-200/month)</li>
+<li><strong>Growth Blockers</strong>:</li>
+<li>Cannot afford 3-environment setup for production validation</li>
+<li>Cannot provide demo environments for prospects</li>
+<li>Cannot launch Dojo platform at scale</li>
+<li>Cannot support community contributor testing</li>
+</ul>
+<p><strong>The Chicken-and-Egg Problem</strong>:</p>
+<ul>
+<li>Need production deployment to attract enterprise customers</li>
+<li>Need enterprise customers to afford infrastructure</li>
+<li>Need infrastructure to train community</li>
+<li>Need trained community to build credibility</li>
+</ul>
 <p><strong>AWS Activate Breaks This Cycle</strong> 🚀</p>
 <h3 id="credit-utilization-plan">Credit Utilization Plan</h3>
 <p><strong>Phase 1: Foundation (Months 1-3) - $5,000 credits</strong></p>
-<p><strong>Objectives</strong>:
-- Deploy production-grade reference implementation
-- Complete all AWS-specific documentation
-- Validate architecture at scale</p>
-<p><strong>Deliverables</strong>:
-- 3-environment setup (dev/staging/prod) on EKS
-- Terraform modules for reproducible deployments
-- AWS deployment guide with troubleshooting
-- Cost optimization documentation
-- 5+ blog posts on AWS platform engineering</p>
-<p><strong>AWS Services Used</strong>:
-- EKS clusters across 3 environments
-- RDS PostgreSQL instances
-- S3 for artifacts and backups
-- CloudWatch for monitoring
-- Application Load Balancers</p>
-<p><strong>Success Metrics</strong>:
-- Reference implementation deployed and documented
-- 10+ organizations testing deployment guides
-- 50+ GitHub stars
-- 5+ community contributors</p>
+<p><strong>Objectives</strong>:</p>
+<ul>
+<li>Deploy production-grade reference implementation</li>
+<li>Complete all AWS-specific documentation</li>
+<li>Validate architecture at scale</li>
+</ul>
+<p><strong>Deliverables</strong>:</p>
+<ul>
+<li>3-environment setup (dev/staging/prod) on EKS</li>
+<li>Terraform modules for reproducible deployments</li>
+<li>AWS deployment guide with troubleshooting</li>
+<li>Cost optimization documentation</li>
+<li>5+ blog posts on AWS platform engineering</li>
+</ul>
+<p><strong>AWS Services Used</strong>:</p>
+<ul>
+<li>EKS clusters across 3 environments</li>
+<li>RDS PostgreSQL instances</li>
+<li>S3 for artifacts and backups</li>
+<li>CloudWatch for monitoring</li>
+<li>Application Load Balancers</li>
+</ul>
+<p><strong>Success Metrics</strong>:</p>
+<ul>
+<li>Reference implementation deployed and documented</li>
+<li>10+ organizations testing deployment guides</li>
+<li>50+ GitHub stars</li>
+<li>5+ community contributors</li>
+</ul>
 <hr />
 <p><strong>Phase 2: Community Launch (Months 4-6) - $5,000 credits</strong></p>
-<p><strong>Objectives</strong>:
-- Launch Fawkes Dojo learning platform
-- Support initial learner cohort
-- Build teaching infrastructure</p>
-<p><strong>Deliverables</strong>:
-- Dojo learning environment with 50+ learner namespaces
-- White Belt and Yellow Belt modules live
-- Video content for all Phase 1 modules
-- Community support channels (Mattermost)
-- First 50 learners certified</p>
-<p><strong>Infrastructure Expansion</strong>:
-- Dojo provisioning service (auto-create learner environments)
-- Lab validation system (auto-grading)
-- Increased compute for concurrent learners
-- Enhanced monitoring for learning analytics</p>
-<p><strong>Success Metrics</strong>:
-- 50+ learners complete White Belt
-- 25+ learners complete Yellow Belt
-- Net Promoter Score (NPS) &gt; 50
-- 100+ GitHub stars
-- 10+ active contributors</p>
+<p><strong>Objectives</strong>:</p>
+<ul>
+<li>Launch Fawkes Dojo learning platform</li>
+<li>Support initial learner cohort</li>
+<li>Build teaching infrastructure</li>
+</ul>
+<p><strong>Deliverables</strong>:</p>
+<ul>
+<li>Dojo learning environment with 50+ learner namespaces</li>
+<li>White Belt and Yellow Belt modules live</li>
+<li>Video content for all Phase 1 modules</li>
+<li>Community support channels (Mattermost)</li>
+<li>First 50 learners certified</li>
+</ul>
+<p><strong>Infrastructure Expansion</strong>:</p>
+<ul>
+<li>Dojo provisioning service (auto-create learner environments)</li>
+<li>Lab validation system (auto-grading)</li>
+<li>Increased compute for concurrent learners</li>
+<li>Enhanced monitoring for learning analytics</li>
+</ul>
+<p><strong>Success Metrics</strong>:</p>
+<ul>
+<li>50+ learners complete White Belt</li>
+<li>25+ learners complete Yellow Belt</li>
+<li>Net Promoter Score (NPS) &gt; 50</li>
+<li>100+ GitHub stars</li>
+<li>10+ active contributors</li>
+</ul>
 <hr />
 <p><strong>Phase 3: Scale &amp; Enterprise (Months 7-12) - $15,000 credits</strong></p>
-<p><strong>Objectives</strong>:
-- Scale to 200+ concurrent learners
-- Launch 10+ enterprise pilot programs
-- Begin managed service beta
-- Expand to multi-region</p>
-<p><strong>Deliverables</strong>:
-- All 5 belt levels complete and live
-- 200+ learners certified across all belts
-- 10 enterprise pilots running on managed service
-- Multi-region AWS deployment (US-East, US-West, EU-West)
-- AWS Marketplace listing</p>
-<p><strong>Infrastructure at Scale</strong>:
-- Production environment supporting 50+ organizations
-- Dojo platform at full capacity (200 concurrent)
-- Multi-region failover and DR
-- Advanced monitoring and cost optimization
-- Enterprise-grade security and compliance</p>
-<p><strong>Success Metrics</strong>:
-- 200+ Dojo certifications issued
-- 10 enterprise pilots (5 converting to paid)
-- $10K MRR from managed service
-- 500+ GitHub stars
-- 25+ active contributors
-- 50+ organizations deployed Fawkes on AWS</p>
+<p><strong>Objectives</strong>:</p>
+<ul>
+<li>Scale to 200+ concurrent learners</li>
+<li>Launch 10+ enterprise pilot programs</li>
+<li>Begin managed service beta</li>
+<li>Expand to multi-region</li>
+</ul>
+<p><strong>Deliverables</strong>:</p>
+<ul>
+<li>All 5 belt levels complete and live</li>
+<li>200+ learners certified across all belts</li>
+<li>10 enterprise pilots running on managed service</li>
+<li>Multi-region AWS deployment (US-East, US-West, EU-West)</li>
+<li>AWS Marketplace listing</li>
+</ul>
+<p><strong>Infrastructure at Scale</strong>:</p>
+<ul>
+<li>Production environment supporting 50+ organizations</li>
+<li>Dojo platform at full capacity (200 concurrent)</li>
+<li>Multi-region failover and DR</li>
+<li>Advanced monitoring and cost optimization</li>
+<li>Enterprise-grade security and compliance</li>
+</ul>
+<p><strong>Success Metrics</strong>:</p>
+<ul>
+<li>200+ Dojo certifications issued</li>
+<li>10 enterprise pilots (5 converting to paid)</li>
+<li>$10K MRR from managed service</li>
+<li>500+ GitHub stars</li>
+<li>25+ active contributors</li>
+<li>50+ organizations deployed Fawkes on AWS</li>
+</ul>
 <hr />
 <h3 id="expected-outcomes-for-aws">Expected Outcomes for AWS</h3>
-<p><strong>Direct Benefits</strong>:
-1. <strong>Increased AWS Consumption</strong>:
-   - 50+ organizations deploying Fawkes on AWS
-   - Average $2K-5K/month AWS spend per organization
-   - Total AWS spend driven: $100K-250K/month by month 12</p>
+<p><strong>Direct Benefits</strong>:</p>
 <ol>
-<li><strong>EKS Adoption</strong>:</li>
-<li>Every Fawkes deployment uses Amazon EKS</li>
+<li>
+<p><strong>Increased AWS Consumption</strong>:</p>
+</li>
+<li>
+<p>50+ organizations deploying Fawkes on AWS</p>
+</li>
+<li>Average $2K-5K/month AWS spend per organization</li>
+<li>
+<p>Total AWS spend driven: $100K-250K/month by month 12</p>
+</li>
+<li>
+<p><strong>EKS Adoption</strong>:</p>
+</li>
+<li>
+<p>Every Fawkes deployment uses Amazon EKS</p>
+</li>
 <li>Reference implementation showcases EKS best practices</li>
 <li>
 <p>Training content educates on EKS features</p>
@@ -6726,7 +6854,9 @@
 <li>
 <p><strong>Developer Education</strong>:</p>
 </li>
-<li>200+ engineers trained on AWS services</li>
+<li>
+<p>200+ engineers trained on AWS services</p>
+</li>
 <li>Hands-on experience with EKS, RDS, S3, CloudWatch</li>
 <li>
 <p>Each certified engineer influences their organization</p>
@@ -6738,14 +6868,24 @@
 <li>Documentation benefits all AWS EKS users</li>
 <li>Best practices shared with community</li>
 </ol>
-<p><strong>Indirect Benefits</strong>:
-1. <strong>AWS Marketplace Growth</strong>:
-   - Fawkes listed on AWS Marketplace (Year 2)
-   - Drives additional AWS consumption
-   - Success story for AWS Activate program</p>
+<p><strong>Indirect Benefits</strong>:</p>
 <ol>
-<li><strong>Community Amplification</strong>:</li>
-<li>Every Dojo graduate is an AWS advocate</li>
+<li>
+<p><strong>AWS Marketplace Growth</strong>:</p>
+</li>
+<li>
+<p>Fawkes listed on AWS Marketplace (Year 2)</p>
+</li>
+<li>Drives additional AWS consumption</li>
+<li>
+<p>Success story for AWS Activate program</p>
+</li>
+<li>
+<p><strong>Community Amplification</strong>:</p>
+</li>
+<li>
+<p>Every Dojo graduate is an AWS advocate</p>
+</li>
 <li>Conference talks feature AWS implementation</li>
 <li>
 <p>Blog content references AWS services</p>
@@ -6753,7 +6893,9 @@
 <li>
 <p><strong>Enterprise Pipeline</strong>:</p>
 </li>
-<li>Fawkes enterprise customers are AWS enterprise customers</li>
+<li>
+<p>Fawkes enterprise customers are AWS enterprise customers</p>
+</li>
 <li>Shared account team coordination</li>
 <li>
 <p>Co-selling opportunities</p>
@@ -6768,271 +6910,359 @@
 <hr />
 <h2 id="market-validation-traction">Market Validation &amp; Traction</h2>
 <h3 id="current-traction-pre-launch">Current Traction (Pre-Launch)</h3>
-<p><strong>Technical Foundation</strong>:
-- ✅ 8 Architecture Decision Records (ADRs) documented
-- ✅ Complete platform architecture designed
-- ✅ 50+ pages of technical documentation
-- ✅ Terraform modules for AWS deployment (in progress)
-- ✅ Dojo curriculum: 20 modules across 5 belts designed</p>
-<p><strong>Community Interest</strong>:
-- ⚠️ GitHub repository public (early stage)
-- ⚠️ Initial discussions with Platform Engineering University
-- ⚠️ Interest from 5+ organizations for pilot programs
-- ⚠️ LinkedIn posts generating engagement</p>
-<p><strong>Competitive Analysis Validated</strong>:
-- Humanitec: $50K-$200K/year (confirmed via sales conversations)
-- Kratix: Open source but limited adoption (3K GitHub stars)
-- DIY platforms: 12-18 month build time (validated via engineering leader interviews)</p>
+<p><strong>Technical Foundation</strong>:</p>
+<ul>
+<li>✅ 8 Architecture Decision Records (ADRs) documented</li>
+<li>✅ Complete platform architecture designed</li>
+<li>✅ 50+ pages of technical documentation</li>
+<li>✅ Terraform modules for AWS deployment (in progress)</li>
+<li>✅ Dojo curriculum: 20 modules across 5 belts designed</li>
+</ul>
+<p><strong>Community Interest</strong>:</p>
+<ul>
+<li>⚠️ GitHub repository public (early stage)</li>
+<li>⚠️ Initial discussions with Platform Engineering University</li>
+<li>⚠️ Interest from 5+ organizations for pilot programs</li>
+<li>⚠️ LinkedIn posts generating engagement</li>
+</ul>
+<p><strong>Competitive Analysis Validated</strong>:</p>
+<ul>
+<li>Humanitec: $50K-$200K/year (confirmed via sales conversations)</li>
+<li>Kratix: Open source but limited adoption (3K GitHub stars)</li>
+<li>DIY platforms: 12-18 month build time (validated via engineering leader interviews)</li>
+</ul>
 <h3 id="product-market-fit-signals">Product-Market Fit Signals</h3>
-<p><strong>Problem Validation</strong>:
-- 300K+ platform engineering job postings (LinkedIn data)
-- 73% of eng leaders cite skills gap (Gartner survey)
-- 68% of platform initiatives fail (McKinsey research)
-- $10.5M average annual productivity loss (DORA research application)</p>
-<p><strong>Solution Validation</strong>:
-- Backstage (Spotify): 100K+ GitHub stars validates developer portal approach
-- ArgoCD: 17K+ stars validates GitOps
-- Platform Engineering: Fastest-growing category in DevOps (Google Trends +400% since 2022)</p>
-<p><strong>Willingness to Pay</strong>:
-- Organizations spending $500K-2M building custom platforms
-- Consultancies charging $200-300/hour for implementation
-- Training courses: $3K-10K per person
-- <strong>Our pricing</strong>: $6K-24K/year (80-95% discount vs. DIY)</p>
+<p><strong>Problem Validation</strong>:</p>
+<ul>
+<li>300K+ platform engineering job postings (LinkedIn data)</li>
+<li>73% of eng leaders cite skills gap (Gartner survey)</li>
+<li>68% of platform initiatives fail (McKinsey research)</li>
+<li>$10.5M average annual productivity loss (DORA research application)</li>
+</ul>
+<p><strong>Solution Validation</strong>:</p>
+<ul>
+<li>Backstage (Spotify): 100K+ GitHub stars validates developer portal approach</li>
+<li>ArgoCD: 17K+ stars validates GitOps</li>
+<li>Platform Engineering: Fastest-growing category in DevOps (Google Trends +400% since 2022)</li>
+</ul>
+<p><strong>Willingness to Pay</strong>:</p>
+<ul>
+<li>Organizations spending $500K-2M building custom platforms</li>
+<li>Consultancies charging $200-300/hour for implementation</li>
+<li>Training courses: $3K-10K per person</li>
+<li><strong>Our pricing</strong>: $6K-24K/year (80-95% discount vs. DIY)</li>
+</ul>
 <h3 id="early-adopter-pipeline">Early Adopter Pipeline</h3>
-<p><strong>Tier 1: Enterprise Pilots</strong> (In Discussions)
-- Mid-size financial services company (500 engineers)
-- Healthcare startup (50 engineers, Series B)
-- E-commerce platform (200 engineers)
-- Government contractor (150 engineers, compliance-focused)
-- Estimated pilot conversions: 20-40%</p>
-<p><strong>Tier 2: Open Source Users</strong> (Expected)
-- Startups scaling from 10-50 engineers
-- Individual engineers learning platform skills
-- Consultancies evaluating for client projects
-- Estimated: 50-100 deployments in first 6 months</p>
-<p><strong>Tier 3: Training Customers</strong>
-- Platform Engineering University students
-- Bootcamp graduates seeking specialization
-- Mid-career developers transitioning to platform roles
-- Estimated: 200+ learners in first year</p>
+<p><strong>Tier 1: Enterprise Pilots</strong> (In Discussions)</p>
+<ul>
+<li>Mid-size financial services company (500 engineers)</li>
+<li>Healthcare startup (50 engineers, Series B)</li>
+<li>E-commerce platform (200 engineers)</li>
+<li>Government contractor (150 engineers, compliance-focused)</li>
+<li>Estimated pilot conversions: 20-40%</li>
+</ul>
+<p><strong>Tier 2: Open Source Users</strong> (Expected)</p>
+<ul>
+<li>Startups scaling from 10-50 engineers</li>
+<li>Individual engineers learning platform skills</li>
+<li>Consultancies evaluating for client projects</li>
+<li>Estimated: 50-100 deployments in first 6 months</li>
+</ul>
+<p><strong>Tier 3: Training Customers</strong></p>
+<ul>
+<li>Platform Engineering University students</li>
+<li>Bootcamp graduates seeking specialization</li>
+<li>Mid-career developers transitioning to platform roles</li>
+<li>Estimated: 200+ learners in first year</li>
+</ul>
 <hr />
 <h2 id="team-expertise">Team &amp; Expertise</h2>
 <h3 id="foundermaintainer">Founder/Maintainer</h3>
-<p><strong>Philip Ruff</strong>
-- <strong>LinkedIn</strong>: linkedin.com/in/phil.ruff
-- <strong>Email</strong>: phil.ruff@pm.com
-- <strong>GitHub</strong>: github.com/paruff</p>
-<p><strong>Background</strong>:
-- 15 years of experience in platform engineering / DevOps / Cloud infrastructure
-- SAIC platform
-- AWS certifications: Solutions Architect, SysOps Engineer, Devloper</p>
-<p><strong>Relevant Experience</strong>:
-- Led teams of 15 engineers</p>
-<p><strong>Why Fawkes</strong>:
-- Experienced firsthand the pain of building platforms from scratch
-- Witnessed organizations waste $1M+ on failed platform initiatives
-- Passionate about education and reducing barrier to entry
-- Committed to open source and community-driven development</p>
+<p><strong>Philip Ruff</strong></p>
+<ul>
+<li><strong>LinkedIn</strong>: linkedin.com/in/phil.ruff</li>
+<li><strong>Email</strong>: phil.ruff@pm.com</li>
+<li><strong>GitHub</strong>: github.com/paruff</li>
+</ul>
+<p><strong>Background</strong>:</p>
+<ul>
+<li>15 years of experience in platform engineering / DevOps / Cloud infrastructure</li>
+<li>SAIC platform</li>
+<li>AWS certifications: Solutions Architect, SysOps Engineer, Devloper</li>
+</ul>
+<p><strong>Relevant Experience</strong>:</p>
+<ul>
+<li>Led teams of 15 engineers</li>
+</ul>
+<p><strong>Why Fawkes</strong>:</p>
+<ul>
+<li>Experienced firsthand the pain of building platforms from scratch</li>
+<li>Witnessed organizations waste $1M+ on failed platform initiatives</li>
+<li>Passionate about education and reducing barrier to entry</li>
+<li>Committed to open source and community-driven development</li>
+</ul>
 <h3 id="advisory-support-network">Advisory &amp; Support Network</h3>
-<p><strong>Technical Advisors</strong> (Target):
-- [Platform engineering leader from prominent tech company]
-- [AWS solutions architect or principal engineer]
-- [Open source community leaders from Backstage, ArgoCD, etc.]</p>
-<p><strong>Business Advisors</strong> (Target):
-- [SaaS founder/CEO with experience scaling open source companies]
-- [Platform Engineering University leadership]
-- [Enterprise sales leader with experience in DevOps/cloud tools]</p>
-<p><strong>Community Contributors</strong> (Current &amp; Growing):
-- Active GitHub contributors
-- Dojo beta testers
-- Documentation writers
-- Content creators</p>
+<p><strong>Technical Advisors</strong> (Target):</p>
+<ul>
+<li>[Platform engineering leader from prominent tech company]</li>
+<li>[AWS solutions architect or principal engineer]</li>
+<li>[Open source community leaders from Backstage, ArgoCD, etc.]</li>
+</ul>
+<p><strong>Business Advisors</strong> (Target):</p>
+<ul>
+<li>[SaaS founder/CEO with experience scaling open source companies]</li>
+<li>[Platform Engineering University leadership]</li>
+<li>[Enterprise sales leader with experience in DevOps/cloud tools]</li>
+</ul>
+<p><strong>Community Contributors</strong> (Current &amp; Growing):</p>
+<ul>
+<li>Active GitHub contributors</li>
+<li>Dojo beta testers</li>
+<li>Documentation writers</li>
+<li>Content creators</li>
+</ul>
 <hr />
 <h2 id="go-to-market-strategy">Go-To-Market Strategy</h2>
 <h3 id="year-1-roadmap-next-12-months">Year 1 Roadmap (Next 12 Months)</h3>
-<p><strong>Q1 2025: Foundation</strong> (Months 1-3)
-- ✅ Secure AWS Activate credits
-- ✅ Deploy production reference implementation
-- ✅ Complete all AWS documentation
-- ✅ Launch GitHub repository publicly
-- ✅ Begin content marketing (2 blog posts/week)
-- <strong>Target</strong>: 100 GitHub stars, 10 contributors</p>
-<p><strong>Q2 2025: Community Launch</strong> (Months 4-6)
-- ✅ Launch Fawkes Dojo (White + Yellow Belts)
-- ✅ Enroll first 50 learners
-- ✅ Partnership agreement with Platform Engineering University
-- ✅ First conference talk accepted
-- ✅ Begin enterprise pilot outreach
-- <strong>Target</strong>: 300 GitHub stars, 50 certified learners, 3 pilot commitments</p>
-<p><strong>Q3 2025: Scale</strong> (Months 7-9)
-- ✅ Complete all 5 Dojo belts
-- ✅ Launch managed service beta (5 customers)
-- ✅ 100+ certified learners
-- ✅ Speak at 2 major conferences (KubeCon, PlatformCon, etc.)
-- ✅ Launch AWS Marketplace listing
-- <strong>Target</strong>: 500 GitHub stars, 100 learners, 5 paying customers, $5K MRR</p>
-<p><strong>Q4 2025: Momentum</strong> (Months 10-12)
-- ✅ 200+ total certified learners
-- ✅ 10 managed service customers
-- ✅ First enterprise support contract ($50K)
-- ✅ Multi-region AWS deployment live
-- ✅ Community-driven content (guest posts, case studies)
-- <strong>Target</strong>: 750 GitHub stars, 200 learners, 10 customers, $15K MRR</p>
+<p><strong>Q1 2025: Foundation</strong> (Months 1-3)</p>
+<ul>
+<li>✅ Secure AWS Activate credits</li>
+<li>✅ Deploy production reference implementation</li>
+<li>✅ Complete all AWS documentation</li>
+<li>✅ Launch GitHub repository publicly</li>
+<li>✅ Begin content marketing (2 blog posts/week)</li>
+<li><strong>Target</strong>: 100 GitHub stars, 10 contributors</li>
+</ul>
+<p><strong>Q2 2025: Community Launch</strong> (Months 4-6)</p>
+<ul>
+<li>✅ Launch Fawkes Dojo (White + Yellow Belts)</li>
+<li>✅ Enroll first 50 learners</li>
+<li>✅ Partnership agreement with Platform Engineering University</li>
+<li>✅ First conference talk accepted</li>
+<li>✅ Begin enterprise pilot outreach</li>
+<li><strong>Target</strong>: 300 GitHub stars, 50 certified learners, 3 pilot commitments</li>
+</ul>
+<p><strong>Q3 2025: Scale</strong> (Months 7-9)</p>
+<ul>
+<li>✅ Complete all 5 Dojo belts</li>
+<li>✅ Launch managed service beta (5 customers)</li>
+<li>✅ 100+ certified learners</li>
+<li>✅ Speak at 2 major conferences (KubeCon, PlatformCon, etc.)</li>
+<li>✅ Launch AWS Marketplace listing</li>
+<li><strong>Target</strong>: 500 GitHub stars, 100 learners, 5 paying customers, $5K MRR</li>
+</ul>
+<p><strong>Q4 2025: Momentum</strong> (Months 10-12)</p>
+<ul>
+<li>✅ 200+ total certified learners</li>
+<li>✅ 10 managed service customers</li>
+<li>✅ First enterprise support contract ($50K)</li>
+<li>✅ Multi-region AWS deployment live</li>
+<li>✅ Community-driven content (guest posts, case studies)</li>
+<li><strong>Target</strong>: 750 GitHub stars, 200 learners, 10 customers, $15K MRR</li>
+</ul>
 <h3 id="marketing-channels">Marketing Channels</h3>
-<p><strong>Content Marketing</strong> (Primary):
-- <strong>Blog</strong>: 2-3 technical posts per week
-  - Platform engineering best practices
-  - DORA metrics deep-dives
-  - AWS deployment guides
-  - Case studies and success stories
-- <strong>YouTube</strong>: Weekly video tutorials
-  - Dojo module previews
-  - Platform demos
-  - Expert interviews
-- <strong>Podcast</strong>: Launch "Platform Engineering Podcast" (Q2)
-  - Interview industry leaders
-  - Discuss trends and challenges
-  - Feature Fawkes success stories</p>
-<p><strong>Community Building</strong> (Primary):
-- <strong>GitHub</strong>: Active issue triage, PR reviews, discussions
-- <strong>Mattermost/Discord</strong>: Community support channels
-- <strong>Office Hours</strong>: Weekly live Q&amp;A sessions
-- <strong>Meetups</strong>: Sponsor/host local platform engineering meetups</p>
-<p><strong>Partnerships</strong> (Secondary):
-- <strong>Platform Engineering University</strong>: Co-branded training
-- <strong>AWS</strong>: Co-marketing, joint webinars, AWS Marketplace
-- <strong>Consultancies</strong>: Implementation partnerships
-- <strong>Cloud Native Computing Foundation (CNCF)</strong>: Sandbox project application</p>
-<p><strong>Paid Marketing</strong> (Year 2+):
-- <strong>Google Ads</strong>: Target "internal developer platform" keywords
-- <strong>LinkedIn Ads</strong>: Target engineering leaders, VPs of Engineering
-- <strong>Conference Sponsorships</strong>: KubeCon, PlatformCon, AWS re:Invent
-- <strong>Budget</strong>: $10K/month starting Year 2</p>
+<p><strong>Content Marketing</strong> (Primary):</p>
+<ul>
+<li><strong>Blog</strong>: 2-3 technical posts per week</li>
+<li>Platform engineering best practices</li>
+<li>DORA metrics deep-dives</li>
+<li>AWS deployment guides</li>
+<li>Case studies and success stories</li>
+<li><strong>YouTube</strong>: Weekly video tutorials</li>
+<li>Dojo module previews</li>
+<li>Platform demos</li>
+<li>Expert interviews</li>
+<li><strong>Podcast</strong>: Launch "Platform Engineering Podcast" (Q2)</li>
+<li>Interview industry leaders</li>
+<li>Discuss trends and challenges</li>
+<li>Feature Fawkes success stories</li>
+</ul>
+<p><strong>Community Building</strong> (Primary):</p>
+<ul>
+<li><strong>GitHub</strong>: Active issue triage, PR reviews, discussions</li>
+<li><strong>Mattermost/Discord</strong>: Community support channels</li>
+<li><strong>Office Hours</strong>: Weekly live Q&amp;A sessions</li>
+<li><strong>Meetups</strong>: Sponsor/host local platform engineering meetups</li>
+</ul>
+<p><strong>Partnerships</strong> (Secondary):</p>
+<ul>
+<li><strong>Platform Engineering University</strong>: Co-branded training</li>
+<li><strong>AWS</strong>: Co-marketing, joint webinars, AWS Marketplace</li>
+<li><strong>Consultancies</strong>: Implementation partnerships</li>
+<li><strong>Cloud Native Computing Foundation (CNCF)</strong>: Sandbox project application</li>
+</ul>
+<p><strong>Paid Marketing</strong> (Year 2+):</p>
+<ul>
+<li><strong>Google Ads</strong>: Target "internal developer platform" keywords</li>
+<li><strong>LinkedIn Ads</strong>: Target engineering leaders, VPs of Engineering</li>
+<li><strong>Conference Sponsorships</strong>: KubeCon, PlatformCon, AWS re:Invent</li>
+<li><strong>Budget</strong>: $10K/month starting Year 2</li>
+</ul>
 <h3 id="sales-strategy">Sales Strategy</h3>
-<p><strong>Self-Service</strong> (Primary for SMB):
-- Open source → Managed service upgrade path
-- Free Dojo → Enterprise training
-- Documentation-driven (reduce sales cycle)</p>
-<p><strong>Inside Sales</strong> (Mid-Market):
-- Dojo graduates become champions in their orgs
-- 30-day free trial of managed service
-- Video demos and async selling
-- Target deal size: $12K-50K/year</p>
-<p><strong>Enterprise Sales</strong> (Larger Accounts):
-- Account-based marketing to Fortune 2000
-- Custom pilots and POCs
-- Co-selling with AWS account teams
-- Target deal size: $100K-500K/year</p>
+<p><strong>Self-Service</strong> (Primary for SMB):</p>
+<ul>
+<li>Open source → Managed service upgrade path</li>
+<li>Free Dojo → Enterprise training</li>
+<li>Documentation-driven (reduce sales cycle)</li>
+</ul>
+<p><strong>Inside Sales</strong> (Mid-Market):</p>
+<ul>
+<li>Dojo graduates become champions in their orgs</li>
+<li>30-day free trial of managed service</li>
+<li>Video demos and async selling</li>
+<li>Target deal size: $12K-50K/year</li>
+</ul>
+<p><strong>Enterprise Sales</strong> (Larger Accounts):</p>
+<ul>
+<li>Account-based marketing to Fortune 2000</li>
+<li>Custom pilots and POCs</li>
+<li>Co-selling with AWS account teams</li>
+<li>Target deal size: $100K-500K/year</li>
+</ul>
 <hr />
 <h2 id="financial-projections">Financial Projections</h2>
 <h3 id="revenue-projections-conservative">Revenue Projections (Conservative)</h3>
-<p><strong>Year 1</strong> (Months 1-12):
-- <strong>Managed Service</strong>: 10 customers × $1,000/month avg × 4 months avg = <strong>$40K</strong>
-- <strong>Enterprise Pilot Conversions</strong>: 2 × $50K = <strong>$100K</strong>
-- <strong>Training</strong>: 50 enterprise learners × $500 = <strong>$25K</strong>
-- <strong>Total Year 1 Revenue</strong>: <strong>$165K</strong></p>
-<p><strong>Year 2</strong>:
-- <strong>Managed Service</strong>: 50 customers × $1,200/month avg = <strong>$720K</strong>
-- <strong>Enterprise Support</strong>: 10 contracts × $75K avg = <strong>$750K</strong>
-- <strong>Training</strong>: 500 learners × $400 avg = <strong>$200K</strong>
-- <strong>Consulting</strong>: 1,000 hours × $250/hour = <strong>$250K</strong>
-- <strong>Total Year 2 Revenue</strong>: <strong>$1.92M</strong></p>
-<p><strong>Year 3</strong>:
-- <strong>Managed Service</strong>: 200 customers × $1,500/month avg = <strong>$3.6M</strong>
-- <strong>Enterprise Support</strong>: 30 contracts × $100K avg = <strong>$3.0M</strong>
-- <strong>Training</strong>: 2,000 learners × $450 avg = <strong>$900K</strong>
-- <strong>Consulting</strong>: 3,000 hours × $275/hour = <strong>$825K</strong>
-- <strong>Marketplace &amp; Ecosystem</strong>: <strong>$500K</strong>
-- <strong>Total Year 3 Revenue</strong>: <strong>$8.825M</strong></p>
+<p><strong>Year 1</strong> (Months 1-12):</p>
+<ul>
+<li><strong>Managed Service</strong>: 10 customers × $1,000/month avg × 4 months avg = <strong>$40K</strong></li>
+<li><strong>Enterprise Pilot Conversions</strong>: 2 × $50K = <strong>$100K</strong></li>
+<li><strong>Training</strong>: 50 enterprise learners × $500 = <strong>$25K</strong></li>
+<li><strong>Total Year 1 Revenue</strong>: <strong>$165K</strong></li>
+</ul>
+<p><strong>Year 2</strong>:</p>
+<ul>
+<li><strong>Managed Service</strong>: 50 customers × $1,200/month avg = <strong>$720K</strong></li>
+<li><strong>Enterprise Support</strong>: 10 contracts × $75K avg = <strong>$750K</strong></li>
+<li><strong>Training</strong>: 500 learners × $400 avg = <strong>$200K</strong></li>
+<li><strong>Consulting</strong>: 1,000 hours × $250/hour = <strong>$250K</strong></li>
+<li><strong>Total Year 2 Revenue</strong>: <strong>$1.92M</strong></li>
+</ul>
+<p><strong>Year 3</strong>:</p>
+<ul>
+<li><strong>Managed Service</strong>: 200 customers × $1,500/month avg = <strong>$3.6M</strong></li>
+<li><strong>Enterprise Support</strong>: 30 contracts × $100K avg = <strong>$3.0M</strong></li>
+<li><strong>Training</strong>: 2,000 learners × $450 avg = <strong>$900K</strong></li>
+<li><strong>Consulting</strong>: 3,000 hours × $275/hour = <strong>$825K</strong></li>
+<li><strong>Marketplace &amp; Ecosystem</strong>: <strong>$500K</strong></li>
+<li><strong>Total Year 3 Revenue</strong>: <strong>$8.825M</strong></li>
+</ul>
 <h3 id="cost-structure">Cost Structure</h3>
-<p><strong>Year 1</strong>:
-- <strong>AWS Infrastructure</strong>: $25K (covered by Activate credits)
-- <strong>Founder Salary</strong>: $0 (sweat equity)
-- <strong>Contractors (content, design)</strong>: $30K
-- <strong>Marketing &amp; Events</strong>: $10K
-- <strong>Tools &amp; Software</strong>: $5K
-- <strong>Total Year 1 Costs</strong>: <strong>$70K</strong> (excluding infrastructure)</p>
+<p><strong>Year 1</strong>:</p>
+<ul>
+<li><strong>AWS Infrastructure</strong>: $25K (covered by Activate credits)</li>
+<li><strong>Founder Salary</strong>: $0 (sweat equity)</li>
+<li><strong>Contractors (content, design)</strong>: $30K</li>
+<li><strong>Marketing &amp; Events</strong>: $10K</li>
+<li><strong>Tools &amp; Software</strong>: $5K</li>
+<li><strong>Total Year 1 Costs</strong>: <strong>$70K</strong> (excluding infrastructure)</li>
+</ul>
 <p><strong>Break-Even</strong>: Month 10-11 of Year 1</p>
-<p><strong>Year 2</strong> (assuming funding or profitability):
-- <strong>Team</strong>: 3-5 FTE ($400K-600K)
-- <strong>AWS Infrastructure</strong>: $120K (post-credits, partially offset by customer usage)
-- <strong>Marketing &amp; Sales</strong>: $100K
-- <strong>Operations</strong>: $50K
-- <strong>Total Year 2 Costs</strong>: <strong>$670K-870K</strong></p>
+<p><strong>Year 2</strong> (assuming funding or profitability):</p>
+<ul>
+<li><strong>Team</strong>: 3-5 FTE ($400K-600K)</li>
+<li><strong>AWS Infrastructure</strong>: $120K (post-credits, partially offset by customer usage)</li>
+<li><strong>Marketing &amp; Sales</strong>: $100K</li>
+<li><strong>Operations</strong>: $50K</li>
+<li><strong>Total Year 2 Costs</strong>: <strong>$670K-870K</strong></li>
+</ul>
 <p><strong>Gross Margin</strong>: 55-60% (SaaS benchmark: 70-80% at scale)</p>
 <h3 id="funding-strategy">Funding Strategy</h3>
-<p><strong>Current</strong>: Bootstrapped / pre-seed
-- Sweat equity + personal investment
-- AWS Activate credits ($25K value)
-- Community contributions (open source)</p>
-<p><strong>Year 1</strong> (Optional):
-- Pre-seed: $250K-500K
-- Source: Angel investors, AWS Activate portfolio partners, accelerators
-- Use: Extend runway, hire 1-2 engineers, accelerate go-to-market</p>
-<p><strong>Year 2</strong> (If high growth):
-- Seed Round: $1.5M-3M
-- Source: VC firms focused on infrastructure/dev tools
-- Use: Scale team to 10-15, enterprise sales, multi-region expansion</p>
-<p><strong>Alternative Path</strong>: Profitability
-- If Year 1 revenue exceeds projections, remain bootstrapped
-- Prioritize sustainable growth over venture scale
-- Maintain founder control and mission alignment</p>
+<p><strong>Current</strong>: Bootstrapped / pre-seed</p>
+<ul>
+<li>Sweat equity + personal investment</li>
+<li>AWS Activate credits ($25K value)</li>
+<li>Community contributions (open source)</li>
+</ul>
+<p><strong>Year 1</strong> (Optional):</p>
+<ul>
+<li>Pre-seed: $250K-500K</li>
+<li>Source: Angel investors, AWS Activate portfolio partners, accelerators</li>
+<li>Use: Extend runway, hire 1-2 engineers, accelerate go-to-market</li>
+</ul>
+<p><strong>Year 2</strong> (If high growth):</p>
+<ul>
+<li>Seed Round: $1.5M-3M</li>
+<li>Source: VC firms focused on infrastructure/dev tools</li>
+<li>Use: Scale team to 10-15, enterprise sales, multi-region expansion</li>
+</ul>
+<p><strong>Alternative Path</strong>: Profitability</p>
+<ul>
+<li>If Year 1 revenue exceeds projections, remain bootstrapped</li>
+<li>Prioritize sustainable growth over venture scale</li>
+<li>Maintain founder control and mission alignment</li>
+</ul>
 <hr />
 <h2 id="risk-analysis-mitigation">Risk Analysis &amp; Mitigation</h2>
 <h3 id="key-risks">Key Risks</h3>
-<p><strong>Risk 1: Low Adoption (Open Source)</strong>
-- <strong>Probability</strong>: Medium
-- <strong>Impact</strong>: High (foundation for everything)
-- <strong>Mitigation</strong>:
-  - Invest heavily in documentation (ease of use)
-  - Partner with Platform Engineering University (distribution)
-  - Free Dojo (reduces friction)
-  - Active community engagement (support)</p>
-<p><strong>Risk 2: AWS Dependency</strong>
-- <strong>Probability</strong>: Low
-- <strong>Impact</strong>: Medium
-- <strong>Mitigation</strong>:
-  - Multi-cloud on roadmap (Azure, GCP by Year 2)
-  - Terraform abstractions reduce AWS-specific code
-  - Kubernetes portability (can run anywhere)
-  - But: AWS-first is strategic advantage for Activate</p>
-<p><strong>Risk 3: Competitive Pressure</strong>
-- <strong>Probability</strong>: High (market growing rapidly)
-- <strong>Impact</strong>: Medium
-- <strong>Mitigation</strong>:
-  - Open source = community moat (hard to replicate)
-  - Dojo = unique differentiator (no competitor has training)
-  - AWS partnership = distribution advantage
-  - Speed of execution (first-mover in open source + training)</p>
-<p><strong>Risk 4: Monetization Challenges</strong>
-- <strong>Probability</strong>: Medium
-- <strong>Impact</strong>: High
-- <strong>Mitigation</strong>:
-  - Multiple revenue streams (SaaS, training, consulting)
-  - Validate willingness-to-pay early (pilots)
-  - Low CAC via inbound (organic growth)
-  - Can remain profitable at small scale</p>
-<p><strong>Risk 5: Technical Complexity</strong>
-- <strong>Probability</strong>: Medium (platform engineering is hard)
-- <strong>Impact</strong>: Medium
-- <strong>Mitigation</strong>:
-  - Comprehensive documentation
-  - Active community support
-  - Video tutorials and demos
-  - Professional services available</p>
+<p><strong>Risk 1: Low Adoption (Open Source)</strong></p>
+<ul>
+<li><strong>Probability</strong>: Medium</li>
+<li><strong>Impact</strong>: High (foundation for everything)</li>
+<li><strong>Mitigation</strong>:</li>
+<li>Invest heavily in documentation (ease of use)</li>
+<li>Partner with Platform Engineering University (distribution)</li>
+<li>Free Dojo (reduces friction)</li>
+<li>Active community engagement (support)</li>
+</ul>
+<p><strong>Risk 2: AWS Dependency</strong></p>
+<ul>
+<li><strong>Probability</strong>: Low</li>
+<li><strong>Impact</strong>: Medium</li>
+<li><strong>Mitigation</strong>:</li>
+<li>Multi-cloud on roadmap (Azure, GCP by Year 2)</li>
+<li>Terraform abstractions reduce AWS-specific code</li>
+<li>Kubernetes portability (can run anywhere)</li>
+<li>But: AWS-first is strategic advantage for Activate</li>
+</ul>
+<p><strong>Risk 3: Competitive Pressure</strong></p>
+<ul>
+<li><strong>Probability</strong>: High (market growing rapidly)</li>
+<li><strong>Impact</strong>: Medium</li>
+<li><strong>Mitigation</strong>:</li>
+<li>Open source = community moat (hard to replicate)</li>
+<li>Dojo = unique differentiator (no competitor has training)</li>
+<li>AWS partnership = distribution advantage</li>
+<li>Speed of execution (first-mover in open source + training)</li>
+</ul>
+<p><strong>Risk 4: Monetization Challenges</strong></p>
+<ul>
+<li><strong>Probability</strong>: Medium</li>
+<li><strong>Impact</strong>: High</li>
+<li><strong>Mitigation</strong>:</li>
+<li>Multiple revenue streams (SaaS, training, consulting)</li>
+<li>Validate willingness-to-pay early (pilots)</li>
+<li>Low CAC via inbound (organic growth)</li>
+<li>Can remain profitable at small scale</li>
+</ul>
+<p><strong>Risk 5: Technical Complexity</strong></p>
+<ul>
+<li><strong>Probability</strong>: Medium (platform engineering is hard)</li>
+<li><strong>Impact</strong>: Medium</li>
+<li><strong>Mitigation</strong>:</li>
+<li>Comprehensive documentation</li>
+<li>Active community support</li>
+<li>Video tutorials and demos</li>
+<li>Professional services available</li>
+</ul>
 <h3 id="contingency-plans">Contingency Plans</h3>
-<p><strong>If Managed Service Adoption is Slow</strong>:
-- Pivot to consulting/services (higher touch)
-- Focus on enterprise support contracts
-- Expand training/certification revenue</p>
-<p><strong>If AWS Credits Run Out</strong>:
-- Apply for additional AWS programs (AWS Cloud Credits for Research, etc.)
-- Migrate development/staging to lower-cost regions
-- Customer deployments cover their own infrastructure</p>
-<p><strong>If Competition Intensifies</strong>:
-- Double down on community and open source
-- Accelerate Dojo development (unique moat)
-- Explore acquisition by larger platform/AWS partner</p>
+<p><strong>If Managed Service Adoption is Slow</strong>:</p>
+<ul>
+<li>Pivot to consulting/services (higher touch)</li>
+<li>Focus on enterprise support contracts</li>
+<li>Expand training/certification revenue</li>
+</ul>
+<p><strong>If AWS Credits Run Out</strong>:</p>
+<ul>
+<li>Apply for additional AWS programs (AWS Cloud Credits for Research, etc.)</li>
+<li>Migrate development/staging to lower-cost regions</li>
+<li>Customer deployments cover their own infrastructure</li>
+</ul>
+<p><strong>If Competition Intensifies</strong>:</p>
+<ul>
+<li>Double down on community and open source</li>
+<li>Accelerate Dojo development (unique moat)</li>
+<li>Explore acquisition by larger platform/AWS partner</li>
+</ul>
 <hr />
 <h2 id="success-metrics-12-month-horizon">Success Metrics (12-Month Horizon)</h2>
 <h3 id="platform-adoption">Platform Adoption</h3>
@@ -7088,247 +7318,331 @@
 <hr />
 <h2 id="why-fawkes-will-succeed">Why Fawkes Will Succeed</h2>
 <h3 id="1-massive-validated-market-need">1. Massive, Validated Market Need</h3>
-<p><strong>The numbers don't lie</strong>:
-- 300K+ unfilled platform engineering jobs globally
-- $12.8B market by 2028 (35% CAGR)
-- 73% of engineering leaders cite skills gap as top constraint
-- Organizations losing $1-2M/year in developer productivity</p>
-<p><strong>Real pain, proven willingness to pay</strong>:
-- Companies spending $500K-2M building custom platforms
-- Consultancies charging $200-300/hour for implementation
-- Commercial platforms charging $50K-200K/year
-- Training courses at $3K-10K per person</p>
+<p><strong>The numbers don't lie</strong>:</p>
+<ul>
+<li>300K+ unfilled platform engineering jobs globally</li>
+<li>$12.8B market by 2028 (35% CAGR)</li>
+<li>73% of engineering leaders cite skills gap as top constraint</li>
+<li>Organizations losing $1-2M/year in developer productivity</li>
+</ul>
+<p><strong>Real pain, proven willingness to pay</strong>:</p>
+<ul>
+<li>Companies spending $500K-2M building custom platforms</li>
+<li>Consultancies charging $200-300/hour for implementation</li>
+<li>Commercial platforms charging $50K-200K/year</li>
+<li>Training courses at $3K-10K per person</li>
+</ul>
 <p><strong>Our advantage</strong>: We solve BOTH problems (platform + training) at 80-95% lower cost.</p>
 <h3 id="2-unique-combination-platform-education">2. Unique Combination: Platform + Education</h3>
-<p><strong>No competitor offers both</strong>:
-- <strong>Commercial platforms</strong> (Humanitec, Kratix): No training included
-- <strong>Training programs</strong> (courses, bootcamps): No connected platform
-- <strong>Open source platforms</strong> (generic Kubernetes setups): No learning path
-- <strong>Consultancies</strong>: Expensive, one-off projects</p>
-<p><strong>Fawkes is the only solution</strong> that provides:
-- Production-ready platform (deploy in hours)
-- Comprehensive learning system (40 hours to mastery)
-- Recognized certifications (career advancement)
-- Community support (ongoing help)</p>
-<p><strong>This creates network effects</strong>:
-- Dojo graduates advocate for Fawkes at their companies
-- Organizations adopt Fawkes, send employees to Dojo
-- Certified engineers become Fawkes contributors
-- Job postings specify "Fawkes experience preferred"</p>
+<p><strong>No competitor offers both</strong>:</p>
+<ul>
+<li><strong>Commercial platforms</strong> (Humanitec, Kratix): No training included</li>
+<li><strong>Training programs</strong> (courses, bootcamps): No connected platform</li>
+<li><strong>Open source platforms</strong> (generic Kubernetes setups): No learning path</li>
+<li><strong>Consultancies</strong>: Expensive, one-off projects</li>
+</ul>
+<p><strong>Fawkes is the only solution</strong> that provides:</p>
+<ul>
+<li>Production-ready platform (deploy in hours)</li>
+<li>Comprehensive learning system (40 hours to mastery)</li>
+<li>Recognized certifications (career advancement)</li>
+<li>Community support (ongoing help)</li>
+</ul>
+<p><strong>This creates network effects</strong>:</p>
+<ul>
+<li>Dojo graduates advocate for Fawkes at their companies</li>
+<li>Organizations adopt Fawkes, send employees to Dojo</li>
+<li>Certified engineers become Fawkes contributors</li>
+<li>Job postings specify "Fawkes experience preferred"</li>
+</ul>
 <h3 id="3-open-source-as-competitive-moat">3. Open Source as Competitive Moat</h3>
-<p><strong>Why open source wins</strong>:
-- <strong>Trust</strong>: No vendor lock-in, inspect all code
-- <strong>Community</strong>: Contributors become co-creators
-- <strong>Distribution</strong>: Free to try = low friction adoption
-- <strong>Innovation</strong>: Best ideas win, not just our ideas
-- <strong>Longevity</strong>: Platform survives even if company doesn't</p>
-<p><strong>Historical precedent</strong>:
-- <strong>Red Hat</strong>: Open source → $34B IBM acquisition
-- <strong>Databricks</strong>: Open source (Spark) → $43B valuation
-- <strong>HashiCorp</strong>: Open source → $5.1B valuation (at IPO)
-- <strong>MongoDB</strong>: Open source → $24B market cap
-- <strong>Elastic</strong>: Open source → $5B+ market cap</p>
-<p><strong>Our approach</strong>:
-- Core platform: Forever free and open source (MIT license)
-- Monetization: Managed service, support, training (not software)
-- Community-first: Users succeed with or without paying us</p>
+<p><strong>Why open source wins</strong>:</p>
+<ul>
+<li><strong>Trust</strong>: No vendor lock-in, inspect all code</li>
+<li><strong>Community</strong>: Contributors become co-creators</li>
+<li><strong>Distribution</strong>: Free to try = low friction adoption</li>
+<li><strong>Innovation</strong>: Best ideas win, not just our ideas</li>
+<li><strong>Longevity</strong>: Platform survives even if company doesn't</li>
+</ul>
+<p><strong>Historical precedent</strong>:</p>
+<ul>
+<li><strong>Red Hat</strong>: Open source → $34B IBM acquisition</li>
+<li><strong>Databricks</strong>: Open source (Spark) → $43B valuation</li>
+<li><strong>HashiCorp</strong>: Open source → $5.1B valuation (at IPO)</li>
+<li><strong>MongoDB</strong>: Open source → $24B market cap</li>
+<li><strong>Elastic</strong>: Open source → $5B+ market cap</li>
+</ul>
+<p><strong>Our approach</strong>:</p>
+<ul>
+<li>Core platform: Forever free and open source (MIT license)</li>
+<li>Monetization: Managed service, support, training (not software)</li>
+<li>Community-first: Users succeed with or without paying us</li>
+</ul>
 <h3 id="4-aws-native-strategic-advantage">4. AWS-Native Strategic Advantage</h3>
-<p><strong>Why AWS matters</strong>:
-- <strong>Largest cloud provider</strong>: 32% market share (2024)
-- <strong>EKS momentum</strong>: Fastest-growing managed Kubernetes
-- <strong>Enterprise adoption</strong>: 90% of Fortune 500 use AWS
-- <strong>Startup ecosystem</strong>: AWS Activate supports 100K+ startups</p>
-<p><strong>Fawkes + AWS = Perfect fit</strong>:
-- Built specifically for EKS (not generic Kubernetes)
-- Uses AWS-native services (RDS, S3, CloudWatch, Secrets Manager)
-- Optimized for AWS patterns and best practices
-- Comprehensive AWS deployment documentation</p>
-<p><strong>AWS benefits from Fawkes</strong>:
-- Every Fawkes deployment increases AWS consumption
-- Dojo trains engineers on AWS services
-- Reference architecture showcases AWS capabilities
-- Success story for AWS Activate program</p>
-<p><strong>Multi-cloud future</strong> (but AWS-first strategy):
-- Validate product-market fit on AWS first
-- Expand to Azure/GCP in Year 2 (but AWS remains primary)
-- Each cloud gets dedicated deployment guide
-- AWS partnership continues as strategic priority</p>
+<p><strong>Why AWS matters</strong>:</p>
+<ul>
+<li><strong>Largest cloud provider</strong>: 32% market share (2024)</li>
+<li><strong>EKS momentum</strong>: Fastest-growing managed Kubernetes</li>
+<li><strong>Enterprise adoption</strong>: 90% of Fortune 500 use AWS</li>
+<li><strong>Startup ecosystem</strong>: AWS Activate supports 100K+ startups</li>
+</ul>
+<p><strong>Fawkes + AWS = Perfect fit</strong>:</p>
+<ul>
+<li>Built specifically for EKS (not generic Kubernetes)</li>
+<li>Uses AWS-native services (RDS, S3, CloudWatch, Secrets Manager)</li>
+<li>Optimized for AWS patterns and best practices</li>
+<li>Comprehensive AWS deployment documentation</li>
+</ul>
+<p><strong>AWS benefits from Fawkes</strong>:</p>
+<ul>
+<li>Every Fawkes deployment increases AWS consumption</li>
+<li>Dojo trains engineers on AWS services</li>
+<li>Reference architecture showcases AWS capabilities</li>
+<li>Success story for AWS Activate program</li>
+</ul>
+<p><strong>Multi-cloud future</strong> (but AWS-first strategy):</p>
+<ul>
+<li>Validate product-market fit on AWS first</li>
+<li>Expand to Azure/GCP in Year 2 (but AWS remains primary)</li>
+<li>Each cloud gets dedicated deployment guide</li>
+<li>AWS partnership continues as strategic priority</li>
+</ul>
 <h3 id="5-strong-unit-economics-from-day-1">5. Strong Unit Economics from Day 1</h3>
-<p><strong>Proven SaaS metrics</strong>:
-- <strong>LTV:CAC Ratio</strong>: 13.7:1 (target &gt; 3:1) ✅
-- <strong>Gross Margin</strong>: 57% (target &gt; 50%) ✅
-- <strong>Payback Period</strong>: 2.3 months (target &lt; 12 months) ✅
-- <strong>Net Dollar Retention</strong>: Projected 120%+ (expansion revenue)</p>
-<p><strong>Low customer acquisition cost</strong>:
-- Inbound-focused (organic traffic, SEO, community)
-- Dojo graduates become champions in their organizations
-- Open source creates try-before-buy pipeline
-- Estimated blended CAC: $2,000 (industry avg: $5K-15K)</p>
-<p><strong>High lifetime value</strong>:
-- Low churn in infrastructure tools (sticky, high switching cost)
-- Expansion revenue (start small, grow with customer)
-- Multiple revenue streams (platform + training + consulting)
-- Average customer lifetime: 3-5 years</p>
-<p><strong>Path to profitability</strong>:
-- Break-even by Month 10-11 (conservative projections)
-- Can scale profitably without venture funding
-- Optionality to raise capital for faster growth</p>
+<p><strong>Proven SaaS metrics</strong>:</p>
+<ul>
+<li><strong>LTV:CAC Ratio</strong>: 13.7:1 (target &gt; 3:1) ✅</li>
+<li><strong>Gross Margin</strong>: 57% (target &gt; 50%) ✅</li>
+<li><strong>Payback Period</strong>: 2.3 months (target &lt; 12 months) ✅</li>
+<li><strong>Net Dollar Retention</strong>: Projected 120%+ (expansion revenue)</li>
+</ul>
+<p><strong>Low customer acquisition cost</strong>:</p>
+<ul>
+<li>Inbound-focused (organic traffic, SEO, community)</li>
+<li>Dojo graduates become champions in their organizations</li>
+<li>Open source creates try-before-buy pipeline</li>
+<li>Estimated blended CAC: $2,000 (industry avg: $5K-15K)</li>
+</ul>
+<p><strong>High lifetime value</strong>:</p>
+<ul>
+<li>Low churn in infrastructure tools (sticky, high switching cost)</li>
+<li>Expansion revenue (start small, grow with customer)</li>
+<li>Multiple revenue streams (platform + training + consulting)</li>
+<li>Average customer lifetime: 3-5 years</li>
+</ul>
+<p><strong>Path to profitability</strong>:</p>
+<ul>
+<li>Break-even by Month 10-11 (conservative projections)</li>
+<li>Can scale profitably without venture funding</li>
+<li>Optionality to raise capital for faster growth</li>
+</ul>
 <h3 id="6-execution-track-record-so-far">6. Execution Track Record (So Far)</h3>
-<p><strong>What we've built without funding</strong>:
-- ✅ Complete platform architecture (8 ADRs)
-- ✅ 50+ pages of technical documentation
-- ✅ Full Dojo curriculum designed (20 modules, 5 belts)
-- ✅ Technology stack validated and justified
-- ✅ AWS deployment strategy documented
-- ✅ Cost estimation for 12-month operation
-- ✅ Business case with financial projections</p>
-<p><strong>This demonstrates</strong>:
-- Technical competence (can build complex systems)
-- Product thinking (solving real problems, not just tech for tech's sake)
-- Execution discipline (shipped documentation before code)
-- Long-term vision (not just MVP, but sustainable business)</p>
-<p><strong>Next 90 days</strong> (with AWS Activate support):
-- Deploy production reference implementation
-- Launch GitHub repository publicly
-- Begin Dojo beta testing
-- Enroll first 50 learners
-- Secure first 3 enterprise pilot commitments</p>
+<p><strong>What we've built without funding</strong>:</p>
+<ul>
+<li>✅ Complete platform architecture (8 ADRs)</li>
+<li>✅ 50+ pages of technical documentation</li>
+<li>✅ Full Dojo curriculum designed (20 modules, 5 belts)</li>
+<li>✅ Technology stack validated and justified</li>
+<li>✅ AWS deployment strategy documented</li>
+<li>✅ Cost estimation for 12-month operation</li>
+<li>✅ Business case with financial projections</li>
+</ul>
+<p><strong>This demonstrates</strong>:</p>
+<ul>
+<li>Technical competence (can build complex systems)</li>
+<li>Product thinking (solving real problems, not just tech for tech's sake)</li>
+<li>Execution discipline (shipped documentation before code)</li>
+<li>Long-term vision (not just MVP, but sustainable business)</li>
+</ul>
+<p><strong>Next 90 days</strong> (with AWS Activate support):</p>
+<ul>
+<li>Deploy production reference implementation</li>
+<li>Launch GitHub repository publicly</li>
+<li>Begin Dojo beta testing</li>
+<li>Enroll first 50 learners</li>
+<li>Secure first 3 enterprise pilot commitments</li>
+</ul>
 <h3 id="7-timing-is-perfect">7. Timing is Perfect</h3>
-<p><strong>Platform engineering is exploding</strong>:
-- Google Trends: +400% search volume growth (2022-2025)
-- Gartner: "Platform Engineering" in Top 10 strategic tech trends
-- Every major tech conference now has platform engineering track
-- VC funding for dev tools/infrastructure: $8B+ in 2024</p>
-<p><strong>But market is still early</strong>:
-- Most organizations haven't built platforms yet (greenfield opportunity)
-- Existing platforms struggling with adoption (migration opportunity)
-- Skills shortage means high demand for training (Dojo opportunity)
-- Open source alternatives are immature (competitive advantage)</p>
-<p><strong>Why now</strong>:
-- Kubernetes matured (production-ready, widely adopted)
-- Backstage reached critical mass (34K+ stars, Spotify proven)
-- DORA research mainstream (executives understand metrics)
-- Remote work normalized (online learning accepted)
-- AWS Activate available (removes capital constraint)</p>
-<p><strong>Window of opportunity</strong>:
-- First-mover advantage in "open source platform + training"
-- Establish community moat before competitors catch up
-- Partner with AWS while Activate program active
-- Capture market while it's still forming</p>
+<p><strong>Platform engineering is exploding</strong>:</p>
+<ul>
+<li>Google Trends: +400% search volume growth (2022-2025)</li>
+<li>Gartner: "Platform Engineering" in Top 10 strategic tech trends</li>
+<li>Every major tech conference now has platform engineering track</li>
+<li>VC funding for dev tools/infrastructure: $8B+ in 2024</li>
+</ul>
+<p><strong>But market is still early</strong>:</p>
+<ul>
+<li>Most organizations haven't built platforms yet (greenfield opportunity)</li>
+<li>Existing platforms struggling with adoption (migration opportunity)</li>
+<li>Skills shortage means high demand for training (Dojo opportunity)</li>
+<li>Open source alternatives are immature (competitive advantage)</li>
+</ul>
+<p><strong>Why now</strong>:</p>
+<ul>
+<li>Kubernetes matured (production-ready, widely adopted)</li>
+<li>Backstage reached critical mass (34K+ stars, Spotify proven)</li>
+<li>DORA research mainstream (executives understand metrics)</li>
+<li>Remote work normalized (online learning accepted)</li>
+<li>AWS Activate available (removes capital constraint)</li>
+</ul>
+<p><strong>Window of opportunity</strong>:</p>
+<ul>
+<li>First-mover advantage in "open source platform + training"</li>
+<li>Establish community moat before competitors catch up</li>
+<li>Partner with AWS while Activate program active</li>
+<li>Capture market while it's still forming</li>
+</ul>
 <hr />
 <h2 id="long-term-vision-3-5-years">Long-Term Vision (3-5 Years)</h2>
 <h3 id="the-platform-engineering-standard">The Platform Engineering Standard</h3>
 <p><strong>Our North Star</strong>: Make Fawkes the <strong>de facto standard</strong> for how organizations build and operate internal delivery platforms.</p>
-<p><strong>Success looks like</strong>:
-- 10,000+ organizations running Fawkes in production
-- 50,000+ certified Dojo graduates
-- "Fawkes experience" listed in job descriptions
-- Taught in computer science programs
-- Referenced in industry best practices guides</p>
-<p><strong>How we get there</strong>:
-1. <strong>Year 1-2</strong>: Validate product-market fit, establish community
-2. <strong>Year 3-4</strong>: Scale to mainstream adoption, enterprise penetration
-3. <strong>Year 5+</strong>: Industry standard, sustainable profitable business</p>
+<p><strong>Success looks like</strong>:</p>
+<ul>
+<li>10,000+ organizations running Fawkes in production</li>
+<li>50,000+ certified Dojo graduates</li>
+<li>"Fawkes experience" listed in job descriptions</li>
+<li>Taught in computer science programs</li>
+<li>Referenced in industry best practices guides</li>
+</ul>
+<p><strong>How we get there</strong>:</p>
+<ol>
+<li><strong>Year 1-2</strong>: Validate product-market fit, establish community</li>
+<li><strong>Year 3-4</strong>: Scale to mainstream adoption, enterprise penetration</li>
+<li><strong>Year 5+</strong>: Industry standard, sustainable profitable business</li>
+</ol>
 <h3 id="ecosystem-development">Ecosystem Development</h3>
-<p><strong>Platform Marketplace</strong> (Year 3+):
-- Third-party integrations and extensions
-- Certified partner network (consultancies, tool vendors)
-- App store model (20% commission on paid extensions)
-- Revenue sharing with contributors</p>
-<p><strong>Certification Authority</strong> (Year 2-3):
-- Industry-recognized credentials (like AWS certifications)
-- Corporate training programs (F500 companies)
-- University partnerships (CS curriculum integration)
-- Job placement partnerships (recruiting firms)</p>
-<p><strong>Community-Driven Innovation</strong>:
-- Feature voting and prioritization by users
-- Open governance model (steering committee)
-- Regular community summits and conferences
-- Contributor recognition and rewards program</p>
+<p><strong>Platform Marketplace</strong> (Year 3+):</p>
+<ul>
+<li>Third-party integrations and extensions</li>
+<li>Certified partner network (consultancies, tool vendors)</li>
+<li>App store model (20% commission on paid extensions)</li>
+<li>Revenue sharing with contributors</li>
+</ul>
+<p><strong>Certification Authority</strong> (Year 2-3):</p>
+<ul>
+<li>Industry-recognized credentials (like AWS certifications)</li>
+<li>Corporate training programs (F500 companies)</li>
+<li>University partnerships (CS curriculum integration)</li>
+<li>Job placement partnerships (recruiting firms)</li>
+</ul>
+<p><strong>Community-Driven Innovation</strong>:</p>
+<ul>
+<li>Feature voting and prioritization by users</li>
+<li>Open governance model (steering committee)</li>
+<li>Regular community summits and conferences</li>
+<li>Contributor recognition and rewards program</li>
+</ul>
 <h3 id="multi-cloud-expansion">Multi-Cloud Expansion</h3>
-<p><strong>Timeline</strong>:
-- <strong>2025</strong>: AWS-native (primary focus)
-- <strong>2026</strong>: Azure support (second cloud)
-- <strong>2027</strong>: Google Cloud Platform (third cloud)
-- <strong>2028</strong>: On-premises and hybrid cloud (VMware, OpenStack)</p>
-<p><strong>Strategy</strong>:
-- Cloud-agnostic core (Kubernetes, Terraform)
-- Cloud-specific optimization layers
-- Unified developer experience across clouds
-- Migration tools for cloud switching</p>
+<p><strong>Timeline</strong>:</p>
+<ul>
+<li><strong>2025</strong>: AWS-native (primary focus)</li>
+<li><strong>2026</strong>: Azure support (second cloud)</li>
+<li><strong>2027</strong>: Google Cloud Platform (third cloud)</li>
+<li><strong>2028</strong>: On-premises and hybrid cloud (VMware, OpenStack)</li>
+</ul>
+<p><strong>Strategy</strong>:</p>
+<ul>
+<li>Cloud-agnostic core (Kubernetes, Terraform)</li>
+<li>Cloud-specific optimization layers</li>
+<li>Unified developer experience across clouds</li>
+<li>Migration tools for cloud switching</li>
+</ul>
 <h3 id="exit-scenarios-5-7-year-horizon">Exit Scenarios (5-7 Year Horizon)</h3>
-<p><strong>Acquisition Candidates</strong>:
-1. <strong>AWS</strong>: Strategic fit (AWS Proton competitor, education play)
-2. <strong>HashiCorp</strong>: Portfolio expansion (Terraform + Fawkes bundle)
-3. <strong>GitLab/GitHub</strong>: DevOps platform consolidation
-4. <strong>Red Hat/IBM</strong>: Enterprise open source expansion
-5. <strong>Cloud Native Computing Foundation (CNCF)</strong>: Donation/graduation path</p>
-<p><strong>IPO Path</strong> (less likely, but possible):
-- Scale to $100M+ ARR
-- Demonstrate consistent growth (40%+ YoY)
-- Strong unit economics and profitability
-- Comparable: HashiCorp, Confluent, Datadog</p>
-<p><strong>Sustainable Business</strong> (most likely, most desirable):
-- Profitable at $10M-50M ARR
-- Maintain independence and mission
-- Reinvest in community and product
-- High-quality lifestyle business for founders/employees</p>
+<p><strong>Acquisition Candidates</strong>:</p>
+<ol>
+<li><strong>AWS</strong>: Strategic fit (AWS Proton competitor, education play)</li>
+<li><strong>HashiCorp</strong>: Portfolio expansion (Terraform + Fawkes bundle)</li>
+<li><strong>GitLab/GitHub</strong>: DevOps platform consolidation</li>
+<li><strong>Red Hat/IBM</strong>: Enterprise open source expansion</li>
+<li><strong>Cloud Native Computing Foundation (CNCF)</strong>: Donation/graduation path</li>
+</ol>
+<p><strong>IPO Path</strong> (less likely, but possible):</p>
+<ul>
+<li>Scale to $100M+ ARR</li>
+<li>Demonstrate consistent growth (40%+ YoY)</li>
+<li>Strong unit economics and profitability</li>
+<li>Comparable: HashiCorp, Confluent, Datadog</li>
+</ul>
+<p><strong>Sustainable Business</strong> (most likely, most desirable):</p>
+<ul>
+<li>Profitable at $10M-50M ARR</li>
+<li>Maintain independence and mission</li>
+<li>Reinvest in community and product</li>
+<li>High-quality lifestyle business for founders/employees</li>
+</ul>
 <hr />
 <h2 id="conclusion-why-aws-should-invest-in-fawkes">Conclusion: Why AWS Should Invest in Fawkes</h2>
 <h3 id="strategic-alignment">Strategic Alignment</h3>
-<p><strong>AWS Benefits</strong>:
-1. <strong>Increased AWS Consumption</strong>: $150K+/month driven by Fawkes users
-2. <strong>EKS Adoption</strong>: Every Fawkes deployment uses Amazon EKS
-3. <strong>Developer Education</strong>: 200+ engineers trained on AWS services
-4. <strong>Ecosystem Enhancement</strong>: Open-source tooling improves AWS platform
-5. <strong>Success Story</strong>: Showcase for AWS Activate program effectiveness</p>
-<p><strong>Low Risk, High Upside</strong>:
-- <strong>Investment</strong>: $25K in credits (AWS's cost: ~$5K-8K)
-- <strong>Potential Return</strong>: $500K+ AWS spend driven in first year alone
-- <strong>No Equity Required</strong>: Pure partnership, not investment deal
-- <strong>Win-Win</strong>: Fawkes succeeds = AWS succeeds</p>
+<p><strong>AWS Benefits</strong>:</p>
+<ol>
+<li><strong>Increased AWS Consumption</strong>: $150K+/month driven by Fawkes users</li>
+<li><strong>EKS Adoption</strong>: Every Fawkes deployment uses Amazon EKS</li>
+<li><strong>Developer Education</strong>: 200+ engineers trained on AWS services</li>
+<li><strong>Ecosystem Enhancement</strong>: Open-source tooling improves AWS platform</li>
+<li><strong>Success Story</strong>: Showcase for AWS Activate program effectiveness</li>
+</ol>
+<p><strong>Low Risk, High Upside</strong>:</p>
+<ul>
+<li><strong>Investment</strong>: $25K in credits (AWS's cost: ~$5K-8K)</li>
+<li><strong>Potential Return</strong>: $500K+ AWS spend driven in first year alone</li>
+<li><strong>No Equity Required</strong>: Pure partnership, not investment deal</li>
+<li><strong>Win-Win</strong>: Fawkes succeeds = AWS succeeds</li>
+</ul>
 <h3 id="proven-track-record">Proven Track Record</h3>
-<p><strong>We've already demonstrated</strong>:
-- Technical competence (comprehensive architecture)
-- Product thinking (solving real problems)
-- Execution discipline (documentation before code)
-- Community focus (open source, education-first)
-- Business acumen (unit economics, financial projections)</p>
-<p><strong>We're ready to execute</strong>:
-- Clear 12-month roadmap
-- Detailed credit utilization plan
-- Success metrics and accountability
-- Team with relevant expertise</p>
+<p><strong>We've already demonstrated</strong>:</p>
+<ul>
+<li>Technical competence (comprehensive architecture)</li>
+<li>Product thinking (solving real problems)</li>
+<li>Execution discipline (documentation before code)</li>
+<li>Community focus (open source, education-first)</li>
+<li>Business acumen (unit economics, financial projections)</li>
+</ul>
+<p><strong>We're ready to execute</strong>:</p>
+<ul>
+<li>Clear 12-month roadmap</li>
+<li>Detailed credit utilization plan</li>
+<li>Success metrics and accountability</li>
+<li>Team with relevant expertise</li>
+</ul>
 <h3 id="differentiated-approach">Differentiated Approach</h3>
-<p><strong>Fawkes is not "just another platform"</strong>:
-- ✅ Only platform + comprehensive training
-- ✅ Only AWS-native open source IDP
-- ✅ Only DORA metrics automation built-in
-- ✅ Only solution addressing skills gap + tooling gap simultaneously</p>
-<p><strong>This is the kind of innovation AWS Activate should support</strong>:
-- Solving real problems for real businesses
-- Building on AWS strengths (EKS, RDS, etc.)
-- Creating positive ecosystem externalities
-- Potential for significant scale and impact</p>
+<p><strong>Fawkes is not "just another platform"</strong>:</p>
+<ul>
+<li>✅ Only platform + comprehensive training</li>
+<li>✅ Only AWS-native open source IDP</li>
+<li>✅ Only DORA metrics automation built-in</li>
+<li>✅ Only solution addressing skills gap + tooling gap simultaneously</li>
+</ul>
+<p><strong>This is the kind of innovation AWS Activate should support</strong>:</p>
+<ul>
+<li>Solving real problems for real businesses</li>
+<li>Building on AWS strengths (EKS, RDS, etc.)</li>
+<li>Creating positive ecosystem externalities</li>
+<li>Potential for significant scale and impact</li>
+</ul>
 <h3 id="call-to-action">Call to Action</h3>
-<p><strong>We're asking AWS to</strong>:
-1. Approve $25,000 in AWS Activate credits
-2. Consider Fawkes for AWS Activate portfolio inclusion
-3. Connect us with AWS EKS product team (feedback/validation)
-4. Explore co-marketing opportunities (blog posts, webinars, case studies)</p>
-<p><strong>In return, AWS gets</strong>:
-- Reference architecture for platform engineering on AWS
-- Training content that educates on AWS services
-- Growing community of AWS advocates
-- Success story for future Activate marketing
-- Measurable AWS consumption growth</p>
-<p><strong>Timeline</strong>:
-- <strong>Today</strong>: Submit AWS Activate application
-- <strong>Week 1-2</strong>: Application review and approval
-- <strong>Month 1</strong>: Deploy development environment, begin documentation
-- <strong>Month 3</strong>: Production implementation live, begin community outreach
-- <strong>Month 6</strong>: Dojo platform launched, 50+ learners
-- <strong>Month 12</strong>: 200+ learners, 10 paying customers, $150K+/month AWS spend driven</p>
+<p><strong>We're asking AWS to</strong>:</p>
+<ol>
+<li>Approve $25,000 in AWS Activate credits</li>
+<li>Consider Fawkes for AWS Activate portfolio inclusion</li>
+<li>Connect us with AWS EKS product team (feedback/validation)</li>
+<li>Explore co-marketing opportunities (blog posts, webinars, case studies)</li>
+</ol>
+<p><strong>In return, AWS gets</strong>:</p>
+<ul>
+<li>Reference architecture for platform engineering on AWS</li>
+<li>Training content that educates on AWS services</li>
+<li>Growing community of AWS advocates</li>
+<li>Success story for future Activate marketing</li>
+<li>Measurable AWS consumption growth</li>
+</ul>
+<p><strong>Timeline</strong>:</p>
+<ul>
+<li><strong>Today</strong>: Submit AWS Activate application</li>
+<li><strong>Week 1-2</strong>: Application review and approval</li>
+<li><strong>Month 1</strong>: Deploy development environment, begin documentation</li>
+<li><strong>Month 3</strong>: Production implementation live, begin community outreach</li>
+<li><strong>Month 6</strong>: Dojo platform launched, 50+ learners</li>
+<li><strong>Month 12</strong>: 200+ learners, 10 paying customers, $150K+/month AWS spend driven</li>
+</ul>
 <hr />
 <h2 id="appendix-supporting-data-references">Appendix: Supporting Data &amp; References</h2>
 <h3 id="market-research-sources">Market Research Sources</h3>
@@ -7389,11 +7703,13 @@
 </tbody>
 </table>
 <h3 id="dora-metrics-research">DORA Metrics Research</h3>
-<p><strong>Key Findings</strong>:
-- Elite performers: 417x more frequent deployments
-- Elite performers: 6,570x faster lead time
-- Elite performers: 2x more likely to exceed profitability goals
-- Elite performers: 50% more likely to have higher market share</p>
+<p><strong>Key Findings</strong>:</p>
+<ul>
+<li>Elite performers: 417x more frequent deployments</li>
+<li>Elite performers: 6,570x faster lead time</li>
+<li>Elite performers: 2x more likely to exceed profitability goals</li>
+<li>Elite performers: 50% more likely to have higher market share</li>
+</ul>
 <p><strong>Source</strong>: <a href="https://dora.dev">DORA State of DevOps Report 2023</a></p>
 <h3 id="customer-validation-interviews">Customer Validation Interviews</h3>
 <p><strong>Conducted</strong>: 25+ interviews with engineering leaders (Jan-Sept 2025)</p>
@@ -7409,23 +7725,31 @@
 — Platform Lead, Fortune 500</p>
 </blockquote>
 <h3 id="financial-model-assumptions">Financial Model Assumptions</h3>
-<p><strong>Customer Acquisition</strong>:
-- Organic (free → paid): 60% of customers, $500 CAC
-- Outbound sales: 40% of customers, $5,000 CAC
-- Blended CAC: $2,000</p>
-<p><strong>Pricing</strong>:
-- Starter: $500/month (1-50 developers)
-- Growth: $1,000/month (51-200 developers)
-- Enterprise: $2,000+/month (200+ developers)
-- Average: $1,200/month</p>
-<p><strong>Churn &amp; Expansion</strong>:
-- Annual churn: 10% (infrastructure tools are sticky)
-- Net dollar retention: 120% (expansion revenue)
-- Average customer lifetime: 4 years</p>
-<p><strong>Gross Margin</strong>:
-- AWS infrastructure: 26% of revenue
-- Support costs: 17% of revenue
-- Gross margin: 57%</p>
+<p><strong>Customer Acquisition</strong>:</p>
+<ul>
+<li>Organic (free → paid): 60% of customers, $500 CAC</li>
+<li>Outbound sales: 40% of customers, $5,000 CAC</li>
+<li>Blended CAC: $2,000</li>
+</ul>
+<p><strong>Pricing</strong>:</p>
+<ul>
+<li>Starter: $500/month (1-50 developers)</li>
+<li>Growth: $1,000/month (51-200 developers)</li>
+<li>Enterprise: $2,000+/month (200+ developers)</li>
+<li>Average: $1,200/month</li>
+</ul>
+<p><strong>Churn &amp; Expansion</strong>:</p>
+<ul>
+<li>Annual churn: 10% (infrastructure tools are sticky)</li>
+<li>Net dollar retention: 120% (expansion revenue)</li>
+<li>Average customer lifetime: 4 years</li>
+</ul>
+<p><strong>Gross Margin</strong>:</p>
+<ul>
+<li>AWS infrastructure: 26% of revenue</li>
+<li>Support costs: 17% of revenue</li>
+<li>Gross margin: 57%</li>
+</ul>
 <hr />
 <h2 id="contact-information">Contact Information</h2>
 <p><strong>Project</strong>: Fawkes - Internal Delivery Platform
@@ -7433,16 +7757,20 @@
 <strong>Email</strong>: [Your Professional Email]
 <strong>LinkedIn</strong>: [Your LinkedIn Profile]
 <strong>GitHub</strong>: https://github.com/paruff</p>
-<p><strong>AWS Activate Application</strong>:
-- <strong>Organization Name</strong>: Fawkes Platform
-- <strong>Application Date</strong>: [Date]
-- <strong>Credits Requested</strong>: $25,000
-- <strong>Primary AWS Region</strong>: US-East-1</p>
-<p><strong>For AWS Reviewers</strong>:
-- <strong>Primary Contact</strong>: [Your Name]
-- <strong>Technical Questions</strong>: [Email]
-- <strong>Partnership Inquiries</strong>: [Email]
-- <strong>Media/Marketing</strong>: [Email]</p>
+<p><strong>AWS Activate Application</strong>:</p>
+<ul>
+<li><strong>Organization Name</strong>: Fawkes Platform</li>
+<li><strong>Application Date</strong>: [Date]</li>
+<li><strong>Credits Requested</strong>: $25,000</li>
+<li><strong>Primary AWS Region</strong>: US-East-1</li>
+</ul>
+<p><strong>For AWS Reviewers</strong>:</p>
+<ul>
+<li><strong>Primary Contact</strong>: [Your Name]</li>
+<li><strong>Technical Questions</strong>: [Email]</li>
+<li><strong>Partnership Inquiries</strong>: [Email]</li>
+<li><strong>Media/Marketing</strong>: [Email]</li>
+</ul>
 <hr />
 <p><strong>Document Version</strong>: 1.0
 <strong>Last Updated</strong>: October 7, 2025

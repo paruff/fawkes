@@ -4988,8 +4988,12 @@
 <h2 id="implementation">Implementation</h2>
 <h3 id="components-deployed">Components Deployed</h3>
 <ol>
-<li><strong>Plausible Analytics Application</strong> (v2.0)</li>
-<li>2 replicas for HA</li>
+<li>
+<p><strong>Plausible Analytics Application</strong> (v2.0)</p>
+</li>
+<li>
+<p>2 replicas for HA</p>
+</li>
 <li>Health checks configured</li>
 <li>Cookie-less tracking</li>
 <li>
@@ -4998,7 +5002,9 @@
 <li>
 <p><strong>ClickHouse Database</strong> (v23.3.7.5)</p>
 </li>
-<li>Analytics data storage</li>
+<li>
+<p>Analytics data storage</p>
+</li>
 <li>Time-series optimized</li>
 <li>
 <p>StatefulSet with 10Gi storage</p>
@@ -5006,7 +5012,9 @@
 <li>
 <p><strong>PostgreSQL Cluster</strong> (v16.4)</p>
 </li>
-<li>Metadata storage (users, sites, settings)</li>
+<li>
+<p>Metadata storage (users, sites, settings)</p>
+</li>
 <li>CloudNativePG with 3 replicas</li>
 <li>
 <p>10Gi storage per instance</p>
@@ -5059,17 +5067,19 @@ tests/bdd/features/
 <p>Added proxy endpoint:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">proxy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
-<span class="w">    </span><span class="s">&#39;/plausible/api&#39;</span><span class="p p-Indicator">:</span>
+<span class="w">    </span><span class="s">&quot;/plausible/api&quot;</span><span class="p p-Indicator">:</span>
 <span class="w">      </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://plausible.fawkes.svc:8000/api/</span>
 <span class="w">      </span><span class="nt">changeOrigin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">secure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </code></pre></div>
 <h3 id="custom-events">Custom Events</h3>
-<p>Configured to track:
-- Deploy Application
-- Create Service
-- View Documentation
-- Run CI/CD Pipeline</p>
+<p>Configured to track:</p>
+<ul>
+<li>Deploy Application</li>
+<li>Create Service</li>
+<li>View Documentation</li>
+<li>Run CI/CD Pipeline</li>
+</ul>
 <h2 id="resource-configuration">Resource Configuration</h2>
 <p>Following the 70% resource utilization target:</p>
 <h3 id="plausible-application">Plausible Application</h3>
@@ -5091,10 +5101,12 @@ tests/bdd/features/
 <li><strong>Storage</strong>: 10Gi</li>
 <li><strong>Instances</strong>: 3 (1 primary + 2 replicas)</li>
 </ul>
-<p><strong>Total Resource Impact:</strong>
-- CPU Requests: ~800m across all components
-- Memory Requests: ~1Gi across all components
-- Well within 70% target for most clusters</p>
+<p><strong>Total Resource Impact:</strong></p>
+<ul>
+<li>CPU Requests: ~800m across all components</li>
+<li>Memory Requests: ~1Gi across all components</li>
+<li>Well within 70% target for most clusters</li>
+</ul>
 <h2 id="deployment">Deployment</h2>
 <h3 id="prerequisites">Prerequisites</h3>
 <ol>
@@ -5125,15 +5137,21 @@ make<span class="w"> </span>validate-at-e3-011<span class="w"> </span><span clas
 <h2 id="validation">Validation</h2>
 <h3 id="automated-tests">Automated Tests</h3>
 <ol>
-<li><strong>BDD Tests</strong>: <code>tests/bdd/features/product-analytics.feature</code></li>
-<li>20+ scenarios covering all acceptance criteria</li>
+<li>
+<p><strong>BDD Tests</strong>: <code>tests/bdd/features/product-analytics.feature</code></p>
+</li>
+<li>
+<p>20+ scenarios covering all acceptance criteria</p>
+</li>
 <li>
 <p>Tests privacy compliance, Backstage integration, custom events</p>
 </li>
 <li>
 <p><strong>Validation Scripts</strong>:</p>
 </li>
-<li><code>platform/apps/plausible/validate-plausible.sh</code> - Component validation</li>
+<li>
+<p><code>platform/apps/plausible/validate-plausible.sh</code> - Component validation</p>
+</li>
 <li>
 <p><code>scripts/validate-product-analytics.sh</code> - AT-E3-011 validation</p>
 </li>
@@ -5173,14 +5191,16 @@ make<span class="w"> </span>validate-at-e3-011<span class="w"> </span><span clas
 <li><strong>Resource limits</strong>: Prevents resource exhaustion</li>
 </ol>
 <h3 id="secrets-management">Secrets Management</h3>
-<p>Current implementation uses Kubernetes secrets for dev/local:
-- Database credentials
-- Plausible secret key base
-- Admin credentials</p>
-<p><strong>Production</strong>: Use External Secrets Operator with Vault:
+<p>Current implementation uses Kubernetes secrets for dev/local:</p>
+<ul>
+<li>Database credentials</li>
+<li>Plausible secret key base</li>
+<li>Admin credentials</li>
+</ul>
+<p><strong>Production</strong>: Use External Secrets Operator with Vault:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Replace db-plausible-credentials.yaml with:</span>
 <span class="c1"># externalsecret-db-plausible.yaml</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="monitoring">Monitoring</h2>
 <h3 id="health-checks">Health Checks</h3>
 <ul>
@@ -5189,43 +5209,43 @@ make<span class="w"> </span>validate-at-e3-011<span class="w"> </span><span clas
 <li><strong>PostgreSQL</strong>: CloudNativePG operator monitoring</li>
 </ul>
 <h3 id="metrics">Metrics</h3>
-<p>Prometheus monitoring available:
-- Pod metrics via ServiceMonitor
-- Database metrics via CloudNativePG
-- ClickHouse metrics via native endpoint</p>
+<p>Prometheus monitoring available:</p>
+<ul>
+<li>Pod metrics via ServiceMonitor</li>
+<li>Database metrics via CloudNativePG</li>
+<li>ClickHouse metrics via native endpoint</li>
+</ul>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="common-issues">Common Issues</h3>
 <ol>
-<li>
-<p><strong>Plausible pods not starting</strong>
-   <div class="highlight"><pre><span></span><code><span class="c1"># Check logs</span>
+<li><strong>Plausible pods not starting</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>deployment/plausible
 
 <span class="c1"># Check init containers</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>plausible
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Database connection issues</strong>
-   <div class="highlight"><pre><span></span><code><span class="c1"># Verify PostgreSQL is ready</span>
+</code></pre></div>
+<ol>
+<li><strong>Database connection issues</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify PostgreSQL is ready</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>db-plausible-dev<span class="w"> </span>-n<span class="w"> </span>fawkes
 
 <span class="c1"># Check database credentials</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>db-plausible-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>ClickHouse not ready</strong>
-   <div class="highlight"><pre><span></span><code><span class="c1"># Check ClickHouse logs</span>
+</code></pre></div>
+<ol>
+<li><strong>ClickHouse not ready</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check ClickHouse logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>statefulset/plausible-clickhouse
 
 <span class="c1"># Verify storage</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">component</span><span class="o">=</span>clickhouse
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Tracking script not loading</strong></p>
-</li>
+</code></pre></div>
+<ol>
+<li><strong>Tracking script not loading</strong></li>
 <li>Verify Backstage configuration</li>
 <li>Check CORS settings</li>
 <li>Ensure <code>data-domain</code> matches site in Plausible</li>
@@ -5245,8 +5265,12 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 </code></pre></div>
 <h2 id="future-enhancements">Future Enhancements</h2>
 <ol>
-<li><strong>Advanced Analytics</strong></li>
-<li>Funnel analysis for multi-step workflows</li>
+<li>
+<p><strong>Advanced Analytics</strong></p>
+</li>
+<li>
+<p>Funnel analysis for multi-step workflows</p>
+</li>
 <li>Custom properties for detailed event tracking</li>
 <li>
 <p>A/B testing integration</p>
@@ -5254,7 +5278,9 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <li>
 <p><strong>Additional Integrations</strong></p>
 </li>
-<li>Instrument other platform components (Jenkins, Grafana, etc.)</li>
+<li>
+<p>Instrument other platform components (Jenkins, Grafana, etc.)</p>
+</li>
 <li>API integration for programmatic access</li>
 <li>
 <p>Webhook notifications for goals</p>
@@ -5262,7 +5288,9 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <li>
 <p><strong>Multi-tenancy</strong></p>
 </li>
-<li>Separate analytics per team/project</li>
+<li>
+<p>Separate analytics per team/project</p>
+</li>
 <li>Role-based access control</li>
 <li>
 <p>Shared vs isolated sites</p>

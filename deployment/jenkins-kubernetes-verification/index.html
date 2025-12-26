@@ -4839,85 +4839,97 @@ kubectl<span class="w"> </span>get<span class="w"> </span>application<span class
 <span class="c1"># Or using ArgoCD CLI</span>
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>jenkins
 </code></pre></div>
-<p><strong>Expected output:</strong>
-- Status: <code>Synced</code> and <code>Healthy</code>
-- Sync Status: <code>Synced</code>
-- Health Status: <code>Healthy</code></p>
+<p><strong>Expected output:</strong></p>
+<ul>
+<li>Status: <code>Synced</code> and <code>Healthy</code></li>
+<li>Sync Status: <code>Synced</code></li>
+<li>Health Status: <code>Healthy</code></li>
+</ul>
 <h3 id="2-verify-jenkins-deployment">2. Verify Jenkins Deployment</h3>
 <p>Check that the Jenkins deployment is running:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>jenkins<span class="w"> </span>-n<span class="w"> </span>fawkes
 </code></pre></div>
-<p><strong>Expected output:</strong>
+<p><strong>Expected output:</strong></p>
 <div class="highlight"><pre><span></span><code>NAME      READY   UP-TO-DATE   AVAILABLE   AGE
 jenkins   1/1     1            1           5m
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="3-verify-jenkins-pod">3. Verify Jenkins Pod</h3>
 <p>Check that the Jenkins pod is running:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>jenkins
 </code></pre></div>
-<p><strong>Expected output:</strong>
+<p><strong>Expected output:</strong></p>
 <div class="highlight"><pre><span></span><code>NAME        READY   STATUS    RESTARTS   AGE
 jenkins-0   2/2     Running   0          5m
-</code></pre></div></p>
-<p>Check pod logs:
+</code></pre></div>
+<p>Check pod logs:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>jenkins-0<span class="w"> </span>-c<span class="w"> </span>jenkins<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
-</code></pre></div></p>
+</code></pre></div>
 <p>Look for: <code>Jenkins is fully up and running</code></p>
 <h3 id="4-verify-jenkins-service">4. Verify Jenkins Service</h3>
 <p>Check that the Jenkins service is created:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>service<span class="w"> </span>jenkins<span class="w"> </span>-n<span class="w"> </span>fawkes
 </code></pre></div>
-<p><strong>Expected output:</strong>
+<p><strong>Expected output:</strong></p>
 <div class="highlight"><pre><span></span><code>NAME      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
 jenkins   ClusterIP   10.96.xxx.xxx   &lt;none&gt;        8080/TCP   5m
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="5-verify-jenkins-ingress">5. Verify Jenkins Ingress</h3>
 <p>Check that the Jenkins Ingress is configured:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>jenkins<span class="w"> </span>-n<span class="w"> </span>fawkes
 </code></pre></div>
-<p><strong>Expected output:</strong>
+<p><strong>Expected output:</strong></p>
 <div class="highlight"><pre><span></span><code>NAME      CLASS   HOSTS                          ADDRESS         PORTS   AGE
 jenkins   nginx   jenkins.127.0.0.1.nip.io       192.168.x.x     80      5m
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="6-verify-jenkins-ui-access">6. Verify Jenkins UI Access</h3>
 <p>Open a browser and navigate to: <code>http://jenkins.127.0.0.1.nip.io</code></p>
-<p><strong>Expected result:</strong>
-- Jenkins login page displayed
-- No certificate errors (if TLS is configured)
-- Page loads without errors</p>
-<p>Login with credentials (after setting them up):
-- <strong>Username:</strong> <code>admin</code>
-- <strong>Password:</strong> Value from <code>platform/apps/jenkins/secrets.yaml</code></p>
-<p><strong>⚠️ Important:</strong> Before accessing Jenkins:
-1. Update password in <code>platform/apps/jenkins/secrets.yaml</code>
-2. Apply the secret: <code>kubectl apply -f platform/apps/jenkins/secrets.yaml</code>
-3. Sync ArgoCD: <code>argocd app sync jenkins</code></p>
+<p><strong>Expected result:</strong></p>
+<ul>
+<li>Jenkins login page displayed</li>
+<li>No certificate errors (if TLS is configured)</li>
+<li>Page loads without errors</li>
+</ul>
+<p>Login with credentials (after setting them up):</p>
+<ul>
+<li><strong>Username:</strong> <code>admin</code></li>
+<li><strong>Password:</strong> Value from <code>platform/apps/jenkins/secrets.yaml</code></li>
+</ul>
+<p><strong>⚠️ Important:</strong> Before accessing Jenkins:</p>
+<ol>
+<li>Update password in <code>platform/apps/jenkins/secrets.yaml</code></li>
+<li>Apply the secret: <code>kubectl apply -f platform/apps/jenkins/secrets.yaml</code></li>
+<li>Sync ArgoCD: <code>argocd app sync jenkins</code></li>
+</ol>
 <p><strong>Note:</strong> Never commit actual passwords to Git!</p>
 <h3 id="7-verify-jcasc-configuration">7. Verify JCasC Configuration</h3>
 <p>Once logged in, navigate to <strong>Manage Jenkins</strong> → <strong>Configuration as Code</strong></p>
-<p><strong>Expected result:</strong>
-- Configuration loaded successfully
-- System message: "Fawkes CI/CD Platform - Golden Path Enabled"
-- No configuration errors</p>
-<p>Check system message:
+<p><strong>Expected result:</strong></p>
+<ul>
+<li>Configuration loaded successfully</li>
+<li>System message: "Fawkes CI/CD Platform - Golden Path Enabled"</li>
+<li>No configuration errors</li>
+</ul>
+<p>Check system message:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>jenkins-0<span class="w"> </span>-c<span class="w"> </span>jenkins<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8080/api/json<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;&quot;systemMessage&quot;:&quot;[^&quot;]*&quot;&#39;</span>
-</code></pre></div></p>
-<p><strong>Expected output:</strong>
+</code></pre></div>
+<p><strong>Expected output:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">&quot;systemMessage&quot;</span><span class="p">:</span><span class="s2">&quot;Fawkes CI/CD Platform - Golden Path Enabled&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="8-verify-kubernetes-cloud-configuration">8. Verify Kubernetes Cloud Configuration</h3>
 <p>Navigate to <strong>Manage Jenkins</strong> → <strong>Nodes and Clouds</strong> → <strong>Configure Clouds</strong></p>
-<p><strong>Expected configuration:</strong>
-- Cloud name: <code>kubernetes</code>
-- Kubernetes URL: Default (in-cluster)
-- Kubernetes Namespace: <code>fawkes</code>
-- Jenkins URL: <code>http://jenkins:8080</code>
-- Jenkins tunnel: <code>jenkins-agent:50000</code>
-- Container Cap: <code>20</code></p>
-<p>Or check via CLI:
+<p><strong>Expected configuration:</strong></p>
+<ul>
+<li>Cloud name: <code>kubernetes</code></li>
+<li>Kubernetes URL: Default (in-cluster)</li>
+<li>Kubernetes Namespace: <code>fawkes</code></li>
+<li>Jenkins URL: <code>http://jenkins:8080</code></li>
+<li>Jenkins tunnel: <code>jenkins-agent:50000</code></li>
+<li>Container Cap: <code>20</code></li>
+</ul>
+<p>Or check via CLI:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>jenkins-casc<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">&quot;clouds:&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="9-verify-agent-templates">9. Verify Agent Templates</h3>
 <p>Navigate to <strong>Manage Jenkins</strong> → <strong>Nodes and Clouds</strong> → <strong>Configure Clouds</strong> → <strong>Pod Templates</strong></p>
 <p><strong>Expected agent templates:</strong></p>
@@ -4975,9 +4987,9 @@ jenkins   nginx   jenkins.127.0.0.1.nip.io       192.168.x.x     80      5m
 </tr>
 </tbody>
 </table>
-<p>Or check via CLI:
+<p>Or check via CLI:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>jenkins-casc<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;templates:&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="10-test-dynamic-agent-provisioning">10. Test Dynamic Agent Provisioning</h3>
 <p>Create a test pipeline to verify dynamic agent provisioning:</p>
 <ol>
@@ -5004,97 +5016,111 @@ jenkins   nginx   jenkins.127.0.0.1.nip.io       192.168.x.x     80      5m
 <ol>
 <li>Click <strong>Save</strong> and then <strong>Build Now</strong></li>
 </ol>
-<p><strong>Expected result:</strong>
-- Build starts successfully
-- A new pod is created in the <code>fawkes</code> namespace
-- Build executes on the dynamic agent
-- Pod is terminated after build completion (within 10 minutes)</p>
-<p>Monitor agent pods:
+<p><strong>Expected result:</strong></p>
+<ul>
+<li>Build starts successfully</li>
+<li>A new pod is created in the <code>fawkes</code> namespace</li>
+<li>Build executes on the dynamic agent</li>
+<li>Pod is terminated after build completion (within 10 minutes)</li>
+</ul>
+<p>Monitor agent pods:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Watch for agent pods being created</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--watch<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;jenkins-agent|jnlp&quot;</span>
-</code></pre></div></p>
-<p><strong>Expected output:</strong>
+</code></pre></div>
+<p><strong>Expected output:</strong></p>
 <div class="highlight"><pre><span></span><code>jenkins-agent-xxxxx   0/2     Pending   0          0s
 jenkins-agent-xxxxx   0/2     ContainerCreating   0          1s
 jenkins-agent-xxxxx   2/2     Running   0          10s
 jenkins-agent-xxxxx   2/2     Completed   0          30s
 jenkins-agent-xxxxx   0/2     Terminating   0          40s
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="11-verify-security-configuration">11. Verify Security Configuration</h3>
-<p>Check authentication is required:
+<p>Check authentication is required:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Should return 403 or redirect to login</span>
 curl<span class="w"> </span>-I<span class="w"> </span>http://jenkins.127.0.0.1.nip.io/
-</code></pre></div></p>
-<p><strong>Expected response:</strong>
-- HTTP 403 Forbidden OR
-- HTTP 302 redirect to login page</p>
-<p>Anonymous access should be denied:
+</code></pre></div>
+<p><strong>Expected response:</strong></p>
+<ul>
+<li>HTTP 403 Forbidden OR</li>
+<li>HTTP 302 redirect to login page</li>
+</ul>
+<p>Anonymous access should be denied:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-I<span class="w"> </span>http://jenkins.127.0.0.1.nip.io/api/json
-</code></pre></div></p>
-<p><strong>Expected response:</strong>
-- HTTP 403 Forbidden</p>
+</code></pre></div>
+<p><strong>Expected response:</strong></p>
+<ul>
+<li>HTTP 403 Forbidden</li>
+</ul>
 <h3 id="12-verify-executor-configuration">12. Verify Executor Configuration</h3>
 <p>Check that the controller has 0 executors (builds only run on agents):</p>
 <p>Navigate to <strong>Manage Jenkins</strong> → <strong>System Information</strong></p>
 <p>Look for: <code>Number of executors: 0</code></p>
-<p>Or via CLI:
+<p>Or via CLI:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>jenkins-0<span class="w"> </span>-c<span class="w"> </span>jenkins<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8080/computer/api/json<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;&quot;numExecutors&quot;:[0-9]*&#39;</span>
-</code></pre></div></p>
-<p><strong>Expected output:</strong>
+</code></pre></div>
+<p><strong>Expected output:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">&quot;numExecutors&quot;</span><span class="p">:</span><span class="mi">0</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="13-run-bdd-acceptance-tests">13. Run BDD Acceptance Tests</h3>
 <p>Run the automated BDD tests to verify all acceptance criteria:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/fawkes
 python3<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/bdd/step_definitions/test_jenkins_kubernetes_deployment.py<span class="w"> </span>-v
 </code></pre></div>
-<p><strong>Expected result:</strong>
+<p><strong>Expected result:</strong></p>
 <div class="highlight"><pre><span></span><code>10 passed in 0.10s
-</code></pre></div></p>
-<p>All tests should pass:
-- ✅ Jenkins is deployed via ArgoCD
-- ✅ Kubernetes plugin is configured
-- ✅ Agent templates are configured
-- ✅ Dynamic agent provisioning works
-- ✅ Jenkins UI is accessible via Ingress
-- ✅ Jenkins authentication is configured
-- ✅ Agent resource limits are configured
-- ✅ Agent idle termination is configured
-- ✅ Agent capacity limits are configured
-- ✅ Jenkins Configuration as Code is working</p>
+</code></pre></div>
+<p>All tests should pass:</p>
+<ul>
+<li>✅ Jenkins is deployed via ArgoCD</li>
+<li>✅ Kubernetes plugin is configured</li>
+<li>✅ Agent templates are configured</li>
+<li>✅ Dynamic agent provisioning works</li>
+<li>✅ Jenkins UI is accessible via Ingress</li>
+<li>✅ Jenkins authentication is configured</li>
+<li>✅ Agent resource limits are configured</li>
+<li>✅ Agent idle termination is configured</li>
+<li>✅ Agent capacity limits are configured</li>
+<li>✅ Jenkins Configuration as Code is working</li>
+</ul>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="jenkins-pod-not-starting">Jenkins Pod Not Starting</h3>
-<p>Check pod events:
+<p>Check pod events:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>jenkins-0<span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
-<p>Common issues:
-- <strong>PVC not bound</strong>: Check storage class availability
-- <strong>Image pull errors</strong>: Verify network connectivity
-- <strong>Resource limits</strong>: Check cluster has sufficient resources</p>
+</code></pre></div>
+<p>Common issues:</p>
+<ul>
+<li><strong>PVC not bound</strong>: Check storage class availability</li>
+<li><strong>Image pull errors</strong>: Verify network connectivity</li>
+<li><strong>Resource limits</strong>: Check cluster has sufficient resources</li>
+</ul>
 <h3 id="agent-pods-not-starting">Agent Pods Not Starting</h3>
-<p>Check Jenkins logs:
+<p>Check Jenkins logs:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>jenkins-0<span class="w"> </span>-c<span class="w"> </span>jenkins<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>kubernetes
-</code></pre></div></p>
-<p>Common issues:
-- <strong>RBAC permissions</strong>: Verify ServiceAccount has correct permissions
-- <strong>Network policies</strong>: Check network access from Jenkins to agents
-- <strong>Resource quotas</strong>: Verify namespace has sufficient quotas</p>
+</code></pre></div>
+<p>Common issues:</p>
+<ul>
+<li><strong>RBAC permissions</strong>: Verify ServiceAccount has correct permissions</li>
+<li><strong>Network policies</strong>: Check network access from Jenkins to agents</li>
+<li><strong>Resource quotas</strong>: Verify namespace has sufficient quotas</li>
+</ul>
 <h3 id="ui-not-accessible">UI Not Accessible</h3>
-<p>Check Ingress status:
+<p>Check Ingress status:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>ingress<span class="w"> </span>jenkins<span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
-<p>Common issues:
-- <strong>Ingress controller not installed</strong>: Install nginx-ingress
-- <strong>DNS resolution</strong>: Verify DNS resolves to cluster
-- <strong>TLS certificate</strong>: Check cert-manager is working</p>
+</code></pre></div>
+<p>Common issues:</p>
+<ul>
+<li><strong>Ingress controller not installed</strong>: Install nginx-ingress</li>
+<li><strong>DNS resolution</strong>: Verify DNS resolves to cluster</li>
+<li><strong>TLS certificate</strong>: Check cert-manager is working</li>
+</ul>
 <h3 id="configuration-not-loading">Configuration Not Loading</h3>
-<p>Check ConfigMap exists:
+<p>Check ConfigMap exists:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>jenkins-casc<span class="w"> </span>-n<span class="w"> </span>fawkes
-</code></pre></div></p>
-<p>Check Jenkins logs for JCasC errors:
+</code></pre></div>
+<p>Check Jenkins logs for JCasC errors:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>jenkins-0<span class="w"> </span>-c<span class="w"> </span>jenkins<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>casc
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="success-criteria">Success Criteria</h2>
 <p>✅ All verification steps completed successfully
 ✅ Jenkins UI accessible at http://jenkins.127.0.0.1.nip.io

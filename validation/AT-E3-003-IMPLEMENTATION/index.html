@@ -5027,35 +5027,41 @@
 <h2 id="multi-channel-feedback-system-components">Multi-Channel Feedback System Components</h2>
 <h3 id="1-backstage-widget-feedback-service">1. Backstage Widget (feedback-service)</h3>
 <p><strong>Location</strong>: <code>services/feedback/</code>, <code>platform/apps/feedback-service/</code></p>
-<p><strong>Features</strong>:
-- REST API for feedback submission
-- PostgreSQL database (CloudNativePG)
-- Admin endpoints for feedback management
-- Sentiment analysis integration
-- Prometheus metrics exposure
-- Screenshot attachment support
-- GitHub issue creation capability</p>
-<p><strong>Key Endpoints</strong>:
-- <code>POST /api/v1/feedback</code> - Submit feedback
-- <code>GET /api/v1/feedback</code> - List feedback (admin)
-- <code>PUT /api/v1/feedback/{id}/status</code> - Update status (admin)
-- <code>GET /api/v1/feedback/stats</code> - Get statistics (admin)
-- <code>POST /api/v1/automation/process-validated</code> - Process validated feedback
-- <code>GET /health</code> - Health check
-- <code>GET /metrics</code> - Prometheus metrics</p>
-<p><strong>Deployment</strong>:
+<p><strong>Features</strong>:</p>
+<ul>
+<li>REST API for feedback submission</li>
+<li>PostgreSQL database (CloudNativePG)</li>
+<li>Admin endpoints for feedback management</li>
+<li>Sentiment analysis integration</li>
+<li>Prometheus metrics exposure</li>
+<li>Screenshot attachment support</li>
+<li>GitHub issue creation capability</li>
+</ul>
+<p><strong>Key Endpoints</strong>:</p>
+<ul>
+<li><code>POST /api/v1/feedback</code> - Submit feedback</li>
+<li><code>GET /api/v1/feedback</code> - List feedback (admin)</li>
+<li><code>PUT /api/v1/feedback/{id}/status</code> - Update status (admin)</li>
+<li><code>GET /api/v1/feedback/stats</code> - Get statistics (admin)</li>
+<li><code>POST /api/v1/automation/process-validated</code> - Process validated feedback</li>
+<li><code>GET /health</code> - Health check</li>
+<li><code>GET /metrics</code> - Prometheus metrics</li>
+</ul>
+<p><strong>Deployment</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>platform/apps/feedback-service/
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="2-cli-tool-feedback-cli">2. CLI Tool (feedback-cli)</h3>
 <p><strong>Location</strong>: <code>services/feedback-cli/</code></p>
-<p><strong>Features</strong>:
-- Quick feedback submission from terminal
-- Interactive mode with prompts
-- Offline queue capability
-- Auto-sync when connection restored
-- Configuration management
-- Rich terminal UI</p>
-<p><strong>Commands</strong>:
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Quick feedback submission from terminal</li>
+<li>Interactive mode with prompts</li>
+<li>Offline queue capability</li>
+<li>Auto-sync when connection restored</li>
+<li>Configuration management</li>
+<li>Rich terminal UI</li>
+</ul>
+<p><strong>Commands</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Initialize configuration</span>
 fawkes-feedback<span class="w"> </span>config<span class="w"> </span>init
 
@@ -5070,76 +5076,90 @@ fawkes-feedback<span class="w"> </span>list
 
 <span class="c1"># Show statistics</span>
 fawkes-feedback<span class="w"> </span>stats
-</code></pre></div></p>
-<p><strong>Installation</strong>:
+</code></pre></div>
+<p><strong>Installation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>services/feedback-cli
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="3-mattermost-bot-feedback-bot">3. Mattermost Bot (feedback-bot)</h3>
 <p><strong>Location</strong>: <code>services/feedback-bot/</code>, <code>platform/apps/feedback-bot/</code></p>
-<p><strong>Features</strong>:
-- Natural language interface
-- Sentiment analysis (VADER)
-- Auto-categorization
-- Smart rating extraction/inference
-- Prometheus metrics
-- <code>/feedback</code> slash command</p>
-<p><strong>Usage in Mattermost</strong>:
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Natural language interface</li>
+<li>Sentiment analysis (VADER)</li>
+<li>Auto-categorization</li>
+<li>Smart rating extraction/inference</li>
+<li>Prometheus metrics</li>
+<li><code>/feedback</code> slash command</li>
+</ul>
+<p><strong>Usage in Mattermost</strong>:</p>
 <div class="highlight"><pre><span></span><code>/feedback The new UI is amazing! Love the dark mode.
-</code></pre></div></p>
-<p><strong>Analysis Example</strong>:
-- Rating: ⭐⭐⭐⭐⭐ (5/5)
-- Sentiment: Positive 😊
-- Category: UI</p>
-<p><strong>Deployment</strong>:
+</code></pre></div>
+<p><strong>Analysis Example</strong>:</p>
+<ul>
+<li>Rating: ⭐⭐⭐⭐⭐ (5/5)</li>
+<li>Sentiment: Positive 😊</li>
+<li>Category: UI</li>
+</ul>
+<p><strong>Deployment</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>platform/apps/feedback-bot/
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="4-automation-pipeline-feedback-automation">4. Automation Pipeline (feedback-automation)</h3>
 <p><strong>Location</strong>: <code>platform/apps/feedback-service/cronjob-automation.yaml</code></p>
-<p><strong>Features</strong>:
-- Runs every 15 minutes
-- AI-powered triage
-- Priority calculation
-- Duplicate detection
-- GitHub issue creation
-- Notification system
-- Smart labeling and milestone assignment</p>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Runs every 15 minutes</li>
+<li>AI-powered triage</li>
+<li>Priority calculation</li>
+<li>Duplicate detection</li>
+<li>GitHub issue creation</li>
+<li>Notification system</li>
+<li>Smart labeling and milestone assignment</li>
+</ul>
 <p><strong>Schedule</strong>: <code>*/15 * * * *</code> (every 15 minutes)</p>
-<p><strong>Triage Logic</strong>:
-- <strong>P0</strong>: Critical bugs, security issues, rating 1-2
-- <strong>P1</strong>: Important features, rating 2-3
-- <strong>P2</strong>: Enhancements, rating 3-4
-- <strong>P3</strong>: Nice-to-have, rating 4-5</p>
-<p><strong>Deployment</strong>:
+<p><strong>Triage Logic</strong>:</p>
+<ul>
+<li><strong>P0</strong>: Critical bugs, security issues, rating 1-2</li>
+<li><strong>P1</strong>: Important features, rating 2-3</li>
+<li><strong>P2</strong>: Enhancements, rating 3-4</li>
+<li><strong>P3</strong>: Nice-to-have, rating 4-5</li>
+</ul>
+<p><strong>Deployment</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/feedback-service/cronjob-automation.yaml
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="5-analytics-dashboard-feedback-analytics">5. Analytics Dashboard (feedback-analytics)</h3>
 <p><strong>Location</strong>: <code>platform/apps/grafana/dashboards/feedback-analytics.json</code></p>
-<p><strong>Features</strong>:
-- NPS Score tracking
-- Sentiment analysis visualization
-- Feedback volume metrics
-- Rating distribution
-- Category breakdown
-- Response rate tracking
-- Historical trends (30/90 days)</p>
-<p><strong>Key Metrics</strong>:
-- <strong>NPS Score</strong>: -100 to +100 scale
-- <strong>Total Feedback</strong>: Volume over time
-- <strong>Response Rate</strong>: % of feedback addressed
-- <strong>Average Rating</strong>: 1-5 stars
-- <strong>Sentiment Distribution</strong>: Positive/Neutral/Negative
-- <strong>Top Categories</strong>: Most common feedback types
-- <strong>Low-Rated Feedback</strong>: Issues requiring attention</p>
-<p><strong>Dashboard Panels</strong> (25 total):
-1. Key Metrics Overview (4 panels)
-2. NPS Breakdown (2 panels)
-3. Feedback Volume &amp; Categories (2 panels)
-4. Rating Distribution (2 panels)
-5. Sentiment Analysis (2 panels)
-6. Response Tracking (2 panels)
-7. Top Issues &amp; Insights (2 panels)
-8. Additional visualization panels (9 panels)</p>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>NPS Score tracking</li>
+<li>Sentiment analysis visualization</li>
+<li>Feedback volume metrics</li>
+<li>Rating distribution</li>
+<li>Category breakdown</li>
+<li>Response rate tracking</li>
+<li>Historical trends (30/90 days)</li>
+</ul>
+<p><strong>Key Metrics</strong>:</p>
+<ul>
+<li><strong>NPS Score</strong>: -100 to +100 scale</li>
+<li><strong>Total Feedback</strong>: Volume over time</li>
+<li><strong>Response Rate</strong>: % of feedback addressed</li>
+<li><strong>Average Rating</strong>: 1-5 stars</li>
+<li><strong>Sentiment Distribution</strong>: Positive/Neutral/Negative</li>
+<li><strong>Top Categories</strong>: Most common feedback types</li>
+<li><strong>Low-Rated Feedback</strong>: Issues requiring attention</li>
+</ul>
+<p><strong>Dashboard Panels</strong> (25 total):</p>
+<ol>
+<li>Key Metrics Overview (4 panels)</li>
+<li>NPS Breakdown (2 panels)</li>
+<li>Feedback Volume &amp; Categories (2 panels)</li>
+<li>Rating Distribution (2 panels)</li>
+<li>Sentiment Analysis (2 panels)</li>
+<li>Response Tracking (2 panels)</li>
+<li>Top Issues &amp; Insights (2 panels)</li>
+<li>Additional visualization panels (9 panels)</li>
+</ol>
 <h2 id="test-procedure">Test Procedure</h2>
 <h3 id="automated-validation">Automated Validation</h3>
 <p>Run the validation script:</p>
@@ -5350,13 +5370,15 @@ behave<span class="w"> </span>tests/bdd/features<span class="w"> </span>--tags<s
 </tbody>
 </table>
 <h3 id="deployment-validation-requires-cluster">Deployment Validation (Requires Cluster)</h3>
-<p>Run on actual cluster to validate:
-- Service deployments are running
-- Pods are healthy and ready
-- APIs are accessible
-- Automation is executing
-- Metrics are being collected
-- Dashboard displays data</p>
+<p>Run on actual cluster to validate:</p>
+<ul>
+<li>Service deployments are running</li>
+<li>Pods are healthy and ready</li>
+<li>APIs are accessible</li>
+<li>Automation is executing</li>
+<li>Metrics are being collected</li>
+<li>Dashboard displays data</li>
+</ul>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="feedback-service-not-accessible">Feedback Service Not Accessible</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check pod status</span>
@@ -5460,12 +5482,14 @@ curl<span class="w"> </span>http://localhost:8000/metrics<span class="w"> </span
 <li>BDD tests provide comprehensive scenario coverage</li>
 </ul>
 <h2 id="maintenance">Maintenance</h2>
-<p>This test should be run:
-- After initial deployment
-- After any changes to feedback system components
-- Before releases to production
-- As part of CI/CD pipeline validation
-- When adding new feedback channels</p>
+<p>This test should be run:</p>
+<ul>
+<li>After initial deployment</li>
+<li>After any changes to feedback system components</li>
+<li>Before releases to production</li>
+<li>As part of CI/CD pipeline validation</li>
+<li>When adding new feedback channels</li>
+</ul>
 
 
 

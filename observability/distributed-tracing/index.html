@@ -5189,19 +5189,23 @@
 <p>Tempo is deployed as the trace storage backend:</p>
 <div class="highlight"><pre><span></span><code>platform/apps/tempo/tempo-application.yaml
 </code></pre></div>
-<p>Key features:
-- OTLP ingestion on ports 4317 (gRPC) and 4318 (HTTP)
-- 7-day trace retention
-- Metrics generation for RED metrics
-- TraceQL query support</p>
+<p>Key features:</p>
+<ul>
+<li>OTLP ingestion on ports 4317 (gRPC) and 4318 (HTTP)</li>
+<li>7-day trace retention</li>
+<li>Metrics generation for RED metrics</li>
+<li>TraceQL query support</li>
+</ul>
 <h3 id="grafana-data-sources">Grafana Data Sources</h3>
 <p>Grafana is configured with trace correlation:</p>
 <div class="highlight"><pre><span></span><code>platform/apps/grafana/helm-release.yml
 </code></pre></div>
-<p>Data sources configured:
-- <strong>Tempo</strong>: Trace storage and visualization
-- <strong>Prometheus</strong>: Trace-to-metrics correlation
-- <strong>OpenSearch</strong>: Trace-to-logs correlation</p>
+<p>Data sources configured:</p>
+<ul>
+<li><strong>Tempo</strong>: Trace storage and visualization</li>
+<li><strong>Prometheus</strong>: Trace-to-metrics correlation</li>
+<li><strong>OpenSearch</strong>: Trace-to-logs correlation</li>
+</ul>
 <h2 id="application-instrumentation">Application Instrumentation</h2>
 <h3 id="java-applications-spring-boot-jenkins">Java Applications (Spring Boot, Jenkins)</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Download OpenTelemetry Java agent</span>
@@ -5226,14 +5230,14 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 </code></pre></div>
 <h3 id="nodejs-applications-backstage-express">Node.js Applications (Backstage, Express)</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// tracing.js - Add at the very top of your application</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/sdk-node&#39;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/exporter-trace-otlp-grpc&#39;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/auto-instrumentations-node&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/sdk-node&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/exporter-trace-otlp-grpc&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/auto-instrumentations-node&quot;</span><span class="p">);</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">sdk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">serviceName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;my-nodejs-app&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">serviceName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-nodejs-app&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">traceExporter</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;grpc://otel-collector.monitoring.svc.cluster.local:4317&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;grpc://otel-collector.monitoring.svc.cluster.local:4317&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}),</span>
 <span class="w">  </span><span class="nx">instrumentations</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">getNodeAutoInstrumentations</span><span class="p">()],</span>
 <span class="p">});</span>

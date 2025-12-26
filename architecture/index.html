@@ -6395,11 +6395,13 @@
 <h2 id="introduction">Introduction</h2>
 <p>Fawkes is an opinionated Internal Delivery Platform (IDP) designed to accelerate software delivery through automation, observability, and continuous learning. This document describes the architectural design, component interactions, and key technical decisions.</p>
 <h3 id="architectural-context">Architectural Context</h3>
-<p>Fawkes sits at the intersection of:
-- <strong>Platform Engineering</strong>: Providing self-service infrastructure and tooling
-- <strong>DevSecOps</strong>: Integrating security throughout the delivery pipeline
-- <strong>DORA Research</strong>: Optimizing for the four key metrics
-- <strong>GitOps</strong>: Declarative, version-controlled infrastructure and applications</p>
+<p>Fawkes sits at the intersection of:</p>
+<ul>
+<li><strong>Platform Engineering</strong>: Providing self-service infrastructure and tooling</li>
+<li><strong>DevSecOps</strong>: Integrating security throughout the delivery pipeline</li>
+<li><strong>DORA Research</strong>: Optimizing for the four key metrics</li>
+<li><strong>GitOps</strong>: Declarative, version-controlled infrastructure and applications</li>
+</ul>
 <hr />
 <h2 id="architectural-principles">Architectural Principles</h2>
 <h3 id="1-developer-experience-first">1. Developer Experience First</h3>
@@ -6615,18 +6617,24 @@
 └─────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h3 id="deployment-configuration">Deployment Configuration</h3>
-<p><strong>High Availability</strong>:
-- 2 replicas with pod anti-affinity
-- Pod disruption budget (minAvailable: 1)
-- PostgreSQL HA cluster (3 instances)</p>
-<p><strong>Resource Allocation</strong>:
-- Backstage: 300m-1 CPU, 384Mi-1Gi memory (optimized for &lt;70% utilization)
-- PostgreSQL: 300m-1 CPU, 384Mi-1Gi memory per pod (3 pods for HA)</p>
-<p><strong>Security</strong>:
-- TLS termination at ingress (cert-manager)
-- Non-root container execution
-- Read-only filesystem where possible
-- Security context with dropped capabilities</p>
+<p><strong>High Availability</strong>:</p>
+<ul>
+<li>2 replicas with pod anti-affinity</li>
+<li>Pod disruption budget (minAvailable: 1)</li>
+<li>PostgreSQL HA cluster (3 instances)</li>
+</ul>
+<p><strong>Resource Allocation</strong>:</p>
+<ul>
+<li>Backstage: 300m-1 CPU, 384Mi-1Gi memory (optimized for &lt;70% utilization)</li>
+<li>PostgreSQL: 300m-1 CPU, 384Mi-1Gi memory per pod (3 pods for HA)</li>
+</ul>
+<p><strong>Security</strong>:</p>
+<ul>
+<li>TLS termination at ingress (cert-manager)</li>
+<li>Non-root container execution</li>
+<li>Read-only filesystem where possible</li>
+<li>Security context with dropped capabilities</li>
+</ul>
 <h3 id="integration-points">Integration Points</h3>
 <table>
 <thead>
@@ -6776,40 +6784,50 @@ for detailed architecture decisions.</p>
 <h2 id="component-overview">Component Overview</h2>
 <h3 id="1-developer-portal-backstage">1. Developer Portal (Backstage)</h3>
 <p><strong>Purpose</strong>: Single pane of glass for developer self-service</p>
-<p><strong>Key Features</strong>:
-- Software catalog (services, APIs, resources)
-- Software templates (golden paths)
-- TechDocs (documentation as code)
-- Plugin ecosystem (CI/CD status, metrics, alerts)</p>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Software catalog (services, APIs, resources)</li>
+<li>Software templates (golden paths)</li>
+<li>TechDocs (documentation as code)</li>
+<li>Plugin ecosystem (CI/CD status, metrics, alerts)</li>
+</ul>
 <p><strong>Technology</strong>: Backstage (TypeScript/React), PostgreSQL</p>
-<p><strong>Integrations</strong>:
-- GitHub (repository discovery, authentication)
-- Jenkins (pipeline status)
-- ArgoCD (deployment status)
-- Grafana (metrics dashboards)</p>
+<p><strong>Integrations</strong>:</p>
+<ul>
+<li>GitHub (repository discovery, authentication)</li>
+<li>Jenkins (pipeline status)</li>
+<li>ArgoCD (deployment status)</li>
+<li>Grafana (metrics dashboards)</li>
+</ul>
 <h3 id="2-cicd-layer-jenkins">2. CI/CD Layer (Jenkins)</h3>
 <p><strong>Purpose</strong>: Continuous integration and build automation</p>
-<p><strong>Key Features</strong>:
-- Pipeline as code (Jenkinsfile)
-- Dynamic Kubernetes agents
-- Shared pipeline libraries
-- Multi-stage builds (build, test, scan, package)</p>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Pipeline as code (Jenkinsfile)</li>
+<li>Dynamic Kubernetes agents</li>
+<li>Shared pipeline libraries</li>
+<li>Multi-stage builds (build, test, scan, package)</li>
+</ul>
 <p><strong>Technology</strong>: Jenkins, Kubernetes plugin, Docker</p>
-<p><strong>Pipelines</strong>:
-- Build pipeline (compile, unit test)
-- Security scan pipeline (SAST, dependency check, container scan)
-- Integration test pipeline
-- Deployment pipeline (publish artifacts, trigger CD)</p>
+<p><strong>Pipelines</strong>:</p>
+<ul>
+<li>Build pipeline (compile, unit test)</li>
+<li>Security scan pipeline (SAST, dependency check, container scan)</li>
+<li>Integration test pipeline</li>
+<li>Deployment pipeline (publish artifacts, trigger CD)</li>
+</ul>
 <h3 id="3-gitops-layer-argocd">3. GitOps Layer (ArgoCD)</h3>
 <p><strong>Purpose</strong>: Declarative continuous delivery</p>
-<p><strong>Key Features</strong>:
-- Git as source of truth
-- Automated sync and reconciliation
-- Progressive delivery (blue-green, canary)
-- Multi-cluster management
-- Rollback capabilities</p>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Git as source of truth</li>
+<li>Automated sync and reconciliation</li>
+<li>Progressive delivery (blue-green, canary)</li>
+<li>Multi-cluster management</li>
+<li>Rollback capabilities</li>
+</ul>
 <p><strong>Technology</strong>: ArgoCD, Kustomize/Helm</p>
-<p><strong>Repository Structure</strong>:
+<p><strong>Repository Structure</strong>:</p>
 <div class="highlight"><pre><span></span><code>gitops-repo/
 ├── apps/
 │   ├── team-a/
@@ -6821,62 +6839,78 @@ for detailed architecture decisions.</p>
 └── infrastructure/
     ├── clusters/
     ├── namespaces/
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="4-observability-stack">4. Observability Stack</h3>
 <p><strong>Purpose</strong>: Comprehensive monitoring, logging, and tracing</p>
 <p><strong>Components</strong>:</p>
-<p><strong>Metrics</strong> (Prometheus + Grafana):
-- Platform metrics (Jenkins, ArgoCD, Backstage)
-- Application metrics (custom + OpenTelemetry)
-- DORA metrics (automated collection)
-- Infrastructure metrics (Kubernetes, nodes)</p>
-<p><strong>Logging</strong> (OpenSearch + Fluent Bit):
-- Centralized log aggregation
-- Structured logging
-- Log correlation with traces
-- Retention policies</p>
-<p><strong>Tracing</strong> (Grafana Tempo + OpenTelemetry):
-- Distributed tracing
-- Service dependency mapping
-- Performance analysis
-- Request flow visualization</p>
-<p><strong>Alerting</strong> (Grafana Alerting):
-- Threshold-based alerts
-- Anomaly detection
-- Multi-channel notifications (Slack, PagerDuty, email)</p>
+<p><strong>Metrics</strong> (Prometheus + Grafana):</p>
+<ul>
+<li>Platform metrics (Jenkins, ArgoCD, Backstage)</li>
+<li>Application metrics (custom + OpenTelemetry)</li>
+<li>DORA metrics (automated collection)</li>
+<li>Infrastructure metrics (Kubernetes, nodes)</li>
+</ul>
+<p><strong>Logging</strong> (OpenSearch + Fluent Bit):</p>
+<ul>
+<li>Centralized log aggregation</li>
+<li>Structured logging</li>
+<li>Log correlation with traces</li>
+<li>Retention policies</li>
+</ul>
+<p><strong>Tracing</strong> (Grafana Tempo + OpenTelemetry):</p>
+<ul>
+<li>Distributed tracing</li>
+<li>Service dependency mapping</li>
+<li>Performance analysis</li>
+<li>Request flow visualization</li>
+</ul>
+<p><strong>Alerting</strong> (Grafana Alerting):</p>
+<ul>
+<li>Threshold-based alerts</li>
+<li>Anomaly detection</li>
+<li>Multi-channel notifications (Slack, PagerDuty, email)</li>
+</ul>
 <h3 id="5-security-layer">5. Security Layer</h3>
 <p><strong>Purpose</strong>: Shift-left security and compliance automation</p>
 <p><strong>Components</strong>:</p>
-<p><strong>Code Security</strong> (SonarQube):
-- Static analysis (SAST)
-- Code quality gates
-- Technical debt tracking
-- Security hotspots</p>
-<p><strong>Container Security</strong> (Trivy):
-- Image vulnerability scanning
-- SBOM generation
-- Policy enforcement
-- Registry integration</p>
-<p><strong>Secrets Management</strong> (HashiCorp Vault + External Secrets Operator):
-- HashiCorp Vault for centralized secrets management (HA deployment)
-- Vault Agent Sidecar for automatic secret injection into pods
-- CSI Secret Store Driver for volume-based secret mounting
-- External Secrets Operator for cloud provider integration
-- Kubernetes Auth Method for service account authentication
-- Dynamic secret generation and automatic rotation
-- Comprehensive audit logging for compliance</p>
-<p><strong>Policy Enforcement</strong> (Kyverno):
-- Kubernetes-native policy engine for policy-as-code
-- <strong>Validation Policies</strong>: Enforce Pod Security Standards (runAsNonRoot,
-  disallow privileged, require resource limits)
-- <strong>Mutation Policies</strong>: Automatic standardization (platform labels, Vault
-  integration, Ingress class defaults, security context defaults)
-- <strong>Generation Policies</strong>: Automatic resource creation for new namespaces
-  (NetworkPolicy, ResourceQuota, LimitRange)
-- <strong>Policy Reports</strong>: Audit and compliance via PolicyReport CRDs
-- HA deployment with 3 admission controller replicas
-- Integration with ArgoCD for GitOps policy management
-- See <a href="../adr/ADR-017%20kyverno-policy-engine/">ADR-017: Kyverno Policy Engine</a></p>
+<p><strong>Code Security</strong> (SonarQube):</p>
+<ul>
+<li>Static analysis (SAST)</li>
+<li>Code quality gates</li>
+<li>Technical debt tracking</li>
+<li>Security hotspots</li>
+</ul>
+<p><strong>Container Security</strong> (Trivy):</p>
+<ul>
+<li>Image vulnerability scanning</li>
+<li>SBOM generation</li>
+<li>Policy enforcement</li>
+<li>Registry integration</li>
+</ul>
+<p><strong>Secrets Management</strong> (HashiCorp Vault + External Secrets Operator):</p>
+<ul>
+<li>HashiCorp Vault for centralized secrets management (HA deployment)</li>
+<li>Vault Agent Sidecar for automatic secret injection into pods</li>
+<li>CSI Secret Store Driver for volume-based secret mounting</li>
+<li>External Secrets Operator for cloud provider integration</li>
+<li>Kubernetes Auth Method for service account authentication</li>
+<li>Dynamic secret generation and automatic rotation</li>
+<li>Comprehensive audit logging for compliance</li>
+</ul>
+<p><strong>Policy Enforcement</strong> (Kyverno):</p>
+<ul>
+<li>Kubernetes-native policy engine for policy-as-code</li>
+<li><strong>Validation Policies</strong>: Enforce Pod Security Standards (runAsNonRoot,
+  disallow privileged, require resource limits)</li>
+<li><strong>Mutation Policies</strong>: Automatic standardization (platform labels, Vault
+  integration, Ingress class defaults, security context defaults)</li>
+<li><strong>Generation Policies</strong>: Automatic resource creation for new namespaces
+  (NetworkPolicy, ResourceQuota, LimitRange)</li>
+<li><strong>Policy Reports</strong>: Audit and compliance via PolicyReport CRDs</li>
+<li>HA deployment with 3 admission controller replicas</li>
+<li>Integration with ArgoCD for GitOps policy management</li>
+<li>See <a href="../adr/ADR-017%20kyverno-policy-engine/">ADR-017: Kyverno Policy Engine</a></li>
+</ul>
 <h3 id="6-dora-metrics-service">6. DORA Metrics Service</h3>
 <p><strong>Purpose</strong>: Automated collection and visualization of DORA metrics</p>
 <p><strong>Implementation</strong>: Apache DevLake provides unified DORA metrics collection,
@@ -6887,7 +6921,7 @@ calculation, and visualization. In the Fawkes GitOps architecture:</p>
 <li><strong>GitHub</strong> provides commit and PR data</li>
 <li><strong>Observability</strong> provides incident data for CFR/MTTR</li>
 </ul>
-<p><strong>Architecture</strong>:
+<p><strong>Architecture</strong>:</p>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
 │                        Data Sources                              │
 │                                                                   │
@@ -6936,36 +6970,46 @@ calculation, and visualization. In the Fawkes GitOps architecture:</p>
 │  │  Dashboards  │  │   Plugin     │  │              │          │
 │  └──────────────┘  └──────────────┘  └──────────────┘          │
 └─────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
-<p><strong>DORA Metrics Calculated</strong>:
-1. <strong>Deployment Frequency</strong>: ArgoCD syncs per day/week (production apps)
-2. <strong>Lead Time for Changes</strong>: Commit timestamp to ArgoCD sync completion
-3. <strong>Change Failure Rate</strong>: (Failed syncs + Incidents) / Total syncs
-4. <strong>Mean Time to Restore</strong>: Incident creation to restore sync
-5. <strong>Operational Performance</strong>: SLO/SLI adherence from Prometheus</p>
-<p><strong>CI/Rework Metrics</strong> (from Jenkins):
-- Build Success Rate
-- Quality Gate Pass Rate
-- Test Flakiness
-- Rework Rate (retry builds)</p>
+</code></pre></div>
+<p><strong>DORA Metrics Calculated</strong>:</p>
+<ol>
+<li><strong>Deployment Frequency</strong>: ArgoCD syncs per day/week (production apps)</li>
+<li><strong>Lead Time for Changes</strong>: Commit timestamp to ArgoCD sync completion</li>
+<li><strong>Change Failure Rate</strong>: (Failed syncs + Incidents) / Total syncs</li>
+<li><strong>Mean Time to Restore</strong>: Incident creation to restore sync</li>
+<li><strong>Operational Performance</strong>: SLO/SLI adherence from Prometheus</li>
+</ol>
+<p><strong>CI/Rework Metrics</strong> (from Jenkins):</p>
+<ul>
+<li>Build Success Rate</li>
+<li>Quality Gate Pass Rate</li>
+<li>Test Flakiness</li>
+<li>Rework Rate (retry builds)</li>
+</ul>
 <p>See <a href="../adr/ADR-016%20devlake-dora-strategy/">ADR-016: DevLake DORA Strategy</a> for details.</p>
 <h3 id="7-infrastructure-layer">7. Infrastructure Layer</h3>
 <p><strong>Purpose</strong>: Cloud infrastructure provisioning and management</p>
 <p><strong>Components</strong>:</p>
-<p><strong>Terraform</strong>:
-- Kubernetes cluster provisioning
-- VPC, networking, security groups
-- IAM roles and policies
-- Cloud resources (databases, caches, queues)</p>
-<p><strong>Crossplane</strong> (Roadmap):
-- Kubernetes-native infrastructure management
-- Cloud-agnostic abstractions
-- GitOps-driven infrastructure
-- Self-service resource provisioning</p>
-<p><strong>Helm</strong>:
-- Package management for Kubernetes
-- Platform component deployment
-- Application chart templating</p>
+<p><strong>Terraform</strong>:</p>
+<ul>
+<li>Kubernetes cluster provisioning</li>
+<li>VPC, networking, security groups</li>
+<li>IAM roles and policies</li>
+<li>Cloud resources (databases, caches, queues)</li>
+</ul>
+<p><strong>Crossplane</strong> (Roadmap):</p>
+<ul>
+<li>Kubernetes-native infrastructure management</li>
+<li>Cloud-agnostic abstractions</li>
+<li>GitOps-driven infrastructure</li>
+<li>Self-service resource provisioning</li>
+</ul>
+<p><strong>Helm</strong>:</p>
+<ul>
+<li>Package management for Kubernetes</li>
+<li>Platform component deployment</li>
+<li>Application chart templating</li>
+</ul>
 <hr />
 <h2 id="data-flow">Data Flow</h2>
 <h3 id="1-application-deployment-flow">1. Application Deployment Flow</h3>
@@ -7058,7 +7102,7 @@ Application deployed to cluster
 <h2 id="integration-patterns">Integration Patterns</h2>
 <h3 id="1-webhook-based-integration">1. Webhook-Based Integration</h3>
 <p>Used for real-time event notification between components.</p>
-<p><strong>Example</strong>: Jenkins → DORA Metrics Service
+<p><strong>Example</strong>: Jenkins → DORA Metrics Service</p>
 <div class="highlight"><pre><span></span><code>Jenkins Pipeline Completes
     │
     ▼
@@ -7073,10 +7117,10 @@ DORA Service processes event
     ├─ Calculate lead time (commit → build completion)
     ├─ Update deployment frequency
     └─ Store in PostgreSQL and expose to Prometheus
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="2-pull-based-discovery">2. Pull-Based Discovery</h3>
 <p>Used for service catalog and status updates.</p>
-<p><strong>Example</strong>: Backstage → Kubernetes
+<p><strong>Example</strong>: Backstage → Kubernetes</p>
 <div class="highlight"><pre><span></span><code>Backstage Kubernetes Plugin
     │
     ▼
@@ -7088,10 +7132,10 @@ Queries Kubernetes API (every 30s)
     │
     ▼
 Display in Backstage UI (real-time status)
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="3-gitops-reconciliation">3. GitOps Reconciliation</h3>
 <p>Used for declarative state management.</p>
-<p><strong>Example</strong>: ArgoCD → Kubernetes
+<p><strong>Example</strong>: ArgoCD → Kubernetes</p>
 <div class="highlight"><pre><span></span><code>ArgoCD watches Git repository
     │
     ▼
@@ -7106,10 +7150,10 @@ Reconciliation loop:
     │
     ▼
 Cluster converges to desired state
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="4-api-based-integration">4. API-Based Integration</h3>
 <p>Used for programmatic interactions.</p>
-<p><strong>Example</strong>: Backstage Templates → GitHub API
+<p><strong>Example</strong>: Backstage Templates → GitHub API</p>
 <div class="highlight"><pre><span></span><code>User triggers template scaffolding
     │
     ▼
@@ -7121,7 +7165,7 @@ Backstage calls GitHub API:
     │
     ▼
 Repository ready for development
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="security-architecture">Security Architecture</h2>
 <h3 id="defense-in-depth">Defense in Depth</h3>
@@ -7219,12 +7263,14 @@ Repository ready for development
     ▼
 Deploy to Kubernetes
 </code></pre></div>
-<p><strong>Quality Gate Enforcement Strategy</strong>:
-- <strong>Fail Fast</strong>: Pipeline stops at first critical issue
-- <strong>Defense in Depth</strong>: Multiple gates catch different issue types
-- <strong>Automated</strong>: No manual approvals required for clean builds
-- <strong>Override Path</strong>: Documented exception process with expiration
-- <strong>Metrics</strong>: All gate failures tracked in DORA change failure rate</p>
+<p><strong>Quality Gate Enforcement Strategy</strong>:</p>
+<ul>
+<li><strong>Fail Fast</strong>: Pipeline stops at first critical issue</li>
+<li><strong>Defense in Depth</strong>: Multiple gates catch different issue types</li>
+<li><strong>Automated</strong>: No manual approvals required for clean builds</li>
+<li><strong>Override Path</strong>: Documented exception process with expiration</li>
+<li><strong>Metrics</strong>: All gate failures tracked in DORA change failure rate</li>
+</ul>
 <p>For complete details on configuring and managing quality gates, see:
 <a href="../how-to/security/quality-gates-configuration.md">Quality Gates Configuration Guide</a></p>
 <h3 id="sonarqube-quality-gate-integration">SonarQube Quality Gate Integration</h3>
@@ -7252,13 +7298,15 @@ Deploy to Kubernetes
 │                                               └──────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p><strong>Quality Gate Conditions</strong>:
-- 0 new bugs
-- 0 new vulnerabilities
-- 100% security hotspots reviewed
-- ≥80% new code coverage
-- ≤3% duplicated lines
-- Maintainability rating A</p>
+<p><strong>Quality Gate Conditions</strong>:</p>
+<ul>
+<li>0 new bugs</li>
+<li>0 new vulnerabilities</li>
+<li>100% security hotspots reviewed</li>
+<li>≥80% new code coverage</li>
+<li>≤3% duplicated lines</li>
+<li>Maintainability rating A</li>
+</ul>
 <p><strong>Configuration and Overrides</strong>:</p>
 <p>The platform enforces quality gates at multiple stages with defined severity thresholds:</p>
 <ul>
@@ -7267,13 +7315,17 @@ Deploy to Kubernetes
 <li><strong>Gitleaks Secrets Scan</strong>: Zero tolerance for hardcoded secrets</li>
 <li><strong>Dependency Checks</strong>: CVSS ≥7 vulnerabilities require remediation</li>
 </ul>
-<p>For detailed configuration, customization, and override processes, see:
-- <a href="../how-to/security/quality-gates-configuration.md">Quality Gates Configuration Guide</a>
-- <a href="../adr/ADR-014%20sonarqube%20quality%20gates.md">ADR-014: SonarQube Quality Gates</a></p>
-<p><strong>Override Process</strong>: All quality gate exceptions require documented justification and approval from:
-- Security Team (required)
-- Technical Lead (required)
-- Product Owner (for production deployments)</p>
+<p>For detailed configuration, customization, and override processes, see:</p>
+<ul>
+<li><a href="../how-to/security/quality-gates-configuration.md">Quality Gates Configuration Guide</a></li>
+<li><a href="../adr/ADR-014%20sonarqube%20quality%20gates.md">ADR-014: SonarQube Quality Gates</a></li>
+</ul>
+<p><strong>Override Process</strong>: All quality gate exceptions require documented justification and approval from:</p>
+<ul>
+<li>Security Team (required)</li>
+<li>Technical Lead (required)</li>
+<li>Product Owner (for production deployments)</li>
+</ul>
 <h3 id="secrets-management">Secrets Management</h3>
 <p><strong>Architecture</strong>:</p>
 <p>The Fawkes platform implements a hybrid secrets management approach using
@@ -7333,7 +7385,7 @@ for cloud provider integration.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Secret Rotation Flow</strong>:
+<p><strong>Secret Rotation Flow</strong>:</p>
 <div class="highlight"><pre><span></span><code>Secret Updated in Vault
      │
      ▼
@@ -7344,31 +7396,37 @@ Agent Updates /vault/secrets/* Files
      │
      ▼
 Application Reads New Secret (no pod restart)
-</code></pre></div></p>
-<p><strong>Best Practices</strong>:
-- No secrets in Git repositories
-- Secrets encrypted at rest and in transit
-- Automatic rotation via Vault Agent
-- Audit logging for all secret access
-- Least privilege access via Vault policies
-- Service account authentication (no static tokens)</p>
+</code></pre></div>
+<p><strong>Best Practices</strong>:</p>
+<ul>
+<li>No secrets in Git repositories</li>
+<li>Secrets encrypted at rest and in transit</li>
+<li>Automatic rotation via Vault Agent</li>
+<li>Audit logging for all secret access</li>
+<li>Least privilege access via Vault policies</li>
+<li>Service account authentication (no static tokens)</li>
+</ul>
 <hr />
 <h2 id="multi-cloud-strategy">Multi-Cloud Strategy</h2>
 <h3 id="current-state-mvp-aws-focus">Current State (MVP): AWS Focus</h3>
-<p><strong>Rationale</strong>:
-- Fastest time to MVP
-- Most mature Terraform provider
-- Largest market share
-- Extensive documentation and community</p>
-<p><strong>AWS Components</strong>:
-- EKS (Kubernetes)
-- VPC, subnets, security groups
-- IAM roles and policies
-- ECR (container registry)
-- RDS (databases)
-- ElastiCache (caching)
-- S3 (storage)
-- Route 53 (DNS)</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Fastest time to MVP</li>
+<li>Most mature Terraform provider</li>
+<li>Largest market share</li>
+<li>Extensive documentation and community</li>
+</ul>
+<p><strong>AWS Components</strong>:</p>
+<ul>
+<li>EKS (Kubernetes)</li>
+<li>VPC, subnets, security groups</li>
+<li>IAM roles and policies</li>
+<li>ECR (container registry)</li>
+<li>RDS (databases)</li>
+<li>ElastiCache (caching)</li>
+<li>S3 (storage)</li>
+<li>Route 53 (DNS)</li>
+</ul>
 <h3 id="target-state-multi-cloud-abstraction">Target State: Multi-Cloud Abstraction</h3>
 <p><strong>Approach</strong>: Crossplane for cloud-agnostic infrastructure</p>
 <div class="highlight"><pre><span></span><code>Developer requests database
@@ -7393,11 +7451,13 @@ Connection details stored in Kubernetes Secret
     ▼
 Application consumes database
 </code></pre></div>
-<p><strong>Benefits</strong>:
-- Consistent API across clouds
-- GitOps-driven infrastructure
-- Self-service for developers
-- Reduced cloud vendor lock-in</p>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>Consistent API across clouds</li>
+<li>GitOps-driven infrastructure</li>
+<li>Self-service for developers</li>
+<li>Reduced cloud vendor lock-in</li>
+</ul>
 <h3 id="multi-cloud-architecture">Multi-Cloud Architecture</h3>
 <div class="highlight"><pre><span></span><code>                    Fawkes Control Plane
                             │
@@ -7412,22 +7472,28 @@ Application consumes database
         │                   │                   │
     App Workloads       App Workloads       App Workloads
 </code></pre></div>
-<p><strong>Cluster Federation</strong>:
-- ArgoCD manages multiple clusters
-- Centralized observability (Prometheus, Grafana)
-- Unified developer portal (Backstage)
-- Cross-cluster service discovery</p>
+<p><strong>Cluster Federation</strong>:</p>
+<ul>
+<li>ArgoCD manages multiple clusters</li>
+<li>Centralized observability (Prometheus, Grafana)</li>
+<li>Unified developer portal (Backstage)</li>
+<li>Cross-cluster service discovery</li>
+</ul>
 <hr />
 <h2 id="scalability-performance">Scalability &amp; Performance</h2>
 <h3 id="horizontal-scaling">Horizontal Scaling</h3>
-<p><strong>Kubernetes Cluster</strong>:
-- Node autoscaling (3-100 nodes)
-- Pod autoscaling (HPA based on CPU/memory/custom metrics)
-- Cluster API for cluster lifecycle management</p>
-<p><strong>Platform Components</strong>:
-- Jenkins: Dynamic agents (spin up/down as needed)
-- Prometheus: Sharding and federation for large environments
-- Grafana: Read replicas for dashboard queries</p>
+<p><strong>Kubernetes Cluster</strong>:</p>
+<ul>
+<li>Node autoscaling (3-100 nodes)</li>
+<li>Pod autoscaling (HPA based on CPU/memory/custom metrics)</li>
+<li>Cluster API for cluster lifecycle management</li>
+</ul>
+<p><strong>Platform Components</strong>:</p>
+<ul>
+<li>Jenkins: Dynamic agents (spin up/down as needed)</li>
+<li>Prometheus: Sharding and federation for large environments</li>
+<li>Grafana: Read replicas for dashboard queries</li>
+</ul>
 <h3 id="performance-targets">Performance Targets</h3>
 <table>
 <thead>
@@ -7476,27 +7542,33 @@ Application consumes database
 </tbody>
 </table>
 <h3 id="resource-allocation-per-cluster">Resource Allocation (per cluster)</h3>
-<p><strong>MVP Scale</strong> (5 teams, 25 services):
-- Kubernetes nodes: 3-5 (16GB RAM, 4 vCPU each)
-- Total cluster capacity: ~48-80GB RAM, 12-20 vCPU
-- Platform overhead: ~11GB RAM, 5.5 vCPU
-- Application capacity: ~37-69GB RAM, 6.5-14.5 vCPU
-- Resource utilization target: &lt;70% CPU/Memory average</p>
-<p><strong>Platform Component Resources (Optimized for &lt;70% utilization):</strong>
-- Backstage (2 replicas): 600m CPU request, 2 CPU limit, 768Mi-2Gi memory
-- Jenkins Controller: 500m-1.5 CPU, 1-2Gi memory
-- Prometheus: 300m-800m CPU, 768Mi-1.5Gi memory
-- PostgreSQL clusters (3 pods each): 900m-3 CPU, 1.15-3Gi memory per cluster
-- Grafana: 80m-150m CPU, 200-400Mi memory
-- OpenTelemetry Collector (DaemonSet): 150m-800m CPU, 384-768Mi memory per node
-- OpenSearch: 400m-800m CPU, 1.5Gi memory
-- Vault (3 pods): 600m-2.4 CPU, 600Mi-1.2Gi memory
-- Kyverno (7 pods total): 560m-2.8 CPU, 700Mi-1.4Gi memory</p>
-<p><strong>Production Scale</strong> (20 teams, 200 services):
-- Kubernetes nodes: 10-20 (32GB RAM, 8 vCPU each)
-- Total cluster capacity: ~320-640GB RAM, 80-160 vCPU
-- Platform overhead: ~50GB RAM, 25 vCPU
-- Application capacity: ~270-590GB RAM, 55-135 vCPU</p>
+<p><strong>MVP Scale</strong> (5 teams, 25 services):</p>
+<ul>
+<li>Kubernetes nodes: 3-5 (16GB RAM, 4 vCPU each)</li>
+<li>Total cluster capacity: ~48-80GB RAM, 12-20 vCPU</li>
+<li>Platform overhead: ~11GB RAM, 5.5 vCPU</li>
+<li>Application capacity: ~37-69GB RAM, 6.5-14.5 vCPU</li>
+<li>Resource utilization target: &lt;70% CPU/Memory average</li>
+</ul>
+<p><strong>Platform Component Resources (Optimized for &lt;70% utilization):</strong></p>
+<ul>
+<li>Backstage (2 replicas): 600m CPU request, 2 CPU limit, 768Mi-2Gi memory</li>
+<li>Jenkins Controller: 500m-1.5 CPU, 1-2Gi memory</li>
+<li>Prometheus: 300m-800m CPU, 768Mi-1.5Gi memory</li>
+<li>PostgreSQL clusters (3 pods each): 900m-3 CPU, 1.15-3Gi memory per cluster</li>
+<li>Grafana: 80m-150m CPU, 200-400Mi memory</li>
+<li>OpenTelemetry Collector (DaemonSet): 150m-800m CPU, 384-768Mi memory per node</li>
+<li>OpenSearch: 400m-800m CPU, 1.5Gi memory</li>
+<li>Vault (3 pods): 600m-2.4 CPU, 600Mi-1.2Gi memory</li>
+<li>Kyverno (7 pods total): 560m-2.8 CPU, 700Mi-1.4Gi memory</li>
+</ul>
+<p><strong>Production Scale</strong> (20 teams, 200 services):</p>
+<ul>
+<li>Kubernetes nodes: 10-20 (32GB RAM, 8 vCPU each)</li>
+<li>Total cluster capacity: ~320-640GB RAM, 80-160 vCPU</li>
+<li>Platform overhead: ~50GB RAM, 25 vCPU</li>
+<li>Application capacity: ~270-590GB RAM, 55-135 vCPU</li>
+</ul>
 <h3 id="caching-strategy">Caching Strategy</h3>
 <ul>
 <li><strong>Backstage</strong>: Redis for session and catalog caching</li>
@@ -7736,41 +7808,57 @@ Application consumes database
 <hr />
 <h2 id="future-architecture">Future Architecture</h2>
 <h3 id="6-month-roadmap">6-Month Roadmap</h3>
-<p><strong>Multi-Cloud Expansion</strong>:
-- Azure support via Terraform
-- GCP support via Terraform
-- Crossplane implementation for cloud abstraction</p>
-<p><strong>Advanced Security</strong>:
-- Service mesh (Linkerd) for mTLS
-- Runtime security (Falco)
-- Policy-as-code enforcement (expanded Kyverno policies)
-- SLSA compliance</p>
-<p><strong>Enhanced Observability</strong>:
-- Distributed tracing adoption (100% of services)
-- Cost visibility (OpenCost integration)
-- SLO tracking and error budgets</p>
-<p><strong>Dojo Expansion</strong>:
-- 10+ learning modules
-- Hands-on labs with live platform
-- Certification integration complete</p>
+<p><strong>Multi-Cloud Expansion</strong>:</p>
+<ul>
+<li>Azure support via Terraform</li>
+<li>GCP support via Terraform</li>
+<li>Crossplane implementation for cloud abstraction</li>
+</ul>
+<p><strong>Advanced Security</strong>:</p>
+<ul>
+<li>Service mesh (Linkerd) for mTLS</li>
+<li>Runtime security (Falco)</li>
+<li>Policy-as-code enforcement (expanded Kyverno policies)</li>
+<li>SLSA compliance</li>
+</ul>
+<p><strong>Enhanced Observability</strong>:</p>
+<ul>
+<li>Distributed tracing adoption (100% of services)</li>
+<li>Cost visibility (OpenCost integration)</li>
+<li>SLO tracking and error budgets</li>
+</ul>
+<p><strong>Dojo Expansion</strong>:</p>
+<ul>
+<li>10+ learning modules</li>
+<li>Hands-on labs with live platform</li>
+<li>Certification integration complete</li>
+</ul>
 <h3 id="12-month-vision">12-Month Vision</h3>
-<p><strong>Platform Maturity</strong>:
-- CNCF Sandbox/Incubating project
-- 50+ production deployments
-- Enterprise-grade stability (99.9% uptime)</p>
-<p><strong>Advanced Features</strong>:
-- Multi-region deployments
-- Disaster recovery automation
-- Blue-green cluster upgrades
-- Chaos engineering integration</p>
-<p><strong>Ecosystem</strong>:
-- 20+ community plugins
-- Commercial support partnerships
-- Training and certification program</p>
-<p><strong>Research &amp; Development</strong>:
-- AI-powered platform insights
-- Predictive failure detection
-- Automated performance optimization</p>
+<p><strong>Platform Maturity</strong>:</p>
+<ul>
+<li>CNCF Sandbox/Incubating project</li>
+<li>50+ production deployments</li>
+<li>Enterprise-grade stability (99.9% uptime)</li>
+</ul>
+<p><strong>Advanced Features</strong>:</p>
+<ul>
+<li>Multi-region deployments</li>
+<li>Disaster recovery automation</li>
+<li>Blue-green cluster upgrades</li>
+<li>Chaos engineering integration</li>
+</ul>
+<p><strong>Ecosystem</strong>:</p>
+<ul>
+<li>20+ community plugins</li>
+<li>Commercial support partnerships</li>
+<li>Training and certification program</li>
+</ul>
+<p><strong>Research &amp; Development</strong>:</p>
+<ul>
+<li>AI-powered platform insights</li>
+<li>Predictive failure detection</li>
+<li>Automated performance optimization</li>
+</ul>
 <hr />
 <h2 id="architectural-decision-records-adrs">Architectural Decision Records (ADRs)</h2>
 <p>Major architectural decisions are documented in ADRs stored in <code>/docs/adr/</code>:</p>
@@ -7874,11 +7962,13 @@ Application consumes database
 ✅ Remains extensible and customizable</p>
 <p>The architecture will evolve based on community feedback, adoption patterns, and emerging best practices in platform engineering.</p>
 <hr />
-<p><strong>Next Steps</strong>:
-1. Review and approve this architecture
-2. Create detailed ADRs for key decisions
-3. Begin MVP implementation following this blueprint
-4. Iterate based on early adopter feedback</p>
+<p><strong>Next Steps</strong>:</p>
+<ol>
+<li>Review and approve this architecture</li>
+<li>Create detailed ADRs for key decisions</li>
+<li>Begin MVP implementation following this blueprint</li>
+<li>Iterate based on early adopter feedback</li>
+</ol>
 <p><strong>Questions or Feedback</strong>: Open a GitHub Discussion or contact the architecture team</p>
 <hr />
 <p><strong>Document Maintainers</strong>: Platform Architecture Team

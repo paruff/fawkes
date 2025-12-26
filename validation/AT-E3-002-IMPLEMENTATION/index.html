@@ -4853,10 +4853,12 @@ kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class=
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>space-metrics
 kubectl<span class="w"> </span>get<span class="w"> </span>service<span class="w"> </span>space-metrics<span class="w"> </span>-n<span class="w"> </span>fawkes-local
 </code></pre></div>
-<p><strong>Expected Result</strong>:
-- Deployment exists with 2 ready replicas
-- Pods are in Running state
-- Service exists and is accessible</p>
+<p><strong>Expected Result</strong>:</p>
+<ul>
+<li>Deployment exists with 2 ready replicas</li>
+<li>Pods are in Running state</li>
+<li>Service exists and is accessible</li>
+</ul>
 <h3 id="2-api-endpoint-validation">2. API Endpoint Validation</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Port forward to service</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>svc/space-metrics<span class="w"> </span><span class="m">8000</span>:8000
@@ -4867,9 +4869,11 @@ curl<span class="w"> </span>http://localhost:8000/health
 <span class="c1"># Test SPACE metrics endpoint</span>
 curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space
 </code></pre></div>
-<p><strong>Expected Result</strong>:
-- Health endpoint returns <code>{"status": "healthy"}</code>
-- SPACE metrics endpoint returns data for all 5 dimensions</p>
+<p><strong>Expected Result</strong>:</p>
+<ul>
+<li>Health endpoint returns <code>{"status": "healthy"}</code></li>
+<li>SPACE metrics endpoint returns data for all 5 dimensions</li>
+</ul>
 <h3 id="3-five-space-dimensions-validation">3. Five SPACE Dimensions Validation</h3>
 <p>Test each dimension endpoint:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Satisfaction</span>
@@ -4917,10 +4921,12 @@ curl<span class="w"> </span>http://localhost:8000/metrics
 <span class="c1"># Verify ServiceMonitor</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitor<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>space-metrics
 </code></pre></div>
-<p><strong>Expected Result</strong>:
-- Metrics endpoint exposes SPACE metrics in Prometheus format
-- ServiceMonitor exists and is configured correctly
-- Key metrics present: <code>space_devex_health_score</code>, <code>space_nps_score</code>, etc.</p>
+<p><strong>Expected Result</strong>:</p>
+<ul>
+<li>Metrics endpoint exposes SPACE metrics in Prometheus format</li>
+<li>ServiceMonitor exists and is configured correctly</li>
+<li>Key metrics present: <code>space_devex_health_score</code>, <code>space_nps_score</code>, etc.</li>
+</ul>
 <h3 id="7-privacy-compliance-validation">7. Privacy Compliance Validation</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check aggregation threshold</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>space-metrics-config<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-o<span class="w"> </span>yaml
@@ -4928,10 +4934,12 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <span class="c1"># Verify no individual data in API response</span>
 curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;user_id\|username\|email&quot;</span>
 </code></pre></div>
-<p><strong>Expected Result</strong>:
-- Aggregation threshold is set to 5 or higher
-- API responses do not contain individual developer identifiers
-- Metrics are aggregated at team level</p>
+<p><strong>Expected Result</strong>:</p>
+<ul>
+<li>Aggregation threshold is set to 5 or higher</li>
+<li>API responses do not contain individual developer identifiers</li>
+<li>Metrics are aggregated at team level</li>
+</ul>
 <h3 id="8-database-connection-validation">8. Database Connection Validation</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check secret exists</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>space-metrics-db-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes-local
@@ -4939,9 +4947,11 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 <span class="c1"># Check pod logs for database errors</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>space-metrics<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;database\|error&quot;</span>
 </code></pre></div>
-<p><strong>Expected Result</strong>:
-- Database credentials secret exists
-- No database connection errors in logs</p>
+<p><strong>Expected Result</strong>:</p>
+<ul>
+<li>Database credentials secret exists</li>
+<li>No database connection errors in logs</li>
+</ul>
 <h3 id="9-devex-survey-automation-service-validation">9. DevEx Survey Automation Service Validation</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check deployment exists</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>devex-survey-automation<span class="w"> </span>-n<span class="w"> </span>fawkes-local
@@ -4953,11 +4963,13 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>svc/devex-survey-automation<span class="w"> </span><span class="m">8080</span>:8000
 curl<span class="w"> </span>http://localhost:8080/health
 </code></pre></div>
-<p><strong>Expected Result</strong>:
-- Deployment exists with at least 1 ready replica
-- Pods are in Running state
-- Service health endpoint responds successfully
-- Automated survey CronJobs are scheduled</p>
+<p><strong>Expected Result</strong>:</p>
+<ul>
+<li>Deployment exists with at least 1 ready replica</li>
+<li>Pods are in Running state</li>
+<li>Service health endpoint responds successfully</li>
+<li>Automated survey CronJobs are scheduled</li>
+</ul>
 <h3 id="10-cognitive-load-assessment-tool-nasa-tlx-validation">10. Cognitive Load Assessment Tool (NASA-TLX) Validation</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check if NASA-TLX endpoints are accessible</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>svc/devex-survey-automation<span class="w"> </span><span class="m">8080</span>:8000
@@ -4968,17 +4980,21 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/assessment/nasa-tlx
 <span class="c1"># Verify validation script exists</span>
 ls<span class="w"> </span>-la<span class="w"> </span>services/devex-survey-automation/scripts/validate-nasa-tlx.py
 </code></pre></div>
-<p><strong>Expected Result</strong>:
-- NASA-TLX assessment endpoint is accessible
-- Validation script exists
-- Tool is integrated with DevEx Survey Automation service</p>
+<p><strong>Expected Result</strong>:</p>
+<ul>
+<li>NASA-TLX assessment endpoint is accessible</li>
+<li>Validation script exists</li>
+<li>Tool is integrated with DevEx Survey Automation service</li>
+</ul>
 <h3 id="11-devex-health-score-validation">11. DevEx Health Score Validation</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get health score</span>
 curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space/health
 </code></pre></div>
-<p><strong>Expected Result</strong>:
-- Health score returned (0-100)
-- Status indicator included (excellent/good/needs_improvement)</p>
+<p><strong>Expected Result</strong>:</p>
+<ul>
+<li>Health score returned (0-100)</li>
+<li>Status indicator included (excellent/good/needs_improvement)</li>
+</ul>
 <h2 id="automated-test-execution">Automated Test Execution</h2>
 <p>Run the automated validation script:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Using make target</span>
@@ -4987,17 +5003,19 @@ make<span class="w"> </span>validate-at-e3-002
 <span class="c1"># Or directly</span>
 ./scripts/validate-at-e3-002.sh<span class="w"> </span>fawkes-local
 </code></pre></div>
-<p>The script validates:
-1. Service deployment and readiness
-2. API endpoints accessibility
-3. All 5 SPACE dimensions
-4. Survey integration
-5. Friction logging
-6. DevEx Survey Automation service
-7. Cognitive Load Assessment (NASA-TLX)
-8. Prometheus metrics
-9. Privacy compliance
-10. Database connectivity</p>
+<p>The script validates:</p>
+<ol>
+<li>Service deployment and readiness</li>
+<li>API endpoints accessibility</li>
+<li>All 5 SPACE dimensions</li>
+<li>Survey integration</li>
+<li>Friction logging</li>
+<li>DevEx Survey Automation service</li>
+<li>Cognitive Load Assessment (NASA-TLX)</li>
+<li>Prometheus metrics</li>
+<li>Privacy compliance</li>
+<li>Database connectivity</li>
+</ol>
 <h2 id="success-criteria">Success Criteria</h2>
 <p>All of the following must pass:</p>
 <ol>
@@ -5062,11 +5080,13 @@ make<span class="w"> </span>validate-at-e3-002
 <li>Privacy compliance is enforced at the application level via aggregation threshold</li>
 </ul>
 <h2 id="maintenance">Maintenance</h2>
-<p>This test should be run:
-- After initial deployment
-- After any changes to the SPACE metrics service
-- Before releases to production
-- As part of CI/CD pipeline validation</p>
+<p>This test should be run:</p>
+<ul>
+<li>After initial deployment</li>
+<li>After any changes to the SPACE metrics service</li>
+<li>Before releases to production</li>
+<li>As part of CI/CD pipeline validation</li>
+</ul>
 
 
 

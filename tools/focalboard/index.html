@@ -5458,45 +5458,41 @@
 <h3 id="common-issues">Common Issues</h3>
 <h4 id="service-not-accessible">Service Not Accessible</h4>
 <ol>
-<li>
-<p>Check if the pod is running:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>focalboard
-</code></pre></div></p>
-</li>
-<li>
-<p>Check pod logs:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>focalboard
-</code></pre></div></p>
-</li>
-<li>
-<p>Verify ingress configuration:
+<li>Check if the pod is running:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>focalboard
+</code></pre></div>
+<ol>
+<li>Check pod logs:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>focalboard
+</code></pre></div>
+<ol>
+<li>Verify ingress configuration:
    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>focalboard
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <h4 id="database-connection-failed">Database Connection Failed</h4>
 <ol>
-<li>
-<p>Verify PostgreSQL cluster is healthy:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-focalboard-dev
-</code></pre></div></p>
-</li>
-<li>
-<p>Check database credentials:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-focalboard-credentials
-</code></pre></div></p>
-</li>
-<li>
-<p>Test database connectivity from the pod:
+<li>Verify PostgreSQL cluster is healthy:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-focalboard-dev
+</code></pre></div>
+<ol>
+<li>Check database credentials:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-focalboard-credentials
+</code></pre></div>
+<ol>
+<li>Test database connectivity from the pod:
    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-it<span class="w"> </span>deployment/focalboard<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>psql<span class="w"> </span><span class="s2">&quot;postgres://focalboard_user@db-focalboard-dev-rw:5432/focalboard?sslmode=require&quot;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <h3 id="pod-restart-loop">Pod Restart Loop</h3>
-<p>Check for resource constraints:
+<p>Check for resource constraints:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>focalboard
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="related-resources">Related Resources</h2>
 <ul>
 <li><a href="https://github.com/mattermost/focalboard">Focalboard GitHub</a></li>

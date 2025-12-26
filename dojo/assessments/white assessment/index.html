@@ -4851,15 +4851,19 @@
 <strong>Format</strong>: 30 multiple choice questions + 3 hands-on labs</p>
 <hr />
 <h2 id="assessment-overview">📋 Assessment Overview</h2>
-<p>This assessment validates your understanding of:
-- Internal developer platform fundamentals
-- DORA metrics and their significance
-- GitOps principles and workflows
-- Basic deployment operations</p>
-<p><strong>Requirements</strong>:
-- Completed Modules 1-4
-- Access to Fawkes lab environment
-- Basic command line proficiency</p>
+<p>This assessment validates your understanding of:</p>
+<ul>
+<li>Internal developer platform fundamentals</li>
+<li>DORA metrics and their significance</li>
+<li>GitOps principles and workflows</li>
+<li>Basic deployment operations</li>
+</ul>
+<p><strong>Requirements</strong>:</p>
+<ul>
+<li>Completed Modules 1-4</li>
+<li>Access to Fawkes lab environment</li>
+<li>Basic command line proficiency</li>
+</ul>
 <hr />
 <h2 id="part-1-written-exam-30-questions">Part 1: Written Exam (30 Questions)</h2>
 <h3 id="section-a-platform-fundamentals-10-questions">Section A: Platform Fundamentals (10 questions)</h3>
@@ -5198,67 +5202,83 @@ D) Push is for production, pull is for staging</p>
 <h2 id="part-2-hands-on-labs-70-minutes">Part 2: Hands-On Labs (70 minutes)</h2>
 <h3 id="lab-1-deploy-your-first-application-20-minutes">Lab 1: Deploy Your First Application (20 minutes)</h3>
 <p><strong>Objective</strong>: Deploy a web application to Kubernetes using GitOps workflow.</p>
-<p><strong>Tasks</strong>:
-1. Fork the sample application repository
-2. Modify the deployment manifest (change replica count to 3)
-3. Commit and push changes to Git
-4. Verify ArgoCD detects and applies changes
-5. Access the application via its service URL</p>
-<p><strong>Acceptance Criteria</strong>:
-- ✅ Application running with 3 replicas
-- ✅ All pods in "Running" state
-- ✅ Application accessible via browser
-- ✅ ArgoCD shows "Synced" and "Healthy" status</p>
-<p><strong>Validation Command</strong>:
+<p><strong>Tasks</strong>:</p>
+<ol>
+<li>Fork the sample application repository</li>
+<li>Modify the deployment manifest (change replica count to 3)</li>
+<li>Commit and push changes to Git</li>
+<li>Verify ArgoCD detects and applies changes</li>
+<li>Access the application via its service URL</li>
+</ol>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>✅ Application running with 3 replicas</li>
+<li>✅ All pods in "Running" state</li>
+<li>✅ Application accessible via browser</li>
+<li>✅ ArgoCD shows "Synced" and "Healthy" status</li>
+</ul>
+<p><strong>Validation Command</strong>:</p>
 <div class="highlight"><pre><span></span><code>fawkes<span class="w"> </span>assessment<span class="w"> </span>validate<span class="w"> </span>--lab<span class="w"> </span>white-belt-lab1
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="lab-2-deploy-to-multiple-environments-25-minutes">Lab 2: Deploy to Multiple Environments (25 minutes)</h3>
 <p><strong>Objective</strong>: Use Kustomize overlays to deploy the same app to dev and prod environments.</p>
-<p><strong>Tasks</strong>:
-1. Create base configuration (common to all environments)
-2. Create dev overlay (1 replica, dev config)
-3. Create prod overlay (3 replicas, prod config, resource limits)
-4. Deploy both environments via ArgoCD
-5. Verify different configurations in each environment</p>
-<p><strong>Acceptance Criteria</strong>:
-- ✅ Dev environment: 1 replica, no resource limits
-- ✅ Prod environment: 3 replicas, resource limits configured
-- ✅ Both environments use same base image
-- ✅ ArgoCD managing both environments</p>
-<p><strong>Validation Command</strong>:
+<p><strong>Tasks</strong>:</p>
+<ol>
+<li>Create base configuration (common to all environments)</li>
+<li>Create dev overlay (1 replica, dev config)</li>
+<li>Create prod overlay (3 replicas, prod config, resource limits)</li>
+<li>Deploy both environments via ArgoCD</li>
+<li>Verify different configurations in each environment</li>
+</ol>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>✅ Dev environment: 1 replica, no resource limits</li>
+<li>✅ Prod environment: 3 replicas, resource limits configured</li>
+<li>✅ Both environments use same base image</li>
+<li>✅ ArgoCD managing both environments</li>
+</ul>
+<p><strong>Validation Command</strong>:</p>
 <div class="highlight"><pre><span></span><code>fawkes<span class="w"> </span>assessment<span class="w"> </span>validate<span class="w"> </span>--lab<span class="w"> </span>white-belt-lab2
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="lab-3-monitor-dora-metrics-25-minutes">Lab 3: Monitor DORA Metrics (25 minutes)</h3>
 <p><strong>Objective</strong>: Set up DORA metrics collection and dashboard for your application.</p>
-<p><strong>Tasks</strong>:
-1. Configure deployment tracking (Prometheus annotations)
-2. Deploy the DORA metrics exporter
-3. Create Grafana dashboard showing:
-   - Deployment frequency (last 7 days)
-   - Average lead time
-   - Recent deployments timeline
-4. Perform 3 test deployments and observe metrics</p>
-<p><strong>Acceptance Criteria</strong>:
-- ✅ Deployment frequency metric showing 3+ deployments
-- ✅ Lead time calculated for each deployment
-- ✅ Dashboard displays real-time metrics
-- ✅ Deployment success/failure status tracked</p>
-<p><strong>Validation Command</strong>:
+<p><strong>Tasks</strong>:</p>
+<ol>
+<li>Configure deployment tracking (Prometheus annotations)</li>
+<li>Deploy the DORA metrics exporter</li>
+<li>Create Grafana dashboard showing:</li>
+<li>Deployment frequency (last 7 days)</li>
+<li>Average lead time</li>
+<li>Recent deployments timeline</li>
+<li>Perform 3 test deployments and observe metrics</li>
+</ol>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>✅ Deployment frequency metric showing 3+ deployments</li>
+<li>✅ Lead time calculated for each deployment</li>
+<li>✅ Dashboard displays real-time metrics</li>
+<li>✅ Deployment success/failure status tracked</li>
+</ul>
+<p><strong>Validation Command</strong>:</p>
 <div class="highlight"><pre><span></span><code>fawkes<span class="w"> </span>assessment<span class="w"> </span>validate<span class="w"> </span>--lab<span class="w"> </span>white-belt-lab3
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="submission-grading">Submission &amp; Grading</h2>
 <h3 id="automated-grading">Automated Grading</h3>
-<p>The Fawkes assessment system automatically grades:
-- <strong>Written exam</strong>: Instant results upon submission
-- <strong>Labs</strong>: Validation scripts check cluster state</p>
+<p>The Fawkes assessment system automatically grades:</p>
+<ul>
+<li><strong>Written exam</strong>: Instant results upon submission</li>
+<li><strong>Labs</strong>: Validation scripts check cluster state</li>
+</ul>
 <h3 id="manual-review">Manual Review</h3>
-<p>Platform engineers will review:
-- Code quality in Git commits
-- Documentation in pull requests
-- Dashboard configuration</p>
+<p>Platform engineers will review:</p>
+<ul>
+<li>Code quality in Git commits</li>
+<li>Documentation in pull requests</li>
+<li>Dashboard configuration</li>
+</ul>
 <h3 id="scoring">Scoring</h3>
 <div class="highlight"><pre><span></span><code>Written Exam:  30 questions × 2 points = 60 points
 Lab 1:         10 points
@@ -5272,11 +5292,13 @@ Passing Score: 80 points
 <hr />
 <h2 id="results-certification">Results &amp; Certification</h2>
 <h3 id="passing-80-points">Passing (≥80 points)</h3>
-<p>You will receive:
-- ✅ <strong>Fawkes Platform Operator</strong> digital certificate
-- 🎖️ Digital badge (add to LinkedIn/resume)
-- 📧 Certificate email with verification link
-- 🚀 Access to Yellow Belt curriculum</p>
+<p>You will receive:</p>
+<ul>
+<li>✅ <strong>Fawkes Platform Operator</strong> digital certificate</li>
+<li>🎖️ Digital badge (add to LinkedIn/resume)</li>
+<li>📧 Certificate email with verification link</li>
+<li>🚀 Access to Yellow Belt curriculum</li>
+</ul>
 <h3 id="not-passing-80-points">Not Passing (&lt;80 points)</h3>
 <ul>
 <li>📊 Detailed score report showing weak areas</li>
@@ -5323,8 +5345,12 @@ fawkes<span class="w"> </span>assessment<span class="w"> </span>schedule<span cl
 </code></pre></div>
 <h3 id="during-the-assessment">During the Assessment</h3>
 <ol>
-<li><strong>Written Exam</strong> (60 minutes)</li>
-<li>30 questions, multiple choice</li>
+<li>
+<p><strong>Written Exam</strong> (60 minutes)</p>
+</li>
+<li>
+<p>30 questions, multiple choice</p>
+</li>
 <li>Can review and change answers</li>
 <li>
 <p>Submit when complete</p>
@@ -5332,7 +5358,9 @@ fawkes<span class="w"> </span>assessment<span class="w"> </span>schedule<span cl
 <li>
 <p><strong>Hands-On Labs</strong> (70 minutes)</p>
 </li>
-<li>Access lab environment via browser</li>
+<li>
+<p>Access lab environment via browser</p>
+</li>
 <li>Complete all 3 labs</li>
 <li>Run validation commands</li>
 <li>
@@ -5347,12 +5375,14 @@ fawkes<span class="w"> </span>assessment<span class="w"> </span>schedule<span cl
 </ol>
 <hr />
 <h2 id="good-luck">Good Luck! 🍀</h2>
-<p>Remember:
-- ✅ Read questions carefully
-- ✅ Use the lab environment to test your understanding
-- ✅ Don't rush - you have 2 hours
-- ✅ If stuck, move on and come back later
-- ✅ Validate labs before submitting</p>
+<p>Remember:</p>
+<ul>
+<li>✅ Read questions carefully</li>
+<li>✅ Use the lab environment to test your understanding</li>
+<li>✅ Don't rush - you have 2 hours</li>
+<li>✅ If stuck, move on and come back later</li>
+<li>✅ Validate labs before submitting</li>
+</ul>
 <p><strong>Questions?</strong> Contact #dojo-support on Mattermost</p>
 <hr />
 <p><strong>White Belt Assessment</strong> | Fawkes Dojo | Version 1.0

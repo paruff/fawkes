@@ -5029,23 +5029,27 @@
 <h2 id="authentication-methods">Authentication Methods</h2>
 <h3 id="1-local-authentication-enabled">1. Local Authentication (Enabled)</h3>
 <p>Users can register and log in with email and password.</p>
-<p><strong>Configuration</strong> (in <code>deployment.yaml</code>):
+<p><strong>Configuration</strong> (in <code>deployment.yaml</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_FLAGS</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;enable-registration</span><span class="nv"> </span><span class="s">enable-login-with-password&quot;</span>
-</code></pre></div></p>
-<p><strong>User Registration</strong>:
-- Navigate to https://penpot.fawkes.local
-- Click "Sign Up"
-- Enter email and password
-- Email verification is disabled for development (can be enabled for production)</p>
+</code></pre></div>
+<p><strong>User Registration</strong>:</p>
+<ul>
+<li>Navigate to https://penpot.fawkes.local</li>
+<li>Click "Sign Up"</li>
+<li>Enter email and password</li>
+<li>Email verification is disabled for development (can be enabled for production)</li>
+</ul>
 <h3 id="2-oauth-integration-future">2. OAuth Integration (Future)</h3>
 <p>Planned integration with Backstage OAuth for single sign-on.</p>
-<p><strong>Benefits</strong>:
-- Single sign-on across Fawkes platform
-- Consistent user identity
-- Centralized access management</p>
-<p><strong>Implementation Plan</strong>:
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>Single sign-on across Fawkes platform</li>
+<li>Consistent user identity</li>
+<li>Centralized access management</li>
+</ul>
+<p><strong>Implementation Plan</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Future configuration</span>
 <span class="nt">penpot</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">auth</span><span class="p">:</span>
@@ -5056,10 +5060,10 @@
 <span class="w">        </span><span class="nt">clientSecret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${BACKSTAGE_CLIENT_SECRET}</span>
 <span class="w">        </span><span class="nt">authorizationUrl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://backstage.fawkes.local/oauth/authorize</span>
 <span class="w">        </span><span class="nt">tokenUrl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://backstage.fawkes.local/oauth/token</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="3-ldapsaml-available">3. LDAP/SAML (Available)</h3>
 <p>Penpot supports LDAP and SAML for enterprise authentication.</p>
-<p><strong>Configuration Example</strong>:
+<p><strong>Configuration Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_LDAP_HOST</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ldap.example.com&quot;</span>
@@ -5069,13 +5073,17 @@
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cn=admin,dc=example,dc=com&quot;</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_LDAP_BASE_DN</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ou=users,dc=example,dc=com&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="role-based-access-control">Role-Based Access Control</h2>
 <h3 id="user-roles">User Roles</h3>
 <p>Penpot supports the following roles at the team level:</p>
 <ol>
-<li><strong>Owner</strong></li>
-<li>Full control over team and all projects</li>
+<li>
+<p><strong>Owner</strong></p>
+</li>
+<li>
+<p>Full control over team and all projects</p>
+</li>
 <li>Can add/remove members</li>
 <li>Can manage team settings</li>
 <li>
@@ -5084,7 +5092,9 @@
 <li>
 <p><strong>Admin</strong></p>
 </li>
-<li>Can manage projects and members</li>
+<li>
+<p>Can manage projects and members</p>
+</li>
 <li>Can create/delete projects</li>
 <li>Can invite new members</li>
 <li>
@@ -5093,7 +5103,9 @@
 <li>
 <p><strong>Editor</strong></p>
 </li>
-<li>Can create and edit designs</li>
+<li>
+<p>Can create and edit designs</p>
+</li>
 <li>Can comment on designs</li>
 <li>Can share designs</li>
 <li>
@@ -5134,19 +5146,21 @@
 <h2 id="access-control-configuration">Access Control Configuration</h2>
 <h3 id="initial-setup">Initial Setup</h3>
 <ol>
-<li>
-<p><strong>Create Admin User</strong>:
-   <div class="highlight"><pre><span></span><code><span class="c1"># Access Penpot backend pod</span>
+<li><strong>Create Admin User</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Access Penpot backend pod</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>penpot-backend-xxx<span class="w"> </span>--<span class="w"> </span>bash
 
 <span class="c1"># Create admin user (if not using first-user auto-admin)</span>
 <span class="c1"># This is typically done through the UI on first login</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Create Platform Team</strong>:</p>
 </li>
-<li>Log in as admin</li>
+<li>
+<p>Log in as admin</p>
+</li>
 <li>Click "Teams" → "Create Team"</li>
 <li>Name: "Fawkes Platform"</li>
 <li>
@@ -5201,16 +5215,22 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <li>Set expiration (optional)</li>
 <li>Share link via Mattermost or email</li>
 </ol>
-<p><strong>Security Best Practices</strong>:
-- Use expiring links for external reviews
-- Revoke links after review completion
-- Don't share internal/sensitive designs publicly</p>
+<p><strong>Security Best Practices</strong>:</p>
+<ul>
+<li>Use expiring links for external reviews</li>
+<li>Revoke links after review completion</li>
+<li>Don't share internal/sensitive designs publicly</li>
+</ul>
 <h2 id="integration-with-backstage">Integration with Backstage</h2>
 <h3 id="viewer-access-for-developers">Viewer Access for Developers</h3>
 <p>Developers accessing designs through Backstage should have <strong>Viewer</strong> role:</p>
 <ol>
-<li><strong>Automatic Access</strong> (Future):</li>
-<li>Backstage catalog references Penpot designs</li>
+<li>
+<p><strong>Automatic Access</strong> (Future):</p>
+</li>
+<li>
+<p>Backstage catalog references Penpot designs</p>
+</li>
 <li>
 <p>Developers automatically get viewer access via OAuth</p>
 </li>
@@ -5224,38 +5244,40 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <h3 id="api-access">API Access</h3>
 <p>For automation and component sync:</p>
 <ol>
-<li>
-<p><strong>Create Service Account</strong>:
-   <div class="highlight"><pre><span></span><code><span class="c1"># API tokens are per-user in Penpot</span>
+<li><strong>Create Service Account</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># API tokens are per-user in Penpot</span>
 <span class="c1"># Create a dedicated &quot;service&quot; user for automation</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Generate API Token</strong>:</p>
 </li>
-<li>Log in as service user</li>
+<li>
+<p>Log in as service user</p>
+</li>
 <li>Navigate to Profile → API Tokens</li>
 <li>
 <p>Create new token with read-only access</p>
 </li>
 <li>
-<p><strong>Store Token Securely</strong>:
-   <div class="highlight"><pre><span></span><code><span class="c1"># Create Kubernetes secret</span>
+<p><strong>Store Token Securely</strong>:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create Kubernetes secret</span>
 kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>penpot-api-token<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">token</span><span class="o">=</span><span class="s1">&#39;YOUR_TOKEN_HERE&#39;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Use in Sync Jobs</strong>:
+</code></pre></div>
+<ol>
+<li><strong>Use in Sync Jobs</strong>:
    <div class="highlight"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_API_TOKEN</span>
 <span class="w">    </span><span class="nt">valueFrom</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">secretKeyRef</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">penpot-api-token</span>
 <span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <h2 id="security-best-practices">Security Best Practices</h2>
 <h3 id="password-policy">Password Policy</h3>
@@ -5275,10 +5297,12 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <span class="w">  </span><span class="c1"># Sessions expire after 7 days of inactivity (Penpot default)</span>
 </code></pre></div>
 <h3 id="rate-limiting">Rate Limiting</h3>
-<p>Penpot includes built-in rate limiting:
-- API requests: 100 requests/minute per user
-- Login attempts: 5 failed attempts trigger 15-minute lockout
-- Export requests: 10 exports/minute per user</p>
+<p>Penpot includes built-in rate limiting:</p>
+<ul>
+<li>API requests: 100 requests/minute per user</li>
+<li>Login attempts: 5 failed attempts trigger 15-minute lockout</li>
+<li>Export requests: 10 exports/minute per user</li>
+</ul>
 <h3 id="audit-logging">Audit Logging</h3>
 <p>Enable audit logging for compliance:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
@@ -5290,9 +5314,9 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <span class="w">  </span><span class="c1"># - File modifications</span>
 <span class="w">  </span><span class="c1"># - Permission changes</span>
 </code></pre></div>
-<p>Access audit logs:
+<p>Access audit logs:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>penpot-backend-xxx<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;audit&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="monitoring-and-alerts">Monitoring and Alerts</h2>
 <h3 id="user-activity-monitoring">User Activity Monitoring</h3>
 <p>Track user activity via Prometheus metrics:</p>
@@ -5333,35 +5357,41 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 </code></pre></div>
 <h2 id="compliance">Compliance</h2>
 <h3 id="data-privacy">Data Privacy</h3>
-<p>Penpot stores the following user data:
-- Email addresses
-- Hashed passwords (bcrypt)
-- Design files and assets
-- Activity logs</p>
-<p><strong>GDPR Compliance</strong>:
-- Users can request data export
-- Users can request account deletion
-- All data is stored within cluster (no external cloud)</p>
+<p>Penpot stores the following user data:</p>
+<ul>
+<li>Email addresses</li>
+<li>Hashed passwords (bcrypt)</li>
+<li>Design files and assets</li>
+<li>Activity logs</li>
+</ul>
+<p><strong>GDPR Compliance</strong>:</p>
+<ul>
+<li>Users can request data export</li>
+<li>Users can request account deletion</li>
+<li>All data is stored within cluster (no external cloud)</li>
+</ul>
 <h3 id="data-retention">Data Retention</h3>
 <p>Configure retention policies:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># In deployment.yaml</span>
 <span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_DATA_RETENTION_DAYS</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;365&quot;</span><span class="w">  </span><span class="c1"># Keep inactive projects for 1 year</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;365&quot;</span><span class="w"> </span><span class="c1"># Keep inactive projects for 1 year</span>
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="user-cannot-log-in">User Cannot Log In</h3>
 <ol>
-<li>
-<p><strong>Check user exists</strong>:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>penpot-backend-xxx<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<li><strong>Check user exists</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>penpot-backend-xxx<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>penpot<span class="w"> </span>-d<span class="w"> </span>penpot<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT email FROM profile;&quot;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Reset password</strong>:</p>
 </li>
-<li>User clicks "Forgot Password" on login page</li>
+<li>
+<p>User clicks "Forgot Password" on login page</p>
+</li>
 <li>
 <p>Or admin resets via database (not recommended)</p>
 </li>
@@ -5375,7 +5405,9 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 </ol>
 <h3 id="user-cannot-access-project">User Cannot Access Project</h3>
 <ol>
-<li><strong>Verify team membership</strong>:</li>
+<li>
+<p><strong>Verify team membership</strong>:</p>
+</li>
 <li>
 <p>Check if user is member of team that owns project</p>
 </li>
@@ -5392,16 +5424,18 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 </ol>
 <h3 id="api-token-not-working">API Token Not Working</h3>
 <ol>
-<li>
-<p><strong>Verify token is valid</strong>:
-   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Token YOUR_TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<li><strong>Verify token is valid</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Token YOUR_TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>https://penpot.fawkes.local/api/rpc/command/get-profile
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Check token expiration</strong>:</p>
 </li>
-<li>Tokens don't expire by default in Penpot</li>
+<li>
+<p>Tokens don't expire by default in Penpot</p>
+</li>
 <li>
 <p>But can be revoked by user</p>
 </li>

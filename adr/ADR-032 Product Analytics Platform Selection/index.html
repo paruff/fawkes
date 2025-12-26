@@ -4843,97 +4843,125 @@
 <strong>Decision Makers</strong>: Platform Team
 <strong>Tags</strong>: analytics, observability, privacy, gdpr</p>
 <h2 id="context">Context</h2>
-<p>The Fawkes platform needs product analytics capabilities to:
-- Track platform usage and feature adoption
-- Understand user behavior and pain points
-- Make data-driven decisions about platform improvements
-- Measure impact of platform changes
-- Support continuous discovery processes</p>
-<p>Key requirements:
-1. <strong>Privacy-first</strong>: GDPR compliant, no unnecessary data collection
-2. <strong>Cookie-less</strong>: No consent banners needed
-3. <strong>Lightweight</strong>: Minimal performance impact
-4. <strong>Self-hosted</strong>: Data sovereignty, no third-party dependencies
-5. <strong>Developer-friendly</strong>: Easy to instrument and use
-6. <strong>Resource-efficient</strong>: Fits within platform resource constraints</p>
+<p>The Fawkes platform needs product analytics capabilities to:</p>
+<ul>
+<li>Track platform usage and feature adoption</li>
+<li>Understand user behavior and pain points</li>
+<li>Make data-driven decisions about platform improvements</li>
+<li>Measure impact of platform changes</li>
+<li>Support continuous discovery processes</li>
+</ul>
+<p>Key requirements:</p>
+<ol>
+<li><strong>Privacy-first</strong>: GDPR compliant, no unnecessary data collection</li>
+<li><strong>Cookie-less</strong>: No consent banners needed</li>
+<li><strong>Lightweight</strong>: Minimal performance impact</li>
+<li><strong>Self-hosted</strong>: Data sovereignty, no third-party dependencies</li>
+<li><strong>Developer-friendly</strong>: Easy to instrument and use</li>
+<li><strong>Resource-efficient</strong>: Fits within platform resource constraints</li>
+</ol>
 <h2 id="decision">Decision</h2>
 <p>We will use <strong>Plausible Analytics</strong> as the product analytics platform.</p>
 <h2 id="options-considered">Options Considered</h2>
 <h3 id="1-plausible-analytics-selected">1. Plausible Analytics ⭐ (Selected)</h3>
-<p><strong>Pros:</strong>
-- ✅ Privacy-first by design, GDPR compliant out-of-box
-- ✅ Cookie-less tracking, no consent banners needed
-- ✅ Lightweight script (&lt; 1KB vs 20KB+ for alternatives)
-- ✅ Simple, clean UI focused on actionable metrics
-- ✅ Open source, self-hosted, no vendor lock-in
-- ✅ Low resource footprint (~500m CPU, ~1Gi RAM total)
-- ✅ Custom events support for feature tracking
-- ✅ Real-time dashboard with live visitor count
-- ✅ Modern tech stack (Elixir, ClickHouse, PostgreSQL)
-- ✅ Active development and community</p>
-<p><strong>Cons:</strong>
-- ⚠️ Less feature-rich than Matomo (intentionally simpler)
-- ⚠️ No built-in A/B testing (can be added separately)
-- ⚠️ Newer project (less mature than Matomo)</p>
-<p><strong>Resource Requirements:</strong>
-- Plausible: 200m CPU, 256Mi RAM (2 replicas)
-- ClickHouse: 200m CPU, 256Mi RAM
-- PostgreSQL: 200m CPU, 256Mi RAM (3 replicas)
-- <strong>Total</strong>: ~800m CPU, ~1Gi RAM</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>✅ Privacy-first by design, GDPR compliant out-of-box</li>
+<li>✅ Cookie-less tracking, no consent banners needed</li>
+<li>✅ Lightweight script (&lt; 1KB vs 20KB+ for alternatives)</li>
+<li>✅ Simple, clean UI focused on actionable metrics</li>
+<li>✅ Open source, self-hosted, no vendor lock-in</li>
+<li>✅ Low resource footprint (~500m CPU, ~1Gi RAM total)</li>
+<li>✅ Custom events support for feature tracking</li>
+<li>✅ Real-time dashboard with live visitor count</li>
+<li>✅ Modern tech stack (Elixir, ClickHouse, PostgreSQL)</li>
+<li>✅ Active development and community</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>⚠️ Less feature-rich than Matomo (intentionally simpler)</li>
+<li>⚠️ No built-in A/B testing (can be added separately)</li>
+<li>⚠️ Newer project (less mature than Matomo)</li>
+</ul>
+<p><strong>Resource Requirements:</strong></p>
+<ul>
+<li>Plausible: 200m CPU, 256Mi RAM (2 replicas)</li>
+<li>ClickHouse: 200m CPU, 256Mi RAM</li>
+<li>PostgreSQL: 200m CPU, 256Mi RAM (3 replicas)</li>
+<li><strong>Total</strong>: ~800m CPU, ~1Gi RAM</li>
+</ul>
 <h3 id="2-matomo-formerly-piwik">2. Matomo (formerly Piwik)</h3>
-<p><strong>Pros:</strong>
-- ✅ Feature-rich with extensive analytics capabilities
-- ✅ Mature project with large community
-- ✅ Self-hosted, GDPR compliant with configuration
-- ✅ Plugin ecosystem for extensions
-- ✅ Built-in A/B testing, heatmaps, session recording</p>
-<p><strong>Cons:</strong>
-- ❌ Heavier tracking script (20KB+ vs 1KB)
-- ❌ More complex setup and configuration
-- ❌ Requires more resources (~2-4GB RAM minimum)
-- ❌ Cookie-based by default (requires config for cookie-less)
-- ❌ More complex UI with many features we don't need
-- ❌ PHP-based (additional runtime to maintain)</p>
-<p><strong>Resource Requirements:</strong>
-- Matomo: 1 CPU, 2Gi RAM minimum (plus PHP-FPM, nginx)
-- MySQL/MariaDB: 500m CPU, 1Gi RAM
-- Redis: 100m CPU, 256Mi RAM
-- <strong>Total</strong>: ~2 CPU, ~3.5Gi RAM</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>✅ Feature-rich with extensive analytics capabilities</li>
+<li>✅ Mature project with large community</li>
+<li>✅ Self-hosted, GDPR compliant with configuration</li>
+<li>✅ Plugin ecosystem for extensions</li>
+<li>✅ Built-in A/B testing, heatmaps, session recording</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>❌ Heavier tracking script (20KB+ vs 1KB)</li>
+<li>❌ More complex setup and configuration</li>
+<li>❌ Requires more resources (~2-4GB RAM minimum)</li>
+<li>❌ Cookie-based by default (requires config for cookie-less)</li>
+<li>❌ More complex UI with many features we don't need</li>
+<li>❌ PHP-based (additional runtime to maintain)</li>
+</ul>
+<p><strong>Resource Requirements:</strong></p>
+<ul>
+<li>Matomo: 1 CPU, 2Gi RAM minimum (plus PHP-FPM, nginx)</li>
+<li>MySQL/MariaDB: 500m CPU, 1Gi RAM</li>
+<li>Redis: 100m CPU, 256Mi RAM</li>
+<li><strong>Total</strong>: ~2 CPU, ~3.5Gi RAM</li>
+</ul>
 <h3 id="3-google-analytics">3. Google Analytics</h3>
-<p><strong>Pros:</strong>
-- ✅ Free, no infrastructure to maintain
-- ✅ Feature-rich with advanced analytics
-- ✅ Large ecosystem of integrations</p>
-<p><strong>Cons:</strong>
-- ❌ Not self-hosted, data sent to Google
-- ❌ Privacy concerns, GDPR compliance issues
-- ❌ Cookie-based, requires consent banners
-- ❌ Blocked by many ad blockers
-- ❌ Terms of Service concerns for internal tools
-- ❌ Against platform philosophy of self-sovereignty</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>✅ Free, no infrastructure to maintain</li>
+<li>✅ Feature-rich with advanced analytics</li>
+<li>✅ Large ecosystem of integrations</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>❌ Not self-hosted, data sent to Google</li>
+<li>❌ Privacy concerns, GDPR compliance issues</li>
+<li>❌ Cookie-based, requires consent banners</li>
+<li>❌ Blocked by many ad blockers</li>
+<li>❌ Terms of Service concerns for internal tools</li>
+<li>❌ Against platform philosophy of self-sovereignty</li>
+</ul>
 <h3 id="4-umami-analytics">4. Umami Analytics</h3>
-<p><strong>Pros:</strong>
-- ✅ Privacy-focused, GDPR compliant
-- ✅ Lightweight and simple
-- ✅ Self-hosted, open source
-- ✅ Modern tech stack (Next.js, PostgreSQL)</p>
-<p><strong>Cons:</strong>
-- ❌ Less mature than Plausible
-- ❌ Smaller community
-- ❌ Fewer features than Plausible
-- ❌ Less active development</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>✅ Privacy-focused, GDPR compliant</li>
+<li>✅ Lightweight and simple</li>
+<li>✅ Self-hosted, open source</li>
+<li>✅ Modern tech stack (Next.js, PostgreSQL)</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>❌ Less mature than Plausible</li>
+<li>❌ Smaller community</li>
+<li>❌ Fewer features than Plausible</li>
+<li>❌ Less active development</li>
+</ul>
 <h3 id="5-posthog">5. PostHog</h3>
-<p><strong>Pros:</strong>
-- ✅ Comprehensive product analytics platform
-- ✅ Session recording, feature flags, A/B testing
-- ✅ Self-hosted option available
-- ✅ Modern architecture</p>
-<p><strong>Cons:</strong>
-- ❌ Heavy resource requirements (4GB+ RAM)
-- ❌ Complex setup and maintenance
-- ❌ Over-featured for our current needs
-- ❌ Cookie-based by default
-- ❌ Enterprise features require paid license</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>✅ Comprehensive product analytics platform</li>
+<li>✅ Session recording, feature flags, A/B testing</li>
+<li>✅ Self-hosted option available</li>
+<li>✅ Modern architecture</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>❌ Heavy resource requirements (4GB+ RAM)</li>
+<li>❌ Complex setup and maintenance</li>
+<li>❌ Over-featured for our current needs</li>
+<li>❌ Cookie-based by default</li>
+<li>❌ Enterprise features require paid license</li>
+</ul>
 <h2 id="decision-rationale">Decision Rationale</h2>
 <p>We selected <strong>Plausible</strong> for the following reasons:</p>
 <h3 id="1-privacy-compliance">1. Privacy &amp; Compliance</h3>
@@ -4967,15 +4995,19 @@
 </ul>
 <h2 id="implementation">Implementation</h2>
 <p>See <a href="../../implementation-plan/product-analytics-implementation/">Product Analytics Implementation Guide</a> for details.</p>
-<p>Key components:
-- Plausible v2.0 (2 replicas for HA)
-- ClickHouse v23.3 (analytics data)
-- PostgreSQL v16.4 (metadata, via CloudNativePG)
-- Ingress with TLS (https://plausible.fawkes.idp)</p>
-<p>Instrumentation:
-- Backstage: Configured in app-config.yaml
-- Custom events: Deploy, Create, View, Run actions
-- API proxy: Available at /plausible/api</p>
+<p>Key components:</p>
+<ul>
+<li>Plausible v2.0 (2 replicas for HA)</li>
+<li>ClickHouse v23.3 (analytics data)</li>
+<li>PostgreSQL v16.4 (metadata, via CloudNativePG)</li>
+<li>Ingress with TLS (https://plausible.fawkes.idp)</li>
+</ul>
+<p>Instrumentation:</p>
+<ul>
+<li>Backstage: Configured in app-config.yaml</li>
+<li>Custom events: Deploy, Create, View, Run actions</li>
+<li>API proxy: Available at /plausible/api</li>
+</ul>
 <h2 id="consequences">Consequences</h2>
 <h3 id="positive">Positive</h3>
 <ul>

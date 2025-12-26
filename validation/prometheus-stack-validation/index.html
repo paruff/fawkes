@@ -4743,15 +4743,17 @@
 <h3 id="acceptance-criteria-validation">Acceptance Criteria Validation</h3>
 <h4 id="kube-prometheus-stack-deployed-via-argocd">✅ kube-prometheus-stack deployed via ArgoCD</h4>
 <p><strong>Status:</strong> Complete</p>
-<p><strong>Evidence:</strong>
-- ArgoCD Application manifest exists: <code>platform/apps/prometheus/prometheus-application.yaml</code>
-- Configured with:
-  - Helm chart: <code>kube-prometheus-stack</code> version 66.3.1 from prometheus-community
-  - Components: Prometheus, Grafana, Alertmanager, node-exporter, kube-state-metrics
-  - Namespace: <code>monitoring</code>
-  - Sync policy: Automated with prune and self-heal
-  - Sync wave: -3 (deployed early in the bootstrap process)</p>
-<p><strong>Validation Steps:</strong>
+<p><strong>Evidence:</strong></p>
+<ul>
+<li>ArgoCD Application manifest exists: <code>platform/apps/prometheus/prometheus-application.yaml</code></li>
+<li>Configured with:</li>
+<li>Helm chart: <code>kube-prometheus-stack</code> version 66.3.1 from prometheus-community</li>
+<li>Components: Prometheus, Grafana, Alertmanager, node-exporter, kube-state-metrics</li>
+<li>Namespace: <code>monitoring</code></li>
+<li>Sync policy: Automated with prune and self-heal</li>
+<li>Sync wave: -3 (deployed early in the bootstrap process)</li>
+</ul>
+<p><strong>Validation Steps:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check ArgoCD application exists and is healthy</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>application<span class="w"> </span>prometheus-stack<span class="w"> </span>-n<span class="w"> </span>fawkes
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>prometheus-stack
@@ -4765,25 +4767,29 @@ kubectl<span class="w"> </span>get<span class="w"> </span>application<span class
 
 kubectl<span class="w"> </span>get<span class="w"> </span>application<span class="w"> </span>prometheus-stack<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.sync.status}&#39;</span>
 <span class="c1"># Expected: Synced</span>
-</code></pre></div></p>
-<p><strong>Configuration Highlights:</strong>
-- Prometheus retention: 15 days
-- Prometheus storage: 20Gi
-- Alertmanager storage: 2Gi
-- Grafana storage: 5Gi
-- Remote write receiver enabled for OpenTelemetry integration
-- Default dashboards enabled</p>
+</code></pre></div>
+<p><strong>Configuration Highlights:</strong></p>
+<ul>
+<li>Prometheus retention: 15 days</li>
+<li>Prometheus storage: 20Gi</li>
+<li>Alertmanager storage: 2Gi</li>
+<li>Grafana storage: 5Gi</li>
+<li>Remote write receiver enabled for OpenTelemetry integration</li>
+<li>Default dashboards enabled</li>
+</ul>
 <h4 id="prometheus-scraping-metrics">✅ Prometheus scraping metrics</h4>
 <p><strong>Status:</strong> Complete</p>
-<p><strong>Evidence:</strong>
-- Prometheus configured with automatic ServiceMonitor discovery
-- ServiceMonitor selectors set to discover all ServiceMonitors (not restricted to Helm values)
-- Scrape interval: 30s
-- Evaluation interval: 30s
-- External labels configured:
-  - cluster: <code>fawkes-dev</code>
-  - environment: <code>development</code></p>
-<p><strong>Validation Steps:</strong>
+<p><strong>Evidence:</strong></p>
+<ul>
+<li>Prometheus configured with automatic ServiceMonitor discovery</li>
+<li>ServiceMonitor selectors set to discover all ServiceMonitors (not restricted to Helm values)</li>
+<li>Scrape interval: 30s</li>
+<li>Evaluation interval: 30s</li>
+<li>External labels configured:</li>
+<li>cluster: <code>fawkes-dev</code></li>
+<li>environment: <code>development</code></li>
+</ul>
+<p><strong>Validation Steps:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Port-forward to Prometheus UI</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>svc/prometheus-prometheus<span class="w"> </span><span class="m">9090</span>:9090
 
@@ -4796,27 +4802,31 @@ kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitor<span cl
 <span class="c1"># Query Prometheus for metrics</span>
 curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:9090/api/v1/targets<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.data.activeTargets | length&#39;</span>
 <span class="c1"># Expected: &gt; 0 (multiple active targets)</span>
-</code></pre></div></p>
-<p><strong>Metrics Collection:</strong>
-- Infrastructure metrics: CPU, Memory, Disk, Network from node-exporter
-- Kubernetes metrics: Pod, Node, Deployment status from kube-state-metrics
-- Application metrics: Via ServiceMonitors for platform components
-- Operator metrics: Prometheus Operator self-monitoring</p>
+</code></pre></div>
+<p><strong>Metrics Collection:</strong></p>
+<ul>
+<li>Infrastructure metrics: CPU, Memory, Disk, Network from node-exporter</li>
+<li>Kubernetes metrics: Pod, Node, Deployment status from kube-state-metrics</li>
+<li>Application metrics: Via ServiceMonitors for platform components</li>
+<li>Operator metrics: Prometheus Operator self-monitoring</li>
+</ul>
 <h4 id="grafana-accessible">✅ Grafana accessible</h4>
 <p><strong>Status:</strong> Complete</p>
-<p><strong>Evidence:</strong>
-- Grafana deployment configured in prometheus-application.yaml
-- Ingress configured:
-  - Host: <code>grafana.127.0.0.1.nip.io</code>
-  - Ingress class: <code>nginx</code>
-  - Path: <code>/</code>
-- Admin credentials:
-  - Username: <code>admin</code>
-  - Password: <code>fawkesidp</code> (configured in values)
-- Persistence enabled with 5Gi storage
-- Default dashboards enabled
-- Prometheus datasource automatically configured</p>
-<p><strong>Validation Steps:</strong>
+<p><strong>Evidence:</strong></p>
+<ul>
+<li>Grafana deployment configured in prometheus-application.yaml</li>
+<li>Ingress configured:</li>
+<li>Host: <code>grafana.127.0.0.1.nip.io</code></li>
+<li>Ingress class: <code>nginx</code></li>
+<li>Path: <code>/</code></li>
+<li>Admin credentials:</li>
+<li>Username: <code>admin</code></li>
+<li>Password: <code>fawkesidp</code> (configured in values)</li>
+<li>Persistence enabled with 5Gi storage</li>
+<li>Default dashboards enabled</li>
+<li>Prometheus datasource automatically configured</li>
+</ul>
+<p><strong>Validation Steps:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Grafana deployment</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>prometheus-grafana<span class="w"> </span>-n<span class="w"> </span>monitoring
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>grafana
@@ -4832,26 +4842,30 @@ kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>svc/prometheus-grafana<span class="w"> </span><span class="m">3000</span>:80
 curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>admin:fawkesidp<span class="w"> </span>http://localhost:3000/api/datasources<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[].name&#39;</span>
 <span class="c1"># Expected: &quot;prometheus&quot; datasource exists</span>
-</code></pre></div></p>
-<p><strong>Grafana Features:</strong>
-- Default Kubernetes dashboards imported
-- Sidecar for dashboard auto-discovery enabled
-- Plugins: grafana-piechart-panel, grafana-clock-panel
-- Timezone: UTC
-- Anonymous auth: disabled (secure by default)</p>
+</code></pre></div>
+<p><strong>Grafana Features:</strong></p>
+<ul>
+<li>Default Kubernetes dashboards imported</li>
+<li>Sidecar for dashboard auto-discovery enabled</li>
+<li>Plugins: grafana-piechart-panel, grafana-clock-panel</li>
+<li>Timezone: UTC</li>
+<li>Anonymous auth: disabled (secure by default)</li>
+</ul>
 <h4 id="servicemonitors-configured-for-platform-components">✅ ServiceMonitors configured for platform components</h4>
 <p><strong>Status:</strong> Complete</p>
-<p><strong>Evidence:</strong>
-- ServiceMonitor configurations exist: <code>platform/apps/prometheus/servicemonitors.yaml</code>
-- Configured ServiceMonitors:
-  - <strong>ArgoCD Server</strong>: Scrapes <code>/metrics</code> on port <code>metrics</code> every 30s
-  - <strong>ArgoCD Application Controller</strong>: Scrapes <code>/metrics</code> on port <code>metrics</code> every 30s
-  - <strong>Jenkins</strong>: Scrapes <code>/prometheus</code> on port <code>http</code> every 60s
-  - <strong>SonarQube</strong>: Scrapes <code>/api/monitoring/metrics</code> every 60s
-  - <strong>PostgreSQL (CloudNativePG)</strong>: Scrapes all clusters with <code>cnpg.io/cluster</code> label
-  - <strong>OpenTelemetry Collector</strong>: Scrapes collector metrics in monitoring namespace
-- PodMonitor for application pods with <code>app</code> label</p>
-<p><strong>Validation Steps:</strong>
+<p><strong>Evidence:</strong></p>
+<ul>
+<li>ServiceMonitor configurations exist: <code>platform/apps/prometheus/servicemonitors.yaml</code></li>
+<li>Configured ServiceMonitors:</li>
+<li><strong>ArgoCD Server</strong>: Scrapes <code>/metrics</code> on port <code>metrics</code> every 30s</li>
+<li><strong>ArgoCD Application Controller</strong>: Scrapes <code>/metrics</code> on port <code>metrics</code> every 30s</li>
+<li><strong>Jenkins</strong>: Scrapes <code>/prometheus</code> on port <code>http</code> every 60s</li>
+<li><strong>SonarQube</strong>: Scrapes <code>/api/monitoring/metrics</code> every 60s</li>
+<li><strong>PostgreSQL (CloudNativePG)</strong>: Scrapes all clusters with <code>cnpg.io/cluster</code> label</li>
+<li><strong>OpenTelemetry Collector</strong>: Scrapes collector metrics in monitoring namespace</li>
+<li>PodMonitor for application pods with <code>app</code> label</li>
+</ul>
+<p><strong>Validation Steps:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># List all ServiceMonitors</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitor<span class="w"> </span>-n<span class="w"> </span>monitoring
 
@@ -4868,26 +4882,30 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 
 <span class="c1"># Check if metrics are being collected</span>
 curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:9090/api/v1/query?query<span class="o">=</span>up<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.data.result[] | select(.metric.job | contains(&quot;argocd&quot;))&#39;</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Label Enrichment:</strong>
-All ServiceMonitors include relabeling to add Kubernetes metadata:
-- <code>namespace</code>: Kubernetes namespace
-- <code>pod_name</code>: Pod name
-- <code>service_name</code>: Service name
-- Additional labels specific to the service (e.g., cluster name for PostgreSQL)</p>
+All ServiceMonitors include relabeling to add Kubernetes metadata:</p>
+<ul>
+<li><code>namespace</code>: Kubernetes namespace</li>
+<li><code>pod_name</code>: Pod name</li>
+<li><code>service_name</code>: Service name</li>
+<li>Additional labels specific to the service (e.g., cluster name for PostgreSQL)</li>
+</ul>
 <h3 id="additional-components-validated">Additional Components Validated</h3>
 <h4 id="alertmanager">✅ Alertmanager</h4>
 <p><strong>Status:</strong> Complete</p>
-<p><strong>Configuration:</strong>
-- Deployment: StatefulSet with 1 replica
-- Storage: 2Gi PVC
-- Ingress: <code>alertmanager.127.0.0.1.nip.io</code>
-- Receivers configured:
-  - <code>platform-team</code>: Slack alerts for warnings
-  - <code>platform-oncall</code>: Slack alerts for critical SLO violations
-- Routing: By alertname, cluster, service, namespace
-- Inhibit rules: Critical alerts suppress warnings</p>
-<p><strong>Validation:</strong>
+<p><strong>Configuration:</strong></p>
+<ul>
+<li>Deployment: StatefulSet with 1 replica</li>
+<li>Storage: 2Gi PVC</li>
+<li>Ingress: <code>alertmanager.127.0.0.1.nip.io</code></li>
+<li>Receivers configured:</li>
+<li><code>platform-team</code>: Slack alerts for warnings</li>
+<li><code>platform-oncall</code>: Slack alerts for critical SLO violations</li>
+<li>Routing: By alertname, cluster, service, namespace</li>
+<li>Inhibit rules: Critical alerts suppress warnings</li>
+</ul>
+<p><strong>Validation:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Alertmanager</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>statefulset<span class="w"> </span>alertmanager-prometheus-alertmanager<span class="w"> </span>-n<span class="w"> </span>monitoring
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>alertmanager
@@ -4897,14 +4915,16 @@ kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"
 
 <span class="c1"># Access Alertmanager UI</span>
 <span class="c1"># Open browser to http://alertmanager.127.0.0.1.nip.io</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="node-exporter">✅ Node Exporter</h4>
 <p><strong>Status:</strong> Complete</p>
-<p><strong>Configuration:</strong>
-- Deployed as DaemonSet (runs on every node)
-- Collects node-level metrics: CPU, memory, disk, network
-- Resource limits: 50m CPU request, 64Mi memory request</p>
-<p><strong>Validation:</strong>
+<p><strong>Configuration:</strong></p>
+<ul>
+<li>Deployed as DaemonSet (runs on every node)</li>
+<li>Collects node-level metrics: CPU, memory, disk, network</li>
+<li>Resource limits: 50m CPU request, 64Mi memory request</li>
+</ul>
+<p><strong>Validation:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check node-exporter DaemonSet</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>daemonset<span class="w"> </span>prometheus-prometheus-node-exporter<span class="w"> </span>-n<span class="w"> </span>monitoring
 
@@ -4914,14 +4934,16 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <span class="c1"># Number of node-exporter pods should match number of nodes</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>prometheus-node-exporter<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="kube-state-metrics">✅ Kube State Metrics</h4>
 <p><strong>Status:</strong> Complete</p>
-<p><strong>Configuration:</strong>
-- Deployment with 1 replica
-- Exposes Kubernetes object metrics (pods, nodes, deployments, etc.)
-- Resource limits: 50m CPU request, 64Mi memory request</p>
-<p><strong>Validation:</strong>
+<p><strong>Configuration:</strong></p>
+<ul>
+<li>Deployment with 1 replica</li>
+<li>Exposes Kubernetes object metrics (pods, nodes, deployments, etc.)</li>
+<li>Resource limits: 50m CPU request, 64Mi memory request</li>
+</ul>
+<p><strong>Validation:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check kube-state-metrics deployment</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>prometheus-kube-state-metrics<span class="w"> </span>-n<span class="w"> </span>monitoring
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>kube-state-metrics
@@ -4930,14 +4952,16 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>svc/prometheus-prometheus<span class="w"> </span><span class="m">9090</span>:9090
 curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:9090/api/v1/query?query<span class="o">=</span>kube_pod_info<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.data.result | length&#39;</span>
 <span class="c1"># Expected: &gt; 0 (should return pod information)</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="persistent-storage">✅ Persistent Storage</h4>
 <p><strong>Status:</strong> Complete</p>
-<p><strong>Configuration:</strong>
-- Prometheus: 20Gi PVC with <code>standard</code> storage class
-- Alertmanager: 2Gi PVC with <code>standard</code> storage class
-- Grafana: 5Gi PVC with <code>standard</code> storage class</p>
-<p><strong>Validation:</strong>
+<p><strong>Configuration:</strong></p>
+<ul>
+<li>Prometheus: 20Gi PVC with <code>standard</code> storage class</li>
+<li>Alertmanager: 2Gi PVC with <code>standard</code> storage class</li>
+<li>Grafana: 5Gi PVC with <code>standard</code> storage class</li>
+</ul>
+<p><strong>Validation:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check all PVCs in monitoring namespace</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>monitoring
 
@@ -4947,24 +4971,26 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </
 
 <span class="c1"># Check storage sizes</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{range .items[*]}{.metadata.name}{&quot;\t&quot;}{.spec.resources.requests.storage}{&quot;\n&quot;}{end}&#39;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="resource-limits">✅ Resource Limits</h4>
 <p><strong>Status:</strong> Complete</p>
 <p><strong>Configuration:</strong>
-All components have CPU and memory requests/limits defined:
-- Prometheus Operator: 100m/128Mi requests, 200m/256Mi limits
-- Prometheus Server: 500m/1Gi requests, 1000m/2Gi limits
-- Grafana: 100m/256Mi requests, 200m/512Mi limits
-- Alertmanager: 50m/64Mi requests, 100m/128Mi limits
-- Node Exporter: 50m/64Mi requests, 100m/128Mi limits
-- Kube State Metrics: 50m/64Mi requests, 100m/128Mi limits</p>
-<p><strong>Validation:</strong>
+All components have CPU and memory requests/limits defined:</p>
+<ul>
+<li>Prometheus Operator: 100m/128Mi requests, 200m/256Mi limits</li>
+<li>Prometheus Server: 500m/1Gi requests, 1000m/2Gi limits</li>
+<li>Grafana: 100m/256Mi requests, 200m/512Mi limits</li>
+<li>Alertmanager: 50m/64Mi requests, 100m/128Mi limits</li>
+<li>Node Exporter: 50m/64Mi requests, 100m/128Mi limits</li>
+<li>Kube State Metrics: 50m/64Mi requests, 100m/128Mi limits</li>
+</ul>
+<p><strong>Validation:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check resource specifications for all deployments</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>deployments<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | {name: .metadata.name, containers: [.spec.template.spec.containers[] | {name: .name, resources: .resources}]}&#39;</span>
 
 <span class="c1"># Check resource specifications for statefulsets</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>statefulsets<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | {name: .metadata.name, containers: [.spec.template.spec.containers[] | {name: .name, resources: .resources}]}&#39;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="automated-validation">Automated Validation</h3>
 <p>Run the automated validation script:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run AT-E1-006 validation script</span>
@@ -4979,22 +5005,24 @@ make<span class="w"> </span>validate-at-e1-006
 <span class="c1"># Custom report path</span>
 ./scripts/validate-at-e1-006.sh<span class="w"> </span>--report<span class="w"> </span>/path/to/custom-report.json
 </code></pre></div>
-<p>The validation script checks:
-1. ✅ Monitoring namespace exists and is Active
-2. ✅ ArgoCD Application prometheus-stack is Healthy and Synced
-3. ✅ Prometheus Operator deployment is running
-4. ✅ Prometheus Server statefulset is ready
-5. ✅ Grafana deployment is running
-6. ✅ Alertmanager statefulset is ready
-7. ✅ Node Exporter DaemonSet is running on all nodes
-8. ✅ Kube State Metrics deployment is running
-9. ✅ ServiceMonitors are configured (at least 2 found)
-10. ✅ Prometheus PVC exists and is Bound
-11. ✅ Grafana ingress is configured
-12. ✅ Prometheus ingress is configured
-13. ✅ Resource limits are defined for all components
-14. ✅ Most pods are healthy (&gt;=80%)</p>
-<p><strong>Expected Output:</strong>
+<p>The validation script checks:</p>
+<ol>
+<li>✅ Monitoring namespace exists and is Active</li>
+<li>✅ ArgoCD Application prometheus-stack is Healthy and Synced</li>
+<li>✅ Prometheus Operator deployment is running</li>
+<li>✅ Prometheus Server statefulset is ready</li>
+<li>✅ Grafana deployment is running</li>
+<li>✅ Alertmanager statefulset is ready</li>
+<li>✅ Node Exporter DaemonSet is running on all nodes</li>
+<li>✅ Kube State Metrics deployment is running</li>
+<li>✅ ServiceMonitors are configured (at least 2 found)</li>
+<li>✅ Prometheus PVC exists and is Bound</li>
+<li>✅ Grafana ingress is configured</li>
+<li>✅ Prometheus ingress is configured</li>
+<li>✅ Resource limits are defined for all components</li>
+<li>✅ Most pods are healthy (&gt;=80%)</li>
+</ol>
+<p><strong>Expected Output:</strong></p>
 <div class="highlight"><pre><span></span><code>========================================================================
   AT-E1-006 Validation Summary
 ========================================================================
@@ -5007,7 +5035,7 @@ make<span class="w"> </span>validate-at-e1-006
 
   The kube-prometheus-stack is properly deployed and configured.
 ========================================================================
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="bdd-acceptance-tests">BDD Acceptance Tests</h3>
 <p>Run the BDD acceptance tests:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run all prometheus-stack scenarios</span>
@@ -5016,18 +5044,20 @@ pytest<span class="w"> </span>tests/bdd/step_definitions/test_prometheus_stack.p
 <span class="c1"># Or using behave</span>
 behave<span class="w"> </span>tests/bdd/features/prometheus-stack-deployment.feature
 </code></pre></div>
-<p>The BDD tests include 28 scenarios covering:
-- Namespace and ArgoCD Application validation
-- Pod health checks for all components
-- Prometheus scraping and storage
-- Grafana UI, authentication, datasources, and dashboards
-- Alertmanager configuration
-- ServiceMonitors for all platform components
-- Node exporter and kube-state-metrics
-- Prometheus API functionality
-- Alert rules
-- Resource limits
-- Remote write configuration</p>
+<p>The BDD tests include 28 scenarios covering:</p>
+<ul>
+<li>Namespace and ArgoCD Application validation</li>
+<li>Pod health checks for all components</li>
+<li>Prometheus scraping and storage</li>
+<li>Grafana UI, authentication, datasources, and dashboards</li>
+<li>Alertmanager configuration</li>
+<li>ServiceMonitors for all platform components</li>
+<li>Node exporter and kube-state-metrics</li>
+<li>Prometheus API functionality</li>
+<li>Alert rules</li>
+<li>Resource limits</li>
+<li>Remote write configuration</li>
+</ul>
 <h3 id="related-documentation">Related Documentation</h3>
 <ul>
 <li><strong>Architecture</strong>: <code>docs/architecture.md</code> - Section on Observability</li>
@@ -5039,19 +5069,21 @@ behave<span class="w"> </span>tests/bdd/features/prometheus-stack-deployment.fea
 <h3 id="issue-resolution">Issue Resolution</h3>
 <p><strong>Issue #24: Deploy kube-prometheus-stack</strong></p>
 <p>✅ <strong>RESOLVED</strong></p>
-<p>All acceptance criteria have been met:
-- [x] kube-prometheus-stack deployed via ArgoCD
-- [x] Prometheus scraping metrics from platform components
-- [x] Grafana accessible with default dashboards and datasources
-- [x] ServiceMonitors configured for ArgoCD, Jenkins, PostgreSQL, SonarQube, OpenTelemetry
-- [x] Alertmanager configured with Slack integration
-- [x] Node exporter running on all nodes
-- [x] Kube-state-metrics collecting Kubernetes object metrics
-- [x] Persistent storage configured for all components
-- [x] Resource limits defined for all components
-- [x] Automated validation script created (AT-E1-006)
-- [x] BDD acceptance tests created
-- [x] Documentation updated</p>
+<p>All acceptance criteria have been met:</p>
+<ul>
+<li>[x] kube-prometheus-stack deployed via ArgoCD</li>
+<li>[x] Prometheus scraping metrics from platform components</li>
+<li>[x] Grafana accessible with default dashboards and datasources</li>
+<li>[x] ServiceMonitors configured for ArgoCD, Jenkins, PostgreSQL, SonarQube, OpenTelemetry</li>
+<li>[x] Alertmanager configured with Slack integration</li>
+<li>[x] Node exporter running on all nodes</li>
+<li>[x] Kube-state-metrics collecting Kubernetes object metrics</li>
+<li>[x] Persistent storage configured for all components</li>
+<li>[x] Resource limits defined for all components</li>
+<li>[x] Automated validation script created (AT-E1-006)</li>
+<li>[x] BDD acceptance tests created</li>
+<li>[x] Documentation updated</li>
+</ul>
 <p>The observability stack is now fully operational and integrated with the Fawkes platform.</p>
 
 

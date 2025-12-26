@@ -5432,17 +5432,29 @@ make<span class="w"> </span>lint
 <span class="c1"># Run linters on specific files</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class="w"> </span>path/to/file
 </code></pre></div>
+<p><strong>💡 TIP</strong>: Set up format-on-save in your IDE for automatic formatting. See the <a href="../format-on-save-setup/">Format-on-Save Setup Guide</a> for detailed instructions.</p>
 <h2 id="language-specific-standards">Language-Specific Standards</h2>
 <h3 id="bash">Bash</h3>
-<p><strong>Linter</strong>: ShellCheck</p>
-<p><strong>Standards</strong>:
-- Use <code>#!/usr/bin/env bash</code> shebang
-- Use double quotes for variables: <code>"${var}"</code>
-- Check exit codes with <code>|| exit 1</code>
-- Use <code>[[ ]]</code> instead of <code>[ ]</code> for conditionals
-- Add <code>set -euo pipefail</code> at script start for safety</p>
-<p><strong>Configuration</strong>: <code>.shellcheckrc</code> (uses defaults)</p>
-<p><strong>Example</strong>:
+<p><strong>Formatter</strong>: shfmt
+<strong>Linter</strong>: ShellCheck</p>
+<p><strong>Standards</strong>:</p>
+<ul>
+<li>Use <code>#!/usr/bin/env bash</code> shebang</li>
+<li><strong>Indentation</strong>: 2 spaces</li>
+<li><strong>Case indentation</strong>: Indent case statements</li>
+<li><strong>Binary next line</strong>: Place <code>&amp;&amp;</code> and <code>||</code> at beginning of line</li>
+<li><strong>Simplify redirects</strong>: Use simplified redirect syntax</li>
+<li>Use double quotes for variables: <code>"${var}"</code></li>
+<li>Check exit codes with <code>|| exit 1</code></li>
+<li>Use <code>[[ ]]</code> instead of <code>[ ]</code> for conditionals</li>
+<li>Add <code>set -euo pipefail</code> at script start for safety</li>
+</ul>
+<p><strong>Configuration</strong>:</p>
+<ul>
+<li>shfmt args in <code>.pre-commit-config.yaml</code>: <code>-i 2 -ci -bn -sr</code></li>
+<li>ShellCheck: <code>.shellcheckrc</code> (uses defaults)</li>
+</ul>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
@@ -5455,25 +5467,32 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$var</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># Missing quotes, using [ ]</span>
 <span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Variable is set&quot;</span>
 <span class="k">fi</span>
-</code></pre></div></p>
-<p><strong>Pre-commit hook</strong>:
+</code></pre></div>
+<p><strong>Pre-commit hook</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/shellcheck-py/shellcheck-py</span>
 <span class="w">  </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shellcheck</span>
-<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--severity=warning&#39;</span><span class="p p-Indicator">]</span>
-</code></pre></div></p>
+<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;--severity=warning&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/scop/pre-commit-shfmt</span>
+<span class="w">  </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shfmt</span>
+<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;-i&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;2&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-ci&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-bn&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-sr&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-w&quot;</span><span class="p p-Indicator">]</span>
+</code></pre></div>
 <h3 id="python">Python</h3>
 <p><strong>Linters</strong>: Black (formatter), Flake8 (linter)</p>
-<p><strong>Standards</strong>:
-- <strong>Line length</strong>: 120 characters (extended from default 88)
-- <strong>Import order</strong>: stdlib → third-party → local
-- <strong>Type hints</strong>: Required for all public functions
-- <strong>Docstrings</strong>: Google style for all public functions/classes
-- <strong>Naming</strong>:
-  - <code>snake_case</code> for functions and variables
-  - <code>PascalCase</code> for classes
-  - <code>UPPER_CASE</code> for constants</p>
-<p><strong>Configuration</strong>:
+<p><strong>Standards</strong>:</p>
+<ul>
+<li><strong>Line length</strong>: 120 characters (extended from default 88)</li>
+<li><strong>Import order</strong>: stdlib → third-party → local</li>
+<li><strong>Type hints</strong>: Required for all public functions</li>
+<li><strong>Docstrings</strong>: Google style for all public functions/classes</li>
+<li><strong>Naming</strong>:</li>
+<li><code>snake_case</code> for functions and variables</li>
+<li><code>PascalCase</code> for classes</li>
+<li><code>UPPER_CASE</code> for constants</li>
+</ul>
+<p><strong>Configuration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
 <span class="o">-</span> <span class="n">repo</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">psf</span><span class="o">/</span><span class="n">black</span>
   <span class="n">hooks</span><span class="p">:</span>
@@ -5484,8 +5503,8 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
   <span class="n">hooks</span><span class="p">:</span>
     <span class="o">-</span> <span class="nb">id</span><span class="p">:</span> <span class="n">flake8</span>
       <span class="n">args</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;--max-line-length=120&#39;</span><span class="p">,</span> <span class="s1">&#39;--extend-ignore=E203,W503&#39;</span><span class="p">]</span>
-</code></pre></div></p>
-<p><strong>Example</strong>:
+</code></pre></div>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;Module for user management.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
@@ -5513,8 +5532,8 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
         <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">email</span><span class="p">,</span>
         <span class="s2">&quot;active&quot;</span><span class="p">:</span> <span class="n">active</span><span class="p">,</span>
     <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>IDE Integration</strong>:
+</code></pre></div>
+<p><strong>IDE Integration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># VS Code settings.json</span>
 <span class="o">{</span>
 <span class="w">    </span><span class="s2">&quot;python.linting.enabled&quot;</span>:<span class="w"> </span>true,
@@ -5523,16 +5542,18 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 <span class="w">    </span><span class="s2">&quot;python.formatting.provider&quot;</span>:<span class="w"> </span><span class="s2">&quot;black&quot;</span>,
 <span class="w">    </span><span class="s2">&quot;editor.formatOnSave&quot;</span>:<span class="w"> </span><span class="nb">true</span>
 <span class="o">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="go">Go</h3>
 <p><strong>Linter</strong>: golangci-lint (recommended)</p>
-<p><strong>Standards</strong>:
-- <strong>Go version</strong>: 1.21+
-- <strong>Package naming</strong>: Short, lowercase, no underscores
-- <strong>Error handling</strong>: Always check errors, don't ignore
-- <strong>Context</strong>: Pass context.Context as first parameter
-- <strong>Comments</strong>: Exported functions/types must have comments</p>
-<p><strong>Configuration</strong>: <code>.golangci.yml</code>
+<p><strong>Standards</strong>:</p>
+<ul>
+<li><strong>Go version</strong>: 1.21+</li>
+<li><strong>Package naming</strong>: Short, lowercase, no underscores</li>
+<li><strong>Error handling</strong>: Always check errors, don't ignore</li>
+<li><strong>Context</strong>: Pass context.Context as first parameter</li>
+<li><strong>Comments</strong>: Exported functions/types must have comments</li>
+</ul>
+<p><strong>Configuration</strong>: <code>.golangci.yml</code></p>
 <div class="highlight"><pre><span></span><code><span class="nt">linters</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">enable</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gofmt</span>
@@ -5547,8 +5568,8 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 <span class="nt">linters-settings</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">gofmt</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">simplify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div></p>
-<p><strong>Example</strong>:
+</code></pre></div>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Package user provides user management functionality.</span>
 <span class="kn">package</span><span class="w"> </span><span class="nx">user</span>
 
@@ -5578,22 +5599,29 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">user</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Pre-commit hook</strong> (add to <code>.pre-commit-config.yaml</code>):
+</code></pre></div>
+<p><strong>Pre-commit hook</strong> (add to <code>.pre-commit-config.yaml</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/golangci/golangci-lint</span>
 <span class="w">  </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.55.0</span>
 <span class="w">  </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">golangci-lint</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="yaml">YAML</h3>
-<p><strong>Linter</strong>: yamllint</p>
-<p><strong>Standards</strong>:
-- <strong>Indentation</strong>: 2 spaces
-- <strong>Line length</strong>: 120 characters (warning only)
-- <strong>Document start</strong>: Not required (<code>---</code> optional)
-- <strong>Trailing spaces</strong>: Not allowed
-- <strong>Empty lines</strong>: Maximum 2 consecutive</p>
-<p><strong>Configuration</strong>: <code>.yamllint</code>
+<p><strong>Formatter</strong>: Prettier
+<strong>Linter</strong>: yamllint</p>
+<p><strong>Standards</strong>:</p>
+<ul>
+<li><strong>Indentation</strong>: 2 spaces</li>
+<li><strong>Line length</strong>: 120 characters (warning only)</li>
+<li><strong>Document start</strong>: Not required (<code>---</code> optional)</li>
+<li><strong>Trailing spaces</strong>: Not allowed</li>
+<li><strong>Empty lines</strong>: Maximum 2 consecutive</li>
+</ul>
+<p><strong>Configuration</strong>:</p>
+<ul>
+<li>Formatting: <code>.prettierrc</code></li>
+<li>Linting: <code>.yamllint</code></li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="nt">extends</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 
 <span class="nt">rules</span><span class="p">:</span>
@@ -5605,8 +5633,8 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 <span class="w">  </span><span class="nt">indentation</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">spaces</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 <span class="w">    </span><span class="nt">indent-sequences</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">consistent</span>
-</code></pre></div></p>
-<p><strong>Example</strong>:
+</code></pre></div>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Good</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
@@ -5622,20 +5650,29 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
 <span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
 <span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="json">JSON</h3>
-<p><strong>Linter</strong>: check-json (built-in to pre-commit-hooks)</p>
-<p><strong>Standards</strong>:
-- <strong>Indentation</strong>: 2 spaces
-- <strong>Trailing commas</strong>: Not allowed
-- <strong>Comments</strong>: Not supported (use YAML if comments needed)
-- <strong>Keys</strong>: Use camelCase or snake_case consistently</p>
-<p><strong>Pre-commit hook</strong>:
+<p><strong>Formatter</strong>: Prettier
+<strong>Linter</strong>: check-json (built-in to pre-commit-hooks)</p>
+<p><strong>Standards</strong>:</p>
+<ul>
+<li><strong>Indentation</strong>: 2 spaces</li>
+<li><strong>Trailing commas</strong>: Not allowed (JSON spec)</li>
+<li><strong>Comments</strong>: Not supported (use YAML if comments needed)</li>
+<li><strong>Keys</strong>: Use camelCase or snake_case consistently</li>
+</ul>
+<p><strong>Configuration</strong>: <code>.prettierrc</code></p>
+<p><strong>Pre-commit hook</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/pre-commit-hooks</span>
 <span class="w">  </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-json</span>
-</code></pre></div></p>
-<p><strong>Example</strong>:
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/mirrors-prettier</span>
+<span class="w">  </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prettier</span>
+<span class="w">      </span><span class="nt">types_or</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">json</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;apiVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;v1&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ConfigMap&quot;</span><span class="p">,</span>
@@ -5648,27 +5685,34 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 <span class="w">    </span><span class="nt">&quot;maxConnections&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;100&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="markdown">Markdown</h3>
-<p><strong>Linter</strong>: markdownlint-cli</p>
-<p><strong>Standards</strong>:
-- <strong>Line length</strong>: Disabled (some docs need long lines)
-- <strong>Multiple H1s</strong>: Allowed (for documentation)
-- <strong>Trailing spaces</strong>: Not allowed
-- <strong>Lists</strong>: Consistent markers (- or <em>)
-- </em><em>Code blocks</em>*: Language specifier required</p>
-<p><strong>Configuration</strong>: <code>.markdownlint.json</code>
+<p><strong>Formatter</strong>: Prettier
+<strong>Linter</strong>: markdownlint-cli</p>
+<p><strong>Standards</strong>:</p>
+<ul>
+<li><strong>Line length</strong>: Disabled (some docs need long lines)</li>
+<li><strong>Multiple H1s</strong>: Allowed (for documentation)</li>
+<li><strong>Trailing spaces</strong>: Not allowed</li>
+<li><strong>Lists</strong>: Consistent markers (- or *)</li>
+<li><strong>Code blocks</strong>: Language specifier required</li>
+</ul>
+<p><strong>Configuration</strong>:</p>
+<ul>
+<li>Formatting: <code>.prettierrc</code></li>
+<li>Linting: <code>.markdownlint.json</code></li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;MD013&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">   </span><span class="c1">// Disable line length</span>
-<span class="w">  </span><span class="nt">&quot;MD041&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">   </span><span class="c1">// Disable first line heading</span>
-<span class="w">  </span><span class="nt">&quot;MD025&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">   </span><span class="c1">// Allow multiple H1s</span>
-<span class="w">  </span><span class="nt">&quot;MD047&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">   </span><span class="c1">// Disable single trailing newline</span>
-<span class="w">  </span><span class="nt">&quot;MD032&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">   </span><span class="c1">// Disable blank lines around lists</span>
-<span class="w">  </span><span class="nt">&quot;MD034&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">   </span><span class="c1">// Disable bare URLs</span>
-<span class="w">  </span><span class="nt">&quot;MD040&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">    </span><span class="c1">// Disable fenced code language</span>
+<span class="w">  </span><span class="nt">&quot;MD013&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable line length</span>
+<span class="w">  </span><span class="nt">&quot;MD041&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable first line heading</span>
+<span class="w">  </span><span class="nt">&quot;MD025&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Allow multiple H1s</span>
+<span class="w">  </span><span class="nt">&quot;MD047&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable single trailing newline</span>
+<span class="w">  </span><span class="nt">&quot;MD032&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable blank lines around lists</span>
+<span class="w">  </span><span class="nt">&quot;MD034&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable bare URLs</span>
+<span class="w">  </span><span class="nt">&quot;MD040&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="c1">// Disable fenced code language</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Example</strong>:
+</code></pre></div>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gh"># Component Architecture</span>
 
 <span class="gu">## Overview</span>
@@ -5681,9 +5725,10 @@ The component follows the microservices pattern with the following structure:
 
 <span class="gu">### Code Example</span>
 
-```python
-def hello_world():
-    return &quot;Hello, World!&quot;
+<span class="sb">```python</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hello_world</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s2">&quot;Hello, World!&quot;</span>
+<span class="sb">```</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>### Terraform
 
@@ -5714,8 +5759,8 @@ rule &quot;terraform_naming_convention&quot; {
   enabled = true
   format  = &quot;snake_case&quot;
 }
-</code></pre></div></p>
-<p><strong>Example</strong>:
+</code></pre></div>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Terraform &gt;= 1.6</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.6.0&quot;</span>
@@ -5756,8 +5801,8 @@ rule &quot;terraform_naming_convention&quot; {
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ID of the created resource group&quot;</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_resource_group.main.id</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Pre-commit hooks</strong>:
+</code></pre></div>
+<p><strong>Pre-commit hooks</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/antonbabenko/pre-commit-terraform</span>
 <span class="w">  </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform_fmt</span>
@@ -5765,17 +5810,19 @@ rule &quot;terraform_naming_convention&quot; {
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform_tflint</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform_docs</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform_tfsec</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="security-standards">Security Standards</h2>
 <h3 id="secrets-detection">Secrets Detection</h3>
 <p><strong>Tools</strong>: Gitleaks, detect-secrets</p>
-<p><strong>Standards</strong>:
-- <strong>Zero tolerance</strong> for committed secrets
-- <strong>Pre-commit</strong>: Blocks commits with secrets
-- <strong>CI/CD</strong>: Pipeline fails on secrets detection
-- <strong>Environment variables</strong>: Use for all secrets
-- <strong>Vault integration</strong>: For production secrets</p>
-<p><strong>Configuration</strong>: <code>.gitleaks.toml</code>
+<p><strong>Standards</strong>:</p>
+<ul>
+<li><strong>Zero tolerance</strong> for committed secrets</li>
+<li><strong>Pre-commit</strong>: Blocks commits with secrets</li>
+<li><strong>CI/CD</strong>: Pipeline fails on secrets detection</li>
+<li><strong>Environment variables</strong>: Use for all secrets</li>
+<li><strong>Vault integration</strong>: For production secrets</li>
+</ul>
+<p><strong>Configuration</strong>: <code>.gitleaks.toml</code></p>
 <div class="highlight"><pre><span></span><code><span class="k">[allowlist]</span>
 <span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allowlist for false positives&quot;</span>
 
@@ -5784,13 +5831,13 @@ rule &quot;terraform_naming_convention&quot; {
 <span class="w">    </span><span class="s2">&quot;tests/fixtures/&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="s2">&quot;examples/&quot;</span><span class="p">,</span>
 <span class="p">]</span>
-</code></pre></div></p>
-<p><strong>Example (BAD)</strong>:
+</code></pre></div>
+<p><strong>Example (BAD)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># ❌ NEVER do this</span>
 <span class="n">api_key</span> <span class="o">=</span> <span class="s2">&quot;sk-1234567890abcdef&quot;</span>  <span class="c1"># pragma: allowlist secret</span>
 <span class="n">database_url</span> <span class="o">=</span> <span class="s2">&quot;postgresql://user:password@localhost/db&quot;</span>  <span class="c1"># pragma: allowlist secret</span>
-</code></pre></div></p>
-<p><strong>Example (GOOD)</strong>:
+</code></pre></div>
+<p><strong>Example (GOOD)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># ✅ Use environment variables</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
@@ -5799,15 +5846,17 @@ rule &quot;terraform_naming_convention&quot; {
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">database_url</span><span class="p">:</span>
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Required environment variables not set&quot;</span><span class="p">)</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="container-security">Container Security</h3>
 <p><strong>Tool</strong>: Trivy</p>
-<p><strong>Standards</strong>:
-- <strong>Severity threshold</strong>: CRITICAL and HIGH fail pipeline
-- <strong>Base images</strong>: Use official, updated images
-- <strong>Updates</strong>: Regular security patching
-- <strong>Overrides</strong>: Document in <code>.trivyignore</code> with expiration</p>
-<p><strong>Example Dockerfile</strong>:
+<p><strong>Standards</strong>:</p>
+<ul>
+<li><strong>Severity threshold</strong>: CRITICAL and HIGH fail pipeline</li>
+<li><strong>Base images</strong>: Use official, updated images</li>
+<li><strong>Updates</strong>: Regular security patching</li>
+<li><strong>Overrides</strong>: Document in <code>.trivyignore</code> with expiration</li>
+</ul>
+<p><strong>Example Dockerfile</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c"># Use specific version tag, not latest</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim-bookworm</span>
 
@@ -5827,18 +5876,20 @@ rule &quot;terraform_naming_convention&quot; {
 <span class="k">COPY</span><span class="w"> </span>--chown<span class="o">=</span>appuser:appuser<span class="w"> </span>.<span class="w"> </span>.
 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;app.py&quot;</span><span class="p">]</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="code-quality-sast">Code Quality (SAST)</h3>
 <p><strong>Tool</strong>: SonarQube</p>
-<p><strong>Standards</strong>:
-- <strong>Code coverage</strong>: Minimum 80% for new code
-- <strong>Bugs</strong>: Zero new bugs
-- <strong>Vulnerabilities</strong>: Zero new vulnerabilities
-- <strong>Security hotspots</strong>: 100% reviewed
-- <strong>Code smells</strong>: Address critical/major issues</p>
+<p><strong>Standards</strong>:</p>
+<ul>
+<li><strong>Code coverage</strong>: Minimum 80% for new code</li>
+<li><strong>Bugs</strong>: Zero new bugs</li>
+<li><strong>Vulnerabilities</strong>: Zero new vulnerabilities</li>
+<li><strong>Security hotspots</strong>: 100% reviewed</li>
+<li><strong>Code smells</strong>: Address critical/major issues</li>
+</ul>
 <h2 id="ide-integration">IDE Integration</h2>
 <h3 id="vs-code">VS Code</h3>
-<p><strong>Extensions</strong>:
+<p><strong>Extensions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;recommendations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="s2">&quot;ms-python.python&quot;</span><span class="p">,</span>
@@ -5851,8 +5902,8 @@ rule &quot;terraform_naming_convention&quot; {
 <span class="w">    </span><span class="s2">&quot;davidanson.vscode-markdownlint&quot;</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Settings</strong> (<code>.vscode/settings.json</code>):
+</code></pre></div>
+<p><strong>Settings</strong> (<code>.vscode/settings.json</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;editor.formatOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;editor.codeActionsOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -5870,26 +5921,30 @@ rule &quot;terraform_naming_convention&quot; {
 <span class="w">    </span><span class="nt">&quot;editor.defaultFormatter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hashicorp.terraform&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="intellij-idea-pycharm">IntelliJ IDEA / PyCharm</h3>
-<p><strong>Plugins</strong>:
-- Python Plugin (PyCharm has built-in)
-- Terraform and HCL
-- Kubernetes
-- Bash Support
-- Markdown Support</p>
-<p><strong>Settings</strong>:
-1. File → Settings → Tools → File Watchers → Add Black
-2. File → Settings → Editor → Code Style → Python → Set line length to 120
-3. File → Settings → Editor → Inspections → Enable all Python inspections</p>
+<p><strong>Plugins</strong>:</p>
+<ul>
+<li>Python Plugin (PyCharm has built-in)</li>
+<li>Terraform and HCL</li>
+<li>Kubernetes</li>
+<li>Bash Support</li>
+<li>Markdown Support</li>
+</ul>
+<p><strong>Settings</strong>:</p>
+<ol>
+<li>File → Settings → Tools → File Watchers → Add Black</li>
+<li>File → Settings → Editor → Code Style → Python → Set line length to 120</li>
+<li>File → Settings → Editor → Inspections → Enable all Python inspections</li>
+</ol>
 <h3 id="vimneovim">Vim/Neovim</h3>
-<p><strong>Plugins</strong> (via vim-plug):
+<p><strong>Plugins</strong> (via vim-plug):</p>
 <div class="highlight"><pre><span></span><code>Plug <span class="s1">&#39;dense-analysis/ale&#39;</span>
 Plug <span class="s1">&#39;hashivim/vim-terraform&#39;</span>
 Plug <span class="s1">&#39;fatih/vim-go&#39;</span>
 Plug <span class="s1">&#39;ambv/black&#39;</span>
-</code></pre></div></p>
-<p><strong>Configuration</strong>:
+</code></pre></div>
+<p><strong>Configuration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c">&quot; ALE linters</span>
 <span class="k">let</span> <span class="k">g</span>:ale_linters <span class="p">=</span> {
 \   <span class="s1">&#39;python&#39;</span>: [<span class="s1">&#39;flake8&#39;</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span>]<span class="p">,</span>
@@ -5904,17 +5959,19 @@ Plug <span class="s1">&#39;ambv/black&#39;</span>
 \   <span class="s1">&#39;terraform&#39;</span>: [<span class="s1">&#39;terraform&#39;</span>]<span class="p">,</span>
 \}
 <span class="k">let</span> <span class="k">g</span>:ale_fix_on_save <span class="p">=</span> <span class="m">1</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="cicd-integration">CI/CD Integration</h2>
 <h3 id="pre-commit-ci-workflow">Pre-commit CI Workflow</h3>
 <p><strong>Location</strong>: <code>.github/workflows/pre-commit.yml</code></p>
-<p><strong>Features</strong>:
-- Runs on all pull requests
-- Runs on push to main/develop
-- Caches dependencies for speed
-- Comments on PR with failures
-- Uploads artifacts for review</p>
-<p><strong>Workflow</strong>:
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Runs on all pull requests</li>
+<li>Runs on push to main/develop</li>
+<li>Caches dependencies for speed</li>
+<li>Comments on PR with failures</li>
+<li>Uploads artifacts for review</li>
+</ul>
+<p><strong>Workflow</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pre-commit Validation</span>
 <span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
@@ -5929,28 +5986,30 @@ Plug <span class="s1">&#39;ambv/black&#39;</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v6</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v6</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install pre-commit</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install pre-commit</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run pre-commit</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pre-commit run --all-files</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="quality-gates">Quality Gates</h3>
 <p>Quality gates enforce standards at multiple checkpoints:</p>
 <div class="highlight"><pre><span></span><code>Code Commit → Pre-commit Hooks → PR → CI Linting → Security Scan → Build → Deploy
      ↓              ↓              ↓         ↓              ↓          ↓       ↓
   Local Check   Local Check   GitHub   GitHub Actions   SonarQube  Harbor  ArgoCD
 </code></pre></div>
-<p><strong>Gate Levels</strong>:
-1. <strong>Pre-commit</strong> (Local): Immediate feedback on commit
-2. <strong>PR Check</strong> (GitHub): Blocks merge on failure
-3. <strong>CI Linting</strong> (GitHub Actions): Comprehensive checks
-4. <strong>Security Scan</strong> (SonarQube/Trivy): Vulnerability detection
-5. <strong>Quality Gate</strong> (SonarQube): Code quality metrics</p>
+<p><strong>Gate Levels</strong>:</p>
+<ol>
+<li><strong>Pre-commit</strong> (Local): Immediate feedback on commit</li>
+<li><strong>PR Check</strong> (GitHub): Blocks merge on failure</li>
+<li><strong>CI Linting</strong> (GitHub Actions): Comprehensive checks</li>
+<li><strong>Security Scan</strong> (SonarQube/Trivy): Vulnerability detection</li>
+<li><strong>Quality Gate</strong> (SonarQube): Code quality metrics</li>
+</ol>
 <h2 id="common-issues-and-solutions">Common Issues and Solutions</h2>
 <h3 id="pre-commit-hook-failures">Pre-commit Hook Failures</h3>
 <p><strong>Issue</strong>: Hook fails with "command not found"</p>
-<p><strong>Solution</strong>: Install the required tool
+<p><strong>Solution</strong>: Install the required tool</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Terraform tools</span>
 brew<span class="w"> </span>install<span class="w"> </span>terraform<span class="w"> </span>tflint<span class="w"> </span>terraform-docs<span class="w"> </span>tfsec
 
@@ -5962,50 +6021,50 @@ pip<span class="w"> </span>install<span class="w"> </span>black<span class="w"> 
 
 <span class="c1"># Shell tools</span>
 brew<span class="w"> </span>install<span class="w"> </span>shellcheck
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Issue</strong>: Hook times out or is very slow</p>
-<p><strong>Solution</strong>: Use specific hooks instead of all
+<p><strong>Solution</strong>: Use specific hooks instead of all</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run specific hook</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>terraform_fmt<span class="w"> </span>--all-files
 
 <span class="c1"># Skip slow hooks temporarily</span>
 <span class="nv">SKIP</span><span class="o">=</span>terraform_tflint,mkdocs-validate<span class="w"> </span>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="linting-failures">Linting Failures</h3>
 <p><strong>Issue</strong>: Black and Flake8 conflict on line length</p>
-<p><strong>Solution</strong>: Both are configured for 120 chars, but ensure consistency:
+<p><strong>Solution</strong>: Both are configured for 120 chars, but ensure consistency:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># .flake8</span>
 <span class="p">[</span><span class="n">flake8</span><span class="p">]</span>
 <span class="nb">max</span><span class="o">-</span><span class="n">line</span><span class="o">-</span><span class="n">length</span> <span class="o">=</span> <span class="mi">120</span>
 <span class="n">extend</span><span class="o">-</span><span class="n">ignore</span> <span class="o">=</span> <span class="n">E203</span><span class="p">,</span> <span class="n">W503</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Issue</strong>: Terraform fmt changes files but validation fails</p>
-<p><strong>Solution</strong>: Run in order:
+<p><strong>Solution</strong>: Run in order:</p>
 <div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>fmt<span class="w"> </span>-recursive
 terraform<span class="w"> </span>validate
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Issue</strong>: ShellCheck reports issues in vendor scripts</p>
-<p><strong>Solution</strong>: Exclude vendor directories:
+<p><strong>Solution</strong>: Exclude vendor directories:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
 -<span class="w"> </span>id:<span class="w"> </span>shellcheck
 <span class="w">  </span>exclude:<span class="w"> </span><span class="s1">&#39;^vendor/|^third-party/&#39;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="security-scanning-issues">Security Scanning Issues</h3>
 <p><strong>Issue</strong>: Secrets detected in test fixtures</p>
-<p><strong>Solution</strong>: Add to allowlist:
+<p><strong>Solution</strong>: Add to allowlist:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># .gitleaks.toml</span>
 <span class="k">[allowlist]</span>
 <span class="n">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="s2">&quot;tests/fixtures/&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="s2">&quot;examples/test-data.json&quot;</span><span class="p">,</span>
 <span class="p">]</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Issue</strong>: Trivy reports false positive CVE</p>
-<p><strong>Solution</strong>: Document and ignore:
+<p><strong>Solution</strong>: Document and ignore:</p>
 <div class="highlight"><pre><span></span><code># .trivyignore
 # PostgreSQL CVE - not applicable, using prepared statements
 CVE-2023-12345 exp:2024-12-31
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="do">DO ✅</h3>
 <ul>
@@ -6029,6 +6088,7 @@ CVE-2023-12345 exp:2024-12-31
 <h2 id="getting-help">Getting Help</h2>
 <h3 id="resources">Resources</h3>
 <ul>
+<li><strong>Format-on-Save Setup</strong>: <a href="../format-on-save-setup/">docs/how-to/development/format-on-save-setup.md</a></li>
 <li><strong>Pre-commit Documentation</strong>: <a href="../../../PRE-COMMIT/">docs/PRE-COMMIT.md</a></li>
 <li><strong>Security Quality Gates</strong>: <a href="../../security/quality-gates-configuration/">docs/how-to/security/quality-gates-configuration.md</a></li>
 <li><strong>Contributing Guide</strong>: <a href="../../../contributing/">docs/contributing.md</a></li>

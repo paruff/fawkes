@@ -5852,55 +5852,68 @@
 <h2 id="overview">Overview</h2>
 <p>This guide provides step-by-step instructions for planning, running, and following up on Customer Advisory Board (CAB) quarterly meetings.</p>
 <p><strong>Target Audience</strong>: Fawkes product team, particularly the CAB lead and meeting facilitator</p>
-<p><strong>Related Documents</strong>:
-- <a href="../../CUSTOMER_ADVISORY_BOARD/">Customer Advisory Board Charter</a>
-- <a href="../../research/templates/cab-meeting-agenda/">CAB Meeting Agenda Template</a>
-- <a href="../../research/templates/cab-feedback-form/">CAB Feedback Form Template</a></p>
+<p><strong>Related Documents</strong>:</p>
+<ul>
+<li><a href="../../CUSTOMER_ADVISORY_BOARD/">Customer Advisory Board Charter</a></li>
+<li><a href="../../research/templates/cab-meeting-agenda/">CAB Meeting Agenda Template</a></li>
+<li><a href="../../research/templates/cab-feedback-form/">CAB Feedback Form Template</a></li>
+</ul>
 <hr />
 <h2 id="meeting-lifecycle">Meeting Lifecycle</h2>
 <h3 id="pre-meeting-4-6-weeks-before">Pre-Meeting (4-6 weeks before)</h3>
 <h4 id="step-1-schedule-the-meeting-6-weeks-before">Step 1: Schedule the Meeting (6 weeks before)</h4>
-<p><strong>Choose Date and Time</strong>:
-- Review member preferences from onboarding
-- Consider timezone distribution
-- Avoid major holidays and common vacation periods
-- Book 2.5 hours (2hr meeting + 30min buffer)</p>
-<p><strong>Send Calendar Invite</strong>:
-- Title: "Fawkes CAB Q[X] [YEAR] Meeting"
-- Include video conference link (Zoom/Meet/Teams)
-- Add to-be-completed agenda in description
-- Invite: <code>@fawkes/advisory-board</code> + product team
-- Set reminder for 24 hours before</p>
-<p><strong>Tools</strong>:
+<p><strong>Choose Date and Time</strong>:</p>
+<ul>
+<li>Review member preferences from onboarding</li>
+<li>Consider timezone distribution</li>
+<li>Avoid major holidays and common vacation periods</li>
+<li>Book 2.5 hours (2hr meeting + 30min buffer)</li>
+</ul>
+<p><strong>Send Calendar Invite</strong>:</p>
+<ul>
+<li>Title: "Fawkes CAB Q[X] [YEAR] Meeting"</li>
+<li>Include video conference link (Zoom/Meet/Teams)</li>
+<li>Add to-be-completed agenda in description</li>
+<li>Invite: <code>@fawkes/advisory-board</code> + product team</li>
+<li>Set reminder for 24 hours before</li>
+</ul>
+<p><strong>Tools</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Use GitHub API to get CAB member emails</span>
 gh<span class="w"> </span>api<span class="w"> </span>/orgs/paruff/teams/advisory-board/members<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.[].email&#39;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="step-2-prepare-materials-2-3-weeks-before">Step 2: Prepare Materials (2-3 weeks before)</h4>
-<p><strong>Create Meeting Agenda</strong>:
-1. Copy template: <code>docs/research/templates/cab-meeting-agenda.md</code>
-2. Fill in sections:
-   - Platform updates (releases, metrics, highlights)
-   - Roadmap priorities for next quarter
-   - 2-3 features for deep dive
-   - 1 specific decision requiring input
-3. Review with product team
-4. Finalize 1 week before meeting</p>
-<p><strong>Gather Supporting Materials</strong>:
-- Roadmap document (slide deck or doc)
-- Feature mockups or designs (if applicable)
-- Metrics dashboard screenshots
-- Release notes since last meeting
-- Previous meeting notes for reference</p>
-<p><strong>Create Pre-Read Document</strong> (optional but recommended):
-- 2-5 page summary of key topics
-- Link to detailed materials
-- Specific questions for members to consider</p>
+<p><strong>Create Meeting Agenda</strong>:</p>
+<ol>
+<li>Copy template: <code>docs/research/templates/cab-meeting-agenda.md</code></li>
+<li>Fill in sections:</li>
+<li>Platform updates (releases, metrics, highlights)</li>
+<li>Roadmap priorities for next quarter</li>
+<li>2-3 features for deep dive</li>
+<li>1 specific decision requiring input</li>
+<li>Review with product team</li>
+<li>Finalize 1 week before meeting</li>
+</ol>
+<p><strong>Gather Supporting Materials</strong>:</p>
+<ul>
+<li>Roadmap document (slide deck or doc)</li>
+<li>Feature mockups or designs (if applicable)</li>
+<li>Metrics dashboard screenshots</li>
+<li>Release notes since last meeting</li>
+<li>Previous meeting notes for reference</li>
+</ul>
+<p><strong>Create Pre-Read Document</strong> (optional but recommended):</p>
+<ul>
+<li>2-5 page summary of key topics</li>
+<li>Link to detailed materials</li>
+<li>Specific questions for members to consider</li>
+</ul>
 <h4 id="step-3-send-pre-read-1-week-before">Step 3: Send Pre-Read (1 week before)</h4>
-<p><strong>Mattermost Announcement</strong>:
+<p><strong>Mattermost Announcement</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="ni">@advisory</span>-board - Our Q[X] CAB meeting is in one week!
 
 📅 <span class="gs">**Date**</span>: [Day, Month DD] at [Time] [TZ]
 🎯 <span class="gs">**Meeting Goals**</span>:
+
 <span class="k">1.</span> Review Q[X] roadmap priorities
 <span class="k">2.</span> Get feedback on [Feature Name]
 <span class="k">3.</span> Discuss [Strategic Topic]
@@ -5911,20 +5924,24 @@ gh<span class="w"> </span>api<span class="w"> </span>/orgs/paruff/teams/advisory
 Looking forward to seeing everyone! Let me know if you have questions or can&#39;t make it.
 
 Video link in calendar invite. Recording will be available if you can&#39;t attend live.
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Pin Message</strong> in channel for visibility</p>
 <h4 id="step-4-final-preparations-1-2-days-before">Step 4: Final Preparations (1-2 days before)</h4>
-<p><strong>Confirm Attendance</strong>:
-- Check RSVPs in calendar
-- Follow up with non-responders in Mattermost
-- Plan for quorum (at least 3 members ideally)</p>
-<p><strong>Prep Facilitator</strong>:
-- Review agenda thoroughly
-- Prepare questions and discussion prompts
-- Assign note-taker (not the facilitator)
-- Test video conferencing setup
-- Prepare polls if needed (Mattermost polls or manual)</p>
-<p><strong>Send Reminder</strong> (24 hours before):
+<p><strong>Confirm Attendance</strong>:</p>
+<ul>
+<li>Check RSVPs in calendar</li>
+<li>Follow up with non-responders in Mattermost</li>
+<li>Plan for quorum (at least 3 members ideally)</li>
+</ul>
+<p><strong>Prep Facilitator</strong>:</p>
+<ul>
+<li>Review agenda thoroughly</li>
+<li>Prepare questions and discussion prompts</li>
+<li>Assign note-taker (not the facilitator)</li>
+<li>Test video conferencing setup</li>
+<li>Prepare polls if needed (Mattermost polls or manual)</li>
+</ul>
+<p><strong>Send Reminder</strong> (24 hours before):</p>
 <div class="highlight"><pre><span></span><code><span class="ni">@advisory</span>-board - Reminder: CAB meeting tomorrow!
 
 ⏰ <span class="gs">**Tomorrow**</span> at [Time] [TZ]
@@ -5932,147 +5949,185 @@ Video link in calendar invite. Recording will be available if you can&#39;t atte
 📄 <span class="gs">**Agenda**</span>: [Link]
 
 See you there! 👋
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="during-meeting-2-hours">During Meeting (2 hours)</h3>
 <h4 id="opening-10-minutes">Opening (10 minutes)</h4>
-<p><strong>Welcome and Setup</strong>:
-1. Start on time (even if not everyone has joined)
-2. Welcome everyone and thank them for their time
-3. Quick round of intros if new members
-4. Housekeeping:
-   - Recording status (ask permission)
-   - Note-taker identified
-   - Agenda review
-   - Timing plan
-5. Review meeting goals</p>
-<p><strong>Facilitator Tips</strong>:
-- Be warm and welcoming
-- Set collaborative tone
-- Encourage questions and interruptions
-- "No such thing as a bad question"</p>
+<p><strong>Welcome and Setup</strong>:</p>
+<ol>
+<li>Start on time (even if not everyone has joined)</li>
+<li>Welcome everyone and thank them for their time</li>
+<li>Quick round of intros if new members</li>
+<li>Housekeeping:</li>
+<li>Recording status (ask permission)</li>
+<li>Note-taker identified</li>
+<li>Agenda review</li>
+<li>Timing plan</li>
+<li>Review meeting goals</li>
+</ol>
+<p><strong>Facilitator Tips</strong>:</p>
+<ul>
+<li>Be warm and welcoming</li>
+<li>Set collaborative tone</li>
+<li>Encourage questions and interruptions</li>
+<li>"No such thing as a bad question"</li>
+</ul>
 <h4 id="platform-updates-20-minutes">Platform Updates (20 minutes)</h4>
-<p><strong>Progress Since Last Meeting</strong>:
-- Show, don't just tell (screenshots, demos if quick)
-- Highlight how previous CAB feedback was used
-- Celebrate wins and be honest about challenges
-- Keep it high-level, save details for Q&amp;A</p>
-<p><strong>Metrics and Community</strong>:
-- Share adoption metrics (GitHub stars, deployments)
-- Community highlights (contributions, case studies)
-- DORA metrics improvements
-- Keep it brief (5 minutes max)</p>
-<p><strong>Facilitator Tips</strong>:
-- Use visuals (slides or screen share)
-- Pause for questions but stay on time
-- "Let's table detailed discussion for later if needed"</p>
+<p><strong>Progress Since Last Meeting</strong>:</p>
+<ul>
+<li>Show, don't just tell (screenshots, demos if quick)</li>
+<li>Highlight how previous CAB feedback was used</li>
+<li>Celebrate wins and be honest about challenges</li>
+<li>Keep it high-level, save details for Q&amp;A</li>
+</ul>
+<p><strong>Metrics and Community</strong>:</p>
+<ul>
+<li>Share adoption metrics (GitHub stars, deployments)</li>
+<li>Community highlights (contributions, case studies)</li>
+<li>DORA metrics improvements</li>
+<li>Keep it brief (5 minutes max)</li>
+</ul>
+<p><strong>Facilitator Tips</strong>:</p>
+<ul>
+<li>Use visuals (slides or screen share)</li>
+<li>Pause for questions but stay on time</li>
+<li>"Let's table detailed discussion for later if needed"</li>
+</ul>
 <h4 id="roadmap-review-40-minutes">Roadmap Review (40 minutes)</h4>
-<p><strong>Strategic Priorities</strong> (10 mins):
-- Present next quarter's top 3-4 priorities
-- Explain rationale for each
-- Ask: "Do these align with your needs?"
-- Invite reaction and quick feedback</p>
-<p><strong>Feature Deep Dives</strong> (20 mins):
-- 2-3 features, ~7 minutes each
-- For each feature:
-  1. Problem statement (2 mins)
-  2. Proposed solution (3 mins)
-  3. Questions for CAB (2 mins)
-- Show mockups/designs if available</p>
-<p><strong>Trade-offs and Decisions</strong> (10 mins):
-- Present a specific decision point
-- Explain options and trade-offs
-- Structured discussion:
-  - "Who prefers Option A? Why?"
-  - "Who prefers Option B? Why?"
-  - "Other perspectives?"
-- Synthesize input</p>
-<p><strong>Facilitator Tips</strong>:
-- Use timeboxing strictly (set timer)
-- "Let's spend 7 minutes on this feature..."
-- Encourage diverse voices: "Anyone else?"
-- Note dissenting opinions
-- Seek clarity: "Can you elaborate on that?"</p>
+<p><strong>Strategic Priorities</strong> (10 mins):</p>
+<ul>
+<li>Present next quarter's top 3-4 priorities</li>
+<li>Explain rationale for each</li>
+<li>Ask: "Do these align with your needs?"</li>
+<li>Invite reaction and quick feedback</li>
+</ul>
+<p><strong>Feature Deep Dives</strong> (20 mins):</p>
+<ul>
+<li>2-3 features, ~7 minutes each</li>
+<li>For each feature:</li>
+<li>Problem statement (2 mins)</li>
+<li>Proposed solution (3 mins)</li>
+<li>Questions for CAB (2 mins)</li>
+<li>Show mockups/designs if available</li>
+</ul>
+<p><strong>Trade-offs and Decisions</strong> (10 mins):</p>
+<ul>
+<li>Present a specific decision point</li>
+<li>Explain options and trade-offs</li>
+<li>Structured discussion:</li>
+<li>"Who prefers Option A? Why?"</li>
+<li>"Who prefers Option B? Why?"</li>
+<li>"Other perspectives?"</li>
+<li>Synthesize input</li>
+</ul>
+<p><strong>Facilitator Tips</strong>:</p>
+<ul>
+<li>Use timeboxing strictly (set timer)</li>
+<li>"Let's spend 7 minutes on this feature..."</li>
+<li>Encourage diverse voices: "Anyone else?"</li>
+<li>Note dissenting opinions</li>
+<li>Seek clarity: "Can you elaborate on that?"</li>
+</ul>
 <h4 id="member-feedback-30-minutes">Member Feedback (30 minutes)</h4>
-<p><strong>Open Floor</strong>:
-1. Ask open-ended questions:
-   - "What's working well?"
-   - "What pain points are you experiencing?"
-   - "What's missing?"
-2. Let conversation flow naturally
-3. Prompt if needed:
-   - "How's the developer onboarding?"
-   - "Any operational challenges?"
-   - "Documentation gaps?"</p>
-<p><strong>Guided Discussion</strong> (if needed):
-- Have backup topics if conversation lags
-- Draw out quiet members: "[Name], curious about your experience with X?"</p>
-<p><strong>Success Stories</strong>:
-- Invite members to share wins
-- "Anyone want to share how Fawkes has helped your team?"</p>
-<p><strong>Facilitator Tips</strong>:
-- Listen more than talk (80/20 rule)
-- Take notes on key themes
-- Don't get defensive - thank members for honest feedback
-- Ask clarifying questions
-- "Tell me more about that..."</p>
+<p><strong>Open Floor</strong>:</p>
+<ol>
+<li>Ask open-ended questions:</li>
+<li>"What's working well?"</li>
+<li>"What pain points are you experiencing?"</li>
+<li>"What's missing?"</li>
+<li>Let conversation flow naturally</li>
+<li>Prompt if needed:</li>
+<li>"How's the developer onboarding?"</li>
+<li>"Any operational challenges?"</li>
+<li>"Documentation gaps?"</li>
+</ol>
+<p><strong>Guided Discussion</strong> (if needed):</p>
+<ul>
+<li>Have backup topics if conversation lags</li>
+<li>Draw out quiet members: "[Name], curious about your experience with X?"</li>
+</ul>
+<p><strong>Success Stories</strong>:</p>
+<ul>
+<li>Invite members to share wins</li>
+<li>"Anyone want to share how Fawkes has helped your team?"</li>
+</ul>
+<p><strong>Facilitator Tips</strong>:</p>
+<ul>
+<li>Listen more than talk (80/20 rule)</li>
+<li>Take notes on key themes</li>
+<li>Don't get defensive - thank members for honest feedback</li>
+<li>Ask clarifying questions</li>
+<li>"Tell me more about that..."</li>
+</ul>
 <h4 id="deep-dive-topic-15-minutes">Deep Dive Topic (15 minutes)</h4>
-<p><strong>Focused Discussion</strong>:
-- Present one topic needing detailed input
-- Provide context and current thinking
-- Structured questions for discussion
-- Capture specific feedback and suggestions</p>
-<p><strong>Examples</strong>:
-- Architecture decisions
-- User experience dilemmas
-- Prioritization debates
-- Partnership or integration opportunities</p>
+<p><strong>Focused Discussion</strong>:</p>
+<ul>
+<li>Present one topic needing detailed input</li>
+<li>Provide context and current thinking</li>
+<li>Structured questions for discussion</li>
+<li>Capture specific feedback and suggestions</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>Architecture decisions</li>
+<li>User experience dilemmas</li>
+<li>Prioritization debates</li>
+<li>Partnership or integration opportunities</li>
+</ul>
 <h4 id="closing-5-minutes">Closing (5 minutes)</h4>
-<p><strong>Wrap Up</strong>:
-1. Summarize key themes heard
-2. Preview action items (detailed follow-up later)
-3. Confirm next meeting date
-4. Thank everyone again
-5. Remind about async channel for follow-up thoughts</p>
+<p><strong>Wrap Up</strong>:</p>
+<ol>
+<li>Summarize key themes heard</li>
+<li>Preview action items (detailed follow-up later)</li>
+<li>Confirm next meeting date</li>
+<li>Thank everyone again</li>
+<li>Remind about async channel for follow-up thoughts</li>
+</ol>
 <p><strong>End on Time</strong> - respect members' schedules</p>
 <hr />
 <h3 id="post-meeting-within-48-hours">Post-Meeting (Within 48 hours)</h3>
 <h4 id="step-1-share-meeting-notes-same-day-or-next-day">Step 1: Share Meeting Notes (Same day or next day)</h4>
-<p><strong>Process Notes</strong>:
-1. Note-taker cleans up raw notes
-2. Facilitator reviews and adds context
-3. Organize by section (matching agenda)
-4. Include:
-   - Key discussion points
-   - Decisions made
-   - Action items with owners
-   - Feedback themes
-   - Parking lot items</p>
-<p><strong>Share in Mattermost</strong>:
+<p><strong>Process Notes</strong>:</p>
+<ol>
+<li>Note-taker cleans up raw notes</li>
+<li>Facilitator reviews and adds context</li>
+<li>Organize by section (matching agenda)</li>
+<li>Include:</li>
+<li>Key discussion points</li>
+<li>Decisions made</li>
+<li>Action items with owners</li>
+<li>Feedback themes</li>
+<li>Parking lot items</li>
+</ol>
+<p><strong>Share in Mattermost</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="ni">@advisory</span>-board - Thank you for a great Q[X] meeting! 🎉
 
 📝 <span class="gs">**Meeting Notes**</span>: [Link to notes document or paste inline]
 🎥 <span class="gs">**Recording**</span>: [Link if available]
 
 <span class="gs">**Key Takeaways**</span>:
+
 <span class="k">-</span><span class="w"> </span>[Theme 1]
 <span class="k">-</span><span class="w"> </span>[Theme 2]
 <span class="k">-</span><span class="w"> </span>[Theme 3]
 
 <span class="gs">**Action Items**</span>:
+
 <span class="k">- [ ]</span> [Action 1] - <span class="ni">@owner</span> - [Due date]
 <span class="k">- [ ]</span> [Action 2] - <span class="ni">@owner</span> - [Due date]
 
 Follow-up thoughts? Keep the conversation going in this channel! 💬
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="step-2-create-action-items-within-48-hours">Step 2: Create Action Items (Within 48 hours)</h4>
-<p><strong>GitHub Issues</strong>:
-- Create issues for each action item
-- Label with <code>cab-feedback</code>
-- Reference meeting date
-- Tag relevant team members
-- Link in Mattermost thread</p>
-<p><strong>Example Issue</strong>:
+<p><strong>GitHub Issues</strong>:</p>
+<ul>
+<li>Create issues for each action item</li>
+<li>Label with <code>cab-feedback</code></li>
+<li>Reference meeting date</li>
+<li>Tag relevant team members</li>
+<li>Link in Mattermost thread</li>
+</ul>
+<p><strong>Example Issue</strong>:</p>
 <div class="highlight"><pre><span></span><code>Title: [CAB Q1] Improve documentation for multi-cloud setup
 
 <span class="gs">**Context**</span>:
@@ -6080,6 +6135,7 @@ In Q1 2026 CAB meeting, members requested better documentation for
 running Fawkes across multiple cloud providers simultaneously.
 
 <span class="gs">**Request Details**</span>:
+
 <span class="k">-</span><span class="w"> </span>Step-by-step guide for hybrid AWS/Azure setup
 <span class="k">-</span><span class="w"> </span>Troubleshooting common cross-cloud issues
 <span class="k">-</span><span class="w"> </span>Best practices for cost optimization
@@ -6089,13 +6145,15 @@ running Fawkes across multiple cloud providers simultaneously.
 <span class="gs">**Reference**</span>: Q1 2026 CAB Meeting Notes [link]
 
 <span class="gs">**Labels**</span>: <span class="sb">`cab-feedback`</span>, <span class="sb">`documentation`</span>, <span class="sb">`enhancement`</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="step-3-send-thank-you-within-48-hours">Step 3: Send Thank You (Within 48 hours)</h4>
-<p><strong>Individual Thank Yous</strong> (optional but nice):
-- Personal message to each member
-- Specific appreciation for their contribution
-- Via Mattermost DM or email</p>
-<p><strong>Example</strong>:
+<p><strong>Individual Thank Yous</strong> (optional but nice):</p>
+<ul>
+<li>Personal message to each member</li>
+<li>Specific appreciation for their contribution</li>
+<li>Via Mattermost DM or email</li>
+</ul>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code>Hi [Name],
 
 Thanks so much for joining our Q[X] CAB meeting! Your insights on
@@ -6106,143 +6164,189 @@ Looking forward to the next one in [Month]!
 
 Best,
 [Your Name]
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="follow-up-within-1-month">Follow-Up (Within 1 month)</h3>
 <h4 id="week-1-2-execute-action-items">Week 1-2: Execute Action Items</h4>
-<p><strong>Progress Updates</strong>:
-- Start work on action items
-- Post updates in Mattermost channel
-- Tag members who raised the topics</p>
-<p><strong>Example</strong>:
+<p><strong>Progress Updates</strong>:</p>
+<ul>
+<li>Start work on action items</li>
+<li>Post updates in Mattermost channel</li>
+<li>Tag members who raised the topics</li>
+</ul>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code>Update on CAB feedback: We&#39;ve started work on the multi-cloud
 documentation requested in last meeting. First draft will be ready
 for review next week. <span class="ni">@member1</span> <span class="ni">@member2</span> - we&#39;ll tag you for review!
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="week-3-4-publish-cab-summary">Week 3-4: Publish CAB Summary</h4>
-<p><strong>Public Summary</strong> (for blog or docs):
-- High-level meeting recap
-- Key discussion themes
-- How feedback is being incorporated
-- Sanitize confidential information</p>
-<p><strong>Template</strong>:
+<p><strong>Public Summary</strong> (for blog or docs):</p>
+<ul>
+<li>High-level meeting recap</li>
+<li>Key discussion themes</li>
+<li>How feedback is being incorporated</li>
+<li>Sanitize confidential information</li>
+</ul>
+<p><strong>Template</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gh"># Q[X] [YEAR] Customer Advisory Board Meeting Recap</span>
 
 The Fawkes Customer Advisory Board met on [Date] to discuss [topics].
 
 <span class="gu">## Key Discussion Themes</span>
+
 <span class="k">1.</span> [Theme 1]
 <span class="k">2.</span> [Theme 2]
 <span class="k">3.</span> [Theme 3]
 
 <span class="gu">## Feedback Impact</span>
+
 Based on CAB input, we&#39;re:
+
 <span class="k">-</span><span class="w"> </span>[Action 1]
 <span class="k">-</span><span class="w"> </span>[Action 2]
 <span class="k">-</span><span class="w"> </span>[Action 3]
 
 <span class="gu">## Thank You</span>
+
 Thank you to our CAB members for their continued guidance and support!
 
 Next meeting: Q[X+1] [YEAR]
-</code></pre></div></p>
-<p><strong>Share</strong>:
-- Post in community channels
-- Include in newsletter
-- Add to docs site</p>
+</code></pre></div>
+<p><strong>Share</strong>:</p>
+<ul>
+<li>Post in community channels</li>
+<li>Include in newsletter</li>
+<li>Add to docs site</li>
+</ul>
 <h4 id="ongoing-close-the-loop">Ongoing: Close the Loop</h4>
-<p><strong>As Action Items Complete</strong>:
-- Update CAB in Mattermost
-- Show how their feedback made impact
-- Include in next meeting recap</p>
-<p><strong>Recognition</strong>:
-- Credit CAB when launching features they influenced
-- Release notes: "Based on CAB feedback..."
-- Blog posts spotlighting member success stories</p>
+<p><strong>As Action Items Complete</strong>:</p>
+<ul>
+<li>Update CAB in Mattermost</li>
+<li>Show how their feedback made impact</li>
+<li>Include in next meeting recap</li>
+</ul>
+<p><strong>Recognition</strong>:</p>
+<ul>
+<li>Credit CAB when launching features they influenced</li>
+<li>Release notes: "Based on CAB feedback..."</li>
+<li>Blog posts spotlighting member success stories</li>
+</ul>
 <hr />
 <h2 id="facilitator-best-practices">Facilitator Best Practices</h2>
 <h3 id="creating-psychological-safety">Creating Psychological Safety</h3>
-<p><strong>Do</strong>:
-- Thank members for both positive and critical feedback
-- Acknowledge dissenting opinions
-- Say "That's a great point" or "I hadn't considered that"
-- Admit when you don't know something
-- Be vulnerable about challenges</p>
-<p><strong>Don't</strong>:
-- Get defensive about criticism
-- Dismiss concerns or feedback
-- Dominate the conversation
-- Make members feel stupid for questions
-- Over-promise on timelines</p>
+<p><strong>Do</strong>:</p>
+<ul>
+<li>Thank members for both positive and critical feedback</li>
+<li>Acknowledge dissenting opinions</li>
+<li>Say "That's a great point" or "I hadn't considered that"</li>
+<li>Admit when you don't know something</li>
+<li>Be vulnerable about challenges</li>
+</ul>
+<p><strong>Don't</strong>:</p>
+<ul>
+<li>Get defensive about criticism</li>
+<li>Dismiss concerns or feedback</li>
+<li>Dominate the conversation</li>
+<li>Make members feel stupid for questions</li>
+<li>Over-promise on timelines</li>
+</ul>
 <h3 id="managing-discussion">Managing Discussion</h3>
-<p><strong>Encouraging Participation</strong>:
-- "I'd love to hear from folks who haven't spoken yet"
-- "[Name], you have experience with X - what do you think?"
-- Use polls for quick input: "Show of hands..."
-- Pause after asking questions (count to 5 silently)</p>
-<p><strong>Managing Dominant Voices</strong>:
-- "Thanks [Name], let's hear from others too"
-- "Let's make sure everyone gets a chance to weigh in"
-- Use round-robin for specific questions</p>
-<p><strong>Handling Off-Topic Discussions</strong>:
-- "Great topic - let's add that to the parking lot"
-- "That's worth a deeper discussion - can we schedule a separate call?"
-- "For the sake of time, let's table that for async discussion"</p>
-<p><strong>Time Management</strong>:
-- Visible timer (share screen or announce time checks)
-- "We have 5 minutes left on this topic"
-- Be willing to extend important discussions by 5-10 minutes
-- Skip less critical agenda items if needed</p>
+<p><strong>Encouraging Participation</strong>:</p>
+<ul>
+<li>"I'd love to hear from folks who haven't spoken yet"</li>
+<li>"[Name], you have experience with X - what do you think?"</li>
+<li>Use polls for quick input: "Show of hands..."</li>
+<li>Pause after asking questions (count to 5 silently)</li>
+</ul>
+<p><strong>Managing Dominant Voices</strong>:</p>
+<ul>
+<li>"Thanks [Name], let's hear from others too"</li>
+<li>"Let's make sure everyone gets a chance to weigh in"</li>
+<li>Use round-robin for specific questions</li>
+</ul>
+<p><strong>Handling Off-Topic Discussions</strong>:</p>
+<ul>
+<li>"Great topic - let's add that to the parking lot"</li>
+<li>"That's worth a deeper discussion - can we schedule a separate call?"</li>
+<li>"For the sake of time, let's table that for async discussion"</li>
+</ul>
+<p><strong>Time Management</strong>:</p>
+<ul>
+<li>Visible timer (share screen or announce time checks)</li>
+<li>"We have 5 minutes left on this topic"</li>
+<li>Be willing to extend important discussions by 5-10 minutes</li>
+<li>Skip less critical agenda items if needed</li>
+</ul>
 <h3 id="active-listening">Active Listening</h3>
-<p><strong>Techniques</strong>:
-- Paraphrase to confirm understanding: "So what I'm hearing is..."
-- Ask follow-up questions: "Can you tell me more about that?"
-- Take notes visibly (shows you're listening)
-- Non-verbal cues (nodding, eye contact in video)
-- Don't interrupt (unless really off track)</p>
+<p><strong>Techniques</strong>:</p>
+<ul>
+<li>Paraphrase to confirm understanding: "So what I'm hearing is..."</li>
+<li>Ask follow-up questions: "Can you tell me more about that?"</li>
+<li>Take notes visibly (shows you're listening)</li>
+<li>Non-verbal cues (nodding, eye contact in video)</li>
+<li>Don't interrupt (unless really off track)</li>
+</ul>
 <h3 id="handling-difficult-situations">Handling Difficult Situations</h3>
-<p><strong>Conflicting Opinions</strong>:
-- "Both perspectives are valuable - let's explore the trade-offs"
-- Document all viewpoints
-- Explain how product team will weigh input</p>
-<p><strong>Unrealistic Requests</strong>:
-- Acknowledge the need: "I understand why that would be valuable"
-- Be honest about constraints: "Given [limitation], we may not be able to..."
-- Explore alternatives: "What if we approached it this way instead?"</p>
-<p><strong>Technical Issues</strong>:
-- Have a backup plan (phone numbers, alternate platform)
-- Start on time even if some members can't join
-- Record and share with those affected</p>
+<p><strong>Conflicting Opinions</strong>:</p>
+<ul>
+<li>"Both perspectives are valuable - let's explore the trade-offs"</li>
+<li>Document all viewpoints</li>
+<li>Explain how product team will weigh input</li>
+</ul>
+<p><strong>Unrealistic Requests</strong>:</p>
+<ul>
+<li>Acknowledge the need: "I understand why that would be valuable"</li>
+<li>Be honest about constraints: "Given [limitation], we may not be able to..."</li>
+<li>Explore alternatives: "What if we approached it this way instead?"</li>
+</ul>
+<p><strong>Technical Issues</strong>:</p>
+<ul>
+<li>Have a backup plan (phone numbers, alternate platform)</li>
+<li>Start on time even if some members can't join</li>
+<li>Record and share with those affected</li>
+</ul>
 <hr />
 <h2 id="tools-and-resources">Tools and Resources</h2>
 <h3 id="meeting-tools">Meeting Tools</h3>
-<p><strong>Video Conferencing</strong>:
-- Zoom, Google Meet, or Microsoft Teams
-- Test beforehand
-- Have co-host for backup
-- Enable recording (with permission)</p>
-<p><strong>Collaboration</strong>:
-- Mattermost for chat and polls
-- Google Docs for live note-taking
-- Miro/Mural for visual collaboration (if needed)</p>
-<p><strong>Scheduling</strong>:
-- Google Calendar or Outlook
-- Consider using Calendly for future meeting scheduling</p>
+<p><strong>Video Conferencing</strong>:</p>
+<ul>
+<li>Zoom, Google Meet, or Microsoft Teams</li>
+<li>Test beforehand</li>
+<li>Have co-host for backup</li>
+<li>Enable recording (with permission)</li>
+</ul>
+<p><strong>Collaboration</strong>:</p>
+<ul>
+<li>Mattermost for chat and polls</li>
+<li>Google Docs for live note-taking</li>
+<li>Miro/Mural for visual collaboration (if needed)</li>
+</ul>
+<p><strong>Scheduling</strong>:</p>
+<ul>
+<li>Google Calendar or Outlook</li>
+<li>Consider using Calendly for future meeting scheduling</li>
+</ul>
 <h3 id="templates">Templates</h3>
-<p>All templates in <code>docs/research/templates/</code>:
-- <code>cab-meeting-agenda.md</code> - Detailed agenda template
-- <code>cab-feedback-form.md</code> - Structured feedback collection
-- <code>cab-nomination.md</code> - Member nomination form</p>
+<p>All templates in <code>docs/research/templates/</code>:</p>
+<ul>
+<li><code>cab-meeting-agenda.md</code> - Detailed agenda template</li>
+<li><code>cab-feedback-form.md</code> - Structured feedback collection</li>
+<li><code>cab-nomination.md</code> - Member nomination form</li>
+</ul>
 <h3 id="tracking">Tracking</h3>
-<p><strong>GitHub</strong>:
-- Label: <code>cab-feedback</code> for issues from CAB
-- Project board: "CAB Feedback" (optional)
-- Milestone: Track CAB-driven features</p>
-<p><strong>Metrics</strong> (track quarterly):
-- Attendance rate
-- Feedback items received
-- Action items completed
-- Roadmap changes influenced by CAB</p>
+<p><strong>GitHub</strong>:</p>
+<ul>
+<li>Label: <code>cab-feedback</code> for issues from CAB</li>
+<li>Project board: "CAB Feedback" (optional)</li>
+<li>Milestone: Track CAB-driven features</li>
+</ul>
+<p><strong>Metrics</strong> (track quarterly):</p>
+<ul>
+<li>Attendance rate</li>
+<li>Feedback items received</li>
+<li>Action items completed</li>
+<li>Roadmap changes influenced by CAB</li>
+</ul>
 <hr />
 <h2 id="quarterly-checklist">Quarterly Checklist</h2>
 <p>Use this checklist for each quarterly meeting:</p>
@@ -6343,25 +6447,33 @@ Next meeting: Q[X+1] [YEAR]
 <hr />
 <h2 id="measuring-success">Measuring Success</h2>
 <h3 id="meeting-effectiveness-metrics">Meeting Effectiveness Metrics</h3>
-<p><strong>Engagement</strong>:
-- Attendance rate (target: 80%+)
-- Speaking time distribution (should be balanced)
-- Follow-up questions/comments in channel</p>
-<p><strong>Quality</strong>:
-- Actionable feedback items received
-- Diversity of perspectives shared
-- Depth of discussion on key topics</p>
-<p><strong>Impact</strong>:
-- Features/decisions influenced by CAB input
-- Issues identified and resolved
-- Roadmap changes based on feedback</p>
+<p><strong>Engagement</strong>:</p>
+<ul>
+<li>Attendance rate (target: 80%+)</li>
+<li>Speaking time distribution (should be balanced)</li>
+<li>Follow-up questions/comments in channel</li>
+</ul>
+<p><strong>Quality</strong>:</p>
+<ul>
+<li>Actionable feedback items received</li>
+<li>Diversity of perspectives shared</li>
+<li>Depth of discussion on key topics</li>
+</ul>
+<p><strong>Impact</strong>:</p>
+<ul>
+<li>Features/decisions influenced by CAB input</li>
+<li>Issues identified and resolved</li>
+<li>Roadmap changes based on feedback</li>
+</ul>
 <h3 id="member-satisfaction">Member Satisfaction</h3>
-<p><strong>Post-Meeting Survey</strong> (optional, quarterly or bi-annually):
-- Meeting was valuable: 1-5 scale
-- Felt heard: 1-5 scale
-- Time well spent: 1-5 scale
-- Would recommend CAB: NPS score
-- Open feedback</p>
+<p><strong>Post-Meeting Survey</strong> (optional, quarterly or bi-annually):</p>
+<ul>
+<li>Meeting was valuable: 1-5 scale</li>
+<li>Felt heard: 1-5 scale</li>
+<li>Time well spent: 1-5 scale</li>
+<li>Would recommend CAB: NPS score</li>
+<li>Open feedback</li>
+</ul>
 <hr />
 <h2 id="questions">Questions?</h2>
 <p>This guide will evolve based on experience. Share improvements and lessons learned!</p>

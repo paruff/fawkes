@@ -4781,86 +4781,88 @@
 <h2 id="prerequisites">Prerequisites</h2>
 <p>Before running the validation tests, ensure you have:</p>
 <ol>
-<li>
-<p><strong>Azure CLI</strong> installed and configured
-   <div class="highlight"><pre><span></span><code>az<span class="w"> </span>--version
+<li><strong>Azure CLI</strong> installed and configured</li>
+</ol>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>--version
 az<span class="w"> </span>login
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>kubectl</strong> installed
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>version<span class="w"> </span>--client
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Python 3.8+</strong> (for pytest-based tests)
-   <div class="highlight"><pre><span></span><code>python<span class="w"> </span>--version
+</code></pre></div>
+<ol>
+<li><strong>kubectl</strong> installed</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>version<span class="w"> </span>--client
+</code></pre></div>
+<ol>
+<li><strong>Python 3.8+</strong> (for pytest-based tests)</li>
+</ol>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>--version
 pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-dev.txt
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Azure AKS cluster</strong> deployed</p>
-</li>
+</code></pre></div>
+<ol>
+<li><strong>Azure AKS cluster</strong> deployed</li>
 <li>Cluster should be deployed using the terraform configuration in <code>infra/azure/</code></li>
 <li>Or deployed using the ignite script: <code>./scripts/ignite.sh --provider azure --only-cluster dev</code></li>
 </ol>
 <h2 id="running-validation-tests">Running Validation Tests</h2>
 <h3 id="method-1-using-the-validation-script-recommended">Method 1: Using the Validation Script (Recommended)</h3>
 <p>The validation script is a standalone bash script that performs all checks and generates a JSON report.</p>
-<p><strong>Basic usage:</strong>
+<p><strong>Basic usage:</strong></p>
 <div class="highlight"><pre><span></span><code>./scripts/validate-at-e1-001.sh
-</code></pre></div></p>
-<p><strong>With custom cluster:</strong>
+</code></pre></div>
+<p><strong>With custom cluster:</strong></p>
 <div class="highlight"><pre><span></span><code>./scripts/validate-at-e1-001.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>my-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--cluster-name<span class="w"> </span>my-aks
-</code></pre></div></p>
-<p><strong>With environment variables:</strong>
+</code></pre></div>
+<p><strong>With environment variables:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">AZURE_RESOURCE_GROUP</span><span class="o">=</span>fawkes-rg
 <span class="nb">export</span><span class="w"> </span><span class="nv">AZURE_CLUSTER_NAME</span><span class="o">=</span>fawkes-aks
 ./scripts/validate-at-e1-001.sh<span class="w"> </span>--verbose
-</code></pre></div></p>
-<p><strong>Options:</strong>
-- <code>-g, --resource-group</code> - Azure resource group name (default: fawkes-rg)
-- <code>-c, --cluster-name</code> - AKS cluster name (default: fawkes-aks)
-- <code>-m, --min-nodes</code> - Minimum required nodes (default: 4)
-- <code>-v, --verbose</code> - Verbose output
-- <code>-h, --help</code> - Show help message</p>
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<ul>
+<li><code>-g, --resource-group</code> - Azure resource group name (default: fawkes-rg)</li>
+<li><code>-c, --cluster-name</code> - AKS cluster name (default: fawkes-aks)</li>
+<li><code>-m, --min-nodes</code> - Minimum required nodes (default: 4)</li>
+<li><code>-v, --verbose</code> - Verbose output</li>
+<li><code>-h, --help</code> - Show help message</li>
+</ul>
 <p><strong>Output:</strong></p>
-<p>The script will:
-1. Run all validation checks
-2. Display results with color-coded output
-3. Generate a JSON report in <code>reports/at-e1-001-validation-&lt;timestamp&gt;.json</code>
-4. Print a summary of passed/failed tests
-5. Exit with code 0 (success) or 1 (failure)</p>
+<p>The script will:</p>
+<ol>
+<li>Run all validation checks</li>
+<li>Display results with color-coded output</li>
+<li>Generate a JSON report in <code>reports/at-e1-001-validation-&lt;timestamp&gt;.json</code></li>
+<li>Print a summary of passed/failed tests</li>
+<li>Exit with code 0 (success) or 1 (failure)</li>
+</ol>
 <h3 id="method-2-using-pytest-integration-tests">Method 2: Using pytest Integration Tests</h3>
 <p>The pytest integration tests wrap the validation script and provide additional test assertions.</p>
-<p><strong>Run all AT-E1-001 tests:</strong>
+<p><strong>Run all AT-E1-001 tests:</strong></p>
 <div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>tests/integration/test_at_e1_001_validation.py<span class="w"> </span>-v
-</code></pre></div></p>
-<p><strong>Run with custom cluster:</strong>
+</code></pre></div>
+<p><strong>Run with custom cluster:</strong></p>
 <div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>tests/integration/test_at_e1_001_validation.py<span class="w"> </span>-v<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>my-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--cluster-name<span class="w"> </span>my-aks
-</code></pre></div></p>
-<p><strong>Run specific test:</strong>
+</code></pre></div>
+<p><strong>Run specific test:</strong></p>
 <div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>tests/integration/test_at_e1_001_validation.py::TestATE1001Validation::test_all_nodes_ready<span class="w"> </span>-v
-</code></pre></div></p>
-<p><strong>Run with markers:</strong>
+</code></pre></div>
+<p><strong>Run with markers:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run all smoke tests</span>
 pytest<span class="w"> </span>tests/integration/test_at_e1_001_validation.py<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span>smoke
 
 <span class="c1"># Run all Azure integration tests</span>
 pytest<span class="w"> </span>tests/integration/<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;azure and integration&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="method-3-using-bdd-tests">Method 3: Using BDD Tests</h3>
 <p>The existing BDD feature file includes scenarios for AT-E1-001 validation.</p>
-<p><strong>Run BDD tests:</strong>
+<p><strong>Run BDD tests:</strong></p>
 <div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>tests/bdd/features/azure_aks_provisioning.feature<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;AT-E1-001&quot;</span>
-</code></pre></div></p>
-<p><strong>Or with behave:</strong>
+</code></pre></div>
+<p><strong>Or with behave:</strong></p>
 <div class="highlight"><pre><span></span><code>behave<span class="w"> </span>tests/bdd/features/azure_aks_provisioning.feature<span class="w"> </span>--tags<span class="o">=</span>AT-E1-001
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="method-4-using-inspec">Method 4: Using InSpec</h3>
 <p>For compliance testing, use InSpec with the Azure plugin:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Install InSpec and Azure plugin (if not already installed)</span>
@@ -4882,7 +4884,7 @@ inspec<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <li><strong>Summary Statistics</strong>: Total tests, passed, failed, and success rate</li>
 <li><strong>JSON Report</strong>: Detailed results saved to <code>reports/</code> directory</li>
 </ol>
-<p>Example output:
+<p>Example output:</p>
 <div class="highlight"><pre><span></span><code>[INFO] Checking prerequisites...
 [✓] Prerequisites - Azure CLI: Azure CLI installed
 [✓] Prerequisites - kubectl: kubectl installed
@@ -4899,9 +4901,9 @@ Passed: 11
 Failed: 0
 Success Rate: 100.0%
 ========================================
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="json-report-format">JSON Report Format</h3>
-<p>The JSON report includes:
+<p>The JSON report includes:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;test_suite&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AT-E1-001&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-13T12:00:00Z&quot;</span><span class="p">,</span>
@@ -4924,55 +4926,63 @@ Success Rate: 100.0%
 <span class="w">    </span><span class="c1">// ... more tests</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="common-issues">Common Issues</h3>
-<p><strong>Issue: Azure CLI not authenticated</strong>
+<p><strong>Issue: Azure CLI not authenticated</strong></p>
 <div class="highlight"><pre><span></span><code>[✗] Prerequisites - Azure Auth: Not authenticated to Azure
 </code></pre></div>
-Solution:
+<p>Solution:</p>
 <div class="highlight"><pre><span></span><code>az<span class="w"> </span>login
 az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span>&lt;your-subscription-id&gt;
-</code></pre></div></p>
-<p><strong>Issue: Cluster not found</strong>
+</code></pre></div>
+<p><strong>Issue: Cluster not found</strong></p>
 <div class="highlight"><pre><span></span><code>[✗] Cluster Exists: Cluster fawkes-aks not found in fawkes-rg
 </code></pre></div>
-Solution:
-- Verify cluster name and resource group
-- Check that cluster is deployed: <code>az aks list -o table</code>
-- Deploy cluster if needed: <code>./scripts/ignite.sh --provider azure --only-cluster dev</code></p>
-<p><strong>Issue: kubectl cannot connect</strong>
+<p>Solution:</p>
+<ul>
+<li>Verify cluster name and resource group</li>
+<li>Check that cluster is deployed: <code>az aks list -o table</code></li>
+<li>Deploy cluster if needed: <code>./scripts/ignite.sh --provider azure --only-cluster dev</code></li>
+</ul>
+<p><strong>Issue: kubectl cannot connect</strong></p>
 <div class="highlight"><pre><span></span><code>[✗] kubectl Configuration: kubectl cannot connect to cluster
 </code></pre></div>
-Solution:
+<p>Solution:</p>
 <div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>get-credentials<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--overwrite-existing
 kubectl<span class="w"> </span>cluster-info
-</code></pre></div></p>
-<p><strong>Issue: Metrics not available</strong>
+</code></pre></div>
+<p><strong>Issue: Metrics not available</strong></p>
 <div class="highlight"><pre><span></span><code>[✗] Cluster Metrics: metrics-server deployed but not returning data
 </code></pre></div>
-Solution:
-- Wait a few minutes for metrics-server to collect data
-- Check metrics-server pod status: <code>kubectl get pods -n kube-system -l k8s-app=metrics-server</code>
-- Check metrics-server logs: <code>kubectl logs -n kube-system -l k8s-app=metrics-server</code></p>
-<p><strong>Issue: Ingress controller not found</strong>
+<p>Solution:</p>
+<ul>
+<li>Wait a few minutes for metrics-server to collect data</li>
+<li>Check metrics-server pod status: <code>kubectl get pods -n kube-system -l k8s-app=metrics-server</code></li>
+<li>Check metrics-server logs: <code>kubectl logs -n kube-system -l k8s-app=metrics-server</code></li>
+</ul>
+<p><strong>Issue: Ingress controller not found</strong></p>
 <div class="highlight"><pre><span></span><code>[✗] Ingress Controller: No ingress controller (nginx/traefik) found
 </code></pre></div>
-Solution:
-- Deploy ingress controller (see issue #2 in epic1-local.json)
-- For nginx: <code>kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml</code>
-- Wait for deployment: <code>kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s</code></p>
-<p><strong>Issue: Nodes over resource limits</strong>
+<p>Solution:</p>
+<ul>
+<li>Deploy ingress controller (see issue #2 in epic1-local.json)</li>
+<li>For nginx: <code>kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml</code></li>
+<li>Wait for deployment: <code>kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s</code></li>
+</ul>
+<p><strong>Issue: Nodes over resource limits</strong></p>
 <div class="highlight"><pre><span></span><code>[✗] Resource Limits: 1 node(s) over resource limits
 </code></pre></div>
-Solution:
-- Check node metrics: <code>kubectl top nodes</code>
-- Scale down resource-intensive workloads
-- Consider adding more nodes or upgrading node SKUs
-- For development: This warning can sometimes be ignored if non-critical</p>
+<p>Solution:</p>
+<ul>
+<li>Check node metrics: <code>kubectl top nodes</code></li>
+<li>Scale down resource-intensive workloads</li>
+<li>Consider adding more nodes or upgrading node SKUs</li>
+<li>For development: This warning can sometimes be ignored if non-critical</li>
+</ul>
 <h2 id="integration-with-cicd">Integration with CI/CD</h2>
 <h3 id="github-actions">GitHub Actions</h3>
 <p>Add to your workflow:</p>
@@ -5056,10 +5066,12 @@ Solution:
 <li><a href="../../infra/azure/inspec/controls/aks.rb">InSpec Controls</a></li>
 </ul>
 <h2 id="support">Support</h2>
-<p>For issues or questions:
-1. Check the <a href="#troubleshooting">troubleshooting section</a> above
-2. Review the <a href="../azure-aks-validation-checklist/">Azure AKS validation checklist</a>
-3. Open an issue on GitHub with the validation report attached</p>
+<p>For issues or questions:</p>
+<ol>
+<li>Check the <a href="#troubleshooting">troubleshooting section</a> above</li>
+<li>Review the <a href="../azure-aks-validation-checklist/">Azure AKS validation checklist</a></li>
+<li>Open an issue on GitHub with the validation report attached</li>
+</ol>
 
 
 

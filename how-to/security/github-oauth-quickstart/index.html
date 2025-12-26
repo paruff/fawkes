@@ -4666,12 +4666,16 @@
 </blockquote>
 <h2 id="5-minute-setup">🚀 5-Minute Setup</h2>
 <h3 id="1-create-github-oauth-app">1. Create GitHub OAuth App</h3>
-<p><strong>Personal Account:</strong>
-- Go to: https://github.com/settings/developers
-- Click "OAuth Apps" → "New OAuth App"</p>
-<p><strong>Organization:</strong>
-- Go to: https://github.com/organizations/YOUR_ORG/settings/applications
-- Click "New OAuth App"</p>
+<p><strong>Personal Account:</strong></p>
+<ul>
+<li>Go to: https://github.com/settings/developers</li>
+<li>Click "OAuth Apps" → "New OAuth App"</li>
+</ul>
+<p><strong>Organization:</strong></p>
+<ul>
+<li>Go to: https://github.com/organizations/YOUR_ORG/settings/applications</li>
+<li>Click "New OAuth App"</li>
+</ul>
 <h3 id="2-configure-oauth-app">2. Configure OAuth App</h3>
 <div class="highlight"><pre><span></span><code>Application name:        Fawkes Backstage - [Environment]
 Homepage URL:            https://backstage.fawkes.idp
@@ -4753,18 +4757,24 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 </ul>
 <h2 id="production-best-practices">🔐 Production Best Practices</h2>
 <ol>
-<li><strong>Use separate OAuth apps per environment</strong></li>
-<li>Development: <code>Fawkes Backstage - Dev</code></li>
+<li>
+<p><strong>Use separate OAuth apps per environment</strong></p>
+</li>
+<li>
+<p>Development: <code>Fawkes Backstage - Dev</code></p>
+</li>
 <li>
 <p>Production: <code>Fawkes Backstage - Prod</code></p>
 </li>
 <li>
-<p><strong>Use Vault for secrets</strong> (not Git)
-   <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </span>secret/backstage/oauth<span class="w"> </span><span class="se">\</span>
+<p><strong>Use Vault for secrets</strong> (not Git)</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </span>secret/backstage/oauth<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>github-client-id<span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>github-client-secret<span class="o">=</span><span class="s2">&quot;...&quot;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Rotate secrets every 90 days</strong></p>
 </li>

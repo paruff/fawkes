@@ -4577,7 +4577,7 @@
   <a href="#valid-reasons" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ✅ Valid Reasons:
+        ✅ Valid Reasons
       
     </span>
   </a>
@@ -4588,7 +4588,7 @@
   <a href="#poor-reasons" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ❌ Poor Reasons:
+        ❌ Poor Reasons
       
     </span>
   </a>
@@ -5373,7 +5373,7 @@
   <a href="#congratulations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🎉 Congratulations!
+        🎉 Congratulations
       
     </span>
   </a>
@@ -5446,7 +5446,7 @@
 <li><strong>Data residency</strong>: Workloads placed in specific clouds for compliance</li>
 </ol>
 <h3 id="why-multi-cloud">Why Multi-Cloud?</h3>
-<h4 id="valid-reasons">✅ Valid Reasons:</h4>
+<h4 id="valid-reasons">✅ Valid Reasons</h4>
 <ol>
 <li><strong>Avoid vendor lock-in</strong>: Reduce dependency on single provider</li>
 <li><strong>Disaster recovery</strong>: Survive cloud provider outage</li>
@@ -5455,7 +5455,7 @@
 <li><strong>Acquisitions</strong>: Inherited cloud environments from acquired companies</li>
 <li><strong>Best-of-breed services</strong>: Leverage unique capabilities (e.g., BigQuery on GCP, SageMaker on AWS)</li>
 </ol>
-<h4 id="poor-reasons">❌ Poor Reasons:</h4>
+<h4 id="poor-reasons">❌ Poor Reasons</h4>
 <ol>
 <li><strong>"Just in case" vendor lock-in fear</strong>: Adds massive complexity without clear benefit</li>
 <li><strong>Negotiation leverage</strong>: Threat of moving is often sufficient</li>
@@ -5508,20 +5508,26 @@ Complexity &amp; Cost ───────────────────�
                                                     Portability ▶
 </code></pre></div>
 <h3 id="the-cost-of-multi-cloud">The Cost of Multi-Cloud</h3>
-<p><strong>Operational overhead</strong>:
-- Multiple IAM systems to manage
-- Different networking models (VPC, VNet, VPC)
-- Divergent monitoring and logging tools
-- Team training for multiple clouds
-- More complex incident response</p>
-<p><strong>Financial costs</strong>:
-- Data egress fees (expensive to move data between clouds)
-- Lost volume discounts (spend split across providers)
-- Duplication of resources (CI/CD, monitoring, networks)</p>
-<p><strong>Engineering complexity</strong>:
-- Lowest common denominator (can't use best-of-breed services)
-- Abstraction layers introduce bugs and performance overhead
-- Testing must cover all cloud environments</p>
+<p><strong>Operational overhead</strong>:</p>
+<ul>
+<li>Multiple IAM systems to manage</li>
+<li>Different networking models (VPC, VNet, VPC)</li>
+<li>Divergent monitoring and logging tools</li>
+<li>Team training for multiple clouds</li>
+<li>More complex incident response</li>
+</ul>
+<p><strong>Financial costs</strong>:</p>
+<ul>
+<li>Data egress fees (expensive to move data between clouds)</li>
+<li>Lost volume discounts (spend split across providers)</li>
+<li>Duplication of resources (CI/CD, monitoring, networks)</li>
+</ul>
+<p><strong>Engineering complexity</strong>:</p>
+<ul>
+<li>Lowest common denominator (can't use best-of-breed services)</li>
+<li>Abstraction layers introduce bugs and performance overhead</li>
+<li>Testing must cover all cloud environments</li>
+</ul>
 <p><strong>Rule of thumb</strong>: Multi-cloud adds 30-50% operational overhead compared to single cloud.</p>
 <hr />
 <h2 id="multi-cloud-architecture-patterns">🏗️ Multi-Cloud Architecture Patterns</h2>
@@ -5544,14 +5550,18 @@ Complexity &amp; Cost ───────────────────�
 │                                                 │
 └─────────────────────────────────────────────────┘
 </code></pre></div>
-<p><strong>Pros</strong>:
-- Each team optimizes for their cloud
-- Limited complexity (no cross-cloud communication)
-- Easy to start (pilot one app on new cloud)</p>
-<p><strong>Cons</strong>:
-- Teams must learn different clouds
-- Harder to share infrastructure
-- Duplicated platform tooling</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Each team optimizes for their cloud</li>
+<li>Limited complexity (no cross-cloud communication)</li>
+<li>Easy to start (pilot one app on new cloud)</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Teams must learn different clouds</li>
+<li>Harder to share infrastructure</li>
+<li>Duplicated platform tooling</li>
+</ul>
 <hr />
 <h3 id="pattern-2-multi-cloud-for-disaster-recovery">Pattern 2: Multi-Cloud for Disaster Recovery</h3>
 <p><strong>When to use</strong>: Must survive cloud provider outage (99.99%+ availability requirement).</p>
@@ -5582,18 +5592,22 @@ Global Load Balancer (Cloudflare, AWS Route53)
 ├─ Automatic failover (DNS/Anycast)
 └─ Failback once primary recovers
 </code></pre></div>
-<p><strong>Implementation</strong>:
-- <strong>Active-Passive</strong>: Primary handles all traffic, secondary is warm standby
-- <strong>Active-Active</strong>: Both clouds handle traffic (more complex, requires data sync)</p>
-<p><strong>Key decisions</strong>:
-- <strong>RTO (Recovery Time Objective)</strong>: How long can you be down?
-  - RTO &lt; 5 min → Active-Active (expensive)
-  - RTO 5-30 min → Warm standby (moderate cost)
-  - RTO &gt; 30 min → Cold standby (cheapest)
-- <strong>RPO (Recovery Point Objective)</strong>: How much data can you lose?
-  - RPO = 0 → Synchronous replication (very expensive)
-  - RPO &lt; 5 min → Continuous async replication
-  - RPO &gt; 15 min → Periodic snapshots</p>
+<p><strong>Implementation</strong>:</p>
+<ul>
+<li><strong>Active-Passive</strong>: Primary handles all traffic, secondary is warm standby</li>
+<li><strong>Active-Active</strong>: Both clouds handle traffic (more complex, requires data sync)</li>
+</ul>
+<p><strong>Key decisions</strong>:</p>
+<ul>
+<li><strong>RTO (Recovery Time Objective)</strong>: How long can you be down?</li>
+<li>RTO &lt; 5 min → Active-Active (expensive)</li>
+<li>RTO 5-30 min → Warm standby (moderate cost)</li>
+<li>RTO &gt; 30 min → Cold standby (cheapest)</li>
+<li><strong>RPO (Recovery Point Objective)</strong>: How much data can you lose?</li>
+<li>RPO = 0 → Synchronous replication (very expensive)</li>
+<li>RPO &lt; 5 min → Continuous async replication</li>
+<li>RPO &gt; 15 min → Periodic snapshots</li>
+</ul>
 <hr />
 <h3 id="pattern-3-multi-cloud-with-kubernetes">Pattern 3: Multi-Cloud with Kubernetes</h3>
 <p><strong>When to use</strong>: Need portable workloads with minimal cloud-specific code.</p>
@@ -5625,23 +5639,23 @@ Global Load Balancer (Cloudflare, AWS Route53)
 </code></pre></div>
 <p><strong>Abstraction strategies</strong>:</p>
 <ol>
-<li>
-<p><strong>Storage</strong>: Use Kubernetes CSI drivers
+<li><strong>Storage</strong>: Use Kubernetes CSI drivers</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PersistentVolumeClaim</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-pvc</span>
 <span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fast-ssd</span><span class="w">  </span><span class="c1"># Maps to EBS (AWS), PD-SSD (GCP), Premium (Azure)</span>
+<span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fast-ssd</span><span class="w"> </span><span class="c1"># Maps to EBS (AWS), PD-SSD (GCP), Premium (Azure)</span>
 <span class="w">  </span><span class="nt">accessModes</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadWriteOnce</span>
 <span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">requests</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100Gi</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Secrets</strong>: Use External Secrets Operator
+</code></pre></div>
+<ol>
+<li><strong>Secrets</strong>: Use External Secrets Operator</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterSecretStore</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5650,10 +5664,10 @@ Global Load Balancer (Cloudflare, AWS Route53)
 <span class="w">  </span><span class="nt">provider</span><span class="p">:</span>
 <span class="w">    </span><span class="c1"># Automatically detects AWS Secrets Manager, GCP Secret Manager, or Azure Key Vault</span>
 <span class="w">    </span><span class="c1"># based on cluster environment</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Databases</strong>: Use Crossplane for cloud resource provisioning
+</code></pre></div>
+<ol>
+<li><strong>Databases</strong>: Use Crossplane for cloud resource provisioning</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database.crossplane.io/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PostgreSQLInstance</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5665,10 +5679,8 @@ Global Load Balancer (Cloudflare, AWS Route53)
 <span class="w">    </span><span class="nt">instanceClass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db.t3.medium</span>
 <span class="w">    </span><span class="nt">storageGB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
 <span class="w">  </span><span class="nt">providerConfigRef</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w">  </span><span class="c1"># Points to current cloud</span>
-</code></pre></div></p>
-</li>
-</ol>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"> </span><span class="c1"># Points to current cloud</span>
+</code></pre></div>
 <hr />
 <h3 id="pattern-4-data-residency-compliance">Pattern 4: Data Residency &amp; Compliance</h3>
 <p><strong>When to use</strong>: Regulatory requirements dictate where data must reside (GDPR, data sovereignty).</p>
@@ -5692,10 +5704,12 @@ Global Load Balancer (Cloudflare, AWS Route53)
     data stays in    data stays in    data stays in
     EU region        US region        APAC region
 </code></pre></div>
-<p><strong>Implementation</strong>:
-- <strong>Geo-routing</strong>: Route users to nearest compliant region (DNS, Anycast)
-- <strong>Data partitioning</strong>: Customer data sharded by geography
-- <strong>Cross-region replication</strong>: Limited to regions with adequate legal frameworks</p>
+<p><strong>Implementation</strong>:</p>
+<ul>
+<li><strong>Geo-routing</strong>: Route users to nearest compliant region (DNS, Anycast)</li>
+<li><strong>Data partitioning</strong>: Customer data sharded by geography</li>
+<li><strong>Cross-region replication</strong>: Limited to regions with adequate legal frameworks</li>
+</ul>
 <hr />
 <h2 id="tools-for-multi-cloud">🛠️ Tools for Multi-Cloud</h2>
 <h3 id="1-infrastructure-as-code">1. Infrastructure-as-Code</h3>
@@ -5764,20 +5778,20 @@ Global Load Balancer (Cloudflare, AWS Route53)
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">XDatabase</span>
 <span class="w">    </span><span class="nt">plural</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xdatabases</span>
 <span class="w">  </span><span class="nt">versions</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1alpha1</span>
-<span class="w">    </span><span class="nt">schema</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">openAPIV3Schema</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
-<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">spec</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
-<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">size</span><span class="p">:</span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">                </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">small</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">medium</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">large</span><span class="p p-Indicator">]</span>
-<span class="w">              </span><span class="nt">engine</span><span class="p">:</span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">                </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">postgres</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">mysql</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1alpha1</span>
+<span class="w">      </span><span class="nt">schema</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">openAPIV3Schema</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">          </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">              </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">size</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">                  </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">small</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">medium</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">large</span><span class="p p-Indicator">]</span>
+<span class="w">                </span><span class="nt">engine</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">                  </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">postgres</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">mysql</span><span class="p p-Indicator">]</span>
 <span class="nn">---</span>
 <span class="c1"># Composition for AWS</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apiextensions.crossplane.io/v1</span>
@@ -5789,14 +5803,14 @@ Global Load Balancer (Cloudflare, AWS Route53)
 <span class="w">    </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com/v1alpha1</span>
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">XDatabase</span>
 <span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rds-instance</span>
-<span class="w">    </span><span class="nt">base</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database.aws.crossplane.io/v1beta1</span>
-<span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RDSInstance</span>
-<span class="w">      </span><span class="nt">spec</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">forProvider</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">engine</span><span class="p">:</span><span class="w"> </span><span class="c1"># Set from spec.engine</span>
-<span class="w">          </span><span class="nt">instanceClass</span><span class="p">:</span><span class="w"> </span><span class="c1"># Map spec.size to AWS instance class</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rds-instance</span>
+<span class="w">      </span><span class="nt">base</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database.aws.crossplane.io/v1beta1</span>
+<span class="w">        </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RDSInstance</span>
+<span class="w">        </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">forProvider</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">engine</span><span class="p">:</span><span class="w"> </span><span class="c1"># Set from spec.engine</span>
+<span class="w">            </span><span class="nt">instanceClass</span><span class="p">:</span><span class="w"> </span><span class="c1"># Map spec.size to AWS instance class</span>
 <span class="nn">---</span>
 <span class="c1"># Composition for GCP</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apiextensions.crossplane.io/v1</span>
@@ -5808,16 +5822,16 @@ Global Load Balancer (Cloudflare, AWS Route53)
 <span class="w">    </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com/v1alpha1</span>
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">XDatabase</span>
 <span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cloudsql-instance</span>
-<span class="w">    </span><span class="nt">base</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database.gcp.crossplane.io/v1beta1</span>
-<span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CloudSQLInstance</span>
-<span class="w">      </span><span class="nt">spec</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">forProvider</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">databaseVersion</span><span class="p">:</span><span class="w"> </span><span class="c1"># Set from spec.engine</span>
-<span class="w">          </span><span class="nt">tier</span><span class="p">:</span><span class="w"> </span><span class="c1"># Map spec.size to GCP tier</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cloudsql-instance</span>
+<span class="w">      </span><span class="nt">base</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database.gcp.crossplane.io/v1beta1</span>
+<span class="w">        </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CloudSQLInstance</span>
+<span class="w">        </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">forProvider</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">databaseVersion</span><span class="p">:</span><span class="w"> </span><span class="c1"># Set from spec.engine</span>
+<span class="w">            </span><span class="nt">tier</span><span class="p">:</span><span class="w"> </span><span class="c1"># Map spec.size to GCP tier</span>
 </code></pre></div>
-<p><strong>Usage</strong> (same manifest works on any cloud):
+<p><strong>Usage</strong> (same manifest works on any cloud):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">XDatabase</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5826,7 +5840,7 @@ Global Load Balancer (Cloudflare, AWS Route53)
 <span class="w">  </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">medium</span>
 <span class="w">  </span><span class="nt">engine</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
 <span class="w">  </span><span class="c1"># Crossplane automatically provisions RDS on AWS, Cloud SQL on GCP, etc.</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="3-service-mesh-for-multi-cloud-networking">3. Service Mesh for Multi-Cloud Networking</h3>
 <p><strong>Istio Multi-Cluster</strong>: Connect services across multiple Kubernetes clusters in different clouds.</p>
@@ -5840,10 +5854,10 @@ Global Load Balancer (Cloudflare, AWS Route53)
 <span class="w">    </span><span class="nt">global</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">meshID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shared-mesh</span>
 <span class="w">      </span><span class="nt">multiCluster</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">clusterName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-east-cluster</span><span class="w">  </span><span class="c1"># or gcp-us-cluster</span>
-<span class="w">      </span><span class="nt">network</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-network</span><span class="w">  </span><span class="c1"># or gcp-network</span>
+<span class="w">        </span><span class="nt">clusterName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-east-cluster</span><span class="w"> </span><span class="c1"># or gcp-us-cluster</span>
+<span class="w">      </span><span class="nt">network</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-network</span><span class="w"> </span><span class="c1"># or gcp-network</span>
 </code></pre></div>
-<p><strong>Service in AWS can call service in GCP transparently</strong>:
+<p><strong>Service in AWS can call service in GCP transparently</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Payment service running in AWS EKS</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
@@ -5857,10 +5871,9 @@ Global Load Balancer (Cloudflare, AWS Route53)
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fraud-detection</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fraud</span>
-
 <span class="c1"># Payment service can call: http://fraud-detection.fraud.svc.cluster.local</span>
 <span class="c1"># Istio routes across clouds with mTLS</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="4-observability">4. Observability</h3>
 <p><strong>Unified observability across clouds</strong>:</p>
@@ -5896,7 +5909,7 @@ Global Load Balancer (Cloudflare, AWS Route53)
 <span class="w">    </span><span class="no">- url: https://prometheus.example.com/api/v1/write</span>
 <span class="w">      </span><span class="no"># Centralized long-term storage</span>
 </code></pre></div>
-<p><strong>Grafana dashboards</strong> showing unified view:
+<p><strong>Grafana dashboards</strong> showing unified view:</p>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────┐
 │  Application Performance (All Clouds)           │
 ├─────────────────────────────────────────────────┤
@@ -5917,7 +5930,7 @@ Global Load Balancer (Cloudflare, AWS Route53)
 │    └─ Azure:   310ms                            │
 │                                                 │
 └─────────────────────────────────────────────────┘
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="5-cost-management">5. Cost Management</h3>
 <p><strong>Cloud Cost Optimization Tools</strong>:</p>
@@ -5953,12 +5966,14 @@ Result: Multi-cloud loses ~15% in discounts
 <hr />
 <h2 id="hands-on-lab-multi-cloud-deployment">🏗️ Hands-On Lab: Multi-Cloud Deployment</h2>
 <h3 id="lab-overview">Lab Overview</h3>
-<p>You will deploy the same application to AWS (EKS) and GCP (GKE) using:
-1. Terraform to provision infrastructure
-2. Kubernetes manifests for the application
-3. Crossplane to provision cloud-specific resources (RDS, Cloud SQL)
-4. Istio multi-cluster for cross-cloud service communication
-5. Unified observability with Prometheus + Grafana</p>
+<p>You will deploy the same application to AWS (EKS) and GCP (GKE) using:</p>
+<ol>
+<li>Terraform to provision infrastructure</li>
+<li>Kubernetes manifests for the application</li>
+<li>Crossplane to provision cloud-specific resources (RDS, Cloud SQL)</li>
+<li>Istio multi-cluster for cross-cloud service communication</li>
+<li>Unified observability with Prometheus + Grafana</li>
+</ol>
 <p><strong>Duration</strong>: 25 minutes
 <strong>Tools</strong>: <code>terraform</code>, <code>kubectl</code>, <code>helm</code>, <code>fawkes</code> CLI</p>
 <hr />
@@ -5987,7 +6002,7 @@ kubectl<span class="w"> </span>config<span class="w"> </span>get-contexts
 <span class="c1"># Review the multi-cloud Terraform configuration</span>
 cat<span class="w"> </span>main.tf
 </code></pre></div>
-<p><strong>main.tf</strong>:
+<p><strong>main.tf</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Multi-cloud infrastructure</span>
 <span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;cloud_provider&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
@@ -6022,7 +6037,7 @@ cat<span class="w"> </span>main.tf
 <span class="kr">output</span><span class="w"> </span><span class="nv">&quot;kubeconfig_command&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.cloud_provider</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s2">&quot;aws&quot; ? &quot;aws eks update-kubeconfig --name fawkes-eks&quot; : &quot;gcloud container clusters get-credentials fawkes-gke&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Apply infrastructure</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Provision AWS cluster</span>
 terraform<span class="w"> </span>init
@@ -6054,7 +6069,7 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>payments<span class="w"> </span>--context<span class="w"> </span>aws-cluster
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>payments<span class="w"> </span>--context<span class="w"> </span>gcp-cluster
 </code></pre></div>
-<p><strong>deployment.yaml</strong> (same for both clouds):
+<p><strong>deployment.yaml</strong> (same for both clouds):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -6071,21 +6086,21 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-api</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/fawkes-demo/payment-api:v2.0.0</span>
-<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLOUD_PROVIDER</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;auto-detect&quot;</span><span class="w">  </span><span class="c1"># App detects AWS vs GCP</span>
-<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span>
-<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;250m&quot;</span>
-</code></pre></div></p>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/fawkes-demo/payment-api:v2.0.0</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLOUD_PROVIDER</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;auto-detect&quot;</span><span class="w"> </span><span class="c1"># App detects AWS vs GCP</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span>
+<span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;250m&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="exercise-3-provision-cloud-resources-with-crossplane-6-minutes">Exercise 3: Provision Cloud Resources with Crossplane (6 minutes)</h3>
 <p><strong>Objective</strong>: Use Crossplane to provision PostgreSQL databases on both clouds using the same API.</p>
@@ -6347,63 +6362,85 @@ Cloud-native services (Lambda, DynamoDB, BigQuery) offer better performance, fea
 <h2 id="real-world-examples">🌍 Real-World Examples</h2>
 <h3 id="example-1-shopifys-multi-cloud-strategy">Example 1: Shopify's Multi-Cloud Strategy</h3>
 <p><strong>Approach</strong>: Multi-cloud by region, not by workload.</p>
-<p><strong>Architecture</strong>:
-- <strong>Primary</strong>: GCP (main infrastructure)
-- <strong>Disaster Recovery</strong>: AWS (warm standby)
-- <strong>Data residency</strong>: Regional clouds for EU/APAC</p>
-<p><strong>Key decisions</strong>:
-- Standardized on Kubernetes (GKE primary, EKS secondary)
-- Used Terraform for infrastructure provisioning
-- Avoided active-active (complexity not worth it)
-- Invested heavily in observability (Datadog across clouds)</p>
-<p><strong>Results</strong>:
-- Survived GCP outage in 2020 with minimal downtime
-- Achieved 99.99% availability SLA
-- Cost: ~20% overhead vs single-cloud</p>
+<p><strong>Architecture</strong>:</p>
+<ul>
+<li><strong>Primary</strong>: GCP (main infrastructure)</li>
+<li><strong>Disaster Recovery</strong>: AWS (warm standby)</li>
+<li><strong>Data residency</strong>: Regional clouds for EU/APAC</li>
+</ul>
+<p><strong>Key decisions</strong>:</p>
+<ul>
+<li>Standardized on Kubernetes (GKE primary, EKS secondary)</li>
+<li>Used Terraform for infrastructure provisioning</li>
+<li>Avoided active-active (complexity not worth it)</li>
+<li>Invested heavily in observability (Datadog across clouds)</li>
+</ul>
+<p><strong>Results</strong>:</p>
+<ul>
+<li>Survived GCP outage in 2020 with minimal downtime</li>
+<li>Achieved 99.99% availability SLA</li>
+<li>Cost: ~20% overhead vs single-cloud</li>
+</ul>
 <p><strong>Lesson</strong>: Multi-cloud for DR makes sense at scale, but keep it simple (active-passive, not active-active).</p>
 <hr />
 <h3 id="example-2-spotifys-cloud-migration">Example 2: Spotify's Cloud Migration</h3>
 <p><strong>Journey</strong>: Datacenter → GCP (2016-2018)</p>
-<p><strong>Why NOT multi-cloud?</strong>:
-- Decided vendor lock-in risk &lt; operational complexity cost
-- Bet on GCP for best-of-breed data/ML services (BigQuery, Dataflow)
-- Negotiated favorable pricing with Google</p>
-<p><strong>How they mitigated lock-in</strong>:
-- Used Kubernetes for all workloads (portable if needed)
-- Abstracted storage with GCS-compatible libraries
-- Open-sourced internal tools (Backstage) for community portability</p>
-<p><strong>Results</strong>:
-- Successful migration in 2 years
-- Reduced infrastructure costs by 30%
-- Faster feature development (cloud-native services)</p>
+<p><strong>Why NOT multi-cloud?</strong>:</p>
+<ul>
+<li>Decided vendor lock-in risk &lt; operational complexity cost</li>
+<li>Bet on GCP for best-of-breed data/ML services (BigQuery, Dataflow)</li>
+<li>Negotiated favorable pricing with Google</li>
+</ul>
+<p><strong>How they mitigated lock-in</strong>:</p>
+<ul>
+<li>Used Kubernetes for all workloads (portable if needed)</li>
+<li>Abstracted storage with GCS-compatible libraries</li>
+<li>Open-sourced internal tools (Backstage) for community portability</li>
+</ul>
+<p><strong>Results</strong>:</p>
+<ul>
+<li>Successful migration in 2 years</li>
+<li>Reduced infrastructure costs by 30%</li>
+<li>Faster feature development (cloud-native services)</li>
+</ul>
 <p><strong>Lesson</strong>: For most companies, single-cloud with portability planning is better than multi-cloud execution.</p>
 <hr />
 <h3 id="example-3-capital-ones-multi-cloud-hybrid">Example 3: Capital One's Multi-Cloud Hybrid</h3>
 <p><strong>Approach</strong>: AWS-primary with strategic GCP usage.</p>
-<p><strong>Architecture</strong>:
-- <strong>95% of workloads</strong>: AWS (core banking systems)
-- <strong>ML/AI workloads</strong>: GCP (BigQuery, Vertex AI)
-- <strong>Data analytics</strong>: GCP (better data warehouse pricing)</p>
-<p><strong>Implementation</strong>:
-- Cross-cloud VPN for secure connectivity
-- Replicate data to GCP for analytics (batch, nightly)
-- Unified IAM via Okta SSO</p>
-<p><strong>Results</strong>:
-- Best-of-breed services without full multi-cloud complexity
-- Contained GCP usage to specific use cases
-- Avoided active-active complexity</p>
+<p><strong>Architecture</strong>:</p>
+<ul>
+<li><strong>95% of workloads</strong>: AWS (core banking systems)</li>
+<li><strong>ML/AI workloads</strong>: GCP (BigQuery, Vertex AI)</li>
+<li><strong>Data analytics</strong>: GCP (better data warehouse pricing)</li>
+</ul>
+<p><strong>Implementation</strong>:</p>
+<ul>
+<li>Cross-cloud VPN for secure connectivity</li>
+<li>Replicate data to GCP for analytics (batch, nightly)</li>
+<li>Unified IAM via Okta SSO</li>
+</ul>
+<p><strong>Results</strong>:</p>
+<ul>
+<li>Best-of-breed services without full multi-cloud complexity</li>
+<li>Contained GCP usage to specific use cases</li>
+<li>Avoided active-active complexity</li>
+</ul>
 <p><strong>Lesson</strong>: Tactical multi-cloud (best tool for the job) is more practical than strategic multi-cloud (everything everywhere).</p>
 <hr />
 <h3 id="example-4-dropboxs-cloud-repatriation">Example 4: Dropbox's Cloud Repatriation</h3>
 <p><strong>Journey</strong>: AWS → Own Datacenters (2016)</p>
-<p><strong>Why leave the cloud?</strong>:
-- At scale (exabytes of data), cloud economics inverted
-- 90% of workload predictable (not bursty)
-- Egress fees killed economics ($75M+/year in bandwidth)</p>
-<p><strong>Result</strong>:
-- Saved ~$75M over 2 years
-- Better performance (purpose-built infrastructure)
-- Retained AWS for edge locations and burst capacity</p>
+<p><strong>Why leave the cloud?</strong>:</p>
+<ul>
+<li>At scale (exabytes of data), cloud economics inverted</li>
+<li>90% of workload predictable (not bursty)</li>
+<li>Egress fees killed economics ($75M+/year in bandwidth)</li>
+</ul>
+<p><strong>Result</strong>:</p>
+<ul>
+<li>Saved ~$75M over 2 years</li>
+<li>Better performance (purpose-built infrastructure)</li>
+<li>Retained AWS for edge locations and burst capacity</li>
+</ul>
 <p><strong>Lesson</strong>: Multi-cloud isn't always the answer. Sometimes "no cloud" or "hybrid cloud" makes more sense at extreme scale.</p>
 <hr />
 <h2 id="dora-capabilities-mapping">📊 DORA Capabilities Mapping</h2>
@@ -6565,30 +6602,44 @@ aws<span class="w"> </span>ce<span class="w"> </span>get-cost-and-usage<span cla
 <li>✅ <strong>Practical tools</strong> - Terraform, Crossplane, Istio, unified observability</li>
 </ol>
 <p><strong>Critical insight</strong>: Multi-cloud is a tool, not a goal. Most organizations benefit more from single-cloud excellence with portability planning than premature multi-cloud complexity.</p>
-<p><strong>Decision framework</strong>:
-- <strong>Start-up</strong>: Single cloud, cloud-native services (speed &gt; portability)
-- <strong>Growth stage</strong>: Single cloud with abstraction layers (prepare for optionality)
-- <strong>Enterprise</strong>: Selective multi-cloud (DR, compliance, best-of-breed)</p>
+<p><strong>Decision framework</strong>:</p>
+<ul>
+<li><strong>Start-up</strong>: Single cloud, cloud-native services (speed &gt; portability)</li>
+<li><strong>Growth stage</strong>: Single cloud with abstraction layers (prepare for optionality)</li>
+<li><strong>Enterprise</strong>: Selective multi-cloud (DR, compliance, best-of-breed)</li>
+</ul>
 <hr />
 <h2 id="next-steps">🚀 Next Steps</h2>
 <h3 id="congratulations-youve-completed-the-black-belt-curriculum">Congratulations! You've Completed the Black Belt Curriculum! 🥋</h3>
 <p>You've mastered all 20 modules of the Fawkes Dojo. Here's what comes next:</p>
 <h3 id="1-black-belt-assessment-4-hours">1. Black Belt Assessment (4 hours)</h3>
 <p>To earn your <strong>Fawkes Platform Architect</strong> certification, complete:</p>
-<p><strong>Written Exam</strong> (50 questions, 90% pass required):
-- Multi-cloud architecture design
-- Zero trust security implementation
-- Platform-as-a-product principles
-- Multi-tenancy patterns
-- DORA metrics and continuous improvement</p>
-<p><strong>Practical Assessment</strong>:
-1. <strong>Architecture Design</strong> (90 minutes)
-   - Design a complete platform architecture for a given scenario
-   - Present to peer review panel
-   - Defend design decisions under questioning</p>
+<p><strong>Written Exam</strong> (50 questions, 90% pass required):</p>
+<ul>
+<li>Multi-cloud architecture design</li>
+<li>Zero trust security implementation</li>
+<li>Platform-as-a-product principles</li>
+<li>Multi-tenancy patterns</li>
+<li>DORA metrics and continuous improvement</li>
+</ul>
+<p><strong>Practical Assessment</strong>:</p>
 <ol>
-<li><strong>Implementation Challenge</strong> (90 minutes)</li>
-<li>Implement multi-tenant namespace with resource quotas</li>
+<li>
+<p><strong>Architecture Design</strong> (90 minutes)</p>
+</li>
+<li>
+<p>Design a complete platform architecture for a given scenario</p>
+</li>
+<li>Present to peer review panel</li>
+<li>
+<p>Defend design decisions under questioning</p>
+</li>
+<li>
+<p><strong>Implementation Challenge</strong> (90 minutes)</p>
+</li>
+<li>
+<p>Implement multi-tenant namespace with resource quotas</p>
+</li>
 <li>Configure zero trust policies (mTLS, image signing)</li>
 <li>Deploy application across two cloud providers</li>
 <li>
@@ -6597,7 +6648,9 @@ aws<span class="w"> </span>ce<span class="w"> </span>get-cost-and-usage<span cla
 <li>
 <p><strong>Code Contribution</strong> (60 minutes)</p>
 </li>
-<li>Contribute a feature or bug fix to Fawkes codebase</li>
+<li>
+<p>Contribute a feature or bug fix to Fawkes codebase</p>
+</li>
 <li>Submit PR with documentation and tests</li>
 <li>
 <p>Code review by platform team</p>
@@ -6610,24 +6663,30 @@ aws<span class="w"> </span>ce<span class="w"> </span>get-cost-and-usage<span cla
 <li>Provide constructive feedback</li>
 </ol>
 <h3 id="2-continue-your-platform-engineering-journey">2. Continue Your Platform Engineering Journey</h3>
-<p><strong>Advanced Topics</strong> (self-study):
-- <strong>FinOps</strong>: Cloud cost optimization at scale
-- <strong>Platform Security</strong>: Advanced threat modeling, security-as-code
-- <strong>Developer Experience</strong>: Measuring and improving DORA metrics
-- <strong>SRE Practices</strong>: Error budgets, on-call rotation, incident response
-- <strong>Platform Product Management</strong>: Roadmapping, user research, adoption metrics</p>
-<p><strong>Recommended Certifications</strong>:
-- <strong>Kubernetes</strong>: CKA (Certified Kubernetes Administrator)
-- <strong>Cloud</strong>: AWS Solutions Architect, GCP Professional Cloud Architect
-- <strong>Security</strong>: CISSP, Certified Ethical Hacker
-- <strong>SRE</strong>: Google SRE Certification (if available)</p>
+<p><strong>Advanced Topics</strong> (self-study):</p>
+<ul>
+<li><strong>FinOps</strong>: Cloud cost optimization at scale</li>
+<li><strong>Platform Security</strong>: Advanced threat modeling, security-as-code</li>
+<li><strong>Developer Experience</strong>: Measuring and improving DORA metrics</li>
+<li><strong>SRE Practices</strong>: Error budgets, on-call rotation, incident response</li>
+<li><strong>Platform Product Management</strong>: Roadmapping, user research, adoption metrics</li>
+</ul>
+<p><strong>Recommended Certifications</strong>:</p>
+<ul>
+<li><strong>Kubernetes</strong>: CKA (Certified Kubernetes Administrator)</li>
+<li><strong>Cloud</strong>: AWS Solutions Architect, GCP Professional Cloud Architect</li>
+<li><strong>Security</strong>: CISSP, Certified Ethical Hacker</li>
+<li><strong>SRE</strong>: Google SRE Certification (if available)</li>
+</ul>
 <h3 id="3-contribute-to-the-platform-engineering-community">3. Contribute to the Platform Engineering Community</h3>
-<p><strong>Ways to give back</strong>:
-- Write blog posts about your platform journey
-- Speak at meetups or conferences (KubeCon, PlatformCon)
-- Contribute to open-source platform tools (Backstage, Crossplane, ArgoCD)
-- Mentor junior engineers at your organization
-- Share learnings in #platformengineering on Twitter/LinkedIn</p>
+<p><strong>Ways to give back</strong>:</p>
+<ul>
+<li>Write blog posts about your platform journey</li>
+<li>Speak at meetups or conferences (KubeCon, PlatformCon)</li>
+<li>Contribute to open-source platform tools (Backstage, Crossplane, ArgoCD)</li>
+<li>Mentor junior engineers at your organization</li>
+<li>Share learnings in #platformengineering on Twitter/LinkedIn</li>
+</ul>
 <h3 id="4-apply-your-skills">4. Apply Your Skills</h3>
 <p><strong>Platform Engineering Career Paths</strong>:</p>
 <ol>
@@ -6640,11 +6699,13 @@ aws<span class="w"> </span>ce<span class="w"> </span>get-cost-and-usage<span cla
 <li><strong>Cloud Architect</strong>: Design multi-cloud and hybrid cloud solutions</li>
 <li><strong>Platform Product Manager</strong>: Own platform roadmap and adoption</li>
 </ol>
-<p><strong>Salary Ranges</strong> (US, 2025):
-- Platform Engineer: $120k - $180k
-- Senior Platform Engineer: $150k - $220k
-- Staff Platform Engineer: $180k - $280k
-- Platform Architect: $200k - $350k+</p>
+<p><strong>Salary Ranges</strong> (US, 2025):</p>
+<ul>
+<li>Platform Engineer: $120k - $180k</li>
+<li>Senior Platform Engineer: $150k - $220k</li>
+<li>Staff Platform Engineer: $180k - $280k</li>
+<li>Platform Architect: $200k - $350k+</li>
+</ul>
 <hr />
 <h2 id="your-fawkes-dojo-progress">📊 Your Fawkes Dojo Progress</h2>
 <div class="highlight"><pre><span></span><code>╔══════════════════════════════════════════════════════════════╗
@@ -6756,16 +6817,20 @@ OVERALL PROGRESS: 20/20 MODULES COMPLETE (100%)
 <h2 id="feedback-community">💬 Feedback &amp; Community</h2>
 <h3 id="share-your-experience">Share Your Experience</h3>
 <p>We'd love to hear about your Fawkes Dojo journey!</p>
-<p><strong>Join the community</strong>:
-- 💬 <strong>Mattermost</strong>: <code>#dojo-graduates</code> channel
-- 🐦 <strong>Twitter</strong>: Tweet with <code>#FawkesDojo</code> and <code>@FawkesPlatform</code>
-- 💼 <strong>LinkedIn</strong>: Add "Fawkes Platform Architect" to certifications
-- 📝 <strong>Blog</strong>: Write about your learning experience</p>
-<p><strong>Help improve the Dojo</strong>:
-- Submit feedback via Backstage feedback plugin
-- Suggest new modules or improvements
-- Contribute lab exercises or quizzes
-- Help translate content (internationalization)</p>
+<p><strong>Join the community</strong>:</p>
+<ul>
+<li>💬 <strong>Mattermost</strong>: <code>#dojo-graduates</code> channel</li>
+<li>🐦 <strong>Twitter</strong>: Tweet with <code>#FawkesDojo</code> and <code>@FawkesPlatform</code></li>
+<li>💼 <strong>LinkedIn</strong>: Add "Fawkes Platform Architect" to certifications</li>
+<li>📝 <strong>Blog</strong>: Write about your learning experience</li>
+</ul>
+<p><strong>Help improve the Dojo</strong>:</p>
+<ul>
+<li>Submit feedback via Backstage feedback plugin</li>
+<li>Suggest new modules or improvements</li>
+<li>Contribute lab exercises or quizzes</li>
+<li>Help translate content (internationalization)</li>
+</ul>
 <hr />
 <h2 id="fawkes-platform-architect-badge">🌟 Fawkes Platform Architect Badge</h2>
 <p>Upon passing the Black Belt Assessment, you'll receive:</p>
@@ -6796,18 +6861,24 @@ OVERALL PROGRESS: 20/20 MODULES COMPLETE (100%)
 ║                                                           ║
 ╚═══════════════════════════════════════════════════════════╝
 </code></pre></div>
-<p><strong>Digital badge includes</strong>:
-- Credly integration (add to LinkedIn, resume)
-- QR code for verification
-- Skill tags for recruiter searches
-- Expiration date (renew every 2 years with continued learning)</p>
+<p><strong>Digital badge includes</strong>:</p>
+<ul>
+<li>Credly integration (add to LinkedIn, resume)</li>
+<li>QR code for verification</li>
+<li>Skill tags for recruiter searches</li>
+<li>Expiration date (renew every 2 years with continued learning)</li>
+</ul>
 <hr />
 <h2 id="recertification">📅 Recertification</h2>
 <p>Platform engineering evolves rapidly. To maintain your certification:</p>
 <p><strong>Recertification Options</strong> (every 2 years):</p>
 <ol>
-<li><strong>Continuous Learning Path</strong>:</li>
-<li>Complete 4 new Fawkes Dojo modules (as they're released)</li>
+<li>
+<p><strong>Continuous Learning Path</strong>:</p>
+</li>
+<li>
+<p>Complete 4 new Fawkes Dojo modules (as they're released)</p>
+</li>
 <li>Attend 2 platform engineering conferences/workshops</li>
 <li>
 <p>Contribute to 2 open-source platform projects</p>
@@ -6815,7 +6886,9 @@ OVERALL PROGRESS: 20/20 MODULES COMPLETE (100%)
 <li>
 <p><strong>Advanced Assessment</strong>:</p>
 </li>
-<li>Take updated Black Belt exam (reflects new tools/practices)</li>
+<li>
+<p>Take updated Black Belt exam (reflects new tools/practices)</p>
+</li>
 <li>
 <p>Present case study from your production platform</p>
 </li>
@@ -6827,7 +6900,7 @@ OVERALL PROGRESS: 20/20 MODULES COMPLETE (100%)
 <li>Document learnings and best practices</li>
 </ol>
 <hr />
-<h2 id="congratulations">🎉 Congratulations!</h2>
+<h2 id="congratulations">🎉 Congratulations</h2>
 <p>You've completed the most comprehensive platform engineering curriculum available. You're now equipped to:</p>
 <ul>
 <li><strong>Build</strong> world-class internal developer platforms</li>

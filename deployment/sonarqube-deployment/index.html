@@ -5069,10 +5069,12 @@
 <h2 id="deployment-steps">Deployment Steps</h2>
 <h3 id="step-1-deploy-postgresql-database">Step 1: Deploy PostgreSQL Database</h3>
 <p>The PostgreSQL database cluster for SonarQube is already defined in the repository.</p>
-<p><strong>Files</strong>:
-- <code>platform/apps/postgresql/db-sonarqube-cluster.yaml</code> - PostgreSQL cluster definition
-- <code>platform/apps/postgresql/db-sonarqube-credentials.yaml</code> - Database credentials</p>
-<p><strong>Verify PostgreSQL Deployment</strong>:
+<p><strong>Files</strong>:</p>
+<ul>
+<li><code>platform/apps/postgresql/db-sonarqube-cluster.yaml</code> - PostgreSQL cluster definition</li>
+<li><code>platform/apps/postgresql/db-sonarqube-credentials.yaml</code> - Database credentials</li>
+</ul>
+<p><strong>Verify PostgreSQL Deployment</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check if PostgreSQL operator is running</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>cloudnativepg-system
 
@@ -5082,20 +5084,22 @@ kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"
 <span class="c1"># Verify cluster is ready</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-sonarqube-dev<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.phase}&#39;</span>
 <span class="c1"># Expected output: Cluster in healthy state</span>
-</code></pre></div></p>
-<p><strong>Database Details</strong>:
-- <strong>Cluster Name</strong>: <code>db-sonarqube-dev</code>
-- <strong>Namespace</strong>: <code>fawkes</code>
-- <strong>Database</strong>: <code>sonarqube</code>
-- <strong>User</strong>: <code>sonarqube_user</code>
-- <strong>Instances</strong>: 3 (1 primary + 2 replicas)
-- <strong>Storage</strong>: 20Gi per instance
-- <strong>Connection String</strong>: <code>jdbc:postgresql://db-sonarqube-dev-rw.fawkes.svc.cluster.local:5432/sonarqube</code></p>
+</code></pre></div>
+<p><strong>Database Details</strong>:</p>
+<ul>
+<li><strong>Cluster Name</strong>: <code>db-sonarqube-dev</code></li>
+<li><strong>Namespace</strong>: <code>fawkes</code></li>
+<li><strong>Database</strong>: <code>sonarqube</code></li>
+<li><strong>User</strong>: <code>sonarqube_user</code></li>
+<li><strong>Instances</strong>: 3 (1 primary + 2 replicas)</li>
+<li><strong>Storage</strong>: 20Gi per instance</li>
+<li><strong>Connection String</strong>: <code>jdbc:postgresql://db-sonarqube-dev-rw.fawkes.svc.cluster.local:5432/sonarqube</code></li>
+</ul>
 <p><strong>⚠️ Security Note</strong>: Change the default password in <code>db-sonarqube-credentials.yaml</code> before deploying to production!</p>
 <h3 id="step-2-deploy-sonarqube-via-argocd">Step 2: Deploy SonarQube via ArgoCD</h3>
 <p>The SonarQube application is defined as an ArgoCD Application manifest.</p>
 <p><strong>File</strong>: <code>platform/apps/sonarqube-application.yaml</code></p>
-<p><strong>Apply the ArgoCD Application</strong>:
+<p><strong>Apply the ArgoCD Application</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Apply the SonarQube application</span>
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/sonarqube-application.yaml
 
@@ -5104,21 +5108,23 @@ kubectl<span class="w"> </span>get<span class="w"> </span>application<span class
 
 <span class="c1"># Watch the synchronization</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>application<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>sonarqube<span class="w"> </span>-w
-</code></pre></div></p>
-<p><strong>Alternative: Deploy via ArgoCD UI</strong>:
-1. Open ArgoCD UI
-2. Click <strong>+ New App</strong>
-3. Application Name: <code>sonarqube</code>
-4. Project: <code>default</code>
-5. Sync Policy: <code>Automatic</code>
-6. Repository URL: <code>https://charts.sonarsource.com</code>
-7. Chart: <code>sonarqube</code>
-8. Target Revision: <code>2025.1.0</code>
-9. Cluster: <code>https://kubernetes.default.svc</code>
-10. Namespace: <code>fawkes</code>
-11. Values: Copy from <code>sonarqube-application.yaml</code></p>
+</code></pre></div>
+<p><strong>Alternative: Deploy via ArgoCD UI</strong>:</p>
+<ol>
+<li>Open ArgoCD UI</li>
+<li>Click <strong>+ New App</strong></li>
+<li>Application Name: <code>sonarqube</code></li>
+<li>Project: <code>default</code></li>
+<li>Sync Policy: <code>Automatic</code></li>
+<li>Repository URL: <code>https://charts.sonarsource.com</code></li>
+<li>Chart: <code>sonarqube</code></li>
+<li>Target Revision: <code>2025.1.0</code></li>
+<li>Cluster: <code>https://kubernetes.default.svc</code></li>
+<li>Namespace: <code>fawkes</code></li>
+<li>Values: Copy from <code>sonarqube-application.yaml</code></li>
+</ol>
 <h3 id="step-3-verify-deployment">Step 3: Verify Deployment</h3>
-<p><strong>Check Pod Status</strong>:
+<p><strong>Check Pod Status</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Wait for SonarQube pod to be ready (can take 2-3 minutes)</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>sonarqube
 
@@ -5128,24 +5134,24 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 <span class="c1"># Expected in logs:</span>
 <span class="c1"># &quot;SonarQube is operational&quot;</span>
 <span class="c1"># &quot;Process[web] is up&quot;</span>
-</code></pre></div></p>
-<p><strong>Check Service</strong>:
+</code></pre></div>
+<p><strong>Check Service</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify service is created</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>sonarqube
 
 <span class="c1"># Expected output:</span>
 <span class="c1"># NAME        TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE</span>
 <span class="c1"># sonarqube   ClusterIP   10.x.x.x        &lt;none&gt;        9000/TCP   xm</span>
-</code></pre></div></p>
-<p><strong>Check Ingress</strong>:
+</code></pre></div>
+<p><strong>Check Ingress</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify ingress is created</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>sonarqube
 
 <span class="c1"># Check ingress details</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>sonarqube
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="step-4-access-sonarqube-ui">Step 4: Access SonarQube UI</h3>
-<p><strong>Local Development</strong>:
+<p><strong>Local Development</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Access via ingress</span>
 http://sonarqube.127.0.0.1.nip.io
 
@@ -5153,13 +5159,15 @@ http://sonarqube.127.0.0.1.nip.io
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>svc/sonarqube<span class="w"> </span><span class="m">9000</span>:9000
 
 <span class="c1"># Then access at http://localhost:9000</span>
-</code></pre></div></p>
-<p><strong>Production</strong>:
+</code></pre></div>
+<p><strong>Production</strong>:</p>
 <div class="highlight"><pre><span></span><code>https://sonarqube.fawkes.idp
-</code></pre></div></p>
-<p><strong>Default Credentials</strong>:
-- Username: <code>admin</code>
-- Password: <code>admin</code></p>
+</code></pre></div>
+<p><strong>Default Credentials</strong>:</p>
+<ul>
+<li>Username: <code>admin</code></li>
+<li>Password: <code>admin</code></li>
+</ul>
 <p><strong>⚠️ Important</strong>: Change the admin password immediately after first login!</p>
 <h3 id="step-5-initial-configuration">Step 5: Initial Configuration</h3>
 <h4 id="51-change-admin-password">5.1 Change Admin Password</h4>
@@ -5187,7 +5195,7 @@ curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${<
 <span class="c1"># Save the token output for Jenkins configuration</span>
 </code></pre></div>
 <h4 id="53-configure-jenkins-integration">5.3 Configure Jenkins Integration</h4>
-<p><strong>Add Token to Jenkins</strong>:
+<p><strong>Add Token to Jenkins</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Via Jenkins UI:</span>
 <span class="c1"># 1. Jenkins → Manage Jenkins → Manage Credentials</span>
 <span class="c1"># 2. Select domain: (global)</span>
@@ -5198,24 +5206,26 @@ curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${<
 
 <span class="c1"># Via Jenkins Configuration as Code (JCasC):</span>
 <span class="c1"># Already configured in jenkins-casc-configmap.yaml</span>
-</code></pre></div></p>
-<p><strong>Configure SonarQube Server in Jenkins</strong>:
+</code></pre></div>
+<p><strong>Configure SonarQube Server in Jenkins</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Already configured in Jenkins Shared Library</span>
 <span class="n">withSonarQubeEnv</span><span class="o">(</span><span class="s1">&#39;SonarQube&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="c1">// SonarQube server URL: http://sonarqube.fawkes.svc:9000</span>
 <span class="w">    </span><span class="c1">// Scanner authentication via token</span>
 <span class="o">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="54-create-quality-profiles">5.4 Create Quality Profiles</h4>
 <p>See <a href="../../platform/apps/sonarqube/quality-profiles.md">quality-profiles.md</a> for detailed instructions.</p>
-<p><strong>Quick Setup</strong>:
-1. Navigate to <strong>Quality Profiles</strong> in SonarQube UI
-2. Create custom profiles for each language:
-   - <code>Fawkes Java</code> (parent: Sonar way)
-   - <code>Fawkes Python</code> (parent: Sonar way)
-   - <code>Fawkes JavaScript</code> (parent: Sonar way)
-3. Activate additional security and quality rules
-4. Set each as default for its language</p>
+<p><strong>Quick Setup</strong>:</p>
+<ol>
+<li>Navigate to <strong>Quality Profiles</strong> in SonarQube UI</li>
+<li>Create custom profiles for each language:</li>
+<li><code>Fawkes Java</code> (parent: Sonar way)</li>
+<li><code>Fawkes Python</code> (parent: Sonar way)</li>
+<li><code>Fawkes JavaScript</code> (parent: Sonar way)</li>
+<li>Activate additional security and quality rules</li>
+<li>Set each as default for its language</li>
+</ol>
 <h4 id="55-configure-quality-gate">5.5 Configure Quality Gate</h4>
 <p>The default Quality Gate "Sonar way" is sufficient, but you can customize:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create custom Quality Gate via API</span>
@@ -5233,14 +5243,16 @@ curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${<
 <span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="s2">&quot;http://sonarqube.fawkes.svc:9000/api/qualitygates/set_as_default?name=Fawkes%20Gate&quot;</span>
 </code></pre></div>
-<p>Or configure via UI:
-1. Navigate to <strong>Quality Gates</strong>
-2. Click <strong>Create</strong>
-3. Name: <code>Fawkes Gate</code>
-4. Add conditions as per <a href="../../adr/ADR-014%20sonarqube%20quality%20gates/">ADR-014</a>
-5. Set as default</p>
+<p>Or configure via UI:</p>
+<ol>
+<li>Navigate to <strong>Quality Gates</strong></li>
+<li>Click <strong>Create</strong></li>
+<li>Name: <code>Fawkes Gate</code></li>
+<li>Add conditions as per <a href="../../adr/ADR-014%20sonarqube%20quality%20gates/">ADR-014</a></li>
+<li>Set as default</li>
+</ol>
 <h3 id="step-6-test-integration-with-jenkins">Step 6: Test Integration with Jenkins</h3>
-<p><strong>Create Test Project</strong>:
+<p><strong>Create Test Project</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Use a golden path template to create a test service</span>
 <span class="c1"># From Backstage UI:</span>
 <span class="c1"># 1. Create Component → Select Java/Python/Node.js template</span>
@@ -5248,8 +5260,8 @@ curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${<
 <span class="c1"># 3. Create</span>
 
 <span class="c1"># Or manually create a simple project with Jenkinsfile</span>
-</code></pre></div></p>
-<p><strong>Trigger Jenkins Build</strong>:
+</code></pre></div>
+<p><strong>Trigger Jenkins Build</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Push code to trigger Jenkins pipeline</span>
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Test SonarQube integration&quot;</span>
 git<span class="w"> </span>push
@@ -5257,95 +5269,117 @@ git<span class="w"> </span>push
 <span class="c1"># Monitor Jenkins build</span>
 <span class="c1"># Should see &quot;SonarQube Analysis&quot; stage execute successfully</span>
 <span class="c1"># Should see &quot;Quality Gate&quot; stage check results</span>
-</code></pre></div></p>
-<p><strong>Verify in SonarQube</strong>:
+</code></pre></div>
+<p><strong>Verify in SonarQube</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check project appears in SonarQube UI</span>
 <span class="c1"># Navigate to Projects</span>
 <span class="c1"># Should see your test project listed with analysis results</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="configuration-details">Configuration Details</h2>
 <h3 id="resource-limits">Resource Limits</h3>
-<p><strong>SonarQube Pod</strong>:
-- Requests: 500m CPU, 2Gi memory
-- Limits: 2 CPU, 4Gi memory</p>
-<p><strong>PostgreSQL Cluster</strong>:
-- Requests: 500m CPU, 512Mi memory per instance
-- Limits: 2 CPU, 2Gi memory per instance
-- Storage: 20Gi per instance (total 60Gi for 3 instances)</p>
+<p><strong>SonarQube Pod</strong>:</p>
+<ul>
+<li>Requests: 500m CPU, 2Gi memory</li>
+<li>Limits: 2 CPU, 4Gi memory</li>
+</ul>
+<p><strong>PostgreSQL Cluster</strong>:</p>
+<ul>
+<li>Requests: 500m CPU, 512Mi memory per instance</li>
+<li>Limits: 2 CPU, 2Gi memory per instance</li>
+<li>Storage: 20Gi per instance (total 60Gi for 3 instances)</li>
+</ul>
 <h3 id="persistence">Persistence</h3>
-<p><strong>SonarQube Data</strong>:
-- Volume: PersistentVolumeClaim
-- Storage Class: <code>standard</code>
-- Size: 10Gi
-- Access Mode: ReadWriteOnce</p>
-<p><strong>PostgreSQL Data</strong>:
-- Managed by CloudNativePG operator
-- Automated backups (configure in production)
-- Point-in-time recovery capability</p>
+<p><strong>SonarQube Data</strong>:</p>
+<ul>
+<li>Volume: PersistentVolumeClaim</li>
+<li>Storage Class: <code>standard</code></li>
+<li>Size: 10Gi</li>
+<li>Access Mode: ReadWriteOnce</li>
+</ul>
+<p><strong>PostgreSQL Data</strong>:</p>
+<ul>
+<li>Managed by CloudNativePG operator</li>
+<li>Automated backups (configure in production)</li>
+<li>Point-in-time recovery capability</li>
+</ul>
 <h3 id="security">Security</h3>
-<p><strong>Pod Security Context</strong>:
-- Non-root user: UID/GID 1000
-- fsGroup: 1000
-- Read-only root filesystem: false (SonarQube writes to temp dirs)
-- Capabilities dropped: ALL
-- Seccomp profile: RuntimeDefault</p>
-<p><strong>Network</strong>:
-- Internal service: ClusterIP
-- External access: Via Ingress with TLS
-- Database connection: Internal service, TLS optional</p>
-<p><strong>Secrets Management</strong>:
-- Database credentials: Kubernetes secrets (dev/local)
-- Admin credentials: Manual change required
-- Scanner tokens: Jenkins credentials store
-- Production: Use External Secrets Operator with Vault</p>
+<p><strong>Pod Security Context</strong>:</p>
+<ul>
+<li>Non-root user: UID/GID 1000</li>
+<li>fsGroup: 1000</li>
+<li>Read-only root filesystem: false (SonarQube writes to temp dirs)</li>
+<li>Capabilities dropped: ALL</li>
+<li>Seccomp profile: RuntimeDefault</li>
+</ul>
+<p><strong>Network</strong>:</p>
+<ul>
+<li>Internal service: ClusterIP</li>
+<li>External access: Via Ingress with TLS</li>
+<li>Database connection: Internal service, TLS optional</li>
+</ul>
+<p><strong>Secrets Management</strong>:</p>
+<ul>
+<li>Database credentials: Kubernetes secrets (dev/local)</li>
+<li>Admin credentials: Manual change required</li>
+<li>Scanner tokens: Jenkins credentials store</li>
+<li>Production: Use External Secrets Operator with Vault</li>
+</ul>
 <h3 id="plugins">Plugins</h3>
-<p>The following plugins are pre-installed:
-- sonar-scm-git-plugin (Git integration)
-- sonar-jacoco-plugin (Java code coverage)
-- sonar-findbugs-plugin (SpotBugs integration)
-- checkstyle-sonar-plugin (Java code style)
-- sonar-yaml-plugin (Infrastructure as Code analysis)</p>
+<p>The following plugins are pre-installed:</p>
+<ul>
+<li>sonar-scm-git-plugin (Git integration)</li>
+<li>sonar-jacoco-plugin (Java code coverage)</li>
+<li>sonar-findbugs-plugin (SpotBugs integration)</li>
+<li>checkstyle-sonar-plugin (Java code style)</li>
+<li>sonar-yaml-plugin (Infrastructure as Code analysis)</li>
+</ul>
 <p>See <code>sonarqube-application.yaml</code> for plugin URLs and versions.</p>
 <h2 id="monitoring">Monitoring</h2>
 <h3 id="prometheus-integration">Prometheus Integration</h3>
-<p><strong>ServiceMonitor</strong>:
+<p><strong>ServiceMonitor</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Already configured in sonarqube-application.yaml</span>
 <span class="nt">prometheusMonitoring</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">podMonitor</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes</span>
 <span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
-</code></pre></div></p>
-<p><strong>Key Metrics</strong>:
-- <code>sonarqube_health_status</code> - Overall health
-- <code>sonarqube_compute_engine_tasks</code> - Background task queue
-- <code>sonarqube_database_pool_active_connections</code> - DB connections</p>
-<p><strong>View Metrics</strong>:
+</code></pre></div>
+<p><strong>Key Metrics</strong>:</p>
+<ul>
+<li><code>sonarqube_health_status</code> - Overall health</li>
+<li><code>sonarqube_compute_engine_tasks</code> - Background task queue</li>
+<li><code>sonarqube_database_pool_active_connections</code> - DB connections</li>
+</ul>
+<p><strong>View Metrics</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Port-forward to SonarQube</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>svc/sonarqube<span class="w"> </span><span class="m">9000</span>:9000
 
 <span class="c1"># Access metrics endpoint</span>
 curl<span class="w"> </span>http://localhost:9000/api/monitoring/metrics
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="health-checks">Health Checks</h3>
-<p><strong>Liveness Probe</strong>:
-- Path: <code>/api/system/liveness</code>
-- Initial Delay: 90 seconds
-- Period: 30 seconds</p>
-<p><strong>Readiness Probe</strong>:
-- Path: <code>/api/system/health</code>
-- Initial Delay: 90 seconds
-- Period: 30 seconds</p>
-<p><strong>Check Health</strong>:
+<p><strong>Liveness Probe</strong>:</p>
+<ul>
+<li>Path: <code>/api/system/liveness</code></li>
+<li>Initial Delay: 90 seconds</li>
+<li>Period: 30 seconds</li>
+</ul>
+<p><strong>Readiness Probe</strong>:</p>
+<ul>
+<li>Path: <code>/api/system/health</code></li>
+<li>Initial Delay: 90 seconds</li>
+<li>Period: 30 seconds</li>
+</ul>
+<p><strong>Check Health</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Via API</span>
 curl<span class="w"> </span>http://sonarqube.fawkes.svc:9000/api/system/health
 
 <span class="c1"># Expected response: {&quot;health&quot;:&quot;GREEN&quot;,&quot;causes&quot;:[]}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="pod-not-starting">Pod Not Starting</h3>
 <p><strong>Symptoms</strong>: Pod stuck in <code>CrashLoopBackOff</code> or <code>Pending</code></p>
-<p><strong>Solutions</strong>:
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check pod events</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>sonarqube
 
@@ -5356,10 +5390,10 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 <span class="c1"># 1. Insufficient memory - increase resources</span>
 <span class="c1"># 2. PostgreSQL not ready - wait for DB cluster to be healthy</span>
 <span class="c1"># 3. PVC not bound - check storage provisioner</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="database-connection-failed">Database Connection Failed</h3>
 <p><strong>Symptoms</strong>: Logs show "Can't connect to database"</p>
-<p><strong>Solutions</strong>:
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify PostgreSQL cluster is healthy</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-sonarqube-dev
 
@@ -5371,10 +5405,10 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 
 <span class="c1"># Verify credentials match</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-sonarqube-credentials<span class="w"> </span>-o<span class="w"> </span>yaml
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="ingress-not-working">Ingress Not Working</h3>
 <p><strong>Symptoms</strong>: Can't access SonarQube UI via ingress</p>
-<p><strong>Solutions</strong>:
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check ingress status</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>sonarqube
 
@@ -5387,10 +5421,10 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 
 <span class="c1"># Check ingress logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/component<span class="o">=</span>controller
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="quality-gate-timeout">Quality Gate Timeout</h3>
 <p><strong>Symptoms</strong>: Jenkins pipeline times out waiting for Quality Gate</p>
-<p><strong>Solutions</strong>:
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Increase timeout in Jenkinsfile</span>
 timeout<span class="o">(</span>time:<span class="w"> </span><span class="m">10</span>,<span class="w"> </span>unit:<span class="w"> </span><span class="s1">&#39;MINUTES&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span>waitForQualityGate<span class="w"> </span>abortPipeline:<span class="w"> </span><span class="nb">true</span>
@@ -5402,10 +5436,10 @@ curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${<
 
 <span class="c1"># Restart SonarQube pod if compute engine is stuck</span>
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>sonarqube
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="high-memory-usage">High Memory Usage</h3>
 <p><strong>Symptoms</strong>: Pod using more memory than allocated</p>
-<p><strong>Solutions</strong>:
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check current usage</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>sonarqube
 
@@ -5418,10 +5452,10 @@ sonarProperties:
 resources:
 <span class="w">  </span>limits:
 <span class="w">    </span>memory:<span class="w"> </span>6Gi<span class="w">  </span><span class="c1"># Increase from 4Gi</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="backup-and-recovery">Backup and Recovery</h2>
 <h3 id="database-backup">Database Backup</h3>
-<p><strong>Automated Backups</strong> (configure in production):
+<p><strong>Automated Backups</strong> (configure in production):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Edit db-sonarqube-cluster.yaml</span>
 <span class="nt">backup</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">barmanObjectStore</span><span class="p">:</span>
@@ -5436,8 +5470,8 @@ resources:
 <span class="w">    </span><span class="nt">wal</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">compression</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gzip</span>
 <span class="w">  </span><span class="nt">retentionPolicy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;30d&quot;</span>
-</code></pre></div></p>
-<p><strong>Manual Backup</strong>:
+</code></pre></div>
+<p><strong>Manual Backup</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Export database</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-sonarqube-dev-1<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>pg_dump<span class="w"> </span>-U<span class="w"> </span>sonarqube_user<span class="w"> </span>-d<span class="w"> </span>sonarqube<span class="w"> </span>&gt;<span class="w"> </span>sonarqube-backup.sql
@@ -5446,7 +5480,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${</span><span class="nv">SONAR_PASSWORD</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="s2">&quot;http://sonarqube.fawkes.svc:9000/api/qualityprofiles/backup?language=java&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>&gt;<span class="w"> </span>fawkes-java-profile.xml
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="restore">Restore</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Restore database</span>
 cat<span class="w"> </span>sonarqube-backup.sql<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
@@ -5476,26 +5510,26 @@ curl<span class="w"> </span>http://sonarqube.fawkes.svc:9000/api/system/status
 </code></pre></div>
 <h3 id="database-migration">Database Migration</h3>
 <p>SonarQube automatically migrates the database schema on startup if needed.</p>
-<p><strong>Monitor Migration</strong>:
+<p><strong>Monitor Migration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check logs for migration</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>sonarqube<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span>-f
 
 <span class="c1"># Look for:</span>
 <span class="c1"># &quot;Executing DB migrations...&quot;</span>
 <span class="c1"># &quot;DB migration | success&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="maintenance">Maintenance</h2>
 <h3 id="housekeeping">Housekeeping</h3>
-<p><strong>Clean Old Analysis</strong>:
+<p><strong>Clean Old Analysis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Via UI: Administration → Projects → Management → Bulk Deletion</span>
 
 <span class="c1"># Or via API (delete analyses older than 90 days)</span>
 curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${</span><span class="nv">SONAR_PASSWORD</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="s2">&quot;http://sonarqube.fawkes.svc:9000/api/projects/bulk_delete?analyzedBefore=2024-09-01&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="reindexing">Reindexing</h3>
-<p>If search is slow or not working:
+<p>If search is slow or not working:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Trigger reindex</span>
 curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${</span><span class="nv">SONAR_PASSWORD</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -5503,7 +5537,7 @@ curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${<
 
 <span class="c1"># Monitor logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>sonarqube<span class="w"> </span>-f
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="resources">Resources</h2>
 <ul>
 <li><a href="https://docs.sonarqube.org/">SonarQube Documentation</a></li>

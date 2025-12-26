@@ -5058,70 +5058,66 @@
 </ul>
 <div class="admonition info">
 <p class="admonition-title">Why Vault?</p>
-<p>Storing secrets in code, environment variables, or ConfigMaps is insecure. Vault provides centralized secret management with audit logs, access control, and rotation capabilities. <a href="../../explanation/security/zero-trust-model/">Learn more about Zero Trust Security</a>.</p>
 </div>
+<p>Storing secrets in code, environment variables, or ConfigMaps is insecure. Vault provides centralized secret management with audit logs, access control, and rotation capabilities. <a href="../../explanation/security/zero-trust-model/">Learn more about Zero Trust Security</a>.</p>
 <h2 id="step-1-authenticate-to-vault">Step 1: Authenticate to Vault</h2>
 <p>First, let's verify you can access Vault.</p>
 <ol>
-<li>
-<p>Set the Vault address:
-   <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VAULT_ADDR</span><span class="o">=</span><span class="s2">&quot;https://vault.127.0.0.1.nip.io&quot;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Log in to Vault (use the token provided by your platform team):
-   <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>login
-</code></pre></div></p>
-</li>
+<li>Set the Vault address:</li>
 </ol>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VAULT_ADDR</span><span class="o">=</span><span class="s2">&quot;https://vault.127.0.0.1.nip.io&quot;</span>
+</code></pre></div>
+<ol>
+<li>Log in to Vault (use the token provided by your platform team):</li>
+</ol>
+<div class="highlight"><pre><span></span><code>vault<span class="w"> </span>login
+</code></pre></div>
 <p>Enter your token when prompted.</p>
 <ol>
-<li>Verify authentication:
-   <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>token<span class="w"> </span>lookup
-</code></pre></div></li>
+<li>Verify authentication:</li>
 </ol>
+<div class="highlight"><pre><span></span><code>vault<span class="w"> </span>token<span class="w"> </span>lookup
+</code></pre></div>
 <p>You should see details about your token, including policies and permissions.</p>
 <div class="admonition tip">
 <p class="admonition-title">Vault Token Management</p>
-<p>In production, individual users don't use root tokens. Instead, applications authenticate using Kubernetes Service Accounts. We'll set that up later in this tutorial.</p>
 </div>
+<p>In production, individual users don't use root tokens. Instead, applications authenticate using Kubernetes Service Accounts. We'll set that up later in this tutorial.</p>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You can authenticate to Vault and are ready to create secrets.</p>
 </div>
+<p>You can authenticate to Vault and are ready to create secrets.</p>
 <h2 id="step-2-create-a-secret-in-vault">Step 2: Create a Secret in Vault</h2>
 <p>Let's create a database connection secret for our application.</p>
 <ol>
-<li>Enable the KV v2 secrets engine if not already enabled:
-   <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>secrets<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-path<span class="o">=</span>secret<span class="w"> </span>kv-v2
-</code></pre></div></li>
+<li>Enable the KV v2 secrets engine if not already enabled:</li>
 </ol>
+<div class="highlight"><pre><span></span><code>vault<span class="w"> </span>secrets<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-path<span class="o">=</span>secret<span class="w"> </span>kv-v2
+</code></pre></div>
 <p>If it's already enabled, you'll see an error - that's okay!</p>
 <ol>
-<li>
-<p>Create a secret for your application:
-   <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </span>secret/hello-fawkes/database<span class="w"> </span><span class="se">\</span>
+<li>Create a secret for your application:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </span>secret/hello-fawkes/database<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">host</span><span class="o">=</span><span class="s2">&quot;postgres.database.svc.cluster.local&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">port</span><span class="o">=</span><span class="s2">&quot;5432&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">username</span><span class="o">=</span><span class="s2">&quot;hello_fawkes_user&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">password</span><span class="o">=</span><span class="s2">&quot;SuperSecretPassword123!&quot;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Verify the secret was created:
-   <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>kv<span class="w"> </span>get<span class="w"> </span>secret/hello-fawkes/database
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
+<li>Verify the secret was created:</li>
 </ol>
-<p>You should see your secret values:
-   <div class="highlight"><pre><span></span><code>====== Data ======
+<div class="highlight"><pre><span></span><code>vault<span class="w"> </span>kv<span class="w"> </span>get<span class="w"> </span>secret/hello-fawkes/database
+</code></pre></div>
+<p>You should see your secret values:</p>
+<div class="highlight"><pre><span></span><code>====== Data ======
 Key         Value
 ---         -----
 host        postgres.database.svc.cluster.local
 port        5432
 username    hello_fawkes_user
 password    SuperSecretPassword123!
-</code></pre></div></p>
+</code></pre></div>
 <ol>
 <li>Create another secret for API keys:
    <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </span>secret/hello-fawkes/api<span class="w"> </span><span class="se">\</span>
@@ -5131,28 +5127,26 @@ password    SuperSecretPassword123!
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Your secrets are stored in Vault and can be accessed programmatically.</p>
 </div>
+<p>Your secrets are stored in Vault and can be accessed programmatically.</p>
 <h2 id="step-3-configure-vault-kubernetes-authentication">Step 3: Configure Vault Kubernetes Authentication</h2>
 <p>For your application to access Vault, we need to set up Kubernetes authentication.</p>
 <ol>
-<li>
-<p>Enable Kubernetes auth method (if not already enabled):
-   <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>auth<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>kubernetes
-</code></pre></div></p>
-</li>
-<li>
-<p>Configure the Kubernetes auth method:
-   <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>write<span class="w"> </span>auth/kubernetes/config<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="nv">kubernetes_host</span><span class="o">=</span><span class="s2">&quot;https://kubernetes.default.svc:443&quot;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Create a policy that allows reading your secrets:</p>
-</li>
+<li>Enable Kubernetes auth method (if not already enabled):</li>
 </ol>
-<p>Create a file <code>hello-fawkes-policy.hcl</code>:
-   <div class="highlight"><pre><span></span><code><span class="c1"># Allow reading secrets for hello-fawkes</span>
+<div class="highlight"><pre><span></span><code>vault<span class="w"> </span>auth<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>kubernetes
+</code></pre></div>
+<ol>
+<li>Configure the Kubernetes auth method:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>vault<span class="w"> </span>write<span class="w"> </span>auth/kubernetes/config<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="nv">kubernetes_host</span><span class="o">=</span><span class="s2">&quot;https://kubernetes.default.svc:443&quot;</span>
+</code></pre></div>
+<ol>
+<li>Create a policy that allows reading your secrets:</li>
+</ol>
+<p>Create a file <code>hello-fawkes-policy.hcl</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Allow reading secrets for hello-fawkes</span>
 <span class="err">path</span><span class="w"> </span><span class="s2">&quot;secret/data/hello-fawkes/*&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">capabilities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;read&quot;, &quot;list&quot;</span><span class="p">]</span>
 <span class="p">}</span>
@@ -5161,46 +5155,44 @@ password    SuperSecretPassword123!
 <span class="err">path</span><span class="w"> </span><span class="s2">&quot;secret/metadata/hello-fawkes/*&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">capabilities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;read&quot;, &quot;list&quot;</span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <ol>
-<li>
-<p>Upload the policy to Vault:
-   <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>policy<span class="w"> </span>write<span class="w"> </span>hello-fawkes<span class="w"> </span>hello-fawkes-policy.hcl
-</code></pre></div></p>
-</li>
-<li>
-<p>Create a Vault role that maps to your Kubernetes service account:
+<li>Upload the policy to Vault:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>vault<span class="w"> </span>policy<span class="w"> </span>write<span class="w"> </span>hello-fawkes<span class="w"> </span>hello-fawkes-policy.hcl
+</code></pre></div>
+<ol>
+<li>Create a Vault role that maps to your Kubernetes service account:
    <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>write<span class="w"> </span>auth/kubernetes/role/hello-fawkes<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">bound_service_account_names</span><span class="o">=</span>hello-fawkes<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">bound_service_account_namespaces</span><span class="o">=</span>my-first-app<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">policies</span><span class="o">=</span>hello-fawkes<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">ttl</span><span class="o">=</span>24h
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition info">
 <p class="admonition-title">What Did We Just Do?</p>
-<p>We created a Vault role that trusts the <code>hello-fawkes</code> ServiceAccount in the <code>my-first-app</code> namespace. This allows pods using that ServiceAccount to authenticate to Vault and read secrets according to the <code>hello-fawkes</code> policy.</p>
 </div>
+<p>We created a Vault role that trusts the <code>hello-fawkes</code> ServiceAccount in the <code>my-first-app</code> namespace. This allows pods using that ServiceAccount to authenticate to Vault and read secrets according to the <code>hello-fawkes</code> policy.</p>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Kubernetes authentication is configured, allowing your application to securely access Vault.</p>
 </div>
+<p>Kubernetes authentication is configured, allowing your application to securely access Vault.</p>
 <h2 id="step-4-create-a-kubernetes-service-account">Step 4: Create a Kubernetes Service Account</h2>
 <p>Your application needs a ServiceAccount to authenticate with Vault.</p>
 <ol>
-<li>
-<p>Create <code>k8s/serviceaccount.yaml</code>:
-   <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<li>Create <code>k8s/serviceaccount.yaml</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-first-app</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Update <code>k8s/deployment.yaml</code> to use the ServiceAccount:
-   <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+</code></pre></div>
+<ol>
+<li>Update <code>k8s/deployment.yaml</code> to use the ServiceAccount:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
@@ -5219,42 +5211,40 @@ password    SuperSecretPassword123!
 <span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
 <span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v3</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span><span class="w">  </span><span class="c1"># Add this line</span>
+<span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span><span class="w"> </span><span class="c1"># Add this line</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YOUR-USERNAME/hello-fawkes:v3.0.0</span>
-<span class="w">        </span><span class="c1"># ... rest of container spec</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Apply the ServiceAccount:
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YOUR-USERNAME/hello-fawkes:v3.0.0</span>
+<span class="w">          </span><span class="c1"># ... rest of container spec</span>
+</code></pre></div>
+<ol>
+<li>Apply the ServiceAccount:
    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/serviceaccount.yaml
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Your application now has a ServiceAccount that can authenticate with Vault.</p>
 </div>
+<p>Your application now has a ServiceAccount that can authenticate with Vault.</p>
 <h2 id="step-5-update-application-to-use-vault">Step 5: Update Application to Use Vault</h2>
 <p>Now let's modify our application to fetch secrets from Vault at runtime.</p>
 <ol>
-<li>
-<p>Install the Vault client library:
-   <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--save<span class="w"> </span>node-vault
-</code></pre></div></p>
-</li>
-<li>
-<p>Create a new file <code>vault-client.js</code>:
-   <div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">vault</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;node-vault&#39;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">fs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+<li>Install the Vault client library:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--save<span class="w"> </span>node-vault
+</code></pre></div>
+<ol>
+<li>Create a new file <code>vault-client.js</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">vault</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;node-vault&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">fs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;fs&quot;</span><span class="p">);</span>
 
 <span class="c1">// Read the service account token</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">getK8sToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">&#39;/var/run/secrets/kubernetes.io/serviceaccount/token&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;utf8&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s2">&quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;utf8&quot;</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Failed to read Kubernetes token:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Failed to read Kubernetes token:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">};</span>
@@ -5262,30 +5252,30 @@ password    SuperSecretPassword123!
 <span class="c1">// Initialize Vault client</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">initVaultClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">vaultClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">vault</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;v1&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">endpoint</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">VAULT_ADDR</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;http://vault.fawkes-platform.svc.cluster.local:8200&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;v1&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">endpoint</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">VAULT_ADDR</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;http://vault.fawkes-platform.svc.cluster.local:8200&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 
 <span class="w">  </span><span class="c1">// Authenticate using Kubernetes service account</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">k8sToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">getK8sToken</span><span class="p">();</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">k8sToken</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;No Kubernetes token available&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;No Kubernetes token available&quot;</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">vaultClient</span><span class="p">.</span><span class="nx">kubernetesLogin</span><span class="p">({</span>
-<span class="w">      </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;hello-fawkes&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hello-fawkes&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="nx">jwt</span><span class="o">:</span><span class="w"> </span><span class="nx">k8sToken</span><span class="p">,</span>
 <span class="w">    </span><span class="p">});</span>
 
-<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Successfully authenticated to Vault&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Successfully authenticated to Vault&quot;</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// Set the client token for future requests</span>
 <span class="w">    </span><span class="nx">vaultClient</span><span class="p">.</span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">client_token</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">vaultClient</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Vault authentication failed:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Vault authentication failed:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
 <span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="nx">error</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">};</span>
@@ -5305,15 +5295,15 @@ password    SuperSecretPassword123!
 <span class="w">  </span><span class="nx">initVaultClient</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">getSecret</span><span class="p">,</span>
 <span class="p">};</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Update <code>server.js</code> to use Vault secrets:
-   <div class="highlight"><pre><span></span><code><span class="c1">// Load tracing first</span>
-<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./tracing&#39;</span><span class="p">);</span>
+</code></pre></div>
+<ol>
+<li>Update <code>server.js</code> to use Vault secrets:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1">// Load tracing first</span>
+<span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./tracing&quot;</span><span class="p">);</span>
 
-<span class="kd">const</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">initVaultClient</span><span class="p">,</span><span class="w"> </span><span class="nx">getSecret</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./vault-client&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;express&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">initVaultClient</span><span class="p">,</span><span class="w"> </span><span class="nx">getSecret</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./vault-client&quot;</span><span class="p">);</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">();</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">PORT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">8080</span><span class="p">;</span>
@@ -5331,42 +5321,42 @@ password    SuperSecretPassword123!
 <span class="w">    </span><span class="nx">vaultClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">initVaultClient</span><span class="p">();</span>
 
 <span class="w">    </span><span class="c1">// Load database secrets</span>
-<span class="w">    </span><span class="nx">secrets</span><span class="p">.</span><span class="nx">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">getSecret</span><span class="p">(</span><span class="nx">vaultClient</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;hello-fawkes/database&#39;</span><span class="p">);</span>
-<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Database secrets loaded&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">secrets</span><span class="p">.</span><span class="nx">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">getSecret</span><span class="p">(</span><span class="nx">vaultClient</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;hello-fawkes/database&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Database secrets loaded&quot;</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// Load API secrets</span>
-<span class="w">    </span><span class="nx">secrets</span><span class="p">.</span><span class="nx">api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">getSecret</span><span class="p">(</span><span class="nx">vaultClient</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;hello-fawkes/api&#39;</span><span class="p">);</span>
-<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;API secrets loaded&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">secrets</span><span class="p">.</span><span class="nx">api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">getSecret</span><span class="p">(</span><span class="nx">vaultClient</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;hello-fawkes/api&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;API secrets loaded&quot;</span><span class="p">);</span>
 
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Failed to initialize secrets:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Failed to initialize secrets:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">};</span>
 
-<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Hello from Fawkes!&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Hello from Fawkes!&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">timestamp</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">(),</span>
-<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;3.0.0&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">tracing</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;enabled&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">secrets</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;managed by Vault&#39;</span>
+<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;3.0.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">tracing</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">secrets</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;managed by Vault&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 
-<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/health&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/health&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">healthy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">secrets</span><span class="p">.</span><span class="nx">database</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">secrets</span><span class="p">.</span><span class="nx">api</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="nx">healthy</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mf">200</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">503</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="nx">healthy</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;healthy&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;unhealthy&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">secretsLoaded</span><span class="o">:</span><span class="w"> </span><span class="nx">healthy</span>
+<span class="w">    </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="nx">healthy</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unhealthy&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">secretsLoaded</span><span class="o">:</span><span class="w"> </span><span class="nx">healthy</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 
 <span class="c1">// Endpoint that uses database secrets</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/api/data&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/api/data&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">secrets</span><span class="p">.</span><span class="nx">database</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">503</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Database secrets not loaded&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">503</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Database secrets not loaded&quot;</span><span class="w"> </span><span class="p">});</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="c1">// In a real app, you&#39;d use these to connect to the database</span>
@@ -5378,7 +5368,7 @@ password    SuperSecretPassword123!
 <span class="w">  </span><span class="p">};</span>
 
 <span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Database connection configured&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Database connection configured&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">host</span><span class="o">:</span><span class="w"> </span><span class="nx">dbConfig</span><span class="p">.</span><span class="nx">host</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">port</span><span class="o">:</span><span class="w"> </span><span class="nx">dbConfig</span><span class="p">.</span><span class="nx">port</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">user</span><span class="o">:</span><span class="w"> </span><span class="nx">dbConfig</span><span class="p">.</span><span class="nx">username</span><span class="p">,</span>
@@ -5386,12 +5376,12 @@ password    SuperSecretPassword123!
 <span class="p">});</span>
 
 <span class="c1">// Endpoint to trigger secret refresh</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/api/refresh-secrets&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Refreshing secrets from Vault...&#39;</span><span class="p">);</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">&quot;/api/refresh-secrets&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Refreshing secrets from Vault...&quot;</span><span class="p">);</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">initializeSecrets</span><span class="p">();</span>
 <span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span>
 <span class="w">    </span><span class="nx">success</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="nx">success</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;Secrets refreshed&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Failed to refresh secrets&#39;</span>
+<span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="nx">success</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s2">&quot;Secrets refreshed&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Failed to refresh secrets&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 
@@ -5400,32 +5390,30 @@ password    SuperSecretPassword123!
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">secretsLoaded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">initializeSecrets</span><span class="p">();</span>
 
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">secretsLoaded</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Failed to load secrets. Server will start but may not function correctly.&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Failed to load secrets. Server will start but may not function correctly.&quot;</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Server running on port </span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
 <span class="w">  </span><span class="p">});</span>
 <span class="p">})();</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Commit the changes:
+</code></pre></div>
+<ol>
+<li>Commit the changes:
    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>vault-client.js<span class="w"> </span>server.js<span class="w"> </span>package.json<span class="w"> </span>package-lock.json
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add Vault secret management&quot;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Your application now fetches secrets from Vault instead of using hardcoded values!</p>
 </div>
+<p>Your application now fetches secrets from Vault instead of using hardcoded values!</p>
 <h2 id="step-6-update-deployment-configuration">Step 6: Update Deployment Configuration</h2>
 <p>Add environment variables for Vault connectivity.</p>
 <ol>
-<li>
-<p>Update <code>k8s/deployment.yaml</code>:
-   <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<li>Update <code>k8s/deployment.yaml</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
@@ -5446,170 +5434,162 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YOUR-USERNAME/hello-fawkes:v3.0.0</span>
-<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
-<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PORT</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8080&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VAULT_ADDR</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://vault.fawkes-platform.svc.cluster.local:8200&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_SERVICE_NAME</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hello-fawkes&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVICE_VERSION</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.0.0&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENVIRONMENT</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;development&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_EXPORTER_OTLP_ENDPOINT</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://tempo.fawkes-platform.svc.cluster.local:4318/v1/traces&quot;</span>
-<span class="w">        </span><span class="nt">livenessProbe</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">httpGet</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
-<span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
-<span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">        </span><span class="nt">readinessProbe</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">httpGet</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
-<span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
-<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
-<span class="w">        </span><span class="nt">securityContext</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">          </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">          </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">          </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Commit the changes:
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YOUR-USERNAME/hello-fawkes:v3.0.0</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PORT</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8080&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VAULT_ADDR</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://vault.fawkes-platform.svc.cluster.local:8200&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_SERVICE_NAME</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hello-fawkes&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVICE_VERSION</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.0.0&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENVIRONMENT</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;development&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_EXPORTER_OTLP_ENDPOINT</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://tempo.fawkes-platform.svc.cluster.local:4318/v1/traces&quot;</span>
+<span class="w">          </span><span class="nt">livenessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">          </span><span class="nt">readinessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
+<span class="w">            </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
+<span class="w">          </span><span class="nt">securityContext</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+<span class="w">            </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">            </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<ol>
+<li>Commit the changes:
    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>k8s/
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Configure Vault integration in deployment&quot;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Deployment is configured to connect to Vault using the ServiceAccount.</p>
 </div>
+<p>Deployment is configured to connect to Vault using the ServiceAccount.</p>
 <h2 id="step-7-deploy-and-verify">Step 7: Deploy and Verify</h2>
 <p>Let's deploy the updated application and verify it can read secrets from Vault.</p>
 <ol>
-<li>
-<p>Build and push the new version:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v3.0.0<span class="w"> </span>.
-docker<span class="w"> </span>push<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v3.0.0
-</code></pre></div></p>
-</li>
-<li>
-<p>Push to Git (ArgoCD will auto-sync):
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>push
-</code></pre></div></p>
-</li>
-<li>
-<p>Watch the deployment:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/hello-fawkes<span class="w"> </span>-n<span class="w"> </span>my-first-app
-</code></pre></div></p>
-</li>
-<li>
-<p>Check that secrets loaded successfully:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>my-first-app<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>hello-fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vault
-</code></pre></div></p>
-</li>
+<li>Build and push the new version:</li>
 </ol>
-<p>You should see:
-   <div class="highlight"><pre><span></span><code>Successfully authenticated to Vault
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v3.0.0<span class="w"> </span>.
+docker<span class="w"> </span>push<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v3.0.0
+</code></pre></div>
+<ol>
+<li>Push to Git (ArgoCD will auto-sync):</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>push
+</code></pre></div>
+<ol>
+<li>Watch the deployment:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/hello-fawkes<span class="w"> </span>-n<span class="w"> </span>my-first-app
+</code></pre></div>
+<ol>
+<li>Check that secrets loaded successfully:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>my-first-app<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>hello-fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vault
+</code></pre></div>
+<p>You should see:</p>
+<div class="highlight"><pre><span></span><code>Successfully authenticated to Vault
 Database secrets loaded
 API secrets loaded
-</code></pre></div></p>
+</code></pre></div>
 <ol>
-<li>Test the health endpoint:
-   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>https://hello-fawkes.127.0.0.1.nip.io/health
-</code></pre></div></li>
+<li>Test the health endpoint:</li>
 </ol>
-<p>Should return:
-   <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>https://hello-fawkes.127.0.0.1.nip.io/health
+</code></pre></div>
+<p>Should return:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;secretsLoaded&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <ol>
-<li>Test the data endpoint that uses secrets:
-   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>https://hello-fawkes.127.0.0.1.nip.io/api/data
-</code></pre></div></li>
+<li>Test the data endpoint that uses secrets:</li>
 </ol>
-<p>Should return database configuration from Vault:
-   <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>https://hello-fawkes.127.0.0.1.nip.io/api/data
+</code></pre></div>
+<p>Should return database configuration from Vault:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Database connection configured&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;postgres.database.svc.cluster.local&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5432&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hello_fawkes_user&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Your application is running and successfully retrieving secrets from Vault! 🎉</p>
 </div>
+<p>Your application is running and successfully retrieving secrets from Vault! 🎉</p>
 <h2 id="step-8-rotate-a-secret">Step 8: Rotate a Secret</h2>
 <p>Let's verify that secret rotation works by updating a secret in Vault and refreshing it in the application.</p>
 <ol>
-<li>
-<p>Update the database password in Vault:
-   <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </span>secret/hello-fawkes/database<span class="w"> </span><span class="se">\</span>
+<li>Update the database password in Vault:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </span>secret/hello-fawkes/database<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">host</span><span class="o">=</span><span class="s2">&quot;postgres.database.svc.cluster.local&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">port</span><span class="o">=</span><span class="s2">&quot;5432&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">username</span><span class="o">=</span><span class="s2">&quot;hello_fawkes_user&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">password</span><span class="o">=</span><span class="s2">&quot;NewRotatedPassword456!&quot;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Verify the secret was updated:
-   <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>kv<span class="w"> </span>get<span class="w"> </span>secret/hello-fawkes/database
-</code></pre></div></p>
-</li>
-<li>
-<p>Trigger secret refresh in your application:
-   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://hello-fawkes.127.0.0.1.nip.io/api/refresh-secrets
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
+<li>Verify the secret was updated:</li>
 </ol>
-<p>Should return:
-   <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code>vault<span class="w"> </span>kv<span class="w"> </span>get<span class="w"> </span>secret/hello-fawkes/database
+</code></pre></div>
+<ol>
+<li>Trigger secret refresh in your application:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://hello-fawkes.127.0.0.1.nip.io/api/refresh-secrets
+</code></pre></div>
+<p>Should return:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Secrets refreshed&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <ol>
-<li>Check the logs to verify the new secret was loaded:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>my-first-app<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>hello-fawkes<span class="w"> </span>--tail<span class="o">=</span><span class="m">20</span>
-</code></pre></div></li>
+<li>Check the logs to verify the new secret was loaded:</li>
 </ol>
-<p>You should see:
-   <div class="highlight"><pre><span></span><code>Refreshing secrets from Vault...
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>my-first-app<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>hello-fawkes<span class="w"> </span>--tail<span class="o">=</span><span class="m">20</span>
+</code></pre></div>
+<p>You should see:</p>
+<div class="highlight"><pre><span></span><code>Refreshing secrets from Vault...
 Database secrets loaded
 API secrets loaded
-</code></pre></div></p>
+</code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Production Secret Rotation</p>
-<p>In production, you'd automate secret rotation using:
-- Vault's automatic rotation features
-- A sidecar that refreshes secrets periodically
-- Or External Secrets Operator for full automation</p>
-<p>See <a href="../../how-to/security/rotate-vault-secrets/">How to Rotate Vault Secrets</a> for advanced patterns.</p>
 </div>
+<p>In production, you'd automate secret rotation using: - Vault's automatic rotation features - A sidecar that refreshes secrets periodically - Or External Secrets Operator for full automation</p>
+<pre><code>See [How to Rotate Vault Secrets](../how-to/security/rotate-vault-secrets.md) for advanced patterns.
+</code></pre>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You've successfully rotated a secret and verified your application picked up the new value!</p>
 </div>
+<p>You've successfully rotated a secret and verified your application picked up the new value!</p>
 <h2 id="what-youve-accomplished">What You've Accomplished</h2>
 <p>Congratulations! You've successfully:</p>
 <ul>

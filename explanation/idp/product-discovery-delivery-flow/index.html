@@ -5120,11 +5120,13 @@
 
 <h1 id="product-discovery-and-delivery-flow-the-ip3dp-concept">Product Discovery and Delivery Flow: The IP3dP Concept</h1>
 <h2 id="context">Context</h2>
-<p>Most internal developer platforms (IDPs) fail not because of technical problems, but because of <strong>product problems</strong>:
-- Built features nobody uses
-- Solved problems teams don't have
-- Ignored the problems teams actually face
-- Failed to measure whether the platform improves developer productivity</p>
+<p>Most internal developer platforms (IDPs) fail not because of technical problems, but because of <strong>product problems</strong>:</p>
+<ul>
+<li>Built features nobody uses</li>
+<li>Solved problems teams don't have</li>
+<li>Ignored the problems teams actually face</li>
+<li>Failed to measure whether the platform improves developer productivity</li>
+</ul>
 <p><strong>The Challenge</strong>: How do you treat your platform like a product when your "customers" (developers) can't choose a competitor and you have no revenue to measure success?</p>
 <p>Fawkes introduces the <strong>IP3dP</strong> framework: <strong>Internal Platform Product Discovery and Delivery Process</strong>—a structured methodology for running your platform as a product, not a project.</p>
 <h2 id="the-problem-build-it-and-they-will-come-doesnt-work">The Problem: "Build It and They Will Come" Doesn't Work</h2>
@@ -5136,27 +5138,35 @@
 <strong>Month 9</strong>: Platform team confused: "Why don't they use it?"</p>
 <p><strong>Root Cause</strong>: Nobody asked developers what problems they actually have.</p>
 <h3 id="the-feature-factory-trap">The Feature Factory Trap</h3>
-<p>Platform team operates like a feature factory:
-1. Stakeholder requests feature ("We need Vault integration!")
-2. Team builds feature
-3. Ship feature, move to next request
-4. Repeat indefinitely</p>
-<p><strong>Missing</strong>:
-- <strong>Discovery</strong>: Is this solving a real pain point?
-- <strong>Validation</strong>: Will developers actually use this?
-- <strong>Measurement</strong>: Did this improve productivity?
-- <strong>Iteration</strong>: How do we make it better?</p>
+<p>Platform team operates like a feature factory:</p>
+<ol>
+<li>Stakeholder requests feature ("We need Vault integration!")</li>
+<li>Team builds feature</li>
+<li>Ship feature, move to next request</li>
+<li>Repeat indefinitely</li>
+</ol>
+<p><strong>Missing</strong>:</p>
+<ul>
+<li><strong>Discovery</strong>: Is this solving a real pain point?</li>
+<li><strong>Validation</strong>: Will developers actually use this?</li>
+<li><strong>Measurement</strong>: Did this improve productivity?</li>
+<li><strong>Iteration</strong>: How do we make it better?</li>
+</ul>
 <p><strong>Result</strong>: A Frankenstein platform with 50 features, 5 actually used, and developers still frustrated.</p>
 <h3 id="the-metrics-mirage">The Metrics Mirage</h3>
-<p>Platform teams measure the <strong>wrong things</strong>:
-- ❌ <strong>Deployment frequency</strong> (platform metric, not developer outcome)
-- ❌ <strong>Number of features shipped</strong> (output, not outcome)
-- ❌ <strong>Uptime of platform services</strong> (necessary but not sufficient)</p>
-<p><strong>What Should Be Measured</strong>:
-- ✅ <strong>Developer productivity</strong> (time from idea to production)
-- ✅ <strong>Cognitive load</strong> (how many tools/concepts to learn)
-- ✅ <strong>Task success rate</strong> (can devs complete common tasks?)
-- ✅ <strong>Developer satisfaction</strong> (Net Promoter Score for internal platform)</p>
+<p>Platform teams measure the <strong>wrong things</strong>:</p>
+<ul>
+<li>❌ <strong>Deployment frequency</strong> (platform metric, not developer outcome)</li>
+<li>❌ <strong>Number of features shipped</strong> (output, not outcome)</li>
+<li>❌ <strong>Uptime of platform services</strong> (necessary but not sufficient)</li>
+</ul>
+<p><strong>What Should Be Measured</strong>:</p>
+<ul>
+<li>✅ <strong>Developer productivity</strong> (time from idea to production)</li>
+<li>✅ <strong>Cognitive load</strong> (how many tools/concepts to learn)</li>
+<li>✅ <strong>Task success rate</strong> (can devs complete common tasks?)</li>
+<li>✅ <strong>Developer satisfaction</strong> (Net Promoter Score for internal platform)</li>
+</ul>
 <h2 id="the-solution-ip3dp-platform-as-product">The Solution: IP3dP - Platform as Product</h2>
 <p>The <strong>IP3dP framework</strong> applies product management principles to platform engineering:</p>
 <pre class="mermaid"><code>graph TB
@@ -5173,14 +5183,24 @@
 <h4 id="1-discovery-what-problems-do-developers-have">1. Discovery: What Problems Do Developers Have?</h4>
 <p><strong>Goal</strong>: Deeply understand developer pain points before building anything.</p>
 <p><strong>Methods:</strong></p>
-<p><strong>User Research (Qualitative)</strong>:
-- <strong>Developer Interviews</strong>: 1-on-1 conversations (30-45 min)
-  - "Walk me through your last deployment"
-  - "What's the most frustrating part of your workflow?"
-  - "If you had a magic wand, what would you change?"</p>
+<p><strong>User Research (Qualitative)</strong>:</p>
 <ul>
-<li><strong>Shadowing</strong>: Sit with developers, observe their workflow</li>
-<li>Watch them struggle with <code>kubectl</code> copy-pasting from Slack</li>
+<li>
+<p><strong>Developer Interviews</strong>: 1-on-1 conversations (30-45 min)</p>
+</li>
+<li>
+<p>"Walk me through your last deployment"</p>
+</li>
+<li>"What's the most frustrating part of your workflow?"</li>
+<li>
+<p>"If you had a magic wand, what would you change?"</p>
+</li>
+<li>
+<p><strong>Shadowing</strong>: Sit with developers, observe their workflow</p>
+</li>
+<li>
+<p>Watch them struggle with <code>kubectl</code> copy-pasting from Slack</p>
+</li>
 <li>See them waste 20 minutes finding the right config file</li>
 <li>
 <p>Notice they rebuild images unnecessarily because unclear when cache invalidated</p>
@@ -5191,13 +5211,23 @@
 <li>SPACE Framework metrics (Satisfaction, Performance, Activity, Communication, Efficiency)</li>
 <li>Net Promoter Score: "How likely are you to recommend this platform to a colleague?"</li>
 </ul>
-<p><strong>Data Analysis (Quantitative)</strong>:
-- <strong>Platform Analytics</strong>: What features are used? What's ignored?
-  - Backstage: 80% use service catalog, 10% use docs, 2% use templates
-  - Jenkins: 60% of pipelines copy-pasted from "blessed-pipeline" repo (hint: make template)</p>
+<p><strong>Data Analysis (Quantitative)</strong>:</p>
 <ul>
-<li><strong>Support Tickets</strong>: What breaks? What confuses people?</li>
-<li>40% of tickets: "How do I deploy to production?" (hint: docs/onboarding problem)</li>
+<li>
+<p><strong>Platform Analytics</strong>: What features are used? What's ignored?</p>
+</li>
+<li>
+<p>Backstage: 80% use service catalog, 10% use docs, 2% use templates</p>
+</li>
+<li>
+<p>Jenkins: 60% of pipelines copy-pasted from "blessed-pipeline" repo (hint: make template)</p>
+</li>
+<li>
+<p><strong>Support Tickets</strong>: What breaks? What confuses people?</p>
+</li>
+<li>
+<p>40% of tickets: "How do I deploy to production?" (hint: docs/onboarding problem)</p>
+</li>
 <li>
 <p>25% of tickets: "My build is slow" (hint: buildpack caching issue)</p>
 </li>
@@ -5241,13 +5271,15 @@
 </table>
 <p><strong>Example Discovery Insight</strong>:</p>
 <p><strong>Initial Request</strong>: "We need a feature flag service"
-<strong>Discovery Conversation</strong>:
-- <em>Why do you need feature flags?</em>
-- "To deploy without breaking production"
-- <em>What breaks today when you deploy?</em>
-- "We push code Friday, it breaks, we roll back"
-- <em>Why Friday? Why not earlier in the week?</em>
-- "Deployment process takes 2 hours, only time we have is end-of-sprint"</p>
+<strong>Discovery Conversation</strong>:</p>
+<ul>
+<li><em>Why do you need feature flags?</em></li>
+<li>"To deploy without breaking production"</li>
+<li><em>What breaks today when you deploy?</em></li>
+<li>"We push code Friday, it breaks, we roll back"</li>
+<li><em>Why Friday? Why not earlier in the week?</em></li>
+<li>"Deployment process takes 2 hours, only time we have is end-of-sprint"</li>
+</ul>
 <p><strong>Real Problem</strong>: Deployment is too slow and risky, so teams batch changes and deploy infrequently.
 <strong>Solution</strong>: Not feature flags—fix deployment speed and reliability (canary deployments, automated rollback).</p>
 <h4 id="2-prioritization-what-should-we-build">2. Prioritization: What Should We Build?</h4>
@@ -5338,28 +5370,38 @@
 </tbody>
 </table>
 <p><strong>Decision</strong>: Build auto-deploy first (highest impact, reasonable effort).</p>
-<p><strong>Ruthless De-Prioritization</strong>:
-- "We won't build feature flags this quarter" (low confidence it solves real problem)
-- "We won't support Python 2.7" (reach is 2 legacy apps, sunset them instead)</p>
+<p><strong>Ruthless De-Prioritization</strong>:</p>
+<ul>
+<li>"We won't build feature flags this quarter" (low confidence it solves real problem)</li>
+<li>"We won't support Python 2.7" (reach is 2 legacy apps, sunset them instead)</li>
+</ul>
 <h4 id="3-delivery-build-measure-learn">3. Delivery: Build, Measure, Learn</h4>
 <p><strong>Goal</strong>: Ship iteratively, get feedback fast, pivot if needed.</p>
 <p><strong>Lean Delivery Approach:</strong></p>
-<p><strong>Week 1-2: Spike / Prototype</strong>
-- Build minimal proof-of-concept
-- Test with 2-3 friendly developer teams
-- <strong>Question</strong>: "Does this solve your problem?"</p>
-<p><strong>Week 3-4: Alpha</strong>
-- Functional but rough
-- 10-20 early adopters
-- <strong>Measurement</strong>: Can they complete the task? Where do they struggle?</p>
-<p><strong>Week 5-6: Beta</strong>
-- Polished UX, docs, error messages
-- Opt-in for all teams
-- <strong>Measurement</strong>: Adoption rate, support tickets</p>
-<p><strong>Week 7-8: General Availability</strong>
-- Default for new services
-- Gradual rollout to existing services
-- <strong>Measurement</strong>: DORA metrics, developer satisfaction</p>
+<p><strong>Week 1-2: Spike / Prototype</strong></p>
+<ul>
+<li>Build minimal proof-of-concept</li>
+<li>Test with 2-3 friendly developer teams</li>
+<li><strong>Question</strong>: "Does this solve your problem?"</li>
+</ul>
+<p><strong>Week 3-4: Alpha</strong></p>
+<ul>
+<li>Functional but rough</li>
+<li>10-20 early adopters</li>
+<li><strong>Measurement</strong>: Can they complete the task? Where do they struggle?</li>
+</ul>
+<p><strong>Week 5-6: Beta</strong></p>
+<ul>
+<li>Polished UX, docs, error messages</li>
+<li>Opt-in for all teams</li>
+<li><strong>Measurement</strong>: Adoption rate, support tickets</li>
+</ul>
+<p><strong>Week 7-8: General Availability</strong></p>
+<ul>
+<li>Default for new services</li>
+<li>Gradual rollout to existing services</li>
+<li><strong>Measurement</strong>: DORA metrics, developer satisfaction</li>
+</ul>
 <p><strong>Example: GitOps Rollout</strong></p>
 <table>
 <thead>
@@ -5397,18 +5439,22 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Feedback Loops:</strong>
-- <strong>Office Hours</strong>: Weekly drop-in for developers to ask questions
-- <strong>Retrospectives</strong>: After each phase, what worked? What didn't?
-- <strong>Metrics Dashboard</strong>: Real-time visibility into adoption, errors</p>
+<p><strong>Feedback Loops:</strong></p>
+<ul>
+<li><strong>Office Hours</strong>: Weekly drop-in for developers to ask questions</li>
+<li><strong>Retrospectives</strong>: After each phase, what worked? What didn't?</li>
+<li><strong>Metrics Dashboard</strong>: Real-time visibility into adoption, errors</li>
+</ul>
 <h4 id="4-measurement-did-it-work">4. Measurement: Did It Work?</h4>
 <p><strong>Goal</strong>: Quantify impact, not just activity.</p>
 <p><strong>North Star Metric: Developer Productivity</strong></p>
-<p>Operationalized as:
-- <strong>Lead Time for Changes</strong> (DORA) - Time from commit to production
-- <strong>Deployment Frequency</strong> (DORA) - How often teams deploy
-- <strong>Change Failure Rate</strong> (DORA) - % of deployments requiring rollback
-- <strong>Time to Restore Service</strong> (DORA) - MTTR for incidents</p>
+<p>Operationalized as:</p>
+<ul>
+<li><strong>Lead Time for Changes</strong> (DORA) - Time from commit to production</li>
+<li><strong>Deployment Frequency</strong> (DORA) - How often teams deploy</li>
+<li><strong>Change Failure Rate</strong> (DORA) - % of deployments requiring rollback</li>
+<li><strong>Time to Restore Service</strong> (DORA) - MTTR for incidents</li>
+</ul>
 <p><strong>SPACE Framework (Developer Experience)</strong></p>
 <table>
 <thead>
@@ -5576,15 +5622,21 @@ Satisfaction: 40% say &quot;too complex&quot; ❌
 <p><strong>Traditional Approach</strong>: Install K8s Dashboard, grant access, done.</p>
 <p><strong>IP3dP Approach</strong>:</p>
 <ol>
-<li><strong>Discovery</strong>: Why do they need to see pods?</li>
-<li>Interview reveals: "Want to know if my app is healthy"</li>
+<li>
+<p><strong>Discovery</strong>: Why do they need to see pods?</p>
+</li>
+<li>
+<p>Interview reveals: "Want to know if my app is healthy"</p>
+</li>
 <li>
 <p>Real job-to-be-done: <strong>Monitor application health</strong></p>
 </li>
 <li>
 <p><strong>Prioritization</strong>:</p>
 </li>
-<li>Reach: All teams (200 devs)</li>
+<li>
+<p>Reach: All teams (200 devs)</p>
+</li>
 <li>Impact: High (currently checking Slack or kubectl)</li>
 <li>Confidence: Medium (is Grafana better than K8s Dashboard?)</li>
 <li>Effort: 2 weeks</li>
@@ -5594,7 +5646,9 @@ Satisfaction: 40% say &quot;too complex&quot; ❌
 <li>
 <p><strong>Delivery</strong>:</p>
 </li>
-<li>Prototype: Grafana dashboard showing service SLIs (latency, error rate, throughput)</li>
+<li>
+<p>Prototype: Grafana dashboard showing service SLIs (latency, error rate, throughput)</p>
+</li>
 <li>Alpha: 5 teams test, feedback: "This is what we actually need!"</li>
 <li>Beta: Template for all services</li>
 <li>
@@ -5613,15 +5667,21 @@ Satisfaction: 40% say &quot;too complex&quot; ❌
 <p><strong>Traditional Approach</strong>: Provision larger Jenkins agents, increase CPU/RAM.</p>
 <p><strong>IP3dP Approach</strong>:</p>
 <ol>
-<li><strong>Discovery</strong>: What makes builds slow?</li>
-<li>Data analysis: 70% of build time is <code>npm install</code> (Node.js dependency download)</li>
+<li>
+<p><strong>Discovery</strong>: What makes builds slow?</p>
+</li>
+<li>
+<p>Data analysis: 70% of build time is <code>npm install</code> (Node.js dependency download)</p>
+</li>
 <li>
 <p>50% of builds fetch identical dependencies (no caching)</p>
 </li>
 <li>
 <p><strong>Prioritization</strong>:</p>
 </li>
-<li>Reach: 30 teams (Node.js services)</li>
+<li>
+<p>Reach: 30 teams (Node.js services)</p>
+</li>
 <li>Impact: Very high (40 min → 8 min builds)</li>
 <li>Confidence: High (buildpack caching proven)</li>
 <li>Effort: 2 weeks</li>
@@ -5631,7 +5691,9 @@ Satisfaction: 40% say &quot;too complex&quot; ❌
 <li>
 <p><strong>Delivery</strong>:</p>
 </li>
-<li>Implement buildpack layer caching</li>
+<li>
+<p>Implement buildpack layer caching</p>
+</li>
 <li>Alpha: 5 teams, validate caching works</li>
 <li>
 <p>Beta: Gradual rollout to all Node.js services</p>
@@ -5655,11 +5717,13 @@ Satisfaction: 40% say &quot;too complex&quot; ❌
 </ul>
 <h2 id="conclusion">Conclusion</h2>
 <p><strong>Internal Platform ≠ Just Infrastructure</strong>—it's a <strong>product</strong> with developers as customers.</p>
-<p>The IP3dP framework (Product Discovery and Delivery Process) ensures you:
-1. <strong>Discover</strong> real developer problems (not imagined ones)
-2. <strong>Prioritize</strong> high-impact solutions (not every request)
-3. <strong>Deliver</strong> iteratively (prototype → alpha → beta → GA)
-4. <strong>Measure</strong> outcomes (productivity, satisfaction, DORA metrics)</p>
+<p>The IP3dP framework (Product Discovery and Delivery Process) ensures you:</p>
+<ol>
+<li><strong>Discover</strong> real developer problems (not imagined ones)</li>
+<li><strong>Prioritize</strong> high-impact solutions (not every request)</li>
+<li><strong>Deliver</strong> iteratively (prototype → alpha → beta → GA)</li>
+<li><strong>Measure</strong> outcomes (productivity, satisfaction, DORA metrics)</li>
+</ol>
 <p><strong>The Core Insight</strong>: Developers won't use a platform just because you built it. They'll use it if it <strong>solves their problems better than alternatives</strong> (including <code>kubectl</code>, manual processes, or shadow IT).</p>
 <p><strong>The Commitment</strong>: Treat developers like customers. Listen, validate, measure, iterate.</p>
 <p><strong>This is Platform as Product.</strong> This is IP3dP.</p>

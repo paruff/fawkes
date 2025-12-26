@@ -4912,11 +4912,13 @@ Fawkes platform using Apache DevLake.</p>
 software delivery performance. They help teams understand their delivery velocity,
 stability, and identify areas for improvement.</p>
 <h2 id="gitops-architecture-and-data-sources">GitOps Architecture and Data Sources</h2>
-<p>In Fawkes, we follow a GitOps pattern where:
-- <strong>ArgoCD</strong> performs the actual deployments to Kubernetes
-- <strong>Jenkins</strong> handles CI (build, test, scan) and updates the GitOps repository
-- <strong>GitHub</strong> provides commit and PR data
-- <strong>Observability</strong> provides incident data</p>
+<p>In Fawkes, we follow a GitOps pattern where:</p>
+<ul>
+<li><strong>ArgoCD</strong> performs the actual deployments to Kubernetes</li>
+<li><strong>Jenkins</strong> handles CI (build, test, scan) and updates the GitOps repository</li>
+<li><strong>GitHub</strong> provides commit and PR data</li>
+<li><strong>Observability</strong> provides incident data</li>
+</ul>
 <p>This architecture affects where DORA metrics are sourced:</p>
 <table>
 <thead>
@@ -4954,23 +4956,27 @@ stability, and identify areas for improvement.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Jenkins provides complementary CI metrics:</strong>
-- Build success/failure rates
-- Test coverage and flakiness
-- Quality gate pass rates
-- Rework metrics (retries, repeated failures)</p>
+<p><strong>Jenkins provides complementary CI metrics:</strong></p>
+<ul>
+<li>Build success/failure rates</li>
+<li>Test coverage and flakiness</li>
+<li>Quality gate pass rates</li>
+<li>Rework metrics (retries, repeated failures)</li>
+</ul>
 <h2 id="the-five-dora-metrics">The Five DORA Metrics</h2>
 <h3 id="1-deployment-frequency">1. Deployment Frequency</h3>
 <p><strong>Definition</strong>: How often code changes are deployed to production.</p>
 <p><strong>Primary Data Source</strong>: <strong>ArgoCD sync events</strong></p>
-<p>In a GitOps architecture, Jenkins does not deploy directly. Instead:
-1. Jenkins builds and tests code
-2. Jenkins updates the GitOps repository with new image tags
-3. ArgoCD detects the change and syncs to Kubernetes
-4. The ArgoCD sync is the actual deployment event</p>
-<p><strong>Calculation</strong>:
+<p>In a GitOps architecture, Jenkins does not deploy directly. Instead:</p>
+<ol>
+<li>Jenkins builds and tests code</li>
+<li>Jenkins updates the GitOps repository with new image tags</li>
+<li>ArgoCD detects the change and syncs to Kubernetes</li>
+<li>The ArgoCD sync is the actual deployment event</li>
+</ol>
+<p><strong>Calculation</strong>:</p>
 <div class="highlight"><pre><span></span><code>Deployment Frequency = Number of successful ArgoCD syncs to production / Time period
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Performance Levels</strong>:
 | Level | Frequency |
 |-------|-----------|
@@ -4978,24 +4984,30 @@ stability, and identify areas for improvement.</p>
 | High | Once per day to once per week |
 | Medium | Once per week to once per month |
 | Low | Less than once per month |</p>
-<p><strong>Fawkes Implementation</strong>:
-- DevLake ArgoCD plugin collects sync events
-- Production environments identified by app name pattern (e.g., <code>*-prod</code>)
-- Grafana dashboard displays daily/weekly/monthly trends</p>
+<p><strong>Fawkes Implementation</strong>:</p>
+<ul>
+<li>DevLake ArgoCD plugin collects sync events</li>
+<li>Production environments identified by app name pattern (e.g., <code>*-prod</code>)</li>
+<li>Grafana dashboard displays daily/weekly/monthly trends</li>
+</ul>
 <hr />
 <h3 id="2-lead-time-for-changes">2. Lead Time for Changes</h3>
 <p><strong>Definition</strong>: Time from code commit to running in production.</p>
-<p><strong>Data Sources</strong>:
-- <strong>GitHub</strong>: Commit timestamps
-- <strong>ArgoCD</strong>: Sync completion timestamps</p>
-<p><strong>Calculation</strong>:
+<p><strong>Data Sources</strong>:</p>
+<ul>
+<li><strong>GitHub</strong>: Commit timestamps</li>
+<li><strong>ArgoCD</strong>: Sync completion timestamps</li>
+</ul>
+<p><strong>Calculation</strong>:</p>
 <div class="highlight"><pre><span></span><code>Lead Time = ArgoCD Sync Timestamp - First Commit Timestamp
-</code></pre></div></p>
-<p>The lead time includes:
-1. <strong>Development Time</strong>: Time spent coding
-2. <strong>Review Time</strong>: Time in code review/PR process
-3. <strong>CI Time</strong>: Jenkins build and test execution
-4. <strong>GitOps Sync Time</strong>: ArgoCD reconciliation</p>
+</code></pre></div>
+<p>The lead time includes:</p>
+<ol>
+<li><strong>Development Time</strong>: Time spent coding</li>
+<li><strong>Review Time</strong>: Time in code review/PR process</li>
+<li><strong>CI Time</strong>: Jenkins build and test execution</li>
+<li><strong>GitOps Sync Time</strong>: ArgoCD reconciliation</li>
+</ol>
 <p><strong>Performance Levels</strong>:
 | Level | Lead Time |
 |-------|-----------|
@@ -5003,24 +5015,30 @@ stability, and identify areas for improvement.</p>
 | High | 1 hour to 1 day |
 | Medium | 1 day to 1 week |
 | Low | More than 1 week |</p>
-<p><strong>Fawkes Implementation</strong>:
-- DevLake correlates GitHub commits with ArgoCD syncs
-- Commit SHA links are used for correlation
-- Pipeline stages are tracked for detailed breakdown</p>
+<p><strong>Fawkes Implementation</strong>:</p>
+<ul>
+<li>DevLake correlates GitHub commits with ArgoCD syncs</li>
+<li>Commit SHA links are used for correlation</li>
+<li>Pipeline stages are tracked for detailed breakdown</li>
+</ul>
 <hr />
 <h3 id="3-change-failure-rate-cfr">3. Change Failure Rate (CFR)</h3>
 <p><strong>Definition</strong>: Percentage of deployments that cause a failure in production.</p>
-<p><strong>Data Sources</strong>:
-- <strong>ArgoCD</strong>: Sync status (success/failed/degraded)
-- <strong>Observability</strong>: Incident records from Alertmanager
-- <strong>Webhooks</strong>: Manual incident creation</p>
-<p><strong>Calculation</strong>:
+<p><strong>Data Sources</strong>:</p>
+<ul>
+<li><strong>ArgoCD</strong>: Sync status (success/failed/degraded)</li>
+<li><strong>Observability</strong>: Incident records from Alertmanager</li>
+<li><strong>Webhooks</strong>: Manual incident creation</li>
+</ul>
+<p><strong>Calculation</strong>:</p>
 <div class="highlight"><pre><span></span><code>CFR = (Failed ArgoCD Syncs + Production Incidents) / Total ArgoCD Syncs × 100%
-</code></pre></div></p>
-<p>A deployment is considered a failure if:
-- The ArgoCD sync fails or enters degraded state
-- An incident is created within a configured time window after sync
-- A rollback sync is triggered</p>
+</code></pre></div>
+<p>A deployment is considered a failure if:</p>
+<ul>
+<li>The ArgoCD sync fails or enters degraded state</li>
+<li>An incident is created within a configured time window after sync</li>
+<li>A rollback sync is triggered</li>
+</ul>
 <p><strong>Performance Levels</strong>:
 | Level | CFR |
 |-------|-----|
@@ -5028,24 +5046,30 @@ stability, and identify areas for improvement.</p>
 | High | 5-10% |
 | Medium | 10-15% |
 | Low | 15%+ |</p>
-<p><strong>Fawkes Implementation</strong>:
-- ArgoCD sync failures are automatically tracked
-- Observability platform sends incident webhooks
-- Correlation with recent syncs determines CFR attribution</p>
+<p><strong>Fawkes Implementation</strong>:</p>
+<ul>
+<li>ArgoCD sync failures are automatically tracked</li>
+<li>Observability platform sends incident webhooks</li>
+<li>Correlation with recent syncs determines CFR attribution</li>
+</ul>
 <hr />
 <h3 id="4-mean-time-to-restore-mttr">4. Mean Time to Restore (MTTR)</h3>
 <p><strong>Definition</strong>: Average time to restore service after a production incident.</p>
-<p><strong>Data Sources</strong>:
-- <strong>Observability</strong>: Incident creation timestamps (from Alertmanager)
-- <strong>ArgoCD</strong>: Restore sync completion timestamps
-- <strong>Webhooks</strong>: Manual incident resolution events</p>
-<p><strong>Calculation</strong>:
+<p><strong>Data Sources</strong>:</p>
+<ul>
+<li><strong>Observability</strong>: Incident creation timestamps (from Alertmanager)</li>
+<li><strong>ArgoCD</strong>: Restore sync completion timestamps</li>
+<li><strong>Webhooks</strong>: Manual incident resolution events</li>
+</ul>
+<p><strong>Calculation</strong>:</p>
 <div class="highlight"><pre><span></span><code>MTTR = Sum(Resolution Time - Creation Time) / Number of Incidents
-</code></pre></div></p>
-<p>Resolution is detected when:
-- A subsequent successful ArgoCD sync occurs
-- Alertmanager alert resolves
-- Manual resolution via webhook/API</p>
+</code></pre></div>
+<p>Resolution is detected when:</p>
+<ul>
+<li>A subsequent successful ArgoCD sync occurs</li>
+<li>Alertmanager alert resolves</li>
+<li>Manual resolution via webhook/API</li>
+</ul>
 <p><strong>Performance Levels</strong>:
 | Level | MTTR |
 |-------|------|
@@ -5053,26 +5077,32 @@ stability, and identify areas for improvement.</p>
 | High | 1 hour to 1 day |
 | Medium | 1 day to 1 week |
 | Low | More than 1 week |</p>
-<p><strong>Fawkes Implementation</strong>:
-- Incidents are created automatically from Alertmanager
-- ArgoCD restore syncs are correlated with open incidents
-- Grafana dashboard shows MTTR trends by severity</p>
+<p><strong>Fawkes Implementation</strong>:</p>
+<ul>
+<li>Incidents are created automatically from Alertmanager</li>
+<li>ArgoCD restore syncs are correlated with open incidents</li>
+<li>Grafana dashboard shows MTTR trends by severity</li>
+</ul>
 <hr />
 <h3 id="5-operational-performance-reliability">5. Operational Performance (Reliability)</h3>
 <p><strong>Definition</strong>: Measures the reliability and performance of services in production.</p>
-<p><strong>Data Sources</strong>:
-- <strong>Prometheus</strong>: Latency, error rate, availability metrics
-- <strong>SLO/SLI Definitions</strong>: Target thresholds</p>
-<p><strong>Calculation</strong>:
+<p><strong>Data Sources</strong>:</p>
+<ul>
+<li><strong>Prometheus</strong>: Latency, error rate, availability metrics</li>
+<li><strong>SLO/SLI Definitions</strong>: Target thresholds</li>
+</ul>
+<p><strong>Calculation</strong>:</p>
 <div class="highlight"><pre><span></span><code>Operational Performance = Actual Uptime / Target Uptime × 100%
-</code></pre></div></p>
-<p>Or based on SLO adherence:
+</code></pre></div>
+<p>Or based on SLO adherence:</p>
 <div class="highlight"><pre><span></span><code>SLO Adherence = Time within SLO / Total Time × 100%
-</code></pre></div></p>
-<p><strong>Key Indicators</strong>:
-- <strong>Availability</strong>: Percentage of time service is operational
-- <strong>Latency P99</strong>: 99th percentile response time
-- <strong>Error Rate</strong>: Percentage of failed requests</p>
+</code></pre></div>
+<p><strong>Key Indicators</strong>:</p>
+<ul>
+<li><strong>Availability</strong>: Percentage of time service is operational</li>
+<li><strong>Latency P99</strong>: 99th percentile response time</li>
+<li><strong>Error Rate</strong>: Percentage of failed requests</li>
+</ul>
 <p><strong>Performance Levels</strong>:
 | Level | SLO Adherence |
 |-------|---------------|
@@ -5085,24 +5115,24 @@ stability, and identify areas for improvement.</p>
 <p>While DORA metrics focus on deployment and production, Jenkins provides valuable
 CI quality metrics:</p>
 <h3 id="build-success-rate">Build Success Rate</h3>
-<p><div class="highlight"><pre><span></span><code>Build Success Rate = Successful Builds / Total Builds × 100%
+<div class="highlight"><pre><span></span><code>Build Success Rate = Successful Builds / Total Builds × 100%
 </code></pre></div>
-Tracks the reliability of the CI pipeline.</p>
+<p>Tracks the reliability of the CI pipeline.</p>
 <h3 id="rework-rate">Rework Rate</h3>
-<p><div class="highlight"><pre><span></span><code>Rework Rate = Retry Builds / Unique Commits × 100%
+<div class="highlight"><pre><span></span><code>Rework Rate = Retry Builds / Unique Commits × 100%
 </code></pre></div>
-Measures how often builds need to be re-run for the same code.</p>
+<p>Measures how often builds need to be re-run for the same code.</p>
 <h3 id="quality-gate-pass-rate">Quality Gate Pass Rate</h3>
-<p><div class="highlight"><pre><span></span><code>QG Pass Rate = Passed Quality Gates / Total Scans × 100%
+<div class="highlight"><pre><span></span><code>QG Pass Rate = Passed Quality Gates / Total Scans × 100%
 </code></pre></div>
-Tracks SonarQube quality gate success over time.</p>
+<p>Tracks SonarQube quality gate success over time.</p>
 <h3 id="test-flakiness">Test Flakiness</h3>
-<p><div class="highlight"><pre><span></span><code>Flakiness = Flaky Test Runs / Total Test Runs × 100%
+<div class="highlight"><pre><span></span><code>Flakiness = Flaky Test Runs / Total Test Runs × 100%
 </code></pre></div>
-Identifies non-deterministic test failures.</p>
+<p>Identifies non-deterministic test failures.</p>
 <h3 id="build-duration-trend">Build Duration Trend</h3>
 <p>Tracks average and P95 build durations over time.</p>
-<p><strong>Example Jenkins Pipeline Usage</strong>:
+<p><strong>Example Jenkins Pipeline Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 
 <span class="c1">// Record build metrics</span>
@@ -5131,7 +5161,7 @@ Identifies non-deterministic test failures.</p>
 
 <span class="c1">// At pipeline end</span>
 <span class="n">doraMetrics</span><span class="o">.</span><span class="na">recordPipelineComplete</span><span class="o">(</span><span class="nl">service:</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span><span class="o">)</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="data-flow-architecture">Data Flow Architecture</h2>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
@@ -5196,28 +5226,36 @@ Identifies non-deterministic test failures.</p>
 </code></pre></div>
 <h2 id="accessing-dora-metrics">Accessing DORA Metrics</h2>
 <h3 id="grafana-dashboards">Grafana Dashboards</h3>
-<p>Access the DORA metrics dashboards at:
-- <strong>URL</strong>: <code>http://devlake-grafana.127.0.0.1.nip.io</code>
-- <strong>Credentials</strong>: Use the Grafana admin credentials</p>
-<p>Available dashboards:
-- DORA Overview - All metrics at a glance
-- Deployment Frequency - Detailed deploy trends
-- Lead Time for Changes - Time breakdown by stage
-- Change Failure Rate - Failure analysis
-- Mean Time to Restore - Incident resolution trends</p>
+<p>Access the DORA metrics dashboards at:</p>
+<ul>
+<li><strong>URL</strong>: <code>http://devlake-grafana.127.0.0.1.nip.io</code></li>
+<li><strong>Credentials</strong>: Use the Grafana admin credentials</li>
+</ul>
+<p>Available dashboards:</p>
+<ul>
+<li>DORA Overview - All metrics at a glance</li>
+<li>Deployment Frequency - Detailed deploy trends</li>
+<li>Lead Time for Changes - Time breakdown by stage</li>
+<li>Change Failure Rate - Failure analysis</li>
+<li>Mean Time to Restore - Incident resolution trends</li>
+</ul>
 <h3 id="backstage-developer-portal">Backstage Developer Portal</h3>
-<p>DORA metrics are integrated into Backstage service pages:
-1. Navigate to your service in the Backstage catalog
-2. Click the "DORA Metrics" tab
-3. View the five metrics with performance ratings</p>
+<p>DORA metrics are integrated into Backstage service pages:</p>
+<ol>
+<li>Navigate to your service in the Backstage catalog</li>
+<li>Click the "DORA Metrics" tab</li>
+<li>View the five metrics with performance ratings</li>
+</ol>
 <h3 id="devlake-ui">DevLake UI</h3>
-<p>Access the DevLake configuration UI at:
-- <strong>URL</strong>: <code>http://devlake.127.0.0.1.nip.io</code>
-- Configure data sources and projects</p>
+<p>Access the DevLake configuration UI at:</p>
+<ul>
+<li><strong>URL</strong>: <code>http://devlake.127.0.0.1.nip.io</code></li>
+<li>Configure data sources and projects</li>
+</ul>
 <h3 id="jenkins-pipeline">Jenkins Pipeline</h3>
-<p>View DORA metrics summary in pipeline output:
+<p>View DORA metrics summary in pipeline output:</p>
 <div class="highlight"><pre><span></span><code><span class="n">doraMetrics</span><span class="o">.</span><span class="na">getMetricsSummary</span><span class="o">(</span><span class="s1">&#39;my-service&#39;</span><span class="o">)</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="improving-deployment-frequency">Improving Deployment Frequency</h3>
 <ul>
@@ -5250,25 +5288,31 @@ Identifies non-deterministic test failures.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="missing-metrics">Missing Metrics</h3>
 <p><strong>Problem</strong>: DORA metrics show N/A</p>
-<p><strong>Solutions</strong>:
-1. Verify data source connections in DevLake UI
-2. Check that Jenkins is sending deployment events
-3. Ensure GitHub collector is configured correctly
-4. Run a manual data collection in DevLake</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Verify data source connections in DevLake UI</li>
+<li>Check that Jenkins is sending deployment events</li>
+<li>Ensure GitHub collector is configured correctly</li>
+<li>Run a manual data collection in DevLake</li>
+</ol>
 <h3 id="incorrect-calculations">Incorrect Calculations</h3>
 <p><strong>Problem</strong>: Metrics don't match expectations</p>
-<p><strong>Solutions</strong>:
-1. Verify commit SHAs are being recorded
-2. Check time zone configurations
-3. Review the deployment pattern regex
-4. Validate incident correlation settings</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Verify commit SHAs are being recorded</li>
+<li>Check time zone configurations</li>
+<li>Review the deployment pattern regex</li>
+<li>Validate incident correlation settings</li>
+</ol>
 <h3 id="no-data-in-grafana">No Data in Grafana</h3>
 <p><strong>Problem</strong>: Grafana dashboards are empty</p>
-<p><strong>Solutions</strong>:
-1. Verify DevLake data sync completed
-2. Check Grafana data source configuration
-3. Adjust time range in dashboard
-4. Run DevLake blueprint manually</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Verify DevLake data sync completed</li>
+<li>Check Grafana data source configuration</li>
+<li>Adjust time range in dashboard</li>
+<li>Run DevLake blueprint manually</li>
+</ol>
 <h2 id="references">References</h2>
 <ul>
 <li><a href="https://dora.dev/">DORA Research</a></li>

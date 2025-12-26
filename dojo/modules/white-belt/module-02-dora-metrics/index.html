@@ -5325,7 +5325,7 @@
   <a href="#youve-completed-module-2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ✅ You've Completed Module 2!
+        ✅ You've Completed Module 2
       
     </span>
   </a>
@@ -5397,79 +5397,102 @@
 <h2 id="2-theory-concepts-15-minutes">2. Theory &amp; Concepts (15 minutes)</h2>
 <h3 id="video-the-four-key-metrics-explained-7-minutes">📺 Video: The Four Key Metrics Explained (7 minutes)</h3>
 <blockquote>
-<p><strong>[VIDEO PLACEHOLDER]</strong>
-<strong>See detailed script in supporting document</strong></p>
+<p><strong>[VIDEO PLACEHOLDER]</strong> &gt; <strong>See detailed script in supporting document</strong></p>
 </blockquote>
 <h3 id="the-four-key-metrics">The Four Key Metrics</h3>
 <p>DORA identified four metrics that matter most for software delivery performance:</p>
 <h4 id="1-deployment-frequency-df">1. 🚀 Deployment Frequency (DF)</h4>
 <p><strong>Definition</strong>: How often does your organization deploy code to production?</p>
-<p><strong>Why It Matters</strong>: Deployment frequency is a proxy for <strong>batch size</strong>. Small, frequent deployments mean:
-- Lower risk (less can go wrong)
-- Faster feedback (find problems sooner)
-- Faster time to market (features reach customers quickly)
-- Better team morale (see your work in production)</p>
-<p><strong>Performance Levels</strong>:
-- <strong>Elite</strong>: Multiple deployments per day (on-demand)
-- <strong>High</strong>: Between once per day and once per week
-- <strong>Medium</strong>: Between once per week and once per month
-- <strong>Low</strong>: Between once per month and once every six months</p>
-<p><strong>Example</strong>:
-- <strong>Low Performer</strong>: "We deploy every 2 months during maintenance windows"
-- <strong>Elite Performer</strong>: "We deploy 50+ times per day automatically"</p>
+<p><strong>Why It Matters</strong>: Deployment frequency is a proxy for <strong>batch size</strong>. Small, frequent deployments mean:</p>
+<ul>
+<li>Lower risk (less can go wrong)</li>
+<li>Faster feedback (find problems sooner)</li>
+<li>Faster time to market (features reach customers quickly)</li>
+<li>Better team morale (see your work in production)</li>
+</ul>
+<p><strong>Performance Levels</strong>:</p>
+<ul>
+<li><strong>Elite</strong>: Multiple deployments per day (on-demand)</li>
+<li><strong>High</strong>: Between once per day and once per week</li>
+<li><strong>Medium</strong>: Between once per week and once per month</li>
+<li><strong>Low</strong>: Between once per month and once every six months</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<ul>
+<li><strong>Low Performer</strong>: "We deploy every 2 months during maintenance windows"</li>
+<li><strong>Elite Performer</strong>: "We deploy 50+ times per day automatically"</li>
+</ul>
 <p><strong>How Fawkes Tracks It</strong>: Every ArgoCD sync to production is recorded as a deployment event.</p>
 <hr />
 <h4 id="2-lead-time-for-changes-lt">2. ⏱️ Lead Time for Changes (LT)</h4>
 <p><strong>Definition</strong>: How long does it take for a commit to go from version control to running in production?</p>
-<p><strong>Why It Matters</strong>: Lead time measures <strong>efficiency</strong>. Short lead times mean:
-- Faster feature delivery to customers
-- Quicker response to market changes
-- Reduced work-in-progress inventory
-- Higher developer satisfaction</p>
-<p><strong>Performance Levels</strong>:
-- <strong>Elite</strong>: Less than one hour
-- <strong>High</strong>: Between one day and one week
-- <strong>Medium</strong>: Between one month and six months
-- <strong>Low</strong>: More than six months</p>
-<p><strong>Example</strong>:
-- <strong>Low Performer</strong>: "I wrote this code 3 months ago. Still waiting for QA approval."
-- <strong>Elite Performer</strong>: "I committed code 20 minutes ago. It's already in production."</p>
+<p><strong>Why It Matters</strong>: Lead time measures <strong>efficiency</strong>. Short lead times mean:</p>
+<ul>
+<li>Faster feature delivery to customers</li>
+<li>Quicker response to market changes</li>
+<li>Reduced work-in-progress inventory</li>
+<li>Higher developer satisfaction</li>
+</ul>
+<p><strong>Performance Levels</strong>:</p>
+<ul>
+<li><strong>Elite</strong>: Less than one hour</li>
+<li><strong>High</strong>: Between one day and one week</li>
+<li><strong>Medium</strong>: Between one month and six months</li>
+<li><strong>Low</strong>: More than six months</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<ul>
+<li><strong>Low Performer</strong>: "I wrote this code 3 months ago. Still waiting for QA approval."</li>
+<li><strong>Elite Performer</strong>: "I committed code 20 minutes ago. It's already in production."</li>
+</ul>
 <p><strong>How Fawkes Tracks It</strong>: Measures time from Git commit to successful ArgoCD sync in production.</p>
 <p><strong>Important</strong>: This is NOT "time to write code." It's "time code sits waiting" in your process.</p>
 <hr />
 <h4 id="3-time-to-restore-service-mttr">3. 🔧 Time to Restore Service (MTTR)</h4>
 <p><strong>Definition</strong>: How long does it take to restore service when an incident occurs?</p>
-<p><strong>Why It Matters</strong>: MTTR measures <strong>resilience</strong>. Fast recovery means:
-- Less customer impact from incidents
-- Lower stress for on-call engineers
-- Better SLAs and reliability
-- Confidence to move fast (you can recover quickly)</p>
-<p><strong>Performance Levels</strong>:
-- <strong>Elite</strong>: Less than one hour
-- <strong>High</strong>: Less than one day
-- <strong>Medium</strong>: Between one day and one week
-- <strong>Low</strong>: More than one week</p>
-<p><strong>Example</strong>:
-- <strong>Low Performer</strong>: "Production is down. We need a 5-hour emergency change board meeting."
-- <strong>Elite Performer</strong>: "Production issue detected. Automatic rollback completed in 4 minutes."</p>
+<p><strong>Why It Matters</strong>: MTTR measures <strong>resilience</strong>. Fast recovery means:</p>
+<ul>
+<li>Less customer impact from incidents</li>
+<li>Lower stress for on-call engineers</li>
+<li>Better SLAs and reliability</li>
+<li>Confidence to move fast (you can recover quickly)</li>
+</ul>
+<p><strong>Performance Levels</strong>:</p>
+<ul>
+<li><strong>Elite</strong>: Less than one hour</li>
+<li><strong>High</strong>: Less than one day</li>
+<li><strong>Medium</strong>: Between one day and one week</li>
+<li><strong>Low</strong>: More than one week</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<ul>
+<li><strong>Low Performer</strong>: "Production is down. We need a 5-hour emergency change board meeting."</li>
+<li><strong>Elite Performer</strong>: "Production issue detected. Automatic rollback completed in 4 minutes."</li>
+</ul>
 <p><strong>How Fawkes Tracks It</strong>: Measures time from incident creation (Alertmanager) to resolution (successful deployment or rollback).</p>
 <hr />
 <h4 id="4-change-failure-rate-cfr">4. ❌ Change Failure Rate (CFR)</h4>
 <p><strong>Definition</strong>: What percentage of deployments cause failures in production?</p>
-<p><strong>Why It Matters</strong>: CFR measures <strong>quality</strong>. Low failure rates mean:
-- Sustainable velocity (not breaking things constantly)
-- Lower operational burden
-- Better customer experience
-- More time for feature development (less firefighting)</p>
-<p><strong>Performance Levels</strong>:
-- <strong>Elite</strong>: 0-15%
-- <strong>High</strong>: 16-30%
-- <strong>Medium</strong>: 16-30%
-- <strong>Low</strong>: 16-30%</p>
+<p><strong>Why It Matters</strong>: CFR measures <strong>quality</strong>. Low failure rates mean:</p>
+<ul>
+<li>Sustainable velocity (not breaking things constantly)</li>
+<li>Lower operational burden</li>
+<li>Better customer experience</li>
+<li>More time for feature development (less firefighting)</li>
+</ul>
+<p><strong>Performance Levels</strong>:</p>
+<ul>
+<li><strong>Elite</strong>: 0-15%</li>
+<li><strong>High</strong>: 16-30%</li>
+<li><strong>Medium</strong>: 16-30%</li>
+<li><strong>Low</strong>: 16-30%</li>
+</ul>
 <p><strong>Note</strong>: 2023 research collapsed High/Medium/Low into same range. Elite performers stand out with &lt;15%.</p>
-<p><strong>Example</strong>:
-- <strong>Low Performer</strong>: "Every Friday deployment requires weekend hotfixes."
-- <strong>Elite Performer</strong>: "We deploy 100 times per week with 5% failure rate."</p>
+<p><strong>Example</strong>:</p>
+<ul>
+<li><strong>Low Performer</strong>: "Every Friday deployment requires weekend hotfixes."</li>
+<li><strong>Elite Performer</strong>: "We deploy 100 times per week with 5% failure rate."</li>
+</ul>
 <p><strong>How Fawkes Tracks It</strong>: Compares successful deployments to failed deployments (rollbacks, incidents within 24 hours of deploy).</p>
 <p><strong>Important</strong>: Some failure is expected and healthy! 0% might mean you're too risk-averse.</p>
 <hr />
@@ -5520,12 +5543,16 @@
 <hr />
 <h3 id="why-these-four-metrics">Why These Four Metrics?</h3>
 <h4 id="they-balance-speed-and-stability">They Balance Speed and Stability</h4>
-<p><strong>Speed Metrics</strong>:
-- Deployment Frequency
-- Lead Time for Changes</p>
-<p><strong>Stability Metrics</strong>:
-- Time to Restore Service
-- Change Failure Rate</p>
+<p><strong>Speed Metrics</strong>:</p>
+<ul>
+<li>Deployment Frequency</li>
+<li>Lead Time for Changes</li>
+</ul>
+<p><strong>Stability Metrics</strong>:</p>
+<ul>
+<li>Time to Restore Service</li>
+<li>Change Failure Rate</li>
+</ul>
 <p>You can't optimize for speed alone (you'll break everything) or stability alone (you'll move too slowly). <strong>Elite performers excel at all four simultaneously.</strong></p>
 <h4 id="theyre-predictive-not-descriptive">They're Predictive, Not Descriptive</h4>
 <p>These metrics don't just describe performance—they <strong>predict business outcomes</strong>:</p>
@@ -5541,24 +5568,32 @@ Good metrics (DORA): How fast you deliver value and how reliably</p>
 <hr />
 <h3 id="the-business-case-for-dora-metrics">The Business Case for DORA Metrics</h3>
 <h4 id="scenario-legacy-bank-vs-digital-startup">Scenario: Legacy Bank vs. Digital Startup</h4>
-<p><strong>Legacy Bank</strong> (Low Performer):
-- Deploys every 3 months
-- Lead time: 4 months from idea to production
-- MTTR: 3 days (requires emergency change approval)
-- CFR: 25% (1 in 4 releases has issues)</p>
-<p><strong>Impact</strong>:
-- New credit card feature takes 1 year to launch (competitors launch in 6 weeks)
-- When mobile app crashes, customers can't access accounts for 3 days
-- Developer turnover: 35% annually (frustration with slow process)</p>
-<p><strong>Digital Startup</strong> (Elite Performer):
-- Deploys 20x per day
-- Lead time: 2 hours from commit to production
-- MTTR: 15 minutes (automated rollback)
-- CFR: 8% (rigorous testing catches issues)</p>
-<p><strong>Impact</strong>:
-- New feature ideas tested with customers within days
-- Production incidents resolved in minutes, not days
-- Developer retention: 95% (engineers love working there)</p>
+<p><strong>Legacy Bank</strong> (Low Performer):</p>
+<ul>
+<li>Deploys every 3 months</li>
+<li>Lead time: 4 months from idea to production</li>
+<li>MTTR: 3 days (requires emergency change approval)</li>
+<li>CFR: 25% (1 in 4 releases has issues)</li>
+</ul>
+<p><strong>Impact</strong>:</p>
+<ul>
+<li>New credit card feature takes 1 year to launch (competitors launch in 6 weeks)</li>
+<li>When mobile app crashes, customers can't access accounts for 3 days</li>
+<li>Developer turnover: 35% annually (frustration with slow process)</li>
+</ul>
+<p><strong>Digital Startup</strong> (Elite Performer):</p>
+<ul>
+<li>Deploys 20x per day</li>
+<li>Lead time: 2 hours from commit to production</li>
+<li>MTTR: 15 minutes (automated rollback)</li>
+<li>CFR: 8% (rigorous testing catches issues)</li>
+</ul>
+<p><strong>Impact</strong>:</p>
+<ul>
+<li>New feature ideas tested with customers within days</li>
+<li>Production incidents resolved in minutes, not days</li>
+<li>Developer retention: 95% (engineers love working there)</li>
+</ul>
 <p><strong>Result</strong>: Startup captures 30% market share in 2 years despite having 1/100th the resources.</p>
 <hr />
 <h3 id="how-platform-engineering-improves-dora-metrics">How Platform Engineering Improves DORA Metrics</h3>
@@ -5624,18 +5659,19 @@ Grafana dashboard updates in real-time
 Alertmanager detects any incidents
     ↓ (MTTR measurement if incident occurs)
 </code></pre></div>
-<p><strong>Data Sources</strong>:
-- <strong>Git</strong>: Commit timestamps (lead time start)
-- <strong>Jenkins</strong>: Build results (quality signals)
-- <strong>ArgoCD</strong>: Deployment events (DF, lead time end, CFR)
-- <strong>Prometheus/Alertmanager</strong>: Incident detection and resolution (MTTR)</p>
+<p><strong>Data Sources</strong>:</p>
+<ul>
+<li><strong>Git</strong>: Commit timestamps (lead time start)</li>
+<li><strong>Jenkins</strong>: Build results (quality signals)</li>
+<li><strong>ArgoCD</strong>: Deployment events (DF, lead time end, CFR)</li>
+<li><strong>Prometheus/Alertmanager</strong>: Incident detection and resolution (MTTR)</li>
+</ul>
 <p><strong>No Manual Work Required</strong>: Metrics update automatically with every deployment.</p>
 <hr />
 <h2 id="3-demonstration-10-minutes">3. Demonstration (10 minutes)</h2>
 <h3 id="video-navigating-fawkes-dora-dashboards-10-minutes">📺 Video: Navigating Fawkes DORA Dashboards (10 minutes)</h3>
 <blockquote>
-<p><strong>[VIDEO PLACEHOLDER]</strong>
-<strong>See detailed script in supporting document</strong></p>
+<p><strong>[VIDEO PLACEHOLDER]</strong> &gt; <strong>See detailed script in supporting document</strong></p>
 </blockquote>
 <h3 id="key-takeaways-from-demo">Key Takeaways from Demo</h3>
 <ol>
@@ -5654,25 +5690,31 @@ Alertmanager detects any incidents
 <strong>Auto-Graded</strong>: Partially (calculations auto-checked; recommendations manually reviewed)
 <strong>Points</strong>: 60</p>
 <h3 id="lab-environment">Lab Environment</h3>
-<p>When you click "Start Lab", we'll provision:
-- ✅ Access to Grafana DORA dashboards
-- ✅ Sample data for 3 months (90 days)
-- ✅ 3 different teams with varying performance levels
-- ✅ Lab notebook for your analysis</p>
+<p>When you click "Start Lab", we'll provision:</p>
+<ul>
+<li>✅ Access to Grafana DORA dashboards</li>
+<li>✅ Sample data for 3 months (90 days)</li>
+<li>✅ 3 different teams with varying performance levels</li>
+<li>✅ Lab notebook for your analysis</li>
+</ul>
 <p><strong>Environment will be available for 24 hours from start time.</strong></p>
 <h3 id="lab-instructions">Lab Instructions</h3>
 <h4 id="part-1-calculate-metrics-30-points">Part 1: Calculate Metrics (30 points)</h4>
 <p>You'll analyze "Team Alpha's" performance over the last 30 days.</p>
-<p><strong>Given Data</strong> (available in dashboard):
-- Total deployments to production: 45
-- Total commits: 180
-- Failed deployments (rollbacks): 7
-- Incidents reported: 3
-- Average time from commit to production: 6 hours
-- Average time to resolve incidents: 2 hours</p>
-<ol>
-<li><strong>Calculate Deployment Frequency</strong> (10 points)</li>
-</ol>
+<p><strong>Given Data</strong> (available in dashboard):</p>
+<ul>
+<li>Total deployments to production: 45</li>
+<li>Total commits: 180</li>
+<li>Failed deployments (rollbacks): 7</li>
+<li>Incidents reported: 3</li>
+<li>Average time from commit to production: 6 hours</li>
+<li>
+<p>Average time to resolve incidents: 2 hours</p>
+</li>
+<li>
+<p><strong>Calculate Deployment Frequency</strong> (10 points)</p>
+</li>
+</ul>
 <p>Formula: <code>Total deployments / Days in period</code></p>
 <p>📝 <strong>Submit</strong>: What is Team Alpha's deployment frequency? (deployments per day)</p>
 <p>✅ <strong>Validation</strong>: Auto-checked against correct calculation</p>
@@ -5693,48 +5735,62 @@ Alertmanager detects any incidents
 <li><strong>Classify Team Alpha's Performance</strong> (15 points)</li>
 </ol>
 <p>Based on the metrics you calculated, classify Team Alpha according to DORA performance levels:</p>
-<p>📝 <strong>Submit</strong>:
-   - Deployment Frequency Level: [Elite/High/Medium/Low]
-   - Lead Time Level: [Elite/High/Medium/Low]
-   - Change Failure Rate Level: [Elite/High/Medium/Low]
-   - Overall Classification: [Elite/High/Medium/Low]</p>
+<p>📝 <strong>Submit</strong>:</p>
+<ul>
+<li>Deployment Frequency Level: [Elite/High/Medium/Low]</li>
+<li>Lead Time Level: [Elite/High/Medium/Low]</li>
+<li>Change Failure Rate Level: [Elite/High/Medium/Low]</li>
+<li>Overall Classification: [Elite/High/Medium/Low]</li>
+</ul>
 <p>✅ <strong>Validation</strong>: Auto-checked against DORA thresholds</p>
 <h4 id="part-3-compare-teams-15-points">Part 3: Compare Teams (15 points)</h4>
 <ol>
 <li><strong>Analyze Team Bravo vs. Team Charlie</strong> (15 points)</li>
 </ol>
 <p>Open the "Team Comparison" dashboard and compare Team Bravo and Team Charlie.</p>
-<p><strong>Team Bravo</strong>:
-   - DF: 0.3 per day (9 per month)
-   - LT: 3 days
-   - MTTR: 4 hours
-   - CFR: 10%</p>
-<p><strong>Team Charlie</strong>:
-   - DF: 2.5 per day (75 per month)
-   - LT: 45 minutes
-   - MTTR: 30 minutes
-   - CFR: 18%</p>
-<p>📝 <strong>Submit</strong>:
-   - Which team is the higher performer overall? [Bravo/Charlie]
-   - What is Team Charlie's biggest weakness? [DF/LT/MTTR/CFR]
-   - If Team Bravo could improve one metric, which would have the biggest impact? [DF/LT/MTTR/CFR]
-   - Explain your reasoning (2-3 sentences)</p>
+<p><strong>Team Bravo</strong>:</p>
+<ul>
+<li>DF: 0.3 per day (9 per month)</li>
+<li>LT: 3 days</li>
+<li>MTTR: 4 hours</li>
+<li>CFR: 10%</li>
+</ul>
+<p><strong>Team Charlie</strong>:</p>
+<ul>
+<li>DF: 2.5 per day (75 per month)</li>
+<li>LT: 45 minutes</li>
+<li>MTTR: 30 minutes</li>
+<li>CFR: 18%</li>
+</ul>
+<p>📝 <strong>Submit</strong>:</p>
+<ul>
+<li>Which team is the higher performer overall? [Bravo/Charlie]</li>
+<li>What is Team Charlie's biggest weakness? [DF/LT/MTTR/CFR]</li>
+<li>If Team Bravo could improve one metric, which would have the biggest impact? [DF/LT/MTTR/CFR]</li>
+<li>Explain your reasoning (2-3 sentences)</li>
+</ul>
 <p>✅ <strong>Validation</strong>: Reasoning manually reviewed by instructors</p>
 <h4 id="part-4-identify-improvement-opportunities-bonus">Part 4: Identify Improvement Opportunities (Bonus)</h4>
 <ol>
 <li><strong>Recommend Improvements for Team Alpha</strong> (Bonus: +10 points)</li>
 </ol>
-<p>Based on Team Alpha's metrics:
-   - DF: 1.5 per day (High)
-   - LT: 6 hours (Elite)
-   - MTTR: 2 hours (Elite)
-   - CFR: 15.6% (Elite)</p>
-<p>📝 <strong>Submit</strong>:
-   - Team Alpha is performing at Elite level across all metrics. However, what could they do to push even further? (3-5 specific recommendations)</p>
-<p>Examples of good recommendations:
-   - "Reduce deployment frequency variability (some days have 5 deploys, others have 0)"
-   - "Investigate the 7 failed deployments to find common root causes"
-   - "Implement chaos engineering to practice MTTR scenarios"</p>
+<p>Based on Team Alpha's metrics:</p>
+<ul>
+<li>DF: 1.5 per day (High)</li>
+<li>LT: 6 hours (Elite)</li>
+<li>MTTR: 2 hours (Elite)</li>
+<li>CFR: 15.6% (Elite)</li>
+</ul>
+<p>📝 <strong>Submit</strong>:</p>
+<ul>
+<li>Team Alpha is performing at Elite level across all metrics. However, what could they do to push even further? (3-5 specific recommendations)</li>
+</ul>
+<p>Examples of good recommendations:</p>
+<ul>
+<li>"Reduce deployment frequency variability (some days have 5 deploys, others have 0)"</li>
+<li>"Investigate the 7 failed deployments to find common root causes"</li>
+<li>"Implement chaos engineering to practice MTTR scenarios"</li>
+</ul>
 <p>✅ <strong>Validation</strong>: Manually reviewed for thoughtfulness and actionability</p>
 <h3 id="lab-submission">Lab Submission</h3>
 <p>Once you've completed all tasks:</p>
@@ -5743,23 +5799,31 @@ Alertmanager detects any incidents
 <li>Ensure all required answers are recorded</li>
 <li>Click "Submit Lab" button</li>
 </ol>
-<p><strong>Grading</strong>:
-- Parts 1-2: Auto-graded immediately (45 points)
-- Parts 3-4: Reviewed within 24 hours by instructors (15 + 10 points)
-- Passing score: 48/60 (80%)</p>
+<p><strong>Grading</strong>:</p>
+<ul>
+<li>Parts 1-2: Auto-graded immediately (45 points)</li>
+<li>Parts 3-4: Reviewed within 24 hours by instructors (15 + 10 points)</li>
+<li>Passing score: 48/60 (80%)</li>
+</ul>
 <h3 id="troubleshooting-hints">Troubleshooting Hints</h3>
-<p><strong>Can't access Grafana?</strong>
-- Click "Open Grafana" from lab instructions
-- Use provided credentials (auto-populated)
-- Try incognito mode if having authentication issues</p>
-<p><strong>Calculations not matching?</strong>
-- Double-check your formulas
-- Ensure you're using correct time periods (30 days)
-- Round to 2 decimal places</p>
-<p><strong>Don't understand a metric?</strong>
-- Review the Theory &amp; Concepts section
-- Check the DORA handbook link in resources
-- Ask in #dojo-white-belt on Mattermost</p>
+<p><strong>Can't access Grafana?</strong></p>
+<ul>
+<li>Click "Open Grafana" from lab instructions</li>
+<li>Use provided credentials (auto-populated)</li>
+<li>Try incognito mode if having authentication issues</li>
+</ul>
+<p><strong>Calculations not matching?</strong></p>
+<ul>
+<li>Double-check your formulas</li>
+<li>Ensure you're using correct time periods (30 days)</li>
+<li>Round to 2 decimal places</li>
+</ul>
+<p><strong>Don't understand a metric?</strong></p>
+<ul>
+<li>Review the Theory &amp; Concepts section</li>
+<li>Check the DORA handbook link in resources</li>
+<li>Ask in #dojo-white-belt on Mattermost</li>
+</ul>
 <hr />
 <h2 id="5-knowledge-check-5-minutes">5. Knowledge Check (5 minutes)</h2>
 <h3 id="quiz-dora-metrics-mastery">Quiz: DORA Metrics Mastery</h3>
@@ -5874,35 +5938,49 @@ Alertmanager detects any incidents
 <h2 id="6-reflection-next-steps-5-minutes">6. Reflection &amp; Next Steps (5 minutes)</h2>
 <h3 id="what-you-learned">What You Learned</h3>
 <p>Congratulations! 🎉 You've completed Module 2. Let's recap:</p>
-<p>✅ <strong>You now understand</strong>:
-- The Four Key Metrics and what they measure
-- Why these metrics predict business success
-- How to calculate and interpret DORA metrics
-- The difference between Elite and Low performers
-- How Fawkes automates metrics collection</p>
-<p>✅ <strong>You can now</strong>:
-- Analyze DORA dashboards and spot issues
-- Make data-driven recommendations for improvement
-- Explain metrics to business stakeholders
-- Use metrics to prioritize platform improvements</p>
+<p>✅ <strong>You now understand</strong>:</p>
+<ul>
+<li>The Four Key Metrics and what they measure</li>
+<li>Why these metrics predict business success</li>
+<li>How to calculate and interpret DORA metrics</li>
+<li>The difference between Elite and Low performers</li>
+<li>How Fawkes automates metrics collection</li>
+</ul>
+<p>✅ <strong>You can now</strong>:</p>
+<ul>
+<li>Analyze DORA dashboards and spot issues</li>
+<li>Make data-driven recommendations for improvement</li>
+<li>Explain metrics to business stakeholders</li>
+<li>Use metrics to prioritize platform improvements</li>
+</ul>
 <h3 id="how-this-connects-to-your-work">How This Connects to Your Work</h3>
-<p><strong>For Developers</strong>:
-- You understand what "good" looks like (Elite benchmarks)
-- You can advocate for improvements using data
-- You know how to track your team's progress</p>
-<p><strong>For Platform Engineers</strong>:
-- You can measure platform impact objectively
-- You know which improvements matter most
-- You can demonstrate ROI to leadership</p>
-<p><strong>For Leaders</strong>:
-- You have a data-driven framework for investment decisions
-- You can benchmark against industry standards
-- You can track improvement over time</p>
+<p><strong>For Developers</strong>:</p>
+<ul>
+<li>You understand what "good" looks like (Elite benchmarks)</li>
+<li>You can advocate for improvements using data</li>
+<li>You know how to track your team's progress</li>
+</ul>
+<p><strong>For Platform Engineers</strong>:</p>
+<ul>
+<li>You can measure platform impact objectively</li>
+<li>You know which improvements matter most</li>
+<li>You can demonstrate ROI to leadership</li>
+</ul>
+<p><strong>For Leaders</strong>:</p>
+<ul>
+<li>You have a data-driven framework for investment decisions</li>
+<li>You can benchmark against industry standards</li>
+<li>You can track improvement over time</li>
+</ul>
 <h3 id="real-world-application-exercise">Real-World Application Exercise</h3>
 <p><strong>This Week, Try This</strong>:</p>
 <ol>
-<li><strong>Measure Your Current State</strong></li>
-<li>Track deployments for one week</li>
+<li>
+<p><strong>Measure Your Current State</strong></p>
+</li>
+<li>
+<p>Track deployments for one week</p>
+</li>
 <li>Calculate your team's current DORA metrics</li>
 <li>
 <p>Be honest—no judgment, just data</p>
@@ -5910,7 +5988,9 @@ Alertmanager detects any incidents
 <li>
 <p><strong>Identify One Improvement</strong></p>
 </li>
-<li>Pick the metric with the most room for improvement</li>
+<li>
+<p>Pick the metric with the most room for improvement</p>
+</li>
 <li>Brainstorm 3 concrete actions to improve it</li>
 <li>
 <p>Estimate impact and effort</p>
@@ -5925,7 +6005,9 @@ Alertmanager detects any incidents
 <h3 id="reflection-questions">Reflection Questions</h3>
 <p>Take 2 minutes to think about:</p>
 <ol>
-<li><strong>Which metric surprised you most?</strong></li>
+<li>
+<p><strong>Which metric surprised you most?</strong></p>
+</li>
 <li>
 <p>Did your team's performance match your intuition?</p>
 </li>
@@ -5947,54 +6029,70 @@ Alertmanager detects any incidents
 <li>Which leader should see your team's DORA metrics?</li>
 </ol>
 <h3 id="additional-resources">Additional Resources</h3>
-<p><strong>📚 Further Reading</strong>:
-- <a href="https://dora.dev/research">DORA State of DevOps Report</a> - Annual research findings
-- <a href="https://itrevolution.com/accelerate-book/">Accelerate Book</a> - The foundational research
-- <a href="https://dora.dev/quickcheck/">DORA Quick Check</a> - Assess your team in 5 minutes
-- <a href="https://cloud.google.com/blog/products/devops-sre/the-2023-accelerate-state-of-devops-report-is-here">Google Cloud DORA Resources</a> - Implementation guides</p>
-<p><strong>🎥 Videos to Watch</strong>:
-- "DORA Metrics Explained" by Dr. Nicole Forsgren (15 min)
-- "Why DORA Metrics Matter" by Gene Kim (20 min)
-- "Implementing DORA Metrics" by Charity Majors (30 min)</p>
-<p><strong>🛠️ Tools</strong>:
-- <a href="https://github.com/dora-team/fourkeys">Four Keys Project</a> - Open source DORA metrics tool
-- <a href="https://www.sleuth.io/">Sleuth</a> - Commercial DORA tracking (Fawkes alternative)
-- <a href="https://linearb.io/">LinearB</a> - Engineering intelligence platform</p>
-<p><strong>💬 Community</strong>:
-- Share your team's metrics (anonymously!) in <code>#dojo-metrics</code>
-- Join the DORA community discussions
-- Help others interpret their data</p>
+<p><strong>📚 Further Reading</strong>:</p>
+<ul>
+<li><a href="https://dora.dev/research">DORA State of DevOps Report</a> - Annual research findings</li>
+<li><a href="https://itrevolution.com/accelerate-book/">Accelerate Book</a> - The foundational research</li>
+<li><a href="https://dora.dev/quickcheck/">DORA Quick Check</a> - Assess your team in 5 minutes</li>
+<li><a href="https://cloud.google.com/blog/products/devops-sre/the-2023-accelerate-state-of-devops-report-is-here">Google Cloud DORA Resources</a> - Implementation guides</li>
+</ul>
+<p><strong>🎥 Videos to Watch</strong>:</p>
+<ul>
+<li>"DORA Metrics Explained" by Dr. Nicole Forsgren (15 min)</li>
+<li>"Why DORA Metrics Matter" by Gene Kim (20 min)</li>
+<li>"Implementing DORA Metrics" by Charity Majors (30 min)</li>
+</ul>
+<p><strong>🛠️ Tools</strong>:</p>
+<ul>
+<li><a href="https://github.com/dora-team/fourkeys">Four Keys Project</a> - Open source DORA metrics tool</li>
+<li><a href="https://www.sleuth.io/">Sleuth</a> - Commercial DORA tracking (Fawkes alternative)</li>
+<li><a href="https://linearb.io/">LinearB</a> - Engineering intelligence platform</li>
+</ul>
+<p><strong>💬 Community</strong>:</p>
+<ul>
+<li>Share your team's metrics (anonymously!) in <code>#dojo-metrics</code></li>
+<li>Join the DORA community discussions</li>
+<li>Help others interpret their data</li>
+</ul>
 <h3 id="preview-module-3">Preview: Module 3</h3>
 <p><strong>Next Up: GitOps Principles</strong></p>
-<p>In Module 3, you'll learn:
-- What GitOps is and why it's transforming deployments
-- Declarative infrastructure and desired state
-- How ArgoCD implements GitOps
-- Pull-based vs. push-based deployments
-- Making your first GitOps change</p>
+<p>In Module 3, you'll learn:</p>
+<ul>
+<li>What GitOps is and why it's transforming deployments</li>
+<li>Declarative infrastructure and desired state</li>
+<li>How ArgoCD implements GitOps</li>
+<li>Pull-based vs. push-based deployments</li>
+<li>Making your first GitOps change</li>
+</ul>
 <p><strong>Time</strong>: 60 minutes
 <strong>Hands-On</strong>: Make a GitOps deployment using ArgoCD</p>
 <p><strong>Get Ready</strong>: Think about how your team currently deploys applications. Who has access? How is it documented? What could go wrong?</p>
 <hr />
 <h2 id="module-completion">Module Completion</h2>
-<h3 id="youve-completed-module-2">✅ You've Completed Module 2!</h3>
-<p><strong>Next Steps</strong>:
-1. ✅ Mark this module complete in your Backstage profile
-2. 📊 View your progress on the Dojo dashboard
-3. 💬 Share your DORA metrics insights in <code>#dojo-achievements</code>
-4. ➡️ <strong>Continue to Module 3</strong> when ready</p>
+<h3 id="youve-completed-module-2">✅ You've Completed Module 2</h3>
+<p><strong>Next Steps</strong>:</p>
+<ol>
+<li>✅ Mark this module complete in your Backstage profile</li>
+<li>📊 View your progress on the Dojo dashboard</li>
+<li>💬 Share your DORA metrics insights in <code>#dojo-achievements</code></li>
+<li>➡️ <strong>Continue to Module 3</strong> when ready</li>
+</ol>
 <p><strong>Time Investment</strong>: 60 minutes
 <strong>Skills Gained</strong>: DORA metrics analysis, performance benchmarking
 <strong>Progress</strong>: 2 of 4 modules toward White Belt (50% complete)</p>
 <hr />
-<p><strong>Questions or Issues?</strong>
-- 💬 Ask in <code>#dojo-white-belt</code> on Mattermost
-- 📧 Email: dojo@fawkes.io
-- 🐛 Report bugs: <a href="https://github.com/paruff/fawkes/issues">GitHub Issues</a></p>
-<p><strong>Feedback?</strong>
-- Rate this module (takes 30 seconds)
-- What worked well? What could be better?
-- Help us improve the learning experience!</p>
+<p><strong>Questions or Issues?</strong></p>
+<ul>
+<li>💬 Ask in <code>#dojo-white-belt</code> on Mattermost</li>
+<li>📧 Email: dojo@fawkes.io</li>
+<li>🐛 Report bugs: <a href="https://github.com/paruff/fawkes/issues">GitHub Issues</a></li>
+</ul>
+<p><strong>Feedback?</strong></p>
+<ul>
+<li>Rate this module (takes 30 seconds)</li>
+<li>What worked well? What could be better?</li>
+<li>Help us improve the learning experience!</li>
+</ul>
 <hr />
 <p><strong>Module Author</strong>: Fawkes Learning Team
 <strong>Last Updated</strong>: October 2025

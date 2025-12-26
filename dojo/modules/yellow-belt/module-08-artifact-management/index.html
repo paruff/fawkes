@@ -5037,19 +5037,19 @@
   <a href="#yellow-belt-complete" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🎉 Yellow Belt Complete!
+        🎉 Yellow Belt Complete
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🎉 Yellow Belt Complete!">
+    <nav class="md-nav" aria-label="🎉 Yellow Belt Complete">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#congratulations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🏆 Congratulations!
+        🏆 Congratulations
       
     </span>
   </a>
@@ -5217,11 +5217,13 @@
 <strong>Module</strong>: 4 of 4 (Yellow Belt - <strong>FINAL MODULE</strong>)
 <strong>Duration</strong>: 60 minutes
 <strong>Difficulty</strong>: Intermediate
-<strong>Prerequisites</strong>:
-- Modules 5, 6, 7 complete
-- Understanding of Docker and containers
-- Familiarity with versioning concepts
-- CI/CD pipeline experience</p>
+<strong>Prerequisites</strong>:</p>
+<ul>
+<li>Modules 5, 6, 7 complete</li>
+<li>Understanding of Docker and containers</li>
+<li>Familiarity with versioning concepts</li>
+<li>CI/CD pipeline experience</li>
+</ul>
 <hr />
 <h2 id="learning-objectives">📚 Learning Objectives</h2>
 <p>By the end of this module, you will:</p>
@@ -5234,14 +5236,16 @@
 <li>✅ Secure artifacts with signing and scanning</li>
 <li>✅ Optimize storage costs and performance</li>
 </ol>
-<p><strong>DORA Capabilities Addressed</strong>:
-- ✓ CD1: Version control for production artifacts
-- ✓ CD2: Automate deployment process
-- ✓ Artifact Traceability</p>
+<p><strong>DORA Capabilities Addressed</strong>:</p>
+<ul>
+<li>✓ CD1: Version control for production artifacts</li>
+<li>✓ CD2: Automate deployment process</li>
+<li>✓ Artifact Traceability</li>
+</ul>
 <hr />
 <h2 id="part-1-why-artifact-management-matters">📖 Part 1: Why Artifact Management Matters</h2>
 <h3 id="the-problem-ad-hoc-artifact-storage">The Problem: Ad-Hoc Artifact Storage</h3>
-<p><strong>Without proper artifact management</strong>:
+<p><strong>Without proper artifact management</strong>:</p>
 <div class="highlight"><pre><span></span><code>Team A: Stores Docker images on local machines
 Team B: Uses random Docker Hub accounts
 Team C: Rebuilds from source every time
@@ -5253,7 +5257,7 @@ Result:
 ❌ No audit trail
 ❌ Security vulnerabilities untracked
 ❌ Storage costs out of control
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="the-solution-centralized-artifact-registry">The Solution: Centralized Artifact Registry</h3>
 <div class="highlight"><pre><span></span><code>                   ┌─────────────────────┐
                    │   Harbor Registry   │
@@ -5268,27 +5272,31 @@ Result:
    │  dev-123│          │  stg-123│          │  v1.2.3 │
    └─────────┘          └─────────┘          └─────────┘
 </code></pre></div>
-<p><strong>Benefits</strong>:
-- ✅ Single source of truth
-- ✅ Immutable artifacts
-- ✅ Complete audit trail
-- ✅ Security scanning integrated
-- ✅ Efficient storage with deduplication
-- ✅ Role-based access control
-- ✅ Replication for DR</p>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>✅ Single source of truth</li>
+<li>✅ Immutable artifacts</li>
+<li>✅ Complete audit trail</li>
+<li>✅ Security scanning integrated</li>
+<li>✅ Efficient storage with deduplication</li>
+<li>✅ Role-based access control</li>
+<li>✅ Replication for DR</li>
+</ul>
 <hr />
 <h2 id="part-2-harbor-container-registry">🏗️ Part 2: Harbor Container Registry</h2>
 <h3 id="what-is-harbor">What is Harbor?</h3>
 <p>Harbor is an open-source container registry that secures artifacts with policies and role-based access control.</p>
-<p><strong>Key Features</strong>:
-- 🐳 Docker/OCI image storage
-- 🔒 Integrated security scanning (Trivy)
-- 📊 Vulnerability management
-- 🏷️ Image signing (Cosign/Notary)
-- 📦 Helm chart repository
-- 🔐 RBAC and quota management
-- 📈 Audit logging
-- 🌍 Replication across registries</p>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>🐳 Docker/OCI image storage</li>
+<li>🔒 Integrated security scanning (Trivy)</li>
+<li>📊 Vulnerability management</li>
+<li>🏷️ Image signing (Cosign/Notary)</li>
+<li>📦 Helm chart repository</li>
+<li>🔐 RBAC and quota management</li>
+<li>📈 Audit logging</li>
+<li>🌍 Replication across registries</li>
+</ul>
 <h3 id="harbor-architecture-in-fawkes">Harbor Architecture in Fawkes</h3>
 <div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────┐
 │                   Harbor Registry                     │
@@ -5440,16 +5448,20 @@ Result:
 </code></pre></div>
 <h3 id="step-2-verify-in-harbor-ui">Step 2: Verify in Harbor UI</h3>
 <p>Access Harbor: <code>https://harbor.fawkes.internal</code></p>
-<p><strong>Navigate to your image</strong>:
-1. Projects → Your Project
-2. Repositories → Your Image
-3. Click on tag (e.g., <code>123-abc1234</code>)</p>
-<p><strong>View Details</strong>:
-- 📋 Vulnerabilities scan results
-- 🏷️ Labels and metadata
-- 📊 Layer information
-- 🔒 Signature status
-- 📈 Pull statistics</p>
+<p><strong>Navigate to your image</strong>:</p>
+<ol>
+<li>Projects → Your Project</li>
+<li>Repositories → Your Image</li>
+<li>Click on tag (e.g., <code>123-abc1234</code>)</li>
+</ol>
+<p><strong>View Details</strong>:</p>
+<ul>
+<li>📋 Vulnerabilities scan results</li>
+<li>🏷️ Labels and metadata</li>
+<li>📊 Layer information</li>
+<li>🔒 Signature status</li>
+<li>📈 Pull statistics</li>
+</ul>
 <hr />
 <h2 id="part-4-versioning-strategies">📊 Part 4: Versioning Strategies</h2>
 <h3 id="semantic-versioning-semver">Semantic Versioning (SemVer)</h3>
@@ -5460,11 +5472,13 @@ Result:
 │ └─── Minor: New features (backward compatible)
 └───── Major: Breaking changes
 </code></pre></div>
-<p><strong>Examples</strong>:
-- <code>v1.0.0</code> → Initial release
-- <code>v1.0.1</code> → Bug fix
-- <code>v1.1.0</code> → New feature added
-- <code>v2.0.0</code> → Breaking API change</p>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li><code>v1.0.0</code> → Initial release</li>
+<li><code>v1.0.1</code> → Bug fix</li>
+<li><code>v1.1.0</code> → New feature added</li>
+<li><code>v2.0.0</code> → Breaking API change</li>
+</ul>
 <h3 id="tagging-strategy">Tagging Strategy</h3>
 <p><strong>Multiple tags per image</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Build number + commit (immutable reference)</span>
@@ -5649,25 +5663,25 @@ myapp:latest
 <hr />
 <h2 id="part-6-retention-policies">🗄️ Part 6: Retention Policies</h2>
 <h3 id="why-retention-policies-matter">Why Retention Policies Matter</h3>
-<p><strong>Without retention</strong>:
+<p><strong>Without retention</strong>:</p>
 <div class="highlight"><pre><span></span><code>Day 1:   10 images  → 1 GB
 Day 30:  300 images → 30 GB
 Day 90:  900 images → 90 GB
 Day 365: 3650 images → 365 GB 💸💸💸
-</code></pre></div></p>
-<p><strong>With retention</strong>:
+</code></pre></div>
+<p><strong>With retention</strong>:</p>
 <div class="highlight"><pre><span></span><code>Day 1:   10 images → 1 GB
 Day 365: 100 images → 10 GB ✅
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="harbor-retention-rules">Harbor Retention Rules</h3>
 <p>Configure in Harbor UI or via API:</p>
-<p><strong>Example Policy</strong>:
+<p><strong>Example Policy</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">retention_policy</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">scope</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;**&quot;</span><span class="w">  </span><span class="c1"># All repositories</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">scope</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;**&quot;</span><span class="w"> </span><span class="c1"># All repositories</span>
 <span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">      </span><span class="c1"># Keep production images indefinitely</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;production&quot;</span>
-<span class="w">        </span><span class="nt">retain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1</span><span class="w">  </span><span class="c1"># Forever</span>
+<span class="w">        </span><span class="nt">retain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1</span><span class="w"> </span><span class="c1"># Forever</span>
 
 <span class="w">      </span><span class="c1"># Keep staging images for 30 days</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;staging&quot;</span>
@@ -5684,7 +5698,7 @@ Day 365: 100 images → 10 GB ✅
 <span class="w">      </span><span class="c1"># Delete untagged images after 7 days</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
 <span class="w">        </span><span class="nt">retain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="implementing-retention-via-api">Implementing Retention via API</h3>
 <div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Configure Retention&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
@@ -5744,31 +5758,31 @@ Day 365: 100 images → 10 GB ✅
 <hr />
 <h2 id="part-7-artifact-signing-verification">🔒 Part 7: Artifact Signing &amp; Verification</h2>
 <h3 id="why-sign-artifacts">Why Sign Artifacts?</h3>
-<p><strong>Without signing</strong>:
+<p><strong>Without signing</strong>:</p>
 <div class="highlight"><pre><span></span><code>❌ Can&#39;t verify artifact authenticity
 ❌ Don&#39;t know who published it
 ❌ Can&#39;t detect tampering
 ❌ Supply chain vulnerable
-</code></pre></div></p>
-<p><strong>With signing</strong>:
+</code></pre></div>
+<p><strong>With signing</strong>:</p>
 <div class="highlight"><pre><span></span><code>✅ Cryptographically verify origin
 ✅ Detect any modifications
 ✅ Enforce only signed images run
 ✅ Complete audit trail
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="signing-with-cosign">Signing with Cosign</h3>
-<p><strong>Install Cosign</strong>:
+<p><strong>Install Cosign</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># In pipeline</span>
 curl<span class="w"> </span>-sSL<span class="w"> </span>https://github.com/sigstore/cosign/releases/download/v2.0.0/cosign-linux-amd64<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-o<span class="w"> </span>/usr/local/bin/cosign
 chmod<span class="w"> </span>+x<span class="w"> </span>/usr/local/bin/cosign
-</code></pre></div></p>
-<p><strong>Generate Key Pair</strong> (one-time setup):
+</code></pre></div>
+<p><strong>Generate Key Pair</strong> (one-time setup):</p>
 <div class="highlight"><pre><span></span><code>cosign<span class="w"> </span>generate-key-pair
 <span class="c1"># Creates: cosign.key (private) and cosign.pub (public)</span>
 <span class="c1"># Store private key in Jenkins credentials</span>
-</code></pre></div></p>
-<p><strong>Sign Image in Pipeline</strong>:
+</code></pre></div>
+<p><strong>Sign Image in Pipeline</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Sign Image&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;cosign&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
@@ -5786,13 +5800,13 @@ chmod<span class="w"> </span>+x<span class="w"> </span>/usr/local/bin/cosign
 <span class="w">        </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div></p>
-<p><strong>Verify Signature</strong>:
+</code></pre></div>
+<p><strong>Verify Signature</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># In deployment pipeline</span>
 cosign<span class="w"> </span>verify<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--key<span class="w"> </span>cosign.pub<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>harbor.fawkes.internal/library/myapp:v1.2.3
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="kubernetes-admission-control">Kubernetes Admission Control</h3>
 <p>Enforce only signed images:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Kyverno policy</span>
@@ -5803,21 +5817,21 @@ cosign<span class="w"> </span>verify<span class="w"> </span><span class="se">\</
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enforce</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verify-signature</span>
-<span class="w">    </span><span class="nt">match</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">kinds</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
-<span class="w">    </span><span class="nt">verifyImages</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">imageReferences</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;harbor.fawkes.internal/*&quot;</span>
-<span class="w">      </span><span class="nt">attestors</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">entries</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">keys</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">publicKeys</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
-<span class="w">              </span><span class="no">-----BEGIN PUBLIC KEY-----</span>
-<span class="w">              </span><span class="no">[Your Cosign Public Key]</span>
-<span class="w">              </span><span class="no">-----END PUBLIC KEY-----</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verify-signature</span>
+<span class="w">      </span><span class="nt">match</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">kinds</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+<span class="w">      </span><span class="nt">verifyImages</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">imageReferences</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;harbor.fawkes.internal/*&quot;</span>
+<span class="w">          </span><span class="nt">attestors</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">entries</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">keys</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">publicKeys</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">                      </span><span class="no">-----BEGIN PUBLIC KEY-----</span>
+<span class="w">                      </span><span class="no">[Your Cosign Public Key]</span>
+<span class="w">                      </span><span class="no">-----END PUBLIC KEY-----</span>
 </code></pre></div>
 <hr />
 <h2 id="part-8-monitoring-metrics">📈 Part 8: Monitoring &amp; Metrics</h2>
@@ -5847,31 +5861,39 @@ cosign<span class="w"> </span>verify<span class="w"> </span><span class="se">\</
 <span class="w">    </span><span class="nt">&quot;panels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Daily Artifact Publishes&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(artifacts_published_total[1d]))&quot;</span>
-<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(artifacts_published_total[1d]))&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;graph&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Storage Usage by Project&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(storage_used_bytes) by (project) / 1024/1024/1024&quot;</span>
-<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(storage_used_bytes) by (project) / 1024/1024/1024&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;piechart&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GB&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Most Pulled Images&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;topk(10, sum(rate(artifact_pulls_total[7d])) by (repository))&quot;</span>
-<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;topk(10, sum(rate(artifact_pulls_total[7d])) by (repository))&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;table&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Vulnerabilities by Severity&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(vulnerabilities_total) by (severity)&quot;</span>
-<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(vulnerabilities_total) by (severity)&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
 <span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bargauge&quot;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">]</span>
@@ -5908,14 +5930,16 @@ cosign<span class="w"> </span>verify<span class="w"> </span><span class="se">\</
 <h2 id="part-9-practical-exercise">💪 Part 9: Practical Exercise</h2>
 <h3 id="exercise-complete-artifact-lifecycle">Exercise: Complete Artifact Lifecycle</h3>
 <p><strong>Objective</strong>: Implement full artifact management lifecycle</p>
-<p><strong>Requirements</strong>:
-1. Build and tag Docker image with multiple tags
-2. Push to Harbor with metadata labels
-3. Trigger and verify Harbor security scan
-4. Sign image with Cosign
-5. Implement artifact promotion (dev → staging → prod)
-6. Configure retention policy
-7. Set up monitoring for artifact metrics</p>
+<p><strong>Requirements</strong>:</p>
+<ol>
+<li>Build and tag Docker image with multiple tags</li>
+<li>Push to Harbor with metadata labels</li>
+<li>Trigger and verify Harbor security scan</li>
+<li>Sign image with Cosign</li>
+<li>Implement artifact promotion (dev → staging → prod)</li>
+<li>Configure retention policy</li>
+<li>Set up monitoring for artifact metrics</li>
+</ol>
 <p><strong>Starter Template</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 
@@ -5979,21 +6003,27 @@ cosign<span class="w"> </span>verify<span class="w"> </span><span class="se">\</
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>Validation Criteria</strong>:
-- [ ] Image built and tagged correctly
-- [ ] All tags pushed to Harbor
-- [ ] Harbor scan completed successfully
-- [ ] Image signed with Cosign
-- [ ] Signature verifiable
-- [ ] Artifact promoted correctly
-- [ ] Retention policy configured
-- [ ] Metrics visible in Grafana</p>
+<p><strong>Validation Criteria</strong>:</p>
+<ul>
+<li>[ ] Image built and tagged correctly</li>
+<li>[ ] All tags pushed to Harbor</li>
+<li>[ ] Harbor scan completed successfully</li>
+<li>[ ] Image signed with Cosign</li>
+<li>[ ] Signature verifiable</li>
+<li>[ ] Artifact promoted correctly</li>
+<li>[ ] Retention policy configured</li>
+<li>[ ] Metrics visible in Grafana</li>
+</ul>
 <hr />
 <h2 id="part-10-knowledge-check">🎓 Part 10: Knowledge Check</h2>
 <h3 id="quiz-questions">Quiz Questions</h3>
 <ol>
-<li><strong>What is the purpose of an artifact registry?</strong></li>
-<li>[ ] Store source code</li>
+<li>
+<p><strong>What is the purpose of an artifact registry?</strong></p>
+</li>
+<li>
+<p>[ ] Store source code</p>
+</li>
 <li>[x] Store and manage build artifacts (images, packages)</li>
 <li>[ ] Run containers</li>
 <li>
@@ -6002,7 +6032,9 @@ cosign<span class="w"> </span>verify<span class="w"> </span><span class="se">\</
 <li>
 <p><strong>What is semantic versioning format?</strong></p>
 </li>
-<li>[ ] BUILD.DATE.TIME</li>
+<li>
+<p>[ ] BUILD.DATE.TIME</p>
+</li>
 <li>[x] MAJOR.MINOR.PATCH</li>
 <li>[ ] YEAR.MONTH.DAY</li>
 <li>
@@ -6011,7 +6043,9 @@ cosign<span class="w"> </span>verify<span class="w"> </span><span class="se">\</
 <li>
 <p><strong>Why should you use the same artifact across environments?</strong></p>
 </li>
-<li>[ ] Save disk space</li>
+<li>
+<p>[ ] Save disk space</p>
+</li>
 <li>[ ] Faster builds</li>
 <li>[x] Ensure consistency and avoid "works on my machine"</li>
 <li>
@@ -6020,7 +6054,9 @@ cosign<span class="w"> </span>verify<span class="w"> </span><span class="se">\</
 <li>
 <p><strong>What does artifact signing provide?</strong></p>
 </li>
-<li>[ ] Faster downloads</li>
+<li>
+<p>[ ] Faster downloads</p>
+</li>
 <li>[ ] Smaller file size</li>
 <li>[x] Verification of authenticity and integrity</li>
 <li>
@@ -6029,7 +6065,9 @@ cosign<span class="w"> </span>verify<span class="w"> </span><span class="se">\</
 <li>
 <p><strong>Why implement retention policies?</strong></p>
 </li>
-<li>[x] Control storage costs and remove unused artifacts</li>
+<li>
+<p>[x] Control storage costs and remove unused artifacts</p>
+</li>
 <li>[ ] Make builds faster</li>
 <li>[ ] Improve security</li>
 <li>
@@ -6038,7 +6076,9 @@ cosign<span class="w"> </span>verify<span class="w"> </span><span class="se">\</
 <li>
 <p><strong>What is artifact promotion?</strong></p>
 </li>
-<li>[ ] Marketing the artifact</li>
+<li>
+<p>[ ] Marketing the artifact</p>
+</li>
 <li>[x] Moving same artifact through environments without rebuilding</li>
 <li>[ ] Upgrading to newer version</li>
 <li>
@@ -6047,7 +6087,9 @@ cosign<span class="w"> </span>verify<span class="w"> </span><span class="se">\</
 <li>
 <p><strong>What tool does Fawkes use for container registry?</strong></p>
 </li>
-<li>[ ] Docker Hub</li>
+<li>
+<p>[ ] Docker Hub</p>
+</li>
 <li>[ ] Artifactory</li>
 <li>[x] Harbor</li>
 <li>
@@ -6087,22 +6129,28 @@ cosign<span class="w"> </span>verify<span class="w"> </span><span class="se">\</
 <li><strong>Monitor your registry</strong> - Track usage, vulnerabilities, costs</li>
 </ol>
 <h3 id="real-world-impact">Real-World Impact</h3>
-<p>"After implementing proper artifact management:
-- <strong>Build reproducibility</strong>: 60% → 100%
-- <strong>Deployment confidence</strong>: 70% → 95%
-- <strong>Storage costs</strong>: $5,000/month → $800/month
-- <strong>Time to rollback</strong>: 30 min → 2 min
-- <strong>Supply chain security</strong>: Significantly improved with signing</p>
-<p>We can now trace every production artifact back to exact source code commit."
-- <em>DevOps Team, E-Commerce Platform</em></p>
+<p>"After implementing proper artifact management:</p>
+<ul>
+<li><strong>Build reproducibility</strong>: 60% → 100%</li>
+<li><strong>Deployment confidence</strong>: 70% → 95%</li>
+<li><strong>Storage costs</strong>: $5,000/month → $800/month</li>
+<li><strong>Time to rollback</strong>: 30 min → 2 min</li>
+<li><strong>Supply chain security</strong>: Significantly improved with signing</li>
+</ul>
+<p>We can now trace every production artifact back to exact source code commit."</p>
+<ul>
+<li><em>DevOps Team, E-Commerce Platform</em></li>
+</ul>
 <hr />
-<h2 id="yellow-belt-complete">🎉 Yellow Belt Complete!</h2>
-<h3 id="congratulations">🏆 Congratulations!</h3>
-<p>You've completed all four Yellow Belt modules:
-- ✅ Module 5: CI Fundamentals
-- ✅ Module 6: Golden Path Pipelines
-- ✅ Module 7: Security Scanning &amp; Quality Gates
-- ✅ Module 8: Artifact Management</p>
+<h2 id="yellow-belt-complete">🎉 Yellow Belt Complete</h2>
+<h3 id="congratulations">🏆 Congratulations</h3>
+<p>You've completed all four Yellow Belt modules:</p>
+<ul>
+<li>✅ Module 5: CI Fundamentals</li>
+<li>✅ Module 6: Golden Path Pipelines</li>
+<li>✅ Module 7: Security Scanning &amp; Quality Gates</li>
+<li>✅ Module 8: Artifact Management</li>
+</ul>
 <h3 id="yellow-belt-progress">🎖️ Yellow Belt Progress</h3>
 <div class="highlight"><pre><span></span><code>Yellow Belt: CI/CD Mastery
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -6114,47 +6162,63 @@ Module 8: Artifact Management    ████████████ 100% ✓
 </code></pre></div>
 <h3 id="yellow-belt-certification">📜 Yellow Belt Certification</h3>
 <p><strong>You're now ready for the Yellow Belt Certification Exam!</strong></p>
-<p><strong>Exam Format</strong>:
-- 40 multiple choice questions
-- 3 hands-on challenges
-- 85% passing score required
-- 2-hour time limit</p>
-<p><strong>Exam Challenges</strong>:
-1. Build a production-ready CI/CD pipeline from scratch
-2. Optimize existing pipeline to &lt;5 minute build time
-3. Implement complete security scanning and artifact management</p>
-<p><strong>Schedule Your Exam</strong>:
-- Visit Fawkes Dojo Portal
-- Navigate to Certifications → Yellow Belt
-- Click "Schedule Exam"</p>
+<p><strong>Exam Format</strong>:</p>
+<ul>
+<li>40 multiple choice questions</li>
+<li>3 hands-on challenges</li>
+<li>85% passing score required</li>
+<li>2-hour time limit</li>
+</ul>
+<p><strong>Exam Challenges</strong>:</p>
+<ol>
+<li>Build a production-ready CI/CD pipeline from scratch</li>
+<li>Optimize existing pipeline to &lt;5 minute build time</li>
+<li>Implement complete security scanning and artifact management</li>
+</ol>
+<p><strong>Schedule Your Exam</strong>:</p>
+<ul>
+<li>Visit Fawkes Dojo Portal</li>
+<li>Navigate to Certifications → Yellow Belt</li>
+<li>Click "Schedule Exam"</li>
+</ul>
 <h3 id="what-youve-achieved">🎓 What You've Achieved</h3>
-<p><strong>Skills Mastered</strong>:
-- ✅ Jenkins pipeline development
-- ✅ Shared library creation
-- ✅ Security scanning integration
-- ✅ Artifact management
-- ✅ Pipeline optimization
-- ✅ CI/CD best practices</p>
-<p><strong>DORA Impact</strong>:
-- <strong>Deployment Frequency</strong>: Can deploy multiple times per day
-- <strong>Lead Time</strong>: Reduced to minutes with optimized pipelines
-- <strong>Change Failure Rate</strong>: Security gates prevent bad code
-- <strong>MTTR</strong>: Artifact management enables fast rollbacks</p>
+<p><strong>Skills Mastered</strong>:</p>
+<ul>
+<li>✅ Jenkins pipeline development</li>
+<li>✅ Shared library creation</li>
+<li>✅ Security scanning integration</li>
+<li>✅ Artifact management</li>
+<li>✅ Pipeline optimization</li>
+<li>✅ CI/CD best practices</li>
+</ul>
+<p><strong>DORA Impact</strong>:</p>
+<ul>
+<li><strong>Deployment Frequency</strong>: Can deploy multiple times per day</li>
+<li><strong>Lead Time</strong>: Reduced to minutes with optimized pipelines</li>
+<li><strong>Change Failure Rate</strong>: Security gates prevent bad code</li>
+<li><strong>MTTR</strong>: Artifact management enables fast rollbacks</li>
+</ul>
 <h3 id="whats-next">🚀 What's Next?</h3>
-<p><strong>Option 1: Take Yellow Belt Certification Exam</strong>
-- Validate your learning
-- Earn "Fawkes CI/CD Specialist" badge
-- Get LinkedIn-verified credential</p>
-<p><strong>Option 2: Continue to Green Belt</strong>
-- Module 9: GitOps with ArgoCD
-- Module 10: Deployment Strategies
-- Module 11: Progressive Delivery
-- Module 12: Rollback &amp; Incident Response</p>
-<p><strong>Option 3: Practice &amp; Contribute</strong>
-- Apply learnings to your team's pipelines
-- Share your shared library with community
-- Write blog post about your journey
-- Help others in #yellow-belt channel</p>
+<p><strong>Option 1: Take Yellow Belt Certification Exam</strong></p>
+<ul>
+<li>Validate your learning</li>
+<li>Earn "Fawkes CI/CD Specialist" badge</li>
+<li>Get LinkedIn-verified credential</li>
+</ul>
+<p><strong>Option 2: Continue to Green Belt</strong></p>
+<ul>
+<li>Module 9: GitOps with ArgoCD</li>
+<li>Module 10: Deployment Strategies</li>
+<li>Module 11: Progressive Delivery</li>
+<li>Module 12: Rollback &amp; Incident Response</li>
+</ul>
+<p><strong>Option 3: Practice &amp; Contribute</strong></p>
+<ul>
+<li>Apply learnings to your team's pipelines</li>
+<li>Share your shared library with community</li>
+<li>Write blog post about your journey</li>
+<li>Help others in #yellow-belt channel</li>
+</ul>
 <hr />
 <h2 id="additional-resources">📚 Additional Resources</h2>
 <h3 id="tools-documentation">Tools &amp; Documentation</h3>
@@ -6179,7 +6243,7 @@ Module 8: Artifact Management    ████████████ 100% ✓
 <hr />
 <h2 id="appendix-artifact-management-cheat-sheet">📖 Appendix: Artifact Management Cheat Sheet</h2>
 <h3 id="quick-reference-commands">Quick Reference Commands</h3>
-<p><strong>Harbor CLI (via API)</strong>:
+<p><strong>Harbor CLI (via API)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># List repositories</span>
 curl<span class="w"> </span>-u<span class="w"> </span>user:pass<span class="w"> </span>https://harbor.fawkes.internal/api/v2.0/projects/library/repositories
 
@@ -6191,8 +6255,8 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 
 <span class="c1"># Delete artifact</span>
 curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-u<span class="w"> </span>user:pass<span class="w"> </span>https://harbor.fawkes.internal/api/v2.0/projects/library/repositories/myapp/artifacts/v1.2.3
-</code></pre></div></p>
-<p><strong>Cosign Commands</strong>:
+</code></pre></div>
+<p><strong>Cosign Commands</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Sign image</span>
 cosign<span class="w"> </span>sign<span class="w"> </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>myapp:v1.2.3
 
@@ -6204,8 +6268,8 @@ cosign<span class="w"> </span>attach<span class="w"> </span>sbom<span class="w">
 
 <span class="c1"># Download SBOM</span>
 cosign<span class="w"> </span>download<span class="w"> </span>sbom<span class="w"> </span>myapp:v1.2.3
-</code></pre></div></p>
-<p><strong>Docker Tag Management</strong>:
+</code></pre></div>
+<p><strong>Docker Tag Management</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create multiple tags</span>
 docker<span class="w"> </span>tag<span class="w"> </span>myapp:123<span class="w"> </span>myapp:v1.2.3
 docker<span class="w"> </span>tag<span class="w"> </span>myapp:123<span class="w"> </span>myapp:latest
@@ -6213,7 +6277,7 @@ docker<span class="w"> </span>tag<span class="w"> </span>myapp:123<span class="w
 
 <span class="c1"># Push all tags</span>
 docker<span class="w"> </span>push<span class="w"> </span>--all-tags<span class="w"> </span>myapp
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="final-thoughts">🎊 Final Thoughts</h2>
 <p>You've completed an intensive journey through CI/CD mastery. You now have the skills to:</p>

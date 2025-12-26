@@ -4541,9 +4541,8 @@
 Fawkes Dojo Lab Automation &amp; Validation Scripts</p>
 <p>This module provides automated lab environment setup, validation,
 and grading for all Fawkes Dojo assessments.</p>
-<p>Usage:
-    # Start lab environment
-    fawkes lab start --module 1</p>
+<p>Usage: # Start lab environment
+fawkes lab start --module 1</p>
 <pre><code># Validate lab completion
 fawkes lab validate --lab white-belt-lab1
 
@@ -4560,29 +4559,29 @@ from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
 from enum import Enum</p>
 <p>class BeltLevel(Enum):
-    WHITE = "white"
-    YELLOW = "yellow"
-    GREEN = "green"
-    BROWN = "brown"
-    BLACK = "black"</p>
+WHITE = "white"
+YELLOW = "yellow"
+GREEN = "green"
+BROWN = "brown"
+BLACK = "black"</p>
 <p>@dataclass
 class ValidationResult:
-    """Result of a lab validation check"""
-    passed: bool
-    message: str
-    points: int
-    max_points: int
-    details: Optional[Dict] = None</p>
+"""Result of a lab validation check"""
+passed: bool
+message: str
+points: int
+max_points: int
+details: Optional[Dict] = None</p>
 <p>@dataclass
 class LabEnvironment:
-    """Lab environment configuration"""
-    module_id: int
-    belt_level: BeltLevel
-    cluster_name: str
-    namespace: str
-    resources: List[str]</p>
+"""Lab environment configuration"""
+module_id: int
+belt_level: BeltLevel
+cluster_name: str
+namespace: str
+resources: List[str]</p>
 <p>class LabAutomation:
-    """Main class for lab automation"""</p>
+"""Main class for lab automation"""</p>
 <pre><code>def __init__(self):
     self.kubectl = "kubectl"
     self.results = []
@@ -4622,7 +4621,7 @@ def check_resource_exists(self, resource_type: str, resource_name: str,
 <h1 id="white-belt-lab-validators">WHITE BELT LAB VALIDATORS</h1>
 <h1 id="_2">=============================================================================</h1>
 <p>class WhiteBeltLab1Validator:
-    """Validator for White Belt Lab 1: First Deployment"""</p>
+"""Validator for White Belt Lab 1: First Deployment"""</p>
 <pre><code>def __init__(self, lab_automation: LabAutomation):
     self.lab = lab_automation
     self.namespace = "default"
@@ -4708,7 +4707,7 @@ def check_application_accessible(self) -&gt; bool:
     return exit_code == 0 and "my-first-app" in stdout
 </code></pre>
 <p>class WhiteBeltLab2Validator:
-    """Validator for White Belt Lab 2: Multi-Environment Deployment"""</p>
+"""Validator for White Belt Lab 2: Multi-Environment Deployment"""</p>
 <pre><code>def __init__(self, lab_automation: LabAutomation):
     self.lab = lab_automation
     self.max_points = 15
@@ -4804,7 +4803,7 @@ def check_argocd_apps(self) -&gt; bool:
     return dev_app and prod_app
 </code></pre>
 <p>class WhiteBeltLab3Validator:
-    """Validator for White Belt Lab 3: DORA Metrics"""</p>
+"""Validator for White Belt Lab 3: DORA Metrics"""</p>
 <pre><code>def __init__(self, lab_automation: LabAutomation):
     self.lab = lab_automation
     self.max_points = 15
@@ -4868,7 +4867,7 @@ def check_deployment_metrics(self) -&gt; bool:
 <h1 id="yellow-belt-lab-validators">YELLOW BELT LAB VALIDATORS</h1>
 <h1 id="_4">=============================================================================</h1>
 <p>class YellowBeltLab1Validator:
-    """Validator for Yellow Belt Lab 1: Production CI Pipeline"""</p>
+"""Validator for Yellow Belt Lab 1: Production CI Pipeline"""</p>
 <pre><code>def __init__(self, lab_automation: LabAutomation):
     self.lab = lab_automation
     self.max_points = 20
@@ -4948,7 +4947,7 @@ def check_quality_gates(self) -&gt; bool:
 <h1 id="command-line-interface">COMMAND LINE INTERFACE</h1>
 <h1 id="_6">=============================================================================</h1>
 <p>class FawkesLabCLI:
-    """Command line interface for Fawkes lab automation"""</p>
+"""Command line interface for Fawkes lab automation"""</p>
 <pre><code>def __init__(self):
     self.lab_automation = LabAutomation()
     self.validators = {
@@ -5090,7 +5089,7 @@ def display_validation_results(self, result: ValidationResult):
 <h1 id="assessment-automation">ASSESSMENT AUTOMATION</h1>
 <h1 id="_8">=============================================================================</h1>
 <p>class AssessmentValidator:
-    """Automated assessment validation and grading"""</p>
+"""Automated assessment validation and grading"""</p>
 <pre><code>def __init__(self):
     self.lab_automation = LabAutomation()
 
@@ -5187,8 +5186,8 @@ def generate_cert_id(self, user_info: Dict, belt_level: str) -&gt; str:
 <h1 id="utility-functions">UTILITY FUNCTIONS</h1>
 <h1 id="_10">=============================================================================</h1>
 <p>def setup_lab_environment():
-    """One-time setup for lab infrastructure"""
-    print("🔧 Setting up Fawkes Dojo lab infrastructure...")</p>
+"""One-time setup for lab infrastructure"""
+print("🔧 Setting up Fawkes Dojo lab infrastructure...")</p>
 <pre><code>lab = LabAutomation()
 
 # Create monitoring namespace
@@ -5213,8 +5212,8 @@ lab.run_command([
 print("✅ Lab infrastructure ready!")
 </code></pre>
 <p>def cleanup_lab_environment(module_id: int):
-    """Clean up lab environment"""
-    print(f"🧹 Cleaning up lab environment for Module {module_id}...")</p>
+"""Clean up lab environment"""
+print(f"🧹 Cleaning up lab environment for Module {module_id}...")</p>
 <pre><code>lab = LabAutomation()
 namespace = f"lab-module-{module_id}"
 
@@ -5226,8 +5225,8 @@ print(f"✅ Lab environment cleaned up!")
 <h1 id="main-cli-entrypoint">MAIN CLI ENTRYPOINT</h1>
 <h1 id="_12">=============================================================================</h1>
 <p>def main():
-    """Main CLI entrypoint"""
-    import argparse</p>
+"""Main CLI entrypoint"""
+import argparse</p>
 <pre><code>parser = argparse.ArgumentParser(description="Fawkes Dojo Lab Automation")
 subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
@@ -5309,7 +5308,7 @@ else:
     parser.print_help()
 </code></pre>
 <p>if <strong>name</strong> == "<strong>main</strong>":
-    main()</p>
+main()</p>
 <h1 id="_13">=============================================================================</h1>
 <h1 id="example-usage">EXAMPLE USAGE</h1>
 <h1 id="_14">=============================================================================</h1>

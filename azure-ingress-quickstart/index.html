@@ -4699,9 +4699,9 @@ kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </sp
 <span class="c1"># Get external IP (may take 2-3 minutes)</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-w
 </code></pre></div>
-<p><strong>Validation:</strong>
+<p><strong>Validation:</strong></p>
 <div class="highlight"><pre><span></span><code>./platform/apps/ingress-nginx/validate-azure.sh
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="2-configure-dns-optional-10-minutes">2. Configure DNS (Optional, 10 minutes)</h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Edit infra/azure/terraform.tfvars</span>
 <span class="nv">dns_zone_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes.yourdomain.com&quot;</span>
@@ -4731,9 +4731,9 @@ sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/pla
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/cert-manager/cluster-issuer-letsencrypt-staging.yaml
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/cert-manager/cluster-issuer-letsencrypt-prod.yaml
 </code></pre></div>
-<p><strong>Validation:</strong>
+<p><strong>Validation:</strong></p>
 <div class="highlight"><pre><span></span><code>./platform/apps/cert-manager/validate.sh
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="4-test-with-echo-server-5-minutes">4. Test with Echo Server (5 minutes)</h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Deploy test app</span>
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/ingress-nginx/test-ingress.yaml
@@ -4771,13 +4771,13 @@ curl<span class="w"> </span>http://test.<span class="si">${</span><span class="n
 <span class="w">                </span><span class="nt">port</span><span class="p">:</span>
 <span class="w">                  </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
 </code></pre></div>
-<p><strong>Watch certificate creation:</strong>
+<p><strong>Watch certificate creation:</strong></p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>certificate<span class="w"> </span>-A<span class="w"> </span>-w
-</code></pre></div></p>
-<p><strong>Once verified, switch to production:</strong>
+</code></pre></div>
+<p><strong>Once verified, switch to production:</strong></p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>annotate<span class="w"> </span>ingress<span class="w"> </span>myapp<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>cert-manager.io/cluster-issuer<span class="o">=</span>letsencrypt-prod<span class="w"> </span>--overwrite
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="common-issues">Common Issues</h2>
 <h3 id="external-ip-pending">External IP Pending</h3>
 <p>Wait 2-3 minutes. Azure Load Balancer creation takes time.</p>

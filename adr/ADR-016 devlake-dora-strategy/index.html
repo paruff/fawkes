@@ -4929,18 +4929,22 @@ flexibility, it requires significant custom development effort.</p>
 <p>We will deploy <strong>Apache DevLake</strong> as the DORA metrics collection, calculation,
 and visualization platform for Fawkes.</p>
 <h3 id="why-apache-devlake">Why Apache DevLake</h3>
-<p><strong>Advantages</strong>:
-1. <strong>Purpose-built for DORA</strong>: Native support for all four DORA metrics
-2. <strong>Multi-source Integration</strong>: Pre-built collectors for GitHub, GitLab, Jenkins,
-   Jira, and more
-3. <strong>Open Source</strong>: Apache 2.0 license, active CNCF community
-4. <strong>Extensible</strong>: Plugin architecture for custom data sources
-5. <strong>Grafana Integration</strong>: Pre-built dashboards for DORA visualization
-6. <strong>Low Custom Development</strong>: Reduces need for custom webhook handlers</p>
-<p><strong>Trade-offs</strong>:
-1. <strong>Additional Component</strong>: Adds DevLake stack (API, UI, collector workers)
-2. <strong>Database Requirement</strong>: Requires MySQL/PostgreSQL for data storage
-3. <strong>Learning Curve</strong>: Teams need to understand DevLake configuration</p>
+<p><strong>Advantages</strong>:</p>
+<ol>
+<li><strong>Purpose-built for DORA</strong>: Native support for all four DORA metrics</li>
+<li><strong>Multi-source Integration</strong>: Pre-built collectors for GitHub, GitLab, Jenkins,
+   Jira, and more</li>
+<li><strong>Open Source</strong>: Apache 2.0 license, active CNCF community</li>
+<li><strong>Extensible</strong>: Plugin architecture for custom data sources</li>
+<li><strong>Grafana Integration</strong>: Pre-built dashboards for DORA visualization</li>
+<li><strong>Low Custom Development</strong>: Reduces need for custom webhook handlers</li>
+</ol>
+<p><strong>Trade-offs</strong>:</p>
+<ol>
+<li><strong>Additional Component</strong>: Adds DevLake stack (API, UI, collector workers)</li>
+<li><strong>Database Requirement</strong>: Requires MySQL/PostgreSQL for data storage</li>
+<li><strong>Learning Curve</strong>: Teams need to understand DevLake configuration</li>
+</ol>
 <h3 id="architecture">Architecture</h3>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────────────────┐
 │                          DevLake DORA Metrics Layer                          │
@@ -5084,11 +5088,13 @@ repository, which ArgoCD then reconciles. Therefore:</p>
 </tbody>
 </table>
 <h3 id="deployment-configuration">Deployment Configuration</h3>
-<p><strong>Namespace Isolation</strong>:
-- DevLake deployed in <code>fawkes-devlake</code> namespace
-- Secrets managed via Vault/External Secrets
-- Network policies restrict access to approved sources</p>
-<p><strong>Resource Requirements</strong>:
+<p><strong>Namespace Isolation</strong>:</p>
+<ul>
+<li>DevLake deployed in <code>fawkes-devlake</code> namespace</li>
+<li>Secrets managed via Vault/External Secrets</li>
+<li>Network policies restrict access to approved sources</li>
+</ul>
+<p><strong>Resource Requirements</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">devlake-api</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200m</span>
@@ -5112,31 +5118,41 @@ repository, which ArgoCD then reconciles. Therefore:</p>
 <span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2000m</span>
 <span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4Gi</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="data-source-configuration">Data Source Configuration</h3>
-<p><strong>GitHub/Git Integration</strong>:
-- OAuth app for repository access
-- Webhook receiver for real-time events
-- Collect: commits, PRs, branches</p>
-<p><strong>ArgoCD Integration</strong> (Primary deployment source):
-- API access for sync event collection
-- Deployment frequency from successful syncs
-- Lead time correlation with commit timestamps
-- Failure detection from sync failures</p>
-<p><strong>Jenkins Integration</strong> (CI and rework metrics):
-- API token for build data access
-- Build success/failure tracking
-- Quality gate results
-- <strong>Rework metrics</strong>: build retries, flaky tests, repeated failures</p>
-<p><strong>Observability Integration</strong>:
-- Webhook endpoint for incident events
-- Alert-to-incident correlation
-- Resolution tracking for MTTR</p>
+<p><strong>GitHub/Git Integration</strong>:</p>
+<ul>
+<li>OAuth app for repository access</li>
+<li>Webhook receiver for real-time events</li>
+<li>Collect: commits, PRs, branches</li>
+</ul>
+<p><strong>ArgoCD Integration</strong> (Primary deployment source):</p>
+<ul>
+<li>API access for sync event collection</li>
+<li>Deployment frequency from successful syncs</li>
+<li>Lead time correlation with commit timestamps</li>
+<li>Failure detection from sync failures</li>
+</ul>
+<p><strong>Jenkins Integration</strong> (CI and rework metrics):</p>
+<ul>
+<li>API token for build data access</li>
+<li>Build success/failure tracking</li>
+<li>Quality gate results</li>
+<li><strong>Rework metrics</strong>: build retries, flaky tests, repeated failures</li>
+</ul>
+<p><strong>Observability Integration</strong>:</p>
+<ul>
+<li>Webhook endpoint for incident events</li>
+<li>Alert-to-incident correlation</li>
+<li>Resolution tracking for MTTR</li>
+</ul>
 <h3 id="backstage-integration">Backstage Integration</h3>
-<p>DevLake will integrate with Backstage via:
-1. <strong>Iframe Plugin</strong>: Embed DevLake dashboards in Backstage
-2. <strong>API Integration</strong>: Fetch DORA metrics for service cards
-3. <strong>Entity Annotation</strong>: Link catalog entities to DevLake projects</p>
+<p>DevLake will integrate with Backstage via:</p>
+<ol>
+<li><strong>Iframe Plugin</strong>: Embed DevLake dashboards in Backstage</li>
+<li><strong>API Integration</strong>: Fetch DORA metrics for service cards</li>
+<li><strong>Entity Annotation</strong>: Link catalog entities to DevLake projects</li>
+</ol>
 <h3 id="edge-case-handling">Edge Case Handling</h3>
 <table>
 <thead>
@@ -5209,28 +5225,36 @@ repository, which ArgoCD then reconciles. Therefore:</p>
 <h2 id="alternatives-considered">Alternatives Considered</h2>
 <h3 id="1-custom-dora-metrics-service-adr-012-approach">1. Custom DORA Metrics Service (ADR-012 Approach)</h3>
 <p><strong>Description</strong>: Build custom Go/Python service with webhook receivers</p>
-<p><strong>Rejected because</strong>:
-- Higher development and maintenance cost
-- Need to implement all collectors from scratch
-- No pre-built visualization</p>
+<p><strong>Rejected because</strong>:</p>
+<ul>
+<li>Higher development and maintenance cost</li>
+<li>Need to implement all collectors from scratch</li>
+<li>No pre-built visualization</li>
+</ul>
 <h3 id="2-sleuthio-commercial">2. Sleuth.io (Commercial)</h3>
 <p><strong>Description</strong>: SaaS DORA metrics platform</p>
-<p><strong>Rejected because</strong>:
-- Commercial licensing costs
-- External data residency concerns
-- Vendor lock-in</p>
+<p><strong>Rejected because</strong>:</p>
+<ul>
+<li>Commercial licensing costs</li>
+<li>External data residency concerns</li>
+<li>Vendor lock-in</li>
+</ul>
 <h3 id="3-faros-ai-commercial">3. Faros AI (Commercial)</h3>
 <p><strong>Description</strong>: Engineering metrics platform</p>
-<p><strong>Rejected because</strong>:
-- Commercial licensing
-- More complex than needed
-- Over-featured for core DORA requirements</p>
+<p><strong>Rejected because</strong>:</p>
+<ul>
+<li>Commercial licensing</li>
+<li>More complex than needed</li>
+<li>Over-featured for core DORA requirements</li>
+</ul>
 <h3 id="4-haystack-open-source">4. Haystack (Open Source)</h3>
 <p><strong>Description</strong>: Engineering analytics platform</p>
-<p><strong>Rejected because</strong>:
-- Smaller community than DevLake
-- Less mature DORA implementation
-- Limited documentation</p>
+<p><strong>Rejected because</strong>:</p>
+<ul>
+<li>Smaller community than DevLake</li>
+<li>Less mature DORA implementation</li>
+<li>Limited documentation</li>
+</ul>
 <h2 id="implementation-plan">Implementation Plan</h2>
 <h3 id="phase-1-core-deployment-week-1">Phase 1: Core Deployment (Week 1)</h3>
 <ul>

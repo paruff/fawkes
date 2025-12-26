@@ -5355,27 +5355,33 @@
 <h1 id="zero-trust-security-model-never-trust-always-verify">Zero Trust Security Model: Never Trust, Always Verify</h1>
 <h2 id="context">Context</h2>
 <p>Traditional security models operate on the <strong>perimeter defense</strong> principle: hard outer shell (firewall), soft interior (trusted network). Once you're inside the network, you're trusted. This worked when datacenters had literal walls and employees sat in offices.</p>
-<p>But modern cloud-native applications break these assumptions:
-- <strong>No perimeter</strong> - Services span multiple clouds, regions, networks
-- <strong>Ephemeral workloads</strong> - Containers are created and destroyed constantly
-- <strong>Lateral movement</strong> - A compromised pod can talk to others on the same network
-- <strong>Supply chain attacks</strong> - Third-party dependencies could be malicious</p>
+<p>But modern cloud-native applications break these assumptions:</p>
+<ul>
+<li><strong>No perimeter</strong> - Services span multiple clouds, regions, networks</li>
+<li><strong>Ephemeral workloads</strong> - Containers are created and destroyed constantly</li>
+<li><strong>Lateral movement</strong> - A compromised pod can talk to others on the same network</li>
+<li><strong>Supply chain attacks</strong> - Third-party dependencies could be malicious</li>
+</ul>
 <p>The solution is <strong>Zero Trust Architecture</strong>: assume breach, verify everything, and grant least-privilege access at every layer.</p>
-<p>Fawkes implements Zero Trust through the integration of three key components:
-- <strong>HashiCorp Vault</strong> - Secrets management and identity
-- <strong>Kyverno</strong> - Policy-as-Code enforcement
-- <strong>Istio/Ingress</strong> - Network policy and mTLS</p>
+<p>Fawkes implements Zero Trust through the integration of three key components:</p>
+<ul>
+<li><strong>HashiCorp Vault</strong> - Secrets management and identity</li>
+<li><strong>Kyverno</strong> - Policy-as-Code enforcement</li>
+<li><strong>Istio/Ingress</strong> - Network policy and mTLS</li>
+</ul>
 <p>This document explains how these pieces work together to create defense in depth.</p>
 <h2 id="the-problem-trust-based-security-fails-in-kubernetes">The Problem: Trust-Based Security Fails in Kubernetes</h2>
 <h3 id="the-traditional-trust-the-network-approach">The Traditional "Trust the Network" Approach</h3>
-<p>In legacy architectures:
+<p>In legacy architectures:</p>
 <div class="highlight"><pre><span></span><code>Internet → Firewall → Internal Network (Trusted Zone)
-</code></pre></div></p>
-<p><strong>Inside the firewall:</strong>
-- Services communicate over HTTP (no encryption)
-- Authentication is often "source IP" or "same VLAN"
-- Secrets stored in environment variables or config files
-- Policies enforced at deploy time (if at all)</p>
+</code></pre></div>
+<p><strong>Inside the firewall:</strong></p>
+<ul>
+<li>Services communicate over HTTP (no encryption)</li>
+<li>Authentication is often "source IP" or "same VLAN"</li>
+<li>Secrets stored in environment variables or config files</li>
+<li>Policies enforced at deploy time (if at all)</li>
+</ul>
 <p><strong>What Could Go Wrong?</strong></p>
 <pre class="mermaid"><code>graph TB
     A[Compromised App Pod] --&gt;|No network policy| B[Database Pod]
@@ -5393,12 +5399,12 @@
 <h3 id="real-world-attack-scenario">Real-World Attack Scenario</h3>
 <p><strong>Day 1</strong>: Developer deploys app with a vulnerable dependency (Log4Shell, typo-squatting, etc.)</p>
 <p><strong>Day 2</strong>: Attacker exploits vulnerability, gains remote code execution in pod</p>
-<p><strong>Day 3</strong>: Attacker pivots:
+<p><strong>Day 3</strong>: Attacker pivots:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># From inside compromised pod</span>
 curl<span class="w"> </span>http://database:5432<span class="w">  </span><span class="c1"># No network policy blocks this</span>
 env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DB_PASSWORD<span class="w">     </span><span class="c1"># Secrets in environment variables</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"> </span>-n<span class="w"> </span>prod<span class="w">  </span><span class="c1"># Service account has excessive permissions</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Day 4</strong>: Attacker exfiltrates customer data, deploys cryptominer, pivots to other clusters</p>
 <p><strong>Time to Detect</strong>: Days to weeks
 <strong>Blast Radius</strong>: Entire cluster potentially compromised</p>
@@ -5440,11 +5446,13 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <span class="w">                </span><span class="nt">port</span><span class="p">:</span>
 <span class="w">                  </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
 </code></pre></div>
-<p><strong>What This Provides:</strong>
-- ✅ <strong>Encryption in transit</strong> - HTTPS for all external traffic
-- ✅ <strong>Certificate management</strong> - Cert-manager automates TLS renewal
-- ✅ <strong>SNI routing</strong> - Multiple services, one load balancer
-- ✅ <strong>DDoS mitigation</strong> - Rate limiting, WAF integration (if enabled)</p>
+<p><strong>What This Provides:</strong></p>
+<ul>
+<li>✅ <strong>Encryption in transit</strong> - HTTPS for all external traffic</li>
+<li>✅ <strong>Certificate management</strong> - Cert-manager automates TLS renewal</li>
+<li>✅ <strong>SNI routing</strong> - Multiple services, one load balancer</li>
+<li>✅ <strong>DDoS mitigation</strong> - Rate limiting, WAF integration (if enabled)</li>
+</ul>
 <h4 id="istio-service-mesh-internal-traffic">Istio Service Mesh (Internal Traffic)</h4>
 <p><strong>Purpose</strong>: Mutual TLS (mTLS) for pod-to-pod communication</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security.istio.io/v1beta1</span>
@@ -5454,14 +5462,16 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">mtls</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STRICT</span><span class="w">  </span><span class="c1"># Require mTLS for all traffic</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STRICT</span><span class="w"> </span><span class="c1"># Require mTLS for all traffic</span>
 </code></pre></div>
-<p><strong>What This Provides:</strong>
-- ✅ <strong>Zero trust networking</strong> - Pods authenticate to each other via certificates
-- ✅ <strong>Encrypted service mesh</strong> - Even inside the cluster, traffic is encrypted
-- ✅ <strong>Identity-based access</strong> - Authorization based on service identity, not IP
-- ✅ <strong>Observability</strong> - Istio traces every request (distributed tracing)</p>
-<p><strong>Example AuthorizationPolicy:</strong>
+<p><strong>What This Provides:</strong></p>
+<ul>
+<li>✅ <strong>Zero trust networking</strong> - Pods authenticate to each other via certificates</li>
+<li>✅ <strong>Encrypted service mesh</strong> - Even inside the cluster, traffic is encrypted</li>
+<li>✅ <strong>Identity-based access</strong> - Authorization based on service identity, not IP</li>
+<li>✅ <strong>Observability</strong> - Istio traces every request (distributed tracing)</li>
+</ul>
+<p><strong>Example AuthorizationPolicy:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security.istio.io/v1beta1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AuthorizationPolicy</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5479,7 +5489,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <span class="w">      </span><span class="nt">to</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">operation</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">ports</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;5432&quot;</span><span class="p p-Indicator">]</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Translation</strong>: Only the <code>api-service</code> service account can connect to Postgres port 5432. Everything else denied.</p>
 <h3 id="layer-2-policy-enforcement-with-kyverno">Layer 2: Policy Enforcement with Kyverno</h3>
 <p><strong>Principle</strong>: Prevent bad configurations from ever being deployed</p>
@@ -5491,7 +5501,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">require-non-root</span>
 <span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enforce</span><span class="w">  </span><span class="c1"># Block deployment if violated</span>
+<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enforce</span><span class="w"> </span><span class="c1"># Block deployment if violated</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-containers-non-root</span>
 <span class="w">      </span><span class="nt">match</span><span class="p">:</span>
@@ -5579,11 +5589,13 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 </tr>
 </tbody>
 </table>
-<p><strong>Fawkes Approach:</strong>
-1. <strong>Phase 1 (Audit)</strong>: Deploy policy in audit mode, observe violations
-2. <strong>Phase 2 (Remediation)</strong>: Work with teams to fix violations
-3. <strong>Phase 3 (Enforce)</strong>: Switch to enforce mode, block new violations</p>
-<p><strong>Example Policy Report:</strong>
+<p><strong>Fawkes Approach:</strong></p>
+<ol>
+<li><strong>Phase 1 (Audit)</strong>: Deploy policy in audit mode, observe violations</li>
+<li><strong>Phase 2 (Remediation)</strong>: Work with teams to fix violations</li>
+<li><strong>Phase 3 (Enforce)</strong>: Switch to enforce mode, block new violations</li>
+</ol>
+<p><strong>Example Policy Report:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wgpolicyk8s.io/v1alpha2</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PolicyReport</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5599,23 +5611,27 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">legacy-app-pod-123</span>
 <span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
 <span class="w">    </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Container</span><span class="nv"> </span><span class="s">&#39;app&#39;</span><span class="nv"> </span><span class="s">runs</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">root</span><span class="nv"> </span><span class="s">user&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Visibility</strong>: Platform team sees violations, can track compliance over time.</p>
 <h3 id="layer-3-secrets-management-with-vault">Layer 3: Secrets Management with Vault</h3>
 <p><strong>Principle</strong>: Secrets are ephemeral, dynamically generated, and audited</p>
 <h4 id="the-problem-with-kubernetes-secrets">The Problem with Kubernetes Secrets</h4>
-<p>Native Kubernetes Secrets are <strong>not secret</strong>:
-- Stored <strong>base64-encoded</strong> (not encrypted) in etcd
-- Visible to anyone with <code>get secrets</code> permission
-- Static (no automatic rotation)
-- No audit trail (who read the secret?)</p>
+<p>Native Kubernetes Secrets are <strong>not secret</strong>:</p>
+<ul>
+<li>Stored <strong>base64-encoded</strong> (not encrypted) in etcd</li>
+<li>Visible to anyone with <code>get secrets</code> permission</li>
+<li>Static (no automatic rotation)</li>
+<li>No audit trail (who read the secret?)</li>
+</ul>
 <h4 id="vaults-solution">Vault's Solution</h4>
-<p><strong>HashiCorp Vault</strong> is a secrets management platform that provides:
-- <strong>Encryption at rest</strong> - Secrets encrypted in storage backend
-- <strong>Dynamic secrets</strong> - Generated on-demand, short-lived
-- <strong>Audit logging</strong> - Every secret access logged
-- <strong>Access policies</strong> - Fine-grained RBAC
-- <strong>Automatic rotation</strong> - Secrets rotated automatically</p>
+<p><strong>HashiCorp Vault</strong> is a secrets management platform that provides:</p>
+<ul>
+<li><strong>Encryption at rest</strong> - Secrets encrypted in storage backend</li>
+<li><strong>Dynamic secrets</strong> - Generated on-demand, short-lived</li>
+<li><strong>Audit logging</strong> - Every secret access logged</li>
+<li><strong>Access policies</strong> - Fine-grained RBAC</li>
+<li><strong>Automatic rotation</strong> - Secrets rotated automatically</li>
+</ul>
 <h4 id="integration-pattern-vault-agent-sidecar">Integration Pattern: Vault Agent Sidecar</h4>
 <p><strong>Option 1: Vault Agent Injector (Recommended)</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
@@ -5639,17 +5655,21 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/api:v1.2.3</span>
 <span class="w">      </span><span class="c1"># Secrets injected at /vault/secrets/database</span>
 </code></pre></div>
-<p><strong>What Happens:</strong>
-1. <strong>Vault Agent sidecar injected</strong> - Runs alongside app container
-2. <strong>Kubernetes auth</strong> - Vault verifies pod's service account
-3. <strong>Secret retrieval</strong> - Agent fetches secrets from Vault
-4. <strong>File injection</strong> - Secrets written to shared volume at <code>/vault/secrets/</code>
-5. <strong>Automatic renewal</strong> - Agent refreshes secrets before expiration</p>
-<p><strong>Benefits:</strong>
-- ✅ <strong>No secrets in environment variables</strong> - Hidden from <code>kubectl describe</code>
-- ✅ <strong>No code changes</strong> - App reads from file like config
-- ✅ <strong>Automatic rotation</strong> - Agent handles renewal
-- ✅ <strong>Audit trail</strong> - Vault logs every access</p>
+<p><strong>What Happens:</strong></p>
+<ol>
+<li><strong>Vault Agent sidecar injected</strong> - Runs alongside app container</li>
+<li><strong>Kubernetes auth</strong> - Vault verifies pod's service account</li>
+<li><strong>Secret retrieval</strong> - Agent fetches secrets from Vault</li>
+<li><strong>File injection</strong> - Secrets written to shared volume at <code>/vault/secrets/</code></li>
+<li><strong>Automatic renewal</strong> - Agent refreshes secrets before expiration</li>
+</ol>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>✅ <strong>No secrets in environment variables</strong> - Hidden from <code>kubectl describe</code></li>
+<li>✅ <strong>No code changes</strong> - App reads from file like config</li>
+<li>✅ <strong>Automatic rotation</strong> - Agent handles renewal</li>
+<li>✅ <strong>Audit trail</strong> - Vault logs every access</li>
+</ul>
 <p><strong>Option 2: External Secrets Operator</strong></p>
 <p>For teams preferring Kubernetes-native pattern:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
@@ -5678,22 +5698,24 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <p><strong>The Ultimate Secret Management:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Vault configuration</span>
 <span class="l l-Scalar l-Scalar-Plain">vault write database/config/postgres \</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">plugin_name=postgresql-database-plugin \</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">allowed_roles=&quot;api-role&quot; \</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">connection_url=&quot;postgresql://{{username}}:{{password}}@postgres:5432/production&quot;</span>
+<span class="l l-Scalar l-Scalar-Plain">plugin_name=postgresql-database-plugin \</span>
+<span class="l l-Scalar l-Scalar-Plain">allowed_roles=&quot;api-role&quot; \</span>
+<span class="l l-Scalar l-Scalar-Plain">connection_url=&quot;postgresql://{{username}}:{{password}}@postgres:5432/production&quot;</span>
 
 <span class="l l-Scalar l-Scalar-Plain">vault write database/roles/api-role \</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">db_name=postgres \</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">creation_statements=&quot;CREATE ROLE \&quot;{{name}}\&quot; WITH LOGIN PASSWORD &#39;{{password}}&#39; VALID UNTIL &#39;{{expiration}}&#39;; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \&quot;{{name}}\&quot;;&quot; \</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">default_ttl=&quot;1h&quot; \</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">max_ttl=&quot;24h&quot;</span>
+<span class="l l-Scalar l-Scalar-Plain">db_name=postgres \</span>
+<span class="l l-Scalar l-Scalar-Plain">creation_statements=&quot;CREATE ROLE \&quot;{{name}}\&quot; WITH LOGIN PASSWORD &#39;{{password}}&#39; VALID UNTIL &#39;{{expiration}}&#39;; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \&quot;{{name}}\&quot;;&quot; \</span>
+<span class="l l-Scalar l-Scalar-Plain">default_ttl=&quot;1h&quot; \</span>
+<span class="l l-Scalar l-Scalar-Plain">max_ttl=&quot;24h&quot;</span>
 </code></pre></div>
-<p><strong>What This Enables:</strong>
-- Vault <strong>generates unique database credentials</strong> per application
-- Credentials <strong>expire after 1 hour</strong> (auto-rotated by Vault Agent)
-- If pod compromised, credentials useless after 1 hour
-- <strong>No shared passwords</strong> - Each pod gets unique creds
-- <strong>Audit trail</strong> - Know which pod accessed database at what time</p>
+<p><strong>What This Enables:</strong></p>
+<ul>
+<li>Vault <strong>generates unique database credentials</strong> per application</li>
+<li>Credentials <strong>expire after 1 hour</strong> (auto-rotated by Vault Agent)</li>
+<li>If pod compromised, credentials useless after 1 hour</li>
+<li><strong>No shared passwords</strong> - Each pod gets unique creds</li>
+<li><strong>Audit trail</strong> - Know which pod accessed database at what time</li>
+</ul>
 <p><strong>Time-Limited Blast Radius</strong>: Compromised credentials valid for max 1 hour, not indefinitely.</p>
 <h2 id="how-the-layers-work-together">How the Layers Work Together</h2>
 <h3 id="scenario-deploying-a-new-api-service">Scenario: Deploying a New API Service</h3>
@@ -5744,44 +5766,48 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <li>External traffic encrypted via HTTPS</li>
 <li>Internal traffic encrypted via mTLS</li>
 </ul>
-<p><strong>Security Layers Active:</strong>
-1. ✅ <strong>Ingress</strong> - TLS encryption for external traffic
-2. ✅ <strong>Istio</strong> - mTLS for internal service-to-service
-3. ✅ <strong>Kyverno</strong> - Policy validation (non-root, resource limits, etc.)
-4. ✅ <strong>Vault</strong> - Dynamic secrets with audit trail
-5. ✅ <strong>Network Policy</strong> - Least privilege network access</p>
+<p><strong>Security Layers Active:</strong></p>
+<ol>
+<li>✅ <strong>Ingress</strong> - TLS encryption for external traffic</li>
+<li>✅ <strong>Istio</strong> - mTLS for internal service-to-service</li>
+<li>✅ <strong>Kyverno</strong> - Policy validation (non-root, resource limits, etc.)</li>
+<li>✅ <strong>Vault</strong> - Dynamic secrets with audit trail</li>
+<li>✅ <strong>Network Policy</strong> - Least privilege network access</li>
+</ol>
 <h3 id="scenario-compromised-pod-defense-in-depth">Scenario: Compromised Pod (Defense in Depth)</h3>
 <p><strong>Attacker gains code execution in <code>api</code> pod:</strong></p>
-<p><strong>Attack 1: Lateral movement to database</strong>
+<p><strong>Attack 1: Lateral movement to database</strong></p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://postgres:5432
 </code></pre></div>
-<strong>❌ Blocked</strong>: Istio AuthorizationPolicy requires mTLS with <code>api</code> service identity. Attacker can't forge certificate.</p>
-<p><strong>Attack 2: Steal secrets from environment</strong>
+<p><strong>❌ Blocked</strong>: Istio AuthorizationPolicy requires mTLS with <code>api</code> service identity. Attacker can't forge certificate.</p>
+<p><strong>Attack 2: Steal secrets from environment</strong></p>
 <div class="highlight"><pre><span></span><code>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>PASSWORD
 </code></pre></div>
-<strong>❌ Mitigated</strong>: No secrets in environment variables. Secrets in <code>/vault/secrets/</code> (but still accessible if pod compromised).</p>
-<p><strong>Attack 3: Read secrets from Vault directly</strong>
+<p><strong>❌ Mitigated</strong>: No secrets in environment variables. Secrets in <code>/vault/secrets/</code> (but still accessible if pod compromised).</p>
+<p><strong>Attack 3: Read secrets from Vault directly</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">VAULT_ADDR</span><span class="o">=</span>http://vault:8200
 vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>secret/data/database
 </code></pre></div>
-<strong>❌ Blocked</strong>: Vault requires service account token. Attacker's manual <code>vault</code> CLI doesn't have token (Vault Agent does, but Agent is separate container).</p>
-<p><strong>Attack 4: Pivot to other namespaces</strong>
+<p><strong>❌ Blocked</strong>: Vault requires service account token. Attacker's manual <code>vault</code> CLI doesn't have token (Vault Agent does, but Agent is separate container).</p>
+<p><strong>Attack 4: Pivot to other namespaces</strong></p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>other-namespace
 </code></pre></div>
-<strong>❌ Blocked</strong>: Service account has RBAC limited to own namespace. No cross-namespace access.</p>
-<p><strong>Attack 5: Deploy malicious pod</strong>
+<p><strong>❌ Blocked</strong>: Service account has RBAC limited to own namespace. No cross-namespace access.</p>
+<p><strong>Attack 5: Deploy malicious pod</strong></p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>run<span class="w"> </span>evil-pod<span class="w"> </span>--image<span class="o">=</span>attacker/cryptominer
 </code></pre></div>
-<strong>❌ Blocked</strong>: Kyverno policy rejects images from unapproved registries. Admission denied.</p>
-<p><strong>Attack 6: Exfiltrate data from accessible database</strong>
+<p><strong>❌ Blocked</strong>: Kyverno policy rejects images from unapproved registries. Admission denied.</p>
+<p><strong>Attack 6: Exfiltrate data from accessible database</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Assume attacker accesses DB using app&#39;s connection</span>
 SELECT<span class="w"> </span>*<span class="w"> </span>FROM<span class="w"> </span>customers<span class="p">;</span>
 </code></pre></div>
-<strong>✅ Possible</strong>: If app has database access, attacker can read data the app can read.</p>
-<p><strong>Mitigation</strong>:
-- Least privilege DB credentials (Vault dynamic secrets give minimal permissions)
-- Audit logging (Vault logs all secret access; know which pod at what time)
-- Incident response (Revoke Vault credentials for compromised pod, rotate dynamic secrets)</p>
+<p><strong>✅ Possible</strong>: If app has database access, attacker can read data the app can read.</p>
+<p><strong>Mitigation</strong>:</p>
+<ul>
+<li>Least privilege DB credentials (Vault dynamic secrets give minimal permissions)</li>
+<li>Audit logging (Vault logs all secret access; know which pod at what time)</li>
+<li>Incident response (Revoke Vault credentials for compromised pod, rotate dynamic secrets)</li>
+</ul>
 <p><strong>Blast Radius</strong>: Limited to what the <code>api</code> service legitimately needs. Can't pivot to other services or namespaces.</p>
 <h2 id="trade-offs-security-vs-complexity">Trade-Offs: Security vs. Complexity</h2>
 <h3 id="what-zero-trust-gives-you">What Zero Trust Gives You</h3>
@@ -5903,10 +5929,12 @@ SELECT<span class="w"> </span>*<span class="w"> </span>FROM<span class="w"> </sp
 <li>⚠️ <strong>No latest tag</strong> - Require specific version tags</li>
 <li>⚠️ <strong>Secrets via Vault</strong> - Not Kubernetes Secrets</li>
 </ul>
-<p><strong>Rollout</strong>:
-1. <strong>Month 1</strong>: Audit mode (log violations, don't block)
-2. <strong>Month 2</strong>: Notify teams of violations, provide guidance
-3. <strong>Month 3</strong>: Enforce mode (block non-compliant deployments)</p>
+<p><strong>Rollout</strong>:</p>
+<ol>
+<li><strong>Month 1</strong>: Audit mode (log violations, don't block)</li>
+<li><strong>Month 2</strong>: Notify teams of violations, provide guidance</li>
+<li><strong>Month 3</strong>: Enforce mode (block non-compliant deployments)</li>
+</ol>
 <h3 id="tier-3-best-practice-audit-only">Tier 3: Best Practice (Audit Only)</h3>
 <p>Policies that encourage good practices but don't block:</p>
 <ul>
@@ -5927,10 +5955,12 @@ SELECT<span class="w"> </span>*<span class="w"> </span>FROM<span class="w"> </sp
 </ul>
 <h2 id="conclusion">Conclusion</h2>
 <p>Zero Trust is not a product—it's an <strong>architectural philosophy</strong>. No single tool provides Zero Trust; it emerges from the integration of complementary security layers.</p>
-<p>Fawkes implements Zero Trust through:
-- <strong>Vault</strong> - Identity-based secrets with audit trail
-- <strong>Kyverno</strong> - Policy enforcement at admission time
-- <strong>Istio/Ingress</strong> - Encrypted transport and identity verification</p>
+<p>Fawkes implements Zero Trust through:</p>
+<ul>
+<li><strong>Vault</strong> - Identity-based secrets with audit trail</li>
+<li><strong>Kyverno</strong> - Policy enforcement at admission time</li>
+<li><strong>Istio/Ingress</strong> - Encrypted transport and identity verification</li>
+</ul>
 <p>Together, these create <strong>defense in depth</strong>: multiple security layers that must all fail for a breach to succeed.</p>
 <p><strong>The Goal</strong>: Make attacks expensive. Even if an attacker compromises one pod, they can't pivot laterally, can't exfiltrate secrets, can't deploy malicious workloads. The blast radius is minimized, and the audit trail is complete.</p>
 <p><strong>This is Zero Trust</strong>: Never trust, always verify, and limit the damage when (not if) something goes wrong.</p>

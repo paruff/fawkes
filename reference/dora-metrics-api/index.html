@@ -4878,12 +4878,14 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 <h3 id="1-get-all-dora-metrics">1. Get All DORA Metrics</h3>
 <p>Returns all five DORA metrics for a project.</p>
 <p><strong>Endpoint</strong>: <code>GET /api/dora/metrics</code></p>
-<p><strong>Query Parameters</strong>:
-- <code>project</code> (required): Project name or service name
-- <code>timeRange</code> (optional): Time range for metrics (default: <code>last30days</code>)
-  - Values: <code>last7days</code>, <code>last30days</code>, <code>last90days</code>, <code>custom</code>
-- <code>startDate</code> (optional): Start date for custom range (ISO 8601)
-- <code>endDate</code> (optional): End date for custom range (ISO 8601)</p>
+<p><strong>Query Parameters</strong>:</p>
+<ul>
+<li><code>project</code> (required): Project name or service name</li>
+<li><code>timeRange</code> (optional): Time range for metrics (default: <code>last30days</code>)</li>
+<li>Values: <code>last7days</code>, <code>last30days</code>, <code>last90days</code>, <code>custom</code></li>
+<li><code>startDate</code> (optional): Start date for custom range (ISO 8601)</li>
+<li><code>endDate</code> (optional): End date for custom range (ISO 8601)</li>
+</ul>
 <p><strong>Example Request</strong>:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;http://devlake.127.0.0.1.nip.io/api/dora/metrics?project=payment-service&amp;timeRange=last30days&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$DEVLAKE_TOKEN</span><span class="s2">&quot;</span>
@@ -4940,10 +4942,12 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 <h3 id="2-get-deployment-frequency">2. Get Deployment Frequency</h3>
 <p>Returns deployment frequency metric only.</p>
 <p><strong>Endpoint</strong>: <code>GET /api/dora/deployment-frequency</code></p>
-<p><strong>Query Parameters</strong>:
-- <code>project</code> (required): Project name
-- <code>timeRange</code> (optional): Time range (default: <code>last7days</code>)
-- <code>groupBy</code> (optional): Group results by <code>day</code>, <code>week</code>, or <code>month</code></p>
+<p><strong>Query Parameters</strong>:</p>
+<ul>
+<li><code>project</code> (required): Project name</li>
+<li><code>timeRange</code> (optional): Time range (default: <code>last7days</code>)</li>
+<li><code>groupBy</code> (optional): Group results by <code>day</code>, <code>week</code>, or <code>month</code></li>
+</ul>
 <p><strong>Example Request</strong>:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;http://devlake.127.0.0.1.nip.io/api/dora/deployment-frequency?project=payment-service&amp;groupBy=day&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$DEVLAKE_TOKEN</span><span class="s2">&quot;</span>
@@ -4958,23 +4962,25 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 <span class="w">    </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;elite&quot;</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="nt">&quot;timeseries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-08&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-09&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-10&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-11&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-12&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-13&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-14&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">}</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-08&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-09&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-10&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-11&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-12&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-13&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-14&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;deployments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="3-get-lead-time-for-changes">3. Get Lead Time for Changes</h3>
 <p>Returns lead time metric with breakdown by stage.</p>
 <p><strong>Endpoint</strong>: <code>GET /api/dora/lead-time</code></p>
-<p><strong>Query Parameters</strong>:
-- <code>project</code> (required): Project name
-- <code>timeRange</code> (optional): Time range
-- <code>includeStages</code> (optional): Include stage breakdown (default: <code>false</code>)</p>
+<p><strong>Query Parameters</strong>:</p>
+<ul>
+<li><code>project</code> (required): Project name</li>
+<li><code>timeRange</code> (optional): Time range</li>
+<li><code>includeStages</code> (optional): Include stage breakdown (default: <code>false</code>)</li>
+</ul>
 <p><strong>Example Request</strong>:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;http://devlake.127.0.0.1.nip.io/api/dora/lead-time?project=payment-service&amp;includeStages=true&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$DEVLAKE_TOKEN</span><span class="s2">&quot;</span>
@@ -5017,9 +5023,11 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 <h3 id="4-get-change-failure-rate">4. Get Change Failure Rate</h3>
 <p>Returns change failure rate with details on failures.</p>
 <p><strong>Endpoint</strong>: <code>GET /api/dora/change-failure-rate</code></p>
-<p><strong>Query Parameters</strong>:
-- <code>project</code> (required): Project name
-- <code>timeRange</code> (optional): Time range</p>
+<p><strong>Query Parameters</strong>:</p>
+<ul>
+<li><code>project</code> (required): Project name</li>
+<li><code>timeRange</code> (optional): Time range</li>
+</ul>
 <p><strong>Example Request</strong>:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;http://devlake.127.0.0.1.nip.io/api/dora/change-failure-rate?project=payment-service&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$DEVLAKE_TOKEN</span><span class="s2">&quot;</span>
@@ -5051,10 +5059,12 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 <h3 id="5-get-mean-time-to-restore">5. Get Mean Time to Restore</h3>
 <p>Returns MTTR with incident details.</p>
 <p><strong>Endpoint</strong>: <code>GET /api/dora/mttr</code></p>
-<p><strong>Query Parameters</strong>:
-- <code>project</code> (required): Project name
-- <code>timeRange</code> (optional): Time range
-- <code>severity</code> (optional): Filter by severity (<code>high</code>, <code>medium</code>, <code>low</code>)</p>
+<p><strong>Query Parameters</strong>:</p>
+<ul>
+<li><code>project</code> (required): Project name</li>
+<li><code>timeRange</code> (optional): Time range</li>
+<li><code>severity</code> (optional): Filter by severity (<code>high</code>, <code>medium</code>, <code>low</code>)</li>
+</ul>
 <p><strong>Example Request</strong>:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;http://devlake.127.0.0.1.nip.io/api/dora/mttr?project=payment-service&amp;severity=high&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$DEVLAKE_TOKEN</span><span class="s2">&quot;</span>
@@ -5087,9 +5097,11 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 <h3 id="6-get-cirework-metrics">6. Get CI/Rework Metrics</h3>
 <p>Returns Jenkins CI metrics including rework rate.</p>
 <p><strong>Endpoint</strong>: <code>GET /api/dora/rework</code></p>
-<p><strong>Query Parameters</strong>:
-- <code>project</code> (required): Project name
-- <code>timeRange</code> (optional): Time range</p>
+<p><strong>Query Parameters</strong>:</p>
+<ul>
+<li><code>project</code> (required): Project name</li>
+<li><code>timeRange</code> (optional): Time range</li>
+</ul>
 <p><strong>Example Request</strong>:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;http://devlake.127.0.0.1.nip.io/api/dora/rework?project=payment-service&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$DEVLAKE_TOKEN</span><span class="s2">&quot;</span>
@@ -5348,17 +5360,17 @@ X-RateLimit-Reset: 1702828800
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Lead Time: </span><span class="si">{</span><span class="n">metrics</span><span class="o">.</span><span class="n">lead_time</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">metrics</span><span class="o">.</span><span class="n">lead_time</span><span class="o">.</span><span class="n">unit</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="javascript-sdk">JavaScript SDK</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">DevLakeClient</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@devlake/sdk&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">DevLakeClient</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@devlake/sdk&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DevLakeClient</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">baseURL</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;http://devlake.127.0.0.1.nip.io/api&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">token</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;your-api-token&#39;</span>
+<span class="w">  </span><span class="nx">baseURL</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;http://devlake.127.0.0.1.nip.io/api&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">token</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;your-api-token&quot;</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="c1">// Get DORA metrics</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">metrics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getDoraMetrics</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">project</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;payment-service&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">timeRange</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;last30days&#39;</span>
+<span class="w">  </span><span class="nx">project</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;payment-service&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">timeRange</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;last30days&quot;</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Deployment Frequency: </span><span class="si">${</span><span class="nx">metrics</span><span class="p">.</span><span class="nx">deploymentFrequency</span><span class="p">.</span><span class="nx">value</span><span class="si">}</span><span class="sb"> </span><span class="si">${</span><span class="nx">metrics</span><span class="p">.</span><span class="nx">deploymentFrequency</span><span class="p">.</span><span class="nx">unit</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>

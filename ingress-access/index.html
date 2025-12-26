@@ -4908,10 +4908,12 @@
 <h1 id="ingress-access-guide">Ingress Access Guide</h1>
 <p>This document describes how to configure external access for services on the Fawkes platform using Ingress resources with automated DNS management and TLS provisioning.</p>
 <h2 id="overview">Overview</h2>
-<p>The Fawkes platform provides:
-- <strong>NGINX Ingress Controller</strong>: High availability Layer 7 routing
-- <strong>ExternalDNS</strong>: Automated DNS record management
-- <strong>cert-manager</strong>: Automatic TLS certificate provisioning via Let's Encrypt</p>
+<p>The Fawkes platform provides:</p>
+<ul>
+<li><strong>NGINX Ingress Controller</strong>: High availability Layer 7 routing</li>
+<li><strong>ExternalDNS</strong>: Automated DNS record management</li>
+<li><strong>cert-manager</strong>: Automatic TLS certificate provisioning via Let's Encrypt</li>
+</ul>
 <p>All external-facing services are exposed via the Ingress Controller with mandatory TLS encryption.</p>
 <h2 id="architecture">Architecture</h2>
 <div class="highlight"><pre><span></span><code>Internet
@@ -5180,29 +5182,31 @@
 <li><strong>Storage</strong>: Certificates are stored in Kubernetes Secrets referenced by <code>secretName</code></li>
 </ol>
 <h3 id="troubleshooting-certificates">Troubleshooting Certificates</h3>
-<p>Check certificate status:
+<p>Check certificate status:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>certificate<span class="w"> </span>-A
 kubectl<span class="w"> </span>describe<span class="w"> </span>certificate<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
-</code></pre></div></p>
-<p>Check certificate requests:
+</code></pre></div>
+<p>Check certificate requests:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>certificaterequest<span class="w"> </span>-A
 kubectl<span class="w"> </span>describe<span class="w"> </span>certificaterequest<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="dns-configuration">DNS Configuration</h2>
 <h3 id="wildcard-dns-setup">Wildcard DNS Setup</h3>
 <p>A wildcard DNS record <code>*.fawkes.idp</code> must point to the Ingress Controller's Load Balancer IP.</p>
-<p>Get the Load Balancer IP:
+<p>Get the Load Balancer IP:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span>
-</code></pre></div></p>
-<p>Or use the Terraform output:
+</code></pre></div>
+<p>Or use the Terraform output:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>platform/networking/loadbalancer-provisioning
 terraform<span class="w"> </span>output<span class="w"> </span>ingress_lb_public_ip
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="externaldns-behavior">ExternalDNS Behavior</h3>
-<p>ExternalDNS automatically manages DNS records based on Ingress resources:
-- Creates A records when Ingress is created
-- Updates records when Ingress is modified
-- Does not delete records by default (upsert-only policy)</p>
+<p>ExternalDNS automatically manages DNS records based on Ingress resources:</p>
+<ul>
+<li>Creates A records when Ingress is created</li>
+<li>Updates records when Ingress is modified</li>
+<li>Does not delete records by default (upsert-only policy)</li>
+</ul>
 <h2 id="security-considerations">Security Considerations</h2>
 <h3 id="tls-termination">TLS Termination</h3>
 <ul>
@@ -5213,20 +5217,24 @@ terraform<span class="w"> </span>output<span class="w"> </span>ingress_lb_public
 <h3 id="http-to-https-redirect">HTTP to HTTPS Redirect</h3>
 <p>All HTTP requests are automatically redirected to HTTPS. This is enforced at the Ingress Controller level.</p>
 <h3 id="security-headers">Security Headers</h3>
-<p>The Ingress Controller adds the following security headers by default:
-- <code>Strict-Transport-Security: max-age=31536000; includeSubDomains</code>
-- Server tokens are hidden</p>
+<p>The Ingress Controller adds the following security headers by default:</p>
+<ul>
+<li><code>Strict-Transport-Security: max-age=31536000; includeSubDomains</code></li>
+<li>Server tokens are hidden</li>
+</ul>
 <h2 id="monitoring">Monitoring</h2>
 <h3 id="ingress-controller-metrics">Ingress Controller Metrics</h3>
 <p>Prometheus metrics are available at <code>/metrics</code> on the Ingress Controller pods.</p>
-<p>Key metrics:
-- <code>nginx_ingress_controller_requests</code>: Total requests handled
-- <code>nginx_ingress_controller_request_duration_seconds</code>: Request latency
-- <code>nginx_ingress_controller_ssl_expire_time_seconds</code>: Certificate expiration</p>
+<p>Key metrics:</p>
+<ul>
+<li><code>nginx_ingress_controller_requests</code>: Total requests handled</li>
+<li><code>nginx_ingress_controller_request_duration_seconds</code>: Request latency</li>
+<li><code>nginx_ingress_controller_ssl_expire_time_seconds</code>: Certificate expiration</li>
+</ul>
 <h3 id="access-logs">Access Logs</h3>
-<p>Access logs are available via:
+<p>Access logs are available via:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/component<span class="o">=</span>controller
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="common-issues">Common Issues</h3>
 <ol>

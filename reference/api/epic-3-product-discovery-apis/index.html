@@ -5235,13 +5235,15 @@
 <h1 id="epic-3-product-discovery-ux-apis-reference">Epic 3 Product Discovery &amp; UX APIs Reference</h1>
 <h2 id="overview">Overview</h2>
 <p>This document provides API references for all Epic 3 Product Discovery &amp; UX components, including REST APIs, webhooks, and integrations.</p>
-<p><strong>Component Coverage:</strong>
-- SPACE Metrics Service API
-- Feedback Service API
-- Feedback Bot Commands
-- Unleash Feature Flags API
-- Product Analytics API
-- Design System (Storybook)</p>
+<p><strong>Component Coverage:</strong></p>
+<ul>
+<li>SPACE Metrics Service API</li>
+<li>Feedback Service API</li>
+<li>Feedback Bot Commands</li>
+<li>Unleash Feature Flags API</li>
+<li>Product Analytics API</li>
+<li>Design System (Storybook)</li>
+</ul>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol>
@@ -5316,23 +5318,25 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <h3 id="health-check">Health Check</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /health</span>
 </code></pre></div>
-<p><strong>Response</strong>:
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;connected&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="get-all-space-metrics">Get All SPACE Metrics</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/metrics/space</span>
 </code></pre></div>
-<p><strong>Query Parameters</strong>:
-- <code>team</code> (optional): Filter by team name
-- <code>start_date</code> (optional): ISO 8601 date (default: 30 days ago)
-- <code>end_date</code> (optional): ISO 8601 date (default: now)
-- <code>granularity</code> (optional): <code>daily</code>, <code>weekly</code>, <code>monthly</code> (default: <code>weekly</code>)</p>
-<p><strong>Response</strong>:
+<p><strong>Query Parameters</strong>:</p>
+<ul>
+<li><code>team</code> (optional): Filter by team name</li>
+<li><code>start_date</code> (optional): ISO 8601 date (default: 30 days ago)</li>
+<li><code>end_date</code> (optional): ISO 8601 date (default: now)</li>
+<li><code>granularity</code> (optional): <code>daily</code>, <code>weekly</code>, <code>monthly</code> (default: <code>weekly</code>)</li>
+</ul>
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;period&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-25&quot;</span><span class="p">,</span>
@@ -5366,15 +5370,15 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="get-specific-space-dimension">Get Specific SPACE Dimension</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/metrics/space/{dimension}</span>
 </code></pre></div>
 <p><strong>Dimensions</strong>: <code>satisfaction</code>, <code>performance</code>, <code>activity</code>, <code>communication</code>, <code>efficiency</code></p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/metrics/space/satisfaction?team=platform</span>
-</code></pre></div></p>
-<p><strong>Response</strong>:
+</code></pre></div>
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;dimension&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;satisfaction&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;team&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;platform&quot;</span><span class="p">,</span>
@@ -5394,13 +5398,13 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <span class="w">    </span><span class="nt">&quot;trend&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;improving&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="submit-pulse-survey">Submit Pulse Survey</h3>
 <div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/surveys/pulse/submit</span>
 <span class="err">Content-Type: application/json</span>
 <span class="err">X-API-Key: &lt;api-key&gt;</span>
 </code></pre></div>
-<p><strong>Request Body</strong>:
+<p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anonymous_12345&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
@@ -5411,20 +5415,20 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <span class="w">    </span><span class="nt">&quot;wins&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployed new feature successfully&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Response</strong>:
+</code></pre></div>
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;survey_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;survey_67890&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Thank you for your feedback!&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="submit-friction-log">Submit Friction Log</h3>
 <div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/friction-log/submit</span>
 <span class="err">Content-Type: application/json</span>
 <span class="err">X-API-Key: &lt;api-key&gt;</span>
 </code></pre></div>
-<p><strong>Request Body</strong>:
+<p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anonymous_12345&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
@@ -5433,14 +5437,14 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <span class="w">  </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;medium&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;time_lost_minutes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Response</strong>:
+</code></pre></div>
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;friction_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;friction_99999&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Friction point logged. Thank you for reporting!&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="cognitive-load-assessment">Cognitive Load Assessment</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/cognitive-load/assessment</span>
 </code></pre></div>
@@ -5449,7 +5453,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <span class="err">Content-Type: application/json</span>
 <span class="err">X-API-Key: &lt;api-key&gt;</span>
 </code></pre></div>
-<p><strong>Request Body</strong> (NASA-TLX scores, 0-100):
+<p><strong>Request Body</strong> (NASA-TLX scores, 0-100):</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anonymous_12345&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;task&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deploying microservice to production&quot;</span><span class="p">,</span>
@@ -5463,16 +5467,18 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <span class="w">    </span><span class="nt">&quot;frustration&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="prometheus-metrics">Prometheus Metrics</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /metrics</span>
 </code></pre></div>
-<p>Exposes Prometheus metrics:
-- <code>space_metrics_satisfaction_enps</code>
-- <code>space_metrics_performance_deployment_frequency</code>
-- <code>space_metrics_activity_commits_total</code>
-- <code>space_metrics_communication_messages_total</code>
-- <code>space_metrics_efficiency_cognitive_load</code></p>
+<p>Exposes Prometheus metrics:</p>
+<ul>
+<li><code>space_metrics_satisfaction_enps</code></li>
+<li><code>space_metrics_performance_deployment_frequency</code></li>
+<li><code>space_metrics_activity_commits_total</code></li>
+<li><code>space_metrics_communication_messages_total</code></li>
+<li><code>space_metrics_efficiency_cognitive_load</code></li>
+</ul>
 <hr />
 <h2 id="feedback-service-api">Feedback Service API</h2>
 <p><strong>Base URL</strong>: <code>http://feedback-service.fawkes.svc.cluster.local:8080</code>
@@ -5480,17 +5486,17 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <h3 id="health-check_1">Health Check</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /health</span>
 </code></pre></div>
-<p><strong>Response</strong>:
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;connected&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="submit-feedback">Submit Feedback</h3>
 <div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/feedback</span>
 <span class="err">Content-Type: application/json</span>
 </code></pre></div>
-<p><strong>Request Body</strong>:
+<p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;rating&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UI/UX&quot;</span><span class="p">,</span>
@@ -5508,27 +5514,29 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="nt">&quot;screenshot&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;base64-encoded-image&gt;&quot;</span><span class="w"> </span><span class="c1">// optional</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Response</strong>:
+</code></pre></div>
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fb_12345&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Thank you for your feedback!&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="list-feedback-admin">List Feedback (Admin)</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/feedback</span>
 </code></pre></div>
-<p><strong>Query Parameters</strong>:
-- <code>status</code>: <code>new</code>, <code>validated</code>, <code>in_progress</code>, <code>resolved</code>, <code>archived</code>
-- <code>category</code>: Filter by category
-- <code>rating</code>: Filter by rating (1-5)
-- <code>start_date</code>: ISO 8601 date
-- <code>end_date</code>: ISO 8601 date
-- <code>page</code>: Page number (default: 1)
-- <code>per_page</code>: Results per page (default: 20, max: 100)</p>
-<p><strong>Response</strong>:
+<p><strong>Query Parameters</strong>:</p>
+<ul>
+<li><code>status</code>: <code>new</code>, <code>validated</code>, <code>in_progress</code>, <code>resolved</code>, <code>archived</code></li>
+<li><code>category</code>: Filter by category</li>
+<li><code>rating</code>: Filter by rating (1-5)</li>
+<li><code>start_date</code>: ISO 8601 date</li>
+<li><code>end_date</code>: ISO 8601 date</li>
+<li><code>page</code>: Page number (default: 1)</li>
+<li><code>per_page</code>: Results per page (default: 20, max: 100)</li>
+</ul>
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
@@ -5552,11 +5560,11 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <span class="w">    </span><span class="nt">&quot;total_pages&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="get-single-feedback">Get Single Feedback</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/feedback/{id}</span>
 </code></pre></div>
-<p><strong>Response</strong>:
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fb_12345&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;rating&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
@@ -5580,31 +5588,33 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <span class="w">    </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/paruff/fawkes/issues/250&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="update-feedback-status-admin">Update Feedback Status (Admin)</h3>
 <div class="highlight"><pre><span></span><code><span class="err">PUT /api/v1/feedback/{id}/status</span>
 <span class="err">Content-Type: application/json</span>
 </code></pre></div>
-<p><strong>Request Body</strong>:
+<p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;validated&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;notes&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Confirmed with 3 other users&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Response</strong>:
+</code></pre></div>
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fb_12345&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;validated&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;updated_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T11:00:00Z&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="get-feedback-statistics">Get Feedback Statistics</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/feedback/stats</span>
 </code></pre></div>
-<p><strong>Query Parameters</strong>:
-- <code>start_date</code>: ISO 8601 date (default: 30 days ago)
-- <code>end_date</code>: ISO 8601 date (default: now)</p>
-<p><strong>Response</strong>:
+<p><strong>Query Parameters</strong>:</p>
+<ul>
+<li><code>start_date</code>: ISO 8601 date (default: 30 days ago)</li>
+<li><code>end_date</code>: ISO 8601 date (default: now)</li>
+</ul>
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;period&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-25&quot;</span><span class="p">,</span>
@@ -5640,13 +5650,13 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <span class="w">  </span><span class="nt">&quot;avg_rating&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">4.1</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;response_rate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.42</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="process-validated-feedback-automation">Process Validated Feedback (Automation)</h3>
 <div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/automation/process-validated</span>
 <span class="err">Content-Type: application/json</span>
 <span class="err">X-API-Key: &lt;automation-key&gt;</span>
 </code></pre></div>
-<p><strong>Response</strong>:
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;processed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;github_issues_created&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -5658,54 +5668,56 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <span class="w">  </span><span class="p">],</span>
 <span class="w">  </span><span class="nt">&quot;errors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="prometheus-metrics_1">Prometheus Metrics</h3>
 <div class="highlight"><pre><span></span><code><span class="err">GET /metrics</span>
 </code></pre></div>
-<p>Exposes metrics:
-- <code>feedback_submissions_total</code>
-- <code>feedback_by_rating</code>
-- <code>feedback_by_category</code>
-- <code>feedback_processing_duration_seconds</code></p>
+<p>Exposes metrics:</p>
+<ul>
+<li><code>feedback_submissions_total</code></li>
+<li><code>feedback_by_rating</code></li>
+<li><code>feedback_by_category</code></li>
+<li><code>feedback_processing_duration_seconds</code></li>
+</ul>
 <hr />
 <h2 id="feedback-bot-commands">Feedback Bot Commands</h2>
 <p>The Mattermost feedback bot responds to direct messages and mentions.</p>
 <h3 id="submit-feedback-via-bot">Submit Feedback via Bot</h3>
-<p><strong>In any channel</strong>:
+<p><strong>In any channel</strong>:</p>
 <div class="highlight"><pre><span></span><code>@feedback The new CI/CD pipeline is much faster!
-</code></pre></div></p>
-<p><strong>Via Direct Message</strong>:
+</code></pre></div>
+<p><strong>Via Direct Message</strong>:</p>
 <div class="highlight"><pre><span></span><code>The deployment experience could be improved
-</code></pre></div></p>
-<p><strong>Bot Response</strong>:
+</code></pre></div>
+<p><strong>Bot Response</strong>:</p>
 <div class="highlight"><pre><span></span><code>✅ Feedback received! I&#39;ve analyzed your message:
 • Category: CI/CD
 • Sentiment: Positive
 • Priority: Low
 
 Would you like to add more details? Reply to this thread.
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="check-feedback-status">Check Feedback Status</h3>
 <div class="highlight"><pre><span></span><code>@feedback status
 </code></pre></div>
-<p><strong>Bot Response</strong>:
+<p><strong>Bot Response</strong>:</p>
 <div class="highlight"><pre><span></span><code>📊 Feedback Summary (Last 30 days):
 • Total submissions: 15
 • Avg rating: 4.2
 • Your submissions: 3
 • Recent: &quot;The new CI/CD pipeline...&quot; (2 days ago)
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="get-help">Get Help</h3>
 <div class="highlight"><pre><span></span><code>@feedback help
 </code></pre></div>
-<p><strong>Bot Response</strong>:
+<p><strong>Bot Response</strong>:</p>
 <div class="highlight"><pre><span></span><code>🤖 Feedback Bot Commands:
 • @feedback &lt;message&gt; - Submit feedback
 • @feedback status - View your feedback stats
 • @feedback help - Show this help message
 
 You can also DM me directly with feedback!
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="unleash-api">Unleash API</h2>
 <p><strong>Base URL</strong>: <code>http://unleash.fawkes.svc.cluster.local:4242</code>
@@ -5722,7 +5734,7 @@ You can also DM me directly with feedback!
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/client/features</span>
 <span class="err">Authorization: &lt;CLIENT_TOKEN&gt;</span>
 </code></pre></div>
-<p><strong>Response</strong>:
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;features&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -5741,13 +5753,13 @@ You can also DM me directly with feedback!
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="register-client">Register Client</h4>
 <div class="highlight"><pre><span></span><code><span class="err">POST /api/client/register</span>
 <span class="err">Content-Type: application/json</span>
 <span class="err">Authorization: &lt;CLIENT_TOKEN&gt;</span>
 </code></pre></div>
-<p><strong>Request Body</strong>:
+<p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;appName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;instanceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;instance-12345&quot;</span><span class="p">,</span>
@@ -5756,13 +5768,13 @@ You can also DM me directly with feedback!
 <span class="w">  </span><span class="nt">&quot;started&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15000</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="send-metrics">Send Metrics</h4>
 <div class="highlight"><pre><span></span><code><span class="err">POST /api/client/metrics</span>
 <span class="err">Content-Type: application/json</span>
 <span class="err">Authorization: &lt;CLIENT_TOKEN&gt;</span>
 </code></pre></div>
-<p><strong>Request Body</strong>:
+<p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;appName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;instanceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;instance-12345&quot;</span><span class="p">,</span>
@@ -5777,7 +5789,7 @@ You can also DM me directly with feedback!
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="admin-api">Admin API</h3>
 <h4 id="list-feature-flags">List Feature Flags</h4>
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/admin/features</span>
@@ -5788,7 +5800,7 @@ You can also DM me directly with feedback!
 <span class="err">Content-Type: application/json</span>
 <span class="err">Authorization: &lt;ADMIN_TOKEN&gt;</span>
 </code></pre></div>
-<p><strong>Request Body</strong>:
+<p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;new-dashboard&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Enable new dashboard UI&quot;</span><span class="p">,</span>
@@ -5805,7 +5817,7 @@ You can also DM me directly with feedback!
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="toggle-feature-flag">Toggle Feature Flag</h4>
 <div class="highlight"><pre><span></span><code><span class="err">POST /api/admin/features/{featureName}/toggle/{on|off}</span>
 <span class="err">Authorization: &lt;ADMIN_TOKEN&gt;</span>
@@ -5814,7 +5826,7 @@ You can also DM me directly with feedback!
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/admin/metrics/features/{featureName}</span>
 <span class="err">Authorization: &lt;ADMIN_TOKEN&gt;</span>
 </code></pre></div>
-<p><strong>Response</strong>:
+<p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;featureName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;new-dashboard&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;lastHourUsage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -5823,7 +5835,7 @@ You can also DM me directly with feedback!
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="nt">&quot;seenApplications&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;backstage&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;feedback-service&quot;</span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="product-analytics-api">Product Analytics API</h2>
 <p><strong>Base URL</strong>: Depends on analytics platform (PostHog/Plausible)
@@ -5832,7 +5844,7 @@ You can also DM me directly with feedback!
 <div class="highlight"><pre><span></span><code><span class="err">POST /api/capture</span>
 <span class="err">Content-Type: application/json</span>
 </code></pre></div>
-<p><strong>Request Body</strong>:
+<p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;api_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;PROJECT_API_KEY&gt;&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;service_created&quot;</span><span class="p">,</span>
@@ -5844,36 +5856,36 @@ You can also DM me directly with feedback!
 <span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;distinct_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user-123&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="batch-events">Batch Events</h3>
 <div class="highlight"><pre><span></span><code><span class="err">POST /api/batch</span>
 <span class="err">Content-Type: application/json</span>
 </code></pre></div>
-<p><strong>Request Body</strong>:
+<p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;api_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;PROJECT_API_KEY&gt;&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;batch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;page_view&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/dashboard&quot;</span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/dashboard&quot;</span><span class="w"> </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">&quot;distinct_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user-123&quot;</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;button_clicked&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;button&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;deploy&quot;</span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;button&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;deploy&quot;</span><span class="w"> </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:31:00Z&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">&quot;distinct_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user-123&quot;</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="query-events">Query Events</h3>
 <div class="highlight"><pre><span></span><code><span class="err">POST /api/query</span>
 <span class="err">Content-Type: application/json</span>
 <span class="err">Authorization: Bearer &lt;API_TOKEN&gt;</span>
 </code></pre></div>
-<p><strong>Request Body</strong>:
+<p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EventsQuery&quot;</span><span class="p">,</span>
@@ -5883,28 +5895,32 @@ You can also DM me directly with feedback!
 <span class="w">    </span><span class="nt">&quot;before&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="storybook-design-system">Storybook (Design System)</h2>
 <p><strong>URL</strong>: <code>https://storybook.fawkes.local</code> (or port-forward)
 <strong>Port</strong>: 6006</p>
 <p>Storybook is a static site and doesn't have a REST API, but provides:</p>
 <h3 id="component-documentation">Component Documentation</h3>
-<p>Access via web UI:
-- Component list at <code>/</code>
-- Individual components at <code>/story/&lt;component-name&gt;</code>
-- Documentation pages at <code>/docs/&lt;component-name&gt;</code></p>
+<p>Access via web UI:</p>
+<ul>
+<li>Component list at <code>/</code></li>
+<li>Individual components at <code>/story/&lt;component-name&gt;</code></li>
+<li>Documentation pages at <code>/docs/&lt;component-name&gt;</code></li>
+</ul>
 <h3 id="accessibility-reports">Accessibility Reports</h3>
-<p>Each component page includes:
-- A11y addon violations panel
-- WCAG 2.1 AA compliance status
-- Interactive accessibility tree</p>
+<p>Each component page includes:</p>
+<ul>
+<li>A11y addon violations panel</li>
+<li>WCAG 2.1 AA compliance status</li>
+<li>Interactive accessibility tree</li>
+</ul>
 <h3 id="component-export">Component Export</h3>
 <p>To use components in your application:</p>
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>@fawkes/design-system
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Button</span><span class="p">,</span><span class="w"> </span><span class="nx">Card</span><span class="p">,</span><span class="w"> </span><span class="nx">Modal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system&#39;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/dist/styles.css&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Button</span><span class="p">,</span><span class="w"> </span><span class="nx">Card</span><span class="p">,</span><span class="w"> </span><span class="nx">Modal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system/dist/styles.css&quot;</span><span class="p">;</span>
 </code></pre></div>
 <hr />
 <h2 id="error-handling">Error Handling</h2>
@@ -6012,17 +6028,17 @@ You can also DM me directly with feedback!
 </tr>
 </tbody>
 </table>
-<p>Rate limit headers are included in responses:
+<p>Rate limit headers are included in responses:</p>
 <div class="highlight"><pre><span></span><code><span class="err">X-RateLimit-Limit: 100</span>
 <span class="err">X-RateLimit-Remaining: 95</span>
 <span class="err">X-RateLimit-Reset: 1640444400</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="webhooks">Webhooks</h2>
 <h3 id="feedback-webhook-github-issue-created">Feedback Webhook (GitHub Issue Created)</h3>
 <p>When validated feedback is converted to a GitHub issue, a webhook can be configured:</p>
 <p><strong>Event</strong>: <code>feedback.github_issue_created</code></p>
-<p><strong>Payload</strong>:
+<p><strong>Payload</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;feedback.github_issue_created&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
@@ -6038,11 +6054,11 @@ You can also DM me directly with feedback!
 <span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;[Feedback] The new dashboard is amazing!&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="unleash-webhook-feature-flag-changed">Unleash Webhook (Feature Flag Changed)</h3>
 <p>Unleash can send webhooks when feature flags change:</p>
 <p><strong>Event</strong>: <code>feature-updated</code></p>
-<p><strong>Payload</strong>:
+<p><strong>Payload</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;feature-updated&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
@@ -6054,11 +6070,11 @@ You can also DM me directly with feedback!
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="nt">&quot;createdBy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;admin@example.com&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="sdks-and-client-libraries">SDKs and Client Libraries</h2>
 <h3 id="space-metrics">SPACE Metrics</h3>
-<p><strong>Python Client</strong>:
+<p><strong>Python Client</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">space_metrics_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPACEMetricsClient</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">SPACEMetricsClient</span><span class="p">(</span>
@@ -6068,35 +6084,37 @@ You can also DM me directly with feedback!
 
 <span class="n">metrics</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_all_metrics</span><span class="p">(</span><span class="n">team</span><span class="o">=</span><span class="s2">&quot;platform&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">satisfaction</span><span class="o">.</span><span class="n">enps_score</span><span class="p">)</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="feedback-service">Feedback Service</h3>
-<p><strong>JavaScript/TypeScript Client</strong>:
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">FeedbackClient</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/feedback-client&#39;</span><span class="p">;</span>
+<p><strong>JavaScript/TypeScript Client</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">FeedbackClient</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@fawkes/feedback-client&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">FeedbackClient</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">baseURL</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;http://feedback-service:8080&#39;</span>
+<span class="w">  </span><span class="nx">baseURL</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;http://feedback-service:8080&quot;</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">submitFeedback</span><span class="p">({</span>
 <span class="w">  </span><span class="nx">rating</span><span class="o">:</span><span class="w"> </span><span class="kt">5</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">category</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;UI/UX&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Great experience!&#39;</span>
+<span class="w">  </span><span class="nx">category</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;UI/UX&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Great experience!&quot;</span><span class="p">,</span>
 <span class="p">});</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="unleash">Unleash</h3>
-<p><strong>OpenFeature SDK</strong> (Recommended):
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@openfeature/server-sdk&#39;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UnleashProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@openfeature/unleash-provider&#39;</span><span class="p">;</span>
+<p><strong>OpenFeature SDK</strong> (Recommended):</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openfeature/server-sdk&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UnleashProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openfeature/unleash-provider&quot;</span><span class="p">;</span>
 
-<span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">UnleashProvider</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;http://unleash:4242/api&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">clientKey</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;your-client-key&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">appName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;my-app&#39;</span>
-<span class="p">}));</span>
+<span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span>
+<span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">UnleashProvider</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;http://unleash:4242/api&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">clientKey</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;your-client-key&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">appName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-app&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">);</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">getClient</span><span class="p">();</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s1">&#39;new-dashboard&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
-</code></pre></div></p>
+<span class="kd">const</span><span class="w"> </span><span class="nx">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s2">&quot;new-dashboard&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+</code></pre></div>
 <hr />
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>
@@ -6109,10 +6127,12 @@ You can also DM me directly with feedback!
 </ul>
 <hr />
 <h2 id="support">Support</h2>
-<p>For API support:
-- <strong>Platform Team</strong>: #platform-team on Mattermost
-- <strong>Issues</strong>: GitHub Issues
-- <strong>Documentation</strong>: TechDocs in Backstage</p>
+<p>For API support:</p>
+<ul>
+<li><strong>Platform Team</strong>: #platform-team on Mattermost</li>
+<li><strong>Issues</strong>: GitHub Issues</li>
+<li><strong>Documentation</strong>: TechDocs in Backstage</li>
+</ul>
 
 
 

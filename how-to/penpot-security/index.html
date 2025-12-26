@@ -4722,8 +4722,12 @@
 <p>All secrets in the Penpot deployment use placeholder values prefixed with <code>CHANGE_ME_</code>. These <strong>MUST</strong> be changed before deploying to any environment.</p>
 <h3 id="secrets-to-configure">Secrets to Configure</h3>
 <ol>
-<li><strong>Database Password</strong> (<code>platform/apps/postgresql/db-penpot-credentials.yaml</code>)</li>
-<li>Location: <code>stringData.password</code></li>
+<li>
+<p><strong>Database Password</strong> (<code>platform/apps/postgresql/db-penpot-credentials.yaml</code>)</p>
+</li>
+<li>
+<p>Location: <code>stringData.password</code></p>
+</li>
 <li>Default: <code>CHANGE_ME_penpot_db_password</code></li>
 <li>
 <p>Requirements: Minimum 16 characters, alphanumeric + special chars</p>
@@ -4731,7 +4735,9 @@
 <li>
 <p><strong>Penpot Secret Key</strong> (<code>platform/apps/penpot/deployment.yaml</code>)</p>
 </li>
-<li>Location: <code>penpot-secrets.stringData.PENPOT_SECRET_KEY</code></li>
+<li>
+<p>Location: <code>penpot-secrets.stringData.PENPOT_SECRET_KEY</code></p>
+</li>
 <li>Default: <code>CHANGE_ME_penpot_secret_key_min_16_chars</code></li>
 <li>
 <p>Requirements: Minimum 16 characters, used for session encryption</p>
@@ -4863,15 +4869,21 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 </code></pre></div>
 <h3 id="security-best-practices">Security Best Practices</h3>
 <ol>
-<li><strong>Never commit real secrets to Git</strong></li>
-<li>Always use placeholder values (CHANGE_ME_*)</li>
+<li>
+<p><strong>Never commit real secrets to Git</strong></p>
+</li>
+<li>
+<p>Always use placeholder values (CHANGE<em>ME</em>*)</p>
+</li>
 <li>
 <p>Use External Secrets Operator for production</p>
 </li>
 <li>
 <p><strong>Rotate secrets regularly</strong></p>
 </li>
-<li>Database passwords: Every 90 days</li>
+<li>
+<p>Database passwords: Every 90 days</p>
+</li>
 <li>Secret keys: Every 180 days</li>
 <li>
 <p>Use automated rotation where possible</p>
@@ -4879,7 +4891,9 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <li>
 <p><strong>Use strong passwords</strong></p>
 </li>
-<li>Minimum 16 characters</li>
+<li>
+<p>Minimum 16 characters</p>
+</li>
 <li>Mix of uppercase, lowercase, numbers, special characters</li>
 <li>
 <p>Use password generator: <code>openssl rand -base64 32</code></p>
@@ -4887,7 +4901,9 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <li>
 <p><strong>Restrict secret access</strong></p>
 </li>
-<li>Use Kubernetes RBAC to limit who can read secrets</li>
+<li>
+<p>Use Kubernetes RBAC to limit who can read secrets</p>
+</li>
 <li>Enable audit logging for secret access</li>
 <li>
 <p>Monitor for unauthorized access attempts</p>
@@ -4909,19 +4925,19 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 <h3 id="troubleshooting">Troubleshooting</h3>
 <h4 id="penpot-fails-to-start-with-authentication-errors">Penpot fails to start with authentication errors</h4>
 <p><strong>Symptom</strong>: Backend pod logs show database authentication failures</p>
-<p><strong>Solution</strong>: Verify database password matches in both secrets:
+<p><strong>Solution</strong>: Verify database password matches in both secrets:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get password from db credentials</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>penpot-db-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.password}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
 
 <span class="c1"># Get password from connection string</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>penpot-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.PENPOT_DATABASE_URI}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
-</code></pre></div></p>
+</code></pre></div>
 <p>The passwords must match!</p>
 <h4 id="secret-key-errors">Secret key errors</h4>
 <p><strong>Symptom</strong>: Penpot backend logs show "Invalid secret key" or session errors</p>
-<p><strong>Solution</strong>: Ensure PENPOT_SECRET_KEY is at least 16 characters:
+<p><strong>Solution</strong>: Ensure PENPOT_SECRET_KEY is at least 16 characters:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>penpot-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.PENPOT_SECRET_KEY}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-c
-</code></pre></div></p>
+</code></pre></div>
 <p>Should return at least 16.</p>
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>

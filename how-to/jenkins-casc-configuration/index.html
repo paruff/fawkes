@@ -5018,20 +5018,20 @@
 <div class="highlight"><pre><span></span><code><span class="nt">jenkins</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">systemMessage</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Fawkes</span><span class="nv"> </span><span class="s">CI/CD</span><span class="nv"> </span><span class="s">Platform</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">Golden</span><span class="nv"> </span><span class="s">Path</span><span class="nv"> </span><span class="s">Enabled&quot;</span>
 <span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NORMAL</span>
-<span class="w">  </span><span class="nt">numExecutors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">  </span><span class="c1"># No builds on controller</span>
+<span class="w">  </span><span class="nt">numExecutors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"> </span><span class="c1"># No builds on controller</span>
 </code></pre></div>
 <h3 id="2-kubernetes-cloud-configuration">2. Kubernetes Cloud Configuration</h3>
-<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nt">clouds</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kubernetes</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes&quot;</span>
-<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fawkes&quot;</span>
-<span class="w">        </span><span class="nt">jenkinsUrl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://jenkins:8080&quot;</span>
-<span class="w">        </span><span class="nt">jenkinsTunnel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;jenkins-agent:50000&quot;</span>
-<span class="w">        </span><span class="nt">containerCapStr</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;20&quot;</span>
-<span class="w">        </span><span class="nt">templates</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven-agent&quot;</span>
-<span class="w">            </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven</span><span class="nv"> </span><span class="s">java&quot;</span>
-<span class="w">            </span><span class="c1"># ... agent configuration</span>
+<div class="highlight"><pre><span></span><code><span class="nt">clouds</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kubernetes</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes&quot;</span>
+<span class="w">      </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fawkes&quot;</span>
+<span class="w">      </span><span class="nt">jenkinsUrl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://jenkins:8080&quot;</span>
+<span class="w">      </span><span class="nt">jenkinsTunnel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;jenkins-agent:50000&quot;</span>
+<span class="w">      </span><span class="nt">containerCapStr</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;20&quot;</span>
+<span class="w">      </span><span class="nt">templates</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven-agent&quot;</span>
+<span class="w">          </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven</span><span class="nv"> </span><span class="s">java&quot;</span>
+<span class="w">          </span><span class="c1"># ... agent configuration</span>
 </code></pre></div>
 <h3 id="3-security-realm-authorization">3. Security Realm &amp; Authorization</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">securityRealm</span><span class="p">:</span>
@@ -5142,13 +5142,17 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">DOCKER_REGISTRY_USERNAME</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">read</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;Docker Username: &#39;</span><span class="w"> </span>user<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$user</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">DOCKER_REGISTRY_PASSWORD</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">read</span><span class="w"> </span>-s<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;Docker Password: &#39;</span><span class="w"> </span>pass<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$pass</span><span class="k">)</span><span class="s2">&quot;</span>
 </code></pre></div>
-<p><strong>Security Note</strong>: Never use <code>--from-literal</code> with plaintext values as shown in simple examples, as this exposes credentials in:
-- Shell history (<code>.bash_history</code>, <code>.zsh_history</code>)
-- Process listings (<code>ps aux</code>)
-- Kubernetes audit logs</p>
-<ol>
-<li>Reference in Jenkins pod:</li>
-</ol>
+<p><strong>Security Note</strong>: Never use <code>--from-literal</code> with plaintext values as shown in simple examples, as this exposes credentials in:</p>
+<ul>
+<li>Shell history (<code>.bash_history</code>, <code>.zsh_history</code>)</li>
+<li>Process listings (<code>ps aux</code>)</li>
+<li>
+<p>Kubernetes audit logs</p>
+</li>
+<li>
+<p>Reference in Jenkins pod:</p>
+</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="nt">extraEnv</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GITHUB_TOKEN</span>
 <span class="w">    </span><span class="nt">valueFrom</span><span class="p">:</span>
@@ -5173,14 +5177,18 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <span class="w">              </span><span class="nt">secret</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${GITHUB_TOKEN}&quot;</span>
 </code></pre></div>
 <h3 id="production-setup-with-external-secrets-operator">Production Setup with External Secrets Operator</h3>
-<p>For production environments, use External Secrets Operator to sync from:
-- AWS Secrets Manager
-- Azure Key Vault
-- HashiCorp Vault
-- GCP Secret Manager</p>
-<ol>
-<li>Create ExternalSecret:</li>
-</ol>
+<p>For production environments, use External Secrets Operator to sync from:</p>
+<ul>
+<li>AWS Secrets Manager</li>
+<li>Azure Key Vault</li>
+<li>HashiCorp Vault</li>
+<li>
+<p>GCP Secret Manager</p>
+</li>
+<li>
+<p>Create ExternalSecret:</p>
+</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExternalSecret</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5294,7 +5302,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 </ol>
 <div class="highlight"><pre><span></span><code><span class="nt">controller</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">installPlugins</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes:4029.v5712230ccb_f8</span><span class="w">  </span><span class="c1"># Pin specific version</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes:4029.v5712230ccb_f8</span><span class="w"> </span><span class="c1"># Pin specific version</span>
 </code></pre></div>
 <h3 id="credentials-not-working-in-pipelines">Credentials Not Working in Pipelines</h3>
 <ol>
@@ -5320,46 +5328,62 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 </code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="1-version-control-everything">1. Version Control Everything</h3>
-<p>✅ <strong>DO:</strong>
-- Store all configuration in Git
-- Use meaningful commit messages
-- Create pull requests for changes
-- Review changes before merging</p>
-<p>❌ <strong>DON'T:</strong>
-- Make manual changes via UI (they will be overwritten)
-- Commit secrets to Git
-- Skip code review for configuration changes</p>
+<p>✅ <strong>DO:</strong></p>
+<ul>
+<li>Store all configuration in Git</li>
+<li>Use meaningful commit messages</li>
+<li>Create pull requests for changes</li>
+<li>Review changes before merging</li>
+</ul>
+<p>❌ <strong>DON'T:</strong></p>
+<ul>
+<li>Make manual changes via UI (they will be overwritten)</li>
+<li>Commit secrets to Git</li>
+<li>Skip code review for configuration changes</li>
+</ul>
 <h3 id="2-secret-management">2. Secret Management</h3>
-<p>✅ <strong>DO:</strong>
-- Use External Secrets Operator in production
-- Rotate credentials regularly
-- Use minimal required permissions
-- Audit secret access</p>
-<p>❌ <strong>DON'T:</strong>
-- Commit real credentials to Git
-- Use default/weak passwords
-- Share credentials between environments</p>
+<p>✅ <strong>DO:</strong></p>
+<ul>
+<li>Use External Secrets Operator in production</li>
+<li>Rotate credentials regularly</li>
+<li>Use minimal required permissions</li>
+<li>Audit secret access</li>
+</ul>
+<p>❌ <strong>DON'T:</strong></p>
+<ul>
+<li>Commit real credentials to Git</li>
+<li>Use default/weak passwords</li>
+<li>Share credentials between environments</li>
+</ul>
 <h3 id="3-plugin-management">3. Plugin Management</h3>
-<p>✅ <strong>DO:</strong>
-- Pin plugin versions in production
-- Test plugin updates in dev first
-- Document required plugins
-- Keep plugins up to date</p>
-<p>❌ <strong>DON'T:</strong>
-- Use <code>:latest</code> tag in production
-- Install unnecessary plugins
-- Skip security updates</p>
+<p>✅ <strong>DO:</strong></p>
+<ul>
+<li>Pin plugin versions in production</li>
+<li>Test plugin updates in dev first</li>
+<li>Document required plugins</li>
+<li>Keep plugins up to date</li>
+</ul>
+<p>❌ <strong>DON'T:</strong></p>
+<ul>
+<li>Use <code>:latest</code> tag in production</li>
+<li>Install unnecessary plugins</li>
+<li>Skip security updates</li>
+</ul>
 <h3 id="4-testing">4. Testing</h3>
-<p>✅ <strong>DO:</strong>
-- Test configuration in dev environment
-- Validate YAML syntax before commit
-- Check Jenkins logs after changes
-- Have rollback plan</p>
-<p>❌ <strong>DON'T:</strong>
-- Test directly in production
-- Skip validation
-- Deploy without monitoring
-- Forget to backup configuration</p>
+<p>✅ <strong>DO:</strong></p>
+<ul>
+<li>Test configuration in dev environment</li>
+<li>Validate YAML syntax before commit</li>
+<li>Check Jenkins logs after changes</li>
+<li>Have rollback plan</li>
+</ul>
+<p>❌ <strong>DON'T:</strong></p>
+<ul>
+<li>Test directly in production</li>
+<li>Skip validation</li>
+<li>Deploy without monitoring</li>
+<li>Forget to backup configuration</li>
+</ul>
 <h2 id="configuration-examples">Configuration Examples</h2>
 <h3 id="adding-a-new-kubernetes-agent-template">Adding a New Kubernetes Agent Template</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">templates</span><span class="p">:</span>

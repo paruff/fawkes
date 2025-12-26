@@ -4796,11 +4796,13 @@
 <h1 id="component-library-sync-with-penpot">Component Library Sync with Penpot</h1>
 <p>This document describes how the Fawkes Design System components are synchronized with Penpot designs.</p>
 <h2 id="overview">Overview</h2>
-<p>The component library sync ensures that:
-1. Design system components match Penpot designs
-2. Component documentation includes design references
-3. Storybook includes embedded design previews
-4. Discrepancies are detected and reported</p>
+<p>The component library sync ensures that:</p>
+<ol>
+<li>Design system components match Penpot designs</li>
+<li>Component documentation includes design references</li>
+<li>Storybook includes embedded design previews</li>
+<li>Discrepancies are detected and reported</li>
+</ol>
 <h2 id="architecture">Architecture</h2>
 <div class="highlight"><pre><span></span><code>┌─────────────┐       ┌──────────────┐       ┌─────────────┐
 │   Penpot    │──────►│  Sync Service│──────►│   Design    │
@@ -4824,11 +4826,13 @@
 <h2 id="sync-process">Sync Process</h2>
 <h3 id="1-discovery-phase">1. Discovery Phase</h3>
 <p><strong>Frequency</strong>: Every hour (configurable)</p>
-<p><strong>Steps</strong>:
-1. Fetch list of projects from Penpot API
-2. Identify projects tagged with <code>design-system</code>
-3. Extract all components and their properties
-4. Build component inventory</p>
+<p><strong>Steps</strong>:</p>
+<ol>
+<li>Fetch list of projects from Penpot API</li>
+<li>Identify projects tagged with <code>design-system</code></li>
+<li>Extract all components and their properties</li>
+<li>Build component inventory</li>
+</ol>
 <p><strong>Jenkins Job</strong>: <code>penpot-component-discovery</code></p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Jenkinsfile for discovery</span>
 <span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
@@ -4870,7 +4874,7 @@
 <h3 id="2-mapping-phase">2. Mapping Phase</h3>
 <p><strong>Purpose</strong>: Match Penpot components to Design System components</p>
 <p><strong>Mapping File</strong>: <code>platform/apps/backstage/plugins/penpot-viewer.yaml</code></p>
-<p><strong>Mapping Logic</strong>:
+<p><strong>Mapping Logic</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Example mapping logic</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">map_components</span><span class="p">(</span><span class="n">penpot_components</span><span class="p">,</span> <span class="n">design_system_components</span><span class="p">):</span>
     <span class="n">mappings</span> <span class="o">=</span> <span class="p">[]</span>
@@ -4903,19 +4907,25 @@
                 <span class="p">})</span>
 
     <span class="k">return</span> <span class="n">mappings</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="3-validation-phase">3. Validation Phase</h3>
 <p><strong>Checks Performed</strong>:</p>
 <ol>
-<li><strong>Name Consistency</strong></li>
-<li>Penpot component name matches Design System component name</li>
+<li>
+<p><strong>Name Consistency</strong></p>
+</li>
+<li>
+<p>Penpot component name matches Design System component name</p>
+</li>
 <li>
 <p>Variants are consistently named</p>
 </li>
 <li>
 <p><strong>Property Validation</strong></p>
 </li>
-<li>Props in Penpot match component API</li>
+<li>
+<p>Props in Penpot match component API</p>
+</li>
 <li>Required props are present</li>
 <li>
 <p>Prop types are compatible</p>
@@ -4923,7 +4933,9 @@
 <li>
 <p><strong>Design Token Validation</strong></p>
 </li>
-<li>Colors match design token values</li>
+<li>
+<p>Colors match design token values</p>
+</li>
 <li>Spacing uses token scale</li>
 <li>Typography uses defined scales</li>
 <li>
@@ -4936,7 +4948,7 @@
 <li>Touch targets meet minimum size (44x44px)</li>
 <li>Responsive breakpoints align</li>
 </ol>
-<p><strong>Validation Script</strong>:
+<p><strong>Validation Script</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># scripts/validate-component-sync.py</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
@@ -4982,12 +4994,16 @@
         <span class="s1">&#39;accessibility_issues&#39;</span><span class="p">:</span> <span class="n">validate_accessibility</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">),</span>
         <span class="s1">&#39;mapping_confidence&#39;</span><span class="p">:</span> <span class="n">calculate_mapping_confidence</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">,</span> <span class="n">design_system_component</span><span class="p">)</span>
     <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="4-sync-phase">4. Sync Phase</h3>
 <p><strong>Actions</strong>:</p>
 <ol>
-<li><strong>Update Component Metadata</strong></li>
-<li>Add Penpot design ID to component files</li>
+<li>
+<p><strong>Update Component Metadata</strong></p>
+</li>
+<li>
+<p>Add Penpot design ID to component files</p>
+</li>
 <li>Update design preview URLs</li>
 <li>
 <p>Add design version tags</p>
@@ -4995,7 +5011,9 @@
 <li>
 <p><strong>Update Storybook Documentation</strong></p>
 </li>
-<li>Embed Penpot design previews</li>
+<li>
+<p>Embed Penpot design previews</p>
+</li>
 <li>Add links to source designs</li>
 <li>
 <p>Include design specifications</p>
@@ -5007,7 +5025,7 @@
 <li>Document spacing and sizing</li>
 <li>List color and typography values</li>
 </ol>
-<p><strong>Storybook Integration</strong>:
+<p><strong>Storybook Integration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Example: Adding Penpot preview to Storybook</span>
 <span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Meta</span><span class="p">,</span><span class="w"> </span><span class="nx">Story</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@storybook/react&#39;</span><span class="p">;</span>
@@ -5036,7 +5054,7 @@
 <span class="w">  </span><span class="nx">variant</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;primary&#39;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Primary Button&#39;</span><span class="p">,</span>
 <span class="p">};</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="5-reporting-phase">5. Reporting Phase</h3>
 <p><strong>Report Generation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Example sync report</span>
@@ -5073,7 +5091,7 @@
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Update</span><span class="nv"> </span><span class="s">Alert/Info</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">use</span><span class="nv"> </span><span class="s">tokens.colors.info[500]&quot;</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Review</span><span class="nv"> </span><span class="s">Button</span><span class="nv"> </span><span class="s">size</span><span class="nv"> </span><span class="s">variants&quot;</span>
 </code></pre></div>
-<p><strong>Notification</strong>:
+<p><strong>Notification</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;channel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#design-system&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;🎨 Component Sync Report - 2024-12-24&quot;</span><span class="p">,</span>
@@ -5100,7 +5118,7 @@
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="configuration">Configuration</h2>
 <h3 id="sync-schedule">Sync Schedule</h3>
 <p>Configure sync frequency in Jenkins:</p>
@@ -5142,7 +5160,7 @@
 <div class="highlight"><pre><span></span><code><span class="nt">validation</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">design_tokens</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span><span class="w">  </span><span class="c1"># warning | error</span>
+<span class="w">    </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span><span class="w"> </span><span class="c1"># warning | error</span>
 
 <span class="w">  </span><span class="nt">accessibility</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -5166,31 +5184,35 @@ kubectl<span class="w"> </span>create<span class="w"> </span>job<span class="w">
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="sync-job-failing">Sync Job Failing</h3>
-<p><strong>Check logs</strong>:
+<p><strong>Check logs</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>jobs/penpot-sync
-</code></pre></div></p>
-<p><strong>Common issues</strong>:
-1. <strong>API token expired</strong>: Regenerate token in Penpot
-2. <strong>Network connectivity</strong>: Check Penpot service is reachable
-3. <strong>Invalid mapping config</strong>: Validate YAML syntax</p>
+</code></pre></div>
+<p><strong>Common issues</strong>:</p>
+<ol>
+<li><strong>API token expired</strong>: Regenerate token in Penpot</li>
+<li><strong>Network connectivity</strong>: Check Penpot service is reachable</li>
+<li><strong>Invalid mapping config</strong>: Validate YAML syntax</li>
+</ol>
 <h3 id="components-not-mapping">Components Not Mapping</h3>
-<p><strong>Reasons</strong>:
-1. <strong>Name mismatch</strong>: Check component names in Penpot vs. Design System
-2. <strong>Missing tags</strong>: Ensure Penpot project is tagged with <code>design-system</code>
-3. <strong>Exclusion rules</strong>: Check if component is excluded in config</p>
-<p><strong>Fix</strong>:
+<p><strong>Reasons</strong>:</p>
+<ol>
+<li><strong>Name mismatch</strong>: Check component names in Penpot vs. Design System</li>
+<li><strong>Missing tags</strong>: Ensure Penpot project is tagged with <code>design-system</code></li>
+<li><strong>Exclusion rules</strong>: Check if component is excluded in config</li>
+</ol>
+<p><strong>Fix</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Add explicit mapping</span>
 <span class="nt">mappings</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">penpotComponent</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Icon</span><span class="nv"> </span><span class="s">Button&quot;</span>
 <span class="w">    </span><span class="nt">designSystemComponent</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;IconButton&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="false-validation-errors">False Validation Errors</h3>
-<p><strong>Adjust thresholds</strong>:
+<p><strong>Adjust thresholds</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">validation</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">design_tokens</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">color_tolerance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">  </span><span class="c1"># Allow 5% color difference</span>
-<span class="w">    </span><span class="nt">spacing_tolerance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">  </span><span class="c1"># Allow 2px spacing difference</span>
-</code></pre></div></p>
+<span class="w">    </span><span class="nt">color_tolerance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"> </span><span class="c1"># Allow 5% color difference</span>
+<span class="w">    </span><span class="nt">spacing_tolerance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"> </span><span class="c1"># Allow 2px spacing difference</span>
+</code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <ol>
 <li><strong>Consistent Naming</strong>: Use same component names in Penpot and Design System</li>

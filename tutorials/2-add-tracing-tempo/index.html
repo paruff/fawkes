@@ -5035,56 +5035,54 @@
 </ul>
 <div class="admonition info">
 <p class="admonition-title">What is Distributed Tracing?</p>
-<p>Distributed tracing tracks requests as they flow through multiple services. Each request gets a unique trace ID, and each service operation creates a "span". This helps you debug performance issues and understand system behavior. <a href="../../explanation/observability/unified-telemetry/">Learn more about Unified Telemetry</a>.</p>
 </div>
+<p>Distributed tracing tracks requests as they flow through multiple services. Each request gets a unique trace ID, and each service operation creates a "span". This helps you debug performance issues and understand system behavior. <a href="../../explanation/observability/unified-telemetry/">Learn more about Unified Telemetry</a>.</p>
 <h2 id="step-1-install-opentelemetry-dependencies">Step 1: Install OpenTelemetry Dependencies</h2>
 <p>We'll add OpenTelemetry instrumentation to the Node.js application we created in Tutorial 1.</p>
 <ol>
-<li>
-<p>Navigate to your <code>hello-fawkes</code> directory:
-   <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>hello-fawkes
-</code></pre></div></p>
-</li>
-<li>
-<p>Install OpenTelemetry packages:
-   <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--save<span class="w"> </span><span class="se">\</span>
+<li>Navigate to your <code>hello-fawkes</code> directory:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>hello-fawkes
+</code></pre></div>
+<ol>
+<li>Install OpenTelemetry packages:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--save<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>@opentelemetry/api<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>@opentelemetry/sdk-node<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>@opentelemetry/auto-instrumentations-node<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>@opentelemetry/exporter-trace-otlp-http
-</code></pre></div></p>
-</li>
-<li>
-<p>Update <code>package.json</code> to save the dependencies:
+</code></pre></div>
+<ol>
+<li>Update <code>package.json</code> to save the dependencies:
    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>package.json<span class="w"> </span>package-lock.json
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add OpenTelemetry dependencies&quot;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>OpenTelemetry dependencies are installed and ready to use.</p>
 </div>
+<p>OpenTelemetry dependencies are installed and ready to use.</p>
 <h2 id="step-2-create-opentelemetry-configuration">Step 2: Create OpenTelemetry Configuration</h2>
 <ol>
-<li>
-<p>Create a new file <code>tracing.js</code> in your project root:
-   <div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/sdk-node&#39;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/auto-instrumentations-node&#39;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/exporter-trace-otlp-http&#39;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Resource</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/resources&#39;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SemanticResourceAttributes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@opentelemetry/semantic-conventions&#39;</span><span class="p">);</span>
+<li>Create a new file <code>tracing.js</code> in your project root:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/sdk-node&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/auto-instrumentations-node&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/exporter-trace-otlp-http&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Resource</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/resources&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SemanticResourceAttributes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/semantic-conventions&quot;</span><span class="p">);</span>
 
 <span class="c1">// Configure the trace exporter</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">traceExporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;http://tempo.fawkes-platform.svc.cluster.local:4318/v1/traces&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;http://tempo.fawkes-platform.svc.cluster.local:4318/v1/traces&quot;</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="c1">// Create resource with service information</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Resource</span><span class="p">({</span>
-<span class="w">  </span><span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">SERVICE_NAME</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">OTEL_SERVICE_NAME</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;hello-fawkes&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">SERVICE_VERSION</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">SERVICE_VERSION</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;1.0.0&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">DEPLOYMENT_ENVIRONMENT</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ENVIRONMENT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;development&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">SERVICE_NAME</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">OTEL_SERVICE_NAME</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;hello-fawkes&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">SERVICE_VERSION</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">SERVICE_VERSION</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">DEPLOYMENT_ENVIRONMENT</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ENVIRONMENT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;development&quot;</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="c1">// Initialize the SDK</span>
@@ -5094,7 +5092,7 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <span class="w">  </span><span class="nx">instrumentations</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="nx">getNodeAutoInstrumentations</span><span class="p">({</span>
 <span class="w">      </span><span class="c1">// Customize instrumentation</span>
-<span class="w">      </span><span class="s1">&#39;@opentelemetry/instrumentation-fs&#39;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;@opentelemetry/instrumentation-fs&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable file system instrumentation for cleaner traces</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">    </span><span class="p">}),</span>
@@ -5105,75 +5103,74 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <span class="nx">sdk</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
 
 <span class="c1">// Graceful shutdown</span>
-<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;SIGTERM&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">sdk</span><span class="p">.</span><span class="nx">shutdown</span><span class="p">()</span>
-<span class="w">    </span><span class="p">.</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Tracing terminated&#39;</span><span class="p">))</span>
-<span class="w">    </span><span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Error terminating tracing&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">))</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;SIGTERM&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">sdk</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">shutdown</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Tracing terminated&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Error terminating tracing&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">))</span>
 <span class="w">    </span><span class="p">.</span><span class="k">finally</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mf">0</span><span class="p">));</span>
 <span class="p">});</span>
 
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;OpenTelemetry tracing initialized&#39;</span><span class="p">);</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Update <code>server.js</code> to load tracing first:
-   <div class="highlight"><pre><span></span><code><span class="c1">// Load tracing before anything else</span>
-<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./tracing&#39;</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;OpenTelemetry tracing initialized&quot;</span><span class="p">);</span>
+</code></pre></div>
+<ol>
+<li>Update <code>server.js</code> to load tracing first:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1">// Load tracing before anything else</span>
+<span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./tracing&quot;</span><span class="p">);</span>
 
-<span class="kd">const</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;express&quot;</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">();</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">PORT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">8080</span><span class="p">;</span>
 
-<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Hello from Fawkes!&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Hello from Fawkes!&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">timestamp</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">(),</span>
-<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;1.0.0&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">tracing</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;enabled&#39;</span>
+<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">tracing</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 
-<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/health&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;healthy&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/health&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="w"> </span><span class="p">});</span>
 <span class="p">});</span>
 
 <span class="c1">// Add a new endpoint to simulate a traced operation</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/api/data&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/api/data&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="c1">// Simulate some work</span>
-<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Promise</span><span class="p">(</span><span class="nx">resolve</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">setTimeout</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span><span class="w"> </span><span class="mf">100</span><span class="p">));</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">setTimeout</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span><span class="w"> </span><span class="mf">100</span><span class="p">));</span>
 
 <span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span>
 <span class="w">    </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Item 1&#39;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Item 2&#39;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Item 3&#39;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Item 1&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Item 2&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Item 3&quot;</span><span class="w"> </span><span class="p">},</span>
 <span class="w">    </span><span class="p">],</span>
-<span class="w">    </span><span class="nx">traceId</span><span class="o">:</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s1">&#39;x-trace-id&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;auto-generated&#39;</span>
+<span class="w">    </span><span class="nx">traceId</span><span class="o">:</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s2">&quot;x-trace-id&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;auto-generated&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 
-<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Server running on port </span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
 <span class="p">});</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Commit the changes:
+</code></pre></div>
+<ol>
+<li>Commit the changes:
    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>tracing.js<span class="w"> </span>server.js
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add OpenTelemetry instrumentation&quot;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Your application is now instrumented with OpenTelemetry!</p>
 </div>
+<p>Your application is now instrumented with OpenTelemetry!</p>
 <h2 id="step-3-update-kubernetes-deployment">Step 3: Update Kubernetes Deployment</h2>
 <p>We need to configure environment variables for the OpenTelemetry exporter.</p>
 <ol>
-<li>
-<p>Update <code>k8s/deployment.yaml</code> to add environment variables:
-   <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<li>Update <code>k8s/deployment.yaml</code> to add environment variables:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
@@ -5193,147 +5190,134 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YOUR-USERNAME/hello-fawkes:v2.0.0</span><span class="w">  </span><span class="c1"># Update version</span>
-<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
-<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PORT</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8080&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_SERVICE_NAME</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hello-fawkes&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVICE_VERSION</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2.0.0&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENVIRONMENT</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;development&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_EXPORTER_OTLP_ENDPOINT</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://tempo.fawkes-platform.svc.cluster.local:4318/v1/traces&quot;</span>
-<span class="w">        </span><span class="nt">livenessProbe</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">httpGet</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
-<span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">        </span><span class="nt">readinessProbe</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">httpGet</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
-<span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span><span class="w">  </span><span class="c1"># Increased for tracing overhead</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
-<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span><span class="w">  </span><span class="c1"># Increased for tracing overhead</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
-<span class="w">        </span><span class="nt">securityContext</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">          </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">          </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">          </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Commit the updated manifest:
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YOUR-USERNAME/hello-fawkes:v2.0.0</span><span class="w"> </span><span class="c1"># Update version</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PORT</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8080&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_SERVICE_NAME</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hello-fawkes&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVICE_VERSION</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2.0.0&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENVIRONMENT</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;development&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_EXPORTER_OTLP_ENDPOINT</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://tempo.fawkes-platform.svc.cluster.local:4318/v1/traces&quot;</span>
+<span class="w">          </span><span class="nt">livenessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">          </span><span class="nt">readinessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span><span class="w"> </span><span class="c1"># Increased for tracing overhead</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
+<span class="w">            </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span><span class="w"> </span><span class="c1"># Increased for tracing overhead</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
+<span class="w">          </span><span class="nt">securityContext</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+<span class="w">            </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">            </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<ol>
+<li>Commit the updated manifest:
    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>k8s/deployment.yaml
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Configure OpenTelemetry environment variables&quot;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
-<div class="admonition info">
-<p class="admonition-title">Why These Environment Variables?</p>
-<ul>
-<li><code>OTEL_SERVICE_NAME</code>: Identifies your service in traces</li>
-<li><code>OTEL_EXPORTER_OTLP_ENDPOINT</code>: Where to send traces (Tempo endpoint)</li>
-<li><code>ENVIRONMENT</code>: Helps filter traces by environment (dev/staging/prod)</li>
-</ul>
-</div>
+<p>!!! info "Why These Environment Variables?" - <code>OTEL_SERVICE_NAME</code>: Identifies your service in traces - <code>OTEL_EXPORTER_OTLP_ENDPOINT</code>: Where to send traces (Tempo endpoint) - <code>ENVIRONMENT</code>: Helps filter traces by environment (dev/staging/prod)</p>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Deployment is configured to export traces to Tempo.</p>
 </div>
+<p>Deployment is configured to export traces to Tempo.</p>
 <h2 id="step-4-build-and-deploy-updated-application">Step 4: Build and Deploy Updated Application</h2>
 <ol>
-<li>
-<p>Build the new version of your container:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v2.0.0<span class="w"> </span>.
-</code></pre></div></p>
-</li>
-<li>
-<p>Push the image:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>push<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v2.0.0
-</code></pre></div></p>
-</li>
-<li>
-<p>Push your code changes to Git:
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>push
-</code></pre></div></p>
-</li>
-<li>
-<p>If using ArgoCD, it will automatically sync. If not, apply manually:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/deployment.yaml
-</code></pre></div></p>
-</li>
-<li>
-<p>Watch the rollout:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/hello-fawkes<span class="w"> </span>-n<span class="w"> </span>my-first-app
-</code></pre></div></p>
-</li>
-<li>
-<p>Verify the new pods are running:
+<li>Build the new version of your container:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v2.0.0<span class="w"> </span>.
+</code></pre></div>
+<ol>
+<li>Push the image:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>push<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v2.0.0
+</code></pre></div>
+<ol>
+<li>Push your code changes to Git:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>push
+</code></pre></div>
+<ol>
+<li>If using ArgoCD, it will automatically sync. If not, apply manually:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/deployment.yaml
+</code></pre></div>
+<ol>
+<li>Watch the rollout:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/hello-fawkes<span class="w"> </span>-n<span class="w"> </span>my-first-app
+</code></pre></div>
+<ol>
+<li>Verify the new pods are running:
    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>my-first-app
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Your updated application with tracing is deployed and running!</p>
 </div>
+<p>Your updated application with tracing is deployed and running!</p>
 <h2 id="step-5-generate-traces">Step 5: Generate Traces</h2>
 <p>Now let's create some traces by making requests to our service.</p>
 <ol>
-<li>
-<p>Make some requests to generate traces:
-   <div class="highlight"><pre><span></span><code><span class="c1"># Make multiple requests</span>
+<li>Make some requests to generate traces:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Make multiple requests</span>
 <span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..10<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
 <span class="w">  </span>curl<span class="w"> </span>https://hello-fawkes.127.0.0.1.nip.io/
 <span class="w">  </span>sleep<span class="w"> </span><span class="m">1</span>
 <span class="k">done</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Make requests to the new <code>/api/data</code> endpoint:
-   <div class="highlight"><pre><span></span><code><span class="c1"># Generate traces with the data endpoint</span>
+</code></pre></div>
+<ol>
+<li>Make requests to the new <code>/api/data</code> endpoint:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate traces with the data endpoint</span>
 <span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..10<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
 <span class="w">  </span>curl<span class="w"> </span>https://hello-fawkes.127.0.0.1.nip.io/api/data
 <span class="w">  </span>sleep<span class="w"> </span><span class="m">1</span>
 <span class="k">done</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Mix in some health check requests:
+</code></pre></div>
+<ol>
+<li>Mix in some health check requests:
    <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>https://hello-fawkes.127.0.0.1.nip.io/health
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition tip">
 <p class="admonition-title">Generate Realistic Traffic</p>
-<p>The more varied your requests, the more interesting your traces will be. Try different endpoints and patterns.</p>
 </div>
+<p>The more varied your requests, the more interesting your traces will be. Try different endpoints and patterns.</p>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You've generated trace data that should now be visible in Grafana Tempo!</p>
 </div>
+<p>You've generated trace data that should now be visible in Grafana Tempo!</p>
 <h2 id="step-6-view-traces-in-grafana">Step 6: View Traces in Grafana</h2>
 <p>Now for the exciting part - seeing your traces visualized!</p>
 <ol>
-<li>
-<p>Open Grafana in your browser:
-   <div class="highlight"><pre><span></span><code>https://grafana.127.0.0.1.nip.io
-</code></pre></div></p>
-</li>
+<li>Open Grafana in your browser:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>https://grafana.127.0.0.1.nip.io
+</code></pre></div>
+<ol>
 <li>
 <p>Log in with your Grafana credentials (ask your platform team if you don't have them).</p>
 </li>
@@ -5346,7 +5330,9 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <li>
 <p>In the query builder:</p>
 </li>
-<li>Select <strong>Search</strong> tab</li>
+<li>
+<p>Select <strong>Search</strong> tab</p>
+</li>
 <li>Service Name: <code>hello-fawkes</code></li>
 <li>
 <p>Click <strong>Run query</strong></p>
@@ -5363,12 +5349,12 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 </ol>
 <div class="admonition tip">
 <p class="admonition-title">Understanding the Trace View</p>
-<p>Each horizontal bar is a "span" representing an operation. Nested spans show parent-child relationships. Longer bars indicate slower operations.</p>
 </div>
+<p>Each horizontal bar is a "span" representing an operation. Nested spans show parent-child relationships. Longer bars indicate slower operations.</p>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You're viewing distributed traces in Grafana Tempo! 🎉</p>
 </div>
+<p>You're viewing distributed traces in Grafana Tempo! 🎉</p>
 <h2 id="step-7-analyze-a-trace">Step 7: Analyze a Trace</h2>
 <p>Let's understand what you're seeing in the trace view.</p>
 <ol>
@@ -5376,17 +5362,21 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <p>Pick a trace for the <code>/api/data</code> endpoint.</p>
 </li>
 <li>
-<p>Expand the spans to see the hierarchy:
-   <div class="highlight"><pre><span></span><code>GET /api/data (root span)
+<p>Expand the spans to see the hierarchy:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>GET /api/data (root span)
 ├─ Express middleware
 ├─ Route handler
 └─ HTTP response
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p>Look at the span details:</p>
 </li>
-<li><strong>Duration</strong>: How long this operation took</li>
+<li>
+<p><strong>Duration</strong>: How long this operation took</p>
+</li>
 <li><strong>Tags</strong>: Metadata like HTTP method, status code, URL</li>
 <li>
 <p><strong>Logs</strong>: Any events recorded during this span</p>
@@ -5399,8 +5389,8 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 </ol>
 <div class="admonition info">
 <p class="admonition-title">What Makes a Good Trace?</p>
-<p>A well-instrumented trace shows you exactly where time is spent. You should be able to answer: "Which operation is slow?" without looking at code.</p>
 </div>
+<p>A well-instrumented trace shows you exactly where time is spent. You should be able to answer: "Which operation is slow?" without looking at code.</p>
 <h2 id="step-8-create-a-grafana-dashboard-optional">Step 8: Create a Grafana Dashboard (Optional)</h2>
 <p>For ongoing monitoring, create a dashboard to visualize trace metrics.</p>
 <ol>
@@ -5416,7 +5406,9 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <li>
 <p>Create a panel showing request rate:</p>
 </li>
-<li>Query: Use TraceQL: <code>{ service.name="hello-fawkes" }</code></li>
+<li>
+<p>Query: Use TraceQL: <code>{ service.name="hello-fawkes" }</code></p>
+</li>
 <li>
 <p>Visualization: Time series</p>
 </li>
@@ -5432,8 +5424,8 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You now have a dashboard to monitor your service's trace data continuously!</p>
 </div>
+<p>You now have a dashboard to monitor your service's trace data continuously!</p>
 <h2 id="what-youve-accomplished">What You've Accomplished</h2>
 <p>Congratulations! You've successfully:</p>
 <ul>
@@ -5453,22 +5445,20 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="no-traces-appearing-in-grafana">No Traces Appearing in Grafana</h3>
 <ol>
-<li>
-<p>Check that Tempo is running:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes-platform<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>tempo
-</code></pre></div></p>
-</li>
-<li>
-<p>Verify your application can reach Tempo:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>my-first-app<span class="w"> </span>deployment/hello-fawkes<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<li>Check that Tempo is running:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes-platform<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>tempo
+</code></pre></div>
+<ol>
+<li>Verify your application can reach Tempo:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>my-first-app<span class="w"> </span>deployment/hello-fawkes<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>wget<span class="w"> </span>-O-<span class="w"> </span>http://tempo.fawkes-platform.svc.cluster.local:4318/v1/traces
-</code></pre></div></p>
-</li>
-<li>
-<p>Check application logs for tracing errors:
+</code></pre></div>
+<ol>
+<li>Check application logs for tracing errors:
    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>my-first-app<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>hello-fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>otel
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <h3 id="traces-appear-but-are-incomplete">Traces Appear but Are Incomplete</h3>
 <ul>

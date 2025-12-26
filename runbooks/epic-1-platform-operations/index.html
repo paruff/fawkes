@@ -5428,7 +5428,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w">
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="pod-not-starting">Pod Not Starting</h3>
 <p><strong>Symptoms</strong>: Pod stuck in <code>Pending</code>, <code>ContainerCreating</code>, or <code>CrashLoopBackOff</code> state</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check pod status and events</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 
@@ -5437,43 +5437,43 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span
 
 <span class="c1"># Check previous container logs if pod restarted</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--previous
-</code></pre></div></p>
-<p><strong>Common Causes</strong>:
-1. <strong>Insufficient Resources</strong>: Node doesn't have enough CPU/memory
-   <div class="highlight"><pre><span></span><code><span class="c1"># Check node resources</span>
+</code></pre></div>
+<p><strong>Common Causes</strong>:</p>
+<ol>
+<li><strong>Insufficient Resources</strong>: Node doesn't have enough CPU/memory</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check node resources</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>nodes
 kubectl<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Allocated resources&quot;</span>
 </code></pre></div>
-   <strong>Solution</strong>: Scale down other workloads or add nodes</p>
+<p><strong>Solution</strong>: Scale down other workloads or add nodes</p>
 <ol>
-<li>
-<p><strong>Image Pull Errors</strong>: Cannot pull container image
-   <div class="highlight"><pre><span></span><code><span class="c1"># Check image pull secrets</span>
+<li><strong>Image Pull Errors</strong>: Cannot pull container image</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check image pull secrets</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 </code></pre></div>
-   <strong>Solution</strong>: Verify Harbor credentials or image name</p>
-</li>
-<li>
-<p><strong>Configuration Errors</strong>: Invalid ConfigMap or Secret references
-   <div class="highlight"><pre><span></span><code><span class="c1"># Verify ConfigMap exists</span>
+<p><strong>Solution</strong>: Verify Harbor credentials or image name</p>
+<ol>
+<li><strong>Configuration Errors</strong>: Invalid ConfigMap or Secret references</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify ConfigMap exists</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 
 <span class="c1"># Verify Secret exists</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 </code></pre></div>
-   <strong>Solution</strong>: Create missing resources or fix references</p>
-</li>
-<li>
-<p><strong>Policy Violations</strong>: Kyverno blocking pod creation
+<p><strong>Solution</strong>: Create missing resources or fix references</p>
+<ol>
+<li><strong>Policy Violations</strong>: Kyverno blocking pod creation
    <div class="highlight"><pre><span></span><code><span class="c1"># Check policy reports</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>policyreports<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 </code></pre></div>
-   <strong>Solution</strong>: Fix policy violations or update policies</p>
-</li>
+   <strong>Solution</strong>: Fix policy violations or update policies</li>
 </ol>
 <h3 id="service-not-accessible">Service Not Accessible</h3>
 <p><strong>Symptoms</strong>: Cannot access service via port-forward or ingress</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check service exists</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 
@@ -5485,29 +5485,29 @@ kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"
 
 <span class="c1"># Check ingress controller logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/component<span class="o">=</span>controller
-</code></pre></div></p>
-<p><strong>Common Causes</strong>:
-1. <strong>No Healthy Pods</strong>: Service has no ready endpoints
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>-o<span class="w"> </span>wide
 </code></pre></div>
-   <strong>Solution</strong>: Fix pod issues first</p>
+<p><strong>Common Causes</strong>:</p>
 <ol>
-<li>
-<p><strong>Incorrect Service Selector</strong>: Service not matching pods
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>svc<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+<li><strong>No Healthy Pods</strong>: Service has no ready endpoints</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>-o<span class="w"> </span>wide
 </code></pre></div>
-   <strong>Solution</strong>: Update service selector to match pod labels</p>
-</li>
-<li>
-<p><strong>Ingress Misconfiguration</strong>: TLS or path issues
+<p><strong>Solution</strong>: Fix pod issues first</p>
+<ol>
+<li><strong>Incorrect Service Selector</strong>: Service not matching pods</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>svc<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</code></pre></div>
+<p><strong>Solution</strong>: Update service selector to match pod labels</p>
+<ol>
+<li><strong>Ingress Misconfiguration</strong>: TLS or path issues
    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>ingress<span class="w"> </span>&lt;ingress-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 </code></pre></div>
-   <strong>Solution</strong>: Verify hostname, paths, and TLS certificates</p>
-</li>
+   <strong>Solution</strong>: Verify hostname, paths, and TLS certificates</li>
 </ol>
 <h3 id="argocd-application-out-of-sync">ArgoCD Application Out of Sync</h3>
 <p><strong>Symptoms</strong>: Application shows <code>OutOfSync</code> status in ArgoCD</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check application status</span>
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>&lt;app-name&gt;
 
@@ -5516,8 +5516,8 @@ argocd<span class="w"> </span>app<span class="w"> </span>diff<span class="w"> </
 
 <span class="c1"># Check sync history</span>
 argocd<span class="w"> </span>app<span class="w"> </span><span class="nb">history</span><span class="w"> </span>&lt;app-name&gt;
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Manual sync</span>
 argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </span>&lt;app-name&gt;
 
@@ -5529,10 +5529,10 @@ argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </
 
 <span class="c1"># Hard refresh (clear cache)</span>
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>&lt;app-name&gt;<span class="w"> </span>--hard-refresh
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="jenkins-build-failures">Jenkins Build Failures</h3>
 <p><strong>Symptoms</strong>: Builds failing consistently</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Jenkins agent pods</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>-l<span class="w"> </span>jenkins/label
 
@@ -5540,25 +5540,27 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/component<span class="o">=</span>jenkins-controller<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span>
 
 <span class="c1"># Access Jenkins and check build console output</span>
-</code></pre></div></p>
-<p><strong>Common Causes</strong>:
-1. <strong>Agent Connection Issues</strong>: Agents can't connect to controller
-   <strong>Solution</strong>: Check network policies and service endpoints</p>
+</code></pre></div>
+<p><strong>Common Causes</strong>:</p>
 <ol>
 <li>
-<p><strong>Insufficient Agent Resources</strong>: Agents running out of memory/CPU
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>-l<span class="w"> </span>jenkins/label
-</code></pre></div>
-   <strong>Solution</strong>: Increase agent resource requests/limits</p>
+<p><strong>Agent Connection Issues</strong>: Agents can't connect to controller
+   <strong>Solution</strong>: Check network policies and service endpoints</p>
 </li>
 <li>
-<p><strong>Quality Gate Failures</strong>: SonarQube or security scan blocking build
-   <strong>Solution</strong>: Review scan results and fix issues or adjust quality gates</p>
+<p><strong>Insufficient Agent Resources</strong>: Agents running out of memory/CPU</p>
 </li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>-l<span class="w"> </span>jenkins/label
+</code></pre></div>
+<p><strong>Solution</strong>: Increase agent resource requests/limits</p>
+<ol>
+<li><strong>Quality Gate Failures</strong>: SonarQube or security scan blocking build
+   <strong>Solution</strong>: Review scan results and fix issues or adjust quality gates</li>
 </ol>
 <h3 id="prometheus-metrics-missing">Prometheus Metrics Missing</h3>
 <p><strong>Symptoms</strong>: Dashboards show "No data" or metrics not being collected</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Prometheus targets</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/prometheus-kube-prometheus-prometheus<span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span><span class="m">9090</span>:9090
 <span class="c1"># Navigate to http://localhost:9090/targets</span>
@@ -5568,8 +5570,8 @@ kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitors<span c
 
 <span class="c1"># Check Prometheus logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span>prometheus-kube-prometheus-prometheus-0
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify ServiceMonitor exists for component</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitor<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 
@@ -5578,25 +5580,25 @@ kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w
 
 <span class="c1"># Restart Prometheus to reload configuration</span>
 kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span>prometheus-kube-prometheus-prometheus-0
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="vault-sealed">Vault Sealed</h3>
 <p><strong>Symptoms</strong>: Vault pods show "Sealed" status</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Vault status</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-0<span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>status
-</code></pre></div></p>
-<p><strong>Solution</strong>:
+</code></pre></div>
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Unseal Vault (requires unseal keys)</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-0<span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>operator<span class="w"> </span>unseal<span class="w"> </span>&lt;key-1&gt;
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-0<span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>operator<span class="w"> </span>unseal<span class="w"> </span>&lt;key-2&gt;
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-0<span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>operator<span class="w"> </span>unseal<span class="w"> </span>&lt;key-3&gt;
 
 <span class="c1"># Repeat for each Vault pod (vault-0, vault-1, vault-2)</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Prevention</strong>: Configure auto-unseal with cloud KMS for production</p>
 <h3 id="certificate-errors">Certificate Errors</h3>
 <p><strong>Symptoms</strong>: TLS errors when accessing services</p>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check certificates</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>certificates<span class="w"> </span>-A
 
@@ -5605,8 +5607,8 @@ kubectl<span class="w"> </span>get<span class="w"> </span>certificaterequests<sp
 
 <span class="c1"># Check cert-manager logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>cert-manager<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>cert-manager
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check certificate status</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>certificate<span class="w"> </span>&lt;cert-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 
@@ -5616,7 +5618,7 @@ kubectl<span class="w"> </span>delete<span class="w"> </span>certificaterequest<
 
 <span class="c1"># Restart cert-manager</span>
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>cert-manager<span class="w"> </span>-n<span class="w"> </span>cert-manager
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="maintenance-procedures">Maintenance Procedures</h2>
 <h3 id="regular-maintenance-schedule">Regular Maintenance Schedule</h3>
@@ -5819,6 +5821,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 </code></pre></div>
 <h4 id="step-4-communicate">Step 4: Communicate</h4>
 <div class="highlight"><pre><span></span><code><span class="gh"># Incident notification template</span>
+
 Subject: [P0/P1/P2] &lt;Brief Description&gt; - Fawkes Platform
 
 Status: Investigating/Mitigating/Resolved
@@ -5828,10 +5831,12 @@ Current Status: &lt;Current state&gt;
 Next Update: &lt;Expected time&gt;
 
 Actions Taken:
+
 <span class="k">-</span><span class="w"> </span>&lt;Action 1&gt;
 <span class="k">-</span><span class="w"> </span>&lt;Action 2&gt;
 
 Next Steps:
+
 <span class="k">-</span><span class="w"> </span>&lt;Next step 1&gt;
 <span class="k">-</span><span class="w"> </span>&lt;Next step 2&gt;
 </code></pre></div>
@@ -5846,6 +5851,7 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 </code></pre></div>
 <h4 id="step-6-post-incident">Step 6: Post-Incident</h4>
 <div class="highlight"><pre><span></span><code><span class="gh"># Post-incident review template</span>
+
 <span class="k">1.</span> Timeline of events
 <span class="k">2.</span> Root cause analysis
 <span class="k">3.</span> Impact assessment
@@ -5911,12 +5917,12 @@ kubectl<span class="w"> </span>get<span class="w"> </span>certificates<span clas
 
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Health Check Complete ===&quot;</span>
 </code></pre></div>
-<p>Make it executable:
+<p>Make it executable:</p>
 <div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>scripts/health-check.sh
-</code></pre></div></p>
-<p>Run daily or on-demand:
+</code></pre></div>
+<p>Run daily or on-demand:</p>
 <div class="highlight"><pre><span></span><code>./scripts/health-check.sh
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>

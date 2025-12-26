@@ -4945,18 +4945,22 @@
 <span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_result</span><span class="w"> </span><span class="p">(</span><span class="k">result</span><span class="p">)</span>
 <span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COLLATE</span><span class="o">=</span><span class="n">utf8mb4_unicode_ci</span><span class="p">;</span>
 </code></pre></div>
-<p><strong>Key Fields</strong>:
-- <code>id</code>: Unique deployment identifier (ArgoCD sync ID or Jenkins build ID)
-- <code>cicd_scope_id</code>: Links to the project/service scope
-- <code>result</code>: Deployment result (<code>SUCCESS</code>, <code>FAILURE</code>, <code>ABORTED</code>)
-- <code>environment</code>: Target environment (<code>production</code>, <code>staging</code>, <code>dev</code>)
-- <code>finished_date</code>: Deployment completion timestamp (for frequency calculation)
-- <code>commit_sha</code>: Git commit SHA deployed
-- <code>duration_sec</code>: Deployment duration in seconds</p>
-<p><strong>Usage</strong>:
-- <strong>Deployment Frequency</strong>: Count of successful deployments per time window
-- <strong>Lead Time</strong>: Join with <code>commits</code> table to calculate commit → deploy time
-- <strong>Change Failure Rate</strong>: Ratio of failed to total deployments</p>
+<p><strong>Key Fields</strong>:</p>
+<ul>
+<li><code>id</code>: Unique deployment identifier (ArgoCD sync ID or Jenkins build ID)</li>
+<li><code>cicd_scope_id</code>: Links to the project/service scope</li>
+<li><code>result</code>: Deployment result (<code>SUCCESS</code>, <code>FAILURE</code>, <code>ABORTED</code>)</li>
+<li><code>environment</code>: Target environment (<code>production</code>, <code>staging</code>, <code>dev</code>)</li>
+<li><code>finished_date</code>: Deployment completion timestamp (for frequency calculation)</li>
+<li><code>commit_sha</code>: Git commit SHA deployed</li>
+<li><code>duration_sec</code>: Deployment duration in seconds</li>
+</ul>
+<p><strong>Usage</strong>:</p>
+<ul>
+<li><strong>Deployment Frequency</strong>: Count of successful deployments per time window</li>
+<li><strong>Lead Time</strong>: Join with <code>commits</code> table to calculate commit → deploy time</li>
+<li><strong>Change Failure Rate</strong>: Ratio of failed to total deployments</li>
+</ul>
 <hr />
 <h3 id="2-commits-table">2. <code>commits</code> Table</h3>
 <p>Stores Git commit data from GitHub.</p>
@@ -4980,15 +4984,19 @@
 <span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_author_id</span><span class="w"> </span><span class="p">(</span><span class="n">author_id</span><span class="p">)</span>
 <span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COLLATE</span><span class="o">=</span><span class="n">utf8mb4_unicode_ci</span><span class="p">;</span>
 </code></pre></div>
-<p><strong>Key Fields</strong>:
-- <code>sha</code>: Commit SHA (primary key)
-- <code>authored_date</code>: When the commit was created
-- <code>message</code>: Commit message
-- <code>author_name</code>: Commit author
-- <code>additions</code>/<code>deletions</code>: Lines of code changed</p>
-<p><strong>Usage</strong>:
-- <strong>Lead Time</strong>: Start time for lead time calculation
-- <strong>Code churn</strong>: Track code changes over time</p>
+<p><strong>Key Fields</strong>:</p>
+<ul>
+<li><code>sha</code>: Commit SHA (primary key)</li>
+<li><code>authored_date</code>: When the commit was created</li>
+<li><code>message</code>: Commit message</li>
+<li><code>author_name</code>: Commit author</li>
+<li><code>additions</code>/<code>deletions</code>: Lines of code changed</li>
+</ul>
+<p><strong>Usage</strong>:</p>
+<ul>
+<li><strong>Lead Time</strong>: Start time for lead time calculation</li>
+<li><strong>Code churn</strong>: Track code changes over time</li>
+</ul>
 <hr />
 <h3 id="3-incidents-table">3. <code>incidents</code> Table</h3>
 <p>Stores production incidents for CFR and MTTR calculation.</p>
@@ -5017,15 +5025,19 @@
 <span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_status</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
 <span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COLLATE</span><span class="o">=</span><span class="n">utf8mb4_unicode_ci</span><span class="p">;</span>
 </code></pre></div>
-<p><strong>Key Fields</strong>:
-- <code>id</code>: Incident unique identifier
-- <code>severity</code>: Incident severity (<code>high</code>, <code>medium</code>, <code>low</code>)
-- <code>created_date</code>: Incident detection time
-- <code>resolution_date</code>: Incident resolution time
-- <code>lead_time_minutes</code>: Time to restore (calculated)</p>
-<p><strong>Usage</strong>:
-- <strong>Change Failure Rate</strong>: Count of incidents caused by deployments
-- <strong>Mean Time to Restore</strong>: Average time from incident creation to resolution</p>
+<p><strong>Key Fields</strong>:</p>
+<ul>
+<li><code>id</code>: Incident unique identifier</li>
+<li><code>severity</code>: Incident severity (<code>high</code>, <code>medium</code>, <code>low</code>)</li>
+<li><code>created_date</code>: Incident detection time</li>
+<li><code>resolution_date</code>: Incident resolution time</li>
+<li><code>lead_time_minutes</code>: Time to restore (calculated)</li>
+</ul>
+<p><strong>Usage</strong>:</p>
+<ul>
+<li><strong>Change Failure Rate</strong>: Count of incidents caused by deployments</li>
+<li><strong>Mean Time to Restore</strong>: Average time from incident creation to resolution</li>
+</ul>
 <hr />
 <h3 id="4-cicd_deployments-table">4. <code>cicd_deployments</code> Table</h3>
 <p>Links deployments to CICD pipelines and commits.</p>
@@ -5054,13 +5066,17 @@
 <span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_finished_date</span><span class="w"> </span><span class="p">(</span><span class="n">finished_date</span><span class="p">)</span>
 <span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COLLATE</span><span class="o">=</span><span class="n">utf8mb4_unicode_ci</span><span class="p">;</span>
 </code></pre></div>
-<p><strong>Key Fields</strong>:
-- <code>cicd_scope_id</code>: Project/service scope identifier
-- <code>commit_sha</code>: Links deployment to commit
-- <code>environment</code>: Deployment target environment
-- <code>finished_date</code>: Deployment completion time</p>
-<p><strong>Usage</strong>:
-- Links ArgoCD syncs to commits for lead time calculation</p>
+<p><strong>Key Fields</strong>:</p>
+<ul>
+<li><code>cicd_scope_id</code>: Project/service scope identifier</li>
+<li><code>commit_sha</code>: Links deployment to commit</li>
+<li><code>environment</code>: Deployment target environment</li>
+<li><code>finished_date</code>: Deployment completion time</li>
+</ul>
+<p><strong>Usage</strong>:</p>
+<ul>
+<li>Links ArgoCD syncs to commits for lead time calculation</li>
+</ul>
 <hr />
 <h3 id="5-project_metric_settings-table">5. <code>project_metric_settings</code> Table</h3>
 <p>Stores DORA metric configuration per project.</p>
@@ -5075,11 +5091,13 @@
 <span class="w">  </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">uk_project_plugin</span><span class="w"> </span><span class="p">(</span><span class="n">project_name</span><span class="p">,</span><span class="w"> </span><span class="n">plugin_name</span><span class="p">)</span>
 <span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COLLATE</span><span class="o">=</span><span class="n">utf8mb4_unicode_ci</span><span class="p">;</span>
 </code></pre></div>
-<p><strong>Key Fields</strong>:
-- <code>project_name</code>: Project identifier
-- <code>plugin_name</code>: Metric type (e.g., <code>dora</code>)
-- <code>plugin_option</code>: JSON configuration for the metric
-- <code>enable</code>: Whether metric is enabled</p>
+<p><strong>Key Fields</strong>:</p>
+<ul>
+<li><code>project_name</code>: Project identifier</li>
+<li><code>plugin_name</code>: Metric type (e.g., <code>dora</code>)</li>
+<li><code>plugin_option</code>: JSON configuration for the metric</li>
+<li><code>enable</code>: Whether metric is enabled</li>
+</ul>
 <p><strong>Example plugin_option</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;deployment_frequency&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>

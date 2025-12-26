@@ -5237,18 +5237,22 @@
 </table>
 <h3 id="total-resource-requirements-by-scale">Total Resource Requirements by Scale</h3>
 <h4 id="mvp-scale-5-teams-25-services">MVP Scale (5 teams, 25 services)</h4>
-<p><strong>Platform Core Services:</strong>
-- CPU Requests: ~5.5 cores
-- CPU Limits: ~15 cores
-- Memory Requests: ~11 GB
-- Memory Limits: ~22 GB
-- Storage: ~150 GB</p>
-<p><strong>Recommended Cluster Configuration:</strong>
-- Nodes: 3-5 worker nodes
-- Node Size: 4 vCPU, 16 GB RAM each
-- Total Cluster: 12-20 vCPU, 48-80 GB RAM
-- Platform Overhead: ~45% of cluster capacity
-- Application Capacity: ~55% of cluster capacity</p>
+<p><strong>Platform Core Services:</strong></p>
+<ul>
+<li>CPU Requests: ~5.5 cores</li>
+<li>CPU Limits: ~15 cores</li>
+<li>Memory Requests: ~11 GB</li>
+<li>Memory Limits: ~22 GB</li>
+<li>Storage: ~150 GB</li>
+</ul>
+<p><strong>Recommended Cluster Configuration:</strong></p>
+<ul>
+<li>Nodes: 3-5 worker nodes</li>
+<li>Node Size: 4 vCPU, 16 GB RAM each</li>
+<li>Total Cluster: 12-20 vCPU, 48-80 GB RAM</li>
+<li>Platform Overhead: ~45% of cluster capacity</li>
+<li>Application Capacity: ~55% of cluster capacity</li>
+</ul>
 <h4 id="production-scale-20-teams-200-services">Production Scale (20 teams, 200 services)</h4>
 <p><strong>Scaling Recommendations:</strong></p>
 <table>
@@ -5292,35 +5296,45 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Recommended Cluster Configuration:</strong>
-- Nodes: 10-20 worker nodes
-- Node Size: 8 vCPU, 32 GB RAM each
-- Total Cluster: 80-160 vCPU, 320-640 GB RAM
-- Platform Overhead: ~30% of cluster capacity
-- Application Capacity: ~70% of cluster capacity</p>
+<p><strong>Recommended Cluster Configuration:</strong></p>
+<ul>
+<li>Nodes: 10-20 worker nodes</li>
+<li>Node Size: 8 vCPU, 32 GB RAM each</li>
+<li>Total Cluster: 80-160 vCPU, 320-640 GB RAM</li>
+<li>Platform Overhead: ~30% of cluster capacity</li>
+<li>Application Capacity: ~70% of cluster capacity</li>
+</ul>
 <h2 id="resource-tuning-guidelines">Resource Tuning Guidelines</h2>
 <h3 id="when-to-scale-up">When to Scale Up</h3>
-<p><strong>CPU:</strong>
-- Sustained usage &gt;70% of limits
-- Increased request latency (P95 &gt;2x baseline)
-- Container throttling metrics increasing
-- Queue depths growing</p>
-<p><strong>Memory:</strong>
-- Sustained usage &gt;70% of limits
-- Increasing GC frequency (for JVM apps)
-- OOM kill events
-- Disk swapping activity</p>
+<p><strong>CPU:</strong></p>
+<ul>
+<li>Sustained usage &gt;70% of limits</li>
+<li>Increased request latency (P95 &gt;2x baseline)</li>
+<li>Container throttling metrics increasing</li>
+<li>Queue depths growing</li>
+</ul>
+<p><strong>Memory:</strong></p>
+<ul>
+<li>Sustained usage &gt;70% of limits</li>
+<li>Increasing GC frequency (for JVM apps)</li>
+<li>OOM kill events</li>
+<li>Disk swapping activity</li>
+</ul>
 <h3 id="when-to-scale-down">When to Scale Down</h3>
-<p><strong>CPU:</strong>
-- Sustained usage &lt;30% of requests
-- No performance degradation observed
-- After workload analysis over 7+ days</p>
-<p><strong>Memory:</strong>
-- Sustained usage &lt;40% of requests
-- No OOM events for 30+ days
-- After workload analysis over 7+ days</p>
+<p><strong>CPU:</strong></p>
+<ul>
+<li>Sustained usage &lt;30% of requests</li>
+<li>No performance degradation observed</li>
+<li>After workload analysis over 7+ days</li>
+</ul>
+<p><strong>Memory:</strong></p>
+<ul>
+<li>Sustained usage &lt;40% of requests</li>
+<li>No OOM events for 30+ days</li>
+<li>After workload analysis over 7+ days</li>
+</ul>
 <h3 id="monitoring-metrics">Monitoring Metrics</h3>
-<p><strong>Key Metrics to Track:</strong>
+<p><strong>Key Metrics to Track:</strong></p>
 <div class="highlight"><pre><span></span><code># CPU
 container_cpu_usage_seconds_total
 rate(container_cpu_usage_seconds_total[5m])
@@ -5337,20 +5351,22 @@ container_oom_events_total
 
 # Evictions
 kube_pod_status_reason{reason=&quot;Evicted&quot;}
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="resource-requestlimit-ratio-guidelines">Resource Request/Limit Ratio Guidelines</h3>
-<p><strong>Recommended Ratios:</strong>
-- CPU: Request = 30-50% of Limit (allows bursting)
-- Memory: Request = 70-100% of Limit (memory is not compressible)</p>
-<p><strong>Example:</strong>
+<p><strong>Recommended Ratios:</strong></p>
+<ul>
+<li>CPU: Request = 30-50% of Limit (allows bursting)</li>
+<li>Memory: Request = 70-100% of Limit (memory is not compressible)</li>
+</ul>
+<p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300m</span><span class="w">      </span><span class="c1"># 30% of limit</span>
-<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">768Mi</span><span class="w">  </span><span class="c1"># 75% of limit</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300m</span><span class="w"> </span><span class="c1"># 30% of limit</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">768Mi</span><span class="w"> </span><span class="c1"># 75% of limit</span>
 <span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">         </span><span class="c1"># Allows 3x burst</span>
-<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span><span class="w">    </span><span class="c1"># Prevents OOM</span>
-</code></pre></div></p>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># Allows 3x burst</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span><span class="w"> </span><span class="c1"># Prevents OOM</span>
+</code></pre></div>
 <h2 id="pod-disruption-budgets">Pod Disruption Budgets</h2>
 <p>For HA components, always configure PDBs:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">policy/v1</span>
@@ -5402,7 +5418,7 @@ kube_pod_status_reason{reason=&quot;Evicted&quot;}
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage</span>
 <span class="w">  </span><span class="nt">updatePolicy</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">updateMode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Auto&quot;</span><span class="w">  </span><span class="c1"># or &quot;Recreate&quot; or &quot;Initial&quot;</span>
+<span class="w">    </span><span class="nt">updateMode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Auto&quot;</span><span class="w"> </span><span class="c1"># or &quot;Recreate&quot; or &quot;Initial&quot;</span>
 <span class="w">  </span><span class="nt">resourcePolicy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">containerPolicies</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage</span>
@@ -5521,32 +5537,44 @@ watch<span class="w"> </span>kubectl<span class="w"> </span>top<span class="w"> 
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="pod-evictions">Pod Evictions</h3>
-<p><strong>Symptoms:</strong>
-- Pods restarting frequently
-- Status: <code>Evicted</code>
-- Reason: <code>OutOfMemory</code> or <code>DiskPressure</code></p>
-<p><strong>Solution:</strong>
-1. Check memory limits: <code>kubectl describe pod &lt;pod-name&gt; -n fawkes</code>
-2. Increase memory requests/limits
-3. Check for memory leaks in application code</p>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>Pods restarting frequently</li>
+<li>Status: <code>Evicted</code></li>
+<li>Reason: <code>OutOfMemory</code> or <code>DiskPressure</code></li>
+</ul>
+<p><strong>Solution:</strong></p>
+<ol>
+<li>Check memory limits: <code>kubectl describe pod &lt;pod-name&gt; -n fawkes</code></li>
+<li>Increase memory requests/limits</li>
+<li>Check for memory leaks in application code</li>
+</ol>
 <h3 id="cpu-throttling">CPU Throttling</h3>
-<p><strong>Symptoms:</strong>
-- Slow application response times
-- High CPU throttling metrics
-- No increase in actual CPU usage</p>
-<p><strong>Solution:</strong>
-1. Check throttling: <code>kubectl top pods -n fawkes --containers</code>
-2. Increase CPU limits (but keep requests low for scheduling)
-3. Consider HPA for scaling out instead of up</p>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>Slow application response times</li>
+<li>High CPU throttling metrics</li>
+<li>No increase in actual CPU usage</li>
+</ul>
+<p><strong>Solution:</strong></p>
+<ol>
+<li>Check throttling: <code>kubectl top pods -n fawkes --containers</code></li>
+<li>Increase CPU limits (but keep requests low for scheduling)</li>
+<li>Consider HPA for scaling out instead of up</li>
+</ol>
 <h3 id="out-of-memory-oom">Out of Memory (OOM)</h3>
-<p><strong>Symptoms:</strong>
-- Pod terminated with exit code 137
-- <code>OOMKilled</code> in pod status</p>
-<p><strong>Solution:</strong>
-1. Increase memory limits
-2. Review application memory consumption
-3. Check for memory leaks
-4. Tune JVM heap sizes (for Java apps)</p>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>Pod terminated with exit code 137</li>
+<li><code>OOMKilled</code> in pod status</li>
+</ul>
+<p><strong>Solution:</strong></p>
+<ol>
+<li>Increase memory limits</li>
+<li>Review application memory consumption</li>
+<li>Check for memory leaks</li>
+<li>Tune JVM heap sizes (for Java apps)</li>
+</ol>
 <h2 id="references">References</h2>
 <ul>
 <li><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/">Kubernetes Resource Management</a></li>

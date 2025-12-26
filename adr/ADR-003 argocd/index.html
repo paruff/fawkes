@@ -5037,74 +5037,94 @@
 <h2 id="context">Context</h2>
 <p>Fawkes requires a GitOps continuous delivery solution to manage application deployments and platform infrastructure declaratively. GitOps—where Git is the single source of truth for desired system state—is a core principle of modern platform engineering and directly supports DORA best practices.</p>
 <h3 id="the-need-for-gitops">The Need for GitOps</h3>
-<p><strong>Current Challenges Without GitOps</strong>:
-- <strong>Manual Deployments</strong>: Error-prone, not repeatable, tribal knowledge
-- <strong>Configuration Drift</strong>: Production state diverges from declared state
-- <strong>Audit Trail Gaps</strong>: Hard to track who changed what and when
-- <strong>Rollback Complexity</strong>: No easy way to revert to previous working state
-- <strong>Multi-Environment Management</strong>: Promoting changes across dev/staging/prod is manual
-- <strong>No Self-Healing</strong>: Systems don't automatically recover from drift</p>
-<p><strong>What GitOps Provides</strong>:
-1. <strong>Declarative Configuration</strong>: Everything defined in Git (applications, infrastructure, configs)
-2. <strong>Automated Sync</strong>: System automatically converges to desired state
-3. <strong>Version Control</strong>: Complete history of all changes with Git commits
-4. <strong>Easy Rollback</strong>: Revert Git commit to roll back to previous state
-5. <strong>Audit Trail</strong>: Who, what, when, why all tracked in Git
-6. <strong>Self-Healing</strong>: Automatic drift detection and correction
-7. <strong>Multi-Cluster Management</strong>: Manage multiple Kubernetes clusters from single control plane</p>
+<p><strong>Current Challenges Without GitOps</strong>:</p>
+<ul>
+<li><strong>Manual Deployments</strong>: Error-prone, not repeatable, tribal knowledge</li>
+<li><strong>Configuration Drift</strong>: Production state diverges from declared state</li>
+<li><strong>Audit Trail Gaps</strong>: Hard to track who changed what and when</li>
+<li><strong>Rollback Complexity</strong>: No easy way to revert to previous working state</li>
+<li><strong>Multi-Environment Management</strong>: Promoting changes across dev/staging/prod is manual</li>
+<li><strong>No Self-Healing</strong>: Systems don't automatically recover from drift</li>
+</ul>
+<p><strong>What GitOps Provides</strong>:</p>
+<ol>
+<li><strong>Declarative Configuration</strong>: Everything defined in Git (applications, infrastructure, configs)</li>
+<li><strong>Automated Sync</strong>: System automatically converges to desired state</li>
+<li><strong>Version Control</strong>: Complete history of all changes with Git commits</li>
+<li><strong>Easy Rollback</strong>: Revert Git commit to roll back to previous state</li>
+<li><strong>Audit Trail</strong>: Who, what, when, why all tracked in Git</li>
+<li><strong>Self-Healing</strong>: Automatic drift detection and correction</li>
+<li><strong>Multi-Cluster Management</strong>: Manage multiple Kubernetes clusters from single control plane</li>
+</ol>
 <h3 id="requirements-for-gitops-tool">Requirements for GitOps Tool</h3>
-<p><strong>Core Requirements</strong>:
-- <strong>Kubernetes-Native</strong>: Designed specifically for Kubernetes deployments
-- <strong>Git Integration</strong>: Supports GitHub, GitLab, Bitbucket, etc.
-- <strong>Automated Sync</strong>: Watches Git, applies changes automatically
-- <strong>Drift Detection</strong>: Detects and corrects configuration drift
-- <strong>Multi-Cluster</strong>: Manages multiple clusters (dev, staging, prod)
-- <strong>Progressive Delivery</strong>: Supports canary, blue-green deployments
-- <strong>Rollback</strong>: Easy revert to previous version
-- <strong>RBAC</strong>: Fine-grained access control for teams
-- <strong>SSO Integration</strong>: OIDC/SAML for authentication</p>
-<p><strong>DORA Alignment</strong>:
-- <strong>Deployment Frequency</strong>: Automated deployments increase frequency
-- <strong>Lead Time</strong>: Git commit to deployment is fast and automated
-- <strong>Change Failure Rate</strong>: Declarative state reduces misconfigurations
-- <strong>Time to Restore</strong>: Git revert enables fast rollback</p>
-<p><strong>Integration Requirements</strong>:
-- <strong>Backstage</strong>: Show deployment status in developer portal
-- <strong>Jenkins</strong>: Trigger deployments after successful builds
-- <strong>Mattermost</strong>: Send deployment notifications to team channels
-- <strong>DORA Metrics</strong>: Report deployment events for metrics calculation
-- <strong>Kubernetes</strong>: Native integration, no abstraction layer</p>
+<p><strong>Core Requirements</strong>:</p>
+<ul>
+<li><strong>Kubernetes-Native</strong>: Designed specifically for Kubernetes deployments</li>
+<li><strong>Git Integration</strong>: Supports GitHub, GitLab, Bitbucket, etc.</li>
+<li><strong>Automated Sync</strong>: Watches Git, applies changes automatically</li>
+<li><strong>Drift Detection</strong>: Detects and corrects configuration drift</li>
+<li><strong>Multi-Cluster</strong>: Manages multiple clusters (dev, staging, prod)</li>
+<li><strong>Progressive Delivery</strong>: Supports canary, blue-green deployments</li>
+<li><strong>Rollback</strong>: Easy revert to previous version</li>
+<li><strong>RBAC</strong>: Fine-grained access control for teams</li>
+<li><strong>SSO Integration</strong>: OIDC/SAML for authentication</li>
+</ul>
+<p><strong>DORA Alignment</strong>:</p>
+<ul>
+<li><strong>Deployment Frequency</strong>: Automated deployments increase frequency</li>
+<li><strong>Lead Time</strong>: Git commit to deployment is fast and automated</li>
+<li><strong>Change Failure Rate</strong>: Declarative state reduces misconfigurations</li>
+<li><strong>Time to Restore</strong>: Git revert enables fast rollback</li>
+</ul>
+<p><strong>Integration Requirements</strong>:</p>
+<ul>
+<li><strong>Backstage</strong>: Show deployment status in developer portal</li>
+<li><strong>Jenkins</strong>: Trigger deployments after successful builds</li>
+<li><strong>Mattermost</strong>: Send deployment notifications to team channels</li>
+<li><strong>DORA Metrics</strong>: Report deployment events for metrics calculation</li>
+<li><strong>Kubernetes</strong>: Native integration, no abstraction layer</li>
+</ul>
 <h3 id="forces-at-play">Forces at Play</h3>
-<p><strong>Technical Forces</strong>:
-- Need declarative configuration for reliability
-- Drift detection critical for production stability
-- Multi-environment promotion needs automation
-- Self-healing reduces operational toil</p>
-<p><strong>Operational Forces</strong>:
-- Platform team can't manually deploy everything
-- Need audit trail for compliance
-- Rollback must be fast and reliable
-- Want to reduce deployment-related incidents</p>
-<p><strong>Developer Experience Forces</strong>:
-- Developers want to see deployment status
-- Need confidence deployments will succeed
-- Want easy rollback if issues arise
-- Prefer GitOps "merge to deploy" workflow</p>
-<p><strong>DORA Forces</strong>:
-- Deployment frequency depends on automation
-- Lead time includes deployment time
-- GitOps reduces change failure rate
-- Fast rollback improves time to restore</p>
+<p><strong>Technical Forces</strong>:</p>
+<ul>
+<li>Need declarative configuration for reliability</li>
+<li>Drift detection critical for production stability</li>
+<li>Multi-environment promotion needs automation</li>
+<li>Self-healing reduces operational toil</li>
+</ul>
+<p><strong>Operational Forces</strong>:</p>
+<ul>
+<li>Platform team can't manually deploy everything</li>
+<li>Need audit trail for compliance</li>
+<li>Rollback must be fast and reliable</li>
+<li>Want to reduce deployment-related incidents</li>
+</ul>
+<p><strong>Developer Experience Forces</strong>:</p>
+<ul>
+<li>Developers want to see deployment status</li>
+<li>Need confidence deployments will succeed</li>
+<li>Want easy rollback if issues arise</li>
+<li>Prefer GitOps "merge to deploy" workflow</li>
+</ul>
+<p><strong>DORA Forces</strong>:</p>
+<ul>
+<li>Deployment frequency depends on automation</li>
+<li>Lead time includes deployment time</li>
+<li>GitOps reduces change failure rate</li>
+<li>Fast rollback improves time to restore</li>
+</ul>
 <h2 id="decision">Decision</h2>
 <p><strong>We will use ArgoCD as the GitOps continuous delivery platform for Fawkes.</strong></p>
-<p>Specifically:
-- <strong>ArgoCD Core</strong> (latest stable version, currently 2.9+)
-- <strong>Multi-cluster deployment</strong> (manage dev, staging, prod from single ArgoCD)
-- <strong>ApplicationSets</strong> for managing multiple applications with templates
-- <strong>Argo Rollouts</strong> for progressive delivery (canary, blue-green)
-- <strong>Argo Notifications</strong> for Mattermost integration
-- <strong>Argo Image Updater</strong> for automated image updates (optional, evaluate after MVP)
-- <strong>SSO integration</strong> via OIDC (Phase 2)</p>
+<p>Specifically:</p>
+<ul>
+<li><strong>ArgoCD Core</strong> (latest stable version, currently 2.9+)</li>
+<li><strong>Multi-cluster deployment</strong> (manage dev, staging, prod from single ArgoCD)</li>
+<li><strong>ApplicationSets</strong> for managing multiple applications with templates</li>
+<li><strong>Argo Rollouts</strong> for progressive delivery (canary, blue-green)</li>
+<li><strong>Argo Notifications</strong> for Mattermost integration</li>
+<li><strong>Argo Image Updater</strong> for automated image updates (optional, evaluate after MVP)</li>
+<li><strong>SSO integration</strong> via OIDC (Phase 2)</li>
+</ul>
 <h3 id="rationale">Rationale</h3>
 <ol>
 <li>
@@ -5113,7 +5133,9 @@
 <li>
 <p><strong>CNCF Graduated Project</strong>: Highest maturity level in CNCF, indicating:</p>
 </li>
-<li>Production-ready and battle-tested</li>
+<li>
+<p>Production-ready and battle-tested</p>
+</li>
 <li>Strong governance and security</li>
 <li>Long-term sustainability</li>
 <li>
@@ -5122,7 +5144,9 @@
 <li>
 <p><strong>Best-in-Class GitOps</strong>: Purpose-built for GitOps on Kubernetes:</p>
 </li>
-<li>Declarative Git-based deployments</li>
+<li>
+<p>Declarative Git-based deployments</p>
+</li>
 <li>Automated sync with configurable policies</li>
 <li>Drift detection with auto-heal option</li>
 <li>Multi-cluster management from single UI</li>
@@ -5132,7 +5156,9 @@
 <li>
 <p><strong>Argo Ecosystem Integration</strong>: Part of larger Argo ecosystem:</p>
 </li>
-<li><strong>Argo Rollouts</strong>: Advanced deployment strategies (canary, blue-green)</li>
+<li>
+<p><strong>Argo Rollouts</strong>: Advanced deployment strategies (canary, blue-green)</p>
+</li>
 <li><strong>Argo Workflows</strong>: Complex workflow orchestration</li>
 <li><strong>Argo Events</strong>: Event-driven workflow automation</li>
 <li><strong>Argo CD Image Updater</strong>: Automated image updates</li>
@@ -5142,7 +5168,9 @@
 <li>
 <p><strong>Progressive Delivery Support</strong>: Via Argo Rollouts:</p>
 </li>
-<li>Canary deployments with automated analysis</li>
+<li>
+<p>Canary deployments with automated analysis</p>
+</li>
 <li>Blue-green deployments</li>
 <li>Traffic splitting (with service mesh)</li>
 <li>Automated rollback on metrics threshold</li>
@@ -5152,7 +5180,9 @@
 <li>
 <p><strong>Excellent UI</strong>: Beautiful web interface showing:</p>
 </li>
-<li>Application topology (visual graph)</li>
+<li>
+<p>Application topology (visual graph)</p>
+</li>
 <li>Real-time sync status</li>
 <li>Resource health</li>
 <li>Git commit history</li>
@@ -5162,7 +5192,9 @@
 <li>
 <p><strong>CLI and API</strong>: Full control via CLI and REST API:</p>
 </li>
-<li>Automate operations</li>
+<li>
+<p>Automate operations</p>
+</li>
 <li>Integrate with CI/CD</li>
 <li>
 <p>Custom tooling and scripts</p>
@@ -5170,7 +5202,9 @@
 <li>
 <p><strong>ApplicationSets</strong>: Powerful templating for multiple applications:</p>
 </li>
-<li>Deploy multiple apps with single manifest</li>
+<li>
+<p>Deploy multiple apps with single manifest</p>
+</li>
 <li>Git generator (monorepo support)</li>
 <li>Cluster generator (multi-cluster)</li>
 <li>
@@ -5179,7 +5213,9 @@
 <li>
 <p><strong>RBAC and Security</strong>:</p>
 </li>
-<li>Fine-grained RBAC for teams</li>
+<li>
+<p>Fine-grained RBAC for teams</p>
+</li>
 <li>SSO integration (OIDC, SAML, LDAP)</li>
 <li>Git credentials management</li>
 <li>
@@ -5238,8 +5274,12 @@
 <p>◽ <strong>Sync Policies</strong>: Choosing auto vs. manual sync requires consideration per application</p>
 <h3 id="mitigation-strategies">Mitigation Strategies</h3>
 <ol>
-<li><strong>Learning Curve</strong>:</li>
-<li>Allocate 1 week for ArgoCD training</li>
+<li>
+<p><strong>Learning Curve</strong>:</p>
+</li>
+<li>
+<p>Allocate 1 week for ArgoCD training</p>
+</li>
 <li>Start with simple applications, progress to complex</li>
 <li>Leverage official documentation and tutorials</li>
 <li>
@@ -5248,7 +5288,9 @@
 <li>
 <p><strong>Git as Bottleneck</strong>:</p>
 </li>
-<li>Use webhooks for faster sync (vs. 3-minute poll)</li>
+<li>
+<p>Use webhooks for faster sync (vs. 3-minute poll)</p>
+</li>
 <li>Emergency "break glass" procedure documented</li>
 <li>kubectl still available for true emergencies</li>
 <li>
@@ -5257,7 +5299,9 @@
 <li>
 <p><strong>Secret Management</strong>:</p>
 </li>
-<li>Use Sealed Secrets or External Secrets Operator</li>
+<li>
+<p>Use Sealed Secrets or External Secrets Operator</p>
+</li>
 <li>Never commit raw secrets to Git</li>
 <li>Document secret rotation procedures</li>
 <li>
@@ -5266,7 +5310,9 @@
 <li>
 <p><strong>Initial Setup</strong>:</p>
 </li>
-<li>Use official Helm chart for deployment</li>
+<li>
+<p>Use official Helm chart for deployment</p>
+</li>
 <li>Start with single cluster, add multi-cluster later</li>
 <li>Use Infrastructure as Code for ArgoCD configuration</li>
 <li>
@@ -5275,7 +5321,9 @@
 <li>
 <p><strong>Sync Performance</strong>:</p>
 </li>
-<li>Use webhooks instead of polling where possible</li>
+<li>
+<p>Use webhooks instead of polling where possible</p>
+</li>
 <li>Configure appropriate sync intervals per application</li>
 <li>Use ApplicationSets for large-scale deployments</li>
 <li>
@@ -5291,110 +5339,138 @@
 </ol>
 <h2 id="alternatives-considered">Alternatives Considered</h2>
 <h3 id="alternative-1-flux-cd">Alternative 1: Flux CD</h3>
-<p><strong>Pros</strong>:
-- CNCF Graduated (alongside ArgoCD)
-- GitOps Toolkit approach (modular)
-- Native Helm support
-- Excellent multi-tenancy
-- Lower resource usage than ArgoCD
-- Strong automation capabilities
-- Good for Infrastructure as Code</p>
-<p><strong>Cons</strong>:
-- <strong>No Built-In UI</strong>: CLI-only, requires separate UI (Weave GitOps)
-- <strong>Less Visual</strong>: No application topology graph like ArgoCD
-- <strong>Smaller Community</strong>: Fewer contributors and users than ArgoCD
-- <strong>Learning Curve</strong>: GitOps Toolkit concepts more abstract
-- <strong>Progressive Delivery</strong>: Requires Flagger (separate project)
-- <strong>Less Mature Backstage Plugin</strong>: ArgoCD plugin more feature-complete</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>CNCF Graduated (alongside ArgoCD)</li>
+<li>GitOps Toolkit approach (modular)</li>
+<li>Native Helm support</li>
+<li>Excellent multi-tenancy</li>
+<li>Lower resource usage than ArgoCD</li>
+<li>Strong automation capabilities</li>
+<li>Good for Infrastructure as Code</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>No Built-In UI</strong>: CLI-only, requires separate UI (Weave GitOps)</li>
+<li><strong>Less Visual</strong>: No application topology graph like ArgoCD</li>
+<li><strong>Smaller Community</strong>: Fewer contributors and users than ArgoCD</li>
+<li><strong>Learning Curve</strong>: GitOps Toolkit concepts more abstract</li>
+<li><strong>Progressive Delivery</strong>: Requires Flagger (separate project)</li>
+<li><strong>Less Mature Backstage Plugin</strong>: ArgoCD plugin more feature-complete</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Flux is excellent, but ArgoCD's UI is significant advantage for developer experience and troubleshooting. Visual application topology helps developers understand system. ArgoCD's larger community and more mature Backstage integration better fit Fawkes needs. However, Flux is valid choice and could be reconsidered for infrastructure GitOps.</p>
 <h3 id="alternative-2-jenkins-x">Alternative 2: Jenkins X</h3>
-<p><strong>Pros</strong>:
-- Complete CI/CD platform (not just CD)
-- GitOps-based
-- Automated preview environments
-- Integrated pipeline and deployment
-- Good for Jenkins users</p>
-<p><strong>Cons</strong>:
-- <strong>Opinionated</strong>: Prescriptive workflows, less flexible
-- <strong>Complexity</strong>: Full platform, not just GitOps
-- <strong>Jenkins Dependency</strong>: Tied to Jenkins ecosystem
-- <strong>Smaller Adoption</strong>: Less proven than ArgoCD/Flux
-- <strong>Maintenance Concerns</strong>: Development pace slowed
-- <strong>Overkill</strong>: We already have Jenkins for CI</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Complete CI/CD platform (not just CD)</li>
+<li>GitOps-based</li>
+<li>Automated preview environments</li>
+<li>Integrated pipeline and deployment</li>
+<li>Good for Jenkins users</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Opinionated</strong>: Prescriptive workflows, less flexible</li>
+<li><strong>Complexity</strong>: Full platform, not just GitOps</li>
+<li><strong>Jenkins Dependency</strong>: Tied to Jenkins ecosystem</li>
+<li><strong>Smaller Adoption</strong>: Less proven than ArgoCD/Flux</li>
+<li><strong>Maintenance Concerns</strong>: Development pace slowed</li>
+<li><strong>Overkill</strong>: We already have Jenkins for CI</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Jenkins X is full CI/CD platform, but we're using Jenkins (ADR-004) for CI and only need GitOps for CD. Jenkins X too opinionated and complex. ArgoCD's separation of concerns (CI vs CD) cleaner architecture.</p>
 <h3 id="alternative-3-spinnaker">Alternative 3: Spinnaker</h3>
-<p><strong>Pros</strong>:
-- Multi-cloud native (not just Kubernetes)
-- Advanced deployment strategies
-- Proven at Netflix scale
-- Strong pipeline orchestration
-- Multi-cluster management
-- Extensive integrations</p>
-<p><strong>Cons</strong>:
-- <strong>Heavy and Complex</strong>: Difficult to deploy and maintain
-- <strong>Resource Intensive</strong>: Requires 8+ microservices, significant resources
-- <strong>Steep Learning Curve</strong>: Complex concepts and UI
-- <strong>Not GitOps-First</strong>: Push-based, not GitOps pull model
-- <strong>Maintenance Burden</strong>: High operational overhead
-- <strong>Overkill</strong>: More than we need for Kubernetes deployments</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Multi-cloud native (not just Kubernetes)</li>
+<li>Advanced deployment strategies</li>
+<li>Proven at Netflix scale</li>
+<li>Strong pipeline orchestration</li>
+<li>Multi-cluster management</li>
+<li>Extensive integrations</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Heavy and Complex</strong>: Difficult to deploy and maintain</li>
+<li><strong>Resource Intensive</strong>: Requires 8+ microservices, significant resources</li>
+<li><strong>Steep Learning Curve</strong>: Complex concepts and UI</li>
+<li><strong>Not GitOps-First</strong>: Push-based, not GitOps pull model</li>
+<li><strong>Maintenance Burden</strong>: High operational overhead</li>
+<li><strong>Overkill</strong>: More than we need for Kubernetes deployments</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Spinnaker powerful but extremely complex. High resource usage (10+ pods) and maintenance burden unjustified for our Kubernetes-focused needs. Not GitOps-native (push model). ArgoCD provides 80% of benefits with 20% of complexity. May revisit Spinnaker if we need multi-cloud deployment orchestration beyond Kubernetes.</p>
 <h3 id="alternative-4-helm-only-no-gitops-tool">Alternative 4: Helm Only (No GitOps Tool)</h3>
-<p><strong>Pros</strong>:
-- Simple, no additional tool to learn
-- Direct control with helm upgrade commands
-- Low resource overhead
-- Familiar to most Kubernetes users
-- Fast deployments</p>
-<p><strong>Cons</strong>:
-- <strong>No GitOps</strong>: No automatic sync, drift detection, or self-healing
-- <strong>Manual Process</strong>: Engineers must run helm commands
-- <strong>No Audit Trail</strong>: History only in Helm releases, not Git
-- <strong>No Rollback Automation</strong>: Manual helm rollback required
-- <strong>No Multi-Cluster</strong>: Managing multiple clusters complex
-- <strong>High Error Potential</strong>: Human mistakes likely
-- <strong>No Developer Self-Service</strong>: Requires platform team access</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Simple, no additional tool to learn</li>
+<li>Direct control with helm upgrade commands</li>
+<li>Low resource overhead</li>
+<li>Familiar to most Kubernetes users</li>
+<li>Fast deployments</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>No GitOps</strong>: No automatic sync, drift detection, or self-healing</li>
+<li><strong>Manual Process</strong>: Engineers must run helm commands</li>
+<li><strong>No Audit Trail</strong>: History only in Helm releases, not Git</li>
+<li><strong>No Rollback Automation</strong>: Manual helm rollback required</li>
+<li><strong>No Multi-Cluster</strong>: Managing multiple clusters complex</li>
+<li><strong>High Error Potential</strong>: Human mistakes likely</li>
+<li><strong>No Developer Self-Service</strong>: Requires platform team access</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Helm alone doesn't provide GitOps benefits. Manual deployments don't scale, increase error rate, and limit deployment frequency. GitOps is core principle of modern platform engineering and DORA best practices. Helm excellent as package manager but not replacement for GitOps tool.</p>
 <h3 id="alternative-5-rancher-fleet">Alternative 5: Rancher Fleet</h3>
-<p><strong>Pros</strong>:
-- Built into Rancher platform
-- GitOps-based
-- Multi-cluster management
-- Simpler than ArgoCD
-- Good for Rancher users</p>
-<p><strong>Cons</strong>:
-- <strong>Rancher Dependency</strong>: Requires Rancher platform
-- <strong>Smaller Community</strong>: Much smaller than ArgoCD/Flux
-- <strong>Less Mature</strong>: Newer project, less battle-tested
-- <strong>Limited Features</strong>: Fewer advanced features than ArgoCD
-- <strong>No Progressive Delivery</strong>: No built-in canary/blue-green
-- <strong>Weaker Ecosystem</strong>: Fewer integrations and plugins</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Built into Rancher platform</li>
+<li>GitOps-based</li>
+<li>Multi-cluster management</li>
+<li>Simpler than ArgoCD</li>
+<li>Good for Rancher users</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Rancher Dependency</strong>: Requires Rancher platform</li>
+<li><strong>Smaller Community</strong>: Much smaller than ArgoCD/Flux</li>
+<li><strong>Less Mature</strong>: Newer project, less battle-tested</li>
+<li><strong>Limited Features</strong>: Fewer advanced features than ArgoCD</li>
+<li><strong>No Progressive Delivery</strong>: No built-in canary/blue-green</li>
+<li><strong>Weaker Ecosystem</strong>: Fewer integrations and plugins</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Fleet good if using Rancher, but we're not. ArgoCD more mature, larger community, better features. Fleet's simplicity doesn't outweigh ArgoCD's comprehensive capabilities and proven track record.</p>
 <h3 id="alternative-6-gitlab-autodevops">Alternative 6: GitLab AutoDevOps</h3>
-<p><strong>Pros</strong>:
-- Integrated with GitLab
-- Auto-configured pipelines
-- Built-in deployment
-- Good for GitLab-centric shops</p>
-<p><strong>Cons</strong>:
-- <strong>GitLab Lock-In</strong>: Only works with GitLab
-- <strong>Not GitOps</strong>: Push-based, not declarative
-- <strong>Opinionated</strong>: Limited customization
-- <strong>GitLab Required</strong>: We use GitHub
-- <strong>Less Control</strong>: Abstract away too much
-- <strong>Not Best-of-Breed</strong>: GitOps secondary to CI features</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Integrated with GitLab</li>
+<li>Auto-configured pipelines</li>
+<li>Built-in deployment</li>
+<li>Good for GitLab-centric shops</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>GitLab Lock-In</strong>: Only works with GitLab</li>
+<li><strong>Not GitOps</strong>: Push-based, not declarative</li>
+<li><strong>Opinionated</strong>: Limited customization</li>
+<li><strong>GitLab Required</strong>: We use GitHub</li>
+<li><strong>Less Control</strong>: Abstract away too much</li>
+<li><strong>Not Best-of-Breed</strong>: GitOps secondary to CI features</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: GitLab AutoDevOps tied to GitLab ecosystem. We use GitHub. Not true GitOps (push-based CI/CD). ArgoCD better fit for our multi-tool, GitOps-first approach.</p>
 <h3 id="alternative-7-weave-gitops-commercial">Alternative 7: Weave GitOps (Commercial)</h3>
-<p><strong>Pros</strong>:
-- Built on Flux CD
-- Nice UI for Flux
-- Enterprise features
-- Good for Flux users</p>
-<p><strong>Cons</strong>:
-- <strong>Commercial</strong>: Core features open source, but UI and advanced features paid
-- <strong>Cost</strong>: Pricing unclear, per-cluster
-- <strong>Flux Dependency</strong>: Requires Flux understanding
-- <strong>Smaller Adoption</strong>: Newer, less proven
-- <strong>Less Features</strong>: Not as comprehensive as ArgoCD</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Built on Flux CD</li>
+<li>Nice UI for Flux</li>
+<li>Enterprise features</li>
+<li>Good for Flux users</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Commercial</strong>: Core features open source, but UI and advanced features paid</li>
+<li><strong>Cost</strong>: Pricing unclear, per-cluster</li>
+<li><strong>Flux Dependency</strong>: Requires Flux understanding</li>
+<li><strong>Smaller Adoption</strong>: Newer, less proven</li>
+<li><strong>Less Features</strong>: Not as comprehensive as ArgoCD</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Commercial aspects conflict with open source values. ArgoCD provides richer feature set out-of-box with free, open source UI. Weave GitOps good for Flux users wanting UI, but ArgoCD better starting point.</p>
 <h2 id="related-decisions">Related Decisions</h2>
 <ul>
@@ -5479,10 +5555,12 @@
 │   └── prod-apps.yaml
 └── README.md
 </code></pre></div>
-<p><strong>Alternative</strong> (polyrepo approach):
-- Separate repository per team/service
-- Pros: Team autonomy, clear ownership
-- Cons: Harder to enforce consistency, more repositories to manage</p>
+<p><strong>Alternative</strong> (polyrepo approach):</p>
+<ul>
+<li>Separate repository per team/service</li>
+<li>Pros: Team autonomy, clear ownership</li>
+<li>Cons: Harder to enforce consistency, more repositories to manage</li>
+</ul>
 <h3 id="applicationset-example">ApplicationSet Example</h3>
 <p><strong>Deploy All Team Applications</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
@@ -5499,16 +5577,16 @@
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/prod/*/*</span>
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{path.basename}}&#39;</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{path.basename}}&quot;</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 <span class="w">      </span><span class="nt">source</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">repoURL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/paruff/fawkes-gitops</span>
 <span class="w">        </span><span class="nt">targetRevision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HEAD</span>
-<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{path}}&#39;</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{path}}&quot;</span>
 <span class="w">      </span><span class="nt">destination</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://kubernetes.default.svc</span>
-<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{path[1]}}&#39;</span><span class="w"> </span><span class="c1"># team name from path</span>
+<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{path[1]}}&quot;</span><span class="w"> </span><span class="c1"># team name from path</span>
 <span class="w">      </span><span class="nt">syncPolicy</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">automated</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -5517,11 +5595,11 @@
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span>
 </code></pre></div>
 <h3 id="sync-policies">Sync Policies</h3>
-<p><strong>Automated Sync</strong> (recommended for most apps):
+<p><strong>Automated Sync</strong> (recommended for most apps):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">syncPolicy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">automated</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">       </span><span class="c1"># Delete resources removed from Git</span>
-<span class="w">    </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">    </span><span class="c1"># Revert manual changes</span>
+<span class="w">    </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># Delete resources removed from Git</span>
+<span class="w">    </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># Revert manual changes</span>
 <span class="w">  </span><span class="nt">syncOptions</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span>
 <span class="w">  </span><span class="nt">retry</span><span class="p">:</span>
@@ -5530,11 +5608,11 @@
 <span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
 <span class="w">      </span><span class="nt">factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 <span class="w">      </span><span class="nt">maxDuration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3m</span>
-</code></pre></div></p>
-<p><strong>Manual Sync</strong> (for critical production apps initially):
+</code></pre></div>
+<p><strong>Manual Sync</strong> (for critical production apps initially):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">syncPolicy</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">manual</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w">  </span><span class="c1"># Require manual approval for sync</span>
-</code></pre></div></p>
+<span class="w">  </span><span class="nt">manual</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w"> </span><span class="c1"># Require manual approval for sync</span>
+</code></pre></div>
 <h3 id="progressive-delivery-with-argo-rollouts">Progressive Delivery with Argo Rollouts</h3>
 <p><strong>Canary Deployment Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
@@ -5546,14 +5624,14 @@
 <span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">canary</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">    </span><span class="c1"># 20% traffic to canary</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span><span class="w">    </span><span class="c1"># 40% traffic</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w">    </span><span class="c1"># 60% traffic</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w">    </span><span class="c1"># 80% traffic</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w"> </span><span class="c1"># 20% traffic to canary</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span><span class="w"> </span><span class="c1"># 40% traffic</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"> </span><span class="c1"># 60% traffic</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"> </span><span class="c1"># 80% traffic</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">      </span><span class="nt">analysis</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">templates</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">templateName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error-rate-analysis</span>
@@ -5620,14 +5698,14 @@ argocd<span class="w"> </span>cluster<span class="w"> </span>add<span class="w">
 <span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://prod-cluster</span>
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;sample-app-{{cluster}}&#39;</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-app-{{cluster}}&quot;</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 <span class="w">      </span><span class="nt">source</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">repoURL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/paruff/fawkes-gitops</span>
-<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;apps/{{cluster}}/sample-app&#39;</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;apps/{{cluster}}/sample-app&quot;</span>
 <span class="w">      </span><span class="nt">destination</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{url}}&#39;</span>
+<span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{url}}&quot;</span>
 <span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample-app</span>
 </code></pre></div>
 <h3 id="rbac-configuration">RBAC Configuration</h3>
@@ -5639,9 +5717,9 @@ argocd<span class="w"> </span>cluster<span class="w"> </span>add<span class="w">
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Team A applications</span>
 <span class="w">  </span><span class="nt">sourceRepos</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;https://github.com/paruff/fawkes-gitops&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;https://github.com/paruff/fawkes-gitops&quot;</span>
 <span class="w">  </span><span class="nt">destinations</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;team-a-*&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;team-a-*&quot;</span>
 <span class="w">      </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://kubernetes.default.svc</span>
 <span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-a-developer</span>
@@ -5667,19 +5745,25 @@ argocd<span class="w"> </span>cluster<span class="w"> </span>add<span class="w">
 <span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-a</span>
 </code></pre></div>
 <h3 id="monitoring-observability">Monitoring &amp; Observability</h3>
-<p><strong>Prometheus Metrics</strong>:
-- argocd_app_sync_total (sync attempts)
-- argocd_app_sync_status (current sync status)
-- argocd_app_health_status (application health)
-- argocd_git_request_total (Git operations)</p>
-<p><strong>Grafana Dashboard</strong>:
-- Official ArgoCD dashboard (ID: 14584)
-- Customizations for Fawkes-specific views</p>
-<p><strong>Alerts</strong>:
-- Application OutOfSync &gt;30 minutes
-- Application Degraded &gt;15 minutes
-- Sync Failures (3 consecutive)
-- High API latency (&gt;2s)</p>
+<p><strong>Prometheus Metrics</strong>:</p>
+<ul>
+<li>argocd_app_sync_total (sync attempts)</li>
+<li>argocd_app_sync_status (current sync status)</li>
+<li>argocd_app_health_status (application health)</li>
+<li>argocd_git_request_total (Git operations)</li>
+</ul>
+<p><strong>Grafana Dashboard</strong>:</p>
+<ul>
+<li>Official ArgoCD dashboard (ID: 14584)</li>
+<li>Customizations for Fawkes-specific views</li>
+</ul>
+<p><strong>Alerts</strong>:</p>
+<ul>
+<li>Application OutOfSync &gt;30 minutes</li>
+<li>Application Degraded &gt;15 minutes</li>
+<li>Sync Failures (3 consecutive)</li>
+<li>High API latency (&gt;2s)</li>
+</ul>
 <h3 id="secret-management">Secret Management</h3>
 <p><strong>Option 1: Sealed Secrets</strong> (recommended for MVP):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Encrypt secret</span>
@@ -5690,31 +5774,39 @@ argocd<span class="w"> </span>cluster<span class="w"> </span>add<span class="w">
 <span class="c1"># Commit sealed-secret.yaml to Git</span>
 <span class="c1"># SealedSecret controller decrypts in-cluster</span>
 </code></pre></div>
-<p><strong>Option 2: External Secrets Operator</strong>:
-- Fetch secrets from Vault, AWS Secrets Manager, etc.
-- Keep secret references in Git, not actual secrets
-- Better for large-scale deployments</p>
+<p><strong>Option 2: External Secrets Operator</strong>:</p>
+<ul>
+<li>Fetch secrets from Vault, AWS Secrets Manager, etc.</li>
+<li>Keep secret references in Git, not actual secrets</li>
+<li>Better for large-scale deployments</li>
+</ul>
 <p><strong>Never</strong>: Commit raw secrets to Git!</p>
 <h3 id="backup-disaster-recovery">Backup &amp; Disaster Recovery</h3>
-<p><strong>Backup Strategy</strong>:
-- ArgoCD configuration stored in Git (Infrastructure as Code)
-- Application manifests in GitOps repository
-- ArgoCD state in Kubernetes (can be recreated)</p>
-<p><strong>Recovery</strong>:
-1. Redeploy ArgoCD from Helm chart
-2. Re-add clusters
-3. Create Applications pointing to Git repository
-4. ArgoCD syncs from Git (applications restored)</p>
+<p><strong>Backup Strategy</strong>:</p>
+<ul>
+<li>ArgoCD configuration stored in Git (Infrastructure as Code)</li>
+<li>Application manifests in GitOps repository</li>
+<li>ArgoCD state in Kubernetes (can be recreated)</li>
+</ul>
+<p><strong>Recovery</strong>:</p>
+<ol>
+<li>Redeploy ArgoCD from Helm chart</li>
+<li>Re-add clusters</li>
+<li>Create Applications pointing to Git repository</li>
+<li>ArgoCD syncs from Git (applications restored)</li>
+</ol>
 <p><strong>RTO</strong>: &lt;2 hours (ArgoCD redeploy + application sync)
 <strong>RPO</strong>: 0 (Git is source of truth, no data loss)</p>
 <h3 id="performance-optimization">Performance Optimization</h3>
-<p><strong>For Large Deployments</strong>:
-- Increase application controller replicas
-- Tune sync timeouts and retry logic
-- Use ApplicationSets instead of individual Applications
-- Enable concurrent sync operations
-- Optimize Git repository size (use shallow clones)</p>
-<p><strong>Resource Limits</strong>:
+<p><strong>For Large Deployments</strong>:</p>
+<ul>
+<li>Increase application controller replicas</li>
+<li>Tune sync timeouts and retry logic</li>
+<li>Use ApplicationSets instead of individual Applications</li>
+<li>Enable concurrent sync operations</li>
+<li>Optimize Git repository size (use shallow clones)</li>
+</ul>
+<p><strong>Resource Limits</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">limits</span><span class="p">:</span>
@@ -5723,15 +5815,17 @@ argocd<span class="w"> </span>cluster<span class="w"> </span>add<span class="w">
 <span class="w">    </span><span class="nt">requests</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
 <span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512Mi</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="monitoring-this-decision">Monitoring This Decision</h2>
-<p>We will revisit this ADR if:
-- ArgoCD project becomes unmaintained or development slows
-- Performance issues arise that cannot be resolved
-- A superior GitOps tool emerges with better fit
-- Flux CD's UI significantly improves (could reconsider)
-- Operational burden exceeds benefits
-- Community adoption of ArgoCD declines significantly</p>
+<p>We will revisit this ADR if:</p>
+<ul>
+<li>ArgoCD project becomes unmaintained or development slows</li>
+<li>Performance issues arise that cannot be resolved</li>
+<li>A superior GitOps tool emerges with better fit</li>
+<li>Flux CD's UI significantly improves (could reconsider)</li>
+<li>Operational burden exceeds benefits</li>
+<li>Community adoption of ArgoCD declines significantly</li>
+</ul>
 <p><strong>Next Review Date</strong>: April 8, 2026 (6 months)</p>
 <h2 id="references">References</h2>
 <ul>
@@ -5744,18 +5838,22 @@ argocd<span class="w"> </span>cluster<span class="w"> </span>add<span class="w">
 </ul>
 <h2 id="notes">Notes</h2>
 <h3 id="argocd-vs-flux-the-eternal-debate">ArgoCD vs. Flux: The Eternal Debate</h3>
-<p><strong>When to choose ArgoCD</strong>:
-- Want built-in, feature-rich UI
-- Prefer visual application topology
-- Need strong RBAC out-of-box
-- Value large, active community
-- Want simpler mental model</p>
-<p><strong>When to choose Flux</strong>:
-- Prefer CLI-first workflow
-- Want lower resource usage
-- Need advanced multi-tenancy
-- Comfortable with GitOps Toolkit abstraction
-- Strong preference for CNCF's recommended GitOps tool</p>
+<p><strong>When to choose ArgoCD</strong>:</p>
+<ul>
+<li>Want built-in, feature-rich UI</li>
+<li>Prefer visual application topology</li>
+<li>Need strong RBAC out-of-box</li>
+<li>Value large, active community</li>
+<li>Want simpler mental model</li>
+</ul>
+<p><strong>When to choose Flux</strong>:</p>
+<ul>
+<li>Prefer CLI-first workflow</li>
+<li>Want lower resource usage</li>
+<li>Need advanced multi-tenancy</li>
+<li>Comfortable with GitOps Toolkit abstraction</li>
+<li>Strong preference for CNCF's recommended GitOps tool</li>
+</ul>
 <p><strong>For Fawkes</strong>: ArgoCD's UI significant advantage for developer experience and troubleshooting. Both are excellent choices—this decision not deeply philosophical, more pragmatic based on UX priorities.</p>
 <h3 id="gitops-best-practices">GitOps Best Practices</h3>
 <ol>
@@ -5768,11 +5866,13 @@ argocd<span class="w"> </span>cluster<span class="w"> </span>add<span class="w">
 <li><strong>Rollback Plan</strong>: Test rollback procedure before you need it</li>
 </ol>
 <h3 id="progressive-delivery-roi">Progressive Delivery ROI</h3>
-<p>Argo Rollouts adds complexity but significantly reduces change failure rate:
-- Canary deployments catch issues before full rollout
-- Automated rollback based on metrics prevents outages
-- Traffic shifting minimizes blast radius
-- Aligns with DORA best practices</p>
+<p>Argo Rollouts adds complexity but significantly reduces change failure rate:</p>
+<ul>
+<li>Canary deployments catch issues before full rollout</li>
+<li>Automated rollback based on metrics prevents outages</li>
+<li>Traffic shifting minimizes blast radius</li>
+<li>Aligns with DORA best practices</li>
+</ul>
 <p>Worth complexity trade-off for production applications. Can start without Rollouts, add later for critical services.</p>
 <hr />
 <p><strong>Decision Made By</strong>: Platform Architecture Team

@@ -4739,39 +4739,37 @@
 </ul>
 <h3 id="steps-to-set-up">Steps to Set Up</h3>
 <ol>
-<li>
-<p><strong>Clone the Repository</strong>:
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/paruff/fawkes.git
+<li><strong>Clone the Repository</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/paruff/fawkes.git
 <span class="nb">cd</span><span class="w"> </span>fawkes
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Set Up Environment Variables</strong>:
-   Copy the <code>.env.example</code> file to <code>.env</code> and update the values:
-   <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Provision Infrastructure</strong>:
-   Use the scripts in the <code>infra/</code> directory to provision the required infrastructure:
-   <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra
+</code></pre></div>
+<ol>
+<li><strong>Set Up Environment Variables</strong>:
+   Copy the <code>.env.example</code> file to <code>.env</code> and update the values:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+</code></pre></div>
+<ol>
+<li><strong>Provision Infrastructure</strong>:
+   Use the scripts in the <code>infra/</code> directory to provision the required infrastructure:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra
 ./scripts/ignite.sh<span class="w"> </span>--provider<span class="w"> </span>aws<span class="w"> </span>dev
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Deploy Platform Services</strong>:
-   Navigate to the <code>platform/</code> directory and deploy services:
-   <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>platform
+</code></pre></div>
+<ol>
+<li><strong>Deploy Platform Services</strong>:
+   Navigate to the <code>platform/</code> directory and deploy services:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>platform
 ./deploy-services.sh
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Run Tests</strong>:
+</code></pre></div>
+<ol>
+<li><strong>Run Tests</strong>:
    Execute the test suite to validate your setup:
    <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>qa
 ./run-tests.sh
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <hr />
 <h2 id="coding-standards">Coding Standards</h2>
@@ -4798,41 +4796,41 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>shellcheck<span cla
 </ul>
 <h3 id="ide-integration">IDE Integration</h3>
 <p>Configure your IDE for automatic linting:</p>
-<p><strong>VS Code</strong>: Install recommended extensions
+<p><strong>VS Code</strong>: Install recommended extensions</p>
 <div class="highlight"><pre><span></span><code>make<span class="w"> </span>setup-vscode
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Other IDEs</strong>: See <a href="../how-to/development/code-quality-standards/#ide-integration">Code Quality Standards</a></p>
 <h3 id="detailed-documentation">Detailed Documentation</h3>
 <p>For comprehensive coding standards, linting rules, and troubleshooting:</p>
 <p>📖 <strong><a href="../how-to/development/code-quality-standards/">Code Quality Standards</a></strong></p>
-<p>This includes:
-- Language-specific style guides
-- Security scanning requirements
-- IDE integration guides
-- Common issues and solutions</p>
+<p>This includes:</p>
+<ul>
+<li>Language-specific style guides</li>
+<li>Security scanning requirements</li>
+<li>IDE integration guides</li>
+<li>Common issues and solutions</li>
+</ul>
 <hr />
 <h2 id="branching-and-workflow">Branching and Workflow</h2>
 <ol>
-<li>
-<p><strong>Create a Feature Branch</strong>:
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/&lt;feature-name&gt;
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Commit Changes</strong>:
-   Write clear and concise commit messages:
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add &lt;feature-name&gt;: &lt;short description&gt;&quot;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Push Changes</strong>:
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/&lt;feature-name&gt;
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Submit a Pull Request</strong>:
-   Open a pull request (PR) on GitHub and request a review.</p>
-</li>
+<li><strong>Create a Feature Branch</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/&lt;feature-name&gt;
+</code></pre></div>
+<ol>
+<li><strong>Commit Changes</strong>:
+   Write clear and concise commit messages:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add &lt;feature-name&gt;: &lt;short description&gt;&quot;</span>
+</code></pre></div>
+<ol>
+<li><strong>Push Changes</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/&lt;feature-name&gt;
+</code></pre></div>
+<ol>
+<li><strong>Submit a Pull Request</strong>:
+   Open a pull request (PR) on GitHub and request a review.</li>
 </ol>
 <hr />
 <h2 id="testing">Testing</h2>
@@ -4844,24 +4842,24 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>shellcheck<span cla
 <li><strong>Acceptance Tests</strong>: Located in the <code>qa/acceptance/</code> directory.</li>
 <li><strong>Performance Tests</strong>: Located in the <code>qa/performance/</code> directory.</li>
 </ul>
-<p>Run all tests before submitting a PR:
+<p>Run all tests before submitting a PR:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>qa
 ./run-all-tests.sh
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="azure-development-best-practices">Azure Development Best Practices</h2>
 <p>If you are working with Azure, follow these best practices:</p>
 <ol>
-<li>
-<p><strong>Use Azure CLI for Authentication</strong>:
-   <div class="highlight"><pre><span></span><code>az<span class="w"> </span>login
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Set the Active Subscription</strong>:
-   <div class="highlight"><pre><span></span><code>az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
-</code></pre></div></p>
-</li>
+<li><strong>Use Azure CLI for Authentication</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>login
+</code></pre></div>
+<ol>
+<li><strong>Set the Active Subscription</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Follow Azure Resource Naming Conventions</strong>:
    Use consistent and descriptive names for resources.</p>

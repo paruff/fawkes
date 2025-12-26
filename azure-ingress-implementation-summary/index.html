@@ -4857,75 +4857,95 @@
 <p>This implementation provides a complete solution for configuring Azure Load Balancer, nginx-ingress controller, and cert-manager on Azure AKS, enabling external access to platform services with automated TLS certificate management.</p>
 <h2 id="what-was-implemented">What Was Implemented</h2>
 <h3 id="task-21-deploy-nginx-ingress-with-azure-lb">Task 2.1: Deploy nginx-ingress with Azure LB ✅</h3>
-<p><strong>Files Created:</strong>
-- <code>platform/apps/ingress-nginx/values-azure.yaml</code> - Azure-specific Helm values
-- <code>platform/apps/ingress-nginx/ingress-nginx-azure-application.yaml</code> - ArgoCD Application
-- <code>platform/apps/ingress-nginx/validate-azure.sh</code> - Validation script</p>
-<p><strong>Key Features:</strong>
-- ✅ Azure Load Balancer integration with health probes
-- ✅ High availability (2+ replicas with pod anti-affinity)
-- ✅ Auto-scaling (HPA) from 2-10 replicas based on CPU/memory
-- ✅ TLS termination with SSL redirect and HSTS enabled
-- ✅ Prometheus metrics with ServiceMonitor and PrometheusRules
-- ✅ Session affinity for better performance
-- ✅ External traffic policy set to Local
-- ✅ Resource limits: 200m CPU, 256Mi memory (requests)
-- ✅ Security: Snippet annotations disabled, server tokens hidden</p>
-<p><strong>Files Modified:</strong>
-- <code>platform/apps/ingress-nginx/README.md</code> - Added Azure deployment instructions</p>
+<p><strong>Files Created:</strong></p>
+<ul>
+<li><code>platform/apps/ingress-nginx/values-azure.yaml</code> - Azure-specific Helm values</li>
+<li><code>platform/apps/ingress-nginx/ingress-nginx-azure-application.yaml</code> - ArgoCD Application</li>
+<li><code>platform/apps/ingress-nginx/validate-azure.sh</code> - Validation script</li>
+</ul>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>✅ Azure Load Balancer integration with health probes</li>
+<li>✅ High availability (2+ replicas with pod anti-affinity)</li>
+<li>✅ Auto-scaling (HPA) from 2-10 replicas based on CPU/memory</li>
+<li>✅ TLS termination with SSL redirect and HSTS enabled</li>
+<li>✅ Prometheus metrics with ServiceMonitor and PrometheusRules</li>
+<li>✅ Session affinity for better performance</li>
+<li>✅ External traffic policy set to Local</li>
+<li>✅ Resource limits: 200m CPU, 256Mi memory (requests)</li>
+<li>✅ Security: Snippet annotations disabled, server tokens hidden</li>
+</ul>
+<p><strong>Files Modified:</strong></p>
+<ul>
+<li><code>platform/apps/ingress-nginx/README.md</code> - Added Azure deployment instructions</li>
+</ul>
 <h3 id="task-22-configure-azure-dns-optional">Task 2.2: Configure Azure DNS (Optional) ✅</h3>
-<p><strong>Files Created:</strong>
-- <code>infra/azure/dns.tf</code> - Terraform configuration for Azure DNS
-- DNS zone creation
-- A records for root domain
-- Wildcard A records (*.fawkes.yourdomain.com)
-- Optional specific service records (commented examples)</p>
-<p><strong>Files Modified:</strong>
-- <code>infra/azure/variables.tf</code> - Added DNS configuration variables
-- <code>infra/azure/outputs.tf</code> - Added DNS outputs (nameservers, zone ID, ingress IP)
-- <code>infra/azure/terraform.tfvars.example</code> - Added DNS configuration examples</p>
-<p><strong>Key Features:</strong>
-- ✅ Optional DNS zone creation (controlled by variable)
-- ✅ Automatic A record creation pointing to ingress IP
-- ✅ Wildcard DNS support for all subdomains
-- ✅ DNS nameserver output for delegation
-- ✅ Conditional resource creation (no cost if disabled)</p>
+<p><strong>Files Created:</strong></p>
+<ul>
+<li><code>infra/azure/dns.tf</code> - Terraform configuration for Azure DNS</li>
+<li>DNS zone creation</li>
+<li>A records for root domain</li>
+<li>Wildcard A records (*.fawkes.yourdomain.com)</li>
+<li>Optional specific service records (commented examples)</li>
+</ul>
+<p><strong>Files Modified:</strong></p>
+<ul>
+<li><code>infra/azure/variables.tf</code> - Added DNS configuration variables</li>
+<li><code>infra/azure/outputs.tf</code> - Added DNS outputs (nameservers, zone ID, ingress IP)</li>
+<li><code>infra/azure/terraform.tfvars.example</code> - Added DNS configuration examples</li>
+</ul>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>✅ Optional DNS zone creation (controlled by variable)</li>
+<li>✅ Automatic A record creation pointing to ingress IP</li>
+<li>✅ Wildcard DNS support for all subdomains</li>
+<li>✅ DNS nameserver output for delegation</li>
+<li>✅ Conditional resource creation (no cost if disabled)</li>
+</ul>
 <h3 id="task-23-configure-cert-manager-with-lets-encrypt">Task 2.3: Configure cert-manager with Let's Encrypt ✅</h3>
-<p><strong>Files Created:</strong>
-- <code>platform/apps/cert-manager/cert-manager-application.yaml</code> - Main cert-manager deployment
-- <code>platform/apps/cert-manager/cluster-issuers-application.yaml</code> - ArgoCD app for issuers
-- <code>platform/apps/cert-manager/cluster-issuer-letsencrypt-staging.yaml</code> - Staging issuer (HTTP-01)
-- <code>platform/apps/cert-manager/cluster-issuer-letsencrypt-prod.yaml</code> - Production issuer (HTTP-01)
-- <code>platform/apps/cert-manager/cluster-issuer-letsencrypt-dns-azure.yaml</code> - Azure DNS issuer (DNS-01)
-- <code>platform/apps/cert-manager/certificate-example.yaml</code> - Sample certificate resources
-- <code>platform/apps/cert-manager/README.md</code> - Comprehensive documentation
-- <code>platform/apps/cert-manager/validate.sh</code> - Validation script</p>
-<p><strong>Key Features:</strong>
-- ✅ cert-manager v1.15.3 deployment
-- ✅ CRD installation with Helm
-- ✅ Let's Encrypt staging issuer (for testing)
-- ✅ Let's Encrypt production issuer
-- ✅ Azure DNS issuer for wildcard certificates
-- ✅ HTTP-01 challenge support
-- ✅ DNS-01 challenge support with Azure DNS
-- ✅ Prometheus metrics with ServiceMonitor
-- ✅ Security contexts configured
-- ✅ Automatic certificate issuance and renewal
-- ✅ Example certificates (single domain, wildcard, multi-domain)</p>
+<p><strong>Files Created:</strong></p>
+<ul>
+<li><code>platform/apps/cert-manager/cert-manager-application.yaml</code> - Main cert-manager deployment</li>
+<li><code>platform/apps/cert-manager/cluster-issuers-application.yaml</code> - ArgoCD app for issuers</li>
+<li><code>platform/apps/cert-manager/cluster-issuer-letsencrypt-staging.yaml</code> - Staging issuer (HTTP-01)</li>
+<li><code>platform/apps/cert-manager/cluster-issuer-letsencrypt-prod.yaml</code> - Production issuer (HTTP-01)</li>
+<li><code>platform/apps/cert-manager/cluster-issuer-letsencrypt-dns-azure.yaml</code> - Azure DNS issuer (DNS-01)</li>
+<li><code>platform/apps/cert-manager/certificate-example.yaml</code> - Sample certificate resources</li>
+<li><code>platform/apps/cert-manager/README.md</code> - Comprehensive documentation</li>
+<li><code>platform/apps/cert-manager/validate.sh</code> - Validation script</li>
+</ul>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>✅ cert-manager v1.15.3 deployment</li>
+<li>✅ CRD installation with Helm</li>
+<li>✅ Let's Encrypt staging issuer (for testing)</li>
+<li>✅ Let's Encrypt production issuer</li>
+<li>✅ Azure DNS issuer for wildcard certificates</li>
+<li>✅ HTTP-01 challenge support</li>
+<li>✅ DNS-01 challenge support with Azure DNS</li>
+<li>✅ Prometheus metrics with ServiceMonitor</li>
+<li>✅ Security contexts configured</li>
+<li>✅ Automatic certificate issuance and renewal</li>
+<li>✅ Example certificates (single domain, wildcard, multi-domain)</li>
+</ul>
 <h3 id="documentation">Documentation ✅</h3>
-<p><strong>Files Created:</strong>
-- <code>docs/azure-ingress-setup.md</code> - Comprehensive setup guide
-- <code>docs/azure-ingress-quickstart.md</code> - Quick start guide
-- <code>tests/bdd/features/azure_ingress_loadbalancer.feature</code> - BDD acceptance tests</p>
-<p><strong>Content:</strong>
-- ✅ Architecture overview
-- ✅ Step-by-step deployment instructions
-- ✅ Advanced configuration (static IP, wildcard certs, internal LB)
-- ✅ Monitoring and alerting setup
-- ✅ Troubleshooting guide
-- ✅ Security best practices
-- ✅ Cost optimization information
-- ✅ Quick reference commands</p>
+<p><strong>Files Created:</strong></p>
+<ul>
+<li><code>docs/azure-ingress-setup.md</code> - Comprehensive setup guide</li>
+<li><code>docs/azure-ingress-quickstart.md</code> - Quick start guide</li>
+<li><code>tests/bdd/features/azure_ingress_loadbalancer.feature</code> - BDD acceptance tests</li>
+</ul>
+<p><strong>Content:</strong></p>
+<ul>
+<li>✅ Architecture overview</li>
+<li>✅ Step-by-step deployment instructions</li>
+<li>✅ Advanced configuration (static IP, wildcard certs, internal LB)</li>
+<li>✅ Monitoring and alerting setup</li>
+<li>✅ Troubleshooting guide</li>
+<li>✅ Security best practices</li>
+<li>✅ Cost optimization information</li>
+<li>✅ Quick reference commands</li>
+</ul>
 <h2 id="acceptance-criteria-status">Acceptance Criteria Status</h2>
 <p>All acceptance criteria from the issue have been met:</p>
 <h3 id="nginx-ingress-controller-deployed">nginx-ingress controller deployed ✅</h3>
@@ -4998,22 +5018,30 @@ kubectl<span class="w"> </span>get<span class="w"> </span>certificates<span clas
 ✅ Let's Encrypt rate limit protection (staging/production issuers)
 ✅ RBAC enabled</p>
 <h2 id="cost-optimization">Cost Optimization</h2>
-<p>Estimated monthly cost:
-- Standard Load Balancer: ~$18/month
-- Public IP: ~$3/month
-- DNS Zone (optional): ~$0.50/month
-- cert-manager: Free (Let's Encrypt)
-<strong>Total: ~$22-25/month</strong></p>
-<p>Resource efficiency:
-- Auto-scaling from 2-10 replicas based on load
-- Appropriate resource limits prevent over-provisioning</p>
+<p>Estimated monthly cost:</p>
+<ul>
+<li>Standard Load Balancer: ~$18/month</li>
+<li>Public IP: ~$3/month</li>
+<li>DNS Zone (optional): ~$0.50/month</li>
+<li>cert-manager: Free (Let's Encrypt)
+  <strong>Total: ~$22-25/month</strong></li>
+</ul>
+<p>Resource efficiency:</p>
+<ul>
+<li>Auto-scaling from 2-10 replicas based on load</li>
+<li>Appropriate resource limits prevent over-provisioning</li>
+</ul>
 <h2 id="dependencies-satisfied">Dependencies Satisfied</h2>
-<p>This implementation depends on:
-- ✅ Issue #1 (Azure Infrastructure) - AKS cluster must be provisioned first</p>
-<p>This implementation blocks:
-- Issue #5 (blocked by this)
-- Issue #9 (blocked by this)
-- Issue #14 (blocked by this)</p>
+<p>This implementation depends on:</p>
+<ul>
+<li>✅ Issue #1 (Azure Infrastructure) - AKS cluster must be provisioned first</li>
+</ul>
+<p>This implementation blocks:</p>
+<ul>
+<li>Issue #5 (blocked by this)</li>
+<li>Issue #9 (blocked by this)</li>
+<li>Issue #14 (blocked by this)</li>
+</ul>
 <h2 id="testing">Testing</h2>
 <h3 id="manual-testing-requires-aks-cluster">Manual Testing (Requires AKS Cluster)</h3>
 <ul>
@@ -5035,7 +5063,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>certificates<span clas
 <li>✅ No linting errors</li>
 <li>✅ Code review completed</li>
 <li>✅ Security scan passed (no issues)</li>
-<li>⚠️  Live cluster testing pending (requires Azure AKS)</li>
+<li>⚠️ Live cluster testing pending (requires Azure AKS)</li>
 </ul>
 <h2 id="usage-example">Usage Example</h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create an ingress with automatic TLS</span>
@@ -5063,25 +5091,31 @@ kubectl<span class="w"> </span>get<span class="w"> </span>certificates<span clas
 <span class="w">                </span><span class="nt">port</span><span class="p">:</span>
 <span class="w">                  </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
 </code></pre></div>
-<p>cert-manager automatically:
-1. Creates a Certificate resource
-2. Requests certificate from Let's Encrypt
-3. Completes ACME challenge (HTTP-01 or DNS-01)
-4. Stores certificate in Kubernetes Secret
-5. Renews certificate before expiration</p>
+<p>cert-manager automatically:</p>
+<ol>
+<li>Creates a Certificate resource</li>
+<li>Requests certificate from Let's Encrypt</li>
+<li>Completes ACME challenge (HTTP-01 or DNS-01)</li>
+<li>Stores certificate in Kubernetes Secret</li>
+<li>Renews certificate before expiration</li>
+</ol>
 <h2 id="next-steps">Next Steps</h2>
-<p>For platform users:
-1. Deploy nginx-ingress and cert-manager using the ArgoCD Applications
-2. Configure DNS (if using custom domain)
-3. Update email address in ClusterIssuers
-4. Create Ingress resources for services
-5. Monitor certificate status</p>
-<p>For future enhancements:
-- Integrate with external-dns for automatic DNS management
-- Add WAF integration with Azure Application Gateway
-- Configure rate limiting policies
-- Add custom error pages
-- Implement geo-routing</p>
+<p>For platform users:</p>
+<ol>
+<li>Deploy nginx-ingress and cert-manager using the ArgoCD Applications</li>
+<li>Configure DNS (if using custom domain)</li>
+<li>Update email address in ClusterIssuers</li>
+<li>Create Ingress resources for services</li>
+<li>Monitor certificate status</li>
+</ol>
+<p>For future enhancements:</p>
+<ul>
+<li>Integrate with external-dns for automatic DNS management</li>
+<li>Add WAF integration with Azure Application Gateway</li>
+<li>Configure rate limiting policies</li>
+<li>Add custom error pages</li>
+<li>Implement geo-routing</li>
+</ul>
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>
 <li><a href="../docs/azure-ingress-setup.md">Azure Ingress Setup Guide</a></li>
@@ -5091,12 +5125,14 @@ kubectl<span class="w"> </span>get<span class="w"> </span>certificates<span clas
 <li><a href="../tests/bdd/features/azure_ingress_loadbalancer.feature">BDD Tests</a></li>
 </ul>
 <h2 id="conclusion">Conclusion</h2>
-<p>This implementation provides a production-ready solution for external access to the Fawkes platform on Azure AKS with:
-- Automatic Load Balancer configuration
-- High availability and auto-scaling
-- Automated TLS certificate management
-- Comprehensive monitoring
-- Complete documentation</p>
+<p>This implementation provides a production-ready solution for external access to the Fawkes platform on Azure AKS with:</p>
+<ul>
+<li>Automatic Load Balancer configuration</li>
+<li>High availability and auto-scaling</li>
+<li>Automated TLS certificate management</li>
+<li>Comprehensive monitoring</li>
+<li>Complete documentation</li>
+</ul>
 <p>All acceptance criteria have been met, and the solution follows Fawkes architecture principles and best practices.</p>
 
 

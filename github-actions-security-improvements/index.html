@@ -4776,45 +4776,51 @@
 <h2 id="summary-of-changes">Summary of Changes</h2>
 <h3 id="1-job-level-permission-blocks">1. <strong>Job-Level Permission Blocks</strong> ✅</h3>
 <p>Every job now has explicit <code>permissions</code> blocks following the principle of least privilege.</p>
-<p><strong>Security Benefits:</strong>
-- <strong>Least Privilege</strong>: Jobs only get the minimum permissions they need
-- <strong>Blast Radius Reduction</strong>: If a job is compromised, the attacker's access is limited
-- <strong>Clear Intent</strong>: Makes it explicit what permissions each job requires
-- <strong>Prevents Privilege Escalation</strong>: GitHub tokens are scoped to only what's declared</p>
-<p><strong>Example:</strong>
+<p><strong>Security Benefits:</strong></p>
+<ul>
+<li><strong>Least Privilege</strong>: Jobs only get the minimum permissions they need</li>
+<li><strong>Blast Radius Reduction</strong>: If a job is compromised, the attacker's access is limited</li>
+<li><strong>Clear Intent</strong>: Makes it explicit what permissions each job requires</li>
+<li><strong>Prevents Privilege Escalation</strong>: GitHub tokens are scoped to only what's declared</li>
+</ul>
+<p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">validate-and-scan</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">permissions</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span><span class="w">          </span><span class="c1"># Can read repository contents</span>
-<span class="w">      </span><span class="nt">security-events</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span><span class="w">  </span><span class="c1"># Can upload SARIF results</span>
+<span class="w">      </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span><span class="w"> </span><span class="c1"># Can read repository contents</span>
+<span class="w">      </span><span class="nt">security-events</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span><span class="w"> </span><span class="c1"># Can upload SARIF results</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
 <span class="w">      </span><span class="c1"># ... steps that need these permissions</span>
-</code></pre></div></p>
-<p><strong>Default Permissions Set:</strong>
-- Workflow-level: <code>contents: read</code> (most restrictive by default)
-- Job-level: Explicitly declared based on needs
-- Common patterns:
-  - <code>contents: read</code> - Read repository files
-  - <code>security-events: write</code> - Upload security scan results
-  - <code>pull-requests: write</code> - Comment on PRs
-  - <code>packages: write</code> - Push container images</p>
+</code></pre></div>
+<p><strong>Default Permissions Set:</strong></p>
+<ul>
+<li>Workflow-level: <code>contents: read</code> (most restrictive by default)</li>
+<li>Job-level: Explicitly declared based on needs</li>
+<li>Common patterns:</li>
+<li><code>contents: read</code> - Read repository files</li>
+<li><code>security-events: write</code> - Upload security scan results</li>
+<li><code>pull-requests: write</code> - Comment on PRs</li>
+<li><code>packages: write</code> - Push container images</li>
+</ul>
 <h3 id="3-dependency-caching">3. <strong>Dependency Caching</strong> ✅</h3>
 <p>Added caching for Python dependencies and Terraform providers to speed up workflows.</p>
-<p><strong>Efficiency Benefits:</strong>
-- <strong>Faster Builds</strong>: Reduce pip install time from 30-60s to 5-10s
-- <strong>Reduced Network Load</strong>: Fewer downloads from PyPI and Terraform Registry
-- <strong>Cost Savings</strong>: Shorter workflow execution times mean lower GitHub Actions costs
-- <strong>Better Developer Experience</strong>: Faster feedback on PRs</p>
-<p><strong>Python Dependency Caching:</strong>
+<p><strong>Efficiency Benefits:</strong></p>
+<ul>
+<li><strong>Faster Builds</strong>: Reduce pip install time from 30-60s to 5-10s</li>
+<li><strong>Reduced Network Load</strong>: Fewer downloads from PyPI and Terraform Registry</li>
+<li><strong>Cost Savings</strong>: Shorter workflow execution times mean lower GitHub Actions costs</li>
+<li><strong>Better Developer Experience</strong>: Faster feedback on PRs</li>
+</ul>
+<p><strong>Python Dependency Caching:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
 <span class="w">  </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
 <span class="w">  </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;pip&#39;</span>
-<span class="w">    </span><span class="nt">cache-dependency-path</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;requirements.txt&#39;</span>
-</code></pre></div></p>
-<p><strong>Terraform Provider Caching:</strong>
+<span class="w">    </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pip&quot;</span>
+<span class="w">    </span><span class="nt">cache-dependency-path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;requirements.txt&quot;</span>
+</code></pre></div>
+<p><strong>Terraform Provider Caching:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cache Terraform providers</span>
 <span class="w">  </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v4</span>
 <span class="w">  </span><span class="nt">with</span><span class="p">:</span>
@@ -4824,45 +4830,53 @@
 <span class="w">    </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ runner.os }}-terraform-${{ hashFiles(&#39;**/.terraform.lock.hcl&#39;) }}</span>
 <span class="w">    </span><span class="nt">restore-keys</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">${{ runner.os }}-terraform-</span>
-</code></pre></div></p>
-<p><strong>Cache Key Strategy:</strong>
-- Python: Hash of requirements files ensures cache invalidation on dependency changes
-- Terraform: Hash of lock files ensures correct provider versions
-- Restore keys provide fallback for partial cache hits</p>
+</code></pre></div>
+<p><strong>Cache Key Strategy:</strong></p>
+<ul>
+<li>Python: Hash of requirements files ensures cache invalidation on dependency changes</li>
+<li>Terraform: Hash of lock files ensures correct provider versions</li>
+<li>Restore keys provide fallback for partial cache hits</li>
+</ul>
 <h3 id="4-path-based-triggers">4. <strong>Path-Based Triggers</strong> ✅</h3>
 <p>Security and Terraform workflows now only run when relevant files change.</p>
-<p><strong>Efficiency Benefits:</strong>
-- <strong>Reduced CI Load</strong>: Don't run infrastructure tests when only docs change
-- <strong>Faster Feedback</strong>: Only run what's necessary for a given change
-- <strong>Resource Conservation</strong>: Saves GitHub Actions minutes</p>
-<p><strong>Example:</strong>
+<p><strong>Efficiency Benefits:</strong></p>
+<ul>
+<li><strong>Reduced CI Load</strong>: Don't run infrastructure tests when only docs change</li>
+<li><strong>Faster Feedback</strong>: Only run what's necessary for a given change</li>
+<li><strong>Resource Conservation</strong>: Saves GitHub Actions minutes</li>
+</ul>
+<p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">push</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
 <span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;infra/**&#39;</span><span class="w">                                    </span><span class="c1"># Infrastructure code</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;.github/workflows/security-and-terraform.yml&#39;</span><span class="w"> </span><span class="c1"># This workflow</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;**/*.tf&#39;</span><span class="w">                                     </span><span class="c1"># Any Terraform files</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;infra/**&quot;</span><span class="w"> </span><span class="c1"># Infrastructure code</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;.github/workflows/security-and-terraform.yml&quot;</span><span class="w"> </span><span class="c1"># This workflow</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;**/*.tf&quot;</span><span class="w"> </span><span class="c1"># Any Terraform files</span>
 <span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="w"> </span><span class="p p-Indicator">]</span>
-</code></pre></div></p>
-<p><strong>Path Patterns:</strong>
-- <code>infra/**</code> - All files under infra directory
-- <code>**/*.tf</code> - All Terraform files anywhere in the repo
-- <code>.github/workflows/*.yml</code> - The workflow file itself</p>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<p><strong>Path Patterns:</strong></p>
+<ul>
+<li><code>infra/**</code> - All files under infra directory</li>
+<li><code>**/*.tf</code> - All Terraform files anywhere in the repo</li>
+<li><code>.github/workflows/*.yml</code> - The workflow file itself</li>
+</ul>
 <h3 id="5-required-security-scans-on-prs">5. <strong>Required Security Scans on PRs</strong> ✅</h3>
 <p>TFLint and Gitleaks now run on every PR without <code>continue-on-error</code>.</p>
-<p><strong>Security Benefits:</strong>
-- <strong>Prevent Misconfigurations</strong>: TFLint catches Terraform errors before merge
-- <strong>Secret Leak Prevention</strong>: Gitleaks detects accidentally committed secrets
-- <strong>Enforce Best Practices</strong>: Security checks are required, not optional
-- <strong>Shift Left</strong>: Catch issues in PRs before they reach production</p>
-<p><strong>TFLint Configuration:</strong>
+<p><strong>Security Benefits:</strong></p>
+<ul>
+<li><strong>Prevent Misconfigurations</strong>: TFLint catches Terraform errors before merge</li>
+<li><strong>Secret Leak Prevention</strong>: Gitleaks detects accidentally committed secrets</li>
+<li><strong>Enforce Best Practices</strong>: Security checks are required, not optional</li>
+<li><strong>Shift Left</strong>: Catch issues in PRs before they reach production</li>
+</ul>
+<p><strong>TFLint Configuration:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run TFLint (recursive)</span>
 <span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tflint --recursive</span>
 <span class="w">  </span><span class="c1"># No continue-on-error - failures will block the PR</span>
-</code></pre></div></p>
-<p><strong>Gitleaks Configuration:</strong>
+</code></pre></div>
+<p><strong>Gitleaks Configuration:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Gitleaks (secret scan)</span>
 <span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">gitleaks detect \</span>
@@ -4871,21 +4885,23 @@
 <span class="w">      </span><span class="no">--report-path gitleaks-results.sarif \</span>
 <span class="w">      </span><span class="no">--no-banner \</span>
 <span class="w">      </span><span class="no">--verbose || true</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="6-github-oidc-for-aws-authentication">6. <strong>GitHub OIDC for AWS Authentication</strong> ⚠️</h3>
 <p><strong>Status</strong>: Prepared but not yet implemented (no AWS usage detected in current workflows)</p>
 <p>When AWS integration is added, use OIDC instead of long-lived access keys:</p>
-<p><strong>Security Benefits:</strong>
-- <strong>No Static Secrets</strong>: No <code>AWS_ACCESS_KEY_ID</code> or <code>AWS_SECRET_ACCESS_KEY</code> in GitHub Secrets
-- <strong>Short-Lived Tokens</strong>: Credentials expire automatically after workflow completes
-- <strong>Audit Trail</strong>: All AWS actions tied to GitHub workflow identity
-- <strong>Principle of Least Privilege</strong>: IAM roles can be scoped to specific repos/branches</p>
-<p><strong>Implementation Template:</strong>
+<p><strong>Security Benefits:</strong></p>
+<ul>
+<li><strong>No Static Secrets</strong>: No <code>AWS_ACCESS_KEY_ID</code> or <code>AWS_SECRET_ACCESS_KEY</code> in GitHub Secrets</li>
+<li><strong>Short-Lived Tokens</strong>: Credentials expire automatically after workflow completes</li>
+<li><strong>Audit Trail</strong>: All AWS actions tied to GitHub workflow identity</li>
+<li><strong>Principle of Least Privilege</strong>: IAM roles can be scoped to specific repos/branches</li>
+</ul>
+<p><strong>Implementation Template:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">permissions</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">id-token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span><span class="w">  </span><span class="c1"># Required for OIDC</span>
+<span class="w">      </span><span class="nt">id-token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span><span class="w"> </span><span class="c1"># Required for OIDC</span>
 <span class="w">      </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@34e11480ae1e31caa3f43c6f6043d4daa6e1148a</span>
@@ -4900,12 +4916,14 @@
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no"># AWS CLI commands here - automatically authenticated</span>
 <span class="w">          </span><span class="no">aws s3 ls</span>
-</code></pre></div></p>
-<p><strong>Setup Requirements:</strong>
-1. Create OIDC provider in AWS IAM
-2. Create IAM role with trust policy for GitHub
-3. Grant role permissions for required AWS services
-4. Configure <code>role-to-assume</code> in workflow</p>
+</code></pre></div>
+<p><strong>Setup Requirements:</strong></p>
+<ol>
+<li>Create OIDC provider in AWS IAM</li>
+<li>Create IAM role with trust policy for GitHub</li>
+<li>Grant role permissions for required AWS services</li>
+<li>Configure <code>role-to-assume</code> in workflow</li>
+</ol>
 <h2 id="workflow-specific-changes">Workflow-Specific Changes</h2>
 <h3 id="security-and-terraformyml">security-and-terraform.yml</h3>
 <ul>
@@ -4977,9 +4995,9 @@
 <h2 id="maintenance-best-practices">Maintenance Best Practices</h2>
 <h3 id="keeping-actions-up-to-date">Keeping Actions Up-to-Date</h3>
 <ol>
-<li>
-<p><strong>Enable Dependabot for GitHub Actions</strong>:
-   <div class="highlight"><pre><span></span><code><span class="c1"># .github/dependabot.yml</span>
+<li><strong>Enable Dependabot for GitHub Actions</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/dependabot.yml</span>
 <span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 <span class="nt">updates</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">package-ecosystem</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;github-actions&quot;</span>
@@ -4987,12 +5005,14 @@
 <span class="w">    </span><span class="nt">schedule</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;weekly&quot;</span>
 <span class="w">    </span><span class="nt">open-pull-requests-limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Review Security Advisories</strong>:</p>
 </li>
-<li>Check GitHub Security Advisories before updating</li>
+<li>
+<p>Check GitHub Security Advisories before updating</p>
+</li>
 <li>Review changelogs for breaking changes</li>
 <li>
 <p>Test workflows in a branch before merging</p>
@@ -5028,15 +5048,21 @@
 <h2 id="rollback-plan">Rollback Plan</h2>
 <p>If issues arise from these changes:</p>
 <ol>
-<li><strong>Action Version Issues</strong>:</li>
-<li>Comment out SHA, uncomment tag temporarily</li>
+<li>
+<p><strong>Action Version Issues</strong>:</p>
+</li>
+<li>
+<p>Comment out SHA, uncomment tag temporarily</p>
+</li>
 <li>
 <p>Investigate and update to correct SHA</p>
 </li>
 <li>
 <p><strong>Permission Issues</strong>:</p>
 </li>
-<li>Check workflow logs for permission errors</li>
+<li>
+<p>Check workflow logs for permission errors</p>
+</li>
 <li>Add minimal required permissions to job</li>
 <li>
 <p>Document why permission is needed</p>
@@ -5044,7 +5070,9 @@
 <li>
 <p><strong>Cache Issues</strong>:</p>
 </li>
-<li>Clear cache manually via GitHub UI</li>
+<li>
+<p>Clear cache manually via GitHub UI</p>
+</li>
 <li>Adjust cache key if needed</li>
 <li>
 <p>Disable caching temporarily if blocking</p>

@@ -5170,11 +5170,11 @@
 <span class="w">  </span><span class="c1"># Sync policy: Automatic synchronization</span>
 <span class="w">  </span><span class="nt">syncPolicy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">automated</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># Delete resources that are no longer in Git</span>
-<span class="w">      </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">     </span><span class="c1"># Force sync when cluster state deviates</span>
+<span class="w">      </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># Delete resources that are no longer in Git</span>
+<span class="w">      </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># Force sync when cluster state deviates</span>
 <span class="w">      </span><span class="nt">allowEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">    </span><span class="nt">syncOptions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span><span class="w">  </span><span class="c1"># Auto-create namespace if it doesn&#39;t exist</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span><span class="w"> </span><span class="c1"># Auto-create namespace if it doesn&#39;t exist</span>
 <span class="w">    </span><span class="nt">retry</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
 <span class="w">      </span><span class="nt">backoff</span><span class="p">:</span>
@@ -5187,7 +5187,7 @@
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps</span>
 <span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="w">      </span><span class="nt">jsonPointers</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/spec/replicas</span><span class="w">  </span><span class="c1"># Ignore replica count changes (for HPA)</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/spec/replicas</span><span class="w"> </span><span class="c1"># Ignore replica count changes (for HPA)</span>
 </code></pre></div>
 <h3 id="3-add-application-to-kustomization">3. Add Application to Kustomization</h3>
 <p>Add your new Application to the ArgoCD apps kustomization:</p>
@@ -5198,7 +5198,7 @@
 <span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">existing-app-1.yaml</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">existing-app-2.yaml</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-service-dev.yaml</span><span class="w">  </span><span class="c1"># Add this line</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-service-dev.yaml</span><span class="w"> </span><span class="c1"># Add this line</span>
 </code></pre></div>
 <h3 id="4-commit-and-push-to-git">4. Commit and Push to Git</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Navigate to platform-root repository</span>

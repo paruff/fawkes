@@ -4923,11 +4923,13 @@
 <li><strong>Security</strong>: HMAC-SHA256 signature validation</li>
 <li><strong>Purpose</strong>: Captures commit timestamps for lead time calculation</li>
 </ul>
-<p><strong>Setup Required</strong>:
-1. Get webhook secret from Kubernetes
-2. Configure webhook in GitHub repository settings
-3. Point to: <code>https://devlake.fawkes.idp/api/plugins/webhook/1/commits</code>
-4. Test with a commit push</p>
+<p><strong>Setup Required</strong>:</p>
+<ol>
+<li>Get webhook secret from Kubernetes</li>
+<li>Configure webhook in GitHub repository settings</li>
+<li>Point to: <code>https://devlake.fawkes.idp/api/plugins/webhook/1/commits</code></li>
+<li>Test with a commit push</li>
+</ol>
 <h3 id="jenkins-webhooks-configured-builds">✅ Jenkins Webhooks Configured (Builds)</h3>
 <ul>
 <li><strong>Implementation</strong>: <code>jenkins-shared-library/vars/doraMetrics.groovy</code></li>
@@ -4937,13 +4939,13 @@
 <li><strong>Security</strong>: Internal cluster network (no external access needed)</li>
 <li><strong>Purpose</strong>: Tracks build success rate, rework rate, quality metrics</li>
 </ul>
-<p><strong>Integration Method</strong>:
+<p><strong>Integration Method</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 
 <span class="n">doraMetrics</span><span class="o">.</span><span class="na">recordBuild</span><span class="o">(</span><span class="nl">service:</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">status:</span><span class="w"> </span><span class="s1">&#39;success&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">stage:</span><span class="w"> </span><span class="s1">&#39;build&#39;</span><span class="o">)</span>
 <span class="n">doraMetrics</span><span class="o">.</span><span class="na">recordTestResults</span><span class="o">(</span><span class="nl">service:</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">totalTests:</span><span class="w"> </span><span class="mi">150</span><span class="o">,</span><span class="w"> </span><span class="nl">passedTests:</span><span class="w"> </span><span class="mi">148</span><span class="o">)</span>
 <span class="n">doraMetrics</span><span class="o">.</span><span class="na">recordQualityGate</span><span class="o">(</span><span class="nl">service:</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">passed:</span><span class="w"> </span><span class="kc">true</span><span class="o">,</span><span class="w"> </span><span class="nl">coveragePercent:</span><span class="w"> </span><span class="mi">85</span><span class="o">)</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Usage</strong>: Automatically available in all Jenkins pipelines via shared library. Golden Path pipelines automatically emit DORA events.</p>
 <h3 id="argocd-webhooks-configured-deployments">✅ ArgoCD Webhooks Configured (Deployments)</h3>
 <ul>
@@ -4953,46 +4955,54 @@
 <li><strong>Security</strong>: Internal cluster network</li>
 <li><strong>Purpose</strong>: Tracks deployment frequency, lead time, change failure rate</li>
 </ul>
-<p><strong>Templates Configured</strong>:
-1. <code>deployment-succeeded</code> - Successful ArgoCD syncs
-2. <code>deployment-failed</code> - Failed ArgoCD syncs
-3. <code>health-degraded</code> - Application health issues</p>
-<p><strong>Triggers</strong>:
-- <code>on-sync-succeeded</code> - Fires on successful application sync
-- <code>on-sync-failed</code> - Fires on failed application sync
-- <code>on-health-degraded</code> - Fires when app health degrades</p>
-<p><strong>Setup Required</strong>:
+<p><strong>Templates Configured</strong>:</p>
+<ol>
+<li><code>deployment-succeeded</code> - Successful ArgoCD syncs</li>
+<li><code>deployment-failed</code> - Failed ArgoCD syncs</li>
+<li><code>health-degraded</code> - Application health issues</li>
+</ol>
+<p><strong>Triggers</strong>:</p>
+<ul>
+<li><code>on-sync-succeeded</code> - Fires on successful application sync</li>
+<li><code>on-sync-failed</code> - Fires on failed application sync</li>
+<li><code>on-health-degraded</code> - Fires when app health degrades</li>
+</ul>
+<p><strong>Setup Required</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/devlake/config/argocd-notifications.yaml
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="test-webhooks-firing-correctly">✅ Test Webhooks Firing Correctly</h3>
 <p><strong>Automated Test Script</strong>: <code>scripts/test-dora-webhooks.sh</code></p>
-<p>Tests performed:
-- ✅ DevLake service running
-- ✅ Webhook endpoints accessible
-- ✅ GitHub webhook endpoint responds
-- ✅ Jenkins webhook endpoint responds
-- ✅ ArgoCD webhook endpoint responds
-- ✅ Incident webhook endpoint responds
-- ✅ Network policies configured
-- ✅ Configuration files present</p>
+<p>Tests performed:</p>
+<ul>
+<li>✅ DevLake service running</li>
+<li>✅ Webhook endpoints accessible</li>
+<li>✅ GitHub webhook endpoint responds</li>
+<li>✅ Jenkins webhook endpoint responds</li>
+<li>✅ ArgoCD webhook endpoint responds</li>
+<li>✅ Incident webhook endpoint responds</li>
+<li>✅ Network policies configured</li>
+<li>✅ Configuration files present</li>
+</ul>
 <p><strong>BDD Test Coverage</strong>: <code>tests/bdd/features/dora-webhooks.feature</code></p>
-<p>Scenarios tested:
-- GitHub commit webhooks
-- Jenkins build webhooks
-- Jenkins quality gate webhooks
-- ArgoCD deployment success webhooks
-- ArgoCD deployment failure webhooks
-- Incident creation/resolution webhooks
-- Network accessibility
-- Security validation
-- End-to-end integration flow</p>
-<p><strong>Manual Testing</strong>:
+<p>Scenarios tested:</p>
+<ul>
+<li>GitHub commit webhooks</li>
+<li>Jenkins build webhooks</li>
+<li>Jenkins quality gate webhooks</li>
+<li>ArgoCD deployment success webhooks</li>
+<li>ArgoCD deployment failure webhooks</li>
+<li>Incident creation/resolution webhooks</li>
+<li>Network accessibility</li>
+<li>Security validation</li>
+<li>End-to-end integration flow</li>
+</ul>
+<p><strong>Manual Testing</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Test GitHub webhook</span>
 ./scripts/test-dora-webhooks.sh
 
 <span class="c1"># Run BDD tests</span>
 <span class="nb">cd</span><span class="w"> </span>tests/bdd<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pytest<span class="w"> </span>features/dora-webhooks.feature<span class="w"> </span>-v
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="webhook-flow-diagram">Webhook Flow Diagram</h2>
 <div class="highlight"><pre><span></span><code>┌─────────────┐
 │   GitHub    │ ──push──&gt; Commit event ──────┐
@@ -5058,7 +5068,7 @@
 <li><strong>ArgoCD</strong>: Internal cluster network (no external access)</li>
 </ul>
 <h3 id="secrets-management">Secrets Management</h3>
-<p>All webhook secrets managed via External Secrets Operator:
+<p>All webhook secrets managed via External Secrets Operator:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExternalSecret</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5075,7 +5085,7 @@
 <span class="w">      </span><span class="nt">remoteRef</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret/data/fawkes/devlake</span>
 <span class="w">        </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github-webhook-secret</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="network-policies">Network Policies</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NetworkPolicy</span>
@@ -5108,8 +5118,12 @@
 <h2 id="files-createdmodified">Files Created/Modified</h2>
 <h3 id="configuration-files">Configuration Files</h3>
 <ol>
-<li><code>platform/apps/devlake/config/webhooks.yaml</code> (183 lines)</li>
-<li>Webhook endpoint configurations</li>
+<li>
+<p><code>platform/apps/devlake/config/webhooks.yaml</code> (183 lines)</p>
+</li>
+<li>
+<p>Webhook endpoint configurations</p>
+</li>
 <li>External secrets for webhook authentication</li>
 <li>Service definitions</li>
 <li>
@@ -5124,8 +5138,12 @@
 </ol>
 <h3 id="documentation">Documentation</h3>
 <ol>
-<li><code>platform/apps/devlake/config/README.md</code> (327 lines)</li>
-<li>Quick start guide</li>
+<li>
+<p><code>platform/apps/devlake/config/README.md</code> (327 lines)</p>
+</li>
+<li>
+<p>Quick start guide</p>
+</li>
 <li>Testing instructions</li>
 <li>
 <p>Troubleshooting guide</p>
@@ -5133,7 +5151,9 @@
 <li>
 <p><code>platform/apps/devlake/config/github-webhook-setup.md</code> (343 lines)</p>
 </li>
-<li>Step-by-step GitHub webhook setup</li>
+<li>
+<p>Step-by-step GitHub webhook setup</p>
+</li>
 <li>Security considerations</li>
 <li>
 <p>Troubleshooting</p>
@@ -5148,8 +5168,12 @@
 </ol>
 <h3 id="testing">Testing</h3>
 <ol>
-<li><code>scripts/test-dora-webhooks.sh</code> (400+ lines)</li>
-<li>Automated webhook validation</li>
+<li>
+<p><code>scripts/test-dora-webhooks.sh</code> (400+ lines)</p>
+</li>
+<li>
+<p>Automated webhook validation</p>
+</li>
 <li>Tests all endpoints</li>
 <li>
 <p>Network policy validation</p>
@@ -5157,7 +5181,9 @@
 <li>
 <p><code>tests/bdd/features/dora-webhooks.feature</code> (200+ lines)</p>
 </li>
-<li>15+ BDD scenarios</li>
+<li>
+<p>15+ BDD scenarios</p>
+</li>
 <li>Integration testing</li>
 <li>
 <p>End-to-end validation</p>
@@ -5178,12 +5204,12 @@
 <h2 id="next-steps">Next Steps</h2>
 <h3 id="for-platform-engineers">For Platform Engineers</h3>
 <ol>
-<li>
-<p><strong>Deploy webhook configurations</strong>:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/devlake/config/webhooks.yaml
+<li><strong>Deploy webhook configurations</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/devlake/config/webhooks.yaml
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/devlake/config/argocd-notifications.yaml
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Configure GitHub webhooks</strong>:</p>
 </li>
@@ -5191,20 +5217,22 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 <p>Follow <code>platform/apps/devlake/config/github-webhook-setup.md</code></p>
 </li>
 <li>
-<p><strong>Validate deployment</strong>:
-   <div class="highlight"><pre><span></span><code>./scripts/test-dora-webhooks.sh
-</code></pre></div></p>
+<p><strong>Validate deployment</strong>:</p>
 </li>
-<li>
-<p><strong>Monitor webhook health</strong>:</p>
-</li>
+</ol>
+<div class="highlight"><pre><span></span><code>./scripts/test-dora-webhooks.sh
+</code></pre></div>
+<ol>
+<li><strong>Monitor webhook health</strong>:</li>
 <li>Grafana: http://devlake-grafana.127.0.0.1.nip.io</li>
 <li>Dashboard: "DevLake Webhooks"</li>
 </ol>
 <h3 id="for-developers">For Developers</h3>
-<p><strong>Jenkins pipelines automatically emit DORA events</strong> if using:
-- Golden Path pipelines (automatic)
-- Shared library with <code>@Library('fawkes-pipeline-library')</code> (manual calls)</p>
+<p><strong>Jenkins pipelines automatically emit DORA events</strong> if using:</p>
+<ul>
+<li>Golden Path pipelines (automatic)</li>
+<li>Shared library with <code>@Library('fawkes-pipeline-library')</code> (manual calls)</li>
+</ul>
 <p><strong>No action required</strong> for most developers - webhooks are transparent.</p>
 <h2 id="success-criteria-met">Success Criteria Met</h2>
 <p>✅ <strong>GitHub webhooks configured (commits)</strong> - Configuration and documentation complete

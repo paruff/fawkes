@@ -5171,7 +5171,7 @@ credentials.json
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-secret</span>
 <span class="nt">stringData</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hardcoded-secret&quot;</span><span class="w">  </span><span class="c1"># DETECTED BY GITLEAKS</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hardcoded-secret&quot;</span><span class="w"> </span><span class="c1"># DETECTED BY GITLEAKS</span>
 </code></pre></div>
 <h3 id="dont-commit-example-secrets">❌ DON'T: Commit Example Secrets</h3>
 <p>Even in example code, avoid realistic-looking secrets:</p>
@@ -5222,7 +5222,7 @@ detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<spa
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">detect-secrets</span>
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Detect secrets</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--baseline&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;.secrets.baseline&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;--baseline&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;.secrets.baseline&quot;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <hr />
 <h2 id="handling-detected-secrets">Handling Detected Secrets</h2>
@@ -5311,14 +5311,14 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>gitleaks<span class
 </code></pre></div>
 <h3 id="nodejs-application">Node.js Application</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// Load from .env file (gitignored)</span>
-<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;dotenv&#39;</span><span class="p">).</span><span class="nx">config</span><span class="p">();</span>
+<span class="nx">require</span><span class="p">(</span><span class="s2">&quot;dotenv&quot;</span><span class="p">).</span><span class="nx">config</span><span class="p">();</span>
 
 <span class="c1">// Get secrets from environment</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">dbUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DATABASE_URL</span><span class="p">;</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">apiKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">API_KEY</span><span class="p">;</span>
 
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">dbUrl</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;DATABASE_URL environment variable is required&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;DATABASE_URL environment variable is required&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="go-application">Go Application</h3>
@@ -5371,9 +5371,11 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>gitleaks<span class
 </code></pre></div>
 <p>Review changes carefully before committing.</p>
 <h3 id="q-whats-the-performance-impact">Q: What's the performance impact?</h3>
-<p><strong>A:</strong> Minimal:
-- Pre-commit: ~2-5 seconds for typical changes
-- Pipeline: ~10-20 seconds for full repository scan</p>
+<p><strong>A:</strong> Minimal:</p>
+<ul>
+<li>Pre-commit: ~2-5 seconds for typical changes</li>
+<li>Pipeline: ~10-20 seconds for full repository scan</li>
+</ul>
 <h3 id="q-can-i-use-trufflehog-instead-of-gitleaks">Q: Can I use TruffleHog instead of Gitleaks?</h3>
 <p><strong>A:</strong> Yes, but Gitleaks is the default. To add TruffleHog:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
@@ -5382,7 +5384,7 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>gitleaks<span class
 <span class="w">  </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trufflehog</span>
 <span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TruffleHog secret scan</span>
-<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;filesystem&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;.&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;--json&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;filesystem&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;--json&quot;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <hr />
 <h2 id="resources">Resources</h2>

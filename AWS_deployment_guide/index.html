@@ -5839,19 +5839,21 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 sudo<span class="w"> </span>yum<span class="w"> </span>install<span class="w"> </span>jq<span class="w"> </span>-y<span class="w">      </span><span class="c1"># RHEL/CentOS</span>
 </code></pre></div>
 <h3 id="aws-account-requirements">AWS Account Requirements</h3>
-<p><strong>IAM Permissions Needed</strong>:
-- EC2 (VPC, Security Groups, EBS)
-- EKS (Cluster creation and management)
-- RDS (PostgreSQL instances)
-- S3 (Bucket creation and management)
-- IAM (Role and policy creation)
-- CloudWatch (Logs and metrics)
-- Certificate Manager (SSL/TLS certificates)
-- Secrets Manager (Secret storage)
-- Application Load Balancer
-- Route53 (DNS management - optional)</p>
+<p><strong>IAM Permissions Needed</strong>:</p>
+<ul>
+<li>EC2 (VPC, Security Groups, EBS)</li>
+<li>EKS (Cluster creation and management)</li>
+<li>RDS (PostgreSQL instances)</li>
+<li>S3 (Bucket creation and management)</li>
+<li>IAM (Role and policy creation)</li>
+<li>CloudWatch (Logs and metrics)</li>
+<li>Certificate Manager (SSL/TLS certificates)</li>
+<li>Secrets Manager (Secret storage)</li>
+<li>Application Load Balancer</li>
+<li>Route53 (DNS management - optional)</li>
+</ul>
 <p><strong>Recommended</strong>: Use an IAM user with <code>AdministratorAccess</code> for initial setup, then lock down to least-privilege after deployment.</p>
-<p><strong>Service Limits Check</strong>:
+<p><strong>Service Limits Check</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check EKS cluster limit (default: 100 per region)</span>
 aws<span class="w"> </span>service-quotas<span class="w"> </span>get-service-quota<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--service-code<span class="w"> </span>eks<span class="w"> </span><span class="se">\</span>
@@ -5863,27 +5865,33 @@ aws<span class="w"> </span>service-quotas<span class="w"> </span>get-service-quo
 <span class="w">  </span>--service-code<span class="w"> </span>ec2<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--quota-code<span class="w"> </span>L-0263D0A3<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--region<span class="w"> </span>us-east-1
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="domain-and-ssl-optional-but-recommended">Domain and SSL (Optional but Recommended)</h3>
-<p><strong>For production deployments</strong>:
-- Domain name (e.g., <code>fawkes.yourdomain.com</code>)
-- Access to DNS management (Route53 or external DNS provider)
-- SSL certificate via AWS Certificate Manager (we'll create this)</p>
-<p><strong>Without domain</strong>:
-- Can use AWS-provided Load Balancer DNS names
-- Self-signed certificates (development only)</p>
+<p><strong>For production deployments</strong>:</p>
+<ul>
+<li>Domain name (e.g., <code>fawkes.yourdomain.com</code>)</li>
+<li>Access to DNS management (Route53 or external DNS provider)</li>
+<li>SSL certificate via AWS Certificate Manager (we'll create this)</li>
+</ul>
+<p><strong>Without domain</strong>:</p>
+<ul>
+<li>Can use AWS-provided Load Balancer DNS names</li>
+<li>Self-signed certificates (development only)</li>
+</ul>
 <h3 id="budget-and-cost-awareness">Budget and Cost Awareness</h3>
-<p><strong>Expected Monthly Costs</strong>:
-- <strong>Development</strong>: ~$379/month
-- <strong>Staging</strong>: ~$762/month
-- <strong>Production</strong>: ~$2,084/month</p>
+<p><strong>Expected Monthly Costs</strong>:</p>
+<ul>
+<li><strong>Development</strong>: ~$379/month</li>
+<li><strong>Staging</strong>: ~$762/month</li>
+<li><strong>Production</strong>: ~$2,084/month</li>
+</ul>
 <p>See <a href="./AWS_COST_ESTIMATION.md">AWS Cost Estimation</a> for detailed breakdown.</p>
-<p><strong>Set up billing alerts</strong>:
+<p><strong>Set up billing alerts</strong>:</p>
 <div class="highlight"><pre><span></span><code>aws<span class="w"> </span>budgets<span class="w"> </span>create-budget<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--account-id<span class="w"> </span>YOUR_ACCOUNT_ID<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--budget<span class="w"> </span>file://budget.json<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--notifications-with-subscribers<span class="w"> </span>file://notifications.json
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="architecture-overview">Architecture Overview</h2>
 <h3 id="high-level-architecture">High-Level Architecture</h3>
@@ -5938,22 +5946,32 @@ aws<span class="w"> </span>service-quotas<span class="w"> </span>get-service-quo
 </code></pre></div>
 <h3 id="network-design">Network Design</h3>
 <p><strong>VPC CIDR</strong>: <code>10.0.0.0/16</code> (65,536 IPs)</p>
-<p><strong>Subnets</strong>:
-- <strong>Public Subnets</strong> (3 AZs): <code>10.0.1.0/24</code>, <code>10.0.2.0/24</code>, <code>10.0.3.0/24</code>
-  - Internet Gateway attached
-  - NAT Gateways deployed here
-  - Application Load Balancers</p>
+<p><strong>Subnets</strong>:</p>
 <ul>
-<li><strong>Private Subnets</strong> (3 AZs): <code>10.0.11.0/24</code>, <code>10.0.12.0/24</code>, <code>10.0.13.0/24</code></li>
+<li>
+<p><strong>Public Subnets</strong> (3 AZs): <code>10.0.1.0/24</code>, <code>10.0.2.0/24</code>, <code>10.0.3.0/24</code></p>
+</li>
+<li>
+<p>Internet Gateway attached</p>
+</li>
+<li>NAT Gateways deployed here</li>
+<li>
+<p>Application Load Balancers</p>
+</li>
+<li>
+<p><strong>Private Subnets</strong> (3 AZs): <code>10.0.11.0/24</code>, <code>10.0.12.0/24</code>, <code>10.0.13.0/24</code></p>
+</li>
 <li>No direct internet access</li>
 <li>EKS worker nodes</li>
 <li>RDS instances</li>
 <li>Egress via NAT Gateways</li>
 </ul>
-<p><strong>Why 3 Availability Zones?</strong>
-- High availability and fault tolerance
-- EKS best practice (distribute nodes across AZs)
-- RDS Multi-AZ automatic failover</p>
+<p><strong>Why 3 Availability Zones?</strong></p>
+<ul>
+<li>High availability and fault tolerance</li>
+<li>EKS best practice (distribute nodes across AZs)</li>
+<li>RDS Multi-AZ automatic failover</li>
+</ul>
 <h3 id="component-placement">Component Placement</h3>
 <table>
 <thead>
@@ -6101,21 +6119,23 @@ terraform<span class="w"> </span>validate
 <span class="c1"># Plan deployment (review what will be created)</span>
 terraform<span class="w"> </span>plan<span class="w"> </span>-var-file<span class="o">=</span>production.tfvars<span class="w"> </span>-out<span class="o">=</span>tfplan
 </code></pre></div>
-<p><strong>Review the plan carefully</strong>. You should see:
-- 1 VPC
-- 6 subnets (3 public, 3 private)
-- 1 Internet Gateway
-- 3 NAT Gateways
-- Route tables and associations
-- Security groups
-- IAM roles and policies</p>
+<p><strong>Review the plan carefully</strong>. You should see:</p>
+<ul>
+<li>1 VPC</li>
+<li>6 subnets (3 public, 3 private)</li>
+<li>1 Internet Gateway</li>
+<li>3 NAT Gateways</li>
+<li>Route tables and associations</li>
+<li>Security groups</li>
+<li>IAM roles and policies</li>
+</ul>
 <h3 id="step-12-deploy-vpc-and-networking">Step 1.2: Deploy VPC and Networking</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Apply the foundation infrastructure</span>
 terraform<span class="w"> </span>apply<span class="w"> </span>tfplan
 
 <span class="c1"># This will take ~10 minutes (NAT Gateways are slow to provision)</span>
 </code></pre></div>
-<p><strong>Expected output</strong>:
+<p><strong>Expected output</strong>:</p>
 <div class="highlight"><pre><span></span><code>Apply complete! Resources: 42 added, 0 changed, 0 destroyed.
 
 Outputs:
@@ -6123,7 +6143,7 @@ vpc_id = &quot;vpc-0a1b2c3d4e5f6g7h8&quot;
 public_subnet_ids = [&quot;subnet-abc123&quot;, &quot;subnet-def456&quot;, &quot;subnet-ghi789&quot;]
 private_subnet_ids = [&quot;subnet-xyz123&quot;, &quot;subnet-uvw456&quot;, &quot;subnet-rst789&quot;]
 nat_gateway_ids = [&quot;nat-0a1b2c3d&quot;, &quot;nat-4e5f6g7h&quot;, &quot;nat-8i9j0k1l&quot;]
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="step-13-create-s3-buckets">Step 1.3: Create S3 Buckets</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create artifacts bucket</span>
 aws<span class="w"> </span>s3<span class="w"> </span>mb<span class="w"> </span>s3://fawkes-artifacts-prod-YOUR-UNIQUE-ID<span class="w"> </span>--region<span class="w"> </span>us-east-1
@@ -6218,7 +6238,7 @@ aws<span class="w"> </span>acm<span class="w"> </span>request-certificate<span c
 <span class="c1"># Follow the validation instructions (add DNS records)</span>
 <span class="c1"># Certificate validation usually takes 5-30 minutes</span>
 </code></pre></div>
-<p><strong>Validation</strong>:
+<p><strong>Validation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check VPC exists</span>
 aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpcs<span class="w"> </span>--filters<span class="w"> </span><span class="s2">&quot;Name=tag:Name,Values=fawkes-production-vpc&quot;</span>
 
@@ -6233,7 +6253,7 @@ aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span><
 
 <span class="c1"># Verify secrets</span>
 aws<span class="w"> </span>secretsmanager<span class="w"> </span>list-secrets<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>fawkes
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="phase-2-eks-cluster-deployment">Phase 2: EKS Cluster Deployment</h2>
 <p><strong>Duration</strong>: 20-30 minutes
@@ -6335,12 +6355,14 @@ eksctl<span class="w"> </span>create<span class="w"> </span>cluster<span class="
 
 <span class="c1"># This takes 15-20 minutes - good time for coffee!</span>
 </code></pre></div>
-<p><strong>What's happening during creation</strong>:
-1. EKS control plane provisioning (managed by AWS)
-2. Worker nodes launching across 3 AZs
-3. IAM roles and policies creation
-4. OIDC provider setup
-5. Add-ons installation (VPC CNI, CoreDNS, kube-proxy, EBS CSI)</p>
+<p><strong>What's happening during creation</strong>:</p>
+<ol>
+<li>EKS control plane provisioning (managed by AWS)</li>
+<li>Worker nodes launching across 3 AZs</li>
+<li>IAM roles and policies creation</li>
+<li>OIDC provider setup</li>
+<li>Add-ons installation (VPC CNI, CoreDNS, kube-proxy, EBS CSI)</li>
+</ol>
 <h3 id="step-22-configure-kubectl-access">Step 2.2: Configure kubectl Access</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Update kubeconfig</span>
 aws<span class="w"> </span>eks<span class="w"> </span>update-kubeconfig<span class="w"> </span><span class="se">\</span>
@@ -6440,7 +6462,7 @@ kubectl<span class="w"> </span>-n<span class="w"> </span>kube-system<span class=
 <span class="c1"># Verify</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>cluster-autoscaler
 </code></pre></div>
-<p><strong>Validation</strong>:
+<p><strong>Validation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check cluster status</span>
 eksctl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>--name<span class="w"> </span>fawkes-production
 
@@ -6453,7 +6475,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <span class="c1"># Verify service accounts</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>sa<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>aws-load-balancer-controller
 kubectl<span class="w"> </span>get<span class="w"> </span>sa<span class="w"> </span>-n<span class="w"> </span>external-secrets-system<span class="w"> </span>external-secrets
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="phase-3-database-and-storage">Phase 3: Database and Storage</h2>
 <p><strong>Duration</strong>: 20 minutes
@@ -6627,7 +6649,7 @@ kubectl<span class="w"> </span>run<span class="w"> </span>postgres-client<span c
 <span class="w">  </span>--env<span class="o">=</span><span class="s2">&quot;PGPASSWORD=</span><span class="nv">$DB_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--<span class="w"> </span>psql<span class="w"> </span>-h<span class="w"> </span><span class="nv">$RDS_ENDPOINT</span><span class="w"> </span>-U<span class="w"> </span>fawkesadmin<span class="w"> </span>-d<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;\l&quot;</span>
 </code></pre></div>
-<p><strong>Validation</strong>:
+<p><strong>Validation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify RDS instance is running</span>
 aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--db-instance-identifier<span class="w"> </span>fawkes-production-db<span class="w"> </span><span class="se">\</span>
@@ -6645,7 +6667,7 @@ kubectl<span class="w"> </span>run<span class="w"> </span>postgres-test<span cla
 
 <span class="c1"># Verify storage classes</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>storageclass
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="phase-4-platform-services">Phase 4: Platform Services</h2>
 <p><strong>Duration</strong>: 45-60 minutes
@@ -7204,7 +7226,7 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="o">=</span><span class="nv">condition</span><span class="o">=</span>available<span class="w"> </span>--timeout<span class="o">=</span>300s<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>deployment/focalboard<span class="w"> </span>-n<span class="w"> </span>focalboard
 </code></pre></div>
-<p><strong>Validation</strong>:
+<p><strong>Validation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check all platform services are running</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>argocd
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>harbor
@@ -7223,7 +7245,7 @@ curl<span class="w"> </span>-k<span class="w"> </span>https://jenkins.fawkes.you
 curl<span class="w"> </span>-k<span class="w"> </span>https://backstage.fawkes.yourdomain.com
 curl<span class="w"> </span>-k<span class="w"> </span>https://mattermost.fawkes.yourdomain.com
 curl<span class="w"> </span>-k<span class="w"> </span>https://focalboard.fawkes.yourdomain.com
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="phase-5-observability-stack">Phase 5: Observability Stack</h2>
 <p><strong>Duration</strong>: 30 minutes
@@ -7474,7 +7496,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="c1"># Upload the dashboard file first</span>
 kubectl<span class="w"> </span>cp<span class="w"> </span>dora-dashboard.json<span class="w"> </span>monitoring/<span class="nv">$GRAFANA_POD</span>:/tmp/
 </code></pre></div>
-<p><strong>Validation</strong>:
+<p><strong>Validation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Prometheus is scraping targets</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>svc/prometheus-operated<span class="w"> </span><span class="m">9090</span>:9090<span class="w"> </span><span class="p">&amp;</span>
 curl<span class="w"> </span>http://localhost:9090/api/v1/targets
@@ -7485,7 +7507,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"
 <span class="c1"># Get Grafana admin password</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>prometheus-grafana<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.admin-password}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>--decode<span class="p">;</span><span class="w"> </span><span class="nb">echo</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="phase-6-security-hardening">Phase 6: Security Hardening</h2>
 <p><strong>Duration</strong>: 20 minutes
@@ -7726,7 +7748,7 @@ cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</spa
 <span class="s">  apiGroup: rbac.authorization.k8s.io</span>
 <span class="s">EOF</span>
 </code></pre></div>
-<p><strong>Validation</strong>:
+<p><strong>Validation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Trivy is scanning</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>vulnerabilityreports<span class="w"> </span>-A
 
@@ -7739,7 +7761,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>networkpolicies<span c
 <span class="c1"># Test RBAC (as a developer user)</span>
 kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>delete<span class="w"> </span>pods<span class="w"> </span>--as<span class="o">=</span>system:serviceaccount:default:developer
 <span class="c1"># Should return &quot;no&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="phase-7-validation-and-testing">Phase 7: Validation and Testing</h2>
 <p><strong>Duration</strong>: 30 minutes
@@ -8225,10 +8247,10 @@ cat<span class="w"> </span>DEPLOYMENT_RECORD.md
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="common-issues-and-solutions">Common Issues and Solutions</h3>
 <h4 id="issue-pods-stuck-in-pending-state">Issue: Pods stuck in Pending state</h4>
-<p><strong>Symptoms</strong>:
+<p><strong>Symptoms</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
-</code></pre></div></p>
-<p><strong>Diagnosis</strong>:
+</code></pre></div>
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check pod events</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
 
@@ -8241,8 +8263,8 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </
 
 <span class="c1"># 3. Node selector/affinity issues</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span>nodeSelector
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Scale up nodes if resource constrained</span>
 eksctl<span class="w"> </span>scale<span class="w"> </span>nodegroup<span class="w"> </span>--cluster<span class="o">=</span>fawkes-production<span class="w"> </span>--nodes<span class="o">=</span><span class="m">9</span><span class="w"> </span>--name<span class="o">=</span>fawkes-ng-general
 
@@ -8251,13 +8273,13 @@ kubectl<span class="w"> </span>get<span class="w"> </span>storageclass
 
 <span class="c1"># Fix PVC issues</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>pvc<span class="w"> </span>&lt;pvc-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-cannot-access-services-via-ingress">Issue: Cannot access services via ingress</h4>
-<p><strong>Symptoms</strong>:
+<p><strong>Symptoms</strong>:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>https://argocd.fawkes.yourdomain.com
 <span class="c1"># Returns timeout or connection refused</span>
-</code></pre></div></p>
-<p><strong>Diagnosis</strong>:
+</code></pre></div>
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check ingress status</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-A
 kubectl<span class="w"> </span>describe<span class="w"> </span>ingress<span class="w"> </span>&lt;ingress-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
@@ -8270,8 +8292,8 @@ aws<span class="w"> </span>elbv2<span class="w"> </span>describe-target-groups<s
 
 <span class="c1"># Check security groups</span>
 aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span>--group-ids<span class="w"> </span>&lt;sg-id&gt;
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Restart ALB controller</span>
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/aws-load-balancer-controller<span class="w"> </span>-n<span class="w"> </span>kube-system
 
@@ -8280,13 +8302,13 @@ kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"
 
 <span class="c1"># Verify DNS resolution</span>
 nslookup<span class="w"> </span>argocd.fawkes.yourdomain.com
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-database-connection-failures">Issue: Database connection failures</h4>
-<p><strong>Symptoms</strong>:
+<p><strong>Symptoms</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Pods crashlooping with database errors</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;database\|postgres&quot;</span>
-</code></pre></div></p>
-<p><strong>Diagnosis</strong>:
+</code></pre></div>
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check RDS status</span>
 aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>fawkes-production-db
 
@@ -8299,8 +8321,8 @@ kubectl<span class="w"> </span>run<span class="w"> </span>postgres-test<span cla
 
 <span class="c1"># Check security group rules</span>
 aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span>--group-ids<span class="w"> </span>&lt;rds-sg-id&gt;
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify security group allows traffic from EKS nodes</span>
 <span class="nv">EKS_NODE_SG</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>fawkes-production<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;cluster.resourcesVpcConfig.clusterSecurityGroupId&quot;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
 
@@ -8312,9 +8334,9 @@ aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-i
 
 <span class="c1"># Check secrets are correct</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>postgres-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes-system<span class="w"> </span>-o<span class="w"> </span>yaml
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-high-aws-costs">Issue: High AWS costs</h4>
-<p><strong>Diagnosis</strong>:
+<p><strong>Diagnosis</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check current month&#39;s costs</span>
 aws<span class="w"> </span>ce<span class="w"> </span>get-cost-and-usage<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--time-period<span class="w"> </span><span class="nv">Start</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-01<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>+%Y-%m-%d<span class="k">)</span>,End<span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="w"> </span><span class="se">\</span>
@@ -8325,8 +8347,8 @@ aws<span class="w"> </span>ce<span class="w"> </span>get-cost-and-usage<span cla
 <span class="c1"># Identify expensive resources</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>nodes
 kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Right-size nodes</span>
 eksctl<span class="w"> </span>scale<span class="w"> </span>nodegroup<span class="w"> </span>--cluster<span class="o">=</span>fawkes-production<span class="w"> </span>--nodes<span class="o">=</span><span class="m">3</span><span class="w"> </span>--name<span class="o">=</span>fawkes-ng-general
 
@@ -8343,13 +8365,13 @@ aws<span class="w"> </span>ec2<span class="w"> </span>describe-volumes<span clas
 aws<span class="w"> </span>budgets<span class="w"> </span>create-budget<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--account-id<span class="w"> </span><span class="k">$(</span>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w"> </span>--query<span class="w"> </span>Account<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--budget<span class="w"> </span>file://budget-alert.json
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="issue-certificate-validation-pending">Issue: Certificate validation pending</h4>
-<p><strong>Symptoms</strong>:
+<p><strong>Symptoms</strong>:</p>
 <div class="highlight"><pre><span></span><code>aws<span class="w"> </span>acm<span class="w"> </span>describe-certificate<span class="w"> </span>--certificate-arn<span class="w"> </span>&lt;cert-arn&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Status
 <span class="c1"># Returns: PENDING_VALIDATION</span>
-</code></pre></div></p>
-<p><strong>Solutions</strong>:
+</code></pre></div>
+<p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get validation records</span>
 aws<span class="w"> </span>acm<span class="w"> </span>describe-certificate<span class="w"> </span>--certificate-arn<span class="w"> </span>&lt;cert-arn&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;Certificate.DomainValidationOptions[0].ResourceRecord&#39;</span>
 
@@ -8358,7 +8380,7 @@ aws<span class="w"> </span>acm<span class="w"> </span>describe-certificate<span 
 
 <span class="c1"># Wait for validation (can take 5-30 minutes)</span>
 aws<span class="w"> </span>acm<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>certificate-validated<span class="w"> </span>--certificate-arn<span class="w"> </span>&lt;cert-arn&gt;
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="cost-optimization">Cost Optimization</h2>
 <h3 id="immediate-optimizations-week-1">Immediate Optimizations (Week 1)</h3>
@@ -8714,12 +8736,12 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <hr />
 <h2 id="appendix-c-disaster-recovery-procedures">Appendix C: Disaster Recovery Procedures</h2>
 <h3 id="rds-failure">RDS Failure</h3>
-<p><strong>Detection</strong>:
+<p><strong>Detection</strong>:</p>
 <div class="highlight"><pre><span></span><code>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--db-instance-identifier<span class="w"> </span>fawkes-production-db<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[0].DBInstanceStatus&#39;</span>
-</code></pre></div></p>
-<p><strong>Recovery</strong> (Multi-AZ automatic failover):
+</code></pre></div>
+<p><strong>Recovery</strong> (Multi-AZ automatic failover):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Force failover to standby</span>
 aws<span class="w"> </span>rds<span class="w"> </span>reboot-db-instance<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--db-instance-identifier<span class="w"> </span>fawkes-production-db<span class="w"> </span><span class="se">\</span>
@@ -8733,8 +8755,8 @@ aws<span class="w"> </span>rds<span class="w"> </span><span class="nb">wait</spa
 aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--db-instance-identifier<span class="w"> </span>fawkes-production-db<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[0].Endpoint.Address&#39;</span>
-</code></pre></div></p>
-<p><strong>Recovery</strong> (Complete failure - restore from snapshot):
+</code></pre></div>
+<p><strong>Recovery</strong> (Complete failure - restore from snapshot):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># List recent snapshots</span>
 aws<span class="w"> </span>rds<span class="w"> </span>describe-db-snapshots<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--db-instance-identifier<span class="w"> </span>fawkes-production-db<span class="w"> </span><span class="se">\</span>
@@ -8770,13 +8792,13 @@ kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>harbor
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>mattermost
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>focalboard
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="eks-cluster-failure">EKS Cluster Failure</h3>
-<p><strong>Detection</strong>:
+<p><strong>Detection</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
 <span class="c1"># No response or all nodes NotReady</span>
-</code></pre></div></p>
-<p><strong>Recovery</strong>:
+</code></pre></div>
+<p><strong>Recovery</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check cluster status</span>
 aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>fawkes-production<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;cluster.status&#39;</span>
 
@@ -8787,13 +8809,15 @@ terraform<span class="w"> </span>apply
 
 <span class="c1"># Restore from Velero backup</span>
 velero<span class="w"> </span>restore<span class="w"> </span>create<span class="w"> </span>--from-backup<span class="w"> </span>daily-backup-20251007
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="complete-region-failure">Complete Region Failure</h3>
-<p><strong>Prerequisites</strong>:
-- Multi-region setup (not covered in this guide)
-- Cross-region RDS replication
-- S3 cross-region replication</p>
-<p><strong>Recovery</strong>:
+<p><strong>Prerequisites</strong>:</p>
+<ul>
+<li>Multi-region setup (not covered in this guide)</li>
+<li>Cross-region RDS replication</li>
+<li>S3 cross-region replication</li>
+</ul>
+<p><strong>Recovery</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Promote RDS read replica in secondary region</span>
 aws<span class="w"> </span>rds<span class="w"> </span>promote-read-replica<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--db-instance-identifier<span class="w"> </span>fawkes-production-db-replica<span class="w"> </span><span class="se">\</span>
@@ -8807,7 +8831,7 @@ terraform<span class="w"> </span>apply<span class="w"> </span>-var-file<span cla
 aws<span class="w"> </span>route53<span class="w"> </span>change-resource-record-sets<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--hosted-zone-id<span class="w"> </span>&lt;zone-id&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--change-batch<span class="w"> </span>file://failover-dns.json
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="appendix-d-maintenance-procedures">Appendix D: Maintenance Procedures</h2>
 <h3 id="monthly-maintenance-tasks">Monthly Maintenance Tasks</h3>
@@ -8932,31 +8956,39 @@ aws<span class="w"> </span>config<span class="w"> </span>describe-compliance-by-
 <hr />
 <h2 id="conclusion">Conclusion</h2>
 <p>Congratulations! You've successfully deployed the Fawkes platform on AWS in production.</p>
-<p><strong>What you've accomplished</strong>:
-- ✅ Deployed a complete Internal Delivery Platform on AWS
-- ✅ Set up high-availability infrastructure across 3 availability zones
-- ✅ Implemented security best practices (encryption, network policies, RBAC)
-- ✅ Configured comprehensive observability and monitoring
-- ✅ Established automated backups and disaster recovery procedures
-- ✅ Created maintainable, documented infrastructure</p>
-<p><strong>Next steps</strong>:
-1. <strong>Onboard your first team</strong>: Create their first project using Backstage
-2. <strong>Deploy first application</strong>: Use the golden path templates
-3. <strong>Configure CI/CD</strong>: Set up Jenkins pipelines for automated builds
-4. <strong>Launch Dojo</strong>: Begin training engineers on the platform
-5. <strong>Iterate and improve</strong>: Collect feedback and enhance the platform</p>
-<p><strong>Remember</strong>:
-- Monitor costs daily for the first week
-- Review security scans weekly
-- Perform monthly maintenance tasks
-- Test disaster recovery procedures quarterly
-- Keep documentation up to date</p>
-<p><strong>Need help?</strong>
-- Check troubleshooting section first
-- Search GitHub Issues: https://github.com/paruff/fawkes/issues
-- Join the community on Mattermost
-- Review AWS documentation
-- Contact platform team: platform-team@yourdomain.com</p>
+<p><strong>What you've accomplished</strong>:</p>
+<ul>
+<li>✅ Deployed a complete Internal Delivery Platform on AWS</li>
+<li>✅ Set up high-availability infrastructure across 3 availability zones</li>
+<li>✅ Implemented security best practices (encryption, network policies, RBAC)</li>
+<li>✅ Configured comprehensive observability and monitoring</li>
+<li>✅ Established automated backups and disaster recovery procedures</li>
+<li>✅ Created maintainable, documented infrastructure</li>
+</ul>
+<p><strong>Next steps</strong>:</p>
+<ol>
+<li><strong>Onboard your first team</strong>: Create their first project using Backstage</li>
+<li><strong>Deploy first application</strong>: Use the golden path templates</li>
+<li><strong>Configure CI/CD</strong>: Set up Jenkins pipelines for automated builds</li>
+<li><strong>Launch Dojo</strong>: Begin training engineers on the platform</li>
+<li><strong>Iterate and improve</strong>: Collect feedback and enhance the platform</li>
+</ol>
+<p><strong>Remember</strong>:</p>
+<ul>
+<li>Monitor costs daily for the first week</li>
+<li>Review security scans weekly</li>
+<li>Perform monthly maintenance tasks</li>
+<li>Test disaster recovery procedures quarterly</li>
+<li>Keep documentation up to date</li>
+</ul>
+<p><strong>Need help?</strong></p>
+<ul>
+<li>Check troubleshooting section first</li>
+<li>Search GitHub Issues: https://github.com/paruff/fawkes/issues</li>
+<li>Join the community on Mattermost</li>
+<li>Review AWS documentation</li>
+<li>Contact platform team: platform-team@yourdomain.com</li>
+</ul>
 <p><strong>Thank you for choosing Fawkes!</strong> 🚀</p>
 <hr />
 <p><strong>Document Version</strong>: 1.0

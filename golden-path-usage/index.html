@@ -5264,11 +5264,13 @@
 <span class="w">    </span><span class="c1">// bddTestCommand = &#39;mvn verify -Pcucumber&#39;</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>Required Files:</strong>
-- <code>pom.xml</code> - Maven project file
-- <code>Dockerfile</code> - Container build instructions
-- <code>src/test/java/</code> - Unit tests
-- <code>src/test/resources/features/</code> - Gherkin feature files (optional)</p>
+<p><strong>Required Files:</strong></p>
+<ul>
+<li><code>pom.xml</code> - Maven project file</li>
+<li><code>Dockerfile</code> - Container build instructions</li>
+<li><code>src/test/java/</code> - Unit tests</li>
+<li><code>src/test/resources/features/</code> - Gherkin feature files (optional)</li>
+</ul>
 <p><strong>Cucumber Integration:</strong></p>
 <p>Add to <code>pom.xml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;profiles&gt;</span>
@@ -5300,11 +5302,13 @@
 <span class="w">    </span><span class="c1">// bddTestCommand = &#39;behave --junit --junit-directory=bdd-results&#39;</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>Required Files:</strong>
-- <code>requirements.txt</code> - Dependencies
-- <code>Dockerfile</code> - Container build instructions
-- <code>tests/unit/</code> - Unit tests
-- <code>features/</code> - Behave feature files (optional)</p>
+<p><strong>Required Files:</strong></p>
+<ul>
+<li><code>requirements.txt</code> - Dependencies</li>
+<li><code>Dockerfile</code> - Container build instructions</li>
+<li><code>tests/unit/</code> - Unit tests</li>
+<li><code>features/</code> - Behave feature files (optional)</li>
+</ul>
 <p><strong>Behave Integration:</strong></p>
 <div class="highlight"><pre><span></span><code>features/
 ├── environment.py
@@ -5322,11 +5326,13 @@
 <span class="w">    </span><span class="c1">// bddTestCommand = &#39;npm run test:bdd&#39;</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>Required Files:</strong>
-- <code>package.json</code> - Node.js project file
-- <code>Dockerfile</code> - Container build instructions
-- <code>__tests__/</code> or <code>tests/</code> - Unit tests
-- <code>features/</code> - Cucumber.js feature files (optional)</p>
+<p><strong>Required Files:</strong></p>
+<ul>
+<li><code>package.json</code> - Node.js project file</li>
+<li><code>Dockerfile</code> - Container build instructions</li>
+<li><code>__tests__/</code> or <code>tests/</code> - Unit tests</li>
+<li><code>features/</code> - Cucumber.js feature files (optional)</li>
+</ul>
 <p><strong>Cucumber.js Integration:</strong></p>
 <p>Add to <code>package.json</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -5348,11 +5354,13 @@
 <span class="w">    </span><span class="c1">// bddTestCommand = &#39;go test -v ./features/...&#39;</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><strong>Required Files:</strong>
-- <code>go.mod</code> - Go module file
-- <code>Dockerfile</code> - Container build instructions
-- <code>*_test.go</code> - Unit tests
-- <code>features/</code> - Godog feature files (optional)</p>
+<p><strong>Required Files:</strong></p>
+<ul>
+<li><code>go.mod</code> - Go module file</li>
+<li><code>Dockerfile</code> - Container build instructions</li>
+<li><code>*_test.go</code> - Unit tests</li>
+<li><code>features/</code> - Godog feature files (optional)</li>
+</ul>
 <h2 id="custom-commands">Custom Commands</h2>
 <p>Override default commands when needed:</p>
 <div class="highlight"><pre><span></span><code><span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
@@ -5451,22 +5459,26 @@
 <span class="o">}</span>
 </code></pre></div>
 <h3 id="dependency-checks">Dependency Checks</h3>
-<p>Language-specific dependency scanning:
-- <strong>Java</strong>: OWASP Dependency-Check Maven plugin
-- <strong>Python</strong>: <code>safety</code> and <code>pip-audit</code>
-- <strong>Node.js</strong>: <code>npm audit</code>
-- <strong>Go</strong>: <code>govulncheck</code></p>
+<p>Language-specific dependency scanning:</p>
+<ul>
+<li><strong>Java</strong>: OWASP Dependency-Check Maven plugin</li>
+<li><strong>Python</strong>: <code>safety</code> and <code>pip-audit</code></li>
+<li><strong>Node.js</strong>: <code>npm audit</code></li>
+<li><strong>Go</strong>: <code>govulncheck</code></li>
+</ul>
 <h2 id="notifications">Notifications</h2>
 <p>Build notifications are sent to Mattermost:</p>
 <div class="highlight"><pre><span></span><code><span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">notifyChannel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-team-builds&#39;</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>Notifications include:
-- ✅/❌ Build status
-- Build number and duration
-- Commit SHA and branch
-- Link to Jenkins build</p>
+<p>Notifications include:</p>
+<ul>
+<li>✅/❌ Build status</li>
+<li>Build number and duration</li>
+<li>Commit SHA and branch</li>
+<li>Link to Jenkins build</li>
+</ul>
 <h2 id="dora-metrics">DORA Metrics</h2>
 <p>The pipeline automatically records:</p>
 <ul>
@@ -5518,16 +5530,18 @@
 </tbody>
 </table>
 <h3 id="merge-requirements">Merge Requirements</h3>
-<p>Before merging:
-1. All tests pass
-2. Code review approved
-3. PR status checks green</p>
+<p>Before merging:</p>
+<ol>
+<li>All tests pass</li>
+<li>Code review approved</li>
+<li>PR status checks green</li>
+</ol>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="common-issues">Common Issues</h3>
 <h4 id="build-timeout">Build Timeout</h4>
-<p>Increase timeout in Jenkinsfile:
+<p>Increase timeout in Jenkinsfile:</p>
 <div class="highlight"><pre><span></span><code><span class="n">timeoutMinutes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">60</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="sonarqube-fails">SonarQube Fails</h4>
 <ol>
 <li>Check SonarQube project exists</li>
@@ -5547,10 +5561,12 @@
 <li>Verify feature files are in correct location</li>
 </ol>
 <h3 id="debug-mode">Debug Mode</h3>
-<p>View detailed logs in Jenkins console output:
-1. Go to Jenkins build
-2. Click "Console Output"
-3. Search for stage name</p>
+<p>View detailed logs in Jenkins console output:</p>
+<ol>
+<li>Go to Jenkins build</li>
+<li>Click "Console Output"</li>
+<li>Search for stage name</li>
+</ol>
 <h3 id="getting-help">Getting Help</h3>
 <ul>
 <li><strong>Documentation</strong>: This guide and shared library README</li>
@@ -5583,15 +5599,15 @@
 <span class="w">  </span><span class="nt">web</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;harbor.fawkes.local/my-team/my-service:latest&quot;</span>
 <span class="w">    </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">limits</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span><span class="p p-Indicator">,</span><span class="nt"> cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="nt">requests</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span><span class="p p-Indicator">,</span><span class="nt"> cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;250m&quot;</span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">limits</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span><span class="p p-Indicator">,</span><span class="nt"> cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">requests</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span><span class="p p-Indicator">,</span><span class="nt"> cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;250m&quot;</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">    </span><span class="nt">variables</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">LOG_LEVEL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;info&quot;</span>
 <span class="w">      </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${resources.db.connection_string}&quot;</span>
 
 <span class="nt">service</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">web</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="nv">80</span><span class="p p-Indicator">,</span><span class="nt"> targetPort</span><span class="p">:</span><span class="w"> </span><span class="nv">8080</span><span class="p p-Indicator">}</span>
+<span class="w">    </span><span class="nt">web</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> port</span><span class="p">:</span><span class="w"> </span><span class="nv">80</span><span class="p p-Indicator">,</span><span class="nt"> targetPort</span><span class="p">:</span><span class="w"> </span><span class="nv">8080</span><span class="w"> </span><span class="p p-Indicator">}</span>
 
 <span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">db</span><span class="p">:</span>
@@ -5601,14 +5617,16 @@
 
 <span class="nt">route</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;my-service.${ENVIRONMENT}.fawkes.idp&quot;</span>
-<span class="w">  </span><span class="nt">tls</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">tls</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> enabled</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="w"> </span><span class="p p-Indicator">}</span>
 </code></pre></div>
-<p>The platform automatically translates this into:
-- Kubernetes Deployment
-- Service
-- Ingress
-- PostgreSQL database (via CloudNativePG)
-- TLS certificate (via cert-manager)</p>
+<p>The platform automatically translates this into:</p>
+<ul>
+<li>Kubernetes Deployment</li>
+<li>Service</li>
+<li>Ingress</li>
+<li>PostgreSQL database (via CloudNativePG)</li>
+<li>TLS certificate (via cert-manager)</li>
+</ul>
 <h3 id="repository-structure-with-score">Repository Structure with SCORE</h3>
 <div class="highlight"><pre><span></span><code>my-service/
 ├── score.yaml              # Workload definition (SCORE spec)
@@ -5651,14 +5669,18 @@
 </table>
 <h3 id="environment-specific-deployment">Environment-Specific Deployment</h3>
 <p>The same <code>score.yaml</code> works across environments. Environment differences (replicas, resource limits, hostnames) are handled by the platform:</p>
-<p><strong>Dev Environment:</strong>
-- 1 replica
-- Smaller resource limits
-- <code>my-service.dev.fawkes.idp</code></p>
-<p><strong>Prod Environment:</strong>
-- 3 replicas with autoscaling
-- Higher resource limits
-- <code>my-service.prod.fawkes.idp</code></p>
+<p><strong>Dev Environment:</strong></p>
+<ul>
+<li>1 replica</li>
+<li>Smaller resource limits</li>
+<li><code>my-service.dev.fawkes.idp</code></li>
+</ul>
+<p><strong>Prod Environment:</strong></p>
+<ul>
+<li>3 replicas with autoscaling</li>
+<li>Higher resource limits</li>
+<li><code>my-service.prod.fawkes.idp</code></li>
+</ul>
 <h3 id="migration-from-k8s-manifests">Migration from K8s Manifests</h3>
 <p>If you have existing Kubernetes manifests, you can migrate gradually:</p>
 <ol>

@@ -5335,7 +5335,7 @@
   <a href="#achievement-unlocked" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🏆 Achievement Unlocked!
+        🏆 Achievement Unlocked
       
     </span>
   </a>
@@ -5411,11 +5411,13 @@
 <li><strong>Make</strong> a GitOps-driven deployment change in the hands-on lab</li>
 </ol>
 <h3 id="why-this-matters">Why This Matters</h3>
-<p>GitOps is a fundamental practice in modern platform engineering:
-- <strong>Netflix</strong> deploys 1000+ times per day using GitOps
-- <strong>Weaveworks</strong> reported 2x faster deployments with GitOps
-- <strong>DORA research</strong> shows GitOps directly improves all four key metrics
-- <strong>90% of cloud-native teams</strong> use or plan to use GitOps (CNCF Survey 2024)</p>
+<p>GitOps is a fundamental practice in modern platform engineering:</p>
+<ul>
+<li><strong>Netflix</strong> deploys 1000+ times per day using GitOps</li>
+<li><strong>Weaveworks</strong> reported 2x faster deployments with GitOps</li>
+<li><strong>DORA research</strong> shows GitOps directly improves all four key metrics</li>
+<li><strong>90% of cloud-native teams</strong> use or plan to use GitOps (CNCF Survey 2024)</li>
+</ul>
 <p>Understanding GitOps is essential for elite delivery performance.</p>
 <hr />
 <h2 id="section-1-the-gitops-paradigm-15-minutes">📚 Section 1: The GitOps Paradigm (15 minutes)</h2>
@@ -5428,13 +5430,15 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment/myapp<spa
 helm<span class="w"> </span>upgrade<span class="w"> </span>myapp<span class="w"> </span>./chart<span class="w"> </span>--set<span class="w"> </span>image.tag<span class="o">=</span>v2.0
 terraform<span class="w"> </span>apply
 </code></pre></div>
-<p><strong>Problems</strong>:
-- ❌ <strong>No audit trail</strong> - Who made what change, when, and why?
-- ❌ <strong>Configuration drift</strong> - Production differs from documented state
-- ❌ <strong>No rollback</strong> - Can't easily revert to previous working state
-- ❌ <strong>Knowledge silos</strong> - Only certain people know how to deploy
-- ❌ <strong>Error-prone</strong> - Manual commands = human mistakes
-- ❌ <strong>No code review</strong> - Infrastructure changes not peer-reviewed</p>
+<p><strong>Problems</strong>:</p>
+<ul>
+<li>❌ <strong>No audit trail</strong> - Who made what change, when, and why?</li>
+<li>❌ <strong>Configuration drift</strong> - Production differs from documented state</li>
+<li>❌ <strong>No rollback</strong> - Can't easily revert to previous working state</li>
+<li>❌ <strong>Knowledge silos</strong> - Only certain people know how to deploy</li>
+<li>❌ <strong>Error-prone</strong> - Manual commands = human mistakes</li>
+<li>❌ <strong>No code review</strong> - Infrastructure changes not peer-reviewed</li>
+</ul>
 <h3 id="the-gitops-way-declarative-state">The GitOps Way: Declarative State</h3>
 <p><strong>With GitOps</strong>, you declare desired state in Git:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># In Git repository: apps/prod/myapp/deployment.yaml</span>
@@ -5447,26 +5451,30 @@ terraform<span class="w"> </span>apply
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v2.0</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v2.0</span>
 </code></pre></div>
-<p><strong>GitOps operator</strong> (like ArgoCD) continuously:
-1. <strong>Watches Git</strong> for changes
-2. <strong>Compares</strong> Git state with cluster state
-3. <strong>Applies</strong> differences automatically
-4. <strong>Heals</strong> any manual changes (self-healing)</p>
-<p><strong>Benefits</strong>:
-- ✅ <strong>Complete audit trail</strong> - Every change is a Git commit
-- ✅ <strong>No drift</strong> - System automatically returns to Git state
-- ✅ <strong>Easy rollback</strong> - <code>git revert</code> restores previous state
-- ✅ <strong>Knowledge sharing</strong> - Git repository documents everything
-- ✅ <strong>Reliable</strong> - Automation eliminates human error
-- ✅ <strong>Code review</strong> - All changes via pull requests</p>
+<p><strong>GitOps operator</strong> (like ArgoCD) continuously:</p>
+<ol>
+<li><strong>Watches Git</strong> for changes</li>
+<li><strong>Compares</strong> Git state with cluster state</li>
+<li><strong>Applies</strong> differences automatically</li>
+<li><strong>Heals</strong> any manual changes (self-healing)</li>
+</ol>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>✅ <strong>Complete audit trail</strong> - Every change is a Git commit</li>
+<li>✅ <strong>No drift</strong> - System automatically returns to Git state</li>
+<li>✅ <strong>Easy rollback</strong> - <code>git revert</code> restores previous state</li>
+<li>✅ <strong>Knowledge sharing</strong> - Git repository documents everything</li>
+<li>✅ <strong>Reliable</strong> - Automation eliminates human error</li>
+<li>✅ <strong>Code review</strong> - All changes via pull requests</li>
+</ul>
 <h3 id="four-principles-of-gitops">Four Principles of GitOps</h3>
 <p>The <strong>OpenGitOps</strong> working group defines four core principles:</p>
 <h4 id="1-declarative">1. Declarative</h4>
 <p><strong>Definition</strong>: System's desired state is expressed declaratively (what, not how).</p>
-<p><strong>Example</strong>:
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Declarative (GitOps) - Describe WHAT you want</span>
 <span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
 <span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:v2.0</span>
@@ -5474,16 +5482,18 @@ terraform<span class="w"> </span>apply
 <span class="c1"># vs. Imperative - Describe HOW to achieve it</span>
 <span class="l l-Scalar l-Scalar-Plain">kubectl scale --replicas=5</span>
 <span class="l l-Scalar l-Scalar-Plain">kubectl set image deployment/myapp myapp=v2.0</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Why it matters</strong>: Declarative is idempotent (run multiple times = same result), easier to understand, and automation-friendly.</p>
 <h4 id="2-versioned-and-immutable">2. Versioned and Immutable</h4>
 <p><strong>Definition</strong>: Desired state is stored in Git, providing version history and immutability.</p>
-<p><strong>Benefits</strong>:
-- Every change has a commit SHA (immutable reference)
-- Full history of who changed what, when, and why
-- Easy to see what production looked like at any point in time
-- Rollback is just a <code>git revert</code></p>
-<p><strong>Example</strong>:
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>Every change has a commit SHA (immutable reference)</li>
+<li>Full history of who changed what, when, and why</li>
+<li>Easy to see what production looked like at any point in time</li>
+<li>Rollback is just a <code>git revert</code></li>
+</ul>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># View deployment history</span>
 git<span class="w"> </span>log<span class="w"> </span>apps/prod/myapp/deployment.yaml
 
@@ -5492,10 +5502,10 @@ git<span class="w"> </span>diff<span class="w"> </span>HEAD~1<span class="w"> </
 
 <span class="c1"># Rollback to previous version</span>
 git<span class="w"> </span>revert<span class="w"> </span>HEAD
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="3-pulled-automatically">3. Pulled Automatically</h4>
 <p><strong>Definition</strong>: Software agents automatically pull desired state from Git (not pushed).</p>
-<p><strong>Pull Model</strong> (GitOps):
+<p><strong>Pull Model</strong> (GitOps):</p>
 <div class="highlight"><pre><span></span><code>Git Repository (source of truth)
         ↑
         │ Pull changes
@@ -5506,56 +5516,64 @@ git<span class="w"> </span>revert<span class="w"> </span>HEAD
         ↓ Apply to cluster
         │
     Kubernetes Cluster
-</code></pre></div></p>
-<p><strong>Push Model</strong> (Traditional CI/CD):
+</code></pre></div>
+<p><strong>Push Model</strong> (Traditional CI/CD):</p>
 <div class="highlight"><pre><span></span><code>CI/CD System (Jenkins)
         │
         ↓ Push changes
         │ (when triggered)
         │
     Kubernetes Cluster
-</code></pre></div></p>
-<p><strong>Why Pull is Better</strong>:
-- ✅ <strong>More secure</strong> - Cluster credentials not in CI/CD system
-- ✅ <strong>Self-healing</strong> - Detects and corrects drift automatically
-- ✅ <strong>Better failure handling</strong> - Retries automatically
-- ✅ <strong>Audit trail</strong> - All changes go through Git (no backdoors)</p>
+</code></pre></div>
+<p><strong>Why Pull is Better</strong>:</p>
+<ul>
+<li>✅ <strong>More secure</strong> - Cluster credentials not in CI/CD system</li>
+<li>✅ <strong>Self-healing</strong> - Detects and corrects drift automatically</li>
+<li>✅ <strong>Better failure handling</strong> - Retries automatically</li>
+<li>✅ <strong>Audit trail</strong> - All changes go through Git (no backdoors)</li>
+</ul>
 <h4 id="4-continuously-reconciled">4. Continuously Reconciled</h4>
 <p><strong>Definition</strong>: Software agents continuously ensure actual state matches desired state.</p>
-<p><strong>Reconciliation Loop</strong>:
+<p><strong>Reconciliation Loop</strong>:</p>
 <div class="highlight"><pre><span></span><code>1. Fetch desired state from Git
 2. Compare with actual state in cluster
 3. If different, apply changes
 4. Wait (e.g., 3 minutes)
 5. Repeat from step 1
-</code></pre></div></p>
-<p><strong>Self-Healing Example</strong>:
+</code></pre></div>
+<p><strong>Self-Healing Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Someone manually changes replicas</span>
 kubectl<span class="w"> </span>scale<span class="w"> </span>deployment/myapp<span class="w"> </span>--replicas<span class="o">=</span><span class="m">10</span>
 
 <span class="c1"># Within 3 minutes, GitOps operator detects drift</span>
 <span class="c1"># and reverts to Git-declared state (5 replicas)</span>
-</code></pre></div></p>
-<p><strong>Benefits</strong>:
-- Prevents configuration drift
-- Recovers from manual mistakes automatically
-- Ensures production always matches Git
-- Reduces operational toil</p>
+</code></pre></div>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>Prevents configuration drift</li>
+<li>Recovers from manual mistakes automatically</li>
+<li>Ensures production always matches Git</li>
+<li>Reduces operational toil</li>
+</ul>
 <hr />
 <h2 id="section-2-gitops-and-dora-metrics-15-minutes">📚 Section 2: GitOps and DORA Metrics (15 minutes)</h2>
 <h3 id="how-gitops-improves-deployment-frequency">How GitOps Improves Deployment Frequency</h3>
 <p><strong>Deployment Frequency</strong>: How often you deploy to production</p>
-<p><strong>Without GitOps</strong>:
-- Manual deployments require coordination
-- Fear of breaking production slows deploys
-- Need specific people with kubectl access
-- Result: Weekly or monthly deployments</p>
-<p><strong>With GitOps</strong>:
-- Merge to main branch → automatic deployment
-- Git PR process provides confidence
-- Any developer can merge (with approval)
-- Result: Multiple deployments per day</p>
-<p><strong>Example Flow</strong>:
+<p><strong>Without GitOps</strong>:</p>
+<ul>
+<li>Manual deployments require coordination</li>
+<li>Fear of breaking production slows deploys</li>
+<li>Need specific people with kubectl access</li>
+<li>Result: Weekly or monthly deployments</li>
+</ul>
+<p><strong>With GitOps</strong>:</p>
+<ul>
+<li>Merge to main branch → automatic deployment</li>
+<li>Git PR process provides confidence</li>
+<li>Any developer can merge (with approval)</li>
+<li>Result: Multiple deployments per day</li>
+</ul>
+<p><strong>Example Flow</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Developer workflow</span>
 git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/new-endpoint
 <span class="c1"># Make changes to application code</span>
@@ -5566,69 +5584,77 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <span class="c1"># → CI builds and pushes image</span>
 <span class="c1"># → Updates GitOps repo with new image tag</span>
 <span class="c1"># → ArgoCD deploys automatically (within 3 minutes)</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Impact</strong>: Fawkes teams average 10-20 deployments/day with GitOps vs. 2-3/week without.</p>
 <h3 id="how-gitops-reduces-lead-time-for-changes">How GitOps Reduces Lead Time for Changes</h3>
 <p><strong>Lead Time for Changes</strong>: Time from commit to production</p>
-<p><strong>Without GitOps</strong>:
+<p><strong>Without GitOps</strong>:</p>
 <div class="highlight"><pre><span></span><code>Commit → Wait for CI → Manual deployment steps → Production
         (10 min)      (30-60 min manual work)
 Total: 40-70 minutes
-</code></pre></div></p>
-<p><strong>With GitOps</strong>:
+</code></pre></div>
+<p><strong>With GitOps</strong>:</p>
 <div class="highlight"><pre><span></span><code>Commit → CI builds → Update GitOps repo → ArgoCD syncs → Production
         (10 min)    (1 min)              (3 min)
 Total: 14 minutes
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Key Difference</strong>: Elimination of manual deployment steps.</p>
 <p><strong>Fawkes Optimization</strong>: Using webhooks instead of polling reduces sync time to &lt;30 seconds.</p>
 <h3 id="how-gitops-lowers-change-failure-rate">How GitOps Lowers Change Failure Rate</h3>
 <p><strong>Change Failure Rate</strong>: % of deployments causing failures</p>
-<p><strong>Without GitOps</strong>:
-- Manual kubectl commands prone to errors
-- No code review of infrastructure changes
-- Difficult to test changes before production
-- Configuration drift introduces unknowns
-- Result: 15-20% failure rate typical</p>
-<p><strong>With GitOps</strong>:
-- Declarative configs easier to review
-- Pull requests catch errors before merge
-- Can test in staging (identical GitOps workflow)
-- No drift means fewer surprises
-- Result: 3-5% failure rate achievable</p>
-<p><strong>Safety Mechanisms</strong>:
-1. <strong>Git History</strong>: Every change reviewed and auditable
-2. <strong>Dry Run</strong>: ArgoCD shows what will change before applying
-3. <strong>Progressive Sync</strong>: Gradual rollout with health checks
-4. <strong>Automatic Rollback</strong>: Failed deployments auto-revert</p>
+<p><strong>Without GitOps</strong>:</p>
+<ul>
+<li>Manual kubectl commands prone to errors</li>
+<li>No code review of infrastructure changes</li>
+<li>Difficult to test changes before production</li>
+<li>Configuration drift introduces unknowns</li>
+<li>Result: 15-20% failure rate typical</li>
+</ul>
+<p><strong>With GitOps</strong>:</p>
+<ul>
+<li>Declarative configs easier to review</li>
+<li>Pull requests catch errors before merge</li>
+<li>Can test in staging (identical GitOps workflow)</li>
+<li>No drift means fewer surprises</li>
+<li>Result: 3-5% failure rate achievable</li>
+</ul>
+<p><strong>Safety Mechanisms</strong>:</p>
+<ol>
+<li><strong>Git History</strong>: Every change reviewed and auditable</li>
+<li><strong>Dry Run</strong>: ArgoCD shows what will change before applying</li>
+<li><strong>Progressive Sync</strong>: Gradual rollout with health checks</li>
+<li><strong>Automatic Rollback</strong>: Failed deployments auto-revert</li>
+</ol>
 <h3 id="how-gitops-improves-time-to-restore-service">How GitOps Improves Time to Restore Service</h3>
 <p><strong>Time to Restore Service</strong>: Time to recover from failure</p>
-<p><strong>Without GitOps</strong>:
+<p><strong>Without GitOps</strong>:</p>
 <div class="highlight"><pre><span></span><code>Incident detected → Find person with access → Figure out what changed →
 Run commands to fix → Hope it works
 Total: 30-60 minutes (or more)
-</code></pre></div></p>
-<p><strong>With GitOps</strong>:
+</code></pre></div>
+<p><strong>With GitOps</strong>:</p>
 <div class="highlight"><pre><span></span><code>Incident detected → git revert HEAD → ArgoCD syncs → Service restored
 Total: 3-5 minutes
-</code></pre></div></p>
-<p><strong>Example</strong>:
+</code></pre></div>
+<p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Quick rollback</span>
 git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w">  </span><span class="c1"># Find commit to revert to</span>
 git<span class="w"> </span>revert<span class="w"> </span>abc123<span class="w">  </span><span class="c1"># Creates new commit that undoes abc123</span>
 git<span class="w"> </span>push<span class="w">           </span><span class="c1"># ArgoCD automatically applies rollback</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Fawkes Average MTTR</strong>: 4 minutes with GitOps vs. 45 minutes without.</p>
 <hr />
 <h2 id="section-3-gitops-repository-structure-15-minutes">📚 Section 3: GitOps Repository Structure (15 minutes)</h2>
 <h3 id="the-mono-repo-pattern">The Mono-repo Pattern</h3>
 <p>Fawkes uses a <strong>mono-repo approach</strong> where all environments and applications live in one repository.</p>
-<p><strong>Benefits</strong>:
-- Single source of truth
-- Easy to see all environments
-- Shared modules and configurations
-- Consistent tooling</p>
-<p><strong>Structure</strong>:
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>Single source of truth</li>
+<li>Easy to see all environments</li>
+<li>Shared modules and configurations</li>
+<li>Consistent tooling</li>
+</ul>
+<p><strong>Structure</strong>:</p>
 <div class="highlight"><pre><span></span><code>fawkes-gitops/
 ├── apps/                       # Application deployments
 │   ├── dev/                    # Development environment
@@ -5663,24 +5689,32 @@ git<span class="w"> </span>push<span class="w">           </span><span class="c1
     ├── dev-apps.yaml
     ├── staging-apps.yaml
     └── prod-apps.yaml
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="directory-responsibilities">Directory Responsibilities</h3>
-<p><strong><code>apps/</code></strong> - Application Deployments
-- One directory per environment (dev, staging, prod)
-- Team-based organization
-- Contains Kubernetes manifests or Kustomize/Helm references</p>
-<p><strong><code>platform/</code></strong> - Platform Components
-- Fawkes platform services (Backstage, Jenkins, ArgoCD, etc.)
-- Usually deployed once (not per environment)
-- Managed by platform team</p>
-<p><strong><code>infrastructure/</code></strong> - Infrastructure Resources
-- Namespaces, RBAC, network policies
-- Resource quotas and limits
-- Applied before applications</p>
-<p><strong><code>argocd-apps/</code></strong> - ArgoCD Applications
-- Defines what ArgoCD should deploy
-- ApplicationSets for deploying multiple apps
-- Points to directories in <code>apps/</code>, <code>platform/</code>, <code>infrastructure/</code></p>
+<p><strong><code>apps/</code></strong> - Application Deployments</p>
+<ul>
+<li>One directory per environment (dev, staging, prod)</li>
+<li>Team-based organization</li>
+<li>Contains Kubernetes manifests or Kustomize/Helm references</li>
+</ul>
+<p><strong><code>platform/</code></strong> - Platform Components</p>
+<ul>
+<li>Fawkes platform services (Backstage, Jenkins, ArgoCD, etc.)</li>
+<li>Usually deployed once (not per environment)</li>
+<li>Managed by platform team</li>
+</ul>
+<p><strong><code>infrastructure/</code></strong> - Infrastructure Resources</p>
+<ul>
+<li>Namespaces, RBAC, network policies</li>
+<li>Resource quotas and limits</li>
+<li>Applied before applications</li>
+</ul>
+<p><strong><code>argocd-apps/</code></strong> - ArgoCD Applications</p>
+<ul>
+<li>Defines what ArgoCD should deploy</li>
+<li>ApplicationSets for deploying multiple apps</li>
+<li>Points to directories in <code>apps/</code>, <code>platform/</code>, <code>infrastructure/</code></li>
+</ul>
 <h3 id="environment-promotion-pattern">Environment Promotion Pattern</h3>
 <p><strong>Dev → Staging → Prod</strong> promotion via Git:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Deploy to dev (automatic on merge)</span>
@@ -5706,13 +5740,13 @@ git<span class="w"> </span>push
 <p><strong>Better Approach: Kustomize Overlays</strong> (covered in Green Belt)</p>
 <h3 id="gitops-repository-best-practices">GitOps Repository Best Practices</h3>
 <h4 id="1-separate-application-code-from-deployment-config">1. Separate Application Code from Deployment Config</h4>
-<p><strong>Anti-pattern</strong>: Kubernetes manifests in application repository
+<p><strong>Anti-pattern</strong>: Kubernetes manifests in application repository</p>
 <div class="highlight"><pre><span></span><code>myapp/
 ├── src/           # Application code
 ├── deployment.yaml  # ❌ Deployment config mixed with code
 └── service.yaml
-</code></pre></div></p>
-<p><strong>Best Practice</strong>: Separate repositories
+</code></pre></div>
+<p><strong>Best Practice</strong>: Separate repositories</p>
 <div class="highlight"><pre><span></span><code>myapp/             # Application code repository
 └── src/
 
@@ -5720,20 +5754,20 @@ fawkes-gitops/     # Deployment config repository
 └── apps/dev/team-a/myapp/
     ├── deployment.yaml  # ✅ Deployment config separate
     └── service.yaml
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Why</strong>: Allows deploying same app code to multiple environments with different configs.</p>
 <h4 id="2-use-meaningful-commit-messages">2. Use Meaningful Commit Messages</h4>
-<p><strong>Bad</strong>:
+<p><strong>Bad</strong>:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;update&quot;</span>
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix&quot;</span>
-</code></pre></div></p>
-<p><strong>Good</strong>:
+</code></pre></div>
+<p><strong>Good</strong>:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Scale myapp from 3 to 5 replicas to handle increased load&quot;</span>
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update myapp to v2.1.3 (fixes memory leak)&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Why</strong>: Commit messages are your audit trail and rollback documentation.</p>
 <h4 id="3-keep-files-small-and-focused">3. Keep Files Small and Focused</h4>
-<p><strong>Anti-pattern</strong>: One giant <code>all-resources.yaml</code>
+<p><strong>Anti-pattern</strong>: One giant <code>all-resources.yaml</code></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># ❌ 500 lines containing everything</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
@@ -5746,14 +5780,14 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
 <span class="c1"># ... 200 lines</span>
-</code></pre></div></p>
-<p><strong>Best Practice</strong>: One file per resource type
+</code></pre></div>
+<p><strong>Best Practice</strong>: One file per resource type</p>
 <div class="highlight"><pre><span></span><code>myapp/
 ├── kustomization.yaml  # ✅ Small, focused files
 ├── deployment.yaml
 ├── service.yaml
 └── ingress.yaml
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Why</strong>: Easier to review, understand, and modify. Better Git diffs.</p>
 <h4 id="4-use-kustomize-for-environment-differences">4. Use Kustomize for Environment Differences</h4>
 <p>Instead of copying entire files per environment, use Kustomize overlays:</p>
@@ -5772,16 +5806,16 @@ overlays/
 </code></pre></div>
 <p><strong>Why</strong>: DRY principle - define once, override only what differs.</p>
 <h4 id="5-never-commit-secrets-to-git">5. Never Commit Secrets to Git</h4>
-<p><strong>Wrong (example with placeholder)</strong>:
+<p><strong>Wrong (example with placeholder)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># ❌ NEVER commit real secrets</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-password</span>
 <span class="nt">data</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLACEHOLDER_BASE64_VALUE</span><span class="w">  </span><span class="c1"># base64 is NOT encryption</span>
-</code></pre></div></p>
-<p><strong>Right</strong>: Use Sealed Secrets or External Secrets Operator
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLACEHOLDER_BASE64_VALUE</span><span class="w"> </span><span class="c1"># base64 is NOT encryption</span>
+</code></pre></div>
+<p><strong>Right</strong>: Use Sealed Secrets or External Secrets Operator</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># ✅ Encrypted secret safe for Git</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bitnami.com/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SealedSecret</span>
@@ -5789,60 +5823,78 @@ overlays/
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-password</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">encryptedData</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AgAAAA...REDACTED_EXAMPLE</span><span class="w">  </span><span class="c1"># Encrypted; only decryptable by controller</span>
-</code></pre></div></p>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AgAAAA...REDACTED_EXAMPLE</span><span class="w"> </span><span class="c1"># Encrypted; only decryptable by controller</span>
+</code></pre></div>
 <p><strong>Why</strong>: Git history is forever. Committed secrets are compromised secrets.</p>
 <hr />
 <h2 id="section-4-gitops-in-action-with-argocd-10-minutes">📚 Section 4: GitOps in Action with ArgoCD (10 minutes)</h2>
 <h3 id="argocd-the-gitops-operator">ArgoCD: The GitOps Operator</h3>
-<p><strong>ArgoCD</strong> is Fawkes' GitOps continuous delivery tool. It:
-- Watches Git repositories for changes
-- Compares desired state (Git) with actual state (Kubernetes)
-- Applies differences automatically
-- Provides UI for visualizing deployments</p>
+<p><strong>ArgoCD</strong> is Fawkes' GitOps continuous delivery tool. It:</p>
+<ul>
+<li>Watches Git repositories for changes</li>
+<li>Compares desired state (Git) with actual state (Kubernetes)</li>
+<li>Applies differences automatically</li>
+<li>Provides UI for visualizing deployments</li>
+</ul>
 <h3 id="application-health-states">Application Health States</h3>
 <p>ArgoCD tracks application health:</p>
-<p><strong>🟢 Healthy</strong> - All resources running as expected
-- Deployments have desired replicas ready
-- Services have endpoints
-- Ingresses configured correctly</p>
-<p><strong>🟡 Progressing</strong> - Deployment in progress
-- New pods starting up
-- Rolling update ongoing
-- Health checks not yet passing</p>
-<p><strong>🟠 Degraded</strong> - Partially working
-- Some replicas not ready
-- Some pods crashing
-- Service partially available</p>
-<p><strong>🔴 Missing</strong> - Resource doesn't exist
-- Deleted manually
-- Never created
-- Configuration error</p>
+<p><strong>🟢 Healthy</strong> - All resources running as expected</p>
+<ul>
+<li>Deployments have desired replicas ready</li>
+<li>Services have endpoints</li>
+<li>Ingresses configured correctly</li>
+</ul>
+<p><strong>🟡 Progressing</strong> - Deployment in progress</p>
+<ul>
+<li>New pods starting up</li>
+<li>Rolling update ongoing</li>
+<li>Health checks not yet passing</li>
+</ul>
+<p><strong>🟠 Degraded</strong> - Partially working</p>
+<ul>
+<li>Some replicas not ready</li>
+<li>Some pods crashing</li>
+<li>Service partially available</li>
+</ul>
+<p><strong>🔴 Missing</strong> - Resource doesn't exist</p>
+<ul>
+<li>Deleted manually</li>
+<li>Never created</li>
+<li>Configuration error</li>
+</ul>
 <h3 id="sync-status">Sync Status</h3>
 <p>ArgoCD compares Git vs. Kubernetes:</p>
-<p><strong>✅ Synced</strong> - Git matches cluster
-- No differences detected
-- Latest commit deployed</p>
-<p><strong>❌ OutOfSync</strong> - Git differs from cluster
-- Someone made manual changes, OR
-- New commit not yet deployed</p>
-<p><strong>🔄 Syncing</strong> - Applying changes
-- ArgoCD deploying Git changes
-- Resources being created/updated</p>
+<p><strong>✅ Synced</strong> - Git matches cluster</p>
+<ul>
+<li>No differences detected</li>
+<li>Latest commit deployed</li>
+</ul>
+<p><strong>❌ OutOfSync</strong> - Git differs from cluster</p>
+<ul>
+<li>Someone made manual changes, OR</li>
+<li>New commit not yet deployed</li>
+</ul>
+<p><strong>🔄 Syncing</strong> - Applying changes</p>
+<ul>
+<li>ArgoCD deploying Git changes</li>
+<li>Resources being created/updated</li>
+</ul>
 <h3 id="hands-on-viewing-your-application-in-argocd">Hands-On: Viewing Your Application in ArgoCD</h3>
-<p><strong>Access ArgoCD UI</strong>:
+<p><strong>Access ArgoCD UI</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get ArgoCD URL</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;https://argocd.fawkes.local&quot;</span>
 
 <span class="c1"># Login credentials provided in lab</span>
 Username:<span class="w"> </span>admin
 Password:<span class="w"> </span><span class="o">[</span>provided<span class="w"> </span><span class="k">in</span><span class="w"> </span>lab<span class="w"> </span>environment<span class="o">]</span>
-</code></pre></div></p>
-<p><strong>Navigate to Your Application</strong>:
-1. Click on <code>Applications</code> in left sidebar
-2. Find application: <code>dojo-learner-[yourname]-myapp</code>
-3. Observe the application topology (visual graph)</p>
-<p><strong>Understanding the Topology</strong>:
+</code></pre></div>
+<p><strong>Navigate to Your Application</strong>:</p>
+<ol>
+<li>Click on <code>Applications</code> in left sidebar</li>
+<li>Find application: <code>dojo-learner-[yourname]-myapp</code></li>
+<li>Observe the application topology (visual graph)</li>
+</ol>
+<p><strong>Understanding the Topology</strong>:</p>
 <div class="highlight"><pre><span></span><code>Application
     ↓
 Deployment
@@ -5850,40 +5902,42 @@ Deployment
 ReplicaSet
     ↓
 Pod → Service → Ingress
-</code></pre></div></p>
-<p><strong>Key Information</strong>:
-- <strong>Sync Status</strong>: Is Git in sync with cluster?
-- <strong>Health Status</strong>: Are resources healthy?
-- <strong>Last Sync</strong>: When was last deployment?
-- <strong>Git Commit</strong>: Which commit is deployed?</p>
+</code></pre></div>
+<p><strong>Key Information</strong>:</p>
+<ul>
+<li><strong>Sync Status</strong>: Is Git in sync with cluster?</li>
+<li><strong>Health Status</strong>: Are resources healthy?</li>
+<li><strong>Last Sync</strong>: When was last deployment?</li>
+<li><strong>Git Commit</strong>: Which commit is deployed?</li>
+</ul>
 <h3 id="making-a-gitops-change">Making a GitOps Change</h3>
 <p><strong>Scenario</strong>: Scale your application from 1 to 3 replicas</p>
-<p><strong>Step 1: Clone GitOps Repository</strong>
+<p><strong>Step 1: Clone GitOps Repository</strong></p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/fawkes-dojo/gitops-lab
 <span class="nb">cd</span><span class="w"> </span>gitops-lab
-</code></pre></div></p>
-<p><strong>Step 2: Make Change</strong>
+</code></pre></div>
+<p><strong>Step 2: Make Change</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Edit deployment file</span>
 vim<span class="w"> </span>apps/dojo/learner-<span class="o">[</span>yourname<span class="o">]</span>/myapp/deployment.yaml
 
 <span class="c1"># Change replicas from 1 to 3</span>
 spec:
 <span class="w">  </span>replicas:<span class="w"> </span><span class="m">3</span><span class="w">  </span><span class="c1"># Changed from 1</span>
-</code></pre></div></p>
-<p><strong>Step 3: Commit and Push</strong>
+</code></pre></div>
+<p><strong>Step 3: Commit and Push</strong></p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>apps/dojo/learner-<span class="o">[</span>yourname<span class="o">]</span>/myapp/deployment.yaml
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Scale myapp to 3 replicas for load testing&quot;</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
-</code></pre></div></p>
-<p><strong>Step 4: Watch ArgoCD Sync</strong>
+</code></pre></div>
+<p><strong>Step 4: Watch ArgoCD Sync</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># ArgoCD detects change within 3 minutes (or immediately with webhooks)</span>
 <span class="c1"># Watch in ArgoCD UI:</span>
 <span class="c1"># 1. Sync Status changes to &quot;OutOfSync&quot;</span>
 <span class="c1"># 2. ArgoCD automatically syncs (if auto-sync enabled)</span>
 <span class="c1"># 3. New pods appear in topology</span>
 <span class="c1"># 4. Sync Status returns to &quot;Synced&quot;</span>
-</code></pre></div></p>
-<p><strong>Step 5: Verify</strong>
+</code></pre></div>
+<p><strong>Step 5: Verify</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check pods</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>dojo-learner-<span class="o">[</span>yourname<span class="o">]</span>
 
@@ -5892,22 +5946,26 @@ NAME<span class="w">                     </span>READY<span class="w">   </span>S
 myapp-7d8f5c9b8d-abc12<span class="w">   </span><span class="m">1</span>/1<span class="w">     </span>Running<span class="w">   </span>2m
 myapp-7d8f5c9b8d-def34<span class="w">   </span><span class="m">1</span>/1<span class="w">     </span>Running<span class="w">   </span>2m
 myapp-7d8f5c9b8d-ghi56<span class="w">   </span><span class="m">1</span>/1<span class="w">     </span>Running<span class="w">   </span>2m
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Congratulations!</strong> You just made your first GitOps deployment! 🎉</p>
 <hr />
 <h2 id="hands-on-lab-gitops-workflow-15-minutes">🧪 Hands-On Lab: GitOps Workflow (15 minutes)</h2>
 <h3 id="lab-objectives">Lab Objectives</h3>
-<p>In this lab, you will:
-1. Make a GitOps change (update image version)
-2. Create a pull request for code review
-3. Observe ArgoCD sync the change
-4. Practice rollback using <code>git revert</code></p>
+<p>In this lab, you will:</p>
+<ol>
+<li>Make a GitOps change (update image version)</li>
+<li>Create a pull request for code review</li>
+<li>Observe ArgoCD sync the change</li>
+<li>Practice rollback using <code>git revert</code></li>
+</ol>
 <h3 id="lab-setup">Lab Setup</h3>
-<p>Your lab environment includes:
-- Personal namespace: <code>dojo-learner-[yourname]</code>
-- Sample application: <code>myapp</code>
-- GitOps repository access
-- ArgoCD UI access</p>
+<p>Your lab environment includes:</p>
+<ul>
+<li>Personal namespace: <code>dojo-learner-[yourname]</code></li>
+<li>Sample application: <code>myapp</code></li>
+<li>GitOps repository access</li>
+<li>ArgoCD UI access</li>
+</ul>
 <h3 id="task-1-update-application-version">Task 1: Update Application Version</h3>
 <p><strong>Scenario</strong>: Deploy v2.0 of myapp which includes new features.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. Create feature branch</span>
@@ -5932,13 +5990,15 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>update-myapp-v2
 </code></pre></div>
 <h3 id="task-2-create-pull-request">Task 2: Create Pull Request</h3>
-<p><strong>In GitHub</strong>:
-1. Navigate to <code>https://github.com/fawkes-dojo/gitops-lab</code>
-2. Click "Pull Requests" → "New Pull Request"
-3. Base: <code>main</code>, Compare: <code>update-myapp-v2</code>
-4. Title: "Update myapp to v2.0"
-5. Description:
-   <div class="highlight"><pre><span></span><code>## Changes
+<p><strong>In GitHub</strong>:</p>
+<ol>
+<li>Navigate to <code>https://github.com/fawkes-dojo/gitops-lab</code></li>
+<li>Click "Pull Requests" → "New Pull Request"</li>
+<li>Base: <code>main</code>, Compare: <code>update-myapp-v2</code></li>
+<li>Title: "Update myapp to v2.0"</li>
+<li>Description:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>## Changes
 - Updates myapp from v1.0 to v2.0
 - Adds new /api/v2/health endpoint
 - Improves response time by 30%
@@ -5952,11 +6012,15 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 - If issues, revert this commit
 - Previous version: v1.0 (commit abc123)
 </code></pre></div>
-6. Click "Create Pull Request"</p>
-<p><strong>Code Review</strong>:
-- Wait for peer review (or auto-approve in lab)
-- Address any feedback
-- Once approved, click "Merge Pull Request"</p>
+<ol>
+<li>Click "Create Pull Request"</li>
+</ol>
+<p><strong>Code Review</strong>:</p>
+<ul>
+<li>Wait for peer review (or auto-approve in lab)</li>
+<li>Address any feedback</li>
+<li>Once approved, click "Merge Pull Request"</li>
+</ul>
 <h3 id="task-3-observe-argocd-sync">Task 3: Observe ArgoCD Sync</h3>
 <p><strong>After merge</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Watch ArgoCD detect change</span>
@@ -6013,11 +6077,13 @@ kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w
 curl<span class="w"> </span>https://myapp-learner-<span class="o">[</span>yourname<span class="o">]</span>.fawkes.local/health
 <span class="c1"># Should respond with v1.0 health check</span>
 </code></pre></div>
-<p><strong>Lab Complete!</strong> You've experienced the full GitOps workflow:
-- Made a change via Git
-- Code review via pull request
-- Automated deployment via ArgoCD
-- Fast rollback via git revert</p>
+<p><strong>Lab Complete!</strong> You've experienced the full GitOps workflow:</p>
+<ul>
+<li>Made a change via Git</li>
+<li>Code review via pull request</li>
+<li>Automated deployment via ArgoCD</li>
+<li>Fast rollback via git revert</li>
+</ul>
 <hr />
 <h2 id="knowledge-check-5-minutes">✅ Knowledge Check (5 minutes)</h2>
 <p>Test your understanding with these questions:</p>
@@ -6039,12 +6105,14 @@ curl<span class="w"> </span>https://myapp-learner-<span class="o">[</span>yourna
 <summary>Click to reveal answer</summary>
 
 **Pull (GitOps)**:
+
 - GitOps operator runs inside cluster
 - Pulls desired state from Git
 - No cluster credentials in CI/CD
 - Self-healing and drift detection
 
 **Push (Traditional)**:
+
 - CI/CD system pushes changes to cluster
 - Requires cluster credentials in CI/CD
 - No automatic drift detection
@@ -6058,6 +6126,7 @@ curl<span class="w"> </span>https://myapp-learner-<span class="o">[</span>yourna
 <summary>Click to reveal answer</summary>
 
 GitOps reduces lead time by:
+
 1. **Eliminating manual steps** - No manual kubectl commands
 2. **Automation** - Merge to Git → automatic deployment
 3. **Faster feedback** - See changes in cluster within minutes
@@ -6073,6 +6142,7 @@ GitOps reduces lead time by:
 <summary>Click to reveal answer</summary>
 
 **Benefits of separation**:
+
 1. **Deploy same app to multiple environments** with different configs
 2. **Different access controls** - More people can deploy than modify code
 3. **Independent versioning** - App version ≠ deployment config version
@@ -6087,12 +6157,14 @@ GitOps reduces lead time by:
 <summary>Click to reveal answer</summary>
 
 **Reasons**:
+
 1. **Base64 is encoding, not encryption** - Easily decoded
 2. **Git history is forever** - Can't truly delete from history
 3. **Access control** - Anyone with Git access gets secrets
 4. **Rotation complexity** - Hard to rotate secrets in Git history
 
 **Instead use**:
+
 - Sealed Secrets (encrypted in Git)
 - External Secrets Operator (fetches from Vault/AWS Secrets Manager)
 - Never commit raw secrets
@@ -6105,6 +6177,7 @@ GitOps reduces lead time by:
 <summary>Click to reveal answer</summary>
 
 **GitOps approach**:
+
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. Edit deployment in Git</span>
 vim<span class="w"> </span>apps/prod/myapp/deployment.yaml
 <span class="c1"># Change: replicas: 10</span>
@@ -6118,6 +6191,7 @@ git<span class="w"> </span>push
 </code></pre></div>
 
 **NOT GitOps** (anti-pattern):
+
 <div class="highlight"><pre><span></span><code><span class="c1"># ❌ Don&#39;t do this:</span>
 kubectl<span class="w"> </span>scale<span class="w"> </span>deployment/myapp<span class="w"> </span>--replicas<span class="o">=</span><span class="m">10</span>
 <span class="c1"># This creates drift - Git still says 3, cluster has 10</span>
@@ -6129,8 +6203,12 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment/myapp<spa
 <h2 id="module-summary">🎓 Module Summary</h2>
 <h3 id="key-takeaways">Key Takeaways</h3>
 <ol>
-<li><strong>GitOps = Git as Source of Truth</strong></li>
-<li>All configuration in Git</li>
+<li>
+<p><strong>GitOps = Git as Source of Truth</strong></p>
+</li>
+<li>
+<p>All configuration in Git</p>
+</li>
 <li>Automated deployment from Git</li>
 <li>
 <p>Self-healing and drift detection</p>
@@ -6138,7 +6216,9 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment/myapp<spa
 <li>
 <p><strong>Four Core Principles</strong></p>
 </li>
-<li>Declarative</li>
+<li>
+<p>Declarative</p>
+</li>
 <li>Versioned and Immutable</li>
 <li>Pulled Automatically</li>
 <li>
@@ -6147,7 +6227,9 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment/myapp<spa
 <li>
 <p><strong>DORA Benefits</strong></p>
 </li>
-<li>Increased deployment frequency</li>
+<li>
+<p>Increased deployment frequency</p>
+</li>
 <li>Reduced lead time</li>
 <li>Lower change failure rate</li>
 <li>
@@ -6156,7 +6238,9 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment/myapp<spa
 <li>
 <p><strong>Best Practices</strong></p>
 </li>
-<li>Separate app code from deployment config</li>
+<li>
+<p>Separate app code from deployment config</p>
+</li>
 <li>Meaningful commit messages</li>
 <li>Never commit secrets</li>
 <li>Use Kustomize for environment differences</li>
@@ -6187,11 +6271,13 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment/myapp<spa
 <li><strong>Total</strong>: ~60 minutes</li>
 </ul>
 <h3 id="next-steps">Next Steps</h3>
-<p><strong>Module 4: Your First Deployment</strong> awaits! You'll:
-- Use Backstage to create a new service from template
-- Deploy your application using GitOps
-- Configure CI/CD pipeline
-- View DORA metrics for your deployment</p>
+<p><strong>Module 4: Your First Deployment</strong> awaits! You'll:</p>
+<ul>
+<li>Use Backstage to create a new service from template</li>
+<li>Deploy your application using GitOps</li>
+<li>Configure CI/CD pipeline</li>
+<li>View DORA metrics for your deployment</li>
+</ul>
 <p><strong>Continue to Module 4</strong> → <a href="../module-04-first-deployment/">Your First Deployment</a></p>
 <hr />
 <h2 id="additional-resources">📚 Additional Resources</h2>
@@ -6236,28 +6322,36 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment/myapp<spa
 <li>✅ <strong>Knowledge Check</strong>: Passed (need 80%+ to proceed)</li>
 </ul>
 <h3 id="module-3-score-auto-calculated-50-points">Module 3 Score: [AUTO-CALCULATED] / 50 points</h3>
-<p><strong>Breakdown</strong>:
-- Theory Understanding (Knowledge Check): 20 points
-- Hands-On Lab Completion: 20 points
-- Code Quality (commit messages, PR description): 10 points</p>
+<p><strong>Breakdown</strong>:</p>
+<ul>
+<li>Theory Understanding (Knowledge Check): 20 points</li>
+<li>Hands-On Lab Completion: 20 points</li>
+<li>Code Quality (commit messages, PR description): 10 points</li>
+</ul>
 <h3 id="certificate-progress">Certificate Progress</h3>
 <p><strong>White Belt Progress</strong>: 3 of 4 modules complete (75%)</p>
-<p>Modules completed:
-- ✅ Module 1: Internal Delivery Platforms - What and Why
-- ✅ Module 2: DORA Metrics - The North Star
-- ✅ Module 3: GitOps Principles</p>
-<p>Next module:
-- ⏳ Module 4: Your First Deployment</p>
+<p>Modules completed:</p>
+<ul>
+<li>✅ Module 1: Internal Delivery Platforms - What and Why</li>
+<li>✅ Module 2: DORA Metrics - The North Star</li>
+<li>✅ Module 3: GitOps Principles</li>
+</ul>
+<p>Next module:</p>
+<ul>
+<li>⏳ Module 4: Your First Deployment</li>
+</ul>
 <p><strong>Continue to Module 4</strong> to complete White Belt requirements!</p>
 <hr />
 <h2 id="feedback-support">💬 Feedback &amp; Support</h2>
 <h3 id="how-was-this-module">How was this module?</h3>
-<p><strong>Rate this module</strong> (helps us improve):
-- ⭐⭐⭐⭐⭐ Excellent
-- ⭐⭐⭐⭐ Good
-- ⭐⭐⭐ Average
-- ⭐⭐ Needs Improvement
-- ⭐ Poor</p>
+<p><strong>Rate this module</strong> (helps us improve):</p>
+<ul>
+<li>⭐⭐⭐⭐⭐ Excellent</li>
+<li>⭐⭐⭐⭐ Good</li>
+<li>⭐⭐⭐ Average</li>
+<li>⭐⭐ Needs Improvement</li>
+<li>⭐ Poor</li>
+</ul>
 <p><strong>Share feedback</strong>: <a href="https://dojo.fawkes.io/feedback/module-03">Feedback Form</a></p>
 <h3 id="need-help">Need Help?</h3>
 <p><strong>Stuck on something?</strong> We're here to help!</p>
@@ -6268,29 +6362,39 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment/myapp<spa
 <li><strong>Documentation</strong>: <a href="https://docs.fawkes.io/gitops">GitOps Guide</a></li>
 </ul>
 <h3 id="common-issues">Common Issues</h3>
-<p><strong>Issue</strong>: ArgoCD not syncing changes
-- Check if auto-sync is enabled
-- Verify Git repository connection
-- Check ArgoCD logs: <code>kubectl logs -n argocd deploy/argocd-application-controller</code></p>
-<p><strong>Issue</strong>: Can't access ArgoCD UI
-- Verify ingress configuration
-- Check ArgoCD service: <code>kubectl get svc -n argocd</code>
-- Try port-forward: <code>kubectl port-forward -n argocd svc/argocd-server 8080:443</code></p>
-<p><strong>Issue</strong>: Git push rejected
-- Verify you have write access to repository
-- Check if branch is protected
-- Ensure you're pushing to correct remote</p>
+<p><strong>Issue</strong>: ArgoCD not syncing changes</p>
+<ul>
+<li>Check if auto-sync is enabled</li>
+<li>Verify Git repository connection</li>
+<li>Check ArgoCD logs: <code>kubectl logs -n argocd deploy/argocd-application-controller</code></li>
+</ul>
+<p><strong>Issue</strong>: Can't access ArgoCD UI</p>
+<ul>
+<li>Verify ingress configuration</li>
+<li>Check ArgoCD service: <code>kubectl get svc -n argocd</code></li>
+<li>Try port-forward: <code>kubectl port-forward -n argocd svc/argocd-server 8080:443</code></li>
+</ul>
+<p><strong>Issue</strong>: Git push rejected</p>
+<ul>
+<li>Verify you have write access to repository</li>
+<li>Check if branch is protected</li>
+<li>Ensure you're pushing to correct remote</li>
+</ul>
 <hr />
-<h2 id="achievement-unlocked">🏆 Achievement Unlocked!</h2>
+<h2 id="achievement-unlocked">🏆 Achievement Unlocked</h2>
 <p><strong>🎓 GitOps Practitioner</strong></p>
-<p>You've completed Module 3 and demonstrated:
-- Understanding of GitOps core principles
-- Ability to make GitOps-driven changes
-- Knowledge of ArgoCD workflow
-- Proficiency in Git-based rollbacks</p>
-<p><strong>Share your achievement</strong>:
-- LinkedIn: "Just completed GitOps Principles module in @Fawkes Dojo! #GitOps #PlatformEngineering"
-- Twitter: "Learned GitOps with hands-on ArgoCD practice at @FawkesIDP dojo 🚀 #DevOps #GitOps"</p>
+<p>You've completed Module 3 and demonstrated:</p>
+<ul>
+<li>Understanding of GitOps core principles</li>
+<li>Ability to make GitOps-driven changes</li>
+<li>Knowledge of ArgoCD workflow</li>
+<li>Proficiency in Git-based rollbacks</li>
+</ul>
+<p><strong>Share your achievement</strong>:</p>
+<ul>
+<li>LinkedIn: "Just completed GitOps Principles module in @Fawkes Dojo! #GitOps #PlatformEngineering"</li>
+<li>Twitter: "Learned GitOps with hands-on ArgoCD practice at @FawkesIDP dojo 🚀 #DevOps #GitOps"</li>
+</ul>
 <p><strong>Next milestone</strong>: Complete Module 4 to earn your <strong>White Belt Certification</strong>! 🥋</p>
 <hr />
 <h2 id="your-dojo-progress">📊 Your Dojo Progress</h2>
@@ -6313,12 +6417,14 @@ Keep going! You&#39;re 75% of the way to your first certification! 💪
 <hr />
 <h2 id="ready-for-module-4">🎯 Ready for Module 4?</h2>
 <p><strong>Module 4: Your First Deployment</strong> brings together everything you've learned:</p>
-<p><strong>You'll learn to</strong>:
-- Create a service using Backstage templates
-- Configure CI/CD pipeline (Jenkins)
-- Deploy using GitOps (ArgoCD)
-- Monitor with observability tools
-- View DORA metrics for your service</p>
+<p><strong>You'll learn to</strong>:</p>
+<ul>
+<li>Create a service using Backstage templates</li>
+<li>Configure CI/CD pipeline (Jenkins)</li>
+<li>Deploy using GitOps (ArgoCD)</li>
+<li>Monitor with observability tools</li>
+<li>View DORA metrics for your service</li>
+</ul>
 <p><strong>Prerequisites</strong>: Modules 1, 2, and 3 complete ✅</p>
 <p><strong>Estimated time</strong>: 60 minutes</p>
 <p><strong><a href="../module-04-first-deployment/">Start Module 4 Now →</a></strong></p>
@@ -6329,8 +6435,10 @@ Keep going! You&#39;re 75% of the way to your first certification! 💪
 <strong>Last Updated</strong>: October 8, 2025
 <strong>Author</strong>: Fawkes Platform Team
 <strong>Contributors</strong>: <a href="https://github.com/paruff/fawkes/graphs/contributors">View Contributors</a></p>
-<p><strong>Module Changelog</strong>:
-- v1.0 (2025-10-08): Initial release</p>
+<p><strong>Module Changelog</strong>:</p>
+<ul>
+<li>v1.0 (2025-10-08): Initial release</li>
+</ul>
 <p><strong>Feedback &amp; Improvements</strong>:
 This module is continuously improved based on learner feedback. If you have suggestions, please <a href="https://github.com/paruff/fawkes/issues/new?template=dojo-feedback.yml">open an issue</a> or discuss in <code>#dojo-feedback</code> channel.</p>
 <hr />

@@ -4861,238 +4861,298 @@
 <hr />
 <h2 id="2-detailed-journey-stages">2. Detailed Journey Stages</h2>
 <h3 id="stage-1-alert-reception-initial-assessment-5-minutes">Stage 1: Alert Reception &amp; Initial Assessment (5 minutes)</h3>
-<p><strong>Actions</strong>:
-1. Alert notification arrives in Mattermost
-2. Alert message shows: "High Error Rate: payment-service"
-3. Clicks on Grafana dashboard link in alert
-4. Sees error rate graph - spike started 10 minutes ago
-5. Checks if other team members have acknowledged
-6. Posts in team channel: "I'm looking into payment-service errors"
-7. Opens incident in incident management system
-8. Classifies as Severity 2 (customer-impacting, not total outage)</p>
-<p><strong>Thoughts</strong>:
-- "What changed recently?"
-- "Is this customer-facing or internal?"
-- "Do I need to escalate immediately?"
-- "Where do I even start?"</p>
+<p><strong>Actions</strong>:</p>
+<ol>
+<li>Alert notification arrives in Mattermost</li>
+<li>Alert message shows: "High Error Rate: payment-service"</li>
+<li>Clicks on Grafana dashboard link in alert</li>
+<li>Sees error rate graph - spike started 10 minutes ago</li>
+<li>Checks if other team members have acknowledged</li>
+<li>Posts in team channel: "I'm looking into payment-service errors"</li>
+<li>Opens incident in incident management system</li>
+<li>Classifies as Severity 2 (customer-impacting, not total outage)</li>
+</ol>
+<p><strong>Thoughts</strong>:</p>
+<ul>
+<li>"What changed recently?"</li>
+<li>"Is this customer-facing or internal?"</li>
+<li>"Do I need to escalate immediately?"</li>
+<li>"Where do I even start?"</li>
+</ul>
 <p><strong>Emotions</strong>: Alarmed 😟 (Intensity: 4/5)</p>
-<p><strong>Pain Points</strong>:
-- Alert lacks context (which endpoints? which errors? since when?)
-- Not immediately clear if it's customer-facing
-- Manual incident creation and classification
-- Unclear severity guidelines
-- No automatic correlation with recent deployments</p>
-<p><strong>Opportunities</strong>:
-- Rich alert context (affected endpoints, error types, timeline)
-- Automatic severity classification based on customer impact
-- Auto-created incident with pre-filled details
-- Link alert to recent changes (deployments, config changes)
-- Suggested runbooks based on alert type</p>
-<p><strong>Touchpoints</strong>:
-- Mattermost (alert notification)
-- Grafana (dashboard)
-- Incident management system
-- Team channel (coordination)</p>
+<p><strong>Pain Points</strong>:</p>
+<ul>
+<li>Alert lacks context (which endpoints? which errors? since when?)</li>
+<li>Not immediately clear if it's customer-facing</li>
+<li>Manual incident creation and classification</li>
+<li>Unclear severity guidelines</li>
+<li>No automatic correlation with recent deployments</li>
+</ul>
+<p><strong>Opportunities</strong>:</p>
+<ul>
+<li>Rich alert context (affected endpoints, error types, timeline)</li>
+<li>Automatic severity classification based on customer impact</li>
+<li>Auto-created incident with pre-filled details</li>
+<li>Link alert to recent changes (deployments, config changes)</li>
+<li>Suggested runbooks based on alert type</li>
+</ul>
+<p><strong>Touchpoints</strong>:</p>
+<ul>
+<li>Mattermost (alert notification)</li>
+<li>Grafana (dashboard)</li>
+<li>Incident management system</li>
+<li>Team channel (coordination)</li>
+</ul>
 <hr />
 <h3 id="stage-2-finding-relevant-logs-15-minutes">Stage 2: Finding Relevant Logs (15 minutes)</h3>
-<p><strong>Actions</strong>:
-1. Opens Kibana (log aggregation system)
-2. Searches for "payment-service" - gets 100,000+ results
-3. Adds time filter (last 30 minutes) - still 10,000+ results
-4. Tries to filter by log level "ERROR" - some, but not all, errors have this
-5. Searches for specific error keywords from Grafana
-6. Finds relevant error messages but they're cryptic
-7. Realizes errors are from a dependency (database service)
-8. Switches to database service logs
-9. Finds connection timeout errors
-10. Tries to correlate timestamps between services - difficult
-11. Asks platform team for help finding specific traces</p>
-<p><strong>Thoughts</strong>:
-- "There's too much noise in the logs"
-- "Are these errors related or separate issues?"
-- "Why are the timestamps in different formats?"
-- "Is this a database problem or our service problem?"
-- "I'm wasting time searching instead of fixing"</p>
+<p><strong>Actions</strong>:</p>
+<ol>
+<li>Opens Kibana (log aggregation system)</li>
+<li>Searches for "payment-service" - gets 100,000+ results</li>
+<li>Adds time filter (last 30 minutes) - still 10,000+ results</li>
+<li>Tries to filter by log level "ERROR" - some, but not all, errors have this</li>
+<li>Searches for specific error keywords from Grafana</li>
+<li>Finds relevant error messages but they're cryptic</li>
+<li>Realizes errors are from a dependency (database service)</li>
+<li>Switches to database service logs</li>
+<li>Finds connection timeout errors</li>
+<li>Tries to correlate timestamps between services - difficult</li>
+<li>Asks platform team for help finding specific traces</li>
+</ol>
+<p><strong>Thoughts</strong>:</p>
+<ul>
+<li>"There's too much noise in the logs"</li>
+<li>"Are these errors related or separate issues?"</li>
+<li>"Why are the timestamps in different formats?"</li>
+<li>"Is this a database problem or our service problem?"</li>
+<li>"I'm wasting time searching instead of fixing"</li>
+</ul>
 <p><strong>Emotions</strong>: Frustrated 😟 (Intensity: 5/5)</p>
-<p><strong>Pain Points</strong>:
-- Log searching is manual and time-consuming
-- Too much log noise (no filtering for relevant entries)
-- Multiple log sources (application, infrastructure, dependencies)
-- Difficult to correlate logs across services
-- No trace IDs in logs for distributed tracing
-- Error messages don't provide enough context</p>
-<p><strong>Opportunities</strong>:
-- Integrated log viewer with smart filtering
-- Automatic correlation of related logs across services
-- Distributed tracing with trace IDs in all logs
-- Click from metric spike directly to relevant logs
-- Log search suggestions based on alert context
-- Structured logging with consistent formats</p>
-<p><strong>Touchpoints</strong>:
-- Kibana (log search)
-- Multiple service logs
-- Platform team (asking for help)
-- Grafana (cross-referencing metrics)</p>
+<p><strong>Pain Points</strong>:</p>
+<ul>
+<li>Log searching is manual and time-consuming</li>
+<li>Too much log noise (no filtering for relevant entries)</li>
+<li>Multiple log sources (application, infrastructure, dependencies)</li>
+<li>Difficult to correlate logs across services</li>
+<li>No trace IDs in logs for distributed tracing</li>
+<li>Error messages don't provide enough context</li>
+</ul>
+<p><strong>Opportunities</strong>:</p>
+<ul>
+<li>Integrated log viewer with smart filtering</li>
+<li>Automatic correlation of related logs across services</li>
+<li>Distributed tracing with trace IDs in all logs</li>
+<li>Click from metric spike directly to relevant logs</li>
+<li>Log search suggestions based on alert context</li>
+<li>Structured logging with consistent formats</li>
+</ul>
+<p><strong>Touchpoints</strong>:</p>
+<ul>
+<li>Kibana (log search)</li>
+<li>Multiple service logs</li>
+<li>Platform team (asking for help)</li>
+<li>Grafana (cross-referencing metrics)</li>
+</ul>
 <hr />
 <h3 id="stage-3-root-cause-analysis-20-minutes">Stage 3: Root Cause Analysis (20 minutes)</h3>
-<p><strong>Actions</strong>:
-1. With help, finds trace IDs in logs
-2. Opens Jaeger (distributed tracing)
-3. Searches for failing traces
-4. Sees payment-service → database-service call taking 30+ seconds
-5. Database service returning timeout errors
-6. Checks database metrics in Grafana
-7. Database CPU is normal, connections are maxed out
-8. Reviews recent changes to payment-service
-9. Discovers recent deployment increased batch size
-10. Realizes larger batches hold database connections longer
-11. Confirms root cause: connection pool exhaustion</p>
-<p><strong>Thoughts</strong>:
-- "Finally, I'm getting somewhere"
-- "Why didn't I see this earlier?"
-- "How do I fix this quickly?"
-- "Is this happening in other services too?"</p>
+<p><strong>Actions</strong>:</p>
+<ol>
+<li>With help, finds trace IDs in logs</li>
+<li>Opens Jaeger (distributed tracing)</li>
+<li>Searches for failing traces</li>
+<li>Sees payment-service → database-service call taking 30+ seconds</li>
+<li>Database service returning timeout errors</li>
+<li>Checks database metrics in Grafana</li>
+<li>Database CPU is normal, connections are maxed out</li>
+<li>Reviews recent changes to payment-service</li>
+<li>Discovers recent deployment increased batch size</li>
+<li>Realizes larger batches hold database connections longer</li>
+<li>Confirms root cause: connection pool exhaustion</li>
+</ol>
+<p><strong>Thoughts</strong>:</p>
+<ul>
+<li>"Finally, I'm getting somewhere"</li>
+<li>"Why didn't I see this earlier?"</li>
+<li>"How do I fix this quickly?"</li>
+<li>"Is this happening in other services too?"</li>
+</ul>
 <p><strong>Emotions</strong>: Focused → Relieved 😐 → 😊 (Intensity: 4/5 → 2/5)</p>
-<p><strong>Pain Points</strong>:
-- Had to use 3 different tools (Kibana, Grafana, Jaeger)
-- Manual correlation between tools
-- No automatic root cause suggestions
-- Difficult to see impact of recent changes
-- No similar incident history or suggestions
-- Platform team assistance required</p>
-<p><strong>Opportunities</strong>:
-- Unified observability view (metrics, logs, traces)
-- Automatic root cause analysis suggestions
-- Show recent deployments/changes in incident view
-- Similar incident detection ("this looks like incident #123")
-- Service dependency visualization in real-time
-- Anomaly detection (flag unusual patterns automatically)</p>
-<p><strong>Touchpoints</strong>:
-- Jaeger (distributed tracing)
-- Grafana (metrics correlation)
-- Kibana (log analysis)
-- GitHub (recent changes review)
-- Platform team (expert assistance)</p>
+<p><strong>Pain Points</strong>:</p>
+<ul>
+<li>Had to use 3 different tools (Kibana, Grafana, Jaeger)</li>
+<li>Manual correlation between tools</li>
+<li>No automatic root cause suggestions</li>
+<li>Difficult to see impact of recent changes</li>
+<li>No similar incident history or suggestions</li>
+<li>Platform team assistance required</li>
+</ul>
+<p><strong>Opportunities</strong>:</p>
+<ul>
+<li>Unified observability view (metrics, logs, traces)</li>
+<li>Automatic root cause analysis suggestions</li>
+<li>Show recent deployments/changes in incident view</li>
+<li>Similar incident detection ("this looks like incident #123")</li>
+<li>Service dependency visualization in real-time</li>
+<li>Anomaly detection (flag unusual patterns automatically)</li>
+</ul>
+<p><strong>Touchpoints</strong>:</p>
+<ul>
+<li>Jaeger (distributed tracing)</li>
+<li>Grafana (metrics correlation)</li>
+<li>Kibana (log analysis)</li>
+<li>GitHub (recent changes review)</li>
+<li>Platform team (expert assistance)</li>
+</ul>
 <hr />
 <h3 id="stage-4-implementing-fix-30-minutes">Stage 4: Implementing Fix (30 minutes)</h3>
-<p><strong>Actions</strong>:
-1. Identifies two options: rollback or quick fix
-2. Decides on quick fix (increase connection pool size)
-3. Updates service configuration (environment variable)
-4. Creates PR with urgent tag
-5. Skips normal review process (incident response)
-6. CI pipeline runs - tests pass
-7. Deploys to production via ArgoCD
-8. Watches deployment progress
-9. New pods roll out with updated config
-10. Monitors error rate - starts decreasing
-11. After 5 minutes, error rate back to normal
-12. Declares incident resolved</p>
-<p><strong>Thoughts</strong>:
-- "Should I rollback or fix forward?"
-- "Is this safe to deploy without full review?"
-- "How fast can I get this to production?"
-- "Please let this work"
-- "Yes! It's working!"</p>
+<p><strong>Actions</strong>:</p>
+<ol>
+<li>Identifies two options: rollback or quick fix</li>
+<li>Decides on quick fix (increase connection pool size)</li>
+<li>Updates service configuration (environment variable)</li>
+<li>Creates PR with urgent tag</li>
+<li>Skips normal review process (incident response)</li>
+<li>CI pipeline runs - tests pass</li>
+<li>Deploys to production via ArgoCD</li>
+<li>Watches deployment progress</li>
+<li>New pods roll out with updated config</li>
+<li>Monitors error rate - starts decreasing</li>
+<li>After 5 minutes, error rate back to normal</li>
+<li>Declares incident resolved</li>
+</ol>
+<p><strong>Thoughts</strong>:</p>
+<ul>
+<li>"Should I rollback or fix forward?"</li>
+<li>"Is this safe to deploy without full review?"</li>
+<li>"How fast can I get this to production?"</li>
+<li>"Please let this work"</li>
+<li>"Yes! It's working!"</li>
+</ul>
 <p><strong>Emotions</strong>: Stressed → Relieved 😟 → 😊 (Intensity: 5/5 → 1/5)</p>
-<p><strong>Pain Points</strong>:
-- Unclear rollback vs. fix-forward decision criteria
-- Manual configuration changes
-- No fast-track deployment process for incidents
-- Waiting for CI pipeline during active incident
-- Manual monitoring of fix effectiveness
-- No automated verification of fix</p>
-<p><strong>Opportunities</strong>:
-- Incident response mode with fast-track deployment
-- Configuration hot-reload without full restart
-- Automatic rollback if fix doesn't work
-- Skip non-critical CI checks during incidents
-- Real-time fix validation dashboard
-- A/B testing fix on subset of traffic first</p>
-<p><strong>Touchpoints</strong>:
-- Configuration files (service config)
-- GitHub (PR creation)
-- CI pipeline (testing)
-- ArgoCD (deployment)
-- Grafana (monitoring fix effectiveness)</p>
+<p><strong>Pain Points</strong>:</p>
+<ul>
+<li>Unclear rollback vs. fix-forward decision criteria</li>
+<li>Manual configuration changes</li>
+<li>No fast-track deployment process for incidents</li>
+<li>Waiting for CI pipeline during active incident</li>
+<li>Manual monitoring of fix effectiveness</li>
+<li>No automated verification of fix</li>
+</ul>
+<p><strong>Opportunities</strong>:</p>
+<ul>
+<li>Incident response mode with fast-track deployment</li>
+<li>Configuration hot-reload without full restart</li>
+<li>Automatic rollback if fix doesn't work</li>
+<li>Skip non-critical CI checks during incidents</li>
+<li>Real-time fix validation dashboard</li>
+<li>A/B testing fix on subset of traffic first</li>
+</ul>
+<p><strong>Touchpoints</strong>:</p>
+<ul>
+<li>Configuration files (service config)</li>
+<li>GitHub (PR creation)</li>
+<li>CI pipeline (testing)</li>
+<li>ArgoCD (deployment)</li>
+<li>Grafana (monitoring fix effectiveness)</li>
+</ul>
 <hr />
 <h3 id="stage-5-verification-communication-15-minutes">Stage 5: Verification &amp; Communication (15 minutes)</h3>
-<p><strong>Actions</strong>:
-1. Continues monitoring for 10 more minutes
-2. Verifies error rate stays at baseline
-3. Checks latency - back to normal
-4. Reviews business metrics - payment processing recovered
-5. Posts update in team channel: "Incident resolved"
-6. Updates incident ticket with resolution
-7. Thanks platform team for assistance
-8. Sends update to stakeholders (product manager)
-9. Schedules post-incident review for tomorrow</p>
-<p><strong>Thoughts</strong>:
-- "How long should I keep watching?"
-- "Are we sure it's fixed?"
-- "Who needs to know about this?"
-- "What do I need to document?"</p>
+<p><strong>Actions</strong>:</p>
+<ol>
+<li>Continues monitoring for 10 more minutes</li>
+<li>Verifies error rate stays at baseline</li>
+<li>Checks latency - back to normal</li>
+<li>Reviews business metrics - payment processing recovered</li>
+<li>Posts update in team channel: "Incident resolved"</li>
+<li>Updates incident ticket with resolution</li>
+<li>Thanks platform team for assistance</li>
+<li>Sends update to stakeholders (product manager)</li>
+<li>Schedules post-incident review for tomorrow</li>
+</ol>
+<p><strong>Thoughts</strong>:</p>
+<ul>
+<li>"How long should I keep watching?"</li>
+<li>"Are we sure it's fixed?"</li>
+<li>"Who needs to know about this?"</li>
+<li>"What do I need to document?"</li>
+</ul>
 <p><strong>Emotions</strong>: Cautious → Satisfied 😐 → 😊 (Intensity: 2/5 → 1/5)</p>
-<p><strong>Pain Points</strong>:
-- Unclear when to declare incident resolved
-- Manual status updates to multiple channels
-- No template for incident communication
-- Stakeholder notification is ad-hoc
-- Post-incident review scheduling is manual</p>
-<p><strong>Opportunities</strong>:
-- Automatic "all clear" notification after stability period
-- Incident status broadcasts to all stakeholders
-- Communication templates for different severity levels
-- Automatic post-incident review scheduling
-- Incident timeline auto-generation
-- Customer impact assessment</p>
-<p><strong>Touchpoints</strong>:
-- Grafana (continued monitoring)
-- Mattermost (team and stakeholder updates)
-- Incident management system (documentation)
-- Calendar (post-incident review scheduling)</p>
+<p><strong>Pain Points</strong>:</p>
+<ul>
+<li>Unclear when to declare incident resolved</li>
+<li>Manual status updates to multiple channels</li>
+<li>No template for incident communication</li>
+<li>Stakeholder notification is ad-hoc</li>
+<li>Post-incident review scheduling is manual</li>
+</ul>
+<p><strong>Opportunities</strong>:</p>
+<ul>
+<li>Automatic "all clear" notification after stability period</li>
+<li>Incident status broadcasts to all stakeholders</li>
+<li>Communication templates for different severity levels</li>
+<li>Automatic post-incident review scheduling</li>
+<li>Incident timeline auto-generation</li>
+<li>Customer impact assessment</li>
+</ul>
+<p><strong>Touchpoints</strong>:</p>
+<ul>
+<li>Grafana (continued monitoring)</li>
+<li>Mattermost (team and stakeholder updates)</li>
+<li>Incident management system (documentation)</li>
+<li>Calendar (post-incident review scheduling)</li>
+</ul>
 <hr />
 <h3 id="stage-6-post-incident-review-next-day-1-hour">Stage 6: Post-Incident Review (Next day, 1 hour)</h3>
-<p><strong>Actions</strong>:
-1. Team meets for post-incident review
-2. Reviews incident timeline
-3. Discusses what went well:
-   - Fast alert detection
-   - Clear team communication
-   - Effective fix
-4. Discusses what could improve:
-   - Took too long to find logs
-   - Manual correlation was time-consuming
-   - No early warning before error spike
-5. Creates action items:
-   - Add distributed tracing to all services
-   - Improve alert context
-   - Set up connection pool monitoring
-6. Documents learnings in incident retrospective
-7. Shares with broader engineering team</p>
-<p><strong>Thoughts</strong>:
-- "How do we prevent this next time?"
-- "What systemic issues did this reveal?"
-- "Are we learning from our incidents?"</p>
+<p><strong>Actions</strong>:</p>
+<ol>
+<li>Team meets for post-incident review</li>
+<li>Reviews incident timeline</li>
+<li>Discusses what went well:</li>
+<li>Fast alert detection</li>
+<li>Clear team communication</li>
+<li>Effective fix</li>
+<li>Discusses what could improve:</li>
+<li>Took too long to find logs</li>
+<li>Manual correlation was time-consuming</li>
+<li>No early warning before error spike</li>
+<li>Creates action items:</li>
+<li>Add distributed tracing to all services</li>
+<li>Improve alert context</li>
+<li>Set up connection pool monitoring</li>
+<li>Documents learnings in incident retrospective</li>
+<li>Shares with broader engineering team</li>
+</ol>
+<p><strong>Thoughts</strong>:</p>
+<ul>
+<li>"How do we prevent this next time?"</li>
+<li>"What systemic issues did this reveal?"</li>
+<li>"Are we learning from our incidents?"</li>
+</ul>
 <p><strong>Emotions</strong>: Reflective 😐 (Intensity: 2/5)</p>
-<p><strong>Pain Points</strong>:
-- Manual incident timeline reconstruction
-- Action items often don't get completed
-- Learnings stay within team (not shared broadly)
-- No tracking of recurring incident patterns
-- Post-incident reviews scheduled manually</p>
-<p><strong>Opportunities</strong>:
-- Auto-generated incident timeline
-- Action item tracking with accountability
-- Incident knowledge base (searchable)
-- Pattern detection across incidents
-- Automatic post-incident review scheduling
-- Share learnings platform-wide</p>
-<p><strong>Touchpoints</strong>:
-- Zoom/meeting room (review session)
-- Incident management system (documentation)
-- Confluence (retrospective documentation)
-- Jira (action items)</p>
+<p><strong>Pain Points</strong>:</p>
+<ul>
+<li>Manual incident timeline reconstruction</li>
+<li>Action items often don't get completed</li>
+<li>Learnings stay within team (not shared broadly)</li>
+<li>No tracking of recurring incident patterns</li>
+<li>Post-incident reviews scheduled manually</li>
+</ul>
+<p><strong>Opportunities</strong>:</p>
+<ul>
+<li>Auto-generated incident timeline</li>
+<li>Action item tracking with accountability</li>
+<li>Incident knowledge base (searchable)</li>
+<li>Pattern detection across incidents</li>
+<li>Automatic post-incident review scheduling</li>
+<li>Share learnings platform-wide</li>
+</ul>
+<p><strong>Touchpoints</strong>:</p>
+<ul>
+<li>Zoom/meeting room (review session)</li>
+<li>Incident management system (documentation)</li>
+<li>Confluence (retrospective documentation)</li>
+<li>Jira (action items)</li>
+</ul>
 <hr />
 <h2 id="3-journey-map-visualization">3. Journey Map Visualization</h2>
 <pre class="mermaid"><code>graph TB
@@ -5222,9 +5282,11 @@ graph LR
 <p>"I wish the platform could just tell me what's wrong instead of making me hunt for it. Sometimes it's obvious from the patterns." - Application Developer, 2 years tenure</p>
 </blockquote>
 <h3 id="validation-with-personas">Validation with Personas</h3>
-<p>This journey map aligns with:
-- <strong>Application Developer persona</strong> (Maria Rodriguez): Matches pain point about difficult production troubleshooting
-- <strong>Platform Developer persona</strong> (Alex Chen): Matches pain points about observability gaps and alert fatigue</p>
+<p>This journey map aligns with:</p>
+<ul>
+<li><strong>Application Developer persona</strong> (Maria Rodriguez): Matches pain point about difficult production troubleshooting</li>
+<li><strong>Platform Developer persona</strong> (Alex Chen): Matches pain points about observability gaps and alert fatigue</li>
+</ul>
 <hr />
 <h2 id="7-improvement-roadmap">7. Improvement Roadmap</h2>
 <h3 id="phase-1-month-1-quick-wins">Phase 1 (Month 1) - Quick Wins</h3>

@@ -4866,50 +4866,64 @@
 <h2 id="context">Context</h2>
 <p>Fawkes platform requires a centralized code quality and security analysis solution integrated into the Golden Path CI/CD pipeline. Currently, code quality review and security vulnerability checks are inconsistent, often relying on manual review or isolated scanning tools that do not enforce pass/fail criteria. There is no central dashboard to track the Quality Debt or security status across all platform repositories.</p>
 <h3 id="requirements">Requirements</h3>
-<p><strong>Functional Requirements</strong>:
-- Static Application Security Testing (SAST)
-- Code quality metrics and technical debt tracking
-- Security vulnerability detection
-- Code coverage analysis
-- Duplicate code detection
-- Quality Gate enforcement in CI/CD pipelines
-- Multi-language support (Java, Python, Node.js, Go)
-- Branch-based analysis for PR reviews</p>
-<p><strong>Non-Functional Requirements</strong>:
-- Fast feedback (&lt; 5 minutes for analysis)
-- Scalable to 50+ repositories
-- SSO/OAuth integration for developer access
-- Secure token-based CI/CD integration
-- Persistent data storage with PostgreSQL
-- High availability for production use</p>
-<p><strong>Integration Requirements</strong>:
-- Jenkins pipeline integration via scanner token
-- GitHub repository linking
-- ArgoCD deployment management
-- Prometheus metrics export
-- Developer portal (Backstage) integration</p>
+<p><strong>Functional Requirements</strong>:</p>
+<ul>
+<li>Static Application Security Testing (SAST)</li>
+<li>Code quality metrics and technical debt tracking</li>
+<li>Security vulnerability detection</li>
+<li>Code coverage analysis</li>
+<li>Duplicate code detection</li>
+<li>Quality Gate enforcement in CI/CD pipelines</li>
+<li>Multi-language support (Java, Python, Node.js, Go)</li>
+<li>Branch-based analysis for PR reviews</li>
+</ul>
+<p><strong>Non-Functional Requirements</strong>:</p>
+<ul>
+<li>Fast feedback (&lt; 5 minutes for analysis)</li>
+<li>Scalable to 50+ repositories</li>
+<li>SSO/OAuth integration for developer access</li>
+<li>Secure token-based CI/CD integration</li>
+<li>Persistent data storage with PostgreSQL</li>
+<li>High availability for production use</li>
+</ul>
+<p><strong>Integration Requirements</strong>:</p>
+<ul>
+<li>Jenkins pipeline integration via scanner token</li>
+<li>GitHub repository linking</li>
+<li>ArgoCD deployment management</li>
+<li>Prometheus metrics export</li>
+<li>Developer portal (Backstage) integration</li>
+</ul>
 <h3 id="forces-at-play">Forces at Play</h3>
-<p><strong>Technical Forces</strong>:
-- Need comprehensive language support
-- Must integrate seamlessly with Jenkins pipelines
-- Require fast, accurate analysis without blocking development</p>
-<p><strong>Operational Forces</strong>:
-- Platform team capacity for maintenance
-- Need for simple deployment and upgrades
-- Backup and disaster recovery requirements</p>
-<p><strong>Developer Experience Forces</strong>:
-- Clear, actionable feedback in CI/CD
-- Easy access to detailed analysis reports
-- Minimal friction in development workflow</p>
+<p><strong>Technical Forces</strong>:</p>
+<ul>
+<li>Need comprehensive language support</li>
+<li>Must integrate seamlessly with Jenkins pipelines</li>
+<li>Require fast, accurate analysis without blocking development</li>
+</ul>
+<p><strong>Operational Forces</strong>:</p>
+<ul>
+<li>Platform team capacity for maintenance</li>
+<li>Need for simple deployment and upgrades</li>
+<li>Backup and disaster recovery requirements</li>
+</ul>
+<p><strong>Developer Experience Forces</strong>:</p>
+<ul>
+<li>Clear, actionable feedback in CI/CD</li>
+<li>Easy access to detailed analysis reports</li>
+<li>Minimal friction in development workflow</li>
+</ul>
 <h2 id="decision">Decision</h2>
 <p><strong>We will deploy SonarQube as the centralized code quality and security analysis platform for Fawkes.</strong></p>
-<p>Specifically:
-- <strong>SonarQube 10.7+ (Community Edition)</strong> as the analysis engine
-- <strong>CloudNativePG PostgreSQL</strong> for persistent data storage
-- <strong>Jenkins Shared Library</strong> integration for scanner execution and Quality Gate enforcement
-- <strong>NGINX Ingress</strong> for external access with SSO integration
-- <strong>Mandatory Quality Gate</strong> enforcement on main branch commits
-- <strong>PR branch analysis</strong> for early feedback</p>
+<p>Specifically:</p>
+<ul>
+<li><strong>SonarQube 10.7+ (Community Edition)</strong> as the analysis engine</li>
+<li><strong>CloudNativePG PostgreSQL</strong> for persistent data storage</li>
+<li><strong>Jenkins Shared Library</strong> integration for scanner execution and Quality Gate enforcement</li>
+<li><strong>NGINX Ingress</strong> for external access with SSO integration</li>
+<li><strong>Mandatory Quality Gate</strong> enforcement on main branch commits</li>
+<li><strong>PR branch analysis</strong> for early feedback</li>
+</ul>
 <h3 id="architecture">Architecture</h3>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
 │                     Developer Workflow                           │
@@ -4941,11 +4955,13 @@
 | New Code Coverage | Is Less Than | 80% | Maintain test coverage |
 | New Duplicated Lines (%) | Is Greater Than | 3% | Limit code duplication |
 | New Maintainability Rating | Is Worse Than | A | Quality standards |</p>
-<p><strong>Quality Gate Enforcement</strong>:
-1. Main branch commits MUST pass Quality Gate before image push
-2. PR builds report Quality Gate status but don't block (informational)
-3. Pipeline fails immediately on Quality Gate failure with detailed logs
-4. Direct link to SonarQube dashboard provided in build output</p>
+<p><strong>Quality Gate Enforcement</strong>:</p>
+<ol>
+<li>Main branch commits MUST pass Quality Gate before image push</li>
+<li>PR builds report Quality Gate status but don't block (informational)</li>
+<li>Pipeline fails immediately on Quality Gate failure with detailed logs</li>
+<li>Direct link to SonarQube dashboard provided in build output</li>
+</ol>
 <h3 id="rationale">Rationale</h3>
 <ol>
 <li>
@@ -4954,7 +4970,9 @@
 <li>
 <p><strong>Comprehensive Analysis</strong>:</p>
 </li>
-<li>27+ programming languages supported</li>
+<li>
+<p>27+ programming languages supported</p>
+</li>
 <li>5000+ rules for bug, vulnerability, and code smell detection</li>
 <li>Security hotspot identification</li>
 <li>
@@ -4963,7 +4981,9 @@
 <li>
 <p><strong>Quality Gate Enforcement</strong>:</p>
 </li>
-<li>Automated pass/fail criteria</li>
+<li>
+<p>Automated pass/fail criteria</p>
+</li>
 <li>Configurable thresholds</li>
 <li>
 <p>Webhook integration for CI/CD</p>
@@ -4971,7 +4991,9 @@
 <li>
 <p><strong>Developer Experience</strong>:</p>
 </li>
-<li>Clear, actionable feedback</li>
+<li>
+<p>Clear, actionable feedback</p>
+</li>
 <li>IDE plugins (SonarLint) for local feedback</li>
 <li>
 <p>Detailed remediation guidance</p>
@@ -4979,7 +5001,9 @@
 <li>
 <p><strong>Open Source</strong>:</p>
 </li>
-<li>Community Edition is free</li>
+<li>
+<p>Community Edition is free</p>
+</li>
 <li>Large community and ecosystem</li>
 <li>
 <p>Regular updates and security patches</p>
@@ -5012,8 +5036,12 @@
 <p>◽ <strong>Storage Growth</strong>: Analysis history grows over time</p>
 <h3 id="mitigation-strategies">Mitigation Strategies</h3>
 <ol>
-<li><strong>Resource Management</strong>:</li>
-<li>Right-size Kubernetes resources</li>
+<li>
+<p><strong>Resource Management</strong>:</p>
+</li>
+<li>
+<p>Right-size Kubernetes resources</p>
+</li>
 <li>Configure housekeeping to clean old analysis data</li>
 <li>
 <p>Use separate PostgreSQL cluster for isolation</p>
@@ -5021,7 +5049,9 @@
 <li>
 <p><strong>Analysis Performance</strong>:</p>
 </li>
-<li>Enable incremental analysis where supported</li>
+<li>
+<p>Enable incremental analysis where supported</p>
+</li>
 <li>Configure appropriate exclusions</li>
 <li>
 <p>Run analysis in parallel with other pipeline stages</p>
@@ -5029,7 +5059,9 @@
 <li>
 <p><strong>False Positives</strong>:</p>
 </li>
-<li>Create custom quality profiles</li>
+<li>
+<p>Create custom quality profiles</p>
+</li>
 <li>Use inline comments for legitimate suppressions</li>
 <li>
 <p>Regular review of flagged issues</p>
@@ -5043,44 +5075,60 @@
 </ol>
 <h2 id="alternatives-considered">Alternatives Considered</h2>
 <h3 id="alternative-1-snyk">Alternative 1: Snyk</h3>
-<p><strong>Pros</strong>:
-- Strong security focus
-- SaaS offering (less maintenance)
-- Good dependency scanning</p>
-<p><strong>Cons</strong>:
-- Limited code quality analysis
-- No quality gate enforcement
-- Primarily security-focused</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Strong security focus</li>
+<li>SaaS offering (less maintenance)</li>
+<li>Good dependency scanning</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Limited code quality analysis</li>
+<li>No quality gate enforcement</li>
+<li>Primarily security-focused</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Snyk excellent for security but lacks comprehensive code quality analysis. SonarQube provides both security and quality in one platform.</p>
 <h3 id="alternative-2-codeclimate">Alternative 2: CodeClimate</h3>
-<p><strong>Pros</strong>:
-- Clean UI
-- Quality focus
-- Good maintainability scores</p>
-<p><strong>Cons</strong>:
-- Limited security features
-- Fewer language support
-- SaaS-only (no self-hosted)</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Clean UI</li>
+<li>Quality focus</li>
+<li>Good maintainability scores</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Limited security features</li>
+<li>Fewer language support</li>
+<li>SaaS-only (no self-hosted)</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: CodeClimate strong on quality but weak on security. Self-hosted option important for enterprise deployments.</p>
 <h3 id="alternative-3-codacy">Alternative 3: Codacy</h3>
-<p><strong>Pros</strong>:
-- Multi-language support
-- Security patterns
-- SaaS and self-hosted options</p>
-<p><strong>Cons</strong>:
-- Less mature than SonarQube
-- Smaller community
-- Limited enterprise features</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Multi-language support</li>
+<li>Security patterns</li>
+<li>SaaS and self-hosted options</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Less mature than SonarQube</li>
+<li>Smaller community</li>
+<li>Limited enterprise features</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Codacy capable but SonarQube has larger community, more rules, and better Jenkins integration.</p>
 <h3 id="alternative-4-github-advanced-security">Alternative 4: GitHub Advanced Security</h3>
-<p><strong>Pros</strong>:
-- Native GitHub integration
-- Code scanning and secret scanning
-- Dependency review</p>
-<p><strong>Cons</strong>:
-- Expensive ($49/user/month)
-- Limited to GitHub repositories
-- Less comprehensive quality analysis</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Native GitHub integration</li>
+<li>Code scanning and secret scanning</li>
+<li>Dependency review</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Expensive ($49/user/month)</li>
+<li>Limited to GitHub repositories</li>
+<li>Less comprehensive quality analysis</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: GitHub Advanced Security powerful but expensive and limited to GitHub. SonarQube works with any Git provider.</p>
 <h2 id="related-decisions">Related Decisions</h2>
 <ul>
@@ -5090,7 +5138,7 @@
 </ul>
 <h2 id="implementation-notes">Implementation Notes</h2>
 <h3 id="deployment-configuration">Deployment Configuration</h3>
-<p><strong>SonarQube ArgoCD Application</strong>:
+<p><strong>SonarQube ArgoCD Application</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Application</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5106,14 +5154,14 @@
 <span class="w">        </span><span class="no">jdbcOverwrite:</span>
 <span class="w">          </span><span class="no">enable: true</span>
 <span class="w">          </span><span class="no">jdbcUrl: &quot;jdbc:postgresql://db-sonarqube-dev-rw.fawkes.svc:5432/sonarqube&quot;</span>
-</code></pre></div></p>
-<p><strong>Jenkins Credentials Configuration</strong>:
+</code></pre></div>
+<p><strong>Jenkins Credentials Configuration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">credentials</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sonarqube-token</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secretText</span>
 <span class="w">    </span><span class="nt">secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${SONARQUBE_TOKEN}</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;SonarQube</span><span class="nv"> </span><span class="s">Scanner</span><span class="nv"> </span><span class="s">Token&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="quality-gate-enforcement-in-pipeline">Quality Gate Enforcement in Pipeline</h3>
 <div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Quality Gate&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
@@ -5139,20 +5187,26 @@
 <li>[ ] Document developer onboarding</li>
 </ol>
 <h3 id="monitoring">Monitoring</h3>
-<p><strong>Prometheus Metrics</strong>:
-- <code>sonarqube_health_status</code>
-- <code>sonarqube_compute_engine_tasks</code>
-- <code>sonarqube_database_connections</code></p>
-<p><strong>Key Alerts</strong>:
-- SonarQube unhealthy
-- Analysis queue growing
-- Database connection issues</p>
+<p><strong>Prometheus Metrics</strong>:</p>
+<ul>
+<li><code>sonarqube_health_status</code></li>
+<li><code>sonarqube_compute_engine_tasks</code></li>
+<li><code>sonarqube_database_connections</code></li>
+</ul>
+<p><strong>Key Alerts</strong>:</p>
+<ul>
+<li>SonarQube unhealthy</li>
+<li>Analysis queue growing</li>
+<li>Database connection issues</li>
+</ul>
 <h2 id="monitoring-this-decision">Monitoring This Decision</h2>
-<p>We will revisit this ADR if:
-- Analysis time consistently exceeds 5 minutes
-- False positive rate becomes problematic
-- Community Edition features are insufficient
-- Alternative tools provide better value</p>
+<p>We will revisit this ADR if:</p>
+<ul>
+<li>Analysis time consistently exceeds 5 minutes</li>
+<li>False positive rate becomes problematic</li>
+<li>Community Edition features are insufficient</li>
+<li>Alternative tools provide better value</li>
+</ul>
 <p><strong>Next Review Date</strong>: May 30, 2026 (6 months)</p>
 <h2 id="references">References</h2>
 <ul>

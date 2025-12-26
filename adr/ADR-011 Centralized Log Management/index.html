@@ -4776,64 +4776,78 @@
 <p>Accepted</p>
 <h2 id="context">Context</h2>
 <p>The Fawkes platform requires comprehensive log management for both platform services and applications deployed by teams:</p>
-<p><strong>Platform Service Logs</strong>:
-- Kubernetes control plane (API server, scheduler, controller manager, etcd)
-- NGINX Ingress Controller (access logs, error logs)
-- ArgoCD (deployment events, sync operations, application health)
-- Jenkins (build logs, pipeline execution, agent activities)
-- Backstage (catalog operations, template scaffolding, API requests)
-- Mattermost (user activity, integrations, webhooks)
-- Harbor (registry operations, image scanning, vulnerability reports)
-- Grafana (dashboard access, alert notifications, data source queries)
-- Prometheus (scrape operations, rule evaluations, alert firing)
-- PostgreSQL (query logs, connection logs, errors)
-- External Secrets Operator (secret synchronization, errors)</p>
-<p><strong>Application Logs</strong> (from teams using Fawkes):
-- Microservice application logs (structured and unstructured)
-- Container stdout/stderr
-- Application performance metrics
-- Error and exception tracking
-- Audit logs for security and compliance
-- Business event logs</p>
-<p><strong>Logging Requirements</strong>:
-- <strong>Centralized Storage</strong>: All logs in one searchable location
-- <strong>Long-Term Retention</strong>: 30 days hot storage, 90+ days cold storage
-- <strong>Fast Search</strong>: Sub-second queries across billions of log entries
-- <strong>Structured Logging</strong>: Support for JSON and structured formats
-- <strong>Log Correlation</strong>: Trace ID correlation across services
-- <strong>Multi-Tenancy</strong>: Team-level log isolation and access control
-- <strong>Real-Time Streaming</strong>: Live log tailing for debugging
-- <strong>Alerting</strong>: Trigger alerts based on log patterns
-- <strong>Visualization</strong>: Dashboard creation from log data
-- <strong>Cost Efficiency</strong>: Minimize storage and compute costs</p>
-<p><strong>Security &amp; Compliance Requirements</strong>:
-- Encryption at rest and in transit
-- Role-based access control (RBAC)
-- Audit trail of log access
-- PII/sensitive data masking
-- Retention policies for compliance (GDPR, SOC 2)
-- Immutable log storage (tamper-proof)
-- Log integrity verification</p>
-<p><strong>Operational Requirements</strong>:
-- Cloud-agnostic (works on AWS, Azure, GCP, on-premises)
-- Low operational overhead (minimal maintenance)
-- Automatic log collection (no application code changes)
-- Handling high throughput (10,000+ logs/second)
-- Graceful degradation (buffering during outages)
-- Easy troubleshooting (logs about logging)
-- GitOps-compatible deployment</p>
-<p><strong>Integration Requirements</strong>:
-- Kubernetes native (DaemonSet for log collection)
-- Prometheus metrics integration
-- Grafana dashboard integration
-- Alert manager integration
-- SIEM integration capabilities
-- OpenTelemetry compatibility</p>
-<p><strong>Dojo Learning Requirements</strong>:
-- Simple enough for learners to understand
-- Clear troubleshooting workflows
-- Hands-on labs for log analysis
-- Integration with DORA metrics (deployment events, incident response)</p>
+<p><strong>Platform Service Logs</strong>:</p>
+<ul>
+<li>Kubernetes control plane (API server, scheduler, controller manager, etcd)</li>
+<li>NGINX Ingress Controller (access logs, error logs)</li>
+<li>ArgoCD (deployment events, sync operations, application health)</li>
+<li>Jenkins (build logs, pipeline execution, agent activities)</li>
+<li>Backstage (catalog operations, template scaffolding, API requests)</li>
+<li>Mattermost (user activity, integrations, webhooks)</li>
+<li>Harbor (registry operations, image scanning, vulnerability reports)</li>
+<li>Grafana (dashboard access, alert notifications, data source queries)</li>
+<li>Prometheus (scrape operations, rule evaluations, alert firing)</li>
+<li>PostgreSQL (query logs, connection logs, errors)</li>
+<li>External Secrets Operator (secret synchronization, errors)</li>
+</ul>
+<p><strong>Application Logs</strong> (from teams using Fawkes):</p>
+<ul>
+<li>Microservice application logs (structured and unstructured)</li>
+<li>Container stdout/stderr</li>
+<li>Application performance metrics</li>
+<li>Error and exception tracking</li>
+<li>Audit logs for security and compliance</li>
+<li>Business event logs</li>
+</ul>
+<p><strong>Logging Requirements</strong>:</p>
+<ul>
+<li><strong>Centralized Storage</strong>: All logs in one searchable location</li>
+<li><strong>Long-Term Retention</strong>: 30 days hot storage, 90+ days cold storage</li>
+<li><strong>Fast Search</strong>: Sub-second queries across billions of log entries</li>
+<li><strong>Structured Logging</strong>: Support for JSON and structured formats</li>
+<li><strong>Log Correlation</strong>: Trace ID correlation across services</li>
+<li><strong>Multi-Tenancy</strong>: Team-level log isolation and access control</li>
+<li><strong>Real-Time Streaming</strong>: Live log tailing for debugging</li>
+<li><strong>Alerting</strong>: Trigger alerts based on log patterns</li>
+<li><strong>Visualization</strong>: Dashboard creation from log data</li>
+<li><strong>Cost Efficiency</strong>: Minimize storage and compute costs</li>
+</ul>
+<p><strong>Security &amp; Compliance Requirements</strong>:</p>
+<ul>
+<li>Encryption at rest and in transit</li>
+<li>Role-based access control (RBAC)</li>
+<li>Audit trail of log access</li>
+<li>PII/sensitive data masking</li>
+<li>Retention policies for compliance (GDPR, SOC 2)</li>
+<li>Immutable log storage (tamper-proof)</li>
+<li>Log integrity verification</li>
+</ul>
+<p><strong>Operational Requirements</strong>:</p>
+<ul>
+<li>Cloud-agnostic (works on AWS, Azure, GCP, on-premises)</li>
+<li>Low operational overhead (minimal maintenance)</li>
+<li>Automatic log collection (no application code changes)</li>
+<li>Handling high throughput (10,000+ logs/second)</li>
+<li>Graceful degradation (buffering during outages)</li>
+<li>Easy troubleshooting (logs about logging)</li>
+<li>GitOps-compatible deployment</li>
+</ul>
+<p><strong>Integration Requirements</strong>:</p>
+<ul>
+<li>Kubernetes native (DaemonSet for log collection)</li>
+<li>Prometheus metrics integration</li>
+<li>Grafana dashboard integration</li>
+<li>Alert manager integration</li>
+<li>SIEM integration capabilities</li>
+<li>OpenTelemetry compatibility</li>
+</ul>
+<p><strong>Dojo Learning Requirements</strong>:</p>
+<ul>
+<li>Simple enough for learners to understand</li>
+<li>Clear troubleshooting workflows</li>
+<li>Hands-on labs for log analysis</li>
+<li>Integration with DORA metrics (deployment events, incident response)</li>
+</ul>
 <h2 id="decision">Decision</h2>
 <p>We will use <strong>OpenSearch</strong> as the centralized log storage and search engine, with <strong>Fluent Bit</strong> as the lightweight log collector.</p>
 <h3 id="architecture">Architecture</h3>
@@ -4917,7 +4931,7 @@
 <li><strong>Querying</strong>: Users search via OpenSearch Dashboards or Grafana</li>
 </ol>
 <h3 id="opensearch-configuration">OpenSearch Configuration</h3>
-<p><strong>Cluster Sizing (Production)</strong>:
+<p><strong>Cluster Sizing (Production)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">Master Nodes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3 replicas</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">- CPU</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 cores</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">- Memory</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4 GB</span>
@@ -4935,8 +4949,8 @@
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">- Memory</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8 GB</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">- Storage</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 TB HDD</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">- Purpose</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Older logs (7-30 days)</span>
-</code></pre></div></p>
-<p><strong>Index Template</strong>:
+</code></pre></div>
+<p><strong>Index Template</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;index_patterns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;fawkes-logs-*&quot;</span><span class="p">],</span>
 <span class="w">  </span><span class="nt">&quot;template&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -4966,8 +4980,8 @@
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Index Lifecycle Policy (ILM)</strong>:
+</code></pre></div>
+<p><strong>Index Lifecycle Policy (ILM)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;policy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;phases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -5004,9 +5018,9 @@
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="fluent-bit-configuration">Fluent Bit Configuration</h3>
-<p><strong>DaemonSet Deployment</strong>:
+<p><strong>DaemonSet Deployment</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DaemonSet</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5023,36 +5037,36 @@
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fluent-bit</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fluent-bit</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fluent/fluent-bit:2.2</span>
-<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200m</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256Mi</span>
-<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128Mi</span>
-<span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">varlog</span>
-<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/log</span>
-<span class="w">          </span><span class="nt">readOnly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">varlibdockercontainers</span>
-<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/lib/docker/containers</span>
-<span class="w">          </span><span class="nt">readOnly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fluent-bit-config</span>
-<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/fluent-bit/etc/</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fluent-bit</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fluent/fluent-bit:2.2</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200m</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256Mi</span>
+<span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128Mi</span>
+<span class="w">          </span><span class="nt">volumeMounts</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">varlog</span>
+<span class="w">              </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/log</span>
+<span class="w">              </span><span class="nt">readOnly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">varlibdockercontainers</span>
+<span class="w">              </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/lib/docker/containers</span>
+<span class="w">              </span><span class="nt">readOnly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fluent-bit-config</span>
+<span class="w">              </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/fluent-bit/etc/</span>
 <span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">varlog</span>
-<span class="w">        </span><span class="nt">hostPath</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/log</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">varlibdockercontainers</span>
-<span class="w">        </span><span class="nt">hostPath</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/lib/docker/containers</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fluent-bit-config</span>
-<span class="w">        </span><span class="nt">configMap</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fluent-bit-config</span>
-</code></pre></div></p>
-<p><strong>Fluent Bit Pipeline Configuration</strong>:
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">varlog</span>
+<span class="w">          </span><span class="nt">hostPath</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/log</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">varlibdockercontainers</span>
+<span class="w">          </span><span class="nt">hostPath</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/lib/docker/containers</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fluent-bit-config</span>
+<span class="w">          </span><span class="nt">configMap</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fluent-bit-config</span>
+</code></pre></div>
+<p><strong>Fluent Bit Pipeline Configuration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[SERVICE]</span>
 <span class="w">    </span><span class="na">Flush         5</span>
 <span class="w">    </span><span class="na">Daemon        off</span>
@@ -5116,8 +5130,8 @@
 <span class="w">    </span><span class="na">HTTP_Passwd     ${OPENSEARCH_PASSWORD}</span>
 <span class="w">    </span><span class="na">Retry_Limit     5</span>
 <span class="w">    </span><span class="na">Buffer_Size     False</span>
-</code></pre></div></p>
-<p><strong>Parsing Configuration</strong> (parsers.conf):
+</code></pre></div>
+<p><strong>Parsing Configuration</strong> (parsers.conf):</p>
 <div class="highlight"><pre><span></span><code><span class="k">[PARSER]</span>
 <span class="w">    </span><span class="na">Name         docker</span>
 <span class="w">    </span><span class="na">Format       json</span>
@@ -5137,18 +5151,18 @@
 <span class="w">    </span><span class="na">Regex        /^(?&lt;time&gt;\d{4}-\d{2}-\d{2}\s+\d{2}</span><span class="o">:</span><span class="s">\d{2}:\d{2}.\d{3})\s+(?&lt;level&gt;[A-Z]+)\s+(?&lt;message&gt;.*)/</span>
 <span class="w">    </span><span class="na">Time_Key     time</span>
 <span class="w">    </span><span class="na">Time_Format  %Y-%m-%d %H</span><span class="o">:</span><span class="s">%M:%S.%L</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="multi-tenancy-access-control">Multi-Tenancy &amp; Access Control</h3>
-<p><strong>Namespace-Based Log Isolation</strong>:
+<p><strong>Namespace-Based Log Isolation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Role</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">log-reader</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha</span>
 <span class="nt">rules</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;pods&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pods/log&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;pods&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pods/log&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">]</span>
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RoleBinding</span>
@@ -5156,15 +5170,15 @@
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha-log-readers</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha</span>
 <span class="nt">subjects</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Group</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha</span>
-<span class="w">  </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Group</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-alpha</span>
+<span class="w">    </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io</span>
 <span class="nt">roleRef</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Role</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">log-reader</span>
 <span class="w">  </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io</span>
-</code></pre></div></p>
-<p><strong>OpenSearch Role-Based Access</strong>:
+</code></pre></div>
+<p><strong>OpenSearch Role-Based Access</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;team-alpha-logs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;cluster_permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
@@ -5179,9 +5193,9 @@
 <span class="w">    </span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="grafana-integration">Grafana Integration</h3>
-<p><strong>Loki Datasource Configuration</strong> (simulated via OpenSearch):
+<p><strong>Loki Datasource Configuration</strong> (simulated via OpenSearch):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 <span class="nt">datasources</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenSearch Logs</span>
@@ -5198,9 +5212,9 @@
 <span class="w">      </span><span class="nt">logMessageField</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">log</span>
 <span class="w">      </span><span class="nt">logLevelField</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">level</span>
 <span class="w">      </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fawkes-logs-*&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="structured-logging-best-practices">Structured Logging Best Practices</h3>
-<p><strong>Recommended Log Format (JSON)</strong>:
+<p><strong>Recommended Log Format (JSON)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;@timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-07T10:30:00.123Z&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
@@ -5217,32 +5231,34 @@
 <span class="w">    </span><span class="nt">&quot;container&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user-service&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Fields to Always Include</strong>:
-- <code>@timestamp</code>: ISO 8601 timestamp
-- <code>level</code>: Log level (ERROR, WARN, INFO, DEBUG)
-- <code>message</code>: Human-readable message
-- <code>trace_id</code>: Distributed tracing ID (OpenTelemetry)
-- <code>span_id</code>: Span ID for correlation
-- Context fields: user_id, request_id, correlation_id</p>
+</code></pre></div>
+<p><strong>Fields to Always Include</strong>:</p>
+<ul>
+<li><code>@timestamp</code>: ISO 8601 timestamp</li>
+<li><code>level</code>: Log level (ERROR, WARN, INFO, DEBUG)</li>
+<li><code>message</code>: Human-readable message</li>
+<li><code>trace_id</code>: Distributed tracing ID (OpenTelemetry)</li>
+<li><code>span_id</code>: Span ID for correlation</li>
+<li>Context fields: user_id, request_id, correlation_id</li>
+</ul>
 <h3 id="common-query-patterns">Common Query Patterns</h3>
-<p><strong>Search for Errors in Namespace</strong>:
+<p><strong>Search for Errors in Namespace</strong>:</p>
 <div class="highlight"><pre><span></span><code>k8s_namespace:&quot;team-alpha&quot; AND level:&quot;ERROR&quot;
-</code></pre></div></p>
-<p><strong>Find Logs with Trace ID</strong>:
+</code></pre></div>
+<p><strong>Find Logs with Trace ID</strong>:</p>
 <div class="highlight"><pre><span></span><code>trace_id:&quot;a1b2c3d4e5f6&quot;
-</code></pre></div></p>
-<p><strong>Logs from Specific Pod</strong>:
+</code></pre></div>
+<p><strong>Logs from Specific Pod</strong>:</p>
 <div class="highlight"><pre><span></span><code>k8s_pod_name:&quot;jenkins-agent-*&quot;
-</code></pre></div></p>
-<p><strong>Slow Requests (Duration &gt; 1000ms)</strong>:
+</code></pre></div>
+<p><strong>Slow Requests (Duration &gt; 1000ms)</strong>:</p>
 <div class="highlight"><pre><span></span><code>duration_ms:&gt;1000
-</code></pre></div></p>
-<p><strong>Deployment Events</strong>:
+</code></pre></div>
+<p><strong>Deployment Events</strong>:</p>
 <div class="highlight"><pre><span></span><code>message:&quot;deployment&quot; AND k8s_namespace:&quot;production&quot;
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="alerting-rules">Alerting Rules</h3>
-<p><strong>High Error Rate</strong>:
+<p><strong>High Error Rate</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;trigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;schedule&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5m&quot;</span><span class="w"> </span><span class="p">},</span>
@@ -5259,10 +5275,7 @@
 <span class="w">        </span><span class="nt">&quot;body&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">          </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;bool&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">              </span><span class="nt">&quot;must&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;term&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="p">}},</span>
-<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;range&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;@timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;gte&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;now-5m&quot;</span><span class="w"> </span><span class="p">}}}</span>
-<span class="w">              </span><span class="p">]</span>
+<span class="w">              </span><span class="nt">&quot;must&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">&quot;term&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;range&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;@timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;gte&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;now-5m&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}]</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">          </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
@@ -5278,8 +5291,8 @@
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Service Unavailable</strong>:
+</code></pre></div>
+<p><strong>Service Unavailable</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;trigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;schedule&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1m&quot;</span><span class="w"> </span><span class="p">},</span>
@@ -5297,9 +5310,9 @@
 <span class="w">          </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;bool&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">              </span><span class="nt">&quot;must&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;match&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;connection refused&quot;</span><span class="w"> </span><span class="p">}},</span>
-<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;term&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;k8s_namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="w"> </span><span class="p">}},</span>
-<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;range&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;@timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;gte&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;now-1m&quot;</span><span class="w"> </span><span class="p">}}}</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;match&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;connection refused&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;term&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;k8s_namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;range&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;@timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;gte&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;now-1m&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">              </span><span class="p">]</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">          </span><span class="p">}</span>
@@ -5308,7 +5321,7 @@
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="consequences">Consequences</h2>
 <h3 id="positive">Positive</h3>
 <ol>
@@ -5342,36 +5355,44 @@
 </ol>
 <h2 id="alternatives-considered">Alternatives Considered</h2>
 <h3 id="alternative-1-grafana-loki">Alternative 1: Grafana Loki</h3>
-<p><strong>Pros</strong>:
-- Designed for Kubernetes logging (cloud-native)
-- Very cost-efficient (indexes only metadata, not log content)
-- Tight Grafana integration (unified metrics + logs)
-- Simple deployment and operation
-- LogQL query language (similar to PromQL)
-- Good for high-volume, short-retention use cases</p>
-<p><strong>Cons</strong>:
-- Limited full-text search capabilities (no inverted index)
-- Less powerful query language than OpenSearch DSL
-- Smaller community and ecosystem than OpenSearch/Elasticsearch
-- Less suitable for compliance (long-term retention, complex queries)
-- Fewer visualization options in dashboards
-- Multi-tenancy requires Loki enterprise features</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Designed for Kubernetes logging (cloud-native)</li>
+<li>Very cost-efficient (indexes only metadata, not log content)</li>
+<li>Tight Grafana integration (unified metrics + logs)</li>
+<li>Simple deployment and operation</li>
+<li>LogQL query language (similar to PromQL)</li>
+<li>Good for high-volume, short-retention use cases</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Limited full-text search capabilities (no inverted index)</li>
+<li>Less powerful query language than OpenSearch DSL</li>
+<li>Smaller community and ecosystem than OpenSearch/Elasticsearch</li>
+<li>Less suitable for compliance (long-term retention, complex queries)</li>
+<li>Fewer visualization options in dashboards</li>
+<li>Multi-tenancy requires Loki enterprise features</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: While Loki is excellent for operational logging, Fawkes requires robust full-text search for debugging, compliance auditing, and security investigations. OpenSearch's powerful query DSL and proven scalability better support DORA metrics analysis and incident post-mortems. However, Loki remains a strong alternative for cost-sensitive deployments.</p>
 <h3 id="alternative-2-elastic-cloud-elk-stack">Alternative 2: Elastic Cloud (ELK Stack)</h3>
-<p><strong>Pros</strong>:
-- Industry standard (Elasticsearch, Logstash, Kibana)
-- Massive ecosystem and community
-- Extremely powerful search and analytics
-- Best-in-class visualization (Kibana)
-- Mature machine learning features
-- Extensive documentation and training</p>
-<p><strong>Cons</strong>:
-- <strong>Licensing concerns</strong> (Elastic License 2.0, not fully open source)
-- High cost for managed service ($50-500+/month)
-- Vendor lock-in potential
-- Self-hosted ELK requires significant operational expertise
-- Logstash resource-heavy (replaced by Fluent Bit in modern stacks)
-- Complex licensing tiers (basic, gold, platinum)</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Industry standard (Elasticsearch, Logstash, Kibana)</li>
+<li>Massive ecosystem and community</li>
+<li>Extremely powerful search and analytics</li>
+<li>Best-in-class visualization (Kibana)</li>
+<li>Mature machine learning features</li>
+<li>Extensive documentation and training</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li><strong>Licensing concerns</strong> (Elastic License 2.0, not fully open source)</li>
+<li>High cost for managed service ($50-500+/month)</li>
+<li>Vendor lock-in potential</li>
+<li>Self-hosted ELK requires significant operational expertise</li>
+<li>Logstash resource-heavy (replaced by Fluent Bit in modern stacks)</li>
+<li>Complex licensing tiers (basic, gold, platinum)</li>
+</ul>
 <p><strong>Reason for Rejection</strong>: Elastic's move away from Apache 2.0 license conflicts with Fawkes' open-source principles. O</p>
 
 

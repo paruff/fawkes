@@ -4844,66 +4844,90 @@
 </code></pre></div>
 <h2 id="deployment-components">Deployment Components</h2>
 <h3 id="1-postgresql-database-cloudnativepg">1. PostgreSQL Database (CloudNativePG)</h3>
-<p><strong>Manifests:</strong>
-- <code>platform/apps/postgresql/cloudnativepg-operator-application.yaml</code> - CloudNativePG operator
-- <code>platform/apps/postgresql/db-backstage-credentials.yaml</code> - Database credentials
-- <code>platform/apps/postgresql/db-backstage-cluster.yaml</code> - HA PostgreSQL cluster (3 replicas)</p>
-<p><strong>Resources:</strong>
-- Database: <code>backstage_db</code>
-- User: <code>backstage_user</code>
-- Storage: 20Gi per instance
-- CPU: 500m request, 2 CPU limit
-- Memory: 512Mi request, 2Gi limit</p>
-<p><strong>High Availability:</strong>
-- 3 instances (1 primary, 2 standby replicas)
-- Automated failover (30 second delay)
-- Pod anti-affinity across nodes
-- Read-write service: <code>db-backstage-dev-rw.fawkes.svc.cluster.local:5432</code>
-- Read-only service: <code>db-backstage-dev-ro.fawkes.svc.cluster.local:5432</code></p>
+<p><strong>Manifests:</strong></p>
+<ul>
+<li><code>platform/apps/postgresql/cloudnativepg-operator-application.yaml</code> - CloudNativePG operator</li>
+<li><code>platform/apps/postgresql/db-backstage-credentials.yaml</code> - Database credentials</li>
+<li><code>platform/apps/postgresql/db-backstage-cluster.yaml</code> - HA PostgreSQL cluster (3 replicas)</li>
+</ul>
+<p><strong>Resources:</strong></p>
+<ul>
+<li>Database: <code>backstage_db</code></li>
+<li>User: <code>backstage_user</code></li>
+<li>Storage: 20Gi per instance</li>
+<li>CPU: 500m request, 2 CPU limit</li>
+<li>Memory: 512Mi request, 2Gi limit</li>
+</ul>
+<p><strong>High Availability:</strong></p>
+<ul>
+<li>3 instances (1 primary, 2 standby replicas)</li>
+<li>Automated failover (30 second delay)</li>
+<li>Pod anti-affinity across nodes</li>
+<li>Read-write service: <code>db-backstage-dev-rw.fawkes.svc.cluster.local:5432</code></li>
+<li>Read-only service: <code>db-backstage-dev-ro.fawkes.svc.cluster.local:5432</code></li>
+</ul>
 <h3 id="2-backstage-application">2. Backstage Application</h3>
-<p><strong>Manifests:</strong>
-- <code>platform/apps/backstage-application.yaml</code> - ArgoCD Application
-- <code>platform/apps/backstage/app-config.yaml</code> - Backstage configuration (ConfigMap)
-- <code>platform/apps/backstage/secrets.yaml</code> - OAuth and integration secrets</p>
-<p><strong>Resources:</strong>
-- Replicas: 2 (HA configuration)
-- CPU: 500m request, 2 CPU limit
-- Memory: 512Mi request, 2Gi limit
-- Ingress: <code>https://backstage.fawkes.idp</code></p>
-<p><strong>Integrations:</strong>
-- GitHub OAuth for authentication
-- GitHub API for repository discovery
-- Jenkins for CI/CD status
-- ArgoCD for deployment status
-- Kubernetes for resource monitoring
-- Prometheus for metrics</p>
+<p><strong>Manifests:</strong></p>
+<ul>
+<li><code>platform/apps/backstage-application.yaml</code> - ArgoCD Application</li>
+<li><code>platform/apps/backstage/app-config.yaml</code> - Backstage configuration (ConfigMap)</li>
+<li><code>platform/apps/backstage/secrets.yaml</code> - OAuth and integration secrets</li>
+</ul>
+<p><strong>Resources:</strong></p>
+<ul>
+<li>Replicas: 2 (HA configuration)</li>
+<li>CPU: 500m request, 2 CPU limit</li>
+<li>Memory: 512Mi request, 2Gi limit</li>
+<li>Ingress: <code>https://backstage.fawkes.idp</code></li>
+</ul>
+<p><strong>Integrations:</strong></p>
+<ul>
+<li>GitHub OAuth for authentication</li>
+<li>GitHub API for repository discovery</li>
+<li>Jenkins for CI/CD status</li>
+<li>ArgoCD for deployment status</li>
+<li>Kubernetes for resource monitoring</li>
+<li>Prometheus for metrics</li>
+</ul>
 <h3 id="3-initial-catalog">3. Initial Catalog</h3>
-<p><strong>Manifests:</strong>
-- <code>catalog-info.yaml</code> - Root platform catalog</p>
-<p><strong>Catalog Contents:</strong>
-- Platform system and domain definitions
-- Platform team group
-- Core components (Backstage, ArgoCD, Jenkins, Prometheus, Grafana, SonarQube)
-- PostgreSQL database resource
-- Software template locations</p>
+<p><strong>Manifests:</strong></p>
+<ul>
+<li><code>catalog-info.yaml</code> - Root platform catalog</li>
+</ul>
+<p><strong>Catalog Contents:</strong></p>
+<ul>
+<li>Platform system and domain definitions</li>
+<li>Platform team group</li>
+<li>Core components (Backstage, ArgoCD, Jenkins, Prometheus, Grafana, SonarQube)</li>
+<li>PostgreSQL database resource</li>
+<li>Software template locations</li>
+</ul>
 <h3 id="4-software-templates">4. Software Templates</h3>
-<p><strong>Templates:</strong>
-- <code>templates/python-service/template.yaml</code> - Python FastAPI microservice
-- <code>templates/java-service/template.yaml</code> - Java Spring Boot microservice
-- <code>templates/nodejs-service/template.yaml</code> - Node.js Express microservice</p>
-<p>Each template includes:
-- Service scaffolding with best practices
-- Dockerfile and Kubernetes manifests
-- CI/CD pipeline configuration
-- Automatic catalog registration
-- Documentation templates</p>
+<p><strong>Templates:</strong></p>
+<ul>
+<li><code>templates/python-service/template.yaml</code> - Python FastAPI microservice</li>
+<li><code>templates/java-service/template.yaml</code> - Java Spring Boot microservice</li>
+<li><code>templates/nodejs-service/template.yaml</code> - Node.js Express microservice</li>
+</ul>
+<p>Each template includes:</p>
+<ul>
+<li>Service scaffolding with best practices</li>
+<li>Dockerfile and Kubernetes manifests</li>
+<li>CI/CD pipeline configuration</li>
+<li>Automatic catalog registration</li>
+<li>Documentation templates</li>
+</ul>
 <h2 id="deployment-steps">Deployment Steps</h2>
 <h3 id="step-0-prerequisites-configure-github-oauth-required">Step 0: Prerequisites - Configure GitHub OAuth (REQUIRED)</h3>
 <p>Before deploying Backstage, you must configure GitHub OAuth authentication. Without this, users won't be able to login.</p>
 <p><strong>Quick Setup:</strong></p>
 <ol>
-<li>Create a GitHub OAuth App:</li>
-<li>Go to: https://github.com/settings/developers (personal) or</li>
+<li>
+<p>Create a GitHub OAuth App:</p>
+</li>
+<li>
+<p>Go to: https://github.com/settings/developers (personal) or</p>
+</li>
 <li>Go to: https://github.com/organizations/YOUR_ORG/settings/applications (organization)</li>
 <li>Click "New OAuth App"</li>
 <li>Fill in:<ul>
@@ -4917,19 +4941,19 @@
 <p>Generate and copy the <strong>Client Secret</strong></p>
 </li>
 <li>
-<p>Update the secrets file:
-   <div class="highlight"><pre><span></span><code>vim<span class="w"> </span>platform/apps/backstage/secrets.yaml
-</code></pre></div></p>
+<p>Update the secrets file:</p>
 </li>
 </ol>
-<p>Replace these lines:
-   <div class="highlight"><pre><span></span><code><span class="nt">github-client-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CHANGE_ME_github_oauth_client_id</span>
+<div class="highlight"><pre><span></span><code>vim<span class="w"> </span>platform/apps/backstage/secrets.yaml
+</code></pre></div>
+<p>Replace these lines:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">github-client-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CHANGE_ME_github_oauth_client_id</span>
 <span class="nt">github-client-secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CHANGE_ME_github_oauth_client_secret</span>
-</code></pre></div></p>
-<p>With your actual values:
-   <div class="highlight"><pre><span></span><code><span class="nt">github-client-id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-actual-client-id&quot;</span>
+</code></pre></div>
+<p>With your actual values:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">github-client-id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-actual-client-id&quot;</span>
 <span class="nt">github-client-secret</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-actual-client-secret&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <ol>
 <li>Apply the secret:
    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/backstage/secrets.yaml
@@ -4960,10 +4984,12 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 <span class="c1"># Wait for ArgoCD to sync all applications</span>
 argocd<span class="w"> </span>app<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>platform-bootstrap<span class="w"> </span>--sync
 </code></pre></div>
-<p>This will automatically deploy in order:
-1. CloudNativePG operator (sync-wave: -5)
-2. PostgreSQL clusters (sync-wave: -4)
-3. Backstage application (sync-wave: 5)</p>
+<p>This will automatically deploy in order:</p>
+<ol>
+<li>CloudNativePG operator (sync-wave: -5)</li>
+<li>PostgreSQL clusters (sync-wave: -4)</li>
+<li>Backstage application (sync-wave: 5)</li>
+</ol>
 <h3 id="step-3-monitor-deployment">Step 3: Monitor Deployment</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check ArgoCD applications</span>
 argocd<span class="w"> </span>app<span class="w"> </span>list
@@ -4984,13 +5010,15 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 <span class="c1"># Access at: https://backstage.fawkes.idp</span>
 </code></pre></div>
 <h3 id="step-5-verify-catalog-population">Step 5: Verify Catalog Population</h3>
-<p>Expected catalog entities:
-- System: fawkes-platform
-- Domain: platform-engineering
-- Group: platform-team
-- Components: backstage, argocd, jenkins, prometheus, grafana, sonarqube
-- Resource: db-backstage-dev
-- Templates: python-service, java-service, nodejs-service</p>
+<p>Expected catalog entities:</p>
+<ul>
+<li>System: fawkes-platform</li>
+<li>Domain: platform-engineering</li>
+<li>Group: platform-team</li>
+<li>Components: backstage, argocd, jenkins, prometheus, grafana, sonarqube</li>
+<li>Resource: db-backstage-dev</li>
+<li>Templates: python-service, java-service, nodejs-service</li>
+</ul>
 <h2 id="verification">Verification</h2>
 <h3 id="check-deployment-status">Check Deployment Status</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># ArgoCD application status</span>

@@ -4609,7 +4609,7 @@
   <a href="#how-fawkes-helps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How Fawkes Helps:
+        How Fawkes Helps
       
     </span>
   </a>
@@ -4679,13 +4679,13 @@
 <h2 id="accessing-platform-services">Accessing Platform Services</h2>
 <p>After deployment, you can access services such as Jenkins, SonarQube, and the Kubernetes Dashboard. These services support <strong>Continuous Integration</strong>, <strong>Monitoring and Observability</strong>, and <strong>Streamlining Change Approval</strong>.</p>
 <ul>
-<li>
-<p><strong>Jenkins:</strong>
+<li><strong>Jenkins:</strong>
   Access Jenkins via the provided URL (e.g., <code>http://&lt;jenkins-lb&gt;:8080</code>).
-  Retrieve the admin password using:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>jenkins<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.jenkins-admin-password}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>--decode
-</code></pre></div></p>
-</li>
+  Retrieve the admin password using:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>jenkins<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.jenkins-admin-password}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>--decode
+</code></pre></div>
+<ul>
 <li>
 <p><strong>SonarQube:</strong>
   Access SonarQube via the provided URL (e.g., <code>http://&lt;sonarqube-lb&gt;:9000</code>).
@@ -4701,60 +4701,54 @@
 <hr />
 <h2 id="managing-infrastructure">Managing Infrastructure</h2>
 <ul>
-<li>
-<p><strong>Provisioning Infrastructure:</strong>
-  Use the provided scripts in the <code>infra/</code> directory to provision or update infrastructure:
-  <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra
+<li><strong>Provisioning Infrastructure:</strong>
+  Use the provided scripts in the <code>infra/</code> directory to provision or update infrastructure:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra
 ./scripts/ignite.sh<span class="w"> </span>--provider<span class="w"> </span>aws<span class="w"> </span>dev
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Destroying Infrastructure:</strong>
-  To tear down infrastructure:
-  <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra
+</code></pre></div>
+<ul>
+<li><strong>Destroying Infrastructure:</strong>
+  To tear down infrastructure:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra
 ./scripts/ignite.sh<span class="w"> </span>--provider<span class="w"> </span>aws<span class="w"> </span>dev<span class="w">  </span><span class="c1"># see docs for destroy guidance</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Using Terraform Directly:</strong>
+</code></pre></div>
+<ul>
+<li><strong>Using Terraform Directly:</strong>
   Advanced users can manage infrastructure directly with Terraform:
   <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra/platform/aws
 terraform<span class="w"> </span>init
 terraform<span class="w"> </span>plan
 terraform<span class="w"> </span>apply
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <hr />
 <h2 id="deploying-platform-services">Deploying Platform Services</h2>
 <ul>
-<li>
-<p><strong>Jenkins Deployment:</strong>
-  Deploy Jenkins using the provided script:
-  <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>platform/jenkins
+<li><strong>Jenkins Deployment:</strong>
+  Deploy Jenkins using the provided script:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>platform/jenkins
 ./jenkins-delta.sh<span class="w"> </span>-i
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Other Services:</strong>
-  Each service directory contains deployment scripts or Helm charts. Refer to the respective README files for details.</p>
-</li>
+</code></pre></div>
+<ul>
+<li><strong>Other Services:</strong>
+  Each service directory contains deployment scripts or Helm charts. Refer to the respective README files for details.</li>
 </ul>
 <hr />
 <h2 id="viewing-outputs-and-endpoints">Viewing Outputs and Endpoints</h2>
 <p>After deployment, service URLs and credentials are displayed in the terminal.
 You can also retrieve them using:</p>
 <ul>
-<li>
-<p><strong>Terraform Outputs:</strong>
-  <div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>output
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Deployment Script Outputs:</strong>
+<li><strong>Terraform Outputs:</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>output
+</code></pre></div>
+<ul>
+<li><strong>Deployment Script Outputs:</strong>
   <div class="highlight"><pre><span></span><code>./jenkins-delta.sh<span class="w"> </span>-s
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ul>
 <hr />
 <h2 id="cicd-and-developer-workflows">CI/CD and Developer Workflows</h2>
@@ -4777,7 +4771,7 @@ You can also retrieve them using:</p>
 <li><strong>Change Failure Rate</strong></li>
 <li><strong>Mean Time to Restore (MTTR)</strong></li>
 </ul>
-<h3 id="how-fawkes-helps">How Fawkes Helps:</h3>
+<h3 id="how-fawkes-helps">How Fawkes Helps</h3>
 <ul>
 <li><strong>Automated CI/CD Pipelines:</strong> Jenkins and other integrated tools provide metrics on deployment frequency and lead time.</li>
 <li><strong>Quality Gates:</strong> SonarQube and automated tests help reduce change failure rate.</li>

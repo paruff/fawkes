@@ -4958,25 +4958,27 @@
 <h2 id="integration-tests">Integration Tests</h2>
 <h3 id="pytest-integration-test-testsintegrationtest_at_e1_006_validationpy">pytest Integration Test: <code>tests/integration/test_at_e1_006_validation.py</code></h3>
 <p>This pytest-based integration test runs the validation script and verifies all acceptance criteria are met.</p>
-<p><strong>Test Methods:</strong>
-- <code>test_validation_script_runs()</code> - Verifies script executes without crashing
-- <code>test_validation_report_generated()</code> - Ensures JSON report is created
-- <code>test_all_acceptance_criteria_pass()</code> - Overall pass/fail validation
-- <code>test_namespace_exists()</code> - Monitoring namespace validation
-- <code>test_argocd_application_healthy()</code> - ArgoCD Application status
-- <code>test_prometheus_operator_running()</code> - Prometheus Operator health
-- <code>test_prometheus_server_running()</code> - Prometheus Server health
-- <code>test_grafana_deployed()</code> - Grafana deployment status
-- <code>test_alertmanager_running()</code> - Alertmanager health
-- <code>test_node_exporter_running()</code> - Node Exporter on all nodes
-- <code>test_kube_state_metrics_running()</code> - Kube State Metrics health
-- <code>test_servicemonitors_configured()</code> - ServiceMonitor configuration
-- <code>test_prometheus_storage_configured()</code> - Persistent storage
-- <code>test_grafana_ingress_configured()</code> - Grafana ingress
-- <code>test_prometheus_ingress_configured()</code> - Prometheus ingress
-- <code>test_resource_limits_configured()</code> - Resource limits defined
-- <code>test_pods_health()</code> - Overall pod health</p>
-<p><strong>Usage:</strong>
+<p><strong>Test Methods:</strong></p>
+<ul>
+<li><code>test_validation_script_runs()</code> - Verifies script executes without crashing</li>
+<li><code>test_validation_report_generated()</code> - Ensures JSON report is created</li>
+<li><code>test_all_acceptance_criteria_pass()</code> - Overall pass/fail validation</li>
+<li><code>test_namespace_exists()</code> - Monitoring namespace validation</li>
+<li><code>test_argocd_application_healthy()</code> - ArgoCD Application status</li>
+<li><code>test_prometheus_operator_running()</code> - Prometheus Operator health</li>
+<li><code>test_prometheus_server_running()</code> - Prometheus Server health</li>
+<li><code>test_grafana_deployed()</code> - Grafana deployment status</li>
+<li><code>test_alertmanager_running()</code> - Alertmanager health</li>
+<li><code>test_node_exporter_running()</code> - Node Exporter on all nodes</li>
+<li><code>test_kube_state_metrics_running()</code> - Kube State Metrics health</li>
+<li><code>test_servicemonitors_configured()</code> - ServiceMonitor configuration</li>
+<li><code>test_prometheus_storage_configured()</code> - Persistent storage</li>
+<li><code>test_grafana_ingress_configured()</code> - Grafana ingress</li>
+<li><code>test_prometheus_ingress_configured()</code> - Prometheus ingress</li>
+<li><code>test_resource_limits_configured()</code> - Resource limits defined</li>
+<li><code>test_pods_health()</code> - Overall pod health</li>
+</ul>
+<p><strong>Usage:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run all tests</span>
 pytest<span class="w"> </span>tests/integration/test_at_e1_006_validation.py<span class="w"> </span>-v
 
@@ -4985,88 +4987,98 @@ pytest<span class="w"> </span>tests/integration/test_at_e1_006_validation.py<spa
 
 <span class="c1"># Run with custom namespace</span>
 pytest<span class="w"> </span>tests/integration/test_at_e1_006_validation.py<span class="w"> </span>-v<span class="w"> </span>--namespace<span class="w"> </span>monitoring
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="automation-scripts">Automation Scripts</h3>
 <h4 id="1-testsintegrationprometheus-metricssh">1. <code>tests/integration/prometheus-metrics.sh</code></h4>
 <p>Validates Prometheus metrics collection via API queries.</p>
-<p><strong>Tests:</strong>
-- Prometheus health endpoint responding
-- Active scrape targets configured
-- <code>up</code> metric availability
-- DORA metrics collection (optional)</p>
-<p><strong>Usage:</strong>
+<p><strong>Tests:</strong></p>
+<ul>
+<li>Prometheus health endpoint responding</li>
+<li>Active scrape targets configured</li>
+<li><code>up</code> metric availability</li>
+<li>DORA metrics collection (optional)</li>
+</ul>
+<p><strong>Usage:</strong></p>
 <div class="highlight"><pre><span></span><code>./tests/integration/prometheus-metrics.sh
 ./tests/integration/prometheus-metrics.sh<span class="w"> </span>http://prometheus.custom.domain
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="2-testsintegrationgrafana-dashboardssh">2. <code>tests/integration/grafana-dashboards.sh</code></h4>
 <p>Validates Grafana dashboards via API.</p>
-<p><strong>Tests:</strong>
-- Grafana health endpoint responding
-- Organization configured
-- Datasources configured (Prometheus)
-- Dashboards imported (Kubernetes, DORA)
-- Dashboard load time (&lt;2 seconds)</p>
-<p><strong>Usage:</strong>
+<p><strong>Tests:</strong></p>
+<ul>
+<li>Grafana health endpoint responding</li>
+<li>Organization configured</li>
+<li>Datasources configured (Prometheus)</li>
+<li>Dashboards imported (Kubernetes, DORA)</li>
+<li>Dashboard load time (&lt;2 seconds)</li>
+</ul>
+<p><strong>Usage:</strong></p>
 <div class="highlight"><pre><span></span><code>./tests/integration/grafana-dashboards.sh
 ./tests/integration/grafana-dashboards.sh<span class="w"> </span>http://grafana.custom.domain
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="bdd-feature-tests">BDD Feature Tests</h2>
 <h3 id="testsbddfeaturesprometheus-stack-deploymentfeature"><code>tests/bdd/features/prometheus-stack-deployment.feature</code></h3>
 <p>Comprehensive BDD tests covering all observability stack scenarios.</p>
-<p><strong>Key Scenarios:</strong>
-- Prometheus deployed in monitoring namespace
-- Prometheus ArgoCD Application exists and is healthy
-- Prometheus Operator pods are running
-- Prometheus is scraping metrics
-- Prometheus persistent storage configured
-- Grafana UI accessible via ingress
-- Grafana admin login works
-- Prometheus datasource configured in Grafana
-- Default Kubernetes dashboards imported
-- Alertmanager UI accessible
-- Alertmanager configuration valid
-- ServiceMonitors for platform components (ArgoCD, Jenkins, PostgreSQL, OpenTelemetry)
-- Node Exporter DaemonSet running
-- Kube State Metrics collecting data
-- Prometheus API functional
-- Alert rules loaded
-- Platform components monitored
-- Resource limits configured
-- Alertmanager persistent storage
-- Remote write for OpenTelemetry</p>
-<p><strong>Usage:</strong>
+<p><strong>Key Scenarios:</strong></p>
+<ul>
+<li>Prometheus deployed in monitoring namespace</li>
+<li>Prometheus ArgoCD Application exists and is healthy</li>
+<li>Prometheus Operator pods are running</li>
+<li>Prometheus is scraping metrics</li>
+<li>Prometheus persistent storage configured</li>
+<li>Grafana UI accessible via ingress</li>
+<li>Grafana admin login works</li>
+<li>Prometheus datasource configured in Grafana</li>
+<li>Default Kubernetes dashboards imported</li>
+<li>Alertmanager UI accessible</li>
+<li>Alertmanager configuration valid</li>
+<li>ServiceMonitors for platform components (ArgoCD, Jenkins, PostgreSQL, OpenTelemetry)</li>
+<li>Node Exporter DaemonSet running</li>
+<li>Kube State Metrics collecting data</li>
+<li>Prometheus API functional</li>
+<li>Alert rules loaded</li>
+<li>Platform components monitored</li>
+<li>Resource limits configured</li>
+<li>Alertmanager persistent storage</li>
+<li>Remote write for OpenTelemetry</li>
+</ul>
+<p><strong>Usage:</strong></p>
 <div class="highlight"><pre><span></span><code>behave<span class="w"> </span>tests/bdd/features/prometheus-stack-deployment.feature
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="testsbddfeaturesopentelemetry-deploymentfeature"><code>tests/bdd/features/opentelemetry-deployment.feature</code></h3>
 <p>Tests OpenTelemetry Collector deployment as part of observability stack.</p>
-<p><strong>Key Scenarios:</strong>
-- OpenTelemetry deployed in monitoring namespace
-- OpenTelemetry ArgoCD Application healthy
-- Collector deployed as DaemonSet
-- OTLP receivers configured
-- Prometheus exporter configured
-- Metrics/logs/traces pipelines configured
-- Health check endpoints accessible
-- Kubernetes attributes enrichment
-- Self-metrics exposed
-- Resource limits configured
-- Security context configured</p>
-<p><strong>Usage:</strong>
+<p><strong>Key Scenarios:</strong></p>
+<ul>
+<li>OpenTelemetry deployed in monitoring namespace</li>
+<li>OpenTelemetry ArgoCD Application healthy</li>
+<li>Collector deployed as DaemonSet</li>
+<li>OTLP receivers configured</li>
+<li>Prometheus exporter configured</li>
+<li>Metrics/logs/traces pipelines configured</li>
+<li>Health check endpoints accessible</li>
+<li>Kubernetes attributes enrichment</li>
+<li>Self-metrics exposed</li>
+<li>Resource limits configured</li>
+<li>Security context configured</li>
+</ul>
+<p><strong>Usage:</strong></p>
 <div class="highlight"><pre><span></span><code>behave<span class="w"> </span>tests/bdd/features/opentelemetry-deployment.feature
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="testsbddfeaturescentralized-loggingfeature"><code>tests/bdd/features/centralized-logging.feature</code></h3>
 <p>Tests centralized logging with OpenTelemetry (part of observability).</p>
-<p><strong>Key Scenarios:</strong>
-- Log forwarding to OpenSearch
-- Kubernetes context enrichment
-- Trace correlation
-- Log searchability within SLA
-- Failure handling
-- Structured logging
-- Multi-tenancy isolation</p>
-<p><strong>Usage:</strong>
+<p><strong>Key Scenarios:</strong></p>
+<ul>
+<li>Log forwarding to OpenSearch</li>
+<li>Kubernetes context enrichment</li>
+<li>Trace correlation</li>
+<li>Log searchability within SLA</li>
+<li>Failure handling</li>
+<li>Structured logging</li>
+<li>Multi-tenancy isolation</li>
+</ul>
+<p><strong>Usage:</strong></p>
 <div class="highlight"><pre><span></span><code>behave<span class="w"> </span>tests/bdd/features/centralized-logging.feature
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="validation-commands">Validation Commands</h2>
 <p>The issue specifies these validation commands, which are all covered:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Prometheus API query - covered by prometheus-metrics.sh</span>
@@ -5120,7 +5132,7 @@ behave<span class="w"> </span>tests/bdd/features/centralized-logging.feature
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Python</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v4</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install -r requirements-dev.txt</span>
@@ -5175,19 +5187,23 @@ behave<span class="w"> </span>tests/bdd/features/centralized-logging.feature
 <li>✅ BDD feature tests pass (optional but recommended)</li>
 </ol>
 <h2 id="dependencies">Dependencies</h2>
-<p>This test depends on the following issues being completed:
-- <strong>paruff/fawkes#24</strong> - Infrastructure setup
-- <strong>paruff/fawkes#25</strong> - GitOps/ArgoCD deployment
-- <strong>paruff/fawkes#26</strong> - Prometheus Operator deployment
-- <strong>paruff/fawkes#27</strong> - Grafana configuration</p>
+<p>This test depends on the following issues being completed:</p>
+<ul>
+<li><strong>paruff/fawkes#24</strong> - Infrastructure setup</li>
+<li><strong>paruff/fawkes#25</strong> - GitOps/ArgoCD deployment</li>
+<li><strong>paruff/fawkes#26</strong> - Prometheus Operator deployment</li>
+<li><strong>paruff/fawkes#27</strong> - Grafana configuration</li>
+</ul>
 <p>All dependencies must be satisfied before AT-E1-006 validation can pass.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
-<p>See <code>tests/integration/README.md</code> for detailed troubleshooting steps for:
-- Validation script failures
-- Missing namespaces
-- ArgoCD Application issues
-- Pod readiness problems
-- Prometheus/Grafana connectivity issues</p>
+<p>See <code>tests/integration/README.md</code> for detailed troubleshooting steps for:</p>
+<ul>
+<li>Validation script failures</li>
+<li>Missing namespaces</li>
+<li>ArgoCD Application issues</li>
+<li>Pod readiness problems</li>
+<li>Prometheus/Grafana connectivity issues</li>
+</ul>
 
 
 

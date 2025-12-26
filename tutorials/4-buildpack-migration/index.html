@@ -5103,14 +5103,14 @@
 </ul>
 <div class="admonition info">
 <p class="admonition-title">Why Buildpacks?</p>
-<p>Dockerfiles give you control, but with control comes responsibility. Who updates base images when CVEs are discovered? Who ensures all teams follow security best practices? Buildpacks automate these concerns. <a href="../../explanation/containers/buildpacks-philosophy/">Learn the philosophy</a>.</p>
 </div>
+<p>Dockerfiles give you control, but with control comes responsibility. Who updates base images when CVEs are discovered? Who ensures all teams follow security best practices? Buildpacks automate these concerns. <a href="../../explanation/containers/buildpacks-philosophy/">Learn the philosophy</a>.</p>
 <h2 id="step-1-understand-your-current-dockerfile">Step 1: Understand Your Current Dockerfile</h2>
 <p>Let's review what your Dockerfile is doing and how Buildpacks will replace it.</p>
 <ol>
-<li>
-<p>View your current <code>Dockerfile</code>:
-   <div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<li>View your current <code>Dockerfile</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
@@ -5130,12 +5130,14 @@
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;start&quot;</span><span class="p">]</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p>Identify what the Dockerfile is doing:</p>
 </li>
-<li>✅ Choosing a base image (node:18-alpine)</li>
+<li>
+<p>✅ Choosing a base image (node:18-alpine)</p>
+</li>
 <li>✅ Installing dependencies (npm ci)</li>
 <li>✅ Copying application code</li>
 <li>✅ Creating a non-root user</li>
@@ -5152,54 +5154,52 @@
 </ol>
 <div class="admonition info">
 <p class="admonition-title">Buildpacks Automate All of This</p>
-<p>Buildpacks detect your application type, choose appropriate base images, install dependencies, and configure security - all automatically.</p>
 </div>
+<p>Buildpacks detect your application type, choose appropriate base images, install dependencies, and configure security - all automatically.</p>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You understand what your Dockerfile does and why Buildpacks are an improvement.</p>
 </div>
+<p>You understand what your Dockerfile does and why Buildpacks are an improvement.</p>
 <h2 id="step-2-install-pack-cli">Step 2: Install Pack CLI</h2>
 <p>Pack is the CLI for working with Cloud Native Buildpacks.</p>
 <ol>
 <li>Install Pack (choose your platform):</li>
 </ol>
-<p><strong>macOS (Homebrew):</strong>
-   <div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>buildpacks/tap/pack
-</code></pre></div></p>
-<p><strong>Linux:</strong>
-   <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:cncf-buildpacks/pack-cli
+<p><strong>macOS (Homebrew):</strong></p>
+<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>buildpacks/tap/pack
+</code></pre></div>
+<p><strong>Linux:</strong></p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:cncf-buildpacks/pack-cli
 sudo<span class="w"> </span>apt-get<span class="w"> </span>update
 sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>pack-cli
-</code></pre></div></p>
-<p><strong>Windows (Chocolatey):</strong>
-   <div class="highlight"><pre><span></span><code>choco<span class="w"> </span>install<span class="w"> </span>pack
-</code></pre></div></p>
+</code></pre></div>
+<p><strong>Windows (Chocolatey):</strong></p>
+<div class="highlight"><pre><span></span><code>choco<span class="w"> </span>install<span class="w"> </span>pack
+</code></pre></div>
 <ol>
-<li>
-<p>Verify installation:
-   <div class="highlight"><pre><span></span><code>pack<span class="w"> </span>--version
-</code></pre></div></p>
-</li>
-<li>
-<p>Set a default builder (we'll use Paketo):
+<li>Verify installation:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>pack<span class="w"> </span>--version
+</code></pre></div>
+<ol>
+<li>Set a default builder (we'll use Paketo):
    <div class="highlight"><pre><span></span><code>pack<span class="w"> </span>config<span class="w"> </span>default-builder<span class="w"> </span>paketobuildpacks/builder:base
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition info">
 <p class="admonition-title">What's a Builder?</p>
-<p>A builder is a container image that contains buildpacks and knows how to build your application. Paketo Buildpacks is a CNCF project that provides enterprise-grade buildpacks for multiple languages.</p>
 </div>
+<p>A builder is a container image that contains buildpacks and knows how to build your application. Paketo Buildpacks is a CNCF project that provides enterprise-grade buildpacks for multiple languages.</p>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Pack CLI is installed and configured with a default builder.</p>
 </div>
+<p>Pack CLI is installed and configured with a default builder.</p>
 <h2 id="step-3-prepare-for-buildpacks">Step 3: Prepare for Buildpacks</h2>
 <p>Buildpacks work best when your application follows conventions. Let's ensure your app is ready.</p>
 <ol>
-<li>
-<p>Verify your <code>package.json</code> has a start script:
-   <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<li>Verify your <code>package.json</code> has a start script:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hello-fawkes&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3.0.0&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -5214,48 +5214,48 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 <span class="w">    </span><span class="nt">&quot;@opentelemetry/exporter-trace-otlp-http&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^0.41.0&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Ensure you have a <code>package-lock.json</code>:
-   <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install
-</code></pre></div></p>
-</li>
-<li>
-<p>Optional: Create a <code>.packignore</code> file to exclude files from the build:
-   <div class="highlight"><pre><span></span><code>.git/
+</code></pre></div>
+<ol>
+<li>Ensure you have a <code>package-lock.json</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install
+</code></pre></div>
+<ol>
+<li>Optional: Create a <code>.packignore</code> file to exclude files from the build:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>.git/
 .gitignore
 *.md
 Dockerfile
 k8s/
 node_modules/
-</code></pre></div></p>
-</li>
-<li>
-<p>Commit these changes:
+</code></pre></div>
+<ol>
+<li>Commit these changes:
    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.packignore<span class="w"> </span>package.json<span class="w"> </span>package-lock.json
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Prepare for Buildpacks migration&quot;</span>
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Your application follows Buildpacks conventions and is ready to build.</p>
 </div>
+<p>Your application follows Buildpacks conventions and is ready to build.</p>
 <h2 id="step-4-build-with-buildpacks">Step 4: Build with Buildpacks</h2>
 <p>Now for the exciting part - building your first Buildpack image!</p>
 <ol>
-<li>
-<p>Build your application with Pack:
-   <div class="highlight"><pre><span></span><code>pack<span class="w"> </span>build<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack<span class="w"> </span><span class="se">\</span>
+<li>Build your application with Pack:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>pack<span class="w"> </span>build<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--builder<span class="w"> </span>paketobuildpacks/builder:base<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--env<span class="w"> </span><span class="nv">BP_NODE_VERSION</span><span class="o">=</span><span class="m">18</span>
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p>Watch the build process:</p>
 </li>
-<li>Buildpacks will detect that you're using Node.js</li>
+<li>
+<p>Buildpacks will detect that you're using Node.js</p>
+</li>
 <li>It will install the correct Node.js version</li>
 <li>It will run <code>npm ci</code> to install dependencies</li>
 <li>It will configure the start command</li>
@@ -5263,8 +5263,10 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <p>It will create a secure, minimal container image</p>
 </li>
 <li>
-<p>Inspect the build output:
-   <div class="highlight"><pre><span></span><code>===&gt; DETECTING
+<p>Inspect the build output:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>===&gt; DETECTING
 [detector] 6 of 24 buildpacks participating
 [detector] paketo-buildpacks/ca-certificates   3.6.3
 [detector] paketo-buildpacks/node-engine        2.0.0
@@ -5280,85 +5282,79 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 ===&gt; EXPORTING
 [exporter] Adding layer &#39;paketo-buildpacks/node-engine:node&#39;
 [exporter] Adding layer &#39;paketo-buildpacks/npm-install:modules&#39;
-</code></pre></div></p>
-</li>
-<li>
-<p>Verify the image was created:
+</code></pre></div>
+<ol>
+<li>Verify the image was created:
    <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>images<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>hello-fawkes
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition tip">
 <p class="admonition-title">Build Time</p>
-<p>The first build may take a few minutes as it downloads base images and buildpacks. Subsequent builds are much faster thanks to layer caching.</p>
 </div>
+<p>The first build may take a few minutes as it downloads base images and buildpacks. Subsequent builds are much faster thanks to layer caching.</p>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You've built a container image using Cloud Native Buildpacks!</p>
 </div>
+<p>You've built a container image using Cloud Native Buildpacks!</p>
 <h2 id="step-5-compare-image-sizes">Step 5: Compare Image Sizes</h2>
 <p>Let's see how the Buildpack image compares to your Dockerfile image.</p>
 <ol>
-<li>
-<p>Check Dockerfile image size:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>images<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v3.0.0
-</code></pre></div></p>
-</li>
-<li>
-<p>Check Buildpack image size:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>images<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
-</code></pre></div></p>
-</li>
-<li>
-<p>Compare the layers:
-   <div class="highlight"><pre><span></span><code><span class="c1"># Dockerfile image</span>
+<li>Check Dockerfile image size:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>images<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v3.0.0
+</code></pre></div>
+<ol>
+<li>Check Buildpack image size:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>images<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
+</code></pre></div>
+<ol>
+<li>Compare the layers:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Dockerfile image</span>
 docker<span class="w"> </span><span class="nb">history</span><span class="w"> </span>YOUR-USERNAME/hello-fawkes:v3.0.0
 
 <span class="c1"># Buildpack image</span>
 docker<span class="w"> </span><span class="nb">history</span><span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
-</code></pre></div></p>
-</li>
-</ol>
+</code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Image Size Differences</p>
-<p>Buildpack images may be larger than Alpine-based Dockerfile images because they use Ubuntu Bionic for better compatibility. However, they're more secure and maintainable. The trade-off is worth it for most applications.</p>
 </div>
+<p>Buildpack images may be larger than Alpine-based Dockerfile images because they use Ubuntu Bionic for better compatibility. However, they're more secure and maintainable. The trade-off is worth it for most applications.</p>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You understand the characteristics of your Buildpack-built image.</p>
 </div>
+<p>You understand the characteristics of your Buildpack-built image.</p>
 <h2 id="step-6-test-the-buildpack-image-locally">Step 6: Test the Buildpack Image Locally</h2>
 <p>Before deploying, let's verify the image works correctly.</p>
 <ol>
-<li>
-<p>Run the container locally:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>hello-fawkes-test<span class="w"> </span><span class="se">\</span>
+<li>Run the container locally:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>hello-fawkes-test<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-p<span class="w"> </span><span class="m">8080</span>:8080<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-e<span class="w"> </span><span class="nv">PORT</span><span class="o">=</span><span class="m">8080</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-e<span class="w"> </span><span class="nv">VAULT_ADDR</span><span class="o">=</span>http://vault.fawkes-platform.svc.cluster.local:8200<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
-</code></pre></div></p>
-</li>
-<li>
-<p>Test the endpoint:
-   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8080/
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
+<li>Test the endpoint:</li>
 </ol>
-<p>Should return:
-   <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8080/
+</code></pre></div>
+<p>Should return:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hello from Fawkes!&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-12-06T12:00:00.000Z&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3.0.0&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;tracing&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;secrets&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;managed by Vault&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <ol>
-<li>Check the running user (should be non-root):
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>hello-fawkes-test<span class="w"> </span>whoami
-</code></pre></div></li>
+<li>Check the running user (should be non-root):</li>
 </ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>hello-fawkes-test<span class="w"> </span>whoami
+</code></pre></div>
 <p>Should output: <code>cnb</code> (Buildpacks default non-root user)</p>
 <ol>
 <li>Stop and remove the test container:
@@ -5368,19 +5364,19 @@ docker<span class="w"> </span>rm<span class="w"> </span>hello-fawkes-test
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>The Buildpack image works correctly and follows security best practices!</p>
 </div>
+<p>The Buildpack image works correctly and follows security best practices!</p>
 <h2 id="step-7-deploy-buildpack-image-to-fawkes">Step 7: Deploy Buildpack Image to Fawkes</h2>
 <p>Now let's deploy the Buildpack-built image to your cluster.</p>
 <ol>
-<li>
-<p>Push the image to your registry:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>push<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
-</code></pre></div></p>
-</li>
-<li>
-<p>Update <code>k8s/deployment.yaml</code> to use the new image:
-   <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<li>Push the image to your registry:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>push<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
+</code></pre></div>
+<ol>
+<li>Update <code>k8s/deployment.yaml</code> to use the new image:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
@@ -5403,93 +5399,91 @@ docker<span class="w"> </span>rm<span class="w"> </span>hello-fawkes-test
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack</span>
-<span class="w">        </span><span class="c1"># Rest of spec remains the same</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Commit and push:
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>k8s/deployment.yaml
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack</span>
+<span class="w">          </span><span class="c1"># Rest of spec remains the same</span>
+</code></pre></div>
+<ol>
+<li>Commit and push:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>k8s/deployment.yaml
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Deploy Buildpack-built image&quot;</span>
 git<span class="w"> </span>push
-</code></pre></div></p>
-</li>
-<li>
-<p>Watch the rollout:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/hello-fawkes<span class="w"> </span>-n<span class="w"> </span>my-first-app
-</code></pre></div></p>
-</li>
-<li>
-<p>Verify the new pods are running:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>my-first-app
-</code></pre></div></p>
-</li>
-<li>
-<p>Test the deployed service:
+</code></pre></div>
+<ol>
+<li>Watch the rollout:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/hello-fawkes<span class="w"> </span>-n<span class="w"> </span>my-first-app
+</code></pre></div>
+<ol>
+<li>Verify the new pods are running:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>my-first-app
+</code></pre></div>
+<ol>
+<li>Test the deployed service:
    <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>https://hello-fawkes.127.0.0.1.nip.io/
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Your service is now running with a Buildpack-built image on Fawkes!</p>
 </div>
+<p>Your service is now running with a Buildpack-built image on Fawkes!</p>
 <h2 id="step-8-understand-rebasing">Step 8: Understand Rebasing</h2>
 <p>One of the key benefits of Buildpacks is "rebasing" - updating base images without rebuilding.</p>
 <ol>
-<li>Check the current base image:
-   <div class="highlight"><pre><span></span><code>pack<span class="w"> </span>inspect<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
-</code></pre></div></li>
+<li>Check the current base image:</li>
 </ol>
+<div class="highlight"><pre><span></span><code>pack<span class="w"> </span>inspect<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
+</code></pre></div>
 <p>Note the "Run Image" section.</p>
 <ol>
-<li>
-<p>Rebase to the latest base image (simulating a security update):
-   <div class="highlight"><pre><span></span><code>pack<span class="w"> </span>rebase<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
-</code></pre></div></p>
-</li>
+<li>Rebase to the latest base image (simulating a security update):</li>
+</ol>
+<div class="highlight"><pre><span></span><code>pack<span class="w"> </span>rebase<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
+</code></pre></div>
+<ol>
 <li>
 <p>Compare the speed:</p>
 </li>
-<li><strong>Rebuild</strong>: 2-5 minutes (downloads dependencies, runs build)</li>
+<li>
+<p><strong>Rebuild</strong>: 2-5 minutes (downloads dependencies, runs build)</p>
+</li>
 <li>
 <p><strong>Rebase</strong>: 5-10 seconds (only updates base layers)</p>
 </li>
 <li>
-<p>Push the rebased image:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>push<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
-</code></pre></div></p>
+<p>Push the rebased image:</p>
 </li>
-<li>
-<p>Trigger a rollout in Kubernetes:
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>push<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
+</code></pre></div>
+<ol>
+<li>Trigger a rollout in Kubernetes:
    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/hello-fawkes<span class="w"> </span>-n<span class="w"> </span>my-first-app
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition info">
 <p class="admonition-title">Rebasing in Production</p>
-<p>In a mature platform, rebasing is automated:
-- CI/CD pipeline runs <code>pack rebase</code> nightly
-- Images get security updates without code changes
-- ArgoCD deploys updated images automatically</p>
-<p>This is how you patch 100 microservices in minutes, not weeks.</p>
 </div>
+<p>In a mature platform, rebasing is automated: - CI/CD pipeline runs <code>pack rebase</code> nightly - Images get security updates without code changes - ArgoCD deploys updated images automatically</p>
+<pre><code>This is how you patch 100 microservices in minutes, not weeks.
+</code></pre>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You've rebased your image and understand the power of this feature!</p>
 </div>
+<p>You've rebased your image and understand the power of this feature!</p>
 <h2 id="step-9-remove-the-dockerfile">Step 9: Remove the Dockerfile</h2>
 <p>Now that you're using Buildpacks, the Dockerfile is obsolete.</p>
 <ol>
-<li>
-<p>Remove the Dockerfile:
-   <div class="highlight"><pre><span></span><code>rm<span class="w"> </span>Dockerfile
-</code></pre></div></p>
-</li>
-<li>
-<p>Optional: Add a <code>project.toml</code> for Buildpack configuration:
-   <div class="highlight"><pre><span></span><code><span class="k">[_]</span>
+<li>Remove the Dockerfile:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>Dockerfile
+</code></pre></div>
+<ol>
+<li>Optional: Add a <code>project.toml</code> for Buildpack configuration:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">[_]</span>
 <span class="n">schema-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.2&quot;</span>
 
 <span class="k">[[io.buildpacks.build.env]]</span>
@@ -5499,14 +5493,12 @@ git<span class="w"> </span>push
 <span class="k">[[io.buildpacks.build.env]]</span>
 <span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_NPM_INSTALL_ARGS&quot;</span>
 <span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;--production&quot;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Update your CI/CD pipeline to use <code>pack build</code> instead of <code>docker build</code>.</p>
-</li>
+</code></pre></div>
+<ol>
+<li>Update your CI/CD pipeline to use <code>pack build</code> instead of <code>docker build</code>.</li>
 </ol>
-<p>Example Jenkins pipeline snippet:
-   <div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build Image&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<p>Example Jenkins pipeline snippet:</p>
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build Image&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">      pack build ${IMAGE_NAME}:${VERSION} \</span>
@@ -5515,7 +5507,7 @@ git<span class="w"> </span>push
 <span class="s1">    &#39;&#39;&#39;</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <ol>
 <li>Commit the changes:
    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>Dockerfile<span class="w"> </span>project.toml
@@ -5525,8 +5517,8 @@ git<span class="w"> </span>push
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You've fully migrated from Dockerfiles to Cloud Native Buildpacks!</p>
 </div>
+<p>You've fully migrated from Dockerfiles to Cloud Native Buildpacks!</p>
 <h2 id="what-youve-accomplished">What You've Accomplished</h2>
 <p>Congratulations! You've successfully:</p>
 <ul>

@@ -5260,26 +5260,30 @@
 └─────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h3 id="zero-trust-in-cicd-pipelines">Zero Trust in CI/CD Pipelines</h3>
-<p>Traditional CI/CD often uses:
-- ❌ Long-lived credentials stored in CI system
-- ❌ Broad permissions for deployment service accounts
-- ❌ No verification of artifact provenance
-- ❌ Implicit trust between pipeline stages</p>
-<p><strong>Zero trust CI/CD</strong>:
-- ✅ Workload identity for pipeline authentication (OIDC)
-- ✅ Least-privilege, ephemeral credentials
-- ✅ Cryptographic verification of artifacts (Sigstore/Cosign)
-- ✅ Policy enforcement at every stage</p>
+<p>Traditional CI/CD often uses:</p>
+<ul>
+<li>❌ Long-lived credentials stored in CI system</li>
+<li>❌ Broad permissions for deployment service accounts</li>
+<li>❌ No verification of artifact provenance</li>
+<li>❌ Implicit trust between pipeline stages</li>
+</ul>
+<p><strong>Zero trust CI/CD</strong>:</p>
+<ul>
+<li>✅ Workload identity for pipeline authentication (OIDC)</li>
+<li>✅ Least-privilege, ephemeral credentials</li>
+<li>✅ Cryptographic verification of artifacts (Sigstore/Cosign)</li>
+<li>✅ Policy enforcement at every stage</li>
+</ul>
 <hr />
 <h2 id="core-concepts">🔐 Core Concepts</h2>
 <h3 id="1-workload-identity">1. Workload Identity</h3>
 <p><strong>Problem</strong>: Traditional approaches use long-lived service account keys stored as secrets.</p>
 <p><strong>Zero Trust Solution</strong>: Workload identity allows pods/pipelines to authenticate using short-lived tokens.</p>
-<p><strong>Example: GitHub Actions → AWS</strong>
+<p><strong>Example: GitHub Actions → AWS</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Traditional approach (NEVER DO THIS)</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure AWS Credentials</span>
 <span class="w">  </span><span class="nt">env</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">AWS_ACCESS_KEY_ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AWS_ACCESS_KEY }}</span><span class="w">     </span><span class="c1"># ❌ Long-lived</span>
+<span class="w">    </span><span class="nt">AWS_ACCESS_KEY_ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AWS_ACCESS_KEY }}</span><span class="w"> </span><span class="c1"># ❌ Long-lived</span>
 <span class="w">    </span><span class="nt">AWS_SECRET_ACCESS_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AWS_SECRET_KEY }}</span><span class="w"> </span><span class="c1"># ❌ Rotated manually</span>
 
 <span class="c1"># Zero trust approach with OIDC</span>
@@ -5291,8 +5295,8 @@
 <span class="w">    </span><span class="c1"># ✅ No secrets stored in GitHub</span>
 <span class="w">    </span><span class="c1"># ✅ Short-lived tokens (1 hour)</span>
 <span class="w">    </span><span class="c1"># ✅ Scoped to specific repos/branches</span>
-</code></pre></div></p>
-<p><strong>Example: Kubernetes Workload Identity</strong>
+</code></pre></div>
+<p><strong>Example: Kubernetes Workload Identity</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5311,19 +5315,21 @@
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service</span><span class="w">  </span><span class="c1"># ✅ Pod gets temporary credentials</span>
+<span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service</span><span class="w"> </span><span class="c1"># ✅ Pod gets temporary credentials</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service:v1.2.3</span>
-<span class="w">        </span><span class="c1"># No AWS_ACCESS_KEY_ID needed! SDK auto-discovers credentials</span>
-</code></pre></div></p>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service:v1.2.3</span>
+<span class="w">          </span><span class="c1"># No AWS_ACCESS_KEY_ID needed! SDK auto-discovers credentials</span>
+</code></pre></div>
 <h3 id="2-mutual-tls-mtls-and-service-mesh">2. Mutual TLS (mTLS) and Service Mesh</h3>
 <p><strong>mTLS</strong>: Both client and server authenticate using certificates, encrypting all traffic.</p>
-<p><strong>Service Mesh</strong> (Istio, Linkerd, Consul) provides:
-- Automatic mTLS between all services
-- Fine-grained authorization policies
-- Traffic encryption without code changes</p>
-<p><strong>Example: Istio Authorization Policy</strong>
+<p><strong>Service Mesh</strong> (Istio, Linkerd, Consul) provides:</p>
+<ul>
+<li>Automatic mTLS between all services</li>
+<li>Fine-grained authorization policies</li>
+<li>Traffic encryption without code changes</li>
+</ul>
+<p><strong>Example: Istio Authorization Policy</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security.istio.io/v1beta1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AuthorizationPolicy</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5335,28 +5341,28 @@
 <span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-api</span>
 <span class="w">  </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALLOW</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">principals</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;cluster.local/ns/checkout/sa/checkout-service&quot;</span><span class="w">  </span><span class="c1"># Only checkout can call</span>
-<span class="w">    </span><span class="nt">to</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">operation</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">methods</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;POST&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">        </span><span class="nt">paths</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;/api/v1/charge&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">principals</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;cluster.local/ns/admin/sa/admin-dashboard&quot;</span>
-<span class="w">    </span><span class="nt">to</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">operation</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">methods</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;GET&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">        </span><span class="nt">paths</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;/api/v1/transactions/*&quot;</span><span class="p p-Indicator">]</span>
-</code></pre></div></p>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">principals</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;cluster.local/ns/checkout/sa/checkout-service&quot;</span><span class="w"> </span><span class="c1"># Only checkout can call</span>
+<span class="w">      </span><span class="nt">to</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">operation</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">methods</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;POST&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">            </span><span class="nt">paths</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;/api/v1/charge&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">principals</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;cluster.local/ns/admin/sa/admin-dashboard&quot;</span>
+<span class="w">      </span><span class="nt">to</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">operation</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">methods</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;GET&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">            </span><span class="nt">paths</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;/api/v1/transactions/*&quot;</span><span class="p p-Indicator">]</span>
+</code></pre></div>
 <p><strong>Result</strong>: Even if an attacker compromises the <code>frontend</code> service, they cannot call the payment API.</p>
 <h3 id="3-policy-as-code-with-opa">3. Policy-as-Code with OPA</h3>
 <p><strong>Open Policy Agent (OPA)</strong>: Express security policies as code, enforce them at runtime.</p>
 <p><strong>Gatekeeper</strong>: OPA integration for Kubernetes admission control.</p>
-<p><strong>Example: Require Image Signatures</strong>
+<p><strong>Example: Require Image Signatures</strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">package</span><span class="w"> </span><span class="n">kubernetes</span><span class="p">.</span><span class="n">admission</span>
 
 <span class="k">import</span><span class="w"> </span><span class="n">future</span><span class="p">.</span><span class="n">keywords</span><span class="p">.</span><span class="k">contains</span>
@@ -5377,8 +5383,8 @@
 <span class="w">    </span><span class="n">image_ref</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">split</span><span class="p">(</span><span class="n">image</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@&quot;</span><span class="p">)[</span><span class="m">0</span><span class="p">]</span>
 <span class="w">    </span><span class="n">verified_images</span><span class="p">[</span><span class="n">image_ref</span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Example: Enforce Resource Limits</strong>
+</code></pre></div>
+<p><strong>Example: Enforce Resource Limits</strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">package</span><span class="w"> </span><span class="n">kubernetes</span><span class="p">.</span><span class="n">admission</span>
 
 <span class="n">deny</span><span class="p">[</span><span class="n">msg</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
@@ -5394,7 +5400,7 @@
 <span class="w">    </span><span class="k">not</span><span class="w"> </span><span class="n">container</span><span class="p">.</span><span class="n">resources</span><span class="p">.</span><span class="n">limits</span><span class="p">.</span><span class="n">cpu</span>
 <span class="w">    </span><span class="n">msg</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">sprintf</span><span class="p">(</span><span class="s2">&quot;Container %v must specify CPU limits&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">container</span><span class="p">.</span><span class="n">name</span><span class="p">])</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="4-supply-chain-security-slsa">4. Supply Chain Security (SLSA)</h3>
 <p><strong>Supply chain attacks</strong>: Compromise the build or delivery process to inject malicious code.</p>
 <p><strong>SLSA (Supply Chain Levels for Software Artifacts)</strong>: Framework for supply chain integrity.</p>
@@ -5405,15 +5411,15 @@
 <li><strong>Image Signing</strong>: Sign container images with Cosign/Sigstore</li>
 <li><strong>Verification</strong>: Verify signatures before deployment</li>
 </ol>
-<p><strong>Example: Generate SBOM with Syft</strong>
+<p><strong>Example: Generate SBOM with Syft</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Generate SBOM for container image</span>
 syft<span class="w"> </span>packages<span class="w"> </span>registry:ghcr.io/myorg/payment-service:v1.2.3<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-o<span class="w"> </span>spdx-json<span class="o">=</span>sbom.json
 
 <span class="c1"># Generate SBOM during build</span>
 syft<span class="w"> </span>packages<span class="w"> </span>dir:.<span class="w"> </span>-o<span class="w"> </span>cyclonedx-json<span class="o">=</span>sbom.json
-</code></pre></div></p>
-<p><strong>Example: Sign Image with Cosign</strong>
+</code></pre></div>
+<p><strong>Example: Sign Image with Cosign</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Sign image (uses keyless signing with Sigstore)</span>
 cosign<span class="w"> </span>sign<span class="w"> </span>ghcr.io/myorg/payment-service:v1.2.3
 
@@ -5425,8 +5431,8 @@ cosign<span class="w"> </span>attest<span class="w"> </span>--predicate<span cla
 cosign<span class="w"> </span>verify<span class="w"> </span>ghcr.io/myorg/payment-service:v1.2.3<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--certificate-identity-regexp<span class="w"> </span><span class="s1">&#39;https://github.com/myorg/*&#39;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--certificate-oidc-issuer<span class="w"> </span><span class="s1">&#39;https://token.actions.githubusercontent.com&#39;</span>
-</code></pre></div></p>
-<p><strong>Example: Policy to Require Signatures</strong>
+</code></pre></div>
+<p><strong>Example: Policy to Require Signatures</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kyverno.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterPolicy</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5434,29 +5440,31 @@ cosign<span class="w"> </span>verify<span class="w"> </span>ghcr.io/myorg/paymen
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enforce</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verify-signature</span>
-<span class="w">    </span><span class="nt">match</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">any</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">kinds</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
-<span class="w">    </span><span class="nt">verifyImages</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">imageReferences</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;ghcr.io/myorg/*&quot;</span>
-<span class="w">      </span><span class="nt">attestors</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">entries</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">keyless</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">subject</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://github.com/myorg/*&quot;</span>
-<span class="w">            </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://token.actions.githubusercontent.com&quot;</span>
-<span class="w">            </span><span class="nt">rekor</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://rekor.sigstore.dev</span>
-</code></pre></div></p>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verify-signature</span>
+<span class="w">      </span><span class="nt">match</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">any</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">kinds</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+<span class="w">      </span><span class="nt">verifyImages</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">imageReferences</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;ghcr.io/myorg/*&quot;</span>
+<span class="w">          </span><span class="nt">attestors</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">entries</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">keyless</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">subject</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://github.com/myorg/*&quot;</span>
+<span class="w">                    </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://token.actions.githubusercontent.com&quot;</span>
+<span class="w">                    </span><span class="nt">rekor</span><span class="p">:</span>
+<span class="w">                      </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://rekor.sigstore.dev</span>
+</code></pre></div>
 <h3 id="5-secret-management">5. Secret Management</h3>
-<p><strong>Never store secrets in</strong>:
-- ❌ Git repositories
-- ❌ Environment variables in Dockerfiles
-- ❌ ConfigMaps
-- ❌ Hardcoded in source code</p>
+<p><strong>Never store secrets in</strong>:</p>
+<ul>
+<li>❌ Git repositories</li>
+<li>❌ Environment variables in Dockerfiles</li>
+<li>❌ ConfigMaps</li>
+<li>❌ Hardcoded in source code</li>
+</ul>
 <p><strong>Zero trust secret management</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># External Secrets Operator: Sync from Vault/AWS Secrets Manager</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
@@ -5472,14 +5480,14 @@ cosign<span class="w"> </span>verify<span class="w"> </span>ghcr.io/myorg/paymen
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-api-secrets</span>
 <span class="w">    </span><span class="nt">creationPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Owner</span>
 <span class="w">  </span><span class="nt">data</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stripe-api-key</span>
-<span class="w">    </span><span class="nt">remoteRef</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod/payment/stripe-api-key</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-password</span>
-<span class="w">    </span><span class="nt">remoteRef</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod/payment/db-password</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stripe-api-key</span>
+<span class="w">      </span><span class="nt">remoteRef</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod/payment/stripe-api-key</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-password</span>
+<span class="w">      </span><span class="nt">remoteRef</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod/payment/db-password</span>
 </code></pre></div>
-<p><strong>Vault Integration</strong>:
+<p><strong>Vault Integration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5499,10 +5507,10 @@ cosign<span class="w"> </span>verify<span class="w"> </span>ghcr.io/myorg/paymen
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service:v1.2.3</span>
-<span class="w">        </span><span class="c1"># Vault agent sidecar injects secrets at /vault/secrets/stripe</span>
-</code></pre></div></p>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service:v1.2.3</span>
+<span class="w">          </span><span class="c1"># Vault agent sidecar injects secrets at /vault/secrets/stripe</span>
+</code></pre></div>
 <hr />
 <h2 id="zero-trust-architecture-for-fawkes">🏗️ Zero Trust Architecture for Fawkes</h2>
 <h3 id="reference-architecture">Reference Architecture</h3>
@@ -5611,12 +5619,14 @@ cosign<span class="w"> </span>verify<span class="w"> </span>ghcr.io/myorg/paymen
 <hr />
 <h2 id="hands-on-lab-implementing-zero-trust-for-fawkes">🛠️ Hands-On Lab: Implementing Zero Trust for Fawkes</h2>
 <h3 id="lab-overview">Lab Overview</h3>
-<p>You will implement key zero trust components:
-1. Configure workload identity for CI/CD
-2. Deploy a service mesh with mTLS
-3. Implement policy-as-code with OPA Gatekeeper
-4. Sign and verify container images with Cosign
-5. Configure External Secrets Operator</p>
+<p>You will implement key zero trust components:</p>
+<ol>
+<li>Configure workload identity for CI/CD</li>
+<li>Deploy a service mesh with mTLS</li>
+<li>Implement policy-as-code with OPA Gatekeeper</li>
+<li>Sign and verify container images with Cosign</li>
+<li>Configure External Secrets Operator</li>
+</ol>
 <p><strong>Duration</strong>: 25 minutes
 <strong>Tools</strong>: <code>kubectl</code>, <code>cosign</code>, <code>helm</code>, <code>fawkes</code> CLI</p>
 <hr />
@@ -6115,59 +6125,77 @@ OIDC-based workload identity (like GitHub Actions OIDC to AWS) provides short-li
 <h2 id="real-world-examples">🌍 Real-World Examples</h2>
 <h3 id="example-1-netflixs-zero-trust-journey">Example 1: Netflix's Zero Trust Journey</h3>
 <p><strong>Challenge</strong>: Netflix runs on AWS with thousands of microservices. Traditional perimeter security was insufficient.</p>
-<p><strong>Solution</strong>:
-- <strong>No VPN</strong>: All services authenticate individually, no network-based trust
-- <strong>mTLS everywhere</strong>: Every service-to-service call uses mutual TLS
-- <strong>Dynamic authorization</strong>: Zuul gateway enforces fine-grained policies based on user/service identity
-- <strong>Credential rotation</strong>: All credentials rotate automatically every few hours</p>
-<p><strong>Result</strong>:
-- Eliminated network perimeter as security boundary
-- Reduced blast radius of security incidents
-- Enabled faster deployment (no VPN bottlenecks)</p>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li><strong>No VPN</strong>: All services authenticate individually, no network-based trust</li>
+<li><strong>mTLS everywhere</strong>: Every service-to-service call uses mutual TLS</li>
+<li><strong>Dynamic authorization</strong>: Zuul gateway enforces fine-grained policies based on user/service identity</li>
+<li><strong>Credential rotation</strong>: All credentials rotate automatically every few hours</li>
+</ul>
+<p><strong>Result</strong>:</p>
+<ul>
+<li>Eliminated network perimeter as security boundary</li>
+<li>Reduced blast radius of security incidents</li>
+<li>Enabled faster deployment (no VPN bottlenecks)</li>
+</ul>
 <p><strong>Learn more</strong>: <a href="https://netflixtechblog.com/tagged/security">Netflix Security Blog</a></p>
 <hr />
 <h3 id="example-2-googles-beyondcorp">Example 2: Google's BeyondCorp</h3>
 <p><strong>Challenge</strong>: Employees working remotely needed access to internal applications without VPN.</p>
-<p><strong>Solution</strong> (BeyondCorp):
-- <strong>Device trust</strong>: Verify device posture before granting access
-- <strong>User identity</strong>: Strong authentication (2FA/U2F keys)
-- <strong>Context-aware access</strong>: Consider user, device, location, and resource sensitivity
-- <strong>Zero trust proxy</strong>: All access flows through proxy that enforces policy</p>
+<p><strong>Solution</strong> (BeyondCorp):</p>
+<ul>
+<li><strong>Device trust</strong>: Verify device posture before granting access</li>
+<li><strong>User identity</strong>: Strong authentication (2FA/U2F keys)</li>
+<li><strong>Context-aware access</strong>: Consider user, device, location, and resource sensitivity</li>
+<li><strong>Zero trust proxy</strong>: All access flows through proxy that enforces policy</li>
+</ul>
 <p><strong>Key insight</strong>: "Location is not a proxy for trust"</p>
-<p><strong>Result</strong>:
-- Employees work securely from anywhere without VPN
-- Reduced attack surface (no broad network access)
-- Better visibility into access patterns</p>
+<p><strong>Result</strong>:</p>
+<ul>
+<li>Employees work securely from anywhere without VPN</li>
+<li>Reduced attack surface (no broad network access)</li>
+<li>Better visibility into access patterns</li>
+</ul>
 <p><strong>Learn more</strong>: <a href="https://cloud.google.com/beyondcorp">BeyondCorp Research Papers</a></p>
 <hr />
 <h3 id="example-3-capital-one-breach-what-went-wrong">Example 3: Capital One Breach (What Went Wrong)</h3>
 <p><strong>Incident</strong> (2019): Attacker compromised a web application firewall (WAF), accessed IAM credentials, and exfiltrated data on 100 million customers.</p>
-<p><strong>Root Causes</strong>:
-- ❌ <strong>Overly permissive IAM role</strong>: WAF had broad access to S3
-- ❌ <strong>No network segmentation</strong>: Compromised WAF could reach production data
-- ❌ <strong>Missing detection</strong>: Exfiltration not detected in real-time</p>
-<p><strong>Zero Trust Would Have Prevented This</strong>:
-- ✅ <strong>Least privilege</strong>: WAF should not have S3 access
-- ✅ <strong>Workload identity</strong>: Short-lived credentials, not long-lived IAM keys
-- ✅ <strong>Micro-segmentation</strong>: WAF isolated from data storage layer
-- ✅ <strong>Continuous monitoring</strong>: Alert on unusual S3 access patterns</p>
+<p><strong>Root Causes</strong>:</p>
+<ul>
+<li>❌ <strong>Overly permissive IAM role</strong>: WAF had broad access to S3</li>
+<li>❌ <strong>No network segmentation</strong>: Compromised WAF could reach production data</li>
+<li>❌ <strong>Missing detection</strong>: Exfiltration not detected in real-time</li>
+</ul>
+<p><strong>Zero Trust Would Have Prevented This</strong>:</p>
+<ul>
+<li>✅ <strong>Least privilege</strong>: WAF should not have S3 access</li>
+<li>✅ <strong>Workload identity</strong>: Short-lived credentials, not long-lived IAM keys</li>
+<li>✅ <strong>Micro-segmentation</strong>: WAF isolated from data storage layer</li>
+<li>✅ <strong>Continuous monitoring</strong>: Alert on unusual S3 access patterns</li>
+</ul>
 <p><strong>Lesson</strong>: Assume breach. Design systems so a single compromise doesn't cascade.</p>
 <hr />
 <h3 id="example-4-shopifys-vault-backed-secrets">Example 4: Shopify's Vault-Backed Secrets</h3>
 <p><strong>Challenge</strong>: Thousands of microservices needed secure access to secrets (API keys, database passwords).</p>
-<p><strong>Old approach</strong>:
-- Secrets stored in environment variables
-- Rotated manually (infrequently)
-- Broad access (many services could read all secrets)</p>
-<p><strong>Zero trust approach</strong>:
-- <strong>HashiCorp Vault</strong>: Central secret management
-- <strong>Dynamic secrets</strong>: Database credentials generated on-demand, expire after use
-- <strong>Fine-grained ACLs</strong>: Each service can only access its required secrets
-- <strong>Audit logging</strong>: Every secret access logged</p>
-<p><strong>Result</strong>:
-- Secrets rotated automatically
-- Reduced blast radius (leaked credential only works for one service)
-- Complete audit trail for compliance</p>
+<p><strong>Old approach</strong>:</p>
+<ul>
+<li>Secrets stored in environment variables</li>
+<li>Rotated manually (infrequently)</li>
+<li>Broad access (many services could read all secrets)</li>
+</ul>
+<p><strong>Zero trust approach</strong>:</p>
+<ul>
+<li><strong>HashiCorp Vault</strong>: Central secret management</li>
+<li><strong>Dynamic secrets</strong>: Database credentials generated on-demand, expire after use</li>
+<li><strong>Fine-grained ACLs</strong>: Each service can only access its required secrets</li>
+<li><strong>Audit logging</strong>: Every secret access logged</li>
+</ul>
+<p><strong>Result</strong>:</p>
+<ul>
+<li>Secrets rotated automatically</li>
+<li>Reduced blast radius (leaked credential only works for one service)</li>
+<li>Complete audit trail for compliance</li>
+</ul>
 <hr />
 <h2 id="dora-capabilities-mapping">📊 DORA Capabilities Mapping</h2>
 <p>This module directly supports these <strong>DORA capabilities</strong>:</p>
@@ -6205,25 +6233,25 @@ OIDC-based workload identity (like GitHub Actions OIDC to AWS) provides short-li
 <hr />
 <h2 id="troubleshooting-common-issues">🔧 Troubleshooting Common Issues</h2>
 <h3 id="issue-1-pods-fail-to-start-after-enabling-strict-mtls">Issue 1: Pods Fail to Start After Enabling Strict mTLS</h3>
-<p><strong>Symptom</strong>:
+<p><strong>Symptom</strong>:</p>
 <div class="highlight"><pre><span></span><code>Error from server: error when creating &quot;deployment.yaml&quot;:
 admission webhook &quot;validation.gatekeeper.sh&quot; denied the request
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Cause</strong>: Pods without Istio sidecar injection cannot communicate when strict mTLS is enabled.</p>
-<p><strong>Solution</strong>:
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Ensure namespace has Istio injection enabled</span>
 kubectl<span class="w"> </span>label<span class="w"> </span>namespace<span class="w"> </span>payments<span class="w"> </span>istio-injection<span class="o">=</span>enabled
 
 <span class="c1"># Restart pods to inject sidecar</span>
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>payments
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="issue-2-image-signature-verification-fails">Issue 2: Image Signature Verification Fails</h3>
-<p><strong>Symptom</strong>:
+<p><strong>Symptom</strong>:</p>
 <div class="highlight"><pre><span></span><code>Error: image signature verification failed: no matching signatures
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Cause</strong>: Image was not signed, or signature verification policy references wrong public key.</p>
-<p><strong>Solution</strong>:
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify the image is signed</span>
 cosign<span class="w"> </span>verify<span class="w"> </span>--key<span class="w"> </span>cosign.pub<span class="w"> </span>ghcr.io/myorg/app:v1.0.0
 
@@ -6232,16 +6260,16 @@ cosign<span class="w"> </span>sign<span class="w"> </span>--key<span class="w"> 
 
 <span class="c1"># Ensure Kyverno policy references correct public key</span>
 kubectl<span class="w"> </span>edit<span class="w"> </span>clusterpolicy<span class="w"> </span>verify-image-signature
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="issue-3-external-secrets-not-syncing">Issue 3: External Secrets Not Syncing</h3>
-<p><strong>Symptom</strong>:
+<p><strong>Symptom</strong>:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>externalsecret
 NAME<span class="w">            </span>STORE<span class="w">    </span>REFRESH<span class="w"> </span>INTERVAL<span class="w">   </span>STATUS<span class="w">         </span>READY
 my-ext-secret<span class="w">   </span>vault<span class="w">    </span>1m<span class="w">                 </span>SecretSyncedError<span class="w">   </span>False
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Cause</strong>: External Secrets Operator cannot authenticate to secret backend (Vault/AWS).</p>
-<p><strong>Solution</strong>:
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check ExternalSecret status</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>externalsecret<span class="w"> </span>my-ext-secret<span class="w"> </span>-n<span class="w"> </span>payments
 
@@ -6254,12 +6282,12 @@ kubectl<span class="w"> </span>get<span class="w"> </span>sa<span class="w"> </s
 <span class="c1"># For Vault: Verify Kubernetes auth is configured</span>
 vault<span class="w"> </span>auth<span class="w"> </span>list
 vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>auth/kubernetes/config
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="issue-4-opa-gatekeeper-policies-not-enforcing">Issue 4: OPA Gatekeeper Policies Not Enforcing</h3>
 <p><strong>Symptom</strong>: Resources are created despite violating policies.</p>
 <p><strong>Cause</strong>: Constraint may not be applied, or validation failure action is "dryrun".</p>
-<p><strong>Solution</strong>:
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check if constraint is created</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>constraints
 
@@ -6270,12 +6298,12 @@ kubectl<span class="w"> </span>describe<span class="w"> </span>k8srequiredresour
 kubectl<span class="w"> </span>get<span class="w"> </span>k8srequiredresources<span class="w"> </span>must-have-resource-limits<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>validationFailureAction
 
 <span class="c1"># Should show: validationFailureAction: enforce</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h3 id="issue-5-workload-identity-not-working">Issue 5: Workload Identity Not Working</h3>
 <p><strong>Symptom</strong>: Pods cannot authenticate to cloud provider (AWS/GCP/Azure).</p>
 <p><strong>Cause</strong>: Service account not properly annotated, or OIDC provider not configured.</p>
-<p><strong>Solution for AWS (EKS)</strong>:
+<p><strong>Solution for AWS (EKS)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify OIDC provider exists</span>
 aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>my-cluster<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;cluster.identity.oidc.issuer&quot;</span>
 
@@ -6286,7 +6314,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>sa<span class="w"> </s
 
 <span class="c1"># Verify IAM role trust policy allows the service account</span>
 aws<span class="w"> </span>iam<span class="w"> </span>get-role<span class="w"> </span>--role-name<span class="w"> </span>payment-service<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;Role.AssumeRolePolicyDocument&#39;</span>
-</code></pre></div></p>
+</code></pre></div>
 <hr />
 <h2 id="additional-resources">📚 Additional Resources</h2>
 <h3 id="official-documentation">Official Documentation</h3>
@@ -6327,24 +6355,30 @@ aws<span class="w"> </span>iam<span class="w"> </span>get-role<span class="w"> <
 <li>✅ <strong>Supply chain security</strong> - Sign images, generate SBOMs, verify provenance</li>
 <li>✅ <strong>Secret management</strong> - External Secrets Operator for centralized secret handling</li>
 </ol>
-<p><strong>Zero trust is not a product, it's an architecture philosophy.</strong> Every component in your platform should:
-- Authenticate explicitly (no implicit trust)
-- Authorize with least privilege (only what's needed)
-- Encrypt all traffic (TLS everywhere)
-- Audit all access (comprehensive logging)</p>
+<p><strong>Zero trust is not a product, it's an architecture philosophy.</strong> Every component in your platform should:</p>
+<ul>
+<li>Authenticate explicitly (no implicit trust)</li>
+<li>Authorize with least privilege (only what's needed)</li>
+<li>Encrypt all traffic (TLS everywhere)</li>
+<li>Audit all access (comprehensive logging)</li>
+</ul>
 <hr />
 <h2 id="next-steps">🚀 Next Steps</h2>
 <h3 id="in-module-20-multi-cloud-strategies">In Module 20: Multi-Cloud Strategies</h3>
-<p>You'll learn how to:
-- Design platform architectures that span multiple cloud providers
-- Abstract cloud-specific APIs with unified interfaces
-- Implement disaster recovery and failover across clouds
-- Manage cost optimization in multi-cloud environments
-- Navigate the tradeoffs of multi-cloud vs. cloud-agnostic approaches</p>
-<p><strong>Prepare by</strong>:
-- Reviewing your organization's cloud provider usage
-- Identifying which services are cloud-specific vs. portable
-- Considering disaster recovery requirements (RTO/RPO)</p>
+<p>You'll learn how to:</p>
+<ul>
+<li>Design platform architectures that span multiple cloud providers</li>
+<li>Abstract cloud-specific APIs with unified interfaces</li>
+<li>Implement disaster recovery and failover across clouds</li>
+<li>Manage cost optimization in multi-cloud environments</li>
+<li>Navigate the tradeoffs of multi-cloud vs. cloud-agnostic approaches</li>
+</ul>
+<p><strong>Prepare by</strong>:</p>
+<ul>
+<li>Reviewing your organization's cloud provider usage</li>
+<li>Identifying which services are cloud-specific vs. portable</li>
+<li>Considering disaster recovery requirements (RTO/RPO)</li>
+</ul>
 <hr />
 <h2 id="black-belt-progress">🏆 Black Belt Progress</h2>
 <p><strong>Module 19 Complete!</strong> ✅</p>
@@ -6362,8 +6396,12 @@ Next: Complete Module 20 to finish Black Belt curriculum!
 <h2 id="certification-path">🎓 Certification Path</h2>
 <p>After completing all Black Belt modules (17-20), you will:</p>
 <ol>
-<li><strong>Complete the Black Belt Assessment</strong> (4 hours):</li>
-<li>Design a complete platform architecture</li>
+<li>
+<p><strong>Complete the Black Belt Assessment</strong> (4 hours):</p>
+</li>
+<li>
+<p>Design a complete platform architecture</p>
+</li>
 <li>Present to peer review panel</li>
 <li>Implement multi-tenant design with zero trust</li>
 <li>Contribute to Fawkes codebase</li>

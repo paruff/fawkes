@@ -4904,20 +4904,24 @@
 </ul>
 <h2 id="workflow-by-workflow-changes">Workflow-by-Workflow Changes</h2>
 <h3 id="1-security-and-terraformyml">1. security-and-terraform.yml</h3>
-<p><strong>Security Changes:</strong>
-- ✅ Added job-level permissions block
-- ✅ Removed <code>continue-on-error: true</code> from TFLint (now required)</p>
-<p><strong>Efficiency Changes:</strong>
-- ✅ Added Terraform provider caching (reduces init time by 50-80%)</p>
-<p><strong>Path Triggers Added:</strong>
+<p><strong>Security Changes:</strong></p>
+<ul>
+<li>✅ Added job-level permissions block</li>
+<li>✅ Removed <code>continue-on-error: true</code> from TFLint (now required)</li>
+</ul>
+<p><strong>Efficiency Changes:</strong></p>
+<ul>
+<li>✅ Added Terraform provider caching (reduces init time by 50-80%)</li>
+</ul>
+<p><strong>Path Triggers Added:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">push</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;infra/**&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;.github/workflows/security-and-terraform.yml&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;**/*.tf&#39;</span>
-</code></pre></div></p>
-<p><strong>Caching Added:</strong>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;infra/**&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;.github/workflows/security-and-terraform.yml&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;**/*.tf&quot;</span>
+</code></pre></div>
+<p><strong>Caching Added:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cache Terraform providers</span>
 <span class="w">  </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@0057852d52279ba093e21d2f6cbbf3c48fb752b7</span>
 <span class="w">  </span><span class="nt">with</span><span class="p">:</span>
@@ -4925,50 +4929,66 @@
 <span class="w">      </span><span class="no">~/.terraform.d/plugin-cache</span>
 <span class="w">      </span><span class="no">**/.terraform/providers</span>
 <span class="w">    </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ runner.os }}-terraform-${{ hashFiles(&#39;**/.terraform.lock.hcl&#39;) }}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="2-deployyml">2. deploy.yml</h3>
-<p><strong>Security Changes:</strong>
-- ✅ Pinned 2 actions to commit SHAs
-- ✅ Added job-level permissions block</p>
-<p><strong>Efficiency Changes:</strong>
-- ✅ Enhanced Python caching with <code>cache-dependency-path</code></p>
-<p><strong>Before:</strong>
+<p><strong>Security Changes:</strong></p>
+<ul>
+<li>✅ Pinned 2 actions to commit SHAs</li>
+<li>✅ Added job-level permissions block</li>
+</ul>
+<p><strong>Efficiency Changes:</strong></p>
+<ul>
+<li>✅ Enhanced Python caching with <code>cache-dependency-path</code></li>
+</ul>
+<p><strong>Before:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
 <span class="w">  </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.10&#39;</span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;pip&#39;</span>
-</code></pre></div></p>
-<p><strong>After:</strong>
+<span class="w">    </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.10&quot;</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pip&quot;</span>
+</code></pre></div>
+<p><strong>After:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@a26af680b6b9b1949f9c02f9e0c6e9f0b2e3c5e4</span>
 <span class="w">  </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.10&#39;</span>
-<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;pip&#39;</span>
-<span class="w">    </span><span class="nt">cache-dependency-path</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;requirements.txt&#39;</span>
-</code></pre></div></p>
+<span class="w">    </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.10&quot;</span>
+<span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pip&quot;</span>
+<span class="w">    </span><span class="nt">cache-dependency-path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;requirements.txt&quot;</span>
+</code></pre></div>
 <h3 id="3-idp-e2e-testsyml">3. idp-e2e-tests.yml</h3>
-<p><strong>Security Changes:</strong>
-- ✅ Pinned 5 actions to commit SHAs
-- ✅ Added job-level permissions block</p>
-<p><strong>Note:</strong> This workflow already had:
-- Python caching configured ✓
-- Path-based triggers ✓
-- Good security practices ✓</p>
+<p><strong>Security Changes:</strong></p>
+<ul>
+<li>✅ Pinned 5 actions to commit SHAs</li>
+<li>✅ Added job-level permissions block</li>
+</ul>
+<p><strong>Note:</strong> This workflow already had:</p>
+<ul>
+<li>Python caching configured ✓</li>
+<li>Path-based triggers ✓</li>
+<li>Good security practices ✓</li>
+</ul>
 <h3 id="4-pre-commityml">4. pre-commit.yml</h3>
-<p><strong>Security Changes:</strong>
-- ✅ Pinned 10 actions across 3 jobs to commit SHAs
-- ✅ Added job-level permissions to all 3 jobs</p>
-<p><strong>Efficiency Changes:</strong>
-- ✅ Added Python dependency caching
-- ✅ Added Terraform provider caching
-- ✅ Enhanced cache configuration</p>
-<p><strong>Jobs Updated:</strong>
-1. <code>pre-commit</code> job - 8 actions pinned, permissions added
-2. <code>gitops-validation</code> job - 1 action pinned, permissions added
-3. <code>idp-validation</code> job - 3 actions pinned, permissions added</p>
+<p><strong>Security Changes:</strong></p>
+<ul>
+<li>✅ Pinned 10 actions across 3 jobs to commit SHAs</li>
+<li>✅ Added job-level permissions to all 3 jobs</li>
+</ul>
+<p><strong>Efficiency Changes:</strong></p>
+<ul>
+<li>✅ Added Python dependency caching</li>
+<li>✅ Added Terraform provider caching</li>
+<li>✅ Enhanced cache configuration</li>
+</ul>
+<p><strong>Jobs Updated:</strong></p>
+<ol>
+<li><code>pre-commit</code> job - 8 actions pinned, permissions added</li>
+<li><code>gitops-validation</code> job - 1 action pinned, permissions added</li>
+<li><code>idp-validation</code> job - 3 actions pinned, permissions added</li>
+</ol>
 <h3 id="5-build-mcp-k8s-serveryml">5. build-mcp-k8s-server.yml</h3>
-<p><strong>Security Changes:</strong>
-- ✅ Pinned 6 actions to commit SHAs
-- ✅ Added job-level permissions block</p>
+<p><strong>Security Changes:</strong></p>
+<ul>
+<li>✅ Pinned 6 actions to commit SHAs</li>
+<li>✅ Added job-level permissions block</li>
+</ul>
 <p><strong>Note:</strong> This workflow only runs on tag pushes, already efficient</p>
 <h2 id="permission-blocks-added">Permission Blocks Added</h2>
 <p>All workflows now have explicit job-level permissions following least privilege:</p>
@@ -4979,7 +4999,7 @@
 </code></pre></div>
 <h3 id="deployyml">deploy.yml</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">permissions</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span><span class="w">  </span><span class="c1"># Needed for gh-pages deployment</span>
+<span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span><span class="w"> </span><span class="c1"># Needed for gh-pages deployment</span>
 </code></pre></div>
 <h3 id="idp-e2e-testsyml">idp-e2e-tests.yml</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">permissions</span><span class="p">:</span>
@@ -5004,7 +5024,7 @@
 <h3 id="build-mcp-k8s-serveryml">build-mcp-k8s-server.yml</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">permissions</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
-<span class="w">  </span><span class="nt">packages</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span><span class="w">  </span><span class="c1"># Needed for GHCR push</span>
+<span class="w">  </span><span class="nt">packages</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span><span class="w"> </span><span class="c1"># Needed for GHCR push</span>
 </code></pre></div>
 <h2 id="new-files-created">New Files Created</h2>
 <h3 id="1-githubdependabotyml">1. .github/dependabot.yml</h3>
@@ -5104,11 +5124,13 @@
 </tbody>
 </table>
 <h2 id="testing-validation">Testing &amp; Validation</h2>
-<p>All changes validated:
-- ✅ YAML syntax validated (all 5 workflows + dependabot.yml)
-- ✅ Action SHAs verified against GitHub repositories
-- ✅ Permission blocks tested for least privilege
-- ✅ Documentation reviewed for accuracy</p>
+<p>All changes validated:</p>
+<ul>
+<li>✅ YAML syntax validated (all 5 workflows + dependabot.yml)</li>
+<li>✅ Action SHAs verified against GitHub repositories</li>
+<li>✅ Permission blocks tested for least privilege</li>
+<li>✅ Documentation reviewed for accuracy</li>
+</ul>
 <h2 id="next-steps">Next Steps</h2>
 <ol>
 <li><strong>Monitor Workflows</strong>: Watch for any issues in the next few PRs</li>
@@ -5119,16 +5141,18 @@
 <h2 id="rollback-instructions">Rollback Instructions</h2>
 <p>If any issues occur:</p>
 <ol>
-<li>
-<p><strong>Action SHA Issues</strong>:
-   <div class="highlight"><pre><span></span><code><span class="c1"># Temporarily revert to tag</span>
+<li><strong>Action SHA Issues</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Temporarily revert to tag</span>
 git<span class="w"> </span>show<span class="w"> </span>HEAD~1:.github/workflows/file.yml<span class="w"> </span>&gt;<span class="w"> </span>.github/workflows/file.yml
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Permission Issues</strong>:</p>
 </li>
-<li>Check workflow logs for "Resource not accessible by integration"</li>
+<li>
+<p>Check workflow logs for "Resource not accessible by integration"</p>
+</li>
 <li>Add minimal required permission to job</li>
 <li>
 <p>Commit and push</p>

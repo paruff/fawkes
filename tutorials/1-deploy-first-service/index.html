@@ -5014,54 +5014,52 @@
 </ul>
 <div class="admonition tip">
 <p class="admonition-title">New to Kubernetes?</p>
-<p>If you're unfamiliar with Kubernetes, don't worry! Follow along step-by-step. This tutorial is designed to work even if you don't understand every detail yet.</p>
 </div>
+<p>If you're unfamiliar with Kubernetes, don't worry! Follow along step-by-step. This tutorial is designed to work even if you don't understand every detail yet.</p>
 <h2 id="step-1-verify-platform-access">Step 1: Verify Platform Access</h2>
 <p>First, let's confirm you can connect to the Fawkes cluster.</p>
 <ol>
-<li>Check your kubectl context:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>config<span class="w"> </span>current-context
-</code></pre></div></li>
+<li>Check your kubectl context:</li>
 </ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>config<span class="w"> </span>current-context
+</code></pre></div>
 <p>You should see a context name containing "fawkes" or your cluster name.</p>
 <ol>
-<li>Verify you can list namespaces:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>namespaces
-</code></pre></div></li>
+<li>Verify you can list namespaces:</li>
 </ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>namespaces
+</code></pre></div>
 <p>You should see core Fawkes namespaces like <code>fawkes-platform</code>, <code>argocd</code>, <code>vault</code>, etc.</p>
 <ol>
-<li>Check your assigned namespace:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>namespace<span class="w"> </span>my-first-app
-</code></pre></div></li>
+<li>Check your assigned namespace:</li>
 </ol>
-<p>If this returns an error, create the namespace:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>my-first-app
-</code></pre></div></p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>namespace<span class="w"> </span>my-first-app
+</code></pre></div>
+<p>If this returns an error, create the namespace:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>my-first-app
+</code></pre></div>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You should now have access to the Fawkes cluster and a namespace for your application.</p>
 </div>
+<p>You should now have access to the Fawkes cluster and a namespace for your application.</p>
 <h2 id="step-2-create-your-application-repository">Step 2: Create Your Application Repository</h2>
 <p>We'll start with a simple Node.js application to demonstrate the deployment workflow.</p>
 <ol>
-<li>
-<p>Create a new directory for your application:
-   <div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>hello-fawkes
-<span class="nb">cd</span><span class="w"> </span>hello-fawkes
-</code></pre></div></p>
-</li>
-<li>
-<p>Initialize a git repository:
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>init
-</code></pre></div></p>
-</li>
-<li>
-<p>Create a simple Node.js application.</p>
-</li>
+<li>Create a new directory for your application:</li>
 </ol>
-<p>Create <code>package.json</code>:
-   <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>hello-fawkes
+<span class="nb">cd</span><span class="w"> </span>hello-fawkes
+</code></pre></div>
+<ol>
+<li>Initialize a git repository:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>init
+</code></pre></div>
+<ol>
+<li>Create a simple Node.js application.</li>
+</ol>
+<p>Create <code>package.json</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hello-fawkes&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My first Fawkes service&quot;</span><span class="p">,</span>
@@ -5073,60 +5071,58 @@
 <span class="w">    </span><span class="nt">&quot;express&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^4.18.2&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <ol>
-<li>
-<p>Create <code>server.js</code>:
-   <div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
+<li>Create <code>server.js</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;express&quot;</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">();</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">PORT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">8080</span><span class="p">;</span>
 
-<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Hello from Fawkes!&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Hello from Fawkes!&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">timestamp</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">(),</span>
-<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;1.0.0&#39;</span>
+<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 
-<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/health&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;healthy&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/health&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="w"> </span><span class="p">});</span>
 <span class="p">});</span>
 
-<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Server running on port </span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
 <span class="p">});</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Commit your code:
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.
+</code></pre></div>
+<ol>
+<li>Commit your code:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Initial hello-fawkes service&quot;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Push to GitHub (create a repository first at github.com):
+</code></pre></div>
+<ol>
+<li>Push to GitHub (create a repository first at github.com):
    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>origin<span class="w"> </span>https://github.com/YOUR-USERNAME/hello-fawkes.git
 git<span class="w"> </span>branch<span class="w"> </span>-M<span class="w"> </span>main
 git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>main
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>You now have a simple web service ready to deploy, stored in a Git repository.</p>
 </div>
+<p>You now have a simple web service ready to deploy, stored in a Git repository.</p>
 <h2 id="step-3-create-kubernetes-manifests">Step 3: Create Kubernetes Manifests</h2>
 <p>Fawkes uses GitOps, which means your deployment configuration lives in Git alongside your code.</p>
 <ol>
-<li>
-<p>Create a <code>k8s/</code> directory in your project:
-   <div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>k8s
-</code></pre></div></p>
-</li>
-<li>
-<p>Create <code>k8s/deployment.yaml</code>:
-   <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<li>Create a <code>k8s/</code> directory in your project:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>k8s
+</code></pre></div>
+<ol>
+<li>Create <code>k8s/deployment.yaml</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
@@ -5146,43 +5142,43 @@ git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span
 <span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YOUR-USERNAME/hello-fawkes:v1.0.0</span>
-<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
-<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PORT</span>
-<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8080&quot;</span>
-<span class="w">        </span><span class="nt">livenessProbe</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">httpGet</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
-<span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">        </span><span class="nt">readinessProbe</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">httpGet</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
-<span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">          </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;64Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
-<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
-<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
-<span class="w">        </span><span class="nt">securityContext</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">          </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">          </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">          </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Create <code>k8s/service.yaml</code>:
-   <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YOUR-USERNAME/hello-fawkes:v1.0.0</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PORT</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8080&quot;</span>
+<span class="w">          </span><span class="nt">livenessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">          </span><span class="nt">readinessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;64Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
+<span class="w">            </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
+<span class="w">          </span><span class="nt">securityContext</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+<span class="w">            </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">            </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<ol>
+<li>Create <code>k8s/service.yaml</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
@@ -5192,16 +5188,15 @@ git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIP</span>
 <span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
-<span class="w">    </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
 <span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Create <code>k8s/ingress.yaml</code>:
+</code></pre></div>
+<ol>
+<li>Create <code>k8s/ingress.yaml</code>:
    <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -5212,27 +5207,26 @@ git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
 <span class="w">  </span><span class="nt">tls</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes.127.0.0.1.nip.io</span>
-<span class="w">    </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes-tls</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes.127.0.0.1.nip.io</span>
+<span class="w">      </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes-tls</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes.127.0.0.1.nip.io</span>
-<span class="w">    </span><span class="nt">http</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">paths</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
-<span class="w">        </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prefix</span>
-<span class="w">        </span><span class="nt">backend</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">service</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
-<span class="w">            </span><span class="nt">port</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-</code></pre></div></p>
-</li>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes.127.0.0.1.nip.io</span>
+<span class="w">      </span><span class="nt">http</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
+<span class="w">            </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prefix</span>
+<span class="w">            </span><span class="nt">backend</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
+<span class="w">                </span><span class="nt">port</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+</code></pre></div></li>
 </ol>
 <div class="admonition info">
 <p class="admonition-title">Why runAsNonRoot?</p>
-<p>Notice the <code>securityContext</code> settings? Fawkes enforces security best practices. Running as non-root prevents privilege escalation attacks. <a href="../../explanation/security/zero-trust-model/">Learn more about Zero Trust Security</a>.</p>
 </div>
+<p>Notice the <code>securityContext</code> settings? Fawkes enforces security best practices. Running as non-root prevents privilege escalation attacks. <a href="../../explanation/security/zero-trust-model/">Learn more about Zero Trust Security</a>.</p>
 <ol>
 <li>Commit the manifests:
    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>k8s/
@@ -5242,14 +5236,14 @@ git<span class="w"> </span>push
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Your application now has Kubernetes deployment manifests that follow Fawkes security policies.</p>
 </div>
+<p>Your application now has Kubernetes deployment manifests that follow Fawkes security policies.</p>
 <h2 id="step-4-build-and-push-container-image">Step 4: Build and Push Container Image</h2>
 <p>Since we're not using Cloud Native Buildpacks in this first tutorial (that's Tutorial 4!), we'll use a simple Dockerfile.</p>
 <ol>
-<li>
-<p>Create a <code>Dockerfile</code>:
-   <div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<li>Create a <code>Dockerfile</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
 
 <span class="c"># Create app directory</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
@@ -5271,33 +5265,31 @@ git<span class="w"> </span>push
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;start&quot;</span><span class="p">]</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Build the container image:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v1.0.0<span class="w"> </span>.
-</code></pre></div></p>
-</li>
-<li>
-<p>Push to a container registry (Docker Hub, GitHub Container Registry, etc.):
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>login
+</code></pre></div>
+<ol>
+<li>Build the container image:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v1.0.0<span class="w"> </span>.
+</code></pre></div>
+<ol>
+<li>Push to a container registry (Docker Hub, GitHub Container Registry, etc.):</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>login
 docker<span class="w"> </span>push<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v1.0.0
-</code></pre></div></p>
-</li>
-<li>
-<p>Update the image reference in <code>k8s/deployment.yaml</code> if needed.</p>
-</li>
+</code></pre></div>
+<ol>
+<li>Update the image reference in <code>k8s/deployment.yaml</code> if needed.</li>
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Your container image is now available in a registry and ready to be deployed.</p>
 </div>
+<p>Your container image is now available in a registry and ready to be deployed.</p>
 <h2 id="step-5-deploy-with-argocd-gitops-way">Step 5: Deploy with ArgoCD (GitOps Way)</h2>
 <p>Fawkes uses ArgoCD for GitOps-based deployments. This is the preferred method.</p>
 <ol>
-<li>
-<p>Create an ArgoCD Application manifest <code>argocd-app.yaml</code>:
-   <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
+<li>Create an ArgoCD Application manifest <code>argocd-app.yaml</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Application</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
@@ -5316,71 +5308,67 @@ docker<span class="w"> </span>push<span class="w"> </span>YOUR-USERNAME/hello-fa
 <span class="w">      </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">syncOptions</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Apply the ArgoCD Application:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>argocd-app.yaml
-</code></pre></div></p>
-</li>
-<li>
-<p>Watch ArgoCD sync your application:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>applications<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>hello-fawkes<span class="w"> </span>-w
-</code></pre></div></p>
-</li>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span>
+</code></pre></div>
+<ol>
+<li>Apply the ArgoCD Application:</li>
 </ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>argocd-app.yaml
+</code></pre></div>
+<ol>
+<li>Watch ArgoCD sync your application:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>applications<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>hello-fawkes<span class="w"> </span>-w
+</code></pre></div>
 <p>Wait until <code>STATUS</code> shows <code>Synced</code> and <code>HEALTH</code> shows <code>Healthy</code>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Alternative: Direct kubectl Apply</p>
-<p>If ArgoCD isn't available, you can deploy directly:
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/
-</code></pre></div></p>
 </div>
+<p>If ArgoCD isn't available, you can deploy directly:
+<code>bash
+    kubectl apply -f k8s/</code></p>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>ArgoCD is now managing your application deployment. Any changes you push to Git will automatically sync!</p>
 </div>
+<p>ArgoCD is now managing your application deployment. Any changes you push to Git will automatically sync!</p>
 <h2 id="step-6-verify-your-deployment">Step 6: Verify Your Deployment</h2>
 <p>Let's confirm everything is working.</p>
 <ol>
-<li>Check pod status:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>my-first-app
-</code></pre></div></li>
+<li>Check pod status:</li>
 </ol>
-<p>You should see 2 pods running (we specified <code>replicas: 2</code>):
-   <div class="highlight"><pre><span></span><code>NAME                            READY   STATUS    RESTARTS   AGE
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>my-first-app
+</code></pre></div>
+<p>You should see 2 pods running (we specified <code>replicas: 2</code>):</p>
+<div class="highlight"><pre><span></span><code>NAME                            READY   STATUS    RESTARTS   AGE
 hello-fawkes-xxxxxxxxx-xxxxx    1/1     Running   0          2m
 hello-fawkes-xxxxxxxxx-xxxxx    1/1     Running   0          2m
-</code></pre></div></p>
+</code></pre></div>
 <ol>
-<li>
-<p>Check the service:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>service<span class="w"> </span>-n<span class="w"> </span>my-first-app
-</code></pre></div></p>
-</li>
-<li>
-<p>Check the ingress:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>my-first-app
-</code></pre></div></p>
-</li>
+<li>Check the service:</li>
 </ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>service<span class="w"> </span>-n<span class="w"> </span>my-first-app
+</code></pre></div>
+<ol>
+<li>Check the ingress:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>my-first-app
+</code></pre></div>
 <p>Note the <code>ADDRESS</code> field - this is your ingress IP.</p>
 <ol>
-<li>Test the endpoint locally first:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>my-first-app<span class="w"> </span>svc/hello-fawkes<span class="w"> </span><span class="m">8080</span>:80
-</code></pre></div></li>
+<li>Test the endpoint locally first:</li>
 </ol>
-<p>In another terminal:
-   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8080
-</code></pre></div></p>
-<p>You should see:
-   <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>my-first-app<span class="w"> </span>svc/hello-fawkes<span class="w"> </span><span class="m">8080</span>:80
+</code></pre></div>
+<p>In another terminal:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8080
+</code></pre></div>
+<p>You should see:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hello from Fawkes!&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-12-06T12:00:00.000Z&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <ol>
 <li>Test via ingress (in your browser or with curl):
    <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>https://hello-fawkes.127.0.0.1.nip.io
@@ -5388,14 +5376,14 @@ hello-fawkes-xxxxxxxxx-xxxxx    1/1     Running   0          2m
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Your service is running, accessible via HTTPS, and responding to requests! 🎉</p>
 </div>
+<p>Your service is running, accessible via HTTPS, and responding to requests! 🎉</p>
 <h2 id="step-7-register-in-backstage-catalog">Step 7: Register in Backstage Catalog</h2>
 <p>To make your service visible in the Fawkes developer portal, register it in Backstage.</p>
 <ol>
-<li>
-<p>Create a <code>catalog-info.yaml</code> file in your repository root:
-   <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage.io/v1alpha1</span>
+<li>Create a <code>catalog-info.yaml</code> file in your repository root:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage.io/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Component</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
@@ -5408,19 +5396,21 @@ hello-fawkes-xxxxxxxxx-xxxxx    1/1     Running   0          2m
 <span class="w">  </span><span class="nt">lifecycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">experimental</span>
 <span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-platform</span>
 <span class="w">  </span><span class="nt">system</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tutorials</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Commit and push:
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>catalog-info.yaml
+</code></pre></div>
+<ol>
+<li>Commit and push:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>catalog-info.yaml
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add Backstage catalog info&quot;</span>
 git<span class="w"> </span>push
-</code></pre></div></p>
-</li>
+</code></pre></div>
+<ol>
 <li>
 <p>Register the component in Backstage:</p>
 </li>
-<li>Navigate to the Backstage UI (typically <code>https://backstage.fawkes.yourdomain.com</code>)</li>
+<li>
+<p>Navigate to the Backstage UI (typically <code>https://backstage.fawkes.yourdomain.com</code>)</p>
+</li>
 <li>Click <strong>Create</strong> → <strong>Register Existing Component</strong></li>
 <li>Enter your repository URL: <code>https://github.com/YOUR-USERNAME/hello-fawkes</code></li>
 <li>
@@ -5435,8 +5425,8 @@ git<span class="w"> </span>push
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Checkpoint</p>
-<p>Your service is now registered in the Backstage service catalog, making it discoverable to your entire team!</p>
 </div>
+<p>Your service is now registered in the Backstage service catalog, making it discoverable to your entire team!</p>
 <h2 id="step-8-celebrate-your-first-success">Step 8: Celebrate Your First Success! 🎉</h2>
 <p>Congratulations! You've successfully:</p>
 <ul>
@@ -5461,10 +5451,12 @@ kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w
 <span class="c1"># Check logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>my-first-app<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>hello-fawkes
 </code></pre></div>
-<p>Common issues:
-- <strong>ImagePullBackOff</strong>: Check your image name and registry credentials
-- <strong>CrashLoopBackOff</strong>: Check application logs for startup errors
-- <strong>Pending</strong>: Check resource quotas and node capacity</p>
+<p>Common issues:</p>
+<ul>
+<li><strong>ImagePullBackOff</strong>: Check your image name and registry credentials</li>
+<li><strong>CrashLoopBackOff</strong>: Check application logs for startup errors</li>
+<li><strong>Pending</strong>: Check resource quotas and node capacity</li>
+</ul>
 <h3 id="ingress-not-accessible">Ingress Not Accessible</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify ingress controller is running</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ingress-nginx

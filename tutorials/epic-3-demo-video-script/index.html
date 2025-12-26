@@ -4784,13 +4784,15 @@
 <p>Switch to conceptual overview:</p>
 <blockquote>
 <p>"Product discovery is about building the right things, not just building things right. Traditional platforms focus on delivery metrics - and we do that too with DORA in Epic 1. But Epic 3 answers a different question: How do we know we're building what developers actually need?</p>
-<p>We've implemented a multi-layered approach:
-- <strong>Research Infrastructure</strong> for qualitative insights
-- <strong>SPACE Framework</strong> for quantitative DevEx measurement
-- <strong>Multi-Channel Feedback</strong> to capture continuous input
-- <strong>Product Analytics</strong> to understand actual usage
-- <strong>Experimentation</strong> to validate hypotheses
-- <strong>Design System</strong> to ensure consistent, accessible experiences"</p>
+<p>We've implemented a multi-layered approach:</p>
+<ul>
+<li><strong>Research Infrastructure</strong> for qualitative insights</li>
+<li><strong>SPACE Framework</strong> for quantitative DevEx measurement</li>
+<li><strong>Multi-Channel Feedback</strong> to capture continuous input</li>
+<li><strong>Product Analytics</strong> to understand actual usage</li>
+<li><strong>Experimentation</strong> to validate hypotheses</li>
+<li><strong>Design System</strong> to ensure consistent, accessible experiences"</li>
+</ul>
 </blockquote>
 <p><strong>[1:30-3:00] Epic 3 Key Deliverables</strong></p>
 <blockquote>
@@ -4812,33 +4814,39 @@
 <p>Navigate to <code>docs/research/</code> directory:</p>
 <blockquote>
 <p>"First, let's look at our research repository. This is where we centralize all our user research activities.</p>
-<p>We have five main areas:
-- <strong>Personas</strong> - 5 validated user personas representing our key user types
-- <strong>Journey Maps</strong> - 5 detailed journey maps covering critical workflows
-- <strong>Interview Guides</strong> - Templates for conducting user research
-- <strong>Insights</strong> - Weekly synthesis of findings
-- <strong>Data</strong> - Raw research artifacts"</p>
+<p>We have five main areas:</p>
+<ul>
+<li><strong>Personas</strong> - 5 validated user personas representing our key user types</li>
+<li><strong>Journey Maps</strong> - 5 detailed journey maps covering critical workflows</li>
+<li><strong>Interview Guides</strong> - Templates for conducting user research</li>
+<li><strong>Insights</strong> - Weekly synthesis of findings</li>
+<li><strong>Data</strong> - Raw research artifacts"</li>
+</ul>
 </blockquote>
 <p><strong>[4:00-5:00] Persona Example</strong></p>
 <p>Open a persona file (e.g., <code>personas/persona-new-developer.md</code>):</p>
 <blockquote>
-<p>"Here's one of our personas - 'Alex the New Developer'. This persona was created from interviews with 10 recent hires. You can see:
-- Demographics and background
-- Goals and motivations
-- Pain points and frustrations
-- Current tools and workflows
-- Quotes from actual interviews</p>
+<p>"Here's one of our personas - 'Alex the New Developer'. This persona was created from interviews with 10 recent hires. You can see:</p>
+<ul>
+<li>Demographics and background</li>
+<li>Goals and motivations</li>
+<li>Pain points and frustrations</li>
+<li>Current tools and workflows</li>
+<li>Quotes from actual interviews</li>
+</ul>
 <p>This helps us empathize with our users and design for their needs."</p>
 </blockquote>
 <p><strong>[5:00-6:30] Journey Map Walkthrough</strong></p>
 <p>Open <code>journey-maps/01-developer-onboarding.md</code>:</p>
 <blockquote>
 <p>"Now let's look at a journey map - specifically the Developer Onboarding journey.</p>
-<p>This map shows the end-to-end experience of a new developer joining the team. For each stage:
-- <strong>Touchpoints</strong> - Where they interact with the platform
-- <strong>Pain Points</strong> - What frustrates them (marked in red)
-- <strong>Opportunities</strong> - How we can improve (marked in green)
-- <strong>Emotion Graph</strong> - How they feel throughout the journey</p>
+<p>This map shows the end-to-end experience of a new developer joining the team. For each stage:</p>
+<ul>
+<li><strong>Touchpoints</strong> - Where they interact with the platform</li>
+<li><strong>Pain Points</strong> - What frustrates them (marked in red)</li>
+<li><strong>Opportunities</strong> - How we can improve (marked in green)</li>
+<li><strong>Emotion Graph</strong> - How they feel throughout the journey</li>
+</ul>
 <p>We validated this with 10 developers who onboarded in the last quarter. Notice the dip in satisfaction during 'Getting Access to Tools' - this is a key opportunity for improvement that we're addressing."</p>
 </blockquote>
 <p><strong>[6:30-7:00] How Research Informs Product</strong></p>
@@ -4849,43 +4857,55 @@
 <h3 id="segment-3-space-framework-devex-measurement-5-minutes">Segment 3: SPACE Framework &amp; DevEx Measurement (5 minutes)</h3>
 <p><strong>[7:00-7:30] SPACE Framework Introduction</strong></p>
 <blockquote>
-<p>"Now let's talk about developer experience measurement. We use the SPACE framework - created by GitHub, Microsoft, and academia - to quantify DevEx across five dimensions:
-- <strong>Satisfaction</strong> - How developers feel
-- <strong>Performance</strong> - System and delivery metrics
-- <strong>Activity</strong> - Development activity levels
-- <strong>Communication</strong> - Collaboration effectiveness
-- <strong>Efficiency</strong> - Developer productivity"</p>
+<p>"Now let's talk about developer experience measurement. We use the SPACE framework - created by GitHub, Microsoft, and academia - to quantify DevEx across five dimensions:</p>
+<ul>
+<li><strong>Satisfaction</strong> - How developers feel</li>
+<li><strong>Performance</strong> - System and delivery metrics</li>
+<li><strong>Activity</strong> - Development activity levels</li>
+<li><strong>Communication</strong> - Collaboration effectiveness</li>
+<li><strong>Efficiency</strong> - Developer productivity"</li>
+</ul>
 </blockquote>
 <p><strong>[7:30-9:00] SPACE Metrics Dashboard</strong></p>
 <p>Navigate to Grafana SPACE metrics dashboard:</p>
 <blockquote>
 <p>"Here's our SPACE metrics dashboard. This updates automatically every week and aggregates data from multiple sources.</p>
 <p>Let's walk through each dimension:</p>
-<p><strong>Satisfaction</strong> (top left):
-- eNPS score of 45 - that's in the 'Good' range
-- Based on quarterly NPS surveys
-- Average feedback rating of 4.2 out of 5
-- We aggregate responses to protect individual privacy - we never show data for fewer than 5 developers</p>
-<p><strong>Performance</strong> (top right):
-- Deployment frequency: 12.5 per week
-- Lead time: 4.2 hours
-- Build success rate: 95%
-- These tie directly to our Epic 1 DORA metrics</p>
-<p><strong>Activity</strong> (middle left):
-- 85 commits per week (team average)
-- 23 PRs merged
-- 4.8 active development days
-- This helps us understand team engagement patterns</p>
-<p><strong>Communication</strong> (middle right):
-- 450 Mattermost messages
-- 156 PR comments
-- 12 documentation updates
-- Healthy collaboration indicators</p>
-<p><strong>Efficiency</strong> (bottom):
-- Time to first commit for new hires: 3.5 hours
-- Time to production: 8.2 hours
-- Cognitive load index: 3.8 out of 10 (lower is better)
-- These efficiency metrics help us remove friction"</p>
+<p><strong>Satisfaction</strong> (top left):</p>
+<ul>
+<li>eNPS score of 45 - that's in the 'Good' range</li>
+<li>Based on quarterly NPS surveys</li>
+<li>Average feedback rating of 4.2 out of 5</li>
+<li>We aggregate responses to protect individual privacy - we never show data for fewer than 5 developers</li>
+</ul>
+<p><strong>Performance</strong> (top right):</p>
+<ul>
+<li>Deployment frequency: 12.5 per week</li>
+<li>Lead time: 4.2 hours</li>
+<li>Build success rate: 95%</li>
+<li>These tie directly to our Epic 1 DORA metrics</li>
+</ul>
+<p><strong>Activity</strong> (middle left):</p>
+<ul>
+<li>85 commits per week (team average)</li>
+<li>23 PRs merged</li>
+<li>4.8 active development days</li>
+<li>This helps us understand team engagement patterns</li>
+</ul>
+<p><strong>Communication</strong> (middle right):</p>
+<ul>
+<li>450 Mattermost messages</li>
+<li>156 PR comments</li>
+<li>12 documentation updates</li>
+<li>Healthy collaboration indicators</li>
+</ul>
+<p><strong>Efficiency</strong> (bottom):</p>
+<ul>
+<li>Time to first commit for new hires: 3.5 hours</li>
+<li>Time to production: 8.2 hours</li>
+<li>Cognitive load index: 3.8 out of 10 (lower is better)</li>
+<li>These efficiency metrics help us remove friction"</li>
+</ul>
 </blockquote>
 <p><strong>[9:00-10:30] SPACE Metrics API &amp; Collection</strong></p>
 <p>Port-forward and demo API:</p>
@@ -4893,12 +4913,14 @@
 curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
 <blockquote>
-<p>"Behind the scenes, we have a SPACE metrics service with a REST API. This collects data from:
-- Prometheus for performance metrics
-- GitHub API for activity metrics
-- Mattermost API for communication metrics
-- Our feedback system for satisfaction
-- Custom surveys for cognitive load assessment</p>
+<p>"Behind the scenes, we have a SPACE metrics service with a REST API. This collects data from:</p>
+<ul>
+<li>Prometheus for performance metrics</li>
+<li>GitHub API for activity metrics</li>
+<li>Mattermost API for communication metrics</li>
+<li>Our feedback system for satisfaction</li>
+<li>Custom surveys for cognitive load assessment</li>
+</ul>
 <p>Teams can also submit pulse surveys and friction logs through the API. Let me show you..."</p>
 </blockquote>
 <p>Demo submitting a friction log:</p>
@@ -4918,13 +4940,15 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <p>Show NASA-TLX assessment form:</p>
 <blockquote>
 <p>"We also measure cognitive load using the NASA-TLX assessment. This is a scientifically validated method for measuring mental workload.</p>
-<p>Developers can take a quick 2-minute assessment after completing a task like 'Deploying to production' or 'Debugging an incident'. They rate six dimensions on a scale of 0-100:
-- Mental demand
-- Physical demand
-- Temporal demand (time pressure)
-- Performance (how well they felt they did)
-- Effort required
-- Frustration level</p>
+<p>Developers can take a quick 2-minute assessment after completing a task like 'Deploying to production' or 'Debugging an incident'. They rate six dimensions on a scale of 0-100:</p>
+<ul>
+<li>Mental demand</li>
+<li>Physical demand</li>
+<li>Temporal demand (time pressure)</li>
+<li>Performance (how well they felt they did)</li>
+<li>Effort required</li>
+<li>Frustration level</li>
+</ul>
 <p>We aggregate these scores into our SPACE efficiency metric. The goal is to reduce cognitive load over time by improving our platform's usability."</p>
 </blockquote>
 <hr />
@@ -4937,12 +4961,14 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <p>Navigate to Backstage and show feedback widget:</p>
 <blockquote>
 <p>"First, the Backstage widget. In the bottom right corner of our developer portal, there's a floating feedback button. Let me click it...</p>
-<p>You can:
-- Rate your experience (1-5 stars)
-- Select a category (UI/UX, Performance, Documentation, etc.)
-- Write free-form feedback
-- Attach a screenshot if helpful
-- Choose to remain anonymous or include your name</p>
+<p>You can:</p>
+<ul>
+<li>Rate your experience (1-5 stars)</li>
+<li>Select a category (UI/UX, Performance, Documentation, etc.)</li>
+<li>Write free-form feedback</li>
+<li>Attach a screenshot if helpful</li>
+<li>Choose to remain anonymous or include your name</li>
+</ul>
 <p>Let me submit some feedback... 'The new service catalog search is much faster - great improvement!' Category: UI/UX, Rating: 5 stars. Submit.</p>
 <p>That feedback is now in our system, automatically analyzed for sentiment, and will appear in our analytics dashboard."</p>
 </blockquote>
@@ -4979,12 +5005,14 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <p><strong>[17:00-17:30] Feedback Analytics Dashboard</strong></p>
 <p>Navigate to Grafana feedback dashboard:</p>
 <blockquote>
-<p>"All four channels feed into our feedback analytics dashboard. Here you can see:
-- Feedback volume over time
-- Breakdown by rating and category
-- Sentiment analysis results
-- Response rate and engagement metrics
-- Top pain points and feature requests</p>
+<p>"All four channels feed into our feedback analytics dashboard. Here you can see:</p>
+<ul>
+<li>Feedback volume over time</li>
+<li>Breakdown by rating and category</li>
+<li>Sentiment analysis results</li>
+<li>Response rate and engagement metrics</li>
+<li>Top pain points and feature requests</li>
+</ul>
 <p>This gives product and platform teams a real-time pulse on how developers feel about the platform."</p>
 </blockquote>
 <hr />
@@ -4996,40 +5024,52 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <p><strong>[18:00-19:30] Storybook Walkthrough</strong></p>
 <p>Navigate to Storybook (<code>https://storybook.fawkes.local</code>):</p>
 <blockquote>
-<p>"Welcome to our design system Storybook. On the left, you see our component library organized by category:
-- Foundations (colors, typography, spacing)
-- Components (buttons, forms, cards, modals)
-- Patterns (navigation, data display, feedback)</p>
+<p>"Welcome to our design system Storybook. On the left, you see our component library organized by category:</p>
+<ul>
+<li>Foundations (colors, typography, spacing)</li>
+<li>Components (buttons, forms, cards, modals)</li>
+<li>Patterns (navigation, data display, feedback)</li>
+</ul>
 <p>We have 42 components currently. Let me click on 'Button' to show you what each component page includes:</p>
-<p><strong>Overview Tab</strong>:
-- Interactive component preview
-- Props/controls to play with variants
-- Code example showing how to use it</p>
-<p><strong>Docs Tab</strong>:
-- Detailed usage guidelines
-- Do's and Don'ts
-- Accessibility considerations
-- Design tokens used</p>
-<p><strong>Accessibility Tab</strong> (from a11y addon):
-- Automated WCAG 2.1 AA checks
-- Violations (if any) are highlighted
-- Our goal is &gt;90% compliance</p>
+<p><strong>Overview Tab</strong>:</p>
+<ul>
+<li>Interactive component preview</li>
+<li>Props/controls to play with variants</li>
+<li>Code example showing how to use it</li>
+</ul>
+<p><strong>Docs Tab</strong>:</p>
+<ul>
+<li>Detailed usage guidelines</li>
+<li>Do's and Don'ts</li>
+<li>Accessibility considerations</li>
+<li>Design tokens used</li>
+</ul>
+<p><strong>Accessibility Tab</strong> (from a11y addon):</p>
+<ul>
+<li>Automated WCAG 2.1 AA checks</li>
+<li>Violations (if any) are highlighted</li>
+<li>Our goal is &gt;90% compliance</li>
+</ul>
 <p>Let me show you our accessibility scores..."</p>
 </blockquote>
 <p><strong>[19:30-20:30] Design Tokens &amp; Accessibility</strong></p>
 <p>Show design tokens and accessibility features:</p>
 <blockquote>
-<p>"We use design tokens for consistency. These are the atomic values like colors, spacing, and typography that all components use. For example:
-- <code>color-primary-500</code> - our primary blue
-- <code>spacing-md</code> - 16px
-- <code>font-size-lg</code> - 18px</p>
+<p>"We use design tokens for consistency. These are the atomic values like colors, spacing, and typography that all components use. For example:</p>
+<ul>
+<li><code>color-primary-500</code> - our primary blue</li>
+<li><code>spacing-md</code> - 16px</li>
+<li><code>font-size-lg</code> - 18px</li>
+</ul>
 <p>These are defined once and used everywhere, making it easy to maintain consistency and rebrand if needed.</p>
-<p>For accessibility, every component is:
-- Tested with axe-core (automated accessibility testing)
-- Keyboard navigable
-- Screen reader compatible
-- Meeting WCAG 2.1 AA standards
-- Color contrast verified</p>
+<p>For accessibility, every component is:</p>
+<ul>
+<li>Tested with axe-core (automated accessibility testing)</li>
+<li>Keyboard navigable</li>
+<li>Screen reader compatible</li>
+<li>Meeting WCAG 2.1 AA standards</li>
+<li>Color contrast verified</li>
+</ul>
 <p>We even integrate this into our CI/CD - the build fails if accessibility scores drop below 90%."</p>
 </blockquote>
 <p><strong>[20:30-21:30] Using the Design System</strong></p>
@@ -5040,8 +5080,8 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>@fawkes/design-system
 </code></pre></div>
 <p>Then import components:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Button</span><span class="p">,</span><span class="w"> </span><span class="nx">Card</span><span class="p">,</span><span class="w"> </span><span class="nx">Modal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system&#39;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/dist/styles.css&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Button</span><span class="p">,</span><span class="w"> </span><span class="nx">Card</span><span class="p">,</span><span class="w"> </span><span class="nx">Modal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system/dist/styles.css&quot;</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">MyApp</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
@@ -5061,18 +5101,22 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <p>Navigate to product analytics dashboard (if deployed):</p>
 <blockquote>
 <p>"Next, let's look at product analytics. We track how developers actually use the platform, which features are popular, and where they get stuck.</p>
-<p>Our analytics dashboard shows:
-- <strong>Usage Trends</strong>: Active users, session duration, feature adoption
-- <strong>User Journeys</strong>: How do developers navigate through tasks
-- <strong>Funnels</strong>: Where do developers drop off (e.g., service creation funnel)
-- <strong>Retention</strong>: Are developers coming back and using the platform regularly
-- <strong>Discovery Metrics</strong>: Time to discovery, usage depth</p>
-<p>For example, this funnel shows the 'Create Service' journey:
-1. Visit Backstage: 100 users
-2. Click 'Create': 85 users (85%)
-3. Choose template: 75 users (75%)
-4. Complete form: 60 users (60%)
-5. Service created: 55 users (55%)</p>
+<p>Our analytics dashboard shows:</p>
+<ul>
+<li><strong>Usage Trends</strong>: Active users, session duration, feature adoption</li>
+<li><strong>User Journeys</strong>: How do developers navigate through tasks</li>
+<li><strong>Funnels</strong>: Where do developers drop off (e.g., service creation funnel)</li>
+<li><strong>Retention</strong>: Are developers coming back and using the platform regularly</li>
+<li><strong>Discovery Metrics</strong>: Time to discovery, usage depth</li>
+</ul>
+<p>For example, this funnel shows the 'Create Service' journey:</p>
+<ol>
+<li>Visit Backstage: 100 users</li>
+<li>Click 'Create': 85 users (85%)</li>
+<li>Choose template: 75 users (75%)</li>
+<li>Complete form: 60 users (60%)</li>
+<li>Service created: 55 users (55%)</li>
+</ol>
 <p>We have a 15% drop-off at 'Complete form' - that's an opportunity to simplify the form or provide better guidance."</p>
 </blockquote>
 <p><strong>[22:30-23:30] Event Tracking</strong></p>
@@ -5080,10 +5124,10 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <blockquote>
 <p>"Behind the scenes, we use event tracking. When a developer performs an action in Backstage or other UIs, we capture it:</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><span class="nx">analytics</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="s1">&#39;service_created&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">template</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;java-service&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">environment</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;dev&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;backstage&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="nx">analytics</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="s2">&quot;service_created&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">template</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;java-service&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">environment</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
 <blockquote>
@@ -5093,20 +5137,26 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <p><strong>[23:30-25:00] Feature Flags with Unleash</strong></p>
 <p>Navigate to Unleash UI:</p>
 <blockquote>
-<p>"Now let's look at feature flags with Unleash. Feature flags let us:
-- Roll out new features gradually
-- A/B test different approaches
-- Kill switch problematic features instantly
-- Target specific users or teams</p>
+<p>"Now let's look at feature flags with Unleash. Feature flags let us:</p>
+<ul>
+<li>Roll out new features gradually</li>
+<li>A/B test different approaches</li>
+<li>Kill switch problematic features instantly</li>
+<li>Target specific users or teams</li>
+</ul>
 <p>Here in the Unleash UI, you see our current feature flags. Let me show you one: 'new-dashboard-ui'</p>
-<p><strong>Strategy</strong>: Gradual Rollout
-- Currently at 50% rollout
-- Started at 10%, monitored metrics, increased to 25%, 50%
-- Planning to go to 100% next week if metrics look good</p>
-<p><strong>Metrics</strong>: In the last hour:
-- 1,500 users saw the new dashboard
-- 500 users saw the old dashboard
-- We're tracking satisfaction scores for both groups</p>
+<p><strong>Strategy</strong>: Gradual Rollout</p>
+<ul>
+<li>Currently at 50% rollout</li>
+<li>Started at 10%, monitored metrics, increased to 25%, 50%</li>
+<li>Planning to go to 100% next week if metrics look good</li>
+</ul>
+<p><strong>Metrics</strong>: In the last hour:</p>
+<ul>
+<li>1,500 users saw the new dashboard</li>
+<li>500 users saw the old dashboard</li>
+<li>We're tracking satisfaction scores for both groups</li>
+</ul>
 <p>If the new dashboard causes issues, I can instantly toggle it off with one click - no deployment required. That's the power of feature flags."</p>
 </blockquote>
 <p><strong>[25:00-25:30] OpenFeature SDK</strong></p>
@@ -5114,10 +5164,10 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <blockquote>
 <p>"In code, we use the OpenFeature SDK, which is vendor-neutral:</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@openfeature/sdk&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openfeature/sdk&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">getClient</span><span class="p">();</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">useNewDashboard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s1">&#39;new-dashboard-ui&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">useNewDashboard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s2">&quot;new-dashboard-ui&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
 
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">useNewDashboard</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">NewDashboard</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">;</span>
@@ -5135,36 +5185,48 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <blockquote>
 <p>"Finally, let's talk about our continuous discovery process. Product discovery isn't a one-time activity - it's an ongoing practice woven into our weekly rhythm.</p>
 <p><strong>Our Weekly Cadence</strong>:</p>
-<p><strong>Monday</strong>: Planning &amp; Synthesis
-- Review last week's feedback, metrics, and research findings
-- Identify patterns and update journey maps
-- Prioritize opportunities for the week</p>
-<p><strong>Tuesday-Wednesday</strong>: Exploration
-- Conduct 1-2 user interviews
-- Run usability tests on prototypes
-- Gather feedback on new features</p>
-<p><strong>Thursday</strong>: Validation
-- Review A/B test results from feature flags
-- Analyze product analytics data
-- Quick pulse surveys if needed</p>
-<p><strong>Friday</strong>: Documentation &amp; Planning
-- Update research repository
-- Share insights in Mattermost #product-discovery
-- Plan next week's research activities"</p>
+<p><strong>Monday</strong>: Planning &amp; Synthesis</p>
+<ul>
+<li>Review last week's feedback, metrics, and research findings</li>
+<li>Identify patterns and update journey maps</li>
+<li>Prioritize opportunities for the week</li>
+</ul>
+<p><strong>Tuesday-Wednesday</strong>: Exploration</p>
+<ul>
+<li>Conduct 1-2 user interviews</li>
+<li>Run usability tests on prototypes</li>
+<li>Gather feedback on new features</li>
+</ul>
+<p><strong>Thursday</strong>: Validation</p>
+<ul>
+<li>Review A/B test results from feature flags</li>
+<li>Analyze product analytics data</li>
+<li>Quick pulse surveys if needed</li>
+</ul>
+<p><strong>Friday</strong>: Documentation &amp; Planning</p>
+<ul>
+<li>Update research repository</li>
+<li>Share insights in Mattermost #product-discovery</li>
+<li>Plan next week's research activities"</li>
+</ul>
 </blockquote>
 <p><strong>[26:30-27:30] Advisory Board</strong></p>
 <p>Show advisory board documentation:</p>
 <blockquote>
-<p>"We also have a Customer Advisory Board that meets quarterly. This is a group of 10-12 power users who:
-- Provide strategic feedback on our roadmap
-- Participate in early access programs
-- Act as evangelists for the platform
-- Give us direct access to developer needs</p>
-<p>We documented our advisory board setup in <code>docs/how-to/run-advisory-board-meetings.md</code> including:
-- How to recruit members
-- Meeting agenda templates
-- How to synthesize feedback
-- Recognizing and rewarding participation"</p>
+<p>"We also have a Customer Advisory Board that meets quarterly. This is a group of 10-12 power users who:</p>
+<ul>
+<li>Provide strategic feedback on our roadmap</li>
+<li>Participate in early access programs</li>
+<li>Act as evangelists for the platform</li>
+<li>Give us direct access to developer needs</li>
+</ul>
+<p>We documented our advisory board setup in <code>docs/how-to/run-advisory-board-meetings.md</code> including:</p>
+<ul>
+<li>How to recruit members</li>
+<li>Meeting agenda templates</li>
+<li>How to synthesize feedback</li>
+<li>Recognizing and rewarding participation"</li>
+</ul>
 </blockquote>
 <p><strong>[27:30-28:30] Research to Product Pipeline</strong></p>
 <p>Show example of insight → feature:</p>
@@ -5193,11 +5255,13 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 </blockquote>
 <p><strong>[29:30-30:00] Call to Action &amp; Resources</strong></p>
 <blockquote>
-<p>"All of this is documented in our Epic 3 docs:
-- Operations runbook for maintaining these systems
-- API reference for integrating with them
-- Architecture diagrams showing how it all fits together
-- Journey maps and personas in docs/research/</p>
+<p>"All of this is documented in our Epic 3 docs:</p>
+<ul>
+<li>Operations runbook for maintaining these systems</li>
+<li>API reference for integrating with them</li>
+<li>Architecture diagrams showing how it all fits together</li>
+<li>Journey maps and personas in docs/research/</li>
+</ul>
 <p>If you have questions or want to learn more, join us in #product-discovery on Mattermost.</p>
 <p>Thanks for watching, and happy discovering!"</p>
 </blockquote>
