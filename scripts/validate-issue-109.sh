@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
+
 # Validation script for Issue #109 - Code Quality Standards and Linting
-set -uo pipefail # Removed -e to allow script to continue on errors
+# Note: Using set -uo pipefail only (without -e) to allow script to continue on errors
+set -uo pipefail
 
 echo "=========================================="
 echo "Validating Code Quality Standards (Issue #109)"

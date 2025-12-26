@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 # =============================================================================
 # File: scripts/lib/summary.sh
+
+set -euo pipefail
 # Purpose: Access summary generation for all services
 # =============================================================================
+
 
 get_service_password() {
   local secret_name="$1"

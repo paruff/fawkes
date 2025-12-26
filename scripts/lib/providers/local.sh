@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 # =============================================================================
 # File: scripts/lib/providers/local.sh
+
+set -euo pipefail
 # Purpose: Local cluster provisioning (minikube, docker-desktop)
 # =============================================================================
+
 
 compute_minikube_resources() {
   local default_mem=8192

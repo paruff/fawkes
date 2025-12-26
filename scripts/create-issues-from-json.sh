@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Fawkes GitHub Issues Generator - JSON-based
 # Generates all issues from JSON data files
 # Requires: gh (GitHub CLI) and jq

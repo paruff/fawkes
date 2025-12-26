@@ -4,6 +4,8 @@
 # Purpose: Command-line flag parsing
 # =============================================================================
 
+set -euo pipefail
+
 usage() {
   echo "Usage: $0 [--provider local|aws|azure|gcp] [--cluster-name NAME] [--region REGION|--location LOCATION] [--only-cluster|--only-apps|--skip-cluster] [--dry-run] [--resume] [--verbose] [--access] <environment|cleanup|destroy>"
   echo "  environment: local | dev | stage | production"

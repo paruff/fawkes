@@ -1,12 +1,13 @@
 #!/bin/bash
-# Don't use set -e to prevent early exit on failures
-# We want to collect all validation results
 
 # validate-at-e3-008.sh
 # Validation script for AT-E3-008: Continuous Discovery Process
 #
 # This script validates that continuous discovery workflow is properly
 # established including documentation, processes, metrics, and advisory board.
+#
+# Note: Uses set -uo pipefail only (without -e) to collect all validation results
+set -uo pipefail
 
 # Color codes for output
 RED='\033[0;31m'

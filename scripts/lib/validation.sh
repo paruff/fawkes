@@ -4,6 +4,8 @@
 # Purpose: Cluster and workload validation
 # =============================================================================
 
+set -euo pipefail
+
 validate_cluster() {
   echo "🔎 Validating Kubernetes cluster health..."
   # API reachability

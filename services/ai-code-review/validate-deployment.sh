@@ -1,7 +1,7 @@
 #!/bin/bash
 # Validation script for AI Code Review Service deployment
 
-set -e
+set -euo pipefail
 
 NAMESPACE="${NAMESPACE:-fawkes}"
 SERVICE_NAME="ai-code-review"

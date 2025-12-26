@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 # =============================================================================
 # File: scripts/lib/providers/gcp.sh
+
+set -euo pipefail
 # Purpose: GCP GKE cluster provisioning
 # =============================================================================
+
 
 provision_gcp_cluster() {
   echo "🔧 Provider=gcp selected. Applying Terraform under infra/gcp..."

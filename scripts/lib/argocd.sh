@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 # =============================================================================
 # File: scripts/lib/argocd.sh
+
+set -euo pipefail
 # Purpose: ArgoCD deployment and management
 # =============================================================================
+
 
 maybe_cleanup_argocd_cluster_resources() {
   set +e

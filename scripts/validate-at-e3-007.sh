@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 ################################################################################
 # AT-E3-007: Event Tracking Infrastructure Validation
 #

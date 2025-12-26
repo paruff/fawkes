@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 # =============================================================================
 # File: scripts/lib/providers/aws.sh
+
+set -euo pipefail
 # Purpose: AWS EKS cluster provisioning
 # =============================================================================
+
 
 provision_aws_cluster() {
   echo "🔧 Provider=aws selected. Applying Terraform under infra/aws..."

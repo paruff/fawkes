@@ -1,7 +1,7 @@
 #!/bin/bash
 # Build script for VSM service Docker image
 
-set -e
+set -euo pipefail
 
 echo "Building VSM service Docker image..."
 docker build -t vsm-service:latest .

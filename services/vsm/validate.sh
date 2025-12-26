@@ -1,7 +1,7 @@
 #!/bin/bash
 # Validation script for VSM service
 
-set -e
+set -euo pipefail
 
 VSM_URL="${VSM_URL:-http://vsm-service.127.0.0.1.nip.io}"
 

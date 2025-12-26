@@ -1,20 +1,26 @@
 #!/bin/bash
-
-# Fawkes GitHub Issues Generator
-# Generates all 108 issues for the 3-epic implementation plan
+# =============================================================================
+# Script: github-issues-generator.sh
+# Purpose: Fawkes GitHub Issues Generator - Generates issues for implementation plan
+# Usage: ./github-issues-generator.sh [options]
+# Exit Codes: 0=success, 1=general error, 2=missing prerequisites
 # Requires: gh (GitHub CLI) authenticated
+# =============================================================================
 
-set -e
+set -euo pipefail
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+# Get script directory for sourcing libraries
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
+
+# Source error handling library
+# shellcheck source=lib/error_handling.sh
+source "${SCRIPT_DIR}/lib/error_handling.sh"
 
 # Configuration
 REPO="paruff/fawkes"
 DRY_RUN=false
+EPIC=""
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -32,40 +38,44 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --help)
-      echo "Usage: $0 [options]"
-      echo ""
-      echo "Options:"
-      echo "  --epic [1|2|3]     Generate issues for specific epic only"
-      echo "  --dry-run          Preview issues without creating them"
-      echo "  --repo OWNER/REPO  Specify repository (default: paruff/fawkes)"
-      echo "  --help             Show this help message"
+      cat << EOF
+Usage: $0 [options]
+
+Options:
+  --epic [1|2|3]     Generate issues for specific epic only
+  --dry-run          Preview issues without creating them
+  --repo OWNER/REPO  Specify repository (default: paruff/fawkes)
+  --help             Show this help message
+
+Exit Codes:
+  0 - Success
+  1 - General error
+  2 - Missing prerequisites
+
+Examples:
+  $0 --dry-run
+  $0 --epic 1
+  $0 --repo myorg/myrepo --dry-run
+EOF
       exit 0
       ;;
     *)
-      echo "Unknown option: $1"
-      echo "Use --help for usage information"
-      exit 1
+      error_exit "Unknown option: $1. Use --help for usage information." "$EXIT_GENERAL_ERROR"
       ;;
   esac
 done
 
-# Check if gh is installed
-if ! command -v gh &> /dev/null; then
-  echo -e "${RED}Error: GitHub CLI (gh) is not installed${NC}"
-  echo "Install from: https://cli.github.com/"
-  exit 1
-fi
+# Check prerequisites
+require_command "gh" "GitHub CLI (gh) is not installed. Install from: https://cli.github.com/"
 
 # Check if authenticated
 if ! gh auth status &> /dev/null; then
-  echo -e "${RED}Error: Not authenticated with GitHub CLI${NC}"
-  echo "Run: gh auth login"
-  exit 1
+  error_exit "Not authenticated with GitHub CLI. Run: gh auth login" "$EXIT_MISSING_PREREQ"
 fi
 
-echo -e "${GREEN}=== Fawkes GitHub Issues Generator ===${NC}"
-echo "Repository: $REPO"
-echo "Dry Run: $DRY_RUN"
+show_section "Fawkes GitHub Issues Generator"
+log_info "Repository: $REPO"
+log_info "Dry Run: $DRY_RUN"
 echo ""
 
 # Function to create issue
@@ -77,24 +87,28 @@ create_issue() {
   local milestone=$5
 
   if [ "$DRY_RUN" = true ]; then
-    echo -e "${YELLOW}[DRY RUN]${NC} Would create: #$issue_number - $title"
-    echo "  Labels: $labels"
-    echo "  Milestone: $milestone"
+    log_warn "[DRY RUN] Would create: #$issue_number - $title"
+    log_info "  Labels: $labels"
+    log_info "  Milestone: $milestone"
     echo ""
   else
-    echo -e "${GREEN}Creating:${NC} #$issue_number - $title"
-    gh issue create \
+    log_info "Creating: #$issue_number - $title"
+    if ! gh issue create \
       --repo "$REPO" \
       --title "$title" \
       --body "$body" \
       --label "$labels" \
-      --milestone "$milestone" || echo -e "${RED}Failed to create issue $issue_number${NC}"
+      --milestone "$milestone"; then
+      log_error "Failed to create issue $issue_number"
+      return 1
+    fi
   fi
+  return 0
 }
 
 # Function to generate Epic 1 issues
 generate_epic1() {
-  echo -e "${GREEN}=== Generating Epic 1 Issues (DORA 2023 Foundation) ===${NC}"
+  show_progress "Generating Epic 1 Issues (DORA 2023 Foundation)"
 
   # Issue #1: Local K8s Cluster
   create_issue 1 "Set up 4-node local K8s cluster" \
