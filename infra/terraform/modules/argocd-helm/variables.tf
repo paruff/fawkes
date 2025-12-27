@@ -78,16 +78,6 @@ variable "namespace" {
   }
 }
 
-variable "kubeconfig_path" {
-  description = "Path to the kubeconfig file used by Kubernetes and Helm providers"
-  type        = string
-
-  validation {
-    condition     = length(var.kubeconfig_path) > 0
-    error_message = "Kubeconfig path cannot be empty."
-  }
-}
-
 variable "timeout" {
   description = "Timeout in seconds for Helm operations"
   type        = number
