@@ -27,8 +27,8 @@ module "aks_cluster" {
   node_count   = 3
   
   network_plugin = "azure"
-  service_cidr   = "10.0.0.0/16"
-  dns_service_ip = "10.0.0.10"
+  service_cidr   = "10.1.0.0/16"  # Must not overlap with VNet CIDR
+  dns_service_ip = "10.1.0.10"
   
   api_server_authorized_ip_ranges = ["203.0.113.0/24"]
   
@@ -62,8 +62,8 @@ module "aks_cluster" {
 | enable_managed_identity | Enable SystemAssigned managed identity | `bool` | `true` | no |
 | enable_rbac | Enable Kubernetes RBAC | `bool` | `true` | no |
 | network_plugin | Network plugin (azure or kubenet) | `string` | `"azure"` | no |
-| service_cidr | Service CIDR for Kubernetes services | `string` | `"10.0.0.0/16"` | no |
-| dns_service_ip | DNS service IP | `string` | `"10.0.0.10"` | no |
+| service_cidr | Service CIDR for Kubernetes services | `string` | `"10.1.0.0/16"` | no |
+| dns_service_ip | DNS service IP | `string` | `"10.1.0.10"` | no |
 | load_balancer_sku | SKU for the load balancer | `string` | `"standard"` | no |
 | outbound_type | Outbound routing type | `string` | `"loadBalancer"` | no |
 | api_server_authorized_ip_ranges | Authorized IP ranges for API server | `list(string)` | `[]` | no |

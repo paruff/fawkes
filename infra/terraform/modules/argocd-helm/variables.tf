@@ -122,3 +122,9 @@ variable "skip_crds" {
   type        = bool
   default     = false
 }
+
+variable "values_override" {
+  description = "Additional Helm values to override defaults (YAML format)"
+  type        = string
+  default     = ""
+}
