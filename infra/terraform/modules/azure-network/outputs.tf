@@ -18,42 +18,32 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-resource "azurerm_kubernetes_cluster" "aks" {
-  name                = var.cluster_name
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "${var.cluster_name}-dns"
+output "vnet_id" {
+  description = "The ID of the virtual network"
+  value       = azurerm_virtual_network.main.id
+}
 
+output "vnet_name" {
+  description = "The name of the virtual network"
+  value       = azurerm_virtual_network.main.name
+}
 
-  default_node_pool {
-    name           = "systemnp"
-    vm_size        = var.node_vm_size
-    node_count     = var.node_count
-    type           = "VirtualMachineScaleSets"
-    vnet_subnet_id = azurerm_subnet.aks.id
-    upgrade_settings {
-      max_surge = "33%"
-    }
-    only_critical_addons_enabled = true
-  }
+output "vnet_address_space" {
+  description = "The address space of the virtual network"
+  value       = azurerm_virtual_network.main.address_space
+}
 
-  identity {
-    type = var.enable_managed_identity ? "SystemAssigned" : "None"
-  }
+output "subnet_id" {
+  description = "The ID of the subnet"
+  value       = azurerm_subnet.main.id
+}
 
-  role_based_access_control_enabled = var.enable_rbac
+output "subnet_name" {
+  description = "The name of the subnet"
+  value       = azurerm_subnet.main.name
+}
 
-  network_profile {
-    network_plugin    = var.network_plugin
-    dns_service_ip    = var.dns_service_ip
-    service_cidr      = var.service_cidr
-    load_balancer_sku = "standard"
-    outbound_type     = "loadBalancer"
-  }
-
-  api_server_access_profile {
-    authorized_ip_ranges = var.api_server_authorized_ip_ranges
-  }
-
-  tags = var.tags
+output "subnet_address_prefixes" {
+  description = "The address prefixes of the subnet"
+  value       = azurerm_subnet.main.address_prefixes
 }
