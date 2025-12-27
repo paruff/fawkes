@@ -119,18 +119,18 @@ variable "network_plugin" {
 variable "service_cidr" {
   description = "Service CIDR for Kubernetes services"
   type        = string
-  default     = "10.0.0.0/16"
+  default     = "10.1.0.0/16"
 
   validation {
     condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.service_cidr))
-    error_message = "Service CIDR must be a valid CIDR block (e.g., 10.0.0.0/16)."
+    error_message = "Service CIDR must be a valid CIDR block (e.g., 10.1.0.0/16)."
   }
 }
 
 variable "dns_service_ip" {
   description = "DNS service IP (must be within service_cidr)"
   type        = string
-  default     = "10.0.0.10"
+  default     = "10.1.0.10"
 
   validation {
     condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}$", var.dns_service_ip))

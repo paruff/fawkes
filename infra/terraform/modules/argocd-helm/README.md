@@ -25,6 +25,17 @@ module "argocd" {
   timeout       = 600
   atomic        = true
   recreate_pods = true
+  
+  # Optional: override default values
+  values_override = <<-EOT
+    global:
+      domain: argocd.mycompany.com
+    server:
+      ingress:
+        enabled: true
+        hosts:
+          - argocd.mycompany.com
+  EOT
 }
 
 # Access admin password
@@ -57,6 +68,7 @@ output "argocd_admin_password" {
 | recreate_pods | Force pod recreation on upgrade | `bool` | `true` | no |
 | create_namespace | Create namespace if it doesn't exist | `bool` | `true` | no |
 | skip_crds | Skip CRD installation | `bool` | `false` | no |
+| values_override | Additional Helm values (YAML) | `string` | `""` | no |
 
 ## Outputs
 
@@ -92,3 +104,37 @@ terraform output -raw argocd_admin_password
 # Username: admin
 # Password: <output from above>
 ```
+
+## Customizing ArgoCD Configuration
+
+You can customize ArgoCD by providing additional Helm values via the `values_override` variable:
+
+```hcl
+module "argocd" {
+  source = "../../modules/argocd-helm"
+  
+  # ... other variables ...
+  
+  values_override = <<-EOT
+    global:
+      domain: argocd.example.com
+    
+    server:
+      ingress:
+        enabled: true
+        ingressClassName: nginx
+        hosts:
+          - argocd.example.com
+        tls:
+          - secretName: argocd-tls
+            hosts:
+              - argocd.example.com
+    
+    configs:
+      params:
+        server.insecure: false  # Enable TLS
+  EOT
+}
+```
+
+The `values_override` will be merged with the default values.yaml in this module.

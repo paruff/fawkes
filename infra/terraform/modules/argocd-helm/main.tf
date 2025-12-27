@@ -42,7 +42,10 @@ resource "helm_release" "argocd" {
   create_namespace = var.create_namespace
   skip_crds        = var.skip_crds
 
-  values = [file("${path.module}/values.yaml")]
+  values = concat(
+    [file("${path.module}/values.yaml")],
+    var.values_override != "" ? [var.values_override] : []
+  )
 
   timeout       = var.timeout
   atomic        = var.atomic
