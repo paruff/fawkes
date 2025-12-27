@@ -20,7 +20,6 @@ module "argocd" {
   release_name    = "argocd"
   namespace       = "argocd"
   chart_version   = "5.51.0"  # Optional: pin to specific version
-  kubeconfig_path = "~/.kube/config"
   
   timeout       = 600
   atomic        = true
@@ -45,6 +44,8 @@ output "argocd_admin_password" {
 }
 ```
 
+**Note**: This module requires the Kubernetes and Helm providers to be configured by the caller. See the providers configuration example below.
+
 ## Requirements
 
 | Name | Version |
@@ -62,7 +63,6 @@ output "argocd_admin_password" {
 | chart_name | Chart name in the repository | `string` | `"argo-cd"` | no |
 | chart_version | Chart version (empty for latest) | `string` | `""` | no |
 | namespace | Kubernetes namespace for ArgoCD | `string` | `"argocd"` | no |
-| kubeconfig_path | Path to kubeconfig file | `string` | n/a | yes |
 | timeout | Timeout in seconds for Helm operations | `number` | `600` | no |
 | atomic | Roll back on failure | `bool` | `true` | no |
 | recreate_pods | Force pod recreation on upgrade | `bool` | `true` | no |
@@ -87,7 +87,33 @@ output "argocd_admin_password" {
 - Namespace: 1-63 characters, lowercase alphanumerics and hyphens
 - Chart repository must be valid HTTP/HTTPS URL
 - Timeout must be between 60 and 3600 seconds
-- Kubeconfig path cannot be empty
+- YAML syntax validation for values_override
+
+## Provider Configuration
+
+This module requires the Kubernetes and Helm providers to be configured by the caller. Example:
+
+```hcl
+provider "kubernetes" {
+  config_path = "~/.kube/config"
+  # Or use other authentication methods like:
+  # host                   = var.cluster_endpoint
+  # client_certificate     = base64decode(var.client_certificate)
+  # client_key             = base64decode(var.client_key)
+  # cluster_ca_certificate = base64decode(var.cluster_ca_certificate)
+}
+
+provider "helm" {
+  kubernetes {
+    config_path = "~/.kube/config"
+  }
+}
+
+module "argocd" {
+  source = "./modules/argocd-helm"
+  # ... module configuration
+}
+```
 
 ## Post-Deployment
 
