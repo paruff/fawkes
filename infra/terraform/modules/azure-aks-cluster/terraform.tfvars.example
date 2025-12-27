@@ -1,0 +1,34 @@
+# Example configuration for Azure AKS Cluster module
+
+cluster_name        = "fawkes-aks"
+location            = "eastus2"
+resource_group_name = "fawkes-rg"
+subnet_id           = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/fawkes-rg/providers/Microsoft.Network/virtualNetworks/fawkes-vnet/subnets/aks-subnet"
+
+dns_prefix = "fawkes"
+
+# Node pool configuration
+node_vm_size = "Standard_B2ms"
+node_count   = 3
+
+# Network configuration
+network_plugin = "azure"
+service_cidr   = "10.0.0.0/16"
+dns_service_ip = "10.0.0.10"
+
+# API server access (replace with your public IP)
+api_server_authorized_ip_ranges = ["203.0.113.0/24"]
+
+# Optional: customize upgrade settings
+max_surge                    = "33%"
+only_critical_addons_enabled = true
+
+# RBAC and identity
+enable_rbac             = true
+enable_managed_identity = true
+
+tags = {
+  platform    = "fawkes"
+  managed_by  = "terraform"
+  environment = "dev"
+}

@@ -1,0 +1,15 @@
+# Example configuration for ArgoCD Helm module
+
+release_name    = "argocd"
+chart_repo      = "https://argoproj.github.io/argo-helm"
+chart_name      = "argo-cd"
+chart_version   = "" # Leave empty for latest or pin to specific version like "5.51.0"
+namespace       = "argocd"
+kubeconfig_path = "~/.kube/config"
+
+# Helm deployment options
+timeout         = 600
+atomic          = true
+recreate_pods   = true
+create_namespace = true
+skip_crds       = false
