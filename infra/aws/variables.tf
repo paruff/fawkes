@@ -22,12 +22,27 @@ variable "region" {
   description = "AWS region for all resources"
   type        = string
   default     = "us-east-2"
+
+  validation {
+    condition = contains([
+      "us-east-1", "us-east-2", "us-west-1", "us-west-2",
+      "ca-central-1", "eu-west-1", "eu-west-2", "eu-west-3",
+      "eu-central-1", "eu-north-1", "ap-northeast-1", "ap-northeast-2",
+      "ap-southeast-1", "ap-southeast-2", "ap-south-1", "sa-east-1"
+    ], var.region)
+    error_message = "Region must be a valid AWS region."
+  }
 }
 
 variable "environment" {
   description = "Deployment environment tag (e.g., dev, staging, prod)."
   type        = string
   default     = "dev"
+
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "Environment must be one of: dev, staging, prod."
+  }
 }
 
 variable "owner" {
@@ -46,6 +61,11 @@ variable "vpc_cidr" {
   description = "VPC CIDR block."
   type        = string
   default     = "10.0.0.0/16"
+
+  validation {
+    condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.vpc_cidr))
+    error_message = "VPC CIDR must be a valid CIDR block (e.g., 10.0.0.0/16)."
+  }
 }
 
 variable "private_subnets" {
@@ -64,6 +84,11 @@ variable "eks_version" {
   description = "EKS Kubernetes version."
   type        = string
   default     = "1.28"
+
+  validation {
+    condition     = can(regex("^1\\.(2[0-9]|30)$", var.eks_version))
+    error_message = "EKS version must be a valid Kubernetes version (e.g., 1.28, 1.29, 1.30)."
+  }
 }
 
 variable "ssh_ingress_cidr_one" {
@@ -106,12 +131,22 @@ variable "worker_group_1_capacity" {
   description = "Desired node count for worker group 1."
   type        = number
   default     = 2
+
+  validation {
+    condition     = var.worker_group_1_capacity >= 1 && var.worker_group_1_capacity <= 100
+    error_message = "Worker group 1 capacity must be between 1 and 100."
+  }
 }
 
 variable "worker_group_2_capacity" {
   description = "Desired node count for worker group 2."
   type        = number
   default     = 1
+
+  validation {
+    condition     = var.worker_group_2_capacity >= 1 && var.worker_group_2_capacity <= 100
+    error_message = "Worker group 2 capacity must be between 1 and 100."
+  }
 }
 
 variable "worker_group_1_min_size" {
@@ -144,13 +179,12 @@ variable "map_roles" {
     rolearn = string
     groups  = list(string)
   }))
+  default = []
 
-  default = [
-    {
-      rolearn = "arn:aws:iam::66666666666:role/role1"
-      groups  = ["system:masters"]
-    },
-  ]
+  validation {
+    condition     = alltrue([for role in var.map_roles : can(regex("^arn:aws:iam::[0-9]{12}:role/[a-zA-Z0-9+=,.@_-]+$", role.rolearn))])
+    error_message = "All role ARNs must be valid AWS IAM role ARNs."
+  }
 }
 
 variable "map_users" {
@@ -159,17 +193,12 @@ variable "map_users" {
     userarn = string
     groups  = list(string)
   }))
+  default = []
 
-  default = [
-    {
-      userarn = "arn:aws:iam::66666666666:user/user1"
-      groups  = ["system:masters"]
-    },
-    {
-      userarn = "arn:aws:iam::66666666666:user/user2"
-      groups  = ["system:masters"]
-    },
-  ]
+  validation {
+    condition     = alltrue([for user in var.map_users : can(regex("^arn:aws:iam::[0-9]{12}:user/[a-zA-Z0-9+=,.@_-]+$", user.userarn))])
+    error_message = "All user ARNs must be valid AWS IAM user ARNs."
+  }
 }
 
 variable "kms_key_arn" {
