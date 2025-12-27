@@ -127,4 +127,9 @@ variable "values_override" {
   description = "Additional Helm values to override defaults (YAML format)"
   type        = string
   default     = ""
+
+  validation {
+    condition     = var.values_override == "" || can(yamldecode(var.values_override))
+    error_message = "values_override must be empty or valid YAML."
+  }
 }
