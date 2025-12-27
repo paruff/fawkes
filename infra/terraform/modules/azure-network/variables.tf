@@ -53,7 +53,10 @@ variable "address_space" {
   }
 
   validation {
-    condition     = alltrue([for cidr in var.address_space : can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", cidr))])
+    condition = alltrue([
+      for cidr in var.address_space :
+      can(cidrhost(cidr, 0))
+    ])
     error_message = "All address spaces must be valid CIDR blocks (e.g., 10.0.0.0/16)."
   }
 }
@@ -78,7 +81,10 @@ variable "subnet_address_prefixes" {
   }
 
   validation {
-    condition     = alltrue([for cidr in var.subnet_address_prefixes : can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", cidr))])
+    condition = alltrue([
+      for cidr in var.subnet_address_prefixes :
+      can(cidrhost(cidr, 0))
+    ])
     error_message = "All subnet address prefixes must be valid CIDR blocks (e.g., 10.0.1.0/24)."
   }
 }

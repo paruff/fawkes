@@ -122,7 +122,7 @@ variable "service_cidr" {
   default     = "10.1.0.0/16"
 
   validation {
-    condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.service_cidr))
+    condition     = can(cidrhost(var.service_cidr, 0))
     error_message = "Service CIDR must be a valid CIDR block (e.g., 10.1.0.0/16)."
   }
 }
@@ -166,7 +166,10 @@ variable "api_server_authorized_ip_ranges" {
   default     = []
 
   validation {
-    condition     = alltrue([for cidr in var.api_server_authorized_ip_ranges : can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", cidr))])
+    condition = alltrue([
+      for cidr in var.api_server_authorized_ip_ranges :
+      can(cidrhost(cidr, 0))
+    ])
     error_message = "All IP ranges must be valid CIDR blocks."
   }
 }
