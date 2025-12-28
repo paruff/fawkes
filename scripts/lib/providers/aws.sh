@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 # =============================================================================
-# File: scripts/lib/providers/aws.sh
-
-set -euo pipefail
-# Purpose: AWS EKS cluster provisioning
+# AWS cloud provider provisioning
 # =============================================================================
+set -euo pipefail
+
+# Source common functions
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+COMMON_LIB="${SCRIPT_DIR}/../common.sh"
+
+if [[ ! -f "$COMMON_LIB" ]]; then
+  echo "❌ Error: common.sh not found at $COMMON_LIB" >&2
+  exit 1
+fi
+
+source "$COMMON_LIB"
 
 
 provision_aws_cluster() {

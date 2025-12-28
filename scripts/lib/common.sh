@@ -6,6 +6,49 @@
 
 set -euo pipefail
 
+# Color codes for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Logging functions
+info() {
+  echo -e "${BLUE}ℹ${NC} $*"
+}
+
+success() {
+  echo -e "${GREEN}✅${NC} $*"
+}
+
+warn() {
+  echo -e "${YELLOW}⚠️${NC} $*"
+}
+
+error() {
+  echo -e "${RED}❌${NC} $*" >&2
+}
+
+error_exit() {
+  error "$@"
+  exit 1
+}
+
+debug() {
+  if [[ "${VERBOSE:-0}" == "1" ]]; then
+    echo -e "${BLUE}[DEBUG]${NC} $*"
+  fi
+}
+
+# Export all functions so they're available in subshells
+export -f info
+export -f success
+export -f warn
+export -f error
+export -f error_exit
+export -f debug
+
 # Error handling
 error_exit() {
   echo "[ERROR] $1" >&2
