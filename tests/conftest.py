@@ -35,6 +35,15 @@ logger = logging.getLogger(__name__)
 
 
 # ============================================================================
+# PYTEST PLUGINS
+# ============================================================================
+
+# Register BDD step definitions as pytest plugins
+# Moved from tests/bdd/conftest.py for pytest 9.x compatibility
+pytest_plugins = ("tests.bdd.step_definitions.argocd_steps",)
+
+
+# ============================================================================
 # PYTEST CONFIGURATION
 # ============================================================================
 
