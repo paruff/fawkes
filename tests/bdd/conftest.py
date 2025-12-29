@@ -4,14 +4,15 @@ import sys
 import requests
 from kubernetes import client, config
 
-# Ensure Argo CD bootstrap step definitions are registered early as a pytest plugin
-# Make repository root importable when pytest rootdir is tests/bdd
+# Ensure repository root is importable when pytest rootdir is tests/bdd
+# Make repository root importable for step definitions
 _HERE = os.path.dirname(__file__)
 _ROOT = os.path.abspath(os.path.join(_HERE, "..", ".."))
 if _ROOT not in sys.path:
     sys.path.insert(0, _ROOT)
 
-pytest_plugins = ("tests.bdd.step_definitions.argocd_steps",)
+# NOTE: pytest_plugins moved to top-level tests/conftest.py for pytest 9.x compatibility
+# pytest 9.x no longer allows pytest_plugins in non-top-level conftest files
 
 
 @pytest.fixture(scope="session")
