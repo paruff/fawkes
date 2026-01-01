@@ -39,6 +39,26 @@ terraform-validate: ## Validate Terraform configurations
 	@cd infra/terraform && terraform fmt -check -recursive
 	@cd infra/terraform && terraform validate
 
+terraform-test: ## Run Terratest validation tests (no resources deployed)
+	@cd tests/terratest && go test -v -timeout 30m -run "Validation"
+
+terraform-test-integration: ## Run Terratest integration tests (deploys real resources)
+	@echo "⚠️  WARNING: This will create real Azure resources and incur costs"
+	@echo "Press Ctrl+C to cancel, or wait 5 seconds to continue..."
+	@sleep 5
+	@cd tests/terratest && RUN_TERRAFORM_INTEGRATION_TESTS=true go test -v -timeout 45m -parallel 2 -run "Module$$"
+
+terraform-test-e2e: ## Run Terratest E2E tests (expensive, 30+ minutes)
+	@echo "⚠️  WARNING: This will create extensive Azure resources and cost $10-20"
+	@echo "Press Ctrl+C to cancel, or wait 10 seconds to continue..."
+	@sleep 10
+	@cd tests/terratest && RUN_TERRAFORM_E2E_TESTS=true go test -v -timeout 90m -run "E2E"
+
+terraform-test-cost: ## Run Terratest cost estimation tests
+	@cd tests/terratest && RUN_TERRAFORM_COST_TESTS=true go test -v -timeout 15m -run "Cost"
+
+terraform-test-all: terraform-test terraform-test-integration terraform-test-e2e terraform-test-cost ## Run all Terratest tests
+
 k8s-validate: ## Validate Kubernetes manifests
 	@kubeval manifests/**/*.yaml
 	@kustomize build manifests/overlays/local | kubectl apply --dry-run=client -f -
