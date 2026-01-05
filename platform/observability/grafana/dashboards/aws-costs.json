@@ -124,7 +124,7 @@
         "title": "Projected Month-End Cost",
         "type": "stat",
         "gridPos": { "x": 18, "y": 1, "w": 6, "h": 6 },
-        "description": "Projected cost for the current month based on daily average",
+        "description": "Projected cost for the current month based on daily average from last 7 days. Calculation: avg_daily_cost × days_remaining_in_month. Example: If avg is $50/day and 20 days remain, projection is $1000.",
         "targets": [
           {
             "expr": "avg_over_time(aws_cost_usage_blended_cost{period=\"daily\"}[7d]) * day_of_month(time() + (31-day_of_month(time()))*86400)",
