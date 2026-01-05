@@ -37,24 +37,10 @@ func TestAzureResourceGroupModuleValidation(t *testing.T) {
 	// This is a validation test that doesn't deploy resources
 	// It only validates the module configuration
 
-	// Generate unique names for testing
-	uniqueID := random.UniqueId()
-	resourceGroupName := fmt.Sprintf("fawkes-test-rg-%s", uniqueID)
-	location := "eastus2"
-
-	// Construct terraform options
+	// Construct terraform options without variables for validation
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "../../infra/terraform/modules/azure/resource-group",
-		Vars: map[string]interface{}{
-			"name":     resourceGroupName,
-			"location": location,
-			"tags": map[string]string{
-				"Environment": "test",
-				"ManagedBy":   "Terratest",
-				"Purpose":     "automated-testing",
-			},
-		},
-		NoColor: true,
+		NoColor:      true,
 	})
 
 	// Run terraform init and validate

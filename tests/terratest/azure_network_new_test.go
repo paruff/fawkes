@@ -37,29 +37,10 @@ func TestAzureNetworkModuleValidation(t *testing.T) {
 	// This is a validation test that doesn't deploy resources
 	// It only validates the module configuration
 
-	// Generate unique names for testing
-	uniqueID := random.UniqueId()
-	vnetName := fmt.Sprintf("fawkes-test-vnet-%s", uniqueID)
-	subnetName := fmt.Sprintf("fawkes-test-subnet-%s", uniqueID)
-	resourceGroupName := fmt.Sprintf("fawkes-test-rg-%s", uniqueID)
-	location := "eastus2"
-
-	// Construct terraform options
+	// Construct terraform options without variables for validation
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "../../infra/terraform/modules/azure/network",
-		Vars: map[string]interface{}{
-			"vnet_name":               vnetName,
-			"location":                location,
-			"resource_group_name":     resourceGroupName,
-			"address_space":           []string{"10.0.0.0/16"},
-			"subnet_name":             subnetName,
-			"subnet_address_prefixes": []string{"10.0.1.0/24"},
-			"tags": map[string]string{
-				"Environment": "test",
-				"ManagedBy":   "Terratest",
-			},
-		},
-		NoColor: true,
+		NoColor:      true,
 	})
 
 	// Run terraform init and validate
