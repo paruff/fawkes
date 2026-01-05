@@ -1,0 +1,409 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# NOTE: This configuration uses environment variable substitution (${VAR_NAME}).
+# Before applying, ensure all required variables are set:
+# - GCP_PROJECT_ID: GCP project ID
+# - GCP_REGION: GCP region
+# - CLUSTER_NAME: Name of the GKE cluster
+# - ENVIRONMENT: Deployment environment (dev/staging/prod)
+# - PROMETHEUS_REMOTE_WRITE_ENDPOINT: Prometheus remote write URL (optional)
+# - JAEGER_ENDPOINT: Jaeger collector endpoint (optional)
+#
+# Apply with: envsubst < otel-collector-config.yaml | kubectl apply -f -
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+  namespace: gcp-observability
+  labels:
+    app: otel-collector
+data:
+  otel-config.yaml: |
+    receivers:
+      # OTLP receiver for traces, metrics, and logs
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+
+      # Prometheus receiver for scraping metrics
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: 'kubernetes-pods'
+              kubernetes_sd_configs:
+                - role: pod
+              relabel_configs:
+                - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+                  action: keep
+                  regex: true
+                - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+                  action: replace
+                  target_label: __metrics_path__
+                  regex: (.+)
+                - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+                  action: replace
+                  regex: ([^:]+)(?::\d+)?;(\d+)
+                  replacement: $1:$2
+                  target_label: __address__
+                - action: labelmap
+                  regex: __meta_kubernetes_pod_label_(.+)
+                - source_labels: [__meta_kubernetes_namespace]
+                  action: replace
+                  target_label: kubernetes_namespace
+                - source_labels: [__meta_kubernetes_pod_name]
+                  action: replace
+                  target_label: kubernetes_pod_name
+
+      # Google Cloud Monitoring receiver
+      googlecloudmonitoring:
+        project_id: ${GCP_PROJECT_ID}
+        collection_interval: 60s
+        metrics:
+          - metric_type: "compute.googleapis.com/instance/cpu/utilization"
+          - metric_type: "kubernetes.io/container/cpu/core_usage_time"
+          - metric_type: "kubernetes.io/container/memory/page_fault_count"
+
+    processors:
+      # Batch processor for better performance
+      batch:
+        timeout: 30s
+        send_batch_size: 1024
+        send_batch_max_size: 2048
+
+      # Memory limiter to prevent OOM
+      memory_limiter:
+        check_interval: 5s
+        limit_mib: 512
+        spike_limit_mib: 128
+
+      # Resource detection for GCP metadata
+      resourcedetection/gcp:
+        detectors: [gcp, env]
+        timeout: 5s
+        override: false
+
+      # Attributes processor for enrichment
+      attributes:
+        actions:
+          - key: cluster_name
+            value: ${CLUSTER_NAME}
+            action: insert
+          - key: cloud.provider
+            value: gcp
+            action: insert
+          - key: cloud.region
+            value: ${GCP_REGION}
+            action: insert
+          - key: deployment.environment
+            value: ${ENVIRONMENT}
+            action: insert
+          - key: gcp.project_id
+            value: ${GCP_PROJECT_ID}
+            action: insert
+
+      # Transform processor for metric manipulation
+      transform:
+        metric_statements:
+          - context: metric
+            statements:
+              - set(description, "Metrics from GKE cluster") where name == "up"
+
+    exporters:
+      # Google Cloud Trace exporter
+      googlecloud:
+        project: ${GCP_PROJECT_ID}
+        # Traces configuration
+        trace:
+          endpoint: "cloudtrace.googleapis.com:443"
+        # Metrics configuration
+        metric:
+          endpoint: "monitoring.googleapis.com:443"
+          prefix: "custom.googleapis.com"
+          skip_create_descriptor: false
+          resource_filters: []
+        # Logs configuration
+        log:
+          default_log_name: "opentelemetry.io/collector-exported-log"
+
+      # Jaeger exporter for trace visualization
+      jaeger:
+        endpoint: ${JAEGER_ENDPOINT}
+        tls:
+          insecure: true
+
+      # Prometheus Remote Write for Grafana
+      prometheusremotewrite:
+        endpoint: ${PROMETHEUS_REMOTE_WRITE_ENDPOINT}
+        tls:
+          insecure: false
+        headers:
+          Authorization: "Bearer ${PROMETHEUS_REMOTE_WRITE_TOKEN}"
+
+      # Logging exporter for debugging
+      logging:
+        verbosity: detailed
+        sampling_initial: 5
+        sampling_thereafter: 200
+
+    extensions:
+      # Health check extension
+      health_check:
+        endpoint: 0.0.0.0:13133
+
+      # Performance profiler
+      pprof:
+        endpoint: 0.0.0.0:1777
+
+      # Zpages for debugging
+      zpages:
+        endpoint: 0.0.0.0:55679
+
+    service:
+      extensions: [health_check, pprof, zpages]
+      pipelines:
+        # Traces pipeline - export to both Cloud Trace and Jaeger
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, resourcedetection/gcp, attributes, batch]
+          exporters: [googlecloud, jaeger, logging]
+
+        # Metrics pipeline - export to Cloud Monitoring and Prometheus
+        metrics:
+          receivers: [otlp, prometheus, googlecloudmonitoring]
+          processors: [memory_limiter, resourcedetection/gcp, attributes, transform, batch]
+          exporters: [googlecloud, prometheusremotewrite, logging]
+
+        # Logs pipeline - export to Cloud Logging
+        logs:
+          receivers: [otlp]
+          processors: [memory_limiter, resourcedetection/gcp, attributes, batch]
+          exporters: [googlecloud, logging]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gcp-observability
+  labels:
+    name: gcp-observability
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: otel-collector
+  namespace: gcp-observability
+  annotations:
+    iam.gke.io/gcp-service-account: "otel-collector@${GCP_PROJECT_ID}.iam.gserviceaccount.com"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: otel-collector
+rules:
+  - apiGroups: [""]
+    resources:
+      - nodes
+      - nodes/proxy
+      - nodes/metrics
+      - services
+      - endpoints
+      - pods
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources:
+      - replicasets
+      - daemonsets
+      - deployments
+      - statefulsets
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["batch"]
+    resources:
+      - jobs
+      - cronjobs
+    verbs: ["get", "list", "watch"]
+  - nonResourceURLs:
+      - "/metrics"
+      - "/metrics/cadvisor"
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: otel-collector
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: otel-collector
+subjects:
+  - kind: ServiceAccount
+    name: otel-collector
+    namespace: gcp-observability
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector
+  namespace: gcp-observability
+  labels:
+    app: otel-collector
+spec:
+  type: ClusterIP
+  ports:
+    - name: otlp-grpc
+      port: 4317
+      protocol: TCP
+      targetPort: 4317
+    - name: otlp-http
+      port: 4318
+      protocol: TCP
+      targetPort: 4318
+    - name: health
+      port: 13133
+      protocol: TCP
+      targetPort: 13133
+    - name: zpages
+      port: 55679
+      protocol: TCP
+      targetPort: 55679
+    - name: metrics
+      port: 8888
+      protocol: TCP
+      targetPort: 8888
+  selector:
+    app: otel-collector
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-collector
+  namespace: gcp-observability
+  labels:
+    app: otel-collector
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: otel-collector
+  template:
+    metadata:
+      labels:
+        app: otel-collector
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8888"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: otel-collector
+      containers:
+        - name: otel-collector
+          image: otel/opentelemetry-collector-contrib:0.92.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - /otelcol-contrib
+            - --config=/etc/otel/otel-config.yaml
+          ports:
+            - name: otlp-grpc
+              containerPort: 4317
+              protocol: TCP
+            - name: otlp-http
+              containerPort: 4318
+              protocol: TCP
+            - name: health
+              containerPort: 13133
+              protocol: TCP
+            - name: zpages
+              containerPort: 55679
+              protocol: TCP
+            - name: metrics
+              containerPort: 8888
+              protocol: TCP
+          env:
+            - name: GCP_PROJECT_ID
+              value: "${GCP_PROJECT_ID}"
+            - name: GCP_REGION
+              value: "${GCP_REGION}"
+            - name: CLUSTER_NAME
+              value: "${CLUSTER_NAME}"
+            - name: ENVIRONMENT
+              value: "${ENVIRONMENT}"
+            - name: PROMETHEUS_REMOTE_WRITE_ENDPOINT
+              value: "${PROMETHEUS_REMOTE_WRITE_ENDPOINT}"
+            - name: PROMETHEUS_REMOTE_WRITE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: prometheus-remote-write
+                  key: token
+                  optional: true
+            - name: JAEGER_ENDPOINT
+              value: "${JAEGER_ENDPOINT}"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/var/secrets/google/key.json"
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+          volumeMounts:
+            - name: config
+              mountPath: /etc/otel
+              readOnly: true
+            - name: google-cloud-key
+              mountPath: /var/secrets/google
+              readOnly: true
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 13133
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 13133
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+      volumes:
+        - name: config
+          configMap:
+            name: otel-collector-config
+        - name: google-cloud-key
+          secret:
+            secretName: gcp-service-account-key
+            optional: true
+      nodeSelector:
+        kubernetes.io/os: linux
