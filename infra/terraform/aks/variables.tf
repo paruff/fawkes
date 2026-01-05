@@ -92,6 +92,12 @@ variable "network_plugin" {
   default     = "azure"
 }
 
+variable "network_policy" {
+  description = "AKS network policy (azure, calico, or cilium)"
+  type        = string
+  default     = "azure"
+}
+
 variable "service_cidr" {
   description = "Service CIDR for Kubernetes services"
   type        = string

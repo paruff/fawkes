@@ -110,9 +110,9 @@ variable "ssh_ingress_cidrs" {
 }
 
 variable "egress_cidr_block" {
-  description = "CIDR block for egress rules."
+  description = "CIDR block for egress rules. Defaults to VPC CIDR for security."
   type        = string
-  default     = "0.0.0.0/0"
+  default     = "10.0.0.0/8"  # Default to private network range
 }
 
 variable "worker_group_1_instance_type" {
