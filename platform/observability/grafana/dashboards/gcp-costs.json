@@ -1,0 +1,697 @@
+{
+  "dashboard": {
+    "title": "GCP Cost Analysis",
+    "tags": ["gcp", "cost", "billing", "finops"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "1h",
+    "description": "GCP Cloud Billing analysis and optimization dashboard for GKE and related services",
+    "panels": [
+      {
+        "id": 1,
+        "title": "GCP Cost Overview",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 2,
+        "title": "Total Monthly Cost",
+        "type": "stat",
+        "gridPos": { "x": 0, "y": 1, "w": 6, "h": 6 },
+        "description": "Total GCP costs for the current month",
+        "targets": [
+          {
+            "expr": "sum(gcp_cost_usage_blended_cost{period=\"monthly\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1000 },
+                { "color": "red", "value": 2000 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 3,
+        "title": "Daily Cost Trend",
+        "type": "stat",
+        "gridPos": { "x": 6, "y": 1, "w": 6, "h": 6 },
+        "description": "Average daily cost over the last 7 days",
+        "targets": [
+          {
+            "expr": "avg_over_time(gcp_cost_usage_blended_cost{period=\"daily\"}[7d])",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "palette-classic" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 4,
+        "title": "Cost vs Budget",
+        "type": "gauge",
+        "gridPos": { "x": 12, "y": 1, "w": 6, "h": 6 },
+        "description": "Current month cost as percentage of budget",
+        "targets": [
+          {
+            "expr": "(sum(gcp_cost_usage_blended_cost{period=\"monthly\"}) / $monthly_budget) * 100",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 70 },
+                { "color": "orange", "value": 85 },
+                { "color": "red", "value": 95 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 5,
+        "title": "Projected Month-End Cost",
+        "type": "stat",
+        "gridPos": { "x": 18, "y": 1, "w": 6, "h": 6 },
+        "description": "Projected cost for the current month based on daily average",
+        "targets": [
+          {
+            "expr": "avg_over_time(gcp_cost_usage_blended_cost{period=\"daily\"}[7d]) * day_of_month(time() + (31-day_of_month(time()))*86400)",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1500 },
+                { "color": "red", "value": 2500 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 6,
+        "title": "Cost Breakdown",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 7, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 7,
+        "title": "Cost by Service (Top 10)",
+        "type": "piechart",
+        "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+        "description": "Top 10 GCP services by cost",
+        "targets": [
+          {
+            "expr": "topk(10, sum by (service) (gcp_cost_usage_blended_cost{period=\"monthly\"}))",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{service}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD"
+          },
+          "overrides": []
+        },
+        "options": {
+          "pieType": "pie",
+          "displayLabels": ["name", "percent"],
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": ["value", "percent"]
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Cost by Resource (Top 10)",
+        "type": "bargauge",
+        "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+        "description": "Top 10 most expensive resources",
+        "targets": [
+          {
+            "expr": "topk(10, sum by (resource_id) (gcp_cost_usage_blended_cost{period=\"monthly\"}))",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{resource_id}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "palette-classic" }
+          },
+          "overrides": []
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "showUnfilled": true
+        }
+      },
+      {
+        "id": 9,
+        "title": "GKE Cluster Cost Breakdown",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 16, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 10,
+        "title": "GKE Cluster Costs",
+        "type": "timeseries",
+        "gridPos": { "x": 0, "y": 17, "w": 12, "h": 8 },
+        "description": "Daily GKE cluster costs over time",
+        "targets": [
+          {
+            "expr": "sum by (cluster_name) (gcp_cost_usage_blended_cost{service=\"Kubernetes Engine\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{cluster_name}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 10,
+              "showPoints": "never"
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true,
+            "values": ["min", "max", "mean", "last"]
+          }
+        }
+      },
+      {
+        "id": 11,
+        "title": "GKE Cost Components",
+        "type": "piechart",
+        "gridPos": { "x": 12, "y": 17, "w": 12, "h": 8 },
+        "description": "Breakdown of GKE costs by component (compute, storage, network)",
+        "targets": [
+          {
+            "expr": "sum by (sku_description) (gcp_cost_usage_blended_cost{service=\"Kubernetes Engine\", period=\"monthly\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{sku_description}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD"
+          },
+          "overrides": []
+        },
+        "options": {
+          "pieType": "donut",
+          "displayLabels": ["name", "percent"],
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": ["value", "percent"]
+          }
+        }
+      },
+      {
+        "id": 12,
+        "title": "Compute Engine Costs",
+        "type": "timeseries",
+        "gridPos": { "x": 0, "y": 25, "w": 12, "h": 8 },
+        "description": "Compute Engine costs (VM instances)",
+        "targets": [
+          {
+            "expr": "sum by (resource_id) (gcp_cost_usage_blended_cost{service=\"Compute Engine\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{resource_id}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 10,
+              "showPoints": "never"
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          }
+        }
+      },
+      {
+        "id": 13,
+        "title": "Cloud Storage Costs",
+        "type": "timeseries",
+        "gridPos": { "x": 12, "y": 25, "w": 12, "h": 8 },
+        "description": "Cloud Storage bucket costs",
+        "targets": [
+          {
+            "expr": "sum by (resource_id) (gcp_cost_usage_blended_cost{service=\"Cloud Storage\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{resource_id}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 10,
+              "showPoints": "never"
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          }
+        }
+      },
+      {
+        "id": 14,
+        "title": "Cost Optimization",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 33, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 15,
+        "title": "Idle Resources Cost",
+        "type": "stat",
+        "gridPos": { "x": 0, "y": 34, "w": 6, "h": 6 },
+        "description": "Estimated cost of idle/underutilized resources",
+        "targets": [
+          {
+            "expr": "sum(gcp_cost_optimization_idle_resource_cost)",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 100 },
+                { "color": "red", "value": 500 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 16,
+        "title": "Committed Use Discount Coverage",
+        "type": "gauge",
+        "gridPos": { "x": 6, "y": 34, "w": 6, "h": 6 },
+        "description": "Percentage of compute usage covered by committed use discounts",
+        "targets": [
+          {
+            "expr": "(sum(gcp_cost_cud_covered_cost) / sum(gcp_cost_usage_blended_cost{service=\"Compute Engine\"})) * 100",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 40 },
+                { "color": "green", "value": 70 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 17,
+        "title": "Sustained Use Discount Savings",
+        "type": "stat",
+        "gridPos": { "x": 12, "y": 34, "w": 6, "h": 6 },
+        "description": "Monthly savings from sustained use discounts",
+        "targets": [
+          {
+            "expr": "sum(gcp_cost_sustained_use_discount_savings{period=\"monthly\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "palette-classic" }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 18,
+        "title": "Potential Monthly Savings",
+        "type": "stat",
+        "gridPos": { "x": 18, "y": 34, "w": 6, "h": 6 },
+        "description": "Estimated potential monthly savings from optimization recommendations",
+        "targets": [
+          {
+            "expr": "sum(gcp_cost_optimization_savings_potential)",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 200 },
+                { "color": "red", "value": 1000 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 19,
+        "title": "Cost Anomalies",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 40, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 20,
+        "title": "Cost Anomalies Detected",
+        "type": "table",
+        "gridPos": { "x": 0, "y": 41, "w": 24, "h": 8 },
+        "description": "Recent cost anomalies and unusual spending patterns",
+        "targets": [
+          {
+            "expr": "gcp_cost_anomaly{severity=\"high\"}",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "format": "table",
+            "instant": true
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "options": {
+          "showHeader": true,
+          "sortBy": [
+            {
+              "displayName": "anomaly_score",
+              "desc": true
+            }
+          ]
+        },
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "__name__": true,
+                "job": true,
+                "instance": true
+              },
+              "indexByName": {},
+              "renameByName": {
+                "service": "Service",
+                "resource_id": "Resource",
+                "anomaly_score": "Anomaly Score",
+                "expected_cost": "Expected Cost",
+                "actual_cost": "Actual Cost",
+                "deviation_pct": "Deviation %"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 21,
+        "title": "Detailed Cost Analysis",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 49, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 22,
+        "title": "Cost by Region",
+        "type": "bargauge",
+        "gridPos": { "x": 0, "y": 50, "w": 12, "h": 8 },
+        "description": "Cost breakdown by GCP region",
+        "targets": [
+          {
+            "expr": "sum by (region) (gcp_cost_usage_blended_cost{period=\"monthly\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{region}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "palette-classic" }
+          },
+          "overrides": []
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "showUnfilled": true
+        }
+      },
+      {
+        "id": 23,
+        "title": "Cost by Project",
+        "type": "bargauge",
+        "gridPos": { "x": 12, "y": 50, "w": 12, "h": 8 },
+        "description": "Cost breakdown by GCP project",
+        "targets": [
+          {
+            "expr": "sum by (project_id) (gcp_cost_usage_blended_cost{period=\"monthly\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{project_id}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "palette-classic" }
+          },
+          "overrides": []
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "showUnfilled": true
+        }
+      },
+      {
+        "id": 24,
+        "title": "Monthly Cost Trend",
+        "type": "timeseries",
+        "gridPos": { "x": 0, "y": 58, "w": 24, "h": 8 },
+        "description": "Historical monthly cost trend for all services",
+        "targets": [
+          {
+            "expr": "sum by (service) (gcp_cost_usage_blended_cost{period=\"monthly\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{service}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 10,
+              "showPoints": "never",
+              "stacking": {
+                "mode": "normal",
+                "group": "A"
+              }
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true,
+            "values": ["min", "max", "mean", "last"]
+          }
+        }
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "monthly_budget",
+          "type": "constant",
+          "label": "Monthly Budget",
+          "value": "2000",
+          "description": "Target monthly budget in USD"
+        },
+        {
+          "name": "project_id",
+          "type": "query",
+          "label": "GCP Project",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "query": "label_values(gcp_cost_usage_blended_cost, project_id)",
+          "multi": true,
+          "includeAll": true,
+          "allValue": ".*"
+        },
+        {
+          "name": "cluster_name",
+          "type": "query",
+          "label": "GKE Cluster",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "query": "label_values(gcp_cost_usage_blended_cost{service=\"Kubernetes Engine\"}, cluster_name)",
+          "multi": true,
+          "includeAll": true,
+          "allValue": ".*"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-30d",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["1h", "6h", "1d"]
+    }
+  }
+}
