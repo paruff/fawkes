@@ -30,8 +30,11 @@ metadata:
   namespace: fawkes
   labels:
     app: rag-service
-    component: ai
-    environment: dev
+    app.kubernetes.io/name: rag-service
+    app.kubernetes.io/version: v0.1.0
+    app.kubernetes.io/component: ai
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/managed-by: argocd
     team: platform
 spec:
   replicas: 2
@@ -42,8 +45,10 @@ spec:
     metadata:
       labels:
         app: rag-service
-        component: ai
-        version: v0.1.0
+        app.kubernetes.io/name: rag-service
+        app.kubernetes.io/version: v0.1.0
+        app.kubernetes.io/component: ai
+        app.kubernetes.io/part-of: fawkes
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8000"
