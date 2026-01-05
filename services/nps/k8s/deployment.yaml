@@ -29,7 +29,11 @@ metadata:
   namespace: fawkes
   labels:
     app: nps-service
-    component: platform
+    app.kubernetes.io/name: nps-service
+    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/component: platform
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/managed-by: argocd
     tier: backend
 spec:
   replicas: 2
@@ -40,7 +44,10 @@ spec:
     metadata:
       labels:
         app: nps-service
-        component: platform
+        app.kubernetes.io/name: nps-service
+        app.kubernetes.io/version: v1.0.0
+        app.kubernetes.io/component: platform
+        app.kubernetes.io/part-of: fawkes
         tier: backend
     spec:
       serviceAccountName: nps-service

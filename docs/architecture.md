@@ -1246,6 +1246,19 @@ Application consumes database
 | Scripts/Automation   | Bash, Python    | Platform automation, tooling            |
 | IaC Modules          | HCL (Terraform) | Infrastructure provisioning             |
 
+### Kubernetes Standards
+
+All Kubernetes manifests in the Fawkes platform follow standardized conventions for labels, annotations, security contexts, resource limits, and health checks. This ensures consistency, improves observability, and maintains security compliance across all environments.
+
+**Key Standards**:
+- **Labels**: All resources include `app.kubernetes.io/*` labels for consistent identification
+- **Security Contexts**: All containers run as non-root with `seccompProfile: RuntimeDefault`
+- **Resource Limits**: All workloads define CPU/memory requests and limits (target <70% utilization)
+- **Health Checks**: All deployments include liveness and readiness probes
+- **Annotations**: Prometheus scraping annotations for metrics collection
+
+For complete standards and examples, see [Kubernetes Standards Reference](reference/kubernetes-standards.md).
+
 ---
 
 ## Future Architecture

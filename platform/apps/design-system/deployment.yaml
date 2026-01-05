@@ -24,6 +24,7 @@ metadata:
   name: fawkes
   labels:
     name: fawkes
+    app.kubernetes.io/name: fawkes
     app.kubernetes.io/part-of: fawkes
 ---
 apiVersion: apps/v1
@@ -33,7 +34,11 @@ metadata:
   namespace: fawkes
   labels:
     app: design-system-storybook
-    component: design-system
+    app.kubernetes.io/name: design-system-storybook
+    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/managed-by: argocd
 spec:
   replicas: 2
   selector:
@@ -43,16 +48,32 @@ spec:
     metadata:
       labels:
         app: design-system-storybook
-        component: design-system
+        app.kubernetes.io/name: design-system-storybook
+        app.kubernetes.io/version: v1.0.0
+        app.kubernetes.io/component: frontend
+        app.kubernetes.io/part-of: fawkes
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "6006"
+        prometheus.io/path: "/metrics"
     spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+
       containers:
         - name: storybook
           image: fawkes/design-system-storybook:latest
           imagePullPolicy: IfNotPresent
+
           ports:
-            - containerPort: 6006
-              name: http
+            - name: http
+              containerPort: 6006
               protocol: TCP
+
           resources:
             requests:
               cpu: 100m
@@ -60,18 +81,43 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
+
           livenessProbe:
             httpGet:
               path: /
               port: http
             initialDelaySeconds: 30
             periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
           readinessProbe:
             httpGet:
               path: /
               port: http
             initialDelaySeconds: 10
             periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+
+      volumes:
+        - name: tmp
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -80,6 +126,9 @@ metadata:
   namespace: fawkes
   labels:
     app: design-system-storybook
+    app.kubernetes.io/name: design-system-storybook
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: fawkes
 spec:
   type: ClusterIP
   ports:
@@ -95,6 +144,11 @@ kind: Ingress
 metadata:
   name: design-system-storybook
   namespace: fawkes
+  labels:
+    app: design-system-storybook
+    app.kubernetes.io/name: design-system-storybook
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: fawkes
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     cert-manager.io/cluster-issuer: letsencrypt-prod
