@@ -30,8 +30,11 @@ metadata:
   namespace: fawkes
   labels:
     app: feedback-service
-    component: feedback
-    environment: dev
+    app.kubernetes.io/name: feedback-service
+    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/component: feedback
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/managed-by: argocd
     team: platform
 spec:
   replicas: 2
@@ -42,9 +45,15 @@ spec:
     metadata:
       labels:
         app: feedback-service
-        component: feedback
-        environment: dev
+        app.kubernetes.io/name: feedback-service
+        app.kubernetes.io/version: v1.0.0
+        app.kubernetes.io/component: feedback
+        app.kubernetes.io/part-of: fawkes
         team: platform
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: feedback-service
       securityContext:
