@@ -114,7 +114,7 @@ class GCPProvider(CloudProvider):
 
             client = resourcemanager_v3.ProjectsClient(credentials=self.credentials)
             project_name = f"projects/{self.project_id}"
-            
+
             try:
                 project = client.get_project(name=project_name)
                 logger.info(f"Authenticated for project: {project.display_name} ({project.project_id})")
@@ -201,7 +201,7 @@ class GCPProvider(CloudProvider):
 
             # Get current IAM policy
             resource = f"projects/{self.project_id}/serviceAccounts/{service_account_email}"
-            
+
             self.rate_limiter.acquire()
             policy = client.get_iam_policy(request={"resource": resource})
 

@@ -1,7 +1,7 @@
 """GCP Cloud Monitoring operations."""
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 from datetime import datetime
 
 from google.cloud import monitoring_v3
