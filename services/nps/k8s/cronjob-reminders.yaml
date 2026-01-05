@@ -30,7 +30,11 @@ metadata:
   namespace: fawkes
   labels:
     app: nps-service
-    component: platform
+    app.kubernetes.io/name: nps-service
+    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/component: platform
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/managed-by: argocd
     job-type: survey-reminders
 spec:
   # Run every Monday at 10 AM UTC
@@ -48,7 +52,10 @@ spec:
     metadata:
       labels:
         app: nps-service
-        component: platform
+        app.kubernetes.io/name: nps-service
+        app.kubernetes.io/version: v1.0.0
+        app.kubernetes.io/component: platform
+        app.kubernetes.io/part-of: fawkes
         job-type: survey-reminders
     spec:
       # Clean up completed job after 7 days
@@ -58,7 +65,10 @@ spec:
         metadata:
           labels:
             app: nps-service
-            component: platform
+            app.kubernetes.io/name: nps-service
+            app.kubernetes.io/version: v1.0.0
+            app.kubernetes.io/component: platform
+            app.kubernetes.io/part-of: fawkes
             job-type: survey-reminders
         spec:
           restartPolicy: OnFailure
