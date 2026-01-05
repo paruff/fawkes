@@ -1,13 +1,14 @@
 """Unit tests for AWS Provider."""
+
 import pytest
 import boto3
 from unittest.mock import Mock, patch, MagicMock
 from moto import mock_aws
-from botocore.exceptions import ClientError, NoCredentialsError
+
 
 from src.providers.aws_provider import AWSProvider
 from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
-from src.exceptions import AuthenticationError, ResourceNotFoundError
+from src.exceptions import AuthenticationError
 
 
 @pytest.fixture
@@ -60,7 +61,7 @@ class TestAWSProviderInitialization:
             mock_sts.get_caller_identity.return_value = {"Arn": "arn:aws:iam::123456789012:user/test"}
             mock_session.client.return_value = mock_sts
 
-            provider = AWSProvider(profile_name="test-profile", region="us-east-1")
+            _ = AWSProvider(profile_name="test-profile", region="us-east-1")
 
             mock_session_class.assert_called_once()
             call_kwargs = mock_session_class.call_args[1]
@@ -83,7 +84,8 @@ class TestAWSProviderInitialization:
                 del os.environ[key]
 
         with pytest.raises(AuthenticationError) as exc_info:
-            AWSProvider()
+            # Create provider which should fail
+            _ = AWSProvider()
 
         assert "No AWS credentials found" in str(exc_info.value)
 
@@ -111,7 +113,8 @@ class TestAWSProviderInitialization:
             initial_session.client.return_value = mock_sts
             assumed_session.client.return_value = mock_sts
 
-            provider = AWSProvider(role_arn="arn:aws:iam::123456789012:role/test-role")
+            # Create provider which will assume role
+            _ = AWSProvider(role_arn="arn:aws:iam::123456789012:role/test-role")
 
             # Verify assume_role was called
             mock_sts.assume_role.assert_called_once()
@@ -300,10 +303,22 @@ class TestAWSProviderDatabaseOperations:
 
             mock_list.return_value = [
                 Database(
-                    id="db-1", name="db-1", engine="postgres", engine_version="14.7", status="available", region="us-west-2", instance_class="db.t3.micro"
+                    id="db-1",
+                    name="db-1",
+                    engine="postgres",
+                    engine_version="14.7",
+                    status="available",
+                    region="us-west-2",
+                    instance_class="db.t3.micro",
                 ),
                 Database(
-                    id="db-2", name="db-2", engine="mysql", engine_version="8.0", status="available", region="us-west-2", instance_class="db.t3.small"
+                    id="db-2",
+                    name="db-2",
+                    engine="mysql",
+                    engine_version="8.0",
+                    status="available",
+                    region="us-west-2",
+                    instance_class="db.t3.small",
                 ),
             ]
 

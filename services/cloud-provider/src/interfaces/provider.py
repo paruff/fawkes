@@ -1,4 +1,5 @@
 """Cloud provider interface definition."""
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Optional, Dict, Any, List

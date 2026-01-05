@@ -1,11 +1,12 @@
 """Utility functions for cloud provider operations."""
+
 import logging
 import time
 from functools import wraps
-from typing import Callable, Any, TypeVar, Optional
+from typing import Callable, TypeVar, Optional
 import random
 
-from .exceptions import RateLimitError, OperationTimeoutError
+from .exceptions import RateLimitError
 
 logger = logging.getLogger(__name__)
 

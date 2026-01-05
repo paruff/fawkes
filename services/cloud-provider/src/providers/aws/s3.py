@@ -1,4 +1,5 @@
 """AWS S3 (Simple Storage Service) operations."""
+
 import logging
 from typing import List, Optional
 from datetime import datetime
@@ -74,9 +75,7 @@ class S3Service:
             # Enable versioning if requested
             if config.versioning_enabled:
                 self.rate_limiter.acquire()
-                client.put_bucket_versioning(
-                    Bucket=config.name, VersioningConfiguration={"Status": "Enabled"}
-                )
+                client.put_bucket_versioning(Bucket=config.name, VersioningConfiguration={"Status": "Enabled"})
                 logger.debug(f"Enabled versioning for bucket: {config.name}")
 
             # Enable encryption if requested
@@ -180,14 +179,9 @@ class S3Service:
                 pass
 
             # Get bucket size and object count
+            # Note: Getting accurate size requires CloudWatch metrics which may not be real-time
             size_bytes = 0
             object_count = 0
-            try:
-                cloudwatch = self.session.client("cloudwatch", region_name=bucket_region)
-                # Note: Getting accurate size requires CloudWatch metrics which may not be real-time
-                # This is a simplified approach
-            except Exception as e:
-                logger.debug(f"Could not get bucket metrics: {e}")
 
             return Storage(
                 id=bucket_name,
