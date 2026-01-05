@@ -37,29 +37,10 @@ func TestAzureKubernetesClusterModuleValidation(t *testing.T) {
 	// This is a validation test that doesn't deploy resources
 	// It only validates the module configuration
 
-	// Generate unique names for testing
-	uniqueID := random.UniqueId()
-	clusterName := fmt.Sprintf("fawkes-test-aks-%s", uniqueID)
-	resourceGroupName := fmt.Sprintf("fawkes-test-rg-%s", uniqueID)
-	subnetID := fmt.Sprintf("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/%s/providers/Microsoft.Network/virtualNetworks/test-vnet/subnets/test-subnet", resourceGroupName)
-	location := "eastus2"
-
-	// Construct terraform options
+	// Construct terraform options without variables for validation
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "../../infra/terraform/modules/azure/kubernetes-cluster",
-		Vars: map[string]interface{}{
-			"cluster_name":        clusterName,
-			"location":            location,
-			"resource_group_name": resourceGroupName,
-			"subnet_id":           subnetID,
-			"node_vm_size":        "Standard_B2ms",
-			"node_count":          3,
-			"tags": map[string]string{
-				"Environment": "test",
-				"ManagedBy":   "Terratest",
-			},
-		},
-		NoColor: true,
+		NoColor:      true,
 	})
 
 	// Run terraform init and validate
