@@ -25,6 +25,9 @@ metadata:
   namespace: default
   labels:
     app: ${{ values.name }}
+    app.kubernetes.io/name: ${{ values.name }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: fawkes
     team: ${{ values.owner }}
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"

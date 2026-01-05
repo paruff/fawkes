@@ -30,7 +30,11 @@ metadata:
   namespace: fawkes-local
   labels:
     app: space-metrics
-    component: devex
+    app.kubernetes.io/name: space-metrics
+    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/component: devex
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/managed-by: argocd
 spec:
   replicas: 2
   selector:
@@ -40,16 +44,30 @@ spec:
     metadata:
       labels:
         app: space-metrics
-        component: devex
+        app.kubernetes.io/name: space-metrics
+        app.kubernetes.io/version: v1.0.0
+        app.kubernetes.io/component: devex
+        app.kubernetes.io/part-of: fawkes
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: space-metrics
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+
       containers:
         - name: space-metrics
           image: fawkes-space-metrics:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8000
-              name: http
+            - name: http
+              containerPort: 8000
               protocol: TCP
           env:
             - name: DATABASE_URL
@@ -71,22 +89,36 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: 8000
+              port: http
             initialDelaySeconds: 10
             periodSeconds: 30
             timeoutSeconds: 5
+            failureThreshold: 3
+
           readinessProbe:
             httpGet:
               path: /health
-              port: 8000
+              port: http
             initialDelaySeconds: 5
             periodSeconds: 10
             timeoutSeconds: 3
+            failureThreshold: 3
+
           securityContext:
-            runAsNonRoot: true
-            runAsUser: 1000
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
             capabilities:
               drop:
                 - ALL
+            seccompProfile:
+              type: RuntimeDefault
+
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+
+      volumes:
+        - name: tmp
+          emptyDir: {}

@@ -25,8 +25,12 @@ metadata:
   namespace: fawkes-samples
   labels:
     app: sample-nodejs-app
+    app.kubernetes.io/name: sample-nodejs-app
+    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/managed-by: backstage
     team: platform-team
-    managed-by: backstage
 spec:
   replicas: 2
   selector:
@@ -36,6 +40,10 @@ spec:
     metadata:
       labels:
         app: sample-nodejs-app
+        app.kubernetes.io/name: sample-nodejs-app
+        app.kubernetes.io/version: v1.0.0
+        app.kubernetes.io/component: backend
+        app.kubernetes.io/part-of: fawkes
         team: platform-team
       annotations:
         prometheus.io/scrape: "true"
