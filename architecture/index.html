@@ -3654,6 +3654,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kubernetes-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Standards
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6354,6 +6365,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kubernetes-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Standards
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -7911,6 +7933,15 @@ Application consumes database
 </tr>
 </tbody>
 </table>
+<h3 id="kubernetes-standards">Kubernetes Standards</h3>
+<p>All Kubernetes manifests in the Fawkes platform follow standardized conventions for labels, annotations, security contexts, resource limits, and health checks. This ensures consistency, improves observability, and maintains security compliance across all environments.</p>
+<p><strong>Key Standards</strong>:
+- <strong>Labels</strong>: All resources include <code>app.kubernetes.io/*</code> labels for consistent identification
+- <strong>Security Contexts</strong>: All containers run as non-root with <code>seccompProfile: RuntimeDefault</code>
+- <strong>Resource Limits</strong>: All workloads define CPU/memory requests and limits (target &lt;70% utilization)
+- <strong>Health Checks</strong>: All deployments include liveness and readiness probes
+- <strong>Annotations</strong>: Prometheus scraping annotations for metrics collection</p>
+<p>For complete standards and examples, see <a href="../reference/kubernetes-standards/">Kubernetes Standards Reference</a>.</p>
 <hr />
 <h2 id="future-architecture">Future Architecture</h2>
 <h3 id="6-month-roadmap">6-Month Roadmap</h3>
