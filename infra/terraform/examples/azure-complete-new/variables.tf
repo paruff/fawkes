@@ -18,26 +18,30 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-# Base outputs for resource groups across all providers
-
-output "id" {
-  description = "The ID of the resource group"
-  value       = var.resource_group_id
-}
-
-output "name" {
-  description = "The name of the resource group"
-  value       = var.name
-}
-
-output "location" {
-  description = "The location of the resource group"
-  value       = var.location
-}
-
-# Variables to pass through from provider-specific modules
-variable "resource_group_id" {
-  description = "Resource group ID from provider-specific module"
+variable "subscription_id" {
+  description = "Azure subscription ID"
   type        = string
-  default     = ""
+}
+
+variable "tenant_id" {
+  description = "Azure tenant ID"
+  type        = string
+}
+
+variable "location" {
+  description = "Azure region for resources"
+  type        = string
+  default     = "eastus2"
+}
+
+variable "environment" {
+  description = "Environment name (dev, staging, prod)"
+  type        = string
+  default     = "dev"
+}
+
+variable "api_server_authorized_ip_ranges" {
+  description = "IP ranges authorized to access AKS API server"
+  type        = list(string)
+  default     = []
 }

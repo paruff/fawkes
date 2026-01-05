@@ -1,6 +1,8 @@
 # Base Resource Group Module
 
-This is a base module that defines common variables and outputs for resource groups across all cloud providers (Azure Resource Group, AWS Tags, GCP Projects, Civo Organization).
+This is a base module that defines common variables and validation patterns for resource groups across all cloud providers (Azure Resource Group, AWS Tags, GCP Projects, Civo Organization).
+
+**Note**: This module is not intended to be instantiated directly. It serves as a reference for common variable definitions.
 
 ## Purpose
 
@@ -8,11 +10,10 @@ This module provides:
 - Common variable definitions for resource grouping with validation rules
 - Standardized naming conventions (snake_case)
 - Reusable patterns for provider-specific implementations
-- Consistent output structure
 
 ## Usage
 
-This module is not intended to be used directly. Instead, use provider-specific modules that extend this base:
+Provider-specific modules should reference these variable definitions. For actual deployments, use:
 
 - `../azure/resource-group` - For Azure Resource Group
 - `../aws/resource-group` - For AWS resource tagging
@@ -30,12 +31,6 @@ This module is not intended to be used directly. Instead, use provider-specific 
 
 - `tags` - Tags/labels to apply (default: {})
 
-## Outputs
-
-- `id` - The resource group ID
-- `name` - The resource group name
-- `location` - The resource group location
-
 ## Validation Rules
 
 All variables include validation rules to catch configuration errors early:
@@ -46,8 +41,8 @@ All variables include validation rules to catch configuration errors early:
 ## Provider-Specific Extensions
 
 Provider-specific modules should:
-1. Define provider-specific variables
-2. Use base module variables where possible
-3. Map base variables to provider resources
+1. Reference these variable definitions where applicable
+2. Use consistent naming from this base
+3. Add provider-specific variables as needed
 4. Add provider-specific validation (e.g., Azure region validation)
-5. Extend outputs with provider-specific information
+5. Define their own outputs based on provider resources
