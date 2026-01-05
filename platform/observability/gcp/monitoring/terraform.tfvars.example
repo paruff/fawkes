@@ -1,0 +1,26 @@
+# Example Terraform variables for GCP Monitoring
+# Copy this file to terraform.tfvars and update with your values
+
+# GKE Cluster Configuration
+cluster_name = "fawkes-prod"
+project_id   = "your-gcp-project-id"
+
+# Mattermost Integration (optional)
+# mattermost_webhook_url = "https://mattermost.example.com/hooks/xxxxxxxxxxxxx"
+
+# Cost Collector Integration (optional)
+# cost_collector_endpoint = "http://cost-collector.fawkes.svc.cluster.local/webhook"
+
+# API Server Uptime Check (optional)
+# api_server_endpoint = "35.123.45.67"
+
+# Cost Anomaly Threshold (USD)
+cost_anomaly_threshold = 100
+
+# Resource Tags
+tags = {
+  Environment = "production"
+  Team        = "platform"
+  ManagedBy   = "terraform"
+  Project     = "fawkes"
+}
