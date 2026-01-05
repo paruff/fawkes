@@ -18,6 +18,16 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
+# NOTE: This configuration uses environment variable substitution (${VAR_NAME}).
+# Before applying, ensure all required variables are set:
+# - AWS_REGION: AWS region for the cluster
+# - CLUSTER_NAME: Name of the EKS cluster
+# - ENVIRONMENT: Deployment environment (dev/staging/prod)
+# - PROMETHEUS_REMOTE_WRITE_ENDPOINT: Prometheus remote write URL (optional)
+# - JAEGER_ENDPOINT: Jaeger collector endpoint (optional)
+#
+# Apply with: envsubst < adot-config.yaml | kubectl apply -f -
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -285,7 +295,7 @@ spec:
       serviceAccountName: adot-collector
       containers:
         - name: adot-collector
-          image: public.ecr.aws/aws-observability/aws-otel-collector:latest
+          image: public.ecr.aws/aws-observability/aws-otel-collector:v0.40.0
           imagePullPolicy: IfNotPresent
           command:
             - /awscollector

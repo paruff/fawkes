@@ -223,7 +223,8 @@ resource "aws_cloudwatch_metric_alarm" "pod_restart_high" {
 resource "aws_cloudwatch_log_metric_filter" "api_server_errors" {
   name           = "${var.cluster_name}-api-server-errors"
   log_group_name = "/aws/eks/${var.cluster_name}/cluster"
-  pattern        = "[timestamp, request_id, ...] error"
+  # Match EKS API server error logs with level=error or ERROR in message
+  pattern        = "[time, stream=kube-apiserver*, ...] ?ERROR ?error"
 
   metric_transformation {
     name      = "ApiServerErrors"
@@ -261,7 +262,8 @@ resource "aws_cloudwatch_metric_alarm" "api_server_error_rate_high" {
 resource "aws_cloudwatch_log_metric_filter" "failed_pods" {
   name           = "${var.cluster_name}-failed-pods"
   log_group_name = "/aws/eks/${var.cluster_name}/cluster"
-  pattern        = "[timestamp, request_id, ...] pod_status=\"Failed\""
+  # Match controller manager logs reporting pod failures
+  pattern        = "[time, stream=kube-controller-manager*, ...] ?Failed ?pod ?error"
 
   metric_transformation {
     name      = "FailedPods"
