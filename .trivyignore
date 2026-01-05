@@ -1,0 +1,22 @@
+# Trivy Ignore File
+# This file lists security findings that are known and tracked separately
+# Format: AVD-ID or CVE-ID
+
+# =============================================================================
+# RESOLVED ISSUES (Previously suppressed, now fixed in PR #120)
+# =============================================================================
+# - AVD-AZU-0041: AKS API server access - FIXED by adding network_policy variable
+# - AVD-AWS-0104: AWS security group egress - FIXED by restricting to VPC CIDR
+# - AVD-KSV-0041: K8s service account tokens - FIXED by adding security contexts
+# - AVD-DS-0002: Dockerfile USER directive - FIXED by adding non-root user
+# - AVD-KSV-0014: Read-only root filesystem - FIXED in K8s manifests
+# - AVD-KSV-0118: Security contexts - FIXED in K8s manifests
+
+# =============================================================================
+# NOTES
+# =============================================================================
+# - All security issues from Trivy scan have been resolved
+# - Terratest implementation files (tests/terratest/) have ZERO security issues
+# - Infrastructure files now follow security best practices
+# - This file can be kept minimal or removed if no suppressions are needed
+
