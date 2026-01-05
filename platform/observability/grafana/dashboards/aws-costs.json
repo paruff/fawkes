@@ -1,0 +1,568 @@
+{
+  "dashboard": {
+    "title": "AWS Cost Analysis",
+    "tags": ["aws", "cost", "billing", "finops"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "1h",
+    "description": "AWS Cost and Usage Report (CUR) analysis and optimization dashboard",
+    "panels": [
+      {
+        "id": 1,
+        "title": "AWS Cost Overview",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 2,
+        "title": "Total Monthly Cost",
+        "type": "stat",
+        "gridPos": { "x": 0, "y": 1, "w": 6, "h": 6 },
+        "description": "Total AWS costs for the current month",
+        "targets": [
+          {
+            "expr": "sum(aws_cost_usage_blended_cost{period=\"monthly\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1000 },
+                { "color": "red", "value": 2000 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 3,
+        "title": "Daily Cost Trend",
+        "type": "stat",
+        "gridPos": { "x": 6, "y": 1, "w": 6, "h": 6 },
+        "description": "Average daily cost over the last 7 days",
+        "targets": [
+          {
+            "expr": "avg_over_time(aws_cost_usage_blended_cost{period=\"daily\"}[7d])",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "palette-classic" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 4,
+        "title": "Cost vs Budget",
+        "type": "gauge",
+        "gridPos": { "x": 12, "y": 1, "w": 6, "h": 6 },
+        "description": "Current month cost as percentage of budget",
+        "targets": [
+          {
+            "expr": "(sum(aws_cost_usage_blended_cost{period=\"monthly\"}) / $monthly_budget) * 100",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 70 },
+                { "color": "orange", "value": 85 },
+                { "color": "red", "value": 95 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 5,
+        "title": "Projected Month-End Cost",
+        "type": "stat",
+        "gridPos": { "x": 18, "y": 1, "w": 6, "h": 6 },
+        "description": "Projected cost for the current month based on daily average",
+        "targets": [
+          {
+            "expr": "avg_over_time(aws_cost_usage_blended_cost{period=\"daily\"}[7d]) * day_of_month(time() + (31-day_of_month(time()))*86400)",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1500 },
+                { "color": "red", "value": 2500 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 6,
+        "title": "Cost Breakdown",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 7, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 7,
+        "title": "Cost by Service (Top 10)",
+        "type": "piechart",
+        "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+        "description": "Top 10 AWS services by cost",
+        "targets": [
+          {
+            "expr": "topk(10, sum by (service) (aws_cost_usage_blended_cost{period=\"monthly\"}))",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{service}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD"
+          },
+          "overrides": []
+        },
+        "options": {
+          "pieType": "pie",
+          "displayLabels": ["name", "percent"],
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": ["value", "percent"]
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Cost by Resource (Top 10)",
+        "type": "bargauge",
+        "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+        "description": "Top 10 most expensive resources",
+        "targets": [
+          {
+            "expr": "topk(10, sum by (resource_id) (aws_cost_usage_blended_cost{period=\"monthly\"}))",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{resource_id}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "palette-classic" }
+          },
+          "overrides": []
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "showUnfilled": true
+        }
+      },
+      {
+        "id": 9,
+        "title": "Historical Trends",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 16, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 10,
+        "title": "Daily Cost Trend (30 Days)",
+        "type": "timeseries",
+        "gridPos": { "x": 0, "y": 17, "w": 24, "h": 8 },
+        "description": "Daily AWS cost over the last 30 days",
+        "targets": [
+          {
+            "expr": "sum(aws_cost_usage_blended_cost{period=\"daily\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "Daily Cost"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "lineWidth": 2,
+              "fillOpacity": 10,
+              "showPoints": "always",
+              "pointSize": 5
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "single"
+          }
+        }
+      },
+      {
+        "id": 11,
+        "title": "Cost by Service Over Time",
+        "type": "timeseries",
+        "gridPos": { "x": 0, "y": 25, "w": 24, "h": 8 },
+        "description": "Daily cost breakdown by top 5 services",
+        "targets": [
+          {
+            "expr": "topk(5, sum by (service) (aws_cost_usage_blended_cost{period=\"daily\"}))",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{service}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "lineWidth": 2,
+              "fillOpacity": 20,
+              "showPoints": "never",
+              "stacking": {
+                "mode": "normal"
+              }
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi"
+          }
+        }
+      },
+      {
+        "id": 12,
+        "title": "EKS Specific Costs",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 33, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 13,
+        "title": "EKS Cluster Cost Breakdown",
+        "type": "piechart",
+        "gridPos": { "x": 0, "y": 34, "w": 12, "h": 8 },
+        "description": "EKS costs by component (control plane, nodes, add-ons)",
+        "targets": [
+          {
+            "expr": "sum by (cost_tag) (aws_cost_usage_blended_cost{service=\"AmazonEKS\",period=\"monthly\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{cost_tag}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD"
+          },
+          "overrides": []
+        },
+        "options": {
+          "pieType": "donut",
+          "displayLabels": ["name", "percent"],
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": ["value", "percent"]
+          }
+        }
+      },
+      {
+        "id": 14,
+        "title": "EC2 Costs (EKS Nodes)",
+        "type": "timeseries",
+        "gridPos": { "x": 12, "y": 34, "w": 12, "h": 8 },
+        "description": "EC2 costs for EKS worker nodes over time",
+        "targets": [
+          {
+            "expr": "sum(aws_cost_usage_blended_cost{service=\"AmazonEC2\",cost_tag=\"eks-worker-nodes\",period=\"daily\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "EC2 Worker Nodes"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "custom": {
+              "drawStyle": "bars",
+              "lineWidth": 1,
+              "fillOpacity": 80
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "single"
+          }
+        }
+      },
+      {
+        "id": 15,
+        "title": "Cost Optimization Opportunities",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 42, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 16,
+        "title": "Idle Resources Cost",
+        "type": "stat",
+        "gridPos": { "x": 0, "y": 43, "w": 6, "h": 6 },
+        "description": "Estimated cost of idle/underutilized resources",
+        "targets": [
+          {
+            "expr": "sum(aws_cost_usage_blended_cost{utilization=\"low\",period=\"monthly\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 100 },
+                { "color": "red", "value": 300 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 17,
+        "title": "Reserved Instance Coverage",
+        "type": "gauge",
+        "gridPos": { "x": 6, "y": 43, "w": 6, "h": 6 },
+        "description": "Percentage of EC2 usage covered by Reserved Instances",
+        "targets": [
+          {
+            "expr": "(sum(aws_cost_usage_reserved_instance_hours) / sum(aws_cost_usage_total_hours)) * 100",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 50 },
+                { "color": "green", "value": 70 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 18,
+        "title": "Savings Plan Coverage",
+        "type": "gauge",
+        "gridPos": { "x": 12, "y": 43, "w": 6, "h": 6 },
+        "description": "Percentage of eligible usage covered by Savings Plans",
+        "targets": [
+          {
+            "expr": "(sum(aws_cost_usage_savings_plan_covered_usage) / sum(aws_cost_usage_eligible_for_savings_plan)) * 100",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 60 },
+                { "color": "green", "value": 80 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 19,
+        "title": "Potential Monthly Savings",
+        "type": "stat",
+        "gridPos": { "x": 18, "y": 43, "w": 6, "h": 6 },
+        "description": "Estimated monthly savings from optimizations",
+        "targets": [
+          {
+            "expr": "sum(aws_cost_optimization_savings_potential{period=\"monthly\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "center"
+        }
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "monthly_budget",
+          "type": "constant",
+          "label": "Monthly Budget ($)",
+          "current": {
+            "value": "2000",
+            "text": "2000"
+          },
+          "options": [
+            {
+              "value": "2000",
+              "text": "2000"
+            }
+          ]
+        },
+        {
+          "name": "environment",
+          "type": "query",
+          "label": "Environment",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "query": "label_values(aws_cost_usage_blended_cost, environment)",
+          "current": {
+            "value": "prod",
+            "text": "prod"
+          },
+          "multi": false,
+          "includeAll": false
+        }
+      ]
+    },
+    "annotations": {
+      "list": [
+        {
+          "name": "Cost Anomalies",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "ALERTS{alertname=\"HighCostAnomaly\"}",
+          "enable": true
+        }
+      ]
+    }
+  },
+  "overwrite": true
+}

@@ -1,0 +1,192 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aws-observability
+  labels:
+    name: aws-observability
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: xray-daemon
+  namespace: aws-observability
+  annotations:
+    eks.amazonaws.com/role-arn: "${XRAY_DAEMON_ROLE_ARN}"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: xray-daemon
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "nodes", "nodes/proxy"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["replicasets", "daemonsets", "deployments", "statefulsets"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: xray-daemon
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: xray-daemon
+subjects:
+  - kind: ServiceAccount
+    name: xray-daemon
+    namespace: aws-observability
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: xray-daemon-config
+  namespace: aws-observability
+data:
+  config.yaml: |
+    # AWS X-Ray daemon configuration
+    TotalBufferSizeMB: 24
+    Concurrency: 8
+    Region: "${AWS_REGION}"
+    Socket:
+      UDPAddress: "0.0.0.0:2000"
+      TCPAddress: "0.0.0.0:2000"
+    Logging:
+      LogLevel: "info"
+      LogRotation: true
+    LocalMode: false
+    ResourceARN: ""
+    RoleARN: ""
+    ProxyAddress: ""
+    Endpoint: ""
+    NoVerifySSL: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: xray-daemon
+  namespace: aws-observability
+  labels:
+    app: xray-daemon
+spec:
+  type: ClusterIP
+  ports:
+    - name: udp
+      port: 2000
+      protocol: UDP
+      targetPort: 2000
+    - name: tcp
+      port: 2000
+      protocol: TCP
+      targetPort: 2000
+  selector:
+    app: xray-daemon
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: xray-daemon
+  namespace: aws-observability
+  labels:
+    app: xray-daemon
+spec:
+  selector:
+    matchLabels:
+      app: xray-daemon
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: xray-daemon
+      annotations:
+        prometheus.io/scrape: "false"
+    spec:
+      serviceAccountName: xray-daemon
+      hostNetwork: false
+      containers:
+        - name: xray-daemon
+          image: public.ecr.aws/xray/aws-xray-daemon:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - /xray
+            - -c
+            - /etc/xray/config.yaml
+          ports:
+            - name: xray-udp
+              containerPort: 2000
+              protocol: UDP
+            - name: xray-tcp
+              containerPort: 2000
+              protocol: TCP
+          env:
+            - name: AWS_REGION
+              value: "${AWS_REGION}"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          volumeMounts:
+            - name: config
+              mountPath: /etc/xray
+              readOnly: true
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          livenessProbe:
+            tcpSocket:
+              port: 2000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 2000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+      volumes:
+        - name: config
+          configMap:
+            name: xray-daemon-config
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+      nodeSelector:
+        kubernetes.io/os: linux
+      priorityClassName: system-node-critical
