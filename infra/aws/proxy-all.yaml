@@ -50,9 +50,23 @@ spec:
         tier: proxy
         track: stable
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: nginx
           image: "docker.com/paruff/fawkesproxy"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
           lifecycle:
             preStop:
               exec:
