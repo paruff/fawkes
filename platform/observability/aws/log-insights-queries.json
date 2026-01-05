@@ -1,0 +1,189 @@
+{
+  "queries": [
+    {
+      "name": "EKS API Server Errors",
+      "description": "Find API server errors in EKS control plane logs",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message, @logStream\n| filter @message like /error/i\n| filter @logStream like /kube-apiserver/\n| sort @timestamp desc\n| limit 100",
+      "tags": ["eks", "api-server", "errors"]
+    },
+    {
+      "name": "Failed Pod Scheduling",
+      "description": "Identify pods that failed to schedule",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @message like /Failed.*schedule/i\n| parse @message /pod=(?<pod_name>\\S+)/ \n| parse @message /reason=(?<reason>\\S+)/\n| stats count() by pod_name, reason\n| sort count desc\n| limit 50",
+      "tags": ["eks", "scheduler", "pods"]
+    },
+    {
+      "name": "Authentication Failures",
+      "description": "Find authentication and authorization failures",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message, @logStream\n| filter @logStream like /authenticator/\n| filter @message like /denied|unauthorized|forbidden/i\n| parse @message /user=(?<user>\\S+)/\n| parse @message /reason=(?<reason>[^\\n]+)/\n| stats count() by user, reason\n| sort count desc\n| limit 100",
+      "tags": ["eks", "authentication", "security"]
+    },
+    {
+      "name": "High Latency API Requests",
+      "description": "Find API requests with high latency",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @logStream like /kube-apiserver/\n| parse @message /latency=(?<latency>\\d+)ms/\n| filter latency > 1000\n| stats avg(latency) as avg_latency, max(latency) as max_latency, count() as request_count by bin(5m)\n| sort @timestamp desc\n| limit 100",
+      "tags": ["eks", "api-server", "performance"]
+    },
+    {
+      "name": "Container Restarts",
+      "description": "Track container restarts and reasons",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @message like /Started container|Restarting/\n| parse @message /container=(?<container>\\S+)/\n| parse @message /pod=(?<pod>\\S+)/\n| parse @message /namespace=(?<namespace>\\S+)/\n| parse @message /reason=(?<reason>\\S+)/\n| stats count() by namespace, pod, container, reason\n| sort count desc\n| limit 50",
+      "tags": ["eks", "containers", "restarts"]
+    },
+    {
+      "name": "Node Not Ready Events",
+      "description": "Identify nodes that became not ready",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @message like /NotReady|node.*not ready/i\n| parse @message /node=(?<node>\\S+)/\n| parse @message /reason=(?<reason>[^\\n]+)/\n| stats count() by node, reason\n| sort @timestamp desc\n| limit 100",
+      "tags": ["eks", "nodes", "health"]
+    },
+    {
+      "name": "OOM Kills",
+      "description": "Find Out of Memory (OOM) killed containers",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @message like /OOMKilled|out of memory/i\n| parse @message /container=(?<container>\\S+)/\n| parse @message /pod=(?<pod>\\S+)/\n| parse @message /namespace=(?<namespace>\\S+)/\n| stats count() by namespace, pod, container\n| sort count desc\n| limit 50",
+      "tags": ["eks", "oom", "memory"]
+    },
+    {
+      "name": "Image Pull Errors",
+      "description": "Find image pull failures",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @message like /ImagePullBackOff|ErrImagePull|Failed to pull image/i\n| parse @message /image=(?<image>\\S+)/\n| parse @message /pod=(?<pod>\\S+)/\n| parse @message /namespace=(?<namespace>\\S+)/\n| stats count() by namespace, pod, image\n| sort count desc\n| limit 50",
+      "tags": ["eks", "images", "errors"]
+    },
+    {
+      "name": "Network Errors",
+      "description": "Identify network-related errors",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @message like /network error|timeout|connection refused|dns/i\n| parse @message /pod=(?<pod>\\S+)/\n| parse @message /destination=(?<destination>\\S+)/\n| stats count() by pod, destination\n| sort count desc\n| limit 100",
+      "tags": ["eks", "network", "errors"]
+    },
+    {
+      "name": "Audit Log - Suspicious Activities",
+      "description": "Find suspicious activities in audit logs",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @logStream like /kube-apiserver-audit/\n| filter @message like /delete|exec|portforward/i\n| parse @message /user=(?<user>\\S+)/\n| parse @message /verb=(?<verb>\\S+)/\n| parse @message /resource=(?<resource>\\S+)/\n| stats count() by user, verb, resource\n| sort count desc\n| limit 100",
+      "tags": ["eks", "audit", "security"]
+    },
+    {
+      "name": "Controller Manager Errors",
+      "description": "Find errors in controller manager",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @logStream like /kube-controller-manager/\n| filter @message like /error|failed/i\n| parse @message /controller=(?<controller>\\S+)/\n| stats count() by controller\n| sort count desc\n| limit 50",
+      "tags": ["eks", "controller-manager", "errors"]
+    },
+    {
+      "name": "Scheduler Performance",
+      "description": "Analyze scheduler performance and errors",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @logStream like /kube-scheduler/\n| parse @message /scheduling_duration_seconds=(?<duration>\\d+\\.\\d+)/\n| stats avg(duration) as avg_duration, max(duration) as max_duration, count() as schedule_count by bin(5m)\n| sort @timestamp desc\n| limit 100",
+      "tags": ["eks", "scheduler", "performance"]
+    },
+    {
+      "name": "Resource Exhaustion",
+      "description": "Find resource exhaustion issues (CPU, memory, disk)",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @message like /insufficient|resource exhausted|exceeded quota/i\n| parse @message /resource=(?<resource>\\S+)/\n| parse @message /pod=(?<pod>\\S+)/\n| parse @message /namespace=(?<namespace>\\S+)/\n| stats count() by namespace, resource\n| sort count desc\n| limit 50",
+      "tags": ["eks", "resources", "capacity"]
+    },
+    {
+      "name": "Certificate Errors",
+      "description": "Find certificate-related errors",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @message like /certificate|tls|x509/i\n| filter @message like /error|failed|expired/i\n| parse @message /certificate=(?<cert>\\S+)/\n| stats count() by cert\n| sort count desc\n| limit 50",
+      "tags": ["eks", "certificates", "security"]
+    },
+    {
+      "name": "Top Error Messages",
+      "description": "Aggregate and count top error messages",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @message like /error|failed/i\n| stats count() as error_count by @message\n| sort error_count desc\n| limit 20",
+      "tags": ["eks", "errors", "aggregation"]
+    },
+    {
+      "name": "Application Logs - Errors by Service",
+      "description": "Application errors grouped by service",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/application"],
+      "queryString": "fields @timestamp, @message, kubernetes.namespace_name, kubernetes.pod_name\n| filter @message like /error|exception|fatal/i\n| stats count() as error_count by kubernetes.namespace_name\n| sort error_count desc\n| limit 20",
+      "tags": ["applications", "errors"]
+    },
+    {
+      "name": "Slow Queries",
+      "description": "Find slow database queries in application logs",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/application"],
+      "queryString": "fields @timestamp, @message\n| filter @message like /query.*duration/i\n| parse @message /duration=(?<duration>\\d+)ms/\n| filter duration > 1000\n| stats avg(duration) as avg_duration, max(duration) as max_duration, count() as query_count by bin(5m)\n| sort @timestamp desc\n| limit 100",
+      "tags": ["applications", "database", "performance"]
+    },
+    {
+      "name": "HTTP 5xx Errors",
+      "description": "Find HTTP server errors in application logs",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/application"],
+      "queryString": "fields @timestamp, @message, kubernetes.pod_name\n| filter @message like /status=5\\d{2}|\"status\":5\\d{2}/\n| parse @message /status[=:](?<status_code>5\\d{2})/\n| parse @message /path[=:](?<path>\\S+)/\n| stats count() as error_count by status_code, path\n| sort error_count desc\n| limit 50",
+      "tags": ["applications", "http", "errors"]
+    },
+    {
+      "name": "Cost Analysis - Top Log Producers",
+      "description": "Identify services generating the most log data",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster", "/aws/eks/${CLUSTER_NAME}/application"],
+      "queryString": "fields @timestamp, @logStream\n| stats count() as log_count, sum(@logStream) as bytes by @logStream\n| sort log_count desc\n| limit 20",
+      "tags": ["cost", "logs", "optimization"]
+    },
+    {
+      "name": "Security - Privilege Escalation Attempts",
+      "description": "Detect potential privilege escalation attempts",
+      "logGroups": ["/aws/eks/${CLUSTER_NAME}/cluster"],
+      "queryString": "fields @timestamp, @message\n| filter @logStream like /kube-apiserver-audit/\n| filter @message like /privileged.*true|hostNetwork.*true|hostPID.*true/i\n| parse @message /user=(?<user>\\S+)/\n| parse @message /namespace=(?<namespace>\\S+)/\n| parse @message /name=(?<resource_name>\\S+)/\n| stats count() by user, namespace, resource_name\n| sort count desc\n| limit 50",
+      "tags": ["security", "audit", "escalation"]
+    }
+  ],
+  "savedSearches": [
+    {
+      "name": "Critical Issues Dashboard",
+      "description": "Combined view of critical issues across the cluster",
+      "queries": [
+        "EKS API Server Errors",
+        "Failed Pod Scheduling",
+        "OOM Kills",
+        "Node Not Ready Events",
+        "Authentication Failures"
+      ]
+    },
+    {
+      "name": "Performance Monitoring",
+      "description": "Performance-related queries for cluster health",
+      "queries": [
+        "High Latency API Requests",
+        "Scheduler Performance",
+        "Slow Queries"
+      ]
+    },
+    {
+      "name": "Security Monitoring",
+      "description": "Security-focused queries for threat detection",
+      "queries": [
+        "Audit Log - Suspicious Activities",
+        "Authentication Failures",
+        "Certificate Errors",
+        "Security - Privilege Escalation Attempts"
+      ]
+    },
+    {
+      "name": "Cost Optimization",
+      "description": "Queries to help optimize logging costs",
+      "queries": [
+        "Cost Analysis - Top Log Producers"
+      ]
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-01-05",
+    "author": "Fawkes Platform Team",
+    "license": "MIT"
+  }
+}
