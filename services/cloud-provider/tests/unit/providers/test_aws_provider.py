@@ -175,11 +175,11 @@ class TestAWSProviderClusterOperations:
                 node_count=3,
             )
 
-            cluster = provider.get_cluster("test-cluster", "us-west-2")
+            cluster = provider.get_cluster("test-cluster", "us-west-2", include_node_count=False)
 
             assert cluster.name == "test-cluster"
             assert cluster.status == "ACTIVE"
-            mock_get.assert_called_once_with("test-cluster", "us-west-2")
+            mock_get.assert_called_once_with("test-cluster", "us-west-2", False)
 
     @mock_aws
     def test_delete_cluster(self, aws_credentials):
@@ -207,12 +207,12 @@ class TestAWSProviderClusterOperations:
                 Cluster(id="cluster-2", name="cluster-2", status="ACTIVE", version="1.27", region="us-west-2"),
             ]
 
-            clusters = provider.list_clusters("us-west-2")
+            clusters = provider.list_clusters("us-west-2", include_details=False)
 
             assert len(clusters) == 2
             assert clusters[0].name == "cluster-1"
             assert clusters[1].name == "cluster-2"
-            mock_list.assert_called_once_with("us-west-2")
+            mock_list.assert_called_once_with("us-west-2", False)
 
 
 class TestAWSProviderDatabaseOperations:
@@ -413,11 +413,11 @@ class TestAWSProviderStorageOperations:
                 Storage(id="bucket-2", name="bucket-2", region="us-west-2"),
             ]
 
-            buckets = provider.list_storage("us-west-2")
+            buckets = provider.list_storage("us-west-2", include_details=False)
 
             assert len(buckets) == 2
             assert buckets[0].name == "bucket-1"
-            mock_list.assert_called_once_with("us-west-2")
+            mock_list.assert_called_once_with("us-west-2", False)
 
 
 class TestAWSProviderCostOperations:
