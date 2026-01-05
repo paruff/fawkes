@@ -272,11 +272,11 @@ resource "aws_security_group" "vpc_endpoints" {
 
 # VPC Flow Logs
 resource "aws_flow_log" "main" {
-  count                = var.enable_flow_logs ? 1 : 0
-  iam_role_arn         = aws_iam_role.flow_logs[0].arn
-  log_destination      = aws_cloudwatch_log_group.flow_logs[0].arn
-  traffic_type         = var.flow_logs_traffic_type
-  vpc_id               = aws_vpc.main.id
+  count                    = var.enable_flow_logs ? 1 : 0
+  iam_role_arn             = aws_iam_role.flow_logs[0].arn
+  log_destination          = aws_cloudwatch_log_group.flow_logs[0].arn
+  traffic_type             = var.flow_logs_traffic_type
+  vpc_id                   = aws_vpc.main.id
   max_aggregation_interval = var.flow_logs_max_aggregation_interval
 
   tags = merge(
@@ -344,7 +344,7 @@ resource "aws_iam_role_policy" "flow_logs" {
           "logs:DescribeLogGroups",
           "logs:DescribeLogStreams"
         ]
-        Effect = "Allow"
+        Effect   = "Allow"
         Resource = "*"
       }
     ]

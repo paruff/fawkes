@@ -169,10 +169,10 @@ variable "object_lock_retention_days" {
 variable "replication_configuration" {
   description = "S3 bucket replication configuration"
   type = object({
-    rule_id                  = string
-    prefix                   = string
-    destination_bucket_arn   = string
-    storage_class            = string
+    rule_id                = string
+    prefix                 = string
+    destination_bucket_arn = string
+    storage_class          = string
   })
   default = null
 }
