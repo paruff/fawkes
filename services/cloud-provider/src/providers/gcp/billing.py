@@ -78,21 +78,29 @@ class BillingService:
         """
         Get cost data for a specified timeframe.
 
-        Note: GCP Cloud Billing API requires BigQuery export to be configured
-        for detailed cost analysis. This implementation provides a simplified
-        version using the Cloud Billing API.
+        IMPORTANT: This method returns placeholder data. For actual cost data, you must:
+        1. Enable BigQuery billing export in your GCP project
+        2. Query the exported billing data from BigQuery
+        3. See: https://cloud.google.com/billing/docs/how-to/export-data-bigquery
+
+        The Cloud Billing API only provides billing account information, not historical costs.
 
         Args:
             timeframe: Time period (e.g., 'LAST_7_DAYS', 'LAST_30_DAYS', 'THIS_MONTH')
-            granularity: Data granularity ('DAILY', 'MONTHLY') - currently not fully supported
+            granularity: Data granularity ('DAILY', 'MONTHLY') - currently not supported
 
         Returns:
-            CostData object with cost information
+            CostData object with billing account info (total_cost will be 0.0)
 
         Raises:
-            CloudProviderError: If cost data retrieval fails
+            CloudProviderError: If billing info retrieval fails
         """
-        logger.debug(f"Getting Cloud Billing cost data for timeframe: {timeframe}")
+        logger.warning(
+            "GCP cost data requires BigQuery export configuration. "
+            "This method returns placeholder data. "
+            "See: https://cloud.google.com/billing/docs/how-to/export-data-bigquery"
+        )
+        logger.debug(f"Getting Cloud Billing info for timeframe: {timeframe}")
 
         try:
             client = self._get_client()

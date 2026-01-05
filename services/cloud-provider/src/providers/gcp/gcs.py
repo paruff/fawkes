@@ -162,15 +162,26 @@ class GCSService:
             self.rate_limiter.acquire()
             bucket = client.get_bucket(bucket_name)
 
-            # Get bucket size and object count (expensive operation)
+            # Get bucket size and object count
+            # Note: This is an expensive operation for large buckets as it iterates all objects.
+            # For production use, consider using Cloud Asset Inventory or bucket metering.
             size_bytes = 0
             object_count = 0
             try:
+                logger.warning(
+                    f"Calculating bucket size for {bucket_name}. "
+                    "This may be slow for buckets with many objects."
+                )
                 self.rate_limiter.acquire()
-                blobs = bucket.list_blobs()
+                blobs = bucket.list_blobs(max_results=1000)  # Limit to first 1000 objects
                 for blob in blobs:
                     size_bytes += blob.size
                     object_count += 1
+                if object_count >= 1000:
+                    logger.warning(
+                        f"Bucket {bucket_name} has 1000+ objects. "
+                        "Size/count may be incomplete. Use Cloud Asset Inventory for accurate metrics."
+                    )
             except Exception as e:
                 logger.warning(f"Could not get bucket size/count: {e}")
 
