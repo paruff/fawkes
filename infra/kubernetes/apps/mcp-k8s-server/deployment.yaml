@@ -25,6 +25,11 @@ metadata:
   namespace: fawkes
   labels:
     app: mcp-k8s-server
+    app.kubernetes.io/name: mcp-k8s-server
+    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/managed-by: argocd
 spec:
   replicas: 1
   selector:
@@ -34,9 +39,20 @@ spec:
     metadata:
       labels:
         app: mcp-k8s-server
+        app.kubernetes.io/name: mcp-k8s-server
+        app.kubernetes.io/version: v1.0.0
+        app.kubernetes.io/component: backend
+        app.kubernetes.io/part-of: fawkes
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
     spec:
       securityContext:
         runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: mcp-inspector
@@ -52,23 +68,28 @@ spec:
             capabilities:
               drop: ["ALL"]
           ports:
-            - containerPort: 8080
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+
           livenessProbe:
             httpGet:
               path: /healthz
-              port: 8080
+              port: http
             initialDelaySeconds: 5
             periodSeconds: 10
             timeoutSeconds: 2
             failureThreshold: 3
+
           readinessProbe:
             httpGet:
               path: /healthz
-              port: 8080
+              port: http
             initialDelaySeconds: 2
             periodSeconds: 10
             timeoutSeconds: 2
             failureThreshold: 3
+
           resources:
             requests:
               cpu: 50m
@@ -76,3 +97,11 @@ spec:
             limits:
               cpu: 200m
               memory: 256Mi
+
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+
+      volumes:
+        - name: tmp
+          emptyDir: {}

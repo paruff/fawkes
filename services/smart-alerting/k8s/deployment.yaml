@@ -25,7 +25,11 @@ metadata:
   namespace: fawkes
   labels:
     app: smart-alerting
-    component: observability
+    app.kubernetes.io/name: smart-alerting
+    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/component: observability
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/managed-by: argocd
 spec:
   replicas: 2
   selector:
@@ -35,12 +39,20 @@ spec:
     metadata:
       labels:
         app: smart-alerting
-        component: observability
+        app.kubernetes.io/name: smart-alerting
+        app.kubernetes.io/version: v1.0.0
+        app.kubernetes.io/component: observability
+        app.kubernetes.io/part-of: fawkes
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: smart-alerting
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
+        runAsGroup: 1000
         fsGroup: 1000
       containers:
         - name: smart-alerting
@@ -124,9 +136,13 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
             capabilities:
               drop:
                 - ALL
+            seccompProfile:
+              type: RuntimeDefault
       volumes:
         - name: rules
           configMap:
@@ -141,7 +157,9 @@ metadata:
   namespace: fawkes
   labels:
     app: smart-alerting
-    component: observability
+    app.kubernetes.io/name: smart-alerting
+    app.kubernetes.io/component: observability
+    app.kubernetes.io/part-of: fawkes
 spec:
   type: ClusterIP
   ports:
@@ -159,3 +177,6 @@ metadata:
   namespace: fawkes
   labels:
     app: smart-alerting
+    app.kubernetes.io/name: smart-alerting
+    app.kubernetes.io/component: observability
+    app.kubernetes.io/part-of: fawkes

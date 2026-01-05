@@ -66,8 +66,11 @@ metadata:
   namespace: fawkes
   labels:
     app: anomaly-detection
-    component: ai-platform
-    version: v0.1.0
+    app.kubernetes.io/name: anomaly-detection
+    app.kubernetes.io/version: v0.1.0
+    app.kubernetes.io/component: ai-platform
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/managed-by: argocd
 spec:
   replicas: 1
   selector:
@@ -77,8 +80,10 @@ spec:
     metadata:
       labels:
         app: anomaly-detection
-        component: ai-platform
-        version: v0.1.0
+        app.kubernetes.io/name: anomaly-detection
+        app.kubernetes.io/version: v0.1.0
+        app.kubernetes.io/component: ai-platform
+        app.kubernetes.io/part-of: fawkes
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8000"
@@ -88,6 +93,7 @@ spec:
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
+        runAsGroup: 65534
         fsGroup: 65534
       containers:
         - name: anomaly-detection
@@ -138,6 +144,8 @@ spec:
             capabilities:
               drop:
                 - ALL
+            seccompProfile:
+              type: RuntimeDefault
           volumeMounts:
             - name: tmp
               mountPath: /tmp
@@ -152,7 +160,9 @@ metadata:
   namespace: fawkes
   labels:
     app: anomaly-detection
-    component: ai-platform
+    app.kubernetes.io/name: anomaly-detection
+    app.kubernetes.io/component: ai-platform
+    app.kubernetes.io/part-of: fawkes
   annotations:
     prometheus.io/scrape: "true"
     prometheus.io/port: "8000"
