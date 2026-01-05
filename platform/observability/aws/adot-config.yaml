@@ -35,7 +35,7 @@ data:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
-      
+
       # Prometheus receiver for scraping metrics
       prometheus:
         config:
@@ -64,7 +64,7 @@ data:
                 - source_labels: [__meta_kubernetes_pod_name]
                   action: replace
                   target_label: kubernetes_pod_name
-      
+
       # X-Ray receiver for traces
       awsxray:
         endpoint: 0.0.0.0:2000
@@ -76,19 +76,19 @@ data:
         timeout: 30s
         send_batch_size: 1024
         send_batch_max_size: 2048
-      
+
       # Memory limiter to prevent OOM
       memory_limiter:
         check_interval: 5s
         limit_mib: 512
         spike_limit_mib: 128
-      
+
       # Resource detection for AWS metadata
       resourcedetection/aws:
         detectors: [env, ec2, ecs, eks]
         timeout: 5s
         override: false
-      
+
       # Attributes processor for enrichment
       attributes:
         actions:
@@ -110,7 +110,7 @@ data:
           - "service.name"
           - "http.status_code"
           - "error"
-      
+
       # CloudWatch metrics exporter
       awscloudwatch:
         region: ${AWS_REGION}
@@ -121,7 +121,7 @@ data:
           - dimensions: [[service.name, service.namespace]]
             metric_name_selectors:
               - ".*"
-      
+
       # Prometheus Remote Write for Grafana
       prometheusremotewrite:
         endpoint: ${PROMETHEUS_REMOTE_WRITE_ENDPOINT}
@@ -129,13 +129,13 @@ data:
           insecure: false
         headers:
           Authorization: "Bearer ${PROMETHEUS_REMOTE_WRITE_TOKEN}"
-      
+
       # Jaeger exporter for trace visualization
       jaeger:
         endpoint: ${JAEGER_ENDPOINT}
         tls:
           insecure: true
-      
+
       # Logging exporter for debugging
       logging:
         verbosity: detailed
@@ -146,11 +146,11 @@ data:
       # Health check extension
       health_check:
         endpoint: 0.0.0.0:13133
-      
+
       # Performance profiler
       pprof:
         endpoint: 0.0.0.0:1777
-      
+
       # Zpages for debugging
       zpages:
         endpoint: 0.0.0.0:55679
@@ -163,13 +163,13 @@ data:
           receivers: [otlp, awsxray]
           processors: [memory_limiter, resourcedetection/aws, attributes, batch]
           exporters: [awsxray, jaeger, logging]
-        
+
         # Metrics pipeline
         metrics:
           receivers: [otlp, prometheus]
           processors: [memory_limiter, resourcedetection/aws, attributes, batch]
           exporters: [awscloudwatch, prometheusremotewrite, logging]
-        
+
         # Logs pipeline
         logs:
           receivers: [otlp]
