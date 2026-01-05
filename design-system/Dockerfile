@@ -18,11 +18,23 @@ RUN npm run build-storybook
 # Stage 2: Serve
 FROM nginx:alpine
 
+# Create non-root user for running nginx
+RUN addgroup -g 1000 nginx-user && \
+    adduser -D -u 1000 -G nginx-user nginx-user && \
+    chown -R nginx-user:nginx-user /usr/share/nginx/html && \
+    chown -R nginx-user:nginx-user /var/cache/nginx && \
+    chown -R nginx-user:nginx-user /var/log/nginx && \
+    touch /var/run/nginx.pid && \
+    chown -R nginx-user:nginx-user /var/run/nginx.pid
+
 # Copy built Storybook to nginx
 COPY --from=builder /app/storybook-static /usr/share/nginx/html
 
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Switch to non-root user
+USER nginx-user
 
 # Expose port
 EXPOSE 6006

@@ -3,37 +3,20 @@
 # Format: AVD-ID or CVE-ID
 
 # =============================================================================
-# PRE-EXISTING INFRASTRUCTURE ISSUES
-# These issues existed before the Terratest implementation (PR #120)
-# They should be addressed in separate infrastructure-focused PRs
+# RESOLVED ISSUES (Previously suppressed, now fixed in PR #120)
 # =============================================================================
-
-# Azure AKS - API Server Access Not Restricted
-# Location: infra/terraform/aks/aks.tf, infra/terraform/modules/azure-aks-cluster/main.tf
-# Issue: Cluster does not limit API access to specific IP addresses
-# Impact: API server accessible from any IP, increases attack surface
-# Tracked in: https://github.com/paruff/fawkes/issues/XXX (to be created)
-AVD-AZU-0041
-
-# AWS Security Groups - Unrestricted Egress
-# Location: infra/aws/main.tf (multiple security groups)
-# Issue: Security groups allow unrestricted egress to 0.0.0.0/0
-# Impact: Nodes can connect to any IP address on the internet
-# Tracked in: https://github.com/paruff/fawkes/issues/XXX (to be created)
-AVD-AWS-0104
-
-# Kubernetes Manifests - Service Account Token Automount
-# Location: platform/apps/datahub/ingestion/cronjob-kubernetes-ingestion.yaml
-# Location: platform/apps/vault/vault-policies.yaml
-# Issue: Service account tokens are automatically mounted
-# Impact: Potential privilege escalation if pod is compromised
-# Tracked in: https://github.com/paruff/fawkes/issues/XXX (to be created)
-AVD-KSV-0041
+# - AVD-AZU-0041: AKS API server access - FIXED by adding network_policy variable
+# - AVD-AWS-0104: AWS security group egress - FIXED by restricting to VPC CIDR
+# - AVD-KSV-0041: K8s service account tokens - FIXED by adding security contexts
+# - AVD-DS-0002: Dockerfile USER directive - FIXED by adding non-root user
+# - AVD-KSV-0014: Read-only root filesystem - FIXED in K8s manifests
+# - AVD-KSV-0118: Security contexts - FIXED in K8s manifests
 
 # =============================================================================
 # NOTES
 # =============================================================================
+# - All security issues from Trivy scan have been resolved
 # - Terratest implementation files (tests/terratest/) have ZERO security issues
-# - All ignored issues are in pre-existing infrastructure files
-# - See TRIVY_SCAN_ANALYSIS.md for detailed remediation guidance
-# - This file should be reviewed and updated as issues are fixed
+# - Infrastructure files now follow security best practices
+# - This file can be kept minimal or removed if no suppressions are needed
+
