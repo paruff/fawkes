@@ -1,6 +1,8 @@
 # Base Network Module
 
-This is a base module that defines common variables and outputs for virtual networks across all cloud providers (Azure VNet, AWS VPC, GCP VPC, Civo Network).
+This is a base module that defines common variables and validation patterns for virtual networks across all cloud providers (Azure VNet, AWS VPC, GCP VPC, Civo Network).
+
+**Note**: This module is not intended to be instantiated directly. It serves as a reference for common variable definitions.
 
 ## Purpose
 
@@ -8,11 +10,10 @@ This module provides:
 - Common variable definitions for virtual networks with validation rules
 - Standardized naming conventions (snake_case)
 - Reusable patterns for provider-specific implementations
-- Consistent output structure
 
 ## Usage
 
-This module is not intended to be used directly. Instead, use provider-specific modules that extend this base:
+Provider-specific modules should reference these variable definitions. For actual deployments, use:
 
 - `../azure/network` - For Azure Virtual Network
 - `../aws/network` - For AWS VPC
@@ -36,13 +37,6 @@ This module is not intended to be used directly. Instead, use provider-specific 
 - `enable_dns_hostnames` - Enable DNS hostnames (default: true)
 - `tags` - Tags/labels to apply (default: {})
 
-## Outputs
-
-- `network_id` - The virtual network ID
-- `network_name` - The virtual network name
-- `subnet_id` - The subnet ID
-- `subnet_name` - The subnet name
-
 ## Validation Rules
 
 All variables include validation rules to catch configuration errors early:
@@ -57,8 +51,8 @@ All variables include validation rules to catch configuration errors early:
 ## Provider-Specific Extensions
 
 Provider-specific modules should:
-1. Define provider-specific variables
-2. Use base module variables where possible
-3. Map base variables to provider resources
+1. Reference these variable definitions where applicable
+2. Use consistent naming from this base
+3. Add provider-specific variables as needed
 4. Add provider-specific validation
-5. Extend outputs with provider-specific information
+5. Define their own outputs based on provider resources

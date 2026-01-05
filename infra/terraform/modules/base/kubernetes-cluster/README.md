@@ -1,6 +1,8 @@
 # Base Kubernetes Cluster Module
 
-This is a base module that defines common variables and outputs for Kubernetes clusters across all cloud providers (Azure, AWS, GCP, Civo).
+This is a base module that defines common variables and validation patterns for Kubernetes clusters across all cloud providers (Azure, AWS, GCP, Civo).
+
+**Note**: This module is not intended to be instantiated directly. It serves as a reference for common variable definitions.
 
 ## Purpose
 
@@ -8,11 +10,10 @@ This module provides:
 - Common variable definitions with validation rules
 - Standardized naming conventions (snake_case)
 - Reusable patterns for provider-specific implementations
-- Consistent output structure
 
 ## Usage
 
-This module is not intended to be used directly. Instead, use provider-specific modules that extend this base:
+Provider-specific modules should reference these variable definitions. For actual deployments, use:
 
 - `../azure/kubernetes-cluster` - For Azure AKS
 - `../aws/kubernetes-cluster` - For AWS EKS
@@ -38,13 +39,6 @@ This module is not intended to be used directly. Instead, use provider-specific 
 - `api_server_authorized_ip_ranges` - Authorized IP ranges (default: [])
 - `tags` - Tags/labels to apply (default: {})
 
-## Outputs
-
-- `cluster_id` - The cluster ID
-- `cluster_name` - The cluster name
-- `cluster_endpoint` - The cluster endpoint/FQDN
-- `kube_config` - Kubernetes configuration (sensitive)
-
 ## Validation Rules
 
 All variables include validation rules to catch configuration errors early:
@@ -58,8 +52,8 @@ All variables include validation rules to catch configuration errors early:
 ## Provider-Specific Extensions
 
 Provider-specific modules should:
-1. Define provider-specific variables
-2. Use base module variables where possible
-3. Map base variables to provider resources
+1. Reference these variable definitions where applicable
+2. Use consistent naming from this base
+3. Add provider-specific variables as needed
 4. Add provider-specific validation
-5. Extend outputs with provider-specific information
+5. Define their own outputs based on provider resources
