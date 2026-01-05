@@ -2,34 +2,46 @@
 
 This directory contains reusable Terraform modules following HashiCorp best practices for infrastructure provisioning.
 
-## Module Catalog
+## 📋 Module Structure
 
-### Azure Modules
+The modules are organized in a hierarchical structure:
 
-#### [azure-resource-group](./azure-resource-group)
-Creates an Azure Resource Group with proper validation and tagging.
+```
+modules/
+├── base/              # Base modules with common patterns
+│   ├── kubernetes-cluster/
+│   ├── network/
+│   └── resource-group/
+├── azure/             # Azure-specific implementations
+│   ├── kubernetes-cluster/
+│   ├── network/
+│   └── resource-group/
+├── aws/               # AWS implementations (future)
+├── gcp/               # GCP implementations (future)
+├── civo/              # Civo implementations (future)
+└── argocd-helm/       # Kubernetes add-ons
+```
 
-**Use When**: You need to create a new resource group for organizing Azure resources.
+## 🚀 Quick Start
 
-**Example**:
+### Azure Infrastructure
+
+#### 1. Resource Group
+
 ```hcl
 module "rg" {
-  source   = "./modules/azure-resource-group"
+  source   = "./modules/azure/resource-group"
   name     = "fawkes-rg"
   location = "eastus2"
-  tags     = { environment = "dev" }
+  tags     = { environment = "dev", platform = "fawkes" }
 }
 ```
 
-#### [azure-network](./azure-network)
-Creates a Virtual Network with subnet for AKS or other workloads.
+#### 2. Network
 
-**Use When**: You need to provision networking for Azure resources like AKS.
-
-**Example**:
 ```hcl
 module "network" {
-  source              = "./modules/azure-network"
+  source              = "./modules/azure/network"
   vnet_name           = "fawkes-vnet"
   location            = "eastus2"
   resource_group_name = module.rg.name
@@ -39,15 +51,11 @@ module "network" {
 }
 ```
 
-#### [azure-aks-cluster](./azure-aks-cluster)
-Provisions an Azure Kubernetes Service (AKS) cluster with best practices.
+#### 3. Kubernetes Cluster (AKS)
 
-**Use When**: You need to create a Kubernetes cluster on Azure.
-
-**Example**:
 ```hcl
 module "aks" {
-  source              = "./modules/azure-aks-cluster"
+  source              = "./modules/azure/kubernetes-cluster"
   cluster_name        = "fawkes-aks"
   location            = "eastus2"
   resource_group_name = module.rg.name
@@ -57,29 +65,50 @@ module "aks" {
 }
 ```
 
+## 📚 Module Catalog
+
+### Base Modules
+
+Base modules define common patterns and variables across all cloud providers.
+
+- **[base/kubernetes-cluster](./base/kubernetes-cluster)** - Common K8s cluster patterns
+- **[base/network](./base/network)** - Common networking patterns
+- **[base/resource-group](./base/resource-group)** - Common resource grouping patterns
+
+### Azure Modules
+
+Azure-specific implementations extending base modules.
+
+- **[azure/kubernetes-cluster](./azure/kubernetes-cluster)** - Azure AKS cluster
+- **[azure/network](./azure/network)** - Azure Virtual Network
+- **[azure/resource-group](./azure/resource-group)** - Azure Resource Group
+
+### Deprecated Modules
+
+⚠️ **The following modules are deprecated. Please use the new structure above.**
+
+- ~~[azure-resource-group](./azure-resource-group)~~ → Use `azure/resource-group`
+- ~~[azure-network](./azure-network)~~ → Use `azure/network`
+- ~~[azure-aks-cluster](./azure-aks-cluster)~~ → Use `azure/kubernetes-cluster`
+
+See [REFACTORING.md](./REFACTORING.md) for migration guide.
+
 ### Kubernetes Modules
 
-#### [argocd-helm](./argocd-helm)
-Deploys ArgoCD to a Kubernetes cluster using Helm with proper configuration.
+- **[argocd-helm](./argocd-helm)** - Deploy ArgoCD via Helm
 
-**Use When**: You need to install ArgoCD for GitOps workflows.
+## ✨ Key Features
 
-**Example**:
-```hcl
-module "argocd" {
-  source          = "./modules/argocd-helm"
-  release_name    = "argocd"
-  namespace       = "argocd"
-  kubeconfig_path = "~/.kube/config"
-}
-```
+### 1. Base Module Pattern
 
-## Design Principles
+Base modules define common variables and validation rules:
 
-All modules follow these principles:
+- Shared variable definitions across providers
+- Consistent validation rules
+- Standardized naming conventions (snake_case)
+- Reusable patterns
 
-### 1. Input Validation
-Every variable has appropriate validation rules to catch errors early:
+Example:
 
 ```hcl
 variable "node_count" {
@@ -91,7 +120,12 @@ variable "node_count" {
 }
 ```
 
-### 2. Comprehensive Outputs
+### 2. Provider-Specific Extensions
+
+Provider modules extend base modules with cloud-specific implementations while maintaining consistent interfaces.
+
+### 3. Comprehensive Outputs
+
 Modules expose all useful information as outputs:
 
 ```hcl
@@ -101,7 +135,7 @@ output "cluster_id" {
 }
 ```
 
-### 3. No Hardcoded Values
+### 4. No Hardcoded Values
 All configuration is passed via variables with sensible defaults:
 
 ```hcl
@@ -112,14 +146,14 @@ variable "network_plugin" {
 }
 ```
 
-### 4. Complete Documentation
+### 5. Complete Documentation
 Each module includes:
 - README.md with usage examples
 - Variable descriptions
 - Output descriptions
 - terraform.tfvars.example
 
-### 5. Version Constraints
+### 6. Version Constraints
 Modules specify minimum provider versions:
 
 ```hcl
