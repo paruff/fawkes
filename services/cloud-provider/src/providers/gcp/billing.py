@@ -17,7 +17,9 @@ logger = logging.getLogger(__name__)
 class BillingService:
     """GCP Cloud Billing service operations."""
 
-    def __init__(self, project_id: str, billing_account_id: Optional[str] = None, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(
+        self, project_id: str, billing_account_id: Optional[str] = None, rate_limiter: Optional[RateLimiter] = None
+    ):
         """
         Initialize Billing service.
 
@@ -50,7 +52,7 @@ class BillingService:
             Tuple of (start_date, end_date)
         """
         end_date = datetime.now()
-        
+
         if timeframe == "LAST_7_DAYS":
             start_date = end_date - timedelta(days=7)
         elif timeframe == "LAST_30_DAYS":
@@ -65,7 +67,7 @@ class BillingService:
         else:
             # Default to last 30 days
             start_date = end_date - timedelta(days=30)
-        
+
         return start_date, end_date
 
     @retry_with_backoff(
@@ -94,13 +96,13 @@ class BillingService:
 
         try:
             client = self._get_client()
-            
+
             # Parse timeframe
             start_date, end_date = self._parse_timeframe(timeframe)
 
             # Get project billing info
             project_name = f"projects/{self.project_id}"
-            
+
             self.rate_limiter.acquire()
             billing_info = client.get_project_billing_info(name=project_name)
 
@@ -145,7 +147,9 @@ class BillingService:
                     "billing_account_name": billing_info.billing_account_name,
                     "billing_enabled": billing_info.billing_enabled,
                     "note": "Configure BigQuery billing export for detailed cost data",
-                    "instructions": "Enable billing export: https://cloud.google.com/billing/docs/how-to/export-data-bigquery",
+                    "instructions": (
+                        "Enable billing export: https://cloud.google.com/billing/docs/how-to/export-data-bigquery"
+                    ),
                 },
             )
 

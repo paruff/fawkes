@@ -1,12 +1,15 @@
-"""GCP Cloud SQL operations."""
+"""GCP Cloud SQL operations using REST API.
+
+Note: This implementation uses the Google Cloud SQL Admin API v1 REST API
+via google-api-python-client instead of google-cloud-sql which doesn't exist.
+"""
 
 import logging
 from typing import List, Optional
-from datetime import datetime
 
-from google.cloud.sql.connector import Connector
-from google.cloud import sql_v1
-from google.api_core import exceptions as gcp_exceptions
+from googleapiclient import discovery
+from googleapiclient.errors import HttpError
+from google.auth import default as get_default_credentials
 
 from ...interfaces.models import Database
 from ...interfaces.provider import DatabaseConfig
@@ -34,29 +37,21 @@ class CloudSQLService:
         """
         self.project_id = project_id
         self.rate_limiter = rate_limiter or RateLimiter(max_calls=10, time_window=1.0)
-        self._client = None
+        self._service = None
 
-    def _get_client(self):
-        """Get or create Cloud SQL admin client."""
-        if self._client is None:
+    def _get_service(self):
+        """Get or create Cloud SQL admin service."""
+        if self._service is None:
             self.rate_limiter.acquire()
-            self._client = sql_v1.SqlInstancesServiceClient()
-            logger.debug("Created Cloud SQL admin client")
-        return self._client
+            credentials, _ = get_default_credentials()
+            self._service = discovery.build('sqladmin', 'v1', credentials=credentials)
+            logger.debug("Created Cloud SQL admin service")
+        return self._service
 
     def _map_engine_to_database_version(self, engine: str, engine_version: str) -> str:
-        """
-        Map generic engine name to GCP database version string.
-
-        Args:
-            engine: Generic engine name (e.g., 'postgres', 'mysql')
-            engine_version: Engine version
-
-        Returns:
-            GCP database version string
-        """
+        """Map generic engine name to GCP database version string."""
         engine_lower = engine.lower()
-        
+
         if engine_lower == "postgres" or engine_lower == "postgresql":
             return f"POSTGRES_{engine_version.replace('.', '_')}"
         elif engine_lower == "mysql":
@@ -66,87 +61,47 @@ class CloudSQLService:
         else:
             return engine_version
 
-    @retry_with_backoff(
-        max_retries=3,
-        retriable_exceptions=(gcp_exceptions.ServiceUnavailable, gcp_exceptions.DeadlineExceeded),
-    )
+    @retry_with_backoff(max_retries=3, retriable_exceptions=(HttpError,))
     def create_database(self, config: DatabaseConfig) -> Database:
-        """
-        Create a Cloud SQL database instance.
-
-        Args:
-            config: Database configuration
-
-        Returns:
-            Database object with details
-
-        Raises:
-            CloudProviderError: If database creation fails
-        """
+        """Create a Cloud SQL database instance."""
         logger.info(f"Creating Cloud SQL instance: {config.name} in region {config.region}")
 
         try:
-            client = self._get_client()
-
-            # Map engine to GCP database version
+            service = self._get_service()
             database_version = self._map_engine_to_database_version(config.engine, config.engine_version)
 
             # Build database instance
-            instance = sql_v1.DatabaseInstance()
-            instance.name = config.name
-            instance.database_version = database_version
-            instance.region = config.region
+            instance_body = {
+                "name": config.name,
+                "databaseVersion": database_version,
+                "region": config.region,
+                "settings": {
+                    "tier": config.instance_class,
+                    "dataDiskSizeGb": config.allocated_storage,
+                    "backupConfiguration": {
+                        "enabled": config.backup_retention_days > 0,
+                        "backupRetentionSettings": {
+                            "retainedBackups": config.backup_retention_days
+                        }
+                    },
+                    "ipConfiguration": {
+                        "ipv4Enabled": config.publicly_accessible
+                    },
+                    "availabilityType": "REGIONAL" if config.multi_az else "ZONAL",
+                    "userLabels": config.tags
+                }
+            }
 
-            # Settings
-            settings = sql_v1.Settings()
-            settings.tier = config.instance_class
-            settings.backup_configuration = sql_v1.BackupConfiguration()
-            settings.backup_configuration.enabled = config.backup_retention_days > 0
-            settings.backup_configuration.backup_retention_settings = sql_v1.BackupRetentionSettings()
-            settings.backup_configuration.backup_retention_settings.retained_backups = config.backup_retention_days
-
-            # IP configuration
-            ip_configuration = sql_v1.IpConfiguration()
-            ip_configuration.ipv4_enabled = config.publicly_accessible
-
-            # Add authorized networks from metadata if provided
-            if config.metadata.get("authorized_networks"):
-                for network in config.metadata["authorized_networks"]:
-                    acl_entry = sql_v1.AclEntry()
-                    acl_entry.value = network
-                    ip_configuration.authorized_networks.append(acl_entry)
-
-            settings.ip_configuration = ip_configuration
-
-            # Data disk configuration
-            settings.data_disk_size_gb = config.allocated_storage
-            if config.metadata.get("data_disk_type"):
-                settings.data_disk_type = config.metadata["data_disk_type"]
-
-            # High availability (multi-AZ equivalent)
-            settings.availability_type = (
-                sql_v1.SqlAvailabilityType.REGIONAL if config.multi_az else sql_v1.SqlAvailabilityType.ZONAL
-            )
-
-            instance.settings = settings
-
-            # Set root password if provided
             if config.master_password:
-                instance.root_password = config.master_password
-
-            # Add labels (GCP equivalent of tags)
-            if config.tags:
-                instance.settings.user_labels = config.tags
-
-            # Create instance request
-            request = sql_v1.InsertInstanceRequest()
-            request.project = self.project_id
-            request.instance_resource = instance
+                instance_body["rootPassword"] = config.master_password
 
             self.rate_limiter.acquire()
-            operation = client.insert(request=request)
+            operation = service.instances().insert(
+                project=self.project_id,
+                body=instance_body
+            ).execute()
 
-            logger.info(f"✅ Initiated Cloud SQL instance creation: {config.name} (operation: {operation.name})")
+            logger.info(f"✅ Initiated Cloud SQL instance creation: {config.name}")
 
             return Database(
                 id=config.name,
@@ -159,210 +114,172 @@ class CloudSQLService:
                 instance_class=config.instance_class,
                 metadata={
                     "project_id": self.project_id,
-                    "operation_name": operation.name,
+                    "operation_name": operation.get("name"),
                     "database_version": database_version,
                 },
             )
 
-        except gcp_exceptions.AlreadyExists:
-            raise ResourceAlreadyExistsError(f"Database instance {config.name} already exists", provider="gcp")
-        except gcp_exceptions.InvalidArgument as e:
-            raise ValidationError(f"Invalid parameter: {str(e)}", provider="gcp")
-        except gcp_exceptions.GoogleAPICallError as e:
-            raise CloudProviderError(
-                f"Failed to create Cloud SQL instance {config.name}: {str(e)}",
-                provider="gcp",
-                error_code=e.grpc_status_code,
-            )
+        except HttpError as e:
+            if e.resp.status == 409:
+                raise ResourceAlreadyExistsError(
+                    f"Database instance {config.name} already exists", provider="gcp"
+                )
+            elif e.resp.status == 400:
+                raise ValidationError(f"Invalid parameter: {str(e)}", provider="gcp")
+            else:
+                raise CloudProviderError(
+                    f"Failed to create Cloud SQL instance {config.name}: {str(e)}",
+                    provider="gcp",
+                    error_code=str(e.resp.status),
+                )
 
-    @retry_with_backoff(
-        max_retries=3,
-        retriable_exceptions=(gcp_exceptions.ServiceUnavailable, gcp_exceptions.DeadlineExceeded),
-    )
+    @retry_with_backoff(max_retries=3, retriable_exceptions=(HttpError,))
     def get_database(self, database_name: str, region: Optional[str] = None) -> Database:
-        """
-        Get Cloud SQL instance details.
-
-        Args:
-            database_name: Database instance name
-            region: GCP region (not used in get, kept for interface compatibility)
-
-        Returns:
-            Database object with details
-
-        Raises:
-            CloudProviderError: If database retrieval fails
-        """
+        """Get Cloud SQL instance details."""
         logger.debug(f"Getting Cloud SQL instance: {database_name}")
 
         try:
-            client = self._get_client()
-
-            request = sql_v1.GetInstanceRequest()
-            request.project = self.project_id
-            request.instance = database_name
+            service = self._get_service()
 
             self.rate_limiter.acquire()
-            instance = client.get(request=request)
+            instance = service.instances().get(
+                project=self.project_id,
+                instance=database_name
+            ).execute()
 
             # Parse database version
             engine = "unknown"
-            engine_version = instance.database_version
-            if "POSTGRES" in instance.database_version:
+            engine_version = instance.get("databaseVersion", "")
+            if "POSTGRES" in engine_version:
                 engine = "postgres"
-                engine_version = instance.database_version.replace("POSTGRES_", "").replace("_", ".")
-            elif "MYSQL" in instance.database_version:
+                engine_version = engine_version.replace("POSTGRES_", "").replace("_", ".")
+            elif "MYSQL" in engine_version:
                 engine = "mysql"
-                engine_version = instance.database_version.replace("MYSQL_", "").replace("_", ".")
-            elif "SQLSERVER" in instance.database_version:
+                engine_version = engine_version.replace("MYSQL_", "").replace("_", ".")
+            elif "SQLSERVER" in engine_version:
                 engine = "sqlserver"
-                engine_version = instance.database_version.replace("SQLSERVER_", "").replace("_", ".")
+                engine_version = engine_version.replace("SQLSERVER_", "").replace("_", ".")
 
             # Get first IP address
             endpoint = None
             port = None
-            if instance.ip_addresses:
-                endpoint = instance.ip_addresses[0].ip_address
+            ip_addresses = instance.get("ipAddresses", [])
+            if ip_addresses:
+                endpoint = ip_addresses[0].get("ipAddress")
                 # Default ports
-                if "POSTGRES" in instance.database_version:
+                if "POSTGRES" in instance.get("databaseVersion", ""):
                     port = 5432
-                elif "MYSQL" in instance.database_version:
+                elif "MYSQL" in instance.get("databaseVersion", ""):
                     port = 3306
-                elif "SQLSERVER" in instance.database_version:
+                elif "SQLSERVER" in instance.get("databaseVersion", ""):
                     port = 1433
 
+            settings = instance.get("settings", {})
+
             return Database(
-                id=instance.name,
-                name=instance.name,
+                id=instance["name"],
+                name=instance["name"],
                 engine=engine,
                 engine_version=engine_version,
-                status=instance.state.name,
+                status=instance.get("state", "UNKNOWN"),
                 endpoint=endpoint,
                 port=port,
-                region=instance.region,
-                allocated_storage=instance.settings.data_disk_size_gb if instance.settings else 0,
-                instance_class=instance.settings.tier if instance.settings else "",
+                region=instance.get("region", ""),
+                allocated_storage=settings.get("dataDiskSizeGb", 0),
+                instance_class=settings.get("tier", ""),
                 metadata={
                     "project_id": self.project_id,
-                    "connection_name": instance.connection_name,
-                    "self_link": instance.self_link,
-                    "database_version": instance.database_version,
+                    "connection_name": instance.get("connectionName"),
+                    "self_link": instance.get("selfLink"),
+                    "database_version": instance.get("databaseVersion"),
                 },
             )
 
-        except gcp_exceptions.NotFound:
-            raise ResourceNotFoundError(f"Database instance {database_name} not found", provider="gcp")
-        except gcp_exceptions.GoogleAPICallError as e:
-            raise CloudProviderError(
-                f"Failed to get Cloud SQL instance {database_name}: {str(e)}",
-                provider="gcp",
-                error_code=e.grpc_status_code,
-            )
+        except HttpError as e:
+            if e.resp.status == 404:
+                raise ResourceNotFoundError(f"Database instance {database_name} not found", provider="gcp")
+            else:
+                raise CloudProviderError(
+                    f"Failed to get Cloud SQL instance {database_name}: {str(e)}",
+                    provider="gcp",
+                    error_code=str(e.resp.status),
+                )
 
-    @retry_with_backoff(
-        max_retries=3,
-        retriable_exceptions=(gcp_exceptions.ServiceUnavailable, gcp_exceptions.DeadlineExceeded),
-    )
-    def delete_database(self, database_name: str, region: Optional[str] = None, skip_final_snapshot: bool = False) -> bool:
-        """
-        Delete a Cloud SQL instance.
-
-        Args:
-            database_name: Database instance name
-            region: GCP region (not used in delete, kept for interface compatibility)
-            skip_final_snapshot: Not applicable to GCP (kept for interface compatibility)
-
-        Returns:
-            True if deletion was initiated
-
-        Raises:
-            CloudProviderError: If database deletion fails
-        """
+    @retry_with_backoff(max_retries=3, retriable_exceptions=(HttpError,))
+    def delete_database(
+        self, database_name: str, region: Optional[str] = None, skip_final_snapshot: bool = False
+    ) -> bool:
+        """Delete a Cloud SQL instance."""
         logger.info(f"Deleting Cloud SQL instance: {database_name}")
 
         try:
-            client = self._get_client()
-
-            request = sql_v1.DeleteInstanceRequest()
-            request.project = self.project_id
-            request.instance = database_name
+            service = self._get_service()
 
             self.rate_limiter.acquire()
-            operation = client.delete(request=request)
+            operation = service.instances().delete(
+                project=self.project_id,
+                instance=database_name
+            ).execute()
 
-            logger.info(f"✅ Initiated Cloud SQL instance deletion: {database_name} (operation: {operation.name})")
+            logger.info(f"✅ Initiated Cloud SQL instance deletion: {database_name}")
             return True
 
-        except gcp_exceptions.NotFound:
-            raise ResourceNotFoundError(f"Database instance {database_name} not found", provider="gcp")
-        except gcp_exceptions.GoogleAPICallError as e:
-            raise CloudProviderError(
-                f"Failed to delete Cloud SQL instance {database_name}: {str(e)}",
-                provider="gcp",
-                error_code=e.grpc_status_code,
-            )
+        except HttpError as e:
+            if e.resp.status == 404:
+                raise ResourceNotFoundError(f"Database instance {database_name} not found", provider="gcp")
+            else:
+                raise CloudProviderError(
+                    f"Failed to delete Cloud SQL instance {database_name}: {str(e)}",
+                    provider="gcp",
+                    error_code=str(e.resp.status),
+                )
 
-    @retry_with_backoff(
-        max_retries=3,
-        retriable_exceptions=(gcp_exceptions.ServiceUnavailable, gcp_exceptions.DeadlineExceeded),
-    )
+    @retry_with_backoff(max_retries=3, retriable_exceptions=(HttpError,))
     def list_databases(self, region: Optional[str] = None) -> List[Database]:
-        """
-        List all Cloud SQL instances in the project.
-
-        Args:
-            region: Optional region filter
-
-        Returns:
-            List of Database objects
-
-        Raises:
-            CloudProviderError: If listing fails
-        """
+        """List all Cloud SQL instances in the project."""
         logger.debug(f"Listing Cloud SQL instances in project {self.project_id}")
 
         try:
-            client = self._get_client()
-
-            request = sql_v1.ListInstancesRequest()
-            request.project = self.project_id
+            service = self._get_service()
 
             databases = []
 
             self.rate_limiter.acquire()
-            response = client.list(request=request)
+            response = service.instances().list(project=self.project_id).execute()
 
-            for instance in response.items:
+            for instance in response.get("items", []):
                 # Filter by region if specified
-                if region and instance.region != region:
+                if region and instance.get("region") != region:
                     continue
 
                 # Parse database version
                 engine = "unknown"
-                engine_version = instance.database_version
-                if "POSTGRES" in instance.database_version:
+                engine_version = instance.get("databaseVersion", "")
+                if "POSTGRES" in engine_version:
                     engine = "postgres"
-                    engine_version = instance.database_version.replace("POSTGRES_", "").replace("_", ".")
-                elif "MYSQL" in instance.database_version:
+                    engine_version = engine_version.replace("POSTGRES_", "").replace("_", ".")
+                elif "MYSQL" in engine_version:
                     engine = "mysql"
-                    engine_version = instance.database_version.replace("MYSQL_", "").replace("_", ".")
-                elif "SQLSERVER" in instance.database_version:
+                    engine_version = engine_version.replace("MYSQL_", "").replace("_", ".")
+                elif "SQLSERVER" in engine_version:
                     engine = "sqlserver"
-                    engine_version = instance.database_version.replace("SQLSERVER_", "").replace("_", ".")
+                    engine_version = engine_version.replace("SQLSERVER_", "").replace("_", ".")
+
+                settings = instance.get("settings", {})
 
                 databases.append(
                     Database(
-                        id=instance.name,
-                        name=instance.name,
+                        id=instance["name"],
+                        name=instance["name"],
                         engine=engine,
                         engine_version=engine_version,
-                        status=instance.state.name,
-                        region=instance.region,
-                        allocated_storage=instance.settings.data_disk_size_gb if instance.settings else 0,
-                        instance_class=instance.settings.tier if instance.settings else "",
+                        status=instance.get("state", "UNKNOWN"),
+                        region=instance.get("region", ""),
+                        allocated_storage=settings.get("dataDiskSizeGb", 0),
+                        instance_class=settings.get("tier", ""),
                         metadata={
                             "project_id": self.project_id,
-                            "connection_name": instance.connection_name,
+                            "connection_name": instance.get("connectionName"),
                         },
                     )
                 )
@@ -370,7 +287,9 @@ class CloudSQLService:
             logger.info(f"Found {len(databases)} Cloud SQL instances")
             return databases
 
-        except gcp_exceptions.GoogleAPICallError as e:
+        except HttpError as e:
             raise CloudProviderError(
-                f"Failed to list Cloud SQL instances: {str(e)}", provider="gcp", error_code=e.grpc_status_code
+                f"Failed to list Cloud SQL instances: {str(e)}",
+                provider="gcp",
+                error_code=str(e.resp.status),
             )

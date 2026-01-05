@@ -2,7 +2,6 @@
 
 import logging
 from typing import List, Optional
-from datetime import datetime
 
 from google.cloud import storage
 from google.api_core import exceptions as gcp_exceptions

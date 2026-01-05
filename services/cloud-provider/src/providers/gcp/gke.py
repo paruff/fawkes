@@ -5,7 +5,6 @@ from typing import List, Optional
 
 from google.cloud import container_v1
 from google.api_core import exceptions as gcp_exceptions
-from google.api_core import retry
 
 from ...interfaces.models import Cluster
 from ...interfaces.provider import ClusterConfig
@@ -74,7 +73,7 @@ class GKEService:
             # Configure node pool
             node_config = container_v1.NodeConfig()
             node_config.machine_type = config.node_instance_type
-            
+
             # Add node pool
             node_pool = container_v1.NodePool()
             node_pool.name = "default-pool"
@@ -118,7 +117,7 @@ class GKEService:
                 },
             )
 
-        except gcp_exceptions.AlreadyExists as e:
+        except gcp_exceptions.AlreadyExists:
             raise ResourceAlreadyExistsError(f"Cluster {config.name} already exists", provider="gcp")
         except gcp_exceptions.InvalidArgument as e:
             raise ValidationError(f"Invalid parameter: {str(e)}", provider="gcp")
