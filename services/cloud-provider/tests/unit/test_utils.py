@@ -1,4 +1,5 @@
 """Unit tests for utility functions."""
+
 import pytest
 import time
 from unittest.mock import Mock
@@ -22,24 +23,36 @@ class TestRetryWithBackoff:
 
     def test_retry_on_exception(self):
         """Test that function retries on exception."""
-        mock_func = Mock(side_effect=[Exception("error 1"), Exception("error 2"), "success"])
-        decorated = retry_with_backoff(max_retries=3, initial_delay=0.01)(mock_func)
+        call_count = [0]
+
+        def test_func():
+            call_count[0] += 1
+            if call_count[0] < 3:
+                raise Exception(f"error {call_count[0]}")
+            return "success"
+
+        decorated = retry_with_backoff(max_retries=3, initial_delay=0.01)(test_func)
 
         result = decorated()
 
         assert result == "success"
-        assert mock_func.call_count == 3
+        assert call_count[0] == 3
 
     def test_max_retries_exceeded(self):
         """Test that function raises after max retries."""
-        mock_func = Mock(side_effect=Exception("persistent error"))
-        decorated = retry_with_backoff(max_retries=2, initial_delay=0.01)(mock_func)
+        call_count = [0]
+
+        def test_func():
+            call_count[0] += 1
+            raise Exception("persistent error")
+
+        decorated = retry_with_backoff(max_retries=2, initial_delay=0.01)(test_func)
 
         with pytest.raises(Exception) as exc_info:
             decorated()
 
         assert "persistent error" in str(exc_info.value)
-        assert mock_func.call_count == 3  # Initial + 2 retries
+        assert call_count[0] == 3  # Initial + 2 retries
 
     def test_exponential_backoff(self):
         """Test that delay increases exponentially."""
@@ -72,16 +85,21 @@ class TestRetryWithBackoff:
         class NonRetriableError(Exception):
             pass
 
-        mock_func = Mock(side_effect=NonRetriableError("non-retriable"))
+        call_count = [0]
+
+        def test_func():
+            call_count[0] += 1
+            raise NonRetriableError("non-retriable")
+
         decorated = retry_with_backoff(max_retries=3, initial_delay=0.01, retriable_exceptions=(RetriableError,))(
-            mock_func
+            test_func
         )
 
         with pytest.raises(NonRetriableError):
             decorated()
 
         # Should fail immediately without retries
-        assert mock_func.call_count == 1
+        assert call_count[0] == 1
 
 
 class TestRateLimiter:
@@ -97,15 +115,16 @@ class TestRateLimiter:
 
     def test_acquire_exceeds_limit(self):
         """Test that requests exceeding limit are throttled."""
-        limiter = RateLimiter(max_calls=2, time_window=1.0)
+        # Use smaller time window and timeout to make test reliable
+        limiter = RateLimiter(max_calls=2, time_window=10.0)  # 10 second window
 
         # First 2 should succeed
-        assert limiter.acquire(timeout=0.1) is True
-        assert limiter.acquire(timeout=0.1) is True
+        assert limiter.acquire(timeout=0.01) is True
+        assert limiter.acquire(timeout=0.01) is True
 
-        # Third should timeout
+        # Third should timeout immediately since refill is slow
         with pytest.raises(RateLimitError):
-            limiter.acquire(timeout=0.1)
+            limiter.acquire(timeout=0.001)
 
     def test_token_refill(self):
         """Test that tokens are refilled over time."""

@@ -1,7 +1,7 @@
 """AWS EKS (Elastic Kubernetes Service) operations."""
+
 import logging
 from typing import List, Optional
-from datetime import datetime
 
 import boto3
 from botocore.exceptions import ClientError

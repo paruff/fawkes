@@ -1,4 +1,5 @@
 """AWS Cost Explorer operations."""
+
 import logging
 from typing import Dict, Any, Optional
 from datetime import datetime, timedelta
@@ -157,9 +158,7 @@ class CostExplorerService:
             if error_code == "InvalidNextToken":
                 raise ValidationError(f"Invalid parameters: {error_msg}", provider="aws")
             else:
-                raise CloudProviderError(
-                    f"Failed to get cost data: {error_msg}", provider="aws", error_code=error_code
-                )
+                raise CloudProviderError(f"Failed to get cost data: {error_msg}", provider="aws", error_code=error_code)
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(ClientError,))
     def get_cost_forecast(self, days: int = 30) -> Dict[str, Any]:
@@ -190,9 +189,7 @@ class CostExplorerService:
             }
 
             self.rate_limiter.acquire()
-            response = client.get_cost_forecast(
-                TimePeriod=time_period, Metric="UNBLENDED_COST", Granularity="MONTHLY"
-            )
+            response = client.get_cost_forecast(TimePeriod=time_period, Metric="UNBLENDED_COST", Granularity="MONTHLY")
 
             total_forecast = float(response.get("Total", {}).get("Amount", 0))
 
@@ -209,6 +206,4 @@ class CostExplorerService:
         except ClientError as e:
             error_code = e.response.get("Error", {}).get("Code", "Unknown")
             error_msg = e.response.get("Error", {}).get("Message", str(e))
-            raise CloudProviderError(
-                f"Failed to get cost forecast: {error_msg}", provider="aws", error_code=error_code
-            )
+            raise CloudProviderError(f"Failed to get cost forecast: {error_msg}", provider="aws", error_code=error_code)

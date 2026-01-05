@@ -1,5 +1,5 @@
 """Unit tests for interface models."""
-import pytest
+
 from datetime import datetime
 
 from src.interfaces.models import Cluster, Database, Storage, CostData
