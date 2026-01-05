@@ -302,7 +302,7 @@ variable "deny_all_egress" {
 }
 
 variable "tags" {
-  description = "Labels to apply to network resources"
+  description = "Labels to apply to network resources (Note: GCP VPC/subnet resources don't support labels, kept for base module compatibility)"
   type        = map(string)
   default     = {}
 }
