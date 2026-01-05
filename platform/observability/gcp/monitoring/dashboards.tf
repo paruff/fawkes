@@ -567,12 +567,6 @@ variable "project_id" {
   type        = string
 }
 
-variable "region" {
-  description = "GCP region"
-  type        = string
-  default     = "us-central1"
-}
-
 variable "tags" {
   description = "Tags to apply to resources"
   type        = map(string)
