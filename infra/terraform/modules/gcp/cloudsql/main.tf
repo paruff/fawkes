@@ -48,11 +48,11 @@ resource "google_sql_database_instance" "main" {
   deletion_protection = var.deletion_protection
 
   settings {
-    tier              = var.tier
-    availability_type = var.availability_type
-    disk_type         = var.disk_type
-    disk_size         = var.disk_size
-    disk_autoresize   = var.disk_autoresize
+    tier                  = var.tier
+    availability_type     = var.availability_type
+    disk_type             = var.disk_type
+    disk_size             = var.disk_size
+    disk_autoresize       = var.disk_autoresize
     disk_autoresize_limit = var.disk_autoresize_limit
 
     # Backup configuration
@@ -72,7 +72,7 @@ resource "google_sql_database_instance" "main" {
       ipv4_enabled                                  = var.ipv4_enabled
       private_network                               = var.private_network
       enable_private_path_for_google_cloud_services = var.enable_private_path_for_google_cloud_services
-      require_ssl                                   = var.require_ssl
+      ssl_mode                                      = var.require_ssl ? "ENCRYPTED_ONLY" : "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
 
       dynamic "authorized_networks" {
         for_each = var.authorized_networks
@@ -161,6 +161,7 @@ resource "google_sql_database_instance" "replicas" {
   master_instance_name = google_sql_database_instance.main.name
   region               = each.value.region
   project              = var.project_id
+  database_version     = google_sql_database_instance.main.database_version
 
   replica_configuration {
     failover_target = each.value.failover_target
@@ -176,7 +177,7 @@ resource "google_sql_database_instance" "replicas" {
     ip_configuration {
       ipv4_enabled    = var.ipv4_enabled
       private_network = var.private_network
-      require_ssl     = var.require_ssl
+      ssl_mode        = var.require_ssl ? "ENCRYPTED_ONLY" : "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
     }
 
     user_labels = merge(

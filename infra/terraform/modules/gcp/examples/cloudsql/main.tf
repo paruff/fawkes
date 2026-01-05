@@ -37,26 +37,26 @@ provider "google" {
 module "cloudsql" {
   source = "../../cloudsql"
 
-  instance_name      = var.instance_name
-  use_random_suffix  = true
-  location           = var.region
-  project_id         = var.project_id
-  database_version   = var.database_version
+  instance_name     = var.instance_name
+  use_random_suffix = true
+  location          = var.region
+  project_id        = var.project_id
+  database_version  = var.database_version
 
-  tier               = var.tier
-  availability_type  = var.availability_type
-  disk_type          = "PD_SSD"
-  disk_size          = 20
-  disk_autoresize    = true
+  tier                  = var.tier
+  availability_type     = var.availability_type
+  disk_type             = "PD_SSD"
+  disk_size             = 20
+  disk_autoresize       = true
   disk_autoresize_limit = 100
 
   deletion_protection = false
 
-  backup_enabled                  = true
-  backup_start_time               = "03:00"
-  point_in_time_recovery_enabled  = true
-  transaction_log_retention_days  = 7
-  retained_backups                = 7
+  backup_enabled                 = true
+  backup_start_time              = "03:00"
+  point_in_time_recovery_enabled = true
+  transaction_log_retention_days = 7
+  retained_backups               = 7
 
   ipv4_enabled                                  = false
   private_network                               = var.private_network

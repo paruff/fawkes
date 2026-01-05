@@ -98,18 +98,18 @@ module "gke" {
 
   kubernetes_version = var.kubernetes_version
 
-  logging_components   = ["SYSTEM_COMPONENTS", "WORKLOADS"]
-  monitoring_components = ["SYSTEM_COMPONENTS"]
+  logging_components        = ["SYSTEM_COMPONENTS", "WORKLOADS"]
+  monitoring_components     = ["SYSTEM_COMPONENTS"]
   enable_managed_prometheus = true
 
-  enable_network_policy      = true
-  binary_authorization_mode  = "PROJECT_SINGLETON_POLICY_ENFORCE"
-  datapath_provider          = "ADVANCED_DATAPATH"
+  enable_network_policy     = true
+  binary_authorization_mode = "PROJECT_SINGLETON_POLICY_ENFORCE"
+  datapath_provider         = "ADVANCED_DATAPATH"
 
-  enable_private_cluster    = true
-  enable_private_endpoint   = false
-  enable_private_nodes      = true
-  master_ipv4_cidr_block    = "172.16.0.0/28"
+  enable_private_cluster      = true
+  enable_private_endpoint     = false
+  enable_private_nodes        = true
+  master_ipv4_cidr_block      = "172.16.0.0/28"
   enable_master_global_access = false
 
   master_authorized_networks = var.master_authorized_networks
@@ -117,9 +117,9 @@ module "gke" {
   maintenance_start_time = "03:00"
   release_channel        = "REGULAR"
 
-  enable_http_load_balancing          = true
-  enable_horizontal_pod_autoscaling   = true
-  enable_filestore_csi_driver         = false
+  enable_http_load_balancing            = true
+  enable_horizontal_pod_autoscaling     = true
+  enable_filestore_csi_driver           = false
   enable_gce_persistent_disk_csi_driver = true
 
   enable_security_posture = true
@@ -127,18 +127,18 @@ module "gke" {
 
   node_pools = var.enable_autopilot ? [] : [
     {
-      name               = "default-pool"
-      initial_node_count = 1
-      enable_autoscaling = true
-      min_node_count     = 1
-      max_node_count     = 10
-      machine_type       = "e2-medium"
-      disk_size_gb       = 100
-      disk_type          = "pd-standard"
-      enable_secure_boot = true
+      name                        = "default-pool"
+      initial_node_count          = 1
+      enable_autoscaling          = true
+      min_node_count              = 1
+      max_node_count              = 10
+      machine_type                = "e2-medium"
+      disk_size_gb                = 100
+      disk_type                   = "pd-standard"
+      enable_secure_boot          = true
       enable_integrity_monitoring = true
-      auto_repair        = true
-      auto_upgrade       = true
+      auto_repair                 = true
+      auto_upgrade                = true
     }
   ]
 

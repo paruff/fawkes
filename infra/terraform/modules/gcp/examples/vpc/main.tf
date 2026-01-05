@@ -73,10 +73,10 @@ module "vpc" {
   enable_nat_gateway                 = true
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
 
-  enable_flow_logs                  = true
-  flow_logs_aggregation_interval    = "INTERVAL_5_SEC"
-  flow_logs_sampling                = 0.5
-  flow_logs_metadata                = "INCLUDE_ALL_METADATA"
+  enable_flow_logs               = true
+  flow_logs_aggregation_interval = "INTERVAL_5_SEC"
+  flow_logs_sampling             = 0.5
+  flow_logs_metadata             = "INCLUDE_ALL_METADATA"
 
   firewall_rules = [
     {
