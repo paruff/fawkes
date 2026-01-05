@@ -156,20 +156,33 @@ class AWSProvider(CloudProvider):
         """Create a Kubernetes cluster."""
         return self.eks.create_cluster(config)
 
-    def get_cluster(self, cluster_id: str, region: Optional[str] = None) -> Cluster:
-        """Get cluster details."""
+    def get_cluster(self, cluster_id: str, region: Optional[str] = None, include_node_count: bool = True) -> Cluster:
+        """
+        Get cluster details.
+
+        Args:
+            cluster_id: Cluster ID
+            region: AWS region
+            include_node_count: Whether to include node count (requires additional API calls)
+        """
         region = region or self.region
-        return self.eks.get_cluster(cluster_id, region)
+        return self.eks.get_cluster(cluster_id, region, include_node_count)
 
     def delete_cluster(self, cluster_id: str, region: Optional[str] = None) -> bool:
         """Delete a cluster."""
         region = region or self.region
         return self.eks.delete_cluster(cluster_id, region)
 
-    def list_clusters(self, region: Optional[str] = None) -> List[Cluster]:
-        """List all clusters."""
+    def list_clusters(self, region: Optional[str] = None, include_details: bool = False) -> List[Cluster]:
+        """
+        List all clusters.
+
+        Args:
+            region: AWS region
+            include_details: Whether to fetch detailed info for each cluster (slower)
+        """
         region = region or self.region
-        return self.eks.list_clusters(region)
+        return self.eks.list_clusters(region, include_details)
 
     # Database operations
     def create_database(self, config: DatabaseConfig) -> Database:
@@ -208,9 +221,15 @@ class AWSProvider(CloudProvider):
         region = region or self.region
         return self.s3.delete_storage(storage_id, region, force)
 
-    def list_storage(self, region: Optional[str] = None) -> List[Storage]:
-        """List all storage buckets."""
-        return self.s3.list_storage(region)
+    def list_storage(self, region: Optional[str] = None, include_details: bool = False) -> List[Storage]:
+        """
+        List all storage buckets.
+
+        Args:
+            region: Optional region filter
+            include_details: Whether to fetch detailed info for each bucket (slower)
+        """
+        return self.s3.list_storage(region, include_details)
 
     # Cost and metrics operations
     def get_cost_data(self, timeframe: str, granularity: str = "MONTHLY") -> CostData:

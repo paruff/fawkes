@@ -281,12 +281,13 @@ class S3Service:
                 )
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(ClientError,))
-    def list_storage(self, region: Optional[str] = None) -> List[Storage]:
+    def list_storage(self, region: Optional[str] = None, include_details: bool = False) -> List[Storage]:
         """
         List all S3 buckets.
 
         Args:
             region: Optional region filter (S3 is global, but buckets have regions)
+            include_details: Whether to fetch detailed info for each bucket (slower)
 
         Returns:
             List of Storage objects
@@ -308,18 +309,29 @@ class S3Service:
                 try:
                     bucket_name = bucket_data["Name"]
 
-                    # Get bucket region
-                    self.rate_limiter.acquire()
-                    location_response = client.get_bucket_location(Bucket=bucket_name)
-                    bucket_region = location_response.get("LocationConstraint") or "us-east-1"
+                    if include_details:
+                        # Get bucket region
+                        self.rate_limiter.acquire()
+                        location_response = client.get_bucket_location(Bucket=bucket_name)
+                        bucket_region = location_response.get("LocationConstraint") or "us-east-1"
 
-                    # Filter by region if specified
-                    if region and bucket_region != region:
-                        continue
+                        # Filter by region if specified
+                        if region and bucket_region != region:
+                            continue
 
-                    # Get full bucket details
-                    bucket = self.get_storage(bucket_name, bucket_region)
-                    buckets.append(bucket)
+                        # Get full bucket details
+                        bucket = self.get_storage(bucket_name, bucket_region)
+                        buckets.append(bucket)
+                    else:
+                        # Minimal info without additional API calls
+                        buckets.append(
+                            Storage(
+                                id=bucket_name,
+                                name=bucket_name,
+                                region="unknown",  # Would require additional API call
+                                created_at=bucket_data.get("CreationDate"),
+                            )
+                        )
 
                 except Exception as e:
                     logger.warning(f"Could not retrieve bucket {bucket_data['Name']}: {e}")

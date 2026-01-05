@@ -119,13 +119,14 @@ class EKSService:
                 )
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(ClientError,))
-    def get_cluster(self, cluster_name: str, region: str) -> Cluster:
+    def get_cluster(self, cluster_name: str, region: str, include_node_count: bool = True) -> Cluster:
         """
         Get EKS cluster details.
 
         Args:
             cluster_name: Cluster name
             region: AWS region
+            include_node_count: Whether to include node count (requires additional API calls)
 
         Returns:
             Cluster object with details
@@ -142,18 +143,19 @@ class EKSService:
 
             cluster_data = response["cluster"]
 
-            # Get node group count
+            # Get node group count (optional, requires additional API calls)
             node_count = 0
-            try:
-                self.rate_limiter.acquire()
-                nodegroups = client.list_nodegroups(clusterName=cluster_name)
-                for ng_name in nodegroups.get("nodegroups", []):
+            if include_node_count:
+                try:
                     self.rate_limiter.acquire()
-                    ng_response = client.describe_nodegroup(clusterName=cluster_name, nodegroupName=ng_name)
-                    ng_data = ng_response.get("nodegroup", {})
-                    node_count += ng_data.get("scalingConfig", {}).get("desiredSize", 0)
-            except ClientError as e:
-                logger.warning(f"Could not retrieve node group info: {e}")
+                    nodegroups = client.list_nodegroups(clusterName=cluster_name)
+                    for ng_name in nodegroups.get("nodegroups", []):
+                        self.rate_limiter.acquire()
+                        ng_response = client.describe_nodegroup(clusterName=cluster_name, nodegroupName=ng_name)
+                        ng_data = ng_response.get("nodegroup", {})
+                        node_count += ng_data.get("scalingConfig", {}).get("desiredSize", 0)
+                except ClientError as e:
+                    logger.warning(f"Could not retrieve node group info: {e}")
 
             return Cluster(
                 id=cluster_data["name"],
@@ -234,12 +236,13 @@ class EKSService:
                 )
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(ClientError,))
-    def list_clusters(self, region: str) -> List[Cluster]:
+    def list_clusters(self, region: str, include_details: bool = False) -> List[Cluster]:
         """
         List all EKS clusters in a region.
 
         Args:
             region: AWS region
+            include_details: Whether to fetch detailed info for each cluster (slower)
 
         Returns:
             List of Cluster objects
@@ -257,13 +260,26 @@ class EKSService:
             self.rate_limiter.acquire()
             response = client.list_clusters()
 
-            # Get details for each cluster
-            for cluster_name in response.get("clusters", []):
-                try:
-                    cluster = self.get_cluster(cluster_name, region)
-                    clusters.append(cluster)
-                except Exception as e:
-                    logger.warning(f"Could not retrieve cluster {cluster_name}: {e}")
+            # Get details for each cluster if requested
+            if include_details:
+                for cluster_name in response.get("clusters", []):
+                    try:
+                        cluster = self.get_cluster(cluster_name, region, include_node_count=True)
+                        clusters.append(cluster)
+                    except Exception as e:
+                        logger.warning(f"Could not retrieve cluster {cluster_name}: {e}")
+            else:
+                # Return minimal cluster info without additional API calls
+                for cluster_name in response.get("clusters", []):
+                    clusters.append(
+                        Cluster(
+                            id=cluster_name,
+                            name=cluster_name,
+                            status="UNKNOWN",  # Status not available without describe_cluster
+                            version="UNKNOWN",
+                            region=region,
+                        )
+                    )
 
             logger.info(f"Found {len(clusters)} EKS clusters in region {region}")
             return clusters
