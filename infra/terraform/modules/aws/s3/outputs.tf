@@ -55,5 +55,5 @@ output "logs_bucket_arn" {
 
 output "replication_role_arn" {
   description = "The ARN of the replication IAM role"
-  value       = var.replication_configuration != null ? aws_iam_role.replication[0].arn : null
+  value       = var.replication_configuration != null && var.enable_versioning ? aws_iam_role.replication[0].arn : null
 }

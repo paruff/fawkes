@@ -199,7 +199,7 @@ resource "aws_s3_bucket_object_lock_configuration" "main" {
 
 # Replication Configuration
 resource "aws_s3_bucket_replication_configuration" "main" {
-  count  = var.replication_configuration != null ? 1 : 0
+  count  = var.replication_configuration != null && var.enable_versioning ? 1 : 0
   bucket = aws_s3_bucket.main.id
   role   = aws_iam_role.replication[0].arn
 
@@ -221,7 +221,7 @@ resource "aws_s3_bucket_replication_configuration" "main" {
 }
 
 resource "aws_iam_role" "replication" {
-  count = var.replication_configuration != null ? 1 : 0
+  count = var.replication_configuration != null && var.enable_versioning ? 1 : 0
   name  = "${var.bucket_name}-replication-role"
 
   assume_role_policy = jsonencode({
@@ -247,7 +247,7 @@ resource "aws_iam_role" "replication" {
 }
 
 resource "aws_iam_role_policy" "replication" {
-  count = var.replication_configuration != null ? 1 : 0
+  count = var.replication_configuration != null && var.enable_versioning ? 1 : 0
   name  = "${var.bucket_name}-replication-policy"
   role  = aws_iam_role.replication[0].id
 
