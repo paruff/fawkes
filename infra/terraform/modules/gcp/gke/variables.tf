@@ -283,13 +283,13 @@ variable "node_pools" {
       value  = string
       effect = string
     })), [])
-    spot                        = optional(bool, false)
-    preemptible                 = optional(bool, false)
-    auto_repair                 = optional(bool, true)
-    auto_upgrade                = optional(bool, true)
-    max_surge                   = optional(number, 1)
-    max_unavailable             = optional(number, 0)
-    upgrade_strategy            = optional(string, "SURGE")
+    spot             = optional(bool, false)
+    preemptible      = optional(bool, false)
+    auto_repair      = optional(bool, true)
+    auto_upgrade     = optional(bool, true)
+    max_surge        = optional(number, 1)
+    max_unavailable  = optional(number, 0)
+    upgrade_strategy = optional(string, "SURGE")
   }))
   default = []
 }

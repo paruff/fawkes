@@ -49,10 +49,10 @@ resource "google_compute_subnetwork" "subnets" {
   network       = google_compute_network.main.id
   project       = var.project_id
 
-  description               = each.value.description
-  private_ip_google_access  = each.value.enable_private_ip_google_access
-  purpose                   = each.value.purpose
-  role                      = each.value.purpose == "INTERNAL_HTTPS_LOAD_BALANCER" ? each.value.role : null
+  description              = each.value.description
+  private_ip_google_access = each.value.enable_private_ip_google_access
+  purpose                  = each.value.purpose
+  role                     = each.value.purpose == "INTERNAL_HTTPS_LOAD_BALANCER" ? each.value.role : null
 
   # Secondary IP ranges for GKE pods and services
   dynamic "secondary_ip_range" {
@@ -91,16 +91,16 @@ resource "google_compute_router" "router" {
 
 # Cloud NAT for outbound internet access from private resources
 resource "google_compute_router_nat" "nat" {
-  count  = var.enable_nat_gateway ? 1 : 0
-  name   = "${var.network_name}-nat"
-  router = google_compute_router.router[0].name
-  region = var.location
+  count   = var.enable_nat_gateway ? 1 : 0
+  name    = "${var.network_name}-nat"
+  router  = google_compute_router.router[0].name
+  region  = var.location
   project = var.project_id
 
   nat_ip_allocate_option             = var.nat_ip_allocate_option
   source_subnetwork_ip_ranges_to_nat = var.source_subnetwork_ip_ranges_to_nat
 
-  min_ports_per_vm                   = var.nat_min_ports_per_vm
+  min_ports_per_vm                    = var.nat_min_ports_per_vm
   enable_endpoint_independent_mapping = var.nat_enable_endpoint_independent_mapping
 
   log_config {

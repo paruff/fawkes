@@ -49,20 +49,20 @@ module "gcs" {
 
   lifecycle_rules = [
     {
-      action_type                      = "SetStorageClass"
-      storage_class                    = "NEARLINE"
-      condition_age                    = 30
-      condition_matches_storage_class  = ["STANDARD"]
+      action_type                     = "SetStorageClass"
+      storage_class                   = "NEARLINE"
+      condition_age                   = 30
+      condition_matches_storage_class = ["STANDARD"]
     },
     {
-      action_type                      = "SetStorageClass"
-      storage_class                    = "COLDLINE"
-      condition_age                    = 90
-      condition_matches_storage_class  = ["NEARLINE"]
+      action_type                     = "SetStorageClass"
+      storage_class                   = "COLDLINE"
+      condition_age                   = 90
+      condition_matches_storage_class = ["NEARLINE"]
     },
     {
-      action_type                      = "Delete"
-      condition_age                    = 365
+      action_type   = "Delete"
+      condition_age = 365
     }
   ]
 

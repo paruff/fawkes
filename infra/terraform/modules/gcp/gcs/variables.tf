@@ -83,17 +83,17 @@ variable "kms_key_name" {
 variable "lifecycle_rules" {
   description = "List of lifecycle rules"
   type = list(object({
-    action_type                           = string
-    storage_class                         = optional(string, null)
-    condition_age                         = optional(number, null)
-    condition_created_before              = optional(string, null)
-    condition_with_state                  = optional(string, null)
-    condition_matches_storage_class       = optional(list(string), null)
-    condition_num_newer_versions          = optional(number, null)
-    condition_days_since_custom_time      = optional(number, null)
-    condition_days_since_noncurrent_time  = optional(number, null)
-    condition_matches_prefix              = optional(list(string), null)
-    condition_matches_suffix              = optional(list(string), null)
+    action_type                          = string
+    storage_class                        = optional(string, null)
+    condition_age                        = optional(number, null)
+    condition_created_before             = optional(string, null)
+    condition_with_state                 = optional(string, null)
+    condition_matches_storage_class      = optional(list(string), null)
+    condition_num_newer_versions         = optional(number, null)
+    condition_days_since_custom_time     = optional(number, null)
+    condition_days_since_noncurrent_time = optional(number, null)
+    condition_matches_prefix             = optional(list(string), null)
+    condition_matches_suffix             = optional(list(string), null)
   }))
   default = []
 
@@ -146,7 +146,7 @@ variable "retention_policy_retention_period" {
   default     = null
 
   validation {
-    condition     = var.retention_policy_retention_period == null || var.retention_policy_retention_period >= 0
+    condition     = var.retention_policy_retention_period == null || try(var.retention_policy_retention_period >= 0, false)
     error_message = "Retention period must be null or a non-negative number."
   }
 }
