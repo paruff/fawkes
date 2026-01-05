@@ -15,6 +15,13 @@ plugin "azurerm" {
   source  = "github.com/terraform-linters/tflint-ruleset-azurerm"
 }
 
+# GCP Plugin
+plugin "google" {
+  enabled = true
+  version = "0.30.0"
+  source  = "github.com/terraform-linters/tflint-ruleset-google"
+}
+
 # Kubernetes Plugin (temporarily removed due to upstream tag resolution errors)
 # Re-enable after confirming a valid release tag exists.
 
