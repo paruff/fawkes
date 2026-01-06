@@ -13,7 +13,7 @@ BATS_VERSION="v1.11.0"
 BATS_SUPPORT_VERSION="v0.3.0"
 BATS_ASSERT_VERSION="v2.1.0"
 BATS_FILE_VERSION="v0.4.0"
-BATS_MOCK_VERSION="v2.1.0"
+BATS_MOCK_VERSION="master"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
