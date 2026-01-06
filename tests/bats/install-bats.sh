@@ -13,7 +13,7 @@ BATS_VERSION="v1.11.0"
 BATS_SUPPORT_VERSION="v0.3.0"
 BATS_ASSERT_VERSION="v2.1.0"
 BATS_FILE_VERSION="v0.4.0"
-BATS_MOCK_VERSION="v2.1.0"
+BATS_MOCK_VERSION="master"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -74,7 +74,7 @@ cp -r bats-file/load.bash bats-file/src "${PREFIX}/lib/bats-file/"
 echo "📦 Installing bats-mock ${BATS_MOCK_VERSION}..."
 git clone --depth 1 --branch "${BATS_MOCK_VERSION}" https://github.com/grayhemp/bats-mock.git
 mkdir -p "${PREFIX}/lib/bats-mock"
-cp -r bats-mock/stub.bash "${PREFIX}/lib/bats-mock/"
+cp -r bats-mock/load.bash bats-mock/src "${PREFIX}/lib/bats-mock/"
 
 echo ""
 echo "✅ BATS installation complete!"
