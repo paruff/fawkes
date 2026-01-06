@@ -74,7 +74,7 @@ cp -r bats-file/load.bash bats-file/src "${PREFIX}/lib/bats-file/"
 echo "📦 Installing bats-mock ${BATS_MOCK_VERSION}..."
 git clone --depth 1 --branch "${BATS_MOCK_VERSION}" https://github.com/grayhemp/bats-mock.git
 mkdir -p "${PREFIX}/lib/bats-mock"
-cp -r bats-mock/stub.bash "${PREFIX}/lib/bats-mock/"
+cp -r bats-mock/load.bash bats-mock/src "${PREFIX}/lib/bats-mock/"
 
 echo ""
 echo "✅ BATS installation complete!"
