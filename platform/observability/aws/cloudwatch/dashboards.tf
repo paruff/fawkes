@@ -38,8 +38,8 @@ resource "aws_cloudwatch_dashboard" "eks_cluster_overview" {
       {
         type = "metric"
         properties = {
-          title   = "EKS Control Plane CPU Utilization"
-          region  = var.aws_region
+          title  = "EKS Control Plane CPU Utilization"
+          region = var.aws_region
           metrics = [
             ["AWS/EKS", "cluster_control_plane_cpu_utilization", "ClusterName", var.cluster_name]
           ]
@@ -56,8 +56,8 @@ resource "aws_cloudwatch_dashboard" "eks_cluster_overview" {
       {
         type = "metric"
         properties = {
-          title   = "EKS Control Plane Memory Utilization"
-          region  = var.aws_region
+          title  = "EKS Control Plane Memory Utilization"
+          region = var.aws_region
           metrics = [
             ["AWS/EKS", "cluster_control_plane_memory_utilization", "ClusterName", var.cluster_name]
           ]
@@ -74,9 +74,9 @@ resource "aws_cloudwatch_dashboard" "eks_cluster_overview" {
       {
         type = "log"
         properties = {
-          title   = "EKS Control Plane Errors"
-          region  = var.aws_region
-          query   = <<-EOT
+          title  = "EKS Control Plane Errors"
+          region = var.aws_region
+          query  = <<-EOT
             SOURCE '/aws/eks/${var.cluster_name}/cluster'
             | fields @timestamp, @message
             | filter @message like /error/i
@@ -88,8 +88,8 @@ resource "aws_cloudwatch_dashboard" "eks_cluster_overview" {
       {
         type = "metric"
         properties = {
-          title   = "Node Count"
-          region  = var.aws_region
+          title  = "Node Count"
+          region = var.aws_region
           metrics = [
             ["AWS/EKS", "cluster_node_count", "ClusterName", var.cluster_name]
           ]
@@ -100,8 +100,8 @@ resource "aws_cloudwatch_dashboard" "eks_cluster_overview" {
       {
         type = "metric"
         properties = {
-          title   = "Pod Count"
-          region  = var.aws_region
+          title  = "Pod Count"
+          region = var.aws_region
           metrics = [
             ["AWS/EKS", "cluster_pod_count", "ClusterName", var.cluster_name]
           ]
@@ -122,8 +122,8 @@ resource "aws_cloudwatch_dashboard" "eks_nodegroup" {
       {
         type = "metric"
         properties = {
-          title   = "Node CPU Utilization"
-          region  = var.aws_region
+          title  = "Node CPU Utilization"
+          region = var.aws_region
           metrics = [
             ["AWS/EC2", "CPUUtilization", { stat = "Average" }]
           ]
@@ -140,8 +140,8 @@ resource "aws_cloudwatch_dashboard" "eks_nodegroup" {
       {
         type = "metric"
         properties = {
-          title   = "Node Memory Utilization"
-          region  = var.aws_region
+          title  = "Node Memory Utilization"
+          region = var.aws_region
           metrics = [
             ["CWAgent", "mem_used_percent", { stat = "Average" }]
           ]
@@ -158,8 +158,8 @@ resource "aws_cloudwatch_dashboard" "eks_nodegroup" {
       {
         type = "metric"
         properties = {
-          title   = "Node Disk Usage"
-          region  = var.aws_region
+          title  = "Node Disk Usage"
+          region = var.aws_region
           metrics = [
             ["CWAgent", "disk_used_percent", { stat = "Average" }]
           ]
@@ -176,8 +176,8 @@ resource "aws_cloudwatch_dashboard" "eks_nodegroup" {
       {
         type = "metric"
         properties = {
-          title   = "Node Network In/Out"
-          region  = var.aws_region
+          title  = "Node Network In/Out"
+          region = var.aws_region
           metrics = [
             ["AWS/EC2", "NetworkIn", { stat = "Average", label = "Network In" }],
             ["...", "NetworkOut", { stat = "Average", label = "Network Out" }]
@@ -199,8 +199,8 @@ resource "aws_cloudwatch_dashboard" "application_performance" {
       {
         type = "metric"
         properties = {
-          title   = "Container Insights - CPU Utilization"
-          region  = var.aws_region
+          title  = "Container Insights - CPU Utilization"
+          region = var.aws_region
           metrics = [
             ["ContainerInsights", "pod_cpu_utilization", "ClusterName", var.cluster_name, { stat = "Average" }]
           ]
@@ -211,8 +211,8 @@ resource "aws_cloudwatch_dashboard" "application_performance" {
       {
         type = "metric"
         properties = {
-          title   = "Container Insights - Memory Utilization"
-          region  = var.aws_region
+          title  = "Container Insights - Memory Utilization"
+          region = var.aws_region
           metrics = [
             ["ContainerInsights", "pod_memory_utilization", "ClusterName", var.cluster_name, { stat = "Average" }]
           ]
@@ -223,8 +223,8 @@ resource "aws_cloudwatch_dashboard" "application_performance" {
       {
         type = "metric"
         properties = {
-          title   = "Container Insights - Network RX/TX"
-          region  = var.aws_region
+          title  = "Container Insights - Network RX/TX"
+          region = var.aws_region
           metrics = [
             ["ContainerInsights", "pod_network_rx_bytes", "ClusterName", var.cluster_name, { stat = "Sum", label = "RX Bytes" }],
             ["...", "pod_network_tx_bytes", "...", "...", { stat = "Sum", label = "TX Bytes" }]
@@ -236,8 +236,8 @@ resource "aws_cloudwatch_dashboard" "application_performance" {
       {
         type = "metric"
         properties = {
-          title   = "Container Restarts"
-          region  = var.aws_region
+          title  = "Container Restarts"
+          region = var.aws_region
           metrics = [
             ["ContainerInsights", "number_of_container_restarts", "ClusterName", var.cluster_name]
           ]
@@ -258,8 +258,8 @@ resource "aws_cloudwatch_dashboard" "cost_usage" {
       {
         type = "metric"
         properties = {
-          title   = "EKS Control Plane Cost (Estimated)"
-          region  = var.aws_region
+          title  = "EKS Control Plane Cost (Estimated)"
+          region = var.aws_region
           annotations = {
             horizontal = [
               {
@@ -278,9 +278,9 @@ resource "aws_cloudwatch_dashboard" "cost_usage" {
       {
         type = "log"
         properties = {
-          title   = "Top 10 Most Expensive Resources"
-          region  = var.aws_region
-          query   = <<-EOT
+          title  = "Top 10 Most Expensive Resources"
+          region = var.aws_region
+          query  = <<-EOT
             fields @timestamp, line_item_resource_id, line_item_blended_cost
             | filter line_item_product_code = 'AmazonEKS' or line_item_product_code = 'AmazonEC2'
             | stats sum(line_item_blended_cost) as cost by line_item_resource_id
