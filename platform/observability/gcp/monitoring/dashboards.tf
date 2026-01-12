@@ -52,9 +52,9 @@ resource "google_monitoring_dashboard" "gke_cluster_overview" {
                     }
                   }
                 }
-                plotType        = "LINE"
-                targetAxis      = "Y1"
-                legendTemplate  = "CPU Utilization"
+                plotType       = "LINE"
+                targetAxis     = "Y1"
+                legendTemplate = "CPU Utilization"
               }]
               yAxis = {
                 label = "Utilization %"
@@ -82,9 +82,9 @@ resource "google_monitoring_dashboard" "gke_cluster_overview" {
                     }
                   }
                 }
-                plotType        = "LINE"
-                targetAxis      = "Y1"
-                legendTemplate  = "Memory Utilization"
+                plotType       = "LINE"
+                targetAxis     = "Y1"
+                legendTemplate = "Memory Utilization"
               }]
               yAxis = {
                 label = "Utilization %"
@@ -112,9 +112,9 @@ resource "google_monitoring_dashboard" "gke_cluster_overview" {
                     }
                   }
                 }
-                plotType        = "LINE"
-                targetAxis      = "Y1"
-                legendTemplate  = "Nodes"
+                plotType       = "LINE"
+                targetAxis     = "Y1"
+                legendTemplate = "Nodes"
               }]
               yAxis = {
                 label = "Count"
@@ -142,9 +142,9 @@ resource "google_monitoring_dashboard" "gke_cluster_overview" {
                     }
                   }
                 }
-                plotType        = "LINE"
-                targetAxis      = "Y1"
-                legendTemplate  = "Pods"
+                plotType       = "LINE"
+                targetAxis     = "Y1"
+                legendTemplate = "Pods"
               }]
               yAxis = {
                 label = "Count"
@@ -174,9 +174,9 @@ resource "google_monitoring_dashboard" "gke_cluster_overview" {
                     }
                   }
                 }
-                plotType        = "LINE"
-                targetAxis      = "Y1"
-                legendTemplate  = "Restarts/sec"
+                plotType       = "LINE"
+                targetAxis     = "Y1"
+                legendTemplate = "Restarts/sec"
               }]
               yAxis = {
                 label = "Restarts per second"
@@ -218,9 +218,9 @@ resource "google_monitoring_dashboard" "gke_node_performance" {
                     }
                   }
                 }
-                plotType        = "LINE"
-                targetAxis      = "Y1"
-                legendTemplate  = "$${resource.labels.node_name}"
+                plotType       = "LINE"
+                targetAxis     = "Y1"
+                legendTemplate = "$${resource.labels.node_name}"
               }]
               yAxis = {
                 label = "CPU Utilization %"
@@ -248,9 +248,9 @@ resource "google_monitoring_dashboard" "gke_node_performance" {
                     }
                   }
                 }
-                plotType        = "LINE"
-                targetAxis      = "Y1"
-                legendTemplate  = "$${resource.labels.node_name}"
+                plotType       = "LINE"
+                targetAxis     = "Y1"
+                legendTemplate = "$${resource.labels.node_name}"
               }]
               yAxis = {
                 label = "Memory Utilization %"
@@ -278,9 +278,9 @@ resource "google_monitoring_dashboard" "gke_node_performance" {
                     }
                   }
                 }
-                plotType        = "LINE"
-                targetAxis      = "Y1"
-                legendTemplate  = "$${resource.labels.node_name}"
+                plotType       = "LINE"
+                targetAxis     = "Y1"
+                legendTemplate = "$${resource.labels.node_name}"
               }]
               yAxis = {
                 label = "Disk Utilization %"
@@ -309,9 +309,9 @@ resource "google_monitoring_dashboard" "gke_node_performance" {
                       }
                     }
                   }
-                  plotType        = "LINE"
-                  targetAxis      = "Y1"
-                  legendTemplate  = "RX: $${resource.labels.node_name}"
+                  plotType       = "LINE"
+                  targetAxis     = "Y1"
+                  legendTemplate = "RX: $${resource.labels.node_name}"
                 },
                 {
                   timeSeriesQuery = {
@@ -323,9 +323,9 @@ resource "google_monitoring_dashboard" "gke_node_performance" {
                       }
                     }
                   }
-                  plotType        = "LINE"
-                  targetAxis      = "Y1"
-                  legendTemplate  = "TX: $${resource.labels.node_name}"
+                  plotType       = "LINE"
+                  targetAxis     = "Y1"
+                  legendTemplate = "TX: $${resource.labels.node_name}"
                 }
               ]
               yAxis = {
@@ -370,9 +370,9 @@ resource "google_monitoring_dashboard" "application_performance" {
                     }
                   }
                 }
-                plotType        = "LINE"
-                targetAxis      = "Y1"
-                legendTemplate  = "$${resource.labels.namespace_name}"
+                plotType       = "LINE"
+                targetAxis     = "Y1"
+                legendTemplate = "$${resource.labels.namespace_name}"
               }]
               yAxis = {
                 label = "CPU Utilization"
@@ -402,9 +402,9 @@ resource "google_monitoring_dashboard" "application_performance" {
                     }
                   }
                 }
-                plotType        = "LINE"
-                targetAxis      = "Y1"
-                legendTemplate  = "$${resource.labels.namespace_name}"
+                plotType       = "LINE"
+                targetAxis     = "Y1"
+                legendTemplate = "$${resource.labels.namespace_name}"
               }]
               yAxis = {
                 label = "Memory Utilization"
@@ -434,9 +434,9 @@ resource "google_monitoring_dashboard" "application_performance" {
                     }
                   }
                 }
-                plotType        = "LINE"
-                targetAxis      = "Y1"
-                legendTemplate  = "$${resource.labels.namespace_name}"
+                plotType       = "LINE"
+                targetAxis     = "Y1"
+                legendTemplate = "$${resource.labels.namespace_name}"
               }]
               yAxis = {
                 label = "Bytes/sec"
@@ -466,9 +466,9 @@ resource "google_monitoring_dashboard" "application_performance" {
                     }
                   }
                 }
-                plotType        = "LINE"
-                targetAxis      = "Y1"
-                legendTemplate  = "$${resource.labels.namespace_name}"
+                plotType       = "LINE"
+                targetAxis     = "Y1"
+                legendTemplate = "$${resource.labels.namespace_name}"
               }]
               yAxis = {
                 label = "Bytes/sec"
