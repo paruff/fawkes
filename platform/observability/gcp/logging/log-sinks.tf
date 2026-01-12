@@ -78,9 +78,9 @@ resource "google_storage_bucket" "logs" {
 
 # BigQuery Dataset for Log Analysis
 resource "google_bigquery_dataset" "logs" {
-  dataset_id                 = replace("${var.cluster_name}_logs", "-", "_")
-  project                    = var.project_id
-  location                   = var.region
+  dataset_id                  = replace("${var.cluster_name}_logs", "-", "_")
+  project                     = var.project_id
+  location                    = var.region
   default_table_expiration_ms = 7776000000 # 90 days
 
   labels = merge(
@@ -165,7 +165,7 @@ resource "google_pubsub_topic" "error_logs" {
   labels = merge(
     var.tags,
     {
-      purpose = "logging"
+      purpose  = "logging"
       severity = "error"
     }
   )
