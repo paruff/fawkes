@@ -196,7 +196,7 @@ resource "azurerm_storage_container" "terraform_state" {
 
 # Get your current public IP (IPv4 only for AKS)
 data "http" "my_ip" {
-  url = "https://ipv4.icanhazip.com"  # Forces IPv4 response
+  url = "https://ipv4.icanhazip.com" # Forces IPv4 response
 }
 
 # Get current Azure client configuration
