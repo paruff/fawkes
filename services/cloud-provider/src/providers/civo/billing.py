@@ -4,7 +4,7 @@ Civo provides billing information through their API.
 """
 
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from datetime import datetime, timedelta
 
 from civo import Civo
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class BillingService:
     """Civo Billing service operations."""
 
-    def __init__(self, client: Civo, rate_limiter: RateLimiter = None):
+    def __init__(self, client: Civo, rate_limiter: Optional[RateLimiter] = None):
         """
         Initialize Billing service.
 

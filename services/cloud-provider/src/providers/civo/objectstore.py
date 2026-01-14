@@ -140,7 +140,7 @@ class ObjectStoreService:
                 region=result.get("region", ""),
                 size_bytes=result.get("size_gb", 0) * 1024 * 1024 * 1024,  # Convert GB to bytes
                 object_count=0,  # Civo doesn't provide object count in API
-                created_at=datetime.fromisoformat(result["created_at"]) if result.get("created_at") else None,
+                created_at=datetime.fromisoformat(result["created_at"].replace("Z", "+00:00")) if result.get("created_at") else None,
                 versioning_enabled=False,
                 encryption_enabled=True,
                 metadata={
@@ -241,7 +241,7 @@ class ObjectStoreService:
                     region=result.get("region", ""),
                     size_bytes=result.get("size_gb", 0) * 1024 * 1024 * 1024,
                     object_count=0,
-                    created_at=datetime.fromisoformat(result["created_at"]) if result.get("created_at") else None,
+                    created_at=datetime.fromisoformat(result["created_at"].replace("Z", "+00:00")) if result.get("created_at") else None,
                     versioning_enabled=False,
                     encryption_enabled=True,
                     metadata={
