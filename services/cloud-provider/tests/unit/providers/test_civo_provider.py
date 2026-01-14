@@ -66,6 +66,10 @@ def mock_civo_client():
     ])
     client.kubernetes.delete = Mock(return_value={"result": "success"})
     
+    # Mock instances endpoints (optional, may not exist)
+    client.instances = Mock()
+    client.instances.list = Mock(return_value=[])
+    
     # Mock objectstore endpoints
     client.objectstore = Mock()
     client.objectstore.create = Mock(return_value={
@@ -354,3 +358,201 @@ class TestCivoProviderRateLimiting:
             
             assert provider.rate_limiter.max_calls == 5
             assert provider.rate_limiter.time_window == 1.0
+
+
+class TestCivoProviderErrorHandling:
+    """Test error handling in Civo provider."""
+
+    def test_cluster_creation_already_exists(self, civo_provider, mock_civo_client):
+        """Test handling of duplicate cluster creation."""
+        from src.exceptions import ResourceAlreadyExistsError
+        
+        mock_civo_client.kubernetes.create.side_effect = Exception("Cluster already exists")
+        
+        config = ClusterConfig(
+            name="duplicate",
+            region="NYC1",
+            version="1.28.0",
+            node_count=2,
+        )
+        
+        with pytest.raises(ResourceAlreadyExistsError):
+            civo_provider.create_cluster(config)
+
+    def test_cluster_creation_validation_error(self, civo_provider, mock_civo_client):
+        """Test handling of validation errors during cluster creation."""
+        from src.exceptions import ValidationError
+        
+        mock_civo_client.kubernetes.create.side_effect = Exception("invalid node count")
+        
+        config = ClusterConfig(
+            name="invalid",
+            region="NYC1",
+            version="1.28.0",
+            node_count=-1,
+        )
+        
+        with pytest.raises(ValidationError):
+            civo_provider.create_cluster(config)
+
+    def test_storage_creation_already_exists(self, civo_provider, mock_civo_client):
+        """Test handling of duplicate storage creation."""
+        from src.exceptions import ResourceAlreadyExistsError
+        
+        mock_civo_client.objectstore.create.side_effect = Exception("already exists")
+        
+        config = StorageConfig(name="duplicate", region="NYC1")
+        
+        with pytest.raises(ResourceAlreadyExistsError):
+            civo_provider.create_storage(config)
+
+    def test_storage_not_found(self, civo_provider, mock_civo_client):
+        """Test handling of non-existent storage."""
+        mock_civo_client.objectstore.get.side_effect = Exception("404 not found")
+        
+        with pytest.raises(ResourceNotFoundError):
+            civo_provider.get_storage("nonexistent")
+
+    def test_delete_nonexistent_cluster(self, civo_provider, mock_civo_client):
+        """Test deleting non-existent cluster."""
+        mock_civo_client.kubernetes.delete.side_effect = Exception("not found")
+        
+        with pytest.raises(ResourceNotFoundError):
+            civo_provider.delete_cluster("nonexistent")
+
+    def test_delete_nonexistent_storage(self, civo_provider, mock_civo_client):
+        """Test deleting non-existent storage."""
+        mock_civo_client.objectstore.delete.side_effect = Exception("404")
+        
+        with pytest.raises(ResourceNotFoundError):
+            civo_provider.delete_storage("nonexistent")
+
+
+class TestCivoProviderAdvanced:
+    """Test advanced Civo provider features."""
+
+    def test_create_cluster_with_applications(self, civo_provider, mock_civo_client):
+        """Test cluster creation with applications."""
+        config = ClusterConfig(
+            name="app-cluster",
+            region="NYC1",
+            version="1.28.0",
+            node_count=3,
+            metadata={
+                "applications": "PostgreSQL:5GB,Redis:5GB",
+                "cni_plugin": "flannel",
+            }
+        )
+        
+        cluster = civo_provider.create_cluster(config)
+        
+        assert isinstance(cluster, Cluster)
+        # Verify applications were passed to the API
+        call_kwargs = mock_civo_client.kubernetes.create.call_args[1]
+        assert "applications" in call_kwargs
+
+    def test_create_cluster_with_network(self, civo_provider, mock_civo_client):
+        """Test cluster creation with custom network."""
+        config = ClusterConfig(
+            name="network-cluster",
+            region="NYC1",
+            version="1.28.0",
+            node_count=2,
+            vpc_id="network-123",
+        )
+        
+        cluster = civo_provider.create_cluster(config)
+        
+        assert isinstance(cluster, Cluster)
+        call_kwargs = mock_civo_client.kubernetes.create.call_args[1]
+        assert call_kwargs["network_id"] == "network-123"
+
+    def test_create_storage_with_max_size(self, civo_provider, mock_civo_client):
+        """Test storage creation with custom max size."""
+        config = StorageConfig(
+            name="large-store",
+            region="NYC1",
+            metadata={"max_size_gb": 1000}
+        )
+        
+        storage = civo_provider.create_storage(config)
+        
+        assert isinstance(storage, Storage)
+        call_kwargs = mock_civo_client.objectstore.create.call_args[1]
+        assert call_kwargs["max_size_gb"] == 1000
+
+    def test_list_clusters_with_region_filter(self, civo_provider, mock_civo_client):
+        """Test listing clusters with region filter."""
+        mock_civo_client.kubernetes.list.return_value = [
+            {
+                "id": "cluster-nyc",
+                "name": "cluster-nyc",
+                "status": "running",
+                "kubernetes_version": "1.28.0",
+                "region": "NYC1",
+                "num_target_nodes": 2,
+                "created_at": "2024-01-14T10:00:00Z",
+            },
+            {
+                "id": "cluster-lon",
+                "name": "cluster-lon",
+                "status": "running",
+                "kubernetes_version": "1.28.0",
+                "region": "LON1",
+                "num_target_nodes": 2,
+                "created_at": "2024-01-14T10:00:00Z",
+            },
+        ]
+        
+        # Filter by NYC1
+        clusters = civo_provider.list_clusters(region="NYC1")
+        
+        assert len(clusters) == 1
+        assert clusters[0].region == "NYC1"
+
+    def test_list_storage_with_region_filter(self, civo_provider, mock_civo_client):
+        """Test listing storage with region filter."""
+        mock_civo_client.objectstore.list.return_value = [
+            {
+                "id": "store-nyc",
+                "name": "store-nyc",
+                "region": "NYC1",
+                "size_gb": 5,
+                "max_size_gb": 500,
+                "created_at": "2024-01-14T10:00:00Z",
+                "status": "ready",
+            },
+            {
+                "id": "store-lon",
+                "name": "store-lon",
+                "region": "LON1",
+                "size_gb": 5,
+                "max_size_gb": 500,
+                "created_at": "2024-01-14T10:00:00Z",
+                "status": "ready",
+            },
+        ]
+        
+        # Filter by NYC1
+        storages = civo_provider.list_storage(region="NYC1")
+        
+        assert len(storages) == 1
+        assert storages[0].region == "NYC1"
+
+    def test_database_unsupported_engine(self, civo_provider):
+        """Test database creation with unsupported engine."""
+        from src.exceptions import ValidationError
+        
+        config = DatabaseConfig(
+            name="test-db",
+            engine="oracle",  # Not supported
+            engine_version="19c",
+            instance_class="small",
+            region="NYC1",
+            metadata={"cluster_id": "cluster-123"},
+        )
+        
+        with pytest.raises(ValidationError) as exc_info:
+            civo_provider.create_database(config)
+        
+        assert "Unsupported database engine" in str(exc_info.value)
