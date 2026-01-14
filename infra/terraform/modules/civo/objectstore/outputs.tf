@@ -41,7 +41,7 @@ output "access_key_id" {
 
 output "secret_access_key" {
   description = "Secret access key for S3 API access"
-  value       = civo_object_store.main.secret_access_key
+  value       = var.create_credentials && length(civo_object_store_credential.main) > 0 ? civo_object_store_credential.main[0].secret_access_key : null
   sensitive   = true
 }
 
@@ -73,11 +73,11 @@ output "credentials_id" {
 output "s3_configuration" {
   description = "S3 configuration details for application integration"
   value = {
-    endpoint           = "https://objectstore.${civo_object_store.main.region}.civo.com"
-    bucket             = civo_object_store.main.name
-    region             = civo_object_store.main.region
-    access_key_id      = civo_object_store.main.access_key_id
-    secret_access_key  = civo_object_store.main.secret_access_key
+    endpoint          = "https://objectstore.${civo_object_store.main.region}.civo.com"
+    bucket            = civo_object_store.main.name
+    region            = civo_object_store.main.region
+    access_key_id     = civo_object_store.main.access_key_id
+    secret_access_key = var.create_credentials && length(civo_object_store_credential.main) > 0 ? civo_object_store_credential.main[0].secret_access_key : null
   }
   sensitive = true
 }

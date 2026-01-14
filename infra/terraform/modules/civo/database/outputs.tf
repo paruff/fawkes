@@ -30,7 +30,7 @@ output "database_name" {
 
 output "database_host" {
   description = "Hostname for connecting to the database"
-  value       = civo_database.main.host
+  value       = civo_database.main.endpoint
   sensitive   = true
 }
 
@@ -53,8 +53,15 @@ output "database_password" {
 
 output "database_uri" {
   description = "Connection URI for the database"
-  value       = civo_database.main.uri
-  sensitive   = true
+  value = format("%s://%s:%s@%s:%d/%s",
+    var.engine,
+    civo_database.main.username,
+    civo_database.main.password,
+    civo_database.main.endpoint,
+    civo_database.main.port,
+    var.database_name
+  )
+  sensitive = true
 }
 
 output "database_status" {
@@ -93,8 +100,8 @@ output "nodes" {
 }
 
 output "public_ipv4" {
-  description = "Public IPv4 address of the database"
-  value       = civo_database.main.public_ipv4
+  description = "Public endpoint of the database"
+  value       = civo_database.main.endpoint
   sensitive   = true
 }
 

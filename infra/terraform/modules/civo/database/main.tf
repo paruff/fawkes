@@ -33,26 +33,13 @@ terraform {
 resource "civo_database" "main" {
   name    = var.database_name
   region  = var.location
-  size    = var.database_size
+  size    = local.effective_size
   engine  = var.engine
   version = var.engine_version
-  nodes   = var.node_count
+  nodes   = local.effective_node_count
 
   # Network configuration
   network_id = var.network_id
-
-  # Firewall configuration
-  firewall_id = var.firewall_id
-
-  # Tags
-  tags = join(",", [for k, v in merge(
-    var.tags,
-    {
-      database = var.database_name
-      engine   = var.engine
-      cost     = "civo-database"
-    }
-  ) : "${k}:${v}"])
 
   # Wait for database to be ready
   timeouts {
@@ -60,30 +47,6 @@ resource "civo_database" "main" {
     update = "30m"
     delete = "15m"
   }
-}
-
-# Firewall rules for database access
-resource "civo_firewall_rule" "database_ingress" {
-  for_each = var.create_firewall_rules ? toset(var.allowed_cidr_blocks) : []
-
-  firewall_id = var.firewall_id != null ? var.firewall_id : civo_firewall.database[0].id
-  protocol    = "tcp"
-  start_port  = local.engine_ports[var.engine]
-  end_port    = local.engine_ports[var.engine]
-  cidr        = [each.value]
-  direction   = "ingress"
-  label       = "Allow ${var.engine} from ${each.value}"
-}
-
-# Create firewall if not provided
-resource "civo_firewall" "database" {
-  count = var.firewall_id == null && var.create_firewall_rules ? 1 : 0
-
-  name       = "${var.database_name}-firewall"
-  network_id = var.network_id
-  region     = var.location
-
-  create_default_rules = false
 }
 
 # Local variables for engine-specific configurations

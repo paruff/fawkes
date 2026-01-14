@@ -86,13 +86,13 @@ output "s3_configuration" {
 output "deployment_summary" {
   description = "Summary of deployed resources"
   value = {
-    region            = var.region
-    environment       = var.environment
-    network_id        = module.network.network_id
-    cluster_id        = module.kubernetes.cluster_id
-    cluster_status    = module.kubernetes.cluster_status
-    database_id       = module.database.database_id
-    database_engine   = module.database.engine
-    bucket_id         = module.objectstore.bucket_id
+    region          = var.region
+    environment     = var.environment
+    network_id      = module.network.network_id
+    cluster_id      = module.kubernetes.cluster_id
+    cluster_status  = module.kubernetes.cluster_status
+    database_id     = module.database.database_id
+    database_engine = module.database.engine
+    bucket_id       = module.objectstore.bucket_id
   }
 }
