@@ -33,8 +33,8 @@ terraform {
 resource "civo_kubernetes_cluster" "main" {
   name               = var.cluster_name
   region             = var.location
-  num_target_nodes   = var.node_count
-  target_nodes_size  = var.node_vm_size
+  num_target_nodes   = local.effective_node_count
+  target_nodes_size  = local.effective_node_vm_size
   kubernetes_version = var.kubernetes_version
 
   # Network configuration
@@ -46,20 +46,14 @@ resource "civo_kubernetes_cluster" "main" {
   # Firewall
   firewall_id = var.firewall_id
 
-  # Marketplace applications
-  dynamic "applications" {
-    for_each = var.marketplace_apps
-    content {
-      application = applications.value.name
-      version     = applications.value.version
-    }
-  }
+  # Marketplace applications (comma-separated string)
+  applications = length(var.marketplace_apps) > 0 ? join(",", [for app in var.marketplace_apps : app.name]) : null
 
-  # Node pools
+  # Node pool configuration
   pools {
-    label       = var.node_pool_label
-    node_count  = var.node_count
-    size        = var.node_vm_size
+    label      = var.node_pool_label
+    node_count = local.effective_node_count
+    size       = local.effective_node_vm_size
   }
 
   # Tags

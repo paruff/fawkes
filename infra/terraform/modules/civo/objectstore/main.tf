@@ -31,26 +31,14 @@ terraform {
 
 # Civo Object Store (S3-compatible)
 resource "civo_object_store" "main" {
-  name              = var.bucket_name
-  region            = var.location
-  max_size_gb       = var.max_size_gb
-  access_key_id     = var.access_key_id != null ? var.access_key_id : null
-  secret_access_key = var.secret_access_key != null ? var.secret_access_key : null
-
-  # Tags
-  tags = join(",", [for k, v in merge(
-    var.tags,
-    {
-      bucket = var.bucket_name
-      cost   = "civo-object-store"
-    }
-  ) : "${k}:${v}"])
+  name          = var.bucket_name
+  region        = var.location
+  max_size_gb   = var.max_size_gb
+  access_key_id = var.access_key_id
 
   # Wait for object store to be ready
   timeouts {
     create = "10m"
-    update = "10m"
-    delete = "10m"
   }
 }
 
@@ -58,11 +46,9 @@ resource "civo_object_store" "main" {
 resource "civo_object_store_credential" "main" {
   count = var.create_credentials ? 1 : 0
 
-  name   = "${var.bucket_name}-credentials"
-  region = var.location
-
-  access_key_id     = civo_object_store.main.access_key_id
-  secret_access_key = civo_object_store.main.secret_access_key
+  name          = "${var.bucket_name}-credentials"
+  region        = var.location
+  access_key_id = civo_object_store.main.access_key_id
 }
 
 # Local variables for CORS configuration

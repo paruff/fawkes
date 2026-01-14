@@ -56,32 +56,29 @@ module "network" {
   cidr_block   = "10.0.0.0/16"
 
   create_firewall = true
-  firewall_rules = [
+  firewall_ingress_rules = [
     {
+      label       = "Allow HTTPS"
       protocol    = "tcp"
       start_port  = 443
       end_port    = 443
       cidr_blocks = ["0.0.0.0/0"]
-      direction   = "ingress"
-      label       = "Allow HTTPS"
       action      = "allow"
     },
     {
+      label       = "Allow HTTP"
       protocol    = "tcp"
       start_port  = 80
       end_port    = 80
       cidr_blocks = ["0.0.0.0/0"]
-      direction   = "ingress"
-      label       = "Allow HTTP"
       action      = "allow"
     },
     {
+      label       = "Allow SSH from admin"
       protocol    = "tcp"
       start_port  = 22
       end_port    = 22
       cidr_blocks = [var.admin_cidr]
-      direction   = "ingress"
-      label       = "Allow SSH from admin"
       action      = "allow"
     }
   ]
@@ -126,9 +123,9 @@ module "kubernetes" {
 module "database" {
   source = "../../database"
 
-  database_name = "${var.project_name}-db"
-  location      = var.region
-  engine        = "postgres"
+  database_name  = "${var.project_name}-db"
+  location       = var.region
+  engine         = "postgres"
   engine_version = "14"
 
   # Use size preset
@@ -140,8 +137,8 @@ module "database" {
   # Allow access from Kubernetes cluster CIDR
   allowed_cidr_blocks = [module.network.network_cidr]
 
-  backup_enabled          = true
-  backup_retention_days   = 7
+  backup_enabled        = true
+  backup_retention_days = 7
 
   tags = local.common_tags
 
@@ -152,9 +149,9 @@ module "database" {
 module "objectstore" {
   source = "../../objectstore"
 
-  bucket_name  = "${var.project_name}-storage"
-  location     = var.region
-  max_size_gb  = 500
+  bucket_name = "${var.project_name}-storage"
+  location    = var.region
+  max_size_gb = 500
 
   create_credentials = true
 

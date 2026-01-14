@@ -62,28 +62,21 @@ variable "create_firewall" {
   default     = true
 }
 
-variable "firewall_id" {
-  description = "Existing firewall ID to use (if not creating new)"
-  type        = string
-  default     = null
-}
-
-variable "firewall_rules" {
-  description = "List of firewall rules"
+variable "firewall_ingress_rules" {
+  description = "List of firewall ingress rules"
   type = list(object({
+    label       = string
     protocol    = string
     start_port  = number
-    end_port    = optional(number, null)
+    end_port    = number
     cidr_blocks = list(string)
-    direction   = string
-    label       = optional(string, null)
     action      = optional(string, "allow")
   }))
   default = []
 
   validation {
     condition = alltrue([
-      for rule in var.firewall_rules :
+      for rule in var.firewall_ingress_rules :
       contains(["tcp", "udp", "icmp"], rule.protocol)
     ])
     error_message = "Protocol must be tcp, udp, or icmp."
@@ -91,133 +84,40 @@ variable "firewall_rules" {
 
   validation {
     condition = alltrue([
-      for rule in var.firewall_rules :
-      contains(["ingress", "egress"], rule.direction)
-    ])
-    error_message = "Direction must be ingress or egress."
-  }
-
-  validation {
-    condition = alltrue([
-      for rule in var.firewall_rules :
+      for rule in var.firewall_ingress_rules :
       contains(["allow", "deny"], rule.action)
     ])
     error_message = "Action must be allow or deny."
   }
 }
 
-variable "create_load_balancer" {
-  description = "Create a load balancer for the network"
-  type        = bool
-  default     = false
-}
-
-variable "load_balancer_hostname" {
-  description = "Hostname for the load balancer"
-  type        = string
-  default     = null
-}
-
-variable "load_balancer_protocol" {
-  description = "Protocol for the load balancer (http, https, tcp)"
-  type        = string
-  default     = "http"
-
-  validation {
-    condition     = contains(["http", "https", "tcp"], var.load_balancer_protocol)
-    error_message = "Load balancer protocol must be http, https, or tcp."
-  }
-}
-
-variable "load_balancer_port" {
-  description = "Port for the load balancer"
-  type        = number
-  default     = 80
-
-  validation {
-    condition     = var.load_balancer_port >= 1 && var.load_balancer_port <= 65535
-    error_message = "Load balancer port must be between 1 and 65535."
-  }
-}
-
-variable "load_balancer_max_request_size" {
-  description = "Maximum request size in MB"
-  type        = number
-  default     = 20
-
-  validation {
-    condition     = var.load_balancer_max_request_size >= 1 && var.load_balancer_max_request_size <= 100
-    error_message = "Max request size must be between 1 and 100 MB."
-  }
-}
-
-variable "load_balancer_policy" {
-  description = "Load balancing policy (round_robin, least_conn, ip_hash)"
-  type        = string
-  default     = "round_robin"
-
-  validation {
-    condition     = contains(["round_robin", "least_conn", "ip_hash"], var.load_balancer_policy)
-    error_message = "Policy must be round_robin, least_conn, or ip_hash."
-  }
-}
-
-variable "load_balancer_health_check_path" {
-  description = "Health check path for the load balancer"
-  type        = string
-  default     = "/"
-}
-
-variable "load_balancer_fail_timeout" {
-  description = "Fail timeout in seconds"
-  type        = number
-  default     = 30
-
-  validation {
-    condition     = var.load_balancer_fail_timeout >= 1 && var.load_balancer_fail_timeout <= 300
-    error_message = "Fail timeout must be between 1 and 300 seconds."
-  }
-}
-
-variable "load_balancer_max_conns" {
-  description = "Maximum connections"
-  type        = number
-  default     = 10000
-
-  validation {
-    condition     = var.load_balancer_max_conns >= 1 && var.load_balancer_max_conns <= 100000
-    error_message = "Max connections must be between 1 and 100000."
-  }
-}
-
-variable "load_balancer_ignore_invalid_backend_tls" {
-  description = "Ignore invalid backend TLS certificates"
-  type        = bool
-  default     = false
-}
-
-variable "load_balancer_enable_proxy_protocol" {
-  description = "Enable proxy protocol"
-  type        = bool
-  default     = false
-}
-
-variable "load_balancer_backends" {
-  description = "List of backend configurations for load balancer"
+variable "firewall_egress_rules" {
+  description = "List of firewall egress rules"
   type = list(object({
-    ip                = string
-    protocol          = string
-    source_port       = number
-    target_port       = number
-    health_check_port = optional(number, null)
+    label       = string
+    protocol    = string
+    start_port  = number
+    end_port    = number
+    cidr_blocks = list(string)
+    action      = optional(string, "allow")
   }))
   default = []
-}
 
-variable "create_reserved_ip" {
-  description = "Create a reserved IP for the load balancer"
-  type        = bool
-  default     = false
+  validation {
+    condition = alltrue([
+      for rule in var.firewall_egress_rules :
+      contains(["tcp", "udp", "icmp"], rule.protocol)
+    ])
+    error_message = "Protocol must be tcp, udp, or icmp."
+  }
+
+  validation {
+    condition = alltrue([
+      for rule in var.firewall_egress_rules :
+      contains(["allow", "deny"], rule.action)
+    ])
+    error_message = "Action must be allow or deny."
+  }
 }
 
 variable "tags" {

@@ -144,11 +144,11 @@ variable "enable_encryption" {
 variable "lifecycle_rules" {
   description = "Lifecycle rules for object management"
   type = list(object({
-    id                     = string
-    enabled                = bool
-    prefix                 = optional(string, "")
-    expiration_days        = optional(number, null)
-    transition_days        = optional(number, null)
+    id                       = string
+    enabled                  = bool
+    prefix                   = optional(string, "")
+    expiration_days          = optional(number, null)
+    transition_days          = optional(number, null)
     transition_storage_class = optional(string, null)
   }))
   default = []
