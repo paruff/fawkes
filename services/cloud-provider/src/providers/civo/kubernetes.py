@@ -90,7 +90,7 @@ class KubernetesService:
                 endpoint=result.get("api_endpoint"),
                 region=config.region,
                 node_count=config.node_count,
-                created_at=datetime.fromisoformat(result["created_at"]) if result.get("created_at") else None,
+                created_at=datetime.fromisoformat(result["created_at"].replace("Z", "+00:00")) if result.get("created_at") else None,
                 metadata={
                     "dns_entry": result.get("dns_entry"),
                     "built_at": result.get("built_at"),
@@ -144,7 +144,7 @@ class KubernetesService:
                 endpoint=result.get("api_endpoint"),
                 region=result.get("region", ""),
                 node_count=result.get("num_target_nodes", 0),
-                created_at=datetime.fromisoformat(result["created_at"]) if result.get("created_at") else None,
+                created_at=datetime.fromisoformat(result["created_at"].replace("Z", "+00:00")) if result.get("created_at") else None,
                 metadata={
                     "dns_entry": result.get("dns_entry"),
                     "built_at": result.get("built_at"),
@@ -231,7 +231,7 @@ class KubernetesService:
                     endpoint=result.get("api_endpoint"),
                     region=result.get("region", ""),
                     node_count=result.get("num_target_nodes", 0),
-                    created_at=datetime.fromisoformat(result["created_at"]) if result.get("created_at") else None,
+                    created_at=datetime.fromisoformat(result["created_at"].replace("Z", "+00:00")) if result.get("created_at") else None,
                     metadata={
                         "dns_entry": result.get("dns_entry"),
                         "civo_cluster_id": result["id"],
