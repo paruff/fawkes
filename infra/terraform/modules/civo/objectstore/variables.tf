@@ -63,13 +63,6 @@ variable "access_key_id" {
   sensitive   = true
 }
 
-variable "secret_access_key" {
-  description = "S3 secret access key (optional, generated if not provided)"
-  type        = string
-  default     = null
-  sensitive   = true
-}
-
 variable "create_credentials" {
   description = "Create object store credentials"
   type        = bool
@@ -127,35 +120,4 @@ variable "cors_max_age_seconds" {
     condition     = var.cors_max_age_seconds >= 0 && var.cors_max_age_seconds <= 86400
     error_message = "CORS max age must be between 0 and 86400 seconds (24 hours)."
   }
-}
-
-variable "enable_versioning" {
-  description = "Enable object versioning"
-  type        = bool
-  default     = false
-}
-
-variable "enable_encryption" {
-  description = "Enable server-side encryption"
-  type        = bool
-  default     = true
-}
-
-variable "lifecycle_rules" {
-  description = "Lifecycle rules for object management"
-  type = list(object({
-    id                       = string
-    enabled                  = bool
-    prefix                   = optional(string, "")
-    expiration_days          = optional(number, null)
-    transition_days          = optional(number, null)
-    transition_storage_class = optional(string, null)
-  }))
-  default = []
-}
-
-variable "tags" {
-  description = "Tags to apply to object store resources"
-  type        = map(string)
-  default     = {}
 }

@@ -95,49 +95,6 @@ variable "network_id" {
   default     = null
 }
 
-variable "firewall_id" {
-  description = "Firewall ID for the database"
-  type        = string
-  default     = null
-}
-
-variable "create_firewall_rules" {
-  description = "Create firewall rules for database access"
-  type        = bool
-  default     = true
-}
-
-variable "allowed_cidr_blocks" {
-  description = "CIDR blocks allowed to access the database"
-  type        = list(string)
-  default     = []
-
-  validation {
-    condition = alltrue([
-      for cidr in var.allowed_cidr_blocks :
-      can(cidrhost(cidr, 0))
-    ])
-    error_message = "All CIDR blocks must be valid CIDR notation."
-  }
-}
-
-variable "backup_enabled" {
-  description = "Enable automated backups (managed by Civo)"
-  type        = bool
-  default     = true
-}
-
-variable "backup_retention_days" {
-  description = "Number of days to retain backups"
-  type        = number
-  default     = 7
-
-  validation {
-    condition     = var.backup_retention_days >= 1 && var.backup_retention_days <= 30
-    error_message = "Backup retention must be between 1 and 30 days."
-  }
-}
-
 variable "size_preset" {
   description = "Size preset for quick configuration (small, medium, large)"
   type        = string
@@ -147,10 +104,4 @@ variable "size_preset" {
     condition     = var.size_preset == null || contains(["small", "medium", "large"], var.size_preset)
     error_message = "Size preset must be null, small, medium, or large."
   }
-}
-
-variable "tags" {
-  description = "Tags to apply to database resources"
-  type        = map(string)
-  default     = {}
 }

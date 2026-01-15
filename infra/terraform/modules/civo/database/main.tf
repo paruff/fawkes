@@ -49,14 +49,8 @@ resource "civo_database" "main" {
   }
 }
 
-# Local variables for engine-specific configurations
+# Local variables for size presets
 locals {
-  engine_ports = {
-    "postgres" = 5432
-    "mysql"    = 3306
-    "redis"    = 6379
-  }
-
   size_presets = {
     small = {
       size  = "g3.db.small"

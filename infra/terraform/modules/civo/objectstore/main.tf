@@ -50,15 +50,3 @@ resource "civo_object_store_credential" "main" {
   region        = var.location
   access_key_id = civo_object_store.main.access_key_id
 }
-
-# Local variables for CORS configuration
-locals {
-  default_cors_rules = var.enable_cors ? [
-    {
-      allowed_origins = var.cors_allowed_origins
-      allowed_methods = var.cors_allowed_methods
-      allowed_headers = var.cors_allowed_headers
-      max_age_seconds = var.cors_max_age_seconds
-    }
-  ] : []
-}

@@ -45,8 +45,3 @@ resource "civo_firewall" "main" {
   region               = var.location
   create_default_rules = length(var.firewall_ingress_rules) == 0
 }
-
-# Local variables
-locals {
-  default_cidr = "10.0.0.0/16"
-}
