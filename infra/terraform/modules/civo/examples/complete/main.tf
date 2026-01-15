@@ -37,16 +37,6 @@ provider "civo" {
   region = var.region
 }
 
-# Common tags for all resources
-locals {
-  common_tags = {
-    platform    = "fawkes"
-    environment = var.environment
-    managed_by  = "terraform"
-    cost_center = var.cost_center
-  }
-}
-
 # 1. Create Network
 module "network" {
   source = "../../network"
@@ -82,8 +72,6 @@ module "network" {
       action      = "allow"
     }
   ]
-
-  tags = local.common_tags
 }
 
 # 2. Create Kubernetes Cluster
@@ -114,8 +102,6 @@ module "kubernetes" {
     }
   ]
 
-  tags = local.common_tags
-
   depends_on = [module.network]
 }
 
@@ -131,16 +117,7 @@ module "database" {
   # Use size preset
   size_preset = var.database_size
 
-  network_id  = module.network.network_id
-  firewall_id = module.network.firewall_id
-
-  # Allow access from Kubernetes cluster CIDR
-  allowed_cidr_blocks = [module.network.network_cidr]
-
-  backup_enabled        = true
-  backup_retention_days = 7
-
-  tags = local.common_tags
+  network_id = module.network.network_id
 
   depends_on = [module.network]
 }
@@ -154,14 +131,4 @@ module "objectstore" {
   max_size_gb = 500
 
   create_credentials = true
-
-  # Enable CORS for web applications
-  enable_cors          = true
-  cors_allowed_origins = ["https://*.${var.domain}"]
-  cors_allowed_methods = ["GET", "POST", "PUT", "DELETE"]
-
-  enable_versioning = true
-  enable_encryption = true
-
-  tags = local.common_tags
 }
