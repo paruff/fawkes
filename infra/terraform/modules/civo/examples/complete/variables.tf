@@ -42,12 +42,6 @@ variable "environment" {
   default     = "dev"
 }
 
-variable "cost_center" {
-  description = "Cost center for billing"
-  type        = string
-  default     = "engineering"
-}
-
 variable "admin_cidr" {
   description = "CIDR block for admin access"
   type        = string
@@ -70,10 +64,4 @@ variable "kubernetes_version" {
   description = "Kubernetes version"
   type        = string
   default     = null
-}
-
-variable "domain" {
-  description = "Domain for the application"
-  type        = string
-  default     = "example.com"
 }
