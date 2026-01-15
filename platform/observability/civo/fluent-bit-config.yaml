@@ -1,0 +1,444 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# NOTE: This configuration uses environment variable substitution (${VAR_NAME}).
+# Before applying, ensure all required variables are set:
+# - CLUSTER_NAME: Name of the Civo cluster
+# - ENVIRONMENT: Deployment environment (dev/staging/prod)
+# - CIVO_REGION: Civo region (NYC1/LON1/FRA1/PHX1)
+# - OPENSEARCH_HOST: OpenSearch host (e.g., opensearch.fawkes.svc.cluster.local)
+# - OPENSEARCH_PORT: OpenSearch port (default: 9200)
+# - OPENSEARCH_USER: OpenSearch username (default: admin)
+# - OPENSEARCH_PASSWORD: OpenSearch password
+#
+# Apply with: envsubst < fluent-bit-config.yaml | kubectl apply -f -
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-civo-config
+  namespace: logging
+  labels:
+    app: fluent-bit
+    cloud-provider: civo
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        Daemon Off
+        Flush 5
+        Log_Level info
+        Parsers_File parsers.conf
+        Parsers_File custom_parsers.conf
+        HTTP_Server On
+        HTTP_Listen 0.0.0.0
+        HTTP_Port 2020
+        Health_Check On
+
+    # ====== INPUT SOURCES ======
+
+    # Civo K3s container logs
+    [INPUT]
+        Name tail
+        Path /var/log/containers/*.log
+        multiline.parser docker, cri
+        Tag kube.*
+        Mem_Buf_Limit 50MB
+        Skip_Long_Lines On
+        Refresh_Interval 10
+        DB /var/fluent-bit/state/flb_kube.db
+        DB.locking true
+
+    # Civo K3s systemd logs
+    [INPUT]
+        Name systemd
+        Tag host.*
+        Systemd_Filter _SYSTEMD_UNIT=k3s.service
+        Read_From_Tail On
+        Strip_Underscores On
+        DB /var/fluent-bit/state/flb_systemd.db
+
+    # Civo node logs (syslog)
+    [INPUT]
+        Name tail
+        Path /var/log/syslog
+        Parser syslog
+        Tag host.syslog
+        DB /var/fluent-bit/state/flb_syslog.db
+
+    # ====== FILTERS ======
+
+    # Kubernetes metadata enrichment
+    [FILTER]
+        Name kubernetes
+        Match kube.*
+        Kube_URL https://kubernetes.default.svc:443
+        Kube_CA_File /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File /var/run/secrets/kubernetes.io/serviceaccount/token
+        Kube_Tag_Prefix kube.var.log.containers.
+        Merge_Log On
+        Keep_Log Off
+        K8S-Logging.Parser On
+        K8S-Logging.Exclude On
+        Buffer_Size 256KB
+        Labels On
+        Annotations On
+
+    # Add Civo-specific metadata
+    [FILTER]
+        Name modify
+        Match *
+        Add cloud_provider civo
+        Add cloud_region ${CIVO_REGION}
+        Add cluster_name ${CLUSTER_NAME}
+        Add environment ${ENVIRONMENT}
+
+    # Parse JSON logs
+    [FILTER]
+        Name parser
+        Match kube.*
+        Key_Name log
+        Parser json
+        Reserve_Data On
+        Preserve_Key On
+
+    # Nest Kubernetes metadata
+    [FILTER]
+        Name nest
+        Match kube.*
+        Operation lift
+        Nested_under kubernetes
+        Add_prefix k8s_
+
+    # Remove unnecessary fields to reduce storage
+    [FILTER]
+        Name record_modifier
+        Match *
+        Remove_key stream
+        Remove_key time
+        Remove_key _p
+
+    # Add timestamp
+    [FILTER]
+        Name modify
+        Match *
+        Add @timestamp ${TIMESTAMP}
+
+    # ====== OUTPUT TO OPENSEARCH ======
+
+    [OUTPUT]
+        Name opensearch
+        Match kube.*
+        Host ${OPENSEARCH_HOST}
+        Port ${OPENSEARCH_PORT}
+        HTTP_User ${OPENSEARCH_USER}
+        HTTP_Passwd ${OPENSEARCH_PASSWORD}
+        Index civo-k8s-logs
+        Type _doc
+        Logstash_Format On
+        Logstash_Prefix civo-k8s
+        Logstash_DateFormat %Y.%m.%d
+        Time_Key @timestamp
+        Generate_ID On
+        Replace_Dots On
+        Retry_Limit 5
+        Buffer_Size 5MB
+        tls On
+        tls.verify Off
+        Suppress_Type_Name On
+        Trace_Error On
+
+    # Host/system logs to OpenSearch
+    [OUTPUT]
+        Name opensearch
+        Match host.*
+        Host ${OPENSEARCH_HOST}
+        Port ${OPENSEARCH_PORT}
+        HTTP_User ${OPENSEARCH_USER}
+        HTTP_Passwd ${OPENSEARCH_PASSWORD}
+        Index civo-host-logs
+        Type _doc
+        Logstash_Format On
+        Logstash_Prefix civo-host
+        Logstash_DateFormat %Y.%m.%d
+        Time_Key @timestamp
+        Generate_ID On
+        Retry_Limit 5
+        Buffer_Size 5MB
+        tls On
+        tls.verify Off
+        Suppress_Type_Name On
+
+    # Error logs to separate index for alerting
+    [OUTPUT]
+        Name opensearch
+        Match *
+        Host ${OPENSEARCH_HOST}
+        Port ${OPENSEARCH_PORT}
+        HTTP_User ${OPENSEARCH_USER}
+        HTTP_Passwd ${OPENSEARCH_PASSWORD}
+        Index civo-errors
+        Type _doc
+        Logstash_Format On
+        Logstash_Prefix civo-errors
+        Logstash_DateFormat %Y.%m.%d
+        Time_Key @timestamp
+        Generate_ID On
+        Retry_Limit 5
+        tls On
+        tls.verify Off
+        Suppress_Type_Name On
+        # Only send error/fatal logs
+        Match_Regex .*level.*(error|fatal|critical|panic).*
+
+  parsers.conf: |
+    [PARSER]
+        Name docker
+        Format json
+        Time_Key time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+        Time_Keep On
+
+    [PARSER]
+        Name json
+        Format json
+        Time_Key time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+        Time_Keep On
+
+    [PARSER]
+        Name syslog
+        Format regex
+        Regex ^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$
+        Time_Key time
+        Time_Format %b %d %H:%M:%S
+        Time_Keep On
+
+  custom_parsers.conf: |
+    # Custom parser for K3s logs
+    [PARSER]
+        Name k3s
+        Format regex
+        Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
+        Time_Key time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+        Time_Keep On
+
+    # Parser for Civo-specific application logs
+    [PARSER]
+        Name civo_app
+        Format json
+        Time_Key timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+        Time_Keep On
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fluent-bit
+  namespace: logging
+  labels:
+    app: fluent-bit
+    cloud-provider: civo
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fluent-bit-civo
+  labels:
+    app: fluent-bit
+    cloud-provider: civo
+rules:
+  - apiGroups: [""]
+    resources:
+      - namespaces
+      - pods
+      - pods/logs
+    verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: fluent-bit-civo
+  labels:
+    app: fluent-bit
+    cloud-provider: civo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: fluent-bit-civo
+subjects:
+  - kind: ServiceAccount
+    name: fluent-bit
+    namespace: logging
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluent-bit
+  namespace: logging
+  labels:
+    app: fluent-bit
+    cloud-provider: civo
+    version: v2.2.0
+spec:
+  selector:
+    matchLabels:
+      app: fluent-bit
+  template:
+    metadata:
+      labels:
+        app: fluent-bit
+        cloud-provider: civo
+        version: v2.2.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2020"
+        prometheus.io/path: "/api/v1/metrics/prometheus"
+    spec:
+      serviceAccountName: fluent-bit
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: fluent-bit
+          image: fluent/fluent-bit:2.2.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 2020
+              protocol: TCP
+          env:
+            - name: CLUSTER_NAME
+              value: "${CLUSTER_NAME}"
+            - name: ENVIRONMENT
+              value: "${ENVIRONMENT}"
+            - name: CIVO_REGION
+              value: "${CIVO_REGION}"
+            - name: OPENSEARCH_HOST
+              value: "${OPENSEARCH_HOST}"
+            - name: OPENSEARCH_PORT
+              value: "${OPENSEARCH_PORT}"
+            - name: OPENSEARCH_USER
+              valueFrom:
+                secretKeyRef:
+                  name: opensearch-credentials
+                  key: username
+            - name: OPENSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: opensearch-credentials
+                  key: password
+            - name: TIMESTAMP
+              value: "$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          volumeMounts:
+            - name: config
+              mountPath: /fluent-bit/etc/
+            - name: varlog
+              mountPath: /var/log
+              readOnly: true
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+            - name: etcmachineid
+              mountPath: /etc/machine-id
+              readOnly: true
+            - name: state
+              mountPath: /var/fluent-bit/state
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+            privileged: false
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - DAC_READ_SEARCH
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 2020
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 2020
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+      volumes:
+        - name: config
+          configMap:
+            name: fluent-bit-civo-config
+        - name: varlog
+          hostPath:
+            path: /var/log
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers
+        - name: etcmachineid
+          hostPath:
+            path: /etc/machine-id
+            type: File
+        - name: state
+          hostPath:
+            path: /var/fluent-bit/state
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluent-bit
+  namespace: logging
+  labels:
+    app: fluent-bit
+    cloud-provider: civo
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 2020
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: fluent-bit
