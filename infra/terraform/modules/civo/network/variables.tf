@@ -90,38 +90,3 @@ variable "firewall_ingress_rules" {
     error_message = "Action must be allow or deny."
   }
 }
-
-variable "firewall_egress_rules" {
-  description = "List of firewall egress rules"
-  type = list(object({
-    label       = string
-    protocol    = string
-    start_port  = number
-    end_port    = number
-    cidr_blocks = list(string)
-    action      = optional(string, "allow")
-  }))
-  default = []
-
-  validation {
-    condition = alltrue([
-      for rule in var.firewall_egress_rules :
-      contains(["tcp", "udp", "icmp"], rule.protocol)
-    ])
-    error_message = "Protocol must be tcp, udp, or icmp."
-  }
-
-  validation {
-    condition = alltrue([
-      for rule in var.firewall_egress_rules :
-      contains(["allow", "deny"], rule.action)
-    ])
-    error_message = "Action must be allow or deny."
-  }
-}
-
-variable "tags" {
-  description = "Tags to apply to network resources"
-  type        = map(string)
-  default     = {}
-}
