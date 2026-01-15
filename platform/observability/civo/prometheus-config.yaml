@@ -164,13 +164,13 @@ data:
           # Cluster CPU utilization percentage
           - record: civo:cluster:cpu_utilization_percent
             expr: |
-              100 * (1 - sum(rate(node_cpu_seconds_total{mode="idle", cloud_provider="civo"}[5m])) 
+              100 * (1 - sum(rate(node_cpu_seconds_total{mode="idle", cloud_provider="civo"}[5m]))
               / count(node_cpu_seconds_total{mode="idle", cloud_provider="civo"}))
 
           # Cluster memory utilization percentage
           - record: civo:cluster:memory_utilization_percent
             expr: |
-              100 * (1 - (sum(node_memory_MemAvailable_bytes{cloud_provider="civo"}) 
+              100 * (1 - (sum(node_memory_MemAvailable_bytes{cloud_provider="civo"})
               / sum(node_memory_MemTotal_bytes{cloud_provider="civo"})))
 
           # Node count by status
@@ -213,7 +213,7 @@ data:
           # API error rate
           - record: civo:api:error_rate
             expr: |
-              rate(civo_api_requests_total{status=~"4..|5.."}[5m]) 
+              rate(civo_api_requests_total{status=~"4..|5.."}[5m])
               / rate(civo_api_requests_total[5m])
 
           # API rate limit approaching (>80% of limit)
@@ -238,8 +238,8 @@ data:
           # Idle resource cost (pods with low CPU usage)
           - record: civo:cost:idle_pods_hourly_usd
             expr: |
-              sum(civo_pod_cost_hourly_usd 
-              * on(pod, namespace) group_left() 
+              sum(civo_pod_cost_hourly_usd
+              * on(pod, namespace) group_left()
               (rate(container_cpu_usage_seconds_total[30m]) < 0.01))
 
 ---

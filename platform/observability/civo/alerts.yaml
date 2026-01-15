@@ -170,7 +170,7 @@ spec:
       rules:
         - alert: CivoCostAnomalyDetected
           expr: |
-            (civo:cost:cluster_hourly_usd - avg_over_time(civo:cost:cluster_hourly_usd[24h])) 
+            (civo:cost:cluster_hourly_usd - avg_over_time(civo:cost:cluster_hourly_usd[24h]))
             / avg_over_time(civo:cost:cluster_hourly_usd[24h]) > 0.30
           for: 1h
           labels:
@@ -235,7 +235,7 @@ spec:
 
         - alert: CivoK3sHighAPILatency
           expr: |
-            histogram_quantile(0.99, 
+            histogram_quantile(0.99,
               rate(apiserver_request_duration_seconds_bucket{job="civo-k3s-apiserver"}[5m])
             ) > 1
           for: 10m
@@ -324,7 +324,7 @@ data:
       group_interval: 5m
       repeat_interval: 4h
       receiver: 'civo-mattermost'
-      
+
       # Route critical alerts immediately
       routes:
         - match:
@@ -333,13 +333,13 @@ data:
           receiver: 'civo-mattermost-critical'
           group_wait: 0s
           repeat_interval: 1h
-        
+
         - match:
             severity: warning
             cloud_provider: civo
           receiver: 'civo-mattermost-warning'
           repeat_interval: 4h
-        
+
         - match:
             category: cost
             cloud_provider: civo
@@ -381,7 +381,7 @@ data:
         target_match:
           severity: 'warning'
         equal: ['alertname', 'cluster_name', 'cloud_provider']
-      
+
       # Inhibit node alerts if cluster-level alert is firing
       - source_match:
           alertname: 'CivoClusterCriticalCPU'
