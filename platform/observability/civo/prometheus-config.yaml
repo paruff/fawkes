@@ -1,0 +1,312 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# NOTE: This configuration uses environment variable substitution (${VAR_NAME}).
+# Before applying, ensure all required variables are set:
+# - CLUSTER_NAME: Name of the Civo cluster
+# - ENVIRONMENT: Deployment environment (dev/staging/prod)
+# - CIVO_REGION: Civo region (NYC1/LON1/FRA1/PHX1)
+#
+# Apply with: envsubst < prometheus-config.yaml | kubectl apply -f -
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-civo-config
+  namespace: monitoring
+  labels:
+    app: prometheus
+    cloud-provider: civo
+data:
+  civo-scrape-configs.yaml: |
+    # Civo K3s Cluster Metrics
+    # K3s runs a lighter Kubernetes distribution, but exposes similar metrics
+    - job_name: 'civo-k3s-nodes'
+      kubernetes_sd_configs:
+        - role: node
+      relabel_configs:
+        - source_labels: [__address__]
+          regex: ^(.*):\d+$
+          target_label: __address__
+          replacement: $1:10250
+        - action: labelmap
+          regex: __meta_kubernetes_node_label_(.+)
+        - source_labels: [__meta_kubernetes_node_name]
+          target_label: node
+        - target_label: cluster_name
+          replacement: ${CLUSTER_NAME}
+        - target_label: cloud_provider
+          replacement: civo
+        - target_label: cloud_region
+          replacement: ${CIVO_REGION}
+      metric_relabel_configs:
+        - source_labels: [__name__]
+          regex: 'kubelet_.*'
+          action: keep
+
+    # Civo K3s API Server Metrics
+    - job_name: 'civo-k3s-apiserver'
+      kubernetes_sd_configs:
+        - role: endpoints
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+          action: keep
+          regex: default;kubernetes;https
+        - target_label: cluster_name
+          replacement: ${CLUSTER_NAME}
+        - target_label: cloud_provider
+          replacement: civo
+        - target_label: cloud_region
+          replacement: ${CIVO_REGION}
+
+    # Civo Application Pods
+    - job_name: 'civo-kubernetes-pods'
+      kubernetes_sd_configs:
+        - role: pod
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+          action: keep
+          regex: true
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+          action: replace
+          target_label: __metrics_path__
+          regex: (.+)
+        - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+          action: replace
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+          target_label: __address__
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_(.+)
+        - source_labels: [__meta_kubernetes_namespace]
+          action: replace
+          target_label: kubernetes_namespace
+        - source_labels: [__meta_kubernetes_pod_name]
+          action: replace
+          target_label: kubernetes_pod_name
+        - target_label: cluster_name
+          replacement: ${CLUSTER_NAME}
+        - target_label: cloud_provider
+          replacement: civo
+        - target_label: cloud_region
+          replacement: ${CIVO_REGION}
+
+    # Civo K3s Controller Manager
+    - job_name: 'civo-k3s-controller-manager'
+      kubernetes_sd_configs:
+        - role: endpoints
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+          action: keep
+          regex: kube-system;k3s;https-metrics
+        - target_label: cluster_name
+          replacement: ${CLUSTER_NAME}
+        - target_label: cloud_provider
+          replacement: civo
+
+    # Civo K3s Scheduler
+    - job_name: 'civo-k3s-scheduler'
+      kubernetes_sd_configs:
+        - role: endpoints
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name]
+          action: keep
+          regex: kube-system;k3s-scheduler
+        - target_label: cluster_name
+          replacement: ${CLUSTER_NAME}
+        - target_label: cloud_provider
+          replacement: civo
+
+  civo-recording-rules.yaml: |
+    groups:
+      # Civo-specific recording rules
+      - name: civo.cluster.resources
+        interval: 30s
+        rules:
+          # Total cluster CPU capacity
+          - record: civo:cluster:cpu_capacity_cores
+            expr: sum(kube_node_status_capacity{resource="cpu", cloud_provider="civo"})
+
+          # Total cluster memory capacity
+          - record: civo:cluster:memory_capacity_bytes
+            expr: sum(kube_node_status_capacity{resource="memory", cloud_provider="civo"})
+
+          # Cluster CPU utilization percentage
+          - record: civo:cluster:cpu_utilization_percent
+            expr: |
+              100 * (1 - sum(rate(node_cpu_seconds_total{mode="idle", cloud_provider="civo"}[5m])) 
+              / count(node_cpu_seconds_total{mode="idle", cloud_provider="civo"}))
+
+          # Cluster memory utilization percentage
+          - record: civo:cluster:memory_utilization_percent
+            expr: |
+              100 * (1 - (sum(node_memory_MemAvailable_bytes{cloud_provider="civo"}) 
+              / sum(node_memory_MemTotal_bytes{cloud_provider="civo"})))
+
+          # Node count by status
+          - record: civo:cluster:nodes_ready
+            expr: sum(kube_node_status_condition{condition="Ready", status="true", cloud_provider="civo"})
+
+          - record: civo:cluster:nodes_not_ready
+            expr: sum(kube_node_status_condition{condition="Ready", status="false", cloud_provider="civo"})
+
+      - name: civo.cluster.pods
+        interval: 30s
+        rules:
+          # Total pod count
+          - record: civo:cluster:pods_total
+            expr: sum(kube_pod_info{cloud_provider="civo"})
+
+          # Running pods
+          - record: civo:cluster:pods_running
+            expr: sum(kube_pod_status_phase{phase="Running", cloud_provider="civo"})
+
+          # Pending pods
+          - record: civo:cluster:pods_pending
+            expr: sum(kube_pod_status_phase{phase="Pending", cloud_provider="civo"})
+
+          # Failed pods
+          - record: civo:cluster:pods_failed
+            expr: sum(kube_pod_status_phase{phase="Failed", cloud_provider="civo"})
+
+          # Pod restart rate (per minute)
+          - record: civo:cluster:pod_restart_rate
+            expr: rate(kube_pod_container_status_restarts_total{cloud_provider="civo"}[5m]) * 60
+
+      - name: civo.api.rate_limits
+        interval: 30s
+        rules:
+          # Track Civo API calls from cost-collector and cloud-provider services
+          - record: civo:api:calls_per_minute
+            expr: rate(civo_api_requests_total[1m]) * 60
+
+          # API error rate
+          - record: civo:api:error_rate
+            expr: |
+              rate(civo_api_requests_total{status=~"4..|5.."}[5m]) 
+              / rate(civo_api_requests_total[5m])
+
+          # API rate limit approaching (>80% of limit)
+          - record: civo:api:rate_limit_usage_percent
+            expr: (civo:api:calls_per_minute / 100) * 100
+
+      - name: civo.costs
+        interval: 5m
+        rules:
+          # Total Civo cluster cost per hour
+          - record: civo:cost:cluster_hourly_usd
+            expr: sum(civo_cluster_cost_hourly_usd)
+
+          # Projected monthly cost
+          - record: civo:cost:cluster_monthly_projected_usd
+            expr: civo:cost:cluster_hourly_usd * 730
+
+          # Cost per namespace (if labels are available)
+          - record: civo:cost:namespace_hourly_usd
+            expr: sum by (namespace) (civo_resource_cost_hourly_usd)
+
+          # Idle resource cost (pods with low CPU usage)
+          - record: civo:cost:idle_pods_hourly_usd
+            expr: |
+              sum(civo_pod_cost_hourly_usd 
+              * on(pod, namespace) group_left() 
+              (rate(container_cpu_usage_seconds_total[30m]) < 0.01))
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: civo-cost-collector
+  namespace: monitoring
+  labels:
+    app: cost-collector
+    cloud-provider: civo
+spec:
+  selector:
+    matchLabels:
+      app: cost-collector
+      cloud-provider: civo
+  endpoints:
+    - port: metrics
+      interval: 5m
+      path: /metrics
+      relabelings:
+        - sourceLabels: [__address__]
+          targetLabel: instance
+        - targetLabel: cloud_provider
+          replacement: civo
+        - targetLabel: cluster_name
+          replacement: ${CLUSTER_NAME}
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: civo-cloud-provider-service
+  namespace: monitoring
+  labels:
+    app: cloud-provider-service
+    cloud-provider: civo
+spec:
+  selector:
+    matchLabels:
+      app: cloud-provider-service
+      cloud-provider: civo
+  endpoints:
+    - port: metrics
+      interval: 1m
+      path: /metrics
+      relabelings:
+        - sourceLabels: [__address__]
+          targetLabel: instance
+        - targetLabel: cloud_provider
+          replacement: civo
+        - targetLabel: cluster_name
+          replacement: ${CLUSTER_NAME}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-civo-recording-rules
+  namespace: monitoring
+  labels:
+    app: prometheus
+    cloud-provider: civo
+    prometheus: kube-prometheus
+    role: recording-rules
+data:
+  civo-recording-rules.yaml: |
+    groups:
+      # Import recording rules from above
+      # These will be loaded by Prometheus via the PrometheusRule CRD

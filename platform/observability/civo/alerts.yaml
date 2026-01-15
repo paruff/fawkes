@@ -1,0 +1,390 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/observability/civo/alerts.yaml
+# PURPOSE: Civo-specific alerting rules for Prometheus
+# SCOPE: Civo K3s cluster monitoring, API rate limits, cost tracking
+# ============================================================================
+
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: civo-alerts
+  namespace: monitoring
+  labels:
+    prometheus: kube-prometheus
+    role: alert-rules
+    cloud-provider: civo
+spec:
+  groups:
+    # ===== Civo Cluster Health Alerts =====
+    - name: civo.cluster.health
+      interval: 1m
+      rules:
+        - alert: CivoNodeNotReady
+          expr: civo:cluster:nodes_not_ready > 0
+          for: 5m
+          labels:
+            severity: critical
+            cloud_provider: civo
+          annotations:
+            summary: "Civo K3s node not ready"
+            description: "{{ $value }} Civo K3s node(s) have been unready for more than 5 minutes in cluster {{ $labels.cluster_name }}"
+            runbook_url: "https://docs.civo.com/kubernetes/troubleshooting"
+
+        - alert: CivoClusterHighCPU
+          expr: civo:cluster:cpu_utilization_percent > 80
+          for: 10m
+          labels:
+            severity: warning
+            cloud_provider: civo
+          annotations:
+            summary: "Civo cluster CPU usage high"
+            description: "Civo cluster {{ $labels.cluster_name }} CPU usage is {{ $value | humanizePercentage }} for more than 10 minutes"
+            runbook_url: "https://docs.civo.com/kubernetes/scaling"
+
+        - alert: CivoClusterCriticalCPU
+          expr: civo:cluster:cpu_utilization_percent > 90
+          for: 5m
+          labels:
+            severity: critical
+            cloud_provider: civo
+          annotations:
+            summary: "Civo cluster CPU usage critical"
+            description: "Civo cluster {{ $labels.cluster_name }} CPU usage is {{ $value | humanizePercentage }}. Consider scaling up."
+            runbook_url: "https://docs.civo.com/kubernetes/scaling"
+
+        - alert: CivoClusterHighMemory
+          expr: civo:cluster:memory_utilization_percent > 85
+          for: 10m
+          labels:
+            severity: warning
+            cloud_provider: civo
+          annotations:
+            summary: "Civo cluster memory usage high"
+            description: "Civo cluster {{ $labels.cluster_name }} memory usage is {{ $value | humanizePercentage }} for more than 10 minutes"
+            runbook_url: "https://docs.civo.com/kubernetes/scaling"
+
+        - alert: CivoClusterCriticalMemory
+          expr: civo:cluster:memory_utilization_percent > 95
+          for: 5m
+          labels:
+            severity: critical
+            cloud_provider: civo
+          annotations:
+            summary: "Civo cluster memory usage critical"
+            description: "Civo cluster {{ $labels.cluster_name }} memory usage is {{ $value | humanizePercentage }}. Immediate action required."
+            runbook_url: "https://docs.civo.com/kubernetes/scaling"
+
+        - alert: CivoPodCrashLooping
+          expr: civo:cluster:pod_restart_rate > 2
+          for: 5m
+          labels:
+            severity: warning
+            cloud_provider: civo
+          annotations:
+            summary: "Civo pod crash looping"
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} in Civo cluster {{ $labels.cluster_name }} is restarting {{ $value }} times per minute"
+            runbook_url: "https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/"
+
+        - alert: CivoPodsStuckPending
+          expr: civo:cluster:pods_pending > 5
+          for: 15m
+          labels:
+            severity: warning
+            cloud_provider: civo
+          annotations:
+            summary: "Civo pods stuck in pending state"
+            description: "{{ $value }} pods have been pending for more than 15 minutes in Civo cluster {{ $labels.cluster_name }}"
+            runbook_url: "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/"
+
+    # ===== Civo API Rate Limit Alerts =====
+    - name: civo.api.rate_limits
+      interval: 1m
+      rules:
+        - alert: CivoAPIRateLimitApproaching
+          expr: civo:api:rate_limit_usage_percent > 70
+          for: 5m
+          labels:
+            severity: warning
+            cloud_provider: civo
+          annotations:
+            summary: "Civo API rate limit approaching"
+            description: "Civo API rate limit usage is {{ $value | humanizePercentage }} for cluster {{ $labels.cluster_name }}. Current rate: {{ $labels.calls_per_minute }} calls/min"
+            runbook_url: "https://docs.civo.com/api#rate-limiting"
+
+        - alert: CivoAPIRateLimitCritical
+          expr: civo:api:rate_limit_usage_percent > 90
+          for: 2m
+          labels:
+            severity: critical
+            cloud_provider: civo
+          annotations:
+            summary: "Civo API rate limit critical"
+            description: "Civo API rate limit usage is {{ $value | humanizePercentage }} for cluster {{ $labels.cluster_name }}. Risk of throttling!"
+            runbook_url: "https://docs.civo.com/api#rate-limiting"
+
+        - alert: CivoAPIHighErrorRate
+          expr: civo:api:error_rate > 0.10
+          for: 5m
+          labels:
+            severity: warning
+            cloud_provider: civo
+          annotations:
+            summary: "Civo API high error rate"
+            description: "Civo API error rate is {{ $value | humanizePercentage }} for cluster {{ $labels.cluster_name }}"
+            runbook_url: "https://docs.civo.com/api#error-codes"
+
+        - alert: CivoAPIDown
+          expr: up{job="civo-cloud-provider-service"} == 0
+          for: 5m
+          labels:
+            severity: critical
+            cloud_provider: civo
+          annotations:
+            summary: "Civo API service down"
+            description: "Cannot reach Civo API service for cluster {{ $labels.cluster_name }}"
+            runbook_url: "https://status.civo.com"
+
+    # ===== Civo Cost Alerts =====
+    - name: civo.costs
+      interval: 5m
+      rules:
+        - alert: CivoCostAnomalyDetected
+          expr: |
+            (civo:cost:cluster_hourly_usd - avg_over_time(civo:cost:cluster_hourly_usd[24h])) 
+            / avg_over_time(civo:cost:cluster_hourly_usd[24h]) > 0.30
+          for: 1h
+          labels:
+            severity: warning
+            cloud_provider: civo
+            category: cost
+          annotations:
+            summary: "Civo cost anomaly detected"
+            description: "Civo cluster {{ $labels.cluster_name }} hourly cost has increased by {{ $value | humanizePercentage }} compared to 24h average. Current: ${{ $labels.current_cost }}/hr"
+            runbook_url: "https://docs.civo.com/account/billing"
+
+        - alert: CivoHighMonthlyCost
+          expr: civo:cost:cluster_monthly_projected_usd > 500
+          for: 30m
+          labels:
+            severity: warning
+            cloud_provider: civo
+            category: cost
+          annotations:
+            summary: "Civo projected monthly cost high"
+            description: "Civo cluster {{ $labels.cluster_name }} projected monthly cost is ${{ $value | humanize }}. Review resource usage."
+            runbook_url: "https://docs.civo.com/account/billing"
+
+        - alert: CivoCriticalMonthlyCost
+          expr: civo:cost:cluster_monthly_projected_usd > 1000
+          for: 15m
+          labels:
+            severity: critical
+            cloud_provider: civo
+            category: cost
+          annotations:
+            summary: "Civo projected monthly cost critical"
+            description: "Civo cluster {{ $labels.cluster_name }} projected monthly cost is ${{ $value | humanize }}. Immediate review required!"
+            runbook_url: "https://docs.civo.com/account/billing"
+
+        - alert: CivoIdleResourcesDetected
+          expr: civo:cost:idle_pods_hourly_usd > 5
+          for: 2h
+          labels:
+            severity: info
+            cloud_provider: civo
+            category: cost
+          annotations:
+            summary: "Civo idle resources detected"
+            description: "Idle pods in Civo cluster {{ $labels.cluster_name }} are costing ${{ $value | humanize }}/hr (${{ $value | humanize * 730 }}/month). Consider scaling down."
+            runbook_url: "https://docs.civo.com/kubernetes/scaling"
+
+    # ===== Civo K3s Specific Alerts =====
+    - name: civo.k3s.health
+      interval: 1m
+      rules:
+        - alert: CivoK3sAPIServerDown
+          expr: up{job="civo-k3s-apiserver"} == 0
+          for: 5m
+          labels:
+            severity: critical
+            cloud_provider: civo
+          annotations:
+            summary: "Civo K3s API server down"
+            description: "K3s API server is down in Civo cluster {{ $labels.cluster_name }}"
+            runbook_url: "https://docs.k3s.io/troubleshooting"
+
+        - alert: CivoK3sHighAPILatency
+          expr: |
+            histogram_quantile(0.99, 
+              rate(apiserver_request_duration_seconds_bucket{job="civo-k3s-apiserver"}[5m])
+            ) > 1
+          for: 10m
+          labels:
+            severity: warning
+            cloud_provider: civo
+          annotations:
+            summary: "Civo K3s API server high latency"
+            description: "K3s API server p99 latency is {{ $value | humanizeDuration }} in Civo cluster {{ $labels.cluster_name }}"
+            runbook_url: "https://docs.k3s.io/troubleshooting"
+
+        - alert: CivoK3sControllerManagerDown
+          expr: up{job="civo-k3s-controller-manager"} == 0
+          for: 5m
+          labels:
+            severity: critical
+            cloud_provider: civo
+          annotations:
+            summary: "Civo K3s controller manager down"
+            description: "K3s controller manager is down in Civo cluster {{ $labels.cluster_name }}"
+            runbook_url: "https://docs.k3s.io/troubleshooting"
+
+        - alert: CivoK3sSchedulerDown
+          expr: up{job="civo-k3s-scheduler"} == 0
+          for: 5m
+          labels:
+            severity: critical
+            cloud_provider: civo
+          annotations:
+            summary: "Civo K3s scheduler down"
+            description: "K3s scheduler is down in Civo cluster {{ $labels.cluster_name }}"
+            runbook_url: "https://docs.k3s.io/troubleshooting"
+
+    # ===== Civo Logging Alerts =====
+    - name: civo.logging
+      interval: 5m
+      rules:
+        - alert: CivoFluentBitDown
+          expr: up{job="fluent-bit", cloud_provider="civo"} == 0
+          for: 5m
+          labels:
+            severity: warning
+            cloud_provider: civo
+          annotations:
+            summary: "Civo Fluent Bit down"
+            description: "Fluent Bit log collector is down in Civo cluster {{ $labels.cluster_name }}. Logs are not being forwarded to OpenSearch."
+            runbook_url: "https://docs.fluentbit.io/manual/troubleshooting"
+
+        - alert: CivoHighLogVolume
+          expr: rate(fluentbit_output_proc_records_total{cloud_provider="civo"}[5m]) > 10000
+          for: 15m
+          labels:
+            severity: warning
+            cloud_provider: civo
+          annotations:
+            summary: "Civo high log volume"
+            description: "Fluent Bit is processing {{ $value | humanize }} log records per second in Civo cluster {{ $labels.cluster_name }}. This may impact OpenSearch performance."
+
+        - alert: CivoLogForwardingFailing
+          expr: rate(fluentbit_output_errors_total{cloud_provider="civo"}[5m]) > 10
+          for: 5m
+          labels:
+            severity: critical
+            cloud_provider: civo
+          annotations:
+            summary: "Civo log forwarding failing"
+            description: "Fluent Bit is experiencing {{ $value | humanize }} errors per second forwarding logs to OpenSearch in Civo cluster {{ $labels.cluster_name }}"
+            runbook_url: "https://docs.fluentbit.io/manual/troubleshooting"
+
+---
+# Alertmanager configuration for Mattermost integration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-civo-mattermost
+  namespace: monitoring
+  labels:
+    app: alertmanager
+    cloud-provider: civo
+data:
+  civo-mattermost-config.yaml: |
+    route:
+      # Group alerts by cluster and severity
+      group_by: ['alertname', 'cluster_name', 'severity', 'cloud_provider']
+      group_wait: 10s
+      group_interval: 5m
+      repeat_interval: 4h
+      receiver: 'civo-mattermost'
+      
+      # Route critical alerts immediately
+      routes:
+        - match:
+            severity: critical
+            cloud_provider: civo
+          receiver: 'civo-mattermost-critical'
+          group_wait: 0s
+          repeat_interval: 1h
+        
+        - match:
+            severity: warning
+            cloud_provider: civo
+          receiver: 'civo-mattermost-warning'
+          repeat_interval: 4h
+        
+        - match:
+            category: cost
+            cloud_provider: civo
+          receiver: 'civo-mattermost-cost'
+          repeat_interval: 12h
+
+    receivers:
+      # Critical alerts - immediate notification
+      - name: 'civo-mattermost-critical'
+        webhook_configs:
+          - url: '${MATTERMOST_WEBHOOK_URL}'
+            send_resolved: true
+            http_config:
+              tls_config:
+                insecure_skip_verify: false
+
+      # Warning alerts - standard notification
+      - name: 'civo-mattermost-warning'
+        webhook_configs:
+          - url: '${MATTERMOST_WEBHOOK_URL}'
+            send_resolved: true
+
+      # Cost alerts - to finance channel
+      - name: 'civo-mattermost-cost'
+        webhook_configs:
+          - url: '${MATTERMOST_COST_WEBHOOK_URL}'
+            send_resolved: false
+
+      # Default receiver
+      - name: 'civo-mattermost'
+        webhook_configs:
+          - url: '${MATTERMOST_WEBHOOK_URL}'
+            send_resolved: true
+
+    inhibit_rules:
+      # Inhibit warning if critical is firing
+      - source_match:
+          severity: 'critical'
+        target_match:
+          severity: 'warning'
+        equal: ['alertname', 'cluster_name', 'cloud_provider']
+      
+      # Inhibit node alerts if cluster-level alert is firing
+      - source_match:
+          alertname: 'CivoClusterCriticalCPU'
+        target_match_re:
+          alertname: 'CivoNodeHighCPU|CivoNodeCriticalCPU'
+        equal: ['cluster_name']
