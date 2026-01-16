@@ -1,0 +1,669 @@
+{
+  "dashboard": {
+    "title": "Civo Cluster Overview",
+    "tags": ["civo", "kubernetes", "k3s", "cost", "finops"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "1m",
+    "description": "Comprehensive Civo K3s cluster monitoring including resource utilization, cost tracking, and performance metrics",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Cluster Overview",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 2,
+        "title": "Total Monthly Cost",
+        "type": "stat",
+        "gridPos": { "x": 0, "y": 1, "w": 6, "h": 6 },
+        "description": "Projected monthly cost for Civo cluster based on current hourly rate",
+        "targets": [
+          {
+            "expr": "civo:cost:cluster_monthly_projected_usd",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 300 },
+                { "color": "orange", "value": 500 },
+                { "color": "red", "value": 800 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 3,
+        "title": "Cluster CPU Utilization",
+        "type": "gauge",
+        "gridPos": { "x": 6, "y": 1, "w": 6, "h": 6 },
+        "description": "Overall CPU utilization across all nodes in Civo K3s cluster",
+        "targets": [
+          {
+            "expr": "civo:cluster:cpu_utilization_percent",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 70 },
+                { "color": "orange", "value": 85 },
+                { "color": "red", "value": 95 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 4,
+        "title": "Cluster Memory Utilization",
+        "type": "gauge",
+        "gridPos": { "x": 12, "y": 1, "w": 6, "h": 6 },
+        "description": "Overall memory utilization across all nodes in Civo K3s cluster",
+        "targets": [
+          {
+            "expr": "civo:cluster:memory_utilization_percent",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 70 },
+                { "color": "orange", "value": 85 },
+                { "color": "red", "value": 95 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 5,
+        "title": "Nodes Status",
+        "type": "stat",
+        "gridPos": { "x": 18, "y": 1, "w": 6, "h": 3 },
+        "description": "Number of ready nodes in the cluster",
+        "targets": [
+          {
+            "expr": "civo:cluster:nodes_ready",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": null },
+                { "color": "green", "value": 1 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background"
+        }
+      },
+      {
+        "id": 6,
+        "title": "Running Pods",
+        "type": "stat",
+        "gridPos": { "x": 18, "y": 4, "w": 6, "h": 3 },
+        "description": "Number of running pods across the cluster",
+        "targets": [
+          {
+            "expr": "civo:cluster:pods_running",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": { "mode": "palette-classic" }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "value"
+        }
+      },
+      {
+        "id": 7,
+        "title": "Cost Tracking",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 7, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 8,
+        "title": "Hourly Cost",
+        "type": "stat",
+        "gridPos": { "x": 0, "y": 8, "w": 4, "h": 4 },
+        "description": "Current hourly cost of Civo cluster",
+        "targets": [
+          {
+            "expr": "civo:cost:cluster_hourly_usd",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "decimals": 3,
+            "color": { "mode": "palette-classic" }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "value"
+        }
+      },
+      {
+        "id": 9,
+        "title": "Idle Resource Cost",
+        "type": "stat",
+        "gridPos": { "x": 4, "y": 8, "w": 4, "h": 4 },
+        "description": "Hourly cost of idle pods (low CPU usage)",
+        "targets": [
+          {
+            "expr": "civo:cost:idle_pods_hourly_usd",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "decimals": 3,
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 5 },
+                { "color": "red", "value": 10 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background"
+        }
+      },
+      {
+        "id": 10,
+        "title": "Cost Trend (24h)",
+        "type": "timeseries",
+        "gridPos": { "x": 8, "y": 8, "w": 16, "h": 8 },
+        "description": "Hourly cost trend over the last 24 hours",
+        "targets": [
+          {
+            "expr": "civo:cost:cluster_hourly_usd",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "Hourly Cost"
+          },
+          {
+            "expr": "civo:cost:idle_pods_hourly_usd",
+            "refId": "B",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "Idle Resources"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "lineWidth": 2,
+              "fillOpacity": 10,
+              "showPoints": "always",
+              "pointSize": 5
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi"
+          }
+        }
+      },
+      {
+        "id": 11,
+        "title": "Cost by Namespace",
+        "type": "bargauge",
+        "gridPos": { "x": 0, "y": 12, "w": 8, "h": 8 },
+        "description": "Hourly cost breakdown by namespace",
+        "targets": [
+          {
+            "expr": "topk(10, civo:cost:namespace_hourly_usd)",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{namespace}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyUSD",
+            "decimals": 3,
+            "color": { "mode": "palette-classic" }
+          },
+          "overrides": []
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "showUnfilled": true
+        }
+      },
+      {
+        "id": 12,
+        "title": "Resource Utilization",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 20, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 13,
+        "title": "CPU Utilization by Node",
+        "type": "timeseries",
+        "gridPos": { "x": 0, "y": 21, "w": 12, "h": 8 },
+        "description": "CPU utilization per node",
+        "targets": [
+          {
+            "expr": "100 - (avg by (node) (rate(node_cpu_seconds_total{mode=\"idle\",cloud_provider=\"civo\"}[5m])) * 100)",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{node}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "lineWidth": 2,
+              "fillOpacity": 10
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": ["last", "max"]
+          }
+        }
+      },
+      {
+        "id": 14,
+        "title": "Memory Utilization by Node",
+        "type": "timeseries",
+        "gridPos": { "x": 12, "y": 21, "w": 12, "h": 8 },
+        "description": "Memory utilization per node",
+        "targets": [
+          {
+            "expr": "(1 - (node_memory_MemAvailable_bytes{cloud_provider=\"civo\"} / node_memory_MemTotal_bytes{cloud_provider=\"civo\"})) * 100",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{node}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "lineWidth": 2,
+              "fillOpacity": 10
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": ["last", "max"]
+          }
+        }
+      },
+      {
+        "id": 15,
+        "title": "K3s Performance",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 29, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 16,
+        "title": "API Server Requests",
+        "type": "timeseries",
+        "gridPos": { "x": 0, "y": 30, "w": 12, "h": 6 },
+        "description": "K3s API server request rate",
+        "targets": [
+          {
+            "expr": "sum(rate(apiserver_request_total{job=\"civo-k3s-apiserver\"}[5m])) by (verb)",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{verb}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "lineWidth": 1,
+              "fillOpacity": 20,
+              "stacking": {
+                "mode": "normal"
+              }
+            }
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 17,
+        "title": "API Server Latency (p99)",
+        "type": "timeseries",
+        "gridPos": { "x": 12, "y": 30, "w": 12, "h": 6 },
+        "description": "99th percentile API server latency",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(apiserver_request_duration_seconds_bucket{job=\"civo-k3s-apiserver\"}[5m])) by (le, verb))",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{verb}} p99"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "lineWidth": 2
+            }
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 18,
+        "title": "Pod Status",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 36, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 19,
+        "title": "Pod Status Distribution",
+        "type": "piechart",
+        "gridPos": { "x": 0, "y": 37, "w": 8, "h": 8 },
+        "description": "Distribution of pods by status",
+        "targets": [
+          {
+            "expr": "civo:cluster:pods_running",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "Running"
+          },
+          {
+            "expr": "civo:cluster:pods_pending",
+            "refId": "B",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "Pending"
+          },
+          {
+            "expr": "civo:cluster:pods_failed",
+            "refId": "C",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "Failed"
+          }
+        ],
+        "options": {
+          "pieType": "pie",
+          "displayLabels": ["name", "value"],
+          "legend": {
+            "displayMode": "table",
+            "placement": "right"
+          }
+        }
+      },
+      {
+        "id": 20,
+        "title": "Pod Restart Rate",
+        "type": "timeseries",
+        "gridPos": { "x": 8, "y": 37, "w": 16, "h": 8 },
+        "description": "Pod container restart rate (per minute)",
+        "targets": [
+          {
+            "expr": "topk(10, civo:cluster:pod_restart_rate)",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "{{namespace}}/{{pod}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "lineWidth": 2,
+              "fillOpacity": 10
+            }
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 21,
+        "title": "API Rate Limits",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 45, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 22,
+        "title": "Civo API Calls Rate",
+        "type": "gauge",
+        "gridPos": { "x": 0, "y": 46, "w": 8, "h": 6 },
+        "description": "Current Civo API calls per minute (limit: ~100/min)",
+        "targets": [
+          {
+            "expr": "civo:api:calls_per_minute",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "min": 0,
+            "max": 100,
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 70 },
+                { "color": "orange", "value": 85 },
+                { "color": "red", "value": 95 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 23,
+        "title": "API Error Rate",
+        "type": "stat",
+        "gridPos": { "x": 8, "y": 46, "w": 8, "h": 6 },
+        "description": "Percentage of Civo API requests returning errors",
+        "targets": [
+          {
+            "expr": "civo:api:error_rate * 100",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 5 },
+                { "color": "red", "value": 10 }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background"
+        }
+      },
+      {
+        "id": 24,
+        "title": "API Calls Trend",
+        "type": "timeseries",
+        "gridPos": { "x": 16, "y": 46, "w": 8, "h": 6 },
+        "description": "Civo API calls over time",
+        "targets": [
+          {
+            "expr": "civo:api:calls_per_minute",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "legendFormat": "API Calls/min"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "lineWidth": 2,
+              "fillOpacity": 20
+            }
+          },
+          "overrides": []
+        }
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "cluster",
+          "type": "query",
+          "label": "Cluster",
+          "query": "label_values(civo:cluster:nodes_ready, cluster_name)",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "refresh": 1,
+          "multi": false,
+          "includeAll": false
+        },
+        {
+          "name": "region",
+          "type": "query",
+          "label": "Region",
+          "query": "label_values(civo:cluster:nodes_ready{cluster_name=\"$cluster\"}, cloud_region)",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "refresh": 1,
+          "multi": false,
+          "includeAll": false
+        }
+      ]
+    },
+    "time": {
+      "from": "now-24h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["30s", "1m", "5m", "15m", "30m", "1h", "2h", "1d"]
+    }
+  }
+}
