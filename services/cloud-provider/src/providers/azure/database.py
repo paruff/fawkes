@@ -2,7 +2,6 @@
 
 import logging
 from typing import List, Optional
-from datetime import datetime
 
 from azure.mgmt.rdbms.postgresql import PostgreSQLManagementClient
 from azure.mgmt.rdbms.mysql import MySQLManagementClient
@@ -249,7 +248,7 @@ class AzureDatabaseService:
             client = self._get_client(engine)
 
             self.rate_limiter.acquire()
-            poller = client.servers.begin_delete(resource_group, database_name)
+            _ = client.servers.begin_delete(resource_group, database_name)
 
             logger.info(f"✅ Initiated Azure Database deletion: {database_name}")
             return True
