@@ -592,14 +592,14 @@ class TestAzureProviderDatabaseOperations:
                 instance_class="GP_Gen5_2",
             )
 
-            mock_db.get_database.return_value = expected_database
+            mock_db.get_database_any_engine.return_value = expected_database
 
             database = provider.get_database("test-db", resource_group="test-rg")
 
             assert database.name == "test-db"
             assert database.status == "Ready"
             assert database.port == 5432
-            mock_db.get_database.assert_called_once_with("test-db", "test-rg")
+            mock_db.get_database_any_engine.assert_called_once_with("test-db", "test-rg")
 
     def test_delete_database(self, azure_credentials, mock_credential):
         """Test database deletion."""
@@ -620,14 +620,14 @@ class TestAzureProviderDatabaseOperations:
             # Mock Database service
             mock_db = Mock()
             mock_db_class.return_value = mock_db
-            mock_db.delete_database.return_value = True
+            mock_db.delete_database_any_engine.return_value = True
 
             provider = AzureProvider(subscription_id="test-sub-id")
 
             result = provider.delete_database("test-db", resource_group="test-rg", skip_final_snapshot=True)
 
             assert result is True
-            mock_db.delete_database.assert_called_once_with("test-db", "test-rg")
+            mock_db.delete_database_any_engine.assert_called_once_with("test-db", "test-rg")
 
     def test_list_databases(self, azure_credentials, mock_credential):
         """Test listing databases."""
@@ -670,7 +670,7 @@ class TestAzureProviderDatabaseOperations:
                 ),
             ]
 
-            mock_db.list_databases.return_value = expected_databases
+            mock_db.list_all_databases.return_value = expected_databases
 
             provider = AzureProvider(subscription_id="test-sub-id")
 
@@ -679,7 +679,7 @@ class TestAzureProviderDatabaseOperations:
             assert len(databases) == 2
             assert databases[0].engine == "postgres"
             assert databases[1].engine == "mysql"
-            mock_db.list_databases.assert_called_once_with("test-rg")
+            mock_db.list_all_databases.assert_called_once_with("test-rg")
 
 
 class TestAzureProviderStorageOperations:

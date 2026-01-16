@@ -43,7 +43,7 @@ class AzureMonitorService:
     def get_metrics(
         self,
         resource_id: str,
-        metric_names: List[str],
+        metric_name: str,
         start_time: datetime,
         end_time: datetime,
         aggregation: Optional[str] = None,
@@ -53,7 +53,7 @@ class AzureMonitorService:
 
         Args:
             resource_id: Full Azure resource ID
-            metric_names: List of metric names to retrieve
+            metric_name: Metric name to retrieve (single metric)
             start_time: Start time for metrics
             end_time: End time for metrics
             aggregation: Aggregation type (Average, Total, Maximum, Minimum, Count)
@@ -64,16 +64,13 @@ class AzureMonitorService:
         Raises:
             CloudProviderError: If metrics retrieval fails
         """
-        logger.debug(f"Getting Azure Monitor metrics: {metric_names} for resource {resource_id}")
+        logger.debug(f"Getting Azure Monitor metric: {metric_name} for resource {resource_id}")
 
         try:
             client = self._get_client()
 
             # Format timestamps for Azure API
             timespan = f"{start_time.isoformat()}/{end_time.isoformat()}"
-
-            # Join metric names
-            metricnames = ",".join(metric_names)
 
             # Set default aggregation if not provided
             if not aggregation:
@@ -91,7 +88,7 @@ class AzureMonitorService:
                 resource_uri=resource_id,
                 timespan=timespan,
                 interval="PT5M",
-                metricnames=metricnames,
+                metricnames=metric_name,
                 aggregation=aggregation,
             )
 
