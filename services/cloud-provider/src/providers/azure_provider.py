@@ -277,7 +277,7 @@ class AzureProvider(CloudProvider):
         else:
             server_name = database_id
 
-        return self.database.get_database(server_name, resource_group)
+        return self.database.get_database_any_engine(server_name, resource_group)
 
     def delete_database(self, database_id: str, resource_group: Optional[str] = None, skip_final_snapshot: bool = False) -> bool:
         """
@@ -306,7 +306,7 @@ class AzureProvider(CloudProvider):
         else:
             server_name = database_id
 
-        return self.database.delete_database(server_name, resource_group)
+        return self.database.delete_database_any_engine(server_name, resource_group)
 
     def list_databases(self, region: Optional[str] = None, resource_group: Optional[str] = None) -> List[Database]:
         """
@@ -322,7 +322,7 @@ class AzureProvider(CloudProvider):
         Raises:
             CloudProviderError: If listing fails
         """
-        return self.database.list_databases(resource_group)
+        return self.database.list_all_databases(resource_group)
 
     # Storage operations
     def create_storage(self, config: StorageConfig) -> Storage:

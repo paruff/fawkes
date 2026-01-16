@@ -334,3 +334,93 @@ class AzureDatabaseService:
             )
         except Exception as e:
             raise CloudProviderError(f"Unexpected error listing Azure Databases: {e}", provider="azure")
+
+    def get_database_any_engine(self, database_name: str, resource_group: str) -> Database:
+        """
+        Get database by trying both PostgreSQL and MySQL engines.
+        
+        This is useful when the engine type is unknown.
+        
+        Args:
+            database_name: Database server name
+            resource_group: Resource group name
+            
+        Returns:
+            Database object with details
+            
+        Raises:
+            ResourceNotFoundError: If database not found with either engine
+        """
+        # Try PostgreSQL first
+        try:
+            return self.get_database(database_name, "postgresql", resource_group)
+        except ResourceNotFoundError:
+            pass
+        
+        # Try MySQL
+        try:
+            return self.get_database(database_name, "mysql", resource_group)
+        except ResourceNotFoundError:
+            raise ResourceNotFoundError(
+                f"Database {database_name} not found in resource group {resource_group} "
+                "(checked both PostgreSQL and MySQL)",
+                provider="azure"
+            )
+    
+    def delete_database_any_engine(self, database_name: str, resource_group: str) -> bool:
+        """
+        Delete database by trying both PostgreSQL and MySQL engines.
+        
+        This is useful when the engine type is unknown.
+        
+        Args:
+            database_name: Database server name
+            resource_group: Resource group name
+            
+        Returns:
+            True if deletion was successful
+            
+        Raises:
+            ResourceNotFoundError: If database not found with either engine
+        """
+        # Try PostgreSQL first
+        try:
+            return self.delete_database(database_name, "postgresql", resource_group)
+        except ResourceNotFoundError:
+            pass
+        
+        # Try MySQL
+        try:
+            return self.delete_database(database_name, "mysql", resource_group)
+        except ResourceNotFoundError:
+            raise ResourceNotFoundError(
+                f"Database {database_name} not found in resource group {resource_group} "
+                "(checked both PostgreSQL and MySQL)",
+                provider="azure"
+            )
+    
+    def list_all_databases(self, resource_group: Optional[str] = None) -> List[Database]:
+        """
+        List all databases (both PostgreSQL and MySQL).
+        
+        Args:
+            resource_group: Optional resource group filter
+            
+        Returns:
+            List of Database objects from both PostgreSQL and MySQL
+        """
+        databases = []
+        
+        # Get PostgreSQL databases
+        try:
+            databases.extend(self.list_databases("postgresql", resource_group))
+        except Exception as e:
+            logger.warning(f"Could not list PostgreSQL databases: {e}")
+        
+        # Get MySQL databases
+        try:
+            databases.extend(self.list_databases("mysql", resource_group))
+        except Exception as e:
+            logger.warning(f"Could not list MySQL databases: {e}")
+        
+        return databases

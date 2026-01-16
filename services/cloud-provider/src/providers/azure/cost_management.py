@@ -224,7 +224,7 @@ class AzureCostManagementService:
             logger.info(f"✅ Retrieved cost forecast: ${total_forecast:.2f} for next {days} days")
 
             return {
-                "forecast_amount": total_forecast,
+                "forecasted_cost": total_forecast,
                 "currency": "USD",
                 "start_date": start_date,
                 "end_date": end_date,

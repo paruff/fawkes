@@ -347,7 +347,7 @@ for service, cost in sorted(cost_data.breakdown.items(), key=lambda x: x[1], rev
 
 # Get cost forecast
 forecast = provider.get_cost_forecast(days=30)
-print(f"\n30-day forecast: ${forecast['forecast_amount']:.2f}")
+print(f"\n30-day forecast: ${forecast['forecasted_cost']:.2f}")
 ```
 
 ### CloudWatch Metrics
@@ -515,7 +515,7 @@ for service, cost in sorted(cost_data.breakdown.items(), key=lambda x: x[1], rev
 
 # Get cost forecast
 forecast = provider.get_cost_forecast(days=30)
-print(f"\n30-day forecast: ${forecast['forecast_amount']:.2f}")
+print(f"\n30-day forecast: ${forecast['forecasted_cost']:.2f}")
 ```
 
 #### Azure Monitor Metrics
