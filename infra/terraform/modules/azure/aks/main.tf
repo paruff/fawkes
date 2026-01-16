@@ -118,12 +118,7 @@ resource "azurerm_kubernetes_cluster" "main" {
   }
 
   # Azure Policy Add-on
-  dynamic "azure_policy_enabled" {
-    for_each = var.enable_azure_policy ? [1] : []
-    content {
-      enabled = true
-    }
-  }
+  azure_policy_enabled = var.enable_azure_policy
 
   # HTTP Application Routing (not recommended for production)
   http_application_routing_enabled = var.enable_http_application_routing
