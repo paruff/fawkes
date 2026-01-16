@@ -2,7 +2,7 @@
 
 import logging
 from typing import Dict, Any, Optional, List
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from azure.mgmt.monitor import MonitorManagementClient
 from azure.core.exceptions import HttpResponseError

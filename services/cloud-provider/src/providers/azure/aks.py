@@ -242,7 +242,7 @@ class AKSService:
             client = self._get_client()
 
             self.rate_limiter.acquire()
-            poller = client.managed_clusters.begin_delete(resource_group, cluster_name)
+            _ = client.managed_clusters.begin_delete(resource_group, cluster_name)
 
             # Wait for deletion to complete (optional)
             # poller.result()

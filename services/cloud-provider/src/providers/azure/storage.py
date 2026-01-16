@@ -5,7 +5,6 @@ from typing import List, Optional
 from datetime import datetime
 
 from azure.mgmt.storage import StorageManagementClient
-from azure.storage.blob import BlobServiceClient
 from azure.core.exceptions import (
     ResourceNotFoundError as AzureResourceNotFoundError,
     HttpResponseError,

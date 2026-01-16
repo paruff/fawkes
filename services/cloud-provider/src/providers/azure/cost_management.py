@@ -142,11 +142,11 @@ class AzureCostManagementService:
                     else:
                         breakdown[service_name] = cost
 
-            currency = result.properties.next_link if hasattr(result, "properties") else "USD"
+            # Currency is typically USD for Azure Cost Management
             if hasattr(result, "columns") and result.columns:
                 for col in result.columns:
-                    if col.name == "Cost":
-                        currency = col.type if hasattr(col, "type") else "USD"
+                    if col.name == "Currency":
+                        # Use currency column if available
                         break
 
             logger.info(f"✅ Retrieved cost data: ${total_cost:.2f} total")
