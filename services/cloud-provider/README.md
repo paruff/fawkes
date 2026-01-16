@@ -1,21 +1,18 @@
 # Cloud Provider Service
 
-A unified abstraction layer for interacting with multiple cloud providers, starting with AWS support for EKS, RDS, S3, CloudWatch, and Cost Explorer.
+A unified abstraction layer for interacting with multiple cloud providers, including AWS and Azure support.
 
 ## Features
 
 - **Multi-cloud abstraction**: Common interface for cloud operations across providers
 - **AWS Support**: Full implementation for EKS, RDS, S3, CloudWatch, and Cost Explorer
+- **Azure Support**: Full implementation for AKS, Azure Database, Blob Storage, Azure Monitor, and Cost Management
 - **Flexible Authentication**: 
-  - IAM roles (preferred)
-  - STS assume role
-  - Access keys with session tokens
-  - AWS profile
-  - Environment variables
-  - Instance metadata (EC2)
+  - **AWS**: IAM roles, STS assume role, access keys, AWS profile, environment variables, instance metadata
+  - **Azure**: Managed Identity, Service Principal, Azure CLI, DefaultAzureCredential
 - **Error Handling**: Comprehensive error handling with retries and exponential backoff
 - **Rate Limiting**: Built-in rate limiting to prevent API throttling
-- **Logging**: Detailed logging of all AWS API calls
+- **Logging**: Detailed logging of all API calls
 - **Type Safety**: Full type hints for better IDE support and type checking
 
 ## Installation
@@ -65,9 +62,49 @@ for service, cost in cost_data.breakdown.items():
     print(f"  {service}: ${cost:.2f}")
 ```
 
+### Azure Basic Usage
+
+```python
+from src.providers.azure_provider import AzureProvider
+from src.interfaces.provider import StorageConfig
+
+# Initialize provider (uses managed identity or Azure CLI)
+provider = AzureProvider(subscription_id="your-subscription-id")
+
+# Create a storage account
+config = StorageConfig(
+    name="mystorageaccount123",  # Must be globally unique, lowercase
+    region="eastus",
+    versioning_enabled=False,
+    encryption_enabled=True,
+    metadata={
+        "resource_group": "my-resource-group",
+        "sku": "Standard_LRS",
+        "kind": "StorageV2",
+    },
+    tags={"Environment": "production", "Team": "platform"}
+)
+
+storage = provider.create_storage(config)
+print(f"Created storage account: {storage.name}")
+
+# List all storage accounts
+storage_accounts = provider.list_storage(resource_group="my-resource-group")
+for account in storage_accounts:
+    print(f"- {account.name} ({account.region})")
+
+# Get cost data
+cost_data = provider.get_cost_data("LAST_30_DAYS", "DAILY")
+print(f"Total cost: ${cost_data.total_cost:.2f}")
+for service, cost in cost_data.breakdown.items():
+    print(f"  {service}: ${cost:.2f}")
+```
+
 ## Authentication
 
-### IAM Role (Recommended)
+### AWS Authentication
+
+#### IAM Role (Recommended)
 
 When running on AWS (EC2, ECS, Lambda), use IAM roles:
 
@@ -117,6 +154,63 @@ Set environment variables:
 export AWS_ACCESS_KEY_ID=your_access_key
 export AWS_SECRET_ACCESS_KEY=your_secret_key
 export AWS_DEFAULT_REGION=us-west-2
+```
+
+### Azure Authentication
+
+#### Managed Identity (Recommended)
+
+When running in Azure (VM, Container Instance, App Service, Functions), use managed identity:
+
+```python
+provider = AzureProvider(
+    subscription_id="your-subscription-id",
+    use_managed_identity=True
+)
+```
+
+#### Service Principal
+
+Use a service principal for programmatic access:
+
+```python
+provider = AzureProvider(
+    subscription_id="your-subscription-id",
+    tenant_id="your-tenant-id",
+    client_id="your-client-id",
+    client_secret="your-client-secret"
+)
+```
+
+#### Azure CLI
+
+Use Azure CLI authentication (for local development):
+
+```python
+provider = AzureProvider(
+    subscription_id="your-subscription-id",
+    use_cli=True
+)
+```
+
+#### DefaultAzureCredential
+
+Let Azure SDK try multiple authentication methods automatically:
+
+```python
+provider = AzureProvider(subscription_id="your-subscription-id")
+# Tries: environment variables → managed identity → Azure CLI → interactive browser
+```
+
+#### Environment Variables
+
+Set environment variables:
+
+```bash
+export AZURE_SUBSCRIPTION_ID=your_subscription_id
+export AZURE_TENANT_ID=your_tenant_id
+export AZURE_CLIENT_ID=your_client_id
+export AZURE_CLIENT_SECRET=your_client_secret
 ```
 
 ## Usage Examples
@@ -253,7 +347,7 @@ for service, cost in sorted(cost_data.breakdown.items(), key=lambda x: x[1], rev
 
 # Get cost forecast
 forecast = provider.get_cost_forecast(days=30)
-print(f"\n30-day forecast: ${forecast['forecast_amount']:.2f}")
+print(f"\n30-day forecast: ${forecast['forecasted_cost']:.2f}")
 ```
 
 ### CloudWatch Metrics
@@ -279,6 +373,175 @@ print(f"Metric: {metrics['metric_name']}")
 print(f"Datapoints: {len(metrics['datapoints'])}")
 for dp in metrics['datapoints'][:5]:
     print(f"  {dp['Timestamp']}: {dp.get('Average', 0):.2f}")
+```
+
+### Azure Usage Examples
+
+#### AKS Cluster Management
+
+```python
+from src.interfaces.provider import ClusterConfig
+
+# Create AKS cluster
+config = ClusterConfig(
+    name="production-cluster",
+    region="eastus",
+    version="1.28",
+    node_count=3,
+    node_instance_type="Standard_DS2_v2",
+    metadata={
+        "resource_group": "my-resource-group",
+        "dns_prefix": "production-cluster-dns",
+        "identity": {"type": "SystemAssigned"},
+        "network_plugin": "kubenet",
+        "enable_rbac": True,
+    },
+    tags={"Environment": "production"}
+)
+
+cluster = provider.create_cluster(config)
+print(f"Cluster {cluster.name} status: {cluster.status}")
+
+# Get cluster details
+cluster = provider.get_cluster("production-cluster", resource_group="my-resource-group")
+print(f"Endpoint: {cluster.endpoint}")
+print(f"Version: {cluster.version}")
+print(f"Nodes: {cluster.node_count}")
+
+# List all clusters in resource group
+clusters = provider.list_clusters(resource_group="my-resource-group")
+for cluster in clusters:
+    print(f"- {cluster.name}: {cluster.status}")
+
+# Delete cluster
+provider.delete_cluster("production-cluster", resource_group="my-resource-group")
+```
+
+#### Azure Database Management
+
+```python
+from src.interfaces.provider import DatabaseConfig
+
+# Create PostgreSQL database
+config = DatabaseConfig(
+    name="production-db",
+    engine="postgres",
+    engine_version="14",
+    instance_class="GP_Gen5_2",
+    region="eastus",
+    allocated_storage=100,
+    master_username="adminuser",
+    master_password="SuperSecretPassword123!",
+    metadata={
+        "resource_group": "my-resource-group",
+        "sku_tier": "GeneralPurpose",
+        "sku_family": "Gen5",
+        "sku_capacity": 2,
+        "backup_retention_days": 7,
+        "geo_redundant_backup": False,
+        "ssl_enforcement": True,
+    },
+    tags={"Environment": "production"}
+)
+
+database = provider.create_database(config)
+print(f"Database {database.name} status: {database.status}")
+
+# Get database details
+database = provider.get_database("production-db", resource_group="my-resource-group")
+print(f"Endpoint: {database.endpoint}:{database.port}")
+print(f"Engine: {database.engine} {database.engine_version}")
+
+# List all databases
+databases = provider.list_databases(resource_group="my-resource-group")
+for db in databases:
+    print(f"- {db.name}: {db.status}")
+
+# Delete database
+provider.delete_database("production-db", resource_group="my-resource-group")
+```
+
+#### Azure Storage Management
+
+```python
+from src.interfaces.provider import StorageConfig
+
+# Create storage account with blob container
+config = StorageConfig(
+    name="mydatalake2024",  # Must be globally unique, lowercase, no hyphens
+    region="eastus",
+    versioning_enabled=False,
+    encryption_enabled=True,
+    public_access_blocked=True,
+    metadata={
+        "resource_group": "my-resource-group",
+        "sku": "Standard_LRS",
+        "kind": "StorageV2",
+        "container_name": "data",  # Optional: creates a blob container
+    },
+    tags={"Project": "data-platform", "CostCenter": "engineering"}
+)
+
+storage = provider.create_storage(config)
+print(f"Created storage account: {storage.name}")
+
+# Get storage account details
+storage = provider.get_storage("mydatalake2024", resource_group="my-resource-group")
+print(f"Region: {storage.region}")
+print(f"Encryption: {storage.encryption_enabled}")
+
+# List all storage accounts
+storage_accounts = provider.list_storage(resource_group="my-resource-group")
+for account in storage_accounts:
+    print(f"- {account.name} ({account.region})")
+
+# Delete storage account
+provider.delete_storage("mydatalake2024", resource_group="my-resource-group", force=True)
+```
+
+#### Azure Cost Monitoring
+
+```python
+# Get cost data for last 30 days
+cost_data = provider.get_cost_data("LAST_30_DAYS", "DAILY")
+print(f"Period: {cost_data.start_date} to {cost_data.end_date}")
+print(f"Total cost: ${cost_data.total_cost:.2f} {cost_data.currency}")
+
+# Print cost breakdown by service
+print("\nCost by service:")
+for service, cost in sorted(cost_data.breakdown.items(), key=lambda x: x[1], reverse=True):
+    percentage = (cost / cost_data.total_cost) * 100
+    print(f"  {service:30s}: ${cost:10.2f} ({percentage:5.1f}%)")
+
+# Get cost forecast
+forecast = provider.get_cost_forecast(days=30)
+print(f"\n30-day forecast: ${forecast['forecasted_cost']:.2f}")
+```
+
+#### Azure Monitor Metrics
+
+```python
+from datetime import datetime, timedelta
+
+# Get metrics for a specific resource
+end_time = datetime.utcnow()
+start_time = end_time - timedelta(hours=24)
+
+# Full Azure resource ID required
+resource_id = "/subscriptions/{subscription_id}/resourceGroups/{rg}/providers/Microsoft.Compute/virtualMachines/{vm_name}"
+
+metrics = provider.get_metrics(
+    resource_id=resource_id,
+    metric_name="Percentage CPU",
+    start_time=start_time.isoformat() + "Z",
+    end_time=end_time.isoformat() + "Z",
+    aggregation="Average"
+)
+
+print(f"Metric: {metrics['metric_name']}")
+print(f"Datapoints: {len(metrics['datapoints'])}")
+for dp in metrics['datapoints'][:5]:
+    print(f"  {dp['timestamp']}: {dp['average']:.2f}%")
 ```
 
 ## Error Handling
