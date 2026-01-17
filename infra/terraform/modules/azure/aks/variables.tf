@@ -334,7 +334,7 @@ variable "network_plugin_mode" {
   default     = null
 
   validation {
-    condition     = var.network_plugin_mode == null || contains(["overlay"], var.network_plugin_mode)
+    condition     = var.network_plugin_mode == null || can(contains(["overlay"], var.network_plugin_mode))
     error_message = "Network plugin mode must be overlay when specified."
   }
 }

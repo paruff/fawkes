@@ -40,7 +40,7 @@ resource "azurerm_storage_account" "main" {
   access_tier              = var.access_tier
 
   # Security
-  enable_https_traffic_only       = var.enable_https_traffic_only
+  https_traffic_only_enabled      = var.enable_https_traffic_only
   min_tls_version                 = var.min_tls_version
   allow_nested_items_to_be_public = var.allow_nested_items_to_be_public
   shared_access_key_enabled       = var.shared_access_key_enabled
