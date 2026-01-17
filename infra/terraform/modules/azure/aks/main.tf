@@ -47,19 +47,16 @@ resource "azurerm_kubernetes_cluster" "main" {
     only_critical_addons_enabled = var.only_critical_addons_enabled
     zones                        = var.availability_zones
 
-    # Auto-scaling configuration
-    enable_auto_scaling = var.enable_auto_scaling
-    min_count           = var.enable_auto_scaling ? var.node_min_count : null
-    max_count           = var.enable_auto_scaling ? var.node_max_count : null
+    # Auto-scaling configuration (min/max_count implies auto-scaling when set)
+    min_count = var.enable_auto_scaling ? var.node_min_count : null
+    max_count = var.enable_auto_scaling ? var.node_max_count : null
 
     # Node configuration
-    os_disk_size_gb      = var.node_os_disk_size_gb
-    os_disk_type         = var.node_os_disk_type
-    max_pods             = var.node_max_pods
-    enable_node_public_ip = var.enable_node_public_ip
+    os_disk_size_gb = var.node_os_disk_size_gb
+    os_disk_type    = var.node_os_disk_type
+    max_pods        = var.node_max_pods
 
     node_labels = var.node_labels
-    node_taints = var.node_taints
 
     upgrade_settings {
       max_surge = var.max_surge
@@ -77,7 +74,6 @@ resource "azurerm_kubernetes_cluster" "main" {
   dynamic "azure_active_directory_role_based_access_control" {
     for_each = var.enable_azure_ad_rbac ? [1] : []
     content {
-      managed                = true
       azure_rbac_enabled     = var.azure_rbac_enabled
       admin_group_object_ids = var.azure_ad_admin_group_object_ids
     }
@@ -137,9 +133,6 @@ resource "azurerm_kubernetes_cluster" "main" {
     }
   }
 
-  # Auto-upgrade
-  automatic_channel_upgrade = var.automatic_channel_upgrade
-
   tags = merge(
     var.tags,
     {
@@ -165,17 +158,15 @@ resource "azurerm_kubernetes_cluster_node_pool" "additional" {
   vnet_subnet_id        = var.subnet_id
   zones                 = lookup(each.value, "zones", var.availability_zones)
 
-  # Auto-scaling
-  enable_auto_scaling = lookup(each.value, "enable_auto_scaling", true)
-  node_count          = lookup(each.value, "enable_auto_scaling", true) ? null : lookup(each.value, "node_count", 3)
-  min_count           = lookup(each.value, "enable_auto_scaling", true) ? lookup(each.value, "min_count", 1) : null
-  max_count           = lookup(each.value, "enable_auto_scaling", true) ? lookup(each.value, "max_count", 10) : null
+  # Auto-scaling (min/max_count implies auto-scaling when set)
+  node_count = lookup(each.value, "enable_auto_scaling", true) ? null : lookup(each.value, "node_count", 3)
+  min_count  = lookup(each.value, "enable_auto_scaling", true) ? lookup(each.value, "min_count", 1) : null
+  max_count  = lookup(each.value, "enable_auto_scaling", true) ? lookup(each.value, "max_count", 10) : null
 
   # Node configuration
-  os_disk_size_gb      = lookup(each.value, "os_disk_size_gb", var.node_os_disk_size_gb)
-  os_disk_type         = lookup(each.value, "os_disk_type", var.node_os_disk_type)
-  max_pods             = lookup(each.value, "max_pods", var.node_max_pods)
-  enable_node_public_ip = lookup(each.value, "enable_node_public_ip", false)
+  os_disk_size_gb = lookup(each.value, "os_disk_size_gb", var.node_os_disk_size_gb)
+  os_disk_type    = lookup(each.value, "os_disk_type", var.node_os_disk_type)
+  max_pods        = lookup(each.value, "max_pods", var.node_max_pods)
 
   node_labels = lookup(each.value, "node_labels", {})
   node_taints = lookup(each.value, "node_taints", [])
