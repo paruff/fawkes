@@ -104,9 +104,9 @@ output "oidc_issuer_url" {
   value       = azurerm_kubernetes_cluster.main.oidc_issuer_url
 }
 
-output "default_node_pool_id" {
-  description = "ID of the default node pool"
-  value       = azurerm_kubernetes_cluster.main.default_node_pool[0].id
+output "default_node_pool_name" {
+  description = "Name of the default node pool"
+  value       = azurerm_kubernetes_cluster.main.default_node_pool[0].name
 }
 
 output "additional_node_pool_ids" {

@@ -98,7 +98,7 @@ variable "admin_password" {
   sensitive   = true
 
   validation {
-    condition     = var.admin_password == null || length(var.admin_password) >= 8
+    condition     = var.admin_password == null || can(length(var.admin_password) >= 8)
     error_message = "Admin password must be at least 8 characters long."
   }
 }
@@ -152,7 +152,7 @@ variable "high_availability_mode" {
   default     = null
 
   validation {
-    condition     = var.high_availability_mode == null || contains(["ZoneRedundant", "SameZone"], var.high_availability_mode)
+    condition     = var.high_availability_mode == null || can(contains(["ZoneRedundant", "SameZone"], var.high_availability_mode))
     error_message = "High availability mode must be either ZoneRedundant or SameZone."
   }
 }
@@ -163,7 +163,7 @@ variable "standby_availability_zone" {
   default     = null
 
   validation {
-    condition     = var.standby_availability_zone == null || contains(["1", "2", "3"], var.standby_availability_zone)
+    condition     = var.standby_availability_zone == null || can(contains(["1", "2", "3"], var.standby_availability_zone))
     error_message = "Standby availability zone must be 1, 2, or 3."
   }
 }
@@ -192,7 +192,7 @@ variable "maintenance_window" {
   validation {
     condition = (
       var.maintenance_window == null ||
-      (
+      can(
         var.maintenance_window.day_of_week >= 0 && var.maintenance_window.day_of_week <= 6 &&
         var.maintenance_window.start_hour >= 0 && var.maintenance_window.start_hour <= 23 &&
         var.maintenance_window.start_minute >= 0 && var.maintenance_window.start_minute <= 59
