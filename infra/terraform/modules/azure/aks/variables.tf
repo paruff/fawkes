@@ -190,22 +190,10 @@ variable "node_max_pods" {
   }
 }
 
-variable "enable_node_public_ip" {
-  description = "Enable public IP for nodes"
-  type        = bool
-  default     = false
-}
-
 variable "node_labels" {
   description = "Key-value map of Kubernetes labels for default node pool"
   type        = map(string)
   default     = {}
-}
-
-variable "node_taints" {
-  description = "List of Kubernetes taints for default node pool"
-  type        = list(string)
-  default     = []
 }
 
 variable "max_surge" {
@@ -436,17 +424,6 @@ variable "maintenance_window" {
     }))
   })
   default = null
-}
-
-variable "automatic_channel_upgrade" {
-  description = "Automatic upgrade channel (patch, rapid, stable, node-image)"
-  type        = string
-  default     = "stable"
-
-  validation {
-    condition     = var.automatic_channel_upgrade == null || contains(["patch", "rapid", "stable", "node-image", "none"], var.automatic_channel_upgrade)
-    error_message = "Automatic channel upgrade must be one of: patch, rapid, stable, node-image, none."
-  }
 }
 
 # Tags
