@@ -37,7 +37,6 @@ resource "azurerm_kubernetes_cluster" "main" {
   dns_prefix                  = var.dns_prefix != null ? var.dns_prefix : "${var.cluster_name}-dns"
   kubernetes_version          = var.kubernetes_version
   sku_tier                    = var.sku_tier
-  automatic_channel_upgrade   = var.automatic_channel_upgrade
 
   default_node_pool {
     name                         = var.default_node_pool_name
@@ -47,7 +46,6 @@ resource "azurerm_kubernetes_cluster" "main" {
     type                         = "VirtualMachineScaleSets"
     only_critical_addons_enabled = var.only_critical_addons_enabled
     zones                        = var.availability_zones
-    enable_node_public_ip        = var.enable_node_public_ip
 
     # Auto-scaling configuration (min/max_count implies auto-scaling when set)
     min_count = var.enable_auto_scaling ? var.node_min_count : null
@@ -59,7 +57,6 @@ resource "azurerm_kubernetes_cluster" "main" {
     max_pods        = var.node_max_pods
 
     node_labels = var.node_labels
-    node_taints = var.node_taints
 
     upgrade_settings {
       max_surge = var.max_surge
