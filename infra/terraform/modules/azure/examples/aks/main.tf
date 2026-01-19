@@ -134,9 +134,6 @@ module "aks" {
   log_analytics_workspace_id  = azurerm_log_analytics_workspace.example.id
   enable_diagnostic_settings  = true
 
-  # Maintenance
-  automatic_channel_upgrade = "stable"
-
   tags = {
     Environment = "example"
     Purpose     = "aks-demo"
