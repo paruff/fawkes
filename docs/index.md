@@ -114,3 +114,49 @@ Organizations that implement capabilities across all three categories (Flow, Fee
 [View All Tutorials](tutorials/index.md){ .md-button }
 [Explore All Capabilities](capabilities.md){ .md-button }
 [Dojo Learning Path](dojo/getting-started.md){ .md-button }
+
+---
+
+## 📚 Documentation Navigation
+
+### For Application Developers
+
+Start here if you're using the Fawkes platform to build and deploy applications:
+
+1. **[Getting Started](getting-started.md)** - Quick start guide for new users
+2. **[Tutorials](tutorials/index.md)** - Step-by-step learning guides
+3. **[How-To Guides](how-to/index.md)** - Task-specific instructions
+4. **[Reference](reference/index.md)** - API docs, glossary, and configuration
+5. **[Troubleshooting](troubleshooting.md)** - Common issues and solutions
+
+### For Platform Engineers & Maintainers
+
+Start here if you're building, operating, or contributing to the platform:
+
+1. **[Architecture](architecture.md)** - Platform architecture overview
+2. **[Contributing Guide](contributing.md)** - How to contribute
+3. **[Development Guide](development.md)** - Development environment setup
+4. **[Coding Standards](../CODING_STANDARDS.md)** - Code quality requirements
+5. **[ADRs](adr/index.md)** - Architecture decision records
+6. **[Operations](runbooks/index.md)** - Runbooks and procedures
+7. **[Testing](testing/index.md)** - Testing strategies
+8. **[Security Plane](security-plane/index.md)** - Security documentation
+
+### By Topic Area
+
+- **Deployment**: [Deployment Guides](deployment/index.md) | [GitOps How-Tos](how-to/gitops/onboard-service-argocd.md)
+- **Observability**: [Observability Overview](observability/index.md) | [DORA Metrics](tutorials/6-measure-dora-metrics.md)
+- **Security**: [Security Plane](security-plane/index.md) | [Security How-Tos](how-to/security/quality-gates-configuration.md)
+- **Testing**: [Testing Overview](testing/index.md) | [Test Patterns](patterns/test-automation.md)
+- **AI/ML**: [AI Documentation](ai/index.md) | [Vector Database](ai/vector-database.md)
+- **Data Platform**: [Data Platform](data-platform/index.md)
+- **Design System**: [Design Documentation](design/index.md)
+- **User Research**: [Research Documentation](research/index.md)
+
+### Quick Links
+
+- **[Glossary](reference/glossary.md)** - Terms and acronyms
+- **[FAQ](faq.md)** - Frequently asked questions
+- **[Playbooks](playbooks/index.md)** - Implementation playbooks
+- **[Tools](tools/index.md)** - Platform tools documentation
+- **[VSM](vsm/index.md)** - Value stream mapping
