@@ -1,0 +1,149 @@
+name: Security Plane - Complete Adoption
+
+on:
+  workflow_dispatch:
+    inputs:
+      enforcement-mode:
+        description: 'Enforcement mode'
+        required: true
+        type: choice
+        options:
+          - advisory
+          - strict
+        default: advisory
+      image-name:
+        description: 'Container image name (for signing/SBOM)'
+        required: false
+        type: string
+      enable-signing:
+        description: 'Enable image signing with Cosign'
+        required: false
+        type: boolean
+        default: true
+      enable-sbom:
+        description: 'Enable SBOM generation'
+        required: false
+        type: boolean
+        default: true
+
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'src/**'
+      - 'Dockerfile*'
+      - 'requirements.txt'
+      - 'package.json'
+      - 'go.mod'
+      - 'pom.xml'
+      - '.security-plane/**'
+
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+  security-events: write
+  packages: write
+  id-token: write
+
+jobs:
+  security-scan:
+    name: Security Scanning
+    uses: ./.github/workflows/reusable-security-scanning.yml
+    with:
+      scan-type: 'all'
+      severity-threshold: 'MEDIUM'
+      fail-on-critical: ${{ github.event.inputs.enforcement-mode == 'strict' || github.event_name == 'push' }}
+      upload-sarif: true
+    permissions:
+      contents: read
+      security-events: write
+
+  policy-enforcement:
+    name: Policy Enforcement
+    needs: security-scan
+    uses: ./.github/workflows/reusable-policy-enforcement.yml
+    with:
+      policy-path: '.security-plane/policies'
+      target-path: '.'
+      fail-on-violation: ${{ github.event.inputs.enforcement-mode == 'strict' || github.event_name == 'push' }}
+    permissions:
+      contents: read
+      security-events: write
+
+  generate-sbom:
+    name: Generate SBOM
+    if: |
+      (github.event_name == 'push' || github.event.inputs.enable-sbom == 'true') &&
+      github.event.inputs.image-name != ''
+    uses: ./.github/workflows/reusable-sbom-generation.yml
+    with:
+      image-name: ${{ github.event.inputs.image-name || github.repository }}
+      image-tag: ${{ github.sha }}
+      sbom-format: 'cyclonedx-json'
+      upload-artifact: true
+    permissions:
+      contents: read
+      packages: read
+
+  sign-image:
+    name: Sign Image
+    if: |
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event.inputs.enable-signing == 'true' || github.event.inputs.enable-signing == null) &&
+      github.event.inputs.image-name != ''
+    needs: [security-scan, policy-enforcement, generate-sbom]
+    uses: ./.github/workflows/reusable-image-signing.yml
+    with:
+      image-name: ${{ github.event.inputs.image-name || github.repository }}
+      image-tag: ${{ github.sha }}
+      registry: 'ghcr.io'
+      sign-sbom: true
+    secrets:
+      registry-username: ${{ github.actor }}
+      registry-password: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [security-scan, policy-enforcement]
+    if: always()
+    
+    steps:
+      - name: Generate Security Badge
+        run: |
+          echo "### 🔒 Security Plane Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.security-scan.result }}" == "success" ] && [ "${{ needs.policy-enforcement.result }}" == "success" ]; then
+            echo "![Security](https://img.shields.io/badge/security-passing-brightgreen)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ All security checks passed!" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "![Security](https://img.shields.io/badge/security-failing-red)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Security checks failed. Review the scan and policy enforcement results." >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "#### Completed Checks" >> $GITHUB_STEP_SUMMARY
+          echo "- Secret Scanning: ${{ needs.security-scan.result == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Vulnerability Scanning: ${{ needs.security-scan.result == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Policy Enforcement: ${{ needs.policy-enforcement.result == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.generate-sbom.result }}" != "skipped" ]; then
+            echo "- SBOM Generation: ${{ needs.generate-sbom.result == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.sign-image.result }}" != "skipped" ]; then
+            echo "- Image Signing: ${{ needs.sign-image.result == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          fi

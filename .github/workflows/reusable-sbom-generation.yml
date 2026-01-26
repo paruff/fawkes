@@ -1,0 +1,83 @@
+name: Reusable SBOM Generation
+
+on:
+  workflow_call:
+    inputs:
+      image-name:
+        description: 'Container image name to generate SBOM for'
+        required: true
+        type: string
+      image-tag:
+        description: 'Container image tag'
+        required: false
+        type: string
+        default: 'latest'
+      upload-artifact:
+        description: 'Upload SBOM as GitHub artifact'
+        required: false
+        type: boolean
+        default: true
+      sbom-format:
+        description: 'SBOM format (cyclonedx-json, spdx-json, syft-json)'
+        required: false
+        type: string
+        default: 'cyclonedx-json'
+    outputs:
+      sbom-path:
+        description: 'Path to generated SBOM file'
+        value: ${{ jobs.generate-sbom.outputs.sbom-path }}
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  generate-sbom:
+    name: Generate SBOM
+    runs-on: ubuntu-latest
+    outputs:
+      sbom-path: ${{ steps.generate.outputs.sbom-path }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Syft
+        uses: anchore/sbom-action/download-syft@v0.15.8
+
+      - name: Generate SBOM for source
+        id: generate
+        run: |
+          SBOM_FILE="sbom-${{ inputs.image-name }}-${{ inputs.image-tag }}.json"
+          syft packages dir:. -o ${{ inputs.sbom-format }} > "$SBOM_FILE"
+          echo "sbom-path=$SBOM_FILE" >> $GITHUB_OUTPUT
+          echo "✅ SBOM generated: $SBOM_FILE"
+          
+      - name: Display SBOM summary
+        run: |
+          echo "### SBOM Generation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image**: ${{ inputs.image-name }}:${{ inputs.image-tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Format**: ${{ inputs.sbom-format }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **File**: ${{ steps.generate.outputs.sbom-path }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Count packages
+          PACKAGE_COUNT=$(cat ${{ steps.generate.outputs.sbom-path }} | grep -o '"name"' | wc -l)
+          echo "- **Packages Found**: $PACKAGE_COUNT" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload SBOM artifact
+        if: inputs.upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ inputs.image-name }}-${{ inputs.image-tag }}
+          path: ${{ steps.generate.outputs.sbom-path }}
+          retention-days: 90
+
+      - name: Validate SBOM
+        run: |
+          if [ ! -s "${{ steps.generate.outputs.sbom-path }}" ]; then
+            echo "❌ SBOM file is empty or missing"
+            exit 1
+          fi
+          echo "✅ SBOM validation passed"
