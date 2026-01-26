@@ -302,10 +302,8 @@ This PR not only delivers the Terratest suite but also significantly improves th
 
 ---
 
-**Scan Date**: January 5, 2026
+**Scan Date**: January 5, 2025
 **Trivy Version**: 0.57.1
 **Scan Scope**: Full repository (HIGH and CRITICAL severities)
 **Status**: ✅ All issues resolved - No vulnerabilities remaining
-**Trivy Version**: 0.57.1
-**Scan Scope**: Full repository (HIGH and CRITICAL severities)
 **Terratest PR Status**: ✅ No security issues in new code
