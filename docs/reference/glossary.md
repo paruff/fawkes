@@ -204,11 +204,18 @@ Human-readable data serialization language used throughout Kubernetes and Fawkes
 | IDP     | Internal Developer Platform                  |
 | JCasC   | Jenkins Configuration as Code                |
 | K8s     | Kubernetes                                   |
+| MTTR    | Mean Time To Restore                         |
+| NPS     | Net Promoter Score                           |
 | OIDC    | OpenID Connect                               |
+| OPA     | Open Policy Agent                            |
 | OTel    | OpenTelemetry                                |
+| RAG     | Retrieval-Augmented Generation               |
 | RBAC    | Role-Based Access Control                    |
 | SAST    | Static Application Security Testing          |
+| SBOM    | Software Bill of Materials                   |
+| SRE     | Site Reliability Engineering                 |
 | TLS     | Transport Layer Security                     |
+| VSM     | Value Stream Mapping                         |
 | YAML    | YAML Ain't Markup Language                   |
 
 ---
