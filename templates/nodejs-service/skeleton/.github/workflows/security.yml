@@ -1,0 +1,32 @@
+name: Security Checks
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+  security-events: write
+  packages: write
+  id-token: write
+
+jobs:
+  security:
+    name: Security Plane
+    uses: paruff/fawkes/.github/workflows/security-plane-adoption.yml@main
+    with:
+      enforcement-mode: advisory  # Change to 'strict' for production
+      image-name: ${{ github.repository }}
+      enable-signing: false  # Set to true when ready for image signing
+      enable-sbom: true
+    permissions:
+      contents: read
+      security-events: write
+      packages: write
+      id-token: write
