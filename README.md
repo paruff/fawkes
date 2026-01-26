@@ -150,11 +150,16 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 
 ### Security & Compliance
 
+- **🔒 Security Plane** - Comprehensive security framework with SBOM, signing, and policy enforcement
 - **Security Scanning** - SonarQube (SAST), Trivy (containers), Gitleaks (secrets)
 - **Automated Secrets Detection** - Pre-commit hooks and CI/CD pipeline scanning
-- **Policy Enforcement** - Kyverno for Kubernetes policies
+- **Policy Enforcement** - Kyverno for Kubernetes policies + OPA/Rego for CI/CD
+- **SBOM Generation** - Syft-based Software Bill of Materials
+- **Image Signing** - Cosign for cryptographic signatures
 - **Secrets Management** - External Secrets Operator + HashiCorp Vault
-- **Zero Trust Roadmap** - Security-first architecture
+- **Zero Trust Architecture** - Security-first architecture
+
+**[Learn more about the Security Plane →](.security-plane/README.md)**
 
 ### Learning & Growth
 
