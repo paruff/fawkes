@@ -29,11 +29,13 @@ dockerfile_has_healthcheck {
 }
 
 # Policy: Minimize layers by combining RUN commands
+# Note: The threshold of 5 is a reasonable default but can be adjusted per project
 warn[msg] {
+    max_run_commands := 5  # Configurable threshold
     run_count := count([cmd | input[i].Cmd == "run"; cmd := input[i]])
-    run_count > 5
+    run_count > max_run_commands
     
-    msg := sprintf("Dockerfile has %d RUN commands. Consider combining them to reduce layers", [run_count])
+    msg := sprintf("Dockerfile has %d RUN commands. Consider combining them to reduce layers (threshold: %d)", [run_count, max_run_commands])
 }
 
 # Policy: Use COPY instead of ADD (unless extracting archives)

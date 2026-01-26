@@ -1,11 +1,14 @@
 package main
 
 # Policy: Block critical vulnerabilities
+# Note: List of vulnerable base images should be maintained separately
+# Consider using input.data.vulnerable_images for dynamic configuration
 deny[msg] {
     input.kind == "Deployment"
     container := input.spec.template.spec.containers[_]
     
     # Check if image uses specific vulnerable base images
+    # This list should be regularly updated and ideally loaded from external data
     vulnerable_bases := ["alpine:3.0", "ubuntu:14.04", "node:10", "python:2.7"]
     base := container.image
     vulnerable_bases[_] == base
