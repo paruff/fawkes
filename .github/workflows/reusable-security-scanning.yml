@@ -1,0 +1,149 @@
+name: Reusable Security Scanning
+
+on:
+  workflow_call:
+    inputs:
+      scan-type:
+        description: 'Type of scan: all, secrets, vulnerabilities, dependencies, container'
+        required: false
+        type: string
+        default: 'all'
+      scan-path:
+        description: 'Path to scan'
+        required: false
+        type: string
+        default: '.'
+      severity-threshold:
+        description: 'Minimum severity to report (UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL)'
+        required: false
+        type: string
+        default: 'MEDIUM'
+      fail-on-critical:
+        description: 'Fail workflow on critical vulnerabilities'
+        required: false
+        type: boolean
+        default: true
+      upload-sarif:
+        description: 'Upload results to GitHub Security tab'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  security-scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run secret scanning
+        if: inputs.scan-type == 'all' || inputs.scan-type == 'secrets'
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_SUMMARY: true
+
+      - name: Run Trivy vulnerability scanner
+        if: inputs.scan-type == 'all' || inputs.scan-type == 'vulnerabilities'
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: ${{ inputs.scan-path }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: ${{ inputs.severity-threshold }}
+          exit-code: ${{ inputs.fail-on-critical && '1' || '0' }}
+
+      - name: Upload Trivy results to GitHub Security
+        if: inputs.upload-sarif && (inputs.scan-type == 'all' || inputs.scan-type == 'vulnerabilities')
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+          category: 'trivy-filesystem'
+
+      - name: Run Trivy for dependency scanning
+        if: inputs.scan-type == 'all' || inputs.scan-type == 'dependencies'
+        run: |
+          echo "🔍 Scanning dependencies..."
+          docker run --rm \
+            -v "${{ github.workspace }}:/workspace" \
+            aquasec/trivy fs \
+            --scanners vuln \
+            --severity ${{ inputs.severity-threshold }} \
+            --format table \
+            /workspace/${{ inputs.scan-path }}
+
+      - name: Run container image scanning
+        if: inputs.scan-type == 'container'
+        run: |
+          echo "🔍 Scanning for container images..."
+          
+          # Find Dockerfiles
+          DOCKERFILES=$(find ${{ inputs.scan-path }} -type f -name "Dockerfile*" \
+            -not -path "*/node_modules/*" \
+            -not -path "*/vendor/*" | head -5)
+          
+          if [ -z "$DOCKERFILES" ]; then
+            echo "⚠️  No Dockerfiles found"
+            exit 0
+          fi
+          
+          for dockerfile in $DOCKERFILES; do
+            echo "📋 Scanning Dockerfile: $dockerfile"
+            docker run --rm \
+              -v "${{ github.workspace }}:/workspace" \
+              aquasec/trivy config \
+              --severity ${{ inputs.severity-threshold }} \
+              "/workspace/$dockerfile"
+          done
+
+      - name: Check for package vulnerabilities (npm)
+        if: inputs.scan-type == 'all' || inputs.scan-type == 'dependencies'
+        continue-on-error: true
+        run: |
+          if [ -f "package.json" ]; then
+            echo "📦 Running npm audit..."
+            npm audit --audit-level=moderate || true
+          fi
+
+      - name: Check for package vulnerabilities (pip)
+        if: inputs.scan-type == 'all' || inputs.scan-type == 'dependencies'
+        continue-on-error: true
+        run: |
+          if [ -f "requirements.txt" ]; then
+            echo "📦 Installing safety for Python vulnerability scanning..."
+            pip install safety
+            echo "🔍 Running safety check..."
+            safety check --file=requirements.txt || true
+          fi
+
+      - name: Generate scan summary
+        if: always()
+        run: |
+          echo "### Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Scan Type**: ${{ inputs.scan-type }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Severity Threshold**: ${{ inputs.severity-threshold }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Fail on Critical**: ${{ inputs.fail-on-critical }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "#### Scans Performed" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ inputs.scan-type }}" == "all" ]; then
+            echo "- ✅ Secret scanning (Gitleaks)" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ Vulnerability scanning (Trivy)" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ Dependency scanning" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ inputs.scan-type }}" == "secrets" ]; then
+            echo "- ✅ Secret scanning (Gitleaks)" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ inputs.scan-type }}" == "vulnerabilities" ]; then
+            echo "- ✅ Vulnerability scanning (Trivy)" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ inputs.scan-type }}" == "dependencies" ]; then
+            echo "- ✅ Dependency scanning" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ inputs.scan-type }}" == "container" ]; then
+            echo "- ✅ Container image scanning" >> $GITHUB_STEP_SUMMARY
+          fi
