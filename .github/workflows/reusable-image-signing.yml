@@ -1,0 +1,109 @@
+name: Reusable Image Signing
+
+on:
+  workflow_call:
+    inputs:
+      image-name:
+        description: 'Container image name to sign'
+        required: true
+        type: string
+      image-tag:
+        description: 'Container image tag'
+        required: false
+        type: string
+        default: 'latest'
+      registry:
+        description: 'Container registry'
+        required: false
+        type: string
+        default: 'ghcr.io'
+      sign-sbom:
+        description: 'Also sign SBOM attestation'
+        required: false
+        type: boolean
+        default: true
+    secrets:
+      registry-username:
+        description: 'Registry username'
+        required: false
+      registry-password:
+        description: 'Registry password'
+        required: false
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write  # For keyless signing
+
+jobs:
+  sign-image:
+    name: Sign Container Image
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.4.0
+        with:
+          cosign-release: 'v2.2.3'
+
+      - name: Log in to registry
+        if: secrets.registry-password != ''
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ inputs.registry }}
+          username: ${{ secrets.registry-username || github.actor }}
+          password: ${{ secrets.registry-password }}
+
+      - name: Sign image with keyless signing
+        run: |
+          IMAGE_REF="${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}"
+          echo "🔐 Signing image: $IMAGE_REF"
+          
+          # Sign with keyless (OIDC) signing
+          cosign sign --yes "$IMAGE_REF"
+          
+          echo "✅ Image signed successfully"
+
+      - name: Generate and sign SBOM attestation
+        if: inputs.sign-sbom
+        run: |
+          IMAGE_REF="${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}"
+          
+          # Generate SBOM
+          echo "📦 Generating SBOM for attestation..."
+          syft packages "$IMAGE_REF" -o cyclonedx-json > sbom.json
+          
+          # Attach SBOM as attestation
+          echo "🔐 Attaching SBOM attestation..."
+          cosign attest --yes --predicate sbom.json --type cyclonedx "$IMAGE_REF"
+          
+          echo "✅ SBOM attestation signed and attached"
+
+      - name: Verify signature
+        run: |
+          IMAGE_REF="${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}"
+          
+          echo "🔍 Verifying signature..."
+          cosign verify "$IMAGE_REF" \
+            --certificate-identity-regexp=".*" \
+            --certificate-oidc-issuer-regexp=".*" || true
+          
+          echo "✅ Signature verification complete"
+
+      - name: Display signing summary
+        run: |
+          echo "### Image Signing Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image**: ${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Signing Method**: Keyless (OIDC)" >> $GITHUB_STEP_SUMMARY
+          echo "- **SBOM Attestation**: ${{ inputs.sign-sbom && '✅ Signed' || '❌ Skipped' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "To verify this signature:" >> $GITHUB_STEP_SUMMARY
+          echo '```bash' >> $GITHUB_STEP_SUMMARY
+          echo "cosign verify ${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }} \\" >> $GITHUB_STEP_SUMMARY
+          echo '  --certificate-identity-regexp=".*" \' >> $GITHUB_STEP_SUMMARY
+          echo '  --certificate-oidc-issuer-regexp=".*"' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY

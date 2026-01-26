@@ -1,0 +1,59 @@
+# Security-Hardened Dockerfile Template
+# This template follows Docker and Kubernetes security best practices
+
+# Use specific version tags, not 'latest'
+# Prefer distroless or minimal base images
+FROM gcr.io/distroless/python3-debian11:nonroot
+
+# Alternative secure base images:
+# FROM alpine:3.19
+# FROM ubuntu:22.04
+# FROM cgr.dev/chainguard/python:latest
+
+# Set labels for metadata and documentation
+LABEL maintainer="security-team@example.com"
+LABEL org.opencontainers.image.source="https://github.com/your-org/your-repo"
+LABEL org.opencontainers.image.description="Security-hardened application"
+LABEL org.opencontainers.image.version="1.0.0"
+
+# If using a non-distroless image, create non-root user
+# RUN addgroup -g 1000 appuser && \
+#     adduser -D -u 1000 -G appuser appuser
+
+# Set working directory
+WORKDIR /app
+
+# Copy only necessary files (use .dockerignore)
+COPY --chown=1000:1000 requirements.txt .
+
+# Install dependencies as root (if needed), then switch to non-root
+# RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY --chown=1000:1000 . .
+
+# Switch to non-root user (distroless uses 'nonroot' user by default)
+# USER 1000
+
+# Expose application port (documentation only, doesn't open port)
+EXPOSE 8080
+
+# Define health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+  CMD curl -f http://localhost:8080/healthz || exit 1
+
+# Use ENTRYPOINT for main command, CMD for default arguments
+ENTRYPOINT ["python3"]
+CMD ["-m", "app"]
+
+# Security best practices checklist:
+# ✓ Use specific image versions (not 'latest')
+# ✓ Use minimal/distroless base images
+# ✓ Run as non-root user
+# ✓ Set proper file ownership
+# ✓ Define HEALTHCHECK
+# ✓ Minimize layers by combining RUN commands
+# ✓ Use .dockerignore to exclude unnecessary files
+# ✓ Don't store secrets in the image
+# ✓ Use COPY instead of ADD (unless extracting archives)
+# ✓ Pin dependency versions
