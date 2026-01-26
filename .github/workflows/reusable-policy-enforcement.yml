@@ -1,0 +1,142 @@
+name: Reusable Policy Enforcement
+
+on:
+  workflow_call:
+    inputs:
+      policy-path:
+        description: 'Path to OPA/Rego policy files'
+        required: false
+        type: string
+        default: '.security-plane/policies'
+      target-path:
+        description: 'Path to files to validate against policies'
+        required: false
+        type: string
+        default: '.'
+      fail-on-violation:
+        description: 'Fail workflow on policy violations'
+        required: false
+        type: boolean
+        default: true
+      policy-namespaces:
+        description: 'Comma-separated list of policy namespaces to check'
+        required: false
+        type: string
+        default: 'main,security,compliance'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  enforce-policies:
+    name: Enforce Security Policies
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Conftest
+        run: |
+          CONFTEST_VERSION="0.49.1"
+          wget -O conftest.tar.gz "https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
+          tar xzf conftest.tar.gz
+          sudo mv conftest /usr/local/bin/
+          conftest --version
+
+      - name: Verify policies exist
+        id: verify
+        run: |
+          if [ -d "${{ inputs.policy-path }}" ]; then
+            POLICY_COUNT=$(find "${{ inputs.policy-path }}" -name "*.rego" | wc -l)
+            echo "policy-count=$POLICY_COUNT" >> $GITHUB_OUTPUT
+            echo "✅ Found $POLICY_COUNT policy files"
+          else
+            echo "⚠️  Policy directory not found: ${{ inputs.policy-path }}"
+            echo "Creating default policy directory..."
+            mkdir -p "${{ inputs.policy-path }}"
+            echo "policy-count=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run policy checks on Kubernetes manifests
+        if: steps.verify.outputs.policy-count > 0
+        continue-on-error: ${{ !inputs.fail-on-violation }}
+        run: |
+          echo "🔍 Checking Kubernetes manifests against policies..."
+          
+          # Find all YAML files that look like Kubernetes manifests
+          K8S_FILES=$(find ${{ inputs.target-path }} -type f \( -name "*.yaml" -o -name "*.yml" \) \
+            -not -path "*/node_modules/*" \
+            -not -path "*/.github/*" \
+            -not -path "*/vendor/*" | head -20)
+          
+          if [ -z "$K8S_FILES" ]; then
+            echo "⚠️  No Kubernetes manifest files found"
+            exit 0
+          fi
+          
+          # Run conftest on each file
+          VIOLATIONS=0
+          for file in $K8S_FILES; do
+            echo "Checking: $file"
+            if ! conftest test "$file" -p "${{ inputs.policy-path }}" --all-namespaces; then
+              VIOLATIONS=$((VIOLATIONS + 1))
+            fi
+          done
+          
+          if [ $VIOLATIONS -gt 0 ]; then
+            echo "❌ Found $VIOLATIONS file(s) with policy violations"
+            if [ "${{ inputs.fail-on-violation }}" == "true" ]; then
+              exit 1
+            fi
+          else
+            echo "✅ All files passed policy checks"
+          fi
+
+      - name: Run policy checks on Dockerfiles
+        if: steps.verify.outputs.policy-count > 0
+        continue-on-error: ${{ !inputs.fail-on-violation }}
+        run: |
+          echo "🔍 Checking Dockerfiles against policies..."
+          
+          DOCKERFILES=$(find ${{ inputs.target-path }} -type f -name "Dockerfile*" \
+            -not -path "*/node_modules/*" \
+            -not -path "*/vendor/*" | head -20)
+          
+          if [ -z "$DOCKERFILES" ]; then
+            echo "⚠️  No Dockerfiles found"
+            exit 0
+          fi
+          
+          VIOLATIONS=0
+          for file in $DOCKERFILES; do
+            echo "Checking: $file"
+            if ! conftest test "$file" -p "${{ inputs.policy-path }}" --all-namespaces; then
+              VIOLATIONS=$((VIOLATIONS + 1))
+            fi
+          done
+          
+          if [ $VIOLATIONS -gt 0 ]; then
+            echo "❌ Found $VIOLATIONS Dockerfile(s) with policy violations"
+            if [ "${{ inputs.fail-on-violation }}" == "true" ]; then
+              exit 1
+            fi
+          else
+            echo "✅ All Dockerfiles passed policy checks"
+          fi
+
+      - name: Generate policy report
+        if: always()
+        run: |
+          echo "### Policy Enforcement Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Policy Path**: ${{ inputs.policy-path }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Policy Files**: ${{ steps.verify.outputs.policy-count }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target Path**: ${{ inputs.target-path }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Enforcement**: ${{ inputs.fail-on-violation && '🔒 Strict (blocking)' || '⚠️ Advisory (non-blocking)' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.verify.outputs.policy-count }}" -eq "0" ]; then
+            echo "⚠️  **No policies found**. Add OPA/Rego policies to enforce security standards." >> $GITHUB_STEP_SUMMARY
+          fi
