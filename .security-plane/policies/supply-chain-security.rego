@@ -3,9 +3,9 @@ package main
 # Policy: Block images with CRITICAL vulnerabilities
 deny[msg] {
     input.vulnerabilities[_].severity == "CRITICAL"
-    count([v | input.vulnerabilities[v]; input.vulnerabilities[v].severity == "CRITICAL"]) > 0
-    
     critical_count := count([v | input.vulnerabilities[v]; input.vulnerabilities[v].severity == "CRITICAL"])
+    critical_count > 0
+    
     msg := sprintf("Image has %d CRITICAL vulnerabilities. These must be fixed before deployment", [critical_count])
 }
 
@@ -69,18 +69,15 @@ registry_approved(image, approved) {
 }
 
 # Policy: Enforce image age limit
-warn[msg] {
-    input.metadata.created
-    age_days := days_since(input.metadata.created)
-    age_days > 90
-    
-    msg := sprintf("Image is %d days old. Consider updating to a more recent base image", [age_days])
-}
-
-days_since(timestamp) = days {
-    # Simplified - in real implementation would parse timestamp
-    days := 0
-}
+# Note: This check requires proper timestamp parsing implementation
+# For now, it's a placeholder for future enhancement
+# warn[msg] {
+#     input.metadata.created
+#     age_days := days_since(input.metadata.created)
+#     age_days > 90
+#     
+#     msg := sprintf("Image is %d days old. Consider updating to a more recent base image", [age_days])
+# }
 
 # Policy: Require vulnerability scan timestamp
 warn[msg] {
