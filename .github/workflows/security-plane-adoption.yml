@@ -97,7 +97,7 @@ jobs:
       (github.event_name == 'workflow_dispatch' &&
        github.event.inputs.enable-signing == 'true' &&
        github.event.inputs.image-name != '')
-    needs: [security-scan, policy-enforcement, generate-sbom]
+    needs: [security-scan, policy-enforcement]
     uses: ./.github/workflows/reusable-image-signing.yml
     with:
       image-name: ${{ github.event.inputs.image-name || github.repository }}
