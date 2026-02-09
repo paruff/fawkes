@@ -78,7 +78,8 @@ jobs:
   generate-sbom:
     name: Generate SBOM
     if: |
-      (github.event_name == 'push' || github.event.inputs.enable-sbom == 'true') &&
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.enable-sbom == 'true' &&
       github.event.inputs.image-name != ''
     uses: ./.github/workflows/reusable-sbom-generation.yml
     with:
@@ -93,11 +94,10 @@ jobs:
   sign-image:
     name: Sign Image
     if: |
-      github.event_name == 'push' &&
-      github.ref == 'refs/heads/main' &&
-      (github.event.inputs.enable-signing == 'true' || github.event.inputs.enable-signing == null) &&
-      github.event.inputs.image-name != ''
-    needs: [security-scan, policy-enforcement, generate-sbom]
+      (github.event_name == 'workflow_dispatch' &&
+       github.event.inputs.enable-signing == 'true' &&
+       github.event.inputs.image-name != '')
+    needs: [security-scan, policy-enforcement]
     uses: ./.github/workflows/reusable-image-signing.yml
     with:
       image-name: ${{ github.event.inputs.image-name || github.repository }}
