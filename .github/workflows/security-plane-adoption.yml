@@ -1,5 +1,10 @@
 name: Security Plane - Complete Adoption
 
+# This workflow is intentionally workflow_dispatch ONLY.
+# Automatic push/pull_request triggers were removed because they caused
+# "ghost run" failures for reusable-image-signing.yml on every push to main.
+# Security scanning on push/PR is already covered by security-and-terraform.yml.
+# Use this workflow for manual, full-lifecycle security plane orchestration.
 on:
   workflow_dispatch:
     inputs:
@@ -26,30 +31,6 @@ on:
         type: boolean
         default: true
 
-  push:
-    branches:
-      - main
-      - develop
-    paths:
-      - 'src/**'
-      - 'Dockerfile*'
-      - 'requirements.txt'
-      - 'package.json'
-      - 'pom.xml'
-      - '.security-plane/**'
-
-  pull_request:
-    branches:
-      - main
-      - develop
-    paths:
-      - 'src/**'
-      - 'Dockerfile*'
-      - 'requirements.txt'
-      - 'package.json'
-      - 'pom.xml'
-      - '.security-plane/**'
-
 permissions:
   contents: read
   security-events: write
@@ -63,7 +44,7 @@ jobs:
     with:
       scan-type: 'all'
       severity-threshold: 'MEDIUM'
-      fail-on-critical: ${{ github.event.inputs.enforcement-mode == 'strict' || github.event_name == 'push' }}
+      fail-on-critical: ${{ github.event.inputs.enforcement-mode == 'strict' }}
       upload-sarif: true
     permissions:
       contents: read
@@ -76,15 +57,14 @@ jobs:
     with:
       policy-path: '.security-plane/policies'
       target-path: '.'
-      fail-on-violation: ${{ github.event.inputs.enforcement-mode == 'strict' || github.event_name == 'push' }}
+      fail-on-violation: ${{ github.event.inputs.enforcement-mode == 'strict' }}
     permissions:
       contents: read
       security-events: write
 
   generate-sbom:
     name: Generate SBOM
-    if: |
-      github.event_name == 'workflow_dispatch' &&
+    if: >-
       github.event.inputs.enable-sbom == 'true' &&
       github.event.inputs.image-name != ''
     uses: ./.github/workflows/reusable-sbom-generation.yml
@@ -99,10 +79,9 @@ jobs:
 
   sign-image:
     name: Sign Image
-    if: |
-      (github.event_name == 'workflow_dispatch' &&
-       github.event.inputs.enable-signing == 'true' &&
-       github.event.inputs.image-name != '')
+    if: >-
+      github.event.inputs.enable-signing == 'true' &&
+      github.event.inputs.image-name != ''
     needs: [security-scan, policy-enforcement]
     uses: ./.github/workflows/reusable-image-signing.yml
     with:
@@ -121,7 +100,7 @@ jobs:
   security-summary:
     name: Security Summary
     runs-on: ubuntu-latest
-    needs: [security-scan, policy-enforcement]
+    needs: [security-scan, policy-enforcement, generate-sbom, sign-image]
     if: always()
     
     steps:
