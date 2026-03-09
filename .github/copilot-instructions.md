@@ -23,6 +23,73 @@ This is **Fawkes**, an Internal Product Delivery Platform with integrated dojo l
 - **Project Management**: Focalboard (Go/React)
 - **Observability**: Prometheus, Grafana, OpenTelemetry
 
+## Fawkes Is Polyglot — Check the Layer Map First
+
+Before writing any code, check `AGENTS.md` → Language & Layer Map.
+The wrong language in the wrong directory will be rejected in review.
+
+| Directory | Language | Linter |
+|---|---|---|
+| `services/` | Go | `golangci-lint` |
+| `infra/` | HCL | `tflint` + `terraform fmt` |
+| `platform/` | YAML + Helm | `helm lint` + `yamllint` |
+| `scripts/` | Bash / Python | `shellcheck` / `ruff` + `black` |
+| `tests/` | Python / Go | `pytest` / `go test` |
+| `docs/` | Markdown | `markdownlint` |
+
+---
+
+## Context Files — Read These First
+
+1. `AGENTS.md` — language map, layer boundaries, PM contract
+2. `docs/ARCHITECTURE.md` — component relationships
+3. `docs/API_SURFACE.md` — public interfaces
+4. `docs/KNOWN_LIMITATIONS.md` — do not make these worse
+5. `docs/CHANGE_IMPACT_MAP.md` — cross-component impact
+
+---
+
+## Hard Rules
+
+### All Languages
+- Failing tests → fix the code, never delete the test
+- No secrets committed — use `${{ secrets.NAME }}` in Actions, env vars elsewhere
+- Conventional commits: `feat(scope):`, `fix(scope):`, `test(scope):`, `docs(scope):`, `chore(scope):`
+
+### Go (services/)
+- `gofmt` + `golangci-lint` must pass
+- Exported functions require godoc comments
+- Errors: `fmt.Errorf("context: %w", err)` — never silently discard
+- No global mutable state
+
+### Terraform (infra/)
+- `tflint` + `terraform fmt` + `terraform validate` must pass
+- No hardcoded credentials, account IDs, or regions
+- All variables need `description` fields
+- `terraform plan` in CI before any `apply`
+
+### Helm / YAML (platform/, charts/)
+- `helm lint` must pass
+- No `latest` image tags — pinned versions only
+- Resource limits required on every container
+- Labels: `app`, `version`, `component`, `managed-by: fawkes`
+
+### Bash (scripts/)
+- `set -euo pipefail` at top of every script
+- `shellcheck` must pass
+- No hardcoded paths
+
+---
+
+## DORA CI Logging (Required on All Workflows)
+
+Every CI job must include:
+```yaml
+- run: echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ) sha:${{ github.sha }}"
+# ... job steps ...
+- run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+```
+
 ### Code Generation Guidelines
 
 #### For Terraform
