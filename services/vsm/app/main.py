@@ -30,6 +30,10 @@ from app.schemas import (
     HealthResponse,
 )
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
+
 # Import Focalboard integration
 try:
     from integrations.focalboard import router as focalboard_router
@@ -38,10 +42,6 @@ try:
 except ImportError as e:
     logger.warning(f"Focalboard integration not available: {e}")
     FOCALBOARD_INTEGRATION_AVAILABLE = False
-
-# Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-logger = logging.getLogger(__name__)
 
 # Configuration
 VERSION = "0.1.0"
