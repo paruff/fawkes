@@ -119,10 +119,11 @@ jobs:
   terraform-integration-tests:
     name: Terraform Integration Tests
     runs-on: ubuntu-latest
-    # Only run integration tests on main branch or when manually triggered
+    # Only run integration tests when manually triggered with the flag set;
+    # automatic push runs are excluded because Azure credentials are not
+    # available in the standard CI environment.
     if: |
-      github.event_name == 'push' || 
-      (github.event_name == 'workflow_dispatch' && inputs.run_integration_tests == true)
+      github.event_name == 'workflow_dispatch' && inputs.run_integration_tests == true
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -235,7 +236,7 @@ jobs:
           echo "- 💰 Cost estimation: Completed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
-          echo "- Integration tests run automatically on merge to main" >> $GITHUB_STEP_SUMMARY
+          echo "- Integration tests must be triggered manually via workflow_dispatch with 'Run integration tests' enabled" >> $GITHUB_STEP_SUMMARY
           echo "- E2E tests can be triggered manually via workflow_dispatch" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "For more information, see [Terratest README](tests/terratest/README.md)" >> $GITHUB_STEP_SUMMARY
