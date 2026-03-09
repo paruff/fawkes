@@ -1,0 +1,72 @@
+name: PR Size Gate
+
+# DORA 2025 (INSTAB-01): AI increases PR size by ~154% (Faros AI telemetry).
+# Large PRs are harder to review, more likely to introduce defects, and harder to roll back.
+# This gate blocks PRs > 400 lines. Override by applying the `large-pr-approved` label
+# (write-access humans only — Copilot cannot apply labels).
+#
+# This workflow is intentionally separate from other CI so it can be re-run independently.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  pr-size-check:
+    name: "🔢 PR Size Gate (400 line limit)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "pr:#${{ github.event.pull_request.number }}"
+
+      - name: Check PR size
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+
+            const added   = pr.additions;
+            const deleted = pr.deletions;
+            const total   = added + deleted;
+            const limit   = 400;
+
+            const hasOverride = pr.labels.some(l => l.name === 'large-pr-approved');
+
+            console.log(`PR #${pr.number}: +${added} -${deleted} = ${total} lines changed`);
+
+            if (hasOverride) {
+              console.log(`✅ large-pr-approved label present — override accepted`);
+              console.log(`⚠️  Remember: large PRs increase review risk and rollback complexity`);
+              return;
+            }
+
+            if (total > limit) {
+              const msg = [
+                `❌ PR size: ${total} lines changed (limit: ${limit})`,
+                ``,
+                `Large PRs are harder to review and more likely to introduce defects.`,
+                `DORA research (2025): AI assistance increases average PR size by ~154%.`,
+                ``,
+                `Options:`,
+                `  1. Split this PR into smaller, focused changes (recommended)`,
+                `  2. Ask a human reviewer with write access to apply the \`large-pr-approved\` label`,
+                ``,
+                `Files changed: ${pr.changed_files}`,
+                `Additions: ${added}  Deletions: ${deleted}`,
+              ].join('\n');
+
+              core.setFailed(msg);
+            } else {
+              console.log(`✅ PR size: ${total} lines (within ${limit} line limit)`);
+            }
+
+      - name: Log job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
