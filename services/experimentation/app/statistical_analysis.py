@@ -1,4 +1,5 @@
 """Statistical analysis for A/B testing"""
+
 import numpy as np
 from scipy import stats
 from typing import List, Dict, Any, Optional
@@ -208,6 +209,8 @@ class StatisticalAnalyzer:
                 effect_pct = variant_stats[1].conversion_rate / variant_stats[0].conversion_rate - 1
                 return f"✅ Winner: {winner} shows {effect_pct:.1%} improvement over {control} (p={p_value:.4f}). Recommend rolling out {winner} to 100% traffic."
             else:
-                return f"✅ Winner: {winner} detected (p={p_value:.4f}). Recommend rolling out {winner} to 100% traffic."
+                return (
+                    f"✅ Winner: {winner} detected (p={p_value:.4f}). Recommend rolling out {winner} to 100% traffic."
+                )
         else:
             return f"Significant difference found (p={p_value:.4f}) but no clear winner. Review variant performance and consider additional testing."

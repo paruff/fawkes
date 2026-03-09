@@ -4,6 +4,7 @@ GitHub Integration module for Feedback service.
 This module provides functionality to create GitHub issues from feedback submissions.
 It supports automatic issue creation with labels, screenshot attachments, and linking.
 """
+
 import os
 import logging
 import base64

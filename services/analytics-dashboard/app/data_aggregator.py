@@ -1,4 +1,5 @@
 """Data aggregation from multiple analytics sources"""
+
 import os
 import asyncio
 from typing import Dict, List, Optional
@@ -263,12 +264,12 @@ class DataAggregator:
                 experiment_id=exp["experiment_id"],
                 experiment_name=exp["name"],
                 status=exp["status"],
-                start_date=datetime.fromisoformat(exp["start_date"].replace("Z", "+00:00"))
-                if exp.get("start_date")
-                else None,
-                end_date=datetime.fromisoformat(exp["end_date"].replace("Z", "+00:00"))
-                if exp.get("end_date")
-                else None,
+                start_date=(
+                    datetime.fromisoformat(exp["start_date"].replace("Z", "+00:00")) if exp.get("start_date") else None
+                ),
+                end_date=(
+                    datetime.fromisoformat(exp["end_date"].replace("Z", "+00:00")) if exp.get("end_date") else None
+                ),
                 variants=variants,
                 winner=exp.get("winner"),
                 p_value=exp.get("p_value"),

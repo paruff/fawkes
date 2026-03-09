@@ -4,6 +4,7 @@ FastAPI application for VSM (Value Stream Mapping) service.
 This service provides work item tracking through value stream stages
 from idea to production, with flow metrics and cycle time calculation.
 """
+
 import os
 import time
 import logging

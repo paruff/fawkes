@@ -1,6 +1,7 @@
 """
 Unit tests for GitHub indexer.
 """
+
 import pytest
 import sys
 import os

@@ -1,6 +1,7 @@
 """
 Unit tests for the Prometheus exporter.
 """
+
 import json
 import pytest
 import tempfile

@@ -68,7 +68,7 @@ class AzureProvider(CloudProvider):
             AuthenticationError: If authentication fails
         """
         self.subscription_id = subscription_id or os.getenv("AZURE_SUBSCRIPTION_ID")
-        
+
         if not self.subscription_id:
             raise AuthenticationError(
                 "Azure subscription ID is required. Provide via subscription_id parameter or "
@@ -126,14 +126,14 @@ class AzureProvider(CloudProvider):
         try:
             # Try to get a token to verify credentials
             from azure.mgmt.resource import ResourceManagementClient
-            
+
             # Create a resource client to verify credentials
             resource_client = ResourceManagementClient(self.credential, self.subscription_id)
-            
+
             # Try to list resource groups (minimal operation to verify auth)
             self.rate_limiter.acquire()
             list(resource_client.resource_groups.list(top=1))
-            
+
             logger.info(f"✅ Azure credentials verified for subscription: {self.subscription_id}")
         except ClientAuthenticationError as e:
             raise AuthenticationError(f"Credential verification failed: {e}", provider="azure")
@@ -161,7 +161,9 @@ class AzureProvider(CloudProvider):
         """
         return self.aks.create_cluster(config)
 
-    def get_cluster(self, cluster_id: str, resource_group: Optional[str] = None, include_node_count: bool = True) -> Cluster:
+    def get_cluster(
+        self, cluster_id: str, resource_group: Optional[str] = None, include_node_count: bool = True
+    ) -> Cluster:
         """
         Get cluster details.
 
@@ -184,6 +186,7 @@ class AzureProvider(CloudProvider):
                 cluster_name = parts[-1]
             else:
                 from ..exceptions import ValidationError
+
                 raise ValidationError("resource_group is required for Azure", provider="azure")
         else:
             cluster_name = cluster_id
@@ -212,13 +215,16 @@ class AzureProvider(CloudProvider):
                 cluster_name = parts[-1]
             else:
                 from ..exceptions import ValidationError
+
                 raise ValidationError("resource_group is required for Azure", provider="azure")
         else:
             cluster_name = cluster_id
 
         return self.aks.delete_cluster(cluster_name, resource_group)
 
-    def list_clusters(self, region: Optional[str] = None, resource_group: Optional[str] = None, include_details: bool = False) -> List[Cluster]:
+    def list_clusters(
+        self, region: Optional[str] = None, resource_group: Optional[str] = None, include_details: bool = False
+    ) -> List[Cluster]:
         """
         List all clusters.
 
@@ -273,13 +279,16 @@ class AzureProvider(CloudProvider):
                 server_name = parts[-1]
             else:
                 from ..exceptions import ValidationError
+
                 raise ValidationError("resource_group is required for Azure", provider="azure")
         else:
             server_name = database_id
 
         return self.database.get_database_any_engine(server_name, resource_group)
 
-    def delete_database(self, database_id: str, resource_group: Optional[str] = None, skip_final_snapshot: bool = False) -> bool:
+    def delete_database(
+        self, database_id: str, resource_group: Optional[str] = None, skip_final_snapshot: bool = False
+    ) -> bool:
         """
         Delete a database instance.
 
@@ -302,6 +311,7 @@ class AzureProvider(CloudProvider):
                 server_name = parts[-1]
             else:
                 from ..exceptions import ValidationError
+
                 raise ValidationError("resource_group is required for Azure", provider="azure")
         else:
             server_name = database_id
@@ -362,6 +372,7 @@ class AzureProvider(CloudProvider):
                 account_name = parts[-1]
             else:
                 from ..exceptions import ValidationError
+
                 raise ValidationError("resource_group is required for Azure", provider="azure")
         else:
             account_name = storage_id
@@ -391,13 +402,16 @@ class AzureProvider(CloudProvider):
                 account_name = parts[-1]
             else:
                 from ..exceptions import ValidationError
+
                 raise ValidationError("resource_group is required for Azure", provider="azure")
         else:
             account_name = storage_id
 
         return self.storage.delete_storage(account_name, resource_group, force)
 
-    def list_storage(self, region: Optional[str] = None, resource_group: Optional[str] = None, include_details: bool = False) -> List[Storage]:
+    def list_storage(
+        self, region: Optional[str] = None, resource_group: Optional[str] = None, include_details: bool = False
+    ) -> List[Storage]:
         """
         List all storage buckets/accounts.
 

@@ -44,7 +44,7 @@ class CloudSQLService:
         if self._service is None:
             self.rate_limiter.acquire()
             credentials, _ = get_default_credentials()
-            self._service = discovery.build('sqladmin', 'v1', credentials=credentials)
+            self._service = discovery.build("sqladmin", "v1", credentials=credentials)
             logger.debug("Created Cloud SQL admin service")
         return self._service
 
@@ -80,26 +80,19 @@ class CloudSQLService:
                     "dataDiskSizeGb": config.allocated_storage,
                     "backupConfiguration": {
                         "enabled": config.backup_retention_days > 0,
-                        "backupRetentionSettings": {
-                            "retainedBackups": config.backup_retention_days
-                        }
+                        "backupRetentionSettings": {"retainedBackups": config.backup_retention_days},
                     },
-                    "ipConfiguration": {
-                        "ipv4Enabled": config.publicly_accessible
-                    },
+                    "ipConfiguration": {"ipv4Enabled": config.publicly_accessible},
                     "availabilityType": "REGIONAL" if config.multi_az else "ZONAL",
-                    "userLabels": config.tags
-                }
+                    "userLabels": config.tags,
+                },
             }
 
             if config.master_password:
                 instance_body["rootPassword"] = config.master_password
 
             self.rate_limiter.acquire()
-            operation = service.instances().insert(
-                project=self.project_id,
-                body=instance_body
-            ).execute()
+            operation = service.instances().insert(project=self.project_id, body=instance_body).execute()
 
             logger.info(f"✅ Initiated Cloud SQL instance creation: {config.name}")
 
@@ -121,9 +114,7 @@ class CloudSQLService:
 
         except HttpError as e:
             if e.resp.status == 409:
-                raise ResourceAlreadyExistsError(
-                    f"Database instance {config.name} already exists", provider="gcp"
-                )
+                raise ResourceAlreadyExistsError(f"Database instance {config.name} already exists", provider="gcp")
             elif e.resp.status == 400:
                 raise ValidationError(f"Invalid parameter: {str(e)}", provider="gcp")
             else:
@@ -142,10 +133,7 @@ class CloudSQLService:
             service = self._get_service()
 
             self.rate_limiter.acquire()
-            instance = service.instances().get(
-                project=self.project_id,
-                instance=database_name
-            ).execute()
+            instance = service.instances().get(project=self.project_id, instance=database_name).execute()
 
             # Parse database version
             engine = "unknown"
@@ -216,10 +204,7 @@ class CloudSQLService:
             service = self._get_service()
 
             self.rate_limiter.acquire()
-            operation = service.instances().delete(
-                project=self.project_id,
-                instance=database_name
-            ).execute()
+            operation = service.instances().delete(project=self.project_id, instance=database_name).execute()
 
             logger.info(f"✅ Initiated Cloud SQL instance deletion: {database_name}")
             return True

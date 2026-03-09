@@ -5,11 +5,11 @@ Revises:
 Create Date: 2025-12-21 21:10:00.000000
 
 """
+
 from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-
 
 # revision identifiers, used by Alembic.
 revision: str = "001"
@@ -94,8 +94,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_flow_metrics_date"), "flow_metrics", ["date"], unique=False)
 
     # Insert default stages
-    op.execute(
-        """
+    op.execute("""
         INSERT INTO stages (name, "order", type, created_at) VALUES
         ('Backlog', 1, 'backlog', NOW()),
         ('Analysis', 2, 'analysis', NOW()),
@@ -103,8 +102,7 @@ def upgrade() -> None:
         ('Testing', 4, 'testing', NOW()),
         ('Deployment', 5, 'deployment', NOW()),
         ('Production', 6, 'production', NOW());
-    """
-    )
+    """)
 
 
 def downgrade() -> None:

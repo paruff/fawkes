@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 class CivoProvider(CloudProvider):
     """Civo cloud provider implementation.
-    
+
     Civo is a simpler cloud provider focused on Kubernetes and developer experience.
     Key differences from AWS/GCP:
     - Limited regions (fewer global locations)
@@ -69,15 +69,12 @@ class CivoProvider(CloudProvider):
 
         # Validate region
         if self.region not in self.VALID_REGIONS:
-            logger.warning(
-                f"Region {self.region} may not be valid. "
-                f"Valid regions: {', '.join(self.VALID_REGIONS)}"
-            )
+            logger.warning(f"Region {self.region} may not be valid. " f"Valid regions: {', '.join(self.VALID_REGIONS)}")
 
         try:
             # Get API key from parameter, environment, or config
             civo_token = api_key or os.getenv("CIVO_TOKEN")
-            
+
             if not civo_token:
                 raise AuthenticationError(
                     "No Civo API key found. Please provide api_key parameter or set CIVO_TOKEN environment variable. "
@@ -87,7 +84,7 @@ class CivoProvider(CloudProvider):
 
             # Initialize Civo client
             self.client = Civo(token=civo_token, region=self.region)
-            
+
             # Verify credentials by making a test call
             self._verify_credentials()
 
@@ -104,15 +101,9 @@ class CivoProvider(CloudProvider):
         except Exception as e:
             error_msg = str(e)
             if "401" in error_msg or "unauthorized" in error_msg.lower():
-                raise AuthenticationError(
-                    f"Civo authentication failed: Invalid API key. {error_msg}",
-                    provider="civo"
-                )
+                raise AuthenticationError(f"Civo authentication failed: Invalid API key. {error_msg}", provider="civo")
             else:
-                raise AuthenticationError(
-                    f"Civo initialization failed: {error_msg}",
-                    provider="civo"
-                )
+                raise AuthenticationError(f"Civo initialization failed: {error_msg}", provider="civo")
 
     def _verify_credentials(self):
         """Verify Civo credentials by making a test call."""
@@ -127,10 +118,7 @@ class CivoProvider(CloudProvider):
         except Exception as e:
             error_msg = str(e)
             if "401" in error_msg or "unauthorized" in error_msg.lower():
-                raise AuthenticationError(
-                    "Credential verification failed: Invalid API key",
-                    provider="civo"
-                )
+                raise AuthenticationError("Credential verification failed: Invalid API key", provider="civo")
             else:
                 logger.warning(f"Could not verify credentials: {error_msg}. Continuing anyway.")
 
@@ -179,7 +167,7 @@ class CivoProvider(CloudProvider):
     def delete_database(self, database_id: str, skip_final_snapshot: bool = False) -> bool:
         """
         Delete a database instance.
-        
+
         Note: skip_final_snapshot is not applicable in Civo as databases
         are K8s applications, not managed services.
         """
@@ -188,7 +176,7 @@ class CivoProvider(CloudProvider):
     def list_databases(self, region: Optional[str] = None) -> List[Database]:
         """
         List all database instances.
-        
+
         Note: In Civo, databases are deployed as cluster applications.
         """
         return self.database.list_databases(region)
@@ -244,19 +232,16 @@ class CivoProvider(CloudProvider):
         - Simpler monitoring than CloudWatch/Cloud Monitoring
         - Metrics available through Prometheus (deployed in clusters)
         - No centralized metrics service like AWS/GCP
-        
+
         Note: This is a basic implementation. For production use,
         you should query Prometheus directly from the cluster.
         """
-        logger.info(
-            f"Getting metrics for {resource_id}: {metric_name} "
-            f"from {start_time} to {end_time}"
-        )
-        
+        logger.info(f"Getting metrics for {resource_id}: {metric_name} " f"from {start_time} to {end_time}")
+
         # Civo doesn't have a centralized metrics API like CloudWatch
         # Metrics are available through Prometheus in each cluster
         # For now, return a placeholder response
-        
+
         return {
             "resource_id": resource_id,
             "metric_name": metric_name,
@@ -264,7 +249,7 @@ class CivoProvider(CloudProvider):
             "end_time": end_time,
             "values": [],
             "note": "Civo metrics are available through Prometheus in each cluster. "
-                   "Query the cluster's Prometheus instance directly for detailed metrics.",
+            "Query the cluster's Prometheus instance directly for detailed metrics.",
         }
 
     def get_quota(self) -> Dict[str, Any]:

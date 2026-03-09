@@ -1,6 +1,7 @@
 """
 Mattermost integration for survey distribution
 """
+
 import logging
 from typing import Optional, Dict, Any
 import httpx

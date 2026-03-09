@@ -4,6 +4,7 @@ FastAPI application for AI-powered anomaly detection service.
 This service monitors metrics and logs from Prometheus, applies ML models
 to detect anomalies in real-time, and provides root cause analysis.
 """
+
 import os
 import time
 import logging

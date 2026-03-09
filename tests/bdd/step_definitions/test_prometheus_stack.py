@@ -7,6 +7,7 @@ Validates that kube-prometheus-stack is properly deployed with:
 - ServiceMonitors for platform components
 - Node exporter and kube-state-metrics
 """
+
 from __future__ import annotations
 
 import json

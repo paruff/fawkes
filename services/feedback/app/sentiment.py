@@ -14,6 +14,7 @@ Sentiment classification:
 - Neutral: -0.05 < compound score < 0.05
 - Negative: compound score <= -0.05
 """
+
 import logging
 from typing import Dict, Optional, Tuple
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer

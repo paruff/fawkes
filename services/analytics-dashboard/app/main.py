@@ -1,4 +1,5 @@
 """Analytics Dashboard Service - Main Application"""
+
 import os
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator, Dict, List, Optional

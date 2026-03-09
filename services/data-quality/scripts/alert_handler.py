@@ -3,6 +3,7 @@
 Alert handler for Great Expectations validation results.
 Sends alerts to Mattermost on validation failures.
 """
+
 import os
 import json
 import requests

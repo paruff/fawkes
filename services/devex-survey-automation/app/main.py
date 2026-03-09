@@ -1,6 +1,7 @@
 """
 FastAPI application for DevEx Survey Automation Service
 """
+
 import logging
 import secrets
 from datetime import datetime, timedelta
@@ -307,8 +308,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
             recipient = result.scalar_one_or_none()
 
             if not recipient:
-                return HTMLResponse(
-                    content="""
+                return HTMLResponse(content="""
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -325,12 +325,10 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <p>This survey link is not valid.</p>
                     </body>
                     </html>
-                """
-                )
+                """)
 
             if recipient.responded_at:
-                return HTMLResponse(
-                    content="""
+                return HTMLResponse(content="""
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -347,8 +345,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <p>You have already completed this survey.</p>
                     </body>
                     </html>
-                """
-                )
+                """)
 
             # Get campaign type
             result = await session.execute(select(SurveyCampaign).where(SurveyCampaign.id == recipient.campaign_id))
@@ -366,8 +363,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
 
 def _render_pulse_survey(token: str) -> HTMLResponse:
     """Render pulse survey HTML"""
-    return HTMLResponse(
-        content=f"""
+    return HTMLResponse(content=f"""
         <!DOCTYPE html>
         <html>
         <head>
@@ -594,14 +590,12 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
             </script>
         </body>
         </html>
-    """
-    )
+    """)
 
 
 def _render_deep_dive_survey(token: str) -> HTMLResponse:
     """Render deep-dive survey HTML (placeholder)"""
-    return HTMLResponse(
-        content=f"""
+    return HTMLResponse(content=f"""
         <!DOCTYPE html>
         <html>
         <head>
@@ -617,8 +611,7 @@ def _render_deep_dive_survey(token: str) -> HTMLResponse:
             <p>Token: {token}</p>
         </body>
         </html>
-    """
-    )
+    """)
 
 
 @app.post("/api/v1/survey/{token}/submit", response_model=SurveySubmissionResponse, tags=["Survey"])
@@ -677,8 +670,7 @@ async def submit_survey(token: str = Path(..., description="Survey token"), resp
 @app.get("/survey/{token}/thanks", response_class=HTMLResponse, tags=["Survey"])
 async def thank_you_page(token: str = Path(..., description="Survey token")):
     """Thank you page after survey submission"""
-    return HTMLResponse(
-        content="""
+    return HTMLResponse(content="""
         <!DOCTYPE html>
         <html>
         <head>
@@ -724,8 +716,7 @@ async def thank_you_page(token: str = Path(..., description="Survey token")):
             </div>
         </body>
         </html>
-    """
-    )
+    """)
 
 
 @app.get("/nasa-tlx", response_class=HTMLResponse, tags=["NASA-TLX"])
@@ -735,8 +726,7 @@ async def get_nasa_tlx_page(
     user_id: str = Query("anonymous", description="User identifier"),
 ):
     """Render NASA-TLX cognitive load assessment page"""
-    return HTMLResponse(
-        content=f"""
+    return HTMLResponse(content=f"""
         <!DOCTYPE html>
         <html>
         <head>
@@ -1106,8 +1096,7 @@ async def get_nasa_tlx_page(
             </script>
         </body>
         </html>
-    """
-    )
+    """)
 
 
 @app.get("/api/v1/analytics/pulse/weekly", response_model=List[PulseAnalytics], tags=["Analytics"])

@@ -14,6 +14,14 @@ if _ROOT not in sys.path:
 # NOTE: pytest_plugins moved to top-level tests/conftest.py for pytest 9.x compatibility
 # pytest 9.x no longer allows pytest_plugins in non-top-level conftest files
 
+# Exclude behave-framework step definition files from pytest collection.
+# These files use behave's @given/@when/@then decorators (a different BDD runner)
+# and are not executable as pytest tests.
+collect_ignore_glob = [
+    "step_definitions/test_e2e_integration.py",
+    "step_definitions/test_trivy_integration.py",
+]
+
 
 @pytest.fixture(scope="session")
 def fawkes_api_url():

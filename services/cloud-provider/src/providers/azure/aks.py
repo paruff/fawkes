@@ -70,7 +70,7 @@ class AKSService:
         try:
             client = self._get_client()
             resource_group = config.metadata.get("resource_group")
-            
+
             if not resource_group:
                 raise ValidationError("resource_group must be provided in metadata", provider="azure")
 
@@ -114,7 +114,7 @@ class AKSService:
 
             # Get initial result without waiting for completion
             result = poller.result(timeout=5) if config.metadata.get("wait_for_completion") else None
-            
+
             if result:
                 cluster_data = result
                 status = "ACTIVE" if cluster_data.provisioning_state == "Succeeded" else cluster_data.provisioning_state
@@ -146,7 +146,11 @@ class AKSService:
         except HttpResponseError as e:
             if "already exists" in str(e).lower():
                 raise ResourceAlreadyExistsError(f"Cluster {config.name} already exists", provider="azure")
-            raise CloudProviderError(f"Failed to create AKS cluster: {e}", provider="azure", error_code=e.error.code if hasattr(e, 'error') else None)
+            raise CloudProviderError(
+                f"Failed to create AKS cluster: {e}",
+                provider="azure",
+                error_code=e.error.code if hasattr(e, "error") else None,
+            )
         except Exception as e:
             raise CloudProviderError(f"Unexpected error creating AKS cluster: {e}", provider="azure")
 
@@ -206,15 +210,23 @@ class AKSService:
                     "dns_prefix": cluster_data.dns_prefix,
                     "enable_rbac": cluster_data.enable_rbac,
                     "network_profile": {
-                        "network_plugin": cluster_data.network_profile.network_plugin if cluster_data.network_profile else None,
+                        "network_plugin": (
+                            cluster_data.network_profile.network_plugin if cluster_data.network_profile else None
+                        ),
                     },
                 },
             )
 
         except AzureResourceNotFoundError:
-            raise ResourceNotFoundError(f"Cluster {cluster_name} not found in resource group {resource_group}", provider="azure")
+            raise ResourceNotFoundError(
+                f"Cluster {cluster_name} not found in resource group {resource_group}", provider="azure"
+            )
         except HttpResponseError as e:
-            raise CloudProviderError(f"Failed to get AKS cluster: {e}", provider="azure", error_code=e.error.code if hasattr(e, 'error') else None)
+            raise CloudProviderError(
+                f"Failed to get AKS cluster: {e}",
+                provider="azure",
+                error_code=e.error.code if hasattr(e, "error") else None,
+            )
         except Exception as e:
             raise CloudProviderError(f"Unexpected error getting AKS cluster: {e}", provider="azure")
 
@@ -251,9 +263,15 @@ class AKSService:
             return True
 
         except AzureResourceNotFoundError:
-            raise ResourceNotFoundError(f"Cluster {cluster_name} not found in resource group {resource_group}", provider="azure")
+            raise ResourceNotFoundError(
+                f"Cluster {cluster_name} not found in resource group {resource_group}", provider="azure"
+            )
         except HttpResponseError as e:
-            raise CloudProviderError(f"Failed to delete AKS cluster: {e}", provider="azure", error_code=e.error.code if hasattr(e, 'error') else None)
+            raise CloudProviderError(
+                f"Failed to delete AKS cluster: {e}",
+                provider="azure",
+                error_code=e.error.code if hasattr(e, "error") else None,
+            )
         except Exception as e:
             raise CloudProviderError(f"Unexpected error deleting AKS cluster: {e}", provider="azure")
 
@@ -321,6 +339,10 @@ class AKSService:
             return clusters
 
         except HttpResponseError as e:
-            raise CloudProviderError(f"Failed to list AKS clusters: {e}", provider="azure", error_code=e.error.code if hasattr(e, 'error') else None)
+            raise CloudProviderError(
+                f"Failed to list AKS clusters: {e}",
+                provider="azure",
+                error_code=e.error.code if hasattr(e, "error") else None,
+            )
         except Exception as e:
             raise CloudProviderError(f"Unexpected error listing AKS clusters: {e}", provider="azure")

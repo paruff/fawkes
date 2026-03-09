@@ -1,4 +1,5 @@
 """Pydantic models for Analytics Dashboard Service"""
+
 from typing import List, Dict, Optional, Any
 from pydantic import BaseModel, Field
 from datetime import datetime
