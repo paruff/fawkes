@@ -23,7 +23,7 @@ Read this before touching any file. Each area of the repo has a primary language
 
 | Directory | Language | What Lives Here | Do Not |
 |---|---|---|---|
-| `services/` | Go | Microservices, APIs, business logic | Add Python or shell logic here |
+| `services/` | Python (FastAPI) | Microservices, APIs, business logic | Embed shell business logic here — use `scripts/` instead |
 | `infra/` | HCL (Terraform) | Cloud provisioning, IaC modules | Hardcode cloud credentials or region defaults |
 | `platform/` | YAML + Helm | Kubernetes manifests, ArgoCD apps, Backstage config | Bypass Helm templating with raw manifests |
 | `scripts/` | Bash / Python | Automation helpers, `ignite.sh`, dev tooling | Put business logic here — scripts call services |
@@ -55,7 +55,7 @@ Read this before touching any file. Each area of the repo has a primary language
 ### Platform Boundaries
 
 ```
-services/     → Stateless Go microservices. No direct infra provisioning.
+services/     → Stateless Python (FastAPI) microservices. No direct infra provisioning.
 infra/        → Terraform only. No application code. No shell business logic.
 platform/     → Kubernetes/Helm declarative state. No imperative scripts.
 scripts/      → Call services and CLI tools. Never contain business logic.
@@ -74,10 +74,11 @@ tests/        → Test the above layers. Never import from multiple layers in on
 - Resource limits required on every container spec
 - Labels must include: `app`, `version`, `component`, `managed-by: fawkes`
 
-### Go Service Rules
-- Standard library preferred over third-party for anything under 50 lines
-- All exported functions have godoc comments
-- Errors wrapped with `fmt.Errorf("context: %w", err)` — never discarded
+### Python (FastAPI) Service Rules
+> **Note:** Go is not currently used in `services/`. Go is only used in `tests/terratest/` for infrastructure tests.
+- Prefer established PyPI packages over reinventing common functionality
+- Type hints on all function signatures
+- Errors raised with explicit exceptions and context — never silently discarded
 - No global mutable state
 
 ### CI / GitHub Actions Rules
@@ -119,6 +120,7 @@ tests/        → Test the above layers. Never import from multiple layers in on
 ## 6. Coding Standards by Language
 
 ### Go
+> **Note:** Go is not currently used in `services/`. Go is only used in `tests/terratest/` for infrastructure tests.
 - `gofmt` + `golangci-lint` — both must pass
 - Table-driven tests in `*_test.go` files
 - Error strings lowercase, no trailing punctuation

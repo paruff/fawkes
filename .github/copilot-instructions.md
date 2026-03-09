@@ -30,7 +30,7 @@ The wrong language in the wrong directory will be rejected in review.
 
 | Directory | Language | Linter |
 |---|---|---|
-| `services/` | Go | `golangci-lint` |
+| `services/` | Python (FastAPI) | `ruff` + `black` + `mypy` |
 | `infra/` | HCL | `tflint` + `terraform fmt` |
 | `platform/` | YAML + Helm | `helm lint` + `yamllint` |
 | `scripts/` | Bash / Python | `shellcheck` / `ruff` + `black` |
@@ -56,10 +56,11 @@ The wrong language in the wrong directory will be rejected in review.
 - No secrets committed — use `${{ secrets.NAME }}` in Actions, env vars elsewhere
 - Conventional commits: `feat(scope):`, `fix(scope):`, `test(scope):`, `docs(scope):`, `chore(scope):`
 
-### Go (services/)
-- `gofmt` + `golangci-lint` must pass
-- Exported functions require godoc comments
-- Errors: `fmt.Errorf("context: %w", err)` — never silently discard
+### Python (FastAPI) (services/)
+> **Note:** Go is not currently used in `services/`. Go is only used in `tests/terratest/` for infrastructure tests.
+- `ruff` + `black` + `mypy` must pass
+- Type hints on all function signatures
+- Errors: raise explicit exceptions with context — never silently discard
 - No global mutable state
 
 ### Terraform (infra/)
