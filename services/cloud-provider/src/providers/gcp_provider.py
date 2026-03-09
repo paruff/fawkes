@@ -175,9 +175,7 @@ class GCPProvider(CloudProvider):
                 f"Failed to create service account {name}: {str(e)}", provider="gcp", error_code=e.grpc_status_code
             )
 
-    def bind_workload_identity(
-        self, service_account_email: str, namespace: str, k8s_service_account: str
-    ) -> bool:
+    def bind_workload_identity(self, service_account_email: str, namespace: str, k8s_service_account: str) -> bool:
         """
         Bind a GCP service account to a Kubernetes service account for Workload Identity.
 
@@ -229,9 +227,7 @@ class GCPProvider(CloudProvider):
             self.rate_limiter.acquire()
             client.set_iam_policy(request={"resource": resource, "policy": policy})
 
-            logger.info(
-                f"✅ Bound Workload Identity: {service_account_email} -> {namespace}/{k8s_service_account}"
-            )
+            logger.info(f"✅ Bound Workload Identity: {service_account_email} -> {namespace}/{k8s_service_account}")
 
             return True
 

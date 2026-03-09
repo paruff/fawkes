@@ -173,9 +173,9 @@ async def collect_communication_metrics(
             pr_comments_avg=round(row.pr_comments_avg, 1) if row.pr_comments_avg else None,
             cross_team_prs=int(row.cross_team_prs) if row.cross_team_prs else 0,
             mattermost_messages=int(row.mattermost_messages) if row.mattermost_messages else 0,
-            constructive_feedback_rate=round(row.constructive_feedback_rate, 1)
-            if row.constructive_feedback_rate
-            else None,
+            constructive_feedback_rate=(
+                round(row.constructive_feedback_rate, 1) if row.constructive_feedback_rate else None
+            ),
         )
     except Exception as e:
         logger.error(f"Error collecting communication metrics: {e}")

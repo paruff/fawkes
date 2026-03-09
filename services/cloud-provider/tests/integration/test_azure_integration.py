@@ -21,7 +21,6 @@ from src.providers.azure_provider import AzureProvider
 from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
 from src.exceptions import ResourceNotFoundError, CloudProviderError
 
-
 # Skip all tests if SKIP_INTEGRATION_TESTS is set
 pytestmark = pytest.mark.skipif(
     os.getenv("SKIP_INTEGRATION_TESTS") == "1",
@@ -145,7 +144,7 @@ class TestAzureProviderIntegration:
 class TestAzureProviderClusterLifecycle:
     """
     Integration tests for full cluster lifecycle.
-    
+
     WARNING: These tests create and delete real resources in Azure.
     They are disabled by default. Set ENABLE_DESTRUCTIVE_TESTS=1 to enable.
     """
@@ -197,7 +196,7 @@ class TestAzureProviderClusterLifecycle:
 class TestAzureProviderStorageLifecycle:
     """
     Integration tests for storage account lifecycle.
-    
+
     WARNING: These tests create and delete real resources in Azure.
     They are disabled by default. Set ENABLE_DESTRUCTIVE_TESTS=1 to enable.
     """

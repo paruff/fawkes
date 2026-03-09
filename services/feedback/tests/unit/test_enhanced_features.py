@@ -2,6 +2,7 @@
 Unit tests for enhanced feedback service features.
 Tests screenshot capture, GitHub integration, and contextual data.
 """
+
 import pytest
 import base64
 from fastapi.testclient import TestClient
@@ -224,11 +225,12 @@ class TestGitHubIntegration:
 
     def test_submit_feedback_with_github_issue_creation(self, client):
         """Test submitting feedback with GitHub issue creation."""
-        with patch("app.main.db_pool") as mock_pool, patch(
-            "app.main.analyze_feedback_sentiment"
-        ) as mock_sentiment, patch("app.main.is_github_enabled") as mock_gh_enabled, patch(
-            "app.main.create_github_issue"
-        ) as mock_create_issue:
+        with (
+            patch("app.main.db_pool") as mock_pool,
+            patch("app.main.analyze_feedback_sentiment") as mock_sentiment,
+            patch("app.main.is_github_enabled") as mock_gh_enabled,
+            patch("app.main.create_github_issue") as mock_create_issue,
+        ):
             mock_sentiment.return_value = ("negative", -0.5, 0.2, 0.3, 0.5)
             mock_gh_enabled.return_value = True
             mock_create_issue.return_value = (True, "https://github.com/test/repo/issues/123", None)
@@ -272,9 +274,11 @@ class TestGitHubIntegration:
 
     def test_submit_feedback_github_disabled(self, client):
         """Test submitting feedback when GitHub integration is disabled."""
-        with patch("app.main.db_pool") as mock_pool, patch(
-            "app.main.analyze_feedback_sentiment"
-        ) as mock_sentiment, patch("app.main.is_github_enabled") as mock_gh_enabled:
+        with (
+            patch("app.main.db_pool") as mock_pool,
+            patch("app.main.analyze_feedback_sentiment") as mock_sentiment,
+            patch("app.main.is_github_enabled") as mock_gh_enabled,
+        ):
             mock_sentiment.return_value = ("neutral", 0.0, 0.5, 0.5, 0.0)
             mock_gh_enabled.return_value = False
 

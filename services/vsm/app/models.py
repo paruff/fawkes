@@ -1,4 +1,5 @@
 """Database models for VSM service."""
+
 from datetime import datetime, timezone
 from typing import Optional
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float, Enum as SQLEnum

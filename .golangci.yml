@@ -20,6 +20,7 @@
 
 # golangci-lint configuration for Fawkes
 # https://golangci-lint.run/usage/configuration/
+version: "2"
 
 # Run configuration
 run:
@@ -29,12 +30,6 @@ run:
   # Include test files
   tests: true
 
-  # Which dirs to skip
-  skip-dirs:
-    - vendor
-    - third_party
-    - node_modules
-
 # Linters configuration
 linters:
   enable:
@@ -42,9 +37,7 @@ linters:
     - govet # Reports suspicious constructs
     - errcheck # Check for unchecked errors
     - staticcheck # Advanced static analysis
-    - gosimple # Simplify code
     - ineffassign # Detect ineffectual assignments
-    - unused # Check for unused code
     - typecheck # Type-check code
     - gocritic # Comprehensive checks
     - gocyclo # Cyclomatic complexity
@@ -52,12 +45,6 @@ linters:
     - misspell # Spell checking
     - revive # Fast, extensible, flexible, clean
     - gosec # Security checks
-
-  disable:
-    - deadcode # Deprecated
-    - varcheck # Deprecated
-    - structcheck # Deprecated
-    - golint # Deprecated, use revive
 
 # Linter-specific settings
 linters-settings:
@@ -136,6 +123,12 @@ issues:
   # Maximum count of issues with the same text
   max-same-issues: 0
 
+  # Directories to skip
+  exclude-dirs:
+    - vendor
+    - third_party
+    - node_modules
+
   # List of regexps for excluding files
   exclude-rules:
     # Exclude test files from certain checks
@@ -153,8 +146,8 @@ issues:
 
 # Output configuration
 output:
-  # Format: colored-line-number, line-number, json, tab, checkstyle
-  format: colored-line-number
+  formats:
+    - format: colored-line-number
 
   # Print lines of code with issue
   print-issued-lines: true

@@ -12,6 +12,7 @@ Metrics exposed:
 - data_freshness_seconds: Time since last validation per datasource (gauge)
 - validation_runs_total: Total number of validation runs (counter)
 """
+
 import os
 import sys
 import json

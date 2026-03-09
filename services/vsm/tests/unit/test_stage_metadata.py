@@ -1,4 +1,5 @@
 """Unit tests for stage metadata API."""
+
 import pytest
 from unittest.mock import MagicMock, patch
 from app.models import Stage, StageType, StageCategory

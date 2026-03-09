@@ -5,6 +5,7 @@ This service provides feedback collection and management for Backstage.
 Users can submit feedback with ratings, categories, and comments.
 Admins can view and manage all feedback submissions.
 """
+
 import os
 import logging
 import base64
@@ -142,8 +143,7 @@ async def init_database():
 
         # Create table if not exists
         async with db_pool.acquire() as conn:
-            await conn.execute(
-                """
+            await conn.execute("""
                 CREATE TABLE IF NOT EXISTS feedback (
                     id SERIAL PRIMARY KEY,
                     rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
@@ -184,8 +184,7 @@ async def init_database():
                         ALTER TABLE feedback ADD COLUMN status_changed_at TIMESTAMP;
                     END IF;
                 END $$;
-            """
-            )
+            """)
             logger.info("✅ Database schema initialized")
     except Exception as e:
         logger.error(f"❌ Failed to connect to database: {e}")

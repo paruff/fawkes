@@ -208,9 +208,11 @@ def list(ctx, category, priority, limit):
             table.add_row(
                 str(insight.get("id")),
                 insight.get("title", "")[:40],
-                insight.get("category", {}).get("name", "N/A")
-                if isinstance(insight.get("category"), dict)
-                else str(insight.get("category", "N/A")),
+                (
+                    insight.get("category", {}).get("name", "N/A")
+                    if isinstance(insight.get("category"), dict)
+                    else str(insight.get("category", "N/A"))
+                ),
                 f"{priority_style}{insight.get('priority', 'medium')}[/]",
                 insight.get("status", "new"),
             )

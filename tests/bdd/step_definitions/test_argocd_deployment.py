@@ -6,6 +6,7 @@ Validates that ArgoCD is properly deployed via Terraform with:
 - CLI working
 - Admin credentials secured
 """
+
 from __future__ import annotations
 
 import json

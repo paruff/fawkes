@@ -8,6 +8,7 @@ This service provides NPS survey automation including:
 - NPS score calculation
 - Integration with Mattermost for survey distribution
 """
+
 import os
 import logging
 import secrets
@@ -108,8 +109,7 @@ async def init_database():
 
         # Create tables if not exists
         async with db_pool.acquire() as conn:
-            await conn.execute(
-                """
+            await conn.execute("""
                 -- Survey links table
                 CREATE TABLE IF NOT EXISTS survey_links (
                     id SERIAL PRIMARY KEY,
@@ -154,8 +154,7 @@ async def init_database():
                 CREATE INDEX IF NOT EXISTS idx_survey_links_expires ON survey_links(expires_at);
                 CREATE INDEX IF NOT EXISTS idx_survey_responses_created ON survey_responses(created_at DESC);
                 CREATE INDEX IF NOT EXISTS idx_survey_responses_score_type ON survey_responses(score_type);
-            """
-            )
+            """)
             logger.info("✅ Database schema initialized")
     except Exception as e:
         logger.error(f"❌ Failed to connect to database: {e}")
@@ -309,8 +308,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
             link = await conn.fetchrow("SELECT * FROM survey_links WHERE token = $1", token)
 
             if not link:
-                return HTMLResponse(
-                    content="""
+                return HTMLResponse(content="""
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -326,12 +324,10 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <p>This survey link is not valid. Please check the link and try again.</p>
                     </body>
                     </html>
-                """
-                )
+                """)
 
             if link["responded"]:
-                return HTMLResponse(
-                    content="""
+                return HTMLResponse(content="""
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -347,12 +343,10 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <p>You have already completed this survey.</p>
                     </body>
                     </html>
-                """
-                )
+                """)
 
             if datetime.now() > link["expires_at"]:
-                return HTMLResponse(
-                    content="""
+                return HTMLResponse(content="""
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -368,12 +362,10 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <p>This survey link has expired. Please contact support if you believe this is an error.</p>
                     </body>
                     </html>
-                """
-                )
+                """)
 
             # Render survey form
-            return HTMLResponse(
-                content=f"""
+            return HTMLResponse(content=f"""
                 <!DOCTYPE html>
                 <html>
                 <head>
@@ -586,8 +578,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                     </script>
                 </body>
                 </html>
-            """
-            )
+            """)
     except Exception as e:
         logger.error(f"Error rendering survey page: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
@@ -597,8 +588,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
 @app.get("/survey/{token}/thanks", response_class=HTMLResponse, tags=["Survey"])
 async def thank_you_page(token: str = Path(..., description="Survey token")):
     """Thank you page after survey submission."""
-    return HTMLResponse(
-        content="""
+    return HTMLResponse(content="""
         <!DOCTYPE html>
         <html>
         <head>
@@ -643,8 +633,7 @@ async def thank_you_page(token: str = Path(..., description="Survey token")):
             </div>
         </body>
         </html>
-    """
-    )
+    """)
 
 
 # Submit survey response

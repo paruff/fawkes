@@ -1,6 +1,7 @@
 """
 Unit tests for Backstage TechDocs indexer.
 """
+
 import pytest
 import sys
 import os

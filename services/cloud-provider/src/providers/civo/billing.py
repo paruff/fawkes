@@ -41,7 +41,7 @@ class BillingService:
             Tuple of (start_date, end_date)
         """
         now = datetime.now()
-        
+
         if timeframe == "LAST_7_DAYS":
             start_date = now - timedelta(days=7)
             end_date = now
@@ -60,7 +60,7 @@ class BillingService:
             # Default to last 30 days
             start_date = now - timedelta(days=30)
             end_date = now
-            
+
         return start_date, end_date
 
     @retry_with_backoff(
@@ -85,50 +85,50 @@ class BillingService:
 
         try:
             start_date, end_date = self._parse_timeframe(timeframe)
-            
+
             self.rate_limiter.acquire()
-            
+
             # Get account quota which includes current usage/costs
             # Note: Civo API doesn't have a dedicated cost explorer like AWS
             # This is a simplified implementation
             quota = self.client.quota.get()
-            
+
             # Calculate estimated costs based on current usage
             # This is approximate - in production you'd want to:
             # 1. Track actual invoices
             # 2. Query billing history if available
             # 3. Calculate based on resource usage and pricing
-            
+
             # Get current resources to estimate costs
             try:
                 clusters = self.client.kubernetes.list()
-                instances = self.client.instances.list() if hasattr(self.client, 'instances') else []
+                instances = self.client.instances.list() if hasattr(self.client, "instances") else []
                 object_stores = self.client.objectstore.list()
             except Exception as e:
                 logger.warning(f"Could not list resources for cost estimation: {e}")
                 clusters = []
                 instances = []
                 object_stores = []
-            
+
             # Rough cost estimation (Civo pricing as of implementation)
             # These are example prices and should be updated based on actual Civo pricing
             cluster_cost = len(clusters) * 5.0  # ~$5/month per small cluster (very approximate)
             instance_cost = len(instances) * 5.0  # ~$5/month per small instance
             storage_cost = len(object_stores) * 5.0  # ~$5/month per store
-            
+
             total_cost = cluster_cost + instance_cost + storage_cost
-            
+
             breakdown = {
                 "kubernetes_clusters": cluster_cost,
                 "instances": instance_cost,
                 "object_storage": storage_cost,
             }
-            
+
             logger.info(
                 f"✅ Retrieved Civo cost data: ${total_cost:.2f} "
                 f"(Note: This is an estimate based on current resources)"
             )
-            
+
             return CostData(
                 start_date=start_date,
                 end_date=end_date,
@@ -138,17 +138,14 @@ class BillingService:
                 metadata={
                     "provider": "civo",
                     "estimation_note": "Costs are estimated based on current resources. "
-                                      "For accurate billing, check Civo console.",
+                    "For accurate billing, check Civo console.",
                     "quota": quota,
                 },
             )
 
         except Exception as e:
             error_msg = str(e)
-            raise CloudProviderError(
-                f"Failed to get cost data: {error_msg}",
-                provider="civo"
-            )
+            raise CloudProviderError(f"Failed to get cost data: {error_msg}", provider="civo")
 
     @retry_with_backoff(
         max_retries=3,
@@ -169,13 +166,10 @@ class BillingService:
         try:
             self.rate_limiter.acquire()
             quota = self.client.quota.get()
-            
+
             logger.info(f"✅ Retrieved Civo quota information")
             return quota
 
         except Exception as e:
             error_msg = str(e)
-            raise CloudProviderError(
-                f"Failed to get quota: {error_msg}",
-                provider="civo"
-            )
+            raise CloudProviderError(f"Failed to get quota: {error_msg}", provider="civo")

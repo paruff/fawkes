@@ -1,6 +1,7 @@
 """
 Unit tests for GitHub integration module.
 """
+
 import pytest
 from unittest.mock import Mock, AsyncMock, patch
 import httpx
@@ -18,8 +19,9 @@ class TestGitHubEnabled:
 
     def test_github_enabled_with_token(self):
         """Test that GitHub is enabled when token is set."""
-        with patch("app.github_integration.GITHUB_TOKEN", "test-token"), patch(
-            "app.github_integration.is_github_enabled", return_value=True
+        with (
+            patch("app.github_integration.GITHUB_TOKEN", "test-token"),
+            patch("app.github_integration.is_github_enabled", return_value=True),
         ):
             assert is_github_enabled() is True
 
@@ -51,9 +53,11 @@ class TestCreateGitHubIssue:
         mock_response.status_code = 201
         mock_response.json.return_value = {"html_url": "https://github.com/test/repo/issues/123", "number": 123}
 
-        with patch("app.github_integration.is_github_enabled", return_value=True), patch(
-            "app.github_integration.GITHUB_TOKEN", "test-token"
-        ), patch("httpx.AsyncClient") as mock_client:
+        with (
+            patch("app.github_integration.is_github_enabled", return_value=True),
+            patch("app.github_integration.GITHUB_TOKEN", "test-token"),
+            patch("httpx.AsyncClient") as mock_client,
+        ):
             mock_client_instance = AsyncMock()
             mock_client.return_value.__aenter__.return_value = mock_client_instance
             mock_client_instance.post = AsyncMock(return_value=mock_response)
@@ -91,9 +95,11 @@ class TestCreateGitHubIssue:
         mock_response.status_code = 201
         mock_response.json.return_value = {"html_url": "https://github.com/test/repo/issues/124", "number": 124}
 
-        with patch("app.github_integration.is_github_enabled", return_value=True), patch(
-            "app.github_integration.GITHUB_TOKEN", "test-token"
-        ), patch("httpx.AsyncClient") as mock_client:
+        with (
+            patch("app.github_integration.is_github_enabled", return_value=True),
+            patch("app.github_integration.GITHUB_TOKEN", "test-token"),
+            patch("httpx.AsyncClient") as mock_client,
+        ):
             mock_client_instance = AsyncMock()
             mock_client.return_value.__aenter__.return_value = mock_client_instance
             mock_client_instance.post = AsyncMock(return_value=mock_response)
@@ -121,9 +127,11 @@ class TestCreateGitHubIssue:
         mock_comment_response = Mock()
         mock_comment_response.status_code = 201
 
-        with patch("app.github_integration.is_github_enabled", return_value=True), patch(
-            "app.github_integration.GITHUB_TOKEN", "test-token"
-        ), patch("httpx.AsyncClient") as mock_client:
+        with (
+            patch("app.github_integration.is_github_enabled", return_value=True),
+            patch("app.github_integration.GITHUB_TOKEN", "test-token"),
+            patch("httpx.AsyncClient") as mock_client,
+        ):
             mock_client_instance = AsyncMock()
             mock_client.return_value.__aenter__.return_value = mock_client_instance
             mock_client_instance.post = AsyncMock(side_effect=[mock_response, mock_comment_response])
@@ -147,9 +155,11 @@ class TestCreateGitHubIssue:
         mock_response.status_code = 500
         mock_response.text = "Internal Server Error"
 
-        with patch("app.github_integration.is_github_enabled", return_value=True), patch(
-            "app.github_integration.GITHUB_TOKEN", "test-token"
-        ), patch("httpx.AsyncClient") as mock_client:
+        with (
+            patch("app.github_integration.is_github_enabled", return_value=True),
+            patch("app.github_integration.GITHUB_TOKEN", "test-token"),
+            patch("httpx.AsyncClient") as mock_client,
+        ):
             mock_client_instance = AsyncMock()
             mock_client.return_value.__aenter__.return_value = mock_client_instance
             mock_client_instance.post = AsyncMock(return_value=mock_response)
@@ -186,9 +196,11 @@ class TestUpdateIssueStatus:
         mock_post_response = Mock()
         mock_post_response.status_code = 201
 
-        with patch("app.github_integration.is_github_enabled", return_value=True), patch(
-            "app.github_integration.GITHUB_TOKEN", "test-token"
-        ), patch("httpx.AsyncClient") as mock_client:
+        with (
+            patch("app.github_integration.is_github_enabled", return_value=True),
+            patch("app.github_integration.GITHUB_TOKEN", "test-token"),
+            patch("httpx.AsyncClient") as mock_client,
+        ):
             mock_client_instance = AsyncMock()
             mock_client.return_value.__aenter__.return_value = mock_client_instance
             mock_client_instance.patch = AsyncMock(return_value=mock_patch_response)
@@ -215,9 +227,11 @@ class TestUpdateIssueStatus:
         mock_post_response = Mock()
         mock_post_response.status_code = 201
 
-        with patch("app.github_integration.is_github_enabled", return_value=True), patch(
-            "app.github_integration.GITHUB_TOKEN", "test-token"
-        ), patch("httpx.AsyncClient") as mock_client:
+        with (
+            patch("app.github_integration.is_github_enabled", return_value=True),
+            patch("app.github_integration.GITHUB_TOKEN", "test-token"),
+            patch("httpx.AsyncClient") as mock_client,
+        ):
             mock_client_instance = AsyncMock()
             mock_client.return_value.__aenter__.return_value = mock_client_instance
             mock_client_instance.patch = AsyncMock(return_value=mock_patch_response)
@@ -236,8 +250,9 @@ class TestUpdateIssueStatus:
     @pytest.mark.asyncio
     async def test_update_status_invalid_url(self):
         """Test handling invalid issue URL."""
-        with patch("app.github_integration.is_github_enabled", return_value=True), patch(
-            "app.github_integration.GITHUB_TOKEN", "test-token"
+        with (
+            patch("app.github_integration.is_github_enabled", return_value=True),
+            patch("app.github_integration.GITHUB_TOKEN", "test-token"),
         ):
             success, error = await update_issue_status(
                 issue_url="https://github.com/invalid", new_status="resolved", feedback_id=1

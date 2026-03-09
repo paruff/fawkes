@@ -40,13 +40,15 @@ class TestAzureProviderInitialization:
 
     def test_init_with_service_principal(self, azure_credentials):
         """Test initialization with service principal credentials."""
-        with patch("src.providers.azure_provider.ClientSecretCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.ClientSecretCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Mock credential
             mock_credential = Mock()
@@ -74,13 +76,15 @@ class TestAzureProviderInitialization:
 
     def test_init_with_managed_identity(self, azure_credentials):
         """Test initialization with managed identity."""
-        with patch("src.providers.azure_provider.ManagedIdentityCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.ManagedIdentityCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Mock credential
             mock_credential = Mock()
@@ -102,13 +106,15 @@ class TestAzureProviderInitialization:
 
     def test_init_with_azure_cli(self, azure_credentials):
         """Test initialization with Azure CLI."""
-        with patch("src.providers.azure_provider.AzureCliCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.AzureCliCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Mock credential
             mock_credential = Mock()
@@ -130,13 +136,15 @@ class TestAzureProviderInitialization:
 
     def test_init_with_default_credential(self, azure_credentials):
         """Test initialization with DefaultAzureCredential."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Mock credential
             mock_credential = Mock()
@@ -155,13 +163,15 @@ class TestAzureProviderInitialization:
 
     def test_init_default_behavior(self, azure_credentials):
         """Test default initialization behavior."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService") as mock_aks, \
-             patch("src.providers.azure_provider.DatabaseService") as mock_db, \
-             patch("src.providers.azure_provider.StorageService") as mock_storage, \
-             patch("src.providers.azure_provider.MonitorService") as mock_monitor, \
-             patch("src.providers.azure_provider.CostManagementService") as mock_cost:
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService") as mock_aks,
+            patch("src.providers.azure_provider.DatabaseService") as mock_db,
+            patch("src.providers.azure_provider.StorageService") as mock_storage,
+            patch("src.providers.azure_provider.MonitorService") as mock_monitor,
+            patch("src.providers.azure_provider.CostManagementService") as mock_cost,
+        ):
 
             # Mock credential
             mock_credential = Mock()
@@ -204,13 +214,15 @@ class TestAzureProviderInitialization:
 
     def test_credential_verification(self, azure_credentials):
         """Test credential verification during initialization."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Mock credential
             mock_credential = Mock()
@@ -233,8 +245,10 @@ class TestAzureProviderInitialization:
         """Test initialization fails when credential verification fails."""
         from azure.core.exceptions import ClientAuthenticationError as AzureAuthError
 
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client:
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+        ):
 
             # Mock credential
             mock_credential = Mock()
@@ -256,13 +270,15 @@ class TestAzureProviderClusterOperations:
 
     def test_create_cluster(self, azure_credentials, mock_credential):
         """Test AKS cluster creation."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService") as mock_aks_class, \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService") as mock_aks_class,
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -303,13 +319,15 @@ class TestAzureProviderClusterOperations:
 
     def test_get_cluster_with_resource_group(self, azure_credentials, mock_credential):
         """Test getting cluster details with resource group."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService") as mock_aks_class, \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService") as mock_aks_class,
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -343,13 +361,15 @@ class TestAzureProviderClusterOperations:
 
     def test_get_cluster_extract_resource_group_from_id(self, azure_credentials, mock_credential):
         """Test getting cluster by extracting resource group from full ID."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService") as mock_aks_class, \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService") as mock_aks_class,
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -382,13 +402,15 @@ class TestAzureProviderClusterOperations:
 
     def test_get_cluster_without_resource_group_fails(self, azure_credentials, mock_credential):
         """Test getting cluster without resource group fails."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService") as mock_aks_class, \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService") as mock_aks_class,
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -408,13 +430,15 @@ class TestAzureProviderClusterOperations:
 
     def test_delete_cluster(self, azure_credentials, mock_credential):
         """Test cluster deletion."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService") as mock_aks_class, \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService") as mock_aks_class,
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -436,13 +460,15 @@ class TestAzureProviderClusterOperations:
 
     def test_list_clusters_no_filter(self, azure_credentials, mock_credential):
         """Test listing clusters without resource group filter."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService") as mock_aks_class, \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService") as mock_aks_class,
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -471,13 +497,15 @@ class TestAzureProviderClusterOperations:
 
     def test_list_clusters_with_resource_group_filter(self, azure_credentials, mock_credential):
         """Test listing clusters with resource group filter."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService") as mock_aks_class, \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService") as mock_aks_class,
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -508,13 +536,15 @@ class TestAzureProviderDatabaseOperations:
 
     def test_create_database(self, azure_credentials, mock_credential):
         """Test database creation."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService") as mock_db_class, \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService") as mock_db_class,
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -560,13 +590,15 @@ class TestAzureProviderDatabaseOperations:
 
     def test_get_database(self, azure_credentials, mock_credential):
         """Test getting database details."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService") as mock_db_class, \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService") as mock_db_class,
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -603,13 +635,15 @@ class TestAzureProviderDatabaseOperations:
 
     def test_delete_database(self, azure_credentials, mock_credential):
         """Test database deletion."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService") as mock_db_class, \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService") as mock_db_class,
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -631,13 +665,15 @@ class TestAzureProviderDatabaseOperations:
 
     def test_list_databases(self, azure_credentials, mock_credential):
         """Test listing databases."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService") as mock_db_class, \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService") as mock_db_class,
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -687,13 +723,15 @@ class TestAzureProviderStorageOperations:
 
     def test_create_storage(self, azure_credentials, mock_credential):
         """Test storage account creation."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService") as mock_storage_class, \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService") as mock_storage_class,
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -734,13 +772,15 @@ class TestAzureProviderStorageOperations:
 
     def test_get_storage(self, azure_credentials, mock_credential):
         """Test getting storage details."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService") as mock_storage_class, \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService") as mock_storage_class,
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -774,13 +814,15 @@ class TestAzureProviderStorageOperations:
 
     def test_delete_storage(self, azure_credentials, mock_credential):
         """Test storage deletion."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService") as mock_storage_class, \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService") as mock_storage_class,
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -802,13 +844,15 @@ class TestAzureProviderStorageOperations:
 
     def test_list_storage(self, azure_credentials, mock_credential):
         """Test listing storage accounts."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService") as mock_storage_class, \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService") as mock_storage_class,
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -841,13 +885,15 @@ class TestAzureProviderCostAndMetrics:
 
     def test_get_cost_data(self, azure_credentials, mock_credential):
         """Test getting cost data."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService") as mock_cost_class:
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService") as mock_cost_class,
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -881,13 +927,15 @@ class TestAzureProviderCostAndMetrics:
 
     def test_get_cost_forecast(self, azure_credentials, mock_credential):
         """Test getting cost forecast."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService"), \
-             patch("src.providers.azure_provider.CostManagementService") as mock_cost_class:
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService"),
+            patch("src.providers.azure_provider.CostManagementService") as mock_cost_class,
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -919,13 +967,15 @@ class TestAzureProviderCostAndMetrics:
 
     def test_get_metrics(self, azure_credentials, mock_credential):
         """Test getting Azure Monitor metrics."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService") as mock_monitor_class, \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService") as mock_monitor_class,
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential
@@ -966,13 +1016,15 @@ class TestAzureProviderCostAndMetrics:
 
     def test_get_metrics_default_aggregation(self, azure_credentials, mock_credential):
         """Test getting metrics with default aggregation."""
-        with patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class, \
-             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client, \
-             patch("src.providers.azure_provider.AKSService"), \
-             patch("src.providers.azure_provider.DatabaseService"), \
-             patch("src.providers.azure_provider.StorageService"), \
-             patch("src.providers.azure_provider.MonitorService") as mock_monitor_class, \
-             patch("src.providers.azure_provider.CostManagementService"):
+        with (
+            patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
+            patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
+            patch("src.providers.azure_provider.AKSService"),
+            patch("src.providers.azure_provider.DatabaseService"),
+            patch("src.providers.azure_provider.StorageService"),
+            patch("src.providers.azure_provider.MonitorService") as mock_monitor_class,
+            patch("src.providers.azure_provider.CostManagementService"),
+        ):
 
             # Setup mocks
             mock_cred_class.return_value = mock_credential

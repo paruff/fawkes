@@ -1,4 +1,5 @@
 """Prometheus metrics collection for Analytics Dashboard"""
+
 from prometheus_client import Counter, Gauge, Histogram, Info
 from typing import Dict
 

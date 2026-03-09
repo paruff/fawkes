@@ -1,4 +1,5 @@
 """Main FastAPI application for Discovery Metrics service."""
+
 import os
 from typing import List, Optional
 from fastapi import FastAPI, Depends, HTTPException, Query, status

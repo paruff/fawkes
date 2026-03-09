@@ -1,4 +1,5 @@
 """Unit tests for the main FastAPI application."""
+
 import pytest
 from fastapi.testclient import TestClient
 from unittest.mock import Mock, patch
