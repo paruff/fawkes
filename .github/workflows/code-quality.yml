@@ -80,23 +80,19 @@ jobs:
       - name: Run Black (formatter check)
         run: |
           black --check --diff .
-        continue-on-error: true
 
       - name: Run Flake8 (linter)
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 . --count --max-line-length=120 --extend-ignore=E203,W503 --statistics
-        continue-on-error: true
 
       - name: Run MyPy (type checking)
         run: |
-          mypy --install-types --non-interactive --ignore-missing-imports . || true
-        continue-on-error: true
+          mypy --install-types --non-interactive --ignore-missing-imports .
 
       - name: Run Pylint (advanced linting)
         run: |
-          pylint --rcfile=/dev/null --max-line-length=120 --disable=C,R,W $(find . -name "*.py" -not -path "*/venv/*" -not -path "*/.venv/*" -not -path "*/node_modules/*") || true
-        continue-on-error: true
+          pylint --rcfile=/dev/null --max-line-length=120 --disable=C,R,W $(find . -name "*.py" -not -path "*/venv/*" -not -path "*/.venv/*" -not -path "*/node_modules/*")
 
   # ==========================================================================
   # Python Test Coverage
@@ -125,8 +121,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest --cov=. --cov-report=xml --cov-report=html --cov-report=term-missing --cov-fail-under=60 tests/ || true
-        continue-on-error: true
+          pytest --cov=. --cov-report=xml --cov-report=html --cov-report=term-missing --cov-fail-under=60 tests/
 
       - name: Upload coverage to artifacts
         if: always()
@@ -174,19 +169,16 @@ jobs:
 
       - name: Run ESLint
         working-directory: ./design-system
-        run: npm run lint || true
-        continue-on-error: true
+        run: npm run lint
 
       - name: Run TypeScript compiler check
         working-directory: ./design-system
-        run: npx tsc --noEmit || true
-        continue-on-error: true
+        run: npx tsc --noEmit
 
       - name: Run tests with coverage
         working-directory: ./design-system
         run: |
-          npm test -- --coverage --coverageReporters=text --coverageReporters=lcov || true
-        continue-on-error: true
+          npm test -- --coverage --coverageReporters=text --coverageReporters=lcov
 
       - name: Upload coverage to artifacts
         if: always()
@@ -221,7 +213,6 @@ jobs:
         with:
           version: latest
           args: --timeout=5m
-        continue-on-error: true
 
   # ==========================================================================
   # Shell Script Quality
@@ -239,7 +230,6 @@ jobs:
         uses: ludeeus/action-shellcheck@master
         with:
           severity: warning
-        continue-on-error: true
 
   # ==========================================================================
   # Shell Script Testing with BATS
@@ -427,3 +417,4 @@ jobs:
               repo: context.repo.repo,
               body: summary
             });
+        continue-on-error: true
