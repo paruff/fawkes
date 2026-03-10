@@ -147,6 +147,14 @@ repos:
         language_version: python3
         exclude: '^templates/.*/skeleton/.*\.py$'
 
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.0
+    hooks:
+      - id: ruff
+        name: Lint Python with Ruff
+        args: ["--fix"]
+        exclude: '^templates/.*/skeleton/.*\.py$'
+
   - repo: https://github.com/pycqa/flake8
     rev: 7.0.0
     hooks:

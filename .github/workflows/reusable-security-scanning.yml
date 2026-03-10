@@ -37,7 +37,7 @@ jobs:
   security-scan:
     name: Security Scanning
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: DORA job start
         run: |
@@ -90,17 +90,17 @@ jobs:
         if: inputs.scan-type == 'container'
         run: |
           echo "🔍 Scanning for container images..."
-          
+
           # Find Dockerfiles
           DOCKERFILES=$(find ${{ inputs.scan-path }} -type f -name "Dockerfile*" \
             -not -path "*/node_modules/*" \
             -not -path "*/vendor/*" | head -5)
-          
+
           if [ -z "$DOCKERFILES" ]; then
             echo "⚠️  No Dockerfiles found"
             exit 0
           fi
-          
+
           for dockerfile in $DOCKERFILES; do
             echo "📋 Scanning Dockerfile: $dockerfile"
             docker run --rm \
@@ -140,7 +140,7 @@ jobs:
           echo "- **Fail on Critical**: ${{ inputs.fail-on-critical }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "#### Scans Performed" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ "${{ inputs.scan-type }}" == "all" ]; then
             echo "- ✅ Secret scanning (Gitleaks)" >> $GITHUB_STEP_SUMMARY
             echo "- ✅ Vulnerability scanning (Trivy)" >> $GITHUB_STEP_SUMMARY
