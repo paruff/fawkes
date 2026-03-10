@@ -8,7 +8,7 @@ through DevLake and associated Grafana dashboards / Backstage plugin.
 import os
 import pytest
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pytest_bdd import scenarios, given, when, then, parsers
 
 # Load all scenarios from the feature file
@@ -134,8 +134,8 @@ def devlake_ingests_sync_event():
         "namespace": "default",
         "revision": "abc123def456",
         "commit_sha": "abc123def456",
-        "sync_started_at": datetime.utcnow().isoformat() + "Z",
-        "sync_finished_at": datetime.utcnow().isoformat() + "Z",
+        "sync_started_at": datetime.now(timezone.utc).isoformat() + "Z",
+        "sync_finished_at": datetime.now(timezone.utc).isoformat() + "Z",
     }
     try:
         response = requests.post(
@@ -188,7 +188,7 @@ def devlake_ingests_build_event():
         "status": "success",
         "duration_ms": 120000,
         "type": "ci_build",
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
     }
     try:
         response = requests.post(
@@ -221,7 +221,7 @@ def incident_webhook_configured():
 @when("an alert fires in the observability platform")
 def alert_fires():
     """Simulate an alert firing in the observability platform."""
-    _ctx.incident_created_at = datetime.utcnow()
+    _ctx.incident_created_at = datetime.now(timezone.utc)
 
 
 @then("DevLake receives the incident event via webhook")
@@ -466,7 +466,7 @@ def deployment_fails_in_production():
 @when("a subsequent successful restore deployment is recorded")
 def restore_deployment_recorded():
     """Record a restore deployment."""
-    _ctx.incident_restored_at = datetime.utcnow()
+    _ctx.incident_restored_at = datetime.now(timezone.utc)
 
 
 @then("the Change Failure Rate is updated to include the failure")
