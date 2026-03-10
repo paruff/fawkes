@@ -52,3 +52,21 @@ exclude = [
     "node_modules",
     "templates",
 ]
+
+[tool.ruff]
+line-length = 120
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    ".venv",
+    "venv",
+    "node_modules",
+    "templates",
+]
+
+[tool.ruff.lint]
+# Match the ignore list used by flake8 so ruff only flags new critical issues
+# Note: W503 is a pycodestyle-only rule not supported by ruff
+ignore = ["E203", "F401", "F841", "F541", "E402", "F811", "E501", "E722", "E712"]

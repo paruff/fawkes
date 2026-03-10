@@ -9,9 +9,21 @@ branch = True
 source = .
 
 # Omit these paths from coverage
+# Note: tests/unit/ utility modules (e.g. terraform_utils.py) are intentionally
+# NOT omitted so that unit test coverage of those modules is measured.
 omit =
-    */tests/*
     */test_*.py
+    */tests/bdd/*
+    */tests/e2e/*
+    */tests/integration/*
+    */tests/acceptance/*
+    */tests/performance/*
+    */tests/chaos/*
+    */tests/security/*
+    */tests/ai/*
+    */tests/alerting/*
+    */tests/bats/*
+    */tests/terratest/*
     */.venv/*
     */venv/*
     */virtualenv/*
