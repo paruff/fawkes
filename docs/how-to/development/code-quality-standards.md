@@ -48,7 +48,7 @@ pre-commit run --files path/to/file
 **Configuration**:
 
 - shfmt args in `.pre-commit-config.yaml`: `-i 2 -ci -bn -sr`
-- ShellCheck: `.shellcheckrc` (uses defaults)
+- ShellCheck: `.shellcheckrc` (configured for warning-level severity, bash dialect)
 
 **Example**:
 

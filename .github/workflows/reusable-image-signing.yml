@@ -39,7 +39,7 @@ jobs:
   sign-image:
     name: Sign Container Image
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: DORA job start
         run: |
@@ -68,36 +68,36 @@ jobs:
         run: |
           IMAGE_REF="${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}"
           echo "🔐 Signing image: $IMAGE_REF"
-          
+
           # Sign with keyless (OIDC) signing
           cosign sign --yes "$IMAGE_REF"
-          
+
           echo "✅ Image signed successfully"
 
       - name: Generate and sign SBOM attestation
         if: inputs.sign-sbom
         run: |
           IMAGE_REF="${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}"
-          
+
           # Generate SBOM
           echo "📦 Generating SBOM for attestation..."
           syft packages "$IMAGE_REF" -o cyclonedx-json > sbom.json
-          
+
           # Attach SBOM as attestation
           echo "🔐 Attaching SBOM attestation..."
           cosign attest --yes --predicate sbom.json --type cyclonedx "$IMAGE_REF"
-          
+
           echo "✅ SBOM attestation signed and attached"
 
       - name: Verify signature
         run: |
           IMAGE_REF="${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}"
-          
+
           echo "🔍 Verifying signature..."
           cosign verify "$IMAGE_REF" \
             --certificate-identity-regexp=".*" \
             --certificate-oidc-issuer-regexp=".*" || true
-          
+
           echo "✅ Signature verification complete"
 
       - name: Display signing summary

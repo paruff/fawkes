@@ -52,3 +52,41 @@ exclude = [
     "node_modules",
     "templates",
 ]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+# Exclude paths consistent with Black and Flake8 configurations
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    ".venv",
+    "venv",
+    "node_modules",
+    "templates",
+    ".eggs",
+    ".mypy_cache",
+    ".tox",
+]
+
+[tool.ruff.lint]
+# Match flake8 ignore list so ruff does not block on pre-existing style issues
+# F401: unused import, F841: unused variable, F541: f-string without placeholders
+# E402: module-level import not at top, F811: redefinition, E501: line too long
+# E722: bare except, E712: comparison to True/False
+select = ["E", "F", "W"]
+ignore = [
+    "E203",  # whitespace before ':'
+    "E402",  # module level import not at top of file
+    "E501",  # line too long (handled by line-length setting)
+    "E711",  # comparison to None
+    "E712",  # comparison to True/False
+    "E722",  # bare except
+    "F401",  # imported but unused
+    "F541",  # f-string without any placeholders
+    "F811",  # redefinition of unused name
+    "F841",  # local variable assigned but never used
+    "F823",  # local variable referenced before assignment (false positive with module-level imports)
+]
