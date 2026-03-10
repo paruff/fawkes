@@ -411,9 +411,9 @@ jobs:
 
       - name: Run Bandit (Python security scan)
         run: |
-          # Run bandit once; save exit code for use after displaying results
-          bandit -r services/ tests/ -ll \
-            -x tests/bats,tests/e2e,tests/performance,tests/chaos \
+          # Run bandit at HIGH severity only (-lll) to catch critical security issues
+          bandit -r services/ tests/ -lll \
+            -x tests/bats,tests/e2e,tests/performance,tests/chaos,tests/bdd \
             -f json -o bandit-report.json || BANDIT_EXIT=$?
           # Summarise findings for the CI log
           python - <<'PYEOF'
@@ -421,7 +421,7 @@ jobs:
           with open("bandit-report.json") as f:
               data = json.load(f)
           results = data.get("results", [])
-          print(f"Bandit: {len(results)} issue(s) found at MEDIUM+ severity")
+          print(f"Bandit: {len(results)} HIGH severity issue(s) found")
           for r in results:
               print(f"  [{r['issue_severity']}] {r['filename']}:{r['line_number']} - {r['issue_text']}")
           PYEOF

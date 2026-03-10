@@ -94,7 +94,7 @@ def should_exclude(path: Path) -> bool:
 
 def get_file_hash(filepath: Path) -> str:
     """Calculate MD5 hash of file content."""
-    hasher = hashlib.md5()
+    hasher = hashlib.md5(usedforsecurity=False)
     with open(filepath, "rb") as f:
         hasher.update(f.read())
     return hasher.hexdigest()
