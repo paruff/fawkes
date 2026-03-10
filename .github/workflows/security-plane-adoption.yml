@@ -102,7 +102,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [security-scan, policy-enforcement, generate-sbom, sign-image]
     if: always()
-    
+
     steps:
       - name: DORA job start
         run: |
@@ -115,7 +115,7 @@ jobs:
         run: |
           echo "### 🔒 Security Plane Status" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ "${{ needs.security-scan.result }}" == "success" ] && [ "${{ needs.policy-enforcement.result }}" == "success" ]; then
             echo "![Security](https://img.shields.io/badge/security-passing-brightgreen)" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
@@ -125,17 +125,17 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "❌ Security checks failed. Review the scan and policy enforcement results." >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "#### Completed Checks" >> $GITHUB_STEP_SUMMARY
           echo "- Secret Scanning: ${{ needs.security-scan.result == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Vulnerability Scanning: ${{ needs.security-scan.result == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Policy Enforcement: ${{ needs.policy-enforcement.result == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ "${{ needs.generate-sbom.result }}" != "skipped" ]; then
             echo "- SBOM Generation: ${{ needs.generate-sbom.result == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           if [ "${{ needs.sign-image.result }}" != "skipped" ]; then
             echo "- Image Signing: ${{ needs.sign-image.result == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
           fi

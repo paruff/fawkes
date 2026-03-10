@@ -49,7 +49,7 @@ jobs:
             echo "typescript=false" >> $GITHUB_OUTPUT
             echo "ℹ️  No TypeScript/JavaScript files found in design-system"
           fi
-          
+
           # Check for Go files
           if find . -type f -name "*.go" 2>/dev/null | grep -q .; then
             echo "go=true" >> $GITHUB_OUTPUT
@@ -98,6 +98,10 @@ jobs:
       - name: Run Black (formatter check)
         run: |
           black --check --diff .
+
+      - name: Run Ruff (fast Python linter)
+        run: |
+          ruff check .
 
       - name: Run Flake8 (linter)
         run: |
@@ -354,15 +358,15 @@ jobs:
           script: |
             const fs = require('fs');
             const summary = `## 🐚 Shell Script Test Results
-            
+
             BATS tests completed. Coverage report and test results are available in the artifacts.
-            
+
             📊 **Coverage Target**: 80%+
             🧪 **Test Framework**: BATS (Bash Automated Testing System)
-            
+
             Download artifacts to view detailed coverage report.
             `;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -370,6 +374,40 @@ jobs:
               body: summary
             });
         continue-on-error: true
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ==========================================================================
+  # YAML Code Quality
+  # ==========================================================================
+  yaml-quality:
+    name: YAML Linting
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Run yamllint
+        run: yamllint -f github -c .yamllint .
 
       - name: DORA job finish
         if: always()
@@ -433,7 +471,7 @@ jobs:
   quality-summary:
     name: Quality Summary
     runs-on: ubuntu-latest
-    needs: [detect-changes, python-quality, python-coverage, typescript-quality, go-quality, shell-quality, shell-tests, security-integration]
+    needs: [detect-changes, python-quality, python-coverage, typescript-quality, go-quality, shell-quality, shell-tests, yaml-quality, security-integration]
     if: always()
     permissions:
       contents: read
@@ -462,6 +500,7 @@ jobs:
           echo "| Go Quality | ${{ needs.go-quality.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Shell Quality | ${{ needs.shell-quality.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Shell Tests (BATS) | ${{ needs.shell-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| YAML Quality | ${{ needs.yaml-quality.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Security Integration | ${{ needs.security-integration.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📈 Next Steps" >> $GITHUB_STEP_SUMMARY
@@ -487,6 +526,7 @@ jobs:
             | Go Quality | ${{ needs.go-quality.result }} |
             | Shell Quality | ${{ needs.shell-quality.result }} |
             | Shell Tests (BATS) | ${{ needs.shell-tests.result }} |
+            | YAML Quality | ${{ needs.yaml-quality.result }} |
             | Security Integration | ${{ needs.security-integration.result }} |
 
             ### 📈 Quality Gates
