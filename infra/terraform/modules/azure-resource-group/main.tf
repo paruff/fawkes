@@ -18,6 +18,10 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
+# DEPRECATED: This module is deprecated. Use infra/terraform/modules/azure/resource-group instead.
+# See DEPRECATED.md and REFACTORING.md in this directory for the migration guide.
+# Scheduled for removal: 2025-07-31
+
 terraform {
   required_version = ">= 1.6.0"
 
