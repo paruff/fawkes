@@ -275,17 +275,11 @@ def developer_views_dashboard(service):
     _ctx.grafana_dashboard_visible = True
 
 
-@then(
-    parsers.parse(
-        "the Deployment Frequency metric is calculated as approximately {freq} deployments per day"
-    )
-)
+@then(parsers.parse("the Deployment Frequency metric is calculated as approximately {freq} deployments per day"))
 def deployment_frequency_calculated(freq):
     """Verify deployment frequency calculation."""
     expected = float(freq)
-    assert abs(_ctx.metric_value - expected) < 0.1, (
-        f"Expected frequency ~{expected}, got {_ctx.metric_value}"
-    )
+    assert abs(_ctx.metric_value - expected) < 0.1, f"Expected frequency ~{expected}, got {_ctx.metric_value}"
 
 
 @then("the metric rating is displayed based on DORA benchmarks")
@@ -344,9 +338,7 @@ def lead_time_calculated_correctly():
     """Verify lead time calculation."""
     if _ctx.incident_created_at and _ctx.incident_restored_at:
         delta = _ctx.incident_restored_at - _ctx.incident_created_at
-        assert delta == timedelta(hours=4, minutes=15), (
-            f"Expected 4h15m, got {delta}"
-        )
+        assert delta == timedelta(hours=4, minutes=15), f"Expected 4h15m, got {delta}"
 
 
 @then("the metric rating reflects DORA performance level")
@@ -409,9 +401,7 @@ def developer_views_cfr():
 @then(parsers.parse("the CFR is calculated and displayed as {pct:d}%"))
 def cfr_calculated_correctly(pct):
     """Verify CFR percentage calculation."""
-    assert abs(_ctx.metric_value - pct) < 1.0, (
-        f"Expected CFR ~{pct}%, got {_ctx.metric_value}%"
-    )
+    assert abs(_ctx.metric_value - pct) < 1.0, f"Expected CFR ~{pct}%, got {_ctx.metric_value}%"
 
 
 @then(parsers.parse('the metric rating indicates "{level}" performer level'))
@@ -445,9 +435,7 @@ def incident_contributes_to_mttr(minutes):
     """Verify MTTR contribution calculation."""
     if _ctx.incident_created_at and _ctx.incident_restored_at:
         delta = _ctx.incident_restored_at - _ctx.incident_created_at
-        assert delta.seconds // 60 == minutes, (
-            f"Expected {minutes} min MTTR contribution, got {delta.seconds // 60}"
-        )
+        assert delta.seconds // 60 == minutes, f"Expected {minutes} min MTTR contribution, got {delta.seconds // 60}"
 
 
 @then("the overall MTTR reflects all resolved incidents")
@@ -690,9 +678,7 @@ def developer_views_ci_dashboard():
 @then(parsers.parse("the Rework Rate is displayed as {pct:d}%"))
 def rework_rate_displayed(pct):
     """Verify rework rate calculation."""
-    assert abs(_ctx.metric_value - pct) < 1.0, (
-        f"Expected rework rate ~{pct}%, got {_ctx.metric_value}%"
-    )
+    assert abs(_ctx.metric_value - pct) < 1.0, f"Expected rework rate ~{pct}%, got {_ctx.metric_value}%"
 
 
 @then("Build Success Rate and Quality Gate Pass Rate are visible")
