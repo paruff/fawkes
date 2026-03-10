@@ -331,7 +331,7 @@ class BackstageIndexer:
 
     def get_content_hash(self, content: str) -> str:
         """Calculate MD5 hash of content."""
-        return hashlib.md5(content.encode("utf-8")).hexdigest()
+        return hashlib.md5(content.encode("utf-8"), usedforsecurity=False).hexdigest()
 
     def index_techdocs(
         self, entity_ref: str, content: str, backstage_url: str, force: bool = False
