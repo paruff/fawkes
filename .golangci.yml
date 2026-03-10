@@ -30,27 +30,32 @@ run:
   # Include test files
   tests: true
 
+# Formatters configuration (gofmt/goimports are formatters in golangci-lint v2)
+formatters:
+  enable:
+    - gofmt # Check formatting
+    - goimports # Check imports
+
+  settings:
+    gofmt:
+      # Simplify code
+      simplify: true
+
 # Linters configuration
 linters:
   enable:
-    - gofmt # Check formatting
     - govet # Reports suspicious constructs
     - errcheck # Check for unchecked errors
     - staticcheck # Advanced static analysis
     - ineffassign # Detect ineffectual assignments
     - gocritic # Comprehensive checks
     - gocyclo # Cyclomatic complexity
-    - goimports # Check imports
     - misspell # Spell checking
     - revive # Fast, extensible, flexible, clean
     - gosec # Security checks
 
-  # Linter-specific settings (nested under linters in golangci-lint v2)
+  # Linter-specific settings
   settings:
-    gofmt:
-      # Simplify code
-      simplify: true
-
     govet:
       # Enable all checks
       enable-all: true
@@ -114,6 +119,29 @@ linters:
       excludes:
         - G104 # Audit errors not checked (covered by errcheck)
 
+  # Exclusions (replaces issues.exclude-dirs and issues.exclude-rules in v2)
+  exclusions:
+    # Directories to skip
+    paths:
+      - vendor
+      - third_party
+      - node_modules
+
+    # Rules for excluding specific files from certain linters
+    rules:
+      # Exclude test files from certain checks
+      - path: _test\.go
+        linters:
+          - gocyclo
+          - errcheck
+          - gosec
+
+      # Exclude example files from certain checks
+      - path: examples/
+        linters:
+          - errcheck
+          - gosec
+
 # Issues configuration
 issues:
   # Maximum issues count per linter
@@ -122,30 +150,7 @@ issues:
   # Maximum count of issues with the same text
   max-same-issues: 0
 
-  # Directories to skip
-  exclude-dirs:
-    - vendor
-    - third_party
-    - node_modules
-
-  # List of regexps for excluding files
-  exclude-rules:
-    # Exclude test files from certain checks
-    - path: _test\.go
-      linters:
-        - gocyclo
-        - errcheck
-        - gosec
-
-    # Exclude example files from certain checks
-    - path: examples/
-      linters:
-        - errcheck
-        - gosec
-
 # Output configuration
 output:
   formats:
-    colored-line-number: {}
-
-  print-linter-name: true
+    text: {}
