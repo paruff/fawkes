@@ -131,6 +131,21 @@ Feature: DORA Metrics Webhooks Configuration
     And the pipeline should continue execution
     And a warning should be logged about the webhook failure
 
+  @jenkins @rework-detection
+  Scenario: isReworkCommit queries DevLake API to detect rework rate
+    Given the Jenkins shared library "doraMetrics.groovy" is available
+    And the DevLake rework API endpoint is available for service "my-service"
+    When isReworkCommit is called for service "my-service"
+    Then it should return true when DevLake reports a rework rate above 10 percent
+
+  @jenkins @rework-detection @resilience
+  Scenario: isReworkCommit returns false when DevLake API is unreachable
+    Given the Jenkins shared library "doraMetrics.groovy" is available
+    And the DevLake rework API endpoint is unavailable
+    When isReworkCommit is called for service "my-service"
+    Then it should return false without failing the pipeline
+    And a warning should be logged about the rework rate query failure
+
   @webhook @integration
   Scenario: End-to-end webhook flow for a complete deployment
     Given a developer commits code to the main branch

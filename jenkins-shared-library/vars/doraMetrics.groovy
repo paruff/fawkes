@@ -35,14 +35,15 @@
  *   - service: Name of the service being built
  *   - status: Build status (success, failure, unstable)
  *   - stage: Build stage (build, test, scan, package)
- *   - isRetry: Whether this is a retry of a previous build
+ *   - isRetry: Whether this is a rework build (elevated rework rate detected via DevLake)
  */
 def recordBuild(Map config = [:]) {
+    def serviceName = config.service ?: (env.JOB_BASE_NAME ?: 'unknown-service')
     def defaults = [
-        service: env.JOB_BASE_NAME ?: 'unknown-service',
+        service: serviceName,
         status: 'success',
         stage: 'build',
-        isRetry: isRetryBuild(),
+        isRetry: isReworkCommit(serviceName),
         commitSha: env.GIT_COMMIT ?: '',
         duration: currentBuild.duration ?: 0,
         buildNumber: env.BUILD_NUMBER ?: '0',
@@ -297,20 +298,34 @@ def recordPipelineComplete(Map config = [:]) {
 }
 
 /**
- * Check if this is a retry build (same commit as previous build)
+ * Detect whether the current build represents rework by querying the DevLake API.
+ *
+ * A rework commit is one that follows a recent CI failure — the most common signal
+ * that a developer had to push an additional commit to fix a broken build. This
+ * method queries DevLake for the service's rework rate over the last 24 hours and
+ * returns true when that rate exceeds 10 %, indicating elevated rework activity.
+ *
+ * This replaces the previous SHA-comparison heuristic (isRetryBuild), which only
+ * caught the rare case of two builds triggered on the exact same commit.
+ *
+ * @param service Name of the service being built (used as the DevLake project key)
+ * @return true if rework rate > 10 % in the last 24 h, false otherwise or on error
  */
-def isRetryBuild() {
+def isReworkCommit(String service) {
+    def devlakeApiUrl = env.DEVLAKE_API_URL ?: 'http://devlake.fawkes-devlake.svc:8080'
+    // Threshold: rework rate > 10 % in the last 24 h signals elevated rework activity
+    def reworkRateThreshold = 10
     try {
-        def previousBuild = currentBuild.previousBuild
-        if (previousBuild) {
-            def previousCommit = previousBuild.changeSets?.find { it }?.items?.find { it }?.commitId
-            def currentCommit = env.GIT_COMMIT
-            return previousCommit == currentCommit
-        }
+        def response = httpRequest(
+            url: "${devlakeApiUrl}/api/dora/rework?project=${service}&window=24h",
+            httpMode: 'GET', validResponseCodes: '200:299'
+        )
+        def metrics = readJSON text: response.content
+        return (metrics.reworkRate?.value ?: 0) > reworkRateThreshold
     } catch (Exception e) {
-        echo "⚠️ Could not determine if this is a retry build: ${e.message}"
+        echo "⚠️ Could not query rework rate: ${e.message}"
+        return false
     }
-    return false
 }
 
 /**
