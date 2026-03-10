@@ -273,7 +273,12 @@ If rework rate for a task type exceeds 20% after 5 completed PRs with the recomm
 - Never assign Claude Opus to any task without explicit written approval
 - Check Settings → Billing → Copilot usage weekly — alert threshold is 240 requests used (80% of 300)
 - If requests exceed 240 mid-month, switch all remaining agent tasks to GPT-4.1 regardless of task type
-- The three GPT-5.1-Codex task types (PromQL, OTEL, Grafana JSON) together consume ~12 requests/month at 20 issues/week — this is the expected and justified premium spend
+- The three GPT-5.1-Codex task types (PromQL, OTEL, Grafana JSON) together consume ~12 requests/month at 20 issues/week this is the expected and justified premium spend
+
+  **Model selection in the GitHub UI is sticky.** Before confirming any new 
+coding agent session, verify the model selector shows the model in the issue's 
+"Suggested model" field and change it manually if needed. GitHub does not 
+automatically apply AGENTS.md model routing.
 - 
 ## 11. See Also
 
