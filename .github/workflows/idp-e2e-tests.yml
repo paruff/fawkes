@@ -24,6 +24,13 @@ jobs:
       pull-requests: write
       checks: write
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - uses: actions/checkout@v6
 
       - name: Set up Python
@@ -130,3 +137,7 @@ jobs:
               repo: context.repo.repo,
               body: `✅ Smoke tests executed. JUnit XML uploaded as artifact: test-reports-${process.env.GITHUB_RUN_ID}.`
             });
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"

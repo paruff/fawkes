@@ -34,6 +34,13 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -140,3 +147,7 @@ jobs:
           if [ "${{ steps.verify.outputs.policy-count }}" -eq "0" ]; then
             echo "⚠️  **No policies found**. Add OPA/Rego policies to enforce security standards." >> $GITHUB_STEP_SUMMARY
           fi
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"

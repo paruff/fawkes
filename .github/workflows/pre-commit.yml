@@ -19,6 +19,13 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
         with:
@@ -205,6 +212,10 @@ jobs:
               body: body
             });
 
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
   # ==========================================================================
   # GitOps Validation Job - Specific checks for ArgoCD and GitOps workflows
   # ==========================================================================
@@ -214,6 +225,13 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -252,6 +270,10 @@ jobs:
             echo "⚠️  No kustomization files found - consider using Kustomize for GitOps"
           fi
 
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
   # ==========================================================================
   # IDP Validation Job - Backstage and platform components
   # ==========================================================================
@@ -261,6 +283,13 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -330,3 +359,7 @@ jobs:
           if [ -d "docs" ]; then
             echo "✓ Documentation directory exists"
           fi
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
