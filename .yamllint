@@ -3,13 +3,24 @@ extends: default
 
 rules:
   line-length:
-    max: 120  # or higher if needed
+    max: 120
     level: warning
   document-start: disable
   comments-indentation: disable
+  # Accept any sequence indentation style since the codebase uses multiple
+  # valid conventions (e.g. mkdocs.yml nav lists, Kubernetes manifests)
   indentation:
     spaces: 2
-    indent-sequences: consistent
+    indent-sequences: whatever
   trailing-spaces: enable
   empty-lines:
     max: 2
+  # Allow spaces inside braces for readability (e.g. Hasura RBAC filters)
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+  # Disable truthy check — GitHub Actions workflows use 'on:' as a key,
+  # which yamllint incorrectly flags as the boolean 'true'
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no', 'on', 'off']
+    check-keys: false
