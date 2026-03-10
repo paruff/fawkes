@@ -158,9 +158,7 @@ def open_dashboard(dashboard_name):
 @then(parsers.parse('I should see the dashboard with title "{title}"'))
 def dashboard_has_title(title):
     """Verify dashboard title matches."""
-    assert _ctx.dashboard_title == title, (
-        f"Expected dashboard '{title}', got '{_ctx.dashboard_title}'"
-    )
+    assert _ctx.dashboard_title == title, f"Expected dashboard '{title}', got '{_ctx.dashboard_title}'"
 
 
 @then("I should see the following sections:")
@@ -171,9 +169,9 @@ def dashboard_has_sections(datatable):
     col_idx = header.index("Section Name")
     expected_sections = [row[col_idx] for row in datatable[1:]]
     for section in expected_sections:
-        assert section in _ctx.sections_visible, (
-            f"Section '{section}' not found in dashboard. Available: {_ctx.sections_visible}"
-        )
+        assert (
+            section in _ctx.sections_visible
+        ), f"Section '{section}' not found in dashboard. Available: {_ctx.sections_visible}"
 
 
 # ============================================================
@@ -198,36 +196,35 @@ def view_dashboard_section(section):
 def panel_shows_value(panel_name, expected_value):
     """Verify a dashboard panel shows the expected value."""
     if panel_name == "Active Anomalies Count":
-        assert str(_ctx.active_anomalies) == expected_value, (
-            f"Expected active anomalies '{expected_value}', got '{_ctx.active_anomalies}'"
-        )
+        assert (
+            str(_ctx.active_anomalies) == expected_value
+        ), f"Expected active anomalies '{expected_value}', got '{_ctx.active_anomalies}'"
     elif panel_name == "Active Alert Groups":
-        assert str(_ctx.active_alert_groups) == expected_value, (
-            f"Expected alert groups '{expected_value}', got '{_ctx.active_alert_groups}'"
-        )
+        assert (
+            str(_ctx.active_alert_groups) == expected_value
+        ), f"Expected alert groups '{expected_value}', got '{_ctx.active_alert_groups}'"
     elif panel_name == "Alerts Suppressed":
-        assert str(_ctx.alerts_suppressed) == expected_value, (
-            f"Expected alerts suppressed '{expected_value}', got '{_ctx.alerts_suppressed}'"
-        )
+        assert (
+            str(_ctx.alerts_suppressed) == expected_value
+        ), f"Expected alerts suppressed '{expected_value}', got '{_ctx.alerts_suppressed}'"
     elif panel_name == "Alert Fatigue Reduction":
         assert expected_value.rstrip("%") == str(int(_ctx.alert_fatigue_reduction)), (
-            f"Expected alert fatigue reduction '{expected_value}', "
-            f"got '{_ctx.alert_fatigue_reduction}%'"
+            f"Expected alert fatigue reduction '{expected_value}', " f"got '{_ctx.alert_fatigue_reduction}%'"
         )
     elif panel_name == "Root Cause Analysis Success Rate":
         if _ctx.rca_total > 0:
             actual_rate = round((_ctx.rca_successful / _ctx.rca_total) * 100)
-            assert expected_value.rstrip("%") == str(actual_rate), (
-                f"Expected RCA success rate '{expected_value}', got '{actual_rate}%'"
-            )
+            assert expected_value.rstrip("%") == str(
+                actual_rate
+            ), f"Expected RCA success rate '{expected_value}', got '{actual_rate}%'"
     elif panel_name == "RCA Executions":
-        assert str(_ctx.rca_total) == expected_value, (
-            f"Expected RCA executions '{expected_value}', got '{_ctx.rca_total}'"
-        )
+        assert (
+            str(_ctx.rca_total) == expected_value
+        ), f"Expected RCA executions '{expected_value}', got '{_ctx.rca_total}'"
     elif panel_name == "ML Models Loaded":
-        assert str(_ctx.ml_models_loaded) == expected_value, (
-            f"Expected ML models '{expected_value}', got '{_ctx.ml_models_loaded}'"
-        )
+        assert (
+            str(_ctx.ml_models_loaded) == expected_value
+        ), f"Expected ML models '{expected_value}', got '{_ctx.ml_models_loaded}'"
 
 
 @then("I should see a table with anomaly details")
@@ -760,9 +757,7 @@ def view_smart_alert_groups():
 @then(parsers.parse('I should see "Alert Grouping Efficiency" showing "{value}"'))
 def alert_grouping_efficiency(value):
     """Verify alert grouping efficiency metric."""
-    assert str(_ctx.active_alert_groups) == value, (
-        f"Expected '{value}' alert groups, got '{_ctx.active_alert_groups}'"
-    )
+    assert str(_ctx.active_alert_groups) == value, f"Expected '{value}' alert groups, got '{_ctx.active_alert_groups}'"
 
 
 @then("I should see the suppression reasons pie chart")
