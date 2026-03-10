@@ -505,9 +505,9 @@ def is_rework_commit_returns_true():
         assert webhook_context.is_rework_result is True
     else:
         # Fallback: verify logic directly — rate > threshold → True
-        assert rework_rate > REWORK_RATE_THRESHOLD, (
-            f"Expected rework rate > {REWORK_RATE_THRESHOLD} % to trigger True, got {rework_rate}"
-        )
+        assert (
+            rework_rate > REWORK_RATE_THRESHOLD
+        ), f"Expected rework rate > {REWORK_RATE_THRESHOLD} % to trigger True, got {rework_rate}"
 
 
 @then("it should return false without failing the pipeline")
