@@ -67,11 +67,11 @@ func TestAzureNetworkModule(t *testing.T) {
 	networkOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "../../infra/terraform/modules/azure-network",
 		Vars: map[string]interface{}{
-			"vnet_name":              vnetName,
-			"location":               location,
-			"resource_group_name":    resourceGroupName,
-			"address_space":          []string{"10.0.0.0/16"},
-			"subnet_name":            subnetName,
+			"vnet_name":               vnetName,
+			"location":                location,
+			"resource_group_name":     resourceGroupName,
+			"address_space":           []string{"10.0.0.0/16"},
+			"subnet_name":             subnetName,
 			"subnet_address_prefixes": []string{"10.0.1.0/24"},
 			"tags": map[string]string{
 				"Environment": "test",
