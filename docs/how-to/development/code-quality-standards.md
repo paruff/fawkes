@@ -841,6 +841,10 @@ CVE-2023-12345 exp:2024-12-31
 make pre-commit-setup          # Install pre-commit hooks
 make setup-vscode              # Configure VS Code
 
+# Formatting
+make format                    # Apply all code formatters (Black, shfmt, prettier, terraform fmt)
+make format-check              # Check formatting without changes (fails if files need formatting)
+
 # Linting
 make lint                      # Run all linters
 pre-commit run --all-files     # Run all pre-commit hooks
