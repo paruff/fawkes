@@ -45,74 +45,74 @@ linters:
     - revive # Fast, extensible, flexible, clean
     - gosec # Security checks
 
-# Linter-specific settings
-linters-settings:
-  gofmt:
-    # Simplify code
-    simplify: true
+  # Linter-specific settings (nested under linters in golangci-lint v2)
+  settings:
+    gofmt:
+      # Simplify code
+      simplify: true
 
-  govet:
-    # Enable all checks
-    enable-all: true
+    govet:
+      # Enable all checks
+      enable-all: true
 
-  errcheck:
-    # Report on errors in type assertions: `a := b.(MyStruct)`
-    check-type-assertions: true
-    # Report on blank error assignments: `num, _ := strconv.Atoi(numStr)`
-    check-blank: false
+    errcheck:
+      # Report on errors in type assertions: `a := b.(MyStruct)`
+      check-type-assertions: true
+      # Report on blank error assignments: `num, _ := strconv.Atoi(numStr)`
+      check-blank: false
 
-  gocyclo:
-    # Minimal cyclomatic complexity to report
-    min-complexity: 15
+    gocyclo:
+      # Minimal cyclomatic complexity to report
+      min-complexity: 15
 
-  gocritic:
-    # Which checks to enable
-    enabled-tags:
-      - diagnostic
-      - style
-      - performance
-    disabled-checks:
-      - whyNoLint
-      - unnamedResult
+    gocritic:
+      # Which checks to enable
+      enabled-tags:
+        - diagnostic
+        - style
+        - performance
+      disabled-checks:
+        - whyNoLint
+        - unnamedResult
 
-  misspell:
-    # Locale for spell checking
-    locale: US
+    misspell:
+      # Locale for spell checking
+      locale: US
 
-  revive:
-    # Enable all rules by default
-    enable-all-rules: false
-    rules:
-      # Enabled rules
-      - name: blank-imports
-      - name: context-as-argument
-      - name: context-keys-type
-      - name: dot-imports
-      - name: error-return
-      - name: error-strings
-      - name: error-naming
-      - name: exported
-      - name: if-return
-      - name: increment-decrement
-      - name: var-naming
-      - name: var-declaration
-      - name: package-comments
-      - name: range
-      - name: receiver-naming
-      - name: time-naming
-      - name: unexported-return
-      - name: indent-error-flow
-      - name: errorf
-      - name: empty-block
-      - name: superfluous-else
-      - name: unused-parameter
-      - name: unreachable-code
-      - name: redefines-builtin-id
+    revive:
+      # Enable all rules by default
+      enable-all-rules: false
+      rules:
+        # Enabled rules
+        - name: blank-imports
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+        - name: error-return
+        - name: error-strings
+        - name: error-naming
+        - name: exported
+        - name: if-return
+        - name: increment-decrement
+        - name: var-naming
+        - name: var-declaration
+        - name: package-comments
+        - name: range
+        - name: receiver-naming
+        - name: time-naming
+        - name: unexported-return
+        - name: indent-error-flow
+        - name: errorf
+        - name: empty-block
+        - name: superfluous-else
+        - name: unused-parameter
+        - name: unreachable-code
+        - name: redefines-builtin-id
 
-  gosec:
-    # Exclude specific checks
-    excludes:
-      - G104 # Audit errors not checked (covered by errcheck)
+    gosec:
+      # Exclude specific checks
+      excludes:
+        - G104 # Audit errors not checked (covered by errcheck)
 
 # Issues configuration
 issues:
