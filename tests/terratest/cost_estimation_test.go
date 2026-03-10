@@ -35,8 +35,8 @@ import (
 
 // CostEstimate represents a simplified cost estimate structure
 type CostEstimate struct {
-	TotalMonthlyCost float64 `json:"totalMonthlyCost"`
 	Currency         string  `json:"currency"`
+	TotalMonthlyCost float64 `json:"totalMonthlyCost"`
 }
 
 // EstimateInfracost runs Infracost to estimate Terraform costs
@@ -59,7 +59,7 @@ func EstimateInfracost(t *testing.T, terraformDir string) (*CostEstimate, error)
 		return nil, fmt.Errorf("failed to generate plan JSON: %w, output: %s", err, string(output))
 	}
 
-	if err := os.WriteFile(planFile, output, 0644); err != nil {
+	if err := os.WriteFile(planFile, output, 0o644); err != nil {
 		return nil, fmt.Errorf("failed to write plan file: %w", err)
 	}
 
@@ -172,11 +172,11 @@ func TestNetworkCostEstimate(t *testing.T) {
 	terraformOptions := &terraform.Options{
 		TerraformDir: "../../infra/terraform/modules/azure-network",
 		Vars: map[string]interface{}{
-			"vnet_name":              "cost-test-vnet",
-			"location":               "eastus2",
-			"resource_group_name":    "cost-test-rg",
-			"address_space":          []string{"10.0.0.0/16"},
-			"subnet_name":            "cost-test-subnet",
+			"vnet_name":               "cost-test-vnet",
+			"location":                "eastus2",
+			"resource_group_name":     "cost-test-rg",
+			"address_space":           []string{"10.0.0.0/16"},
+			"subnet_name":             "cost-test-subnet",
 			"subnet_address_prefixes": []string{"10.0.1.0/24"},
 		},
 		NoColor: true,

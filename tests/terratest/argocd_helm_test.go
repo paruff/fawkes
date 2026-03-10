@@ -50,12 +50,12 @@ func TestArgoCDHelmModule(t *testing.T) {
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "../../infra/terraform/modules/argocd-helm",
 		Vars: map[string]interface{}{
-			"release_name":      "argocd-test",
-			"namespace":         "argocd-test",
-			"create_namespace":  true,
-			"kubeconfig_path":   kubeconfigPath,
-			"chart_version":     "5.51.6",
-			"server_replicas":   1,
+			"release_name":         "argocd-test",
+			"namespace":            "argocd-test",
+			"create_namespace":     true,
+			"kubeconfig_path":      kubeconfigPath,
+			"chart_version":        "5.51.6",
+			"server_replicas":      1,
 			"repo_server_replicas": 1,
 			"controller_replicas":  1,
 		},

@@ -76,7 +76,7 @@ func TestAzureResourceGroupModule(t *testing.T) {
 	assert.NotEmpty(t, outputID, "Resource group ID should not be empty")
 
 	// Verify the resource group ID format
-	expectedIDPrefix := fmt.Sprintf("/subscriptions/")
+	expectedIDPrefix := "/subscriptions/"
 	assert.Contains(t, outputID, expectedIDPrefix, "Resource group ID should contain subscription ID")
 }
 
