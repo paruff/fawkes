@@ -1,11 +1,11 @@
 // cost_estimation_test.go
 
-package terratest
+package test
 
 import (
 	"testing"
 )
 
-func TestCostEstimation(t *testing.T) {
+func TestCostEstimation(_ *testing.T) {
 	// Implement your test logic here
 }
