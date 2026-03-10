@@ -33,6 +33,7 @@ jobs:
   terraform-validation:
     name: Terraform Validation Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - name: DORA job start
         run: |
@@ -79,6 +80,7 @@ jobs:
   terraform-cost-estimation:
     name: Infrastructure Cost Estimation
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     if: github.event_name == 'pull_request'
     steps:
       - name: DORA job start
@@ -141,6 +143,7 @@ jobs:
   terraform-integration-tests:
     name: Terraform Integration Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     # Only run integration tests when manually triggered with the flag set;
     # automatic push runs are excluded because Azure credentials are not
     # available in the standard CI environment.
@@ -206,6 +209,7 @@ jobs:
   terraform-e2e-tests:
     name: Terraform End-to-End Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     # Only run E2E tests when manually triggered
     if: github.event_name == 'workflow_dispatch' && inputs.run_e2e_tests == true
     steps:
@@ -268,6 +272,7 @@ jobs:
   test-summary:
     name: Test Summary
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     needs: [terraform-validation, terraform-cost-estimation]
     if: always()
     steps:

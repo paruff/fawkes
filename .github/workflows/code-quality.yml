@@ -24,6 +24,7 @@ jobs:
   detect-changes:
     name: Detect File Changes
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     outputs:
       typescript: ${{ steps.filter.outputs.typescript }}
       go: ${{ steps.filter.outputs.go }}
@@ -69,6 +70,7 @@ jobs:
   python-quality:
     name: Python Linting & Testing
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
       pull-requests: write
@@ -130,6 +132,7 @@ jobs:
   python-coverage:
     name: Python Test Coverage
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
       pull-requests: write
@@ -188,6 +191,7 @@ jobs:
   typescript-quality:
     name: TypeScript/JavaScript Linting
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: detect-changes
     if: needs.detect-changes.outputs.typescript == 'true'
     permissions:
@@ -245,6 +249,7 @@ jobs:
   go-quality:
     name: Go Linting
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: detect-changes
     if: needs.detect-changes.outputs.go == 'true'
     permissions:
@@ -285,6 +290,7 @@ jobs:
   shell-quality:
     name: Shell Script Linting
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
     steps:
@@ -313,6 +319,7 @@ jobs:
   shell-tests:
     name: Shell Script Tests (BATS)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
       checks: write
@@ -389,6 +396,7 @@ jobs:
   yaml-quality:
     name: YAML Linting
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
     steps:
@@ -423,6 +431,7 @@ jobs:
   security-integration:
     name: Security Scanning Status
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
       security-events: read
@@ -511,6 +520,7 @@ jobs:
   quality-summary:
     name: Quality Summary
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: [detect-changes, python-quality, python-coverage, typescript-quality, go-quality, shell-quality, shell-tests, yaml-quality, security-integration]
     if: always()
     permissions:

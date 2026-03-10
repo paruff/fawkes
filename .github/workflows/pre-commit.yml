@@ -15,6 +15,7 @@ jobs:
   pre-commit:
     name: Run Pre-commit Hooks
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
       pull-requests: write
@@ -222,6 +223,7 @@ jobs:
   gitops-validation:
     name: GitOps & ArgoCD Validation
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
     steps:
@@ -280,6 +282,7 @@ jobs:
   idp-validation:
     name: IDP Components Validation
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
     steps:
