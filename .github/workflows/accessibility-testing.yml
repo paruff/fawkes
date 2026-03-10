@@ -34,6 +34,13 @@ jobs:
     timeout-minutes: 15
 
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -69,12 +76,23 @@ jobs:
           files: design-system/junit.xml
           check_name: Axe-Core Accessibility Tests
 
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
   lighthouse-ci:
     name: Lighthouse CI Audit
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -149,6 +167,10 @@ jobs:
               body: comment
             });
 
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
   create-accessibility-issues:
     name: Create Issues for Violations
     runs-on: ubuntu-latest
@@ -157,6 +179,13 @@ jobs:
     timeout-minutes: 5
 
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -249,6 +278,10 @@ jobs:
               console.log('Recent accessibility issue already exists, skipping creation');
             }
 
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
   accessibility-report:
     name: Generate Accessibility Report
     runs-on: ubuntu-latest
@@ -257,6 +290,13 @@ jobs:
     timeout-minutes: 5
 
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Download all artifacts
         uses: actions/download-artifact@v8
         with:
@@ -283,3 +323,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "_Generated on $(date -u)_" >> $GITHUB_STEP_SUMMARY
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"

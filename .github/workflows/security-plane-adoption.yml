@@ -104,6 +104,13 @@ jobs:
     if: always()
     
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Generate Security Badge
         run: |
           echo "### 🔒 Security Plane Status" >> $GITHUB_STEP_SUMMARY
@@ -132,3 +139,7 @@ jobs:
           if [ "${{ needs.sign-image.result }}" != "skipped" ]; then
             echo "- Image Signing: ${{ needs.sign-image.result == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
           fi
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
