@@ -28,6 +28,13 @@ jobs:
       typescript: ${{ steps.filter.outputs.typescript }}
       go: ${{ steps.filter.outputs.go }}
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -52,6 +59,10 @@ jobs:
             echo "ℹ️  No Go files found"
           fi
 
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
   # ==========================================================================
   # Python Code Quality
   # ==========================================================================
@@ -62,6 +73,13 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -94,6 +112,10 @@ jobs:
         run: |
           pylint --rcfile=/dev/null --max-line-length=120 --disable=C,R,W tests/unit/
 
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
   # ==========================================================================
   # Python Test Coverage
   # ==========================================================================
@@ -104,6 +126,13 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -141,6 +170,10 @@ jobs:
           MINIMUM_ORANGE: 60
         continue-on-error: true
 
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
   # ==========================================================================
   # TypeScript/JavaScript Quality (for design-system)
   # ==========================================================================
@@ -153,6 +186,13 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -187,6 +227,10 @@ jobs:
           name: typescript-coverage-report
           path: design-system/coverage/
 
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
   # ==========================================================================
   # Go Code Quality
   # ==========================================================================
@@ -199,6 +243,13 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -216,6 +267,10 @@ jobs:
           working-directory: tests/terratest
           args: --timeout=5m --config ../../.golangci.yml
 
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
   # ==========================================================================
   # Shell Script Quality
   # ==========================================================================
@@ -225,6 +280,13 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -232,6 +294,10 @@ jobs:
         uses: ludeeus/action-shellcheck@master
         with:
           severity: error
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
   # ==========================================================================
   # Shell Script Testing with BATS
@@ -243,6 +309,13 @@ jobs:
       contents: read
       checks: write
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -298,6 +371,10 @@ jobs:
             });
         continue-on-error: true
 
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
   # ==========================================================================
   # Security Scanning Integration Check
   # ==========================================================================
@@ -308,6 +385,13 @@ jobs:
       contents: read
       security-events: read
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -339,6 +423,10 @@ jobs:
             exit 1
           fi
 
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
   # ==========================================================================
   # Quality Summary Report
   # ==========================================================================
@@ -351,6 +439,13 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -420,3 +515,7 @@ jobs:
               body: summary
             });
         continue-on-error: true
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
