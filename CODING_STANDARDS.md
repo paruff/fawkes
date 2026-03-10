@@ -72,7 +72,7 @@ Install these tools for the best development experience:
 
 ```bash
 # Python tools
-pip install black flake8 mypy pylint pytest pytest-cov
+pip install black flake8 ruff mypy pylint pytest pytest-cov
 
 # Shell tools
 brew install shellcheck shfmt  # macOS
@@ -135,7 +135,7 @@ git push origin feature/your-feature
 
 ### Python
 
-**Tools**: Black (formatter), Flake8 (linter), MyPy (type checker), Pylint (analyzer)
+**Tools**: Black (formatter), Ruff (linter), Flake8 (linter), MyPy (type checker), Pylint (analyzer)
 
 #### Standards
 
@@ -151,6 +151,7 @@ git push origin feature/your-feature
 #### Configuration Files
 
 - **Black**: `pyproject.toml`
+- **Ruff**: `pyproject.toml`
 - **Flake8**: `pyproject.toml`
 - **MyPy**: `pyproject.toml`
 

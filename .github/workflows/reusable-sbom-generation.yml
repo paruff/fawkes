@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       sbom-path: ${{ steps.generate.outputs.sbom-path }}
-    
+
     steps:
       - name: DORA job start
         run: |
@@ -59,7 +59,7 @@ jobs:
           syft packages dir:. -o ${{ inputs.sbom-format }} > "$SBOM_FILE"
           echo "sbom-path=$SBOM_FILE" >> $GITHUB_OUTPUT
           echo "✅ SBOM generated: $SBOM_FILE"
-          
+
       - name: Display SBOM summary
         run: |
           echo "### SBOM Generation Summary" >> $GITHUB_STEP_SUMMARY
@@ -68,7 +68,7 @@ jobs:
           echo "- **Format**: ${{ inputs.sbom-format }}" >> $GITHUB_STEP_SUMMARY
           echo "- **File**: ${{ steps.generate.outputs.sbom-path }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           # Count packages
           PACKAGE_COUNT=$(cat ${{ steps.generate.outputs.sbom-path }} | grep -o '"name"' | wc -l)
           echo "- **Packages Found**: $PACKAGE_COUNT" >> $GITHUB_STEP_SUMMARY
