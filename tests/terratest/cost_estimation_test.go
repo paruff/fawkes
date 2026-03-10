@@ -1,6 +1,6 @@
 // cost_estimation_test.go
 
-package terratest
+package test
 
 import (
 	"testing"
