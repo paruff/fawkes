@@ -6,6 +6,7 @@ Implements:
 - Statistical methods (Z-score, IQR)
 - Time series forecasting (Prophet) for trend-based anomalies
 """
+
 import logging
 import os
 from datetime import datetime, timedelta
@@ -340,8 +341,6 @@ def _detect_isolation_forest(timestamps: List[datetime], values: List[float]) ->
 
     Returns list of (timestamp, value, score, expected_value, method)
     """
-    global isolation_forest
-
     if len(values) < 20:
         return []
 

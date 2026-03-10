@@ -1,4 +1,5 @@
 """Prometheus metrics collection"""
+
 from prometheus_client import Counter, Histogram, Gauge, Info
 
 

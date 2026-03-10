@@ -1,4 +1,5 @@
 """Unit tests for alert correlation engine."""
+
 import pytest
 from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock

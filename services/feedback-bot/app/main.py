@@ -4,6 +4,7 @@ Mattermost Feedback Bot (@fawkes) - Main Application
 This bot provides a conversational interface for collecting feedback
 with natural language processing, sentiment analysis, and auto-categorization.
 """
+
 import os
 import logging
 import re

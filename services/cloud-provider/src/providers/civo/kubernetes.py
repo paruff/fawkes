@@ -90,7 +90,11 @@ class KubernetesService:
                 endpoint=result.get("api_endpoint"),
                 region=config.region,
                 node_count=config.node_count,
-                created_at=datetime.fromisoformat(result["created_at"].replace("Z", "+00:00")) if result.get("created_at") else None,
+                created_at=(
+                    datetime.fromisoformat(result["created_at"].replace("Z", "+00:00"))
+                    if result.get("created_at")
+                    else None
+                ),
                 metadata={
                     "dns_entry": result.get("dns_entry"),
                     "built_at": result.get("built_at"),
@@ -101,12 +105,10 @@ class KubernetesService:
 
         except Exception as e:
             error_msg = str(e)
-            
+
             # Check for specific error types
             if "already exists" in error_msg.lower():
-                raise ResourceAlreadyExistsError(
-                    f"Cluster {config.name} already exists", provider="civo"
-                )
+                raise ResourceAlreadyExistsError(f"Cluster {config.name} already exists", provider="civo")
             elif "invalid" in error_msg.lower() or "validation" in error_msg.lower():
                 raise ValidationError(f"Invalid cluster configuration: {error_msg}", provider="civo")
             else:
@@ -144,7 +146,11 @@ class KubernetesService:
                 endpoint=result.get("api_endpoint"),
                 region=result.get("region", ""),
                 node_count=result.get("num_target_nodes", 0),
-                created_at=datetime.fromisoformat(result["created_at"].replace("Z", "+00:00")) if result.get("created_at") else None,
+                created_at=(
+                    datetime.fromisoformat(result["created_at"].replace("Z", "+00:00"))
+                    if result.get("created_at")
+                    else None
+                ),
                 metadata={
                     "dns_entry": result.get("dns_entry"),
                     "built_at": result.get("built_at"),
@@ -231,7 +237,11 @@ class KubernetesService:
                     endpoint=result.get("api_endpoint"),
                     region=result.get("region", ""),
                     node_count=result.get("num_target_nodes", 0),
-                    created_at=datetime.fromisoformat(result["created_at"].replace("Z", "+00:00")) if result.get("created_at") else None,
+                    created_at=(
+                        datetime.fromisoformat(result["created_at"].replace("Z", "+00:00"))
+                        if result.get("created_at")
+                        else None
+                    ),
                     metadata={
                         "dns_entry": result.get("dns_entry"),
                         "civo_cluster_id": result["id"],

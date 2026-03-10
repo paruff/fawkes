@@ -4,6 +4,7 @@ FastAPI application for AI-powered code review service.
 This service listens for GitHub PR webhooks, analyzes code using LLM,
 queries RAG for relevant patterns/standards, and posts review comments.
 """
+
 import os
 import time
 import logging

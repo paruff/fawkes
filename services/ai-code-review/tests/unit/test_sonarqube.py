@@ -1,4 +1,5 @@
 """Unit tests for SonarQube integration."""
+
 import pytest
 from unittest.mock import Mock, AsyncMock
 import httpx

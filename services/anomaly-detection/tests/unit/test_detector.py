@@ -1,4 +1,5 @@
 """Unit tests for anomaly detection models."""
+
 import pytest
 import numpy as np
 from datetime import datetime, timedelta

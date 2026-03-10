@@ -80,7 +80,8 @@ class AzureMonitorService:
             valid_aggregations = ["Average", "Total", "Maximum", "Minimum", "Count"]
             if aggregation not in valid_aggregations:
                 raise ValidationError(
-                    f"Invalid aggregation: {aggregation}. Valid options: {', '.join(valid_aggregations)}", provider="azure"
+                    f"Invalid aggregation: {aggregation}. Valid options: {', '.join(valid_aggregations)}",
+                    provider="azure",
                 )
 
             self.rate_limiter.acquire()
@@ -173,12 +174,14 @@ class AzureMonitorService:
                         "unit": definition.unit,
                         "primary_aggregation_type": definition.primary_aggregation_type,
                         "supported_aggregation_types": definition.supported_aggregation_types,
-                        "metric_availabilities": [
-                            {"time_grain": avail.time_grain, "retention": avail.retention}
-                            for avail in definition.metric_availabilities
-                        ]
-                        if definition.metric_availabilities
-                        else [],
+                        "metric_availabilities": (
+                            [
+                                {"time_grain": avail.time_grain, "retention": avail.retention}
+                                for avail in definition.metric_availabilities
+                            ]
+                            if definition.metric_availabilities
+                            else []
+                        ),
                         "namespace": definition.namespace if hasattr(definition, "namespace") else None,
                     }
                 )

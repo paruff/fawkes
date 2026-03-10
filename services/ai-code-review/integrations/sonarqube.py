@@ -1,4 +1,5 @@
 """SonarQube integration for AI code review service."""
+
 import logging
 from typing import Dict, List, Optional
 import httpx

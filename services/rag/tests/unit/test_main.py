@@ -1,6 +1,7 @@
 """
 Unit tests for RAG service main application.
 """
+
 import pytest
 from fastapi.testclient import TestClient
 from unittest.mock import Mock, patch, MagicMock

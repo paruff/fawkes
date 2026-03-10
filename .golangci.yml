@@ -20,6 +20,7 @@
 
 # golangci-lint configuration for Fawkes
 # https://golangci-lint.run/usage/configuration/
+version: "2"
 
 # Run configuration
 run:
@@ -29,104 +30,117 @@ run:
   # Include test files
   tests: true
 
-  # Which dirs to skip
-  skip-dirs:
-    - vendor
-    - third_party
-    - node_modules
+# Formatters configuration (gofmt/goimports are formatters in golangci-lint v2)
+formatters:
+  enable:
+    - gofmt # Check formatting
+    - goimports # Check imports
+
+  settings:
+    gofmt:
+      # Simplify code
+      simplify: true
 
 # Linters configuration
 linters:
   enable:
-    - gofmt # Check formatting
     - govet # Reports suspicious constructs
     - errcheck # Check for unchecked errors
     - staticcheck # Advanced static analysis
-    - gosimple # Simplify code
     - ineffassign # Detect ineffectual assignments
-    - unused # Check for unused code
-    - typecheck # Type-check code
     - gocritic # Comprehensive checks
     - gocyclo # Cyclomatic complexity
-    - goimports # Check imports
     - misspell # Spell checking
     - revive # Fast, extensible, flexible, clean
     - gosec # Security checks
 
-  disable:
-    - deadcode # Deprecated
-    - varcheck # Deprecated
-    - structcheck # Deprecated
-    - golint # Deprecated, use revive
+  # Linter-specific settings
+  settings:
+    govet:
+      # Enable all checks
+      enable-all: true
 
-# Linter-specific settings
-linters-settings:
-  gofmt:
-    # Simplify code
-    simplify: true
+    errcheck:
+      # Report on errors in type assertions: `a := b.(MyStruct)`
+      check-type-assertions: true
+      # Report on blank error assignments: `num, _ := strconv.Atoi(numStr)`
+      check-blank: false
 
-  govet:
-    # Enable all checks
-    enable-all: true
+    gocyclo:
+      # Minimal cyclomatic complexity to report
+      min-complexity: 15
 
-  errcheck:
-    # Report on errors in type assertions: `a := b.(MyStruct)`
-    check-type-assertions: true
-    # Report on blank error assignments: `num, _ := strconv.Atoi(numStr)`
-    check-blank: false
+    gocritic:
+      # Which checks to enable
+      enabled-tags:
+        - diagnostic
+        - style
+        - performance
+      disabled-checks:
+        - whyNoLint
+        - unnamedResult
 
-  gocyclo:
-    # Minimal cyclomatic complexity to report
-    min-complexity: 15
+    misspell:
+      # Locale for spell checking
+      locale: US
 
-  gocritic:
-    # Which checks to enable
-    enabled-tags:
-      - diagnostic
-      - style
-      - performance
-    disabled-checks:
-      - whyNoLint
-      - unnamedResult
+    revive:
+      # Enable all rules by default
+      enable-all-rules: false
+      rules:
+        # Enabled rules
+        - name: blank-imports
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+        - name: error-return
+        - name: error-strings
+        - name: error-naming
+        - name: exported
+        - name: if-return
+        - name: increment-decrement
+        - name: var-naming
+        - name: var-declaration
+        - name: package-comments
+        - name: range
+        - name: receiver-naming
+        - name: time-naming
+        - name: unexported-return
+        - name: indent-error-flow
+        - name: errorf
+        - name: empty-block
+        - name: superfluous-else
+        - name: unused-parameter
+        - name: unreachable-code
+        - name: redefines-builtin-id
 
-  misspell:
-    # Locale for spell checking
-    locale: US
+    gosec:
+      # Exclude specific checks
+      excludes:
+        - G104 # Audit errors not checked (covered by errcheck)
 
-  revive:
-    # Enable all rules by default
-    enable-all-rules: false
+  # Exclusions (replaces issues.exclude-dirs and issues.exclude-rules in v2)
+  exclusions:
+    # Directories to skip
+    paths:
+      - vendor
+      - third_party
+      - node_modules
+
+    # Rules for excluding specific files from certain linters
     rules:
-      # Enabled rules
-      - name: blank-imports
-      - name: context-as-argument
-      - name: context-keys-type
-      - name: dot-imports
-      - name: error-return
-      - name: error-strings
-      - name: error-naming
-      - name: exported
-      - name: if-return
-      - name: increment-decrement
-      - name: var-naming
-      - name: var-declaration
-      - name: package-comments
-      - name: range
-      - name: receiver-naming
-      - name: time-naming
-      - name: unexported-return
-      - name: indent-error-flow
-      - name: errorf
-      - name: empty-block
-      - name: superfluous-else
-      - name: unused-parameter
-      - name: unreachable-code
-      - name: redefines-builtin-id
+      # Exclude test files from certain checks
+      - path: _test\.go
+        linters:
+          - gocyclo
+          - errcheck
+          - gosec
 
-  gosec:
-    # Exclude specific checks
-    excludes:
-      - G104 # Audit errors not checked (covered by errcheck)
+      # Exclude example files from certain checks
+      - path: examples/
+        linters:
+          - errcheck
+          - gosec
 
 # Issues configuration
 issues:
@@ -136,28 +150,7 @@ issues:
   # Maximum count of issues with the same text
   max-same-issues: 0
 
-  # List of regexps for excluding files
-  exclude-rules:
-    # Exclude test files from certain checks
-    - path: _test\.go
-      linters:
-        - gocyclo
-        - errcheck
-        - gosec
-
-    # Exclude example files from certain checks
-    - path: examples/
-      linters:
-        - errcheck
-        - gosec
-
 # Output configuration
 output:
-  # Format: colored-line-number, line-number, json, tab, checkstyle
-  format: colored-line-number
-
-  # Print lines of code with issue
-  print-issued-lines: true
-
-  # Print linter name in issue line
-  print-linter-name: true
+  formats:
+    text: {}

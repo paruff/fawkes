@@ -1,4 +1,5 @@
 """Step definitions for Golden Path CI/CD pipeline tests."""
+
 import re
 import pytest
 from pytest_bdd import scenarios, given, when, then, parsers

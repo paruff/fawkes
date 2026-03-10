@@ -16,7 +16,6 @@ from src.providers.aws_provider import AWSProvider
 from src.interfaces.provider import StorageConfig
 from src.exceptions import ResourceNotFoundError, ResourceAlreadyExistsError
 
-
 # Skip integration tests if environment variable is set
 pytestmark = pytest.mark.skipif(os.getenv("SKIP_INTEGRATION_TESTS", "0") == "1", reason="Integration tests disabled")
 

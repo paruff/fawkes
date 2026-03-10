@@ -1,6 +1,7 @@
 """
 Integration with Space Metrics service for pulse survey data
 """
+
 import logging
 from typing import Dict, Any
 import httpx

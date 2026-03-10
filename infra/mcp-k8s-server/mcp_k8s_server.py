@@ -11,6 +11,7 @@ Endpoints:
 This code uses in-cluster config; if not available, it falls back to
 local kubeconfig (useful for local testing).
 """
+
 from __future__ import annotations
 
 import os

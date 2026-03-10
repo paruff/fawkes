@@ -44,7 +44,7 @@ class AzureDatabaseService:
     def _get_client(self, engine: str, subscription_id: Optional[str] = None):
         """Get or create database client based on engine type."""
         sub_id = subscription_id or self.subscription_id
-        
+
         if engine.lower() in ["postgres", "postgresql"]:
             if sub_id not in self._pg_clients:
                 self.rate_limiter.acquire()
@@ -58,7 +58,9 @@ class AzureDatabaseService:
                 logger.debug(f"Created MySQL client for subscription: {sub_id}")
             return self._mysql_clients[sub_id]
         else:
-            raise ValidationError(f"Unsupported database engine: {engine}. Supported: postgresql, mysql", provider="azure")
+            raise ValidationError(
+                f"Unsupported database engine: {engine}. Supported: postgresql, mysql", provider="azure"
+            )
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(HttpResponseError,))
     def create_database(self, config: DatabaseConfig) -> Database:
@@ -124,7 +126,11 @@ class AzureDatabaseService:
 
             logger.info(f"✅ Initiated Azure Database creation: {config.name} (status: {status})")
 
-            provider_prefix = "Microsoft.DBforPostgreSQL" if config.engine.lower() in ["postgres", "postgresql"] else "Microsoft.DBforMySQL"
+            provider_prefix = (
+                "Microsoft.DBforPostgreSQL"
+                if config.engine.lower() in ["postgres", "postgresql"]
+                else "Microsoft.DBforMySQL"
+            )
 
             return Database(
                 id=f"/subscriptions/{self.subscription_id}/resourceGroups/{resource_group}/providers/{provider_prefix}/servers/{config.name}",
@@ -154,7 +160,9 @@ class AzureDatabaseService:
             if "already exists" in str(e).lower():
                 raise ResourceAlreadyExistsError(f"Database {config.name} already exists", provider="azure")
             raise CloudProviderError(
-                f"Failed to create Azure Database: {e}", provider="azure", error_code=e.error.code if hasattr(e, "error") else None
+                f"Failed to create Azure Database: {e}",
+                provider="azure",
+                error_code=e.error.code if hasattr(e, "error") else None,
             )
         except Exception as e:
             raise CloudProviderError(f"Unexpected error creating Azure Database: {e}", provider="azure")
@@ -210,8 +218,12 @@ class AzureDatabaseService:
                     "user_visible_state": server_data.user_visible_state,
                     "ssl_enforcement": server_data.ssl_enforcement,
                     "public_network_access": server_data.public_network_access,
-                    "backup_retention_days": server_data.storage_profile.backup_retention_days if server_data.storage_profile else 0,
-                    "geo_redundant_backup": server_data.storage_profile.geo_redundant_backup if server_data.storage_profile else None,
+                    "backup_retention_days": (
+                        server_data.storage_profile.backup_retention_days if server_data.storage_profile else 0
+                    ),
+                    "geo_redundant_backup": (
+                        server_data.storage_profile.geo_redundant_backup if server_data.storage_profile else None
+                    ),
                 },
             )
 
@@ -221,7 +233,9 @@ class AzureDatabaseService:
             )
         except HttpResponseError as e:
             raise CloudProviderError(
-                f"Failed to get Azure Database: {e}", provider="azure", error_code=e.error.code if hasattr(e, "error") else None
+                f"Failed to get Azure Database: {e}",
+                provider="azure",
+                error_code=e.error.code if hasattr(e, "error") else None,
             )
         except Exception as e:
             raise CloudProviderError(f"Unexpected error getting Azure Database: {e}", provider="azure")
@@ -259,7 +273,9 @@ class AzureDatabaseService:
             )
         except HttpResponseError as e:
             raise CloudProviderError(
-                f"Failed to delete Azure Database: {e}", provider="azure", error_code=e.error.code if hasattr(e, "error") else None
+                f"Failed to delete Azure Database: {e}",
+                provider="azure",
+                error_code=e.error.code if hasattr(e, "error") else None,
             )
         except Exception as e:
             raise CloudProviderError(f"Unexpected error deleting Azure Database: {e}", provider="azure")
@@ -279,7 +295,9 @@ class AzureDatabaseService:
         Raises:
             CloudProviderError: If listing fails
         """
-        logger.debug(f"Listing Azure Databases ({engine})" + (f" in resource group {resource_group}" if resource_group else ""))
+        logger.debug(
+            f"Listing Azure Databases ({engine})" + (f" in resource group {resource_group}" if resource_group else "")
+        )
 
         try:
             client = self._get_client(engine)
@@ -314,7 +332,9 @@ class AzureDatabaseService:
                             endpoint=server_data.fully_qualified_domain_name,
                             port=5432 if engine.lower() in ["postgres", "postgresql"] else 3306,
                             region=server_data.location,
-                            allocated_storage=server_data.storage_profile.storage_mb // 1024 if server_data.storage_profile else 0,
+                            allocated_storage=(
+                                server_data.storage_profile.storage_mb // 1024 if server_data.storage_profile else 0
+                            ),
                             instance_class=server_data.sku.name if server_data.sku else "",
                             metadata={
                                 "resource_group": rg,
@@ -330,7 +350,9 @@ class AzureDatabaseService:
 
         except HttpResponseError as e:
             raise CloudProviderError(
-                f"Failed to list Azure Databases: {e}", provider="azure", error_code=e.error.code if hasattr(e, "error") else None
+                f"Failed to list Azure Databases: {e}",
+                provider="azure",
+                error_code=e.error.code if hasattr(e, "error") else None,
             )
         except Exception as e:
             raise CloudProviderError(f"Unexpected error listing Azure Databases: {e}", provider="azure")
@@ -338,16 +360,16 @@ class AzureDatabaseService:
     def get_database_any_engine(self, database_name: str, resource_group: str) -> Database:
         """
         Get database by trying both PostgreSQL and MySQL engines.
-        
+
         This is useful when the engine type is unknown.
-        
+
         Args:
             database_name: Database server name
             resource_group: Resource group name
-            
+
         Returns:
             Database object with details
-            
+
         Raises:
             ResourceNotFoundError: If database not found with either engine
         """
@@ -356,7 +378,7 @@ class AzureDatabaseService:
             return self.get_database(database_name, "postgresql", resource_group)
         except ResourceNotFoundError:
             pass
-        
+
         # Try MySQL
         try:
             return self.get_database(database_name, "mysql", resource_group)
@@ -364,22 +386,22 @@ class AzureDatabaseService:
             raise ResourceNotFoundError(
                 f"Database {database_name} not found in resource group {resource_group} "
                 "(checked both PostgreSQL and MySQL)",
-                provider="azure"
+                provider="azure",
             )
-    
+
     def delete_database_any_engine(self, database_name: str, resource_group: str) -> bool:
         """
         Delete database by trying both PostgreSQL and MySQL engines.
-        
+
         This is useful when the engine type is unknown.
-        
+
         Args:
             database_name: Database server name
             resource_group: Resource group name
-            
+
         Returns:
             True if deletion was successful
-            
+
         Raises:
             ResourceNotFoundError: If database not found with either engine
         """
@@ -388,7 +410,7 @@ class AzureDatabaseService:
             return self.delete_database(database_name, "postgresql", resource_group)
         except ResourceNotFoundError:
             pass
-        
+
         # Try MySQL
         try:
             return self.delete_database(database_name, "mysql", resource_group)
@@ -396,31 +418,31 @@ class AzureDatabaseService:
             raise ResourceNotFoundError(
                 f"Database {database_name} not found in resource group {resource_group} "
                 "(checked both PostgreSQL and MySQL)",
-                provider="azure"
+                provider="azure",
             )
-    
+
     def list_all_databases(self, resource_group: Optional[str] = None) -> List[Database]:
         """
         List all databases (both PostgreSQL and MySQL).
-        
+
         Args:
             resource_group: Optional resource group filter
-            
+
         Returns:
             List of Database objects from both PostgreSQL and MySQL
         """
         databases = []
-        
+
         # Get PostgreSQL databases
         try:
             databases.extend(self.list_databases("postgresql", resource_group))
         except Exception as e:
             logger.warning(f"Could not list PostgreSQL databases: {e}")
-        
+
         # Get MySQL databases
         try:
             databases.extend(self.list_databases("mysql", resource_group))
         except Exception as e:
             logger.warning(f"Could not list MySQL databases: {e}")
-        
+
         return databases

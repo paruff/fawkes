@@ -1,4 +1,5 @@
 """Database models for Insights service."""
+
 from datetime import datetime, timezone
 from typing import Optional
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Table, Index

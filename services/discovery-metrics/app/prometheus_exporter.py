@@ -1,4 +1,5 @@
 """Prometheus metrics exporter for discovery metrics."""
+
 from prometheus_client import Gauge
 from sqlalchemy.orm import Session
 from sqlalchemy import func

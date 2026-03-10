@@ -1,6 +1,7 @@
 """
 Unit tests for AI triage module.
 """
+
 import pytest
 from unittest.mock import Mock, AsyncMock, patch
 
