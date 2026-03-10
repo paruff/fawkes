@@ -26,12 +26,20 @@ export { breakpoints } from './breakpoints';
 export type { Breakpoint } from './breakpoints';
 
 // Combined tokens object
+import { colors } from './colors';
+import { typography } from './typography';
+import { spacing } from './spacing';
+import { shadows } from './shadows';
+import { radii } from './radii';
+import { zIndices } from './zIndices';
+import { breakpoints } from './breakpoints';
+
 export const tokens = {
-  colors: require('./colors').colors,
-  typography: require('./typography').typography,
-  spacing: require('./spacing').spacing,
-  shadows: require('./shadows').shadows,
-  radii: require('./radii').radii,
-  zIndices: require('./zIndices').zIndices,
-  breakpoints: require('./breakpoints').breakpoints,
+  colors,
+  typography,
+  spacing,
+  shadows,
+  radii,
+  zIndices,
+  breakpoints,
 };

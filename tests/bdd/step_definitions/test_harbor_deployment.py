@@ -7,6 +7,7 @@ Validates that Harbor container registry is properly deployed with:
 - Trivy scanner enabled
 - Projects and robot accounts configured
 """
+
 from __future__ import annotations
 
 import json

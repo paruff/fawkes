@@ -4,6 +4,7 @@ Continuous anomaly detection module.
 This module runs background tasks to continuously query Prometheus,
 detect anomalies using ML models, and trigger alerts.
 """
+
 import asyncio
 import logging
 import os

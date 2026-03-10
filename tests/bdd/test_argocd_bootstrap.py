@@ -4,6 +4,7 @@ Pytest-BDD requires a Python test module to register the .feature file
 scenarios for execution. This module imports all scenarios from the
 feature describing the expected GitOps bootstrap state.
 """
+
 from pytest_bdd import scenarios
 
 try:
@@ -13,4 +14,4 @@ except Exception:  # pragma: no cover
 
 # Provide the feature filename only; pytest-bdd will resolve it relative to the
 # default feature base directory to avoid duplicating 'features/features'.
-scenarios("argocd_bootstrap.feature")
+scenarios("features/argocd_bootstrap.feature")

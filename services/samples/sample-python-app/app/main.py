@@ -1,6 +1,7 @@
 """
 FastAPI application for sample-python-app
 """
+
 from fastapi import FastAPI
 from prometheus_client import make_asgi_app, Counter, Histogram
 import time

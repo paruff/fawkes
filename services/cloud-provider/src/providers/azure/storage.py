@@ -102,7 +102,9 @@ class AzureStorageService:
 
             if result:
                 account_data = result
-                status = "available" if account_data.provisioning_state == "Succeeded" else account_data.provisioning_state
+                status = (
+                    "available" if account_data.provisioning_state == "Succeeded" else account_data.provisioning_state
+                )
             else:
                 account_data = None
                 status = "creating"
@@ -132,7 +134,9 @@ class AzureStorageService:
             if "already exists" in str(e).lower() or isinstance(e, ResourceExistsError):
                 raise ResourceAlreadyExistsError(f"Storage account {config.name} already exists", provider="azure")
             raise CloudProviderError(
-                f"Failed to create Azure Storage: {e}", provider="azure", error_code=e.error.code if hasattr(e, "error") else None
+                f"Failed to create Azure Storage: {e}",
+                provider="azure",
+                error_code=e.error.code if hasattr(e, "error") else None,
             )
         except Exception as e:
             raise CloudProviderError(f"Unexpected error creating Azure Storage: {e}", provider="azure")
@@ -161,7 +165,11 @@ class AzureStorageService:
             account_data = client.storage_accounts.get_properties(resource_group, storage_account_name)
 
             versioning_enabled = False
-            encryption_enabled = account_data.encryption and account_data.encryption.services.blob.enabled if account_data.encryption else False
+            encryption_enabled = (
+                account_data.encryption and account_data.encryption.services.blob.enabled
+                if account_data.encryption
+                else False
+            )
 
             return Storage(
                 id=account_data.id,
@@ -189,7 +197,9 @@ class AzureStorageService:
             )
         except HttpResponseError as e:
             raise CloudProviderError(
-                f"Failed to get Azure Storage: {e}", provider="azure", error_code=e.error.code if hasattr(e, "error") else None
+                f"Failed to get Azure Storage: {e}",
+                provider="azure",
+                error_code=e.error.code if hasattr(e, "error") else None,
             )
         except Exception as e:
             raise CloudProviderError(f"Unexpected error getting Azure Storage: {e}", provider="azure")
@@ -227,7 +237,9 @@ class AzureStorageService:
             )
         except HttpResponseError as e:
             raise CloudProviderError(
-                f"Failed to delete Azure Storage: {e}", provider="azure", error_code=e.error.code if hasattr(e, "error") else None
+                f"Failed to delete Azure Storage: {e}",
+                provider="azure",
+                error_code=e.error.code if hasattr(e, "error") else None,
             )
         except Exception as e:
             raise CloudProviderError(f"Unexpected error deleting Azure Storage: {e}", provider="azure")
@@ -247,7 +259,9 @@ class AzureStorageService:
         Raises:
             CloudProviderError: If listing fails
         """
-        logger.debug("Listing Azure Storage Accounts" + (f" in resource group {resource_group}" if resource_group else ""))
+        logger.debug(
+            "Listing Azure Storage Accounts" + (f" in resource group {resource_group}" if resource_group else "")
+        )
 
         try:
             client = self._get_client()
@@ -266,7 +280,11 @@ class AzureStorageService:
                         storage = self.get_storage(account_data.name, rg)
                         storage_accounts.append(storage)
                     else:
-                        encryption_enabled = account_data.encryption and account_data.encryption.services.blob.enabled if account_data.encryption else False
+                        encryption_enabled = (
+                            account_data.encryption and account_data.encryption.services.blob.enabled
+                            if account_data.encryption
+                            else False
+                        )
 
                         storage_accounts.append(
                             Storage(
@@ -293,7 +311,9 @@ class AzureStorageService:
 
         except HttpResponseError as e:
             raise CloudProviderError(
-                f"Failed to list Azure Storage Accounts: {e}", provider="azure", error_code=e.error.code if hasattr(e, "error") else None
+                f"Failed to list Azure Storage Accounts: {e}",
+                provider="azure",
+                error_code=e.error.code if hasattr(e, "error") else None,
             )
         except Exception as e:
             raise CloudProviderError(f"Unexpected error listing Azure Storage: {e}", provider="azure")

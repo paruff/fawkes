@@ -93,22 +93,13 @@ class ObjectStoreService:
 
         except Exception as e:
             error_msg = str(e)
-            
+
             if "already exists" in error_msg.lower():
-                raise ResourceAlreadyExistsError(
-                    f"Object store {config.name} already exists",
-                    provider="civo"
-                )
+                raise ResourceAlreadyExistsError(f"Object store {config.name} already exists", provider="civo")
             elif "invalid" in error_msg.lower():
-                raise ValidationError(
-                    f"Invalid storage configuration: {error_msg}",
-                    provider="civo"
-                )
+                raise ValidationError(f"Invalid storage configuration: {error_msg}", provider="civo")
             else:
-                raise CloudProviderError(
-                    f"Failed to create object store {config.name}: {error_msg}",
-                    provider="civo"
-                )
+                raise CloudProviderError(f"Failed to create object store {config.name}: {error_msg}", provider="civo")
 
     @retry_with_backoff(
         max_retries=3,
@@ -140,7 +131,11 @@ class ObjectStoreService:
                 region=result.get("region", ""),
                 size_bytes=result.get("size_gb", 0) * 1024 * 1024 * 1024,  # Convert GB to bytes
                 object_count=0,  # Civo doesn't provide object count in API
-                created_at=datetime.fromisoformat(result["created_at"].replace("Z", "+00:00")) if result.get("created_at") else None,
+                created_at=(
+                    datetime.fromisoformat(result["created_at"].replace("Z", "+00:00"))
+                    if result.get("created_at")
+                    else None
+                ),
                 versioning_enabled=False,
                 encryption_enabled=True,
                 metadata={
@@ -154,23 +149,15 @@ class ObjectStoreService:
         except Exception as e:
             error_msg = str(e)
             if "not found" in error_msg.lower() or "404" in error_msg:
-                raise ResourceNotFoundError(
-                    f"Object store {storage_id} not found",
-                    provider="civo"
-                )
+                raise ResourceNotFoundError(f"Object store {storage_id} not found", provider="civo")
             else:
-                raise CloudProviderError(
-                    f"Failed to get object store {storage_id}: {error_msg}",
-                    provider="civo"
-                )
+                raise CloudProviderError(f"Failed to get object store {storage_id}: {error_msg}", provider="civo")
 
     @retry_with_backoff(
         max_retries=3,
         retriable_exceptions=(Exception,),
     )
-    def delete_storage(
-        self, storage_id: str, region: Optional[str] = None, force: bool = False
-    ) -> bool:
+    def delete_storage(self, storage_id: str, region: Optional[str] = None, force: bool = False) -> bool:
         """
         Delete an object storage bucket.
 
@@ -196,15 +183,9 @@ class ObjectStoreService:
         except Exception as e:
             error_msg = str(e)
             if "not found" in error_msg.lower() or "404" in error_msg:
-                raise ResourceNotFoundError(
-                    f"Object store {storage_id} not found",
-                    provider="civo"
-                )
+                raise ResourceNotFoundError(f"Object store {storage_id} not found", provider="civo")
             else:
-                raise CloudProviderError(
-                    f"Failed to delete object store {storage_id}: {error_msg}",
-                    provider="civo"
-                )
+                raise CloudProviderError(f"Failed to delete object store {storage_id}: {error_msg}", provider="civo")
 
     @retry_with_backoff(
         max_retries=3,
@@ -241,7 +222,11 @@ class ObjectStoreService:
                     region=result.get("region", ""),
                     size_bytes=result.get("size_gb", 0) * 1024 * 1024 * 1024,
                     object_count=0,
-                    created_at=datetime.fromisoformat(result["created_at"].replace("Z", "+00:00")) if result.get("created_at") else None,
+                    created_at=(
+                        datetime.fromisoformat(result["created_at"].replace("Z", "+00:00"))
+                        if result.get("created_at")
+                        else None
+                    ),
                     versioning_enabled=False,
                     encryption_enabled=True,
                     metadata={
@@ -257,7 +242,4 @@ class ObjectStoreService:
 
         except Exception as e:
             error_msg = str(e)
-            raise CloudProviderError(
-                f"Failed to list object stores: {error_msg}",
-                provider="civo"
-            )
+            raise CloudProviderError(f"Failed to list object stores: {error_msg}", provider="civo")

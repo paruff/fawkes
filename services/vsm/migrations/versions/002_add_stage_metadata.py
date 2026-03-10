@@ -5,11 +5,11 @@ Revises: 001
 Create Date: 2025-12-21 22:07:00.000000
 
 """
+
 from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-
 
 # revision identifiers, used by Alembic.
 revision: str = "002"
@@ -30,8 +30,7 @@ def upgrade() -> None:
 
     # Update existing stages with category and descriptions based on type
     # Note: This maps the old StageType to the new StageCategory
-    op.execute(
-        """
+    op.execute("""
         UPDATE stages SET
             category = CASE
                 WHEN name = 'Backlog' THEN 'wait'
@@ -61,8 +60,7 @@ def upgrade() -> None:
                 ELSE 'Value stream stage'
             END
         WHERE name IN ('Backlog', 'Analysis', 'Development', 'Testing', 'Deployment', 'Production');
-    """
-    )
+    """)
 
 
 def downgrade() -> None:

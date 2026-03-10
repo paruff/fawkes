@@ -4,6 +4,7 @@ Business-focused checks that the ignite bootstrap produced a healthy
 GitOps baseline: Argo CD namespace exists and root Applications are
 Synced & Healthy.
 """
+
 from __future__ import annotations
 
 import json

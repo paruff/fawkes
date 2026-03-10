@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class DatabaseService:
     """Civo Database service operations.
-    
+
     Civo databases are deployed as applications in Kubernetes clusters.
     This service manages database deployments through Civo's marketplace apps.
     """
@@ -76,40 +76,34 @@ class DatabaseService:
         # Validate configuration
         cluster_id = config.metadata.get("cluster_id")
         if not cluster_id:
-            raise ValidationError(
-                "cluster_id must be provided in metadata for Civo database creation",
-                provider="civo"
-            )
+            raise ValidationError("cluster_id must be provided in metadata for Civo database creation", provider="civo")
 
         engine_lower = config.engine.lower()
         if engine_lower not in self.SUPPORTED_DATABASES:
             raise ValidationError(
                 f"Unsupported database engine: {config.engine}. "
                 f"Supported: {', '.join(self.SUPPORTED_DATABASES.keys())}",
-                provider="civo"
+                provider="civo",
             )
 
         try:
             # Get the marketplace application name
             app_name = self.SUPPORTED_DATABASES[engine_lower]
-            
+
             # For simplicity, we'll store metadata about the database deployment
             # In a real implementation, you might create a custom application
             # or use Helm charts through Civo's application marketplace
-            
+
             self.rate_limiter.acquire()
-            
+
             # Note: Civo doesn't have a direct database creation API
             # This is a simplified implementation that would need to:
             # 1. Deploy database via application marketplace
             # 2. Configure storage and networking
             # 3. Track the deployment status
-            
+
             # For now, we'll return a Database object representing the intended state
-            logger.info(
-                f"✅ Database {config.name} would be deployed as {app_name} "
-                f"in cluster {cluster_id}"
-            )
+            logger.info(f"✅ Database {config.name} would be deployed as {app_name} " f"in cluster {cluster_id}")
 
             return Database(
                 id=f"{cluster_id}-{config.name}",
@@ -135,10 +129,7 @@ class DatabaseService:
             raise
         except Exception as e:
             error_msg = str(e)
-            raise CloudProviderError(
-                f"Failed to create database {config.name}: {error_msg}",
-                provider="civo"
-            )
+            raise CloudProviderError(f"Failed to create database {config.name}: {error_msg}", provider="civo")
 
     def _get_default_port(self, engine: str) -> int:
         """Get default port for database engine."""
@@ -175,35 +166,30 @@ class DatabaseService:
             # Parse database_id to get cluster_id and db_name
             if "-" not in database_id:
                 raise ValidationError(
-                    f"Invalid database_id format: {database_id}. "
-                    "Expected format: cluster_id-db_name",
-                    provider="civo"
+                    f"Invalid database_id format: {database_id}. " "Expected format: cluster_id-db_name",
+                    provider="civo",
                 )
 
             cluster_id = database_id.split("-", 1)[0]
-            
+
             self.rate_limiter.acquire()
-            
+
             # In a real implementation, you would:
             # 1. Get cluster details
             # 2. Check installed applications
             # 3. Query database deployment status
-            
+
             # For now, return a placeholder
             raise ResourceNotFoundError(
-                f"Database {database_id} not found. "
-                "Note: Civo databases are deployed as cluster applications.",
-                provider="civo"
+                f"Database {database_id} not found. " "Note: Civo databases are deployed as cluster applications.",
+                provider="civo",
             )
 
         except (ValidationError, ResourceNotFoundError):
             raise
         except Exception as e:
             error_msg = str(e)
-            raise CloudProviderError(
-                f"Failed to get database {database_id}: {error_msg}",
-                provider="civo"
-            )
+            raise CloudProviderError(f"Failed to get database {database_id}: {error_msg}", provider="civo")
 
     @retry_with_backoff(
         max_retries=3,
@@ -231,18 +217,15 @@ class DatabaseService:
         try:
             # Parse database_id
             if "-" not in database_id:
-                raise ValidationError(
-                    f"Invalid database_id format: {database_id}",
-                    provider="civo"
-                )
+                raise ValidationError(f"Invalid database_id format: {database_id}", provider="civo")
 
             self.rate_limiter.acquire()
-            
+
             # In a real implementation, you would:
             # 1. Find the database application in the cluster
             # 2. Uninstall the application
             # 3. Clean up associated resources
-            
+
             logger.info(
                 f"✅ Database {database_id} would be removed from cluster. "
                 "Note: Actual implementation requires application uninstallation."
@@ -253,10 +236,7 @@ class DatabaseService:
             raise
         except Exception as e:
             error_msg = str(e)
-            raise CloudProviderError(
-                f"Failed to delete database {database_id}: {error_msg}",
-                provider="civo"
-            )
+            raise CloudProviderError(f"Failed to delete database {database_id}: {error_msg}", provider="civo")
 
     @retry_with_backoff(
         max_retries=3,
@@ -279,13 +259,13 @@ class DatabaseService:
 
         try:
             self.rate_limiter.acquire()
-            
+
             # In a real implementation, you would:
             # 1. List all clusters
             # 2. For each cluster, check installed applications
             # 3. Filter for database applications
             # 4. Return Database objects for each
-            
+
             # For now, return empty list
             logger.info(
                 "Civo databases are deployed as cluster applications. "
@@ -295,7 +275,4 @@ class DatabaseService:
 
         except Exception as e:
             error_msg = str(e)
-            raise CloudProviderError(
-                f"Failed to list databases: {error_msg}",
-                provider="civo"
-            )
+            raise CloudProviderError(f"Failed to list databases: {error_msg}", provider="civo")

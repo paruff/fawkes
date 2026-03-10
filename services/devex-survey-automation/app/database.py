@@ -1,6 +1,7 @@
 """
 Database initialization and connection management
 """
+
 import logging
 from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker

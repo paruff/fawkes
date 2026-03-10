@@ -9,6 +9,7 @@ Note: This is an initial implementation. The Focalboard API client functions
 implementations that need to be completed with actual HTTP API calls to
 Focalboard/Mattermost.
 """
+
 import logging
 from datetime import datetime, timezone
 from typing import Optional, Dict, Any, List

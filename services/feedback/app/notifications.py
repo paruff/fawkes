@@ -4,6 +4,7 @@ Notification module for Feedback service.
 This module provides notification capabilities for feedback-to-issue automation.
 Supports multiple notification channels including Mattermost and webhooks.
 """
+
 import os
 import logging
 from typing import Optional, Dict, List

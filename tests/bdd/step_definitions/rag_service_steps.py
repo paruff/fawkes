@@ -3,6 +3,7 @@
 Tests RAG (Retrieval Augmented Generation) service deployment,
 health checks, context retrieval, and integration with Weaviate.
 """
+
 from __future__ import annotations
 
 import json

@@ -169,8 +169,7 @@ class GCSService:
             object_count = 0
             try:
                 logger.warning(
-                    f"Calculating bucket size for {bucket_name}. "
-                    "This may be slow for buckets with many objects."
+                    f"Calculating bucket size for {bucket_name}. " "This may be slow for buckets with many objects."
                 )
                 self.rate_limiter.acquire()
                 blobs = bucket.list_blobs(max_results=1000)  # Limit to first 1000 objects

@@ -1,4 +1,5 @@
 """SQLAlchemy models for discovery metrics."""
+
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float, Boolean, Enum as SQLEnum
 from sqlalchemy.orm import relationship
