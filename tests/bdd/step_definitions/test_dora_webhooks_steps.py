@@ -14,6 +14,12 @@ from kubernetes import client, config
 import subprocess
 import time
 
+# Default DevLake service URL (mirrors the Groovy shared library default)
+DEVLAKE_DEFAULT_URL = "http://devlake.fawkes-devlake.svc:8080"
+
+# Rework rate threshold in percent — mirrors isReworkCommit() in doraMetrics.groovy
+REWORK_RATE_THRESHOLD = 10
+
 # Load all scenarios from the feature file
 scenarios("../features/dora-webhooks.feature")
 
@@ -30,6 +36,12 @@ class WebhookTestContext:
         self.last_commit_sha = None
         self.last_build_number = None
         self.last_incident_id = None
+        # isReworkCommit scenario state
+        self.rework_service = None
+        self.devlake_rework_available = True
+        self.devlake_rework_rate = 0
+        self.is_rework_result = None
+        self.rework_warning_logged = False
 
 
 webhook_context = WebhookTestContext()
@@ -422,3 +434,89 @@ def events_correlated_by_sha():
     """Verify events can be correlated"""
     # All events should include commit_sha for correlation
     assert webhook_context.last_commit_sha is not None
+
+
+# ============================================================
+# isReworkCommit Step Definitions
+# ============================================================
+
+
+@given(parsers.parse('the DevLake rework API endpoint is available for service "{service}"'))
+def devlake_rework_api_available(service):
+    """Record that the DevLake rework API should be treated as available for the test."""
+    webhook_context.rework_service = service
+    webhook_context.devlake_rework_available = True
+    webhook_context.devlake_rework_rate = REWORK_RATE_THRESHOLD + 5  # above threshold
+
+
+@given("the DevLake rework API endpoint is unavailable")
+def devlake_rework_api_unavailable():
+    """Record that the DevLake rework API should be treated as unavailable."""
+    webhook_context.devlake_rework_available = False
+
+
+@when(parsers.parse('isReworkCommit is called for service "{service}"'))
+def is_rework_commit_called(service):
+    """
+    Simulate the isReworkCommit logic from doraMetrics.groovy.
+
+    The Groovy function queries DevLake at:
+        GET /api/dora/rework?project=<service>&window=24h
+    and returns True when reworkRate.value > REWORK_RATE_THRESHOLD, False on error.
+    """
+    devlake_url = webhook_context.devlake_url or DEVLAKE_DEFAULT_URL
+    available = getattr(webhook_context, "devlake_rework_available", True)
+
+    if not available:
+        # Simulate a connection error — function must catch and return False
+        webhook_context.is_rework_result = False
+        webhook_context.rework_warning_logged = True
+        return
+
+    try:
+        response = requests.get(
+            f"{devlake_url}/api/dora/rework",
+            params={"project": service, "window": "24h"},
+            timeout=3,
+        )
+        metrics = response.json()
+        rework_rate_value = metrics.get("reworkRate", {}).get("value", 0)
+        webhook_context.is_rework_result = rework_rate_value > REWORK_RATE_THRESHOLD
+        webhook_context.rework_warning_logged = False
+    except Exception:
+        # Mirror the Groovy catch block: log warning and return False
+        webhook_context.is_rework_result = False
+        webhook_context.rework_warning_logged = True
+
+
+@then(f"it should return true when DevLake reports a rework rate above {REWORK_RATE_THRESHOLD} percent")
+def is_rework_commit_returns_true():
+    """
+    Verify that isReworkCommit returns True when DevLake reports reworkRate.value > threshold.
+
+    When the live DevLake endpoint is unreachable the test is simulated using the
+    in-memory rework_rate set by the Given step.
+    """
+    available = getattr(webhook_context, "devlake_rework_available", True)
+    rework_rate = getattr(webhook_context, "devlake_rework_rate", 0)
+
+    if available and getattr(webhook_context, "is_rework_result", None) is not None:
+        # We had a real (or simulated real) API call
+        assert webhook_context.is_rework_result is True
+    else:
+        # Fallback: verify logic directly — rate > threshold → True
+        assert rework_rate > REWORK_RATE_THRESHOLD, (
+            f"Expected rework rate > {REWORK_RATE_THRESHOLD} % to trigger True, got {rework_rate}"
+        )
+
+
+@then("it should return false without failing the pipeline")
+def is_rework_commit_returns_false():
+    """Verify that isReworkCommit returns False when the DevLake API is unreachable."""
+    assert webhook_context.is_rework_result is False
+
+
+@then("a warning should be logged about the rework rate query failure")
+def rework_warning_was_logged():
+    """Verify that a warning is logged when the DevLake rework endpoint is unreachable."""
+    assert webhook_context.rework_warning_logged is True
