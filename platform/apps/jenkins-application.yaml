@@ -84,7 +84,7 @@ spec:
                             idleTerminationMinutes: 10
                             containers:
                               - name: "jnlp"
-                                image: "jenkins/inbound-agent:latest"
+                                image: "jenkins/inbound-agent:3256.v8e45f94d6f5c-1"
                                 args: "${computer.jnlpmac} ${computer.name}"
                                 workingDir: "/home/jenkins"
                           - name: "maven-agent"
@@ -102,7 +102,7 @@ spec:
                                 resourceLimitCpu: "2"
                                 resourceLimitMemory: "4Gi"
                               - name: "jnlp"
-                                image: "jenkins/inbound-agent:latest"
+                                image: "jenkins/inbound-agent:3256.v8e45f94d6f5c-1"
                                 args: "${computer.jnlpmac} ${computer.name}"
                           - name: "python-agent"
                             label: "python"
@@ -119,7 +119,7 @@ spec:
                                 resourceLimitCpu: "1"
                                 resourceLimitMemory: "2Gi"
                               - name: "jnlp"
-                                image: "jenkins/inbound-agent:latest"
+                                image: "jenkins/inbound-agent:3256.v8e45f94d6f5c-1"
                                 args: "${computer.jnlpmac} ${computer.name}"
                           - name: "node-agent"
                             label: "node nodejs"
@@ -136,7 +136,7 @@ spec:
                                 resourceLimitCpu: "1"
                                 resourceLimitMemory: "2Gi"
                               - name: "jnlp"
-                                image: "jenkins/inbound-agent:latest"
+                                image: "jenkins/inbound-agent:3256.v8e45f94d6f5c-1"
                                 args: "${computer.jnlpmac} ${computer.name}"
                           - name: "go-agent"
                             label: "go golang"
@@ -153,7 +153,7 @@ spec:
                                 resourceLimitCpu: "1"
                                 resourceLimitMemory: "2Gi"
                               - name: "jnlp"
-                                image: "jenkins/inbound-agent:latest"
+                                image: "jenkins/inbound-agent:3256.v8e45f94d6f5c-1"
                                 args: "${computer.jnlpmac} ${computer.name}"
                 securityRealm:
                   local:
@@ -202,46 +202,46 @@ spec:
         controller:
           installPlugins:
             # Core Pipeline
-            - kubernetes:latest
-            - workflow-aggregator:latest
-            - workflow-job:latest
-            - workflow-multibranch:latest
-            - pipeline-stage-view:latest
-            - pipeline-utility-steps:latest
+            - kubernetes:4029.v5712230ccb_f8
+            - workflow-aggregator:596.v8c21c963d92d
+            - workflow-job:1400.v7fd111b_ec82f
+            - workflow-multibranch:773.vc4fe1378f1d4
+            - pipeline-stage-view:2.34
+            - pipeline-utility-steps:2.16.2
             # Source Control
-            - git:latest
-            - github:latest
-            - github-branch-source:latest
+            - git:5.2.2
+            - github:1.38.0
+            - github-branch-source:1763.v8f8b_53a_e9299
             # Credentials & Security
-            - credentials-binding:latest
-            - credentials:latest
+            - credentials-binding:677.vd7c1d3f1f0e5
+            - credentials:1343.v42313abcde26
             # Configuration as Code
-            - configuration-as-code:latest
+            - configuration-as-code:1836.vccda_4a_122a_a_e
             # Shared Libraries
-            - pipeline-github-lib:latest
+            - pipeline-github-lib:61.v629f2cc41d83
             # Quality & Testing
-            - junit:latest
-            - jacoco:latest
-            - warnings-ng:latest
-            - htmlpublisher:latest
-            - cucumber-reports:latest
+            - junit:1265.v65b_14fa_f12f0
+            - jacoco:3.3.7
+            - warnings-ng:11.5.0
+            - htmlpublisher:1.36
+            - cucumber-reports:5.8.3
             # Security Scanning
-            - sonar:latest
+            - sonar:2.17.2
             # Notifications
-            - mattermost:latest
-            - email-ext:latest
+            - mattermost:3.0.0
+            - email-ext:1792.v3bff4c0819db
             # Kubernetes
-            - kubernetes-cli:latest
+            - kubernetes-cli:1.11.0
             # Build Tools
-            - maven-plugin:latest
-            - nodejs:latest
+            - maven-plugin:3.23
+            - nodejs:1.6.2
             # Utilities
-            - http_request:latest
-            - pipeline-input-step:latest
-            - docker-workflow:latest
-            - timestamper:latest
-            - ansicolor:latest
-            - build-discarder:latest
+            - http_request:1.18
+            - pipeline-input-step:477.v339683a_8d55d
+            - docker-workflow:580.vc0c340686b_54
+            - timestamper:1.27
+            - ansicolor:1.0.4
+            - build-discarder:138.v0f76e68ad430
         persistence:
           enabled: true
           size: 8Gi
