@@ -244,6 +244,8 @@ Read this section before selecting a model for any task.
 | Git history rewrite (BFG) | Human | N/A | Requires coordinated force-push — cannot be delegated to any agent |
 | Sprint retrospective | Human | N/A | Requires genuine reflection — AI output is not acceptable here |
 | Security incident response | Human | N/A | Never delegate to any agent |
+| PR code review (any language)  | GPT-4.1 | 0 | Use "Request review" button or 
+@copilot comment — no +model suffix |
 
 ### Required issue body format
 
