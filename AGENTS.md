@@ -182,7 +182,100 @@ Because Fawkes **is** a DORA platform, its own development must model what it te
 
 ---
 
-## 10. See Also
+
+## Section 10 — Model Selection Policy
+
+Fawkes is a polyglot GitOps IDP. All services in `services/` are **Python (FastAPI)**.
+Infrastructure is **HCL + YAML**. CI/CD is **Groovy (Jenkins Shared Library)**.
+Read this section before selecting a model for any task.
+
+> **Budget context:** This repo runs on Copilot Pro (300 premium requests/month).
+> GPT-4.1 has a multiplier of 0 — it is completely free and should be the default
+> for all tasks unless a higher tier is explicitly justified in the table below.
+> The coding agent uses exactly 1 premium request per session × the model multiplier.
+
+### Model Ladder
+
+| Level | Model | Multiplier | Rule |
+|---|---|---|---|
+| L0 — Free default | GPT-4.1 | 0 | Use for ALL tasks unless a higher level is explicitly listed below |
+| L0 — Free lightweight | GPT-5 mini | 0 | Single-file mechanical edits only: .gitignore, version strings, one-line Markdown |
+| L1 — IDE chat upgrade | Claude Haiku 4.5 | 0.33 | Interactive IDE chat sessions only — NOT for coding agent tasks |
+| L2 — Justified premium | GPT-5.1-Codex | 1 | Only the three task types listed below; requires label `model:gpt-5.1-codex` on issue |
+| PROHIBITED | Claude Opus 4.6 fast | 30 | Never use — 30× multiplier. Blocked without explicit written budget approval |
+| AVOID | Claude Opus 4.5 / 4.6 | 3 | Do not use unless a 1× model has failed the same task type 3+ times |
+| SKIP | Gemini 3 Flash | 0.33 | No advantage over GPT-4.1 (free) for any fawkes task type |
+
+### Task → Model Routing Table
+
+| Task type | Model | Cost | Notes |
+|---|---|---|---|
+| Python single-file bug fix | GPT-4.1 | 0 | |
+| Python multi-file refactor | GPT-4.1 | 0 | |
+| FastAPI unit tests (TestClient) | GPT-4.1 | 0 | Do not use mocking except for DB connections |
+| Fix NameError / import order | GPT-5 mini | 0 | Mechanical single-line fix |
+| Update .gitignore | GPT-5 mini | 0 | |
+| Update AGENTS.md or copilot-instructions.md | GPT-5 mini | 0 | |
+| Write or update any Markdown doc | GPT-5 mini | 0 | Provide output file path in issue |
+| Write docs/ARCHITECTURE.md | GPT-4.1 | 0 | Needs full repo context |
+| Write docs/API_SURFACE.md | GPT-4.1 | 0 | Must read all FastAPI route definitions first |
+| Write runbooks or troubleshooting docs | GPT-5 mini | 0 | Provide template and kubectl/LogQL commands in issue body |
+| GitHub Actions YAML edit (any workflow) | GPT-4.1 | 0 | |
+| Remove continue-on-error from CI | GPT-5 mini | 0 | Mechanical find-and-replace |
+| Add DORA timestamps to workflows | GPT-4.1 | 0 | Must apply consistently across all 13 affected files |
+| Add timeout-minutes to workflows | GPT-5 mini | 0 | Single-line addition per job |
+| Terraform single module edit | GPT-4.1 | 0 | |
+| Terraform multi-module refactor | GPT-4.1 | 0 | Add human review requirement to PR |
+| Terraform remote state backend | GPT-4.1 | 0 | Requires 2 human approvals before merge |
+| Terraform validation / Terratest (Go) | GPT-4.1 | 0 | Specify bats-core not legacy bats |
+| Kubernetes manifest standardisation | GPT-4.1 | 0 | Provide services/samples/sample-python-app/k8s/deployment.yaml as reference |
+| Kustomize overlay (single service PoC) | GPT-4.1 | 0 | Scope to ONE service only; fleet rollout is a separate issue |
+| Bash script refactoring (ignite.sh) | GPT-4.1 | 0 | Provide target file list in issue; do not change CLI interface |
+| BATS test framework setup | GPT-4.1 | 0 | Use bats-core not legacy bats package |
+| ADR authoring | GPT-4.1 | 0 | |
+| Pre-commit config (.pre-commit-config.yaml) | GPT-4.1 | 0 | Specify all languages: Python, HCL, YAML, Groovy |
+| score.yaml for golden path templates | GPT-5 mini | 0 | Provide existing score.yaml as reference in issue |
+| BDD step definitions (Python behave) | GPT-4.1 | 0 | Provide .feature file content in issue body |
+| Structured logging rollout (structlog) | GPT-4.1 | 0 | Add services/shared/logging.py as shared module first |
+| PromQL recording rules or alert rules | GPT-5.1-Codex | 1 | Free models produce vector() arithmetic errors; justify with label `model:gpt-5.1-codex` |
+| OTEL AI/LLM pipeline (gen_ai.* spans) | GPT-5.1-Codex | 1 | Risk of breaking existing pipelines; free models miss guard clauses |
+| Grafana dashboard JSON | GPT-5.1-Codex | 1 | Structured multi-panel JSON requires coherence that free models lose |
+| Interactive IDE chat (in VS Code) | Claude Haiku 4.5 | 0.33 | Chat only — do not assign agent tasks to Haiku |
+| Git history rewrite (BFG) | Human | N/A | Requires coordinated force-push — cannot be delegated to any agent |
+| Sprint retrospective | Human | N/A | Requires genuine reflection — AI output is not acceptable here |
+| Security incident response | Human | N/A | Never delegate to any agent |
+
+### Required issue body format
+
+Every issue assigned to the Copilot coding agent must include this block:
+
+```
+**Suggested model:** [GPT-4.1 / GPT-5 mini / GPT-5.1-Codex]
+**Task type:** [single-file bug / multi-file refactor / docs / YAML / structured JSON / test]
+**Files to edit:** [explicit list — agent must not create new files unless listed here]
+**Reference file:** [path to canonical example, if applicable]
+**Do not:** [specific anti-patterns or files to avoid]
+**Acceptance criteria:**
+- [ ] [measurable criterion 1]
+- [ ] [measurable criterion 2]
+```
+
+### Escalation rule
+
+If rework rate for a task type exceeds 20% after 5 completed PRs with the recommended model:
+
+1. First improve the issue body — add file targets, constraints, and reference files
+2. If rework rate is still above 20% after improving the issue body, escalate to the next model tier
+3. Document the decision in this section with the date and evidence
+
+### Budget guardrails
+
+- Never assign Claude Opus to any task without explicit written approval
+- Check Settings → Billing → Copilot usage weekly — alert threshold is 240 requests used (80% of 300)
+- If requests exceed 240 mid-month, switch all remaining agent tasks to GPT-4.1 regardless of task type
+- The three GPT-5.1-Codex task types (PromQL, OTEL, Grafana JSON) together consume ~12 requests/month at 20 issues/week — this is the expected and justified premium spend
+- 
+## 11. See Also
 
 - `.github/copilot-instructions.md` — Copilot-specific subset (merged with this file at runtime)
 - `.github/agents/` — specialist agent profiles
