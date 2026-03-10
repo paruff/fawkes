@@ -95,7 +95,7 @@ func EstimateInfracost(t *testing.T, terraformDir string) (*CostEstimate, error)
 func TestAKSClusterCostEstimate(t *testing.T) {
 	// Skip if Infracost is not installed or if not running cost tests
 	if os.Getenv("RUN_TERRAFORM_COST_TESTS") != "true" {
-			t.Skip("Skipping cost test. Set RUN_TERRAFORM_COST_TESTS=true to run.")
+		t.Skip("Skipping cost test. Set RUN_TERRAFORM_COST_TESTS=true to run.")
 	}
 
 	terraformOptions := &terraform.Options{
@@ -120,8 +120,8 @@ func TestAKSClusterCostEstimate(t *testing.T) {
 	// Estimate cost (if Infracost is available)
 	estimate, err := EstimateInfracost(t, terraformOptions.TerraformDir)
 	if err != nil {
-			t.Logf("Cost estimation skipped: %v", err)
-			t.Skip("Infracost not available or failed")
+		t.Logf("Cost estimation skipped: %v", err)
+		t.Skip("Infracost not available or failed")
 	}
 
 	// Validate cost is within reasonable range for test cluster
@@ -130,13 +130,13 @@ func TestAKSClusterCostEstimate(t *testing.T) {
 	assert.Less(t, estimate.TotalMonthlyCost, maxExpectedCost,
 		fmt.Sprintf("Monthly cost should be less than $%.2f", maxExpectedCost))
 
-		t.Logf("Estimated monthly cost: $%.2f %s", estimate.TotalMonthlyCost, estimate.Currency)
+	t.Logf("Estimated monthly cost: $%.2f %s", estimate.TotalMonthlyCost, estimate.Currency)
 }
 
 // TestResourceGroupCostEstimate validates resource group cost (should be free)
 func TestResourceGroupCostEstimate(t *testing.T) {
 	if os.Getenv("RUN_TERRAFORM_COST_TESTS") != "true" {
-			t.Skip("Skipping cost test. Set RUN_TERRAFORM_COST_TESTS=true to run.")
+		t.Skip("Skipping cost test. Set RUN_TERRAFORM_COST_TESTS=true to run.")
 	}
 
 	terraformOptions := &terraform.Options{
@@ -153,21 +153,21 @@ func TestResourceGroupCostEstimate(t *testing.T) {
 
 	estimate, err := EstimateInfracost(t, terraformOptions.TerraformDir)
 	if err != nil {
-			t.Logf("Cost estimation skipped: %v", err)
-			t.Skip("Infracost not available or failed")
+		t.Logf("Cost estimation skipped: %v", err)
+		t.Skip("Infracost not available or failed")
 	}
 
 	// Resource groups themselves are free
 	assert.Equal(t, 0.0, estimate.TotalMonthlyCost,
 		"Resource group should have no direct cost")
 
-		t.Logf("Estimated monthly cost: $%.2f %s", estimate.TotalMonthlyCost, estimate.Currency)
+	t.Logf("Estimated monthly cost: $%.2f %s", estimate.TotalMonthlyCost, estimate.Currency)
 }
 
 // TestNetworkCostEstimate validates network infrastructure cost
 func TestNetworkCostEstimate(t *testing.T) {
 	if os.Getenv("RUN_TERRAFORM_COST_TESTS") != "true" {
-			t.Skip("Skipping cost test. Set RUN_TERRAFORM_COST_TESTS=true to run.")
+		t.Skip("Skipping cost test. Set RUN_TERRAFORM_COST_TESTS=true to run.")
 	}
 
 	terraformOptions := &terraform.Options{
@@ -188,8 +188,8 @@ func TestNetworkCostEstimate(t *testing.T) {
 
 	estimate, err := EstimateInfracost(t, terraformOptions.TerraformDir)
 	if err != nil {
-			t.Logf("Cost estimation skipped: %v", err)
-			t.Skip("Infracost not available or failed")
+		t.Logf("Cost estimation skipped: %v", err)
+		t.Skip("Infracost not available or failed")
 	}
 
 	// Basic VNet and subnet should be very low cost (mostly egress charges)
@@ -197,13 +197,13 @@ func TestNetworkCostEstimate(t *testing.T) {
 	assert.Less(t, estimate.TotalMonthlyCost, maxExpectedCost,
 		fmt.Sprintf("Network cost should be less than $%.2f", maxExpectedCost))
 
-		t.Logf("Estimated monthly cost: $%.2f %s", estimate.TotalMonthlyCost, estimate.Currency)
+	t.Logf("Estimated monthly cost: $%.2f %s", estimate.TotalMonthlyCost, estimate.Currency)
 }
 
 // TestCostRegression validates that infrastructure changes don't unexpectedly increase costs
 func TestCostRegression(t *testing.T) {
 	if os.Getenv("RUN_TERRAFORM_COST_TESTS") != "true" {
-			t.Skip("Skipping cost test. Set RUN_TERRAFORM_COST_TESTS=true to run.")
+		t.Skip("Skipping cost test. Set RUN_TERRAFORM_COST_TESTS=true to run.")
 	}
 
 	// This test would compare current costs against a baseline
@@ -212,32 +212,32 @@ func TestCostRegression(t *testing.T) {
 	// 2. Run current cost estimation
 	// 3. Compare and fail if cost increases beyond threshold (e.g., 10%)
 
-		t.Log("Cost regression testing - baseline comparison")
-		t.Skip("Implement baseline cost tracking for full regression testing")
+	t.Log("Cost regression testing - baseline comparison")
+	t.Skip("Implement baseline cost tracking for full regression testing")
 }
 
 // TestInfracostAvailability checks if Infracost is available and properly configured
 func TestInfracostAvailability(t *testing.T) {
 	path, err := exec.LookPath("infracost")
 	if err != nil {
-			t.Skip("Infracost not installed. Install from https://www.infracost.io/docs/")
+		t.Skip("Infracost not installed. Install from https://www.infracost.io/docs/")
 	}
 
-		t.Logf("Infracost found at: %s", path)
+	t.Logf("Infracost found at: %s", path)
 
 	// Check Infracost version
 	cmd := exec.Command("infracost", "--version")
 	output, err := cmd.CombinedOutput()
 	require.NoError(t, err, "Infracost should be executable")
 
-		t.Logf("Infracost version: %s", string(output))
+	t.Logf("Infracost version: %s", string(output))
 
 	// Check if API key is configured
 	apiKey := os.Getenv("INFRACOST_API_KEY")
 	if apiKey == "" {
-			t.Log("INFRACOST_API_KEY not set. Some features may not work.")
-			t.Log("Get a free API key from https://dashboard.infracost.io")
+		t.Log("INFRACOST_API_KEY not set. Some features may not work.")
+		t.Log("Get a free API key from https://dashboard.infracost.io")
 	} else {
-			t.Log("INFRACOST_API_KEY is configured")
+		t.Log("INFRACOST_API_KEY is configured")
 	}
 }
