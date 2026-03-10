@@ -2,6 +2,7 @@
 
 import pytest
 from hypothesis import given, strategies as st
+from tests.unit.terraform_utils import validate_environment_name, create_cluster_config
 
 
 def test_validate_environment_name():

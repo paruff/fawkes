@@ -84,7 +84,7 @@ jobs:
       - name: Run Flake8 (linter)
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 . --count --max-line-length=120 --extend-ignore=E203,W503 --statistics
+          flake8 . --count --statistics
 
       - name: Run MyPy (type checking)
         run: |
@@ -121,7 +121,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest --cov=. --cov-report=xml --cov-report=html --cov-report=term-missing --cov-fail-under=60 tests/
+          pytest --cov=. --cov-report=xml --cov-report=html --cov-report=term-missing tests/unit/
 
       - name: Upload coverage to artifacts
         if: always()

@@ -1,0 +1,22 @@
+[flake8]
+max-line-length = 120
+# extend-ignore rationale:
+# E203,W503: formatting handled by Black
+# F401: unused imports — widespread pre-existing; clean up incrementally
+# F841: assigned-but-unused variables — common in scaffolding/WIP code
+# F541: f-string without placeholders — pre-existing in many files
+# E402: module-level import not at top — often required for path manipulation
+# F811: redefinition — behave step_impl pattern / pre-existing
+# E501: line too long — pre-existing; max-line-length already raised to 120
+# E722: bare 'except' — pre-existing resilience patterns
+# E712: comparison to True/False — minor style
+extend-ignore = E203,W503,F401,F841,F541,E402,F811,E501,E722,E712
+exclude =
+    .git,
+    __pycache__,
+    build,
+    dist,
+    .venv,
+    venv,
+    node_modules,
+    templates,

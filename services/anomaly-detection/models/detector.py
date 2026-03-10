@@ -341,8 +341,6 @@ def _detect_isolation_forest(timestamps: List[datetime], values: List[float]) ->
 
     Returns list of (timestamp, value, score, expected_value, method)
     """
-    global isolation_forest
-
     if len(values) < 20:
         return []
 
