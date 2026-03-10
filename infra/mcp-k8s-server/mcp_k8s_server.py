@@ -15,6 +15,7 @@ local kubeconfig (useful for local testing).
 from __future__ import annotations
 
 import os
+from contextlib import asynccontextmanager
 from typing import Dict, Any, List
 
 from fastapi import FastAPI, HTTPException
@@ -29,12 +30,13 @@ def _load_kubeconfig() -> None:
         config.load_kube_config()
 
 
-app = FastAPI(title="MCP K8s Inspector", version="0.1.0")
-
-
-@app.on_event("startup")
-def _startup() -> None:
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
     _load_kubeconfig()
+    yield
+
+
+app = FastAPI(title="MCP K8s Inspector", version="0.1.0", lifespan=lifespan)
 
 
 @app.get("/health")
