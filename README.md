@@ -30,7 +30,9 @@
   <a href="https://github.com/paruff/fawkes/actions/workflows/security-and-terraform.yml">
     <img src="https://github.com/paruff/fawkes/actions/workflows/security-and-terraform.yml/badge.svg" alt="Security"/>
   </a>
-  <img src="https://img.shields.io/badge/coverage-60%25-yellow.svg" alt="Coverage"/>
+  <a href="https://github.com/paruff/fawkes/actions/workflows/code-quality.yml">
+    <img src="https://img.shields.io/badge/coverage-60%25%20min-yellow.svg" alt="Coverage (60% minimum threshold enforced)"/>
+  </a>
 </p>
 
 ---
