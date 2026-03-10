@@ -261,8 +261,6 @@ def main():
     # Create robot accounts
     # Note: Robot tokens are returned by the API but not displayed for security
     # Administrators should retrieve tokens via Harbor UI or API after creation
-    import sys
-
     robot_count = 0
     robot_names = []
 
