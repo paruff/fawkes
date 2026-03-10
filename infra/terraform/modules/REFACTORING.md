@@ -256,11 +256,22 @@ For questions or issues:
 - Consult [ADR-005: Terraform Decision](../../../docs/adr/ADR-005%20terraform.md)
 - Open an issue in the repository
 
-## Timeline
+## Deprecation Timeline
 
-- Old modules (`azure-resource-group`, `azure-network`, `azure-aks-cluster`) are **deprecated** but functional
-- Deprecation warnings will be added in the next release
-- Old modules will be removed in 6 months (July 2025)
+The following standalone modules are **deprecated** and replaced by the canonical `azure/` hierarchy:
+
+| Deprecated Module | Canonical Replacement | Deprecated | Removal |
+|---|---|---|---|
+| `azure-aks-cluster/` | `azure/kubernetes-cluster/` | 2025-01-10 | 2025-07-31 |
+| `azure-network/` | `azure/network/` | 2025-01-10 | 2025-07-31 |
+| `azure-resource-group/` | `azure/resource-group/` | 2025-01-10 | 2025-07-31 |
+
+Each deprecated module directory contains a `DEPRECATED.md` file with:
+- The canonical replacement module path
+- Before/after code examples for migration
+- Links to this document for the full step-by-step guide
+
+**Action required:** Migrate all references to the deprecated modules before **2025-07-31**.
 
 ## Checklist
 
