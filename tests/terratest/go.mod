@@ -4,6 +4,7 @@ go 1.24.11
 
 require (
 	github.com/gruntwork-io/terratest v0.47.2
+	github.com/gruntwork-io/terratest/modules/retry v0.47.2
 	github.com/stretchr/testify v1.10.0
 )
 
