@@ -6,7 +6,6 @@ set -euo pipefail
 # Purpose: Cluster provisioning orchestration
 # =============================================================================
 
-
 provision_cluster() {
   if [[ -n "${PROVIDER}" ]]; then
     case "${PROVIDER}" in
@@ -29,14 +28,14 @@ provision_cluster() {
     echo "✅ Kubernetes context set and reachable."
     return 0
   fi
-  
+
   echo "🔍 Checking available Kubernetes contexts..."
   kubectl config get-contexts || true
   local ACTIVE_CONTEXT
-  ACTIVE_CONTEXT=$(kubectl config current-context 2>/dev/null || echo "")
+  ACTIVE_CONTEXT=$(kubectl config current-context 2> /dev/null || echo "")
   if [[ -n "$ACTIVE_CONTEXT" ]]; then
     echo "Current active context: $ACTIVE_CONTEXT"
-    if kubectl cluster-info &>/dev/null; then
+    if kubectl cluster-info &> /dev/null; then
       read -p "Do you want to use the current context '$ACTIVE_CONTEXT'? [y/N]: " USE_CURRENT
       if [[ ! "$USE_CURRENT" =~ ^[Yy]$ ]]; then
         error_exit "Aborted by user."

@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-research-structure validate-at-e0-001 validate-at-e0-002 validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-008 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-epic-3-final validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all terraform-test terraform-test-integration terraform-test-e2e terraform-test-cost terraform-test-all
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup format format-check validate-research-structure validate-at-e0-001 validate-at-e0-002 validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-008 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-epic-3-final validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all terraform-test terraform-test-integration terraform-test-e2e terraform-test-cost terraform-test-all
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -7,6 +7,8 @@ ENVIRONMENT ?= dev
 AZURE_RESOURCE_GROUP ?= fawkes-rg
 AZURE_CLUSTER_NAME ?= fawkes-aks
 ARGO_NAMESPACE ?= fawkes
+# Shell scripts excluded from shfmt (contains intentional non-standard formatting)
+SHFMT_EXCLUDE_PATTERN := buildplatform.sh
 
 help: ## Show this help message
 	@echo "Fawkes Development Commands:"
@@ -65,6 +67,60 @@ k8s-validate: ## Validate Kubernetes manifests
 
 lint: ## Run all linters
 	@pre-commit run --all-files
+
+format: ## Apply all code formatters (Black, shfmt, prettier, terraform fmt)
+	@echo "🎨 Formatting Python with Black..."
+	@if command -v black > /dev/null 2>&1; then \
+		black .; \
+	else \
+		echo "⚠️  black not installed, skipping Python formatting"; \
+	fi
+	@echo "🎨 Formatting shell scripts with shfmt..."
+	@if command -v shfmt > /dev/null 2>&1; then \
+		find . -name "*.sh" -not -path "./.git/*" | grep -vF '/$(SHFMT_EXCLUDE_PATTERN)' | xargs -r shfmt -i 2 -ci -bn -sr -w; \
+	else \
+		echo "⚠️  shfmt not installed, skipping shell formatting"; \
+	fi
+	@echo "🎨 Formatting JSON/YAML/Markdown with Prettier..."
+	@if command -v prettier > /dev/null 2>&1; then \
+		prettier --write "**/*.{json,yaml,yml,md}" --ignore-unknown; \
+	else \
+		echo "⚠️  prettier not installed, skipping JSON/YAML/Markdown formatting"; \
+	fi
+	@echo "🎨 Formatting Terraform with terraform fmt..."
+	@if command -v terraform > /dev/null 2>&1; then \
+		terraform fmt -recursive infra/; \
+	else \
+		echo "⚠️  terraform not installed, skipping Terraform formatting"; \
+	fi
+	@echo "✅ Formatters applied (install missing tools above to format all file types)"
+
+format-check: ## Check formatting without applying changes (fails if any files need formatting)
+	@echo "🔍 Checking Python formatting with Black..."
+	@if command -v black > /dev/null 2>&1; then \
+		black --check --diff .; \
+	else \
+		echo "⚠️  black not installed, skipping Python format check (install black to enforce)"; \
+	fi
+	@echo "🔍 Checking shell script formatting with shfmt..."
+	@if command -v shfmt > /dev/null 2>&1; then \
+		find . -name "*.sh" -not -path "./.git/*" | grep -vF '/$(SHFMT_EXCLUDE_PATTERN)' | xargs -r shfmt -i 2 -ci -bn -sr -d; \
+	else \
+		echo "⚠️  shfmt not installed, skipping shell format check (install shfmt to enforce)"; \
+	fi
+	@echo "🔍 Checking JSON/YAML/Markdown formatting with Prettier..."
+	@if command -v prettier > /dev/null 2>&1; then \
+		prettier --check "**/*.{json,yaml,yml,md}" --ignore-unknown; \
+	else \
+		echo "⚠️  prettier not installed, skipping JSON/YAML/Markdown format check (install prettier to enforce)"; \
+	fi
+	@echo "🔍 Checking Terraform formatting..."
+	@if command -v terraform > /dev/null 2>&1; then \
+		terraform fmt -check -recursive infra/; \
+	else \
+		echo "⚠️  terraform not installed, skipping Terraform format check (install terraform to enforce)"; \
+	fi
+	@echo "✅ Format checks completed (install missing tools above to check all file types)"
 
 test-unit: ## Run unit tests
 	@pytest tests/unit -v

@@ -314,10 +314,16 @@ If you prefer not to use IDE integration, you can format manually:
 ### Format All Files
 
 ```bash
+# Apply all formatters at once
+make format
+
+# Check formatting without applying changes (CI-equivalent)
+make format-check
+
 # Run all formatters via pre-commit
 pre-commit run --all-files
 
-# Or use make target
+# Or use make target for all linters
 make lint
 ```
 

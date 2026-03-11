@@ -36,7 +36,7 @@ echo ""
 # Test 2: Library can be sourced
 echo "Test Group: Library Loading"
 export SKIP_TRAP_SETUP=1
-if source "${ROOT_DIR}/scripts/lib/error_handling.sh" 2>/dev/null; then
+if source "${ROOT_DIR}/scripts/lib/error_handling.sh" 2> /dev/null; then
   echo -e "${GREEN}✓${NC} error_handling.sh can be sourced"
   ((TESTS_PASSED++))
 else
@@ -149,7 +149,7 @@ echo ""
 
 # Test 6: require_command works correctly
 echo "Test Group: Validation Functions"
-if require_command "bash" "bash should exist" 2>/dev/null; then
+if require_command "bash" "bash should exist" 2> /dev/null; then
   echo -e "${GREEN}✓${NC} require_command works for existing command"
   ((TESTS_PASSED++))
 else
@@ -158,7 +158,7 @@ else
 fi
 
 # Run in subshell to prevent exit
-if (require_command "nonexistent_command_12345" "should not exist" 2>/dev/null); then
+if (require_command "nonexistent_command_12345" "should not exist" 2> /dev/null); then
   echo -e "${RED}✗${NC} require_command passed for non-existing command"
   ((TESTS_FAILED++))
 else

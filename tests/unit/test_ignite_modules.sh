@@ -19,9 +19,9 @@ TESTS_FAILED=0
 test_assert() {
   local description="$1"
   local condition="$2"
-  
+
   TESTS_RUN=$((TESTS_RUN + 1))
-  
+
   if eval "$condition"; then
     echo "✅ PASS: $description"
     TESTS_PASSED=$((TESTS_PASSED + 1))
