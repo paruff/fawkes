@@ -6,12 +6,11 @@ set -euo pipefail
 # Purpose: Access summary generation for all services
 # =============================================================================
 
-
 get_service_password() {
   local secret_name="$1"
   local namespace="$2"
   local key="${3:-password}"
-  kubectl get secret "$secret_name" -n "$namespace" -o jsonpath="{.data.$key}" 2>/dev/null | base64 -d 2>/dev/null || echo "N/A"
+  kubectl get secret "$secret_name" -n "$namespace" -o jsonpath="{.data.$key}" 2> /dev/null | base64 -d 2> /dev/null || echo "N/A"
 }
 
 print_access_summary() {
@@ -22,7 +21,7 @@ print_access_summary() {
   echo ""
 
   local ctx
-  ctx=$(kubectl config current-context 2>/dev/null || echo "unknown")
+  ctx=$(kubectl config current-context 2> /dev/null || echo "unknown")
   echo "📍 Kubernetes Context: $ctx"
   echo "🌍 Environment: ${ENV}"
   if [[ -n "${PROVIDER}" ]]; then
@@ -31,9 +30,9 @@ print_access_summary() {
   echo ""
 
   local has_external=0 external_domain=""
-  if kubectl get ingress -A 2>/dev/null | grep -q .; then
+  if kubectl get ingress -A 2> /dev/null | grep -q .; then
     has_external=1
-    external_domain=$(kubectl get ingress -n "${ARGO_NS}" argocd-server -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    external_domain=$(kubectl get ingress -n "${ARGO_NS}" argocd-server -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo "")
   fi
 
   echo "────────────────────────────────────────────────────────────────────────────────"
@@ -53,10 +52,10 @@ print_access_summary() {
   echo ""
 
   # Jenkins
-  if kubectl get namespace jenkins >/dev/null 2>&1; then
+  if kubectl get namespace jenkins > /dev/null 2>&1; then
     echo "🔷 Jenkins (CI/CD)"
     local jenkins_host
-    jenkins_host=$(kubectl get ingress -n jenkins jenkins -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    jenkins_host=$(kubectl get ingress -n jenkins jenkins -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo "")
     if [[ -n "$jenkins_host" ]]; then
       echo "   External URL: https://$jenkins_host"
     fi
@@ -70,12 +69,12 @@ print_access_summary() {
   fi
 
   # Backstage
-  if kubectl get namespace backstage >/dev/null 2>&1 || kubectl get deployment -n fawkes backstage >/dev/null 2>&1; then
+  if kubectl get namespace backstage > /dev/null 2>&1 || kubectl get deployment -n fawkes backstage > /dev/null 2>&1; then
     local backstage_ns="backstage"
-    kubectl get namespace backstage >/dev/null 2>&1 || backstage_ns="fawkes"
+    kubectl get namespace backstage > /dev/null 2>&1 || backstage_ns="fawkes"
     echo "🔷 Backstage (Developer Portal)"
     local backstage_host
-    backstage_host=$(kubectl get ingress -n "$backstage_ns" backstage -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    backstage_host=$(kubectl get ingress -n "$backstage_ns" backstage -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo "")
     if [[ -n "$backstage_host" ]]; then
       echo "   External URL: https://$backstage_host"
     fi
@@ -86,10 +85,10 @@ print_access_summary() {
   fi
 
   # SonarQube
-  if kubectl get namespace sonarqube >/dev/null 2>&1; then
+  if kubectl get namespace sonarqube > /dev/null 2>&1; then
     echo "🔷 SonarQube (Code Quality)"
     local sonar_host
-    sonar_host=$(kubectl get ingress -n sonarqube sonarqube -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    sonar_host=$(kubectl get ingress -n sonarqube sonarqube -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo "")
     if [[ -n "$sonar_host" ]]; then
       echo "   External URL: https://$sonar_host"
     fi
@@ -101,12 +100,12 @@ print_access_summary() {
   fi
 
   # Grafana
-  if kubectl get namespace grafana >/dev/null 2>&1 || kubectl get deployment -n fawkes grafana >/dev/null 2>&1; then
+  if kubectl get namespace grafana > /dev/null 2>&1 || kubectl get deployment -n fawkes grafana > /dev/null 2>&1; then
     local grafana_ns="grafana"
-    kubectl get namespace grafana >/dev/null 2>&1 || grafana_ns="fawkes"
+    kubectl get namespace grafana > /dev/null 2>&1 || grafana_ns="fawkes"
     echo "🔷 Grafana (Observability)"
     local grafana_host
-    grafana_host=$(kubectl get ingress -n "$grafana_ns" grafana -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    grafana_host=$(kubectl get ingress -n "$grafana_ns" grafana -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo "")
     if [[ -n "$grafana_host" ]]; then
       echo "   External URL: https://$grafana_host"
     fi
@@ -120,9 +119,9 @@ print_access_summary() {
   fi
 
   # Prometheus
-  if kubectl get namespace prometheus >/dev/null 2>&1 || kubectl get deployment -n fawkes prometheus-server >/dev/null 2>&1; then
+  if kubectl get namespace prometheus > /dev/null 2>&1 || kubectl get deployment -n fawkes prometheus-server > /dev/null 2>&1; then
     local prom_ns="prometheus"
-    kubectl get namespace prometheus >/dev/null 2>&1 || prom_ns="fawkes"
+    kubectl get namespace prometheus > /dev/null 2>&1 || prom_ns="fawkes"
     echo "🔷 Prometheus (Metrics)"
     echo "   Local URL:    http://localhost:9090"
     echo "   Port Forward: kubectl -n $prom_ns port-forward svc/prometheus-server 9090:80"
@@ -130,10 +129,10 @@ print_access_summary() {
   fi
 
   # Mattermost
-  if kubectl get namespace mattermost >/dev/null 2>&1; then
+  if kubectl get namespace mattermost > /dev/null 2>&1; then
     echo "🔷 Mattermost (Team Chat)"
     local mm_host
-    mm_host=$(kubectl get ingress -n mattermost mattermost -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    mm_host=$(kubectl get ingress -n mattermost mattermost -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo "")
     if [[ -n "$mm_host" ]]; then
       echo "   External URL: https://$mm_host"
     fi
@@ -144,10 +143,10 @@ print_access_summary() {
   fi
 
   # Focalboard
-  if kubectl get namespace focalboard >/dev/null 2>&1; then
+  if kubectl get namespace focalboard > /dev/null 2>&1; then
     echo "🔷 Focalboard (Project Management)"
     local fb_host
-    fb_host=$(kubectl get ingress -n focalboard focalboard -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    fb_host=$(kubectl get ingress -n focalboard focalboard -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo "")
     if [[ -n "$fb_host" ]]; then
       echo "   External URL: https://$fb_host"
     fi

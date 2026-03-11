@@ -42,8 +42,8 @@ readonly EXIT_PERMISSION_ERROR=8
 # =============================================================================
 # Global Variables
 # =============================================================================
-SCRIPT_NAME="${SCRIPT_NAME:-$(basename "${BASH_SOURCE[1]:-${BASH_SOURCE[0]}}" 2>/dev/null || echo "unknown")}"
-LOG_LEVEL="${LOG_LEVEL:-INFO}"  # DEBUG, INFO, WARN, ERROR
+SCRIPT_NAME="${SCRIPT_NAME:-$(basename "${BASH_SOURCE[1]:-${BASH_SOURCE[0]}}" 2> /dev/null || echo "unknown")}"
+LOG_LEVEL="${LOG_LEVEL:-INFO}" # DEBUG, INFO, WARN, ERROR
 CLEANUP_FUNCTIONS=()
 ROLLBACK_FUNCTIONS=()
 ERROR_COUNT=0
@@ -97,12 +97,12 @@ log_fatal() {
 error_exit() {
   local message="$1"
   local exit_code="${2:-$EXIT_GENERAL_ERROR}"
-  
+
   log_error "$message"
   log_error "Script: $SCRIPT_NAME"
   log_error "Line: ${BASH_LINENO[0]}"
   log_error "Function: ${FUNCNAME[1]}"
-  
+
   exit "$exit_code"
 }
 
@@ -113,15 +113,15 @@ error_handler() {
   local bash_lineno="$2"
   local last_command="$3"
   local exit_code="$4"
-  
+
   log_error "Command failed with exit code $exit_code"
   log_error "Failed command: $last_command"
   log_error "Line number: $line_no"
   log_error "Function: ${FUNCNAME[2]:-main}"
-  
+
   # Execute rollback functions if any
   execute_rollback_functions
-  
+
   exit "$exit_code"
 }
 
@@ -174,16 +174,16 @@ execute_rollback_functions() {
 # Exit trap handler
 cleanup_trap() {
   local exit_code=$?
-  
+
   # Don't run cleanup on successful exit if already run
   if [[ $exit_code -eq 0 ]]; then
     log_debug "Script completed successfully"
   else
     log_error "Script exited with code $exit_code"
   fi
-  
+
   execute_cleanup_functions
-  
+
   exit "$exit_code"
 }
 
@@ -218,7 +218,7 @@ setup_error_handling() {
   trap error_trap ERR
   trap interrupt_trap INT
   trap terminate_trap TERM
-  
+
   log_debug "Error handling initialized for $SCRIPT_NAME"
 }
 
@@ -231,11 +231,11 @@ setup_error_handling() {
 require_command() {
   local cmd="$1"
   local message="${2:-Command '$cmd' is required but not found}"
-  
+
   if ! command -v "$cmd" &> /dev/null; then
     error_exit "$message" "$EXIT_MISSING_PREREQ"
   fi
-  
+
   log_debug "Required command found: $cmd"
 }
 
@@ -244,11 +244,11 @@ require_command() {
 require_var() {
   local var_name="$1"
   local message="${2:-Required variable '$var_name' is not set}"
-  
+
   if [[ -z "${!var_name:-}" ]]; then
     error_exit "$message" "$EXIT_CONFIG_ERROR"
   fi
-  
+
   log_debug "Required variable set: $var_name=${!var_name}"
 }
 
@@ -257,11 +257,11 @@ require_var() {
 require_file() {
   local file="$1"
   local message="${2:-Required file not found: $file}"
-  
+
   if [[ ! -f "$file" ]]; then
     error_exit "$message" "$EXIT_CONFIG_ERROR"
   fi
-  
+
   log_debug "Required file exists: $file"
 }
 
@@ -270,11 +270,11 @@ require_file() {
 require_directory() {
   local dir="$1"
   local message="${2:-Required directory not found: $dir}"
-  
+
   if [[ ! -d "$dir" ]]; then
     error_exit "$message" "$EXIT_CONFIG_ERROR"
   fi
-  
+
   log_debug "Required directory exists: $dir"
 }
 
@@ -290,24 +290,24 @@ retry_command() {
   shift 2
   local command="$*"
   local attempt=1
-  
+
   while [[ $attempt -le $max_attempts ]]; do
     log_debug "Attempt $attempt/$max_attempts: $command"
-    
+
     if eval "$command"; then
       log_debug "Command succeeded on attempt $attempt"
       return 0
     fi
-    
+
     if [[ $attempt -lt $max_attempts ]]; then
       log_warn "Command failed, retrying in ${delay}s... (attempt $attempt/$max_attempts)"
       sleep "$delay"
-      delay=$((delay * 2))  # Exponential backoff
+      delay=$((delay * 2)) # Exponential backoff
     fi
-    
+
     ((attempt++)) || true
   done
-  
+
   log_error "Command failed after $max_attempts attempts: $command"
   return 1
 }
@@ -340,10 +340,10 @@ show_section() {
 confirm() {
   local message="${1:-Are you sure?}"
   local response
-  
+
   read -r -p "$message (y/N): " response
   case "$response" in
-    [yY][eE][sS]|[yY])
+    [yY][eE][sS] | [yY])
       return 0
       ;;
     *)
