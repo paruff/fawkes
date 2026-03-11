@@ -47,7 +47,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     --help)
-      cat <<EOF
+      cat << EOF
 Usage: $0 [OPTIONS]
 
 Run BATS tests for Bash scripts
@@ -82,13 +82,13 @@ EOF
 done
 
 # Ensure BATS is in PATH
-if ! command -v bats >/dev/null 2>&1; then
+if ! command -v bats > /dev/null 2>&1; then
   echo -e "${YELLOW}⚠️  BATS not found in PATH${NC}"
   echo -e "${BLUE}ℹ️  Installing BATS...${NC}"
   "${SCRIPT_DIR}/install-bats.sh" --prefix "${HOME}/.local"
   export PATH="${HOME}/.local/bin:${PATH}"
-  
-  if ! command -v bats >/dev/null 2>&1; then
+
+  if ! command -v bats > /dev/null 2>&1; then
     echo -e "${RED}❌ Failed to install BATS${NC}"
     exit 1
   fi
@@ -128,7 +128,7 @@ fi
 FAILED=0
 if [[ ${COVERAGE} -eq 1 ]]; then
   # Check if kcov is available
-  if ! command -v kcov >/dev/null 2>&1; then
+  if ! command -v kcov > /dev/null 2>&1; then
     echo -e "${YELLOW}⚠️  kcov not found, coverage reporting disabled${NC}"
     echo -e "${BLUE}ℹ️  Install kcov: sudo apt-get install kcov (Ubuntu) or brew install kcov (macOS)${NC}"
     COVERAGE=0
@@ -137,14 +137,14 @@ fi
 
 if [[ ${COVERAGE} -eq 1 ]]; then
   echo -e "${BLUE}📊 Running tests with coverage...${NC}"
-  
+
   # Run with kcov
   for test_file in "${TEST_FILES[@]}"; do
     test_name=$(basename "${test_file}" .bats)
     kcov --exclude-pattern=/usr,/tmp "${COVERAGE_DIR}/${test_name}" \
       bats "${BATS_OPTS[@]}" "${test_file}" || FAILED=1
   done
-  
+
   echo ""
   echo -e "${GREEN}📊 Coverage report generated at: ${COVERAGE_DIR}/index.html${NC}"
 else

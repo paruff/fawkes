@@ -80,7 +80,7 @@ skip_test() {
 }
 
 usage() {
-  cat <<EOF
+  cat << EOF
 Usage: $(basename "$0") [OPTIONS]
 
 Validate AT-E0-001: Code Quality Standards
@@ -104,21 +104,21 @@ EOF
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
   case $1 in
-  --verbose)
-    VERBOSE="true"
-    shift
-    ;;
-  --report)
-    REPORT_FILE="$2"
-    shift 2
-    ;;
-  -h | --help)
-    usage
-    ;;
-  *)
-    log_error "Unknown option: $1"
-    usage
-    ;;
+    --verbose)
+      VERBOSE="true"
+      shift
+      ;;
+    --report)
+      REPORT_FILE="$2"
+      shift 2
+      ;;
+    -h | --help)
+      usage
+      ;;
+    *)
+      log_error "Unknown option: $1"
+      usage
+      ;;
   esac
 done
 
@@ -144,16 +144,16 @@ fi
 # Test 1.2: Verify linters are configured
 log_info "Test 1.2: Verify linters are configured in pre-commit"
 EXPECTED_LINTERS=(
-  "black"      # Python formatter
-  "flake8"     # Python linter
-  "yamllint"   # YAML linter
-  "markdownlint" # Markdown linter
-  "prettier"   # JSON/YAML/Markdown formatter
-  "shellcheck" # Shell script linter
-  "shfmt"      # Shell script formatter
+  "black"         # Python formatter
+  "flake8"        # Python linter
+  "yamllint"      # YAML linter
+  "markdownlint"  # Markdown linter
+  "prettier"      # JSON/YAML/Markdown formatter
+  "shellcheck"    # Shell script linter
+  "shfmt"         # Shell script formatter
   "golangci-lint" # Go linter
-  "terraform"  # Terraform tools
-  "gitleaks"   # Secrets detection
+  "terraform"     # Terraform tools
+  "gitleaks"      # Secrets detection
 )
 
 MISSING_LINTERS=()
@@ -174,7 +174,7 @@ fi
 
 # Test 1.3: Check if pre-commit is installed
 log_info "Test 1.3: Check pre-commit installation"
-if command -v pre-commit &>/dev/null; then
+if command -v pre-commit &> /dev/null; then
   VERSION=$(pre-commit --version)
   pass_test "Pre-commit is installed: $VERSION"
 else
@@ -257,24 +257,24 @@ fi
 
 # Test 2.4: Test pre-commit on a sample file (if installed)
 log_info "Test 2.4: Test pre-commit validation (dry-run)"
-if command -v pre-commit &>/dev/null; then
+if command -v pre-commit &> /dev/null; then
   # Create a temporary test file
   TEMP_FILE=$(mktemp)
-  echo "# Test file for pre-commit" >"$TEMP_FILE"
-  
+  echo "# Test file for pre-commit" > "$TEMP_FILE"
+
   # Try running pre-commit on it
-  if pre-commit run --files "$TEMP_FILE" &>/dev/null; then
+  if pre-commit run --files "$TEMP_FILE" &> /dev/null; then
     pass_test "Pre-commit executed successfully"
   else
     # Check if failure is due to missing hooks or actual errors
-    if pre-commit run --version &>/dev/null; then
+    if pre-commit run --version &> /dev/null; then
       log_warning "Pre-commit execution had issues (may need hook installation)"
       pass_test "Pre-commit is executable (hooks may need setup)"
     else
       fail_test "Pre-commit cannot execute properly"
     fi
   fi
-  
+
   rm -f "$TEMP_FILE"
 else
   skip_test "Pre-commit not installed, cannot test execution"
@@ -320,7 +320,7 @@ if [[ -f "$REPO_ROOT/.github/workflows/code-quality.yml" ]]; then
     "go-quality"
     "shell-quality"
   )
-  
+
   MISSING_JOBS=()
   for job in "${EXPECTED_JOBS[@]}"; do
     if grep -q "$job:" "$REPO_ROOT/.github/workflows/code-quality.yml"; then
@@ -330,7 +330,7 @@ if [[ -f "$REPO_ROOT/.github/workflows/code-quality.yml" ]]; then
       [[ "$VERBOSE" == "true" ]] && log_warning "Job missing: $job"
     fi
   done
-  
+
   if [[ ${#MISSING_JOBS[@]} -eq 0 ]]; then
     pass_test "All quality check jobs are configured (${#EXPECTED_JOBS[@]} jobs)"
   else
@@ -375,9 +375,9 @@ log_section "Acceptance Criteria 4: Code Formatted"
 # Test 4.1: Verify formatters in pre-commit
 log_info "Test 4.1: Verify formatters are configured"
 EXPECTED_FORMATTERS=(
-  "black"      # Python
-  "prettier"   # JSON/YAML/Markdown
-  "shfmt"      # Shell
+  "black"         # Python
+  "prettier"      # JSON/YAML/Markdown
+  "shfmt"         # Shell
   "terraform_fmt" # Terraform
 )
 
@@ -402,7 +402,7 @@ log_info "Test 4.2: Verify Python dev requirements"
 if [[ -f "$REPO_ROOT/requirements-dev.txt" ]]; then
   REQUIRED_PACKAGES=("black" "flake8" "mypy" "pylint" "pytest" "pytest-cov")
   MISSING_PACKAGES=()
-  
+
   for pkg in "${REQUIRED_PACKAGES[@]}"; do
     if grep -q "^$pkg" "$REPO_ROOT/requirements-dev.txt"; then
       [[ "$VERBOSE" == "true" ]] && log_success "Package found: $pkg"
@@ -411,7 +411,7 @@ if [[ -f "$REPO_ROOT/requirements-dev.txt" ]]; then
       [[ "$VERBOSE" == "true" ]] && log_warning "Package missing: $pkg"
     fi
   done
-  
+
   if [[ ${#MISSING_PACKAGES[@]} -eq 0 ]]; then
     pass_test "All Python dev packages are listed (${#REQUIRED_PACKAGES[@]} packages)"
   else
@@ -455,7 +455,7 @@ log_section "Acceptance Criteria 5: Documentation Complete"
 log_info "Test 5.1: Verify CODING_STANDARDS.md exists"
 if [[ -f "$REPO_ROOT/CODING_STANDARDS.md" ]]; then
   # Check minimum word count (should be comprehensive)
-  WORD_COUNT=$(wc -w <"$REPO_ROOT/CODING_STANDARDS.md")
+  WORD_COUNT=$(wc -w < "$REPO_ROOT/CODING_STANDARDS.md")
   if [[ $WORD_COUNT -gt 2000 ]]; then
     pass_test "CODING_STANDARDS.md exists with $WORD_COUNT words (comprehensive)"
   else
@@ -481,7 +481,7 @@ if [[ -f "$REPO_ROOT/CODING_STANDARDS.md" ]]; then
     "CI/CD"
     "FAQ"
   )
-  
+
   MISSING_SECTIONS=()
   for section in "${REQUIRED_SECTIONS[@]}"; do
     if grep -iq "$section" "$REPO_ROOT/CODING_STANDARDS.md"; then
@@ -491,7 +491,7 @@ if [[ -f "$REPO_ROOT/CODING_STANDARDS.md" ]]; then
       [[ "$VERBOSE" == "true" ]] && log_warning "Section missing: $section"
     fi
   done
-  
+
   if [[ ${#MISSING_SECTIONS[@]} -eq 0 ]]; then
     pass_test "All required sections present in CODING_STANDARDS.md (${#REQUIRED_SECTIONS[@]} sections)"
   else
@@ -566,7 +566,7 @@ if [[ -f "$REPO_ROOT/Makefile" ]]; then
       [[ "$VERBOSE" == "true" ]] && log_error "Target missing: $target"
     fi
   done
-  
+
   if [[ ${#MISSING_TARGETS[@]} -eq 0 ]]; then
     pass_test "All required Makefile targets exist (${#REQUIRED_TARGETS[@]} targets)"
   else
@@ -627,7 +627,7 @@ echo ""
 # Calculate pass percentage with better precision
 if [[ $TOTAL_TESTS -gt 0 ]]; then
   # Use bc for floating point if available, otherwise use integer math
-  if command -v bc &>/dev/null; then
+  if command -v bc &> /dev/null; then
     PASS_PERCENTAGE=$(echo "scale=1; ($PASSED_TESTS * 100) / $TOTAL_TESTS" | bc)
   else
     PASS_PERCENTAGE=$((PASSED_TESTS * 100 / TOTAL_TESTS))
@@ -639,9 +639,9 @@ fi
 # Generate JSON report if requested
 if [[ -n "$REPORT_FILE" ]]; then
   log_info "Generating JSON report: $REPORT_FILE"
-  
+
   TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-  
+
   # Calculate acceptance criteria status based on test results
   # AC1: All linters passing (tests 1-4)
   AC1_STATUS=$([ $FAILED_TESTS -eq 0 ] && echo "true" || echo "false")
@@ -655,15 +655,15 @@ if [[ -n "$REPORT_FILE" ]]; then
   AC5_STATUS="true"
   # AC6: Setup tested (tests 21-24) - passes if Makefile targets exist
   AC6_STATUS="true"
-  
+
   # Calculate pass percentage with precision
-  if command -v bc &>/dev/null; then
+  if command -v bc &> /dev/null; then
     PASS_PCT=$(echo "scale=1; ($PASSED_TESTS * 100) / $TOTAL_TESTS" | bc)
   else
     PASS_PCT=$PASS_PERCENTAGE
   fi
-  
-  cat >"$REPORT_FILE" <<EOF
+
+  cat > "$REPORT_FILE" << EOF
 {
   "test_id": "AT-E0-001",
   "test_name": "Code Quality Standards Validation",
@@ -687,7 +687,7 @@ if [[ -n "$REPORT_FILE" ]]; then
   "status": "$([ $FAILED_TESTS -eq 0 ] && echo "PASSED" || echo "FAILED")"
 }
 EOF
-  
+
   log_success "Report generated: $REPORT_FILE"
 fi
 

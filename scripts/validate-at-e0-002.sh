@@ -78,7 +78,7 @@ skip_test() {
 }
 
 usage() {
-  cat <<EOF
+  cat << EOF
 Usage: $(basename "$0") [OPTIONS]
 
 Validate AT-E0-002: Script Refactoring
@@ -102,21 +102,21 @@ EOF
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
   case $1 in
-  --verbose)
-    VERBOSE="true"
-    shift
-    ;;
-  --report)
-    REPORT_FILE="$2"
-    shift 2
-    ;;
-  -h | --help)
-    usage
-    ;;
-  *)
-    log_error "Unknown option: $1"
-    usage
-    ;;
+    --verbose)
+      VERBOSE="true"
+      shift
+      ;;
+    --report)
+      REPORT_FILE="$2"
+      shift 2
+      ;;
+    -h | --help)
+      usage
+      ;;
+    *)
+      log_error "Unknown option: $1"
+      usage
+      ;;
   esac
 done
 
@@ -192,7 +192,7 @@ if [[ -f "$REPO_ROOT/scripts/ignite.sh" ]]; then
       [[ "$VERBOSE" == "true" ]] && log_success "Sources: $module"
     fi
   done
-  
+
   if [[ $SOURCED_MODULES -ge 5 ]]; then
     pass_test "ignite.sh sources $SOURCED_MODULES library modules"
   else
@@ -258,19 +258,19 @@ if [[ -f "$REPO_ROOT/scripts/lib/error_handling.sh" ]]; then
     "error_handler"
     "cleanup_trap"
   )
-  
+
   MISSING_FUNCTIONS=()
   for func in "${ERROR_FUNCTIONS[@]}"; do
-    if grep -q "^[[:space:]]*$func()" "$REPO_ROOT/scripts/lib/error_handling.sh" || \
-       grep -q "^$func()" "$REPO_ROOT/scripts/lib/error_handling.sh" || \
-       grep -q "^[[:space:]]*$func()" "$REPO_ROOT/scripts/lib/common.sh"; then
+    if grep -q "^[[:space:]]*$func()" "$REPO_ROOT/scripts/lib/error_handling.sh" \
+      || grep -q "^$func()" "$REPO_ROOT/scripts/lib/error_handling.sh" \
+      || grep -q "^[[:space:]]*$func()" "$REPO_ROOT/scripts/lib/common.sh"; then
       [[ "$VERBOSE" == "true" ]] && log_success "Function exists: $func"
     else
       MISSING_FUNCTIONS+=("$func")
       [[ "$VERBOSE" == "true" ]] && log_warning "Function missing: $func"
     fi
   done
-  
+
   if [[ ${#MISSING_FUNCTIONS[@]} -eq 0 ]]; then
     pass_test "All error handling functions exist (${#ERROR_FUNCTIONS[@]} functions)"
   else
@@ -388,11 +388,11 @@ fi
 log_info "Test 3.4: Run BATS tests"
 if [[ -f "$REPO_ROOT/tests/bats/run-tests.sh" ]]; then
   # Ensure BATS is in PATH
-  if command -v bats >/dev/null 2>&1 || [[ -x "${HOME}/.local/bin/bats" ]]; then
+  if command -v bats > /dev/null 2>&1 || [[ -x "${HOME}/.local/bin/bats" ]]; then
     export PATH="${HOME}/.local/bin:${PATH}"
-    
+
     log_info "Running BATS tests..."
-    if cd "$REPO_ROOT" && ./tests/bats/run-tests.sh >/tmp/bats-output.log 2>&1; then
+    if cd "$REPO_ROOT" && ./tests/bats/run-tests.sh > /tmp/bats-output.log 2>&1; then
       TEST_RESULTS=$(grep -E "^[0-9]+\.\.[0-9]+" /tmp/bats-output.log || echo "1..0")
       TOTAL_BATS=$(echo "$TEST_RESULTS" | cut -d'.' -f3)
       PASSED_BATS=$(grep -c "^ok " /tmp/bats-output.log || echo 0)
@@ -417,7 +417,7 @@ log_info "Test 3.5: Verify test coverage for library modules"
 if [[ -d "$REPO_ROOT/tests/bats/unit" ]]; then
   CORE_MODULES=("common" "validation" "flags" "prereqs")
   TESTED_MODULES=0
-  
+
   for module in "${CORE_MODULES[@]}"; do
     if [[ -f "$REPO_ROOT/tests/bats/unit/test_${module}.bats" ]]; then
       ((TESTED_MODULES++)) || true
@@ -426,7 +426,7 @@ if [[ -d "$REPO_ROOT/tests/bats/unit" ]]; then
       [[ "$VERBOSE" == "true" ]] && log_warning "No tests for: $module"
     fi
   done
-  
+
   if [[ $TESTED_MODULES -ge 2 ]]; then
     pass_test "Core modules have test coverage ($TESTED_MODULES/${#CORE_MODULES[@]} modules)"
   else
@@ -460,11 +460,11 @@ log_info "Test 4.2: Estimate test coverage"
 if [[ -d "$REPO_ROOT/tests/bats/unit" ]]; then
   TOTAL_TESTS=$(find "$REPO_ROOT/tests/bats/unit" -name "*.bats" -type f -exec grep -h "^@test" {} \; | wc -l)
   TOTAL_FUNCTIONS=$(find "$REPO_ROOT/scripts/lib" -name "*.sh" -type f -exec grep -h "^[[:space:]]*[a-z_]*() {" {} \; | wc -l)
-  
+
   if [[ $TOTAL_FUNCTIONS -gt 0 ]]; then
     # Rough estimate: if we have tests for major functions
     COVERAGE_ESTIMATE=$((TOTAL_TESTS * 100 / TOTAL_FUNCTIONS))
-    
+
     if [[ $COVERAGE_ESTIMATE -ge 80 ]]; then
       pass_test "Estimated coverage: ${COVERAGE_ESTIMATE}% ($TOTAL_TESTS tests / $TOTAL_FUNCTIONS functions)"
     elif [[ $COVERAGE_ESTIMATE -ge 60 ]]; then
@@ -514,8 +514,8 @@ fi
 # Test 5.2: Verify ignite.sh has help/usage
 log_info "Test 5.2: Verify ignite.sh has usage documentation"
 if [[ -f "$REPO_ROOT/scripts/ignite.sh" ]]; then
-  if grep -q "usage\|--help" "$REPO_ROOT/scripts/ignite.sh" || \
-     grep -q "usage\|--help" "$REPO_ROOT/scripts/lib/flags.sh"; then
+  if grep -q "usage\|--help" "$REPO_ROOT/scripts/ignite.sh" \
+    || grep -q "usage\|--help" "$REPO_ROOT/scripts/lib/flags.sh"; then
     pass_test "ignite.sh has usage documentation"
   else
     fail_test "ignite.sh missing usage documentation"
@@ -533,18 +533,18 @@ if [[ -f "$REPO_ROOT/scripts/lib/flags.sh" ]]; then
     "--verbose"
     "--provider"
   )
-  
+
   MISSING_FLAGS=()
   for flag in "${COMMON_FLAGS[@]}"; do
-    if grep -q -- "$flag" "$REPO_ROOT/scripts/lib/flags.sh" 2>/dev/null || \
-       grep -q -- "$flag" "$REPO_ROOT/scripts/ignite.sh" 2>/dev/null; then
+    if grep -q -- "$flag" "$REPO_ROOT/scripts/lib/flags.sh" 2> /dev/null \
+      || grep -q -- "$flag" "$REPO_ROOT/scripts/ignite.sh" 2> /dev/null; then
       [[ "$VERBOSE" == "true" ]] && log_success "Flag supported: $flag"
     else
       MISSING_FLAGS+=("$flag")
       [[ "$VERBOSE" == "true" ]] && log_warning "Flag missing: $flag"
     fi
   done
-  
+
   if [[ ${#MISSING_FLAGS[@]} -eq 0 ]]; then
     pass_test "Common flags are supported (${#COMMON_FLAGS[@]} flags)"
   else
@@ -565,18 +565,18 @@ if [[ -f "$REPO_ROOT/scripts/lib/common.sh" ]]; then
     "state_is_done"
     "run_step"
   )
-  
+
   MISSING_STATE=()
   for func in "${STATE_FUNCTIONS[@]}"; do
-    if grep -q "^[[:space:]]*$func()" "$REPO_ROOT/scripts/lib/common.sh" || \
-       grep -q "^$func()" "$REPO_ROOT/scripts/lib/common.sh"; then
+    if grep -q "^[[:space:]]*$func()" "$REPO_ROOT/scripts/lib/common.sh" \
+      || grep -q "^$func()" "$REPO_ROOT/scripts/lib/common.sh"; then
       [[ "$VERBOSE" == "true" ]] && log_success "State function exists: $func"
     else
       MISSING_STATE+=("$func")
       [[ "$VERBOSE" == "true" ]] && log_warning "State function missing: $func"
     fi
   done
-  
+
   if [[ ${#MISSING_STATE[@]} -eq 0 ]]; then
     pass_test "State management functions exist (${#STATE_FUNCTIONS[@]} functions)"
   else
@@ -613,11 +613,11 @@ if [[ -d "$REPO_ROOT/scripts/lib" ]]; then
   # Count functions with preceding comments (docstrings)
   TOTAL_LIB_FUNCTIONS=$(find "$REPO_ROOT/scripts/lib" -name "*.sh" -type f \
     -exec grep -h "^[[:space:]]*[a-z_]*() {" {} \; | wc -l)
-  
+
   # Count comment blocks (rough estimate of documented functions)
   COMMENT_BLOCKS=$(find "$REPO_ROOT/scripts/lib" -name "*.sh" -type f \
     -exec grep -B1 "^[[:space:]]*[a-z_]*() {" {} \; | grep -c "#" || echo 0)
-  
+
   if [[ $COMMENT_BLOCKS -gt $((TOTAL_LIB_FUNCTIONS / 2)) ]]; then
     pass_test "Library functions have documentation (>50% documented)"
   else
@@ -665,8 +665,8 @@ fi
 # Test 6.5: Verify Makefile targets are documented
 log_info "Test 6.5: Verify Makefile has AT-E0-002 target"
 if [[ -f "$REPO_ROOT/Makefile" ]]; then
-  if grep -q "validate-at-e0-002:" "$REPO_ROOT/Makefile" || \
-     grep -q "test-bats:" "$REPO_ROOT/Makefile"; then
+  if grep -q "validate-at-e0-002:" "$REPO_ROOT/Makefile" \
+    || grep -q "test-bats:" "$REPO_ROOT/Makefile"; then
     pass_test "Makefile has script validation targets"
   else
     log_warning "Makefile should have validate-at-e0-002 target"
@@ -690,7 +690,7 @@ echo ""
 
 # Calculate pass percentage
 if [[ $TOTAL_TESTS -gt 0 ]]; then
-  if command -v bc &>/dev/null; then
+  if command -v bc &> /dev/null; then
     PASS_PERCENTAGE=$(echo "scale=1; ($PASSED_TESTS * 100) / $TOTAL_TESTS" | bc)
   else
     PASS_PERCENTAGE=$((PASSED_TESTS * 100 / TOTAL_TESTS))
@@ -702,16 +702,16 @@ fi
 # Generate JSON report if requested
 if [[ -n "$REPORT_FILE" ]]; then
   log_info "Generating JSON report: $REPORT_FILE"
-  
+
   TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-  
+
   # Calculate pass percentage with precision
-  if command -v bc &>/dev/null; then
+  if command -v bc &> /dev/null; then
     PASS_PCT=$(echo "scale=1; ($PASSED_TESTS * 100) / $TOTAL_TESTS" | bc)
   else
     PASS_PCT=$PASS_PERCENTAGE
   fi
-  
+
   # Determine AC status based on tests
   AC1_MODULAR=$([ $FAILED_TESTS -lt 5 ] && echo "true" || echo "false")
   AC2_ERROR_HANDLING="true"
@@ -719,8 +719,8 @@ if [[ -n "$REPORT_FILE" ]]; then
   AC4_COVERAGE="true"
   AC5_NO_REGRESSIONS="true"
   AC6_DOCS="true"
-  
-  cat >"$REPORT_FILE" <<EOF
+
+  cat > "$REPORT_FILE" << EOF
 {
   "test_id": "AT-E0-002",
   "test_name": "Script Refactoring Validation",
@@ -742,15 +742,15 @@ if [[ -n "$REPORT_FILE" ]]; then
     "docs_complete": $AC6_DOCS
   },
   "metrics": {
-    "ignite_lines": $(wc -l < "$REPO_ROOT/scripts/ignite.sh" 2>/dev/null || echo 0),
-    "library_modules": $(find "$REPO_ROOT/scripts/lib" -name "*.sh" -type f 2>/dev/null | wc -l),
-    "bats_test_files": $(find "$REPO_ROOT/tests/bats" -name "*.bats" -type f 2>/dev/null | wc -l),
-    "total_bats_tests": $(find "$REPO_ROOT/tests/bats/unit" -name "*.bats" -type f -exec grep -h "^@test" {} \; 2>/dev/null | wc -l)
+    "ignite_lines": $(wc -l < "$REPO_ROOT/scripts/ignite.sh" 2> /dev/null || echo 0),
+    "library_modules": $(find "$REPO_ROOT/scripts/lib" -name "*.sh" -type f 2> /dev/null | wc -l),
+    "bats_test_files": $(find "$REPO_ROOT/tests/bats" -name "*.bats" -type f 2> /dev/null | wc -l),
+    "total_bats_tests": $(find "$REPO_ROOT/tests/bats/unit" -name "*.bats" -type f -exec grep -h "^@test" {} \; 2> /dev/null | wc -l)
   },
   "status": "$([ $FAILED_TESTS -eq 0 ] && echo "PASSED" || echo "FAILED")"
 }
 EOF
-  
+
   log_success "Report generated: $REPORT_FILE"
 fi
 

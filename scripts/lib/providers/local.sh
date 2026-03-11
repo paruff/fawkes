@@ -18,7 +18,6 @@ source "$COMMON_LIB"
 # Purpose: Local cluster provisioning (minikube, docker-desktop)
 # =============================================================================
 
-
 compute_minikube_resources() {
   local default_mem=8192
   local default_cpus=4
@@ -26,9 +25,9 @@ compute_minikube_resources() {
   local cpus="${MINIKUBE_CPUS:-$default_cpus}"
 
   if [[ -z "$mem_mb" ]]; then
-    if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+    if command -v docker > /dev/null 2>&1 && docker info > /dev/null 2>&1; then
       local total_line total_val
-      total_line=$(docker info 2>/dev/null | awk -F': ' '/Total Memory/ {print $2; exit}')
+      total_line=$(docker info 2> /dev/null | awk -F': ' '/Total Memory/ {print $2; exit}')
       if [[ -n "$total_line" ]]; then
         if [[ "$total_line" =~ ^([0-9]+\.[0-9]+|[0-9]+)GiB$ ]]; then
           total_val=${BASH_REMATCH[1]}
@@ -78,26 +77,26 @@ choose_minikube_driver() {
   fi
   local os="$(uname -s)"
   if [[ "$os" == "Darwin" ]]; then
-    if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+    if command -v docker > /dev/null 2>&1 && docker info > /dev/null 2>&1; then
       echo "docker"
       return 0
     fi
-    if minikube start --help 2>/dev/null | grep -q "vfkit"; then
+    if minikube start --help 2> /dev/null | grep -q "vfkit"; then
       echo "vfkit"
       return 0
     fi
-    if command -v qemu-system-x86_64 >/dev/null 2>&1 || command -v qemu-system-aarch64 >/dev/null 2>&1; then
+    if command -v qemu-system-x86_64 > /dev/null 2>&1 || command -v qemu-system-aarch64 > /dev/null 2>&1; then
       echo "qemu"
       return 0
     fi
     echo "docker"
     return 0
   else
-    if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+    if command -v docker > /dev/null 2>&1 && docker info > /dev/null 2>&1; then
       echo "docker"
       return 0
     fi
-    if command -v qemu-system-x86_64 >/dev/null 2>&1; then
+    if command -v qemu-system-x86_64 > /dev/null 2>&1; then
       echo "qemu"
       return 0
     fi
@@ -108,7 +107,7 @@ choose_minikube_driver() {
 
 use_first_reachable_local_context() {
   local contexts
-  contexts=$(kubectl config get-contexts -o name 2>/dev/null || true)
+  contexts=$(kubectl config get-contexts -o name 2> /dev/null || true)
   if [[ -z "$contexts" ]]; then return 1; fi
   local -a candidates=()
   if [[ ${PREFER_MINIKUBE:-0} -eq 1 ]]; then
@@ -126,12 +125,12 @@ use_first_reachable_local_context() {
 
   local ctx
   for ctx in "${candidates[@]}"; do
-    if kubectl --context "$ctx" cluster-info >/dev/null 2>&1; then
+    if kubectl --context "$ctx" cluster-info > /dev/null 2>&1; then
       if [[ ${DRY_RUN:-0} -eq 1 ]]; then
         echo "[DRY-RUN] Would use local Kubernetes context '$ctx'"
         return 0
       fi
-      kubectl config use-context "$ctx" >/dev/null 2>&1 || true
+      kubectl config use-context "$ctx" > /dev/null 2>&1 || true
       echo "Using local Kubernetes context '$ctx'."
       return 0
     fi
@@ -142,13 +141,13 @@ use_first_reachable_local_context() {
 driver_extra_args() {
   local driver="$1"
   local -a args=()
-  if minikube start --help 2>/dev/null | grep -q -- "--arch"; then
+  if minikube start --help 2> /dev/null | grep -q -- "--arch"; then
     local arch
     arch=$(detect_minikube_arch)
     args+=("--arch=${arch}")
   fi
   if [[ "$driver" == "qemu" ]]; then
-    if command -v socket_vmnet >/dev/null 2>&1; then
+    if command -v socket_vmnet > /dev/null 2>&1; then
       args+=("--network=socket_vmnet")
     else
       echo "[WARN] QEMU running without socket_vmnet; minikube service/tunnel may not work." >&2
@@ -164,7 +163,7 @@ provision_local_cluster() {
     return 0
   fi
 
-  if ! command -v minikube >/dev/null 2>&1; then
+  if ! command -v minikube > /dev/null 2>&1; then
     error_exit "minikube not installed and Docker Desktop K8s not reachable; install minikube or enable Docker Desktop Kubernetes."
   fi
   echo "Provisioning local cluster via minikube..."
@@ -174,15 +173,15 @@ provision_local_cluster() {
   fi
   local DRIVER
   DRIVER="$(choose_minikube_driver)"
-  if command -v docker >/dev/null 2>&1 && ! docker info >/dev/null 2>&1 && [[ "$(uname -s)" == "Darwin" ]]; then
+  if command -v docker > /dev/null 2>&1 && ! docker info > /dev/null 2>&1 && [[ "$(uname -s)" == "Darwin" ]]; then
     echo "Docker CLI found but daemon is not running. Attempting to start Docker Desktop..."
     open -a Docker || true
     echo "Waiting for Docker engine to become ready (up to 90s)..."
     local end=$((SECONDS + 90))
-    until docker info >/dev/null 2>&1 || [[ ${SECONDS} -ge ${end} ]]; do sleep 3; done
-    if docker info >/dev/null 2>&1; then echo "Docker engine is ready."; else echo "Docker engine not ready; will try other drivers."; fi
+    until docker info > /dev/null 2>&1 || [[ ${SECONDS} -ge ${end} ]]; do sleep 3; done
+    if docker info > /dev/null 2>&1; then echo "Docker engine is ready."; else echo "Docker engine not ready; will try other drivers."; fi
   fi
-  if [[ "$DRIVER" == "docker" ]] && { ! command -v docker >/dev/null 2>&1 || ! docker info >/dev/null 2>&1; }; then
+  if [[ "$DRIVER" == "docker" ]] && { ! command -v docker > /dev/null 2>&1 || ! docker info > /dev/null 2>&1; }; then
     echo "Docker driver selected but daemon not running; attempting anyway."
   fi
   local MEM CPUS DISK EXTRA_ARGS

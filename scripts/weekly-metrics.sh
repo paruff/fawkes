@@ -42,9 +42,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 METRICS_FILE="${REPO_ROOT}/docs/METRICS.md"
 TODAY="$(date -u +%Y-%m-%d)"
-WEEK_AGO="$(date -u -d '7 days ago' +%Y-%m-%d 2>/dev/null \
-           || date -u -v-7d +%Y-%m-%d 2>/dev/null \
-           || true)"
+WEEK_AGO="$(date -u -d '7 days ago' +%Y-%m-%d 2> /dev/null \
+  || date -u -v-7d +%Y-%m-%d 2> /dev/null \
+  || true)"
 if [[ -z "${WEEK_AGO}" ]]; then
   echo "ERROR: Could not compute date 7 days ago. Install GNU coreutils or ensure BSD date is available." >&2
   exit 3
@@ -63,15 +63,15 @@ usage() {
 # ---------------------------------------------------------------------------
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -u|--devlake-url)
+    -u | --devlake-url)
       DEVLAKE_URL="$2"
       shift 2
       ;;
-    -d|--dry-run)
+    -d | --dry-run)
       DRY_RUN=true
       shift
       ;;
-    -h|--help)
+    -h | --help)
       usage
       ;;
     *)
@@ -88,7 +88,7 @@ log() { echo -e "${BOLD}[weekly-metrics]${NC} $*"; }
 err() { echo -e "${RED}[weekly-metrics] ERROR:${NC} $*" >&2; }
 
 require_cmd() {
-  if ! command -v "$1" &>/dev/null; then
+  if ! command -v "$1" &> /dev/null; then
     err "Required command not found: $1"
     exit 3
   fi
@@ -117,10 +117,10 @@ HTTP_RESPONSE=$(curl \
   --write-out "\n%{http_code}" \
   "${DEVLAKE_API}?from=${WEEK_AGO}&to=${TODAY}" \
   2>&1) || {
-    err "Failed to reach DevLake API at ${DEVLAKE_API}"
-    err "Is DevLake running? Check: kubectl get pods -n fawkes-devlake"
-    exit 3
-  }
+  err "Failed to reach DevLake API at ${DEVLAKE_API}"
+  err "Is DevLake running? Check: kubectl get pods -n fawkes-devlake"
+  exit 3
+}
 
 HTTP_BODY=$(echo "${HTTP_RESPONSE}" | head -n -1)
 HTTP_CODE=$(echo "${HTTP_RESPONSE}" | tail -n 1)
@@ -198,13 +198,13 @@ else
   # The pattern anchors to the start of the table row to avoid unintended matches.
   if grep -qE '^\| TBD \|' "${METRICS_FILE}"; then
     # Replace the placeholder row (anchored to line start)
-    sed -i "s|^| TBD |.*|${NEW_ROW}|" "${METRICS_FILE}" 2>/dev/null || \
-    sed -i '' "s/^| TBD |.*/${NEW_ROW}/" "${METRICS_FILE}"
+    sed -i "s|^| TBD |.*|${NEW_ROW}|" "${METRICS_FILE}" 2> /dev/null \
+      || sed -i '' "s/^| TBD |.*/${NEW_ROW}/" "${METRICS_FILE}"
   else
     # Append a new row before the closing italic line (*This table is updated…*)
     ANCHOR='*This table is updated automatically'
-    sed -i "/${ANCHOR}/i ${NEW_ROW}" "${METRICS_FILE}" 2>/dev/null || \
-    sed -i '' "/${ANCHOR}/i\\
+    sed -i "/${ANCHOR}/i ${NEW_ROW}" "${METRICS_FILE}" 2> /dev/null \
+      || sed -i '' "/${ANCHOR}/i\\
 ${NEW_ROW}" "${METRICS_FILE}"
   fi
 
