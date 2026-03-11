@@ -40,6 +40,7 @@ permissions:
 jobs:
   security-scan:
     name: Security Scanning
+    timeout-minutes: 20
     uses: ./.github/workflows/reusable-security-scanning.yml
     with:
       scan-type: 'all'
@@ -53,6 +54,7 @@ jobs:
   policy-enforcement:
     name: Policy Enforcement
     needs: security-scan
+    timeout-minutes: 20
     uses: ./.github/workflows/reusable-policy-enforcement.yml
     with:
       policy-path: '.security-plane/policies'
@@ -67,6 +69,7 @@ jobs:
     if: >-
       github.event.inputs.enable-sbom == 'true' &&
       github.event.inputs.image-name != ''
+    timeout-minutes: 20
     uses: ./.github/workflows/reusable-sbom-generation.yml
     with:
       image-name: ${{ github.event.inputs.image-name || github.repository }}
@@ -83,6 +86,7 @@ jobs:
       github.event.inputs.enable-signing == 'true' &&
       github.event.inputs.image-name != ''
     needs: [security-scan, policy-enforcement]
+    timeout-minutes: 20
     uses: ./.github/workflows/reusable-image-signing.yml
     with:
       image-name: ${{ github.event.inputs.image-name || github.repository }}
@@ -100,6 +104,7 @@ jobs:
   security-summary:
     name: Security Summary
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: [security-scan, policy-enforcement, generate-sbom, sign-image]
     if: always()
 
