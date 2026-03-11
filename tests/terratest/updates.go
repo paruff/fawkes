@@ -1,4 +1,4 @@
-package terratest
+package test
 
 import "testing"
 
