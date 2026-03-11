@@ -70,10 +70,14 @@ lint: ## Run all linters
 
 format: ## Apply all code formatters (Black, shfmt, prettier, terraform fmt)
 	@echo "🎨 Formatting Python with Black..."
-	@black .
+	@if command -v black > /dev/null 2>&1; then \
+		black .; \
+	else \
+		echo "⚠️  black not installed, skipping Python formatting"; \
+	fi
 	@echo "🎨 Formatting shell scripts with shfmt..."
 	@if command -v shfmt > /dev/null 2>&1; then \
-		find scripts tests -name "*.sh" | grep -v $(SHFMT_EXCLUDE_PATTERN) | xargs -r shfmt -i 2 -ci -bn -sr -w; \
+		find . -name "*.sh" -not -path "./.git/*" | grep -vF '/$(SHFMT_EXCLUDE_PATTERN)' | xargs -r shfmt -i 2 -ci -bn -sr -w; \
 	else \
 		echo "⚠️  shfmt not installed, skipping shell formatting"; \
 	fi
@@ -93,10 +97,14 @@ format: ## Apply all code formatters (Black, shfmt, prettier, terraform fmt)
 
 format-check: ## Check formatting without applying changes (fails if any files need formatting)
 	@echo "🔍 Checking Python formatting with Black..."
-	@black --check --diff .
+	@if command -v black > /dev/null 2>&1; then \
+		black --check --diff .; \
+	else \
+		echo "⚠️  black not installed, skipping Python format check (install black to enforce)"; \
+	fi
 	@echo "🔍 Checking shell script formatting with shfmt..."
 	@if command -v shfmt > /dev/null 2>&1; then \
-		find scripts tests -name "*.sh" | grep -v $(SHFMT_EXCLUDE_PATTERN) | xargs -r shfmt -i 2 -ci -bn -sr -d; \
+		find . -name "*.sh" -not -path "./.git/*" | grep -vF '/$(SHFMT_EXCLUDE_PATTERN)' | xargs -r shfmt -i 2 -ci -bn -sr -d; \
 	else \
 		echo "⚠️  shfmt not installed, skipping shell format check (install shfmt to enforce)"; \
 	fi

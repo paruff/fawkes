@@ -6,12 +6,11 @@ set -euo pipefail
 # Purpose: ArgoCD deployment and management
 # =============================================================================
 
-
 maybe_cleanup_argocd_cluster_resources() {
   set +e
   if [[ "${ENV}" != "local" ]]; then return 0; fi
-  if kubectl get clusterrole argocd-application-controller >/dev/null 2>&1 \
-    || kubectl get crd applications.argoproj.io >/dev/null 2>&1; then
+  if kubectl get clusterrole argocd-application-controller > /dev/null 2>&1 \
+    || kubectl get crd applications.argoproj.io > /dev/null 2>&1; then
     echo "⚠️  Detected pre-existing Argo CD cluster-scoped resources. These can block Helm from installing."
     local do_clean="N"
     if [[ "${AUTO_CLEAN_ARGO:-}" == "1" || "${AUTO_CLEAN_ARGO:-}" == "true" || "${2:-}" == "--auto-clean" ]]; then
@@ -22,13 +21,13 @@ maybe_cleanup_argocd_cluster_resources() {
     if [[ "$do_clean" =~ ^[Yy]$ ]]; then
       echo "🧹 Removing Argo CD cluster-scoped resources (CRDs, ClusterRoles, ClusterRoleBindings)..."
       local CRDS
-      CRDS=$(kubectl get crd -o name 2>/dev/null | grep -E 'argoproj.io' || true)
+      CRDS=$(kubectl get crd -o name 2> /dev/null | grep -E 'argoproj.io' || true)
       if [[ -n "$CRDS" ]]; then echo "$CRDS" | xargs kubectl delete --wait --ignore-not-found; fi
       local CROLES
-      CROLES=$(kubectl get clusterrole -o name 2>/dev/null | grep -E '^clusterrole/argocd' || true)
+      CROLES=$(kubectl get clusterrole -o name 2> /dev/null | grep -E '^clusterrole/argocd' || true)
       if [[ -n "$CROLES" ]]; then echo "$CROLES" | xargs kubectl delete --wait --ignore-not-found; fi
       local CRBINDINGS
-      CRBINDINGS=$(kubectl get clusterrolebinding -o name 2>/dev/null | grep -E '^clusterrolebinding/argocd' || true)
+      CRBINDINGS=$(kubectl get clusterrolebinding -o name 2> /dev/null | grep -E '^clusterrolebinding/argocd' || true)
       if [[ -n "$CRBINDINGS" ]]; then echo "$CRBINDINGS" | xargs kubectl delete --wait --ignore-not-found; fi
       echo "✅ Cleanup complete."
     else
@@ -43,13 +42,13 @@ deploy_argocd() {
   echo "Deploying ArgoCD via Terraform module at ${TF_MODULE_DIR}"
   local TEMP_KUBECONFIG
   TEMP_KUBECONFIG=$(mktemp -t fawkes-kubeconfig-XXXX.yaml)
-  kubectl config view --raw --minify --flatten >"${TEMP_KUBECONFIG}"
+  kubectl config view --raw --minify --flatten > "${TEMP_KUBECONFIG}"
   local PREV_KUBECONFIG="${KUBECONFIG-}"
   local PREV_TF_VAR_KUBECONFIG_PATH="${TF_VAR_kubeconfig_path-}"
   export KUBECONFIG="${TEMP_KUBECONFIG}"
   export TF_VAR_kubeconfig_path="${TEMP_KUBECONFIG}"
   echo "Using temporary KUBECONFIG at ${KUBECONFIG} for Terraform operations"
-  pushd "${TF_MODULE_DIR}" >/dev/null
+  pushd "${TF_MODULE_DIR}" > /dev/null
   echo "Running: terraform init (with -upgrade to reconcile provider constraints)"
   terraform init -upgrade -input=false 2>&1 | tee terraform.log
   echo "Running: terraform plan"
@@ -62,7 +61,7 @@ deploy_argocd() {
     terraform apply -input=false plan.tfplan 2>&1 | tee -a terraform.log
     rc=${PIPESTATUS[0]}
   fi
-  popd >/dev/null
+  popd > /dev/null
   if [[ -n "${PREV_KUBECONFIG-}" ]]; then
     export KUBECONFIG="${PREV_KUBECONFIG}"
   else
@@ -86,10 +85,10 @@ deploy_argocd() {
   ARGOCD_PASSWORD=$(kubectl -n "${ARGO_NS}" get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
   if [[ "${ENV}" == "local" ]]; then
     local FAWKES_LOCAL_PASSWORD="${FAWKES_LOCAL_PASSWORD:-fawkesidp}"
-    if command -v argocd >/dev/null 2>&1; then
+    if command -v argocd > /dev/null 2>&1; then
       echo "🔐 Setting ArgoCD admin password to a local default for developers..."
       local svc_ports svc_scheme svc_target_port
-      svc_ports=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[*].port}' 2>/dev/null || echo "")
+      svc_ports=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[*].port}' 2> /dev/null || echo "")
       if echo "${svc_ports}" | grep -qw 80; then
         svc_target_port=80
         svc_scheme="http"
@@ -99,24 +98,24 @@ deploy_argocd() {
         svc_scheme="https"
         local argocd_login_flag="--insecure"
       else
-        svc_target_port=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[0].port}' 2>/dev/null || echo 80)
+        svc_target_port=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[0].port}' 2> /dev/null || echo 80)
         svc_scheme="http"
         local argocd_login_flag="--plaintext"
       fi
       (
-        kubectl -n "${ARGO_NS}" port-forward svc/argocd-server 8080:${svc_target_port} >/dev/null 2>&1 &
-        echo $! >/tmp/fawkes-argocd-pf.pid
+        kubectl -n "${ARGO_NS}" port-forward svc/argocd-server 8080:${svc_target_port} > /dev/null 2>&1 &
+        echo $! > /tmp/fawkes-argocd-pf.pid
       )
       sleep 2
       set +e
-      argocd login localhost:8080 --username admin --password "${ARGOCD_PASSWORD}" ${argocd_login_flag} >/dev/null 2>&1
+      argocd login localhost:8080 --username admin --password "${ARGOCD_PASSWORD}" ${argocd_login_flag} > /dev/null 2>&1
       if [[ $? -eq 0 ]]; then
-        argocd account update-password --current-password "${ARGOCD_PASSWORD}" --new-password "${FAWKES_LOCAL_PASSWORD}" >/dev/null 2>&1 && ARGOCD_PASSWORD="${FAWKES_LOCAL_PASSWORD}"
+        argocd account update-password --current-password "${ARGOCD_PASSWORD}" --new-password "${FAWKES_LOCAL_PASSWORD}" > /dev/null 2>&1 && ARGOCD_PASSWORD="${FAWKES_LOCAL_PASSWORD}"
       else
         echo "[WARN] ArgoCD CLI login failed; attempting password change via kubectl proxy..." >&2
         (
-          kubectl proxy --address 127.0.0.1 --port=8001 >/dev/null 2>&1 &
-          echo $! >/tmp/fawkes-kubectl-proxy.pid
+          kubectl proxy --address 127.0.0.1 --port=8001 > /dev/null 2>&1 &
+          echo $! > /tmp/fawkes-kubectl-proxy.pid
         )
         sleep 2
         local proxy_base="http://127.0.0.1:8001/api/v1/namespaces/${ARGO_NS}/services/${svc_scheme}:argocd-server:${svc_target_port}/proxy"
@@ -127,19 +126,19 @@ deploy_argocd() {
         if [[ -n "${token}" ]]; then
           curl -sk -X PUT -H "Authorization: Bearer ${token}" -H "Content-Type: application/json" \
             -d '{"currentPassword":"'"${ARGOCD_PASSWORD}"'","newPassword":"'"${FAWKES_LOCAL_PASSWORD}"'"}' \
-            "${proxy_base}/api/v1/account/password" >/dev/null 2>&1 && ARGOCD_PASSWORD="${FAWKES_LOCAL_PASSWORD}" \
+            "${proxy_base}/api/v1/account/password" > /dev/null 2>&1 && ARGOCD_PASSWORD="${FAWKES_LOCAL_PASSWORD}" \
             || echo "[WARN] Password change via API proxy did not succeed." >&2
         else
           echo "[WARN] Could not obtain ArgoCD auth token via API proxy; keeping initial password." >&2
         fi
         if [[ -f /tmp/fawkes-kubectl-proxy.pid ]]; then
-          kill $(cat /tmp/fawkes-kubectl-proxy.pid) >/dev/null 2>&1 || true
+          kill $(cat /tmp/fawkes-kubectl-proxy.pid) > /dev/null 2>&1 || true
           rm -f /tmp/fawkes-kubectl-proxy.pid || true
         fi
       fi
       set -e
       if [[ -f /tmp/fawkes-argocd-pf.pid ]]; then
-        kill $(cat /tmp/fawkes-argocd-pf.pid) >/dev/null 2>&1 || true
+        kill $(cat /tmp/fawkes-argocd-pf.pid) > /dev/null 2>&1 || true
         rm -f /tmp/fawkes-argocd-pf.pid || true
       fi
     else
@@ -147,7 +146,7 @@ deploy_argocd() {
     fi
   fi
   local svc_ports_summary svc_scheme_summary svc_target_port_summary
-  svc_ports_summary=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[*].port}' 2>/dev/null || echo "")
+  svc_ports_summary=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[*].port}' 2> /dev/null || echo "")
   if echo "${svc_ports_summary}" | grep -qw 80; then
     svc_target_port_summary=80
     svc_scheme_summary="http"
@@ -155,7 +154,7 @@ deploy_argocd() {
     svc_target_port_summary=443
     svc_scheme_summary="https"
   else
-    svc_target_port_summary=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[0].port}' 2>/dev/null || echo 80)
+    svc_target_port_summary=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[0].port}' 2> /dev/null || echo 80)
     svc_scheme_summary="http"
   fi
   echo ""

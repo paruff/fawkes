@@ -6,7 +6,6 @@ set -euo pipefail
 # Purpose: Prerequisite checking and tool installation
 # =============================================================================
 
-
 check_prereqs() {
   echo "🔎 Validating prerequisites..."
   local script_dir="$(dirname "${BASH_SOURCE[0]}")/.."
@@ -16,7 +15,7 @@ check_prereqs() {
       echo "Some required tools are missing in your environment."
       echo "You can enter the Nix dev shell to get a reproducible environment:"
       echo "  ./scripts/tools.sh shell"
-      if command -v bash >/dev/null 2>&1 && [[ -f "${script_dir}/tools-install.sh" || -f "${script_dir}/brew-install.sh" ]]; then
+      if command -v bash > /dev/null 2>&1 && [[ -f "${script_dir}/tools-install.sh" || -f "${script_dir}/brew-install.sh" ]]; then
         local auto_install=0
         if [[ "${AUTO_INSTALL:-}" == "1" || "${AUTO_INSTALL:-}" == "true" || "${2:-}" == "--auto-install" ]]; then
           auto_install=1
@@ -56,7 +55,7 @@ check_prereqs() {
     echo "✅ All required tools are available."
   else
     for tool in kubectl jq base64 terraform; do
-      if ! command -v $tool &>/dev/null; then
+      if ! command -v $tool &> /dev/null; then
         error_exit "$tool is required but not installed. Please install $tool and try again."
       fi
     done

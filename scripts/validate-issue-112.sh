@@ -15,14 +15,14 @@ FAILED=0
 check() {
   local desc="$1"
   local cmd="$2"
-  if eval "$cmd" >/dev/null 2>&1; then
+  if eval "$cmd" > /dev/null 2>&1; then
     echo "✓ $desc"
     PASSED=$((PASSED + 1))
     return 0
   else
     echo "✗ $desc"
     FAILED=$((FAILED + 1))
-    return 0  # Don't exit on failure
+    return 0 # Don't exit on failure
   fi
 }
 
@@ -30,7 +30,7 @@ check() {
 check "CODING_STANDARDS.md exists" "[[ -f CODING_STANDARDS.md ]]" || true
 
 # Test 2: File size
-SIZE=$(wc -c < CODING_STANDARDS.md 2>/dev/null || echo 0)
+SIZE=$(wc -c < CODING_STANDARDS.md 2> /dev/null || echo 0)
 if [[ $SIZE -gt 10000 ]]; then
   echo "✓ File size adequate ($SIZE bytes)"
   PASSED=$((PASSED + 1))
@@ -55,8 +55,8 @@ done
 
 # Test 5: Examples
 echo ""
-GOOD=$(grep -c "Good Examples" CODING_STANDARDS.md 2>/dev/null || echo 0)
-BAD=$(grep -c "Bad Examples" CODING_STANDARDS.md 2>/dev/null || echo 0)
+GOOD=$(grep -c "Good Examples" CODING_STANDARDS.md 2> /dev/null || echo 0)
+BAD=$(grep -c "Bad Examples" CODING_STANDARDS.md 2> /dev/null || echo 0)
 if [[ $GOOD -ge 5 ]] && [[ $BAD -ge 5 ]]; then
   echo "✓ Examples: $GOOD good, $BAD bad"
   PASSED=$((PASSED + 1))
@@ -66,7 +66,7 @@ else
 fi
 
 # Test 6: FAQ
-FAQ=$(grep -c "#### Q:" CODING_STANDARDS.md 2>/dev/null || echo 0)
+FAQ=$(grep -c "#### Q:" CODING_STANDARDS.md 2> /dev/null || echo 0)
 if [[ $FAQ -ge 10 ]]; then
   echo "✓ FAQ has $FAQ questions"
   PASSED=$((PASSED + 1))

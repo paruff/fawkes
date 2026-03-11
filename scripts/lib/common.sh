@@ -63,7 +63,7 @@ context_id() {
   local reg_part="${REGION:-}"
   local loc_part="${LOCATION:-}"
   if [[ -z "$name_part" ]]; then
-    name_part="$(kubectl config current-context 2>/dev/null || echo unknown)"
+    name_part="$(kubectl config current-context 2> /dev/null || echo unknown)"
   fi
   local key="${env_part}:${prov_part}:${name_part}:${reg_part}:${loc_part}"
   echo "${key// /_}"
@@ -87,7 +87,7 @@ state_clear_context() {
 
 state_is_done() {
   local step="$1" ctx="$CONTEXT_ID"
-  jq -e --arg ctx "$ctx" --arg step "$step" '.runs[$ctx].steps[$step].status == "done"' "$STATE_FILE" >/dev/null 2>&1
+  jq -e --arg ctx "$ctx" --arg step "$step" '.runs[$ctx].steps[$step].status == "done"' "$STATE_FILE" > /dev/null 2>&1
 }
 
 state_mark_done() {
@@ -130,17 +130,17 @@ cleanup_resources() {
 
   echo "🧹 Cleaning up Argo CD cluster-scoped resources (may be absent)..."
   local CRDS
-  CRDS=$(kubectl get crd -o name 2>/dev/null | grep -E 'argoproj.io' || true)
+  CRDS=$(kubectl get crd -o name 2> /dev/null | grep -E 'argoproj.io' || true)
   if [[ -n "$CRDS" ]]; then
     echo "$CRDS" | xargs kubectl delete --wait --ignore-not-found || true
   fi
   local CROLES
-  CROLES=$(kubectl get clusterrole -o name 2>/dev/null | grep -E '^clusterrole/argocd' || true)
+  CROLES=$(kubectl get clusterrole -o name 2> /dev/null | grep -E '^clusterrole/argocd' || true)
   if [[ -n "$CROLES" ]]; then
     echo "$CROLES" | xargs kubectl delete --wait --ignore-not-found || true
   fi
   local CRBINDINGS
-  CRBINDINGS=$(kubectl get clusterrolebinding -o name 2>/dev/null | grep -E '^clusterrolebinding/argocd' || true)
+  CRBINDINGS=$(kubectl get clusterrolebinding -o name 2> /dev/null | grep -E '^clusterrolebinding/argocd' || true)
   if [[ -n "$CRBINDINGS" ]]; then
     echo "$CRBINDINGS" | xargs kubectl delete --wait --ignore-not-found || true
   fi
