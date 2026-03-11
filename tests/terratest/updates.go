@@ -1,9 +1,7 @@
-# Updating Go dependencies
+package test
 
-# Update terratest library to specific version
-"""
-go get github.com/gruntwork-io/terratest@v0.47.2
-go mod tidy
-"""
+import "testing"
 
-# Add any additional changes needed after updating.
+func TestSample(t *testing.T) {
+    // Add your tests here
+}
