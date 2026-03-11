@@ -6163,10 +6163,16 @@ brew<span class="w"> </span>install<span class="w"> </span>terraform<span class=
 <h2 id="command-line-formatting">Command-Line Formatting</h2>
 <p>If you prefer not to use IDE integration, you can format manually:</p>
 <h3 id="format-all-files">Format All Files</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run all formatters via pre-commit</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Apply all formatters at once</span>
+make<span class="w"> </span>format
+
+<span class="c1"># Check formatting without applying changes (CI-equivalent)</span>
+make<span class="w"> </span>format-check
+
+<span class="c1"># Run all formatters via pre-commit</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 
-<span class="c1"># Or use make target</span>
+<span class="c1"># Or use make target for all linters</span>
 make<span class="w"> </span>lint
 </code></pre></div>
 <h3 id="format-specific-file-types">Format Specific File Types</h3>
