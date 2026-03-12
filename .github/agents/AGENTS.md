@@ -12,15 +12,16 @@ issue to Copilot on GitHub.com.
 
 ## Agent Index
 
-| Agent | File | Use for | When |
-|---|---|---|---|
-| `gpt41-default` | `gpt41-default.agent.md` | Feature work, bug fixes, refactoring, config edits | Implementing issues |
-| `otel-engineer` | `otel-engineer.agent.md` | OTEL pipelines, gen_ai spans, Prometheus, Grafana | Labels: `gap`, `dora` |
-| `docs-writer` | `docs-writer.agent.md` | README, ADRs, runbooks, API docs | Label: `docs` |
-| `test-engineer` | `test-engineer.agent.md` | pytest, BDD/behave, acceptance criteria | Label: `testing` |
-| `infra-gitops` | `infra-gitops.agent.md` | Terraform, Helm, ArgoCD, GitHub Actions | Labels: `infra`, `gitops` |
-| `code-reviewer` | `code-reviewer.agent.md` | PR review — severity-tagged, criteria-mapped | On every PR |
-| `issue-writer` | `issue-writer.agent.md` | Expand stub issues into full implementation specs | Before assigning to any agent |
+| Agent | File | Model | Cost | Use for |
+|---|---|---|---|---|
+| `issue-writer` | `issue-writer.agent.md` | Claude Sonnet 4.6 | 1x | Expand stub issues into full specs |
+| `code-reviewer` | `code-reviewer.agent.md` | Claude Sonnet 4.6 | 1x | PR review — severity-tagged, AC-mapped |
+| `ci-debugger` | `ci-debugger.agent.md` | Claude Sonnet 4.6 | 1x | Root cause diagnosis of CI failures |
+| `gpt41-default` | `gpt41-default.agent.md` | GPT-4.1 | 0x | Feature work, bug fixes, refactoring |
+| `otel-engineer` | `otel-engineer.agent.md` | GPT-4.1 | 0x | OTEL pipelines, gen_ai spans, Grafana |
+| `docs-writer` | `docs-writer.agent.md` | GPT-4.1 | 0x | README, ADRs, runbooks, API docs |
+| `test-engineer` | `test-engineer.agent.md` | GPT-4.1 | 0x | pytest, BDD/behave, acceptance criteria |
+| `infra-gitops` | `infra-gitops.agent.md` | GPT-4.1 | 0x | Terraform, Helm, ArgoCD, Actions |
 
 > **Note on code review**: The `.github/instructions/code-review.instructions.md`
 > file provides review standards to the built-in Copilot code review system
@@ -30,29 +31,27 @@ issue to Copilot on GitHub.com.
 
 ---
 
+## Core principle
+**Sonnet 4.6 does the thinking. GPT-4.1 does the typing.**
+
 ## Routing Decision Tree
 
 ```
-Is this a stub issue that needs expanding before implementation?
-  └─ YES → issue-writer  (then re-assign to an implementation agent)
+Needs inference, ambiguity resolution, or cross-file reasoning?
+  ├─ Stub issue → spec?              → issue-writer   (Sonnet 4.6, 1x)
+  ├─ Reviewing a PR?                 → code-reviewer  (Sonnet 4.6, 1x)
+  ├─ CI failing, unclear why?        → ci-debugger    (Sonnet 4.6, 1x)
+  └─ Complex multi-file impl?        → gpt41-default + Auto model
 
-Is this a PR that needs reviewing?
-  └─ YES → code-reviewer  (or add Copilot as reviewer in PR panel)
+Well-specified, single-concern, mechanical?
+  ├─ OTEL / observability / Grafana? → otel-engineer  (GPT-4.1, 0x)
+  ├─ Docs / README / ADR / runbook?  → docs-writer    (GPT-4.1, 0x)
+  ├─ Tests / BDD / pytest?           → test-engineer  (GPT-4.1, 0x)
+  ├─ Terraform / Helm / Actions?     → infra-gitops   (GPT-4.1, 0x)
+  └─ Everything else?                → gpt41-default  (GPT-4.1, 0x)
 
-Is the issue about OTEL / observability / gen_ai spans / Grafana?
-  └─ YES → otel-engineer
-
-Is the issue about docs, README, ADR, or runbook only?
-  └─ YES → docs-writer
-
-Is the issue about writing/fixing tests or BDD acceptance criteria?
-  └─ YES → test-engineer
-
-Is the issue about Terraform, Helm, Kubernetes, or GitHub Actions?
-  └─ YES → infra-gitops
-
-Everything else (features, bugs, refactoring, deps)?
-  └─ DEFAULT → gpt41-default
+Cross-cutting architecture (3+ services)?
+  └─ One-off planning session        → Claude Opus 4.6 (3x, manual)
 ```
 
 ## Recommended workflow per issue

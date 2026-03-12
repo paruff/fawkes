@@ -6,7 +6,7 @@ description: >
   affected files, technical specification, acceptance criteria, test
   requirements, and definition of done. Use before assigning any issue to
   a coding agent.
-model: gpt-4.1
+model: claude-sonnet-4-6
 tools:
   - read_file
   - search_files

@@ -5,7 +5,7 @@ description: >
   acceptance criteria, tests, security, observability, and YAML/infra quality.
   0x cost GPT-4.1. Use by adding Copilot as reviewer on any PR, or by
   @mentioning copilot in a PR comment.
-model: gpt-4.1
+model: claude-sonnet-4-6
 tools:
   - read_file
   - search_files
@@ -85,7 +85,7 @@ Structure your review as:
 ## [BLOCKING] Issues
 <list — must fix before merge>
 
-## [IMPORTANT] Issues  
+## [IMPORTANT] Issues
 <list — should fix before merge>
 
 ## [SUGGESTION] Improvements
