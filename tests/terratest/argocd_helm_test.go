@@ -18,6 +18,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
+// Package test contains integration tests for ArgoCD Helm deployments.
 package test
 
 import (
