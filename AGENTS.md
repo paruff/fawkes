@@ -47,6 +47,7 @@ Read this before touching any file. Each area of the repo has a primary language
 | 4 | `docs/KNOWN_LIMITATIONS.md` | Known issues — do not make these worse |
 | 5 | `docs/CHANGE_IMPACT_MAP.md` | Which files break when a component changes |
 | 6 | `.github/copilot-instructions.md` | Copilot-specific coding standards |
+| 7 | `docs/BACKLOG.md` | Triaged backlog — value/effort scores, agent assignments, MVP wave plan |
 
 ---
 
@@ -287,5 +288,6 @@ automatically apply AGENTS.md model routing.
 - `.github/copilot-instructions.md` — Copilot-specific subset (merged with this file at runtime)
 - `.github/agents/` — specialist agent profiles
 - `.github/instructions/` — path-scoped instruction files by language
+- `docs/BACKLOG.md` — triaged backlog with value/effort scores, agent assignments, MVP wave plan
 - `docs/GOLDEN_PATH.md` — standard feature development workflow (also in docs site)
 - `docs/PROMPT_LIBRARY.md` — tested prompt templates for every repeating task
