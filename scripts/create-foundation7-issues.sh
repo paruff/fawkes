@@ -46,12 +46,12 @@ while [[ $# -gt 0 ]]; do
 done
 
 # ── Dependency checks ───────────────────────────────────────────────────────
-if ! command -v gh &>/dev/null; then
+if ! command -v gh &> /dev/null; then
   echo "ERROR: gh CLI not found. Install from https://cli.github.com/" >&2
   exit 1
 fi
 
-if ! command -v jq &>/dev/null; then
+if ! command -v jq &> /dev/null; then
   echo "ERROR: jq not found. Install with: brew install jq / apt install jq" >&2
   exit 1
 fi
@@ -77,7 +77,7 @@ echo ""
 
 # ── Ensure required labels exist ────────────────────────────────────────────
 # Fetch label list once to avoid multiple API calls
-EXISTING_LABELS=$(gh label list --repo "$REPO" --json name --jq ".[].name" 2>/dev/null || echo "")
+EXISTING_LABELS=$(gh label list --repo "$REPO" --json name --jq ".[].name" 2> /dev/null || echo "")
 
 ensure_label() {
   local name="$1"
@@ -87,14 +87,14 @@ ensure_label() {
     if [[ "$DRY_RUN" == "true" ]]; then
       echo "  [DRY RUN] Would create label: $name"
     else
-      gh label create "$name" --repo "$REPO" --color "$color" --description "$description" 2>/dev/null || true
+      gh label create "$name" --repo "$REPO" --color "$color" --description "$description" 2> /dev/null || true
     fi
   fi
 }
 
-ensure_label "foundation-7"   "0075ca" "DORA 2025 Foundation 7 — Quality Internal Platforms"
+ensure_label "foundation-7" "0075ca" "DORA 2025 Foundation 7 — Quality Internal Platforms"
 ensure_label "comp-ai-tooling" "e4e669" "Component: AI tooling, agents, instructions"
-ensure_label "comp-devex"      "f9d0c4" "Component: Developer experience and workspace"
+ensure_label "comp-devex" "f9d0c4" "Component: Developer experience and workspace"
 
 # ── Create each issue ────────────────────────────────────────────────────────
 for i in $(seq 0 $((ISSUE_COUNT - 1))); do
