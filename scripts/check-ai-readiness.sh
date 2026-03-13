@@ -285,6 +285,7 @@ for line in lines:
         new_lines.append(line)
 
 content = "\n".join(new_lines).rstrip("\n") + "\n\n" + new_section.strip() + "\n"
+# Produces: existing content (trailing newlines stripped) + one blank line + new section + final newline
 
 with open(metrics_file, "w") as f:
     f.write(content)
