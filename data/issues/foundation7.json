@@ -1,0 +1,574 @@
+{
+  "epic": "foundation7",
+  "name": "Foundation 7 \u2014 Quality Internal Platforms (DORA 2025)",
+  "description": "Improvements to Fawkes platform quality that directly multiply AI coding agent effectiveness. Source: docs/ai/foundation-7-platform-quality-guide.md. DORA 2025 data shows teams with high-quality internal platforms get 3-5x better AI outcomes.",
+  "issues": [
+    {
+      "number": 1,
+      "title": "Add python-services.instructions.md path-scoped instruction for Copilot",
+      "milestone": "Foundation 7 \u2014 Tier 1",
+      "priority": "p1-high",
+      "effort": 2,
+      "labels": [
+        "foundation-7",
+        "p1-high",
+        "type-documentation",
+        "comp-ai-tooling",
+        "type-ai-agent"
+      ],
+      "depends_on": [],
+      "blocks": [],
+      "description": "Python FastAPI services are the dominant language in `services/` (16+ services). There is no path-scoped instruction file for `services/**/*.py`. Without it, every Copilot agent must re-derive Python rules from AGENTS.md on every session, leading to inconsistent type hints, error handling, and OTel instrumentation. A path-scoped file in `.github/instructions/` activates automatically whenever any `services/**/*.py` file is edited in Copilot.\n\n**Reference:** `docs/ai/foundation-7-platform-quality-guide.md` \u00a71.1\n**Reference pattern:** `.github/instructions/testing.instructions.md` (existing scoped file)\n\n**DORA 2025 Foundation 7:** Quality internal platforms multiply AI effectiveness.",
+      "acceptance_criteria": [
+        "File `.github/instructions/python-services.instructions.md` exists with correct frontmatter `applyTo: 'services/**/*.py'`",
+        "File contains FastAPI route pattern (Pydantic request model, async def, HTTPException with status code + detail)",
+        "File contains type hint requirement on all function signatures with example",
+        "File contains error wrapping pattern: `raise HTTPException(status_code=..., detail=f'fn: {exc}') from exc`",
+        "File contains OpenTelemetry instrumentation pattern (`from opentelemetry import trace; tracer = trace.get_tracer(__name__)`)",
+        "File contains structlog structured logging pattern",
+        "File contains pytest TestClient pattern for route testing",
+        "File lists exact linter commands: `ruff check app/`, `black --check app/`, `mypy app/`",
+        "File follows the same frontmatter + Markdown structure as `.github/instructions/testing.instructions.md`",
+        "`make lint` passes (markdownlint)"
+      ],
+      "tasks": [
+        {
+          "id": "2.1",
+          "name": "Read existing instruction files for structure",
+          "location": ".github/instructions/",
+          "prompt": "Read all 5 files in `.github/instructions/` to understand the exact frontmatter format and Markdown structure. The new file must match exactly. Key: `applyTo` glob pattern in the YAML frontmatter."
+        },
+        {
+          "id": "2.2",
+          "name": "Read existing FastAPI service routes for patterns",
+          "location": "services/",
+          "prompt": "Read `services/analytics-dashboard/app/routes.py`, `services/feedback/app/routes.py`, and `services/rag/app/routes.py` to extract the actual patterns used in this codebase. Do not invent patterns \u2014 extract from real code."
+        },
+        {
+          "id": "2.3",
+          "name": "Create python-services.instructions.md",
+          "location": ".github/instructions/python-services.instructions.md",
+          "prompt": "Create `.github/instructions/python-services.instructions.md` with frontmatter `applyTo: 'services/**/*.py'`. Include: (1) FastAPI route pattern with Pydantic model + async def + HTTPException, (2) type hints on all signatures, (3) error wrapping with context, (4) OTel trace pattern, (5) structlog pattern, (6) pytest TestClient pattern, (7) linter commands. Follow the structure of `.github/instructions/testing.instructions.md`."
+        }
+      ],
+      "suggested_model": "GPT-4.1",
+      "model_rationale": "Single-file documentation task with clear reference examples in the same directory. GPT-4.1 handles this accurately at 0x cost.",
+      "files_to_edit": [
+        ".github/instructions/python-services.instructions.md"
+      ],
+      "files_to_read": [
+        ".github/instructions/testing.instructions.md",
+        "services/analytics-dashboard/app/routes.py",
+        "services/feedback/app/routes.py",
+        "AGENTS.md"
+      ],
+      "do_not_touch": [
+        "services/",
+        "AGENTS.md"
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Create docs/GOLDEN_PATH.md \u2014 standard feature development workflow",
+      "milestone": "Foundation 7 \u2014 Tier 2",
+      "priority": "p1-high",
+      "effort": 2,
+      "labels": [
+        "foundation-7",
+        "p1-high",
+        "type-documentation",
+        "comp-platform",
+        "type-ai-agent"
+      ],
+      "depends_on": [],
+      "blocks": [],
+      "description": "`docs/GOLDEN_PATH.md` is referenced in `AGENTS.md \u00a712` (See Also section) but does not exist. Without it, every new engineer and every AI agent must reconstruct the standard feature development workflow from multiple sources (AGENTS.md, Makefile, README, CI config). This file is the single paved path for delivering features on Fawkes.\n\n**Reference:** `AGENTS.md \u00a712` \u2014 references `docs/GOLDEN_PATH.md`\n**Reference:** `docs/ai/foundation-7-platform-quality-guide.md` \u00a72.1\n\n**DORA 2025 Foundation 6 + 7:** User-centric focus + quality internal platforms.",
+      "acceptance_criteria": [
+        "File `docs/GOLDEN_PATH.md` exists",
+        "Section: Prerequisites \u2014 tools required (make, kubectl, helm, terraform, gh, docker), how to verify each is installed",
+        "Section: Environment setup \u2014 how to run `make pre-commit-setup` and `make k8s-status`",
+        "Section: Feature development loop \u2014 BDD first (write feature file) \u2192 implement \u2192 deploy locally \u2192 test \u2192 iterate",
+        "Section: Make targets \u2014 exact commands for `make deploy-local`, `make test-bdd`, `make lint`, `make validate`, `make sync`",
+        "Section: PR checklist \u2014 conventional commit format, DORA CI logging requirement, PR < 400 lines, `Closes #NNN`",
+        "Section: Definition of ready to merge \u2014 all CI gates listed with links to workflow files",
+        "File linked from `docs/ai/index.md` and from the mkdocs.yml navigation (if applicable)",
+        "`make lint` passes (markdownlint)"
+      ],
+      "tasks": [
+        {
+          "id": "3.1",
+          "name": "Read AGENTS.md development workflow section",
+          "location": "AGENTS.md",
+          "prompt": "Read the Development Workflow section of AGENTS.md and the Quick Commands section of the copilot-instructions.md to extract what already exists. Do not duplicate \u2014 synthesise."
+        },
+        {
+          "id": "3.2",
+          "name": "Read Makefile for target list",
+          "location": "Makefile",
+          "prompt": "Run `make help` and read the Makefile to extract all documented targets. The GOLDEN_PATH must use exact make target names."
+        },
+        {
+          "id": "3.3",
+          "name": "Create docs/GOLDEN_PATH.md",
+          "location": "docs/GOLDEN_PATH.md",
+          "prompt": "Create `docs/GOLDEN_PATH.md` following the Diataxis how-to guide format. Include: prerequisites, environment setup, BDD-first development loop, make target reference, PR checklist with conventional commits + DORA CI logging, and definition of ready-to-merge. This is the single source of truth for how to develop a feature on Fawkes."
+        }
+      ],
+      "suggested_model": "GPT-4.1",
+      "model_rationale": "Documentation task synthesising from existing AGENTS.md and Makefile. GPT-4.1 handles documentation writing at 0x cost.",
+      "files_to_edit": [
+        "docs/GOLDEN_PATH.md"
+      ],
+      "files_to_read": [
+        "AGENTS.md",
+        "Makefile",
+        ".github/copilot-instructions.md",
+        "docs/ai/dora-2025-alignment.md"
+      ],
+      "do_not_touch": [
+        "AGENTS.md",
+        "Makefile",
+        ".github/workflows/"
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Create .github/agents/docs-writer.agent.md (GPT-4.1)",
+      "milestone": "Foundation 7 \u2014 Tier 1",
+      "priority": "p1-high",
+      "effort": 1,
+      "labels": [
+        "foundation-7",
+        "p1-high",
+        "type-documentation",
+        "comp-ai-tooling",
+        "type-ai-agent"
+      ],
+      "depends_on": [],
+      "blocks": [
+        2,
+        7,
+        8
+      ],
+      "description": "Documentation rot is the primary cause of AI hallucination. When `docs/API_SURFACE.md`, `docs/ARCHITECTURE.md`, and BDD feature files fall behind the code, agents invent endpoints and function names that do not exist. A dedicated `docs-writer` agent with explicit rules prevents this drift.\n\nThe suggestion file `docs/ai/foundation-7-platform-quality-guide.md` \u00a71.3 specifies the key rules. The agent targets all files in `docs/`, `README.md`, `CONTRIBUTING.md`, and ADRs.\n\n**Reference:** `docs/ai/foundation-7-platform-quality-guide.md` \u00a71.3\n**Reference pattern:** `docs/ai/gpt41-default-agent-suggestion.md` (same format)\n\n**DORA 2025 Foundation 2 + 7:** Healthy data ecosystem + quality platforms.",
+      "acceptance_criteria": [
+        "File `.github/agents/docs-writer.agent.md` exists with valid YAML frontmatter",
+        "Frontmatter includes `model: gpt-4.1`, `name: docs-writer`, and a `description` \u2264 3 sentences",
+        "Agent rules require reading the code before updating docs (never invent from old docs)",
+        "Agent rules specify Diataxis structure: tutorials, how-to guides, reference, explanation",
+        "Agent rules state: every new service \u2192 entry in `docs/API_SURFACE.md` in the same PR",
+        "Agent rules state: every known limitation \u2192 entry in `docs/KNOWN_LIMITATIONS.md`",
+        "Agent rules state: every cross-component dependency change \u2192 update `docs/CHANGE_IMPACT_MAP.md`",
+        "Agent rules state: never touch `services/`, `infra/`, `.github/workflows/` \u2014 docs only",
+        "Agent follows same frontmatter format as existing agent suggestion files in `docs/ai/`",
+        "`make lint` passes (markdownlint)"
+      ],
+      "tasks": [
+        {
+          "id": "4.1",
+          "name": "Read existing agent suggestion files for frontmatter format",
+          "location": "docs/ai/",
+          "prompt": "Read `docs/ai/gpt41-default-agent-suggestion.md` and `docs/ai/infra-gitops-agent-suggestion.md` to extract the exact YAML frontmatter format and section structure."
+        },
+        {
+          "id": "4.2",
+          "name": "Create .github/agents/docs-writer.agent.md",
+          "location": ".github/agents/docs-writer.agent.md",
+          "prompt": "Create `.github/agents/docs-writer.agent.md` with model: gpt-4.1. Include mandatory first steps (read code before docs), Diataxis structure guidance, rules for API_SURFACE.md, KNOWN_LIMITATIONS.md, and CHANGE_IMPACT_MAP.md updates, and explicit scope boundaries (docs/ only, never services/ or infra/)."
+        }
+      ],
+      "suggested_model": "GPT-4.1",
+      "model_rationale": "Single agent file creation with clear reference examples. GPT-4.1 at 0x cost.",
+      "files_to_edit": [
+        ".github/agents/docs-writer.agent.md"
+      ],
+      "files_to_read": [
+        "docs/ai/gpt41-default-agent-suggestion.md",
+        "docs/ai/infra-gitops-agent-suggestion.md",
+        "docs/ARCHITECTURE.md",
+        "docs/API_SURFACE.md",
+        "AGENTS.md"
+      ],
+      "do_not_touch": [
+        "AGENTS.md",
+        "services/",
+        "infra/",
+        ".github/workflows/"
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Create scripts/check-ai-readiness.sh \u2014 platform AI-readiness assessment",
+      "milestone": "Foundation 7 \u2014 Tier 2",
+      "priority": "p1-high",
+      "effort": 2,
+      "labels": [
+        "foundation-7",
+        "p1-high",
+        "type-feature",
+        "comp-platform",
+        "type-ai-agent"
+      ],
+      "depends_on": [],
+      "blocks": [
+        9
+      ],
+      "description": "The DORA alignment doc (`docs/ai/dora-2025-alignment.md` \u00a77) calls for measuring paved-path adoption and type-hint coverage. Without an automated script, this is manual and gets skipped. This script scans every service in `services/` and produces an AI-readiness table showing type-hint coverage, test existence, and BDD scenario coverage.\n\n**Reference:** `docs/ai/foundation-7-platform-quality-guide.md` \u00a72.3\n**Reference pattern:** `scripts/bootstrap.sh` (existing bash script with set -euo pipefail)\n\n**DORA 2025 Foundation 2 + 7:** Healthy data ecosystem + platform quality measurement.",
+      "acceptance_criteria": [
+        "File `scripts/check-ai-readiness.sh` exists and is executable (`chmod +x`)",
+        "First line is `#!/usr/bin/env bash`, second line is `set -euo pipefail`",
+        "`shellcheck scripts/check-ai-readiness.sh` passes with no errors",
+        "Script iterates over every directory in `services/*/`",
+        "For each service: counts total function defs and type-hinted function defs using correct indentation-aware grep pattern",
+        "For each service: checks if `tests/unit/test_<service>*.py` exists (0 or 1+)",
+        "For each service: checks if `tests/bdd/features/<service>*.feature` exists (0 or 1+)",
+        "Script outputs a Markdown table with columns: Service | Type hints (typed/total) | Unit tests | BDD scenarios",
+        "Script accepts `--output-file <path>` flag to write table to a file (for CI use)",
+        "Script returns exit code 0 even if some services are not AI-ready (report only, do not fail)",
+        "Script runs successfully from the repo root: `bash scripts/check-ai-readiness.sh`"
+      ],
+      "tasks": [
+        {
+          "id": "5.1",
+          "name": "Read existing scripts for bash patterns",
+          "location": "scripts/",
+          "prompt": "Read `scripts/bootstrap.sh` and `scripts/access-summary.sh` to understand the bash patterns used in this repo. The new script must follow the same conventions."
+        },
+        {
+          "id": "5.2",
+          "name": "Create scripts/check-ai-readiness.sh",
+          "location": "scripts/check-ai-readiness.sh",
+          "prompt": "Create `scripts/check-ai-readiness.sh` with set -euo pipefail. For each service in services/*/: (1) count functions with `grep -rn \"^\\s*\\(async \\)\\?def \"` pattern, (2) count type-hinted functions (filter for `) ->`), (3) check for test files, (4) check for BDD features. Output a Markdown table. Support `--output-file <path>` flag. Do not use shellcheck-prohibited patterns."
+        },
+        {
+          "id": "5.3",
+          "name": "Verify script runs correctly",
+          "location": "scripts/check-ai-readiness.sh",
+          "prompt": "Run `bash scripts/check-ai-readiness.sh` from the repo root and verify it produces a valid Markdown table for all services. Run `shellcheck scripts/check-ai-readiness.sh` and fix any warnings."
+        }
+      ],
+      "suggested_model": "GPT-4.1",
+      "model_rationale": "Bash script with clear specification and existing pattern files to read. GPT-4.1 at 0x cost.",
+      "files_to_edit": [
+        "scripts/check-ai-readiness.sh"
+      ],
+      "files_to_read": [
+        "scripts/bootstrap.sh",
+        "scripts/access-summary.sh",
+        "docs/ai/foundation-7-platform-quality-guide.md"
+      ],
+      "do_not_touch": [
+        "services/",
+        "tests/",
+        ".github/workflows/"
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Add .vscode/settings.json for consistent developer workspace",
+      "milestone": "Foundation 7 \u2014 Tier 2",
+      "priority": "p2-medium",
+      "effort": 1,
+      "labels": [
+        "foundation-7",
+        "p2-medium",
+        "type-feature",
+        "comp-devex",
+        "type-ai-agent"
+      ],
+      "depends_on": [],
+      "blocks": [],
+      "description": "Inconsistent editor settings cause formatting disagreements that are caught only at CI, adding friction to every PR. When developers use different formatters or auto-import styles, AI-generated code passes locally but fails CI linting. A `.vscode/settings.json` committed to the repo ensures every developer and AI tool sees the same configuration from the moment they open the project.\n\n**Reference:** `docs/ai/foundation-7-platform-quality-guide.md` \u00a72.4\n\n**DORA 2025 Foundation 7:** Frictionless tooling reduces the lead time from code write to passing CI.",
+      "acceptance_criteria": [
+        "File `.vscode/settings.json` exists and is valid JSON",
+        "`editor.formatOnSave: true` for Python, Terraform, and YAML file types",
+        "`editor.defaultFormatter` set to `ms-python.black-formatter` for Python",
+        "`[python]` block includes `source.organizeImports` codeAction on save",
+        "`python.linting.ruffEnabled: true`",
+        "`github.copilot.enable` configured: true for all, false for plaintext, true for markdown",
+        "`github.copilot.advanced.listCount: 10` for more suggestion options",
+        "File `.vscode/extensions.json` created with recommended extensions: ms-python.python, ms-python.black-formatter, charliermarsh.ruff, hashicorp.terraform, redhat.vscode-yaml, github.copilot, github.copilot-chat",
+        "File `.vscode/settings.json` added to `.gitignore` exception (settings should be shared; only `.vscode/*.code-workspace` should be ignored)",
+        "`make lint` passes (no new failures)"
+      ],
+      "tasks": [
+        {
+          "id": "6.1",
+          "name": "Check .gitignore for .vscode entries",
+          "location": ".gitignore",
+          "prompt": "Read `.gitignore` to check if `.vscode/` is excluded. If so, add an exception `!.vscode/settings.json` and `!.vscode/extensions.json` so these shared files are committed."
+        },
+        {
+          "id": "6.2",
+          "name": "Create .vscode/settings.json",
+          "location": ".vscode/settings.json",
+          "prompt": "Create `.vscode/settings.json` with formatOnSave for Python (black), Terraform, and YAML; ruff linting enabled; Copilot enabled for code files, disabled for plaintext, enabled for markdown; listCount: 10."
+        },
+        {
+          "id": "6.3",
+          "name": "Create .vscode/extensions.json",
+          "location": ".vscode/extensions.json",
+          "prompt": "Create `.vscode/extensions.json` with recommended extensions: ms-python.python, ms-python.black-formatter, charliermarsh.ruff, hashicorp.terraform, redhat.vscode-yaml, github.copilot, github.copilot-chat, ms-kubernetes-tools.vscode-kubernetes-tools."
+        }
+      ],
+      "suggested_model": "GPT-5 mini",
+      "model_rationale": "Mechanical JSON file creation with no business logic. GPT-5 mini handles this at 0x cost.",
+      "files_to_edit": [
+        ".vscode/settings.json",
+        ".vscode/extensions.json",
+        ".gitignore"
+      ],
+      "files_to_read": [
+        ".gitignore",
+        "docs/ai/foundation-7-platform-quality-guide.md"
+      ],
+      "do_not_touch": [
+        "services/",
+        "AGENTS.md",
+        ".github/workflows/"
+      ]
+    },
+    {
+      "number": 6,
+      "title": "Add AI-readiness status table to every service README",
+      "milestone": "Foundation 7 \u2014 Tier 2",
+      "priority": "p2-medium",
+      "effort": 3,
+      "labels": [
+        "foundation-7",
+        "p2-medium",
+        "type-documentation",
+        "comp-platform",
+        "type-ai-agent"
+      ],
+      "depends_on": [
+        4
+      ],
+      "blocks": [],
+      "description": "The AI-readiness checklist from `AGENTS.md \u00a711` identifies whether an agent can work on a module reliably. Without a per-service status table, agents frequently fail on modules with missing type hints or no tests because they cannot know the quality of the codebase before starting.\n\nThis issue adds a standard `## AI-Readiness Status` section to every `services/<service>/README.md`, populated by running `scripts/check-ai-readiness.sh` (issue #4 in this epic).\n\n**Reference:** `AGENTS.md \u00a711` AI-Readiness Checklist\n**Reference:** `docs/ai/foundation-7-platform-quality-guide.md` \u00a72.2\n\n**DORA 2025 Foundation 2:** Healthy data ecosystem \u2014 agents need accurate context.",
+      "acceptance_criteria": [
+        "Every directory in `services/*/` has a `README.md` file (create if missing)",
+        "Every `services/<service>/README.md` has a `## AI-Readiness Status` section",
+        "The section contains a Markdown table with columns: Criterion | Status",
+        "The table includes all 6 criteria from AGENTS.md \u00a711: type hints, docstrings, tests green, single-purpose, error messages with context, BDD coverage",
+        "Status column shows accurate \u2705 or \u274c based on actual state of the service (not placeholder)",
+        "Table includes a 'Last updated' line below it with the date assessed",
+        "The section is added at the bottom of each README (not replacing existing content)",
+        "`make lint` passes (markdownlint on all modified files)"
+      ],
+      "tasks": [
+        {
+          "id": "7.1",
+          "name": "Run check-ai-readiness.sh to get current state",
+          "location": "scripts/",
+          "prompt": "Run `bash scripts/check-ai-readiness.sh` to get the current type-hint and test coverage for each service. Use this output to populate the Status column accurately."
+        },
+        {
+          "id": "7.2",
+          "name": "Add AI-readiness section to each service README",
+          "location": "services/",
+          "prompt": "For each service in `services/*/`: (1) check if README.md exists, create if missing with service name header, (2) add `## AI-Readiness Status` section at the bottom with the 6-row Markdown table from AGENTS.md \u00a711, (3) populate \u2705/\u274c based on actual service state. Process all 16+ services."
+        }
+      ],
+      "suggested_model": "GPT-4.1",
+      "model_rationale": "Multi-file documentation update requiring codebase assessment per service. GPT-4.1 at 0x cost. Note: touches >5 files \u2014 agent must declare this in PR and get `large-pr-approved` label.",
+      "files_to_edit": [
+        "services/*/README.md (all services)"
+      ],
+      "files_to_read": [
+        "AGENTS.md",
+        "scripts/check-ai-readiness.sh",
+        "services/*/app/"
+      ],
+      "do_not_touch": [
+        "services/*/app/",
+        "tests/",
+        ".github/workflows/"
+      ]
+    },
+    {
+      "number": 7,
+      "title": "Add AI-effectiveness metrics to docs/METRICS.md",
+      "milestone": "Foundation 7 \u2014 Tier 2",
+      "priority": "p2-medium",
+      "effort": 1,
+      "labels": [
+        "foundation-7",
+        "p2-medium",
+        "type-documentation",
+        "comp-platform",
+        "type-ai-agent"
+      ],
+      "depends_on": [
+        4
+      ],
+      "blocks": [],
+      "description": "DORA 2025 requires tracking AI-specific metrics alongside classic DORA metrics. The current `docs/METRICS.md` exists but does not include AI-effectiveness metrics. Without these, Foundation 7 progress is invisible and the platform team cannot detect when AI tooling is causing rework.\n\n**Reference:** `docs/ai/dora-2025-alignment.md` \u00a7Measuring AI Impact on DORA Metrics\n**Reference:** `docs/ai/foundation-7-platform-quality-guide.md` \u00a73.2\n\n**DORA 2025 Foundation 1:** Clear AI stance requires measurable outcomes.",
+      "acceptance_criteria": [
+        "File `docs/METRICS.md` has a new section `## AI-Effectiveness Metrics (DORA 2025)`",
+        "Section includes a table with columns: Metric | Target | Current | Measurement method",
+        "Table includes all 6 metrics: rework rate, type-hint coverage, BDD scenario coverage, paved-path adoption, PR size median, CI pass rate",
+        "Each metric row includes the target value from the foundation guide (e.g., rework rate < 10%)",
+        "Each metric row includes a Measurement method column with the exact command to produce it",
+        "Section links to `scripts/check-ai-readiness.sh` for the automated measurements",
+        "Section includes a 'Weekly review' note referencing `scripts/weekly-metrics.sh`",
+        "Existing content in `docs/METRICS.md` is preserved \u2014 only addition, no deletion",
+        "`make lint` passes (markdownlint)"
+      ],
+      "tasks": [
+        {
+          "id": "8.1",
+          "name": "Read existing docs/METRICS.md",
+          "location": "docs/METRICS.md",
+          "prompt": "Read `docs/METRICS.md` in full to understand existing structure. The new section must follow the same heading level and table style."
+        },
+        {
+          "id": "8.2",
+          "name": "Read dora-2025-alignment.md metrics section",
+          "location": "docs/ai/dora-2025-alignment.md",
+          "prompt": "Read the 'Measuring AI Impact on DORA Metrics' table in `docs/ai/dora-2025-alignment.md` to extract the 6 metrics with targets."
+        },
+        {
+          "id": "8.3",
+          "name": "Add AI-Effectiveness Metrics section to docs/METRICS.md",
+          "location": "docs/METRICS.md",
+          "prompt": "Append a new `## AI-Effectiveness Metrics (DORA 2025)` section to `docs/METRICS.md`. Include the 6-metric table with targets, current values (use '\u2014' if not yet measured), and measurement commands. Reference `scripts/check-ai-readiness.sh` and `scripts/weekly-metrics.sh`."
+        }
+      ],
+      "suggested_model": "GPT-4.1",
+      "model_rationale": "Single-file documentation addition with clear source content. GPT-4.1 at 0x cost.",
+      "files_to_edit": [
+        "docs/METRICS.md"
+      ],
+      "files_to_read": [
+        "docs/METRICS.md",
+        "docs/ai/dora-2025-alignment.md",
+        "docs/ai/foundation-7-platform-quality-guide.md"
+      ],
+      "do_not_touch": [
+        "services/",
+        "AGENTS.md",
+        ".github/workflows/"
+      ]
+    },
+    {
+      "number": 8,
+      "title": "Create .github/agents/security-agent.agent.md (Claude Sonnet 4.6)",
+      "milestone": "Foundation 7 \u2014 Tier 3",
+      "priority": "p1-high",
+      "effort": 2,
+      "labels": [
+        "foundation-7",
+        "p1-high",
+        "type-security",
+        "comp-ai-tooling",
+        "type-ai-agent"
+      ],
+      "depends_on": [],
+      "blocks": [],
+      "description": "Security review is the area where ~30% developer trust gap in AI is highest (DORA 2025). A dedicated security agent applying OWASP, CWE, and container security standards builds developer trust faster than a generalist reviewer catching the same issues.\n\nModel: Claude Sonnet 4.6 (1x) justified because security review requires simultaneous pattern matching across Python (SAST), Terraform (IaC security), Kubernetes RBAC, and container manifests \u2014 the polyglot depth benefits from Sonnet's stronger reasoning.\n\n**Reference:** `docs/ai/foundation-7-platform-quality-guide.md` \u00a73.1\n**Reference pattern:** `docs/ai/code-reviewer-agent-suggestion.md` (same format, similar scope)\n\n**DORA 2025 Foundation 1 + 7:** Clear AI stance on security + platform quality.",
+      "acceptance_criteria": [
+        "File `.github/agents/security-agent.agent.md` exists with valid YAML frontmatter",
+        "Frontmatter includes `model: claude-sonnet-4.6`, `name: security-agent`",
+        "Agent covers Python SAST: SQL injection, command injection, path traversal, insecure deserialization",
+        "Agent covers secret detection: credentials in code, hardcoded tokens, base64-encoded secrets",
+        "Agent covers container security: run-as-non-root, read-only filesystem, no privileged mode, no hostPID/hostNetwork",
+        "Agent covers Terraform security: public S3 buckets, over-permissive IAM, unencrypted resources, missing tfsec annotations",
+        "Agent covers Kubernetes RBAC: ClusterRole vs Role scope, wildcard resources/verbs, default serviceAccount",
+        "Agent uses [CRITICAL] / [HIGH] / [MEDIUM] / [LOW] severity prefixes consistent with CVSS severity bands",
+        "Agent specifies mandatory first steps: read AGENTS.md + ARCHITECTURE.md before reviewing any file",
+        "Agent states it MUST NOT merge PRs or modify code \u2014 review only",
+        "`make lint` passes (markdownlint)"
+      ],
+      "tasks": [
+        {
+          "id": "9.1",
+          "name": "Read existing code-reviewer agent for format reference",
+          "location": "docs/ai/code-reviewer-agent-suggestion.md",
+          "prompt": "Read `docs/ai/code-reviewer-agent-suggestion.md` in full to extract the exact frontmatter format, section structure, severity prefix system, and closing comment format. The security agent follows the same pattern with security-specific checklists."
+        },
+        {
+          "id": "9.2",
+          "name": "Create .github/agents/security-agent.agent.md",
+          "location": ".github/agents/security-agent.agent.md",
+          "prompt": "Create `.github/agents/security-agent.agent.md` with model: claude-sonnet-4.6. Include: mandatory first steps, Python SAST checklist (OWASP Top 10), secret detection patterns, container security checklist, Terraform security checklist, Kubernetes RBAC checklist, [CRITICAL]/[HIGH]/[MEDIUM]/[LOW] severity prefixes, and explicit prohibition on modifying code (review only)."
+        }
+      ],
+      "suggested_model": "GPT-4.1",
+      "model_rationale": "The security-agent FILE is created by GPT-4.1 (writing a docs file). The security-agent itself uses Claude Sonnet 4.6 when executing reviews.",
+      "files_to_edit": [
+        ".github/agents/security-agent.agent.md"
+      ],
+      "files_to_read": [
+        "docs/ai/code-reviewer-agent-suggestion.md",
+        "docs/ai/infra-gitops-agent-suggestion.md",
+        "AGENTS.md",
+        ".github/instructions/terraform.instructions.md"
+      ],
+      "do_not_touch": [
+        "services/",
+        "infra/",
+        ".github/workflows/",
+        "AGENTS.md"
+      ]
+    },
+    {
+      "number": 9,
+      "title": "Add check-ai-readiness.sh as a CI step in code-quality workflow",
+      "milestone": "Foundation 7 \u2014 Tier 2",
+      "priority": "p2-medium",
+      "effort": 2,
+      "labels": [
+        "foundation-7",
+        "p2-medium",
+        "type-feature",
+        "comp-ci-cd",
+        "type-ai-agent"
+      ],
+      "depends_on": [
+        4
+      ],
+      "blocks": [],
+      "description": "The `scripts/check-ai-readiness.sh` script (issue #4 in this epic) is only useful if it runs automatically. Adding it as a non-blocking CI step in the code-quality workflow means the AI-readiness table is always current and visible in every PR, creating a continuous feedback loop that motivates type-hint and test coverage improvements.\n\n**Non-blocking by design:** The step should always pass (exit 0) and upload the readiness table as a CI artifact. It must not block merges \u2014 it is a visibility tool, not a gate.\n\n**Reference:** `docs/ai/foundation-7-platform-quality-guide.md` \u00a710 (Summary table)\n**Reference pattern:** `.github/workflows/code-quality.yml` (existing quality workflow)\n\n**DORA 2025 Foundation 7:** Automated tooling is the platform \u2014 make quality visible automatically.",
+      "acceptance_criteria": [
+        "`.github/workflows/code-quality.yml` has a new job named `ai-readiness` or a new step in an existing job",
+        "The step runs `bash scripts/check-ai-readiness.sh --output-file ai-readiness-report.md`",
+        "The step uses `continue-on-error: false` (script must not fail CI) AND the script itself exits 0 always",
+        "The readiness report is uploaded as a CI artifact using `actions/upload-artifact@v4`",
+        "The artifact is named `ai-readiness-report` and retained for 30 days",
+        "DORA CI logging added to the job: `job-start` timestamp + SHA + `job-finish` timestamp",
+        "Job has `timeout-minutes: 5` set",
+        "CI passes on the current branch after the change",
+        "The new job or step does not run on the `release` event (only `push` and `pull_request`)"
+      ],
+      "tasks": [
+        {
+          "id": "10.1",
+          "name": "Read code-quality workflow for insertion point",
+          "location": ".github/workflows/code-quality.yml",
+          "prompt": "Read `.github/workflows/code-quality.yml` in full to find the correct job to add to or the correct location to add a new `ai-readiness` job. Note the existing DORA CI logging pattern used in other jobs."
+        },
+        {
+          "id": "10.2",
+          "name": "Add ai-readiness job/step to code-quality workflow",
+          "location": ".github/workflows/code-quality.yml",
+          "prompt": "Add an `ai-readiness` job (or step in the existing platform-health job if one exists) to `.github/workflows/code-quality.yml`. The step runs `bash scripts/check-ai-readiness.sh --output-file ai-readiness-report.md`, uploads the result as an artifact, and includes DORA CI logging timestamps. Set `timeout-minutes: 5` and ensure the script exits 0 always (non-blocking)."
+        }
+      ],
+      "suggested_model": "GPT-4.1",
+      "model_rationale": "GitHub Actions YAML edit with clear reference examples in the same file. GPT-4.1 handles workflow edits at 0x cost.",
+      "files_to_edit": [
+        ".github/workflows/code-quality.yml"
+      ],
+      "files_to_read": [
+        ".github/workflows/code-quality.yml",
+        "scripts/check-ai-readiness.sh"
+      ],
+      "do_not_touch": [
+        "services/",
+        "AGENTS.md",
+        "docs/"
+      ]
+    }
+  ]
+}
