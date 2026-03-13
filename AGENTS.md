@@ -180,6 +180,8 @@ Because Fawkes **is** a DORA platform, its own development must model what it te
 3. **Change failure rate** — all infra changes behind `terraform plan` gate in CI
 4. **MTTR** — every runbook in `docs/runbooks/` must be tested quarterly
 5. **Rework rate** — tracked in `docs/METRICS.md`; checked weekly via `scripts/weekly-metrics.sh`
+6. **Developer experience (DevEx)** — frictionless tooling, paved paths, and clear golden-path templates are the single biggest AI-effectiveness multiplier (DORA 2025)
+7. **AI as amplifier, not shortcut** — AI magnifies existing practices; a weak foundation gets worse faster, not better. Invest in platform quality first.
 
 ---
 
@@ -283,7 +285,54 @@ coding agent session, verify the model selector shows the model in the issue's
 "Suggested model" field and change it manually if needed. GitHub does not 
 automatically apply AGENTS.md model routing.
 - 
-## 11. See Also
+## 11. DORA 2025 AI Capabilities Model
+
+The **DORA 2025 State of AI-Assisted Software Development** report introduces seven
+foundational capabilities that determine whether AI accelerates or destabilises delivery.
+Fawkes must actively maintain all seven.
+
+### The Seven Foundations
+
+| # | Foundation | Fawkes Implementation |
+|---|---|---|
+| 1 | **Clear AI stance and policy** | This file + `.github/copilot-instructions.md` define permitted AI tasks, model selection, and trust/verify rules |
+| 2 | **Healthy data ecosystem** | Type hints, docstrings, and structured logs make Fawkes data AI-consumable; `ruff` + `mypy` enforce quality |
+| 3 | **AI-accessible internal data** | Agents read context files before acting; `docs/API_SURFACE.md` and `AGENTS.md` are the authoritative AI context |
+| 4 | **Strong version control** | Small PRs (< 400 lines), conventional commits, and mandatory CI protect the Git history from AI-generated noise |
+| 5 | **Working in small batches** | PR size gate (400 lines) + `large-pr-approved` label enforce batch discipline even when AI generates code quickly |
+| 6 | **User-centric focus** | Golden-path templates, BDD features written in business language, and Backstage catalog keep delivery aimed at users |
+| 7 | **Quality internal platforms** | Fawkes *is* the platform — paved paths, linters, Helm charts, and ArgoCD automation are the force-multiplier |
+
+### AI Trust and Verify Protocol
+
+All AI-generated code in Fawkes follows a **Read → Run → Review** pattern:
+
+1. **Read** — AI must read the existing module/test before writing code for it. Never invent function names or file paths.
+2. **Run** — AI must execute tests and confirm they pass before opening a PR. Writing files without running them is not done.
+3. **Review** — Security-impacting code, RBAC, and infra changes always require a human approval step, regardless of AI confidence.
+4. **Declare** — PR descriptions must note which code sections were AI-generated or AI-reviewed.
+
+### AI-Readiness Checklist
+
+A module is "AI-ready" when agents can work on it reliably. Agents should note gaps as TODO issues:
+
+- [ ] Type hints on all public functions
+- [ ] Docstrings on all public classes and functions
+- [ ] Tests exist and are green before AI adds to them
+- [ ] Module is single-purpose (not a God class/file)
+- [ ] Clear, contextual error messages (no bare `raise Exception`)
+- [ ] Module is covered by BDD scenarios in `tests/bdd/`
+
+### What DORA 2025 Says About Fawkes Agents
+
+- **~30% of developers do not trust AI-generated code** — human review is not optional, it is a trust-building mechanism.
+- **AI amplifies rework if tests are not run** — the test-engineer agent must execute every test it writes, not just write it.
+- **Speed without stability accelerates chaos** — CI gates, PR size limits, and `terraform plan` before apply are non-negotiable even under AI-accelerated delivery.
+- **Platform quality is the biggest AI success factor** — every improvement to golden-path templates, linters, and CI pipelines directly improves AI output quality.
+
+---
+
+## 12. See Also
 
 - `.github/copilot-instructions.md` — Copilot-specific subset (merged with this file at runtime)
 - `.github/agents/` — specialist agent profiles
