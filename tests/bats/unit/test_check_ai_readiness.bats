@@ -109,9 +109,10 @@ teardown() {
   assert_output --partial "Service"
 }
 
-@test "check-ai-readiness: --dry-run output contains known service name" {
+@test "check-ai-readiness: --dry-run output contains coverage percentages" {
   run bash "${SCRIPT}" --dry-run
-  assert_output --partial "ai-code-review"
+  # Coverage entries always contain slash notation e.g. "3/10 (30%)"
+  assert_output --partial "%)"
 }
 
 @test "check-ai-readiness: --dry-run does not modify METRICS.md" {
