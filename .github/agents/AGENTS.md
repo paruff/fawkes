@@ -17,6 +17,7 @@ issue to Copilot on GitHub.com.
 | `issue-writer` | `issue-writer.agent.md` | Claude Sonnet 4.6 | 1x | Expand stub issues into full specs |
 | `code-reviewer` | `code-reviewer.agent.md` | Claude Sonnet 4.6 | 1x | PR review — severity-tagged, AC-mapped |
 | `ci-debugger` | `ci-debugger.agent.md` | Claude Sonnet 4.6 | 1x | Root cause diagnosis of CI failures |
+| `security-agent` | `security-agent.agent.md` | Claude Sonnet 4.6 | 1x | SAST, secret scanning, container/RBAC/IAM security |
 | `gpt41-default` | `gpt41-default.agent.md` | GPT-4.1 | 0x | Feature work, bug fixes, refactoring |
 | `otel-engineer` | `otel-engineer.agent.md` | GPT-4.1 | 0x | OTEL pipelines, gen_ai spans, Grafana |
 | `docs-writer` | `docs-writer.agent.md` | GPT-4.1 | 0x | README, ADRs, runbooks, API docs |
@@ -38,9 +39,10 @@ issue to Copilot on GitHub.com.
 
 ```
 Needs inference, ambiguity resolution, or cross-file reasoning?
-  ├─ Stub issue → spec?              → issue-writer   (Sonnet 4.6, 1x)
-  ├─ Reviewing a PR?                 → code-reviewer  (Sonnet 4.6, 1x)
-  ├─ CI failing, unclear why?        → ci-debugger    (Sonnet 4.6, 1x)
+  ├─ Stub issue → spec?              → issue-writer    (Sonnet 4.6, 1x)
+  ├─ Reviewing a PR?                 → code-reviewer   (Sonnet 4.6, 1x)
+  ├─ CI failing, unclear why?        → ci-debugger     (Sonnet 4.6, 1x)
+  ├─ Security audit / vuln triage?   → security-agent  (Sonnet 4.6, 1x)
   └─ Complex multi-file impl?        → gpt41-default + Auto model
 
 Well-specified, single-concern, mechanical?
