@@ -3,6 +3,11 @@
 # To apply: copy the YAML block below into .github/agents/test-engineer.agent.md
 # and remove this header comment.
 #
+# Model: GPT-4.1 (0× multiplier — free). Confirmed correct. No change needed
+# from the original suggestion. GPT-4.1 handles pytest, pytest-bdd, and bats
+# test generation accurately when given the Read→Run→Review protocol and
+# explicit file paths. Do NOT escalate to a higher-cost model for test writing.
+#
 # This suggestion was generated 2026-03-13 based on the actual test landscape in:
 #   tests/bats/unit/          — bats tests for scripts/lib/ modules
 #   tests/bdd/                — pytest-bdd acceptance tests
