@@ -110,3 +110,27 @@ See the DevLake DORA dashboard for full details.
 - `docs/runbooks/` — incident runbooks
 - `docs/AGENTS.md` Section 9 — platform principles
 - DevLake documentation: <https://devlake.apache.org/docs>
+
+## AI-Readiness Metrics
+
+> Last updated: 2026-03-13 by `scripts/check-ai-readiness.sh`
+> Threshold: >= 80% GREEN | 50-79% YELLOW | < 50% RED
+
+| Service | Type-hints | Docstrings | Unit Tests | BDD |
+|---|---|---|---|---|
+| ai-code-review | 3/10 (30%) | 10/10 (100%) | N | Y |
+| analytics-dashboard | 9/27 (33%) | 27/27 (100%) | N | Y |
+| anomaly-detection | 3/12 (25%) | 12/12 (100%) | N | Y |
+| devex-survey-automation | 1/21 (4%) | 21/21 (100%) | N | N |
+| discovery-metrics | 0/24 (0%) | 24/24 (100%) | N | Y |
+| experimentation | 13/34 (38%) | 34/34 (100%) | N | Y |
+| feedback-bot | 5/9 (55%) | 9/9 (100%) | N | Y |
+| feedback | 21/43 (48%) | 40/43 (93%) | N | Y |
+| friction-bot | 2/8 (25%) | 8/8 (100%) | N | N |
+| insights | 2/23 (8%) | 23/23 (100%) | N | Y |
+| mcp-k8s-server | 0/3 (0%) | 0/3 (0%) | N | N |
+| nps | 2/11 (18%) | 11/11 (100%) | N | N |
+| rag | 0/8 (0%) | 8/8 (100%) | Y | Y |
+| smart-alerting | 13/30 (43%) | 30/30 (100%) | N | Y |
+| space-metrics | 8/21 (38%) | 21/21 (100%) | N | Y |
+| vsm | 3/15 (20%) | 15/15 (100%) | N | N |
