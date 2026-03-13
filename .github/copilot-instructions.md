@@ -440,6 +440,51 @@ make validate-resources
 - **tests/pytest.ini** - Pytest configuration
 - **env.example** - Environment variables template
 
+## DORA 2025 AI Capabilities — Guidelines for Copilot
+
+Based on the **DORA 2025 State of AI-Assisted Software Development** report.
+
+### AI is an amplifier, not a shortcut
+
+AI magnifies existing practices — strong platforms get stronger, weak foundations
+get worse faster. Before generating code, verify that the target module meets the
+AI-Readiness Checklist in `AGENTS.md § 11`.
+
+### Mandatory Read → Run → Review pattern
+
+1. **Read** the existing module before generating code. Never invent function names or import paths.
+2. **Run** tests after generating them. A test that has never been executed has unknown value.
+3. **Review** every suggestion that touches security, RBAC, secrets, or infra — human approval required.
+4. **Declare** AI-generated sections in the PR description.
+
+### Working in small batches (DORA 2025 Foundation #5)
+
+- Keep PRs as small as possible. Hard limit is 400 lines — CI blocks above this.
+- One concern per PR: either fix a bug, add a feature, or add tests — not all three.
+- AI can generate code quickly; resist the urge to bundle multiple issues into one PR.
+
+### Version control discipline (DORA 2025 Foundation #4)
+
+- Conventional commits: `feat(scope):`, `fix(scope):`, `test(scope):`, `docs(scope):`, `chore(scope):`
+- Never rewrite history on shared branches (`main`, `develop`)
+- Every AI-generated commit must pass `make lint` before pushing
+
+### Platform quality is the AI multiplier (DORA 2025 Foundation #7)
+
+Every improvement to linters, golden-path templates, type hints, and CI pipelines
+directly improves the quality of AI-generated code. Prioritise platform hygiene over
+feature velocity.
+
+### Trust gap mitigation
+
+~30% of developers do not trust AI-generated code (DORA 2025). To close the gap:
+
+- Add inline comments explaining *why* a pattern was chosen, not just *what* it does
+- Reference the existing pattern it follows (e.g., "follows `services/foo/app/routes.py`")
+- Include test coverage that demonstrates the behaviour — not just that it runs
+
+---
+
 ## Best Practices
 
 ### Before Committing
