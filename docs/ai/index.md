@@ -6,6 +6,7 @@ This section covers AI-powered features, machine learning integrations, and AI u
 
 - [AI Usage Policy](usage-policy.md) - Guidelines for using AI tools in development
 - [Training Quiz](training-quiz.md) - Test your understanding of AI policies
+- [DORA 2025 AI Capabilities — Fawkes Alignment](dora-2025-alignment.md) - How the seven DORA 2025 AI foundations map to Fawkes practices
 
 ## GitHub Copilot
 
