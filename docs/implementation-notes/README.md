@@ -1,43 +1,62 @@
-# Implementation Summaries
+# Implementation Notes
 
-This directory contains historical implementation summaries and validation reports from various features and epics developed for the Fawkes platform.
+This directory contains **historical AI-generated implementation summaries and
+validation reports** produced during the development of the Fawkes platform.
 
-## Purpose
+## Important Context
 
-These documents serve as:
+These documents are **not active documentation**. They are archived artefacts
+created by AI agents to track issue resolution and feature implementation
+progress. They may describe features that:
 
-- Historical records of feature implementations
-- Reference for implementation patterns and decisions
-- Validation and testing documentation
-- Implementation notes for specific issues and epics
+- Were aspirational and never fully implemented
+- Have since been superseded by real code
+- Document partial implementations or exploratory work
 
-## Categories
+Do **not** rely on these files as authoritative references for how Fawkes
+currently works. For current documentation, see:
+
+- [Getting Started Guide](../getting-started.md)
+- [How-To Guides](../how-to/index.md)
+- [Architecture Documentation](../ARCHITECTURE.md)
+- [API Surface](../API_SURFACE.md)
+- [Reference Documentation](../reference/index.md)
+
+## File Inventory
 
 ### Testing & Validation
+
 - [E2E Testing Summary](E2E_TESTING_SUMMARY.md)
 - [Accessibility Testing Implementation](ACCESSIBILITY_TESTING_IMPLEMENTATION.md)
 - [Usability Testing Implementation](USABILITY_TESTING_IMPLEMENTATION.md)
-- [OpenTelemetry Validation](OPENTELEMETRY_VALIDATION.md)
+- [AT-E1-006 Validation Coverage](AT-E1-006-VALIDATION-COVERAGE.md)
+- [Validation Tests E2 Summary](VALIDATION_TESTS_E2_SUMMARY.md)
+- [Azure Ingress Validation Checklist](azure-ingress-validation-checklist.md)
 
 ### Epic Implementations
+
 - [Epic 3 Final Validation Summary](EPIC_3_FINAL_VALIDATION_SUMMARY.md)
 - [AT-E2-003-004 Implementation Summary](AT_E2_003_004_IMPLEMENTATION_SUMMARY.md)
 - [AT-E3-003 Implementation Summary](AT_E3_003_IMPLEMENTATION_SUMMARY.md)
 
 ### Data Platform
+
 - [DataHub Deployment Summary](DATAHUB_DEPLOYMENT_SUMMARY.md)
 - [DataHub Ingestion Summary](DATAHUB_INGESTION_SUMMARY.md)
 - [Great Expectations Implementation](GREAT_EXPECTATIONS_IMPLEMENTATION.md)
 - [GraphQL API Implementation](GRAPHQL_API_IMPLEMENTATION.md)
 
 ### Analytics & Observability
+
 - [Analytics Dashboard Implementation](ANALYTICS_DASHBOARD_IMPLEMENTATION.md)
 - [AI Observability Dashboard Summary](AI_OBSERVABILITY_DASHBOARD_SUMMARY.md)
 - [Discovery Metrics Dashboard Implementation](DISCOVERY_METRICS_DASHBOARD_IMPLEMENTATION.md)
 - [Research Insights Dashboard Implementation](RESEARCH_INSIGHTS_DASHBOARD_IMPLEMENTATION.md)
 - [Anomaly Detection Implementation](ANOMALY_DETECTION_IMPLEMENTATION.md)
+- [Azure Ingress Implementation Summary](azure-ingress-implementation-summary.md)
 
 ### User Experience & Feedback
+
 - [Feedback Implementation](FEEDBACK_IMPLEMENTATION.md)
 - [Feedback Widget Enhanced](FEEDBACK_WIDGET_ENHANCED.md)
 - [Feedback Analytics Implementation](FEEDBACK_ANALYTICS_IMPLEMENTATION.md)
@@ -48,6 +67,7 @@ These documents serve as:
 - [NPS Survey Implementation Summary](NPS_SURVEY_IMPLEMENTATION_SUMMARY.md)
 
 ### Platform Features
+
 - [Deployment Summary](DEPLOYMENT_SUMMARY.md)
 - [Sample Apps Deployment Summary](SAMPLE_APPS_DEPLOYMENT_SUMMARY.md)
 - [Storybook Deployment Summary](STORYBOOK_DEPLOYMENT_SUMMARY.md)
@@ -57,10 +77,14 @@ These documents serve as:
 - [RAG Service Implementation](RAG_SERVICE_IMPLEMENTATION.md)
 
 ### Developer Experience
+
 - [Cognitive Load Deployment Summary](COGNITIVE_LOAD_DEPLOYMENT_SUMMARY.md)
 - [Experimentation Implementation Summary](EXPERIMENTATION_IMPLEMENTATION_SUMMARY.md)
+- [Documentation Cleanup Summary](DOCUMENTATION_CLEANUP_SUMMARY.md)
+- [Standardization Summary](STANDARDIZATION_SUMMARY.md)
 
 ### Issue-Specific Implementations
+
 - [Issue 41 Implementation](IMPLEMENTATION_ISSUE_41.md)
 - [Issue 61 Implementation](IMPLEMENTATION_ISSUE_61.md)
 - [Issue 73 Implementation](IMPLEMENTATION_ISSUE_73.md)
@@ -75,20 +99,18 @@ These documents serve as:
 - [Issue 115 Implementation Summary](ISSUE_115_IMPLEMENTATION_SUMMARY.md)
 
 ### Value Stream & Metrics
+
 - [VSM Implementation Complete](VSM_IMPLEMENTATION_COMPLETE.md)
 - [VSM Implementation Summary](VSM_IMPLEMENTATION_SUMMARY.md)
 - [Task 4.3.2 Implementation Summary](TASK_4_3_2_IMPLEMENTATION_SUMMARY.md)
 
 ### Infrastructure & Cloud
+
 - [Implementation Summary GCP Observability](IMPLEMENTATION_SUMMARY_GCP_OBSERVABILITY.md)
+- [Implementation Summary](IMPLEMENTATION_SUMMARY.md)
 - [Terratest Implementation Summary](TERRATEST_IMPLEMENTATION_SUMMARY.md)
 - [Resource Optimization Summary](RESOURCE_OPTIMIZATION_SUMMARY.md)
 
-## Usage
+### Smart Platform
 
-These documents are primarily for reference and historical tracking. For current platform documentation and guides, please refer to:
-
-- [Getting Started Guide](../getting-started.md)
-- [How-To Guides](../how-to/index.md)
-- [Architecture Documentation](../architecture.md)
-- [Reference Documentation](../reference/index.md)
+- [Smart Alerting Implementation](SMART_ALERTING_IMPLEMENTATION.md)

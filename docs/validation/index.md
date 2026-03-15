@@ -15,15 +15,15 @@ Validation documentation ensures that platform components and features are corre
 ### Infrastructure
 
 - [Azure AKS Validation Checklist](../runbooks/azure-aks-validation-checklist.md) - Validate AKS cluster deployment
-- [Azure Ingress Validation Checklist](../azure-ingress-validation-checklist.md) - Validate ingress configuration
+- [Azure Ingress Validation Checklist](../implementation-notes/azure-ingress-validation-checklist.md) - Validate ingress configuration
 
 ## Acceptance Testing
 
 ### Epic Validation
 
 - [AT-E1-006 Validation Coverage](../AT-E1-006-VALIDATION-COVERAGE.md) - Security and observability validation
-- [Epic 3 Final Validation](../implementation-summaries/EPIC_3_FINAL_VALIDATION_SUMMARY.md) - Product discovery validation
-- [Validation Tests E2 Summary](../implementation-summaries/VALIDATION_TESTS_E2_SUMMARY.md) - Epic 2 tests
+- [Epic 3 Final Validation](../implementation-notes/EPIC_3_FINAL_VALIDATION_SUMMARY.md) - Product discovery validation
+- [Validation Tests E2 Summary](../implementation-notes/VALIDATION_TESTS_E2_SUMMARY.md) - Epic 2 tests
 
 ### Specific Acceptance Tests
 

@@ -18,7 +18,7 @@ This section contains deployment guides, configurations, and best practices for 
 ### Service Deployment
 
 - [Golden Path Usage](../golden-path-usage.md) - Using golden path templates for service deployment
-- [Sample Apps Deployment](../implementation-summaries/SAMPLE_APPS_DEPLOYMENT_SUMMARY.md) - Deploy sample applications
+- [Sample Apps Deployment](../implementation-notes/SAMPLE_APPS_DEPLOYMENT_SUMMARY.md) - Deploy sample applications
 
 ## Configuration
 
@@ -27,13 +27,13 @@ This section contains deployment guides, configurations, and best practices for 
 
 ## Validation & Checklists
 
-- [Azure Ingress Validation Checklist](../azure-ingress-validation-checklist.md) - Verify Azure ingress setup
+- [Azure Ingress Validation Checklist](../implementation-notes/azure-ingress-validation-checklist.md) - Verify Azure ingress setup
 - [Azure AKS Validation Checklist](../runbooks/azure-aks-validation-checklist.md) - Verify AKS cluster setup
 
 ## Implementation References
 
-- [Azure Ingress Implementation Summary](../azure-ingress-implementation-summary.md) - Technical implementation details
-- [Deployment Summary](../implementation-summaries/DEPLOYMENT_SUMMARY.md) - General deployment summary
+- [Azure Ingress Implementation Summary](../implementation-notes/azure-ingress-implementation-summary.md) - Technical implementation details
+- [Deployment Summary](../implementation-notes/DEPLOYMENT_SUMMARY.md) - General deployment summary
 
 ## Related Documentation
 
