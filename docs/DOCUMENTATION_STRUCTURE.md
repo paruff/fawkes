@@ -46,7 +46,7 @@ docs/
 ├── vsm/                        # Value Stream Mapping
 ├── tools/                      # Platform tools docs
 │
-└── implementation-summaries/   # Historical implementation records
+└── implementation-notes/   # Historical implementation records
 ```
 
 ## Index Files

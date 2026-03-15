@@ -20,8 +20,8 @@ Fawkes implements comprehensive testing at all levels to ensure platform reliabi
 
 ### End-to-End Testing
 
-- [E2E Testing Summary](../implementation-summaries/E2E_TESTING_SUMMARY.md) - E2E test implementation
-- [Validation Tests E2 Summary](../implementation-summaries/VALIDATION_TESTS_E2_SUMMARY.md) - Epic 2 validation tests
+- [E2E Testing Summary](../implementation-notes/E2E_TESTING_SUMMARY.md) - E2E test implementation
+- [Validation Tests E2 Summary](../implementation-notes/VALIDATION_TESTS_E2_SUMMARY.md) - Epic 2 validation tests
 - Run E2E tests with: `make test-e2e-all`
 
 ### BDD/Acceptance Testing
@@ -32,31 +32,31 @@ Fawkes implements comprehensive testing at all levels to ensure platform reliabi
 
 ### Accessibility Testing
 
-- [Accessibility Testing Implementation](../implementation-summaries/ACCESSIBILITY_TESTING_IMPLEMENTATION.md) - A11y testing approach
+- [Accessibility Testing Implementation](../implementation-notes/ACCESSIBILITY_TESTING_IMPLEMENTATION.md) - A11y testing approach
 - [Accessibility Testing Guide](../how-to/accessibility-testing-guide.md) - How to test for accessibility
 
 ### Usability Testing
 
-- [Usability Testing Implementation](../implementation-summaries/USABILITY_TESTING_IMPLEMENTATION.md) - Usability testing framework
+- [Usability Testing Implementation](../implementation-notes/USABILITY_TESTING_IMPLEMENTATION.md) - Usability testing framework
 - [Usability Testing Guide](../how-to/usability-testing-guide.md) - Conducting usability tests
 
 ## Infrastructure Testing
 
-- [Terratest Implementation](../implementation-summaries/TERRATEST_IMPLEMENTATION_SUMMARY.md) - Infrastructure testing with Terratest
-- [Great Expectations Implementation](../implementation-summaries/GREAT_EXPECTATIONS_IMPLEMENTATION.md) - Data quality testing
+- [Terratest Implementation](../implementation-notes/TERRATEST_IMPLEMENTATION_SUMMARY.md) - Infrastructure testing with Terratest
+- [Great Expectations Implementation](../implementation-notes/GREAT_EXPECTATIONS_IMPLEMENTATION.md) - Data quality testing
 
 ## Validation & Acceptance
 
 ### Epic Validation
 
-- [Epic 3 Final Validation](../implementation-summaries/EPIC_3_FINAL_VALIDATION_SUMMARY.md) - Epic 3 acceptance testing
+- [Epic 3 Final Validation](../implementation-notes/EPIC_3_FINAL_VALIDATION_SUMMARY.md) - Epic 3 acceptance testing
 - [AT-E1-006 Validation Coverage](../AT-E1-006-VALIDATION-COVERAGE.md) - Acceptance test coverage
 
 ### Component Validation
 
 - [OpenTelemetry Validation](../validation/OPENTELEMETRY_VALIDATION.md) - Telemetry validation
 - [Azure AKS Validation Checklist](../runbooks/azure-aks-validation-checklist.md) - AKS validation
-- [Azure Ingress Validation Checklist](../azure-ingress-validation-checklist.md) - Ingress validation
+- [Azure Ingress Validation Checklist](../implementation-notes/azure-ingress-validation-checklist.md) - Ingress validation
 
 ## Testing Commands
 

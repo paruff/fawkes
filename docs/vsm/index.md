@@ -12,8 +12,8 @@ Value Stream Mapping helps visualize and optimize the flow of work from idea to 
 
 ## Implementation
 
-- [VSM Implementation Complete](../implementation-summaries/VSM_IMPLEMENTATION_COMPLETE.md) - Completed VSM implementation
-- [VSM Implementation Summary](../implementation-summaries/VSM_IMPLEMENTATION_SUMMARY.md) - Technical implementation details
+- [VSM Implementation Complete](../implementation-notes/VSM_IMPLEMENTATION_COMPLETE.md) - Completed VSM implementation
+- [VSM Implementation Summary](../implementation-notes/VSM_IMPLEMENTATION_SUMMARY.md) - Technical implementation details
 
 ## Related Concepts
 
