@@ -22,27 +22,27 @@ User research helps us understand the needs, behaviors, and pain points of platf
 
 ### Analytics & Metrics
 
-- [Research Insights Dashboard](../implementation-summaries/RESEARCH_INSIGHTS_DASHBOARD_IMPLEMENTATION.md) - User research dashboard
-- [Discovery Metrics Dashboard](../implementation-summaries/DISCOVERY_METRICS_DASHBOARD_IMPLEMENTATION.md) - Product discovery metrics
-- [Product Analytics](../implementation-summaries/PRODUCT_ANALYTICS_DEPLOYMENT_SUMMARY.md) - Platform analytics
+- [Research Insights Dashboard](../implementation-notes/RESEARCH_INSIGHTS_DASHBOARD_IMPLEMENTATION.md) - User research dashboard
+- [Discovery Metrics Dashboard](../implementation-notes/DISCOVERY_METRICS_DASHBOARD_IMPLEMENTATION.md) - Product discovery metrics
+- [Product Analytics](../implementation-notes/PRODUCT_ANALYTICS_DEPLOYMENT_SUMMARY.md) - Platform analytics
 
 ### User Feedback
 
-- [Feedback Implementation](../implementation-summaries/FEEDBACK_IMPLEMENTATION.md) - Feedback collection system
-- [NPS Survey Implementation](../implementation-summaries/NPS_SURVEY_IMPLEMENTATION_SUMMARY.md) - Net Promoter Score tracking
-- [Feedback Analytics](../implementation-summaries/FEEDBACK_ANALYTICS_IMPLEMENTATION.md) - Analyze user feedback
+- [Feedback Implementation](../implementation-notes/FEEDBACK_IMPLEMENTATION.md) - Feedback collection system
+- [NPS Survey Implementation](../implementation-notes/NPS_SURVEY_IMPLEMENTATION_SUMMARY.md) - Net Promoter Score tracking
+- [Feedback Analytics](../implementation-notes/FEEDBACK_ANALYTICS_IMPLEMENTATION.md) - Analyze user feedback
 
 ### User Testing
 
 - [Usability Testing Guide](../how-to/usability-testing-guide.md) - Conduct usability tests
-- [Usability Testing Implementation](../implementation-summaries/USABILITY_TESTING_IMPLEMENTATION.md) - Testing framework
+- [Usability Testing Implementation](../implementation-notes/USABILITY_TESTING_IMPLEMENTATION.md) - Testing framework
 - [Accessibility Testing Guide](../how-to/accessibility-testing-guide.md) - A11y testing
 
 ### Product Discovery
 
 - [Product Discovery & Delivery Flow](../explanation/idp/product-discovery-delivery-flow.md) - Discovery process
 - [Continuous Discovery Workflow Playbook](../playbooks/continuous-discovery-workflow.md) - Discovery practices
-- [Experimentation Implementation](../implementation-summaries/EXPERIMENTATION_IMPLEMENTATION_SUMMARY.md) - Feature experimentation
+- [Experimentation Implementation](../implementation-notes/EXPERIMENTATION_IMPLEMENTATION_SUMMARY.md) - Feature experimentation
 
 ## Personas
 

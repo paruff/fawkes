@@ -32,17 +32,17 @@ Copy the YAML block into the target file, remove the header comment, and commit.
 ### Vector Database & RAG
 
 - [Vector Database](vector-database.md) - Vector database setup and usage
-- [RAG Service Implementation](../implementation-summaries/RAG_SERVICE_IMPLEMENTATION.md) - Retrieval-Augmented Generation service
-- [Weaviate Deployment](../implementation-summaries/WEAVIATE_DEPLOYMENT_SUMMARY.md) - Vector database deployment
+- [RAG Service Implementation](../implementation-notes/RAG_SERVICE_IMPLEMENTATION.md) - Retrieval-Augmented Generation service
+- [Weaviate Deployment](../implementation-notes/WEAVIATE_DEPLOYMENT_SUMMARY.md) - Vector database deployment
 
 ### AI Observability
 
-- [AI Observability Dashboard](../implementation-summaries/AI_OBSERVABILITY_DASHBOARD_SUMMARY.md) - AI-powered observability insights
-- [Anomaly Detection](../implementation-summaries/ANOMALY_DETECTION_IMPLEMENTATION.md) - ML-based anomaly detection
-- [Smart Alerting](../implementation-summaries/SMART_ALERTING_IMPLEMENTATION.md) - Intelligent alerting system
+- [AI Observability Dashboard](../implementation-notes/AI_OBSERVABILITY_DASHBOARD_SUMMARY.md) - AI-powered observability insights
+- [Anomaly Detection](../implementation-notes/ANOMALY_DETECTION_IMPLEMENTATION.md) - ML-based anomaly detection
+- [Smart Alerting](../implementation-notes/SMART_ALERTING_IMPLEMENTATION.md) - Intelligent alerting system
 
 ## Related Documentation
 
 - [Reference Documentation](../reference/index.md) - API references
 - [How-To Guides](../how-to/index.md) - Step-by-step guides
-- [Implementation Summaries](../implementation-summaries/index.md) - Technical implementation details
+- [Implementation Summaries](../implementation-notes/index.md) - Technical implementation details
