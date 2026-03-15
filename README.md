@@ -215,15 +215,30 @@ Don't start from scratch. Deploy a production-ready platform and customize to yo
 
 ## ⚡ Quick Start
 
-### Prerequisites
+### Option 1 — Local (< 10 minutes, no cloud account needed)
 
-- Kubernetes 1.28+ cluster
-- kubectl configured
-- Terraform 1.6+
-- AWS/Azure/GCP account (or local cluster)
-- Basic understanding of Kubernetes and CI/CD
+**Prerequisites:** [Docker](https://docs.docker.com/get-docker/), [k3d](https://k3d.io), [kubectl](https://kubernetes.io/docs/tasks/tools/), [Helm](https://helm.sh/docs/intro/install/)
 
-### Deploy Fawkes (30 minutes)
+```bash
+# 1. Clone the repository
+git clone https://github.com/paruff/fawkes.git
+cd fawkes
+
+# 2. Bring up the full local platform (ArgoCD + Vault + Backstage + Prometheus/Grafana + sample app)
+make dev-up
+
+# 3. Check service URLs and credentials
+make dev-status
+
+# 4. Tear down when done
+make dev-down
+```
+
+See **[docs/tutorials/local-dev-setup.md](docs/tutorials/local-dev-setup.md)** for full prerequisites, port-forward commands, and troubleshooting.
+
+### Option 2 — Cloud (AWS/Azure/GCP)
+
+**Prerequisites:** Kubernetes 1.28+ cluster, kubectl, Terraform 1.6+, cloud account
 
 ```bash
 # 1. Clone the repository
@@ -232,12 +247,10 @@ cd fawkes
 
 # 2. Configure your environment
 cp config/example.tfvars config/terraform.tfvars
-# Edit terraform.tfvars with your settings
+# Edit terraform.tfvars with your cloud settings
 
 # 3. Configure GitHub OAuth for Backstage (REQUIRED)
 # See: docs/how-to/security/github-oauth-quickstart.md
-# Quick: Create OAuth app at https://github.com/settings/developers
-#        Update secrets in platform/apps/backstage/secrets.yaml
 
 # 4. Provision infrastructure and deploy platform via Argo CD
 ./scripts/ignite.sh --provider aws dev
@@ -247,7 +260,7 @@ kubectl get ingress -n fawkes-platform
 # Navigate to Backstage URL shown and login with GitHub
 ```
 
-**Important**: Before first login, configure GitHub OAuth - see [OAuth Quick Start](docs/how-to/security/github-oauth-quickstart.md)
+**Important**: Before first login, configure GitHub OAuth — see [OAuth Quick Start](docs/how-to/security/github-oauth-quickstart.md)
 
 **[Detailed Getting Started Guide →](docs/getting-started.md)**
 
