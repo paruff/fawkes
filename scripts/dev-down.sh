@@ -13,12 +13,12 @@ log() { echo "$(date -u +%H:%M:%S) $*"; }
 
 log "🗑️   Tearing down Fawkes local environment (cluster: ${CLUSTER_NAME})"
 
-if ! command -v k3d &>/dev/null; then
+if ! command -v k3d &> /dev/null; then
   echo "❌  k3d not found — nothing to tear down"
   exit 1
 fi
 
-if k3d cluster list 2>/dev/null | grep -q "^${CLUSTER_NAME} "; then
+if k3d cluster list 2> /dev/null | grep -q "^${CLUSTER_NAME} "; then
   k3d cluster delete "${CLUSTER_NAME}"
   log "✅  Cluster '${CLUSTER_NAME}' deleted"
 else
