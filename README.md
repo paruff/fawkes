@@ -339,7 +339,7 @@ Fawkes is built on a modern, cloud-native architecture:
 
 **Start Here**: [Contributing Guide](CONTRIBUTING.md)
 
-1. Join our Mattermost community
+1. Join the conversation in [GitHub Discussions](https://github.com/paruff/fawkes/discussions)
 2. Review open issues and good first issues
 3. Pick something that interests you
 4. Submit your first PR
@@ -350,7 +350,7 @@ Fawkes is built on a modern, cloud-native architecture:
 - Code (platform features, dojo modules)
 - Documentation (guides, tutorials)
 - Dojo content (create new modules)
-- Community support (help in Mattermost)
+- Community support (help others in Discussions)
 - Bug reports and feature requests
 
 ---
@@ -439,49 +439,12 @@ Comprehensive documentation for all aspects of Fawkes:
 
 ## 🤝 Community
 
-Join our vibrant platform engineering community:
+Community is forming. Join the conversation in [GitHub Discussions](https://github.com/paruff/fawkes/discussions). Office hours and chat channels will be announced once the platform reaches beta.
 
-### Chat & Collaboration
+### Get Involved
 
-- **Mattermost** - [Join our community workspace](https://fawkes-community.mattermost.com)
 - **GitHub Discussions** - [Ask questions, share ideas](https://github.com/paruff/fawkes/discussions)
-
-### Learning & Support
-
-- **Dojo Channels** - Get help with learning modules
-- **Office Hours** - Bi-weekly Q&A with maintainers (Wednesdays 2pm ET)
-- **Mentorship** - Black Belt graduates mentor new learners
-
-### Stay Updated
-
-- **Blog** - [Platform engineering insights](https://blog.fawkes.io)
-- **Newsletter** - Bi-weekly updates (sign up below)
-- **Twitter** - [@FawkesIDP](https://twitter.com/FawkesIDP)
-- **LinkedIn** - [Fawkes Platform](https://linkedin.com/company/fawkes-platform)
-
-### Events
-
-- **Monthly Webinars** - Deep dives on platform topics
-- **Quarterly Conferences** - Virtual platform engineering conference
-- **Local Meetups** - Find or start a meetup in your city
-
----
-
-## 📈 Success Stories
-
-> "We went from deploying once a week to deploying 10x per day. Fawkes gave us the platform and the learning to achieve elite DORA performance."
->
-> — **Sarah Chen, VP Engineering, TechCorp**
-
-> "The dojo system is brilliant. Our developers learned platform engineering while building our IDP. Within 3 months, we had 5 certified platform engineers."
->
-> — **Marcus Johnson, Platform Lead, FinanceStart**
-
-> "Fawkes integrated everything we were using separate tools for. One platform, one team, incredible productivity gains."
->
-> — **Priya Patel, CTO, HealthTech Solutions**
-
-**[Read More Success Stories →](docs/success-stories/)**
+- **GitHub Issues** - [Report bugs and request features](https://github.com/paruff/fawkes/issues)
 
 ---
 
@@ -565,7 +528,7 @@ Fawkes is open source and community-driven. We welcome contributions of all kind
 ### Getting Started with Contributing
 
 1. **Read** [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
-2. **Join** our [Mattermost community](https://fawkes-community.mattermost.com)
+2. **Join** the [GitHub Discussions](https://github.com/paruff/fawkes/discussions)
 3. **Browse** [good first issues](https://github.com/paruff/fawkes/labels/good%20first%20issue)
 4. **Fork** the repository and create a branch
 5. **Set up code quality tools** - Essential for all contributors:
@@ -648,20 +611,13 @@ Fawkes is built on the shoulders of giants and inspired by:
 
 ### Community Support (Free)
 
-- **Mattermost** - Real-time chat support
-- **GitHub Issues** - Bug reports and feature requests
 - **GitHub Discussions** - Questions and discussions
+- **GitHub Issues** - Bug reports and feature requests
 - **Documentation** - Comprehensive guides and tutorials
 
-### Professional Support (Coming Q2 2026)
+### Professional Support
 
-- Implementation assistance
-- Custom development
-- Training and workshops
-- On-call support
-- SLA guarantees
-
-**Contact**: [support@fawkes.io](mailto:support@fawkes.io)
+> **Roadmap item — not yet available.** Professional support (implementation assistance, training, SLA) is planned as a future offering. Follow [GitHub Discussions](https://github.com/paruff/fawkes/discussions) for announcements.
 
 ---
 
@@ -683,9 +639,9 @@ Get your platform running in 30 minutes. Production-ready in hours, not months.
 
 ### 🤝 Join the Community
 
-**[Join Mattermost →](https://fawkes-community.mattermost.com)**
+**[Join GitHub Discussions →](https://github.com/paruff/fawkes/discussions)**
 
-Connect with platform engineers, get help, share your experiences.
+Connect with platform engineers, ask questions, and share your experiences.
 
 ### 💻 Contribute to Fawkes
 
