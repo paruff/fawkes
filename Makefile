@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup format format-check validate-research-structure validate-at-e0-001 validate-at-e0-002 validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-008 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-epic-3-final validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all terraform-test terraform-test-integration terraform-test-e2e terraform-test-cost terraform-test-all
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup format format-check validate-research-structure validate-at-e0-001 validate-at-e0-002 validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-008 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-epic-3-final validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all terraform-test terraform-test-integration terraform-test-e2e terraform-test-cost terraform-test-all dev-up dev-down dev-status check-deps
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -13,6 +13,24 @@ SHFMT_EXCLUDE_PATTERN := buildplatform.sh
 help: ## Show this help message
 	@echo "Fawkes Development Commands:"
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+# ─── Local platform (k3d) ───────────────────────────────────────────────────
+
+check-deps: ## Verify docker, k3d, kubectl, helm are installed
+	@command -v docker  >/dev/null 2>&1 || (echo "❌ docker required — https://docs.docker.com/get-docker/" && exit 1)
+	@command -v k3d     >/dev/null 2>&1 || (echo "❌ k3d required — brew install k3d  OR  https://k3d.io" && exit 1)
+	@command -v kubectl >/dev/null 2>&1 || (echo "❌ kubectl required — brew install kubectl" && exit 1)
+	@command -v helm    >/dev/null 2>&1 || (echo "❌ helm required — brew install helm" && exit 1)
+	@echo "✅ All prerequisites found"
+
+dev-up: check-deps ## Bring up local Fawkes platform (k3d + ArgoCD + Vault + Backstage + Prometheus/Grafana + podinfo)
+	@./scripts/dev-up.sh
+
+dev-down: ## Tear down the local Fawkes k3d cluster
+	@./scripts/dev-down.sh
+
+dev-status: ## Print service URLs and credentials for the local environment
+	@./scripts/dev-status.sh
 
 deploy-local: ## Deploy component to local K8s (COMPONENT=backstage|argocd|all)
 	@./infra/local-dev/deploy-local.sh $(NAMESPACE) $(COMPONENT)
