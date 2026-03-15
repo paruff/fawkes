@@ -9,7 +9,7 @@ set -euo pipefail
 CLUSTER_NAME="${FAWKES_CLUSTER:-fawkes-dev}"
 
 # Check cluster is running
-if ! command -v k3d &>/dev/null || ! k3d cluster list 2>/dev/null | grep -q "^${CLUSTER_NAME} "; then
+if ! command -v k3d &> /dev/null || ! k3d cluster list 2> /dev/null | grep -q "^${CLUSTER_NAME} "; then
   echo "❌  Fawkes local cluster '${CLUSTER_NAME}' is not running."
   echo "    Run: make dev-up"
   exit 1
