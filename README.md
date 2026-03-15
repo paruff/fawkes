@@ -31,7 +31,7 @@
     <img src="https://github.com/paruff/fawkes/actions/workflows/security-and-terraform.yml/badge.svg" alt="Security"/>
   </a>
   <a href="https://github.com/paruff/fawkes/actions/workflows/code-quality.yml">
-    <img src="https://img.shields.io/badge/coverage-60%25%20min-yellow.svg" alt="Coverage (60% minimum threshold enforced)"/>
+    <img src="https://img.shields.io/badge/coverage-CI--enforced-informational.svg" alt="Coverage threshold enforced in CI — see code-quality workflow"/>
   </a>
 </p>
 
@@ -487,17 +487,22 @@ Join our vibrant platform engineering community:
 
 ## 🗺️ Roadmap
 
-### Current Release: v0.1.0-alpha (MVP in Development)
-
-**Sprint 01-04** (Oct-Dec 2025): Foundation
+### Current Release: [v0.3.0](https://github.com/paruff/fawkes/releases/tag/v0.3.0) (December 2025)
 
 - ✅ Core architecture and governance
 - ✅ Dojo learning system design
-- 🔄 Backstage deployment
-- 🔄 Mattermost + Focalboard integration
-- 🔄 CI/CD pipelines
-- 🔄 Observability stack
-- 🔄 White Belt curriculum
+- ✅ AI features — RAG service, Weaviate vector DB, AI coding assistant, AI usage policy
+- ✅ Data catalog (DataHub with PostgreSQL and OpenSearch)
+- ✅ User research infrastructure — personas, interview guides, insights database
+- ✅ Product discovery and adoption support
+- ✅ Security plane — SBOM, image signing, policy enforcement
+- ✅ DORA metrics automation and dashboards
+- ✅ Multi-cloud support (AWS, Azure, GCP)
+- ✅ GitOps workflows with ArgoCD
+- ✅ Observability stack (Prometheus, Grafana, OpenTelemetry)
+- ✅ Jenkins CI/CD with golden path templates
+- ✅ Backstage developer portal
+- ✅ Mattermost collaboration platform
 
 ### Q1 2026: Platform Expansion
 
