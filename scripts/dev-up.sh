@@ -195,10 +195,11 @@ EOF
 
 ok "podinfo ArgoCD Application created"
 
-# Wait briefly for ArgoCD to reconcile
-log "Waiting for ArgoCD to sync podinfo (up to 2 min)..."
-kubectl wait --for=condition=available deployment/argocd-server \
-  --namespace "${ARGOCD_NS}" --timeout=120s 2>/dev/null || true
+# Wait for podinfo deployment to become available (ArgoCD syncs it asynchronously)
+log "Waiting for podinfo to be deployed by ArgoCD (up to 2 min)..."
+kubectl wait --for=condition=available deployment/podinfo \
+  --namespace "${SAMPLE_NS}" --timeout=120s 2>/dev/null || \
+  log "⚠️  podinfo not yet available — ArgoCD may still be syncing (check: make dev-status)"
 
 # ---------------------------------------------------------------------------
 # 9. Print status

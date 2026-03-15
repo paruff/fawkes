@@ -52,14 +52,16 @@ echo "│  URL:   http://localhost:7007                                   │"
 echo "└────────────────────────────────────────────────────────────────┘"
 echo
 echo "┌─ Grafana ──────────────────────────────────────────────────────┐"
-echo "│  kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 3000:80 │"
+echo "│  kubectl port-forward -n monitoring \                          │"
+echo "│    svc/kube-prometheus-stack-grafana 3000:80                  │"
 echo "│  URL:      http://localhost:3000                               │"
 echo "│  User:     admin                                               │"
 echo "│  Password: fawkes-grafana                                      │"
 echo "└────────────────────────────────────────────────────────────────┘"
 echo
 echo "┌─ Prometheus ───────────────────────────────────────────────────┐"
-echo "│  kubectl port-forward -n monitoring svc/kube-prometheus-stack-prometheus 9090:9090 │"
+echo "│  kubectl port-forward -n monitoring \                          │"
+echo "│    svc/kube-prometheus-stack-prometheus 9090:9090              │"
 echo "│  URL:   http://localhost:9090                                   │"
 echo "└────────────────────────────────────────────────────────────────┘"
 echo
