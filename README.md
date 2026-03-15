@@ -215,54 +215,24 @@ Don't start from scratch. Deploy a production-ready platform and customize to yo
 
 ## ⚡ Quick Start
 
-### Option 1 — Local (< 10 minutes, no cloud account needed)
+Not sure where to begin? Choose the path that fits your goal:
 
-**Prerequisites:** [Docker](https://docs.docker.com/get-docker/), [k3d](https://k3d.io), [kubectl](https://kubernetes.io/docs/tasks/tools/), [Helm](https://helm.sh/docs/intro/install/)
+| Path | Goal | Time |
+|---|---|---|
+| **[A — Evaluate Locally](docs/getting-started.md#path-a-evaluate-locally)** | Try Fawkes on your laptop with k3d — no cloud account needed | ~20 min |
+| **[B — Deploy to Cloud](docs/getting-started.md#path-b-deploy-to-cloud-aws-eks)** | Production-capable deployment on AWS EKS | 2–4 hours |
+| **[C — Enterprise Multi-Cloud](docs/getting-started.md#path-c-enterprise-multi-cloud)** | Multi-cloud, SSO, RBAC, compliance | 1–2 days |
 
-```bash
-# 1. Clone the repository
-git clone https://github.com/paruff/fawkes.git
-cd fawkes
-
-# 2. Bring up the full local platform (ArgoCD + Vault + Backstage + Prometheus/Grafana + sample app)
-make dev-up
-
-# 3. Check service URLs and credentials
-make dev-status
-
-# 4. Tear down when done
-make dev-down
-```
-
-See **[docs/tutorials/local-dev-setup.md](docs/tutorials/local-dev-setup.md)** for full prerequisites, port-forward commands, and troubleshooting.
-
-### Option 2 — Cloud (AWS/Azure/GCP)
-
-**Prerequisites:** Kubernetes 1.28+ cluster, kubectl, Terraform 1.6+, cloud account
+**Fastest start (Path A):**
 
 ```bash
-# 1. Clone the repository
 git clone https://github.com/paruff/fawkes.git
 cd fawkes
-
-# 2. Configure your environment
-cp config/example.tfvars config/terraform.tfvars
-# Edit terraform.tfvars with your cloud settings
-
-# 3. Configure GitHub OAuth for Backstage (REQUIRED)
-# See: docs/how-to/security/github-oauth-quickstart.md
-
-# 4. Provision infrastructure and deploy platform via Argo CD
-./scripts/ignite.sh --provider aws dev
-
-# 5. Access your platform
-kubectl get ingress -n fawkes-platform
-# Navigate to Backstage URL shown and login with GitHub
+make dev-up      # creates k3d cluster + deploys 5 core components
+make dev-status  # prints service URLs and credentials
 ```
 
-**Important**: Before first login, configure GitHub OAuth — see [OAuth Quick Start](docs/how-to/security/github-oauth-quickstart.md)
-
-**[Detailed Getting Started Guide →](docs/getting-started.md)**
+**[Full Getting Started Guide →](docs/getting-started.md)**
 
 ---
 
