@@ -149,7 +149,6 @@ Fawkes is composed of four platform layers that must only depend downward:
 | Service | Directory | Purpose |
 |---|---|---|
 | VSM | `services/vsm/` | Value Stream Mapping — tracks work items through 8-stage pipeline, calculates flow metrics |
-| RAG | `services/rag/` | Retrieval-Augmented Generation — semantic search over docs via Weaviate |
 | Analytics Dashboard | `services/analytics-dashboard/` | DORA trend data for Backstage portal widgets |
 | Anomaly Detection | `services/anomaly-detection/` | ML-based anomaly detection using Prometheus metrics |
 | Smart Alerting | `services/smart-alerting/` | Intelligent alert routing via Grafana Alertmanager |
@@ -164,6 +163,9 @@ Fawkes is composed of four platform layers that must only depend downward:
 | Insights | `services/insights/` | Aggregated insight queries over analytics data |
 | Data API | `services/data-api/` | Unified data access layer |
 | MCP K8s Server | `services/mcp-k8s-server/` | Model Context Protocol server for Kubernetes |
+
+> **Extensions**: The RAG service (Weaviate + semantic search) and DataHub (data
+> catalog) are optional extensions. See [`extensions/`](../extensions/README.md).
 
 ---
 
@@ -297,7 +299,6 @@ Services communicate via HTTP/REST only. Direct database sharing is not permitte
 | `anomaly-detection` | Prometheus | HTTP (PromQL) | Pull metrics for ML analysis |
 | `insights` | `analytics-dashboard` | HTTP | Aggregated insight queries |
 | `vsm` service | DevLake | HTTP | Value stream mapping data |
-| `rag` service | Weaviate | HTTP | Vector store queries |
 | Any service | OpenTelemetry Collector | OTLP/gRPC | Traces and metrics export |
 
 **Rules:**
