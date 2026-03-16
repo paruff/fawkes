@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Run Security Scan
         run: |
           echo "Running security scan..."
@@ -51,7 +51,7 @@ jobs:
     needs: security-scan
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Run Policy Enforcement
         run: |
           echo "Running policy enforcement..."
@@ -65,7 +65,7 @@ jobs:
       github.event.inputs.image-name != ''
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Generate SBOM
         run: |
           IMAGE_NAME="${{ github.event.inputs.image-name || github.repository }}"
@@ -82,7 +82,7 @@ jobs:
     needs: [security-scan, policy-enforcement]
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Sign Container Image
         env:
           REGISTRY_USERNAME: ${{ github.actor }}
