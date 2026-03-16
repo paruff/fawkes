@@ -7,14 +7,129 @@
 
 ## Table of Contents
 
-1. [Component Overview](#component-overview)
-2. [Layer Dependency Rules](#layer-dependency-rules)
-3. [Component Diagram](#component-diagram)
-4. [Data Flow: Commit to Metrics](#data-flow-commit-to-metrics)
-5. [Allowed Inter-Service Communication](#allowed-inter-service-communication)
-6. [Observability Stack](#observability-stack)
-7. [Network Namespace Layout](#network-namespace-layout)
-8. [Cross-Platform Dependencies](#cross-platform-dependencies)
+1. [Deployment Tiers](#deployment-tiers)
+2. [Component Overview](#component-overview)
+3. [Layer Dependency Rules](#layer-dependency-rules)
+4. [Component Diagram](#component-diagram)
+5. [Data Flow: Commit to Metrics](#data-flow-commit-to-metrics)
+6. [Allowed Inter-Service Communication](#allowed-inter-service-communication)
+7. [Observability Stack](#observability-stack)
+8. [Network Namespace Layout](#network-namespace-layout)
+9. [Cross-Platform Dependencies](#cross-platform-dependencies)
+
+---
+
+## Deployment Tiers
+
+Fawkes uses a two-tier deployment model that matches the user's goal and environment.
+See [docs/getting-started.md](getting-started.md) for the full decision guide.
+
+### Tier 1 — Core Platform (local or cloud)
+
+Tier 1 is the minimum set of components required to experience the platform. It is
+deployed by **Path A (local k3d)** and is also the foundation of every **Path B / Path C**
+cloud deployment.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    Tier 1 — Core Platform                        │
+│                                                                  │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Backstage Developer Portal + Dojo Hub                   │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                          │                                       │
+│  ┌───────────────────────┴─────────────────────────────────┐   │
+│  │  ArgoCD (GitOps controller)                              │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                          │                                       │
+│  ┌──────────────┬─────────────────────┐                        │
+│  │  Prometheus  │  Grafana            │  ← DORA dashboards      │
+│  └──────────────┴─────────────────────┘                        │
+│                          │                                       │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Vault (dev mode local / prod mode cloud)               │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                          │                                       │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Sample Application (demonstrates CI/CD + DORA metrics) │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  Kubernetes: k3d (local) or managed K8s (cloud)                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+| Component | Local (Path A) | Cloud (Path B/C) |
+|---|---|---|
+| ArgoCD | ✅ k3d | ✅ EKS / AKS |
+| Backstage | ✅ SQLite | ✅ RDS PostgreSQL |
+| Prometheus + Grafana | ✅ in-cluster | ✅ in-cluster |
+| Vault | ✅ dev mode (non-persistent) | ✅ production mode |
+| Sample application | ✅ | ✅ |
+
+### Tier 2 — Full Platform (cloud deployments only)
+
+Tier 2 extends Tier 1 with the components needed for production use: CI/CD, security
+scanning, log aggregation, DORA metrics, and enterprise collaboration.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    Tier 2 — Full Platform                        │
+│  (extends Tier 1 — all Tier 1 components are also present)      │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  CI/CD Layer                                              │  │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────────────────┐   │  │
+│  │  │ Jenkins  │  │ DevLake  │  │ Container Registry   │   │  │
+│  │  │ (CI/CD)  │  │ (DORA)   │  │ (Harbor / ECR)       │   │  │
+│  │  └──────────┘  └──────────┘  └──────────────────────┘   │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Security Layer                                           │  │
+│  │  ┌────────────┐  ┌────────┐  ┌────────────────────────┐  │  │
+│  │  │ SonarQube  │  │ Trivy  │  │ External Secrets Oper. │  │  │
+│  │  │ (SAST)     │  │ (scan) │  │ (secrets sync)         │  │  │
+│  │  └────────────┘  └────────┘  └────────────────────────┘  │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Extended Observability                                   │  │
+│  │  ┌────────────┐  ┌──────────────┐  ┌─────────────────┐   │  │
+│  │  │ OpenSearch │  │ Grafana Tempo│  │ OTel Collector  │   │  │
+│  │  │ (logs)     │  │ (traces)     │  │ (fan-out)       │   │  │
+│  │  └────────────┘  └──────────────┘  └─────────────────┘   │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Collaboration                                            │  │
+│  │  ┌────────────────────────────────────────────────────┐  │  │
+│  │  │ Mattermost + Focalboard (chat + project management)│  │  │
+│  │  └────────────────────────────────────────────────────┘  │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  Cloud: Amazon EKS + RDS + S3  (or Azure AKS / GKE)            │
+│  DNS + TLS: cert-manager + Let's Encrypt                        │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+| Component | Tier 1 | Tier 2 |
+|---|---|---|
+| ArgoCD | ✅ | ✅ |
+| Backstage | ✅ | ✅ |
+| Prometheus + Grafana | ✅ | ✅ |
+| Vault | ✅ | ✅ |
+| Sample application | ✅ | ✅ |
+| Jenkins CI/CD | — | ✅ |
+| DevLake (DORA aggregation) | — | ✅ |
+| SonarQube (SAST) | — | ✅ |
+| Trivy (container scanning) | — | ✅ |
+| Container registry (Harbor / ECR) | — | ✅ |
+| OpenSearch (logs) | — | ✅ |
+| Grafana Tempo (traces) | — | ✅ |
+| External Secrets Operator | — | ✅ |
+| Mattermost + Focalboard | — | ✅ |
+| cert-manager + Let's Encrypt | — | ✅ |
+| Amazon RDS / managed DB | — | ✅ |
 
 ---
 
