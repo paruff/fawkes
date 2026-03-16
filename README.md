@@ -420,6 +420,21 @@ Comprehensive documentation for all aspects of Fawkes:
 
 ---
 
+## 🔌 Extensions
+
+Advanced capabilities available as opt-in add-ons. Extensions are **not** deployed
+by default — they add operational complexity and resource requirements beyond the
+core platform.
+
+| Extension | Components | When to Add |
+|---|---|---|
+| **[AI](extensions/ai/README.md)** | Weaviate (vector DB), RAG service for semantic search | LLM tooling, semantic doc search |
+| **[Data Platform](extensions/data-platform/README.md)** | DataHub (data catalog), Great Expectations (quality) | Data catalog, lineage tracking, quality validation |
+
+[View all extensions →](extensions/README.md)
+
+---
+
 ## 🤝 Community
 
 Community is forming. Join the conversation in [GitHub Discussions](https://github.com/paruff/fawkes/discussions). Office hours and chat channels will be announced once the platform reaches beta.
@@ -437,8 +452,6 @@ Community is forming. Join the conversation in [GitHub Discussions](https://gith
 
 - ✅ Core architecture and governance
 - ✅ Dojo learning system design
-- ✅ AI features — RAG service, Weaviate vector DB, AI coding assistant, AI usage policy
-- ✅ Data catalog (DataHub with PostgreSQL and OpenSearch)
 - ✅ User research infrastructure — personas, interview guides, insights database
 - ✅ Product discovery and adoption support
 - ✅ Security plane — SBOM, image signing, policy enforcement
@@ -449,6 +462,7 @@ Community is forming. Join the conversation in [GitHub Discussions](https://gith
 - ✅ Jenkins CI/CD with golden path templates
 - ✅ Backstage developer portal
 - ✅ Mattermost collaboration platform
+- ✅ Extensions — AI (Weaviate, RAG service) and Data Platform (DataHub) available as opt-in add-ons
 
 ### Q1 2026: Platform Expansion
 
