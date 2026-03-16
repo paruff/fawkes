@@ -5374,6 +5374,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#deployment-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Tiers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment Tiers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tier-1-core-platform-local-or-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier 1 — Core Platform (local or cloud)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tier-2-full-platform-cloud-deployments-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier 2 — Full Platform (cloud deployments only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#component-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5553,6 +5592,7 @@ See also: <code>AGENTS.md</code> §4 (Architecture Rules), <code>docs/CHANGE_IMP
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol>
+<li><a href="#deployment-tiers">Deployment Tiers</a></li>
 <li><a href="#component-overview">Component Overview</a></li>
 <li><a href="#layer-dependency-rules">Layer Dependency Rules</a></li>
 <li><a href="#component-diagram">Component Diagram</a></li>
@@ -5562,6 +5602,209 @@ See also: <code>AGENTS.md</code> §4 (Architecture Rules), <code>docs/CHANGE_IMP
 <li><a href="#network-namespace-layout">Network Namespace Layout</a></li>
 <li><a href="#cross-platform-dependencies">Cross-Platform Dependencies</a></li>
 </ol>
+<hr />
+<h2 id="deployment-tiers">Deployment Tiers</h2>
+<p>Fawkes uses a two-tier deployment model that matches the user's goal and environment.
+See <a href="../getting-started/">docs/getting-started.md</a> for the full decision guide.</p>
+<h3 id="tier-1-core-platform-local-or-cloud">Tier 1 — Core Platform (local or cloud)</h3>
+<p>Tier 1 is the minimum set of components required to experience the platform. It is
+deployed by <strong>Path A (local k3d)</strong> and is also the foundation of every <strong>Path B / Path C</strong>
+cloud deployment.</p>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
+│                    Tier 1 — Core Platform                        │
+│                                                                  │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Backstage Developer Portal + Dojo Hub                   │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                          │                                       │
+│  ┌───────────────────────┴─────────────────────────────────┐   │
+│  │  ArgoCD (GitOps controller)                              │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                          │                                       │
+│  ┌──────────────┬─────────────────────┐                        │
+│  │  Prometheus  │  Grafana            │  ← DORA dashboards      │
+│  └──────────────┴─────────────────────┘                        │
+│                          │                                       │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Vault (dev mode local / prod mode cloud)               │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                          │                                       │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Sample Application (demonstrates CI/CD + DORA metrics) │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  Kubernetes: k3d (local) or managed K8s (cloud)                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Local (Path A)</th>
+<th>Cloud (Path B/C)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ArgoCD</td>
+<td>✅ k3d</td>
+<td>✅ EKS / AKS</td>
+</tr>
+<tr>
+<td>Backstage</td>
+<td>✅ SQLite</td>
+<td>✅ RDS PostgreSQL</td>
+</tr>
+<tr>
+<td>Prometheus + Grafana</td>
+<td>✅ in-cluster</td>
+<td>✅ in-cluster</td>
+</tr>
+<tr>
+<td>Vault</td>
+<td>✅ dev mode (non-persistent)</td>
+<td>✅ production mode</td>
+</tr>
+<tr>
+<td>Sample application</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tier-2-full-platform-cloud-deployments-only">Tier 2 — Full Platform (cloud deployments only)</h3>
+<p>Tier 2 extends Tier 1 with the components needed for production use: CI/CD, security
+scanning, log aggregation, DORA metrics, and enterprise collaboration.</p>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
+│                    Tier 2 — Full Platform                        │
+│  (extends Tier 1 — all Tier 1 components are also present)      │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  CI/CD Layer                                              │  │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────────────────┐   │  │
+│  │  │ Jenkins  │  │ DevLake  │  │ Container Registry   │   │  │
+│  │  │ (CI/CD)  │  │ (DORA)   │  │ (Harbor / ECR)       │   │  │
+│  │  └──────────┘  └──────────┘  └──────────────────────┘   │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Security Layer                                           │  │
+│  │  ┌────────────┐  ┌────────┐  ┌────────────────────────┐  │  │
+│  │  │ SonarQube  │  │ Trivy  │  │ External Secrets Oper. │  │  │
+│  │  │ (SAST)     │  │ (scan) │  │ (secrets sync)         │  │  │
+│  │  └────────────┘  └────────┘  └────────────────────────┘  │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Extended Observability                                   │  │
+│  │  ┌────────────┐  ┌──────────────┐  ┌─────────────────┐   │  │
+│  │  │ OpenSearch │  │ Grafana Tempo│  │ OTel Collector  │   │  │
+│  │  │ (logs)     │  │ (traces)     │  │ (fan-out)       │   │  │
+│  │  └────────────┘  └──────────────┘  └─────────────────┘   │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Collaboration                                            │  │
+│  │  ┌────────────────────────────────────────────────────┐  │  │
+│  │  │ Mattermost + Focalboard (chat + project management)│  │  │
+│  │  └────────────────────────────────────────────────────┘  │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  Cloud: Amazon EKS + RDS + S3  (or Azure AKS / GKE)            │
+│  DNS + TLS: cert-manager + Let&#39;s Encrypt                        │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Tier 1</th>
+<th>Tier 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ArgoCD</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Backstage</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Prometheus + Grafana</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Vault</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Sample application</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Jenkins CI/CD</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>DevLake (DORA aggregation)</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>SonarQube (SAST)</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Trivy (container scanning)</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Container registry (Harbor / ECR)</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>OpenSearch (logs)</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Grafana Tempo (traces)</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>External Secrets Operator</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Mattermost + Focalboard</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>cert-manager + Let's Encrypt</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Amazon RDS / managed DB</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="component-overview">Component Overview</h2>
 <p>Fawkes is composed of four platform layers that must only depend downward:</p>
