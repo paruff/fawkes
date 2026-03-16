@@ -30,7 +30,12 @@ BACKSTAGE_CHART_VERSION="2.3.0"
 PROMETHEUS_CHART_VERSION="67.9.0"
 
 log() { echo "$(date -u +%H:%M:%S) $*"; }
-step() { echo; log "──────────────────────────────────────────"; log "▶  $*"; log "──────────────────────────────────────────"; }
+step() {
+  echo
+  log "──────────────────────────────────────────"
+  log "▶  $*"
+  log "──────────────────────────────────────────"
+}
 ok() { log "✅  $*"; }
 warn() { log "⚠️   $*"; }
 
@@ -40,7 +45,7 @@ warn() { log "⚠️   $*"; }
 step "Checking prerequisites"
 MISSING=()
 for cmd in docker k3d kubectl helm; do
-  if ! command -v "$cmd" &>/dev/null; then
+  if ! command -v "$cmd" &> /dev/null; then
     MISSING+=("$cmd")
   fi
 done
@@ -61,7 +66,7 @@ ok "All prerequisites found"
 # 2. Create k3d cluster (skip if already running)
 # ---------------------------------------------------------------------------
 step "Creating k3d cluster: ${CLUSTER_NAME}"
-if k3d cluster list 2>/dev/null | grep -q "^${CLUSTER_NAME} "; then
+if k3d cluster list 2> /dev/null | grep -q "^${CLUSTER_NAME} "; then
   warn "Cluster '${CLUSTER_NAME}' already exists — skipping creation"
 else
   k3d cluster create "${CLUSTER_NAME}" \
@@ -80,11 +85,11 @@ ok "kubectl context switched to k3d-${CLUSTER_NAME}"
 # 3. Add Helm repositories
 # ---------------------------------------------------------------------------
 step "Adding Helm repositories"
-helm repo add argo      https://argoproj.github.io/argo-helm              2>/dev/null || true
-helm repo add hashicorp https://helm.releases.hashicorp.com               2>/dev/null || true
-helm repo add backstage https://backstage.github.io/charts                2>/dev/null || true
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 2>/dev/null || true
-helm repo add podinfo   https://stefanprodan.github.io/podinfo             2>/dev/null || true
+helm repo add argo https://argoproj.github.io/argo-helm 2> /dev/null || true
+helm repo add hashicorp https://helm.releases.hashicorp.com 2> /dev/null || true
+helm repo add backstage https://backstage.github.io/charts 2> /dev/null || true
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 2> /dev/null || true
+helm repo add podinfo https://stefanprodan.github.io/podinfo 2> /dev/null || true
 helm repo update
 ok "Helm repos updated"
 
@@ -157,7 +162,7 @@ step "Deploying sample app (podinfo) via ArgoCD"
 kubectl create namespace "${SAMPLE_NS}" --dry-run=client -o yaml | kubectl apply -f -
 
 # Create an ArgoCD Application manifest for podinfo
-kubectl apply -f - <<'EOF'
+kubectl apply -f - << 'EOF'
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -198,8 +203,8 @@ ok "podinfo ArgoCD Application created"
 # Wait for podinfo deployment to become available (ArgoCD syncs it asynchronously)
 log "Waiting for podinfo to be deployed by ArgoCD (up to 2 min)..."
 kubectl wait --for=condition=available deployment/podinfo \
-  --namespace "${SAMPLE_NS}" --timeout=120s 2>/dev/null || \
-  log "⚠️  podinfo not yet available — ArgoCD may still be syncing (check: make dev-status)"
+  --namespace "${SAMPLE_NS}" --timeout=120s 2> /dev/null \
+  || log "⚠️  podinfo not yet available — ArgoCD may still be syncing (check: make dev-status)"
 
 # ---------------------------------------------------------------------------
 # 9. Print status
