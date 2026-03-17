@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-fawkes
+  namespace: dojo-lab-01
+  labels:
+    app: hello-fawkes
+    version: v1.0.0
+    component: lab
+    managed-by: fawkes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-fawkes
+  template:
+    metadata:
+      labels:
+        app: hello-fawkes
+        version: v1.0.0
+        component: lab
+        managed-by: fawkes
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: nginx-cache
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir: {}
+      containers:
+        - name: hello-fawkes
+          image: ghcr.io/nginxinc/nginx-unprivileged:1.25-alpine
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+            - name: nginx-run
+              mountPath: /var/run
