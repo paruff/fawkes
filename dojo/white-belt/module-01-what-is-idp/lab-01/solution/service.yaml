@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-fawkes
+  namespace: dojo-lab-01
+  labels:
+    app: hello-fawkes
+    version: v1.0.0
+    component: lab
+    managed-by: fawkes
+spec:
+  type: ClusterIP
+  selector:
+    app: hello-fawkes
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+      protocol: TCP

@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-fawkes
+  namespace: argocd
+  labels:
+    app: hello-fawkes
+    version: v1.0.0
+    component: lab
+    managed-by: fawkes
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes
+    targetRevision: main
+    path: docs/dojo/white-belt/module-01-what-is-idp/lab-01/solution
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dojo-lab-01
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
