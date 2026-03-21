@@ -88,12 +88,12 @@ Each template includes:
 
 ### 2. Python FastAPI Template
 
-**Framework:** FastAPI 0.115.5 with Python 3.12
+**Framework:** FastAPI 0.135.1 with Python 3.12
 
 **Key Dependencies:**
 
 - fastapi (latest secure version)
-- uvicorn 0.32.1 (ASGI server)
+- uvicorn 0.34.3 (ASGI server)
 - prometheus-client
 - pytest 8.3.4 (testing)
 - behave (BDD)
