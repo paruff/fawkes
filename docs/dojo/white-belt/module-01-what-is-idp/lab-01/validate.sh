@@ -172,11 +172,12 @@ write_dojo_progress() {
   # Build the updated JSON blob using Python.
   # Pass shell variables through environment variables to avoid injection.
   local updated_json
-  updated_json=$(DOJO_EXISTING="$existing" \
-    DOJO_BELT="$belt" \
-    DOJO_LAB_ID="$lab_id" \
-    DOJO_STATUS="$status" \
-    python3 - << 'PYEOF'
+  updated_json=$(
+    DOJO_EXISTING="$existing" \
+      DOJO_BELT="$belt" \
+      DOJO_LAB_ID="$lab_id" \
+      DOJO_STATUS="$status" \
+      python3 - << 'PYEOF'
 import json
 import os
 
