@@ -37,8 +37,8 @@ setup(
     install_requires=[
         "click>=8.0.0",
         "pyyaml>=6.0",
-        "requests>=2.32.0",
-        "urllib3>=2.5.0",
+        "requests>=2.32.4",
+        "urllib3>=2.6.3",
         "kubernetes>=24.0.0",
         "rich>=12.0.0",  # For beautiful terminal output
     ],
@@ -133,7 +133,7 @@ keywords = ["platform-engineering", "devops", "kubernetes", "gitops", "dojo"]
 dependencies = [
     "click>=8.0.0",
     "pyyaml>=6.0",
-    "requests>=2.28.0",
+    "requests>=2.32.4",
     "kubernetes>=24.0.0",
     "rich>=12.0.0",
 ]
