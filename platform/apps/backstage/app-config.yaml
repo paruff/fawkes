@@ -119,6 +119,24 @@ data:
           target: http://plausible.fawkes.svc:8000/api/
           changeOrigin: true
           secure: false
+        '/dojo/progress':
+          # Reads the fawkes-dojo-progress ConfigMap via the Kubernetes API.
+          # The Backstage ServiceAccount must have the backstage-dojo-progress-reader
+          # Role applied (see platform/backstage/plugins/dojo-progress/rbac.yaml).
+          #
+          # KUBERNETES_SERVICE_ACCOUNT_TOKEN is automatically projected into the
+          # Backstage pod at /var/run/secrets/kubernetes.io/serviceaccount/token.
+          # Inject it via the Backstage Deployment's env:
+          #   - name: KUBERNETES_SERVICE_ACCOUNT_TOKEN
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: backstage-sa-token   # or use projected token volume
+          #         key: token
+          target: https://kubernetes.default.svc/api/v1/namespaces/fawkes/configmaps/fawkes-dojo-progress
+          changeOrigin: true
+          secure: false
+          headers:
+            Authorization: Bearer ${KUBERNETES_SERVICE_ACCOUNT_TOKEN}
 
     techdocs:
       builder: local
@@ -184,3 +202,19 @@ data:
       baseUrl: http://jenkins.fawkes.svc:8080
       username: ${JENKINS_USERNAME}
       apiKey: ${JENKINS_API_KEY}
+
+    # -------------------------------------------------------------------------
+    # Dojo Progress Plugin
+    # Frontend: @fawkes/backstage-plugin-dojo-progress
+    # Source:   platform/backstage/plugins/dojo-progress/
+    #
+    # App route (packages/app/src/App.tsx):
+    #   <Route path="/dojo" element={<DojoProgressPage />} />
+    #
+    # Sidebar item (packages/app/src/components/Root/Root.tsx):
+    #   <SidebarItem icon={SchoolIcon} to="dojo" text="Dojo" />
+    #
+    # The /dojo/progress proxy entry above forwards reads to the
+    # fawkes-dojo-progress ConfigMap via the in-cluster Kubernetes API.
+    # Apply RBAC first: platform/backstage/plugins/dojo-progress/rbac.yaml
+    # -------------------------------------------------------------------------

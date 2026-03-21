@@ -25,6 +25,13 @@ BACKSTAGE_URL="${BACKSTAGE_URL:-http://localhost:7007}"
 GRAFANA_URL="${GRAFANA_URL:-http://localhost:3000}"
 CHECK_HTTP_PORT="${CHECK_HTTP_PORT:-18888}"
 
+# Dojo progress configuration
+DOJO_BELT="white"
+DOJO_LAB_ID="lab-01"
+DOJO_PROGRESS_CONFIGMAP="fawkes-dojo-progress"
+DOJO_PROGRESS_NAMESPACE="fawkes"
+DOJO_GITHUB_USERNAME="${GITHUB_USER:-$(git config user.name 2> /dev/null | tr ' ' '-' | tr '[:upper:]' '[:lower:]' || echo "")}"
+
 # Test results
 TOTAL_TESTS=0
 PASSED_TESTS=0
@@ -111,6 +118,114 @@ cleanup() {
     kill "$PF_PID" 2> /dev/null || true
     PF_PID=""
   fi
+}
+
+# =============================================================================
+# Dojo Progress Functions
+# =============================================================================
+
+# write_dojo_progress — patches the fawkes-dojo-progress ConfigMap to record
+# that DOJO_GITHUB_USERNAME has completed DOJO_LAB_ID in DOJO_BELT.
+#
+# This function is called automatically after all tests pass.
+# It is a best-effort update: failures emit a warning but do not fail the
+# overall validation run (exit code is still 0 on test success).
+#
+# Requires:
+#   - kubectl with access to the fawkes namespace
+#   - RBAC: Role dojo-progress-writer bound to the running ServiceAccount
+#     (see platform/backstage/plugins/dojo-progress/rbac.yaml)
+write_dojo_progress() {
+  local username="$1"
+  local belt="$2"
+  local lab_id="$3"
+  local status="${4:-PASS}"
+
+  if [ -z "$username" ]; then
+    log_warning "DOJO_GITHUB_USERNAME not set — skipping progress update."
+    log_warning "Set GITHUB_USER env var or configure git user.name to enable tracking."
+    return 0
+  fi
+
+  if ! kubectl get namespace "$DOJO_PROGRESS_NAMESPACE" > /dev/null 2>&1; then
+    log_warning "Namespace '$DOJO_PROGRESS_NAMESPACE' not found — skipping progress update."
+    return 0
+  fi
+
+  log_info "Recording dojo progress: @${username} ${belt}/${lab_id} = ${status}"
+
+  # Ensure the ConfigMap exists (create it if it doesn't).
+  if ! kubectl get configmap "$DOJO_PROGRESS_CONFIGMAP" \
+    -n "$DOJO_PROGRESS_NAMESPACE" > /dev/null 2>&1; then
+    log_info "Creating ConfigMap '$DOJO_PROGRESS_CONFIGMAP'..."
+    kubectl create configmap "$DOJO_PROGRESS_CONFIGMAP" \
+      -n "$DOJO_PROGRESS_NAMESPACE" \
+      --from-literal="$username={}" 2> /dev/null || true
+  fi
+
+  # Read existing user progress (may be empty or absent).
+  local existing
+  existing=$(kubectl get configmap "$DOJO_PROGRESS_CONFIGMAP" \
+    -n "$DOJO_PROGRESS_NAMESPACE" \
+    -o jsonpath="{.data.${username}}" 2> /dev/null || echo "")
+
+  # Build the updated JSON blob using Python.
+  # Pass shell variables through environment variables to avoid injection.
+  local updated_json
+  updated_json=$(DOJO_EXISTING="$existing" \
+    DOJO_BELT="$belt" \
+    DOJO_LAB_ID="$lab_id" \
+    DOJO_STATUS="$status" \
+    python3 - << 'PYEOF'
+import json
+import os
+
+raw = os.environ.get("DOJO_EXISTING", "")
+belt = os.environ["DOJO_BELT"]
+lab_id = os.environ["DOJO_LAB_ID"]
+status = os.environ["DOJO_STATUS"]
+
+try:
+    progress = json.loads(raw) if raw.strip() else {}
+except Exception:
+    progress = {}
+
+belts = ["white", "yellow", "green", "brown", "black"]
+for b in belts:
+    if b not in progress:
+        progress[b] = {"labs": {}}
+
+progress[belt]["labs"][lab_id] = status
+print(json.dumps(progress))
+PYEOF
+  )
+
+  if [ -z "$updated_json" ]; then
+    log_warning "Failed to compute updated progress JSON — skipping ConfigMap patch."
+    return 0
+  fi
+
+  # Write the patch payload to a temp file to avoid quoting/escaping issues
+  # with special characters in the JSON value.
+  local patch_file
+  patch_file=$(mktemp /tmp/dojo-progress-patch.XXXXXX.json)
+  python3 -c "
+import json, sys
+payload = {'data': {'$username': sys.stdin.read()}}
+print(json.dumps(payload))
+" <<< "$updated_json" > "$patch_file"
+
+  if kubectl patch configmap "$DOJO_PROGRESS_CONFIGMAP" \
+    -n "$DOJO_PROGRESS_NAMESPACE" \
+    --type merge \
+    --patch-file "$patch_file" > /dev/null 2>&1; then
+    log_success "Progress recorded: @${username} ${belt}/${lab_id} = ${status}"
+  else
+    log_warning "Could not patch ConfigMap '$DOJO_PROGRESS_CONFIGMAP'."
+    log_warning "Ensure RBAC is applied: kubectl apply -f platform/backstage/plugins/dojo-progress/rbac.yaml"
+  fi
+
+  rm -f "$patch_file"
 }
 
 # =============================================================================
@@ -315,6 +430,11 @@ print_summary() {
     echo "🎉 Congratulations! You have completed White Belt Module 1 Lab 01."
     echo "   Your service is deployed, synced via GitOps, and observable."
     echo "   Move on to Module 02: DORA Metrics."
+    write_dojo_progress \
+      "$DOJO_GITHUB_USERNAME" \
+      "$DOJO_BELT" \
+      "$DOJO_LAB_ID" \
+      "PASS"
     return 0
   else
     log_error "Some tests failed! ❌"

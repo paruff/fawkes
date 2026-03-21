@@ -1,0 +1,35 @@
+# ============================================================================
+# FILE: platform/backstage/plugins/dojo-progress/configmap.yaml
+# PURPOSE: Kubernetes ConfigMap that stores Fawkes Dojo belt progress.
+#          Each key is a GitHub username; the value is a JSON string
+#          containing per-belt lab results.
+#
+# Schema (JSON value per username):
+#   {
+#     "white":  { "labs": { "lab-01": "PASS|FAIL|PENDING", ... } },
+#     "yellow": { "labs": { ... } },
+#     "green":  { "labs": { ... } },
+#     "brown":  { "labs": { ... } },
+#     "black":  { "labs": { ... } }
+#   }
+#
+# This ConfigMap is:
+#   - Written by dojo validate.sh scripts on successful lab completion
+#   - Read by the Backstage dojo-progress plugin via the /dojo/progress proxy
+#   - Patched with kubectl (PATCH strategy=merge) to avoid race conditions
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fawkes-dojo-progress
+  namespace: fawkes
+  labels:
+    app: fawkes-dojo
+    component: progress-tracking
+    managed-by: fawkes
+  annotations:
+    description: >
+      Belt progress for Fawkes Dojo learners.
+      Keyed by GitHub username.  Values are JSON strings (see schema above).
+      Updated automatically by lab validate.sh scripts on success.
+data: {}

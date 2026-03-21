@@ -1,0 +1,91 @@
+# ============================================================================
+# FILE: platform/backstage/plugins/dojo-progress/rbac.yaml
+# PURPOSE: RBAC resources that allow the Backstage service account to read
+#          the fawkes-dojo-progress ConfigMap, and the dojo-validator
+#          ServiceAccount to write (patch) it from validate.sh scripts.
+#
+# Apply before enabling the plugin:
+#   kubectl apply -f platform/backstage/plugins/dojo-progress/rbac.yaml
+# ============================================================================
+---
+# ServiceAccount used by dojo lab validate.sh scripts (run as K8s Jobs).
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dojo-validator
+  namespace: fawkes
+  labels:
+    app: fawkes-dojo
+    component: dojo-progress
+    managed-by: fawkes
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: backstage-dojo-progress-reader
+  namespace: fawkes
+  labels:
+    app: backstage
+    component: dojo-progress
+    managed-by: fawkes
+rules:
+  - apiGroups: [""]
+    resources: [configmaps]
+    resourceNames: [fawkes-dojo-progress]
+    verbs: [get]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: backstage-dojo-progress-reader
+  namespace: fawkes
+  labels:
+    app: backstage
+    component: dojo-progress
+    managed-by: fawkes
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: backstage-dojo-progress-reader
+subjects:
+  - kind: ServiceAccount
+    name: backstage
+    namespace: fawkes
+---
+# Role for validate.sh scripts to create/patch the progress ConfigMap.
+# Bound to the dedicated dojo-validator ServiceAccount (not the default SA).
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: dojo-progress-writer
+  namespace: fawkes
+  labels:
+    app: fawkes-dojo
+    component: dojo-progress
+    managed-by: fawkes
+rules:
+  - apiGroups: [""]
+    resources: [configmaps]
+    resourceNames: [fawkes-dojo-progress]
+    verbs: [get, patch]
+  - apiGroups: [""]
+    resources: [configmaps]
+    verbs: [create]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dojo-progress-writer
+  namespace: fawkes
+  labels:
+    app: fawkes-dojo
+    component: dojo-progress
+    managed-by: fawkes
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: dojo-progress-writer
+subjects:
+  - kind: ServiceAccount
+    name: dojo-validator
+    namespace: fawkes
