@@ -29,7 +29,7 @@ setup(
     python_requires=">=3.9",
     install_requires=[
         "click>=8.1.7",
-        "requests>=2.31.0",
+        "requests>=2.32.4",
         "rich>=13.7.0",
         "pydantic>=2.5.0",
         "pyyaml>=6.0.1",
