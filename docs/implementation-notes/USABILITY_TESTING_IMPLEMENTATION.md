@@ -454,7 +454,7 @@ helm install openreplay openreplay/openreplay \
 
 - [Usability Testing Guide](docs/how-to/usability-testing-guide.md)
 - [Session Recording Setup](docs/how-to/session-recording-setup.md)
-- [Research Repository](docs/research/README.md)
+- [Research Repository](docs/research/index.md)
 - [Interview Protocol](docs/research/interviews/interview-protocol.md)
 
 ### Templates

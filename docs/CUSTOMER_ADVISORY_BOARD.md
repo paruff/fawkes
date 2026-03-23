@@ -506,7 +506,7 @@ A: Yes, we can invite "guest advisors" for specific expertise without full CAB m
 
 - [Governance](GOVERNACE.md) - Overall project governance
 - [Charter](CHARTER.md) - Project vision and mission
-- [User Research](research/README.md) - Research practices and templates
+- [User Research](research/index.md) - Research practices and templates
 
 ### Templates
 

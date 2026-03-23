@@ -24,7 +24,7 @@ Successfully created a comprehensive user research repository structure for Fawk
 
 ### ✅ README with guidelines
 
-- **Main README**: `docs/research/README.md` (13,820 characters)
+- **Main README**: `docs/research/index.md` (13,820 characters)
 
   - Purpose and usage guidelines
   - Directory structure overview
@@ -143,7 +143,7 @@ Failed: 0
 ### New Files Created (20 files)
 
 1. `.gitattributes` - Git LFS configuration
-2. `docs/research/README.md` - Main documentation
+2. `docs/research/index.md` - Main documentation
 3. `docs/research/personas/README.md` - Persona guidelines
 4. `docs/research/personas/.gitkeep` - Directory placeholder
 5. `docs/research/interviews/README.md` - Interview documentation
@@ -169,7 +169,7 @@ Failed: 0
 
 ## Next Steps for Users
 
-1. **Review Documentation**: Read `docs/research/README.md`
+1. **Review Documentation**: Read `docs/research/index.md`
 2. **Ensure Git LFS**: Run `git lfs install` if not already done
 3. **Start Creating**: Use templates to create personas, interviews, journey maps
 4. **Validate Structure**: Run `make validate-research-structure` to verify setup

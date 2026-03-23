@@ -72,7 +72,13 @@ while IFS= read -r filepath; do
       STUB_COUNT=$((STUB_COUNT + 1))
     fi
   fi
-done < <(sed -n '/^nav:/,/^[a-z]/p' "${MKDOCS_YML}" | grep -oE '[a-zA-Z0-9_/.-]+\.md' | sort -u)
+done < <(awk '
+  /^nav:/ { in_nav = 1; next }
+  in_nav {
+    if ($0 ~ /^[a-z]/) { exit }
+    print
+  }
+' "${MKDOCS_YML}" | grep -oE '[a-zA-Z0-9_/.-]+\.md' | sort -u)
 
 if [[ "${STUB_COUNT}" -eq 0 ]]; then
   echo "✅  No stub pages found (all nav files have ≥200 words)"
@@ -99,7 +105,13 @@ while IFS= read -r filepath; do
       TODO_COUNT=$((TODO_COUNT + 1))
     fi
   fi
-done < <(sed -n '/^nav:/,/^[a-z]/p' "${MKDOCS_YML}" | grep -oE '[a-zA-Z0-9_/.-]+\.md' | sort -u)
+done < <(awk '
+  /^nav:/ { in_nav = 1; next }
+  in_nav {
+    if ($0 ~ /^[a-z]/) { exit }
+    print
+  }
+' "${MKDOCS_YML}" | grep -oE '[a-zA-Z0-9_/.-]+\.md' | sort -u)
 
 if [[ "${TODO_COUNT}" -eq 0 ]]; then
   echo "✅  No TODO/Coming Soon placeholders found"
