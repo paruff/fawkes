@@ -8,7 +8,7 @@
 
 <!-- Link to the issue this PR addresses -->
 
-Fixes #(issue number)
+Closes #(issue number)
 
 ## Type of Change
 
@@ -61,6 +61,13 @@ Fixes #(issue number)
 ## Checklist
 
 <!-- Mark completed items with an "x" -->
+
+### Required Before Merge
+
+- [ ] Linked issue referenced above with `Closes #NNN`
+- [ ] `make lint` passes locally (ruff, shellcheck, tflint, yamllint, etc.)
+- [ ] All existing tests pass (`make test-unit`)
+- [ ] Documentation updated (if behaviour changed)
 
 ### Code Quality
 
