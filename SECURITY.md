@@ -4,13 +4,14 @@
 
 The following versions of Fawkes are currently supported with security updates:
 
-| Version     | Supported          |
-| ----------- | ------------------ |
-| `main`      | ✅ Yes             |
-| Pre-release | ✅ Yes             |
-| Older tags  | ❌ No              |
+| Version                   | Supported  |
+| ------------------------- | ---------- |
+| `main`                    | ✅ Yes     |
+| Latest stable release tag | ✅ Yes     |
+| Pre-release tags          | ❌ No      |
+| Older release tags        | ❌ No      |
 
-We only provide security fixes for the latest release and the `main` branch.
+We only provide security fixes for the `main` branch and the latest stable tagged release. Pre-release builds and older release tags do not receive backported security fixes.
 
 ---
 

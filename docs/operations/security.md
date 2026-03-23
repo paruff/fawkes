@@ -9,7 +9,7 @@ This page is the operational entry point for all security-related processes in F
 Fawkes has a responsible disclosure (coordinated vulnerability disclosure) policy for security
 researchers and users who discover vulnerabilities in the platform.
 
-👉 **See [SECURITY.md](../../SECURITY.md) at the repository root for the full policy**, including:
+👉 **See [SECURITY.md](https://github.com/paruff/fawkes/blob/main/SECURITY.md) at the repository root for the full policy**, including:
 
 - Supported versions
 - How to privately report a vulnerability (GitHub Security Advisory or email)
