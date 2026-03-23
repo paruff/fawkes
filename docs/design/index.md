@@ -4,7 +4,9 @@ This section contains design system documentation, UI/UX guidelines, and design 
 
 ## Overview
 
-The Fawkes platform includes design system components and integrations to maintain consistent user experiences.
+The Fawkes platform includes design system components and integrations to maintain consistent user experiences across all developer-facing surfaces. The design system is built on atomic design principles — components, patterns, and guidelines are defined once and reused across the Backstage portal, documentation sites, and internal tooling.
+
+All design assets are version-controlled, reviewed through the same pull-request workflow as code, and deployed automatically. This ensures that design and implementation stay in sync and that accessibility standards are enforced consistently.
 
 ## Design System
 
@@ -38,3 +40,4 @@ The Fawkes platform includes design system components and integrations to mainta
 - [User Research](../research/index.md) - User research and personas
 - [Feedback System](../implementation-notes/FEEDBACK_IMPLEMENTATION.md) - Collect user feedback
 - [How-To Guides](../how-to/index.md) - Design implementation guides
+
