@@ -25,7 +25,6 @@ Copy the YAML block into the target file, remove the header comment, and commit.
 ## GitHub Copilot
 
 - [GitHub Copilot Setup](copilot-setup.md) - Configure GitHub Copilot for Fawkes development
-- 
 
 ## AI-Powered Features
 

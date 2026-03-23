@@ -20,7 +20,7 @@ each requires completing the learning module and passing a practical assessment.
 ## How to Enrol
 
 1. Talk to your team lead or platform team to get access to the dojo environment.
-2. Start with the [White Belt module](modules/white-belt/module-01-what-is-idp.md).
+2. Start with the [White Belt module](white-belt/module-01-what-is-idp/README.md).
 3. Complete the exercises in order. Each module builds on the previous one.
 4. Book an assessment session with a belt-holder when you feel ready.
 
@@ -58,6 +58,6 @@ kubectl get pods -n my-namespace
 
 ## See Also
 
-- [White Belt Module 01 — What Is an IDP?](modules/white-belt/module-01-what-is-idp.md)
+- [White Belt Module 01 — What Is an IDP?](white-belt/module-01-what-is-idp/README.md)
 - [Learning Culture Pattern](../patterns/learning-culture.md)
 - [Tutorials](../tutorials/index.md)
