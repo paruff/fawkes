@@ -252,7 +252,7 @@ make validate-at-e3-011 NAMESPACE=fawkes
 2. Enter domain: backstage.fawkes.idp
 3. Start tracking immediately
 
-See [Quick Start Guide](docs/how-to/product-analytics-quickstart.md) for details.
+See Quick Start Guide for details.
 
 ---
 
@@ -350,10 +350,10 @@ kubectl logs -n fawkes db-plausible-dev-1 -f
 
 ## Documentation
 
-1. **ADR**: [ADR-032 Product Analytics Platform Selection](docs/adr/ADR-032%20Product%20Analytics%20Platform%20Selection.md)
-2. **Quick Start**: [Product Analytics Quick Start](docs/how-to/product-analytics-quickstart.md)
-3. **Implementation Guide**: [Product Analytics Implementation](docs/implementation-plan/product-analytics-implementation.md)
-4. **User Guide**: [Plausible README](platform/apps/plausible/README.md)
+1. **ADR**: ADR-032 Product Analytics Platform Selection
+2. **Quick Start**: Product Analytics Quick Start
+3. **Implementation Guide**: Product Analytics Implementation
+4. **User Guide**: Plausible README
 5. **Plausible Docs**: https://plausible.io/docs
 
 ---

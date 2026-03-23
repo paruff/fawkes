@@ -51,10 +51,13 @@ make deploy-local COMPONENT=all
 
 See the [Troubleshooting Guide](../troubleshooting.md) for common issues and solutions.
 
+Platform engineers should keep runbooks current: an out-of-date runbook is worse
+than no runbook because it creates false confidence during incidents.
+
 ## Related Documentation
 
-- [Operations Documentation](../operations/) - Day 2 operations guides
+- [Operations Documentation](../runbooks/index.md) - Day 2 operations guides
 - [How-To Guides](../how-to/index.md) - Step-by-step procedures
 - [Troubleshooting](../troubleshooting.md) - Problem resolution
-- [Validation](../validation/) - Validation procedures
+- [Validation](../validation/index.md) - Validation procedures
 - [Deployment](../deployment/index.md) - Deployment guides

@@ -646,8 +646,8 @@ If deployment fails and needs rollback:
 
 ## Related Documentation
 
-- [DORA Metrics Service README](../platform/apps/devlake/README.md)
-- [DORA Metrics API Reference](../docs/reference/dora-metrics-api.md)
-- [Database Schema Documentation](../docs/reference/dora-metrics-database-schema.md)
-- [ADR-016: DevLake DORA Strategy](../docs/adr/ADR-016%20devlake-dora-strategy.md)
-- [Architecture: DORA Metrics Service](../docs/architecture.md#6-dora-metrics-service)
+- DORA Metrics Service README
+- DORA Metrics API Reference
+- Database Schema Documentation
+- ADR-016: DevLake DORA Strategy
+- Architecture: DORA Metrics Service

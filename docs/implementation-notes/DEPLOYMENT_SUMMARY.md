@@ -80,7 +80,7 @@ Three golden path templates for creating new services:
    - Troubleshooting guide
    - Validation steps
 
-2. **Deployment README** (`docs/deployment/README.md`)
+2. **Deployment README** (`docs/deployment/index.md`)
 
    - Overview of deployment guides
    - Quick start instructions
@@ -230,7 +230,7 @@ kubectl port-forward -n fawkes svc/backstage 7007:7007
 **New Files (15):**
 
 - `catalog-info.yaml` - Root platform catalog
-- `docs/deployment/README.md` - Deployment guides index
+- `docs/deployment/index.md` - Deployment guides index
 - `docs/deployment/backstage-postgresql.md` - Comprehensive deployment guide
 - `docs/validation/backstage-deployment-validation.md` - Validation documentation
 - `templates/python-service/template.yaml` - Python service template
@@ -295,11 +295,11 @@ ArgoCD (GitOps)
 
 ### 📖 References
 
-- [Deployment Guide](docs/deployment/backstage-postgresql.md)
-- [Validation Document](docs/validation/backstage-deployment-validation.md)
-- [Architecture Documentation](docs/architecture.md)
-- [ADR-002: Backstage for Developer Portal](docs/adr/ADR-002%20backstage.md)
-- [BDD Tests](tests/bdd/features/backstage-deployment.feature)
+- Deployment Guide
+- Validation Document
+- Architecture Documentation
+- ADR-002: Backstage for Developer Portal
+- BDD Tests
 
 ### ✅ Definition of Done
 

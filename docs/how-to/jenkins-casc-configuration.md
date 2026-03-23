@@ -554,7 +554,7 @@ authorizationStrategy:
 
 ## Related Documentation
 
-- [Jenkins README](../../platform/apps/jenkins/README.md)
+- Jenkins README
 - [Jenkins Pipelines Guide](../copilot/jenkins-pipelines.md)
-- [Golden Path CI/CD](../../jenkins-shared-library/README.md)
-- [External Secrets Setup](../how-to/external-secrets-setup.md)
+- Golden Path CI/CD
+- External Secrets Setup

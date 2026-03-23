@@ -221,9 +221,9 @@ Key Storybook dependencies:
 ## Resources
 
 - [Storybook](http://design-system.fawkes.local) - Live documentation (post-deployment)
-- [Deployment Guide](docs/how-to/deploy-design-system-storybook.md) - Complete deployment instructions
-- [Design System README](design-system/README.md) - Component library overview
-- [BDD Tests](tests/bdd/features/design-system-storybook.feature) - Acceptance criteria tests
+- Deployment Guide - Complete deployment instructions
+- Design System README - Component library overview
+- BDD Tests - Acceptance criteria tests
 
 ## Deployment Commands
 

@@ -52,7 +52,7 @@ Fawkes supports Jenkins, GitHub Actions, and Azure DevOps Pipelines. Pre-configu
 
 ### 9. **What types of testing are included?**
 
-Fawkes includes static analysis, unit testing, integration testing, acceptance testing, performance testing, and security testing. Refer to the [QA Directory](../qa/readme.md) for more information.
+Fawkes includes static analysis, unit testing, integration testing, acceptance testing, performance testing, and security testing. Refer to the QA Directory for more information.
 
 ---
 

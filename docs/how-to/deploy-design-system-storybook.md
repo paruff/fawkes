@@ -400,7 +400,7 @@ Ensure proper RBAC is configured for ArgoCD service account.
 ## Additional Resources
 
 - [Storybook Documentation](https://storybook.js.org/)
-- [Design System README](../../design-system/README.md)
+- Design System README
 - [Kubernetes Documentation](https://kubernetes.io/docs/)
 - [ArgoCD Documentation](https://argo-cd.readthedocs.io/)
 - [NGINX Ingress Documentation](https://kubernetes.github.io/ingress-nginx/)

@@ -283,4 +283,4 @@ will create your own service from scratch using the same pattern.
 
 ---
 
-➡️ **Next**: [Module 02 — DORA Metrics: Measuring Delivery Performance](../../module-02-dora-metrics/README.md)
+➡️ **Next**: Module 02 — DORA Metrics: Measuring Delivery Performance

@@ -208,6 +208,6 @@ Weekly check: `scripts/weekly-metrics.sh`
 - [DORA AI Capabilities Model PDF](https://services.google.com/fh/files/misc/2025_dora_ai_capabilities_model.pdf)
 - [AI Usage Policy](usage-policy.md)
 - [Copilot Setup](copilot-setup.md)
-- [AGENTS.md](../../AGENTS.md) — universal agent instructions
-- [Model Selection Policy](../../AGENTS.md#section-10--model-selection-policy)
+- AGENTS.md — universal agent instructions
+- Model Selection Policy
 - [METRICS.md](../METRICS.md)

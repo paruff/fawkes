@@ -166,7 +166,7 @@ make pre-commit-setup
 pre-commit run --all-files
 ```
 
-See [Pre-commit Documentation](../PRE-COMMIT.md) for details.
+See [Pre-commit Documentation](../../PRE-COMMIT.md) for details.
 
 ## Security & Terraform Workflow
 
@@ -359,10 +359,10 @@ git commit -am "Update pre-commit hooks"
 
 ## Related Documentation
 
-- [Code Quality Standards](development/code-quality-standards.md)
-- [Pre-commit Hooks](../PRE-COMMIT.md)
-- [Quality Gates Configuration](security/quality-gates-configuration.md)
-- [Contributing Guide](../contributing.md)
+- [Code Quality Standards](code-quality-standards.md)
+- [Pre-commit Hooks](../../PRE-COMMIT.md)
+- [Quality Gates Configuration](../security/quality-gates-configuration.md)
+- [Contributing Guide](../../contributing.md)
 
 ## Support
 

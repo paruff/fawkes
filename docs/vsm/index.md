@@ -4,7 +4,9 @@ This section covers value stream mapping documentation, metrics, and optimizatio
 
 ## Overview
 
-Value Stream Mapping helps visualize and optimize the flow of work from idea to production, identifying bottlenecks and waste in the delivery process.
+Value Stream Mapping helps visualize and optimize the flow of work from idea to production, identifying bottlenecks and waste in the delivery process. A VSM exercise reveals where work waits, where handoffs lose context, and where automation can eliminate toil.
+
+In the Fawkes platform, VSM data is collected automatically from Git, CI, and incident systems, enabling continuous measurement without manual facilitation sessions.
 
 ## Documentation
 

@@ -291,6 +291,6 @@ All research participants:
 ## Related Documents
 
 - [Interview Guide Template](../templates/interview-guide.md)
-- [Research Ethics Policy](../templates/research-ethics.md)
+- Research Ethics Policy
 - [Persona Templates](../templates/persona.md)
-- [Individual Personas](../personas/)
+- Individual Personas

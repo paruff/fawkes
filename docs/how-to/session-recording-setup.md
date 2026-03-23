@@ -541,7 +541,7 @@ spec:
 ### Internal Resources
 
 - [Usability Testing Guide](../how-to/usability-testing-guide.md)
-- [Research Repository](../research/README.md)
+- [Research Repository](../research/index.md)
 - [Consent Form](../research/interviews/consent-form.md)
 
 ### Support

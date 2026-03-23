@@ -268,7 +268,7 @@ All tests pass successfully:
 ## References
 
 - [Gitleaks GitHub Repository](https://github.com/gitleaks/gitleaks)
-- [Fawkes Architecture: Security Scanning](docs/architecture.md#security-architecture)
+- Fawkes Architecture: Security Scanning
 - [DORA 2023 Foundation Milestone](https://github.com/paruff/fawkes/milestone/3)
 
 ---

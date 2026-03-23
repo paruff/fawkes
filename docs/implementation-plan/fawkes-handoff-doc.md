@@ -203,8 +203,8 @@ Every issue follows this format:
 
 ## Resources
 
-- [Architecture Doc](link)
-- [ADR-00X](link)
+- Architecture Doc
+- ADR-00X
 
 ````
 

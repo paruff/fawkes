@@ -7,7 +7,7 @@ The Fawkes Design System is a comprehensive component library built for the Fawk
 ## Quick Links
 
 - **Storybook**: [http://design-system.fawkes.local](http://design-system.fawkes.local)
-- **Source Code**: [design-system/](../../design-system/)
+- **Source Code**: design-system/
 - **npm Package**: `@fawkes/design-system`
 
 ## Features
@@ -216,7 +216,7 @@ make validate-at-e3-004
 
 ## Contributing
 
-See [CONTRIBUTING.md](../../design-system/CONTRIBUTING.md) for contribution guidelines.
+See CONTRIBUTING.md for contribution guidelines.
 
 ## Architecture Decision Records
 
@@ -229,8 +229,8 @@ See the following ADRs for design decisions:
 ## Related
 
 - [Backstage Integration](../integrations.md#design-system)
-- [Platform Components](../reference/components.md)
-- [UI/UX Guidelines](./ui-ux-guidelines.md)
+- Platform Components
+- UI/UX Guidelines
 
 ## Support
 

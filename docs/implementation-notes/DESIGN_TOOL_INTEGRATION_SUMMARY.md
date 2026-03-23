@@ -306,7 +306,7 @@ Total: 2,555 lines of code/docs added
 ## References
 
 - [Penpot Documentation](https://help.penpot.app/)
-- [Design System Guide](../docs/design/design-system.md)
+- Design System Guide
 - [Issue #92](https://github.com/paruff/fawkes/issues/92)
 - [Milestone M3.2](https://github.com/paruff/fawkes/milestone/3)
 

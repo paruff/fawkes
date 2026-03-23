@@ -34,6 +34,6 @@ kubectl port-forward -n fawkes svc/hasura 8080:8080
 
 ## Resources
 
-- [Full README](../../../platform/apps/hasura/README.md)
-- [RBAC Guide](../../../services/data-api/rbac/README.md)
-- [Schema Guide](../../../services/data-api/schema/README.md)
+- Full README
+- RBAC Guide
+- Schema Guide

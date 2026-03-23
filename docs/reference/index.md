@@ -125,5 +125,5 @@ CLI documentation is under development. The following will be available:
 | Describes APIs  | Explains decisions | Gives instructions |
 | Technical specs | Background info    | Task completion    |
 
-[View Tools :material-tools:](../tools/){ .md-button .md-button--primary }
+[View Tools :material-tools:](../tools/index.md){ .md-button .md-button--primary }
 [Configuration Guide :material-cog:](../configuration.md){ .md-button }

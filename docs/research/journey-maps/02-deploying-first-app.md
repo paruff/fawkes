@@ -548,8 +548,8 @@ This journey map aligns with:
 - [Platform Developer Persona](../personas/platform-developer.md)
 - [Developer Onboarding Journey Map](01-developer-onboarding.md)
 - [Debugging Production Issue Journey Map](03-debugging-production-issue.md)
-- [ArgoCD GitOps Setup](../../deployment/argocd-setup.md)
-- [Service Creation Guidelines](../../how-to/create-new-service.md)
+- ArgoCD GitOps Setup
+- Service Creation Guidelines
 
 ---
 

@@ -487,13 +487,13 @@ curl http://localhost:8000/metrics | grep feedback_
 
 ## Documentation References
 
-- [Feedback Service README](../../services/feedback/README.md)
-- [CLI Tool README](../../services/feedback-cli/README.md)
-- [Bot README](../../services/feedback-bot/README.md)
-- [Feedback Implementation Summary](../../FEEDBACK_IMPLEMENTATION.md)
-- [Feedback Analytics Implementation](../../FEEDBACK_ANALYTICS_IMPLEMENTATION.md)
-- [Feedback Automation Implementation](../../FEEDBACK_AUTOMATION_IMPLEMENTATION.md)
-- [Feedback Bot Implementation](../../FEEDBACK_BOT_IMPLEMENTATION.md)
+- Feedback Service README
+- CLI Tool README
+- Bot README
+- Feedback Implementation Summary
+- Feedback Analytics Implementation
+- Feedback Automation Implementation
+- Feedback Bot Implementation
 
 ## Test History
 

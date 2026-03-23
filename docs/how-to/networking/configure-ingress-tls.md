@@ -552,7 +552,7 @@ After configuring Ingress with TLS:
 
 ## Related Documentation
 
-- [Networking Configuration](../../platform/networking/README.md) - NGINX Ingress setup
+- Networking Configuration - NGINX Ingress setup
 - [Security Best Practices](../../security.md) - TLS configuration
 - [cert-manager Documentation](https://cert-manager.io/docs/) - Certificate management
 - [NGINX Ingress Annotations](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/) - Full annotation reference

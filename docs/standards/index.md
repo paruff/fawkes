@@ -4,7 +4,7 @@ This section contains coding standards, style guides, and best practices for con
 
 ## Coding Standards
 
-- [Coding Standards](../../CODING_STANDARDS.md) - Comprehensive coding standards guide
+- [Code Quality Standards](../how-to/development/code-quality-quickstart.md) - Comprehensive coding standards guide
 - [Code Quality Standards](../how-to/development/code-quality-standards.md) - Quality requirements
 - [Code Quality Quick Start](../how-to/development/code-quality-quickstart.md) - Quick setup guide
 
@@ -14,7 +14,7 @@ This section contains coding standards, style guides, and best practices for con
 
 ## Documentation Standards
 
-- [Standardization Summary](../STANDARDIZATION_SUMMARY.md) - Documentation standardization approach
+- Standardization Summary - Documentation standardization approach
 
 ## Quality Assurance
 
@@ -59,7 +59,7 @@ All pull requests must pass:
 
 ### Markdown
 
-Follow [markdownlint rules](.markdownlint.json) for consistent documentation:
+Follow markdownlint rules for consistent documentation:
 
 - Use ATX-style headings (`#`)
 - Use fenced code blocks with language tags

@@ -587,8 +587,8 @@ This journey map aligns with:
 - [Platform Consumer Persona](../personas/platform-consumer.md)
 - [Platform Developer Persona](../personas/platform-developer.md)
 - [Contributing to Platform Journey Map](05-contributing-to-platform.md)
-- [Platform Roadmap](../../reference/roadmap.md)
-- [Feature Request Template](../../templates/feature-request.md)
+- Platform Roadmap
+- Feature Request Template
 
 ---
 

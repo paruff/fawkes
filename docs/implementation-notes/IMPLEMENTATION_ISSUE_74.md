@@ -287,10 +287,10 @@ cat docs/research/personas/platform-developer.md
 
 ## Related Resources
 
-- [Persona Template](docs/research/templates/persona.md)
-- [Research README](docs/research/README.md)
-- [Backstage Catalog](catalog-info-personas.yaml)
-- [BDD Tests](tests/bdd/features/user-personas.feature)
+- Persona Template
+- Research README
+- Backstage Catalog
+- BDD Tests
 
 ## Success Metrics
 

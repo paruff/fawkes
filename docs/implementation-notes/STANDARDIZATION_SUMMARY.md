@@ -426,9 +426,9 @@ Successfully standardized **30+ Kubernetes manifests** across services, platform
 
 ## Related Documentation
 
-- [Kubernetes Standards Reference](./reference/kubernetes-standards.md) - Complete standards guide
-- [Architecture Overview](./architecture.md) - Platform architecture
-- [Pre-commit Setup](./PRE-COMMIT.md) - Development workflow
+- Kubernetes Standards Reference - Complete standards guide
+- Architecture Overview - Platform architecture
+- Pre-commit Setup - Development workflow
 
 ---
 

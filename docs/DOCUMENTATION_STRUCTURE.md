@@ -77,7 +77,7 @@ Maintainers building and operating the platform:
 1. Understand: [Architecture](architecture.md)
 2. Contribute: [Contributing Guide](contributing.md)
 3. Develop: [Development Guide](development.md)
-4. Standards: [Coding Standards](../CODING_STANDARDS.md)
+4. Standards: Coding Standards
 5. Decisions: [ADRs](adr/index.md)
 6. Operate: [Runbooks](runbooks/index.md)
 
@@ -218,10 +218,10 @@ mkdocs serve
 
 ## Related Documentation
 
-- [CODING_STANDARDS.md](../CODING_STANDARDS.md) - Code quality standards
+- CODING_STANDARDS.md - Code quality standards
 - [Contributing Guide](contributing.md) - How to contribute
-- [README.md](../README.md) - Project overview
-- [CHANGELOG.md](../CHANGELOG.md) - Version history
+- README.md - Project overview
+- CHANGELOG.md - Version history
 
 ## Resources
 

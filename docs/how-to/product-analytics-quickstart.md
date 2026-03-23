@@ -70,7 +70,7 @@ plausible("Deploy Application", {
 
 ## Need Help?
 
-- 📖 [Full Documentation](./platform/apps/plausible/README.md)
-- 🔧 [Implementation Guide](./docs/implementation-plan/product-analytics-implementation.md)
-- 🐛 [Troubleshooting](./platform/apps/plausible/README.md#troubleshooting)
-- ✅ [Validation Script](./platform/apps/plausible/validate-plausible.sh)
+- 📖 Full Documentation
+- 🔧 Implementation Guide
+- 🐛 Troubleshooting
+- ✅ Validation Script

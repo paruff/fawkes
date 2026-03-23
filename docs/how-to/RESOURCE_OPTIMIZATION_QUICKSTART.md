@@ -68,9 +68,9 @@ kubectl describe nodes | grep -A 5 "Allocated resources"
 
 | File                                                                     | Purpose               |
 | ------------------------------------------------------------------------ | --------------------- |
-| [RESOURCE_OPTIMIZATION_SUMMARY.md](RESOURCE_OPTIMIZATION_SUMMARY.md)     | Detailed change log   |
-| [docs/resource-sizing-guide.md](docs/resource-sizing-guide.md)           | Complete sizing guide |
-| [scripts/validate-resource-usage.sh](scripts/validate-resource-usage.sh) | Validation script     |
+| RESOURCE_OPTIMIZATION_SUMMARY.md     | Detailed change log   |
+| docs/resource-sizing-guide.md           | Complete sizing guide |
+| scripts/validate-resource-usage.sh | Validation script     |
 
 ## Troubleshooting
 

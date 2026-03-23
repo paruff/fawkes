@@ -279,7 +279,7 @@ See workflow diagram: [Deployment Process](assets/diagrams/workflow-deployment-p
 
 ## Resources
 
-- [Main Research README](../README.md)
+- Main Research README
 - [Git LFS Documentation](https://git-lfs.github.com/)
 - [Mermaid Live Editor](https://mermaid.live/)
 - [Image Compression Tools](https://tinypng.com/)

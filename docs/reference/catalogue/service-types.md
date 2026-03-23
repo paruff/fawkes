@@ -249,7 +249,7 @@ kubectl apply -k platform/apps/backstage/overlays/dev
 
 ## See Also
 
-- [Configuration Reference](../config/)
+- 
 - [ArgoCD Sync Guide](../../how-to/gitops/sync-argocd-app.md)
 - [Onboard Service to ArgoCD](../../how-to/gitops/onboard-service-argocd.md)
 - [Platform Architecture](../../architecture.md)

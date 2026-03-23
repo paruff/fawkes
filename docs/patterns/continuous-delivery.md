@@ -149,5 +149,5 @@ spec:
 - [2023 State of DevOps Report](https://dora.dev/)
 - [Continuous Delivery](https://continuousdelivery.com/)
 
-[View Examples :octicons-code-16:](../examples/continuous-delivery.md){ .md-button .md-button--primary }
-[Implementation Guide :octicons-book-16:](../guides/cd-implementation.md){ .md-button }
+
+

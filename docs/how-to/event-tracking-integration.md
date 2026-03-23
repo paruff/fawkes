@@ -594,4 +594,4 @@ test('tracks deployment event', () => {
 3. Ensure Plausible service is running
 4. Review event naming and properties
 
-For more details, see the [Analytics README](../../design-system/src/analytics/README.md).
+For more details, see the Analytics README.

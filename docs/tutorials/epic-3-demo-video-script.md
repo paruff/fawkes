@@ -639,8 +639,8 @@ After recording:
 
 ## Related Documentation
 
-- [Epic 3 Operations Runbook](../../runbooks/epic-3-product-discovery-operations.md)
-- [Epic 3 Architecture Diagrams](../../runbooks/epic-3-architecture-diagrams.md)
-- [Epic 3 API Reference](../../reference/api/epic-3-product-discovery-apis.md)
+- Epic 3 Operations Runbook
+- Epic 3 Architecture Diagrams
+- Epic 3 API Reference
 - [Demo Video Checklist](epic-3-demo-video-checklist.md)
 - [Demo Video Access](epic-3-demo-video.md)

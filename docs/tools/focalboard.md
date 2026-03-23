@@ -213,7 +213,7 @@ kubectl describe pod -n fawkes -l app=focalboard
 
 - [Focalboard GitHub](https://github.com/mattermost/focalboard)
 - [Focalboard Documentation](https://docs.mattermost.com/guides/boards.html)
-- [PostgreSQL Deployment](postgresql-deployment.feature)
+- PostgreSQL Deployment
 - [CloudNativePG Documentation](https://cloudnative-pg.io/docs/)
 
 ## Support

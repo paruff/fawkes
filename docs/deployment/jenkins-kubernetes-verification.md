@@ -398,4 +398,4 @@ After successful verification:
 - [Kubernetes Plugin](https://plugins.jenkins.io/kubernetes/)
 - [Configuration as Code](https://github.com/jenkinsci/configuration-as-code-plugin)
 - [ADR-004: Jenkins for CI/CD](../adr/ADR-004%20jenkins%204%20ci.md)
-- [Jenkins README](../../platform/apps/jenkins/README.md)
+- Jenkins README

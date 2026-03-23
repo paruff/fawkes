@@ -644,12 +644,12 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 
 - [Interview Protocol](../research/interviews/interview-protocol.md)
 - [Consent Form](../research/interviews/consent-form.md)
-- [Research Repository](../research/README.md)
+- [Research Repository](../research/index.md)
 
 **Platform Tools:**
 
 - [OpenReplay Setup Guide](./session-recording-setup.md)
-- [Recording Best Practices](./recording-best-practices.md)
+- Recording Best Practices
 
 ### External Resources
 

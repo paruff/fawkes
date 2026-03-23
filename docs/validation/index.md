@@ -21,7 +21,6 @@ Validation documentation ensures that platform components and features are corre
 
 ### Epic Validation
 
-- [AT-E1-006 Validation Coverage](../AT-E1-006-VALIDATION-COVERAGE.md) - Security and observability validation
 - [Epic 3 Final Validation](../implementation-notes/EPIC_3_FINAL_VALIDATION_SUMMARY.md) - Product discovery validation
 - [Validation Tests E2 Summary](../implementation-notes/VALIDATION_TESTS_E2_SUMMARY.md) - Epic 2 tests
 

@@ -692,14 +692,14 @@ After the interview:
 ### Forms and Templates
 
 - [Consent Form Template](./consent-form.md)
-- [Note-Taking Template](../templates/interview-notes-template.md)
+- Note-Taking Template
 - [Participant Screener Template](../templates/participant-screener.md)
 
 ### Additional Resources
 
-- [Research Repository README](../README.md)
-- [Persona Templates](../personas/)
-- [Journey Map Templates](../journey-maps/)
+- Research Repository README
+- Persona Templates
+- Journey Map Templates
 
 ### Recommended Reading
 

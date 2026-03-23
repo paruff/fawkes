@@ -604,9 +604,9 @@ E2E tests are compatible with:
 
 - [Architecture Overview](../architecture.md)
 - [Golden Path Templates](../golden-path-usage.md)
-- [DORA Metrics](../../platform/apps/devlake/README.md)
+- DORA Metrics
 - [Security Scanning](../how-to/security/quality-gates-configuration.md)
-- [GitOps Guide](../how-to/gitops-deployment.md)
+- GitOps Guide
 
 ### External Resources
 

@@ -50,7 +50,7 @@ Fawkes implements comprehensive testing at all levels to ensure platform reliabi
 ### Epic Validation
 
 - [Epic 3 Final Validation](../implementation-notes/EPIC_3_FINAL_VALIDATION_SUMMARY.md) - Epic 3 acceptance testing
-- [AT-E1-006 Validation Coverage](../AT-E1-006-VALIDATION-COVERAGE.md) - Acceptance test coverage
+- Coverage validation for acceptance tests
 
 ### Component Validation
 
@@ -81,4 +81,4 @@ make validate-at-e1-003  # Backstage
 - [Development Guide](../development.md) - Development and testing setup
 - [How-To Guides](../how-to/index.md) - Step-by-step testing guides
 - [Troubleshooting](../troubleshooting.md) - Common testing issues
-- [Runbooks](../runbooks/) - Operational testing procedures
+- [Runbooks](../runbooks/index.md) - Operational testing procedures

@@ -83,4 +83,4 @@ Personas are fictional but data-driven representations of our users. They help u
 
 - [Persona Template](../templates/persona.md)
 - [Interview Guide](../templates/interview-guide.md)
-- [Main Research README](../README.md)
+- Main Research README

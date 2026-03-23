@@ -37,7 +37,6 @@ The Fawkes Security Plane provides comprehensive security capabilities including
 
 ## Implementation References
 
-- [AT-E1-006 Validation Coverage](../AT-E1-006-VALIDATION-COVERAGE.md) - Security validation testing
 
 ## Related Documentation
 

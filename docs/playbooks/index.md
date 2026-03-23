@@ -86,10 +86,10 @@ Creating a new playbook? Use the [Playbook Template](TEMPLATE.md) to ensure cons
 
 ## Related Documentation
 
-- [Tutorials](../tutorials/) - Learning-oriented introductions to concepts
-- [How-To Guides](../how-to/) - Additional task-oriented procedures
-- [Explanation](../explanation/) - Deeper conceptual background
-- [Reference](../reference/) - Detailed technical specifications
+- [Tutorials](../tutorials/index.md) - Learning-oriented introductions to concepts
+- [How-To Guides](../how-to/index.md) - Additional task-oriented procedures
+- [Explanation](../explanation/index.md) - Deeper conceptual background
+- [Reference](../reference/index.md) - Detailed technical specifications
 
 [View Template :material-file-document-edit:](TEMPLATE.md){ .md-button .md-button--primary }
 [Start DORA Playbook :material-chart-line:](dora-metrics-implementation.md){ .md-button }

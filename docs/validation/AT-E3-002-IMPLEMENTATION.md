@@ -284,8 +284,8 @@ If any check fails:
 
 - [SPACE Metrics Guide](../how-to/space-metrics-guide.md)
 - [ADR-018: SPACE Framework](../adr/ADR-018%20Developer%20Experience%20Measurement%20Framework%20SPACE.md)
-- [Service README](../../services/space-metrics/README.md)
-- [Deployment Guide](../../platform/apps/space-metrics/README.md)
+- Service README
+- Deployment Guide
 
 ## Test History
 

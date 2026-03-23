@@ -196,8 +196,8 @@ Before publishing an insight, ensure:
 
 ## Resources
 
-- [Interview Notes](../interviews/)
-- [Personas](../personas/)
-- [Journey Maps](../journey-maps/)
-- [Main Research README](../README.md)
+- Interview Notes
+- Personas
+- Journey Maps
+- Main Research README
 - [Teresa Torres - Continuous Discovery](https://www.producttalk.org/)

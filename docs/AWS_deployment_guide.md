@@ -119,7 +119,7 @@ aws service-quotas get-service-quota \
 - **Staging**: ~$762/month
 - **Production**: ~$2,084/month
 
-See [AWS Cost Estimation](./AWS_COST_ESTIMATION.md) for detailed breakdown.
+See AWS Cost Estimation for detailed breakdown.
 
 **Set up billing alerts**:
 

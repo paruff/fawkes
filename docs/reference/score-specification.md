@@ -851,5 +851,5 @@ route:
 - [SCORE Official Documentation](https://score.dev)
 - [ADR-030: SCORE Integration](../adr/ADR-030%20SCORE%20Workload%20Specification%20Integration.md)
 - [Golden Path Usage Guide](../golden-path-usage.md)
-- [SCORE Transformer README](../../charts/score-transformer/README.md)
-- [Golden Path Service Template](../../templates/golden-path-service/README.md)
+- SCORE Transformer README
+- Golden Path Service Template

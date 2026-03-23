@@ -228,8 +228,8 @@ Should return at least 16.
 ## Related Documentation
 
 - [Access Controls](./penpot-access-controls.md)
-- [Deployment Guide](../apps/penpot/README.md)
-- [External Secrets Operator](../apps/external-secrets/README.md)
+- Deployment Guide
+- External Secrets Operator
 
 ## Support
 

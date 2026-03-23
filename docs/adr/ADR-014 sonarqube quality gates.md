@@ -375,7 +375,7 @@ We will revisit this ADR if:
 - [SonarQube Helm Chart](https://artifacthub.io/packages/helm/sonarqube/sonarqube)
 - [Quality Gates Documentation](https://docs.sonarqube.org/latest/user-guide/quality-gates/)
 - [Jenkins SonarQube Plugin](https://plugins.jenkins.io/sonar/)
-- [Fawkes Jenkins Shared Library](../jenkins-shared-library/)
+- Fawkes Jenkins Shared Library
 
 ---
 

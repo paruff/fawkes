@@ -154,7 +154,7 @@ Wait 2-3 minutes. Azure Load Balancer creation takes time.
 
 ## Full Documentation
 
-- [Azure Ingress Setup Guide](../docs/azure-ingress-setup.md)
-- [nginx-ingress README](../platform/apps/ingress-nginx/README.md)
-- [cert-manager README](../platform/apps/cert-manager/README.md)
-- [BDD Tests](../tests/bdd/features/azure_ingress_loadbalancer.feature)
+- Azure Ingress Setup Guide
+- nginx-ingress README
+- cert-manager README
+- BDD Tests

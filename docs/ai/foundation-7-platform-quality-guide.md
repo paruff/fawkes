@@ -314,7 +314,7 @@ context:
 
 ## Related files
 
-- [`AGENTS.md`](../../AGENTS.md) — universal agent instructions and model selection policy
+- `AGENTS.md` — universal agent instructions and model selection policy
 - [`docs/ai/dora-2025-alignment.md`](dora-2025-alignment.md) — seven-foundation status map
 - [`docs/ai/test-engineer-agent-suggestion.md`](test-engineer-agent-suggestion.md) — test-engineer agent (GPT-4.1)
 - [`docs/ai/issue-writer-agent-suggestion.md`](issue-writer-agent-suggestion.md) — issue-writer agent (Claude Sonnet 4.6)

@@ -360,7 +360,7 @@ Ensure these are completed before running AT-E1-002 tests.
 ## Additional Resources
 
 - [Architecture Documentation](../architecture.md)
-- [Implementation Plan](../implementation-plan/IMPLEMENTATION_HANDOFF.md)
-- [ArgoCD Bootstrap Feature](../../tests/bdd/features/argocd_bootstrap.feature)
-- [ArgoCD Deployment Feature](../../tests/bdd/features/argocd-deployment.feature)
+- Implementation Plan
+- ArgoCD Bootstrap Feature
+- ArgoCD Deployment Feature
 - [Week 1 Detailed Tasks](../implementation-plan/week1-detailed-tasks.md)

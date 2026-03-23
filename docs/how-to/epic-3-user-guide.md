@@ -103,7 +103,7 @@ fawkes-feedback stats
 
 **When to use**: You're already in the terminal, or you want offline queueing
 
-📖 **Detailed Guide**: [Feedback CLI Documentation](../reference/feedback-cli.md)
+📖 **Detailed Guide**: Feedback CLI Documentation
 
 #### 3. Mattermost Bot (Most Conversational)
 
@@ -216,7 +216,7 @@ if (isEnabled) {
 
 **Request a Feature Flag**: Create a GitHub issue or ask in #platform-team
 
-📖 **Detailed Guide**: [Feature Flags with Unleash](../reference/unleash-guide.md)
+📖 **Detailed Guide**: Feature Flags with Unleash
 
 ---
 
@@ -636,7 +636,7 @@ kubectl logs -n fawkes -l app=feedback-service --tail=100
 kubectl logs -n fawkes -l app=feedback-bot --tail=100
 ```
 
-**Alerts**: See [Alert Rules](../observability/alert-rules.md)
+**Alerts**: See Alert Rules
 
 ### Backup and Recovery
 

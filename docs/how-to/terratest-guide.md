@@ -416,7 +416,7 @@ go test -v -run TestMyModule 2>&1 | tee test-output.log
 - [Terraform Testing Guide](https://www.terraform.io/docs/language/modules/testing-experiment.html)
 - [Infracost Documentation](https://www.infracost.io/docs/)
 - [Azure Terraform Provider](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs)
-- [ADR-005: Terraform Decision](../../docs/adr/ADR-005%20terraform.md)
+- ADR-005: Terraform Decision
 
 ## Next Steps
 
@@ -427,6 +427,6 @@ go test -v -run TestMyModule 2>&1 | tee test-output.log
 5. **Add to CI/CD**: Tests run automatically on PRs
 
 For detailed information, see:
-- [Terratest README](README.md)
-- [Module-specific documentation](../../infra/terraform/modules/)
-- [CI/CD workflow](.github/workflows/terraform-tests.yml)
+- Terratest README
+- Module-specific documentation
+- CI/CD workflow

@@ -204,5 +204,5 @@ FAWKES_CLUSTER=my-fawkes make dev-down
 ## Next Steps
 
 - **White Belt tutorial** — [Deploy your first app →](1-deploy-first-service.md)
-- **Full architecture overview** — [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md)
+- **Full architecture overview** — docs/ARCHITECTURE.md
 - **Dojo tutorials index** — [docs/tutorials/index.md](index.md)

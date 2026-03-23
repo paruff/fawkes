@@ -161,30 +161,30 @@ Dive deeper into Epic 3 components:
 
 **Runbooks & Operations:**
 
-- [Epic 3 Operations Runbook](../../runbooks/epic-3-product-discovery-operations.md) - Operational procedures
-- [Epic 3 Architecture Diagrams](../../runbooks/epic-3-architecture-diagrams.md) - System architecture
+- Epic 3 Operations Runbook - Operational procedures
+- Epic 3 Architecture Diagrams - System architecture
 
 **API References:**
 
-- [Epic 3 API Reference](../../reference/api/epic-3-product-discovery-apis.md) - Complete API documentation
+- Epic 3 API Reference - Complete API documentation
 
 **Validation Documents:**
 
-- [AT-E3-002: SPACE Framework](../../validation/AT-E3-002-IMPLEMENTATION.md) - SPACE metrics validation
-- [AT-E3-003: Feedback System](../../validation/AT-E3-003-IMPLEMENTATION.md) - Feedback system validation
-- [AT-E3-004/005/009: Design System](../../validation/AT-E3-004-005-009-IMPLEMENTATION.md) - Design system validation
+- AT-E3-002: SPACE Framework - SPACE metrics validation
+- AT-E3-003: Feedback System - Feedback system validation
+- AT-E3-004/005/009: Design System - Design system validation
 
 **User Research:**
 
-- [Journey Maps](../../research/journey-maps/) - 5 key user journeys
-- [Personas](../../research/personas/) - User persona library
-- [Research Templates](../../research/templates/) - Guides and templates
+- Journey Maps - 5 key user journeys
+- Personas - User persona library
+- Research Templates - Guides and templates
 
 **How-To Guides:**
 
-- [Product Analytics Quickstart](../../how-to/product-analytics-quickstart.md)
-- [Deploy Design System Storybook](../../how-to/deploy-design-system-storybook.md)
-- [Run Advisory Board Meetings](../../how-to/run-advisory-board-meetings.md)
+- Product Analytics Quickstart
+- Deploy Design System Storybook
+- Run Advisory Board Meetings
 
 ## Downloads
 

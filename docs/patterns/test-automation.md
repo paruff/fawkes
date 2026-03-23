@@ -174,5 +174,3 @@ According to DORA research, elite performers achieve:
 - **Coverage**: > 80% of critical paths
 - **Automation**: > 95% of all tests
 
-[View Example Project :octicons-code-16:](../examples/test-automation){ .md-button .md-button--primary }
-[Testing Guide :octicons-book-16:](../guides/testing){ .md-button }

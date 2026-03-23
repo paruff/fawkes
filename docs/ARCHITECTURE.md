@@ -165,7 +165,7 @@ Fawkes is composed of four platform layers that must only depend downward:
 | MCP K8s Server | `services/mcp-k8s-server/` | Model Context Protocol server for Kubernetes |
 
 > **Extensions**: The RAG service (Weaviate + semantic search) and DataHub (data
-> catalog) are optional extensions. See [`extensions/`](../extensions/README.md).
+> catalog) are optional extensions. See `extensions/`.
 
 ---
 

@@ -41,4 +41,4 @@ Fawkes integrates with industry-leading open-source tools to implement DORA capa
 | --------------------------- | ------------------------------------ | ---------------- |
 | [Focalboard](focalboard.md) | Project management and Kanban boards | N/A              |
 
-[View Implementation Guide](../implementation.md){ .md-button .md-button--primary }
+

@@ -410,10 +410,10 @@ Without continued attention, the ingress controller could become a single point 
 
 ### Related Resources
 
-- **Tutorial**: [Getting Started with Fawkes](../../getting-started.md)
-- **How-To**: [Configure Ingress TLS](../../docs/how-to/networking/configure-ingress-tls.md)
-- **Reference**: [Ingress Access Guide](../../ingress-access.md)
-- **Explanation**: [Networking Stack](../../platform/networking/README.md)
+- **Tutorial**: Getting Started with Fawkes
+- **How-To**: Configure Ingress TLS
+- **Reference**: Ingress Access Guide
+- **Explanation**: Networking Stack
 
 ### Troubleshooting
 

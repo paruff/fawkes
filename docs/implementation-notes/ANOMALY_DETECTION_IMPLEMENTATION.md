@@ -298,7 +298,7 @@ Recommended improvements for future iterations:
 - [Issue #58](https://github.com/paruff/fawkes/issues/58)
 - [AT-E2-009 Acceptance Test](https://github.com/paruff/fawkes/blob/main/docs/implementation-plan/fawkes-handoff-doc.md)
 - [Isolation Forest Paper](https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf)
-- [Service README](services/anomaly-detection/README.md)
+- Service README
 
 ## Conclusion
 

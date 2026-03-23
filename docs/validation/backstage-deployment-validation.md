@@ -101,7 +101,7 @@ kubectl get application -n fawkes backstage
 - [x] **Documentation updated**
 
   - Comprehensive deployment guide: `docs/deployment/backstage-postgresql.md`
-  - Deployment directory README: `docs/deployment/README.md`
+  - Deployment directory README: `docs/deployment/index.md`
   - Architecture documented in: `docs/architecture.md`
   - Backstage README exists: `platform/apps/backstage/README.md`
 

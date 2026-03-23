@@ -746,9 +746,9 @@ GET /api/v1/metrics?days=7
 
 ## Additional Resources
 
-- [VSM Service README](../../services/vsm/README.md)
-- [Stage Configuration](../../services/vsm/config/stages.yaml)
-- [Transition Rules](../../services/vsm/config/transitions.yaml)
+- VSM Service README
+- Stage Configuration
+- Transition Rules
 - [Flow Metrics Dashboard](http://grafana.fawkes.local/d/vsm-flow-metrics)
 - [Prometheus Metrics](http://prometheus.fawkes.local/graph?g0.expr=vsm_*)
 

@@ -40,5 +40,5 @@ This section contains deployment guides, configurations, and best practices for 
 - [Infrastructure as Code Pattern](../patterns/infrastructure-as-code.md) - IaC best practices
 - [GitOps Strategy](../explanation/architecture/gitops-strategy.md) - GitOps approach for deployments
 - [How-To: Onboard Service to ArgoCD](../how-to/gitops/onboard-service-argocd.md) - GitOps deployment guide
-- [Runbooks](../runbooks/) - Operational runbooks
+- [Runbooks](../runbooks/index.md) - Operational runbooks
 - [Troubleshooting](../troubleshooting.md) - Common deployment issues

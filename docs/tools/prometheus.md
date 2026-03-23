@@ -182,4 +182,3 @@ Common issues and solutions:
 - [Grafana Integration](https://grafana.com/docs/grafana/latest/datasources/prometheus/)
 
 [Configure Prometheus :octicons-gear-16:](../configuration.md#prometheus){ .md-button .md-button--primary }
-[View Dashboards :octicons-graph-16:](../examples/dashboards.md){ .md-button }

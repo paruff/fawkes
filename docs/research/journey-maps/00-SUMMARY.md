@@ -271,15 +271,15 @@ All journey maps validated with:
 
 ### Supporting Research
 
-- [Persona Directory](../personas/)
-- [Interview Notes](../interviews/)
+- Persona Directory
+- Interview Notes
 - [Journey Map Template](../templates/journey-map.md)
 
 ### Platform Documentation
 
 - [Architecture Overview](../../architecture.md)
-- [Implementation Plan](../../implementation-plan/IMPLEMENTATION_HANDOFF.md)
-- [Platform Roadmap](../../reference/roadmap.md)
+- Implementation Plan
+- Platform Roadmap
 
 ---
 

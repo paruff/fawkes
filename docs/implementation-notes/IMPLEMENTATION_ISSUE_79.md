@@ -313,8 +313,8 @@ curl http://localhost:8000/api/v1/metrics/space
 
 ## Related ADRs
 
-- [ADR-018: SPACE Framework](docs/adr/ADR-018%20Developer%20Experience%20Measurement%20Framework%20SPACE.md)
-- [ADR-025: DevEx Metrics Dashboarding](docs/adr/ADR-025%20Developer%20Experience%20Metrics%20Collection%20&%20Dashboarding.md)
+- ADR-018: SPACE Framework
+- ADR-025: DevEx Metrics Dashboarding
 
 ## Conclusion
 

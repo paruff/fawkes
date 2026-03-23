@@ -231,7 +231,7 @@
 
 ## Related Resources
 
-- [Journey Map: Product Management Workflow](../journey-maps/product-management.md)
-- [Interview Transcripts](../interviews/product-managers/)
-- [Research Insights](../insights/platform-visibility.md)
-- [Business Value Mapping](../insights/platform-roi.md)
+- Journey Map: Product Management Workflow
+- Interview Transcripts
+- Research Insights
+- Business Value Mapping

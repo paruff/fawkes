@@ -222,6 +222,6 @@
 
 ## Related Resources
 
-- [Journey Map: Application Development Workflow](../journey-maps/application-development.md)
-- [Interview Transcripts](../interviews/application-developers/)
-- [Research Insights](../insights/deployment-anxiety.md)
+- Journey Map: Application Development Workflow
+- Interview Transcripts
+- Research Insights

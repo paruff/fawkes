@@ -204,7 +204,7 @@ Before conducting your first interview:
 
 - [General Interview Guide Template](../templates/interview-guide.md)
 - [Persona Template](../templates/persona.md)
-- [Main Research README](../README.md)
+- Main Research README
 - [The Mom Test](https://www.momtestbook.com/) - Recommended reading on effective interviewing
 
 ## Coverage Areas

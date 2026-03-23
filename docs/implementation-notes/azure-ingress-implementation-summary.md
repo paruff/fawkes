@@ -294,11 +294,11 @@ For future enhancements:
 
 ## Related Documentation
 
-- [Azure Ingress Setup Guide](../docs/azure-ingress-setup.md)
-- [Quick Start Guide](../docs/azure-ingress-quickstart.md)
-- [nginx-ingress README](../platform/apps/ingress-nginx/README.md)
-- [cert-manager README](../platform/apps/cert-manager/README.md)
-- [BDD Tests](../tests/bdd/features/azure_ingress_loadbalancer.feature)
+- Azure Ingress Setup Guide
+- Quick Start Guide
+- nginx-ingress README
+- cert-manager README
+- BDD Tests
 
 ## Conclusion
 
