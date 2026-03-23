@@ -1,0 +1,62 @@
+# ============================================================================
+# FILE: platform/apps/backstage/plugins/dojo-progress.yaml
+# PURPOSE: Configuration for the @fawkes/backstage-plugin-dojo-progress plugin.
+#          Documents how the plugin is wired into the Backstage app.
+#
+# To activate the plugin in a Backstage app:
+#   1. Install the package:
+#        yarn workspace app add @fawkes/backstage-plugin-dojo-progress
+#   2. Register the route in packages/app/src/App.tsx (see "App registration")
+#   3. Add the sidebar item in packages/app/src/components/Root/Root.tsx
+#   4. Apply the Kubernetes manifests (configmap.yaml + rbac.yaml) from
+#        platform/backstage/plugins/dojo-progress/
+#   5. Ensure app-config.yaml has the /dojo/progress proxy entry
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backstage-dojo-progress-plugin
+  namespace: fawkes
+  labels:
+    app: backstage
+    component: plugin
+    plugin: dojo-progress
+    environment: dev
+    team: platform
+data:
+  plugin-config.yaml: |
+    # Dojo Progress Plugin Configuration
+
+    dojoProgress:
+      enabled: true
+
+      # Namespace where the fawkes-dojo-progress ConfigMap lives.
+      namespace: fawkes
+
+      # Name of the ConfigMap that stores per-user belt progress.
+      configMapName: fawkes-dojo-progress
+
+      # Proxy endpoint configured in app-config.yaml.
+      # The Backstage backend forwards /dojo/progress → the K8s ConfigMap API.
+      proxyPath: /dojo/progress
+
+  # -------------------------------------------------------------------------
+  # App registration snippet
+  # Add to: packages/app/src/App.tsx
+  # -------------------------------------------------------------------------
+  app-registration.tsx: |
+    // Import
+    import { DojoProgressPage } from '@fawkes/backstage-plugin-dojo-progress';
+
+    // Inside <FlatRoutes>:
+    <Route path="/dojo" element={<DojoProgressPage />} />
+
+  # -------------------------------------------------------------------------
+  # Sidebar snippet
+  # Add to: packages/app/src/components/Root/Root.tsx
+  # -------------------------------------------------------------------------
+  sidebar-snippet.tsx: |
+    import SchoolIcon from '@material-ui/icons/School';
+
+    // Inside the sidebar <SidebarGroup>:
+    <SidebarItem icon={SchoolIcon} to="dojo" text="Dojo" />
