@@ -215,24 +215,58 @@ Don't start from scratch. Deploy a production-ready platform and customize to yo
 
 ## ⚡ Quick Start
 
-Not sure where to begin? Choose the path that fits your goal:
+### Prerequisites
 
-| Path | Goal | Time |
+| Tool | Minimum version | Install |
 |---|---|---|
-| **[A — Evaluate Locally](docs/getting-started.md#path-a-evaluate-locally)** | Try Fawkes on your laptop with k3d — no cloud account needed | ~20 min |
-| **[B — Deploy to Cloud](docs/getting-started.md#path-b-deploy-to-cloud-aws-eks)** | Production-capable deployment on AWS EKS | 2–4 hours |
-| **[C — Enterprise Multi-Cloud](docs/getting-started.md#path-c-enterprise-multi-cloud)** | Multi-cloud, SSO, RBAC, compliance | 1–2 days |
+| Docker | 24+ | <https://docs.docker.com/get-docker/> |
+| k3d | 5+ | `brew install k3d` or <https://k3d.io/#installation> |
+| kubectl | 1.28+ | `brew install kubectl` or <https://kubernetes.io/docs/tasks/tools/> |
+| Helm | 3.12+ | `brew install helm` or <https://helm.sh/docs/intro/install/> |
+| Make | any | Pre-installed on macOS / Linux |
 
-**Fastest start (Path A):**
+**Resource requirements:** 4 CPU cores · 8 GB RAM · 20 GB free disk space
+
+---
+
+### Try it locally (recommended — 20 min)
 
 ```bash
-git clone https://github.com/paruff/fawkes.git
-cd fawkes
-make dev-up      # creates k3d cluster + deploys 5 core components
-make dev-status  # prints service URLs and credentials
+# prerequisite check
+make check-deps
+
+# start everything
+make dev-up
+
+# open the portal
+open http://localhost:8080
 ```
 
-**[Full Getting Started Guide →](docs/getting-started.md)**
+#### What you'll see
+
+After `make dev-up` completes (~15–20 min on a typical laptop):
+
+```
+Fawkes Local Platform  —  http://localhost:8080
+─────────────────────────────────────────────────────────────
+  Service       URL                           Credentials
+  ──────────    ────────────────────────────  ─────────────
+  Backstage     http://localhost:8080         (open access)
+  ArgoCD        http://localhost:8080/argocd  admin / run: make dev-status
+  Grafana       http://localhost:8080/grafana admin / fawkes-grafana
+  Sample app    http://localhost:8080/podinfo (open access)
+─────────────────────────────────────────────────────────────
+  Run `make dev-status` to print credentials
+  Run `make dev-down`   to tear down the cluster
+```
+
+> **Tip:** Run `make dev-status` any time to redisplay service URLs and credentials.
+
+---
+
+### Deploy to AWS (production)
+
+→ See [docs/getting-started.md](docs/getting-started.md) for a full production deployment guide (estimated time: 2–4 hours).
 
 ---
 
@@ -632,7 +666,7 @@ Start your journey from novice to platform architect. 8 hours to your first cert
 
 **[Follow Quick Start Guide →](docs/getting-started.md)**
 
-Get your platform running in 30 minutes. Production-ready in hours, not months.
+Get your local platform running in ~20 minutes (`make dev-up`). Production deployment on AWS in 2–4 hours.
 
 ### 🤝 Join the Community
 
