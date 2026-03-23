@@ -5423,6 +5423,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Branching and Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-git-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Git Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -5881,6 +5898,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Branching and Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-git-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Git Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -6046,26 +6080,54 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>shellcheck<span cla
 </ul>
 <hr />
 <h2 id="branching-and-workflow">Branching and Workflow</h2>
+<p>Fawkes uses a <strong>fork → feature branch → PR against <code>main</code></strong> model.</p>
+<h3 id="step-by-step-git-workflow">Step-by-Step Git Workflow</h3>
 <ol>
-<li><strong>Create a Feature Branch</strong>:</li>
+<li>
+<p><strong>Fork the repository</strong> on GitHub (click "Fork" on the <a href="https://github.com/paruff/fawkes">fawkes repo</a>):</p>
+</li>
+<li>
+<p><strong>Clone your fork and add the upstream remote</strong>:</p>
+</li>
 </ol>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/&lt;feature-name&gt;
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/&lt;your-username&gt;/fawkes.git
+<span class="nb">cd</span><span class="w"> </span>fawkes
+git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>upstream<span class="w"> </span>https://github.com/paruff/fawkes.git
 </code></pre></div>
 <ol>
-<li><strong>Commit Changes</strong>:
-   Write clear and concise commit messages:</li>
+<li><strong>Create a Feature Branch</strong> from the latest <code>main</code>:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add &lt;feature-name&gt;: &lt;short description&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>fetch<span class="w"> </span>upstream
+git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/&lt;feature-name&gt;<span class="w"> </span>upstream/main
 </code></pre></div>
 <ol>
-<li><strong>Push Changes</strong>:</li>
+<li><strong>Make changes and commit</strong> using <a href="https://www.conventionalcommits.org/">Conventional Commits</a>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(scope): short description of the change&quot;</span>
+</code></pre></div>
+<p>Commit prefixes: <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>test</code>, <code>chore</code>.</p>
+<ol>
+<li><strong>Push your branch</strong> to your fork:</li>
 </ol>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/&lt;feature-name&gt;
 </code></pre></div>
 <ol>
-<li><strong>Submit a Pull Request</strong>:
-   Open a pull request (PR) on GitHub and request a review.</li>
+<li><strong>Open a Pull Request against <code>main</code></strong> on the upstream repository:</li>
+<li>Fill in the PR template fully.</li>
+<li>Reference the issue with <code>Closes #NNN</code>.</li>
+<li>
+<p>Keep the PR small (&lt; 400 lines); CI enforces this limit.</p>
+</li>
+<li>
+<p><strong>Address review feedback</strong> by pushing additional commits to the same branch.</p>
+</li>
+<li>
+<p><strong>Merge</strong> — a maintainer merges once all status checks pass and approval is given.</p>
+</li>
 </ol>
+<blockquote>
+<p><strong>Never push directly to <code>main</code>.</strong> Branch protection requires all changes to go through a pull request with at least one maintainer approval (two approvals for changes in <code>infra/</code>) and passing CI checks.</p>
+</blockquote>
 <hr />
 <h2 id="testing">Testing</h2>
 <p>Fawkes includes multiple layers of testing:</p>
@@ -6116,15 +6178,24 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>shellcheck<span cla
 <ol>
 <li>
 <p><strong>Fork the Repository</strong>:
-   Create a fork of the repository on GitHub.</p>
+   Create a fork of the repository on GitHub and clone it locally.</p>
+</li>
+<li>
+<p><strong>Branch from <code>main</code></strong>:
+   Always create a feature branch from the latest <code>main</code> (see <a href="#branching-and-workflow">Branching and Workflow</a> above).</p>
 </li>
 <li>
 <p><strong>Make Changes</strong>:
    Work on your feature branch and ensure all tests pass.</p>
 </li>
 <li>
-<p><strong>Submit a Pull Request</strong>:
-   Open a PR with a detailed description of your changes.</p>
+<p><strong>Run Linters</strong>:
+   <div class="highlight"><pre><span></span><code>make<span class="w"> </span>lint
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Submit a Pull Request against <code>main</code></strong>:
+   Open a PR on the upstream repository with a detailed description of your changes and <code>Closes #NNN</code> referencing the issue.</p>
 </li>
 <li>
 <p><strong>Address Feedback</strong>:
