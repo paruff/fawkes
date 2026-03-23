@@ -21,7 +21,7 @@ echo "MkDocs cfg : ${MKDOCS_YML}"
 echo ""
 
 # ── Dependency check ──────────────────────────────────────────────────────────
-if ! command -v mkdocs &>/dev/null; then
+if ! command -v mkdocs &> /dev/null; then
   echo "ERROR: mkdocs is not installed. Run: pip install mkdocs mkdocs-material"
   exit 1
 fi
@@ -66,7 +66,7 @@ STUB_COUNT=0
 while IFS= read -r filepath; do
   fullpath="${DOCS_DIR}/${filepath}"
   if [[ -f "${fullpath}" ]]; then
-    words=$(wc -w <"${fullpath}")
+    words=$(wc -w < "${fullpath}")
     if [[ "${words}" -lt 200 ]]; then
       echo "⚠  Stub: ${filepath} (${words} words — minimum 200 required)"
       STUB_COUNT=$((STUB_COUNT + 1))
@@ -98,9 +98,9 @@ TODO_COUNT=0
 while IFS= read -r filepath; do
   fullpath="${DOCS_DIR}/${filepath}"
   if [[ -f "${fullpath}" ]]; then
-    words=$(wc -w <"${fullpath}")
+    words=$(wc -w < "${fullpath}")
     # Only flag short files (stub-like) that contain a standalone placeholder line
-    if [[ "${words}" -lt 200 ]] && grep -qiE '^\s*(TODO:?|Coming [Ss]oon\.?)\s*$' "${fullpath}" 2>/dev/null; then
+    if [[ "${words}" -lt 200 ]] && grep -qiE '^\s*(TODO:?|Coming [Ss]oon\.?)\s*$' "${fullpath}" 2> /dev/null; then
       echo "⚠  Placeholder content: ${filepath} (${words} words)"
       TODO_COUNT=$((TODO_COUNT + 1))
     fi
