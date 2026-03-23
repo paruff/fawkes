@@ -231,7 +231,7 @@ withSonarQubeEnv('SonarQube') {
 
 #### 5.4 Create Quality Profiles
 
-See [quality-profiles.md](../../platform/apps/sonarqube/quality-profiles.md) for detailed instructions.
+See quality-profiles.md for detailed instructions.
 
 **Quick Setup**:
 
@@ -648,8 +648,8 @@ kubectl logs -n fawkes -l app=sonarqube -f
 - [SonarQube Helm Chart](https://artifacthub.io/packages/helm/sonarqube/sonarqube)
 - [CloudNativePG Documentation](https://cloudnative-pg.io/)
 - [Fawkes ADR-014: SonarQube Quality Gates](../adr/ADR-014 sonarqube quality gates.md)
-- [Quality Profiles Guide](../../platform/apps/sonarqube/quality-profiles.md)
-- [Jenkins Integration](../../platform/apps/jenkins/README.md)
+- Quality Profiles Guide
+- Jenkins Integration
 
 ## Next Steps
 

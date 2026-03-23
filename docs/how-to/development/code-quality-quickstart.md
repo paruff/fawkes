@@ -171,9 +171,9 @@ SKIP=black,flake8 git commit
 ## Getting Help
 
 ### Documentation
-- [GitHub Actions Workflows](docs/how-to/development/github-actions-workflows.md)
-- [Code Quality Standards](docs/how-to/development/code-quality-standards.md)
-- [Pre-commit Hooks](docs/PRE-COMMIT.md)
+- [GitHub Actions Workflows](github-actions-workflows.md)
+- [Code Quality Standards](code-quality-standards.md)
+- [Pre-commit Hooks](../../PRE-COMMIT.md)
 
 ### Support Channels
 - GitHub Issues for bugs

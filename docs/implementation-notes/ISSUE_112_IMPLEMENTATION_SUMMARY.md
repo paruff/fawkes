@@ -320,11 +320,11 @@ Potential improvements (not in scope for this issue):
 ## References
 
 ### Internal Documentation
-- [Code Quality Standards (detailed)](docs/how-to/development/code-quality-standards.md)
-- [Format-on-Save Setup](docs/how-to/development/format-on-save-setup.md)
-- [GitHub Actions Workflows](docs/how-to/development/github-actions-workflows.md)
-- [Pre-commit Guide](docs/PRE-COMMIT.md)
-- [Contributing Guide](docs/contributing.md)
+- Code Quality Standards (detailed)
+- Format-on-Save Setup
+- GitHub Actions Workflows
+- Pre-commit Guide
+- Contributing Guide
 
 ### Configuration Files Referenced
 - `.pre-commit-config.yaml` - Pre-commit hooks

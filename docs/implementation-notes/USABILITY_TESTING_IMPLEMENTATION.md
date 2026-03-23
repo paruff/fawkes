@@ -452,17 +452,17 @@ helm install openreplay openreplay/openreplay \
 
 ### Internal Documentation
 
-- [Usability Testing Guide](docs/how-to/usability-testing-guide.md)
-- [Session Recording Setup](docs/how-to/session-recording-setup.md)
-- [Research Repository](docs/research/index.md)
-- [Interview Protocol](docs/research/interviews/interview-protocol.md)
+- Usability Testing Guide
+- Session Recording Setup
+- Research Repository
+- Interview Protocol
 
 ### Templates
 
-- [Test Script](docs/research/templates/usability-test-script.md)
-- [Observation Checklist](docs/research/templates/usability-observation-checklist.md)
-- [Analysis Template](docs/research/templates/usability-analysis-template.md)
-- [Participant Screener](docs/research/templates/participant-screener.md)
+- Test Script
+- Observation Checklist
+- Analysis Template
+- Participant Screener
 
 ### External Resources
 

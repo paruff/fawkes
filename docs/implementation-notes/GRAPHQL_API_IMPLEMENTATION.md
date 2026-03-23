@@ -447,4 +447,4 @@ All acceptance criteria met:
 - [Hasura Documentation](https://hasura.io/docs/latest/)
 - [GraphQL Best Practices](https://graphql.org/learn/best-practices/)
 - [Issue #53](https://github.com/paruff/fawkes/issues/53)
-- [Epic 2: AI & Data Platform](../../data/issues/epic2.json)
+- Epic 2: AI & Data Platform

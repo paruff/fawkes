@@ -27,8 +27,8 @@ These patterns provide proven approaches to implementing DORA capabilities in yo
 
 | Pattern                                                                                              | Description                     | Related Tools |
 | ---------------------------------------------------------------------------------------------------- | ------------------------------- | ------------- |
-| ![](../assets/images/icons/security.png){ width="24" } [Shift Left Security](shift-left-security.md) | Early security testing patterns | OWASP ZAP     |
-| ![](../assets/images/icons/quality.png){ width="24" } [Quality Gates](quality-gates.md)              | Code quality enforcement        | SonarQube     |
+| ![](../assets/images/icons/security.png){ width="24" } [Shift Left Security](shift-left-on-security.md) | Early security testing patterns | OWASP ZAP     |
+| ![](../assets/images/icons/quality.png){ width="24" } [Quality Gates](quality.md)              | Code quality enforcement        | SonarQube     |
 | ![](../assets/images/icons/incident.png){ width="24" } [Incident Response](incident-response.md)     | Quick recovery patterns         | PagerDuty     |
 
 [View Capabilities](../capabilities.md){ .md-button .md-button--primary }

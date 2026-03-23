@@ -590,7 +590,7 @@ echo 'export FAWKES_AI_TELEMETRY=enabled' >> ~/.bashrc
 open http://grafana.fawkes.local/d/ai-telemetry
 ```
 
-See [AI Telemetry Dashboard](../../platform/apps/ai-telemetry/README.md) for details.
+See AI Telemetry Dashboard for details.
 
 ## Troubleshooting
 
@@ -688,9 +688,9 @@ See [AI Telemetry Dashboard](../../platform/apps/ai-telemetry/README.md) for det
 ### Internal Resources
 
 - [Fawkes Architecture](../architecture.md)
-- [RAG Service Documentation](../../services/rag/README.md)
+- RAG Service Documentation
 - [Vector Database Guide](./vector-database.md)
-- [AI Telemetry Dashboard](../../platform/apps/ai-telemetry/README.md)
+- AI Telemetry Dashboard
 - [Development Guide](../development.md)
 
 ### Training and Support

@@ -51,5 +51,5 @@ Fawkes provides comprehensive observability with metrics, logs, traces, and dash
 
 - [Architecture Overview](../architecture.md) - Platform architecture
 - [How-To Guides](../how-to/index.md) - Step-by-step guides
-- [Runbooks](../runbooks/) - Operational procedures
+- [Runbooks](../runbooks/index.md) - Operational procedures
 - [Troubleshooting](../troubleshooting.md) - Common issues and solutions

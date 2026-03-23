@@ -389,7 +389,7 @@ watch kubectl top pods -n fawkes
 - [Kubernetes Resource Management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 - [Kubernetes Best Practices](https://kubernetes.io/docs/concepts/configuration/overview/)
 - [DORA Metrics Research](https://dora.dev/)
-- [Fawkes Architecture](../architecture.md)
+- Fawkes Architecture
 
 ## Version History
 

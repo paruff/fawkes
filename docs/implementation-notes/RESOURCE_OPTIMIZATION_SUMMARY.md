@@ -297,8 +297,8 @@ See `docs/resource-sizing-guide.md` for complete Prometheus alert rules.
 ## References
 
 - [Issue #35: Resource optimization and tuning](https://github.com/paruff/fawkes/issues/35)
-- [Resource Sizing Guide](docs/resource-sizing-guide.md)
-- [Architecture Documentation](docs/architecture.md)
+- Resource Sizing Guide
+- Architecture Documentation
 - [Kubernetes Resource Management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 - [DORA Metrics Research](https://dora.dev/)
 

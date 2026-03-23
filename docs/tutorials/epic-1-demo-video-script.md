@@ -677,7 +677,7 @@ A comprehensive 30-minute demonstration of the Fawkes Internal Developer Platfor
 
 - [Architecture Documentation](../architecture.md)
 - [Implementation Handoff Document](../implementation-plan/fawkes-handoff-doc.md)
-- [Epic 1 Acceptance Tests](../AT-E1-006-VALIDATION-COVERAGE.md)
+- Epic 1 Acceptance Tests
 
 ### Support
 

@@ -361,12 +361,12 @@ function DeployButton() {
 
 ## References
 
-- [Event Schema Documentation](../design-system/src/analytics/README.md)
-- [Integration Guide](../docs/how-to/event-tracking-integration.md)
-- [BDD Test Feature](../tests/bdd/features/event-tracking.feature)
-- [Validation Script](../scripts/validate-at-e3-007.sh)
+- Event Schema Documentation
+- Integration Guide
+- BDD Test Feature
+- Validation Script
 - [Plausible Documentation](https://plausible.io/docs)
-- [Epic 3.3 JSON](../data/issues/epic3.3.json)
+- Epic 3.3 JSON
 
 ## Conclusion
 

@@ -37,7 +37,7 @@ Browse the ADRs in this directory to understand:
 ## Related Documentation
 
 - [Architecture Overview](../architecture.md) - High-level platform architecture
-- [Design Documentation](../design/) - Detailed design documents
+- [Design Documentation](../design/index.md) - Detailed design documents
 - [Explanation](../explanation/index.md) - Conceptual documentation
 - [Patterns](../patterns/index.md) - Architectural patterns used
 

@@ -624,8 +624,8 @@ DataHub integrates with other Fawkes components:
 - [Great Expectations Integration](https://datahubproject.io/docs/metadata-ingestion/integration_docs/great-expectations)
 - [PostgreSQL Ingestion](https://datahubproject.io/docs/metadata-ingestion/integration_docs/postgres)
 - [dbt Integration](https://datahubproject.io/docs/metadata-ingestion/integration_docs/dbt)
-- [Architecture Documentation](../../architecture.md)
-- [Data Platform Epic](../../implementation-plan/fawkes-handoff-doc.md)
+- [Architecture Documentation](../architecture.md)
+- [Data Platform Epic](../architecture.md)
 
 ---
 

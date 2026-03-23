@@ -249,9 +249,9 @@ curl http://localhost:8080/work
 
 ### Related ADRs
 
-- [ADR-011: Centralized Log Management](../../docs/adr/ADR-011%20Centralized%20Log%20Management.md)
-- [ADR-012: Metrics Monitoring](../../docs/adr/ADR-012-metrics-monitoring.md)
-- [ADR-013: Distributed Tracing](../../docs/adr/ADR-013%20Distributed%20Tracing.md)
+- ADR-011: Centralized Log Management
+- ADR-012: Metrics Monitoring
+- ADR-013: Distributed Tracing
 
 ## Monitoring & Operations
 
@@ -304,7 +304,7 @@ The collector exposes self-monitoring metrics at port 8888:
 - [OpenTelemetry Collector Documentation](https://opentelemetry.io/docs/collector/)
 - [OpenTelemetry Collector Contrib](https://github.com/open-telemetry/opentelemetry-collector-contrib)
 - [OpenTelemetry Python SDK](https://opentelemetry.io/docs/instrumentation/python/)
-- [Fawkes Architecture - Observability Stack](../../docs/architecture.md#4-observability-stack)
+- Fawkes Architecture - Observability Stack
 
 ---
 

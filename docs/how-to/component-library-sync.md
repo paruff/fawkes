@@ -478,8 +478,8 @@ validation:
 
 - [Penpot API Documentation](https://penpot.app/api/doc)
 - [Design System Guide](../design/design-system.md)
-- [Component Mapping Config](../../platform/apps/backstage/plugins/penpot-viewer.yaml)
-- [Sync Job Definition](../../platform/apps/jenkins/jobs/penpot-sync.groovy)
+- Component Mapping Config
+- Sync Job Definition
 
 ## Support
 

@@ -664,7 +664,7 @@ Monitor quality gate performance in Grafana:
 
 For questions or assistance:
 
-1. **Check docs**: [Security Documentation](../security/)
+1. **Check docs**: [Security Overview](../../security-plane/index.md)
 2. **Search examples**: Review other services in the monorepo
 3. **Ask team**: #security-help channel in Mattermost
 4. **Open ticket**: For policy exceptions or clarifications
@@ -677,8 +677,8 @@ For questions or assistance:
 
 ## Related Documentation
 
-- [SonarQube Integration](../../../platform/apps/sonarqube/README.md)
-- [Trivy Container Scanning](../../../platform/apps/trivy/README.md)
+- [SonarQube](../../tools/sonarqube.md)
+- Trivy Container Scanning
 - [Secrets Management](./secrets-management.md)
 - [Golden Path Pipeline Usage](../../golden-path-usage.md)
 - [Jenkins Configuration as Code](../jenkins-casc-configuration.md)

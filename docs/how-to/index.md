@@ -76,9 +76,9 @@ The following how-to guides help you accomplish specific tasks with Fawkes.
 
 If you need to understand the concepts behind these guides:
 
-- Visit [Explanation](../explanation/) for conceptual background
-- Check [Reference](../reference/) for detailed technical specifications
-- Try [Tutorials](../tutorials/) if you're new to a topic
+- Visit [Explanation](../explanation/index.md) for conceptual background
+- Check [Reference](../reference/index.md) for detailed technical specifications
+- Try [Tutorials](../tutorials/index.md) if you're new to a topic
 
-[View Playbooks :material-clipboard-list:](../playbooks/){ .md-button .md-button--primary }
-[Explore Reference :material-book:](../reference/){ .md-button }
+[View Playbooks :material-clipboard-list:](../playbooks/index.md){ .md-button .md-button--primary }
+[Explore Reference :material-book:](../reference/index.md){ .md-button }

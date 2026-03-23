@@ -448,7 +448,7 @@ After rotating secrets:
 
 ## Related Documentation
 
-- [HashiCorp Vault](../../platform/apps/vault/README.md) - Vault setup guide
+- HashiCorp Vault - Vault setup guide
 - [Security](../../security.md) - Platform security practices
 - [External Secrets Operator](https://external-secrets.io/) - External documentation
 - [Vault Database Secrets Engine](https://developer.hashicorp.com/vault/docs/secrets/databases) - Vault docs

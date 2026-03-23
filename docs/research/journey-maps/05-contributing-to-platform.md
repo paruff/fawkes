@@ -546,9 +546,9 @@ This journey map aligns with:
 - [Application Developer Persona](../personas/application-developer.md)
 - [Platform Developer Persona](../personas/platform-developer.md)
 - [Requesting Platform Feature Journey Map](04-requesting-platform-feature.md)
-- [CONTRIBUTING.md](../../../CONTRIBUTING.md)
-- [Platform Contribution Guide](../../how-to/contribute-to-platform.md)
-- [Template Creation Guide](../../how-to/create-template.md)
+- CONTRIBUTING.md
+- Platform Contribution Guide
+- Template Creation Guide
 
 ---
 

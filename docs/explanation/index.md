@@ -84,7 +84,7 @@ The following explanatory content provides deep-dive understanding of Fawkes arc
 
 ## Architectural Decision Records
 
-For detailed rationale behind specific decisions, see our [ADR collection](../adr/).
+For detailed rationale behind specific decisions, see our [ADR collection](../adr/index.md).
 
-[View ADRs :material-file-document:](../adr/){ .md-button .md-button--primary }
-[Explore Patterns :material-puzzle:](../patterns/){ .md-button }
+[View ADRs :material-file-document:](../adr/index.md){ .md-button .md-button--primary }
+[Explore Patterns :material-puzzle:](../patterns/index.md){ .md-button }

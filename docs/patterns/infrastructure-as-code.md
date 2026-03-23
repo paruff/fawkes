@@ -182,5 +182,3 @@ az aks show --name fawkes-aks --resource-group fawkes-rg
 - [Accelerate: Building and Scaling High Performing Technology Organizations](https://itrevolution.com/book/accelerate/)
 - [Infrastructure as Code by Kief Morris](https://infrastructure-as-code.com/)
 
-[View Examples :octicons-code-16:](../examples/infrastructure.md){ .md-button .md-button--primary }
-[Implementation Guide :octicons-book-16:](../guides/iac-implementation.md){ .md-button }

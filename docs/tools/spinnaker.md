@@ -262,4 +262,3 @@ Common issues and solutions:
 - [Community Slack](https://join.spinnaker.io/)
 
 [Configure Spinnaker :octicons-gear-16:](../configuration.md#spinnaker){ .md-button .md-button--primary }
-[View Examples :octicons-code-16:](../examples/spinnaker.md){ .md-button }

@@ -528,9 +528,9 @@ This journey map aligns with:
 - [Application Developer Persona](../personas/application-developer.md)
 - [Platform Developer Persona](../personas/platform-developer.md)
 - [Deploying First App Journey Map](02-deploying-first-app.md)
-- [Observability Stack Documentation](../../observability/README.md)
-- [Incident Response Runbooks](../../runbooks/incident-response.md)
-- [Distributed Tracing Setup](../../how-to/distributed-tracing.md)
+- Observability Stack Documentation
+- Incident Response Runbooks
+- Distributed Tracing Setup
 
 ---
 

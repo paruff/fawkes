@@ -212,7 +212,7 @@ Files excluded from formatting due to syntax errors or template variables:
 
 ## Troubleshooting
 
-See the [Format-on-Save Setup Guide](docs/how-to/development/format-on-save-setup.md) for detailed troubleshooting instructions.
+See the Format-on-Save Setup Guide for detailed troubleshooting instructions.
 
 Common issues:
 - **Format on save not working**: Check IDE extension installation
@@ -246,9 +246,9 @@ The following formatter versions are now enforced:
 
 ## Documentation
 
-- [Format-on-Save Setup Guide](docs/how-to/development/format-on-save-setup.md)
-- [Code Quality Standards](docs/how-to/development/code-quality-standards.md)
-- [Pre-commit Documentation](docs/PRE-COMMIT.md)
+- Format-on-Save Setup Guide
+- Code Quality Standards
+- Pre-commit Documentation
 
 ## Future Improvements
 

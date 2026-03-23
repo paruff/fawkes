@@ -418,9 +418,9 @@ Look for common themes across interviews:
 
 - [Platform Engineer Persona](../personas/platform-developer.md)
 - [Interview Guide Template](../templates/interview-guide.md)
-- [Research Repository README](../README.md)
+- Research Repository README
 - [Consent Form Template](./consent-form.md)
-- [DORA Metrics Documentation](../../observability/dora-metrics.md)
+- DORA Metrics Documentation
 - **Recommended Reading**:
   - "The Site Reliability Workbook" by Google SRE Team
   - "Team Topologies" by Matthew Skelton and Manuel Pais

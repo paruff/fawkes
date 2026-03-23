@@ -39,7 +39,7 @@ catalog, or you have data quality requirements that need automated validation.
 
 **Resource cost**: 4–8 GB RAM, 4 vCPU additional. Requires OpenSearch (Tier 2).
 
-[Deploy Data Platform Extension →](../../extensions/data-platform/README.md)
+the Data Platform Extension (available in the repository under `extensions/data-platform/`)
 
 ---
 
@@ -61,7 +61,7 @@ capabilities.
 
 **Resource cost**: 2–4 GB RAM, 2 vCPU additional.
 
-[Deploy AI Extension →](../../extensions/ai/README.md)
+the AI Extension (available in the repository under `extensions/ai/`)
 
 ---
 

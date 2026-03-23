@@ -304,8 +304,8 @@ jobs:
 
 ## Support & Resources
 
-- 📖 [Onboarding Guide](.security-plane/onboarding/ONBOARDING.md)
-- 🔧 [Troubleshooting](docs/security-plane/troubleshooting.md)
+- 📖 Onboarding Guide
+- 🔧 Troubleshooting
 - 💬 Slack: #fawkes-security
 - 🐛 Issues: https://github.com/paruff/fawkes/issues
 

@@ -506,10 +506,10 @@ Potential improvements for future iterations:
 - [Issue #60](https://github.com/paruff/fawkes/issues/60)
 - [Issue #58 - Anomaly Detection](https://github.com/paruff/fawkes/issues/58)
 - [Issue #59 - Smart Alerting](https://github.com/paruff/fawkes/issues/59)
-- [AT-E2-009 Acceptance Test](docs/implementation-plan/fawkes-handoff-doc.md)
-- [Anomaly Detection Service README](services/anomaly-detection/README.md)
-- [Smart Alerting Service README](services/smart-alerting/README.md)
-- [Grafana Dashboard README](platform/apps/grafana/dashboards/README.md)
+- AT-E2-009 Acceptance Test
+- Anomaly Detection Service README
+- Smart Alerting Service README
+- Grafana Dashboard README
 
 ## Conclusion
 

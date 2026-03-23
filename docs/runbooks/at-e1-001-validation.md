@@ -353,8 +353,8 @@ stage('AT-E1-001 Validation') {
 
 - [Azure AKS Setup](azure-aks-setup.md)
 - [Azure AKS Validation Checklist](azure-aks-validation-checklist.md)
-- [BDD Feature: Azure AKS Provisioning](../../tests/bdd/features/azure_aks_provisioning.feature)
-- [InSpec Controls](../../infra/azure/inspec/controls/aks.rb)
+- BDD Feature: Azure AKS Provisioning
+- InSpec Controls
 
 ## Support
 

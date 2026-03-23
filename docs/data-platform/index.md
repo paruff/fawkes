@@ -31,6 +31,6 @@ Data quality is enforced through automated validation rules that run in CI and a
 ## Related Documentation
 
 - [Architecture Overview](../architecture.md) - Platform architecture
-- [Implementation Summaries](../implementation-notes/index.md) - Technical details
+- [Implementation Summaries](../implementation-notes/README.md) - Technical details
 - [How-To Guides](../how-to/index.md) - Step-by-step guides
 

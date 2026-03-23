@@ -391,11 +391,11 @@ If we need to migrate to a different provider:
 
 ## Validation
 
-**Acceptance Criteria:** [AT-E3-006](../../tests/bdd/features/feature-flags-unleash.feature)
+**Acceptance Criteria:** AT-E3-006
 
-**Validation Script:** [scripts/validate-at-e3-006.sh](../../scripts/validate-at-e3-006.sh)
+**Validation Script:** scripts/validate-at-e3-006.sh
 
-**BDD Tests:** [tests/bdd/features/feature-flags-unleash.feature](../../tests/bdd/features/feature-flags-unleash.feature)
+**BDD Tests:** tests/bdd/features/feature-flags-unleash.feature
 
 ## References
 

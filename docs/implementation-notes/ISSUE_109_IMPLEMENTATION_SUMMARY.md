@@ -163,11 +163,11 @@ Developers can configure their IDE for automatic linting:
 
 ## Documentation Links
 
-- [Code Quality Standards](docs/how-to/development/code-quality-standards.md) - Complete guide
-- [Pre-commit Setup](docs/PRE-COMMIT.md) - Detailed pre-commit guide
-- [Quality Gates](docs/how-to/security/quality-gates-configuration.md) - CI/CD security gates
-- [Contributing Guide](docs/contributing.md) - How to contribute
-- [Development Guide](docs/development.md) - Development setup
+- Code Quality Standards - Complete guide
+- Pre-commit Setup - Detailed pre-commit guide
+- Quality Gates - CI/CD security gates
+- Contributing Guide - How to contribute
+- Development Guide - Development setup
 
 ## Benefits Delivered
 

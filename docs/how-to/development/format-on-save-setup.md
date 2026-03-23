@@ -471,7 +471,7 @@ If formatting fails in CI:
 
 - [Code Quality Standards](./code-quality-standards.md)
 - [Pre-commit Hooks](../../contributing.md#pre-commit-hooks)
-- [CI/CD Pipeline](../../reference/cicd-pipeline.md)
+- CI/CD Pipeline
 
 ---
 

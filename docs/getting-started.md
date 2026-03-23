@@ -165,9 +165,9 @@ make test-bdd
 
 ### Next steps after Path B
 
-- [Deployment Guide](deployment/) — operational runbooks and day-2 operations
+- [Deployment Guide](deployment/index.md) — operational runbooks and day-2 operations
 - [Golden Path Templates](golden-path-usage.md) — onboard your development teams
-- [DORA Metrics Setup](observability/) — configure team-level dashboards
+- [DORA Metrics Setup](observability/index.md) — configure team-level dashboards
 - For multi-cloud or enterprise needs, see [Path C](#path-c-enterprise-multi-cloud)
 
 ---
@@ -191,7 +191,7 @@ make test-bdd
 |---|---|
 | AWS (multi-account) | [AWS Deployment Guide](AWS_deployment_guide.md) |
 | Azure AKS | [Azure Ingress Setup](azure-ingress-setup.md) · [Azure Ingress Quick Start](azure-ingress-quickstart.md) |
-| Multi-cloud | [docs/deployment/](deployment/) directory |
+| Multi-cloud | [docs/deployment/](deployment/index.md) directory |
 
 ### Enterprise features
 
@@ -201,7 +201,7 @@ make test-bdd
 - **High availability** — multi-zone EKS, RDS multi-AZ, Prometheus federation
 - **Cost allocation** — per-namespace resource tagging and cost dashboards
 
-> For enterprise deployment support, open a [GitHub Discussion](https://github.com/paruff/fawkes/discussions) or refer to the [deployment guides](deployment/).
+> For enterprise deployment support, open a [GitHub Discussion](https://github.com/paruff/fawkes/discussions) or refer to the [deployment guides](deployment/index.md).
 
 ---
 

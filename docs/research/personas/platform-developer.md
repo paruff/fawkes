@@ -224,6 +224,6 @@
 
 ## Related Resources
 
-- [Journey Map: Platform Engineering Workflow](../journey-maps/platform-engineering.md)
-- [Interview Transcripts](../interviews/platform-engineers/)
-- [Research Insights](../insights/platform-pain-points.md)
+- Journey Map: Platform Engineering Workflow
+- Interview Transcripts
+- Research Insights

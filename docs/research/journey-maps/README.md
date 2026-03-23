@@ -163,7 +163,7 @@ graph LR
 ## Resources
 
 - [Journey Map Template](../templates/journey-map.md)
-- [Persona Directory](../personas/)
-- [Interview Notes](../interviews/)
-- [Main Research README](../README.md)
+- Persona Directory
+- Interview Notes
+- Main Research README
 - [Nielsen Norman: Journey Mapping 101](https://www.nngroup.com/articles/customer-journey-mapping/)

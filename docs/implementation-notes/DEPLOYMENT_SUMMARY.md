@@ -295,11 +295,11 @@ ArgoCD (GitOps)
 
 ### 📖 References
 
-- [Deployment Guide](docs/deployment/backstage-postgresql.md)
-- [Validation Document](docs/validation/backstage-deployment-validation.md)
-- [Architecture Documentation](docs/architecture.md)
-- [ADR-002: Backstage for Developer Portal](docs/adr/ADR-002%20backstage.md)
-- [BDD Tests](tests/bdd/features/backstage-deployment.feature)
+- Deployment Guide
+- Validation Document
+- Architecture Documentation
+- ADR-002: Backstage for Developer Portal
+- BDD Tests
 
 ### ✅ Definition of Done
 

@@ -579,7 +579,7 @@ After resolving policy violations:
 
 ## Related Documentation
 
-- [Kyverno Configuration](../../platform/apps/kyverno/README.md) - Policy setup
+- Kyverno Configuration - Policy setup
 - [Security Best Practices](../../security.md) - Platform security
 - [Kyverno Documentation](https://kyverno.io/docs/) - Official Kyverno docs
 - [Policy Catalog](https://kyverno.io/policies/) - Pre-built policies

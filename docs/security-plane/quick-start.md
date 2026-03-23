@@ -246,9 +246,9 @@ gitleaks detect --source . --verbose
 
 ## Getting Help
 
-- 📖 **Full Documentation**: [.security-plane/README.md](.security-plane/README.md)
-- 🔧 **Onboarding Guide**: [.security-plane/onboarding/ONBOARDING.md](.security-plane/onboarding/ONBOARDING.md)
-- 📋 **Reference Architecture**: [docs/security-plane/reference-architecture.md](docs/security-plane/reference-architecture.md)
+- 📖 **Full Documentation**: .security-plane/README.md
+- 🔧 **Onboarding Guide**: .security-plane/onboarding/ONBOARDING.md
+- 📋 **Reference Architecture**: docs/security-plane/reference-architecture.md
 - 💬 **Slack**: #fawkes-security
 - 🐛 **GitHub Issues**: https://github.com/paruff/fawkes/issues
 
@@ -261,7 +261,7 @@ After successfully onboarding:
 3. **Week 5-6**: Enable progressive enforcement
 4. **Week 7+**: Move to strict mode for production
 
-See [Adoption Patterns](docs/security-plane/adoption-patterns.md) for detailed timeline.
+See Adoption Patterns for detailed timeline.
 
 ---
 

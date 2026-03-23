@@ -136,7 +136,7 @@ Start here if you're building, operating, or contributing to the platform:
 1. **[Architecture](architecture.md)** - Platform architecture overview
 2. **[Contributing Guide](contributing.md)** - How to contribute
 3. **[Development Guide](development.md)** - Development environment setup
-4. **[Coding Standards](../CODING_STANDARDS.md)** - Code quality requirements
+4. **[Coding Standards](contributing.md)** - Code quality requirements
 5. **[ADRs](adr/index.md)** - Architecture decision records
 6. **[Operations](runbooks/index.md)** - Runbooks and procedures
 7. **[Testing](testing/index.md)** - Testing strategies

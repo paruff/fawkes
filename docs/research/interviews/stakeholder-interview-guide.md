@@ -446,9 +446,9 @@ Look for common themes across interviews:
 
 - [Platform Consumer Persona](../personas/platform-consumer.md)
 - [Interview Guide Template](../templates/interview-guide.md)
-- [Research Repository README](../README.md)
+- Research Repository README
 - [Consent Form Template](./consent-form.md)
-- [DORA Metrics Documentation](../../observability/dora-metrics.md)
+- DORA Metrics Documentation
 - [Business Case for Platform Engineering](../../business_case.md)
 - **Recommended Reading**:
   - "Accelerate" by Nicole Forsgren, Jez Humble, and Gene Kim

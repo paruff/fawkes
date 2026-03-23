@@ -247,7 +247,7 @@ Before committing data:
 
 ## Resources
 
-- [Main Research README](../README.md)
-- [Insights Directory](../insights/)
+- Main Research README
+- Insights Directory
 - [GDPR Compliance Guide](https://gdpr.eu/)
 - [Anonymization Best Practices](https://www.nngroup.com/articles/qualitative-research-ethics/)

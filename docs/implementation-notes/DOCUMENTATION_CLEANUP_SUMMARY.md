@@ -175,9 +175,9 @@ The documentation now follows the **[Diátaxis framework](https://diataxis.fr/)*
 
 ## Related Documentation
 
-- [DOCUMENTATION_STRUCTURE.md](../docs/DOCUMENTATION_STRUCTURE.md) - Documentation organization guide
-- [CHANGELOG.md](../CHANGELOG.md) - Version history
-- [CODING_STANDARDS.md](../CODING_STANDARDS.md) - Code quality standards
+- DOCUMENTATION_STRUCTURE.md - Documentation organization guide
+- CHANGELOG.md - Version history
+- CODING_STANDARDS.md - Code quality standards
 
 ## Recommendations
 

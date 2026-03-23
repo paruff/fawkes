@@ -21,7 +21,7 @@ Fawkes supports seamless integration with popular CI/CD tools to automate build,
 
 - **Jenkins:**
   Pre-configured pipelines for building and deploying applications.
-  See the [Jenkins integration guide](../platform/jenkins/README.md) for setup instructions.
+  See the Jenkins integration guide for setup instructions.
 
 - **GitHub Actions:**
   Use GitHub Actions workflows for CI/CD directly from your repository.
@@ -39,7 +39,7 @@ Fawkes integrates with monitoring and logging tools to provide visibility into y
 
 - **Prometheus and Grafana:**
   Pre-configured Helm charts for Prometheus and Grafana to monitor Kubernetes clusters and applications.
-  See the [Prometheus setup guide](../platform/k8s/prometheus/README.md).
+  See the Prometheus setup guide.
 
 - **Azure Monitor:**
   Use Azure Monitor for centralized logging and metrics collection.
@@ -75,7 +75,7 @@ Fawkes supports multi-cloud deployments with integrations for major cloud provid
 
 - **AWS:**
   Provision infrastructure using Terraform and manage resources with the AWS CLI.
-  See the [AWS integration guide](../infra/platform/aws/README.md).
+  See the AWS integration guide.
 
 - **Azure:**
   Use Azure CLI and Terraform to provision and manage resources.

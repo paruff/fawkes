@@ -197,4 +197,3 @@ Common issues and solutions:
 - [Jenkins Plugins](https://plugins.jenkins.io/)
 
 [Configure Jenkins :octicons-gear-16:](../configuration.md#jenkins){ .md-button .md-button--primary }
-[View Examples :octicons-code-16:](../examples/jenkins.md){ .md-button }

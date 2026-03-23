@@ -1194,18 +1194,18 @@ SET usage_count = (
 
 ## Related Documentation
 
-- [Insights Service README](../../services/insights/README.md)
-- [Data API GraphQL Schema](../../services/data-api/schema/)
+- Insights Service README
+- Data API GraphQL Schema
 - [Architecture Overview](../architecture.md)
-- [Database Schema Reference](./insights-database-schema.md)
-- [API Development Guide](../how-to/develop-api-service.md)
+- Database Schema Reference
+- API Development Guide
 
 ---
 
 ## Contributing
 
-See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines on contributing to the insights service.
+See CONTRIBUTING.md for guidelines on contributing to the insights service.
 
 ## License
 
-See [LICENSE](../../LICENSE) in repository root.
+See LICENSE in repository root.

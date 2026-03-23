@@ -14,7 +14,7 @@ Fawkes uses [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`) and
 | `MINOR` | New features that are backwards-compatible |
 | `PATCH` | Backwards-compatible bug fixes only |
 
-Current releases are listed in [CHANGELOG.md](../CHANGELOG.md) and on the [GitHub Releases page](https://github.com/paruff/fawkes/releases).
+Current releases are listed in CHANGELOG.md and on the [GitHub Releases page](https://github.com/paruff/fawkes/releases).
 
 ---
 
@@ -143,7 +143,7 @@ Then follow steps 2–7 above for the patch version.
 
 ## Related Documents
 
-- [CHANGELOG.md](../CHANGELOG.md) — full version history
+- CHANGELOG.md — full version history
 - [CONTRIBUTING.md](contributing.md) — how to contribute to Fawkes
 - [docs/ARCHITECTURE.md](ARCHITECTURE.md) — platform architecture overview
 - [GitHub Releases](https://github.com/paruff/fawkes/releases) — published release notes

@@ -16,7 +16,7 @@ Kubernetes Services (backstage, jenkins, etc.)
 
 ## Prerequisites
 
-- Azure AKS cluster provisioned (see [Azure AKS Provisioning](../../../docs/azure-aks-provisioning.md))
+- Azure AKS cluster provisioned (see Azure AKS Provisioning)
 - `kubectl` configured for the cluster
 - ArgoCD installed (optional, for GitOps deployment)
 - Azure CLI installed (for DNS and resource verification)

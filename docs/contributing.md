@@ -60,7 +60,7 @@ make lint
 - Follow language-specific style guides
 - Include appropriate tests
 
-📖 **See**: [CODING_STANDARDS.md](../CODING_STANDARDS.md) - Comprehensive guide with examples and FAQs for all languages
+📖 **See**: [Code Quality Standards](how-to/development/code-quality-quickstart.md) - Comprehensive guide with examples and FAQs for all languages
 
 ## Adding New Content
 

@@ -383,7 +383,7 @@ Look for common themes across interviews:
 
 - [Application Developer Persona](../personas/application-developer.md)
 - [Interview Guide Template](../templates/interview-guide.md)
-- [Research Repository README](../README.md)
+- Research Repository README
 - [Consent Form Template](./consent-form.md)
 - **Recommended Reading**: "The Mom Test" by Rob Fitzpatrick
 

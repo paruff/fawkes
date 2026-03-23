@@ -227,9 +227,9 @@ If advanced features are needed in the future:
 
 ## Validation
 
-Acceptance criteria validation: [AT-E3-011](../../scripts/validate-product-analytics.sh)
+Acceptance criteria validation: AT-E3-011
 
-BDD tests: [tests/bdd/features/product-analytics.feature](../../tests/bdd/features/product-analytics.feature)
+BDD tests: tests/bdd/features/product-analytics.feature
 
 ## References
 

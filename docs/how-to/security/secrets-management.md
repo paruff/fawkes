@@ -482,8 +482,8 @@ Review changes carefully before committing.
 ## Resources
 
 - [Gitleaks Documentation](https://github.com/gitleaks/gitleaks)
-- [HashiCorp Vault for Kubernetes](../../../platform/apps/vault/README.md)
-- [External Secrets Operator](../../../platform/apps/external-secrets/README.md)
+- HashiCorp Vault for Kubernetes
+- External Secrets Operator
 - [Pre-commit Hooks Setup](../../PRE-COMMIT.md)
 - [Fawkes Security Architecture](../../architecture.md#security-architecture)
 

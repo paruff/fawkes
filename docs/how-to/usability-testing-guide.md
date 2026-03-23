@@ -649,7 +649,7 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 **Platform Tools:**
 
 - [OpenReplay Setup Guide](./session-recording-setup.md)
-- [Recording Best Practices](./recording-best-practices.md)
+- Recording Best Practices
 
 ### External Resources
 

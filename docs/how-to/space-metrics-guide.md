@@ -369,10 +369,10 @@ kubectl port-forward -n monitoring svc/prometheus-prometheus 9090:9090
 
 ## Related Documentation
 
-- [ADR-018: SPACE Framework](../../docs/adr/ADR-018%20Developer%20Experience%20Measurement%20Framework%20SPACE.md)
-- [ADR-025: DevEx Metrics Dashboarding](../../docs/adr/ADR-025%20Developer%20Experience%20Metrics%20Collection%20&%20Dashboarding.md)
-- [Service README](../../services/space-metrics/README.md)
-- [Deployment Guide](../../platform/apps/space-metrics/README.md)
+- ADR-018: SPACE Framework
+- ADR-025: DevEx Metrics Dashboarding
+- Service README
+- Deployment Guide
 
 ## Support
 
