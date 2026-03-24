@@ -226,7 +226,7 @@ A deployment is classified as **rework** when:
 
 - DevLake ArgoCD plugin records sync events with commit metadata
 - Git commit message patterns are matched against the rework signal list
-- The rework window is configurable via `DORA_REWORK_WINDOW_HOURS` (default: `24`)
+- The rework window is configurable via the `rework_detection.window_hours` setting in the DevLake collector configuration (default: `24`)
 - Grafana dashboard displays rework rate trend and rework deployments by service
 
 ---
@@ -349,7 +349,7 @@ doraMetrics.recordPipelineComplete(service: 'my-service')
 │  │  • ArgoCD Sync Frequency (Deployment Frequency)            │ │
 │  │  • Sync Failures + Incidents (CFR)                         │ │
 │  │  • Incident → Restore Sync (MTTR)                          │ │
-│  │  • Jenkins Build Metrics (Rework)                          │ │
+│  │  • Jenkins CI Build Rework Metrics (non-DORA CI signal)    │ │
 │  │  • Fix Commits within 24 h Window (Deployment Rework Rate) │ │
 │  └────────────────────────────────────────────────────────────┘ │
 │                              │                                    │

@@ -111,7 +111,7 @@ A deployment is counted as **rework** when:
   (default: **24 hours**), **and**
 - That follow-up deployment is tagged or flagged as a fix (e.g. commit message
   contains `fix:`, `hotfix:`, or `revert:`, or the deployment is labelled
-  `dora.dev/rework=true`).
+  `dora.dev/rework: "true"`).
 
 **Why it matters**: Rework rate distinguishes between deployments that succeed on the
 first attempt and those that silently introduce problems requiring rapid follow-up. It
@@ -131,7 +131,7 @@ teams are patching quietly rather than raising incidents.
 [docs/playbooks/dora-metrics-implementation.md](../playbooks/dora-metrics-implementation.md#step-6-configure-deployment-rework-rate-collection)
 for implementation details.
 
-**Prometheus metric**: `dora_deployment_rework_rate`
+**Prometheus metric**: `dora_deployment_rework_total` (counter; rate computed in dashboard)
 
 **Grafana panel**: *Deployment Rework Rate* (gauge)
 
