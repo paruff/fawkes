@@ -5618,10 +5618,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-operational-performance-reliability" class="md-nav__link">
+  <a href="#5-deployment-rework-rate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Operational Performance (Reliability)
+        5. Deployment Rework Rate
       
     </span>
   </a>
@@ -5920,6 +5920,9 @@
 <h2 id="overview">Overview</h2>
 <p>This guide explains how each of the five DORA metrics is calculated within the
 Fawkes platform using Apache DevLake.</p>
+<p>The five metrics are: <strong>Deployment Frequency</strong>, <strong>Lead Time for Changes</strong>,
+<strong>Change Failure Rate</strong>, <strong>Mean Time to Restore (MTTR)</strong>, and
+<strong>Deployment Rework Rate</strong> (added in DORA 2025).</p>
 <p>DORA (DevOps Research and Assessment) metrics are industry-standard measures of
 software delivery performance. They help teams understand their delivery velocity,
 stability, and identify areas for improvement.</p>
@@ -5962,9 +5965,9 @@ stability, and identify areas for improvement.</p>
 <td>Incident creation → restore deployment</td>
 </tr>
 <tr>
-<td>Operational Performance</td>
-<td><strong>Prometheus</strong></td>
-<td>SLO/SLI adherence metrics</td>
+<td>Deployment Rework Rate</td>
+<td><strong>ArgoCD + Git</strong></td>
+<td>Fix deployments within 24 h window</td>
 </tr>
 </tbody>
 </table>
@@ -6096,32 +6099,57 @@ stability, and identify areas for improvement.</p>
 <li>Grafana dashboard shows MTTR trends by severity</li>
 </ul>
 <hr />
-<h3 id="5-operational-performance-reliability">5. Operational Performance (Reliability)</h3>
-<p><strong>Definition</strong>: Measures the reliability and performance of services in production.</p>
-<p><strong>Data Sources</strong>:</p>
-<ul>
-<li><strong>Prometheus</strong>: Latency, error rate, availability metrics</li>
-<li><strong>SLO/SLI Definitions</strong>: Target thresholds</li>
-</ul>
+<h3 id="5-deployment-rework-rate">5. Deployment Rework Rate</h3>
+<p><strong>Definition</strong>: Percentage of deployments that require a follow-up deployment to fix
+a problem introduced by the original deployment, within a configurable time window
+(default: <strong>24 hours</strong>).</p>
+<p><strong>Primary Data Sources</strong>: <strong>ArgoCD</strong> and <strong>Git</strong></p>
 <p><strong>Calculation</strong>:</p>
-<div class="highlight"><pre><span></span><code>Operational Performance = Actual Uptime / Target Uptime × 100%
+<div class="highlight"><pre><span></span><code>Deployment Rework Rate = Rework Deployments / Total Deployments × 100%
 </code></pre></div>
-<p>Or based on SLO adherence:</p>
-<div class="highlight"><pre><span></span><code>SLO Adherence = Time within SLO / Total Time × 100%
-</code></pre></div>
-<p><strong>Key Indicators</strong>:</p>
+<p>A deployment is classified as <strong>rework</strong> when:</p>
+<ol>
+<li>A second ArgoCD sync to the <strong>same service</strong> occurs within the rework window
+   (default 24 h), <strong>and</strong></li>
+<li>The triggering commit matches any of the following signals:</li>
+<li>Conventional commit prefix: <code>fix:</code>, <code>hotfix:</code>, or <code>revert:</code></li>
+<li>Deployment labelled <code>dora.dev/rework: "true"</code> in the ArgoCD Application spec</li>
+<li>PR title or body contains <code>[rework]</code> or <code>[hotfix]</code></li>
+</ol>
+<p><strong>Performance Levels</strong> (DORA 2025):</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Rework Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elite</td>
+<td>&lt; 5%</td>
+</tr>
+<tr>
+<td>High</td>
+<td>5–10%</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>10–20%</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>20%+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fawkes Implementation</strong>:</p>
 <ul>
-<li><strong>Availability</strong>: Percentage of time service is operational</li>
-<li><strong>Latency P99</strong>: 99th percentile response time</li>
-<li><strong>Error Rate</strong>: Percentage of failed requests</li>
+<li>DevLake ArgoCD plugin records sync events with commit metadata</li>
+<li>Git commit message patterns are matched against the rework signal list</li>
+<li>The rework window is configurable via the <code>rework_detection.window_hours</code> setting in the DevLake collector configuration (default: <code>24</code>)</li>
+<li>Grafana dashboard displays rework rate trend and rework deployments by service</li>
 </ul>
-<p><strong>Performance Levels</strong>:
-| Level | SLO Adherence |
-|-------|---------------|
-| Elite | 99.99%+ |
-| High | 99.9-99.99% |
-| Medium | 99-99.9% |
-| Low | Below 99% |</p>
 <hr />
 <h2 id="jenkins-cirework-metrics">Jenkins CI/Rework Metrics</h2>
 <p>While DORA metrics focus on deployment and production, Jenkins provides valuable
@@ -6215,7 +6243,8 @@ CI quality metrics:</p>
 │  │  • ArgoCD Sync Frequency (Deployment Frequency)            │ │
 │  │  • Sync Failures + Incidents (CFR)                         │ │
 │  │  • Incident → Restore Sync (MTTR)                          │ │
-│  │  • Jenkins Build Metrics (Rework)                          │ │
+│  │  • Jenkins CI Build Rework Metrics (non-DORA CI signal)    │ │
+│  │  • Fix Commits within 24 h Window (Deployment Rework Rate) │ │
 │  └────────────────────────────────────────────────────────────┘ │
 │                              │                                    │
 │                              ▼                                    │
@@ -6250,6 +6279,7 @@ CI quality metrics:</p>
 <li>Lead Time for Changes - Time breakdown by stage</li>
 <li>Change Failure Rate - Failure analysis</li>
 <li>Mean Time to Restore - Incident resolution trends</li>
+<li>Deployment Rework Rate - Fix deployment trends and rework by service</li>
 </ul>
 <h3 id="backstage-developer-portal">Backstage Developer Portal</h3>
 <p>DORA metrics are integrated into Backstage service pages:</p>
