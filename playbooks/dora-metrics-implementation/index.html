@@ -5714,6 +5714,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#step-6-configure-deployment-rework-rate-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Configure Deployment Rework Rate Collection
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6228,6 +6239,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#step-6-configure-deployment-rework-rate-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Configure Deployment Rework Rate Collection
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6514,7 +6536,7 @@
 <p>This section defines the "why"—the risk mitigated, compliance goal achieved, and value delivered.</p>
 <h3 id="what-were-solving">What We're Solving</h3>
 <p>Organizations often struggle to objectively measure their software delivery performance. Without data, improvement efforts are based on intuition rather than evidence, making it impossible to identify true bottlenecks, demonstrate progress to stakeholders, or justify investment in engineering improvements.</p>
-<p>DORA (DevOps Research and Assessment) research has identified four key metrics that reliably predict software delivery and organizational performance. This playbook implements automated collection and visualization of these metrics within the Fawkes platform.</p>
+<p>DORA (DevOps Research and Assessment) research has identified five key metrics that reliably predict software delivery and organizational performance. This playbook implements automated collection and visualization of these metrics within the Fawkes platform.</p>
 <h3 id="risk-mitigation">Risk Mitigation</h3>
 <table>
 <thead>
@@ -6545,11 +6567,16 @@
 <td>Quality issues erode user satisfaction</td>
 <td>Early detection enables proactive fixes</td>
 </tr>
+<tr>
+<td>High rework rate</td>
+<td>Teams patching silently rather than improving</td>
+<td>Rework tracking exposes fix-deploy cycles</td>
+</tr>
 </tbody>
 </table>
 <h3 id="expected-outcomes">Expected Outcomes</h3>
 <ul>
-<li>✅ Automated collection of all four DORA metrics</li>
+<li>✅ Automated collection of all five DORA metrics</li>
 <li>✅ Real-time dashboards showing current performance levels</li>
 <li>✅ Historical trend analysis for improvement tracking</li>
 <li>✅ Team-level breakdowns for targeted interventions</li>
@@ -6997,6 +7024,72 @@
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>dora-dashboard-configmap.yaml
 </code></pre></div>
 <p><strong>Verification</strong>: Access Grafana and verify the DORA dashboard is visible.</p>
+<h3 id="step-6-configure-deployment-rework-rate-collection">Step 6: Configure Deployment Rework Rate Collection</h3>
+<p><strong>Objective</strong>: Detect and record deployments that require a follow-up fix deployment
+within a configurable time window.</p>
+<p><strong>Estimated Time</strong>: 30 minutes</p>
+<p>A deployment is counted as <strong>rework</strong> if a second deployment to the same service
+occurs within the <strong>rework window</strong> (default: 24 hours) and is tagged or flagged
+as a fix using any of the following signals:</p>
+<ul>
+<li>Conventional commit prefix: <code>fix:</code>, <code>hotfix:</code>, or <code>revert:</code></li>
+<li>Deployment labelled <code>dora.dev/rework: "true"</code> in the ArgoCD Application spec</li>
+<li>
+<p>Pull request title or body contains <code>[rework]</code> or <code>[hotfix]</code></p>
+</li>
+<li>
+<p>Add the rework detection configuration to the DORA collector:</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># dora-rework-config.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector-config</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-metrics</span>
+<span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">config.yaml</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">collectors:</span>
+<span class="w">      </span><span class="no">- type: argocd</span>
+<span class="w">        </span><span class="no">webhook_path: /webhooks/argocd</span>
+<span class="w">        </span><span class="no">metrics:</span>
+<span class="w">          </span><span class="no">- deployment_frequency</span>
+<span class="w">          </span><span class="no">- lead_time_for_changes</span>
+<span class="w">          </span><span class="no">- deployment_rework_rate</span>
+<span class="w">    </span><span class="no">rework_detection:</span>
+<span class="w">      </span><span class="no">window_hours: 24               # configurable rework window (default: 24 h)</span>
+<span class="w">      </span><span class="no">fix_commit_patterns:</span>
+<span class="w">        </span><span class="no">- &quot;^fix:&quot;</span>
+<span class="w">        </span><span class="no">- &quot;^hotfix:&quot;</span>
+<span class="w">        </span><span class="no">- &quot;^revert:&quot;</span>
+<span class="w">      </span><span class="no">fix_label: &quot;dora.dev/rework&quot;   # ArgoCD Application label to force-tag a rework</span>
+<span class="w">      </span><span class="no">fix_pr_patterns:</span>
+<span class="w">        </span><span class="no">- &quot;\\[rework\\]&quot;</span>
+<span class="w">        </span><span class="no">- &quot;\\[hotfix\\]&quot;</span>
+</code></pre></div>
+<ol>
+<li>Annotate fix deployments explicitly (optional — for non-conventional commits):</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># In your ArgoCD Application spec, add the label to the next sync:</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dora.dev/rework</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+</code></pre></div>
+<ol>
+<li>Apply the updated configuration:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>dora-rework-config.yaml
+</code></pre></div>
+<ol>
+<li>Verify rework detection is active:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>dora-metrics<span class="w"> </span>deploy/dora-collector<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>localhost:8080/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dora_deployment_rework
+</code></pre></div>
+<p><strong>Expected Result</strong>: <code>dora_deployment_rework_total</code> metric is present (value may be 0
+until a rework deployment occurs).</p>
+<p><strong>Verification</strong>: Trigger a deployment followed by a <code>fix:</code> commit deployment within
+24 hours and confirm the rework count increments.</p>
 <hr />
 <h2 id="iv-validation-success-metrics">IV. Validation &amp; Success Metrics</h2>
 <div class="admonition check">
@@ -7043,7 +7136,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <tr>
 <td>Data Collection</td>
 <td>Check <code>dora_*</code> metrics exist</td>
-<td>All 4 metrics present</td>
+<td>All 5 metrics present</td>
 <td>/grafana/dora</td>
 </tr>
 <tr>
@@ -7062,7 +7155,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 </table>
 <h3 id="verification-checklist">Verification Checklist</h3>
 <ul>
-<li>[ ] All four DORA metrics are being collected</li>
+<li>[ ] All five DORA metrics are being collected</li>
 <li>[ ] Grafana dashboard displays correctly</li>
 <li>[ ] Team-level filtering works</li>
 <li>[ ] Historical trend data is accumulating</li>
@@ -7099,6 +7192,11 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <td>Measured</td>
 <td>&lt; 1 hour</td>
 </tr>
+<tr>
+<td>Deployment Rework Rate</td>
+<td>Measured</td>
+<td>&lt; 5%</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -7109,12 +7207,12 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <p>Ready-to-use business language for communicating success to client executives.</p>
 <h3 id="executive-summary">Executive Summary</h3>
 <blockquote>
-<p>We've implemented automated measurement of software delivery performance using the industry-standard DORA metrics framework. Your organization now has real-time visibility into deployment frequency, lead time, change failure rate, and recovery time—the four metrics that DORA research proves correlate with business performance. This data-driven foundation enables targeted improvements and demonstrates engineering progress to stakeholders.</p>
+<p>We've implemented automated measurement of software delivery performance using the industry-standard DORA metrics framework. Your organization now has real-time visibility into deployment frequency, lead time, change failure rate, recovery time, and deployment rework rate—the five metrics that DORA 2025 research proves correlate with business performance. This data-driven foundation enables targeted improvements and demonstrates engineering progress to stakeholders.</p>
 </blockquote>
 <h3 id="key-messages-for-stakeholders">Key Messages for Stakeholders</h3>
 <h4 id="for-technical-leaders-cto-vp-engineering">For Technical Leaders (CTO, VP Engineering)</h4>
 <ul>
-<li>"We've implemented automated DORA metrics collection that tracks all four key performance indicators across your delivery pipeline"</li>
+<li>"We've implemented automated DORA metrics collection that tracks all five key performance indicators across your delivery pipeline"</li>
 <li>"This positions your organization to identify bottlenecks with data rather than intuition—teams can now see exactly where time is spent in the delivery process"</li>
 <li>"Elite performers in the DORA research deploy on-demand, have lead times under one hour, fail less than 15% of the time, and recover in under one hour. You now have the data to benchmark and improve toward these targets."</li>
 </ul>
@@ -7142,7 +7240,10 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <p><strong>Show MTTR</strong>: "When something does go wrong, how quickly do we recover? Elite teams restore service in under an hour. Our current mean time to restore is [X]..."</p>
 </li>
 <li>
-<p><strong>Connect to value</strong>: "By tracking these metrics, we can identify exactly where to focus improvement efforts and demonstrate progress to the business."</p>
+<p><strong>Show Deployment Rework Rate</strong>: "This is our rework rate—the percentage of deployments that needed a follow-up fix within 24 hours. A high rework rate often means silent patching instead of process improvement. We're currently at [X%], targeting below 5%..."</p>
+</li>
+<li>
+<p><strong>Connect to value</strong>: "By tracking these five metrics, we can identify exactly where to focus improvement efforts and demonstrate progress to the business."</p>
 </li>
 </ol>
 <h3 id="common-executive-questions-answers">Common Executive Questions &amp; Answers</h3>
@@ -7198,7 +7299,8 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <h2 id="appendix">Appendix</h2>
 <h3 id="related-resources">Related Resources</h3>
 <ul>
-<li><a href="../../dojo/modules/white-belt/module-02-dora-metrics/">Module 2: DORA Metrics</a> - Conceptual background on the four key metrics</li>
+<li><a href="../../dojo/modules/white-belt/module-02-dora-metrics/">Module 2: DORA Metrics</a> - Conceptual background on the five key metrics</li>
+<li><a href="../../dora/dashboard-demo/">DORA Dashboard Demo</a> - Five-metric dashboard overview</li>
 <li><a href="../../tools/prometheus/">Prometheus Tool Reference</a> - Metrics collection details</li>
 <li><a href="../../observability/dora-metrics-guide/">DORA Metrics Guide</a> - Detailed DORA implementation guide</li>
 </ul>
