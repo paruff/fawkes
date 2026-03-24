@@ -16,8 +16,17 @@
 Fawkes is an open-source **Internal Product Delivery Platform** that wires together
 Backstage, ArgoCD, Jenkins, Prometheus, and a belt-level Dojo learning environment
 into a single GitOps-managed stack. Deploy it locally in ~20 minutes with
-`make dev-up`, or to AWS EKS in 2–4 hours. DORA metrics (deployment frequency,
-lead time, change failure rate, mean time to restore) are collected automatically from day one.
+`make dev-up`, or to AWS EKS in 2–4 hours. All five DORA metrics (deployment frequency,
+lead time, change failure rate, mean time to restore, and deployment rework rate) are
+collected automatically from day one.
+
+| DORA Metric | Elite Target |
+|---|---|
+| Deployment Frequency | Multiple times per day |
+| Lead Time for Changes | < 1 hour |
+| Change Failure Rate | 0–15% |
+| Time to Restore Service | < 1 hour |
+| Deployment Rework Rate | < 5% |
 
 ---
 
