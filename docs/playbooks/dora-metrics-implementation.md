@@ -20,7 +20,7 @@ This section defines the "why"—the risk mitigated, compliance goal achieved, a
 
 Organizations often struggle to objectively measure their software delivery performance. Without data, improvement efforts are based on intuition rather than evidence, making it impossible to identify true bottlenecks, demonstrate progress to stakeholders, or justify investment in engineering improvements.
 
-DORA (DevOps Research and Assessment) research has identified four key metrics that reliably predict software delivery and organizational performance. This playbook implements automated collection and visualization of these metrics within the Fawkes platform.
+DORA (DevOps Research and Assessment) research has identified five key metrics that reliably predict software delivery and organizational performance. This playbook implements automated collection and visualization of these metrics within the Fawkes platform.
 
 ### Risk Mitigation
 
@@ -30,10 +30,11 @@ DORA (DevOps Research and Assessment) research has identified four key metrics t
 | Unable to demonstrate improvement | Stakeholders lose confidence in engineering | Dashboards show measurable progress     |
 | Slow incident response            | Prolonged outages damage customer trust     | MTTR tracking drives faster recovery    |
 | High change failure rate          | Quality issues erode user satisfaction      | Early detection enables proactive fixes |
+| High rework rate                  | Teams patching silently rather than improving | Rework tracking exposes fix-deploy cycles |
 
 ### Expected Outcomes
 
-- ✅ Automated collection of all four DORA metrics
+- ✅ Automated collection of all five DORA metrics
 - ✅ Real-time dashboards showing current performance levels
 - ✅ Historical trend analysis for improvement tracking
 - ✅ Team-level breakdowns for targeted interventions
@@ -453,6 +454,79 @@ kubectl apply -f dora-dashboard-configmap.yaml
 
 **Verification**: Access Grafana and verify the DORA dashboard is visible.
 
+### Step 6: Configure Deployment Rework Rate Collection
+
+**Objective**: Detect and record deployments that require a follow-up fix deployment
+within a configurable time window.
+
+**Estimated Time**: 30 minutes
+
+A deployment is counted as **rework** if a second deployment to the same service
+occurs within the **rework window** (default: 24 hours) and is tagged or flagged
+as a fix using any of the following signals:
+
+- Conventional commit prefix: `fix:`, `hotfix:`, or `revert:`
+- Deployment labelled `dora.dev/rework: "true"` in the ArgoCD Application spec
+- Pull request title or body contains `[rework]` or `[hotfix]`
+
+1. Add the rework detection configuration to the DORA collector:
+
+```yaml
+# dora-rework-config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dora-collector-config
+  namespace: dora-metrics
+data:
+  config.yaml: |
+    collectors:
+      - type: argocd
+        webhook_path: /webhooks/argocd
+        metrics:
+          - deployment_frequency
+          - lead_time_for_changes
+          - deployment_rework_rate
+    rework_detection:
+      window_hours: 24               # configurable rework window (default: 24 h)
+      fix_commit_patterns:
+        - "^fix:"
+        - "^hotfix:"
+        - "^revert:"
+      fix_label: "dora.dev/rework"   # ArgoCD Application label to force-tag a rework
+      fix_pr_patterns:
+        - "\\[rework\\]"
+        - "\\[hotfix\\]"
+```
+
+2. Annotate fix deployments explicitly (optional — for non-conventional commits):
+
+```yaml
+# In your ArgoCD Application spec, add the label to the next sync:
+metadata:
+  labels:
+    dora.dev/rework: "true"
+```
+
+3. Apply the updated configuration:
+
+```bash
+kubectl apply -f dora-rework-config.yaml
+```
+
+4. Verify rework detection is active:
+
+```bash
+kubectl exec -n dora-metrics deploy/dora-collector -- \
+  curl -s localhost:8080/metrics | grep dora_deployment_rework
+```
+
+**Expected Result**: `dora_deployment_rework_total` metric is present (value may be 0
+until a rework deployment occurs).
+
+**Verification**: Trigger a deployment followed by a `fix:` commit deployment within
+24 hours and confirm the rework count increments.
+
 ---
 
 ## IV. Validation & Success Metrics
@@ -503,13 +577,13 @@ kubectl exec -n monitoring deploy/prometheus -- \
 
 | Metric          | How to Measure               | Target Value          | Dashboard Link |
 | --------------- | ---------------------------- | --------------------- | -------------- |
-| Data Collection | Check `dora_*` metrics exist | All 4 metrics present | /grafana/dora  |
+| Data Collection | Check `dora_*` metrics exist | All 5 metrics present | /grafana/dora  |
 | Dashboard Load  | Grafana dashboard loads      | < 3 seconds           | /grafana/dora  |
 | Historical Data | Query 7-day data             | Data available        | /grafana/dora  |
 
 ### Verification Checklist
 
-- [ ] All four DORA metrics are being collected
+- [ ] All five DORA metrics are being collected
 - [ ] Grafana dashboard displays correctly
 - [ ] Team-level filtering works
 - [ ] Historical trend data is accumulating
@@ -519,12 +593,13 @@ kubectl exec -n monitoring deploy/prometheus -- \
 
 This playbook establishes the foundation for measuring DORA metrics. After 2-4 weeks of data collection, you'll be able to:
 
-| DORA Metric           | Initial Baseline | Typical Elite Target |
-| --------------------- | ---------------- | -------------------- |
-| Deployment Frequency  | Measured         | Multiple per day     |
-| Lead Time for Changes | Measured         | < 1 hour             |
-| Change Failure Rate   | Measured         | 0-15%                |
-| Time to Restore       | Measured         | < 1 hour             |
+| DORA Metric              | Initial Baseline | Typical Elite Target |
+| ------------------------ | ---------------- | -------------------- |
+| Deployment Frequency     | Measured         | Multiple per day     |
+| Lead Time for Changes    | Measured         | < 1 hour             |
+| Change Failure Rate      | Measured         | 0-15%                |
+| Time to Restore          | Measured         | < 1 hour             |
+| Deployment Rework Rate   | Measured         | < 5%                 |
 
 ---
 
@@ -535,13 +610,13 @@ Ready-to-use business language for communicating success to client executives.
 
 ### Executive Summary
 
-> We've implemented automated measurement of software delivery performance using the industry-standard DORA metrics framework. Your organization now has real-time visibility into deployment frequency, lead time, change failure rate, and recovery time—the four metrics that DORA research proves correlate with business performance. This data-driven foundation enables targeted improvements and demonstrates engineering progress to stakeholders.
+> We've implemented automated measurement of software delivery performance using the industry-standard DORA metrics framework. Your organization now has real-time visibility into deployment frequency, lead time, change failure rate, recovery time, and deployment rework rate—the five metrics that DORA 2025 research proves correlate with business performance. This data-driven foundation enables targeted improvements and demonstrates engineering progress to stakeholders.
 
 ### Key Messages for Stakeholders
 
 #### For Technical Leaders (CTO, VP Engineering)
 
-- "We've implemented automated DORA metrics collection that tracks all four key performance indicators across your delivery pipeline"
+- "We've implemented automated DORA metrics collection that tracks all five key performance indicators across your delivery pipeline"
 - "This positions your organization to identify bottlenecks with data rather than intuition—teams can now see exactly where time is spent in the delivery process"
 - "Elite performers in the DORA research deploy on-demand, have lead times under one hour, fail less than 15% of the time, and recover in under one hour. You now have the data to benchmark and improve toward these targets."
 
@@ -563,7 +638,9 @@ Ready-to-use business language for communicating success to client executives.
 
 5. **Show MTTR**: "When something does go wrong, how quickly do we recover? Elite teams restore service in under an hour. Our current mean time to restore is [X]..."
 
-6. **Connect to value**: "By tracking these metrics, we can identify exactly where to focus improvement efforts and demonstrate progress to the business."
+6. **Show Deployment Rework Rate**: "This is our rework rate—the percentage of deployments that needed a follow-up fix within 24 hours. A high rework rate often means silent patching instead of process improvement. We're currently at [X%], targeting below 5%..."
+
+7. **Connect to value**: "By tracking these five metrics, we can identify exactly where to focus improvement efforts and demonstrate progress to the business."
 
 ### Common Executive Questions & Answers
 
@@ -594,7 +671,8 @@ With baseline metrics established, the next step is to identify your primary bot
 
 ### Related Resources
 
-- [Module 2: DORA Metrics](../dojo/modules/white-belt/module-02-dora-metrics.md) - Conceptual background on the four key metrics
+- [Module 2: DORA Metrics](../dojo/modules/white-belt/module-02-dora-metrics.md) - Conceptual background on the five key metrics
+- [DORA Dashboard Demo](../dora/dashboard-demo.md) - Five-metric dashboard overview
 - [Prometheus Tool Reference](../tools/prometheus.md) - Metrics collection details
 - [DORA Metrics Guide](../observability/dora-metrics-guide.md) - Detailed DORA implementation guide
 
