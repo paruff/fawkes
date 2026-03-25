@@ -29,7 +29,7 @@ echo ""
 # ---------------------------------------------------------------------------
 log "Checking ArgoCD (namespace: argocd)..."
 if ARGOCD_PODS=$(kubectl get pods -n argocd \
-  --field-selector=status.phase=Running --no-headers 2>/dev/null); then
+  --field-selector=status.phase=Running --no-headers 2> /dev/null); then
   ARGOCD_RUNNING=$(printf '%s\n' "${ARGOCD_PODS}" | wc -l | tr -d ' ')
   if [[ "${ARGOCD_RUNNING}" -gt 0 ]]; then
     ok "ArgoCD pods are running (${ARGOCD_RUNNING} pod(s))"
@@ -45,7 +45,7 @@ fi
 # ---------------------------------------------------------------------------
 log "Checking Backstage (namespace: backstage)..."
 if BACKSTAGE_PODS=$(kubectl get pods -n backstage \
-  --field-selector=status.phase=Running --no-headers 2>/dev/null); then
+  --field-selector=status.phase=Running --no-headers 2> /dev/null); then
   BACKSTAGE_RUNNING=$(printf '%s\n' "${BACKSTAGE_PODS}" | wc -l | tr -d ' ')
   if [[ "${BACKSTAGE_RUNNING}" -gt 0 ]]; then
     ok "Backstage pods are running (${BACKSTAGE_RUNNING} pod(s))"
@@ -61,7 +61,7 @@ fi
 # ---------------------------------------------------------------------------
 log "Checking Prometheus + Grafana (namespace: monitoring)..."
 if MONITORING_PODS=$(kubectl get pods -n monitoring \
-  --field-selector=status.phase=Running --no-headers 2>/dev/null); then
+  --field-selector=status.phase=Running --no-headers 2> /dev/null); then
   MONITORING_RUNNING=$(printf '%s\n' "${MONITORING_PODS}" | wc -l | tr -d ' ')
   if [[ "${MONITORING_RUNNING}" -gt 0 ]]; then
     ok "Prometheus/Grafana pods are running (${MONITORING_RUNNING} pod(s))"
