@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fawkes-local-apps
+  namespace: argocd
+  labels:
+    app: fawkes-local-apps
+    managed-by: fawkes
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    targetRevision: main
+    path: platform/local/apps
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup format format-check validate-research-structure validate-at-e0-001 validate-at-e0-002 validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-008 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-epic-3-final validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all terraform-test terraform-test-integration terraform-test-e2e terraform-test-cost terraform-test-all dev-up dev-down dev-status check-deps dojo-validate
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup format format-check validate-research-structure validate-at-e0-001 validate-at-e0-002 validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-008 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-epic-3-final validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all terraform-test terraform-test-integration terraform-test-e2e terraform-test-cost terraform-test-all dev-up dev-down dev-status check-deps dojo-validate local-dev local-dev-destroy check-prerequisites create-local-cluster bootstrap-argocd deploy-apps validate-health
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -31,6 +31,47 @@ dev-down: ## Tear down the local Fawkes k3d cluster
 
 dev-status: ## Print service URLs and credentials for the local environment
 	@./scripts/dev-status.sh
+
+# ─── Local platform (kind + ArgoCD GitOps) ─────────────────────────────────
+
+local-dev: check-prerequisites create-local-cluster bootstrap-argocd deploy-apps validate-health ## Bring up GitOps local dev environment (kind + ArgoCD App-of-Apps)
+
+local-dev-destroy: ## Tear down the kind-based local dev environment
+	@echo "Destroying local environment..."
+	@kind delete cluster --name fawkes-local
+
+check-prerequisites: ## Verify kind, kubectl, docker are installed
+	@echo "Checking prerequisites..."
+	@command -v kind    >/dev/null 2>&1 || { echo "❌ kind not found. Install: https://kind.sigs.k8s.io/"; exit 1; }
+	@command -v kubectl >/dev/null 2>&1 || { echo "❌ kubectl not found. Install: https://kubernetes.io/docs/tasks/tools/"; exit 1; }
+	@command -v docker  >/dev/null 2>&1 || { echo "❌ docker not found. Install: https://docs.docker.com/get-docker/"; exit 1; }
+	@echo "✅ All prerequisites found"
+
+create-local-cluster: ## Create kind cluster for local development
+	@echo "Creating kind cluster..."
+	@if kind get clusters 2>/dev/null | grep -q '^fawkes-local$$'; then \
+		echo "⚠️  Cluster 'fawkes-local' already exists — skipping creation"; \
+	else \
+		kind create cluster --name fawkes-local --config platform/local/kind-config.yaml; \
+	fi
+	@kubectl cluster-info --context kind-fawkes-local
+
+bootstrap-argocd: ## Bootstrap ArgoCD in the local kind cluster
+	@echo "Bootstrapping ArgoCD..."
+	@kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+	@kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+	@echo "Waiting for ArgoCD to be ready (up to 5 min)..."
+	@kubectl wait --for=condition=available --timeout=300s deployment/argocd-server -n argocd
+
+deploy-apps: ## Deploy platform apps via ArgoCD App-of-Apps pattern
+	@echo "Deploying platform apps via ArgoCD..."
+	@kubectl apply -f platform/local/apps/app-of-apps.yaml
+	@echo "Waiting for apps to sync (30s)..."
+	@sleep 30
+
+validate-health: ## Validate all core platform apps are running
+	@echo "Validating platform health..."
+	@./scripts/validate-local-deployment.sh
 
 deploy-local: ## Deploy component to local K8s (COMPONENT=backstage|argocd|all)
 	@./infra/local-dev/deploy-local.sh $(NAMESPACE) $(COMPONENT)
