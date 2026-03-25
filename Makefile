@@ -54,6 +54,7 @@ create-local-cluster: ## Create kind cluster for local development
 	else \
 		kind create cluster --name fawkes-local --config platform/local/kind-config.yaml; \
 	fi
+	@kubectl config use-context kind-fawkes-local
 	@kubectl cluster-info --context kind-fawkes-local
 
 bootstrap-argocd: ## Bootstrap ArgoCD in the local kind cluster
@@ -66,12 +67,24 @@ bootstrap-argocd: ## Bootstrap ArgoCD in the local kind cluster
 deploy-apps: ## Deploy platform apps via ArgoCD App-of-Apps pattern
 	@echo "Deploying platform apps via ArgoCD..."
 	@kubectl apply -f platform/local/apps/app-of-apps.yaml
-	@echo "Waiting for apps to sync (30s)..."
-	@sleep 30
 
-validate-health: ## Validate all core platform apps are running
-	@echo "Validating platform health..."
-	@./scripts/validate-local-deployment.sh
+validate-health: ## Validate all core platform apps are running (retries up to 5 min)
+	@echo "Validating platform health (with retries)..."
+	@max_retries=10; delay=30; attempt=1; \
+	while [ $$attempt -le $$max_retries ]; do \
+		echo "Validation attempt $$attempt/$$max_retries..."; \
+		if ./scripts/validate-local-deployment.sh; then \
+			echo "✅ Platform health validation succeeded on attempt $$attempt"; \
+			exit 0; \
+		fi; \
+		if [ $$attempt -eq $$max_retries ]; then \
+			echo "❌ Platform health validation failed after $$max_retries attempts"; \
+			exit 1; \
+		fi; \
+		echo "Retrying in $$delay seconds..."; \
+		sleep $$delay; \
+		attempt=$$((attempt+1)); \
+	done
 
 deploy-local: ## Deploy component to local K8s (COMPONENT=backstage|argocd|all)
 	@./infra/local-dev/deploy-local.sh $(NAMESPACE) $(COMPONENT)

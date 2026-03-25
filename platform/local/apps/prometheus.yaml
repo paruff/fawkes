@@ -16,15 +16,10 @@ spec:
       values: |
         grafana:
           enabled: true
-          # WARNING: dev-only password — never use this password in production
-          adminPassword: "fawkes-grafana"
           service:
             type: ClusterIP
           ingress:
-            enabled: true
-            ingressClassName: nginx
-            hosts:
-              - grafana.local.fawkes.dev
+            enabled: false
         prometheus:
           prometheusSpec:
             resources:

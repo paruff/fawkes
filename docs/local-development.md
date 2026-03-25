@@ -87,7 +87,12 @@ Username: `admin`
 ### Grafana credentials
 
 Username: `admin`  
-Password: `fawkes-grafana`
+Retrieve the generated password from the Kubernetes Secret:
+
+```bash
+kubectl get secret prometheus-grafana -n monitoring \
+  -o jsonpath='{.data.admin-password}' | base64 --decode
+```
 
 ---
 

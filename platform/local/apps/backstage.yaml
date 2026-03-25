@@ -18,26 +18,24 @@ spec:
           appConfig:
             app:
               title: "Fawkes IDP (Local)"
-              baseUrl: "http://backstage.local.fawkes.dev"
+              baseUrl: "http://localhost:7007"
             backend:
-              baseUrl: "http://backstage.local.fawkes.dev"
+              baseUrl: "http://localhost:7007"
               cors:
-                origin: "http://backstage.local.fawkes.dev"
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "256Mi"
-          limits:
-            cpu: "500m"
-            memory: "1Gi"
+                origin: "http://localhost:7007"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
         ingress:
           enabled: true
           className: nginx
-          hosts:
-            - host: backstage.local.fawkes.dev
-              paths:
-                - path: /
-                  pathType: Prefix
+          host: backstage.local.fawkes.dev
+          path: /
+          pathType: Prefix
   destination:
     server: https://kubernetes.default.svc
     namespace: backstage
