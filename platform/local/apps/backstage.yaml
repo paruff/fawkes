@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backstage
+  namespace: argocd
+  labels:
+    app: backstage
+    managed-by: fawkes
+spec:
+  project: default
+  source:
+    repoURL: https://backstage.github.io/charts
+    chart: backstage
+    targetRevision: "2.3.0"
+    helm:
+      values: |
+        backstage:
+          appConfig:
+            app:
+              title: "Fawkes IDP (Local)"
+              baseUrl: "http://localhost:7007"
+            backend:
+              baseUrl: "http://localhost:7007"
+              cors:
+                origin: "http://localhost:7007"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+        ingress:
+          enabled: true
+          className: nginx
+          host: backstage.local.fawkes.dev
+          path: /
+          pathType: Prefix
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: backstage
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
