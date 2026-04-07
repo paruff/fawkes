@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { FormErrorMessage } from './FormErrorMessage';
 
 const meta: Meta<typeof FormErrorMessage> = {

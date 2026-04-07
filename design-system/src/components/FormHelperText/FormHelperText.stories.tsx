@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { FormHelperText } from './FormHelperText';
 
 const meta: Meta<typeof FormHelperText> = {
