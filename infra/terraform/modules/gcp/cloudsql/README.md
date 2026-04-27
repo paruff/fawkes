@@ -44,7 +44,7 @@ module "cloudsql" {
 | instance_name | Name of the Cloud SQL instance | `string` | n/a | yes |
 | location | GCP region | `string` | n/a | yes |
 | project_id | GCP project ID | `string` | n/a | yes |
-| database_version | Database version (POSTGRES_XX or MYSQL_XX) | `string` | n/a | yes |
+| database_version | Database version (e.g., `POSTGRES_15`, `MYSQL_8_0`) | `string` | n/a | yes |
 | use_random_suffix | Add random suffix to instance name | `bool` | `true` | no |
 | tier | Machine tier | `string` | `"db-f1-micro"` | no |
 | availability_type | Availability type (REGIONAL or ZONAL) | `string` | `"REGIONAL"` | no |
@@ -89,7 +89,7 @@ module "cloudsql" {
 ## Validation Rules
 
 - Instance name must be 1–84 characters, start with lowercase letter, contain only lowercase letters, numbers, or hyphens
-- Database version must match format `POSTGRES_XX` or `MYSQL_XX`
+- Database version must match format `POSTGRES_XX` (e.g., `POSTGRES_15`) or `MYSQL_XX_Y` (e.g., `MYSQL_8_0`)
 - Availability type must be `REGIONAL` or `ZONAL`
 - Disk type must be `PD_SSD` or `PD_HDD`
 - Disk size must be 10–65536 GB

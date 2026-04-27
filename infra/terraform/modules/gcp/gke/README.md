@@ -38,6 +38,7 @@ module "gke" {
 |------|---------|
 | terraform | >= 1.6.0 |
 | google | >= 5.0.0 |
+| google-beta | >= 5.0.0 |
 
 ## Inputs
 

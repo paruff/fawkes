@@ -19,7 +19,7 @@ module "network" {
       protocol    = "tcp"
       start_port  = 6443
       end_port    = 6443
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = ["203.0.113.0/32"]  # Replace with your IP range
       action      = "allow"
     }
   ]
