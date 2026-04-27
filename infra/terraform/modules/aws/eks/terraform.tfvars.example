@@ -1,0 +1,53 @@
+# Example configuration for AWS EKS module (aws/eks)
+
+# Required variables
+cluster_name       = "fawkes-eks"
+vpc_id             = "vpc-0a1b2c3d4e5f67890"
+private_subnet_ids = [
+  "subnet-0a1b2c3d4e5f67891",
+  "subnet-0a1b2c3d4e5f67892",
+  "subnet-0a1b2c3d4e5f67893"
+]
+
+# Optional: public subnets for ELB
+# public_subnet_ids = [
+#   "subnet-0a1b2c3d4e5f67894",
+#   "subnet-0a1b2c3d4e5f67895"
+# ]
+
+# Kubernetes version
+kubernetes_version = "1.28"
+
+# API server access
+endpoint_private_access = true
+endpoint_public_access  = true
+# Restrict API server access (replace with your IPs)
+# api_server_authorized_ip_ranges = ["203.0.113.0/24"]
+
+# Control plane logging
+# cluster_log_types          = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+# cluster_log_retention_days = 7
+
+# Node group configuration
+node_instance_types = ["t3.medium"]
+node_capacity_type  = "ON_DEMAND"  # ON_DEMAND | SPOT
+
+# Auto-scaling
+node_desired_size = 3
+node_min_size     = 1
+node_max_size     = 10
+
+# Node disk
+# node_disk_size = 20
+
+# Add-ons
+# enable_ebs_csi_driver                = true
+# enable_cluster_autoscaler            = true
+# enable_aws_load_balancer_controller  = true
+
+# Tags
+tags = {
+  platform    = "fawkes"
+  managed_by  = "terraform"
+  environment = "dev"
+}

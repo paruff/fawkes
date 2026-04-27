@@ -1,0 +1,55 @@
+# Example configuration for GCP GKE module (gcp/gke)
+
+# Required variables
+cluster_name = "fawkes-gke"
+location     = "us-central1"
+project_id   = "my-gcp-project-id"
+
+# Network (from gcp/vpc module outputs)
+network_id                    = "projects/my-gcp-project-id/global/networks/fawkes-vpc"
+subnetwork_id                 = "projects/my-gcp-project-id/regions/us-central1/subnetworks/gke-subnet"
+pods_secondary_range_name     = "pods"
+services_secondary_range_name = "services"
+
+# Cluster configuration
+# enable_autopilot  = false
+# kubernetes_version = null  # Uses release channel default
+# release_channel    = "REGULAR"  # UNSPECIFIED | RAPID | REGULAR | STABLE
+
+# Private cluster
+enable_private_cluster  = true
+enable_private_nodes    = true
+# enable_private_endpoint = false  # Set true to disable public endpoint
+master_ipv4_cidr_block  = "172.16.0.0/28"
+
+# Master authorized networks (replace with your IP)
+master_authorized_networks = [
+  {
+    cidr_block   = "203.0.113.0/32"
+    display_name = "office-vpn"
+  }
+]
+
+# Node pools
+node_pools = [
+  {
+    name               = "default-pool"
+    machine_type       = "e2-standard-4"
+    initial_node_count = 1
+    enable_autoscaling = true
+    min_node_count     = 1
+    max_node_count     = 10
+    disk_size_gb       = 100
+    enable_secure_boot = true
+  }
+]
+
+# Monitoring
+enable_managed_prometheus = true
+
+# Tags / labels
+tags = {
+  environment = "dev"
+  platform    = "fawkes"
+  managed_by  = "terraform"
+}

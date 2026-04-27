@@ -1,0 +1,45 @@
+# Example configuration for AWS VPC module (aws/vpc)
+
+# Required variables
+network_name = "fawkes-vpc"
+location     = "us-east-1"
+
+availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c"]
+
+# CIDR blocks
+# vpc_cidr = "10.0.0.0/16"
+
+public_subnet_cidrs = [
+  "10.0.10.0/24",
+  "10.0.11.0/24",
+  "10.0.12.0/24"
+]
+
+private_subnet_cidrs = [
+  "10.0.1.0/24",
+  "10.0.2.0/24",
+  "10.0.3.0/24"
+]
+
+# NAT Gateway
+enable_nat_gateway = true
+# single_nat_gateway = false  # Set true for cost optimization in dev
+
+# DNS
+# enable_dns_hostnames = true
+# enable_dns_support   = true
+
+# VPC Endpoints
+# enable_s3_endpoint   = true
+# enable_ecr_endpoints = false
+
+# VPC Flow Logs
+enable_flow_logs = true
+# flow_logs_traffic_type = "ALL"  # ACCEPT | REJECT | ALL
+
+# Tags
+tags = {
+  platform    = "fawkes"
+  managed_by  = "terraform"
+  environment = "dev"
+}

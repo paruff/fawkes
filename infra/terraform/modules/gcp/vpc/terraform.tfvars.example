@@ -1,0 +1,53 @@
+# Example configuration for GCP VPC module (gcp/vpc)
+
+# Required variables
+network_name = "fawkes-vpc"
+location     = "us-central1"
+project_id   = "my-gcp-project-id"
+
+# Subnets (at least one required)
+subnets = [
+  {
+    name                            = "gke-subnet"
+    ip_cidr_range                   = "10.0.1.0/24"
+    enable_private_ip_google_access = true
+    secondary_ip_ranges = [
+      { range_name = "pods",     ip_cidr_range = "10.1.0.0/16" },
+      { range_name = "services", ip_cidr_range = "10.2.0.0/16" }
+    ]
+  },
+  {
+    name          = "db-subnet"
+    ip_cidr_range = "10.0.2.0/24"
+  }
+]
+
+# Routing
+# routing_mode = "REGIONAL"
+
+# NAT Gateway
+enable_nat_gateway = true
+# nat_log_config_filter = "ERRORS_ONLY"
+
+# Flow Logs
+enable_flow_logs = true
+# flow_logs_sampling              = 0.5
+# flow_logs_aggregation_interval  = "INTERVAL_5_SEC"
+
+# Firewall
+create_default_firewall_rules = true
+allow_ssh_from_iap            = true
+
+# Custom firewall rules
+# firewall_rules = [
+#   {
+#     name          = "allow-internal"
+#     direction     = "INGRESS"
+#     priority      = 1000
+#     source_ranges = ["10.0.0.0/8"]
+#     allow = [
+#       { protocol = "tcp", ports = ["0-65535"] },
+#       { protocol = "udp", ports = ["0-65535"] }
+#     ]
+#   }
+# ]

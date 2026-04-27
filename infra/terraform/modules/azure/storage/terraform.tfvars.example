@@ -1,0 +1,47 @@
+# Example configuration for Azure Storage Account module (azure/storage)
+
+# Required variables
+storage_account_name = "fawkesdevstore"
+location             = "eastus2"
+resource_group_name  = "fawkes-rg"
+
+# Storage configuration
+# account_tier      = "Standard"
+# replication_type  = "GRS"
+# account_kind      = "StorageV2"
+# access_tier       = "Hot"
+
+# Security
+# enable_https_traffic_only       = true
+# min_tls_version                 = "TLS1_2"
+# allow_nested_items_to_be_public = false
+
+# Blob properties
+# enable_versioning                    = true
+# blob_soft_delete_retention_days      = 7
+# container_soft_delete_retention_days = 7
+
+# Network rules (uncomment to restrict access)
+# enable_network_rules    = false
+# default_network_action  = "Deny"
+# allowed_ip_addresses    = ["203.0.113.0/24"]
+
+# Containers to create
+containers = {
+  data = {
+    access_type = "private"
+  }
+  backups = {
+    access_type = "private"
+  }
+}
+
+# Monitoring
+# enable_diagnostic_settings = true
+
+# Tags
+tags = {
+  platform    = "fawkes"
+  managed_by  = "terraform"
+  environment = "dev"
+}

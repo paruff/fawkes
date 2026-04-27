@@ -1,0 +1,52 @@
+# Example configuration for AWS RDS module (aws/rds)
+
+# Required variables
+identifier            = "fawkes-postgres"
+vpc_id                = "vpc-0a1b2c3d4e5f67890"
+subnet_ids            = ["subnet-0a1b2c3d4e5f67891", "subnet-0a1b2c3d4e5f67892"]
+engine                = "postgres"
+engine_version        = "15.4"
+parameter_group_family = "postgres15"  # Use the major version: postgres<major> or mysql<major>.<minor>
+master_username       = "fawkes_admin"
+
+# Database name to create
+# database_name = "fawkes"
+
+# Instance configuration
+instance_class      = "db.t3.micro"
+# allocated_storage   = 20
+# max_allocated_storage = 100  # 0 to disable autoscaling
+# storage_type        = "gp3"
+# storage_encrypted   = true
+
+# High availability
+multi_az = false  # Set true for production
+
+# Networking
+publicly_accessible = false
+allowed_security_group_ids = []
+# allowed_cidr_blocks = ["10.0.0.0/8"]
+
+# Backups
+# backup_retention_period = 7
+# backup_window           = "03:00-04:00"
+
+# Maintenance
+# maintenance_window         = "sun:04:00-sun:05:00"
+# auto_minor_version_upgrade = true
+
+# Monitoring
+# create_cloudwatch_alarms         = true
+# monitoring_interval              = 0   # 0 disables enhanced monitoring
+# performance_insights_enabled     = false
+
+# Deletion protection (set false before destroying)
+deletion_protection   = true
+# skip_final_snapshot = false
+
+# Tags
+tags = {
+  platform    = "fawkes"
+  managed_by  = "terraform"
+  environment = "dev"
+}

@@ -1,0 +1,48 @@
+# Example configuration for GCP Cloud Storage module (gcp/gcs)
+
+# Required variables
+bucket_name = "my-gcp-project-fawkes-artifacts"
+location    = "us-central1"
+project_id  = "my-gcp-project-id"
+
+# Storage class
+# storage_class = "STANDARD"  # STANDARD | NEARLINE | COLDLINE | ARCHIVE
+
+# Security
+# uniform_bucket_level_access = true
+# public_access_prevention    = "enforced"
+
+# Versioning
+enable_versioning = true
+
+# Lifecycle rules (examples)
+# lifecycle_rules = [
+#   {
+#     action_type                  = "Delete"
+#     condition_num_newer_versions = 5
+#   },
+#   {
+#     action_type       = "SetStorageClass"
+#     storage_class     = "NEARLINE"
+#     condition_age     = 30
+#   }
+# ]
+
+# Logging
+# enable_logging     = true
+# log_object_prefix  = "log/"
+
+# IAM bindings
+# iam_members = [
+#   {
+#     role   = "roles/storage.objectViewer"
+#     member = "serviceAccount:my-sa@my-gcp-project-id.iam.gserviceaccount.com"
+#   }
+# ]
+
+# Tags / labels
+tags = {
+  environment = "dev"
+  platform    = "fawkes"
+  managed_by  = "terraform"
+}

@@ -1,0 +1,44 @@
+# Example configuration for Civo Kubernetes module (civo/kubernetes)
+
+# Required variables
+cluster_name = "fawkes-k8s"
+location     = "NYC1"
+
+# Node pool configuration
+# Use size_preset for quick configuration OR explicit values below
+# size_preset  = "medium"  # small | medium | large
+
+node_vm_size = "g4s.kube.medium"
+node_count   = 3
+
+# Network integration (recommended)
+# network_id  = "00000000-0000-0000-0000-000000000000"
+# firewall_id = "00000000-0000-0000-0000-000000000000"
+
+# Networking
+# cni_plugin = "flannel"  # flannel | cilium
+
+# Node pool label
+# node_pool_label = "default-pool"
+
+# Additional node pools
+# additional_node_pools = [
+#   {
+#     label      = "worker-pool"
+#     node_count = 3
+#     size       = "g4s.kube.medium"
+#   }
+# ]
+
+# Marketplace applications
+# marketplace_apps = [
+#   { name = "Traefik-v2-nodeport" },
+#   { name = "metrics-server" }
+# ]
+
+# Tags
+tags = {
+  platform    = "fawkes"
+  managed_by  = "terraform"
+  environment = "dev"
+}

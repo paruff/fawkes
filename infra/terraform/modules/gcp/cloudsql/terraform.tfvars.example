@@ -1,0 +1,54 @@
+# Example configuration for GCP Cloud SQL module (gcp/cloudsql)
+
+# Required variables
+instance_name    = "fawkes-postgres"
+location         = "us-central1"
+project_id       = "my-gcp-project-id"
+database_version = "POSTGRES_15"
+
+# Instance configuration
+tier              = "db-n1-standard-2"
+availability_type = "REGIONAL"
+
+# Disk
+# disk_type           = "PD_SSD"
+# disk_size           = 20
+# disk_autoresize     = true
+# disk_autoresize_limit = 100
+
+# Networking (private IP recommended)
+ipv4_enabled    = false
+private_network = "projects/my-gcp-project-id/global/networks/fawkes-vpc"
+
+# SSL
+# require_ssl = true
+
+# Backups
+backup_enabled                  = true
+# backup_start_time               = "03:00"
+# point_in_time_recovery_enabled  = true
+# retained_backups                = 7
+
+# Maintenance
+# maintenance_window_day          = 7  # Sunday
+# maintenance_window_hour         = 3
+# maintenance_window_update_track = "stable"
+
+# Deletion protection (set false before destroying)
+deletion_protection = true
+
+# Databases to create
+databases = ["fawkes", "backstage"]
+
+# Users to create (password auto-generated if null)
+users = [
+  { name = "fawkes", password = null },
+  { name = "backstage", password = null }
+]
+
+# Tags / labels
+tags = {
+  environment = "dev"
+  platform    = "fawkes"
+  managed_by  = "terraform"
+}

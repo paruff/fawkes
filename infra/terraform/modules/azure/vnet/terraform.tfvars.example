@@ -1,0 +1,47 @@
+# Example configuration for Azure Virtual Network module (azure/vnet)
+
+# Required variables
+vnet_name           = "fawkes-vnet"
+location            = "eastus2"
+resource_group_name = "fawkes-rg"
+address_space       = ["10.0.0.0/16"]
+
+# Optional: custom DNS servers
+# dns_servers = ["10.0.0.4"]
+
+# Private subnets (for internal workloads)
+private_subnets = [
+  {
+    name              = "aks-subnet"
+    address_prefixes  = ["10.0.1.0/24"]
+    service_endpoints = ["Microsoft.ContainerRegistry", "Microsoft.KeyVault"]
+  },
+  {
+    name             = "db-subnet"
+    address_prefixes = ["10.0.2.0/24"]
+  }
+]
+
+# Public subnets (for internet-facing resources)
+public_subnets = [
+  {
+    name             = "ingress-subnet"
+    address_prefixes = ["10.0.10.0/24"]
+  }
+]
+
+# NAT Gateway for private subnet outbound connectivity
+# enable_nat_gateway       = true
+# nat_gateway_zones        = ["1"]
+# nat_gateway_idle_timeout = 4
+
+# Flow Logs (requires Network Watcher)
+# enable_flow_logs          = true
+# flow_logs_retention_days  = 30
+
+# Tags
+tags = {
+  platform    = "fawkes"
+  managed_by  = "terraform"
+  environment = "dev"
+}
