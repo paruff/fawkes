@@ -24,7 +24,7 @@ PROJECT_NAME="fawkes"
 # Helpers
 # ---------------------------------------------------------------------------
 usage() {
-  cat <<EOF
+  cat << EOF
 Usage: ${SCRIPT_NAME} --cloud <aws|azure> --environment <dev|staging|prod> [OPTIONS]
 
 Bootstrap Terraform remote state infrastructure for Fawkes.
@@ -56,7 +56,7 @@ error() {
 }
 
 require_cmd() {
-  command -v "$1" >/dev/null 2>&1 || error "Required command '$1' is not installed."
+  command -v "$1" > /dev/null 2>&1 || error "Required command '$1' is not installed."
 }
 
 # ---------------------------------------------------------------------------
@@ -70,29 +70,44 @@ AZURE_SUBSCRIPTION=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --cloud)        CLOUD="$2";               shift 2 ;;
-    --environment)  ENVIRONMENT="$2";         shift 2 ;;
-    --region)       AWS_REGION="$2";          shift 2 ;;
-    --location)     AZURE_LOCATION="$2";      shift 2 ;;
-    --subscription) AZURE_SUBSCRIPTION="$2";  shift 2 ;;
-    -h|--help)      usage ;;
-    *)              error "Unknown argument: $1" ;;
+    --cloud)
+      CLOUD="$2"
+      shift 2
+      ;;
+    --environment)
+      ENVIRONMENT="$2"
+      shift 2
+      ;;
+    --region)
+      AWS_REGION="$2"
+      shift 2
+      ;;
+    --location)
+      AZURE_LOCATION="$2"
+      shift 2
+      ;;
+    --subscription)
+      AZURE_SUBSCRIPTION="$2"
+      shift 2
+      ;;
+    -h | --help) usage ;;
+    *) error "Unknown argument: $1" ;;
   esac
 done
 
 # ---------------------------------------------------------------------------
 # Validation
 # ---------------------------------------------------------------------------
-[[ -n "${CLOUD}" ]]       || error "--cloud is required (aws or azure)"
+[[ -n "${CLOUD}" ]] || error "--cloud is required (aws or azure)"
 [[ -n "${ENVIRONMENT}" ]] || error "--environment is required (dev, staging, or prod)"
 
 case "${CLOUD}" in
-  aws|azure) ;;
+  aws | azure) ;;
   *) error "--cloud must be 'aws' or 'azure', got: ${CLOUD}" ;;
 esac
 
 case "${ENVIRONMENT}" in
-  dev|staging|prod) ;;
+  dev | staging | prod) ;;
   *) error "--environment must be 'dev', 'staging', or 'prod', got: ${ENVIRONMENT}" ;;
 esac
 
@@ -114,20 +129,20 @@ bootstrap_aws() {
   # Create S3 bucket (us-east-1 does not accept CreateBucketConfiguration).
   # Use 's3 ls' rather than 'head-bucket' to distinguish owned buckets from
   # name conflicts with buckets owned by other accounts.
-  if aws s3 ls "s3://${bucket_name}" --region "${AWS_REGION}" >/dev/null 2>&1; then
+  if aws s3 ls "s3://${bucket_name}" --region "${AWS_REGION}" > /dev/null 2>&1; then
     log "S3 bucket '${bucket_name}' already exists — skipping creation."
   else
     if [[ "${AWS_REGION}" == "us-east-1" ]]; then
       aws s3api create-bucket \
         --bucket "${bucket_name}" \
         --region "${AWS_REGION}" \
-        >/dev/null
+        > /dev/null
     else
       aws s3api create-bucket \
         --bucket "${bucket_name}" \
         --region "${AWS_REGION}" \
         --create-bucket-configuration LocationConstraint="${AWS_REGION}" \
-        >/dev/null
+        > /dev/null
     fi
     log "Created S3 bucket: ${bucket_name}"
   fi
@@ -136,7 +151,7 @@ bootstrap_aws() {
   aws s3api put-bucket-versioning \
     --bucket "${bucket_name}" \
     --versioning-configuration Status=Enabled \
-    >/dev/null
+    > /dev/null
   log "Versioning enabled on ${bucket_name}."
 
   # Enable server-side encryption (AES-256)
@@ -150,15 +165,15 @@ bootstrap_aws() {
         "BucketKeyEnabled": true
       }]
     }' \
-    >/dev/null
+    > /dev/null
   log "Server-side encryption (AES-256) enabled on ${bucket_name}."
 
   # Block all public access
   aws s3api put-public-access-block \
     --bucket "${bucket_name}" \
     --public-access-block-configuration \
-      "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true" \
-    >/dev/null
+    "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true" \
+    > /dev/null
   log "Public access blocked on ${bucket_name}."
 
   # Enforce TLS-only bucket policy
@@ -176,7 +191,7 @@ bootstrap_aws() {
         \"Condition\": {\"Bool\": {\"aws:SecureTransport\": \"false\"}}
       }]
     }" \
-    >/dev/null
+    > /dev/null
   log "TLS-only bucket policy applied to ${bucket_name}."
 
   # Create DynamoDB table for locking (idempotent: check for ACTIVE status explicitly).
@@ -185,7 +200,7 @@ bootstrap_aws() {
     --table-name "${table_name}" \
     --region "${AWS_REGION}" \
     --query 'Table.TableStatus' \
-    --output text 2>/dev/null || echo "MISSING")"
+    --output text 2> /dev/null || echo "MISSING")"
 
   if [[ "${table_status}" == "ACTIVE" ]]; then
     log "DynamoDB table '${table_name}' already exists and is ACTIVE — skipping creation."
@@ -197,7 +212,7 @@ bootstrap_aws() {
       --billing-mode PAY_PER_REQUEST \
       --sse-specification Enabled=true \
       --region "${AWS_REGION}" \
-      >/dev/null
+      > /dev/null
     log "Created DynamoDB table: ${table_name}"
 
     # Enable PITR
@@ -205,7 +220,7 @@ bootstrap_aws() {
       --table-name "${table_name}" \
       --point-in-time-recovery-specification PointInTimeRecoveryEnabled=true \
       --region "${AWS_REGION}" \
-      >/dev/null
+      > /dev/null
     log "Point-in-time recovery enabled on ${table_name}."
   fi
 
@@ -214,7 +229,7 @@ bootstrap_aws() {
   log ""
   log "Add the following to infra/terraform/environments/${ENVIRONMENT}/backend.hcl:"
   log ""
-  cat <<EOF
+  cat << EOF
 
 bucket         = "${bucket_name}"
 key            = "${ENVIRONMENT}/terraform.tfstate"
@@ -236,9 +251,9 @@ bootstrap_azure() {
   # Azure storage account names: lowercase alphanumeric, max 24 chars
   local env_short
   case "${ENVIRONMENT}" in
-    dev)     env_short="dev" ;;
+    dev) env_short="dev" ;;
     staging) env_short="stg" ;;
-    prod)    env_short="prd" ;;
+    prod) env_short="prd" ;;
   esac
   local storage_account="${PROJECT_NAME}tfstate${env_short}"
   local container_name="tfstate"
@@ -249,7 +264,7 @@ bootstrap_azure() {
   log "  Container:       ${container_name}"
 
   if [[ -n "${AZURE_SUBSCRIPTION}" ]]; then
-    az account set --subscription "${AZURE_SUBSCRIPTION}" >/dev/null
+    az account set --subscription "${AZURE_SUBSCRIPTION}" > /dev/null
     log "Using Azure subscription: ${AZURE_SUBSCRIPTION}"
   fi
 
@@ -258,10 +273,10 @@ bootstrap_azure() {
     --name "${resource_group}" \
     --location "${AZURE_LOCATION}" \
     --tags \
-      Project="${PROJECT_NAME}" \
-      Environment="${ENVIRONMENT}" \
-      ManagedBy="terraform" \
-      Component="state-backend" \
+    Project="${PROJECT_NAME}" \
+    Environment="${ENVIRONMENT}" \
+    ManagedBy="terraform" \
+    Component="state-backend" \
     --output none
   log "Resource group ready: ${resource_group}"
 
@@ -276,10 +291,10 @@ bootstrap_azure() {
     --min-tls-version "TLS1_2" \
     --allow-blob-public-access false \
     --tags \
-      Project="${PROJECT_NAME}" \
-      Environment="${ENVIRONMENT}" \
-      ManagedBy="terraform" \
-      Component="state-backend" \
+    Project="${PROJECT_NAME}" \
+    Environment="${ENVIRONMENT}" \
+    ManagedBy="terraform" \
+    Component="state-backend" \
     --output none
   log "Storage account ready: ${storage_account}"
 
@@ -322,7 +337,7 @@ bootstrap_azure() {
   log ""
   log "Add the following to infra/terraform/environments/azure-${ENVIRONMENT}/backend.hcl:"
   log ""
-  cat <<EOF
+  cat << EOF
 
 resource_group_name  = "${resource_group}"
 storage_account_name = "${storage_account}"
@@ -335,6 +350,6 @@ EOF
 # Entry point
 # ---------------------------------------------------------------------------
 case "${CLOUD}" in
-  aws)   bootstrap_aws ;;
+  aws) bootstrap_aws ;;
   azure) bootstrap_azure ;;
 esac
