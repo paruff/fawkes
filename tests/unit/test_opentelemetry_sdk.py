@@ -1,5 +1,5 @@
 """
-Unit tests validating OpenTelemetry SDK 1.41.0 functionality.
+Unit tests validating OpenTelemetry SDK 1.41.1 functionality.
 
 Covers traces, metrics, and logs signal types to confirm the upgrade
 from 1.28.2 does not regress core SDK behaviour.
@@ -142,17 +142,17 @@ def test_metrics_histogram_records(in_memory_meter):
 
 @pytest.mark.unit
 def test_opentelemetry_sdk_version():
-    """Confirm the installed SDK is 1.41.0."""
+    """Confirm the installed SDK is 1.41.1."""
     import importlib.metadata
 
     version = importlib.metadata.version("opentelemetry-sdk")
-    assert version == "1.41.0", f"Expected 1.41.0, got {version}"
+    assert version == "1.41.1", f"Expected 1.41.1, got {version}"
 
 
 @pytest.mark.unit
 def test_opentelemetry_api_version():
-    """Confirm the installed API is 1.41.0."""
+    """Confirm the installed API is 1.41.1."""
     import importlib.metadata
 
     version = importlib.metadata.version("opentelemetry-api")
-    assert version == "1.41.0", f"Expected 1.41.0, got {version}"
+    assert version == "1.41.1", f"Expected 1.41.1, got {version}"
