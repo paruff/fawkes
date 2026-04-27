@@ -1,6 +1,6 @@
 # Azure Virtual Network (VNet) Module
 
-Manages an Azure Virtual Network with configurable public and private subnets, NSG rules, NAT Gateway, and optional VPC Flow Logs with Traffic Analytics.
+Manages an Azure Virtual Network with configurable public and private subnets, NSG rules, NAT Gateway, and optional NSG Flow Logs with Traffic Analytics.
 
 ## Usage
 
@@ -56,7 +56,7 @@ module "vnet" {
 | enable_nat_gateway | Enable NAT Gateway for private subnets | `bool` | `true` | no |
 | nat_gateway_zones | Availability zones for NAT Gateway | `list(string)` | `["1"]` | no |
 | nat_gateway_idle_timeout | NAT Gateway idle timeout in minutes | `number` | `4` | no |
-| enable_flow_logs | Enable NSG flow logs | `bool` | `true` | no |
+| enable_flow_logs | Enable NSG Flow Logs | `bool` | `true` | no |
 | network_watcher_name | Name of the Network Watcher | `string` | `null` | no |
 | network_watcher_resource_group | Resource group of Network Watcher | `string` | `null` | no |
 | flow_logs_storage_account_id | Storage account ID for flow logs | `string` | `null` | no |
