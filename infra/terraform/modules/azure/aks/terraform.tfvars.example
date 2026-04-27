@@ -1,0 +1,56 @@
+# Example configuration for Azure AKS module (azure/aks)
+
+# Required variables
+cluster_name        = "fawkes-aks"
+location            = "eastus2"
+resource_group_name = "fawkes-rg"
+subnet_id           = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/fawkes-rg/providers/Microsoft.Network/virtualNetworks/fawkes-vnet/subnets/aks-subnet"
+
+# Kubernetes configuration
+kubernetes_version = "1.28"
+sku_tier           = "Standard"
+
+# Default node pool
+# default_node_pool_name = "systemnp"
+# node_vm_size           = "Standard_D2s_v3"
+# availability_zones     = ["1", "2", "3"]
+
+# Auto-scaling (recommended for production)
+enable_auto_scaling = true
+node_min_count      = 2
+node_max_count      = 10
+# node_count          = 3  # Used when enable_auto_scaling = false
+
+# Node configuration
+# node_os_disk_size_gb = 128
+# node_os_disk_type    = "Managed"
+# node_max_pods        = 110
+# max_surge            = "33%"
+
+# RBAC and Azure AD
+# enable_rbac           = true
+# enable_azure_ad_rbac  = false
+
+# Network configuration
+# network_plugin = "azure"
+# network_policy = "azure"
+# service_cidr   = "10.1.0.0/16"  # Must not overlap with VNet CIDR
+# dns_service_ip = "10.1.0.10"
+
+# Load balancer
+# load_balancer_sku = "standard"
+# outbound_type     = "loadBalancer"
+
+# API server access (replace with your public IP)
+# api_server_authorized_ip_ranges = ["203.0.113.0/24"]
+
+# Monitoring
+enable_azure_monitor = true
+# log_retention_days   = 30
+
+# Tags
+tags = {
+  platform    = "fawkes"
+  managed_by  = "terraform"
+  environment = "dev"
+}

@@ -1,0 +1,38 @@
+# Example configuration for Civo Network module (civo/network)
+
+# Required variables
+network_name = "fawkes-network"
+location     = "NYC1"
+
+# Network CIDR
+# cidr_block = "10.0.0.0/16"
+
+# Firewall
+create_firewall = true
+
+firewall_ingress_rules = [
+  {
+    label       = "allow-k8s-api"
+    protocol    = "tcp"
+    start_port  = 6443
+    end_port    = 6443
+    cidr_blocks = ["0.0.0.0/0"]
+    action      = "allow"
+  },
+  {
+    label       = "allow-http"
+    protocol    = "tcp"
+    start_port  = 80
+    end_port    = 80
+    cidr_blocks = ["0.0.0.0/0"]
+    action      = "allow"
+  },
+  {
+    label       = "allow-https"
+    protocol    = "tcp"
+    start_port  = 443
+    end_port    = 443
+    cidr_blocks = ["0.0.0.0/0"]
+    action      = "allow"
+  }
+]
