@@ -11,18 +11,38 @@
 
 ## KL-01 — No Terraform Remote Backend
 
-**Description:** All Terraform state is stored locally (`.tfstate` files on disk). There
-is no remote backend (S3 + DynamoDB, Azure Blob, Terraform Cloud, etc.) configured for
-any module under `infra/`.
+**Status: RESOLVED** — Remote state backend modules, environment backend configs, and a
+bootstrap script have been added. See below for details.
 
-**Impact:**
+**Resolution:**
 
-- State files may be committed to Git accidentally, exposing sensitive resource metadata.
-- Concurrent `terraform apply` runs will corrupt state — no state locking is in place.
-- Disaster recovery of infrastructure state is not possible without the local file.
-- Collaborative IaC workflows (multiple engineers or CI) are unsafe without a shared backend.
+- **AWS**: `infra/terraform/modules/aws/state-backend/` provisions an S3 bucket (versioned,
+  KMS-encrypted, TLS-enforced) + DynamoDB lock table (PITR enabled) per environment.
+- **Azure**: `infra/terraform/modules/azure/state-backend/` provisions an Azure Storage
+  Account (GRS, versioning, soft-delete 30 days) + private `tfstate` container.
+- **Environment configs**: `infra/terraform/environments/` contains per-environment
+  `backend.hcl` files for both AWS and Azure.
+- **Bootstrap script**: `scripts/bootstrap-terraform-state.sh` creates the state
+  infrastructure before Terraform itself can run.
+- **Workspace strategy**: documented in `infra/terraform/environments/README.md`.
 
-**Tracking:** GAP-7 — Migrate Terraform state to a remote backend with locking.
+To bootstrap a new environment:
+
+```bash
+# AWS
+./scripts/bootstrap-terraform-state.sh --cloud aws --environment dev --region us-east-1
+
+# Azure
+./scripts/bootstrap-terraform-state.sh --cloud azure --environment dev --location eastus2
+```
+
+Then initialise any root module:
+
+```bash
+terraform init -backend-config=infra/terraform/environments/dev/backend.hcl
+```
+
+**Tracking:** GAP-7 — Closed by PR implementing issue #119.
 
 ---
 
