@@ -10,6 +10,10 @@ permissions:
   contents: read
   security-events: write
 
+concurrency:
+  group: security-terraform-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate-and-scan:
     runs-on: ubuntu-latest
