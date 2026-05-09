@@ -43,16 +43,16 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
         with:
           go-version-file: tests/terratest/go.mod
           cache-dependency-path: tests/terratest/go.sum
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v4
+        uses: hashicorp/setup-terraform@5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85 # v4.0.0
         with:
           terraform_version: 1.9.5
           terraform_wrapper: false
@@ -91,22 +91,22 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
         with:
           go-version-file: tests/terratest/go.mod
           cache-dependency-path: tests/terratest/go.sum
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v4
+        uses: hashicorp/setup-terraform@5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85 # v4.0.0
         with:
           terraform_version: 1.9.5
           terraform_wrapper: false
 
       - name: Setup Infracost
-        uses: infracost/actions/setup@v4
+        uses: infracost/actions/setup@d51fc54d23c9ad90f984b884257bd96dc2625067 # v4.1.0
         with:
           api-key: ${{ secrets.INFRACOST_API_KEY }}
 
@@ -125,7 +125,7 @@ jobs:
 
       - name: Comment PR with cost estimate
         if: always()
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const body = '## 💰 Infrastructure Cost Estimation\n\nCost estimation tests completed. Check the workflow logs for detailed cost breakdowns.\n\n**Note**: Costs are estimates and may vary based on usage patterns.';
@@ -158,22 +158,22 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
         with:
           go-version: '1.24'
           cache-dependency-path: tests/terratest/go.sum
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v4
+        uses: hashicorp/setup-terraform@5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85 # v4.0.0
         with:
           terraform_version: 1.9.5
           terraform_wrapper: false
 
       - name: Azure Login
-        uses: azure/login@v3
+        uses: azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43 # v3.0.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
@@ -195,7 +195,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: integration-test-results
           path: |
@@ -221,22 +221,22 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
         with:
           go-version: '1.24'
           cache-dependency-path: tests/terratest/go.sum
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v4
+        uses: hashicorp/setup-terraform@5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85 # v4.0.0
         with:
           terraform_version: 1.9.5
           terraform_wrapper: false
 
       - name: Azure Login
-        uses: azure/login@v3
+        uses: azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43 # v3.0.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
@@ -258,7 +258,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: e2e-test-results
           path: |
