@@ -3,8 +3,18 @@ name: Code Quality
 on:
   pull_request:
     branches: [main, develop]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
   push:
     branches: [main, develop]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
   workflow_dispatch:
 
 permissions:
@@ -28,6 +38,9 @@ jobs:
     outputs:
       typescript: ${{ steps.filter.outputs.typescript }}
       go: ${{ steps.filter.outputs.go }}
+      python: ${{ steps.filter.outputs.python }}
+      terraform: ${{ steps.filter.outputs.terraform }}
+      shell: ${{ steps.filter.outputs.shell }}
     steps:
       - name: DORA job start
         run: |
@@ -38,27 +51,39 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
 
       - name: Check for file changes
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
         id: filter
-        run: |
-          # Check for TypeScript/JavaScript files in design-system
-          if find design-system -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" \) 2>/dev/null | grep -q .; then
-            echo "typescript=true" >> $GITHUB_OUTPUT
-            echo "✅ TypeScript/JavaScript files found in design-system"
-          else
-            echo "typescript=false" >> $GITHUB_OUTPUT
-            echo "ℹ️  No TypeScript/JavaScript files found in design-system"
-          fi
-
-          # Check for Go files
-          if find . -type f -name "*.go" 2>/dev/null | grep -q .; then
-            echo "go=true" >> $GITHUB_OUTPUT
-            echo "✅ Go files found"
-          else
-            echo "go=false" >> $GITHUB_OUTPUT
-            echo "ℹ️  No Go files found"
-          fi
+        with:
+          filters: |
+            typescript:
+              - 'design-system/**/*.ts'
+              - 'design-system/**/*.tsx'
+              - 'design-system/**/*.js'
+              - 'design-system/**/*.jsx'
+              - 'design-system/package.json'
+              - 'design-system/package-lock.json'
+              - 'design-system/tsconfig*.json'
+            go:
+              - '**/*.go'
+              - 'tests/terratest/**'
+            python:
+              - '**/*.py'
+              - 'requirements*.txt'
+              - 'pyproject.toml'
+              - 'setup.cfg'
+            terraform:
+              - 'infra/**/*.tf'
+              - 'infra/**/*.tfvars'
+              - '**/.terraform.lock.hcl'
+            shell:
+              - '**/*.sh'
+              - '**/*.bash'
+              - '**/*.bats'
+              - 'tests/bats/**'
 
       - name: DORA job finish
         if: always()
@@ -71,6 +96,8 @@ jobs:
     name: Python Linting & Testing
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    needs: detect-changes
+    if: github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.python == 'true'
     permissions:
       contents: read
       pull-requests: write
@@ -133,6 +160,8 @@ jobs:
     name: Python Test Coverage
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    needs: detect-changes
+    if: github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.python == 'true'
     permissions:
       contents: read
       pull-requests: write
@@ -193,7 +222,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: detect-changes
-    if: needs.detect-changes.outputs.typescript == 'true'
+    if: github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.typescript == 'true'
     permissions:
       contents: read
       pull-requests: write
@@ -251,7 +280,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: detect-changes
-    if: needs.detect-changes.outputs.go == 'true'
+    if: github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.go == 'true'
     permissions:
       contents: read
       pull-requests: write
@@ -291,6 +320,8 @@ jobs:
     name: Shell Script Linting
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    needs: detect-changes
+    if: github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.shell == 'true'
     permissions:
       contents: read
     steps:
@@ -339,6 +370,8 @@ jobs:
     name: Shell Script Tests (BATS)
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    needs: detect-changes
+    if: github.event_name == 'workflow_dispatch' || needs.detect-changes.outputs.shell == 'true'
     permissions:
       contents: read
       checks: write
