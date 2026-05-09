@@ -26,17 +26,17 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       # 1️⃣ Terraform validation
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v4
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269ef065 # v3.1.2
         with:
           terraform_version: 1.9.5
 
       # Cache Terraform providers
       - name: Cache Terraform providers
-        uses: actions/cache@v5
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c6158d # v4.2.0
         with:
           path: |
             ~/.terraform.d/plugin-cache
@@ -66,7 +66,7 @@ jobs:
 
       # Static linting for Terraform (required on PRs)
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v6
+        uses: terraform-linters/setup-tflint@19a52fbac37dacb22a09518e4ef6ee234f2d4987 # v4.0.0
         with:
           tflint_version: latest
           github_token: ${{ github.token }}
@@ -103,7 +103,7 @@ jobs:
 
       # 3️⃣ Vulnerability / misconfiguration scanning
       - name: Run Trivy (repo scan)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@6e7b7d1fd3e4fef0c5fa8cce1229c54b2c9bd0d8 # 0.28.0
         with:
           scan-type: fs
           scan-ref: .
@@ -112,19 +112,19 @@ jobs:
 
       # 4️⃣ Upload SARIF results for GitHub Security tab
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@1b1aada464948af03b950897e5eb522f475603c2 # v3.24.9
         with:
           sarif_file: trivy-results.sarif
 
       - name: Upload Gitleaks results to GitHub Security tab
         if: always() && hashFiles('gitleaks-results.sarif') != ''
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@1b1aada464948af03b950897e5eb522f475603c2 # v3.24.9
         with:
           sarif_file: gitleaks-results.sarif
 
       # 5️⃣ Upload artifacts for later review
       - name: Upload reports
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
         with:
           name: security-reports
           path: |
