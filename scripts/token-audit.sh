@@ -9,7 +9,7 @@ elif [ "${1:-}" != "" ]; then
   exit 1
 fi
 
-REPO_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+REPO_ROOT=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$REPO_ROOT"
 
 WORK_DAYS=22
@@ -23,12 +23,19 @@ TARGET_TOKENS=320
 timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 total_lines=0
 total_tokens=0
-audit_rows=""
+rows_file=$(mktemp)
+output_file=$(mktemp)
+
+cleanup() {
+  rm -f "$rows_file" "$output_file"
+}
+trap cleanup EXIT
 
 print_cost() {
   tokens=$1
   tasks=$2
-  awk -v tokens="$tokens" -v tasks="$tasks" -v days="$WORK_DAYS" -v rate="$INPUT_COST_PER_1K"     'BEGIN { printf "%.2f", (tokens / 1000.0) * tasks * days * rate }'
+  awk -v tokens="$tokens" -v tasks="$tasks" -v days="$WORK_DAYS" -v rate="$INPUT_COST_PER_1K" \
+    'BEGIN { printf "%.2f", (tokens / 1000.0) * tasks * days * rate }'
 }
 
 audit_file() {
@@ -43,11 +50,9 @@ audit_file() {
     heavy=$(print_cost "$tokens" "$HEAVY_TASKS")
     total_lines=$((total_lines + lines))
     total_tokens=$((total_tokens + tokens))
-    audit_rows="$audit_rows$(printf '%s|%s|%s|%s|%s|%s
-' "$label" "$lines" "$tokens" "$light" "$moderate" "$heavy")"
+    printf '%s|%s|%s|%s|%s|%s\n' "$label" "$lines" "$tokens" "$light" "$moderate" "$heavy" >> "$rows_file"
   else
-    audit_rows="$audit_rows$(printf '%s|missing|0|0.00|0.00|0.00
-' "$label")"
+    printf '%s|missing|0|0.00|0.00|0.00\n' "$label" >> "$rows_file"
   fi
 }
 
@@ -84,28 +89,21 @@ fi
 
 recommendations=""
 if [ "$total_tokens" -gt "$TARGET_TOKENS" ]; then
-  recommendations="$recommendations- Always-on context exceeds the 320-token target; move detail into .github/skills/.
-"
+  recommendations="$recommendations- Always-on context exceeds the 320-token target; move detail into .github/skills/.\n"
 else
-  recommendations="$recommendations- Always-on context is within the lean target; keep new rules in on-demand skills.
-"
+  recommendations="$recommendations- Always-on context is within the lean target; keep new rules in on-demand skills.\n"
 fi
 if [ "$copilotignore_status" = "missing" ]; then
-  recommendations="$recommendations- Add a .copilotignore file to keep generated and sensitive files out of prompts.
-"
+  recommendations="$recommendations- Add a .copilotignore file to keep generated and sensitive files out of prompts.\n"
 else
-  recommendations="$recommendations- Review the top 10 largest files below and add low-signal paths to .copilotignore if needed.
-"
+  recommendations="$recommendations- Review the top 10 largest files below and add low-signal paths to .copilotignore if needed.\n"
 fi
 if [ "$agents_status" = "OVER" ]; then
-  recommendations="$recommendations- Trim AGENTS.md below 80 lines and 320 estimated tokens.
-"
+  recommendations="$recommendations- Trim AGENTS.md below 80 lines and 320 estimated tokens.\n"
 else
-  recommendations="$recommendations- AGENTS.md meets the lean target; preserve it as a routing layer only.
-"
+  recommendations="$recommendations- AGENTS.md meets the lean target; preserve it as a routing layer only.\n"
 fi
 
-output_file=$(mktemp)
 {
   echo "# Copilot Token Audit"
   echo
@@ -114,7 +112,7 @@ output_file=$(mktemp)
   echo "## Always-on context"
   echo "File|Lines|Estimated tokens|Light \$ / month|Moderate \$ / month|Heavy \$ / month"
   echo "---|---:|---:|---:|---:|---:"
-  printf '%s' "$audit_rows"
+  cat "$rows_file"
   echo
   echo "Total always-on lines: $total_lines"
   echo "Total always-on tokens: $total_tokens"
@@ -162,5 +160,3 @@ if [ "$SAVE_MODE" -eq 1 ]; then
   echo
   echo "Saved audit snapshot to $metrics_file"
 fi
-
-rm -f "$output_file"
