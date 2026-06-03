@@ -1,62 +1,97 @@
-# Build artifacts — never useful context
-dist/
-build/
-out/
-.next/
-coverage/
-*.min.js
-*.min.css
-*.bundle.js
+# Keep low-signal and generated files out of Copilot context to reduce billed tokens.
 
-# Dependencies — high token cost, zero signal
+# Universal exclusions
 node_modules/
-.pnp/
-vendor/
-venv/
-.venv/
-__pycache__/
-
-# Generated files
-*.lock
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
-*.map
-*.d.ts.map
-
-# Secrets and environment — never send these
+bun.lockb
+*.lock
+build/
+dist/
+out/
+coverage/
+htmlcov/
+site/
+.next/
+logs/
+*.log
+tmp/
+.tmp/
+.cache/
 .env
 .env.*
 !.env.example
 *.pem
 *.key
 *.cert
-secrets/
-
-# Large data and media
-*.csv
-*.json.gz
-*.parquet
-fixtures/
-testdata/
+*.crt
+*.p12
 *.png
 *.jpg
+*.jpeg
 *.gif
+*.svg
 *.mp4
+*.mov
+*.zip
+*.tar
+*.gz
+*.parquet
+*.csv
+*.pdf
 
-# Logs and temp
-*.log
-logs/
-tmp/
-.tmp/
-.cache/
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+venv/
+.venv/
 
-# IDE and OS noise
+# Node / frontend
+.pnpm-store/
+.npm/
+.yarn/
+*.tsbuildinfo
+
+# Go
+vendor/
+*.test
+coverage.out
+*.pb.go
+
+# Terraform / infrastructure
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Helm / Kubernetes / docs build output
+charts/**/*.tgz
+manifests/
+/tmp/mkdocs-build-test/
+
+# Reports and generated artifacts
+reports/
+*.sarif
+*.coverage
+
+# IDE / OS noise
 .DS_Store
 Thumbs.db
 .idea/
+.vscode/
 *.swp
 
-# Docker volumes and generated compose state
-.docker/
-docker-volumes/
+# [PLACEHOLDER] Project-specific generated files
+# Add repo-specific codegen or export paths here after they are confirmed.
