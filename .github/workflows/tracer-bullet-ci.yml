@@ -127,11 +127,11 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Trivy scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
           format: 'table'
-          exit-code: '0'
+          exit-code: '1'
           severity: 'CRITICAL,HIGH'
 
       - name: DORA job finish
