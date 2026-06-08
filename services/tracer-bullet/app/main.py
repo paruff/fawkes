@@ -4,10 +4,19 @@ Minimal service to validate the full deployment pipeline:
 code → Docker build → push → K8s manifest update → ArgoCD sync → running service.
 """
 
-from fastapi import FastAPI
+import logging
+import time
+from typing import Callable
+
+from fastapi import FastAPI, Request, Response
 from prometheus_client import Counter, Histogram, make_asgi_app
 
-app = FastAPI(title="tracer-bullet", version="0.1.0")
+from app import __version__
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+logger = logging.getLogger(__name__)
+
+app = FastAPI(title="tracer-bullet", version=__version__)
 
 # ---------------------------------------------------------------------------
 # Prometheus metrics
@@ -32,9 +41,7 @@ app.mount("/metrics", metrics_app)
 # Middleware — track every request
 # ---------------------------------------------------------------------------
 @app.middleware("http")
-async def track_metrics(request, call_next):
-    import time
-
+async def track_metrics(request: Request, call_next: Callable) -> Response:
     method = request.method
     path = request.url.path
     start = time.perf_counter()
@@ -44,6 +51,7 @@ async def track_metrics(request, call_next):
     elapsed = time.perf_counter() - start
     REQUEST_COUNT.labels(method=method, endpoint=path, status=response.status_code).inc()
     REQUEST_LATENCY.labels(method=method, endpoint=path).observe(elapsed)
+    logger.info("%s %s %d %.3fs", method, path, response.status_code, elapsed)
     return response
 
 
@@ -51,24 +59,24 @@ async def track_metrics(request, call_next):
 # Routes
 # ---------------------------------------------------------------------------
 @app.get("/")
-async def root():
-    return {"message": "Hello from the tracer bullet!", "version": "0.1.0"}
+async def root() -> dict:
+    return {"message": "Hello from the tracer bullet!", "version": __version__}
 
 
 @app.get("/health")
-async def health():
+async def health() -> dict:
     return {"status": "ok"}
 
 
 @app.get("/ready")
-async def ready():
+async def ready() -> dict:
     return {"status": "ready"}
 
 
 @app.get("/info")
-async def info():
+async def info() -> dict:
     return {
         "service": "tracer-bullet",
-        "version": "0.1.0",
+        "version": __version__,
         "description": "Minimal service to validate the Fawkes deployment pipeline",
     }
