@@ -1,0 +1,74 @@
+# =============================================================================
+# gen_ai.* OTEL Pipeline — Prometheus Recording Rules
+# =============================================================================
+# Wires gen_ai.* span metrics from OTEL Collector → Prometheus
+# Reference: AGENTS.md §10 (GPT-5.1-Codex reserved for gen_ai.* PromQL)
+#
+# Data flow:
+#   App (gen_ai.* spans) → OTEL Collector → Tempo (metrics generator)
+#   → Prometheus (traces_spanmetrics_* counters)
+#   → These recording rules → gen_ai_* usable metrics
+# =============================================================================
+
+groups:
+  - name: gen_ai_recording_rules
+    interval: 30s
+    rules:
+      # Total AI operations (from OTEL span metrics)
+      - record: gen_ai:operation_total:rate5m
+        expr: |
+          sum by (service_name, gen_ai_operation_name, gen_ai_request_model) (
+            rate(traces_spanmetrics_calls_total{
+              gen_ai_operation_name!=""
+            }[5m])
+          )
+
+      # Total input tokens consumed
+      - record: gen_ai:input_tokens_total:rate5m
+        expr: |
+          sum by (service_name, gen_ai_request_model) (
+            rate(traces_spanmetrics_attributes_total{
+              gen_ai_usage_input_tokens!=""
+            }[5m])
+          )
+
+      # Total output tokens produced
+      - record: gen_ai:output_tokens_total:rate5m
+        expr: |
+          sum by (service_name, gen_ai_request_model) (
+            rate(traces_spanmetrics_attributes_total{
+              gen_ai_usage_output_tokens!=""
+            }[5m])
+          )
+
+      # P50 latency of AI operations
+      - record: gen_ai:operation_latency_seconds:p50
+        expr: |
+          histogram_quantile(0.50,
+            sum by (le, service_name, gen_ai_request_model) (
+              rate(traces_spanmetrics_duration_milliseconds_bucket{
+                gen_ai_operation_name!=""
+              }[5m])
+            )
+          ) / 1000
+
+      # P99 latency of AI operations
+      - record: gen_ai:operation_latency_seconds:p99
+        expr: |
+          histogram_quantile(0.99,
+            sum by (le, service_name, gen_ai_request_model) (
+              rate(traces_spanmetrics_duration_milliseconds_bucket{
+                gen_ai_operation_name!=""
+              }[5m])
+            )
+          ) / 1000
+
+      # Error rate of AI operations
+      - record: gen_ai:operation_errors_total:rate5m
+        expr: |
+          sum by (service_name, gen_ai_request_model) (
+            rate(traces_spanmetrics_calls_total{
+              gen_ai_operation_name!="",
+              status_code="STATUS_CODE_ERROR"
+            }[5m])
+          )
