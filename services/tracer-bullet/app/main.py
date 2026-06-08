@@ -34,6 +34,7 @@ OTEL_ENDPOINT = os.getenv(
     "OTEL_EXPORTER_OTLP_ENDPOINT",
     "otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317",
 )
+OTEL_INSECURE = os.getenv("OTEL_EXPORTER_OTLP_INSECURE", "true").lower() == "true"
 
 resource = Resource.create(
     {
@@ -44,7 +45,7 @@ resource = Resource.create(
 )
 
 tracer_provider = TracerProvider(resource=resource)
-otlp_exporter = OTLPSpanExporter(endpoint=OTEL_ENDPOINT, insecure=True)
+otlp_exporter = OTLPSpanExporter(endpoint=OTEL_ENDPOINT, insecure=OTEL_INSECURE)
 tracer_provider.add_span_processor(BatchSpanProcessor(otlp_exporter))
 trace.set_tracer_provider(tracer_provider)
 tracer = trace.get_tracer(__name__)
