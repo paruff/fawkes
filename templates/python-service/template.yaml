@@ -42,65 +42,9 @@ spec:
   type: service
 
   parameters:
-    - title: Service Information
-      required:
-        - name
-        - description
-        - owner
-      properties:
-        name:
-          title: Service Name
-          type: string
-          description: Unique name for your service (lowercase, hyphen-separated)
-          pattern: "^[a-z][a-z0-9-]*[a-z0-9]$"
-          ui:autofocus: true
-          ui:help: "Example: user-authentication-service"
-
-        description:
-          title: Description
-          type: string
-          description: Brief description of what this service does
-          ui:widget: textarea
-          ui:help: "Example: Handles user authentication and JWT token generation"
-
-        owner:
-          title: Owner Team
-          type: string
-          description: Team responsible for this service
-          ui:field: OwnerPicker
-          ui:options:
-            allowedKinds:
-              - Group
-
-    - title: Repository Configuration
-      required:
-        - repoUrl
-      properties:
-        repoUrl:
-          title: Repository Location
-          type: string
-          ui:field: RepoUrlPicker
-          ui:options:
-            allowedHosts:
-              - github.com
-
-    - title: Deployment Configuration
-      properties:
-        environment:
-          title: Initial Environment
-          type: string
-          description: Where should this service be deployed initially?
-          default: dev
-          enum:
-            - dev
-            - staging
-            - production
-
-        port:
-          title: Service Port
-          type: number
-          description: Port your service listens on
-          default: 8000
+    - $yaml: ../defaults/parameters/service-info.yaml
+    - $yaml: ../defaults/parameters/repo-config.yaml
+    - $yaml: ../defaults/parameters/deployment-config.yaml
 
   steps:
     - id: fetch-base

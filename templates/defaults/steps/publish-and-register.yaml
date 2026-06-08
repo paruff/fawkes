@@ -1,0 +1,15 @@
+- id: publish
+  name: Publish to GitHub
+  action: publish:github
+  input:
+    allowedHosts:
+      - github.com
+    description: ${{ parameters.description }}
+    repoUrl: ${{ parameters.repoUrl }}
+
+- id: register
+  name: Register with Backstage Catalog
+  action: catalog:register
+  input:
+    repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+    catalogInfoPath: "/catalog-info.yaml"
