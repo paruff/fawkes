@@ -17,11 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Log job start
+      - name: DORA job start
         run: |
           echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "sha:${{ github.sha }}"
-          echo "pr:#${{ github.event.pull_request.number }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
 
       - name: Check PR size
         uses: actions/github-script@v8
@@ -68,6 +69,6 @@ jobs:
               console.log(`✅ PR size: ${total} lines (within ${limit} line limit)`);
             }
 
-      - name: Log job finish
+      - name: DORA job finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
