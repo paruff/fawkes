@@ -45,3 +45,12 @@ def test_metrics_endpoint():
     response = client.get("/metrics")
     assert response.status_code == 200
     assert b"http_requests_total" in response.content
+
+
+@pytest.mark.unit
+def test_demo_span():
+    response = client.get("/demo/span")
+    assert response.status_code == 200
+    data = response.json()
+    assert "trace_id" in data
+    assert len(data["trace_id"]) == 32  # 128-bit hex
