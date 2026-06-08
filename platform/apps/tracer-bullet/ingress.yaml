@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tracer-bullet
+  namespace: fawkes
+  labels:
+    app: tracer-bullet
+    app.kubernetes.io/name: tracer-bullet
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: tracer-bullet.fawkes.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tracer-bullet
+                port:
+                  number: 80
