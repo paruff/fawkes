@@ -1,0 +1,69 @@
+# =============================================================================
+# AI Amplification Metrics — Prometheus Recording Rules
+# =============================================================================
+# Tracks AI adoption vs. delivery stability (Acceleration Whiplash detection).
+# Reference: DORA 2025 State of AI-assisted Software Development
+#
+# These rules derive metrics from the dora-metrics exporter and SPACE metrics
+# service to detect when AI adoption rises but stability drops.
+# =============================================================================
+
+groups:
+  - name: ai_amplification_rules
+    interval: 60s
+    rules:
+      # AI Adoption Rate — % of PRs using AI assistance
+      - record: dora:ai_adoption_rate:ratio5m
+        expr: |
+          avg by (service) (
+            dora_ai_adoption_rate{service!=""}
+          )
+
+      # AI vs Manual PR Size Ratio
+      # > 1.0 means AI PRs are larger (potential Acceleration Whiplash)
+      - record: dora:ai_pr_size_ratio:ratio5m
+        expr: |
+          avg by (service) (
+            dora_ai_pr_size_ratio{service!=""}
+          )
+
+      # AI vs Manual Review Time Ratio
+      # > 1.0 means AI PRs take longer to review (verification tax)
+      - record: dora:ai_review_time_ratio:ratio5m
+        expr: |
+          avg by (service) (
+            dora_ai_review_time_ratio{service!=""}
+          )
+
+      # PR Context Load — concurrent PRs per developer
+      # > 5 indicates cognitive overload (Acceleration Whiplash signal)
+      - record: dora:pr_context_load:avg5m
+        expr: |
+          avg(dora_pr_context_load{service!=""})
+
+      # Acceleration Whiplash Composite Score
+      # Combines AI adoption + review time ratio + context load
+      # Score > 1.0 = positive, < 1.0 = negative
+      - record: dora:acceleration_whiplash:score
+        expr: |
+          (
+            dora:ai_adoption_rate:ratio5m
+            * (1 / clamp_min(dora:ai_review_time_ratio:ratio5m, 0.1))
+            * (1 / clamp_min(dora:pr_context_load:avg5m / 5, 0.1))
+          )
+
+      # SPACE Framework: DevEx Health Score
+      - record: space:devex_health:score
+        expr: |
+          space_devex_health_score
+
+      # SPACE Framework: Friction Rate
+      - record: space:friction:rate5m
+        expr: |
+          rate(space_friction_incidents_total[5m])
+
+      # SPACE Framework: Flow State Efficiency
+      # Higher = more time in flow state (good)
+      - record: space:flow_efficiency:ratio
+        expr: |
+          space_flow_state_days / clamp_min(space_valuable_work_percentage, 0.01)

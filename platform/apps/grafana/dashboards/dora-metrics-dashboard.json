@@ -498,6 +498,144 @@
       },
       {
         "id": 21,
+        "title": "AI Amplification Metrics",
+        "type": "row",
+        "gridPos": { "x": 0, "y": 52, "w": 24, "h": 1 },
+        "collapsed": false
+      },
+      {
+        "id": 22,
+        "title": "AI Adoption Rate",
+        "type": "stat",
+        "gridPos": { "x": 0, "y": 53, "w": 6, "h": 4 },
+        "description": "Percentage of PRs using AI assistance (DORA AI Capabilities Model)",
+        "targets": [
+          {
+            "expr": "avg(dora_ai_adoption_rate{service=~\"$service\"}) * 100",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "blue", "value": null },
+                { "color": "green", "value": 25 },
+                { "color": "yellow", "value": 50 },
+                { "color": "orange", "value": 75 }
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 23,
+        "title": "AI PR Size Ratio",
+        "type": "gauge",
+        "gridPos": { "x": 6, "y": 53, "w": 6, "h": 4 },
+        "description": "Ratio of AI-assisted PR size to manual PR size (>1.0 = AI PRs larger = Acceleration Whiplash risk)",
+        "targets": [
+          {
+            "expr": "avg(dora_ai_pr_size_ratio{service=~\"$service\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ratio",
+            "min": 0,
+            "max": 3,
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1.5 },
+                { "color": "red", "value": 2.0 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 24,
+        "title": "AI Review Time Ratio",
+        "type": "gauge",
+        "gridPos": { "x": 12, "y": 53, "w": 6, "h": 4 },
+        "description": "Ratio of AI-assisted PR review time to manual (>1.0 = verification tax)",
+        "targets": [
+          {
+            "expr": "avg(dora_ai_review_time_ratio{service=~\"$service\"})",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ratio",
+            "min": 0,
+            "max": 5,
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1.5 },
+                { "color": "red", "value": 3.0 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 25,
+        "title": "Acceleration Whiplash Score",
+        "type": "stat",
+        "gridPos": { "x": 18, "y": 53, "w": 6, "h": 4 },
+        "description": "Composite score: AI adoption / (review time ratio * context load). >1.0 = healthy, <1.0 = whiplash",
+        "targets": [
+          {
+            "expr": "dora:acceleration_whiplash:score",
+            "refId": "A",
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ratio",
+            "color": { "mode": "thresholds" },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 0.5 },
+                { "color": "green", "value": 1.0 }
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 27,
         "title": "Benchmark Reference",
         "type": "text",
         "gridPos": { "x": 0, "y": 52, "w": 24, "h": 6 },
@@ -507,20 +645,20 @@
         }
       },
       {
-        "id": 22,
+        "id": 28,
         "title": "Performance Category",
         "type": "row",
         "gridPos": { "x": 0, "y": 58, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
-        "id": 23,
+        "id": 29,
         "title": "DORA Performance Level",
         "type": "text",
         "gridPos": { "x": 0, "y": 59, "w": 24, "h": 6 },
         "options": {
           "mode": "markdown",
-          "content": "## DORA Performance Classification\n\n**Note**: This dashboard shows placeholder metrics. Configure the DORA metrics collector to populate actual data.\n\n### Elite Performance Targets:\n- **Deployment Frequency**: On-demand (multiple deploys per day)\n- **Lead Time for Changes**: Less than one hour\n- **Change Failure Rate**: 0-15%\n- **Mean Time to Restore**: Less than one hour\n\n### Implementation Status:\n🔄 **Metrics collection pending** - Refer to [DORA Metrics Implementation Playbook](../../../docs/playbooks/dora-metrics-implementation.md) for setup instructions.\n\n### Next Steps:\n1. Configure deployment event collection from ArgoCD\n2. Configure Jenkins pipeline metrics integration\n3. Set up incident tracking for MTTR\n4. Enable metrics export to Prometheus\n5. Wait 2-4 weeks for baseline data collection\n6. Analyze trends and identify improvement opportunities"
+          "content": "## DORA Performance Classification\n\n### Data Sources\n- **Deployment Frequency + CFR**: ArgoCD sync events (via dora-metrics exporter)\n- **Lead Time**: GitHub Actions workflow durations (via dora-metrics exporter)\n- **MTTR**: Alertmanager incident resolution (pending Alertmanager integration)\n- **AI Amplification**: AI adoption rate, PR size ratio, review time ratio, whiplash score\n\n### Elite Performance Targets:\n- **Deployment Frequency**: On-demand (multiple deploys per day)\n- **Lead Time for Changes**: Less than one hour\n- **Change Failure Rate**: 0-15%\n- **Mean Time to Restore**: Less than one hour\n\n### Next Steps:\n1. ~~Configure deployment event collection from ArgoCD~~ ✅ Done (dora-metrics exporter)\n2. Wire Alertmanager for MTTR data\n3. Analyze AI PR labels for adoption rate\n4. Wait 2-4 weeks for baseline data collection\n5. Analyze trends and identify improvement opportunities"
         }
       }
     ],

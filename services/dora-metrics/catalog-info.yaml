@@ -1,0 +1,19 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dora-metrics
+  description: DORA metrics exporter — collects deployment frequency, lead time, CFR, MTTR from ArgoCD and GitHub Actions
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    argocd/app-name: dora-metrics
+  tags:
+    - python
+    - fastapi
+    - dora
+    - metrics
+    - prometheus
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: observability
