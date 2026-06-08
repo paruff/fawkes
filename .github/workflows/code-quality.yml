@@ -6,13 +6,13 @@ on:
     paths-ignore:
       - 'docs/**'
       - '**.md'
-      - 'design-system/**'
+      - 'design-system/**' # has its own CI in design-system-ci.yml
   push:
     branches: [main, develop]
     paths-ignore:
       - 'docs/**'
       - '**.md'
-      - 'design-system/**'
+      - 'design-system/**' # has its own CI in design-system-ci.yml
   workflow_dispatch:
 
 permissions:
@@ -50,22 +50,30 @@ jobs:
       - name: Check for file changes
         id: filter
         run: |
-          # Check for TypeScript/JavaScript files in design-system
-          if find design-system -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" \) 2>/dev/null | grep -q .; then
-            echo "typescript=true" >> $GITHUB_OUTPUT
-            echo "✅ TypeScript/JavaScript files found in design-system"
+          # Use git diff against base for PRs, HEAD~1 for pushes
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
           else
-            echo "typescript=false" >> $GITHUB_OUTPUT
-            echo "ℹ️  No TypeScript/JavaScript files found in design-system"
+            BASE="HEAD~1"
           fi
 
-          # Check for Go files
-          if find . -type f -name "*.go" 2>/dev/null | grep -q .; then
+          # Check for TypeScript/JavaScript changes in design-system
+          if git diff --name-only "$BASE" HEAD -- design-system/ 2>/dev/null \
+            | grep -qE '\.(ts|tsx|js|jsx)$'; then
+            echo "typescript=true" >> $GITHUB_OUTPUT
+            echo "✅ TypeScript/JavaScript files changed in design-system"
+          else
+            echo "typescript=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No TypeScript/JavaScript changes in design-system"
+          fi
+
+          # Check for Go file changes
+          if git diff --name-only "$BASE" HEAD -- '*.go' 2>/dev/null | grep -q .; then
             echo "go=true" >> $GITHUB_OUTPUT
-            echo "✅ Go files found"
+            echo "✅ Go files changed"
           else
             echo "go=false" >> $GITHUB_OUTPUT
-            echo "ℹ️  No Go files found"
+            echo "ℹ️  No Go file changes"
           fi
 
       - name: DORA job finish
@@ -262,7 +270,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@master
+        uses: ludeeus/action-shellcheck@2.0.0
         with:
           severity: error
 
