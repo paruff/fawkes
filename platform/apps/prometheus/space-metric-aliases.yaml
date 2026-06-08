@@ -1,0 +1,88 @@
+# =============================================================================
+# SPACE Framework Metric Aliases — Prometheus Recording Rules
+# =============================================================================
+# Bridges naming gaps between the space-metrics exporter and the DevEx dashboard.
+# The exporter exposes metrics with one naming convention; the dashboard expects
+# another. These rules alias exporter metrics to dashboard-expected names.
+#
+# Exporter source: services/space-metrics/app/metrics.py
+# Dashboard target: platform/apps/grafana/dashboards/devex-dashboard.json
+# =============================================================================
+
+groups:
+  - name: space_metric_aliases
+    interval: 60s
+    rules:
+      # Satisfaction dimension
+      - record: space_satisfaction_score
+        expr: space_devex_health_score > bool 0
+
+      - record: space_satisfaction_rating_avg
+        expr: space_satisfaction_rating
+
+      # Performance dimension
+      - record: space_deployments_total
+        expr: space_deployment_frequency
+
+      - record: space_lead_time_hours_avg
+        expr: space_lead_time_hours
+
+      - record: space_performance_score
+        expr: (
+          clamp_min(space_deployment_frequency, 0) / 2 * 100
+        ) / 2
+
+      # Activity dimension
+      - record: space_active_developers_count
+        expr: space_active_developers
+
+      - record: space_ai_adoption_percentage
+        expr: space_ai_adoption_rate * 100
+
+      - record: space_platform_engagement_percentage
+        expr: space_active_developers / 100
+
+      - record: space_activity_score
+        expr: space_active_developers * 5
+
+      # Communication dimension
+      - record: space_avg_review_time_hours
+        expr: space_review_time_hours
+
+      - record: space_comments_per_pr_avg
+        expr: space_pr_comments_avg
+
+      - record: space_cross_team_pr_percentage
+        expr: (
+          space_cross_team_collaboration / clamp_min(space_pull_requests_total, 1)
+        ) * 100
+
+      - record: space_documentation_contributions_total
+        expr: space_commits_total
+
+      - record: space_communication_score
+        expr: clamp_max(100 - (space_review_time_hours * 2), 100)
+
+      # Efficiency dimension
+      - record: space_flow_state_achievement_percentage
+        expr: (space_flow_state_days / 5) * 100
+
+      - record: space_valuable_work_percentage_avg
+        expr: space_valuable_work_percentage
+
+      - record: space_friction_incidents_total
+        expr: space_friction_incidents
+
+      - record: space_cognitive_load_avg
+        expr: space_cognitive_load
+
+      - record: space_efficiency_score
+        expr: space_valuable_work_percentage
+
+      # Code review metrics (from friction-bot + feedback-bot)
+      - record: space_code_reviews_total
+        expr: friction_bot_logs_total
+
+      # Alert metrics (placeholder — needs Alertmanager integration)
+      - record: space_incidents_total
+        expr: vector(0)

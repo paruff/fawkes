@@ -28,7 +28,8 @@ groups:
         expr: |
           sum by (service_name, gen_ai_request_model) (
             rate(traces_spanmetrics_attributes_total{
-              gen_ai_operation_name!=""
+              gen_ai_operation_name!="",
+              gen_ai_token_type="input"
             }[5m])
           )
 
@@ -37,7 +38,8 @@ groups:
         expr: |
           sum by (service_name, gen_ai_request_model) (
             rate(traces_spanmetrics_attributes_total{
-              gen_ai_operation_name!=""
+              gen_ai_operation_name!="",
+              gen_ai_token_type="output"
             }[5m])
           )
 
