@@ -469,13 +469,45 @@ jobs:
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
   # ==========================================================================
+  # Security Scanning (Advisory — Non-Blocking Baseline)
+  # ==========================================================================
+  security-scanning:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    continue-on-error: true
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Run security scanning
+        uses: ./.github/workflows/reusable-security-scanning.yml
+        with:
+          scan-type: all
+          scan-path: '.'
+          severity-threshold: LOW
+          fail-on-critical: false
+          upload-sarif: true
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ==========================================================================
   # Quality Summary Report
   # ==========================================================================
   quality-summary:
     name: Quality Summary
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: [detect-changes, python-lint-and-test, typescript-quality, go-quality, shell-quality, shell-tests, yaml-quality, security-integration]
+    needs: [detect-changes, python-lint-and-test, typescript-quality, go-quality, shell-quality, shell-tests, yaml-quality, security-integration, security-scanning]
     if: always()
     permissions:
       contents: read
@@ -502,6 +534,7 @@ jobs:
           echo "| Shell Tests (BATS) | ${{ needs.shell-tests.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| YAML Quality | ${{ needs.yaml-quality.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Security Integration | ${{ needs.security-integration.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Scanning | ${{ needs.security-scanning.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📈 Next Steps" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -527,6 +560,7 @@ jobs:
             | Shell Tests (BATS) | ${{ needs.shell-tests.result }} |
             | YAML Quality | ${{ needs.yaml-quality.result }} |
             | Security Integration | ${{ needs.security-integration.result }} |
+            | Security Scanning | ${{ needs.security-scanning.result }} |
 
             ### 📈 Quality Gates
 
