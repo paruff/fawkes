@@ -19,6 +19,11 @@
 
 set -euo pipefail
 
+# Prerequisite check
+for cmd in curl jq kubectl; do
+  command -v "$cmd" >/dev/null 2>&1 || { echo "❌ Missing required tool: $cmd"; exit 1; }
+done
+
 NAMESPACE="${1:-fawkes}"
 SERVICE="${2:-tracer-bullet}"
 BASE_URL="http://${SERVICE}.${NAMESPACE}.svc.cluster.local"
@@ -29,8 +34,8 @@ FAIL=0
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-pass() { echo "  ✅ $1"; ((PASS++)); }
-fail() { echo "  ❌ $1"; ((FAIL++)); }
+pass() { echo "  ✅ $1"; PASS=$((PASS + 1)); }
+fail() { echo "  ❌ $1"; FAIL=$((FAIL + 1)); }
 
 check_endpoint() {
   local path="$1"
