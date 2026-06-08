@@ -484,6 +484,13 @@ Before submitting research artifacts, ensure:
 - [DORA Metrics Dashboard](../observability/dora-metrics.md)
 - [Developer Portal (Backstage)](https://backstage.fawkes.local)
 
+### DORA Research (Core to Product Direction)
+
+- [DORA Research Index](dora/) — PDFs, summaries, and Fawkes implications
+- **State of AI-assisted Software Development 2025** — AI as amplifier, 7 capabilities, 7 team archetypes
+- **AI Capabilities Model** — The 7 foundational practices that amplify AI benefits
+- **ROI of AI-assisted Software Development 2026** — J-Curve, capacity reinvestment, financial impact
+
 ### External Resources
 
 - [Nielsen Norman Group - User Research Methods](https://www.nngroup.com/articles/)
