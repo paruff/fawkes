@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tracer-bullet
+  namespace: argocd
+  labels:
+    app: tracer-bullet
+    app.kubernetes.io/name: tracer-bullet
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/version: v0.1.0
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    targetRevision: HEAD
+    path: platform/apps/tracer-bullet
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
