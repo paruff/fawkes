@@ -61,6 +61,12 @@ if [[ "${#MISSING[@]}" -gt 0 ]]; then
   exit 1
 fi
 ok "All prerequisites found"
+# Check if Docker daemon is running
+if ! docker info &>/dev/null; then
+  echo "❌ Docker is installed but not running."
+  echo "Start Docker Desktop and retry."
+  exit 1
+fi
 
 # ---------------------------------------------------------------------------
 # 2. Create k3d cluster (skip if already running)
@@ -85,13 +91,13 @@ ok "kubectl context switched to k3d-${CLUSTER_NAME}"
 # 3. Add Helm repositories
 # ---------------------------------------------------------------------------
 step "Adding Helm repositories"
-helm repo add argo https://argoproj.github.io/argo-helm 2> /dev/null || true
-helm repo add hashicorp https://helm.releases.hashicorp.com 2> /dev/null || true
-helm repo add backstage https://backstage.github.io/charts 2> /dev/null || true
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 2> /dev/null || true
-helm repo add podinfo https://stefanprodan.github.io/podinfo 2> /dev/null || true
+helm repo add argo https://argoproj.github.io/argo-helm 2>/dev/null || true
+helm repo add hashicorp https://helm.releases.hashicorp.com 2>/dev/null || true
+helm repo add backstage https://backstage.github.io/charts 2>/dev/null || true
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 2>/dev/null || true
+helm repo add podinfo https://stefanprodan.github.io/podinfo 2>/dev/null || true
 helm repo update
-ok "Helm repos updated"
+ok "Helm repo updated (ArgoCD only)"
 
 # ---------------------------------------------------------------------------
 # 4. ArgoCD
@@ -106,21 +112,7 @@ helm upgrade --install argocd argo/argo-cd \
   --wait --timeout 5m
 ok "ArgoCD installed (namespace: ${ARGOCD_NS})"
 
-# ---------------------------------------------------------------------------
-# 5. Vault (dev mode)
-# ---------------------------------------------------------------------------
-step "Installing Vault (dev mode)"
-kubectl create namespace "${VAULT_NS}" --dry-run=client -o yaml | kubectl apply -f -
-# WARNING: dev-only root token — never use this token or dev mode in production
-helm upgrade --install vault hashicorp/vault \
-  --version "${VAULT_CHART_VERSION}" \
-  --namespace "${VAULT_NS}" \
-  --set server.dev.enabled=true \
-  --set server.dev.devRootToken="fawkes-dev-root" \
-  --set ui.enabled=true \
-  --set ui.serviceType=ClusterIP \
-  --wait --timeout 5m
-ok "Vault installed in dev mode (namespace: ${VAULT_NS})"
+log "All other apps (Vault, Prometheus, Backstage, podinfo) will be deployed by ArgoCD via GitOps."
 
 # ---------------------------------------------------------------------------
 # 6. kube-prometheus-stack (Prometheus + Grafana)
@@ -206,6 +198,7 @@ kubectl wait --for=condition=available deployment/podinfo \
   --namespace "${SAMPLE_NS}" --timeout=120s 2> /dev/null \
   || log "⚠️  podinfo not yet available — ArgoCD may still be syncing (check: make dev-status)"
 
+ok "podinfo ArgoCD Application created"
 # ---------------------------------------------------------------------------
 # 9. Print status
 # ---------------------------------------------------------------------------
