@@ -1,0 +1,21 @@
+# =============================================================================
+# Terraform Backend Configuration — AWS S3
+# =============================================================================
+# Copy to backend.hcl and fill in values, or pass via -backend-config
+#
+# Required:
+#   bucket          = "fawkes-terraform-state"
+#   key             = "aws/terraform.tfstate"
+#   region          = "us-east-2"
+#   dynamodb_table  = "fawkes-terraform-locks"
+#
+# Optional:
+#   encrypt         = true
+#   profile         = "fawkes"
+# =============================================================================
+
+bucket         = "fawkes-terraform-state"
+key            = "aws/terraform.tfstate"
+region         = "us-east-2"
+dynamodb_table = "fawkes-terraform-locks"
+encrypt        = true
