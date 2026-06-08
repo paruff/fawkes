@@ -26,6 +26,19 @@ if [[ ! -f "$LOG_FILE" ]]; then
   exit 1
 fi
 
+# Cross-platform date parser (macOS BSD date + GNU date)
+parse_epoch() {
+  local ts="$1"
+  if date -j -f "%Y-%m-%dT%H:%M:%SZ" "$ts" "+%s" &>/dev/null; then
+    date -j -f "%Y-%m-%dT%H:%M:%SZ" "$ts" "+%s"
+  elif date -d "$ts" "+%s" &>/dev/null; then
+    date -d "$ts" "+%s"
+  else
+    echo "Error: Cannot parse timestamp: $ts" >&2
+    return 1
+  fi
+}
+
 echo "["
 first=true
 
@@ -54,9 +67,8 @@ while IFS= read -r line; do
     current_finish="${BASH_REMATCH[1]}"
 
     if [[ -n "$current_start" && -n "$current_job" ]]; then
-      # Calculate duration in seconds
-      start_epoch=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$current_start" "+%s" 2>/dev/null || echo 0)
-      finish_epoch=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$current_finish" "+%s" 2>/dev/null || echo 0)
+      start_epoch=$(parse_epoch "$current_start") || start_epoch=0
+      finish_epoch=$(parse_epoch "$current_finish") || finish_epoch=0
       duration=$((finish_epoch - start_epoch))
 
       if [[ "$first" == "true" ]]; then
