@@ -29,9 +29,9 @@ fi
 # Cross-platform date parser (macOS BSD date + GNU date)
 parse_epoch() {
   local ts="$1"
-  if date -j -f "%Y-%m-%dT%H:%M:%SZ" "$ts" "+%s" &>/dev/null; then
+  if date -j -f "%Y-%m-%dT%H:%M:%SZ" "$ts" "+%s" &> /dev/null; then
     date -j -f "%Y-%m-%dT%H:%M:%SZ" "$ts" "+%s"
-  elif date -d "$ts" "+%s" &>/dev/null; then
+  elif date -d "$ts" "+%s" &> /dev/null; then
     date -d "$ts" "+%s"
   else
     echo "Error: Cannot parse timestamp: $ts" >&2
@@ -77,7 +77,7 @@ while IFS= read -r line; do
         echo ","
       fi
 
-      cat <<EOF
+      cat << EOF
   {"workflow":"${current_workflow}","job":"${current_job}","start":"${current_start}","finish":"${current_finish}","duration_seconds":${duration}}
 EOF
     fi
