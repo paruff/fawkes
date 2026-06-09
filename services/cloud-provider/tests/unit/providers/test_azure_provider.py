@@ -49,7 +49,6 @@ class TestAzureProviderInitialization:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Mock credential
             mock_credential = Mock()
             mock_credential.get_token = Mock(return_value=Mock(token="mock-token"))
@@ -85,7 +84,6 @@ class TestAzureProviderInitialization:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Mock credential
             mock_credential = Mock()
             mock_credential.get_token = Mock(return_value=Mock(token="mock-token"))
@@ -115,7 +113,6 @@ class TestAzureProviderInitialization:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Mock credential
             mock_credential = Mock()
             mock_credential.get_token = Mock(return_value=Mock(token="mock-token"))
@@ -145,7 +142,6 @@ class TestAzureProviderInitialization:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Mock credential
             mock_credential = Mock()
             mock_credential.get_token = Mock(return_value=Mock(token="mock-token"))
@@ -172,7 +168,6 @@ class TestAzureProviderInitialization:
             patch("src.providers.azure_provider.MonitorService") as mock_monitor,
             patch("src.providers.azure_provider.CostManagementService") as mock_cost,
         ):
-
             # Mock credential
             mock_credential = Mock()
             mock_credential.get_token = Mock(return_value=Mock(token="mock-token"))
@@ -223,7 +218,6 @@ class TestAzureProviderInitialization:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Mock credential
             mock_credential = Mock()
             mock_credential.get_token = Mock(return_value=Mock(token="mock-token"))
@@ -249,7 +243,6 @@ class TestAzureProviderInitialization:
             patch("src.providers.azure_provider.DefaultAzureCredential") as mock_cred_class,
             patch("azure.mgmt.resource.ResourceManagementClient") as mock_rm_client,
         ):
-
             # Mock credential
             mock_credential = Mock()
             mock_cred_class.return_value = mock_credential
@@ -279,7 +272,6 @@ class TestAzureProviderClusterOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -328,7 +320,6 @@ class TestAzureProviderClusterOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -370,7 +361,6 @@ class TestAzureProviderClusterOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -411,7 +401,6 @@ class TestAzureProviderClusterOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -439,7 +428,6 @@ class TestAzureProviderClusterOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -469,7 +457,6 @@ class TestAzureProviderClusterOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -506,7 +493,6 @@ class TestAzureProviderClusterOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -545,7 +531,6 @@ class TestAzureProviderDatabaseOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -599,7 +584,6 @@ class TestAzureProviderDatabaseOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -644,7 +628,6 @@ class TestAzureProviderDatabaseOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -674,7 +657,6 @@ class TestAzureProviderDatabaseOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -732,7 +714,6 @@ class TestAzureProviderStorageOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -781,7 +762,6 @@ class TestAzureProviderStorageOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -823,7 +803,6 @@ class TestAzureProviderStorageOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -853,7 +832,6 @@ class TestAzureProviderStorageOperations:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -894,7 +872,6 @@ class TestAzureProviderCostAndMetrics:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService") as mock_cost_class,
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -936,7 +913,6 @@ class TestAzureProviderCostAndMetrics:
             patch("src.providers.azure_provider.MonitorService"),
             patch("src.providers.azure_provider.CostManagementService") as mock_cost_class,
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -976,7 +952,6 @@ class TestAzureProviderCostAndMetrics:
             patch("src.providers.azure_provider.MonitorService") as mock_monitor_class,
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()
@@ -1025,7 +1000,6 @@ class TestAzureProviderCostAndMetrics:
             patch("src.providers.azure_provider.MonitorService") as mock_monitor_class,
             patch("src.providers.azure_provider.CostManagementService"),
         ):
-
             # Setup mocks
             mock_cred_class.return_value = mock_credential
             mock_client = MagicMock()

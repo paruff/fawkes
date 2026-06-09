@@ -266,6 +266,7 @@ def _scrape_dora_metrics():
 
     # Run async collection
     import asyncio
+
     try:
         loop = asyncio.get_event_loop()
     except RuntimeError:
@@ -279,22 +280,18 @@ def _scrape_dora_metrics():
     # Count successful ArgoCD syncs as deployments
     for name, info in argocd_apps.items():
         env = info["environment"]
-        DEPLOYMENTS_TOTAL.labels(
-            environment=env, team="platform-team", service=name
-        ).set(info["sync_count"])
+        DEPLOYMENTS_TOTAL.labels(environment=env, team="platform-team", service=name).set(info["sync_count"])
 
         # --- DORA Metric: Change Failure Rate ---
         failed_count = 1 if info["operation_phase"] == "Error" else 0
-        DEPLOYMENT_FAILURES_TOTAL.labels(
-            environment=env, team="platform-team", service=name
-        ).set(failed_count)
+        DEPLOYMENT_FAILURES_TOTAL.labels(environment=env, team="platform-team", service=name).set(failed_count)
 
     # --- DORA Metric: Lead Time ---
     # Use GitHub workflow run duration as a proxy for lead time
     for name, info in github_runs.items():
-        LEAD_TIME_SECONDS.labels(
-            environment="production", team="platform-team", service=name
-        ).set(info.get("avg_duration", 0))
+        LEAD_TIME_SECONDS.labels(environment="production", team="platform-team", service=name).set(
+            info.get("avg_duration", 0)
+        )
 
     # --- DORA Metric: MTTR ---
     # MTTR is derived from incident resolution time
@@ -304,7 +301,9 @@ def _scrape_dora_metrics():
             environment=argocd_apps[name]["environment"],
             team="platform-team",
             service=name,
-        ).set(0)  # Will be populated when Alertmanager is wired
+        ).set(
+            0
+        )  # Will be populated when Alertmanager is wired
 
     # --- AI Amplification Metrics ---
     # These will be populated by GitHub API analysis of PR labels/metadata
@@ -314,10 +313,7 @@ def _scrape_dora_metrics():
         AI_REVIEW_TIME_RATIO.labels(service=name).set(1.0)  # TODO: compare review times
 
     _last_scrape = time.time()
-    logger.info(
-        f"Scrape complete: {len(argocd_apps)} ArgoCD apps, "
-        f"{len(github_runs)} GitHub workflows"
-    )
+    logger.info(f"Scrape complete: {len(argocd_apps)} ArgoCD apps, " f"{len(github_runs)} GitHub workflows")
 
 
 # ---------------------------------------------------------------------------
