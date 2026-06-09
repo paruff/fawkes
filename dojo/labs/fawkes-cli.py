@@ -24,18 +24,15 @@ import click
 import subprocess
 import yaml
 import json
-import os
 import sys
 from pathlib import Path
-from datetime import datetime
-from typing import Optional, List, Dict
+from typing import Optional, Dict
 
 # Import the lab automation classes we created earlier
 # In a real package, these would be in separate modules
 from lab_automation import (
     FawkesLabCLI,
     AssessmentValidator,
-    LabAutomation,
     setup_lab_environment,
     cleanup_lab_environment,
 )
@@ -133,7 +130,6 @@ def cli(ctx):
 @cli.group()
 def lab():
     """Manage lab environments"""
-    pass
 
 
 @lab.command()
@@ -156,11 +152,11 @@ def start(module: int, user: Optional[str]):
 
     try:
         lab_cli.start_lab(module)
-        click.echo(f"✅ Lab environment ready!")
-        click.echo(f"\n📚 Next steps:")
+        click.echo("✅ Lab environment ready!")
+        click.echo("\n📚 Next steps:")
         click.echo(f"   1. Review Module {module} content")
-        click.echo(f"   2. Complete hands-on exercises")
-        click.echo(f"   3. Run: fawkes lab validate --lab [lab-name]")
+        click.echo("   2. Complete hands-on exercises")
+        click.echo("   3. Run: fawkes lab validate --lab [lab-name]")
         click.echo(f"\n   Documentation: https://docs.fawkes.io/dojo/module-{module}")
     except Exception as e:
         click.echo(f"❌ Error starting lab: {str(e)}", err=True)
@@ -205,7 +201,7 @@ def validate(lab: str, verbose: bool):
 
     except KeyError:
         click.echo(f"❌ Unknown lab: {lab}", err=True)
-        click.echo(f"   Available labs: white-belt-lab1, white-belt-lab2, ...", err=True)
+        click.echo("   Available labs: white-belt-lab1, white-belt-lab2, ...", err=True)
         sys.exit(1)
     except Exception as e:
         click.echo(f"❌ Validation error: {str(e)}", err=True)
@@ -225,7 +221,7 @@ def stop(module: int, force: bool):
 
     try:
         cleanup_lab_environment(module)
-        click.echo(f"✅ Lab environment cleaned up!")
+        click.echo("✅ Lab environment cleaned up!")
     except Exception as e:
         click.echo(f"❌ Cleanup error: {str(e)}", err=True)
         sys.exit(1)
@@ -320,7 +316,6 @@ def logs(module: int, follow: bool):
 @cli.group()
 def assessment():
     """Manage belt assessments"""
-    pass
 
 
 @assessment.command()
@@ -345,16 +340,16 @@ def validate(belt: str):
         click.echo(f"   Passing Threshold: {result['passing_threshold']}%")
 
         if result["passed"]:
-            click.echo(f"\n   ✅ PASSED - Congratulations!")
+            click.echo("\n   ✅ PASSED - Congratulations!")
             click.echo(f"\n   You have earned the {result['belt'].upper()} Belt certification!")
-            click.echo(f"\n   Next steps:")
-            click.echo(f"   1. Check your email for certificate")
-            click.echo(f"   2. Add badge to LinkedIn")
-            click.echo(f"   3. Continue to next belt level")
+            click.echo("\n   Next steps:")
+            click.echo("   1. Check your email for certificate")
+            click.echo("   2. Add badge to LinkedIn")
+            click.echo("   3. Continue to next belt level")
         else:
-            click.echo(f"\n   ❌ NOT PASSED")
+            click.echo("\n   ❌ NOT PASSED")
             click.echo(f"   You need {result['passing_threshold']}% to pass.")
-            click.echo(f"   Review the areas where you lost points and try again.")
+            click.echo("   Review the areas where you lost points and try again.")
 
         click.echo("\n   Lab Results:")
         for lab in result["labs"]:
@@ -391,10 +386,10 @@ def check_eligibility(belt: str):
 
     if not required:
         click.echo(f"✅ No prerequisites for {belt.upper()} Belt")
-        click.echo(f"   You can schedule your assessment now!")
+        click.echo("   You can schedule your assessment now!")
         return
 
-    click.echo(f"\n   Required prerequisites:")
+    click.echo("\n   Required prerequisites:")
     for req in required:
         # In real implementation, would check certification database
         click.echo(f"      • {req.upper()} Belt certification")
@@ -418,11 +413,11 @@ def schedule(belt: str, date: Optional[str], time: Optional[str]):
     click.echo(f"\n📅 Scheduling {belt.upper()} Belt Assessment:")
     click.echo(f"   Date: {date}")
     click.echo(f"   Time: {time}")
-    click.echo(f"\n✅ Assessment scheduled!")
-    click.echo(f"\n   You will receive a confirmation email with:")
-    click.echo(f"   • Assessment link")
-    click.echo(f"   • Duration and format")
-    click.echo(f"   • Requirements checklist")
+    click.echo("\n✅ Assessment scheduled!")
+    click.echo("\n   You will receive a confirmation email with:")
+    click.echo("   • Assessment link")
+    click.echo("   • Duration and format")
+    click.echo("   • Requirements checklist")
 
 
 # =============================================================================
@@ -433,7 +428,6 @@ def schedule(belt: str, date: Optional[str], time: Optional[str]):
 @cli.group()
 def config():
     """Manage Fawkes CLI configuration"""
-    pass
 
 
 @config.command()
