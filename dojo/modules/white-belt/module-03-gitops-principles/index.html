@@ -5928,6 +5928,61 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#step-1-clone-gitops-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Clone GitOps Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-make-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Make Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-commit-and-push" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Commit and Push
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-watch-argocd-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Watch ArgoCD Sync
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6352,6 +6407,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="🏆 Achievement Unlocked">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gitops-practitioner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎓 GitOps Practitioner
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -6384,6 +6456,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="📝 Module Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2025-fawkes-platform-licensed-under-mit-license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        © 2025 Fawkes Platform | Licensed under MIT License
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -6924,11 +7013,11 @@ Pod → Service → Ingress
 </ul>
 <h3 id="making-a-gitops-change">Making a GitOps Change</h3>
 <p><strong>Scenario</strong>: Scale your application from 1 to 3 replicas</p>
-<p><strong>Step 1: Clone GitOps Repository</strong></p>
+<h3 id="step-1-clone-gitops-repository">Step 1: Clone GitOps Repository</h3>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/fawkes-dojo/gitops-lab
 <span class="nb">cd</span><span class="w"> </span>gitops-lab
 </code></pre></div>
-<p><strong>Step 2: Make Change</strong></p>
+<h3 id="step-2-make-change">Step 2: Make Change</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Edit deployment file</span>
 vim<span class="w"> </span>apps/dojo/learner-<span class="o">[</span>yourname<span class="o">]</span>/myapp/deployment.yaml
 
@@ -6936,12 +7025,12 @@ vim<span class="w"> </span>apps/dojo/learner-<span class="o">[</span>yourname<sp
 spec:
 <span class="w">  </span>replicas:<span class="w"> </span><span class="m">3</span><span class="w">  </span><span class="c1"># Changed from 1</span>
 </code></pre></div>
-<p><strong>Step 3: Commit and Push</strong></p>
+<h3 id="step-3-commit-and-push">Step 3: Commit and Push</h3>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>apps/dojo/learner-<span class="o">[</span>yourname<span class="o">]</span>/myapp/deployment.yaml
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Scale myapp to 3 replicas for load testing&quot;</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
 </code></pre></div>
-<p><strong>Step 4: Watch ArgoCD Sync</strong></p>
+<h3 id="step-4-watch-argocd-sync">Step 4: Watch ArgoCD Sync</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># ArgoCD detects change within 3 minutes (or immediately with webhooks)</span>
 <span class="c1"># Watch in ArgoCD UI:</span>
 <span class="c1"># 1. Sync Status changes to &quot;OutOfSync&quot;</span>
@@ -6949,7 +7038,7 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <span class="c1"># 3. New pods appear in topology</span>
 <span class="c1"># 4. Sync Status returns to &quot;Synced&quot;</span>
 </code></pre></div>
-<p><strong>Step 5: Verify</strong></p>
+<h3 id="step-5-verify">Step 5: Verify</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check pods</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>dojo-learner-<span class="o">[</span>yourname<span class="o">]</span>
 
@@ -7394,7 +7483,7 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment/myapp<spa
 </ul>
 <hr />
 <h2 id="achievement-unlocked">🏆 Achievement Unlocked</h2>
-<p><strong>🎓 GitOps Practitioner</strong></p>
+<h3 id="gitops-practitioner">🎓 GitOps Practitioner</h3>
 <p>You've completed Module 3 and demonstrated:</p>
 <ul>
 <li>Understanding of GitOps core principles</li>
@@ -7454,7 +7543,7 @@ Keep going! You&#39;re 75% of the way to your first certification! 💪
 <p><strong>Feedback &amp; Improvements</strong>:
 This module is continuously improved based on learner feedback. If you have suggestions, please <a href="https://github.com/paruff/fawkes/issues/new?template=dojo-feedback.yml">open an issue</a> or discuss in <code>#dojo-feedback</code> channel.</p>
 <hr />
-<p><strong>© 2025 Fawkes Platform | Licensed under MIT License</strong></p>
+<h3 id="2025-fawkes-platform-licensed-under-mit-license">© 2025 Fawkes Platform | Licensed under MIT License</h3>
 <p><strong>Platform</strong>: <a href="https://fawkes.io">https://fawkes.io</a>
 <strong>GitHub</strong>: <a href="https://github.com/paruff/fawkes">https://github.com/paruff/fawkes</a>
 <strong>Community</strong>: <a href="https://community.fawkes.io">https://community.fawkes.io</a></p>
