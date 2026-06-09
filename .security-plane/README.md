@@ -417,10 +417,8 @@ This project is part of the Fawkes Internal Developer Platform.
 
 > "The Security Plane reduced our critical vulnerability MTTR from 2 weeks to 2 days."
 > — Platform Team, Company XYZ
-
 > "Advisory mode let us understand our security posture before enforcing policies. Game changer!"
 > — DevOps Lead, Acme Corp
-
 > "Image signing was complex until we adopted the Security Plane. Now it's automatic."
 > — Security Engineer, Tech Startup
 
