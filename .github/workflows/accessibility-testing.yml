@@ -197,9 +197,11 @@ jobs:
       - name: Parse violations and create issues
         uses: actions/github-script@v8
         with:
+          needs-context: ${{ toJSON(needs) }}
           script: |
             const fs = require('fs');
             const path = require('path');
+            const needs = JSON.parse(inputs.needs-context || '{}');
 
             // Check if this is a scheduled run or main branch
             const shouldCreateIssues = context.eventName === 'schedule' || context.ref === 'refs/heads/main';
@@ -230,8 +232,8 @@ jobs:
 
             ### Summary
 
-            ${needs['axe-core-tests'].result === 'failure' ? '❌ Axe-Core tests failed' : '✅ Axe-Core tests passed'}
-            ${needs['lighthouse-ci'].result === 'failure' ? '❌ Lighthouse CI failed' : '✅ Lighthouse CI passed'}
+            ${needs['axe-core-tests']?.result === 'failure' ? '❌ Axe-Core tests failed' : '✅ Axe-Core tests passed'}
+            ${needs['lighthouse-ci']?.result === 'failure' ? '❌ Lighthouse CI failed' : '✅ Lighthouse CI passed'}
 
             ### Action Required
 
