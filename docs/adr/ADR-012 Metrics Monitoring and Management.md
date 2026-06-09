@@ -178,7 +178,7 @@ We will use **Prometheus** as the core metrics collection and storage engine, de
 
 ### Component Breakdown
 
-**1. Prometheus Core (kube-prometheus-stack)**
+### 1. Prometheus Core (kube-prometheus-stack)
 
 - **Prometheus Server**: Metrics collection and short-term storage (15-30 days)
 - **Prometheus Operator**: Manages Prometheus instances via CRDs
@@ -187,7 +187,7 @@ We will use **Prometheus** as the core metrics collection and storage engine, de
 - **Alertmanager**: Alert routing, grouping, and notification
 - **Grafana**: Pre-configured dashboards and visualization
 
-**2. Thanos (Long-term Storage & Global Query)**
+### 2. Thanos (Long-term Storage & Global Query)
 
 - **Thanos Sidecar**: Uploads Prometheus data to object storage
 - **Thanos Store Gateway**: Queries historical data from object storage

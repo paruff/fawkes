@@ -12,7 +12,6 @@ import subprocess
 from typing import Dict
 import os
 
-import pytest
 from pytest_bdd import given, when, then, parsers
 
 if os.getenv("FAWKES_DEBUG_STEPS") == "1":  # pragma: no cover
@@ -66,8 +65,8 @@ def _assert_app_synced_healthy(app: Dict, name: str):
     status = app.get("status", {})
     sync_status = status.get("sync", {}).get("status")
     health_status = status.get("health", {}).get("status")
-    assert sync_status == "Synced", f"Application {name} sync status={sync_status}" + f" (expected Synced)"
-    assert health_status == "Healthy", f"Application {name} health status={health_status}" + f" (expected Healthy)"
+    assert sync_status == "Synced", f"Application {name} sync status={sync_status} (expected Synced)"
+    assert health_status == "Healthy", f"Application {name} health status={health_status} (expected Healthy)"
 
 
 @then(parsers.cfparse('Application "{app_name}" is Synced and Healthy'))

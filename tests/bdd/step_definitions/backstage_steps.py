@@ -5,7 +5,6 @@ import logging
 from kubernetes import client, config
 from kubernetes.stream import stream
 import requests
-import os
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -167,7 +166,7 @@ def step_then_service_health(context, service_name, path, port, timeout):
         try:
             pod_name = find_pod_for_label(context.core_api, context.namespace, sel, timeout=30)
             if pod_name:
-                label_used = sel
+                _ = sel
                 break
         except Exception as e:
             last_exc = e
@@ -338,7 +337,7 @@ def step_when_user_completes_sso_login(context):
         try:
             response = exec_in_pod(context.core_api, namespace, pod_name, env_cmd)
             has_client_id = bool(response and response.strip() and PLACEHOLDER_SECRET_VALUE not in response)
-        except:
+        except Exception:
             has_client_id = False
 
         if has_client_id:

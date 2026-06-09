@@ -1,7 +1,5 @@
 """Unit tests for stage metadata API."""
 
-import pytest
-from unittest.mock import MagicMock, patch
 from app.models import Stage, StageType, StageCategory
 
 
@@ -14,8 +12,6 @@ def test_stage_category_enum_values():
 
 def test_stage_model_has_new_fields():
     """Test that Stage model includes new fields."""
-    from datetime import datetime, timezone
-
     # Create a stage instance with new fields
     stage = Stage(
         name="Test Stage",

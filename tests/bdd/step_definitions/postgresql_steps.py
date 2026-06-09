@@ -12,7 +12,7 @@ scenarios("../features/postgresql-deployment.feature")
 @given("I have kubectl configured for the cluster")
 def kubectl_configured():
     """Verify kubectl is configured and can connect to the cluster."""
-    result = subprocess.run(["kubectl", "cluster-info"], capture_output=True, text=True)
+    _ = subprocess.run(["kubectl", "cluster-info"], capture_output=True, text=True)
     # In CI/CD without a real cluster, we skip the actual check
     # assert result.returncode == 0, "kubectl not configured or cluster not reachable"
     pass
@@ -21,7 +21,7 @@ def kubectl_configured():
 @given("the CloudNativePG Operator is installed")
 def cloudnativepg_installed():
     """Verify CloudNativePG Operator is installed in the cluster."""
-    result = subprocess.run(
+    _ = subprocess.run(
         ["kubectl", "get", "deployment", "-n", "cloudnativepg-system", "-o", "jsonpath={.items[*].metadata.name}"],
         capture_output=True,
         text=True,
@@ -34,7 +34,7 @@ def cloudnativepg_installed():
 @given("the CloudNativePG Operator is running")
 def cloudnativepg_running():
     """Verify CloudNativePG Operator is running and healthy."""
-    result = subprocess.run(
+    _ = subprocess.run(
         [
             "kubectl",
             "get",
@@ -65,7 +65,7 @@ def apply_focalboard_cluster():
 @then("the Operator must provision a 3-node HA cluster")
 def verify_ha_cluster():
     """Verify a 3-node HA cluster is provisioned."""
-    result = subprocess.run(
+    _ = subprocess.run(
         ["kubectl", "get", "cluster", "db-focalboard-dev", "-n", "fawkes", "-o", "jsonpath={.spec.instances}"],
         capture_output=True,
         text=True,

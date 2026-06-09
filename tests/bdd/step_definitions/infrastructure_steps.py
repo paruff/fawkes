@@ -3,7 +3,6 @@
 from pytest_bdd import scenarios, given, when, then, parsers
 import subprocess
 import boto3
-import time
 
 scenarios("../features/infrastructure_provisioning.feature")
 

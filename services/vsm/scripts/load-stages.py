@@ -18,10 +18,9 @@ Options:
 
 import argparse
 import logging
-import os
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict
 
 import yaml
 from sqlalchemy import create_engine
@@ -32,8 +31,8 @@ script_dir = Path(__file__).parent
 service_dir = script_dir.parent
 sys.path.insert(0, str(service_dir))
 
-from app.models import Base, Stage, StageType, StageCategory
-from app.database import DATABASE_URL
+from app.models import Stage, StageType, StageCategory  # noqa: E402
+from app.database import DATABASE_URL  # noqa: E402
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -212,7 +211,7 @@ def main():
     config = load_stages_config(str(config_path))
 
     # Get database connection
-    logger.info(f"Connecting to database...")
+    logger.info("Connecting to database...")
 
     try:
         engine = create_engine(DATABASE_URL)

@@ -162,11 +162,8 @@
 ### Quotes from Research
 
 > "I need a single place to see: What are we building? How's it going? What's the impact? Right now I have to cobble this together from 5 different tools."
-
 > "Platform metrics like 'deployment frequency' are great, but what I really need to know is: Are users adopting our features? Are they happy?"
-
 > "When engineering says 'the platform is down', I need to immediately understand: Which users are affected? What features are broken? When will it be fixed?"
-
 > "I love data, but I don't have time to become a Prometheus expert. Give me a dashboard that tells the story."
 
 ---

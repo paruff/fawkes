@@ -3,7 +3,6 @@
 from pytest_bdd import scenarios, given, when, then, parsers
 import subprocess
 import json
-import time
 import os
 
 scenarios("../features/azure_aks_provisioning.feature")
@@ -412,7 +411,7 @@ def cost_displayed(context):
 @then("cost optimization suggestions should be provided if over budget")
 def cost_suggestions(context):
     """Check for cost optimization suggestions"""
-    result = context.get("last_result")
+    _ = context.get("last_result")
     # If over budget, suggestions should be present
     # This is a soft check - suggestions may or may not appear
     pass
@@ -421,7 +420,7 @@ def cost_suggestions(context):
 @then(parsers.parse('the VNet should have address space "{cidr}"'))
 def vnet_address_space(context, cidr):
     """Verify VNet address space"""
-    network_profile = context.get("network_profile", {})
+    _ = context.get("network_profile", {})
     # In AKS, we don't directly see VNet config, but we can check pod CIDR
     pass  # This would require additional Azure API calls
 
@@ -522,7 +521,7 @@ def terraform_state_in_storage(context):
 @then("volume snapshots should be configured")
 def volume_snapshots_configured():
     """Verify volume snapshot configuration"""
-    result = run_cmd("kubectl get volumesnapshotclass", check=False)
+    _ = run_cmd("kubectl get volumesnapshotclass", check=False)
     # Volume snapshots may not be configured by default
     # This is an optional check
     pass

@@ -2,7 +2,7 @@ import pytest
 import os
 import sys
 import requests
-from kubernetes import client, config
+from kubernetes import config
 
 # Ensure repository root is importable when pytest rootdir is tests/bdd
 # Make repository root importable for step definitions
@@ -72,12 +72,12 @@ def dora_metrics_tracking(request):
 
     # After test completes, record metrics
     if dora_markers and hasattr(request.node, "rep_call"):
-        duration = request.node.rep_call.duration
-        outcome = request.node.rep_call.outcome
+        _ = request.node.rep_call.duration
+        _ = request.node.rep_call.outcome
 
         # Send to metrics collector
         for marker in dora_markers:
-            metric_type = marker.replace("dora-", "")
+            _ = marker.replace("dora-", "")
             # Implementation to send to your metrics system
 
 

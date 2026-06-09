@@ -2,7 +2,7 @@
 
 ## Issue
 
-**#26 - Deploy Fluent Bit and OpenSearch for logging**
+### #26 - Deploy Fluent Bit and OpenSearch for logging
 
 ## Implementation Decision
 

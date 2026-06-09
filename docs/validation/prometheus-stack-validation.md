@@ -388,7 +388,7 @@ The BDD tests include 28 scenarios covering:
 
 ### Issue Resolution
 
-**Issue #24: Deploy kube-prometheus-stack**
+### Issue #24: Deploy kube-prometheus-stack
 
 ✅ **RESOLVED**
 

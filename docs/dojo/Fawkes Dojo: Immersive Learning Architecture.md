@@ -766,7 +766,7 @@ passing_score: 40
 - Code quality checks
 - Performance benchmarks
 
-**2. Belt Certification Assessment**
+### 2. Belt Certification Assessment
 
 - Practical exam (hands-on challenges)
 - Written exam (comprehensive knowledge check)
