@@ -17,9 +17,19 @@
 | `code-reviewer` | Sonnet 4.6 | PR review |
 | `ci-debugger` | Sonnet 4.6 | CI failure diagnosis |
 | `security-agent` | Sonnet 4.6 | Security review |
+| `workflow-maintainer` | GPT-4.1 | Workflow DORA timestamps, pinning, permissions |
 
 ## How to use
 
 Issue → "Assign to Copilot" → select agent from dropdown.
+
+## OpenCode Skills (load via `skill` tool)
+
+| Skill | Use for |
+|---|---|
+| `github-actions` | Pin SHA, timeout-minutes, DORA timestamps |
+| `reusable-workflow-builder` | Create/modify reusable workflows |
+| `dora-instrumentor` | Add DORA metrics to workflows |
+| `workflow-security-audit` | Audit workflow security |
 
 For OpenCode workflows, load skills directly via the `skill` tool instead.
