@@ -1,8 +1,6 @@
 """Unit tests for VSM service API."""
 
-import pytest
 from fastapi.testclient import TestClient
-from datetime import datetime
 from app.main import app
 
 client = TestClient(app)

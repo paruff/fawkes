@@ -492,13 +492,9 @@ graph LR
 ### Direct Quotes from Interviews
 
 > "I wanted to contribute, but I wasn't sure if my code was good enough or if the platform team even wanted contributions." - Application Developer, 8 months tenure
-
 > "The CONTRIBUTING.md talked about code standards, but I wanted to contribute documentation. I didn't know if that was welcome." - Application Developer, 1 year tenure
-
 > "After my contribution was merged, I had no idea if anyone was actually using it. I would love to see metrics on that." - Application Developer, 1.5 years tenure
-
 > "The platform team was super supportive during my first contribution. It made me want to contribute more." - Application Developer, 10 months tenure
-
 > "I gave up on my contribution after the third round of review feedback. I felt like I was wasting their time." - Application Developer, 6 months tenure
 
 ### Validation with Personas

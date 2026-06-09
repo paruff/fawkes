@@ -664,14 +664,14 @@ Pod → Service → Ingress
 
 **Scenario**: Scale your application from 1 to 3 replicas
 
-**Step 1: Clone GitOps Repository**
+### Step 1: Clone GitOps Repository
 
 ```bash
 git clone https://github.com/fawkes-dojo/gitops-lab
 cd gitops-lab
 ```
 
-**Step 2: Make Change**
+### Step 2: Make Change
 
 ```bash
 # Edit deployment file
@@ -682,7 +682,7 @@ spec:
   replicas: 3  # Changed from 1
 ```
 
-**Step 3: Commit and Push**
+### Step 3: Commit and Push
 
 ```bash
 git add apps/dojo/learner-[yourname]/myapp/deployment.yaml
@@ -690,7 +690,7 @@ git commit -m "Scale myapp to 3 replicas for load testing"
 git push origin main
 ```
 
-**Step 4: Watch ArgoCD Sync**
+### Step 4: Watch ArgoCD Sync
 
 ```bash
 # ArgoCD detects change within 3 minutes (or immediately with webhooks)
@@ -701,7 +701,7 @@ git push origin main
 # 4. Sync Status returns to "Synced"
 ```
 
-**Step 5: Verify**
+### Step 5: Verify
 
 ```bash
 # Check pods
@@ -1193,7 +1193,7 @@ Next module:
 
 ## 🏆 Achievement Unlocked
 
-**🎓 GitOps Practitioner**
+### 🎓 GitOps Practitioner
 
 You've completed Module 3 and demonstrated:
 
@@ -1270,7 +1270,7 @@ This module is continuously improved based on learner feedback. If you have sugg
 
 ---
 
-**© 2025 Fawkes Platform | Licensed under MIT License**
+### © 2025 Fawkes Platform | Licensed under MIT License
 
 **Platform**: [https://fawkes.io](https://fawkes.io)
 **GitHub**: [https://github.com/paruff/fawkes](https://github.com/paruff/fawkes)

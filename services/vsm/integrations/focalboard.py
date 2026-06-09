@@ -15,14 +15,13 @@ from datetime import datetime, timezone
 from typing import Optional, Dict, Any, List
 from enum import Enum
 
-import httpx  # Required for future Focalboard API integration
+import httpx  # Required for future Focalboard API integration  # noqa: F401
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import WorkItem, Stage, StageTransition, WorkItemType
-from app.schemas import WorkItemCreate
 
 logger = logging.getLogger(__name__)
 

@@ -2,7 +2,6 @@
 Step definitions for Customer Advisory Board feature tests
 """
 
-import os
 import re
 from behave import given, when, then
 from pathlib import Path

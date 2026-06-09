@@ -16,7 +16,7 @@ API authentication details will be added here based on your requirements.
 
 Health check endpoint for the service.
 
-**Response**
+#### Response
 
 ```json
 {
@@ -25,7 +25,7 @@ Health check endpoint for the service.
 }
 ```
 
-**Status Codes**
+#### Status Codes
 
 - `200 OK`: Service is healthy
 - `503 Service Unavailable`: Service is unhealthy
@@ -34,7 +34,7 @@ Health check endpoint for the service.
 
 Prometheus metrics endpoint.
 
-**Response**
+#### Response
 
 Returns metrics in Prometheus format for scraping.
 
@@ -44,7 +44,7 @@ Returns metrics in Prometheus format for scraping.
 
 Welcome endpoint.
 
-**Response**
+#### Response
 
 ```json
 {

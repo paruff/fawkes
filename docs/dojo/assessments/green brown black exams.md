@@ -118,28 +118,28 @@ Pass:    119 points (85%)
 
 ### Hands-On Labs (90 minutes)
 
-**Lab 1: Complete Observability Stack (25 min)**
+### Lab 1: Complete Observability Stack (25 min)
 
 - Deploy Prometheus, Grafana, Loki, Tempo
 - Instrument application with metrics, logs, traces
 - Create dashboards showing golden signals
 - Set up alerting rules
 
-**Lab 2: DORA Metrics Dashboard (20 min)**
+### Lab 2: DORA Metrics Dashboard (20 min)
 
 - Implement automated DORA metrics collection
 - Build Grafana dashboard
 - Calculate current performance level
 - Identify improvement opportunities
 
-**Lab 3: Define SLOs (20 min)**
+### Lab 3: Define SLOs (20 min)
 
 - Choose appropriate SLIs for service
 - Set SLO thresholds (e.g., 99.9% availability)
 - Calculate error budget
 - Create error budget policy
 
-**Lab 4: Incident Response (25 min)**
+### Lab 4: Incident Response (25 min)
 
 - Respond to production incident
 - Use observability tools to diagnose
@@ -166,7 +166,7 @@ Pass:    136 points (85%)
 
 ### Written Exam Topics (50 Questions)
 
-**Section A: Platform as a Product (13 questions)**
+### Section A: Platform as a Product (13 questions)
 
 - Product management for platforms
 - User research methods
@@ -174,7 +174,7 @@ Pass:    136 points (85%)
 - Roadmap prioritization
 - Stakeholder management
 
-**Section B: Multi-Tenancy (12 questions)**
+### Section B: Multi-Tenancy (12 questions)
 
 - Namespace isolation strategies
 - Resource quotas and limits
@@ -182,7 +182,7 @@ Pass:    136 points (85%)
 - Self-service onboarding
 - Cost allocation
 
-**Section C: Security & Zero Trust (13 questions)**
+### Section C: Security & Zero Trust (13 questions)
 
 - Zero trust principles
 - Workload identity
@@ -190,7 +190,7 @@ Pass:    136 points (85%)
 - Policy-as-code (OPA)
 - Supply chain security (SBOM, signing)
 
-**Section D: Multi-Cloud (12 questions)**
+### Section D: Multi-Cloud (12 questions)
 
 - When multi-cloud makes sense
 - Abstraction strategies
@@ -200,7 +200,7 @@ Pass:    136 points (85%)
 
 ### Practical Assessments
 
-**Part 1: Architecture Design Challenge (90 min)**
+### Part 1: Architecture Design Challenge (90 min)
 
 You'll receive a scenario:
 
@@ -232,7 +232,7 @@ You'll receive a scenario:
 - Developer experience (20%)
 - Implementation feasibility (15%)
 
-**Part 2: Live Presentation (30 min)**
+### Part 2: Live Presentation (30 min)
 
 - Present architecture to review panel (3 senior engineers)
 - Defend design decisions
@@ -241,11 +241,11 @@ You'll receive a scenario:
 
 ---
 
-**Part 3: Implementation Challenge (60 min)**
+### Part 3: Implementation Challenge (60 min)
 
 Choose ONE:
 
-**Option A: Multi-Tenant Platform**
+### Option A: Multi-Tenant Platform
 
 - Configure namespaces for 3 teams
 - Set resource quotas (CPU, memory, storage)
@@ -253,7 +253,7 @@ Choose ONE:
 - Create self-service onboarding workflow
 - Test isolation and quota enforcement
 
-**Option B: Zero Trust Pipeline**
+### Option B: Zero Trust Pipeline
 
 - Implement workload identity (OIDC)
 - Configure image signing (Cosign)
@@ -261,7 +261,7 @@ Choose ONE:
 - Deploy with mTLS (Istio)
 - Verify end-to-end security
 
-**Option C: Multi-Cloud Deployment**
+### Option C: Multi-Cloud Deployment
 
 - Deploy same app to AWS and GCP
 - Use Crossplane for cloud abstraction
@@ -271,7 +271,7 @@ Choose ONE:
 
 ---
 
-**Part 4: Code Contribution (Outside assessment time)**
+### Part 4: Code Contribution (Outside assessment time)
 
 Contribute to Fawkes codebase:
 
@@ -291,7 +291,7 @@ Contribute to Fawkes codebase:
 
 ---
 
-**Part 5: Mentorship (Ongoing)**
+### Part 5: Mentorship (Ongoing)
 
 Mentor 2 White Belt learners:
 

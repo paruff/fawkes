@@ -404,13 +404,9 @@ graph LR
 ### Direct Quotes from Interviews
 
 > "My first week was overwhelming. I didn't know where to start, and the documentation assumed I already knew things I didn't." - Application Developer, 3 months tenure
-
 > "The environment setup took me two full days. I kept hitting issues that weren't in the docs. My teammate finally just screen-shared and walked me through it." - Application Developer, 2 months tenure
-
 > "I wish there was a clear checklist: 'Do step 1, then step 2, then step 3.' Instead, I had to piece together information from multiple places." - Application Developer, 1 month tenure
-
 > "The platform training was good, but it was a lot to absorb in one sitting. Hands-on labs right after would have helped it stick." - Application Developer, 4 months tenure
-
 > "I'm still discovering platform features months later that would have saved me time if I'd known about them earlier." - Application Developer, 6 months tenure
 
 ### Validation with Personas

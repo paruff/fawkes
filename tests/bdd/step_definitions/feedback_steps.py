@@ -216,7 +216,7 @@ def step_request_stats(context):
         context.response = response
         if response.status_code == 200:
             context.stats = response.json()
-            logger.info(f"Retrieved feedback stats")
+            logger.info("Retrieved feedback stats")
     except Exception as e:
         logger.error(f"Error getting stats: {e}")
         context.response = None
@@ -958,7 +958,7 @@ def step_bot_metrics_endpoint(context):
 
 
 @then("metrics should include {metric_name}")
-def step_metrics_include(context, metric_name):
+def step_metrics_include_code_check(context, metric_name):
     """Verify specific metric exists."""
     # This is a code check since we can't easily test metrics in BDD
     service_code_path = "services/feedback/app/main.py"
