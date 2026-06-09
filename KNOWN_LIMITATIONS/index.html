@@ -2835,7 +2835,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
+      <a href="../architecture.md" class="md-nav__link">
         
   
   
@@ -5654,31 +5654,17 @@ Link to the tracking issue where one exists.</p>
 </blockquote>
 <hr />
 <h2 id="kl-01-no-terraform-remote-backend">KL-01 — No Terraform Remote Backend</h2>
-<p><strong>Status: RESOLVED</strong> — Remote state backend modules, environment backend configs, and a
-bootstrap script have been added. See below for details.</p>
-<p><strong>Resolution:</strong></p>
+<p><strong>Description:</strong> All Terraform state is stored locally (<code>.tfstate</code> files on disk). There
+is no remote backend (S3 + DynamoDB, Azure Blob, Terraform Cloud, etc.) configured for
+any module under <code>infra/</code>.</p>
+<p><strong>Impact:</strong></p>
 <ul>
-<li><strong>AWS</strong>: <code>infra/terraform/modules/aws/state-backend/</code> provisions an S3 bucket (versioned,
-  KMS-encrypted, TLS-enforced) + DynamoDB lock table (PITR enabled) per environment.</li>
-<li><strong>Azure</strong>: <code>infra/terraform/modules/azure/state-backend/</code> provisions an Azure Storage
-  Account (GRS, versioning, soft-delete 30 days) + private <code>tfstate</code> container.</li>
-<li><strong>Environment configs</strong>: <code>infra/terraform/environments/</code> contains per-environment
-  <code>backend.hcl</code> files for both AWS and Azure.</li>
-<li><strong>Bootstrap script</strong>: <code>scripts/bootstrap-terraform-state.sh</code> creates the state
-  infrastructure before Terraform itself can run.</li>
-<li><strong>Workspace strategy</strong>: documented in <code>infra/terraform/environments/README.md</code>.</li>
+<li>State files may be committed to Git accidentally, exposing sensitive resource metadata.</li>
+<li>Concurrent <code>terraform apply</code> runs will corrupt state — no state locking is in place.</li>
+<li>Disaster recovery of infrastructure state is not possible without the local file.</li>
+<li>Collaborative IaC workflows (multiple engineers or CI) are unsafe without a shared backend.</li>
 </ul>
-<p>To bootstrap a new environment:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># AWS</span>
-./scripts/bootstrap-terraform-state.sh<span class="w"> </span>--cloud<span class="w"> </span>aws<span class="w"> </span>--environment<span class="w"> </span>dev<span class="w"> </span>--region<span class="w"> </span>us-east-1
-
-<span class="c1"># Azure</span>
-./scripts/bootstrap-terraform-state.sh<span class="w"> </span>--cloud<span class="w"> </span>azure<span class="w"> </span>--environment<span class="w"> </span>dev<span class="w"> </span>--location<span class="w"> </span>eastus2
-</code></pre></div>
-<p>Then initialise any root module:</p>
-<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>init<span class="w"> </span>-backend-config<span class="o">=</span>infra/terraform/environments/dev/backend.hcl
-</code></pre></div>
-<p><strong>Tracking:</strong> GAP-7 — Closed by PR implementing issue #119.</p>
+<p><strong>Tracking:</strong> GAP-7 — Migrate Terraform state to a remote backend with locking.</p>
 <hr />
 <h2 id="kl-02-weaviate-vector-database-required-for-rag-service-no-local-fallback">KL-02 — Weaviate Vector Database Required for RAG Service (No Local Fallback)</h2>
 <p><strong>Description:</strong> The RAG (Retrieval-Augmented Generation) service depends on a running
