@@ -224,14 +224,16 @@ async def update_sentiment_metrics(conn: asyncpg.Connection):
     """
     try:
         # Check if sentiment column exists
-        has_sentiment = await conn.fetchval("""
+        has_sentiment = await conn.fetchval(
+            """
             SELECT EXISTS (
                 SELECT 1
                 FROM information_schema.columns
                 WHERE table_name='feedback'
                 AND column_name='sentiment'
             )
-        """)
+        """
+        )
 
         if not has_sentiment:
             logger.debug("Sentiment column not available, skipping sentiment metrics")
@@ -274,14 +276,16 @@ async def update_time_to_action_metrics(conn: asyncpg.Connection):
     """
     try:
         # Check if status_changed_at column exists
-        has_status_changed_at = await conn.fetchval("""
+        has_status_changed_at = await conn.fetchval(
+            """
             SELECT EXISTS (
                 SELECT 1
                 FROM information_schema.columns
                 WHERE table_name='feedback'
                 AND column_name='status_changed_at'
             )
-        """)
+        """
+        )
 
         if not has_status_changed_at:
             logger.debug("status_changed_at column not available, skipping time-to-action metrics")

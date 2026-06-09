@@ -107,7 +107,8 @@ def upgrade() -> None:
     op.create_index("idx_insight_tags_tag_id", "insight_tags", ["tag_id"], unique=False)
 
     # Insert default categories
-    op.execute("""
+    op.execute(
+        """
         INSERT INTO categories (name, slug, description, color, icon, created_at, updated_at) VALUES
         ('Technical', 'technical', 'Technical insights and learnings', '#3B82F6', 'code', NOW(), NOW()),
         ('Process', 'process', 'Process improvements and best practices', '#10B981', 'cog', NOW(), NOW()),
@@ -115,10 +116,12 @@ def upgrade() -> None:
         ('Product', 'product', 'Product development and features', '#8B5CF6', 'lightbulb', NOW(), NOW()),
         ('Security', 'security', 'Security-related insights', '#EF4444', 'shield', NOW(), NOW()),
         ('Performance', 'performance', 'Performance optimization insights', '#06B6D4', 'zap', NOW(), NOW());
-    """)
+    """
+    )
 
     # Insert default tags
-    op.execute("""
+    op.execute(
+        """
         INSERT INTO tags (name, slug, description, color, created_at) VALUES
         ('Lesson Learned', 'lesson-learned', 'Key lesson from experience', '#10B981', NOW()),
         ('Best Practice', 'best-practice', 'Recommended best practice', '#3B82F6', NOW()),
@@ -128,7 +131,8 @@ def upgrade() -> None:
         ('Documentation', 'documentation', 'Documentation-related', '#6B7280', NOW()),
         ('Testing', 'testing', 'Testing-related insight', '#8B5CF6', NOW()),
         ('Deployment', 'deployment', 'Deployment-related insight', '#06B6D4', NOW());
-    """)
+    """
+    )
 
 
 def downgrade() -> None:

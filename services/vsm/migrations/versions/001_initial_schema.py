@@ -94,7 +94,8 @@ def upgrade() -> None:
     op.create_index(op.f("ix_flow_metrics_date"), "flow_metrics", ["date"], unique=False)
 
     # Insert default stages
-    op.execute("""
+    op.execute(
+        """
         INSERT INTO stages (name, "order", type, created_at) VALUES
         ('Backlog', 1, 'backlog', NOW()),
         ('Analysis', 2, 'analysis', NOW()),
@@ -102,7 +103,8 @@ def upgrade() -> None:
         ('Testing', 4, 'testing', NOW()),
         ('Deployment', 5, 'deployment', NOW()),
         ('Production', 6, 'production', NOW());
-    """)
+    """
+    )
 
 
 def downgrade() -> None:

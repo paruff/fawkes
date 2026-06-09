@@ -28,9 +28,7 @@ groups:
         expr: space_lead_time_hours
 
       - record: space_performance_score
-        expr: (
-          clamp_min(space_deployment_frequency, 0) / 2 * 100
-        ) / 2
+        expr: (clamp_min(space_deployment_frequency, 0) / 2 * 100) / 2
 
       # Activity dimension
       - record: space_active_developers_count
@@ -53,9 +51,7 @@ groups:
         expr: space_pr_comments_avg
 
       - record: space_cross_team_pr_percentage
-        expr: (
-          space_cross_team_collaboration / clamp_min(space_pull_requests_total, 1)
-        ) * 100
+        expr: (space_cross_team_collaboration / clamp_min(space_pull_requests_total, 1)) * 100
 
       - record: space_documentation_contributions_total
         expr: space_commits_total

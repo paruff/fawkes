@@ -18,9 +18,7 @@ def step_get_path(context, path):
 
 @then("the response status is {status:d}")
 def step_response_status(context, status):
-    assert context.response.status_code == status, (
-        f"Expected {status}, got {context.response.status_code}"
-    )
+    assert context.response.status_code == status, f"Expected {status}, got {context.response.status_code}"
 
 
 @then('the response body contains "{text}"')

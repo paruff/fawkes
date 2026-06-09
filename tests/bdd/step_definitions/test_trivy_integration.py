@@ -24,9 +24,11 @@ DEFAULT_NAMESPACE = "fawkes"
 @given("Jenkins is deployed and accessible")
 def step_jenkins_deployed(context):
     """Verify Jenkins is deployed and accessible."""
-    context.execute_steps("""
+    context.execute_steps(
+        """
         Given I have kubectl configured for the cluster
-    """)
+    """
+    )
 
     namespace = getattr(context, "namespace", DEFAULT_NAMESPACE)
 
