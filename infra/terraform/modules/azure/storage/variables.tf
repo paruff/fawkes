@@ -255,12 +255,12 @@ variable "lifecycle_rules" {
     prefix_match = optional(list(string), [])
     blob_types   = optional(list(string), ["blockBlob"])
     base_blob = optional(object({
-      tier_to_cool_after_days                        = optional(number)
-      tier_to_archive_after_days                     = optional(number)
-      delete_after_days                              = optional(number)
-      tier_to_cool_after_days_since_last_access      = optional(number)
-      tier_to_archive_after_days_since_last_access   = optional(number)
-      delete_after_days_since_last_access            = optional(number)
+      tier_to_cool_after_days                      = optional(number)
+      tier_to_archive_after_days                   = optional(number)
+      delete_after_days                            = optional(number)
+      tier_to_cool_after_days_since_last_access    = optional(number)
+      tier_to_archive_after_days_since_last_access = optional(number)
+      delete_after_days_since_last_access          = optional(number)
     }))
     snapshot = optional(object({
       tier_to_cool_after_days    = optional(number)

@@ -7,11 +7,9 @@ integrated into the CI/CD pipeline with axe-core and Lighthouse CI.
 
 import json
 import os
-import subprocess
 from pathlib import Path
 
 import pytest
-import requests
 from pytest_bdd import given, when, then, scenarios, parsers
 
 # Load scenarios from feature file

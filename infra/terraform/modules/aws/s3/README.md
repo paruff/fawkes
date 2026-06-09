@@ -29,7 +29,7 @@ module "s3" {
       id      = "archive-old-versions"
       enabled = true
       prefix  = "logs/"
-      
+
       transitions = [
         {
           days          = 30
@@ -40,7 +40,7 @@ module "s3" {
           storage_class = "GLACIER"
         }
       ]
-      
+
       expiration_days = 365
       noncurrent_version_expiration_days = 90
       noncurrent_version_transitions = []
@@ -57,49 +57,50 @@ module "s3" {
 
 ## Requirements
 
-| Name | Version |
-|------|---------|
+| Name      | Version  |
+| --------- | -------- |
 | terraform | >= 1.6.0 |
-| aws | >= 5.0.0 |
+| aws       | >= 5.0.0 |
 
 ## Inputs
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| bucket_name | Name of the S3 bucket | `string` | n/a | yes |
-| force_destroy | Allow bucket deletion with objects | `bool` | `false` | no |
-| enable_versioning | Enable object versioning | `bool` | `false` | no |
-| sse_algorithm | Encryption algorithm (AES256 or aws:kms) | `string` | `"AES256"` | no |
-| kms_key_id | KMS key ID for encryption | `string` | `null` | no |
-| enable_logging | Enable access logging | `bool` | `false` | no |
-| lifecycle_rules | Lifecycle rules | `list(object)` | `[]` | no |
-| bucket_policy | JSON bucket policy | `string` | `null` | no |
-| cors_rules | CORS configuration | `list(object)` | `[]` | no |
-| enable_object_lock | Enable object lock | `bool` | `false` | no |
-| replication_configuration | Replication configuration | `object` | `null` | no |
-| tags | Tags to apply to resources | `map(string)` | `{}` | no |
+| Name                      | Description                              | Type           | Default    | Required |
+| ------------------------- | ---------------------------------------- | -------------- | ---------- | :------: |
+| bucket_name               | Name of the S3 bucket                    | `string`       | n/a        |   yes    |
+| force_destroy             | Allow bucket deletion with objects       | `bool`         | `false`    |    no    |
+| enable_versioning         | Enable object versioning                 | `bool`         | `false`    |    no    |
+| sse_algorithm             | Encryption algorithm (AES256 or aws:kms) | `string`       | `"AES256"` |    no    |
+| kms_key_id                | KMS key ID for encryption                | `string`       | `null`     |    no    |
+| enable_logging            | Enable access logging                    | `bool`         | `false`    |    no    |
+| lifecycle_rules           | Lifecycle rules                          | `list(object)` | `[]`       |    no    |
+| bucket_policy             | JSON bucket policy                       | `string`       | `null`     |    no    |
+| cors_rules                | CORS configuration                       | `list(object)` | `[]`       |    no    |
+| enable_object_lock        | Enable object lock                       | `bool`         | `false`    |    no    |
+| replication_configuration | Replication configuration                | `object`       | `null`     |    no    |
+| tags                      | Tags to apply to resources               | `map(string)`  | `{}`       |    no    |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| bucket_id | S3 bucket name |
-| bucket_arn | S3 bucket ARN |
-| bucket_domain_name | Bucket domain name |
+| Name                        | Description                 |
+| --------------------------- | --------------------------- |
+| bucket_id                   | S3 bucket name              |
+| bucket_arn                  | S3 bucket ARN               |
+| bucket_domain_name          | Bucket domain name          |
 | bucket_regional_domain_name | Bucket regional domain name |
-| logs_bucket_id | Logging bucket name |
-| logs_bucket_arn | Logging bucket ARN |
+| logs_bucket_id              | Logging bucket name         |
+| logs_bucket_arn             | Logging bucket ARN          |
 
 ## Lifecycle Policy Examples
 
 ### Archive to Glacier
+
 ```hcl
 lifecycle_rules = [
   {
     id      = "archive-policy"
     enabled = true
     prefix  = "archive/"
-    
+
     transitions = [
       {
         days          = 30
@@ -110,7 +111,7 @@ lifecycle_rules = [
         storage_class = "GLACIER"
       }
     ]
-    
+
     expiration_days = null
     noncurrent_version_expiration_days = null
     noncurrent_version_transitions = []
@@ -119,13 +120,14 @@ lifecycle_rules = [
 ```
 
 ### Delete Old Versions
+
 ```hcl
 lifecycle_rules = [
   {
     id      = "cleanup-old-versions"
     enabled = true
     prefix  = null
-    
+
     transitions = []
     expiration_days = null
     noncurrent_version_expiration_days = 90
@@ -135,13 +137,14 @@ lifecycle_rules = [
 ```
 
 ### Temporary Files Cleanup
+
 ```hcl
 lifecycle_rules = [
   {
     id      = "temp-files"
     enabled = true
     prefix  = "temp/"
-    
+
     transitions = []
     expiration_days = 7
     noncurrent_version_expiration_days = null
@@ -153,6 +156,7 @@ lifecycle_rules = [
 ## Bucket Policy Examples
 
 ### Allow CloudFront Access
+
 ```hcl
 bucket_policy = jsonencode({
   Version = "2012-10-17"
@@ -171,6 +175,7 @@ bucket_policy = jsonencode({
 ```
 
 ### Enforce SSL
+
 ```hcl
 bucket_policy = jsonencode({
   Version = "2012-10-17"
@@ -241,5 +246,6 @@ $0.023/GB   $0.0125/GB   $0.004/GB    $0.00099/GB
 ## Examples
 
 See the [examples directory](../examples/) for complete usage examples:
+
 - [s3](../examples/s3/) - S3 bucket configuration
 - [complete](../examples/complete/) - Complete AWS infrastructure with VPC, EKS, RDS, and S3

@@ -6,14 +6,14 @@ Welcome to the Fawkes Internal Developer Platform. Choose the path below that ma
 
 ## Which path is right for you?
 
-| | **Path A — Evaluate Locally** | **Path B — Deploy to Cloud** | **Path C — Enterprise Multi-Cloud** |
-|---|---|---|---|
-| **Goal** | Explore the platform without cloud costs | Run a real platform on AWS EKS | Multi-cloud or enterprise-scale deployment |
-| **Time** | ~20 minutes | 2–4 hours | 1–2 days |
-| **Cloud account** | Not required | AWS account required | AWS + Azure or GCP |
-| **Kubernetes** | k3d (local, auto-provisioned) | Amazon EKS (provisioned by Terraform) | Managed K8s per cloud |
-| **Components** | 5 core components | Full core platform | Full platform + enterprise extensions |
-| **Best for** | Evaluation, learning, demos | Teams adopting Fawkes | Platform teams operating at scale |
+|                   | **Path A — Evaluate Locally**            | **Path B — Deploy to Cloud**          | **Path C — Enterprise Multi-Cloud**        |
+| ----------------- | ---------------------------------------- | ------------------------------------- | ------------------------------------------ |
+| **Goal**          | Explore the platform without cloud costs | Run a real platform on AWS EKS        | Multi-cloud or enterprise-scale deployment |
+| **Time**          | ~20 minutes                              | 2–4 hours                             | 1–2 days                                   |
+| **Cloud account** | Not required                             | AWS account required                  | AWS + Azure or GCP                         |
+| **Kubernetes**    | k3d (local, auto-provisioned)            | Amazon EKS (provisioned by Terraform) | Managed K8s per cloud                      |
+| **Components**    | 5 core components                        | Full core platform                    | Full platform + enterprise extensions      |
+| **Best for**      | Evaluation, learning, demos              | Teams adopting Fawkes                 | Platform teams operating at scale          |
 
 Jump to: [Path A](#path-a-evaluate-locally) · [Path B](#path-b-deploy-to-cloud-aws-eks) · [Path C](#path-c-enterprise-multi-cloud)
 
@@ -27,14 +27,14 @@ Jump to: [Path A](#path-a-evaluate-locally) · [Path B](#path-b-deploy-to-cloud-
 
 ### Prerequisites
 
-| Tool | Minimum version | Install guide |
-|---|---|---|
-| Docker | 24+ | <https://docs.docker.com/get-docker/> |
-| k3d | 5+ | <https://k3d.io/#installation> |
-| kubectl | 1.28+ | <https://kubernetes.io/docs/tasks/tools/> |
-| Helm | 3.12+ | <https://helm.sh/docs/intro/install/> |
-| make | any | Pre-installed on macOS/Linux |
-| Git | any | Pre-installed on most systems |
+| Tool    | Minimum version | Install guide                             |
+| ------- | --------------- | ----------------------------------------- |
+| Docker  | 24+             | <https://docs.docker.com/get-docker/>     |
+| k3d     | 5+              | <https://k3d.io/#installation>            |
+| kubectl | 1.28+           | <https://kubernetes.io/docs/tasks/tools/> |
+| Helm    | 3.12+           | <https://helm.sh/docs/intro/install/>     |
+| make    | any             | Pre-installed on macOS/Linux              |
+| Git     | any             | Pre-installed on most systems             |
 
 **Resource requirements:** 4 CPU cores, 8 GB RAM, 20 GB free disk space.
 
@@ -42,13 +42,13 @@ Jump to: [Path A](#path-a-evaluate-locally) · [Path B](#path-b-deploy-to-cloud-
 
 Path A brings up the **five core components** needed to experience the platform:
 
-| Component | Purpose |
-|---|---|
-| ArgoCD | GitOps controller — reconciles platform state |
-| Backstage | Developer portal and Dojo learning hub |
-| Prometheus + Grafana | Metrics collection and DORA dashboards |
-| Vault (dev mode) | Secrets management (local, non-persistent) |
-| Sample application | Demonstrates CI/CD and DORA metrics |
+| Component            | Purpose                                       |
+| -------------------- | --------------------------------------------- |
+| ArgoCD               | GitOps controller — reconciles platform state |
+| Backstage            | Developer portal and Dojo learning hub        |
+| Prometheus + Grafana | Metrics collection and DORA dashboards        |
+| Vault (dev mode)     | Secrets management (local, non-persistent)    |
+| Sample application   | Demonstrates CI/CD and DORA metrics           |
 
 ### Steps
 
@@ -73,11 +73,11 @@ make dev-down
 
 After `make dev-up` completes, `make dev-status` prints the local URLs. Typical defaults:
 
-| Service | URL | Default credentials |
-|---|---|---|
-| Backstage | <http://backstage.localhost> | GitHub OAuth (local dev app) |
-| ArgoCD | <http://argocd.localhost> | `admin` / printed by `make dev-status` |
-| Grafana | <http://grafana.localhost> | `admin` / `admin` |
+| Service   | URL                          | Default credentials                    |
+| --------- | ---------------------------- | -------------------------------------- |
+| Backstage | <http://backstage.localhost> | GitHub OAuth (local dev app)           |
+| ArgoCD    | <http://argocd.localhost>    | `admin` / printed by `make dev-status` |
+| Grafana   | <http://grafana.localhost>   | `admin` / `admin`                      |
 
 ### Next steps after Path A
 
@@ -95,13 +95,13 @@ After `make dev-up` completes, `make dev-status` prints the local URLs. Typical 
 
 ### Prerequisites
 
-| Tool | Minimum version | Install guide |
-|---|---|---|
-| AWS CLI | 2.x | <https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html> |
-| Terraform | 1.6+ | <https://developer.hashicorp.com/terraform/install> |
-| kubectl | 1.28+ | <https://kubernetes.io/docs/tasks/tools/> |
-| Helm | 3.12+ | <https://helm.sh/docs/intro/install/> |
-| Git | any | Pre-installed on most systems |
+| Tool      | Minimum version | Install guide                                                         |
+| --------- | --------------- | --------------------------------------------------------------------- |
+| AWS CLI   | 2.x             | <https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html> |
+| Terraform | 1.6+            | <https://developer.hashicorp.com/terraform/install>                   |
+| kubectl   | 1.28+           | <https://kubernetes.io/docs/tasks/tools/>                             |
+| Helm      | 3.12+           | <https://helm.sh/docs/intro/install/>                                 |
+| Git       | any             | Pre-installed on most systems                                         |
 
 **AWS account requirements:**
 
@@ -115,17 +115,17 @@ After `make dev-up` completes, `make dev-status` prints the local URLs. Typical 
 
 In addition to the Tier 1 components, Path B deploys the full platform:
 
-| Component | Purpose |
-|---|---|
-| Amazon EKS | Managed Kubernetes control plane |
-| Amazon RDS (PostgreSQL) | Persistent storage for Backstage, SonarQube |
-| Jenkins | CI/CD pipelines with golden path templates |
-| SonarQube | Static application security testing (SAST) |
-| OpenSearch | Log aggregation and search |
-| DevLake | DORA metrics aggregation |
-| External Secrets Operator | Syncs secrets from Vault/AWS Secrets Manager |
-| Cert-manager + Let's Encrypt | Automated TLS certificates |
-| Mattermost | Team collaboration and ChatOps |
+| Component                    | Purpose                                      |
+| ---------------------------- | -------------------------------------------- |
+| Amazon EKS                   | Managed Kubernetes control plane             |
+| Amazon RDS (PostgreSQL)      | Persistent storage for Backstage, SonarQube  |
+| Jenkins                      | CI/CD pipelines with golden path templates   |
+| SonarQube                    | Static application security testing (SAST)   |
+| OpenSearch                   | Log aggregation and search                   |
+| DevLake                      | DORA metrics aggregation                     |
+| External Secrets Operator    | Syncs secrets from Vault/AWS Secrets Manager |
+| Cert-manager + Let's Encrypt | Automated TLS certificates                   |
+| Mattermost                   | Team collaboration and ChatOps               |
 
 ### Steps
 
@@ -187,11 +187,11 @@ make test-bdd
 
 ### Guides by cloud provider
 
-| Cloud | Guide |
-|---|---|
-| AWS (multi-account) | [AWS Deployment Guide](AWS_deployment_guide.md) |
-| Azure AKS | [Azure Ingress Setup](azure-ingress-setup.md) · [Azure Ingress Quick Start](azure-ingress-quickstart.md) |
-| Multi-cloud | [docs/deployment/](deployment/) directory |
+| Cloud               | Guide                                                                                                    |
+| ------------------- | -------------------------------------------------------------------------------------------------------- |
+| AWS (multi-account) | [AWS Deployment Guide](AWS_deployment_guide.md)                                                          |
+| Azure AKS           | [Azure Ingress Setup](azure-ingress-setup.md) · [Azure Ingress Quick Start](azure-ingress-quickstart.md) |
+| Multi-cloud         | [docs/deployment/](deployment/) directory                                                                |
 
 ### Enterprise features
 

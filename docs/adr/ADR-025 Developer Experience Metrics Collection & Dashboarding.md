@@ -189,32 +189,32 @@ We will build a **three-tier DevEx Dashboard system** in Grafana that serves thr
 
 ### Key Features
 
-**1. Single Number Health Indicators**
+### 1. Single Number Health Indicators
 
 - NPS (leading indicator of platform health)
 - Platform ROI (business value in dollars)
 - Overall SPACE score (composite health metric)
 
-**2. Traffic Light System**
+### 2. Traffic Light System
 
 - 🟢 Green: Exceeds target
 - 🟡 Yellow: Meets target
 - 🔴 Red: Below target
 - All thresholds configurable
 
-**3. Automatic Insights**
+### 3. Automatic Insights
 
 - “Attention Required” panel auto-generated from anomaly detection
 - “Wins This Month” celebrates progress
 - No need to manually interpret charts
 
-**4. Trend Visibility**
+### 4. Trend Visibility
 
 - Quarterly trends show trajectory
 - Compare current quarter to previous
 - Project forward based on current trend
 
-**5. Benchmarking**
+### 5. Benchmarking
 
 - Compare to industry standards (DORA research)
 - Show peer company comparisons (if available)

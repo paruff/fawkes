@@ -28,14 +28,14 @@ This is **Fawkes**, an Internal Product Delivery Platform with integrated dojo l
 Before writing any code, check `AGENTS.md` → Language & Layer Map.
 The wrong language in the wrong directory will be rejected in review.
 
-| Directory | Language | Linter |
-|---|---|---|
-| `services/` | Python (FastAPI) | `ruff` + `black` + `mypy` |
-| `infra/` | HCL | `tflint` + `terraform fmt` |
-| `platform/` | YAML + Helm | `helm lint` + `yamllint` |
-| `scripts/` | Bash / Python | `shellcheck` / `ruff` + `black` |
-| `tests/` | Python / Go | `pytest` / `go test` |
-| `docs/` | Markdown | `markdownlint` |
+| Directory   | Language         | Linter                          |
+| ----------- | ---------------- | ------------------------------- |
+| `services/` | Python (FastAPI) | `ruff` + `black` + `mypy`       |
+| `infra/`    | HCL              | `tflint` + `terraform fmt`      |
+| `platform/` | YAML + Helm      | `helm lint` + `yamllint`        |
+| `scripts/`  | Bash / Python    | `shellcheck` / `ruff` + `black` |
+| `tests/`    | Python / Go      | `pytest` / `go test`            |
+| `docs/`     | Markdown         | `markdownlint`                  |
 
 ---
 
@@ -52,30 +52,36 @@ The wrong language in the wrong directory will be rejected in review.
 ## Hard Rules
 
 ### All Languages
+
 - Failing tests → fix the code, never delete the test
 - No secrets committed — use `${{ secrets.NAME }}` in Actions, env vars elsewhere
 - Conventional commits: `feat(scope):`, `fix(scope):`, `test(scope):`, `docs(scope):`, `chore(scope):`
 
 ### Python (FastAPI) (services/)
+
 > **Note:** Go is not currently used in `services/`. Go is only used in `tests/terratest/` for infrastructure tests.
+
 - `ruff` + `black` + `mypy` must pass
 - Type hints on all function signatures
 - Errors: raise explicit exceptions with context — never silently discard
 - No global mutable state
 
 ### Terraform (infra/)
+
 - `tflint` + `terraform fmt` + `terraform validate` must pass
 - No hardcoded credentials, account IDs, or regions
 - All variables need `description` fields
 - `terraform plan` in CI before any `apply`
 
 ### Helm / YAML (platform/, charts/)
+
 - `helm lint` must pass
 - No `latest` image tags — pinned versions only
 - Resource limits required on every container
 - Labels: `app`, `version`, `component`, `managed-by: fawkes`
 
 ### Bash (scripts/)
+
 - `set -euo pipefail` at top of every script
 - `shellcheck` must pass
 - No hardcoded paths
@@ -85,6 +91,7 @@ The wrong language in the wrong directory will be rejected in review.
 ## DORA CI Logging (Required on All Workflows)
 
 Every CI job must include:
+
 ```yaml
 - run: echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ) sha:${{ github.sha }}"
 # ... job steps ...
@@ -479,7 +486,7 @@ feature velocity.
 
 ~30% of developers do not trust AI-generated code (DORA 2025). To close the gap:
 
-- Add inline comments explaining *why* a pattern was chosen, not just *what* it does
+- Add inline comments explaining _why_ a pattern was chosen, not just _what_ it does
 - Reference the existing pattern it follows (e.g., "follows `services/foo/app/routes.py`")
 - Include test coverage that demonstrates the behaviour — not just that it runs
 

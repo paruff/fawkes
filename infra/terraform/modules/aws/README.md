@@ -107,7 +107,7 @@ module "s3" {
       id      = "archive-policy"
       enabled = true
       prefix  = "logs/"
-      
+
       transitions = [
         {
           days          = 30
@@ -118,7 +118,7 @@ module "s3" {
           storage_class = "GLACIER"
         }
       ]
-      
+
       expiration_days                    = 365
       noncurrent_version_expiration_days = 90
       noncurrent_version_transitions     = []
@@ -177,6 +177,7 @@ locals {
 ```
 
 Each resource also gets a `Cost` tag for granular cost tracking:
+
 - `eks-control-plane` - EKS control plane costs
 - `eks-worker-nodes` - EC2 instances for EKS
 - `eks-addons` - EKS add-ons and IRSA roles
@@ -232,6 +233,7 @@ Complete examples are available in the [examples directory](./examples/):
 ## Support
 
 For questions or issues:
+
 - Review individual module READMEs for detailed documentation
 - Check examples for reference implementations
 - Consult [ADR-005: Terraform Decision](../../../../docs/adr/ADR-005%20terraform.md)

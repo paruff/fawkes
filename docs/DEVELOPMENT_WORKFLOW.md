@@ -25,23 +25,28 @@ Every feature starts with a GitHub issue. Use this template:
 
 ```markdown
 ## Summary
+
 One-sentence description of the change.
 
 ## Motivation
+
 Why this change is needed. Link to DORA research if applicable.
 
 ## Scope
+
 - **Layer**: services / infra / platform / scripts / docs
 - **Files to edit**: [explicit list]
 - **Reference file**: [path to canonical example, if applicable]
 
 ## Acceptance Criteria
+
 - [ ] Criterion 1
 - [ ] Criterion 2
 - [ ] Linters pass
 - [ ] Tests added/updated
 
 ## Suggested Model: gemma4:e4b
+
 **Task type**: single-file bug / multi-file refactor / docs / YAML
 ```
 
@@ -49,18 +54,18 @@ Why this change is needed. Link to DORA research if applicable.
 
 gemma4:e4b is the **free default** model. Use it for ALL tasks unless a higher tier is explicitly justified (see `AGENTS.md` §10 Model Selection Policy).
 
-| Task Type | Model | Cost |
-|-----------|-------|------|
-| Python single-file bug fix | gemma4:e4b | 0 |
-| Python multi-file refactor | gemma4:e4b | 0 |
-| FastAPI unit tests | gemma4:e4b | 0 |
-| Fix NameError / import order | gemma4:e4b | 0 |
-| Update .gitignore | gemma4:e4b | 0 |
-| Write Markdown docs | gemma4:e4b | 0 |
-| GitHub Actions YAML | gemma4:e4b | 0 |
-| Terraform single module | gemma4:e4b | 0 |
-| Helm / Kubernetes manifests | gemma4:e4b | 0 |
-| Bash script refactoring | gemma4:e4b | 0 |
+| Task Type                    | Model      | Cost |
+| ---------------------------- | ---------- | ---- |
+| Python single-file bug fix   | gemma4:e4b | 0    |
+| Python multi-file refactor   | gemma4:e4b | 0    |
+| FastAPI unit tests           | gemma4:e4b | 0    |
+| Fix NameError / import order | gemma4:e4b | 0    |
+| Update .gitignore            | gemma4:e4b | 0    |
+| Write Markdown docs          | gemma4:e4b | 0    |
+| GitHub Actions YAML          | gemma4:e4b | 0    |
+| Terraform single module      | gemma4:e4b | 0    |
+| Helm / Kubernetes manifests  | gemma4:e4b | 0    |
+| Bash script refactoring      | gemma4:e4b | 0    |
 
 ---
 
@@ -84,6 +89,7 @@ main ─────────────────────────
 ```
 
 **Rules:**
+
 1. **Branch per feature** — every change gets its own branch
 2. **Naming convention**: `<type>/<short-description>`
    - `feat/add-health-endpoint`
@@ -127,6 +133,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 **Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `ci`, `perf`
 
 **Examples:**
+
 ```
 feat(service): add /health endpoint to tracer-bullet
 fix(ci): pin action versions to SHA hashes
@@ -208,15 +215,15 @@ Every PR must include:
 
 Every PR must pass these checks:
 
-| Check | Description | Blocker? |
-|-------|-------------|----------|
-| PR Size Gate | < 400 lines changed | Yes |
-| Python Lint | `ruff` + `black` | Yes |
-| Type Check | `mypy` | Yes |
-| Unit Tests | `pytest` | Yes |
-| Security Scan | Trivy + Bandit | Advisory |
-| Helm Lint | `helm lint` | Yes (if charts changed) |
-| Terraform Validate | `terraform validate` | Yes (if infra changed) |
+| Check              | Description          | Blocker?                |
+| ------------------ | -------------------- | ----------------------- |
+| PR Size Gate       | < 400 lines changed  | Yes                     |
+| Python Lint        | `ruff` + `black`     | Yes                     |
+| Type Check         | `mypy`               | Yes                     |
+| Unit Tests         | `pytest`             | Yes                     |
+| Security Scan      | Trivy + Bandit       | Advisory                |
+| Helm Lint          | `helm lint`          | Yes (if charts changed) |
+| Terraform Validate | `terraform validate` | Yes (if infra changed)  |
 
 ### Review Checklist
 
@@ -248,6 +255,7 @@ feat/add-health-endpoint (3 commits)
 ```
 
 **Why squash?**
+
 - Clean git history on `main`
 - One commit per feature = easy revert
 - DORA best practice: small, atomic commits

@@ -75,6 +75,7 @@ terraform apply tfplan
 ```
 
 This will create:
+
 - Azure Resource Group
 - Virtual Network with subnet
 - AKS cluster with 3 nodes

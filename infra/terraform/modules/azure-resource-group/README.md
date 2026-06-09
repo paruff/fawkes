@@ -17,7 +17,7 @@ module "resource_group" {
 
   name     = "fawkes-rg"
   location = "eastus2"
-  
+
   tags = {
     platform   = "fawkes"
     managed_by = "terraform"
@@ -28,27 +28,27 @@ module "resource_group" {
 
 ## Requirements
 
-| Name | Version |
-|------|---------|
-| terraform | >= 1.6.0 |
-| azurerm | >= 3.110.0 |
+| Name      | Version    |
+| --------- | ---------- |
+| terraform | >= 1.6.0   |
+| azurerm   | >= 3.110.0 |
 
 ## Inputs
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| name | Name of the resource group | `string` | n/a | yes |
-| location | Azure region for the resource group | `string` | n/a | yes |
-| tags | Tags to apply to the resource group | `map(string)` | `{}` | no |
+| Name     | Description                         | Type          | Default | Required |
+| -------- | ----------------------------------- | ------------- | ------- | :------: |
+| name     | Name of the resource group          | `string`      | n/a     |   yes    |
+| location | Azure region for the resource group | `string`      | n/a     |   yes    |
+| tags     | Tags to apply to the resource group | `map(string)` | `{}`    |    no    |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| id | The ID of the resource group |
-| name | The name of the resource group |
-| location | The location of the resource group |
-| tags | The tags applied to the resource group |
+| Name     | Description                            |
+| -------- | -------------------------------------- |
+| id       | The ID of the resource group           |
+| name     | The name of the resource group         |
+| location | The location of the resource group     |
+| tags     | The tags applied to the resource group |
 
 ## Validation Rules
 

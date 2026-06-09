@@ -6,7 +6,6 @@ for dynamic agent provisioning.
 """
 
 import pytest
-import requests
 from pytest_bdd import scenarios, given, when, then, parsers
 
 # Load all scenarios from the feature file
@@ -280,7 +279,7 @@ def verify_nginx_ingress(jenkins_context):
     response = jenkins_context.get("response")
     assert response is not None
     # Check for nginx headers
-    headers = response.headers
+    _ = response.headers
     # This is a simplified check; actual implementation may vary
     jenkins_context["served_by_nginx"] = True
     assert jenkins_context["served_by_nginx"]

@@ -1,8 +1,8 @@
 # Kubernetes Manifest Standards
 
-**Version**: 1.0  
-**Last Updated**: January 5, 2025  
-**Status**: Standard  
+**Version**: 1.0
+**Last Updated**: January 5, 2025
+**Status**: Standard
 **Applies To**: All Kubernetes manifests in the Fawkes platform
 
 ---
@@ -29,9 +29,9 @@ All Kubernetes resources MUST include the following standard labels where applic
 ```yaml
 metadata:
   labels:
-    app.kubernetes.io/name: <application-name>        # Name of the application (e.g., "backstage", "nps-service")
-    app.kubernetes.io/part-of: fawkes                 # Platform name (always "fawkes")
-    app.kubernetes.io/component: <component-type>     # Component role (e.g., "backend", "frontend", "database")
+    app.kubernetes.io/name: <application-name> # Name of the application (e.g., "backstage", "nps-service")
+    app.kubernetes.io/part-of: fawkes # Platform name (always "fawkes")
+    app.kubernetes.io/component: <component-type> # Component role (e.g., "backend", "frontend", "database")
 ```
 
 ### Recommended Labels
@@ -39,8 +39,8 @@ metadata:
 ```yaml
 metadata:
   labels:
-    app.kubernetes.io/version: <version>              # Application version (e.g., "v1.0.0", "0.1.0")
-    app.kubernetes.io/managed-by: <tool>              # Tool managing the resource (e.g., "argocd", "backstage", "helm")
+    app.kubernetes.io/version: <version> # Application version (e.g., "v1.0.0", "0.1.0")
+    app.kubernetes.io/managed-by: <tool> # Tool managing the resource (e.g., "argocd", "backstage", "helm")
 ```
 
 ### Legacy Compatibility
@@ -50,7 +50,7 @@ For backward compatibility with existing selectors, also include:
 ```yaml
 metadata:
   labels:
-    app: <application-name>                           # Simple app label for selectors
+    app: <application-name> # Simple app label for selectors
 ```
 
 ### Label Value Guidelines
@@ -85,9 +85,9 @@ spec:
   template:
     metadata:
       annotations:
-        prometheus.io/scrape: "true"                  # Enable Prometheus scraping
-        prometheus.io/port: "<port>"                  # Port where metrics are exposed
-        prometheus.io/path: "/metrics"                # Path to metrics endpoint
+        prometheus.io/scrape: "true" # Enable Prometheus scraping
+        prometheus.io/port: "<port>" # Port where metrics are exposed
+        prometheus.io/path: "/metrics" # Path to metrics endpoint
 ```
 
 ### Deployment Annotations
@@ -97,8 +97,8 @@ For documentation and change tracking:
 ```yaml
 metadata:
   annotations:
-    description: "<brief-description>"                # Brief description of the resource
-    docs: "<link-to-documentation>"                   # Link to relevant documentation
+    description: "<brief-description>" # Brief description of the resource
+    docs: "<link-to-documentation>" # Link to relevant documentation
 ```
 
 ## Security Context Standards
@@ -112,10 +112,10 @@ spec:
   template:
     spec:
       securityContext:
-        runAsNonRoot: true                            # REQUIRED: Never run as root
-        runAsUser: 65534                              # REQUIRED: Use nobody user (65534) by default
-        runAsGroup: 65534                             # REQUIRED: Use nobody group
-        fsGroup: 65534                                # REQUIRED: File system group ownership
+        runAsNonRoot: true # REQUIRED: Never run as root
+        runAsUser: 65534 # REQUIRED: Use nobody user (65534) by default
+        runAsGroup: 65534 # REQUIRED: Use nobody group
+        fsGroup: 65534 # REQUIRED: File system group ownership
 ```
 
 **User ID Guidelines:**
@@ -133,15 +133,15 @@ spec:
       containers:
         - name: <container-name>
           securityContext:
-            allowPrivilegeEscalation: false           # REQUIRED: Prevent privilege escalation
-            readOnlyRootFilesystem: true              # REQUIRED: Make root filesystem read-only
-            runAsNonRoot: true                        # REQUIRED: Ensure non-root execution
-            runAsUser: 65534                          # REQUIRED: Match pod-level user
+            allowPrivilegeEscalation: false # REQUIRED: Prevent privilege escalation
+            readOnlyRootFilesystem: true # REQUIRED: Make root filesystem read-only
+            runAsNonRoot: true # REQUIRED: Ensure non-root execution
+            runAsUser: 65534 # REQUIRED: Match pod-level user
             capabilities:
               drop:
-                - ALL                                 # REQUIRED: Drop all Linux capabilities
+                - ALL # REQUIRED: Drop all Linux capabilities
             seccompProfile:
-              type: RuntimeDefault                    # REQUIRED: Use default seccomp profile
+              type: RuntimeDefault # REQUIRED: Use default seccomp profile
 ```
 
 ### Volume Mounts for Writable Directories
@@ -175,12 +175,12 @@ spec:
       containers:
         - name: <container-name>
           resources:
-            requests:                                 # REQUIRED: Minimum guaranteed resources
-              cpu: "<cpu-request>"                    # e.g., "100m", "200m"
-              memory: "<memory-request>"              # e.g., "128Mi", "256Mi"
-            limits:                                   # REQUIRED: Maximum allowed resources
-              cpu: "<cpu-limit>"                      # e.g., "500m", "1000m"
-              memory: "<memory-limit>"                # e.g., "512Mi", "1Gi"
+            requests: # REQUIRED: Minimum guaranteed resources
+              cpu: "<cpu-request>" # e.g., "100m", "200m"
+              memory: "<memory-request>" # e.g., "128Mi", "256Mi"
+            limits: # REQUIRED: Maximum allowed resources
+              cpu: "<cpu-limit>" # e.g., "500m", "1000m"
+              memory: "<memory-limit>" # e.g., "512Mi", "1Gi"
 ```
 
 ### Resource Sizing Guidelines
@@ -261,12 +261,12 @@ spec:
         - name: <container-name>
           livenessProbe:
             httpGet:
-              path: /health                           # Or /healthz, /live
+              path: /health # Or /healthz, /live
               port: http
-            initialDelaySeconds: 30                   # Wait before first check
-            periodSeconds: 10                         # Check every 10 seconds
-            timeoutSeconds: 5                         # Timeout for each check
-            failureThreshold: 3                       # Restart after 3 failures
+            initialDelaySeconds: 30 # Wait before first check
+            periodSeconds: 10 # Check every 10 seconds
+            timeoutSeconds: 5 # Timeout for each check
+            failureThreshold: 3 # Restart after 3 failures
 ```
 
 ### Readiness Probe
@@ -281,12 +281,12 @@ spec:
         - name: <container-name>
           readinessProbe:
             httpGet:
-              path: /ready                            # Or /readyz, /health/ready
+              path: /ready # Or /readyz, /health/ready
               port: http
-            initialDelaySeconds: 10                   # Wait before first check
-            periodSeconds: 5                          # Check every 5 seconds
-            timeoutSeconds: 3                         # Timeout for each check
-            failureThreshold: 3                       # Mark unready after 3 failures
+            initialDelaySeconds: 10 # Wait before first check
+            periodSeconds: 5 # Check every 5 seconds
+            timeoutSeconds: 3 # Timeout for each check
+            failureThreshold: 3 # Mark unready after 3 failures
 ```
 
 ### Health Check Guidelines
@@ -313,7 +313,7 @@ Applications requiring Kubernetes API access MUST use a dedicated ServiceAccount
 spec:
   template:
     spec:
-      serviceAccountName: <app-name>                  # Use dedicated service account
+      serviceAccountName: <app-name> # Use dedicated service account
 ```
 
 For applications NOT requiring API access:
@@ -322,7 +322,7 @@ For applications NOT requiring API access:
 spec:
   template:
     spec:
-      automountServiceAccountToken: false             # Disable token mounting
+      automountServiceAccountToken: false # Disable token mounting
 ```
 
 ## Image Standards
@@ -336,7 +336,7 @@ spec:
       containers:
         - name: <container-name>
           image: <registry>/<org>/<name>:<tag-or-digest>
-          imagePullPolicy: IfNotPresent               # Use cached images when possible
+          imagePullPolicy: IfNotPresent # Use cached images when possible
 ```
 
 ### Image Pull Policy Guidelines
@@ -689,6 +689,6 @@ The following are explicitly **out of scope** for this standardization:
 
 ## Change Log
 
-| Date | Version | Changes |
-|------|---------|---------|
-| 2025-01-05 | 1.0 | Initial standard established for issue #121 |
+| Date       | Version | Changes                                     |
+| ---------- | ------- | ------------------------------------------- |
+| 2025-01-05 | 1.0     | Initial standard established for issue #121 |

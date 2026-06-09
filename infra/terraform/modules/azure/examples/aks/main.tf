@@ -130,9 +130,9 @@ module "aks" {
   enable_rbac = true
 
   # Monitoring
-  enable_azure_monitor        = true
-  log_analytics_workspace_id  = azurerm_log_analytics_workspace.example.id
-  enable_diagnostic_settings  = true
+  enable_azure_monitor       = true
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.example.id
+  enable_diagnostic_settings = true
 
   tags = {
     Environment = "example"

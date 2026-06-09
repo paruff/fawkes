@@ -8,6 +8,7 @@ compatibility: opencode
 # Reusable Workflow Builder — Fawkes
 
 ## File locations
+
 - Reusable workflows: `.github/workflows/reusable-*.yml`
 - Caller workflows: `.github/workflows/*.yml` (not prefixed `reusable-`)
 - Composite actions: `.github/actions/*/action.yml`
@@ -64,6 +65,7 @@ jobs:
 ```
 
 ## Rules
+
 1. **Never hardcode secrets** — pass via `secrets:` block
 2. **Always `timeout-minutes`** on every job in reusable AND caller
 3. **`permissions:` minimal** — both in reusable and caller
@@ -73,12 +75,14 @@ jobs:
 7. **Caller must reference path** — `./.github/workflows/reusable-*.yml` (not `owner/repo/.github/...`)
 
 ## Common mistakes
+
 - Reusable workflow declares `inputs` but caller uses `with:` — these must match exactly
 - Missing `secrets: inherit` when caller passes all secrets
 - Forgetting `if: always()` on DORA finish timestamp
 - Step `id:` missing on output-producing steps
 
 ## Validate
+
 ```bash
 # Check reusable workflow has correct trigger
 grep -A5 "workflow_call:" .github/workflows/reusable-*.yml

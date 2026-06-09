@@ -25,7 +25,7 @@ source "${SCRIPT_DIR}/lib/error_handling.sh"
 ## Exit Codes
 
 - `0` - Success
-- `1` - General error  
+- `1` - General error
 - `2` - Missing prerequisite
 - `3` - Validation failed
 - `4` - Network error

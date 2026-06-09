@@ -365,21 +365,21 @@ GitHub API → ETL → Data Warehouse
 
 **Grafana Dashboard Structure** (3 pages):
 
-**Page 1: Executive Summary**
+### Page 1: Executive Summary
 
 - Overall NPS score with trend
 - DORA 4 keys summary
 - Satisfaction score across dimensions
 - Key alerts (metrics degrading)
 
-**Page 2: SPACE Deep Dive**
+### Page 2: SPACE Deep Dive
 
 - 5 panels (one per SPACE dimension)
 - Historical trends (30/60/90 day views)
 - Team-level breakdowns
 - Correlation analysis (e.g., satisfaction vs. lead time)
 
-**Page 3: Action Dashboard**
+### Page 3: Action Dashboard
 
 - Top 5 friction points (from feedback)
 - Suggested improvements (from analysis)
@@ -541,7 +541,7 @@ GitHub API → ETL → Data Warehouse
 
 ### Phase 1: Foundation (Weeks 1-2)
 
-**Week 1: Infrastructure Setup**
+### Week 1: Infrastructure Setup
 
 1. Deploy survey tools (Qualtrics/Typeform account)
 1. Create data warehouse schema in PostgreSQL
@@ -549,7 +549,7 @@ GitHub API → ETL → Data Warehouse
 1. Draft privacy policy and data handling procedures
 1. Write initial NPS survey (5 questions)
 
-**Week 2: Baseline Measurement**
+### Week 2: Baseline Measurement
 
 1. Launch first NPS survey to all developers
 1. Collect DORA metrics baseline (automated)
@@ -559,7 +559,7 @@ GitHub API → ETL → Data Warehouse
 
 ### Phase 2: Full Rollout (Weeks 3-4)
 
-**Week 3: Automated Metrics**
+### Week 3: Automated Metrics
 
 1. Implement Prometheus collectors for activity metrics
 1. Build Grafana dashboards (all 5 SPACE dimensions)
@@ -567,7 +567,7 @@ GitHub API → ETL → Data Warehouse
 1. Document data collection infrastructure
 1. Train platform team on dashboard usage
 
-**Week 4: Feedback Loops**
+### Week 4: Feedback Loops
 
 1. Deploy weekly pulse survey (automated in Backstage)
 1. Create feedback response process (monthly review meetings)

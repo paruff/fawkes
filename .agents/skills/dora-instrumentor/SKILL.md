@@ -9,12 +9,12 @@ compatibility: opencode
 
 ## What DORA metrics we track
 
-| Metric | Source | How |
-|---|---|---|
-| **Deployment Frequency** | ArgoCD sync events | `dora_deployments_total` counter |
-| **Lead Time for Changes** | Git push → deploy | `dora_lead_time_seconds` histogram |
-| **Change Failure Rate** | ArgoCD sync failures | `dora_deployment_failures_total` counter |
-| **Mean Time to Restore** | Incident → resolve | `dora_mttr_seconds` histogram |
+| Metric                    | Source               | How                                      |
+| ------------------------- | -------------------- | ---------------------------------------- |
+| **Deployment Frequency**  | ArgoCD sync events   | `dora_deployments_total` counter         |
+| **Lead Time for Changes** | Git push → deploy    | `dora_lead_time_seconds` histogram       |
+| **Change Failure Rate**   | ArgoCD sync failures | `dora_deployment_failures_total` counter |
+| **Mean Time to Restore**  | Incident → resolve   | `dora_mttr_seconds` histogram            |
 
 ## Required DORA timestamps
 
@@ -68,16 +68,19 @@ timestamp is captured when ArgoCD reports sync complete.
 ## DORA metrics exporter
 
 `services/dora-metrics/` queries:
+
 - ArgoCD API: `GET /api/v1/applications` for sync status
 - GitHub API: `GET /repos/{owner}/{repo}/actions/runs` for workflow runs
 
 Prometheus metrics exposed on port 8000:
+
 - `dora_deployments_total{service, environment, status}`
 - `dora_lead_time_seconds{service, environment}`
 - `dora_deployment_failures_total{service, environment, reason}`
 - `dora_mttr_seconds{service, environment}`
 
 ## Validate
+
 ```bash
 # Check all workflows have DORA timestamps
 for f in .github/workflows/*.yml; do

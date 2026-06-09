@@ -8,17 +8,18 @@ Successfully implemented a comprehensive, repository-agnostic Security Plane for
 
 ### 1. Reusable GitHub Actions Workflows (5 workflows)
 
-| Workflow | Purpose | Key Features |
-|----------|---------|--------------|
-| `reusable-security-scanning.yml` | Security scanning | Gitleaks, Trivy, npm audit, safety, SARIF upload |
-| `reusable-policy-enforcement.yml` | Policy enforcement | Conftest/OPA, Kubernetes & Dockerfile validation |
-| `reusable-sbom-generation.yml` | SBOM generation | Syft-based, CycloneDX/SPDX formats, 90-day retention |
-| `reusable-image-signing.yml` | Image signing | Cosign keyless signing, SBOM attestation |
-| `security-plane-adoption.yml` | Complete orchestration | Coordinates all security checks, badges, summaries |
+| Workflow                          | Purpose                | Key Features                                         |
+| --------------------------------- | ---------------------- | ---------------------------------------------------- |
+| `reusable-security-scanning.yml`  | Security scanning      | Gitleaks, Trivy, npm audit, safety, SARIF upload     |
+| `reusable-policy-enforcement.yml` | Policy enforcement     | Conftest/OPA, Kubernetes & Dockerfile validation     |
+| `reusable-sbom-generation.yml`    | SBOM generation        | Syft-based, CycloneDX/SPDX formats, 90-day retention |
+| `reusable-image-signing.yml`      | Image signing          | Cosign keyless signing, SBOM attestation             |
+| `security-plane-adoption.yml`     | Complete orchestration | Coordinates all security checks, badges, summaries   |
 
 ### 2. OPA/Rego Security Policies (3 policy sets)
 
 #### Kubernetes Security (`kubernetes-security.rego`)
+
 - Non-root container enforcement
 - Resource limits and requests required
 - Security contexts mandatory
@@ -27,6 +28,7 @@ Successfully implemented a comprehensive, repository-agnostic Security Plane for
 - Liveness/readiness probe recommendations
 
 #### Dockerfile Security (`dockerfile-security.rego`)
+
 - No root user enforcement
 - Specific base image versions
 - Health check recommendations
@@ -35,6 +37,7 @@ Successfully implemented a comprehensive, repository-agnostic Security Plane for
 - Working directory requirements
 
 #### Supply Chain Security (`supply-chain-security.rego`)
+
 - Critical vulnerability blocking
 - SBOM presence requirement
 - Image signature verification
@@ -44,6 +47,7 @@ Successfully implemented a comprehensive, repository-agnostic Security Plane for
 ### 3. Security Templates (2 templates)
 
 1. **Secure Kubernetes Deployment** (`secure-deployment.yaml`)
+
    - Pod Security Standards compliant
    - Non-root security contexts
    - Resource limits and requests
@@ -61,16 +65,19 @@ Successfully implemented a comprehensive, repository-agnostic Security Plane for
 ### 4. Developer Experience Components
 
 #### Onboarding Kit
+
 - **ONBOARDING.md**: Step-by-step guide for adoption
 - **ONBOARDING_PR_TEMPLATE.md**: Template for onboarding PRs
 - **Quick Start Guide**: 10-minute setup instructions
 - **Adoption Patterns Guide**: Advisory → Progressive → Strict modes
 
 #### Issue Templates
+
 - **security-vulnerability.md**: Track vulnerability remediation
 - **policy-violation.md**: Track policy compliance issues
 
 #### Security Badges
+
 - Workflow status badges
 - Security scan results
 - SBOM generation status
@@ -79,6 +86,7 @@ Successfully implemented a comprehensive, repository-agnostic Security Plane for
 ### 5. Service Template Integration
 
 Updated all three service templates with security workflows:
+
 - `templates/python-service/skeleton/.github/workflows/security.yml`
 - `templates/nodejs-service/skeleton/.github/workflows/security.yml`
 - `templates/java-service/skeleton/.github/workflows/security.yml`
@@ -86,23 +94,27 @@ Updated all three service templates with security workflows:
 ### 6. Comprehensive Documentation (5 documents)
 
 1. **Reference Architecture** (`docs/security-plane/reference-architecture.md`)
+
    - Component architecture
    - Integration patterns
    - Metrics and monitoring
    - Extensibility guide
 
 2. **Adoption Patterns** (`docs/security-plane/adoption-patterns.md`)
+
    - Advisory mode (🟢)
    - Progressive enforcement (🟡)
    - Strict mode (🔴)
    - Migration timeline
 
 3. **Quick Start Guide** (`docs/security-plane/quick-start.md`)
+
    - 10-minute onboarding
    - Local testing setup
    - Troubleshooting tips
 
 4. **Main README** (`.security-plane/README.md`)
+
    - Feature overview
    - Quick start
    - Customization examples
@@ -113,6 +125,7 @@ Updated all three service templates with security workflows:
 ### 7. Testing & Validation (4 BDD feature files + 1 validation script)
 
 #### BDD Feature Tests
+
 - `tests/bdd/features/security-plane-sbom.feature` (5 scenarios)
 - `tests/bdd/features/security-plane-signing.feature` (5 scenarios)
 - `tests/bdd/features/security-plane-policies.feature` (10 scenarios)
@@ -121,6 +134,7 @@ Updated all three service templates with security workflows:
 **Total: 31 test scenarios covering all security plane functionality**
 
 #### Validation Script
+
 - `scripts/validate-security-plane.sh`
 - Validates directory structure, policies, workflows, templates, documentation
 - Provides pass/fail summary
@@ -155,30 +169,36 @@ Updated all three service templates with security workflows:
 ## Adoption Path
 
 ### Week 1-2: Advisory Mode
+
 ```yaml
 enforcement-mode: advisory
 fail-on-critical: false
 ```
+
 - Scan all repositories
 - Catalog security findings
 - Train teams on remediation
 
 ### Week 3-4: Fix Critical Issues
+
 - Address CRITICAL vulnerabilities
 - Eliminate secret leaks
 - Update vulnerable dependencies
 
 ### Week 5-6: Progressive Enforcement
+
 ```yaml
 enforcement-mode: strict
 fail-on-critical: true
 severity-threshold: CRITICAL
 ```
+
 - Block critical vulnerabilities
 - Warn on high/medium issues
 - Generate SBOMs
 
 ### Week 7+: Strict Mode
+
 ```yaml
 enforcement-mode: strict
 fail-on-critical: true
@@ -186,6 +206,7 @@ fail-on-violation: true
 enable-signing: true
 enable-sbom: true
 ```
+
 - Full policy enforcement
 - Required image signing
 - Mandatory SBOMs
@@ -193,14 +214,16 @@ enable-sbom: true
 ## Integration Points
 
 ### Backstage
+
 ```yaml
 metadata:
   annotations:
-    security-plane/enabled: 'true'
-    security-plane/mode: 'strict'
+    security-plane/enabled: "true"
+    security-plane/mode: "strict"
 ```
 
 ### Jenkins
+
 ```groovy
 stage('Security') {
     steps {
@@ -210,6 +233,7 @@ stage('Security') {
 ```
 
 ### ArgoCD
+
 ```yaml
 spec:
   syncPolicy:
@@ -220,6 +244,7 @@ spec:
 ## Metrics Tracked
 
 ### Security Posture
+
 - Vulnerability count by severity
 - Policy violations by type
 - SBOM coverage percentage
@@ -227,6 +252,7 @@ spec:
 - Mean time to remediation (MTTR)
 
 ### Team Impact
+
 - PR cycle time with security checks
 - Security training completion rate
 - Number of exemptions requested
@@ -245,6 +271,7 @@ spec:
 ## Files Changed
 
 ### New Files Created: 30
+
 - 5 reusable workflows
 - 3 policy files
 - 2 security templates
@@ -257,6 +284,7 @@ spec:
 - 4 supporting files
 
 ### Files Modified: 1
+
 - `README.md` (updated with Security Plane section)
 
 ### Total Lines Added: ~4,500 lines
@@ -277,17 +305,20 @@ These can be added as the security plane matures and teams provide feedback.
 ## How to Use
 
 ### For New Repositories
+
 1. Use service templates - security is included automatically
 2. Workflows run on first push
 3. Start in advisory mode
 
 ### For Existing Repositories
+
 1. Copy `.security-plane/` directory
 2. Add `.github/workflows/security.yml`
 3. Follow quick start guide
 4. Start in advisory mode, progress to strict
 
 ### For Platform Teams
+
 1. Maintain policies in Fawkes repo
 2. Update reusable workflows centrally
 3. Repos automatically get updates

@@ -252,14 +252,14 @@ def risky_operation():
 
 #### Common Issues
 
-| Issue                | Solution                              |
-| -------------------- | ------------------------------------- |
-| Line too long        | Break into multiple lines             |
-| Missing type hints   | Add type annotations                  |
-| No docstring         | Add Google-style docstring            |
-| Inconsistent naming  | Use snake_case for functions/vars     |
-| Bare except          | Catch specific exceptions             |
-| Mutable defaults     | Use `None` and assign in function     |
+| Issue               | Solution                          |
+| ------------------- | --------------------------------- |
+| Line too long       | Break into multiple lines         |
+| Missing type hints  | Add type annotations              |
+| No docstring        | Add Google-style docstring        |
+| Inconsistent naming | Use snake_case for functions/vars |
+| Bare except         | Catch specific exceptions         |
+| Mutable defaults    | Use `None` and assign in function |
 
 ---
 
@@ -397,13 +397,13 @@ func ProcessUser(id string) (string, string, bool, error, int) {
 
 #### Common Issues
 
-| Issue                  | Solution                          |
-| ---------------------- | --------------------------------- |
-| Unused imports         | Run goimports                     |
-| Unchecked errors       | Always check `err != nil`         |
-| No comments on exports | Add comment starting with name    |
+| Issue                  | Solution                              |
+| ---------------------- | ------------------------------------- |
+| Unused imports         | Run goimports                         |
+| Unchecked errors       | Always check `err != nil`             |
+| No comments on exports | Add comment starting with name        |
 | Ignoring context       | Pass `context.Context` as first param |
-| Generic errors         | Wrap errors with `fmt.Errorf`     |
+| Generic errors         | Wrap errors with `fmt.Errorf`         |
 
 ---
 
@@ -564,8 +564,9 @@ All Bash scripts MUST follow comprehensive error handling standards. See [Error 
 6. **Rollback Functions**: Register rollback with `register_rollback_function`
 
 **Standard Exit Codes**:
+
 - `0` - Success
-- `1` - General error  
+- `1` - General error
 - `2` - Missing prerequisite
 - `3` - Validation failed
 - `4` - Network error
@@ -606,11 +607,11 @@ register_rollback_function rollback
 # Main logic with proper error handling
 main() {
   show_section "Deploying Application"
-  
+
   if ! kubectl apply -f app.yaml -n "$NAMESPACE"; then
     error_exit "Failed to deploy application" "$EXIT_GENERAL_ERROR"
   fi
-  
+
   log_success "Application deployed successfully!"
 }
 
@@ -619,16 +620,16 @@ main "$@"
 
 #### Common Issues
 
-| Issue              | Solution                        |
-| ------------------ | ------------------------------- |
-| Unquoted variables | Always use `"${var}"`           |
-| No error handling  | Use `set -euo pipefail`         |
-| Using `[ ]`        | Use `[[ ]]` for conditionals    |
-| Global variables   | Use `readonly` or `local`       |
-| No function docs   | Add comments above functions    |
-| Backticks          | Use `$()` instead of backticks  |
-| No cleanup         | Register cleanup functions      |
-| Generic errors     | Use specific exit codes         |
+| Issue              | Solution                       |
+| ------------------ | ------------------------------ |
+| Unquoted variables | Always use `"${var}"`          |
+| No error handling  | Use `set -euo pipefail`        |
+| Using `[ ]`        | Use `[[ ]]` for conditionals   |
+| Global variables   | Use `readonly` or `local`      |
+| No function docs   | Add comments above functions   |
+| Backticks          | Use `$()` instead of backticks |
+| No cleanup         | Register cleanup functions     |
+| Generic errors     | Use specific exit codes        |
 
 ---
 
@@ -726,9 +727,9 @@ spec:
 
 # Bad: Trailing whitespace
 metadata:
-  name: fawkes-backend  
+  name: fawkes-backend
   labels:
-    app: backend       
+    app: backend
 
 # Bad: Missing required fields
 apiVersion: apps/v1
@@ -746,13 +747,13 @@ metadata:
 
 #### Common Issues
 
-| Issue                  | Solution                       |
-| ---------------------- | ------------------------------ |
-| Inconsistent indent    | Use 2 spaces everywhere        |
-| Trailing whitespace    | Enable editor trim on save     |
-| Mixed naming styles    | Use kebab-case consistently    |
-| Missing required fields| Validate with kubeval/kubeconform |
-| Too long lines         | Break into multiple lines      |
+| Issue                   | Solution                          |
+| ----------------------- | --------------------------------- |
+| Inconsistent indent     | Use 2 spaces everywhere           |
+| Trailing whitespace     | Enable editor trim on save        |
+| Mixed naming styles     | Use kebab-case consistently       |
+| Missing required fields | Validate with kubeval/kubeconform |
+| Too long lines          | Break into multiple lines         |
 
 ---
 
@@ -811,23 +812,23 @@ metadata:
   "name": "fawkes-backend",
   "version": "1.0.0",
   "dependencies": {
-    "express": "^4.18.0",
-  },  // Bad: Trailing comma
+    "express": "^4.18.0"
+  }, // Bad: Trailing comma
   // Bad: Comments not allowed in JSON
   "devDependencies": {
-    'jest': '^29.0.0'  // Bad: Single quotes
+    "jest": "^29.0.0" // Bad: Single quotes
   }
 }
 ```
 
 #### Common Issues
 
-| Issue            | Solution                          |
-| ---------------- | --------------------------------- |
-| Trailing commas  | Remove last comma in objects/arrays |
-| Comments         | Use YAML if comments needed       |
-| Single quotes    | Always use double quotes          |
-| Invalid syntax   | Run through JSON validator        |
+| Issue           | Solution                            |
+| --------------- | ----------------------------------- |
+| Trailing commas | Remove last comma in objects/arrays |
+| Comments        | Use YAML if comments needed         |
+| Single quotes   | Always use double quotes            |
+| Invalid syntax  | Run through JSON validator          |
 
 ---
 
@@ -943,25 +944,28 @@ kubectl get pods
 Long line: This is a very long line that goes on and on and on and should probably be broken into multiple lines for better readability but isn't because someone didn't follow the style guide properly.
 
 - List item 1
-* List item 2    # Bad: Inconsistent list markers
+
+* List item 2 # Bad: Inconsistent list markers
+
 - List item 3
 
 ## Another Section
 
 [link](http://very-long-url-that-is-repeated-multiple-times.com/path/to/resource)
 [another link](http://very-long-url-that-is-repeated-multiple-times.com/path/to/resource)
+
 # Should use reference-style links instead
 ````
 
 #### Common Issues
 
-| Issue                 | Solution                                |
-| --------------------- | --------------------------------------- |
-| No language in code   | Add language: ` ```python `             |
-| Inconsistent lists    | Use same marker throughout              |
-| Multiple H1 headings  | Use only one H1 (title)                 |
-| Broken links          | Test all links                          |
-| Mixed line endings    | Use LF (Unix-style)                     |
+| Issue                | Solution                    |
+| -------------------- | --------------------------- |
+| No language in code  | Add language: ` ```python ` |
+| Inconsistent lists   | Use same marker throughout  |
+| Multiple H1 headings | Use only one H1 (title)     |
+| Broken links         | Test all links              |
+| Mixed line endings   | Use LF (Unix-style)         |
 
 ---
 
@@ -1125,14 +1129,14 @@ resource "azurerm_resource_group" "MyResourceGroup" {  # Use snake_case
 
 #### Common Issues
 
-| Issue                | Solution                               |
-| -------------------- | -------------------------------------- |
-| No version pinning   | Add required_providers with versions   |
-| Hardcoded values     | Use variables                          |
-| Missing descriptions | Add description to all variables       |
-| No validation        | Add validation blocks to variables     |
-| No outputs           | Document important values as outputs   |
-| Security issues      | Run tfsec to find vulnerabilities      |
+| Issue                | Solution                             |
+| -------------------- | ------------------------------------ |
+| No version pinning   | Add required_providers with versions |
+| Hardcoded values     | Use variables                        |
+| Missing descriptions | Add description to all variables     |
+| No validation        | Add validation blocks to variables   |
+| No outputs           | Document important values as outputs |
+| Security issues      | Run tfsec to find vulnerabilities    |
 
 ---
 
@@ -1265,17 +1269,18 @@ export class UserServiceImpl implements UserService {
 ```typescript
 // Bad: No type annotations
 export class UserService {
-  async createUser(request) {  // Missing types
+  async createUser(request) {
+    // Missing types
     let { username, email } = request;
 
     if (!username || !email) {
-      throw new Error("required");  // Vague error
+      throw new Error("required"); // Vague error
     }
 
     // Bad: Using var instead of const/let
     var user = {
       id: generateId(),
-      username: username,  // Redundant property shorthand
+      username: username, // Redundant property shorthand
       email: email,
     };
 
@@ -1284,7 +1289,7 @@ export class UserService {
 
   // Bad: Callback instead of async/await
   getUser(id, callback) {
-    fetchUser(id, function(err, user) {
+    fetchUser(id, function (err, user) {
       if (err) callback(err);
       callback(null, user);
     });
@@ -1292,7 +1297,7 @@ export class UserService {
 
   // Bad: No error handling
   async deleteUser(id) {
-    await db.users.delete(id);  // Could fail
+    await db.users.delete(id); // Could fail
   }
 }
 
@@ -1302,21 +1307,22 @@ function processData(data: any): any {
 }
 
 // Bad: Inconsistent naming
-class user_service {  // Should be UserService
-  CreateUser() {}     // Should be createUser
+class user_service {
+  // Should be UserService
+  CreateUser() {} // Should be createUser
 }
 ```
 
 #### Common Issues
 
-| Issue               | Solution                           |
-| ------------------- | ---------------------------------- |
-| Missing types       | Add TypeScript type annotations    |
-| Using `any`         | Use specific types                 |
-| Callbacks           | Use async/await                    |
-| No error handling   | Add try/catch blocks               |
-| Inconsistent naming | Use camelCase for vars/functions   |
-| Missing semicolons  | Enable ESLint rule                 |
+| Issue               | Solution                         |
+| ------------------- | -------------------------------- |
+| Missing types       | Add TypeScript type annotations  |
+| Using `any`         | Use specific types               |
+| Callbacks           | Use async/await                  |
+| No error handling   | Add try/catch blocks             |
+| Inconsistent naming | Use camelCase for vars/functions |
+| Missing semicolons  | Enable ESLint rule               |
 
 ---
 
@@ -1371,10 +1377,12 @@ class user_service {  // Should be UserService
 ### IntelliJ IDEA / PyCharm
 
 1. **Enable Black formatter**:
+
    - Settings → Tools → Black → Enable Black
    - Check "Run on save"
 
 2. **Enable ESLint**:
+
    - Settings → Languages & Frameworks → JavaScript → Code Quality Tools → ESLint
    - Select "Automatic ESLint configuration"
 
@@ -1481,10 +1489,12 @@ pre-commit run --all-files
 The project uses GitHub Actions to enforce code quality in CI/CD:
 
 1. **Pre-commit Workflow** (`.github/workflows/pre-commit.yml`)
+
    - Runs all pre-commit hooks
    - Validates on all PRs and pushes
 
 2. **Code Quality Workflow** (`.github/workflows/code-quality.yml`)
+
    - Python linting (Black, Flake8, MyPy, Pylint)
    - Test coverage (60% minimum)
    - Go linting (golangci-lint)
@@ -1617,7 +1627,8 @@ As an author:
 
 #### Q: How do I fix "line too long" errors?
 
-**A**: 
+**A**:
+
 - Python: Break into multiple lines (120 char limit)
 - Go: No strict limit, but prefer 80-100 characters
 - Shell: Break commands with `\` continuation
@@ -1625,6 +1636,7 @@ As an author:
 #### Q: What if a linter gives a false positive?
 
 **A**:
+
 - Add inline comment to disable: `# noqa` (Python), `// nolint` (Go)
 - Update config file to ignore specific rule
 - Document why in code comments
@@ -1649,6 +1661,7 @@ Run `mypy` to find issues incrementally.
 #### Q: What's the difference between Flake8 and Pylint?
 
 **A**:
+
 - **Flake8**: Fast, checks PEP 8 style
 - **Pylint**: Comprehensive, checks logic and patterns
 - Use both for best coverage
@@ -1719,6 +1732,7 @@ output "database_password" {
 #### Q: My PR failed linting but passes locally. Why?
 
 **A**:
+
 - Run `pre-commit run --all-files` locally
 - Ensure you've pulled latest changes
 - Check CI logs for specific failures
@@ -1735,6 +1749,7 @@ pytest --cov=. --cov-report=term-missing
 #### Q: How do I see detailed CI logs?
 
 **A**:
+
 1. Go to GitHub Actions tab
 2. Click on failed workflow
 3. Expand failed job
@@ -1767,6 +1782,7 @@ make pre-commit-setup
 #### Q: My IDE isn't formatting on save
 
 **A**:
+
 1. Verify extensions are installed
 2. Check settings.json configuration
 3. Restart IDE
@@ -1834,6 +1850,6 @@ Following these coding standards ensures:
 
 ---
 
-**Version**: 1.0.0  
-**Last Updated**: December 26, 2024  
+**Version**: 1.0.0
+**Last Updated**: December 26, 2024
 **Maintained By**: Fawkes Platform Team

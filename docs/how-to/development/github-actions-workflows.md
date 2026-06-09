@@ -6,13 +6,13 @@ This document describes the GitHub Actions workflows used in the Fawkes platform
 
 Fawkes uses multiple GitHub Actions workflows to ensure code quality, security, and platform reliability:
 
-| Workflow | Purpose | Trigger | Badge |
-|----------|---------|---------|-------|
-| **Code Quality** | Linting, formatting, testing, coverage | PR, Push to main/develop | ![Code Quality](https://github.com/paruff/fawkes/actions/workflows/code-quality.yml/badge.svg) |
-| **Pre-commit** | Pre-commit hook validation | PR, Push to main/develop | ![Pre-commit](https://github.com/paruff/fawkes/actions/workflows/pre-commit.yml/badge.svg) |
-| **Security & Terraform** | Security scanning, Terraform validation | PR, Push to main | ![Security](https://github.com/paruff/fawkes/actions/workflows/security-and-terraform.yml/badge.svg) |
-| **E2E Tests** | End-to-end platform testing | PR, Schedule | ![E2E Tests](https://github.com/paruff/fawkes/actions/workflows/idp-e2e-tests.yml/badge.svg) |
-| **Accessibility** | WCAG compliance testing | PR, Push to main | ![Accessibility](https://github.com/paruff/fawkes/actions/workflows/accessibility-testing.yml/badge.svg) |
+| Workflow                 | Purpose                                 | Trigger                  | Badge                                                                                                    |
+| ------------------------ | --------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| **Code Quality**         | Linting, formatting, testing, coverage  | PR, Push to main/develop | ![Code Quality](https://github.com/paruff/fawkes/actions/workflows/code-quality.yml/badge.svg)           |
+| **Pre-commit**           | Pre-commit hook validation              | PR, Push to main/develop | ![Pre-commit](https://github.com/paruff/fawkes/actions/workflows/pre-commit.yml/badge.svg)               |
+| **Security & Terraform** | Security scanning, Terraform validation | PR, Push to main         | ![Security](https://github.com/paruff/fawkes/actions/workflows/security-and-terraform.yml/badge.svg)     |
+| **E2E Tests**            | End-to-end platform testing             | PR, Schedule             | ![E2E Tests](https://github.com/paruff/fawkes/actions/workflows/idp-e2e-tests.yml/badge.svg)             |
+| **Accessibility**        | WCAG compliance testing                 | PR, Push to main         | ![Accessibility](https://github.com/paruff/fawkes/actions/workflows/accessibility-testing.yml/badge.svg) |
 
 ## Code Quality Workflow
 
@@ -32,6 +32,7 @@ Runs multiple linters and static analysis tools on Python code:
 - **Pylint**: Advanced code analysis
 
 **Configuration**:
+
 ```yaml
 - Max line length: 120 characters
 - Ignore: E203, W503 (Black compatibility)
@@ -39,6 +40,7 @@ Runs multiple linters and static analysis tools on Python code:
 ```
 
 **Local commands**:
+
 ```bash
 # Run all Python linters
 black --check .
@@ -58,6 +60,7 @@ Runs pytest with coverage reporting:
 **Configuration**: `.coveragerc`, `tests/pytest.ini`
 
 **Local commands**:
+
 ```bash
 # Run tests with coverage
 pytest --cov=. --cov-report=term-missing --cov-report=html
@@ -80,6 +83,7 @@ Runs for the design-system components:
 **Conditions**: Only runs if TypeScript/JavaScript files are present
 
 **Local commands**:
+
 ```bash
 cd design-system
 npm run lint
@@ -98,6 +102,7 @@ Runs golangci-lint for Go code:
 **Conditions**: Only runs if Go files are present
 
 **Local commands**:
+
 ```bash
 golangci-lint run --timeout=5m
 ```
@@ -110,6 +115,7 @@ Runs ShellCheck on all shell scripts:
 - **Standards**: POSIX compliance, best practices
 
 **Local commands**:
+
 ```bash
 shellcheck --severity=warning scripts/**/*.sh
 ```
@@ -139,10 +145,12 @@ The workflow uses **continue-on-error: true** for most checks to provide compreh
 ### Triggering the Workflow
 
 **Automatically**:
+
 - On pull request to `main` or `develop`
 - On push to `main` or `develop`
 
 **Manually**:
+
 ```bash
 # Via GitHub UI: Actions → Code Quality → Run workflow
 # Or via GitHub CLI:
@@ -156,11 +164,13 @@ gh workflow run code-quality.yml
 Runs all pre-commit hooks defined in `.pre-commit-config.yaml`.
 
 **Jobs**:
+
 1. **Pre-commit**: Runs all hooks on all files
 2. **GitOps Validation**: ArgoCD application validation
 3. **IDP Validation**: Backstage catalog validation
 
 **Local setup**:
+
 ```bash
 make pre-commit-setup
 pre-commit run --all-files
@@ -175,17 +185,20 @@ See [Pre-commit Documentation](../PRE-COMMIT.md) for details.
 Combines security scanning with Terraform validation.
 
 **Security Checks**:
+
 1. **Gitleaks**: Secret detection
 2. **Trivy**: Vulnerability scanning (filesystem and containers)
 3. **SARIF Upload**: Results to GitHub Security tab
 
 **Terraform Checks**:
+
 1. **terraform fmt**: Formatting check
 2. **terraform validate**: Syntax validation
 3. **TFLint**: Linting and best practices
 4. **tfsec**: Security scanning
 
 **Local commands**:
+
 ```bash
 # Security
 gitleaks detect --redact
@@ -205,6 +218,7 @@ tfsec .
 Runs end-to-end tests for the entire platform.
 
 **Scope**:
+
 - ArgoCD deployment verification
 - Backstage functionality
 - Jenkins pipeline execution
@@ -219,6 +233,7 @@ Runs end-to-end tests for the entire platform.
 Ensures WCAG 2.1 AA compliance.
 
 **Tools**:
+
 - **Axe-core**: Automated accessibility testing
 - **Lighthouse CI**: Performance and accessibility audits
 - **Pa11y**: Command-line accessibility testing
@@ -248,6 +263,7 @@ Ensures WCAG 2.1 AA compliance.
 **GitHub UI**: Repository → Actions tab
 
 **GitHub CLI**:
+
 ```bash
 # List workflow runs
 gh run list --workflow=code-quality.yml
@@ -270,6 +286,7 @@ Add badges to documentation:
 ### Notifications
 
 Configure workflow notifications:
+
 - **Settings** → **Notifications** → **Actions**
 - Choose: All workflows, failed workflows only, or none
 
@@ -282,6 +299,7 @@ Configure workflow notifications:
 **Error**: `FAIL Required test coverage of 60% not met`
 
 **Solution**:
+
 ```bash
 # Run coverage locally
 pytest --cov=. --cov-report=term-missing
@@ -295,6 +313,7 @@ pytest --cov=. --cov-report=term-missing
 **Error**: `Black would reformat files`
 
 **Solution**:
+
 ```bash
 # Auto-format
 black .
@@ -309,6 +328,7 @@ git commit -m "Apply Black formatting"
 **Error**: `Gitleaks detected secrets`
 
 **Solution**:
+
 1. Remove secrets from code
 2. Use environment variables instead
 3. Rotate compromised credentials
@@ -319,6 +339,7 @@ git commit -m "Apply Black formatting"
 **Error**: Job exceeds 6 hour timeout
 
 **Solution**:
+
 1. Optimize slow steps
 2. Add caching for dependencies
 3. Split into multiple jobs
@@ -346,12 +367,14 @@ git commit -m "Apply Black formatting"
 ### Updating Dependencies
 
 **GitHub Actions**:
+
 ```bash
 # Update to latest versions
 # Edit workflow files to use @v6 instead of @v5, etc.
 ```
 
 **Pre-commit hooks**:
+
 ```bash
 pre-commit autoupdate
 git commit -am "Update pre-commit hooks"
@@ -372,6 +395,6 @@ git commit -am "Update pre-commit hooks"
 
 ---
 
-**Maintained by**: Fawkes Platform Team  
-**Last Updated**: December 2024  
+**Maintained by**: Fawkes Platform Team
+**Last Updated**: December 2024
 **Related Issues**: #111 (Code Quality CI/CD Pipeline)

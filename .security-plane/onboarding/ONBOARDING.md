@@ -3,6 +3,7 @@
 ## 🔒 Welcome to the Fawkes Security Plane
 
 This guide will help you onboard your repository to the Fawkes Security Plane, which provides:
+
 - 🔍 Automated security scanning (secrets, vulnerabilities, dependencies)
 - 📦 SBOM (Software Bill of Materials) generation
 - ✍️ Container image signing with Cosign
@@ -41,7 +42,7 @@ jobs:
   security:
     uses: paruff/fawkes/.github/workflows/security-plane-adoption.yml@main
     with:
-      enforcement-mode: advisory  # or 'strict' for blocking
+      enforcement-mode: advisory # or 'strict' for blocking
       image-name: ${{ github.repository }}
       enable-signing: true
       enable-sbom: true
@@ -70,6 +71,7 @@ conftest test Dockerfile -p .security-plane/policies/
 ## Adoption Modes
 
 ### 🟢 Advisory Mode (Recommended for Start)
+
 - Scans run but don't block PRs/deployments
 - Great for understanding current security posture
 - Provides visibility without disrupting workflow
@@ -80,6 +82,7 @@ fail-on-critical: false
 ```
 
 ### 🟡 Progressive Mode
+
 - Block only CRITICAL vulnerabilities
 - Warn on HIGH and MEDIUM
 - Gradual enforcement increase
@@ -91,6 +94,7 @@ fail-on-critical: true
 ```
 
 ### 🔴 Strict Mode (Production)
+
 - Block all policy violations
 - Enforce image signing
 - Require SBOMs
@@ -105,20 +109,24 @@ fail-on-violation: true
 ## What Gets Scanned
 
 ### Secrets
+
 - Gitleaks scans for hardcoded credentials
 - Patterns: API keys, tokens, passwords, private keys
 
 ### Vulnerabilities
+
 - Trivy scans container images and filesystems
 - Checks against CVE databases
 - Reports severity: UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL
 
 ### Dependencies
+
 - npm audit for Node.js
 - safety for Python
 - Trivy for Go, Java, Rust, etc.
 
 ### Policy Compliance
+
 - Kubernetes security best practices
 - Dockerfile hardening
 - Supply chain security (SBOM, signatures)
@@ -213,20 +221,24 @@ git push
 ## Troubleshooting
 
 ### Scans Taking Too Long
+
 - Reduce scan scope with `.trivyignore`
 - Cache Trivy database between runs
 
 ### Too Many False Positives
+
 - Add exemptions in `.security-plane/exemptions.yaml`
 - Adjust severity threshold
 - Customize policies
 
 ### Policy Failures
+
 - Review policy in `.security-plane/policies/`
 - Run `conftest test` locally
 - Add policy exemptions if needed
 
 ### SBOM Generation Fails
+
 - Ensure package manifest files exist (package.json, requirements.txt, etc.)
 - Check Syft supports your language
 - Try different SBOM format (cyclonedx vs spdx)

@@ -243,7 +243,7 @@ Solution:
 - Check that cluster is deployed: `az aks list -o table`
 - Deploy cluster if needed: `./scripts/ignite.sh --provider azure --only-cluster dev`
 
-**Issue: kubectl cannot connect**
+### Issue: kubectl cannot connect
 
 ```
 [✗] kubectl Configuration: kubectl cannot connect to cluster
@@ -271,7 +271,7 @@ Solution:
 - Check metrics-server pod status: `kubectl get pods -n kube-system -l k8s-app=metrics-server`
 - Check metrics-server logs: `kubectl logs -n kube-system -l k8s-app=metrics-server`
 
-**Issue: Ingress controller not found**
+### Issue: Ingress controller not found
 
 ```
 [✗] Ingress Controller: No ingress controller (nginx/traefik) found
@@ -283,7 +283,7 @@ Solution:
 - For nginx: `kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml`
 - Wait for deployment: `kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s`
 
-**Issue: Nodes over resource limits**
+### Issue: Nodes over resource limits
 
 ```
 [✗] Resource Limits: 1 node(s) over resource limits

@@ -5,6 +5,7 @@ Production-ready Terraform modules for deploying Civo infrastructure following F
 ## Overview
 
 Civo is a cloud-native service provider focused on Kubernetes and developer experience with:
+
 - **Fast K3s Kubernetes clusters** (2-3 minute deployment)
 - **Simple pricing** and transparent costs
 - **Developer-friendly** tools and APIs
@@ -170,6 +171,7 @@ module "objectstore" {
 ## Module Features
 
 ### Kubernetes Module
+
 - ✅ K3s-based clusters (faster deployment than EKS/GKE)
 - ✅ Multiple node pools support
 - ✅ Size presets (small/medium/large)
@@ -179,6 +181,7 @@ module "objectstore" {
 - ✅ Cost tagging
 
 ### Database Module
+
 - ✅ PostgreSQL, MySQL, Redis support
 - ✅ Size presets for easy configuration
 - ✅ High availability (1-3 nodes)
@@ -188,6 +191,7 @@ module "objectstore" {
 - ✅ Cost tagging
 
 ### Object Store Module
+
 - ✅ S3-compatible API
 - ✅ Automatic credential generation
 - ✅ CORS configuration
@@ -197,6 +201,7 @@ module "objectstore" {
 - ✅ Cost tagging
 
 ### Network Module
+
 - ✅ Virtual network creation
 - ✅ Custom CIDR blocks
 - ✅ Firewall with custom rules
@@ -207,11 +212,13 @@ module "objectstore" {
 ## Examples
 
 See the [examples](./examples/) directory for complete working examples:
+
 - **[complete](./examples/complete/)** - Full infrastructure stack with all modules
 
 ## Best Practices
 
 ### Cost Optimization
+
 1. **Use size presets** - Start with `small` and scale up as needed
 2. **Enable auto-scaling** - For Kubernetes node pools
 3. **Set backup retention** - Balance cost vs. recovery needs (7 days recommended)
@@ -219,6 +226,7 @@ See the [examples](./examples/) directory for complete working examples:
 5. **Tag resources** - Use cost tags for tracking and allocation
 
 ### Security
+
 1. **Restrict firewall rules** - Use specific CIDR blocks instead of `0.0.0.0/0`
 2. **Enable encryption** - Always enable for object storage
 3. **Use private networks** - Keep databases and clusters in private networks
@@ -226,12 +234,14 @@ See the [examples](./examples/) directory for complete working examples:
 5. **Enable backups** - Always enable for production databases
 
 ### High Availability
+
 1. **Multi-node databases** - Use 2-3 nodes for production
 2. **Multiple node pools** - Distribute workloads across pools
 3. **Health checks** - Configure load balancer health checks
 4. **Backup strategy** - Test restore procedures regularly
 
 ### Networking
+
 1. **Plan CIDR blocks** - Avoid overlapping with other networks
 2. **Use firewall rules** - Explicit allow/deny rules
 3. **Load balancer** - For ingress traffic distribution
@@ -240,7 +250,9 @@ See the [examples](./examples/) directory for complete working examples:
 ## Civo-Specific Considerations
 
 ### Regions
+
 Civo currently supports 4 regions:
+
 - **NYC1** - New York, USA
 - **LON1** - London, UK
 - **FRA1** - Frankfurt, Germany
@@ -249,7 +261,9 @@ Civo currently supports 4 regions:
 Choose the region closest to your users for best latency.
 
 ### Instance Sizes
+
 Civo offers optimized instance sizes:
+
 - **xsmall** - Development/testing
 - **small** - Small workloads
 - **medium** - Standard workloads (recommended)
@@ -257,13 +271,17 @@ Civo offers optimized instance sizes:
 - **xlarge** - High-performance workloads
 
 ### Rate Limits
+
 Civo API has rate limits (~100 requests/min). Use Terraform's parallelism settings:
+
 ```bash
 terraform apply -parallelism=3
 ```
 
 ### Marketplace Apps
+
 Popular apps available:
+
 - Cert Manager
 - Metrics Server
 - Traefik
@@ -275,6 +293,7 @@ Popular apps available:
 ## Migration from AWS/GCP
 
 Key differences to consider:
+
 - **Kubernetes**: K3s instead of full Kubernetes
 - **Databases**: Application-based instead of managed services
 - **Networking**: Simpler model, no complex VPC/subnet management
@@ -308,6 +327,7 @@ infracost breakdown --path .
 ## Contributing
 
 When contributing to these modules:
+
 1. Follow the existing code style
 2. Add validation rules for all variables
 3. Include comprehensive outputs

@@ -4,27 +4,27 @@ on:
   workflow_call:
     inputs:
       image-name:
-        description: 'Container image name to generate SBOM for'
+        description: "Container image name to generate SBOM for"
         required: true
         type: string
       image-tag:
-        description: 'Container image tag'
+        description: "Container image tag"
         required: false
         type: string
-        default: 'latest'
+        default: "latest"
       upload-artifact:
-        description: 'Upload SBOM as GitHub artifact'
+        description: "Upload SBOM as GitHub artifact"
         required: false
         type: boolean
         default: true
       sbom-format:
-        description: 'SBOM format (cyclonedx-json, spdx-json, syft-json)'
+        description: "SBOM format (cyclonedx-json, spdx-json, syft-json)"
         required: false
         type: string
-        default: 'cyclonedx-json'
+        default: "cyclonedx-json"
     outputs:
       sbom-path:
-        description: 'Path to generated SBOM file'
+        description: "Path to generated SBOM file"
         value: ${{ jobs.generate-sbom.outputs.sbom-path }}
 
 permissions:

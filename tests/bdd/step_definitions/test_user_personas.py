@@ -3,7 +3,6 @@ Step definitions for user persona documentation tests.
 Tests validate that persona templates and documentation meet requirements.
 """
 
-import os
 import re
 from pathlib import Path
 from pytest_bdd import given, when, then, scenarios, parsers

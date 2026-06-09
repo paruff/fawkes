@@ -58,13 +58,13 @@ cloud deployment.
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-| Component | Local (Path A) | Cloud (Path B/C) |
-|---|---|---|
-| ArgoCD | ✅ k3d | ✅ EKS / AKS |
-| Backstage | ✅ SQLite | ✅ RDS PostgreSQL |
-| Prometheus + Grafana | ✅ in-cluster | ✅ in-cluster |
-| Vault | ✅ dev mode (non-persistent) | ✅ production mode |
-| Sample application | ✅ | ✅ |
+| Component            | Local (Path A)               | Cloud (Path B/C)   |
+| -------------------- | ---------------------------- | ------------------ |
+| ArgoCD               | ✅ k3d                       | ✅ EKS / AKS       |
+| Backstage            | ✅ SQLite                    | ✅ RDS PostgreSQL  |
+| Prometheus + Grafana | ✅ in-cluster                | ✅ in-cluster      |
+| Vault                | ✅ dev mode (non-persistent) | ✅ production mode |
+| Sample application   | ✅                           | ✅                 |
 
 ### Tier 2 — Full Platform (cloud deployments only)
 
@@ -112,24 +112,24 @@ scanning, log aggregation, DORA metrics, and enterprise collaboration.
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-| Component | Tier 1 | Tier 2 |
-|---|---|---|
-| ArgoCD | ✅ | ✅ |
-| Backstage | ✅ | ✅ |
-| Prometheus + Grafana | ✅ | ✅ |
-| Vault | ✅ | ✅ |
-| Sample application | ✅ | ✅ |
-| Jenkins CI/CD | — | ✅ |
-| DevLake (DORA aggregation) | — | ✅ |
-| SonarQube (SAST) | — | ✅ |
-| Trivy (container scanning) | — | ✅ |
-| Container registry (Harbor / ECR) | — | ✅ |
-| OpenSearch (logs) | — | ✅ |
-| Grafana Tempo (traces) | — | ✅ |
-| External Secrets Operator | — | ✅ |
-| Mattermost + Focalboard | — | ✅ |
-| cert-manager + Let's Encrypt | — | ✅ |
-| Amazon RDS / managed DB | — | ✅ |
+| Component                         | Tier 1 | Tier 2 |
+| --------------------------------- | ------ | ------ |
+| ArgoCD                            | ✅     | ✅     |
+| Backstage                         | ✅     | ✅     |
+| Prometheus + Grafana              | ✅     | ✅     |
+| Vault                             | ✅     | ✅     |
+| Sample application                | ✅     | ✅     |
+| Jenkins CI/CD                     | —      | ✅     |
+| DevLake (DORA aggregation)        | —      | ✅     |
+| SonarQube (SAST)                  | —      | ✅     |
+| Trivy (container scanning)        | —      | ✅     |
+| Container registry (Harbor / ECR) | —      | ✅     |
+| OpenSearch (logs)                 | —      | ✅     |
+| Grafana Tempo (traces)            | —      | ✅     |
+| External Secrets Operator         | —      | ✅     |
+| Mattermost + Focalboard           | —      | ✅     |
+| cert-manager + Let's Encrypt      | —      | ✅     |
+| Amazon RDS / managed DB           | —      | ✅     |
 
 ---
 
@@ -137,32 +137,32 @@ scanning, log aggregation, DORA metrics, and enterprise collaboration.
 
 Fawkes is composed of four platform layers that must only depend downward:
 
-| Layer | Directory | Primary Language | Responsibility |
-|---|---|---|---|
-| **Services** | `services/` | Python (FastAPI) | Stateless business-logic microservices. Infrastructure tests (Terratest/Go) live in `tests/terratest/`, not here. |
-| **Platform** | `platform/`, `charts/` | YAML + Helm | Kubernetes manifests, ArgoCD apps, Helm charts |
-| **Infrastructure** | `infra/` | HCL (Terraform) | Cloud provisioning, IaC modules |
-| **Scripts** | `scripts/` | Bash / Python | Automation helpers that call services and CLI tools |
+| Layer              | Directory              | Primary Language | Responsibility                                                                                                    |
+| ------------------ | ---------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **Services**       | `services/`            | Python (FastAPI) | Stateless business-logic microservices. Infrastructure tests (Terratest/Go) live in `tests/terratest/`, not here. |
+| **Platform**       | `platform/`, `charts/` | YAML + Helm      | Kubernetes manifests, ArgoCD apps, Helm charts                                                                    |
+| **Infrastructure** | `infra/`               | HCL (Terraform)  | Cloud provisioning, IaC modules                                                                                   |
+| **Scripts**        | `scripts/`             | Bash / Python    | Automation helpers that call services and CLI tools                                                               |
 
 ### Platform Services (`services/`)
 
-| Service | Directory | Purpose |
-|---|---|---|
-| VSM | `services/vsm/` | Value Stream Mapping — tracks work items through 8-stage pipeline, calculates flow metrics |
-| Analytics Dashboard | `services/analytics-dashboard/` | DORA trend data for Backstage portal widgets |
-| Anomaly Detection | `services/anomaly-detection/` | ML-based anomaly detection using Prometheus metrics |
-| Smart Alerting | `services/smart-alerting/` | Intelligent alert routing via Grafana Alertmanager |
-| Feedback | `services/feedback/` | Collect and store developer feedback events |
-| Feedback Bot | `services/feedback-bot/` | Automated feedback collection via Mattermost |
-| Friction CLI / Bot | `services/friction-cli/`, `services/friction-bot/` | Friction signal collection and aggregation |
-| Discovery Metrics | `services/discovery-metrics/` | Service health summaries for Backstage |
-| SPACE Metrics | `services/space-metrics/` | SPACE framework metrics collection |
-| AI Code Review | `services/ai-code-review/` | AI-powered code review automation |
-| NPS | `services/nps/` | Net Promoter Score collection |
-| DevEx Survey | `services/devex-survey-automation/` | Developer experience survey automation |
-| Insights | `services/insights/` | Aggregated insight queries over analytics data |
-| Data API | `services/data-api/` | Unified data access layer |
-| MCP K8s Server | `services/mcp-k8s-server/` | Model Context Protocol server for Kubernetes |
+| Service             | Directory                                          | Purpose                                                                                    |
+| ------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| VSM                 | `services/vsm/`                                    | Value Stream Mapping — tracks work items through 8-stage pipeline, calculates flow metrics |
+| Analytics Dashboard | `services/analytics-dashboard/`                    | DORA trend data for Backstage portal widgets                                               |
+| Anomaly Detection   | `services/anomaly-detection/`                      | ML-based anomaly detection using Prometheus metrics                                        |
+| Smart Alerting      | `services/smart-alerting/`                         | Intelligent alert routing via Grafana Alertmanager                                         |
+| Feedback            | `services/feedback/`                               | Collect and store developer feedback events                                                |
+| Feedback Bot        | `services/feedback-bot/`                           | Automated feedback collection via Mattermost                                               |
+| Friction CLI / Bot  | `services/friction-cli/`, `services/friction-bot/` | Friction signal collection and aggregation                                                 |
+| Discovery Metrics   | `services/discovery-metrics/`                      | Service health summaries for Backstage                                                     |
+| SPACE Metrics       | `services/space-metrics/`                          | SPACE framework metrics collection                                                         |
+| AI Code Review      | `services/ai-code-review/`                         | AI-powered code review automation                                                          |
+| NPS                 | `services/nps/`                                    | Net Promoter Score collection                                                              |
+| DevEx Survey        | `services/devex-survey-automation/`                | Developer experience survey automation                                                     |
+| Insights            | `services/insights/`                               | Aggregated insight queries over analytics data                                             |
+| Data API            | `services/data-api/`                               | Unified data access layer                                                                  |
+| MCP K8s Server      | `services/mcp-k8s-server/`                         | Model Context Protocol server for Kubernetes                                               |
 
 > **Extensions**: The RAG service (Weaviate + semantic search) and DataHub (data
 > catalog) are optional extensions. See [`extensions/`](../extensions/README.md).
@@ -289,17 +289,17 @@ sequenceDiagram
 
 Services communicate via HTTP/REST only. Direct database sharing is not permitted.
 
-| Caller | Callee | Protocol | Notes |
-|---|---|---|---|
-| Backstage (portal) | `analytics-dashboard` | HTTP | DORA trend data for portal widgets |
-| Backstage (portal) | `discovery-metrics` | HTTP | Service health summaries |
-| `feedback-bot` | `feedback` service | HTTP | Store feedback events |
-| `friction-bot` | `friction-cli` | HTTP | Friction signal aggregation |
-| `smart-alerting` | Grafana Alertmanager | HTTP | Route alert rules |
-| `anomaly-detection` | Prometheus | HTTP (PromQL) | Pull metrics for ML analysis |
-| `insights` | `analytics-dashboard` | HTTP | Aggregated insight queries |
-| `vsm` service | DevLake | HTTP | Value stream mapping data |
-| Any service | OpenTelemetry Collector | OTLP/gRPC | Traces and metrics export |
+| Caller              | Callee                  | Protocol      | Notes                              |
+| ------------------- | ----------------------- | ------------- | ---------------------------------- |
+| Backstage (portal)  | `analytics-dashboard`   | HTTP          | DORA trend data for portal widgets |
+| Backstage (portal)  | `discovery-metrics`     | HTTP          | Service health summaries           |
+| `feedback-bot`      | `feedback` service      | HTTP          | Store feedback events              |
+| `friction-bot`      | `friction-cli`          | HTTP          | Friction signal aggregation        |
+| `smart-alerting`    | Grafana Alertmanager    | HTTP          | Route alert rules                  |
+| `anomaly-detection` | Prometheus              | HTTP (PromQL) | Pull metrics for ML analysis       |
+| `insights`          | `analytics-dashboard`   | HTTP          | Aggregated insight queries         |
+| `vsm` service       | DevLake                 | HTTP          | Value stream mapping data          |
+| Any service         | OpenTelemetry Collector | OTLP/gRPC     | Traces and metrics export          |
 
 **Rules:**
 
@@ -331,12 +331,12 @@ graph LR
     Alertmanager -->|notify| SmartAlerting[smart-alerting service]
 ```
 
-| Signal | Collector | Storage | Query |
-|---|---|---|---|
-| Metrics | OpenTelemetry Collector | Prometheus | Grafana / PromQL |
-| Logs | Fluent Bit | OpenSearch | Grafana / Lucene |
-| Traces | OpenTelemetry Collector | Grafana Tempo | Grafana / TraceQL |
-| DORA metrics | DevLake | DevLake DB | Grafana / DevLake API |
+| Signal       | Collector               | Storage       | Query                 |
+| ------------ | ----------------------- | ------------- | --------------------- |
+| Metrics      | OpenTelemetry Collector | Prometheus    | Grafana / PromQL      |
+| Logs         | Fluent Bit              | OpenSearch    | Grafana / Lucene      |
+| Traces       | OpenTelemetry Collector | Grafana Tempo | Grafana / TraceQL     |
+| DORA metrics | DevLake                 | DevLake DB    | Grafana / DevLake API |
 
 ---
 
@@ -366,14 +366,14 @@ graph TD
     NS_Apps -->|team workloads| AppComp[Application Services]
 ```
 
-| Namespace | Components | Ingress |
-|---|---|---|
-| `argocd` | ArgoCD server, repo-server, application-controller | Internal only |
-| `fawkes-platform` | Backstage portal, PostgreSQL | External (HTTPS) |
+| Namespace              | Components                                             | Ingress                     |
+| ---------------------- | ------------------------------------------------------ | --------------------------- |
+| `argocd`               | ArgoCD server, repo-server, application-controller     | Internal only               |
+| `fawkes-platform`      | Backstage portal, PostgreSQL                           | External (HTTPS)            |
 | `fawkes-observability` | Prometheus, Grafana, Tempo, OpenSearch, OTel Collector | Internal + Grafana external |
-| `fawkes-cicd` | Jenkins, DevLake | Internal + Jenkins external |
-| `fawkes-security` | Vault, SonarQube, Trivy operator | Internal only |
-| `fawkes-apps` | Platform microservices (`services/`) | Per-service ingress rules |
+| `fawkes-cicd`          | Jenkins, DevLake                                       | Internal + Jenkins external |
+| `fawkes-security`      | Vault, SonarQube, Trivy operator                       | Internal only               |
+| `fawkes-apps`          | Platform microservices (`services/`)                   | Per-service ingress rules   |
 
 **NetworkPolicy rule**: namespaces may only receive traffic from namespaces explicitly
 listed in their `NetworkPolicy` manifests (`platform/policies/`). Cross-namespace calls
@@ -416,14 +416,14 @@ provisions Vault; `platform/` manifests consume it.
 
 ## Test Architecture
 
-| Layer | Location | Tool | Scope |
-|---|---|---|---|
-| Bash unit tests | `tests/bats/unit/` | bats-core | `scripts/lib/` modules (common, flags, validation, prereqs) |
-| Python unit tests | `tests/unit/` | pytest | Isolated Python utility functions |
-| BDD scenarios | `tests/bdd/` | pytest-bdd | Platform acceptance criteria in business language |
-| Integration tests | `tests/integration/` | pytest / bash | Cross-component API and platform checks |
-| Infrastructure tests | `tests/terratest/` | Go / Terratest | Terraform module validation |
-| E2E tests | `tests/e2e/` | bash | Full platform smoke tests (requires live cluster) |
+| Layer                | Location             | Tool           | Scope                                                       |
+| -------------------- | -------------------- | -------------- | ----------------------------------------------------------- |
+| Bash unit tests      | `tests/bats/unit/`   | bats-core      | `scripts/lib/` modules (common, flags, validation, prereqs) |
+| Python unit tests    | `tests/unit/`        | pytest         | Isolated Python utility functions                           |
+| BDD scenarios        | `tests/bdd/`         | pytest-bdd     | Platform acceptance criteria in business language           |
+| Integration tests    | `tests/integration/` | pytest / bash  | Cross-component API and platform checks                     |
+| Infrastructure tests | `tests/terratest/`   | Go / Terratest | Terraform module validation                                 |
+| E2E tests            | `tests/e2e/`         | bash           | Full platform smoke tests (requires live cluster)           |
 
 Helper libraries for bats tests live in `tests/bats/helpers/`:
 

@@ -6,11 +6,11 @@
 
 ## Reports
 
-| Report | Date | PDF | Key Focus |
-|--------|------|-----|-----------|
-| **State of AI-assisted Software Development 2025** | Sep 2025 | [PDF](https://services.google.com/fh/files/misc/2025_state_of_ai_assisted_software_development.pdf) | Who is adopting AI, how they use it, and what happens next |
-| **AI Capabilities Model** | Nov 2025 | [PDF](https://services.google.com/fh/files/misc/2025_dora_ai_capabilities_model.pdf) | The 7 foundational capabilities that amplify AI benefits |
-| **ROI of AI-assisted Software Development** | Feb 2026 | [PDF](https://services.google.com/fh/files/misc/dora-roi-of-ai-assisted-software-development-2026.pdf) | Navigating the J-Curve, measuring financial impact |
+| Report                                             | Date     | PDF                                                                                                    | Key Focus                                                  |
+| -------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| **State of AI-assisted Software Development 2025** | Sep 2025 | [PDF](https://services.google.com/fh/files/misc/2025_state_of_ai_assisted_software_development.pdf)    | Who is adopting AI, how they use it, and what happens next |
+| **AI Capabilities Model**                          | Nov 2025 | [PDF](https://services.google.com/fh/files/misc/2025_dora_ai_capabilities_model.pdf)                   | The 7 foundational capabilities that amplify AI benefits   |
+| **ROI of AI-assisted Software Development**        | Feb 2026 | [PDF](https://services.google.com/fh/files/misc/dora-roi-of-ai-assisted-software-development-2026.pdf) | Navigating the J-Curve, measuring financial impact         |
 
 ---
 
@@ -25,6 +25,7 @@
 ### 2. The AI Productivity Paradox (State of AI 2025)
 
 Individual output metrics improve dramatically, but organizational delivery stays flat:
+
 - +21% tasks completed per developer
 - +98% more PRs merged
 - Organizational delivery: **flat**
@@ -36,6 +37,7 @@ Individual output metrics improve dramatically, but organizational delivery stay
 ### 3. The Acceleration Whiplash (Faros 2026 update)
 
 The paradox is accelerating:
+
 - PR review time: +441%
 - Bugs per developer: +54%
 - Incidents per PR: +242.7%
@@ -48,15 +50,15 @@ The paradox is accelerating:
 
 The capabilities that determine whether AI benefits scale:
 
-| # | Capability | Fawkes Status | Gap | Phase |
-|---|-----------|---------------|-----|-------|
-| 1 | Clear and communicated AI stance | ⚠️ Partial | AGENTS.md exists but not socialized beyond this repo | 3e |
-| 2 | Healthy data ecosystems | ⚠️ Partial | Type hints + structured logs; no unified data platform | 3b |
-| 3 | AI-accessible internal data | ✅ Strong | AGENTS.md context files, ARCHITECTURE.md, API_SURFACE.md | Done |
-| 4 | Strong version control practices | ✅ Strong | Small PRs, CI gates, conventional commits | Done |
-| 5 | Working in small batches | ⚠️ Partial | 400-line gate exists; AI pushes toward larger changes | 3e |
-| 6 | User-centric focus | ⚠️ Partial | Backstage templates; no user research yet | 3a, 3c |
-| 7 | Quality internal platforms | ✅ Strong | This IS the platform — paved paths, linters, Helm, ArgoCD | Done |
+| #   | Capability                       | Fawkes Status | Gap                                                       | Phase  |
+| --- | -------------------------------- | ------------- | --------------------------------------------------------- | ------ |
+| 1   | Clear and communicated AI stance | ⚠️ Partial    | AGENTS.md exists but not socialized beyond this repo      | 3e     |
+| 2   | Healthy data ecosystems          | ⚠️ Partial    | Type hints + structured logs; no unified data platform    | 3b     |
+| 3   | AI-accessible internal data      | ✅ Strong     | AGENTS.md context files, ARCHITECTURE.md, API_SURFACE.md  | Done   |
+| 4   | Strong version control practices | ✅ Strong     | Small PRs, CI gates, conventional commits                 | Done   |
+| 5   | Working in small batches         | ⚠️ Partial    | 400-line gate exists; AI pushes toward larger changes     | 3e     |
+| 6   | User-centric focus               | ⚠️ Partial    | Backstage templates; no user research yet                 | 3a, 3c |
+| 7   | Quality internal platforms       | ✅ Strong     | This IS the platform — paved paths, linters, Helm, ArgoCD | Done   |
 
 ### 5. The Seven Team Archetypes (State of AI 2025)
 
@@ -91,20 +93,23 @@ Without end-to-end visibility, teams optimize locally — making code generation
 ## How Fawkes Addresses Each Capability
 
 ### Capability 1: Clear AI Stance
+
 - [x] AGENTS.md defines permitted AI tasks, model selection, trust/verify rules
 - [ ] Socialize beyond this repo (internal blog, team presentations)
 - [ ] Create AI usage policy document for the organization
 - **Phase:** 3e
 
 ### Capability 2: Healthy Data Ecosystems
+
 - [x] Type hints on all Python functions
 - [x] Structured logging with trace_id + span_id injection
-- [x] Prometheus metrics + gen_ai.* recording rules
+- [x] Prometheus metrics + gen_ai.\* recording rules
 - [ ] Unified data platform (OpenSearch + Prometheus + Grafana correlation)
 - [ ] Data quality dashboards
 - **Phase:** 3b
 
 ### Capability 3: AI-Accessible Internal Data
+
 - [x] AGENTS.md context files for AI agents
 - [x] ARCHITECTURE.md component relationships
 - [x] API_SURFACE.md public interfaces
@@ -114,6 +119,7 @@ Without end-to-end visibility, teams optimize locally — making code generation
 - **Phase:** 3e
 
 ### Capability 4: Strong Version Control
+
 - [x] CI gates (lint, test, security scan)
 - [x] Conventional commits
 - [x] PR size limits (400 lines → CI blocks)
@@ -123,6 +129,7 @@ Without end-to-end visibility, teams optimize locally — making code generation
 - **Phase:** 3e
 
 ### Capability 5: Working in Small Batches
+
 - [x] PR size gate (400 lines)
 - [x] Tracer bullet approach (one service at a time)
 - [ ] Reduce PR size to 200 lines
@@ -131,6 +138,7 @@ Without end-to-end visibility, teams optimize locally — making code generation
 - **Phase:** 3e
 
 ### Capability 6: User-Centric Focus
+
 - [x] Backstage software templates (Python, Java, Node.js)
 - [x] Self-service template discovery
 - [ ] User research (personas, interviews, journey maps)
@@ -139,6 +147,7 @@ Without end-to-end visibility, teams optimize locally — making code generation
 - **Phase:** 3a, 3c
 
 ### Capability 7: Quality Internal Platforms
+
 - [x] Golden Path templates
 - [x] CI/CD pipelines (GitHub Actions)
 - [x] ArgoCD GitOps deployment
@@ -154,23 +163,25 @@ Without end-to-end visibility, teams optimize locally — making code generation
 ## DORA Metrics Fawkes Tracks
 
 ### Primary (DORA 5)
-| Metric | Instrumentation | Status |
-|--------|----------------|--------|
-| Deployment Frequency | ArgoCD sync events | ✅ |
-| Lead Time for Changes | Git commit → ArgoCD sync | ✅ |
-| Change Failure Rate | ArgoCD health + incidents | ⚠️ Needs alertmanager |
-| Mean Time to Recovery | Incident → resolution | ⚠️ Needs alertmanager |
-| Rework Rate | PR labels (rework) / total PRs | ⚠️ Needs label convention |
+
+| Metric                | Instrumentation                | Status                    |
+| --------------------- | ------------------------------ | ------------------------- |
+| Deployment Frequency  | ArgoCD sync events             | ✅                        |
+| Lead Time for Changes | Git commit → ArgoCD sync       | ✅                        |
+| Change Failure Rate   | ArgoCD health + incidents      | ⚠️ Needs alertmanager     |
+| Mean Time to Recovery | Incident → resolution          | ⚠️ Needs alertmanager     |
+| Rework Rate           | PR labels (rework) / total PRs | ⚠️ Needs label convention |
 
 ### AI Amplification (NEW)
-| Metric | Purpose | Status |
-|--------|---------|--------|
-| AI Adoption Rate | Track adoption curve | ❌ Not started |
-| AI vs. Non-AI PR Size | Detect Acceleration Whiplash | ❌ Not started |
-| AI vs. Non-AI Review Time | Detect verification tax | ❌ Not started |
-| AI vs. Non-AI Incident Rate | Detect quality degradation | ❌ Not started |
-| PR Context Load | Detect cognitive overload | ❌ Not started |
-| Work Restart Rate | Detect "easy to start, hard to finish" | ❌ Not started |
+
+| Metric                      | Purpose                                | Status         |
+| --------------------------- | -------------------------------------- | -------------- |
+| AI Adoption Rate            | Track adoption curve                   | ❌ Not started |
+| AI vs. Non-AI PR Size       | Detect Acceleration Whiplash           | ❌ Not started |
+| AI vs. Non-AI Review Time   | Detect verification tax                | ❌ Not started |
+| AI vs. Non-AI Incident Rate | Detect quality degradation             | ❌ Not started |
+| PR Context Load             | Detect cognitive overload              | ❌ Not started |
+| Work Restart Rate           | Detect "easy to start, hard to finish" | ❌ Not started |
 
 ---
 

@@ -6,13 +6,13 @@ runtime). No cloud account required.
 
 The single command `make dev-up` installs **five components**:
 
-| Component | Role |
-|---|---|
-| **ArgoCD** | GitOps controller — syncs Git state to Kubernetes |
-| **Vault** (dev mode) | Secrets management |
-| **Backstage** | Developer portal and service catalog |
-| **Prometheus + Grafana** | Metrics collection and dashboards |
-| **podinfo** (sample app) | Demo workload managed end-to-end by ArgoCD |
+| Component                | Role                                              |
+| ------------------------ | ------------------------------------------------- |
+| **ArgoCD**               | GitOps controller — syncs Git state to Kubernetes |
+| **Vault** (dev mode)     | Secrets management                                |
+| **Backstage**            | Developer portal and service catalog              |
+| **Prometheus + Grafana** | Metrics collection and dashboards                 |
+| **podinfo** (sample app) | Demo workload managed end-to-end by ArgoCD        |
 
 **Expected time:** < 10 minutes on a machine with 8 GB RAM and Docker installed.
 
@@ -22,14 +22,15 @@ The single command `make dev-up` installs **five components**:
 
 Install these tools before running `make dev-up`:
 
-| Tool | Version | Install |
-|---|---|---|
-| Docker | 24+ | <https://docs.docker.com/get-docker/> |
-| k3d | 5+ | `brew install k3d` or <https://k3d.io> |
-| kubectl | 1.28+ | `brew install kubectl` |
-| Helm | 3.14+ | `brew install helm` |
+| Tool    | Version | Install                                |
+| ------- | ------- | -------------------------------------- |
+| Docker  | 24+     | <https://docs.docker.com/get-docker/>  |
+| k3d     | 5+      | `brew install k3d` or <https://k3d.io> |
+| kubectl | 1.28+   | `brew install kubectl`                 |
+| Helm    | 3.14+   | `brew install helm`                    |
 
 > **macOS one-liner:**
+>
 > ```bash
 > brew install k3d kubectl helm
 > ```
@@ -72,8 +73,8 @@ Open a separate terminal tab for each one you want to access:
 kubectl port-forward -n argocd svc/argocd-server 8888:80
 ```
 
-Open <http://localhost:8888>  
-Username: `admin`  
+Open <http://localhost:8888>
+Username: `admin`
 Password: printed by `make dev-status` (retrieved from the `argocd-initial-admin-secret` Secret)
 
 ### Vault
@@ -82,7 +83,7 @@ Password: printed by `make dev-status` (retrieved from the `argocd-initial-admin
 kubectl port-forward -n vault svc/vault 8200:8200
 ```
 
-Open <http://localhost:8200>  
+Open <http://localhost:8200>
 Root token: `fawkes-dev-root`
 
 > Vault runs in **dev mode** — data is in-memory only and is reset when the pod restarts.
@@ -102,8 +103,8 @@ Open <http://localhost:7007>
 kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 3000:80
 ```
 
-Open <http://localhost:3000>  
-Username: `admin`  
+Open <http://localhost:3000>
+Username: `admin`
 Password: `fawkes-grafana`
 
 ### Prometheus
@@ -120,7 +121,7 @@ Open <http://localhost:9090>
 kubectl port-forward -n sample-apps svc/podinfo 9898:9898
 ```
 
-Open <http://localhost:9898>  
+Open <http://localhost:9898>
 podinfo is deployed and managed by ArgoCD — you can watch the sync in the ArgoCD UI.
 
 ---
@@ -187,8 +188,8 @@ the `--port "8080:80@loadbalancer"` flag to a free port (e.g., `9080`).
 
 ## Environment Variables
 
-| Variable | Default | Description |
-|---|---|---|
+| Variable         | Default      | Description                                |
+| ---------------- | ------------ | ------------------------------------------ |
 | `FAWKES_CLUSTER` | `fawkes-dev` | k3d cluster name used by all three scripts |
 
 Example — use a custom cluster name:

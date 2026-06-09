@@ -4,27 +4,27 @@ on:
   workflow_call:
     inputs:
       scan-type:
-        description: 'Type of scan: all, secrets, vulnerabilities, dependencies, container'
+        description: "Type of scan: all, secrets, vulnerabilities, dependencies, container"
         required: false
         type: string
-        default: 'all'
+        default: "all"
       scan-path:
-        description: 'Path to scan'
+        description: "Path to scan"
         required: false
         type: string
-        default: '.'
+        default: "."
       severity-threshold:
-        description: 'Minimum severity to report (UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL)'
+        description: "Minimum severity to report (UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL)"
         required: false
         type: string
-        default: 'MEDIUM'
+        default: "MEDIUM"
       fail-on-critical:
-        description: 'Fail workflow on critical vulnerabilities'
+        description: "Fail workflow on critical vulnerabilities"
         required: false
         type: boolean
         default: true
       upload-sarif:
-        description: 'Upload results to GitHub Security tab'
+        description: "Upload results to GitHub Security tab"
         required: false
         type: boolean
         default: true
@@ -61,10 +61,10 @@ jobs:
         if: inputs.scan-type == 'all' || inputs.scan-type == 'vulnerabilities'
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs'
+          scan-type: "fs"
           scan-ref: ${{ inputs.scan-path }}
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+          format: "sarif"
+          output: "trivy-results.sarif"
           severity: ${{ inputs.severity-threshold }}
           exit-code: ${{ inputs.fail-on-critical && '1' || '0' }}
 
@@ -72,8 +72,8 @@ jobs:
         if: inputs.upload-sarif && (inputs.scan-type == 'all' || inputs.scan-type == 'vulnerabilities')
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: 'trivy-results.sarif'
-          category: 'trivy-filesystem'
+          sarif_file: "trivy-results.sarif"
+          category: "trivy-filesystem"
 
       - name: Run Trivy for dependency scanning
         if: inputs.scan-type == 'all' || inputs.scan-type == 'dependencies'

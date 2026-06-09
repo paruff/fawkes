@@ -136,6 +136,7 @@ output "cluster_id" {
 ```
 
 ### 4. No Hardcoded Values
+
 All configuration is passed via variables with sensible defaults:
 
 ```hcl
@@ -147,13 +148,16 @@ variable "network_plugin" {
 ```
 
 ### 5. Complete Documentation
+
 Each module includes:
+
 - README.md with usage examples
 - Variable descriptions
 - Output descriptions
 - terraform.tfvars.example
 
 ### 6. Version Constraints
+
 Modules specify minimum provider versions:
 
 ```hcl
@@ -288,6 +292,7 @@ terraform apply tfplan
 When creating new modules:
 
 1. **Follow the structure**:
+
    ```
    module-name/
    ├── README.md
@@ -300,11 +305,13 @@ When creating new modules:
 2. **Add validation** to all variables that have constraints
 
 3. **Document everything**:
+
    - Add descriptions to all variables
    - Add descriptions to all outputs
    - Include usage examples in README
 
 4. **Test thoroughly**:
+
    - Run `terraform fmt`
    - Run `terraform validate`
    - Test with actual resources
@@ -322,11 +329,13 @@ Complete usage examples are available in the [examples](./examples/) directory:
 ## Testing Modules
 
 ### Format Check
+
 ```bash
 terraform fmt -check -recursive
 ```
 
 ### Validation
+
 ```bash
 cd modules/<module-name>
 terraform init
@@ -334,6 +343,7 @@ terraform validate
 ```
 
 ### Plan (Dry Run)
+
 ```bash
 terraform plan
 ```
@@ -366,6 +376,7 @@ When contributing new modules:
 ## Support
 
 For questions or issues with modules:
+
 - Check module README.md
 - Review examples/
 - Open an issue in the repository

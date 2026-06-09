@@ -14,13 +14,13 @@ Never delete a failing test — fix the code instead.
 
 ## Test Layers
 
-| Layer | Location | Tool | When It Runs |
-|---|---|---|---|
-| Go unit | `services/{name}/*_test.go` | `go test` | Every PR |
-| Python unit | `tests/unit/` | `pytest` | Every PR |
-| Integration | `tests/integration/` | `pytest` | Every PR |
-| BDD | `tests/bdd/` | `pytest-bdd` | Every PR |
-| E2E / Platform | `tests/e2e/` | gated | Manual / scheduled |
+| Layer          | Location                    | Tool         | When It Runs       |
+| -------------- | --------------------------- | ------------ | ------------------ |
+| Go unit        | `services/{name}/*_test.go` | `go test`    | Every PR           |
+| Python unit    | `tests/unit/`               | `pytest`     | Every PR           |
+| Integration    | `tests/integration/`        | `pytest`     | Every PR           |
+| BDD            | `tests/bdd/`                | `pytest-bdd` | Every PR           |
+| E2E / Platform | `tests/e2e/`                | gated        | Manual / scheduled |
 
 ## Go Test Pattern (Table-Driven)
 

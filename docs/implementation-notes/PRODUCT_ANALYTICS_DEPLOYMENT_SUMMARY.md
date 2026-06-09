@@ -178,7 +178,7 @@ plausible("Deploy Application", {
 - PostgreSQL: 30Gi (10Gi × 3 replicas, metadata)
 - **Total**: 40Gi
 
-**✅ Well within 70% resource utilization target**
+#### ✅ Well within 70% resource utilization target
 
 ---
 

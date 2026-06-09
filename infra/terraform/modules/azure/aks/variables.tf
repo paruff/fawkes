@@ -206,20 +206,20 @@ variable "max_surge" {
 variable "additional_node_pools" {
   description = "Map of additional node pools to create"
   type = map(object({
-    vm_size              = string
-    enable_auto_scaling  = optional(bool, true)
-    node_count           = optional(number, 3)
-    min_count            = optional(number, 1)
-    max_count            = optional(number, 10)
-    os_disk_size_gb      = optional(number, 128)
-    os_disk_type         = optional(string, "Managed")
-    max_pods             = optional(number, 110)
+    vm_size               = string
+    enable_auto_scaling   = optional(bool, true)
+    node_count            = optional(number, 3)
+    min_count             = optional(number, 1)
+    max_count             = optional(number, 10)
+    os_disk_size_gb       = optional(number, 128)
+    os_disk_type          = optional(string, "Managed")
+    max_pods              = optional(number, 110)
     enable_node_public_ip = optional(bool, false)
-    zones                = optional(list(string))
-    node_labels          = optional(map(string), {})
-    node_taints          = optional(list(string), [])
-    max_surge            = optional(string, "33%")
-    tags                 = optional(map(string), {})
+    zones                 = optional(list(string))
+    node_labels           = optional(map(string), {})
+    node_taints           = optional(list(string), [])
+    max_surge             = optional(string, "33%")
+    tags                  = optional(map(string), {})
   }))
   default = {}
 }

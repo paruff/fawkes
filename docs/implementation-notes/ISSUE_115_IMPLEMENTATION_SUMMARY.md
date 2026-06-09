@@ -11,6 +11,7 @@ Successfully implemented comprehensive error handling across all shell scripts i
 Created `/scripts/lib/error_handling.sh` with the following features:
 
 #### Logging Functions
+
 - `log_debug()` - Debug-level logging (only when VERBOSE=true)
 - `log_info()` - Informational messages
 - `log_success()` - Success messages with green checkmarks
@@ -19,6 +20,7 @@ Created `/scripts/lib/error_handling.sh` with the following features:
 - `log_fatal()` - Fatal error and exit
 
 #### Error Functions
+
 - `error_exit()` - Display error with context (line number, function) and exit
 - `require_command()` - Verify command exists, exit if not
 - `require_var()` - Verify variable is set, exit if not
@@ -26,17 +28,20 @@ Created `/scripts/lib/error_handling.sh` with the following features:
 - `require_directory()` - Verify directory exists, exit if not
 
 #### Cleanup and Rollback
+
 - `register_cleanup_function()` - Register functions to run on exit
 - `register_rollback_function()` - Register functions to run on error
 - Automatic execution via trap handlers
 
 #### Utility Functions
+
 - `retry_command()` - Retry with exponential backoff
 - `show_progress()` - Display progress indicators
 - `show_section()` - Display section headers
 - `confirm()` - User confirmation prompts
 
 #### Trap Handlers
+
 - `EXIT` - Cleanup functions run on any exit
 - `ERR` - Error handler with detailed context
 - `INT` - Graceful shutdown on Ctrl+C
@@ -45,6 +50,7 @@ Created `/scripts/lib/error_handling.sh` with the following features:
 ### 2. Standard Exit Codes
 
 Defined consistent exit codes across all scripts:
+
 - `0` - Success
 - `1` - General error
 - `2` - Missing prerequisite (command, file, variable)
@@ -60,15 +66,17 @@ Defined consistent exit codes across all scripts:
 **Total Scripts**: 82
 **100% Coverage**: All scripts now have `set -euo pipefail`
 
-#### Breakdown by Category:
+#### Breakdown by Category
+
 - **Library files**: 9 files (common.sh, validation.sh, flags.sh, terraform.sh, prereqs.sh, cluster.sh, summary.sh, argocd.sh, error_handling.sh)
 - **Provider libraries**: 4 files (aws.sh, azure.sh, gcp.sh, local.sh)
-- **Validation scripts**: 40+ files (validate-at-*.sh, validate-*.sh)
-- **Test scripts**: 10+ files (test-*.sh)
-- **Service scripts**: 6 files (build.sh, validate*.sh in services/)
+- **Validation scripts**: 40+ files (validate-at-_.sh, validate-_.sh)
+- **Test scripts**: 10+ files (test-\*.sh)
+- **Service scripts**: 6 files (build.sh, validate\*.sh in services/)
 - **Utility scripts**: 6 files (project setup, diagnostics, etc.)
 
-#### Example Scripts with Full Error Handling:
+#### Example Scripts with Full Error Handling
+
 - `scripts/validate-analytics-dashboard.sh` - Uses error handling library
 - `scripts/github-issues-generator.sh` - Uses error handling library
 - `services/ai-code-review/build.sh` - Enhanced with better error messages
@@ -76,12 +84,14 @@ Defined consistent exit codes across all scripts:
 ### 4. Testing
 
 Created `/tests/unit/test_error_handling.sh` with comprehensive tests:
+
 - **Total Tests**: 32
 - **Passing**: 32
 - **Failing**: 0
 - **Coverage**: 100%
 
 Test Categories:
+
 - File existence verification
 - Library loading
 - Function definitions (15 functions tested)
@@ -91,10 +101,12 @@ Test Categories:
 
 ### 5. Documentation
 
-#### Created New Documentation:
+#### Created New Documentation
+
 - `/docs/standards/ERROR_HANDLING.md` - Comprehensive error handling standards
 
-#### Updated Existing Documentation:
+#### Updated Existing Documentation
+
 - `CODING_STANDARDS.md` - Added error handling section with examples
   - Core requirements
   - Error handling library usage
@@ -104,7 +116,8 @@ Test Categories:
 
 ### 6. Key Features
 
-#### Before Implementation:
+#### Before Implementation
+
 - ❌ Inconsistent error handling
 - ❌ Some scripts had only `set -e`
 - ❌ Many scripts had no error handling
@@ -112,7 +125,8 @@ Test Categories:
 - ❌ Generic error messages
 - ❌ Unpredictable failures
 
-#### After Implementation:
+#### After Implementation
+
 - ✅ All scripts have `set -euo pipefail`
 - ✅ Centralized error handling library
 - ✅ Consistent logging and error messages
@@ -213,13 +227,15 @@ retry_command 3 5 "kubectl get nodes"
 
 ## Files Changed
 
-### Created:
+### Created
+
 - `scripts/lib/error_handling.sh`
 - `tests/unit/test_error_handling.sh`
 - `docs/standards/ERROR_HANDLING.md`
 - `ISSUE_115_IMPLEMENTATION_SUMMARY.md`
 
-### Modified:
+### Modified
+
 - `CODING_STANDARDS.md`
 - `scripts/lib/common.sh`
 - `scripts/lib/validation.sh`

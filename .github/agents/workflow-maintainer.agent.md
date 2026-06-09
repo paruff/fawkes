@@ -19,18 +19,19 @@ Your job is to keep workflows compliant with fawkes CI conventions.
 
 ## Fawkes CI conventions
 
-| Rule | Enforcement |
-|---|---|
-| Pin actions to SHA | `uses: actions/checkout@SHA` — never `@v4` or `@main` |
-| `timeout-minutes` on every job | No exceptions — even 1-minute jobs |
-| DORA timestamps | Every job must have start + finish (`if: always()`) |
-| Minimal `permissions` | Job-level, not workflow-level |
-| No hardcoded secrets | `${{ secrets.NAME }}` only |
-| `paths-ignore` for docs | Skip CI on docs-only PRs |
+| Rule                           | Enforcement                                           |
+| ------------------------------ | ----------------------------------------------------- |
+| Pin actions to SHA             | `uses: actions/checkout@SHA` — never `@v4` or `@main` |
+| `timeout-minutes` on every job | No exceptions — even 1-minute jobs                    |
+| DORA timestamps                | Every job must have start + finish (`if: always()`)   |
+| Minimal `permissions`          | Job-level, not workflow-level                         |
+| No hardcoded secrets           | `${{ secrets.NAME }}` only                            |
+| `paths-ignore` for docs        | Skip CI on docs-only PRs                              |
 
 ## Common maintenance tasks
 
 ### 1. Add DORA timestamps to a workflow
+
 ```yaml
 # Add at start of every job's steps:
 - name: DORA job start
@@ -47,6 +48,7 @@ Your job is to keep workflows compliant with fawkes CI conventions.
 ```
 
 ### 2. Fix unpinned actions
+
 ```bash
 # Find unpinned
 grep "uses:" FILE | grep -v "@[a-f0-9]\{40\}"
@@ -56,6 +58,7 @@ git ls-remote https://github.com/OWNER/REPO.git refs/tags/v4
 ```
 
 ### 3. Convert reusable workflow from step-level to job-level
+
 ```yaml
 # WRONG — step-level (can't pass secrets)
 jobs:
@@ -71,15 +74,17 @@ jobs:
 ```
 
 ### 4. Add missing timeout
+
 ```yaml
 # Add to every job
 jobs:
   job-name:
     runs-on: ubuntu-latest
-    timeout-minutes: 15  # <-- add this
+    timeout-minutes: 15 # <-- add this
 ```
 
 ### 5. Add missing permissions
+
 ```yaml
 # Most jobs only need:
 permissions:
@@ -92,6 +97,7 @@ permissions:
 ```
 
 ## Validate after changes
+
 ```bash
 # YAML syntax
 python -c "import yaml; yaml.safe_load(open('FILE'))"

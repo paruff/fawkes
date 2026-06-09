@@ -34,9 +34,9 @@ resource "azurerm_kubernetes_cluster" "main" {
   name                = var.cluster_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  dns_prefix                  = var.dns_prefix != null ? var.dns_prefix : "${var.cluster_name}-dns"
-  kubernetes_version          = var.kubernetes_version
-  sku_tier                    = var.sku_tier
+  dns_prefix          = var.dns_prefix != null ? var.dns_prefix : "${var.cluster_name}-dns"
+  kubernetes_version  = var.kubernetes_version
+  sku_tier            = var.sku_tier
 
   default_node_pool {
     name                         = var.default_node_pool_name
@@ -94,7 +94,7 @@ resource "azurerm_kubernetes_cluster" "main" {
       content {
         managed_outbound_ip_count = var.load_balancer_managed_outbound_ip_count
       }
-      }
+    }
   }
 
   # API Server Access Profile

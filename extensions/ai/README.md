@@ -6,9 +6,9 @@ documentation and knowledge bases.
 
 ## Components
 
-| Component | Purpose | Resource Requirement |
-|---|---|---|
-| **Weaviate** | Vector database for semantic search | 2–4 GB RAM, 2 vCPU |
+| Component       | Purpose                                             | Resource Requirement |
+| --------------- | --------------------------------------------------- | -------------------- |
+| **Weaviate**    | Vector database for semantic search                 | 2–4 GB RAM, 2 vCPU   |
 | **RAG Service** | FastAPI service wrapping Weaviate for doc retrieval | 256 MB RAM, 0.5 vCPU |
 
 ## Prerequisites

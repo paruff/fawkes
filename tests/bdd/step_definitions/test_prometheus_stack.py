@@ -14,10 +14,8 @@ import json
 import subprocess
 import time
 from typing import Dict, Any
-from urllib.parse import urlparse
 
 import pytest
-import requests
 from pytest_bdd import given, when, then, parsers, scenarios
 
 # Load all scenarios from the feature file
@@ -254,7 +252,7 @@ def targets_include(datatable, context: Dict):
     # In a real scenario, we'd parse the targets from Prometheus API
     # For now, we'll check if ServiceMonitors exist
     for row in datatable:
-        target_type = row["target_type"]
+        _ = row["target_type"]
         # Verification would happen here
         pass
 
@@ -471,7 +469,7 @@ def dashboards_exist(datatable, context: Dict):
     assert context.get("grafana_dashboards_queried"), "Dashboards not queried"
     # In a real scenario, we'd verify each dashboard exists
     for row in datatable:
-        dashboard_name = row["dashboard_name"]
+        _ = row["dashboard_name"]
         # Verification would happen here
         pass
 
@@ -651,7 +649,7 @@ def metrics_available(datatable, context: Dict):
     assert context.get("kube_state_metrics_queried"), "Metrics not queried"
     # In a real scenario, we'd verify each metric type
     for row in datatable:
-        metric_type = row["metric_type"]
+        _ = row["metric_type"]
         # Verification would happen here
         pass
 
@@ -763,8 +761,8 @@ def cpu_requests_defined(context: Dict):
         containers = workload.get("spec", {}).get("template", {}).get("spec", {}).get("containers", [])
         for container in containers:
             resources = container.get("resources", {})
-            requests = resources.get("requests", {})
-            assert "cpu" in requests, f"CPU request not defined for {container.get('name')}"
+            resource_requests = resources.get("requests", {})
+            assert "cpu" in resource_requests, f"CPU request not defined for {container.get('name')}"
 
 
 @then("all deployments should have memory requests defined")
@@ -779,8 +777,8 @@ def memory_requests_defined(context: Dict):
         containers = workload.get("spec", {}).get("template", {}).get("spec", {}).get("containers", [])
         for container in containers:
             resources = container.get("resources", {})
-            requests = resources.get("requests", {})
-            assert "memory" in requests, f"Memory request not defined for {container.get('name')}"
+            resource_requests = resources.get("requests", {})
+            assert "memory" in resource_requests, f"Memory request not defined for {container.get('name')}"
 
 
 @then("all deployments should have CPU limits defined")

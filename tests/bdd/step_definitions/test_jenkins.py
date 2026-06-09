@@ -1,7 +1,7 @@
 """Step definitions for Jenkins pipeline tests."""
 
 import pytest
-from pytest_bdd import scenarios, given, when, then, parsers
+from pytest_bdd import scenarios, given, when, then
 
 # Load ALL scenarios from the feature file
 scenarios("../features/jenkins/pipeline-creation.feature")

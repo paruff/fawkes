@@ -22,6 +22,7 @@ Each Terraform module has dedicated unit tests:
 - **`argocd_helm_test.go`**: Tests for ArgoCD Helm deployment module
 
 Unit tests validate:
+
 - Module outputs match expected values
 - Input validation works correctly
 - Resources are created with proper configuration
@@ -65,17 +66,19 @@ az account set --subscription "your-subscription-id"
 ### Environment Setup
 
 1. **Install Go dependencies**:
+
    ```bash
    cd tests/terratest
    go mod download
    ```
 
 2. **Set up environment variables**:
+
    ```bash
    # Required for Azure tests
    export ARM_SUBSCRIPTION_ID="your-subscription-id"
    export ARM_TENANT_ID="your-tenant-id"
-   
+
    # Optional: For cost estimation tests
    export INFRACOST_API_KEY="your-infracost-api-key"
    ```
@@ -147,15 +150,15 @@ go test -v -timeout 60m -parallel 4 ./...
 
 ### Environment Variables
 
-| Variable | Purpose | Default |
-|----------|---------|---------|
-| `RUN_TERRAFORM_INTEGRATION_TESTS` | Enable integration tests that deploy resources | `false` |
-| `RUN_TERRAFORM_E2E_TESTS` | Enable expensive end-to-end tests | `false` |
-| `RUN_TERRAFORM_COST_TESTS` | Enable cost estimation tests | `false` |
-| `ARM_SUBSCRIPTION_ID` | Azure subscription for testing | Required for Azure tests |
-| `ARM_TENANT_ID` | Azure tenant ID | Required for Azure tests |
-| `INFRACOST_API_KEY` | Infracost API key for cost estimation | Optional |
-| `KUBECONFIG` | Path to kubeconfig for Kubernetes tests | `~/.kube/config` |
+| Variable                          | Purpose                                        | Default                  |
+| --------------------------------- | ---------------------------------------------- | ------------------------ |
+| `RUN_TERRAFORM_INTEGRATION_TESTS` | Enable integration tests that deploy resources | `false`                  |
+| `RUN_TERRAFORM_E2E_TESTS`         | Enable expensive end-to-end tests              | `false`                  |
+| `RUN_TERRAFORM_COST_TESTS`        | Enable cost estimation tests                   | `false`                  |
+| `ARM_SUBSCRIPTION_ID`             | Azure subscription for testing                 | Required for Azure tests |
+| `ARM_TENANT_ID`                   | Azure tenant ID                                | Required for Azure tests |
+| `INFRACOST_API_KEY`               | Infracost API key for cost estimation          | Optional                 |
+| `KUBECONFIG`                      | Path to kubeconfig for Kubernetes tests        | `~/.kube/config`         |
 
 ### Test Filters
 
@@ -199,8 +202,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
-      
+          go-version: "1.21"
+
       - name: Run validation tests
         run: |
           cd tests/terratest
@@ -302,13 +305,13 @@ terraform force-unlock <lock-id>
 
 ### Expected Costs
 
-| Test Type | Duration | Estimated Cost |
-|-----------|----------|----------------|
-| Validation | 1-2 min | $0.00 |
-| Unit Test (Resource Group) | 1-2 min | $0.00 |
-| Unit Test (Network) | 2-3 min | $0.01 |
-| Unit Test (AKS) | 10-15 min | $1-2 |
-| Integration Test (Full Stack) | 20-30 min | $5-10 |
+| Test Type                     | Duration  | Estimated Cost |
+| ----------------------------- | --------- | -------------- |
+| Validation                    | 1-2 min   | $0.00          |
+| Unit Test (Resource Group)    | 1-2 min   | $0.00          |
+| Unit Test (Network)           | 2-3 min   | $0.01          |
+| Unit Test (AKS)               | 10-15 min | $1-2           |
+| Integration Test (Full Stack) | 20-30 min | $5-10          |
 
 ### Cost Optimization Tips
 
@@ -346,12 +349,12 @@ import (
 
 func TestMyModule(t *testing.T) {
     t.Parallel()
-    
+
     // Skip if not running integration tests
     if os.Getenv("RUN_TERRAFORM_INTEGRATION_TESTS") != "true" {
         t.Skip("Skipping integration test")
     }
-    
+
     terraformOptions := &terraform.Options{
         TerraformDir: "../../infra/terraform/modules/my-module",
         Vars: map[string]interface{}{
@@ -359,10 +362,10 @@ func TestMyModule(t *testing.T) {
         },
         NoColor: true,
     }
-    
+
     defer terraform.Destroy(t, terraformOptions)
     terraform.InitAndApply(t, terraformOptions)
-    
+
     output := terraform.Output(t, terraformOptions, "my_output")
     assert.NotEmpty(t, output)
 }

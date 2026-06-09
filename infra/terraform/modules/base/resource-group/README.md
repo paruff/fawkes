@@ -7,6 +7,7 @@ This is a base module that defines common variables and validation patterns for 
 ## Purpose
 
 This module provides:
+
 - Common variable definitions for resource grouping with validation rules
 - Standardized naming conventions (snake_case)
 - Reusable patterns for provider-specific implementations
@@ -41,6 +42,7 @@ All variables include validation rules to catch configuration errors early:
 ## Provider-Specific Extensions
 
 Provider-specific modules should:
+
 1. Reference these variable definitions where applicable
 2. Use consistent naming from this base
 3. Add provider-specific variables as needed

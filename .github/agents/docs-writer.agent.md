@@ -44,17 +44,17 @@ describing it — do not fix it yourself.
 
 ## Document types you handle
 
-| Type | Location | Format | When to use |
-|---|---|---|---|
-| ADRs | `docs/adr/` | MADR | New architectural decisions or reversals |
-| Runbooks | `docs/runbooks/` | Diataxis how-to | Operational procedures, incident response |
-| Tutorials | `docs/tutorials/` | Diataxis tutorial | Learning-oriented, step-by-step |
-| Reference | `docs/reference/` | Diataxis reference | API specs, config options, CLI flags |
-| How-to guides | `docs/how-to/` | Diataxis how-to | Goal-oriented task instructions |
-| README | `services/{name}/README.md` | Structured | Per-service overview and quickstart |
-| API docs | `docs/reference/api/` | OpenAPI-derived | FastAPI route documentation |
-| CONTRIBUTING | `CONTRIBUTING.md` | Standard | Onboarding, branching, PR guidelines |
-| DORA reports | `docs/dojo/` | Diataxis explanation | DORA metrics, AI capabilities, belt docs |
+| Type          | Location                    | Format               | When to use                               |
+| ------------- | --------------------------- | -------------------- | ----------------------------------------- |
+| ADRs          | `docs/adr/`                 | MADR                 | New architectural decisions or reversals  |
+| Runbooks      | `docs/runbooks/`            | Diataxis how-to      | Operational procedures, incident response |
+| Tutorials     | `docs/tutorials/`           | Diataxis tutorial    | Learning-oriented, step-by-step           |
+| Reference     | `docs/reference/`           | Diataxis reference   | API specs, config options, CLI flags      |
+| How-to guides | `docs/how-to/`              | Diataxis how-to      | Goal-oriented task instructions           |
+| README        | `services/{name}/README.md` | Structured           | Per-service overview and quickstart       |
+| API docs      | `docs/reference/api/`       | OpenAPI-derived      | FastAPI route documentation               |
+| CONTRIBUTING  | `CONTRIBUTING.md`           | Standard             | Onboarding, branching, PR guidelines      |
+| DORA reports  | `docs/dojo/`                | Diataxis explanation | DORA metrics, AI capabilities, belt docs  |
 
 ## Diataxis documentation structure
 
@@ -93,18 +93,21 @@ Never mix quadrants in a single document.
 ## Consequences
 
 ### Positive
+
 - {outcome 1}
 
 ### Negative / Trade-offs
+
 - {trade-off 1}
 
 ### Neutral
+
 - {neutral change}
 ```
 
 ## Runbook format
 
-```markdown
+````markdown
 # {Runbook title}
 
 **Last updated:** {YYYY-MM-DD}
@@ -127,10 +130,11 @@ Never mix quadrants in a single document.
 ```bash
 {command}
 ```
+````
 
 Expected output: `{what success looks like}`
 
-### Step 2 — ...
+### Step 2 —
 
 ## Verification
 
@@ -140,7 +144,8 @@ Expected output: `{what success looks like}`
 
 If the above steps do not resolve the issue within {N} minutes, escalate to
 {team or channel} with the following information: ...
-```
+
+````
 
 ## Service README format
 
@@ -168,19 +173,20 @@ the human-readable name, e.g. "DORA Metrics Collector" for `services/dora-metric
 cd services/{name}
 pip install -r requirements-dev.txt
 uvicorn app.main:app --reload
-```
+````
 
 ## Configuration
 
-| Variable | Required | Default | Description |
-|---|---|---|---|
-| `PORT` | No | `8000` | Port the service listens on |
+| Variable | Required | Default | Description                 |
+| -------- | -------- | ------- | --------------------------- |
+| `PORT`   | No       | `8000`  | Port the service listens on |
 
 ## Tests
 
 ```bash
 pytest tests/ -v --cov=app
 ```
+
 ```
 
 ## Style guide
@@ -240,3 +246,4 @@ does — closes that gap faster than any other intervention.
 - Changes to `AGENTS.md` — maintainer approval required
 - New entries in `mkdocs.yml` nav that reorganise existing sections
 - Deprecation notices on existing ADRs
+```

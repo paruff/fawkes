@@ -14,13 +14,13 @@ This section covers AI-powered features, machine learning integrations, and AI u
 These files contain suggested `.github/agents/` content for manual review and application.
 Copy the YAML block into the target file, remove the header comment, and commit.
 
-| Agent | Model | Cost | Purpose | Status |
-|---|---|---|---|---|
-| [test-engineer](test-engineer-agent-suggestion.md) | GPT-4.1 | 0× | pytest, pytest-bdd, bats tests | ⏳ Pending review |
-| [issue-writer](issue-writer-agent-suggestion.md) | Claude Sonnet 4.6 | 1× | Fully-specified GitHub issues | ⏳ Pending review |
-| [code-reviewer](code-reviewer-agent-suggestion.md) | Claude Sonnet 4.6 | 1× | PR review across all layers | ⏳ Pending review |
-| [infra-gitops](infra-gitops-agent-suggestion.md) | GPT-4.1 | 0× | Terraform, Helm, ArgoCD, K8s | ⏳ Pending review |
-| [gpt41-default](gpt41-default-agent-suggestion.md) | GPT-4.1 | 0× | General fallback for any task | ⏳ Pending review |
+| Agent                                              | Model             | Cost | Purpose                        | Status            |
+| -------------------------------------------------- | ----------------- | ---- | ------------------------------ | ----------------- |
+| [test-engineer](test-engineer-agent-suggestion.md) | GPT-4.1           | 0×   | pytest, pytest-bdd, bats tests | ⏳ Pending review |
+| [issue-writer](issue-writer-agent-suggestion.md)   | Claude Sonnet 4.6 | 1×   | Fully-specified GitHub issues  | ⏳ Pending review |
+| [code-reviewer](code-reviewer-agent-suggestion.md) | Claude Sonnet 4.6 | 1×   | PR review across all layers    | ⏳ Pending review |
+| [infra-gitops](infra-gitops-agent-suggestion.md)   | GPT-4.1           | 0×   | Terraform, Helm, ArgoCD, K8s   | ⏳ Pending review |
+| [gpt41-default](gpt41-default-agent-suggestion.md) | GPT-4.1           | 0×   | General fallback for any task  | ⏳ Pending review |
 
 ## GitHub Copilot
 

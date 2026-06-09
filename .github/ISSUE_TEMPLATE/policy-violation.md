@@ -1,18 +1,18 @@
 ---
 name: Policy Violation Remediation
 about: Track remediation of a security policy violation
-title: '[POLICY] {{ POLICY_NAME }} violation in {{ COMPONENT }}'
+title: "[POLICY] {{ POLICY_NAME }} violation in {{ COMPONENT }}"
 labels: security, policy-violation
-assignees: ''
+assignees: ""
 ---
 
 ## 🛡️ Policy Violation Details
 
-**Policy**: {{ POLICY_NAME }}  
-**Severity**: {{ SEVERITY }}  
-**Component**: {{ COMPONENT }}  
-**File**: {{ FILE_PATH }}  
-**Discovered By**: {{ SCANNER_NAME }}  
+**Policy**: {{ POLICY_NAME }}
+**Severity**: {{ SEVERITY }}
+**Component**: {{ COMPONENT }}
+**File**: {{ FILE_PATH }}
+**Discovered By**: {{ SCANNER_NAME }}
 **Discovery Date**: {{ DATE }}
 
 ## Violation Description
@@ -27,26 +27,31 @@ The policy requires:
 ## Current State
 
 Current configuration/code:
+
 ```yaml
-{{ CURRENT_CODE }}
+{ { CURRENT_CODE } }
 ```
 
 ## Required Changes
 
 Expected configuration/code:
+
 ```yaml
-{{ EXPECTED_CODE }}
+{ { EXPECTED_CODE } }
 ```
 
 ## Impact Assessment
 
 ### Security Impact
+
 {{ SECURITY_IMPACT }}
 
 ### Business Impact
+
 {{ BUSINESS_IMPACT }}
 
 ### Risk if Not Fixed
+
 - [ ] **Critical** - Potential for security breach
 - [ ] **High** - Significant security weakness
 - [ ] **Medium** - Minor security concern
@@ -55,29 +60,32 @@ Expected configuration/code:
 ## Remediation Options
 
 ### Option 1: Fix Violation (Recommended)
+
 ```bash
 # Steps to fix
 {{ FIX_STEPS }}
 ```
 
-**Estimated Effort**: {{ EFFORT_ESTIMATE }}  
+**Estimated Effort**: {{ EFFORT_ESTIMATE }}
 **Breaking Changes**: {{ BREAKING_CHANGES }}
 
 ### Option 2: Request Policy Exemption
+
 If this violation cannot be fixed due to technical constraints:
 
 - [ ] Compensating controls in place
 - [ ] False positive - policy doesn't apply
 - [ ] Temporary exemption needed (with expiration)
 
-**Justification**: {{ EXEMPTION_JUSTIFICATION }}  
-**Compensating Controls**: {{ COMPENSATING_CONTROLS }}  
-**Expiration Date**: {{ EXPIRATION_DATE }}  
+**Justification**: {{ EXEMPTION_JUSTIFICATION }}
+**Compensating Controls**: {{ COMPENSATING_CONTROLS }}
+**Expiration Date**: {{ EXPIRATION_DATE }}
 **Approver**: @{{ SECURITY_LEAD }}
 
 ## Remediation Plan
 
 ### Steps
+
 1. [ ] Review policy and violation details
 2. [ ] Design fix that meets policy requirements
 3. [ ] Implement changes
@@ -90,6 +98,7 @@ If this violation cannot be fixed due to technical constraints:
 10. [ ] Update documentation
 
 ### Testing Locally
+
 ```bash
 # Test policy compliance locally
 conftest test {{ FILE_PATH }} -p .security-plane/policies/
@@ -100,24 +109,29 @@ conftest test {{ FILE_PATH }} -p .security-plane/policies/
 ## Policy Details
 
 ### Policy File
+
 `.security-plane/policies/{{ POLICY_FILE }}`
 
 ### Relevant Policy Code
+
 ```rego
 {{ POLICY_CODE }}
 ```
 
 ### Policy Rationale
+
 {{ POLICY_RATIONALE }}
 
 ## Examples
 
 ### Compliant Example
+
 ```yaml
-{{ COMPLIANT_EXAMPLE }}
+{ { COMPLIANT_EXAMPLE } }
 ```
 
 ### Similar Fixes in Other Components
+
 - {{ EXAMPLE_1 }}
 - {{ EXAMPLE_2 }}
 
@@ -140,6 +154,7 @@ conftest test {{ FILE_PATH }} -p .security-plane/policies/
 ## Verification
 
 After fix is implemented:
+
 ```bash
 # Verify policy compliance
 conftest test {{ FILE_PATH }} -p .security-plane/policies/ --all-namespaces
@@ -152,7 +167,7 @@ gh workflow run security-plane-adoption.yml
 
 ---
 
-**Labels**: `security`, `policy-violation`, `severity:{{ SEVERITY }}`, `policy:{{ POLICY_NAME }}`  
+**Labels**: `security`, `policy-violation`, `severity:{{ SEVERITY }}`, `policy:{{ POLICY_NAME }}`
 **Priority**: {{ PRIORITY }}
 
 /cc @security-team @{{ COMPONENT_OWNER }}

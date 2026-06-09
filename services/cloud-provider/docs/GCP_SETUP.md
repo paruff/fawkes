@@ -76,12 +76,14 @@ provider = GCPProvider()
 For production or CI/CD:
 
 1. Create a service account:
+
 ```bash
 gcloud iam service-accounts create fawkes-cloud-provider \
     --display-name="Fawkes Cloud Provider Service Account"
 ```
 
 2. Grant required roles:
+
 ```bash
 PROJECT_ID="your-project-id"
 SA_EMAIL="fawkes-cloud-provider@${PROJECT_ID}.iam.gserviceaccount.com"
@@ -108,12 +110,14 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 ```
 
 3. Create and download key:
+
 ```bash
 gcloud iam service-accounts keys create ~/fawkes-sa-key.json \
     --iam-account=${SA_EMAIL}
 ```
 
 4. Use in Python:
+
 ```python
 from src.providers.gcp_provider import GCPProvider
 
@@ -312,11 +316,11 @@ metadata:
 spec:
   serviceAccountName: fawkes-app-ksa
   containers:
-  - name: app
-    image: your-app-image
-    env:
-    - name: GCP_PROJECT_ID
-      value: "your-project-id"
+    - name: app
+      image: your-app-image
+      env:
+        - name: GCP_PROJECT_ID
+          value: "your-project-id"
 ```
 
 ## Usage Examples
@@ -455,6 +459,7 @@ db_config = DatabaseConfig(
 **Problem**: `AuthenticationError: No GCP credentials found`
 
 **Solution**:
+
 1. Run `gcloud auth application-default login`
 2. Or set `GOOGLE_APPLICATION_CREDENTIALS` environment variable
 3. Or provide `credentials_path` parameter
@@ -464,6 +469,7 @@ db_config = DatabaseConfig(
 **Problem**: `403 Permission denied` errors
 
 **Solution**:
+
 1. Verify service account has required roles
 2. Check if APIs are enabled
 3. Ensure project ID is correct
@@ -481,6 +487,7 @@ gcloud services enable container.googleapis.com sqladmin.googleapis.com
 **Problem**: `429 Quota exceeded` errors
 
 **Solution**:
+
 1. Increase rate limiting configuration
 2. Request quota increase from GCP Console
 3. Implement exponential backoff (already included)
@@ -490,6 +497,7 @@ gcloud services enable container.googleapis.com sqladmin.googleapis.com
 **Problem**: Resources not found in specified region
 
 **Solution**:
+
 - For clusters, use full location (e.g., `us-central1` or `us-central1-a`)
 - For databases, use region only (e.g., `us-central1`)
 - Use `-` for all regions: `provider.list_clusters(region="-")`
@@ -499,6 +507,7 @@ gcloud services enable container.googleapis.com sqladmin.googleapis.com
 **Problem**: `get_cost_data()` returns $0.00
 
 **Solution**:
+
 1. Enable BigQuery billing export
 2. Configure export dataset
 3. Query BigQuery directly for detailed costs
@@ -522,6 +531,7 @@ See: https://cloud.google.com/billing/docs/how-to/export-data-bigquery
 ## Support
 
 For issues or questions:
+
 1. Check the [main README](../README.md)
 2. Review [AWS Provider docs](./AWS_SETUP.md) for comparison
 3. File an issue in the repository

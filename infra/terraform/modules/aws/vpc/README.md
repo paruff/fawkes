@@ -40,44 +40,44 @@ module "vpc" {
 
 ## Requirements
 
-| Name | Version |
-|------|---------|
+| Name      | Version  |
+| --------- | -------- |
 | terraform | >= 1.6.0 |
-| aws | >= 5.0.0 |
+| aws       | >= 5.0.0 |
 
 ## Inputs
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| network_name | Name of the VPC | `string` | n/a | yes |
-| location | AWS region for the VPC | `string` | n/a | yes |
-| vpc_cidr | CIDR block for the VPC | `string` | `"10.0.0.0/16"` | no |
-| availability_zones | List of availability zones for subnets | `list(string)` | n/a | yes |
-| public_subnet_cidrs | CIDR blocks for public subnets | `list(string)` | n/a | yes |
-| private_subnet_cidrs | CIDR blocks for private subnets | `list(string)` | n/a | yes |
-| enable_nat_gateway | Enable NAT Gateway for outbound connectivity | `bool` | `true` | no |
-| single_nat_gateway | Use a single NAT Gateway for cost optimization | `bool` | `false` | no |
-| enable_dns_hostnames | Enable DNS hostnames in the VPC | `bool` | `true` | no |
-| enable_dns_support | Enable DNS support in the VPC | `bool` | `true` | no |
-| enable_s3_endpoint | Enable S3 VPC endpoint | `bool` | `true` | no |
-| enable_ecr_endpoints | Enable ECR VPC endpoints | `bool` | `false` | no |
-| enable_flow_logs | Enable VPC Flow Logs to CloudWatch | `bool` | `true` | no |
-| flow_logs_traffic_type | Type of traffic to capture | `string` | `"ALL"` | no |
-| flow_logs_retention_days | Days to retain Flow Logs | `number` | `7` | no |
-| tags | Tags to apply to resources | `map(string)` | `{}` | no |
+| Name                     | Description                                    | Type           | Default         | Required |
+| ------------------------ | ---------------------------------------------- | -------------- | --------------- | :------: |
+| network_name             | Name of the VPC                                | `string`       | n/a             |   yes    |
+| location                 | AWS region for the VPC                         | `string`       | n/a             |   yes    |
+| vpc_cidr                 | CIDR block for the VPC                         | `string`       | `"10.0.0.0/16"` |    no    |
+| availability_zones       | List of availability zones for subnets         | `list(string)` | n/a             |   yes    |
+| public_subnet_cidrs      | CIDR blocks for public subnets                 | `list(string)` | n/a             |   yes    |
+| private_subnet_cidrs     | CIDR blocks for private subnets                | `list(string)` | n/a             |   yes    |
+| enable_nat_gateway       | Enable NAT Gateway for outbound connectivity   | `bool`         | `true`          |    no    |
+| single_nat_gateway       | Use a single NAT Gateway for cost optimization | `bool`         | `false`         |    no    |
+| enable_dns_hostnames     | Enable DNS hostnames in the VPC                | `bool`         | `true`          |    no    |
+| enable_dns_support       | Enable DNS support in the VPC                  | `bool`         | `true`          |    no    |
+| enable_s3_endpoint       | Enable S3 VPC endpoint                         | `bool`         | `true`          |    no    |
+| enable_ecr_endpoints     | Enable ECR VPC endpoints                       | `bool`         | `false`         |    no    |
+| enable_flow_logs         | Enable VPC Flow Logs to CloudWatch             | `bool`         | `true`          |    no    |
+| flow_logs_traffic_type   | Type of traffic to capture                     | `string`       | `"ALL"`         |    no    |
+| flow_logs_retention_days | Days to retain Flow Logs                       | `number`       | `7`             |    no    |
+| tags                     | Tags to apply to resources                     | `map(string)`  | `{}`            |    no    |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| vpc_id | The ID of the VPC |
-| vpc_cidr | The CIDR block of the VPC |
-| public_subnet_ids | List of public subnet IDs |
-| private_subnet_ids | List of private subnet IDs |
-| nat_gateway_ids | List of NAT Gateway IDs |
+| Name                | Description                    |
+| ------------------- | ------------------------------ |
+| vpc_id              | The ID of the VPC              |
+| vpc_cidr            | The CIDR block of the VPC      |
+| public_subnet_ids   | List of public subnet IDs      |
+| private_subnet_ids  | List of private subnet IDs     |
+| nat_gateway_ids     | List of NAT Gateway IDs        |
 | internet_gateway_id | The ID of the Internet Gateway |
-| s3_endpoint_id | The ID of the S3 VPC endpoint |
-| flow_log_id | The ID of the VPC Flow Log |
+| s3_endpoint_id      | The ID of the S3 VPC endpoint  |
+| flow_log_id         | The ID of the VPC Flow Log     |
 
 ## Architecture
 
@@ -126,5 +126,6 @@ module "vpc" {
 ## Examples
 
 See the [examples directory](../examples/) for complete usage examples:
+
 - [vpc](../examples/vpc/) - Basic VPC configuration
 - [complete](../examples/complete/) - Complete AWS infrastructure with VPC, EKS, RDS, and S3

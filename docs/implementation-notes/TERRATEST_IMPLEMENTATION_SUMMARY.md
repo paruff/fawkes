@@ -15,17 +15,21 @@ Successfully implemented a comprehensive Terratest suite for validating Fawkes T
 ### 2. Test Coverage
 
 #### Unit Tests (Module-Level)
+
 - ✅ **Azure Resource Group** (`azure_resource_group_test.go`)
+
   - Validates resource group creation
   - Tests outputs (name, location, ID)
   - Syntax validation
 
 - ✅ **Azure Network** (`azure_network_test.go`)
+
   - Tests VNet and subnet provisioning
   - Validates network configuration
   - CIDR block validation
 
 - ✅ **Azure AKS Cluster** (`azure_aks_cluster_test.go`)
+
   - Tests AKS cluster provisioning
   - Validates cluster configuration
   - Tests kubeconfig generation
@@ -36,12 +40,14 @@ Successfully implemented a comprehensive Terratest suite for validating Fawkes T
   - Tests namespace creation
 
 #### Integration Tests
+
 - ✅ **End-to-End Infrastructure** (`integration_test.go`)
   - Tests complete Azure stack (RG → Network → AKS)
   - Validates multi-module dependencies
   - Full infrastructure deployment scenarios
 
 #### Cost Estimation Tests
+
 - ✅ **Infrastructure Cost Validation** (`cost_estimation_test.go`)
   - Infracost integration for cost estimation
   - Cost regression testing
@@ -51,12 +57,14 @@ Successfully implemented a comprehensive Terratest suite for validating Fawkes T
 ### 3. CI/CD Integration
 
 #### GitHub Actions Workflow (`.github/workflows/terraform-tests.yml`)
+
 - **Validation Tests**: Run on every PR (no cost, fast)
 - **Cost Estimation**: Runs on PRs with Infracost
 - **Integration Tests**: Run on merge to main (deploys resources)
 - **E2E Tests**: Manual trigger only (expensive)
 
 #### Workflow Features
+
 - Parallel test execution
 - Artifact uploads for test results
 - PR comments with cost estimates
@@ -66,6 +74,7 @@ Successfully implemented a comprehensive Terratest suite for validating Fawkes T
 ### 4. Developer Experience
 
 #### Makefile Commands
+
 ```bash
 make terraform-test              # Validation tests (fast, free)
 make terraform-test-integration  # Integration tests (costs apply)
@@ -75,6 +84,7 @@ make terraform-test-all          # All tests
 ```
 
 #### Environment Variables
+
 - `RUN_TERRAFORM_INTEGRATION_TESTS=true` - Enable integration tests
 - `RUN_TERRAFORM_E2E_TESTS=true` - Enable E2E tests
 - `RUN_TERRAFORM_COST_TESTS=true` - Enable cost tests
@@ -84,6 +94,7 @@ make terraform-test-all          # All tests
 ### 5. Documentation
 
 - ✅ **Comprehensive README** (`tests/terratest/README.md`)
+
   - Test overview and structure
   - Setup instructions
   - Running tests guide
@@ -109,6 +120,7 @@ make terraform-test-all          # All tests
 ## Test Execution Flow
 
 ### Validation Tests (Free, Fast)
+
 1. Terraform syntax validation
 2. Provider initialization
 3. Configuration validation
@@ -116,6 +128,7 @@ make terraform-test-all          # All tests
 5. ~1-2 minutes total
 
 ### Integration Tests (Moderate Cost)
+
 1. Generate unique resource names
 2. Deploy real Azure resources
 3. Validate outputs and configuration
@@ -123,6 +136,7 @@ make terraform-test-all          # All tests
 5. ~10-15 minutes per module
 
 ### E2E Tests (High Cost)
+
 1. Deploy complete infrastructure stack
 2. Test all module dependencies
 3. Validate end-to-end functionality
@@ -130,6 +144,7 @@ make terraform-test-all          # All tests
 5. ~30-45 minutes total
 
 ### Cost Estimation Tests
+
 1. Generate Terraform plans
 2. Run Infracost analysis
 3. Compare against baselines
@@ -139,6 +154,7 @@ make terraform-test-all          # All tests
 ## CI/CD Pipeline
 
 ### Pull Request Flow
+
 ```
 1. Developer opens PR with Terraform changes
 2. GitHub Actions triggers:
@@ -149,6 +165,7 @@ make terraform-test-all          # All tests
 ```
 
 ### Main Branch Flow
+
 ```
 1. PR merged to main
 2. GitHub Actions triggers:
@@ -158,6 +175,7 @@ make terraform-test-all          # All tests
 ```
 
 ### Manual E2E Flow
+
 ```
 1. Developer triggers workflow_dispatch
 2. Confirms E2E test execution
@@ -169,14 +187,16 @@ make terraform-test-all          # All tests
 ## Cost Management
 
 ### Expected Costs
-| Test Type | Frequency | Cost/Run | Monthly Est. |
-|-----------|-----------|----------|--------------|
-| Validation | Every PR | $0 | $0 |
-| Integration | On merge | $1-2 | $20-40 |
-| E2E | Manual/Weekly | $10-20 | $40-80 |
-| **Total** | | | **$60-120/mo** |
+
+| Test Type   | Frequency     | Cost/Run | Monthly Est.   |
+| ----------- | ------------- | -------- | -------------- |
+| Validation  | Every PR      | $0       | $0             |
+| Integration | On merge      | $1-2     | $20-40         |
+| E2E         | Manual/Weekly | $10-20   | $40-80         |
+| **Total**   |               |          | **$60-120/mo** |
 
 ### Cost Optimization
+
 1. Minimal resources (1 node, B-series VMs)
 2. Automatic cleanup
 3. Validation tests are free
@@ -194,30 +214,35 @@ make terraform-test-all          # All tests
 ## Benefits Delivered
 
 ### 1. Quality Assurance
+
 - ✅ Validates all Terraform modules work correctly
 - ✅ Catches configuration errors before deployment
 - ✅ Ensures module compatibility
 - ✅ Tests actual Azure resource provisioning
 
 ### 2. Cost Transparency
+
 - ✅ Estimates costs before deployment
 - ✅ Prevents cost regressions
 - ✅ Budget threshold validation
 - ✅ Cost-aware development
 
 ### 3. Faster Development
+
 - ✅ Quick validation tests (1-2 min)
 - ✅ Automated testing in CI/CD
 - ✅ Parallel test execution
 - ✅ Immediate feedback on PRs
 
 ### 4. Reliability
+
 - ✅ Automated resource cleanup
 - ✅ Prevents state drift
 - ✅ Tests real Azure resources
 - ✅ End-to-end validation
 
 ### 5. Documentation
+
 - ✅ Comprehensive guides
 - ✅ Clear examples
 - ✅ Troubleshooting help
@@ -226,38 +251,45 @@ make terraform-test-all          # All tests
 ## Acceptance Criteria Met
 
 ✅ **Terratest framework is configured and implemented**
+
 - Go module created with all dependencies
 - Tests organized by module
 - Proper test structure in place
 
 ✅ **Unit tests validate every individual Terraform module in isolation**
+
 - 4 modules tested: azure-resource-group, azure-network, azure-aks-cluster, argocd-helm
 - Each test validates outputs, configuration, and syntax
 - Tests are independent and can run in parallel
 
 ✅ **Integration tests perform end-to-end infrastructure validation**
+
 - Complete Azure stack tested (RG → Network → AKS)
 - Multi-module dependencies validated
 - Real infrastructure deployment verified
 
 ✅ **Terratest suite is integrated into the CI/CD pipeline**
+
 - GitHub Actions workflow configured
 - Tests run automatically on PRs and merges
 - Manual triggers available for expensive tests
 
 ✅ **Cost estimation tests are implemented and verified**
+
 - Infracost integration complete
 - Per-module cost validation
 - Cost regression tests
 - Budget threshold checks
 
 ✅ **Relevant project documentation is updated**
+
 - Comprehensive README in tests/terratest/
 - Usage guide in docs/how-to/terratest-guide.md
 - Makefile commands documented
 - CI/CD workflow documented
 
 ✅ **All tests are passing**
+
 - Validation tests: 4/4 passing
 - Tests compile without errors
 - Makefile commands work correctly
@@ -266,18 +298,21 @@ make terraform-test-all          # All tests
 ## Next Steps
 
 ### For Developers
+
 1. Run `make terraform-test` before committing Terraform changes
 2. Review cost estimation results on PRs
 3. Monitor integration test results on main branch
 4. Trigger E2E tests before major releases
 
 ### For DevOps
+
 1. Configure Azure credentials in GitHub secrets
 2. Set up Infracost API key for cost estimation
 3. Schedule weekly E2E test runs
 4. Monitor test costs and adjust thresholds
 
 ### For Platform Team
+
 1. Add more modules as they are created
 2. Expand integration test scenarios
 3. Add performance benchmarking tests
@@ -318,6 +353,6 @@ The suite provides automated validation of Terraform infrastructure, ensures cos
 
 ---
 
-*Implementation Date*: January 1, 2026
-*Issue*: #120 - Create Terratest Suite for Infrastructure
-*Milestone*: M0.2
+_Implementation Date_: January 1, 2026
+_Issue_: #120 - Create Terratest Suite for Infrastructure
+_Milestone_: M0.2

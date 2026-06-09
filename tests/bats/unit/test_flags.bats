@@ -8,10 +8,10 @@ setup() {
   # Load test helpers
   load ../helpers/test_helper
   load ../helpers/mocks
-  
+
   # Setup test environment
   setup_test_env
-  
+
   # Initialize required variables
   export PROVIDER=""
   export CLUSTER_NAME=""
@@ -27,7 +27,7 @@ setup() {
   export ENV=""
   export PREFER_MINIKUBE=0
   export PREFER_DOCKER=0
-  
+
   # Source the flags library (and dependencies)
   source "${LIB_DIR}/common.sh"
   source "${LIB_DIR}/flags.sh"

@@ -12,7 +12,7 @@ rule "terraform_required_version" {
   enabled = false
 }
 
-# Disable required providers check since base modules are not complete modules  
+# Disable required providers check since base modules are not complete modules
 rule "terraform_required_providers" {
   enabled = false
 }

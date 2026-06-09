@@ -5,6 +5,7 @@ This document provides a migration guide for the Terraform module refactoring co
 ## Overview
 
 The Terraform modules have been reorganized to:
+
 1. Create base modules with common patterns
 2. Implement provider-specific modules that extend the base
 3. Remove duplicate code between provider implementations
@@ -165,6 +166,7 @@ terraform state list
 ### 1. Base Modules
 
 Base modules now provide:
+
 - Common variable definitions with validation
 - Standardized naming conventions
 - Reusable patterns across providers
@@ -172,6 +174,7 @@ Base modules now provide:
 ### 2. Enhanced Validation
 
 All modules now include comprehensive validation rules:
+
 - Name length and format validation
 - CIDR block validation
 - Enum value validation
@@ -180,6 +183,7 @@ All modules now include comprehensive validation rules:
 ### 3. Provider-Specific Extensions
 
 Provider modules extend base modules with:
+
 - Provider-specific variables
 - Provider-specific validation (e.g., Azure region validation)
 - Provider-specific outputs
@@ -187,6 +191,7 @@ Provider modules extend base modules with:
 ## Testing
 
 All modules have been tested with:
+
 - `terraform fmt -check`
 - `terraform validate`
 - Terratest validation tests
@@ -251,6 +256,7 @@ If you encounter issues, you can rollback by:
 ## Support
 
 For questions or issues:
+
 - Review module READMEs in each module directory
 - Check examples in `infra/terraform/examples/`
 - Consult [ADR-005: Terraform Decision](../../../docs/adr/ADR-005%20terraform.md)
@@ -260,13 +266,14 @@ For questions or issues:
 
 The following standalone modules are **deprecated** and replaced by the canonical `azure/` hierarchy:
 
-| Deprecated Module | Canonical Replacement | Deprecated | Removal |
-|---|---|---|---|
-| `azure-aks-cluster/` | `azure/kubernetes-cluster/` | 2025-01-10 | 2025-07-31 |
-| `azure-network/` | `azure/network/` | 2025-01-10 | 2025-07-31 |
-| `azure-resource-group/` | `azure/resource-group/` | 2025-01-10 | 2025-07-31 |
+| Deprecated Module       | Canonical Replacement       | Deprecated | Removal    |
+| ----------------------- | --------------------------- | ---------- | ---------- |
+| `azure-aks-cluster/`    | `azure/kubernetes-cluster/` | 2025-01-10 | 2025-07-31 |
+| `azure-network/`        | `azure/network/`            | 2025-01-10 | 2025-07-31 |
+| `azure-resource-group/` | `azure/resource-group/`     | 2025-01-10 | 2025-07-31 |
 
 Each deprecated module directory contains a `DEPRECATED.md` file with:
+
 - The canonical replacement module path
 - Before/after code examples for migration
 - Links to this document for the full step-by-step guide

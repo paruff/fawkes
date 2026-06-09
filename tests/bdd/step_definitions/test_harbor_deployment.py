@@ -14,7 +14,6 @@ import json
 import subprocess
 import time
 from typing import Dict
-from urllib.parse import urlparse
 
 import pytest
 import requests
@@ -185,7 +184,7 @@ def check_harbor_pods(context: Dict):
     try:
         pods = _kubectl_json(["-n", "fawkes", "get", "pods", "-l", "app=harbor", "-o", "json"])
         context["harbor_pods"] = pods.get("items", [])
-    except RuntimeError as e:
+    except RuntimeError:
         context["harbor_pods"] = []
 
 
@@ -603,7 +602,7 @@ def query_harbor_api(endpoint: str, context: Dict):
     try:
         response = requests.get(f"http://harbor.127.0.0.1.nip.io{endpoint}", timeout=10)
         context["api_response"] = response
-    except requests.exceptions.RequestException as e:
+    except requests.exceptions.RequestException:
         context["api_response"] = None
 
 

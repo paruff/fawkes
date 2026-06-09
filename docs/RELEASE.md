@@ -8,11 +8,11 @@ This document describes the release process for Fawkes. Follow these steps every
 
 Fawkes uses [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`) and follows the [Keep a Changelog](https://keepachangelog.com/) convention.
 
-| Version component | When to increment |
-|---|---|
-| `MAJOR` | Breaking changes to public APIs or platform contracts |
-| `MINOR` | New features that are backwards-compatible |
-| `PATCH` | Backwards-compatible bug fixes only |
+| Version component | When to increment                                     |
+| ----------------- | ----------------------------------------------------- |
+| `MAJOR`           | Breaking changes to public APIs or platform contracts |
+| `MINOR`           | New features that are backwards-compatible            |
+| `PATCH`           | Backwards-compatible bug fixes only                   |
 
 Current releases are listed in [CHANGELOG.md](../CHANGELOG.md) and on the [GitHub Releases page](https://github.com/paruff/fawkes/releases).
 
@@ -40,15 +40,19 @@ Move items from `[Unreleased]` into a new versioned section:
 [GitHub Release](https://github.com/paruff/fawkes/releases/tag/vX.Y.Z)
 
 ### Added
+
 - Description of new features
 
 ### Changed
+
 - Description of changes to existing functionality
 
 ### Fixed
+
 - Description of bug fixes
 
 ### Removed
+
 - Description of removed features (use sparingly)
 ```
 

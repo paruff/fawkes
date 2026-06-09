@@ -22,6 +22,7 @@ coding agent can implement them with zero follow-up questions.
 ## How to invoke
 
 Post a comment on a stub issue or in Copilot chat:
+
 > `@copilot using issue-writer, expand this into a full implementation-ready issue`
 
 Or assign this agent to a stub issue and it will rewrite the issue body in place.
@@ -32,23 +33,27 @@ Or assign this agent to a stub issue and it will rewrite the issue body in place
 
 ```markdown
 ## Goal
+
 <!-- One sentence: what capability does this add or what bug does this fix? -->
 
 ## Background & motivation
+
 <!-- Why does this matter? What breaks or is missing without it?
      Include links to related issues, ADRs, or external docs. -->
 
 ## Affected components
+
 <!-- List every file or directory that will need changes.
      Be specific — not just "services/" but "services/rag/app/main.py" -->
 
-| Component | Change type | Notes |
-|---|---|---|
+| Component         | Change type           | Notes        |
+| ----------------- | --------------------- | ------------ |
 | `path/to/file.py` | Add / Modify / Delete | Brief reason |
 
 ## Technical specification
 
 ### What to implement
+
 <!-- Detailed description of the change. Include:
      - Exact function/class/endpoint names
      - Input/output types (use Python type hints syntax)
@@ -56,23 +61,29 @@ Or assign this agent to a stub issue and it will rewrite the issue body in place
      - Config keys to add/modify (YAML paths) -->
 
 ### How it should work
+
 <!-- Step-by-step description of runtime behaviour.
      Use numbered steps. Be concrete — name actual variables, keys, ports. -->
 
 ### What NOT to change
+
 <!-- Explicit scope boundary. List files or concerns that are out of scope. -->
 
 ## Examples
 
 ### Input example
 ```
+
 <!-- Concrete example of input, request body, or triggering condition -->
+
 ```
 
 ### Expected output / behaviour
 ```
+
 <!-- Concrete example of expected result, response, log line, or metric -->
-```
+
+````
 
 ## Acceptance criteria
 <!-- Every item must be binary: either done or not done.
@@ -103,7 +114,7 @@ Scenario: <scenario name>
   Given <precondition>
   When <action>
   Then <assertion>
-```
+````
 
 ## Definition of done
 
@@ -114,14 +125,17 @@ Scenario: <scenario name>
 - [ ] `CHANGELOG.md` or relevant docs updated if user-facing change
 
 ## Labels to apply
+
 <!-- Suggest labels from: gap, dora, sprint-N, infra, gitops, docs, testing,
      observability, bug, enhancement -->
 
 ## Implementation notes for coding agent
+
 <!-- Any hints, gotchas, or patterns the agent should know:
      - Relevant existing code to reuse (with file paths)
      - Known pitfalls in this part of the codebase
      - Relevant external docs URLs -->
+
 ```
 
 ---
@@ -154,3 +168,4 @@ sufficient**. An issue that says "add `opentelemetry-sdk==1.x` and
 `opentelemetry-instrumentation-fastapi==0.x` to `services/rag/requirements.txt`,
 then call `FastAPIInstrumentor.instrument_app(app)` in
 `services/rag/app/main.py` after `app = FastAPI()`" **is sufficient**.
+```

@@ -68,46 +68,56 @@ mypy --ignore-missing-imports .
 When you create a pull request, the following checks run automatically:
 
 ### 1. Python Quality (5-7 min)
+
 - ✅ Black formatting check
 - ✅ Flake8 linting
 - ✅ MyPy type checking
 - ✅ Pylint code analysis
 
 ### 2. Python Coverage (3-5 min)
+
 - ✅ pytest with 60% minimum coverage
 - ✅ Coverage report in PR comment
 - ✅ HTML/XML reports in artifacts
 
 ### 3. TypeScript/JavaScript Quality (2-3 min)
+
 - ✅ ESLint (if TS/JS files present)
 - ✅ TypeScript compiler check
 - ✅ Jest tests with coverage
 
 ### 4. Go Quality (2-3 min)
+
 - ✅ golangci-lint (if Go files present)
 
 ### 5. Shell Quality (1-2 min)
+
 - ✅ ShellCheck for all shell scripts
 
 ### 6. Security Integration (1 min)
+
 - ✅ Validates security tools configured
 
 ### 7. Quality Summary (1 min)
+
 - ✅ Aggregates results
 - ✅ Posts comment on PR
 
 ## Reading Workflow Results
 
 ### Green Checks ✅
+
 - All quality checks passed
 - Safe to merge (pending other reviews)
 
 ### Yellow Warnings ⚠️
+
 - Some non-critical issues found
 - Review and consider fixing
 - May still merge if approved
 
 ### Red Failures ❌
+
 - Critical issues found
 - Must be fixed before merge
 - Check workflow logs for details
@@ -171,11 +181,13 @@ SKIP=black,flake8 git commit
 ## Getting Help
 
 ### Documentation
+
 - [GitHub Actions Workflows](docs/how-to/development/github-actions-workflows.md)
 - [Code Quality Standards](docs/how-to/development/code-quality-standards.md)
 - [Pre-commit Hooks](docs/PRE-COMMIT.md)
 
 ### Support Channels
+
 - GitHub Issues for bugs
 - GitHub Discussions for questions
 - Mattermost #platform-help for quick help
@@ -200,15 +212,15 @@ SKIP=black,flake8 git commit
 
 ## Quick Reference
 
-| Command | Purpose |
-|---------|---------|
-| `make pre-commit-setup` | Install pre-commit hooks |
-| `make lint` | Run all linters |
-| `pre-commit run --all-files` | Run pre-commit hooks |
-| `pytest --cov=.` | Run tests with coverage |
-| `black .` | Format Python code |
-| `flake8 .` | Check Python style |
-| `mypy .` | Check Python types |
+| Command                      | Purpose                  |
+| ---------------------------- | ------------------------ |
+| `make pre-commit-setup`      | Install pre-commit hooks |
+| `make lint`                  | Run all linters          |
+| `pre-commit run --all-files` | Run pre-commit hooks     |
+| `pytest --cov=.`             | Run tests with coverage  |
+| `black .`                    | Format Python code       |
+| `flake8 .`                   | Check Python style       |
+| `mypy .`                     | Check Python types       |
 
 ## Workflow Status Badges
 

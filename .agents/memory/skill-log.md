@@ -15,9 +15,9 @@ After completing a task that used a skill, add a row:
 
 ## Log
 
-| Date | Skill | Task | Helped | Notes |
-|---|---|---|---|---|
-| 2026-06-08 | — | Initial setup (this session) | N | Skills were created, not consumed |
+| Date       | Skill | Task                         | Helped | Notes                             |
+| ---------- | ----- | ---------------------------- | ------ | --------------------------------- |
+| 2026-06-08 | —     | Initial setup (this session) | N      | Skills were created, not consumed |
 
 ## Thresholds
 

@@ -91,6 +91,7 @@ Critical and warning alerts with Pub/Sub integration:
 #### Uptime Checks
 
 Configured for critical endpoints:
+
 - GKE API server health checks (`/healthz`)
 - Custom application endpoints
 - 60-second check interval with 10-second timeout
@@ -123,6 +124,7 @@ Multiple log sinks for different purposes:
 #### OpenSearch Integration
 
 Error logs are exported to Pub/Sub and can be consumed by OpenSearch for:
+
 - Real-time log indexing
 - Full-text search capabilities
 - Log correlation and analysis
@@ -151,6 +153,7 @@ Cloud Trace provides distributed tracing for GCP services and applications.
 #### Integration with OpenTelemetry
 
 The OpenTelemetry Collector exports traces to both:
+
 - **Cloud Trace** - Native GCP trace visualization
 - **Jaeger** - Open-source trace visualization in Grafana
 
@@ -307,11 +310,11 @@ Configure Mattermost webhook URL in Terraform:
 ```hcl
 module "gcp_monitoring_alerts" {
   source = "./platform/observability/gcp/monitoring"
-  
+
   cluster_name            = "fawkes-prod"
   project_id              = var.project_id
   mattermost_webhook_url  = var.mattermost_webhook_url
-  
+
   tags = {
     Environment = "production"
     Team        = "platform"
@@ -433,6 +436,7 @@ exporters:
 ### Grafana Integration
 
 1. **Cloud Monitoring Data Source**:
+
    ```yaml
    apiVersion: 1
    datasources:
@@ -467,6 +471,7 @@ exporters:
 ### 1. Log Retention
 
 Balance cost vs. compliance requirements:
+
 - **Critical logs**: 90 days in standard storage
 - **Debug logs**: 30 days
 - **Audit logs**: 1 year minimum
@@ -582,17 +587,20 @@ kubectl port-forward -n fawkes svc/grafana 3000:3000
 ## Security Considerations
 
 1. **Encryption**:
+
    - Pub/Sub topics use default encryption at rest
    - Use customer-managed encryption keys (CMEK) for sensitive data
    - TLS in transit for all data
 
 2. **IAM Roles**:
+
    - Use Workload Identity (IAM for Service Accounts)
    - Follow principle of least privilege
    - Regularly audit IAM permissions
    - Use separate service accounts per component
 
 3. **Network Security**:
+
    - Use Private GKE clusters
    - Restrict egress traffic with firewall rules
    - Enable VPC Flow Logs
@@ -608,15 +616,15 @@ kubectl port-forward -n fawkes svc/grafana 3000:3000
 
 Based on typical usage for a production GKE cluster:
 
-| Service | Usage | Monthly Cost |
-|---------|-------|--------------|
-| Cloud Monitoring | 100 metrics, 60s resolution | $25-30 |
-| Cloud Logging | 50 GB ingested, 30-day retention | $25-30 |
-| Cloud Trace | 1M spans/month | $2-5 |
-| Cloud Storage | 500 GB logs (Nearline) | $10-15 |
-| BigQuery | 100 GB storage, 500 GB queries | $15-20 |
-| Pub/Sub | 10K messages | $0.50 |
-| **Total** | | **~$80-100/month** |
+| Service          | Usage                            | Monthly Cost       |
+| ---------------- | -------------------------------- | ------------------ |
+| Cloud Monitoring | 100 metrics, 60s resolution      | $25-30             |
+| Cloud Logging    | 50 GB ingested, 30-day retention | $25-30             |
+| Cloud Trace      | 1M spans/month                   | $2-5               |
+| Cloud Storage    | 500 GB logs (Nearline)           | $10-15             |
+| BigQuery         | 100 GB storage, 500 GB queries   | $15-20             |
+| Pub/Sub          | 10K messages                     | $0.50              |
+| **Total**        |                                  | **~$80-100/month** |
 
 ## Performance Impact
 
@@ -637,6 +645,7 @@ Based on typical usage for a production GKE cluster:
 ## Support
 
 For issues or questions:
+
 - File an issue in the Fawkes repository
 - Contact the platform team via Mattermost #platform-observability
 - Check the [Fawkes documentation](../../docs/)

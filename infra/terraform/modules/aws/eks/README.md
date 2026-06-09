@@ -50,60 +50,63 @@ module "eks" {
 
 ## Requirements
 
-| Name | Version |
-|------|---------|
+| Name      | Version  |
+| --------- | -------- |
 | terraform | >= 1.6.0 |
-| aws | >= 5.0.0 |
-| tls | >= 4.0.0 |
+| aws       | >= 5.0.0 |
+| tls       | >= 4.0.0 |
 
 ## Inputs
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| cluster_name | Name of the EKS cluster | `string` | n/a | yes |
-| vpc_id | ID of the VPC | `string` | n/a | yes |
-| private_subnet_ids | List of private subnet IDs | `list(string)` | n/a | yes |
-| public_subnet_ids | List of public subnet IDs | `list(string)` | `[]` | no |
-| kubernetes_version | Kubernetes version | `string` | `"1.28"` | no |
-| node_instance_types | Instance types for nodes | `list(string)` | `["t3.medium"]` | no |
-| node_desired_size | Desired number of nodes | `number` | `3` | no |
-| node_min_size | Minimum number of nodes | `number` | `1` | no |
-| node_max_size | Maximum number of nodes | `number` | `10` | no |
-| enable_ebs_csi_driver | Enable EBS CSI driver | `bool` | `true` | no |
-| enable_cluster_autoscaler | Enable Cluster Autoscaler IAM role | `bool` | `true` | no |
-| enable_aws_load_balancer_controller | Enable AWS LB Controller IAM role | `bool` | `true` | no |
-| cluster_log_types | Control plane log types | `list(string)` | `["api", "audit", ...]` | no |
-| tags | Tags to apply to resources | `map(string)` | `{}` | no |
+| Name                                | Description                        | Type           | Default                 | Required |
+| ----------------------------------- | ---------------------------------- | -------------- | ----------------------- | :------: |
+| cluster_name                        | Name of the EKS cluster            | `string`       | n/a                     |   yes    |
+| vpc_id                              | ID of the VPC                      | `string`       | n/a                     |   yes    |
+| private_subnet_ids                  | List of private subnet IDs         | `list(string)` | n/a                     |   yes    |
+| public_subnet_ids                   | List of public subnet IDs          | `list(string)` | `[]`                    |    no    |
+| kubernetes_version                  | Kubernetes version                 | `string`       | `"1.28"`                |    no    |
+| node_instance_types                 | Instance types for nodes           | `list(string)` | `["t3.medium"]`         |    no    |
+| node_desired_size                   | Desired number of nodes            | `number`       | `3`                     |    no    |
+| node_min_size                       | Minimum number of nodes            | `number`       | `1`                     |    no    |
+| node_max_size                       | Maximum number of nodes            | `number`       | `10`                    |    no    |
+| enable_ebs_csi_driver               | Enable EBS CSI driver              | `bool`         | `true`                  |    no    |
+| enable_cluster_autoscaler           | Enable Cluster Autoscaler IAM role | `bool`         | `true`                  |    no    |
+| enable_aws_load_balancer_controller | Enable AWS LB Controller IAM role  | `bool`         | `true`                  |    no    |
+| cluster_log_types                   | Control plane log types            | `list(string)` | `["api", "audit", ...]` |    no    |
+| tags                                | Tags to apply to resources         | `map(string)`  | `{}`                    |    no    |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| cluster_id | EKS cluster ID |
-| cluster_name | EKS cluster name |
-| cluster_endpoint | EKS control plane endpoint |
-| cluster_certificate_authority_data | Certificate data for cluster |
-| oidc_provider_arn | ARN of OIDC provider |
-| ebs_csi_driver_role_arn | IAM role ARN for EBS CSI driver |
-| cluster_autoscaler_role_arn | IAM role ARN for Cluster Autoscaler |
-| aws_load_balancer_controller_role_arn | IAM role ARN for AWS LB Controller |
+| Name                                  | Description                         |
+| ------------------------------------- | ----------------------------------- |
+| cluster_id                            | EKS cluster ID                      |
+| cluster_name                          | EKS cluster name                    |
+| cluster_endpoint                      | EKS control plane endpoint          |
+| cluster_certificate_authority_data    | Certificate data for cluster        |
+| oidc_provider_arn                     | ARN of OIDC provider                |
+| ebs_csi_driver_role_arn               | IAM role ARN for EBS CSI driver     |
+| cluster_autoscaler_role_arn           | IAM role ARN for Cluster Autoscaler |
+| aws_load_balancer_controller_role_arn | IAM role ARN for AWS LB Controller  |
 
 ## Post-Deployment Steps
 
 After deploying the EKS cluster, you need to:
 
 1. **Configure kubectl**:
+
 ```bash
 aws eks update-kubeconfig --region <region> --name <cluster-name>
 ```
 
 2. **Install Cluster Autoscaler** (if enabled):
+
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/autoscaler/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
 kubectl -n kube-system annotate serviceaccount cluster-autoscaler eks.amazonaws.com/role-arn=<cluster_autoscaler_role_arn>
 ```
 
 3. **Install AWS Load Balancer Controller** (if enabled):
+
 ```bash
 helm repo add eks https://aws.github.io/eks-charts
 helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
@@ -160,5 +163,6 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
 ## Examples
 
 See the [examples directory](../examples/) for complete usage examples:
+
 - [eks](../examples/eks/) - EKS cluster configuration
 - [complete](../examples/complete/) - Complete AWS infrastructure with VPC, EKS, RDS, and S3
