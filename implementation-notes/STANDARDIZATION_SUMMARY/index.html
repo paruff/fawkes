@@ -6040,8 +6040,8 @@
 
 
 <h1 id="kubernetes-manifest-standardization-summary">Kubernetes Manifest Standardization Summary</h1>
-<p><strong>Issue</strong>: #121 - Standardize Kubernetes Manifests<br />
-<strong>Status</strong>: Complete<br />
+<p><strong>Issue</strong>: #121 - Standardize Kubernetes Manifests
+<strong>Status</strong>: Complete
 <strong>Date</strong>: January 5, 2025</p>
 <hr />
 <h2 id="overview">Overview</h2>
@@ -6050,8 +6050,12 @@
 <h3 id="files-updated">Files Updated</h3>
 <h4 id="services-services">Services (<code>services/</code>)</h4>
 <ol>
-<li>✅ <strong>services/ai-code-review/k8s/deployment.yaml</strong></li>
-<li>Added standard labels (app.kubernetes.io/*)</li>
+<li>
+<p>✅ <strong>services/ai-code-review/k8s/deployment.yaml</strong></p>
+</li>
+<li>
+<p>Added standard labels (app.kubernetes.io/*)</p>
+</li>
 <li>Added seccompProfile to container security context</li>
 <li>Added runAsGroup to pod security context</li>
 <li>
@@ -6060,7 +6064,9 @@
 <li>
 <p>✅ <strong>services/anomaly-detection/k8s/deployment.yaml</strong></p>
 </li>
-<li>Added standard labels</li>
+<li>
+<p>Added standard labels</p>
+</li>
 <li>Added seccompProfile</li>
 <li>Added runAsGroup</li>
 <li>
@@ -6069,7 +6075,9 @@
 <li>
 <p>✅ <strong>services/nps/k8s/deployment.yaml</strong></p>
 </li>
-<li>Added standard labels including version</li>
+<li>
+<p>Added standard labels including version</p>
+</li>
 <li>Maintained existing comprehensive security context</li>
 <li>
 <p>Already had proper resource limits and health checks</p>
@@ -6077,21 +6085,27 @@
 <li>
 <p>✅ <strong>services/nps/k8s/cronjob-quarterly.yaml</strong></p>
 </li>
-<li>Added standard labels at all levels (CronJob, Job, Pod)</li>
+<li>
+<p>Added standard labels at all levels (CronJob, Job, Pod)</p>
+</li>
 <li>
 <p>Already had proper security contexts with seccompProfile</p>
 </li>
 <li>
 <p>✅ <strong>services/nps/k8s/cronjob-reminders.yaml</strong></p>
 </li>
-<li>Added standard labels at all levels</li>
+<li>
+<p>Added standard labels at all levels</p>
+</li>
 <li>
 <p>Already had proper security contexts</p>
 </li>
 <li>
 <p>✅ <strong>services/smart-alerting/k8s/deployment.yaml</strong></p>
 </li>
-<li>Added standard labels and version</li>
+<li>
+<p>Added standard labels and version</p>
+</li>
 <li>Added seccompProfile</li>
 <li>Added runAsGroup</li>
 <li>
@@ -6100,14 +6114,18 @@
 <li>
 <p>✅ <strong>services/samples/sample-nodejs-app/k8s/deployment.yaml</strong></p>
 </li>
-<li>Added standard labels and version</li>
+<li>
+<p>Added standard labels and version</p>
+</li>
 <li>
 <p>Already had comprehensive security context</p>
 </li>
 <li>
 <p>✅ <strong>services/samples/sample-python-app/k8s/deployment.yaml</strong></p>
 </li>
-<li>Added standard labels and version</li>
+<li>
+<p>Added standard labels and version</p>
+</li>
 <li>
 <p>Already had comprehensive security context</p>
 </li>
@@ -6265,7 +6283,7 @@
 <ul>
 <li><strong>30 Deployment/CronJob files</strong> standardized</li>
 <li><strong>9 Service files</strong> updated</li>
-<li><strong>9 Ingress files</strong> updated  </li>
+<li><strong>9 Ingress files</strong> updated</li>
 <li><strong>3 ServiceAccount files</strong> updated</li>
 <li><strong>All service templates</strong> (3 languages) standardized for future use</li>
 </ul>
@@ -6274,23 +6292,25 @@
 <h3 id="1-labels">1. Labels</h3>
 <p>All resources now include:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">labels</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;name&gt;</span><span class="w">                                    </span><span class="c1"># Legacy compatibility</span>
-<span class="w">  </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;name&gt;</span><span class="w">                 </span><span class="c1"># Standard name</span>
-<span class="w">  </span><span class="nt">app.kubernetes.io/version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;version&gt;</span><span class="w">           </span><span class="c1"># Version (e.g., v1.0.0)</span>
-<span class="w">  </span><span class="nt">app.kubernetes.io/component</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;component&gt;</span><span class="w">       </span><span class="c1"># Component type</span>
-<span class="w">  </span><span class="nt">app.kubernetes.io/part-of</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes</span><span class="w">              </span><span class="c1"># Platform name</span>
-<span class="w">  </span><span class="nt">app.kubernetes.io/managed-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;tool&gt;</span><span class="w">           </span><span class="c1"># Management tool (optional)</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;name&gt;</span><span class="w"> </span><span class="c1"># Legacy compatibility</span>
+<span class="w">  </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;name&gt;</span><span class="w"> </span><span class="c1"># Standard name</span>
+<span class="w">  </span><span class="nt">app.kubernetes.io/version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;version&gt;</span><span class="w"> </span><span class="c1"># Version (e.g., v1.0.0)</span>
+<span class="w">  </span><span class="nt">app.kubernetes.io/component</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;component&gt;</span><span class="w"> </span><span class="c1"># Component type</span>
+<span class="w">  </span><span class="nt">app.kubernetes.io/part-of</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes</span><span class="w"> </span><span class="c1"># Platform name</span>
+<span class="w">  </span><span class="nt">app.kubernetes.io/managed-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;tool&gt;</span><span class="w"> </span><span class="c1"># Management tool (optional)</span>
 </code></pre></div>
-<p><strong>Component Types Used:</strong>
-- <code>backend</code> - Backend services and APIs
-- <code>frontend</code> - Web UIs
-- <code>ai-platform</code> - AI/ML services
-- <code>observability</code> - Monitoring services
-- <code>feedback</code> - Feedback services
-- <code>platform</code> - Core platform services
-- <code>devex</code> - Developer experience tools
-- <code>vsm</code> - Value stream mapping
-- <code>friction-logging</code> - Friction logging</p>
+<p><strong>Component Types Used:</strong></p>
+<ul>
+<li><code>backend</code> - Backend services and APIs</li>
+<li><code>frontend</code> - Web UIs</li>
+<li><code>ai-platform</code> - AI/ML services</li>
+<li><code>observability</code> - Monitoring services</li>
+<li><code>feedback</code> - Feedback services</li>
+<li><code>platform</code> - Core platform services</li>
+<li><code>devex</code> - Developer experience tools</li>
+<li><code>vsm</code> - Value stream mapping</li>
+<li><code>friction-logging</code> - Friction logging</li>
+</ul>
 <h3 id="2-annotations">2. Annotations</h3>
 <p>Deployments exposing metrics now have:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">annotations</span><span class="p">:</span>
@@ -6305,14 +6325,14 @@
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">securityContext</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">        </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;uid&gt;</span><span class="w">        </span><span class="c1"># 65534 (nobody) by default, or specific UID</span>
-<span class="w">        </span><span class="nt">runAsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;gid&gt;</span><span class="w">       </span><span class="c1"># Matching group</span>
-<span class="w">        </span><span class="nt">fsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;gid&gt;</span><span class="w">          </span><span class="c1"># File system group</span>
+<span class="w">        </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;uid&gt;</span><span class="w"> </span><span class="c1"># 65534 (nobody) by default, or specific UID</span>
+<span class="w">        </span><span class="nt">runAsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;gid&gt;</span><span class="w"> </span><span class="c1"># Matching group</span>
+<span class="w">        </span><span class="nt">fsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;gid&gt;</span><span class="w"> </span><span class="c1"># File system group</span>
 </code></pre></div>
 <h4 id="container-level-security-context">Container-Level Security Context</h4>
 <div class="highlight"><pre><span></span><code><span class="nt">securityContext</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">      </span><span class="c1"># With tmp volume mount</span>
+<span class="w">  </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># With tmp volume mount</span>
 <span class="w">  </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;uid&gt;</span>
 <span class="w">  </span><span class="nt">capabilities</span><span class="p">:</span>
@@ -6321,10 +6341,12 @@
 <span class="w">  </span><span class="nt">seccompProfile</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RuntimeDefault</span>
 </code></pre></div>
-<p><strong>User IDs Used:</strong>
-- <code>65534</code> - nobody user (most services) - <strong>Recommended default</strong>
-- <code>1000</code> - Standard non-root user (some services)
-- <code>10001</code> - Custom non-root user (specific services)</p>
+<p><strong>User IDs Used:</strong></p>
+<ul>
+<li><code>65534</code> - nobody user (most services) - <strong>Recommended default</strong></li>
+<li><code>1000</code> - Standard non-root user (some services)</li>
+<li><code>10001</code> - Custom non-root user (specific services)</li>
+</ul>
 <h3 id="4-resource-limits">4. Resource Limits</h3>
 <p>All containers have defined:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
@@ -6335,11 +6357,13 @@
 <span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;cpu-limit&gt;</span>
 <span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;memory-limit&gt;</span>
 </code></pre></div>
-<p><strong>Resource Profiles:</strong>
-- Small: 100m CPU / 128Mi memory (requests), 500m CPU / 512Mi memory (limits)
-- Medium: 200m CPU / 256Mi memory (requests), 500m CPU / 512Mi memory (limits)
-- Large: 500m CPU / 512Mi memory (requests), 2000m CPU / 2Gi memory (limits)
-- Java: 250m CPU / 512Mi memory (requests), 1000m CPU / 1Gi memory (limits)</p>
+<p><strong>Resource Profiles:</strong></p>
+<ul>
+<li>Small: 100m CPU / 128Mi memory (requests), 500m CPU / 512Mi memory (limits)</li>
+<li>Medium: 200m CPU / 256Mi memory (requests), 500m CPU / 512Mi memory (limits)</li>
+<li>Large: 500m CPU / 512Mi memory (requests), 2000m CPU / 2Gi memory (limits)</li>
+<li>Java: 250m CPU / 512Mi memory (requests), 1000m CPU / 1Gi memory (limits)</li>
+</ul>
 <p>Target: &lt;70% cluster utilization</p>
 <h3 id="5-health-checks">5. Health Checks</h3>
 <p>All deployments have:</p>
@@ -6412,22 +6436,26 @@
 <p>Created <code>scripts/standardize-k8s-manifest.py</code> for ongoing validation:</p>
 <div class="highlight"><pre><span></span><code>python3<span class="w"> </span>scripts/standardize-k8s-manifest.py<span class="w"> </span>&lt;manifest-file&gt;<span class="w"> </span>--analyze-only
 </code></pre></div>
-<p>Reports:
-- Missing standard labels
-- Missing security contexts
-- Missing resource limits
-- Missing health checks</p>
+<p>Reports:</p>
+<ul>
+<li>Missing standard labels</li>
+<li>Missing security contexts</li>
+<li>Missing resource limits</li>
+<li>Missing health checks</li>
+</ul>
 <hr />
 <h2 id="documentation-created">Documentation Created</h2>
 <h3 id="primary-documentation">Primary Documentation</h3>
-<p><strong><code>docs/reference/kubernetes-standards.md</code></strong> (700+ lines)
-- Complete standards specification
-- Examples for all resource types
-- Security context guidelines
-- Resource sizing recommendations
-- Health check standards
-- Migration checklist
-- Validation procedures</p>
+<p><strong><code>docs/reference/kubernetes-standards.md</code></strong> (700+ lines)</p>
+<ul>
+<li>Complete standards specification</li>
+<li>Examples for all resource types</li>
+<li>Security context guidelines</li>
+<li>Resource sizing recommendations</li>
+<li>Health check standards</li>
+<li>Migration checklist</li>
+<li>Validation procedures</li>
+</ul>
 <h3 id="supporting-documentation">Supporting Documentation</h3>
 <ul>
 <li><strong><code>docs/STANDARDIZATION_SUMMARY.md</code></strong> (this document)</li>
@@ -6437,8 +6465,12 @@
 <h2 id="future-recommendations">Future Recommendations</h2>
 <h3 id="immediate-next-steps-optional">Immediate Next Steps (Optional)</h3>
 <ol>
-<li>Apply standards to remaining platform/apps deployments:</li>
-<li>hasura, focalboard, penpot, plausible, unleash</li>
+<li>
+<p>Apply standards to remaining platform/apps deployments:</p>
+</li>
+<li>
+<p>hasura, focalboard, penpot, plausible, unleash</p>
+</li>
 <li>analytics-dashboard, discovery-metrics, experimentation</li>
 <li>
 <p>devex-survey-automation, opentelemetry sample-app</p>
@@ -6475,11 +6507,13 @@
 <li>Check that selectors still match pods</li>
 </ul>
 <h3 id="rollback-plan">Rollback Plan</h3>
-<p>If issues arise:
-1. Git revert provides easy rollback
-2. Changes are additive (labels, annotations)
-3. Security contexts maintained for running pods
-4. No service disruption expected</p>
+<p>If issues arise:</p>
+<ol>
+<li>Git revert provides easy rollback</li>
+<li>Changes are additive (labels, annotations)</li>
+<li>Security contexts maintained for running pods</li>
+<li>No service disruption expected</li>
+</ol>
 <hr />
 <h2 id="acceptance-criteria-from-issue-121">Acceptance Criteria (from Issue #121)</h2>
 <table>
@@ -6536,8 +6570,8 @@
 <li><a href="./PRE-COMMIT.md">Pre-commit Setup</a> - Development workflow</li>
 </ul>
 <hr />
-<p><strong>Completed By</strong>: GitHub Copilot Agent<br />
-<strong>Review Status</strong>: Ready for Review<br />
+<p><strong>Completed By</strong>: GitHub Copilot Agent
+<strong>Review Status</strong>: Ready for Review
 <strong>Branch</strong>: <code>copilot/standardize-kubernetes-manifests</code></p>
 
 

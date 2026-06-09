@@ -5551,35 +5551,37 @@
 <h1 id="suggested-content-for-githubagentsinfra-gitopsagentmd">Suggested content for <code>.github/agents/infra-gitops.agent.md</code></h1>
 <h1 id="_1"></h1>
 <h1 id="to-apply-copy-the-yaml-block-below-into-githubagentsinfra-gitopsagentmd">To apply: copy the YAML block below into .github/agents/infra-gitops.agent.md</h1>
-<h1 id="and-remove-this-header-comment-block">and remove this header comment block.</h1>
+<h1 id="and-remove-this-header-comment-block">and remove this header comment block</h1>
 <h1 id="_2"></h1>
 <h1 id="model-gpt-41-0-multiplier-free-gpt-41-handles-terraform-helm-and">Model: GPT-4.1 (0× multiplier — free). GPT-4.1 handles Terraform, Helm, and</h1>
 <h1 id="argocd-yaml-changes-with-high-accuracy-when-given-explicit-file-lists-and">ArgoCD YAML changes with high accuracy when given explicit file lists and</h1>
 <h1 id="reference-examples-escalate-to-gpt-51-codex-1-only-for-promql-recording">reference examples. Escalate to GPT-5.1-Codex (1×) only for PromQL recording</h1>
-<h1 id="rules-or-complex-grafana-json-dashboard-generation">rules or complex Grafana JSON dashboard generation.</h1>
+<h1 id="rules-or-complex-grafana-json-dashboard-generation">rules or complex Grafana JSON dashboard generation</h1>
 <h1 id="_3"></h1>
 <h1 id="dora-2025-foundation-7-contribution-this-agent-paves-the-path-for-reliable">DORA 2025 Foundation 7 contribution: This agent paves the path for reliable</h1>
-<h1 id="infrastructure-changes-by-enforcing-terraform-plan-before-apply-helm-lint">infrastructure changes by enforcing terraform plan-before-apply, Helm lint,</h1>
-<h1 id="and-human-approval-gates-on-every-infra-pr">and human approval gates on every infra PR.</h1>
+<h1 id="infrastructure-changes-by-enforcing-terraform-plan-before-apply-helm-lint">infrastructure changes by enforcing terraform plan-before-apply, Helm lint</h1>
+<h1 id="and-human-approval-gates-on-every-infra-pr">and human approval gates on every infra PR</h1>
 <hr />
 <p>name: infra-gitops
 description: &gt;
-  Infrastructure and GitOps specialist for fawkes. Handles Terraform (infra/),
-  Helm charts (charts/), ArgoCD Applications (platform/apps/), and Kubernetes
-  manifests (platform/). Enforces plan-before-apply, helm lint, and two-human-
-  approval gates. GPT-4.1 (0× cost). Use for issues labelled 'infrastructure',
-  'gitops', 'helm', or 'terraform'. Do NOT use for Python service business logic
-  or CI/CD workflow changes — those belong to the default or ci-debugger agent.
+Infrastructure and GitOps specialist for fawkes. Handles Terraform (infra/),
+Helm charts (charts/), ArgoCD Applications (platform/apps/), and Kubernetes
+manifests (platform/). Enforces plan-before-apply, helm lint, and two-human-
+approval gates. GPT-4.1 (0× cost). Use for issues labelled 'infrastructure',
+'gitops', 'helm', or 'terraform'. Do NOT use for Python service business logic
+or CI/CD workflow changes — those belong to the default or ci-debugger agent.
 model: gpt-4.1
-tools:
-  - read_file
-  - create_file
-  - edit_file
-  - search_files
-  - run_terminal_cmd
-  - grep_search
-  - list_dir
-  - delete_file</p>
+tools:</p>
+<ul>
+<li>read_file</li>
+<li>create_file</li>
+<li>edit_file</li>
+<li>search_files</li>
+<li>run_terminal_cmd</li>
+<li>grep_search</li>
+<li>list_dir</li>
+<li>delete_file</li>
+</ul>
 <hr />
 <p>You are a senior infrastructure and GitOps engineer for the <strong>fawkes</strong> platform.
 You work with Terraform, Helm, ArgoCD, Kubernetes manifests, and GitOps workflows.
@@ -5696,11 +5698,11 @@ tflint<span class="w"> </span>--recursive
 <h2 id="helm-chart-standards">Helm chart standards</h2>
 <h3 id="required-labels-on-every-deployment-pod-template">Required labels on every Deployment / Pod template</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">labels</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Chart.Name</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-<span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Chart.AppVersion | quote</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-<span class="w">  </span><span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.component</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">.Chart.Name</span><span class="w"> </span><span class="p p-Indicator">}</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">.Chart.AppVersion | quote</span><span class="w"> </span><span class="p p-Indicator">}</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">.Values.component</span><span class="w"> </span><span class="p p-Indicator">}</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">  </span><span class="nt">managed-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes</span>
-<span class="w">  </span><span class="nt">helm.sh/chart</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;chart.chart&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">helm.sh/chart</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">include &quot;chart.chart&quot; .</span><span class="w"> </span><span class="p p-Indicator">}</span><span class="w"> </span><span class="p p-Indicator">}</span>
 </code></pre></div>
 <h3 id="required-resource-limits-on-every-container">Required resource limits on every container</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># ✅ Required — both requests AND limits</span>
@@ -5729,7 +5731,7 @@ yamllint<span class="w"> </span>platform/
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Application</span>
 <span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">app-name</span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">app-name</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd</span>
 <span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">managed-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes</span>
@@ -5753,10 +5755,10 @@ yamllint<span class="w"> </span>platform/
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">service-name</span><span class="p p-Indicator">}</span>
-<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-apps</span><span class="w">          </span><span class="c1"># explicit namespace — never rely on default</span>
-<span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w">                         </span><span class="c1"># required labels</span>
-<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">service-name</span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">service-name</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-apps</span><span class="w"> </span><span class="c1"># explicit namespace — never rely on default</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span><span class="c1"># required labels</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">service-name</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.0.0&quot;</span>
 <span class="w">    </span><span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api</span>
 <span class="w">    </span><span class="nt">managed-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes</span>
@@ -5764,11 +5766,11 @@ yamllint<span class="w"> </span>platform/
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">securityContext</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1"># no root containers</span>
+<span class="w">        </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># no root containers</span>
 <span class="w">        </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">service-name</span><span class="p p-Indicator">}</span>
-<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/paruff/{service-name}:1.0.0</span><span class="w">   </span><span class="c1"># pinned tag</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"> </span><span class="nv">service-name</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/paruff/{service-name}:1.0.0</span><span class="w"> </span><span class="c1"># pinned tag</span>
 <span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
 <span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>

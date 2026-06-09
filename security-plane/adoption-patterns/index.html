@@ -6111,11 +6111,13 @@
 </ul>
 <h3 id="timeline">Timeline</h3>
 <p><strong>Duration</strong>: 1-2 weeks</p>
-<p><strong>Success Criteria</strong>:
-- All teams understand scan results
-- Critical issues are cataloged
-- Teams trained on remediation
-- Ready to move to progressive mode</p>
+<p><strong>Success Criteria</strong>:</p>
+<ul>
+<li>All teams understand scan results</li>
+<li>Critical issues are cataloged</li>
+<li>Teams trained on remediation</li>
+<li>Ready to move to progressive mode</li>
+</ul>
 <h2 id="pattern-2-progressive-enforcement">Pattern 2: Progressive Enforcement 🟡</h2>
 <h3 id="when-to-use_1">When to Use</h3>
 <ul>
@@ -6191,11 +6193,13 @@
 </ul>
 <h3 id="timeline_1">Timeline</h3>
 <p><strong>Duration</strong>: 2-4 weeks after advisory</p>
-<p><strong>Success Criteria</strong>:
-- Zero CRITICAL vulnerabilities
-- No secrets in codebase
-- SBOMs for all services
-- Ready for strict mode</p>
+<p><strong>Success Criteria</strong>:</p>
+<ul>
+<li>Zero CRITICAL vulnerabilities</li>
+<li>No secrets in codebase</li>
+<li>SBOMs for all services</li>
+<li>Ready for strict mode</li>
+</ul>
 <h2 id="pattern-3-strict-mode">Pattern 3: Strict Mode 🔴</h2>
 <h3 id="when-to-use_2">When to Use</h3>
 <ul>
@@ -6273,40 +6277,50 @@
 </ul>
 <h3 id="timeline_2">Timeline</h3>
 <p><strong>Duration</strong>: 4-8 weeks after progressive</p>
-<p><strong>Success Criteria</strong>:
-- All services pass strict checks
-- Images signed and verified
-- Policies enforced and documented
-- Zero unmitigated vulnerabilities</p>
+<p><strong>Success Criteria</strong>:</p>
+<ul>
+<li>All services pass strict checks</li>
+<li>Images signed and verified</li>
+<li>Policies enforced and documented</li>
+<li>Zero unmitigated vulnerabilities</li>
+</ul>
 <h2 id="migration-path">Migration Path</h2>
 <h3 id="week-1-2-advisory-mode">Week 1-2: Advisory Mode</h3>
-<p><div class="highlight"><pre><span></span><code>Deploy → Scan → Learn → Catalog
+<div class="highlight"><pre><span></span><code>Deploy → Scan → Learn → Catalog
 </code></pre></div>
-- Enable security workflows
-- Run scans on all repos
-- Catalog all findings
-- Train teams on tools</p>
+<ul>
+<li>Enable security workflows</li>
+<li>Run scans on all repos</li>
+<li>Catalog all findings</li>
+<li>Train teams on tools</li>
+</ul>
 <h3 id="week-3-4-fix-critical">Week 3-4: Fix Critical</h3>
-<p><div class="highlight"><pre><span></span><code>Prioritize → Fix → Verify → Document
+<div class="highlight"><pre><span></span><code>Prioritize → Fix → Verify → Document
 </code></pre></div>
-- Address CRITICAL vulnerabilities
-- Fix secret leaks
-- Update dependencies
-- Document exemptions</p>
+<ul>
+<li>Address CRITICAL vulnerabilities</li>
+<li>Fix secret leaks</li>
+<li>Update dependencies</li>
+<li>Document exemptions</li>
+</ul>
 <h3 id="week-5-6-progressive-enforcement">Week 5-6: Progressive Enforcement</h3>
-<p><div class="highlight"><pre><span></span><code>Enable → Monitor → Fix → Iterate
+<div class="highlight"><pre><span></span><code>Enable → Monitor → Fix → Iterate
 </code></pre></div>
-- Turn on critical blocking
-- Monitor non-blocking issues
-- Gradual fixing of HIGH/MEDIUM
-- Adjust thresholds</p>
+<ul>
+<li>Turn on critical blocking</li>
+<li>Monitor non-blocking issues</li>
+<li>Gradual fixing of HIGH/MEDIUM</li>
+<li>Adjust thresholds</li>
+</ul>
 <h3 id="week-7-8-strict-mode">Week 7-8: Strict Mode</h3>
-<p><div class="highlight"><pre><span></span><code>Enforce → Sign → Verify → Maintain
+<div class="highlight"><pre><span></span><code>Enforce → Sign → Verify → Maintain
 </code></pre></div>
-- Full enforcement enabled
-- Image signing required
-- SBOM generation mandatory
-- Continuous monitoring</p>
+<ul>
+<li>Full enforcement enabled</li>
+<li>Image signing required</li>
+<li>SBOM generation mandatory</li>
+<li>Continuous monitoring</li>
+</ul>
 <h2 id="customization-examples">Customization Examples</h2>
 <h3 id="start-strict-for-new-services">Start Strict for New Services</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># New service - no technical debt</span>
@@ -6328,7 +6342,7 @@
 <span class="nt">with</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">enforcement-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strict</span>
 <span class="w">  </span><span class="nt">fail-on-critical</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">fail-on-violation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># Policies advisory</span>
+<span class="w">  </span><span class="nt">fail-on-violation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"> </span><span class="c1"># Policies advisory</span>
 <span class="w">  </span><span class="nt">severity-threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CRITICAL</span>
 </code></pre></div>
 <h3 id="production-only-strict">Production-Only Strict</h3>

@@ -6128,9 +6128,9 @@
 
 
 <h1 id="kubernetes-manifest-standards">Kubernetes Manifest Standards</h1>
-<p><strong>Version</strong>: 1.0<br />
-<strong>Last Updated</strong>: January 5, 2025<br />
-<strong>Status</strong>: Standard<br />
+<p><strong>Version</strong>: 1.0
+<strong>Last Updated</strong>: January 5, 2025
+<strong>Status</strong>: Standard
 <strong>Applies To</strong>: All Kubernetes manifests in the Fawkes platform</p>
 <hr />
 <h2 id="overview">Overview</h2>
@@ -6148,21 +6148,21 @@
 <h3 id="required-labels-metadata">Required Labels (Metadata)</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;application-name&gt;</span><span class="w">        </span><span class="c1"># Name of the application (e.g., &quot;backstage&quot;, &quot;nps-service&quot;)</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/part-of</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes</span><span class="w">                 </span><span class="c1"># Platform name (always &quot;fawkes&quot;)</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/component</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;component-type&gt;</span><span class="w">     </span><span class="c1"># Component role (e.g., &quot;backend&quot;, &quot;frontend&quot;, &quot;database&quot;)</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;application-name&gt;</span><span class="w"> </span><span class="c1"># Name of the application (e.g., &quot;backstage&quot;, &quot;nps-service&quot;)</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/part-of</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes</span><span class="w"> </span><span class="c1"># Platform name (always &quot;fawkes&quot;)</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/component</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;component-type&gt;</span><span class="w"> </span><span class="c1"># Component role (e.g., &quot;backend&quot;, &quot;frontend&quot;, &quot;database&quot;)</span>
 </code></pre></div>
 <h3 id="recommended-labels">Recommended Labels</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;version&gt;</span><span class="w">              </span><span class="c1"># Application version (e.g., &quot;v1.0.0&quot;, &quot;0.1.0&quot;)</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/managed-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;tool&gt;</span><span class="w">              </span><span class="c1"># Tool managing the resource (e.g., &quot;argocd&quot;, &quot;backstage&quot;, &quot;helm&quot;)</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;version&gt;</span><span class="w"> </span><span class="c1"># Application version (e.g., &quot;v1.0.0&quot;, &quot;0.1.0&quot;)</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/managed-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;tool&gt;</span><span class="w"> </span><span class="c1"># Tool managing the resource (e.g., &quot;argocd&quot;, &quot;backstage&quot;, &quot;helm&quot;)</span>
 </code></pre></div>
 <h3 id="legacy-compatibility">Legacy Compatibility</h3>
 <p>For backward compatibility with existing selectors, also include:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;application-name&gt;</span><span class="w">                           </span><span class="c1"># Simple app label for selectors</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;application-name&gt;</span><span class="w"> </span><span class="c1"># Simple app label for selectors</span>
 </code></pre></div>
 <h3 id="label-value-guidelines">Label Value Guidelines</h3>
 <ul>
@@ -6191,16 +6191,16 @@
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">prometheus.io/scrape</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w">                  </span><span class="c1"># Enable Prometheus scraping</span>
-<span class="w">        </span><span class="nt">prometheus.io/port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;port&gt;&quot;</span><span class="w">                  </span><span class="c1"># Port where metrics are exposed</span>
-<span class="w">        </span><span class="nt">prometheus.io/path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/metrics&quot;</span><span class="w">                </span><span class="c1"># Path to metrics endpoint</span>
+<span class="w">        </span><span class="nt">prometheus.io/scrape</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="c1"># Enable Prometheus scraping</span>
+<span class="w">        </span><span class="nt">prometheus.io/port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;port&gt;&quot;</span><span class="w"> </span><span class="c1"># Port where metrics are exposed</span>
+<span class="w">        </span><span class="nt">prometheus.io/path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/metrics&quot;</span><span class="w"> </span><span class="c1"># Path to metrics endpoint</span>
 </code></pre></div>
 <h3 id="deployment-annotations">Deployment Annotations</h3>
 <p>For documentation and change tracking:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;brief-description&gt;&quot;</span><span class="w">                </span><span class="c1"># Brief description of the resource</span>
-<span class="w">    </span><span class="nt">docs</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;link-to-documentation&gt;&quot;</span><span class="w">                   </span><span class="c1"># Link to relevant documentation</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;brief-description&gt;&quot;</span><span class="w"> </span><span class="c1"># Brief description of the resource</span>
+<span class="w">    </span><span class="nt">docs</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;link-to-documentation&gt;&quot;</span><span class="w"> </span><span class="c1"># Link to relevant documentation</span>
 </code></pre></div>
 <h2 id="security-context-standards">Security Context Standards</h2>
 <p>All deployments MUST implement security contexts at both pod and container levels.</p>
@@ -6209,10 +6209,10 @@
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">securityContext</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                            </span><span class="c1"># REQUIRED: Never run as root</span>
-<span class="w">        </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65534</span><span class="w">                              </span><span class="c1"># REQUIRED: Use nobody user (65534) by default</span>
-<span class="w">        </span><span class="nt">runAsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65534</span><span class="w">                             </span><span class="c1"># REQUIRED: Use nobody group</span>
-<span class="w">        </span><span class="nt">fsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65534</span><span class="w">                                </span><span class="c1"># REQUIRED: File system group ownership</span>
+<span class="w">        </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># REQUIRED: Never run as root</span>
+<span class="w">        </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65534</span><span class="w"> </span><span class="c1"># REQUIRED: Use nobody user (65534) by default</span>
+<span class="w">        </span><span class="nt">runAsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65534</span><span class="w"> </span><span class="c1"># REQUIRED: Use nobody group</span>
+<span class="w">        </span><span class="nt">fsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65534</span><span class="w"> </span><span class="c1"># REQUIRED: File system group ownership</span>
 </code></pre></div>
 <p><strong>User ID Guidelines:</strong></p>
 <ul>
@@ -6227,15 +6227,15 @@
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;container-name&gt;</span>
 <span class="w">          </span><span class="nt">securityContext</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">           </span><span class="c1"># REQUIRED: Prevent privilege escalation</span>
-<span class="w">            </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">              </span><span class="c1"># REQUIRED: Make root filesystem read-only</span>
-<span class="w">            </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                        </span><span class="c1"># REQUIRED: Ensure non-root execution</span>
-<span class="w">            </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65534</span><span class="w">                          </span><span class="c1"># REQUIRED: Match pod-level user</span>
+<span class="w">            </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"> </span><span class="c1"># REQUIRED: Prevent privilege escalation</span>
+<span class="w">            </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># REQUIRED: Make root filesystem read-only</span>
+<span class="w">            </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># REQUIRED: Ensure non-root execution</span>
+<span class="w">            </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65534</span><span class="w"> </span><span class="c1"># REQUIRED: Match pod-level user</span>
 <span class="w">            </span><span class="nt">capabilities</span><span class="p">:</span>
 <span class="w">              </span><span class="nt">drop</span><span class="p">:</span>
-<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALL</span><span class="w">                                 </span><span class="c1"># REQUIRED: Drop all Linux capabilities</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALL</span><span class="w"> </span><span class="c1"># REQUIRED: Drop all Linux capabilities</span>
 <span class="w">            </span><span class="nt">seccompProfile</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RuntimeDefault</span><span class="w">                    </span><span class="c1"># REQUIRED: Use default seccomp profile</span>
+<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RuntimeDefault</span><span class="w"> </span><span class="c1"># REQUIRED: Use default seccomp profile</span>
 </code></pre></div>
 <h3 id="volume-mounts-for-writable-directories">Volume Mounts for Writable Directories</h3>
 <p>When using <code>readOnlyRootFilesystem: true</code>, provide writable temporary directories:</p>
@@ -6260,12 +6260,12 @@
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;container-name&gt;</span>
 <span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">requests</span><span class="p">:</span><span class="w">                                 </span><span class="c1"># REQUIRED: Minimum guaranteed resources</span>
-<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;cpu-request&gt;&quot;</span><span class="w">                    </span><span class="c1"># e.g., &quot;100m&quot;, &quot;200m&quot;</span>
-<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;memory-request&gt;&quot;</span><span class="w">              </span><span class="c1"># e.g., &quot;128Mi&quot;, &quot;256Mi&quot;</span>
-<span class="w">            </span><span class="nt">limits</span><span class="p">:</span><span class="w">                                   </span><span class="c1"># REQUIRED: Maximum allowed resources</span>
-<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;cpu-limit&gt;&quot;</span><span class="w">                      </span><span class="c1"># e.g., &quot;500m&quot;, &quot;1000m&quot;</span>
-<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;memory-limit&gt;&quot;</span><span class="w">                </span><span class="c1"># e.g., &quot;512Mi&quot;, &quot;1Gi&quot;</span>
+<span class="w">            </span><span class="nt">requests</span><span class="p">:</span><span class="w"> </span><span class="c1"># REQUIRED: Minimum guaranteed resources</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;cpu-request&gt;&quot;</span><span class="w"> </span><span class="c1"># e.g., &quot;100m&quot;, &quot;200m&quot;</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;memory-request&gt;&quot;</span><span class="w"> </span><span class="c1"># e.g., &quot;128Mi&quot;, &quot;256Mi&quot;</span>
+<span class="w">            </span><span class="nt">limits</span><span class="p">:</span><span class="w"> </span><span class="c1"># REQUIRED: Maximum allowed resources</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;cpu-limit&gt;&quot;</span><span class="w"> </span><span class="c1"># e.g., &quot;500m&quot;, &quot;1000m&quot;</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;memory-limit&gt;&quot;</span><span class="w"> </span><span class="c1"># e.g., &quot;512Mi&quot;, &quot;1Gi&quot;</span>
 </code></pre></div>
 <h3 id="resource-sizing-guidelines">Resource Sizing Guidelines</h3>
 <p>Target cluster utilization: <strong>&lt;70%</strong> to ensure headroom for spikes</p>
@@ -6325,12 +6325,12 @@
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;container-name&gt;</span>
 <span class="w">          </span><span class="nt">livenessProbe</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span><span class="w">                           </span><span class="c1"># Or /healthz, /live</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span><span class="w"> </span><span class="c1"># Or /healthz, /live</span>
 <span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
-<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">                   </span><span class="c1"># Wait before first check</span>
-<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">                         </span><span class="c1"># Check every 10 seconds</span>
-<span class="w">            </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">                         </span><span class="c1"># Timeout for each check</span>
-<span class="w">            </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">                       </span><span class="c1"># Restart after 3 failures</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w"> </span><span class="c1"># Wait before first check</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"> </span><span class="c1"># Check every 10 seconds</span>
+<span class="w">            </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"> </span><span class="c1"># Timeout for each check</span>
+<span class="w">            </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"> </span><span class="c1"># Restart after 3 failures</span>
 </code></pre></div>
 <h3 id="readiness-probe">Readiness Probe</h3>
 <p>Determines if the container is ready to receive traffic:</p>
@@ -6341,12 +6341,12 @@
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;container-name&gt;</span>
 <span class="w">          </span><span class="nt">readinessProbe</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/ready</span><span class="w">                            </span><span class="c1"># Or /readyz, /health/ready</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/ready</span><span class="w"> </span><span class="c1"># Or /readyz, /health/ready</span>
 <span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
-<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">                   </span><span class="c1"># Wait before first check</span>
-<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w">                          </span><span class="c1"># Check every 5 seconds</span>
-<span class="w">            </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">                         </span><span class="c1"># Timeout for each check</span>
-<span class="w">            </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">                       </span><span class="c1"># Mark unready after 3 failures</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"> </span><span class="c1"># Wait before first check</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"> </span><span class="c1"># Check every 5 seconds</span>
+<span class="w">            </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"> </span><span class="c1"># Timeout for each check</span>
+<span class="w">            </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"> </span><span class="c1"># Mark unready after 3 failures</span>
 </code></pre></div>
 <h3 id="health-check-guidelines">Health Check Guidelines</h3>
 <ul>
@@ -6369,13 +6369,13 @@
 <div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;app-name&gt;</span><span class="w">                  </span><span class="c1"># Use dedicated service account</span>
+<span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;app-name&gt;</span><span class="w"> </span><span class="c1"># Use dedicated service account</span>
 </code></pre></div>
 <p>For applications NOT requiring API access:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">automountServiceAccountToken</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">             </span><span class="c1"># Disable token mounting</span>
+<span class="w">      </span><span class="nt">automountServiceAccountToken</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"> </span><span class="c1"># Disable token mounting</span>
 </code></pre></div>
 <h2 id="image-standards">Image Standards</h2>
 <h3 id="image-references">Image References</h3>
@@ -6385,7 +6385,7 @@
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;container-name&gt;</span>
 <span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;registry&gt;/&lt;org&gt;/&lt;name&gt;:&lt;tag-or-digest&gt;</span>
-<span class="w">          </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IfNotPresent</span><span class="w">               </span><span class="c1"># Use cached images when possible</span>
+<span class="w">          </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IfNotPresent</span><span class="w"> </span><span class="c1"># Use cached images when possible</span>
 </code></pre></div>
 <h3 id="image-pull-policy-guidelines">Image Pull Policy Guidelines</h3>
 <ul>

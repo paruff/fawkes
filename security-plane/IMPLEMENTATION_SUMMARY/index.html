@@ -6181,8 +6181,12 @@
 </ul>
 <h3 id="3-security-templates-2-templates">3. Security Templates (2 templates)</h3>
 <ol>
-<li><strong>Secure Kubernetes Deployment</strong> (<code>secure-deployment.yaml</code>)</li>
-<li>Pod Security Standards compliant</li>
+<li>
+<p><strong>Secure Kubernetes Deployment</strong> (<code>secure-deployment.yaml</code>)</p>
+</li>
+<li>
+<p>Pod Security Standards compliant</p>
+</li>
 <li>Non-root security contexts</li>
 <li>Resource limits and requests</li>
 <li>Health probes configured</li>
@@ -6220,14 +6224,20 @@
 <li>Policy compliance indicators</li>
 </ul>
 <h3 id="5-service-template-integration">5. Service Template Integration</h3>
-<p>Updated all three service templates with security workflows:
-- <code>templates/python-service/skeleton/.github/workflows/security.yml</code>
-- <code>templates/nodejs-service/skeleton/.github/workflows/security.yml</code>
-- <code>templates/java-service/skeleton/.github/workflows/security.yml</code></p>
+<p>Updated all three service templates with security workflows:</p>
+<ul>
+<li><code>templates/python-service/skeleton/.github/workflows/security.yml</code></li>
+<li><code>templates/nodejs-service/skeleton/.github/workflows/security.yml</code></li>
+<li><code>templates/java-service/skeleton/.github/workflows/security.yml</code></li>
+</ul>
 <h3 id="6-comprehensive-documentation-5-documents">6. Comprehensive Documentation (5 documents)</h3>
 <ol>
-<li><strong>Reference Architecture</strong> (<code>docs/security-plane/reference-architecture.md</code>)</li>
-<li>Component architecture</li>
+<li>
+<p><strong>Reference Architecture</strong> (<code>docs/security-plane/reference-architecture.md</code>)</p>
+</li>
+<li>
+<p>Component architecture</p>
+</li>
 <li>Integration patterns</li>
 <li>Metrics and monitoring</li>
 <li>
@@ -6236,7 +6246,9 @@
 <li>
 <p><strong>Adoption Patterns</strong> (<code>docs/security-plane/adoption-patterns.md</code>)</p>
 </li>
-<li>Advisory mode (🟢)</li>
+<li>
+<p>Advisory mode (🟢)</p>
+</li>
 <li>Progressive enforcement (🟡)</li>
 <li>Strict mode (🔴)</li>
 <li>
@@ -6245,7 +6257,9 @@
 <li>
 <p><strong>Quick Start Guide</strong> (<code>docs/security-plane/quick-start.md</code>)</p>
 </li>
-<li>10-minute onboarding</li>
+<li>
+<p>10-minute onboarding</p>
+</li>
 <li>Local testing setup</li>
 <li>
 <p>Troubleshooting tips</p>
@@ -6253,7 +6267,9 @@
 <li>
 <p><strong>Main README</strong> (<code>.security-plane/README.md</code>)</p>
 </li>
-<li>Feature overview</li>
+<li>
+<p>Feature overview</p>
+</li>
 <li>Quick start</li>
 <li>Customization examples</li>
 <li>
@@ -6302,12 +6318,14 @@
 </ul>
 <h2 id="adoption-path">Adoption Path</h2>
 <h3 id="week-1-2-advisory-mode">Week 1-2: Advisory Mode</h3>
-<p><div class="highlight"><pre><span></span><code><span class="nt">enforcement-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">advisory</span>
+<div class="highlight"><pre><span></span><code><span class="nt">enforcement-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">advisory</span>
 <span class="nt">fail-on-critical</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </code></pre></div>
-- Scan all repositories
-- Catalog security findings
-- Train teams on remediation</p>
+<ul>
+<li>Scan all repositories</li>
+<li>Catalog security findings</li>
+<li>Train teams on remediation</li>
+</ul>
 <h3 id="week-3-4-fix-critical-issues">Week 3-4: Fix Critical Issues</h3>
 <ul>
 <li>Address CRITICAL vulnerabilities</li>
@@ -6315,29 +6333,33 @@
 <li>Update vulnerable dependencies</li>
 </ul>
 <h3 id="week-5-6-progressive-enforcement">Week 5-6: Progressive Enforcement</h3>
-<p><div class="highlight"><pre><span></span><code><span class="nt">enforcement-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strict</span>
+<div class="highlight"><pre><span></span><code><span class="nt">enforcement-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strict</span>
 <span class="nt">fail-on-critical</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">severity-threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CRITICAL</span>
 </code></pre></div>
-- Block critical vulnerabilities
-- Warn on high/medium issues
-- Generate SBOMs</p>
+<ul>
+<li>Block critical vulnerabilities</li>
+<li>Warn on high/medium issues</li>
+<li>Generate SBOMs</li>
+</ul>
 <h3 id="week-7-strict-mode">Week 7+: Strict Mode</h3>
-<p><div class="highlight"><pre><span></span><code><span class="nt">enforcement-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strict</span>
+<div class="highlight"><pre><span></span><code><span class="nt">enforcement-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strict</span>
 <span class="nt">fail-on-critical</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">fail-on-violation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">enable-signing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">enable-sbom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
-- Full policy enforcement
-- Required image signing
-- Mandatory SBOMs</p>
+<ul>
+<li>Full policy enforcement</li>
+<li>Required image signing</li>
+<li>Mandatory SBOMs</li>
+</ul>
 <h2 id="integration-points">Integration Points</h2>
 <h3 id="backstage">Backstage</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">security-plane/enabled</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
-<span class="w">    </span><span class="nt">security-plane/mode</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;strict&#39;</span>
+<span class="w">    </span><span class="nt">security-plane/enabled</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">security-plane/mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;strict&quot;</span>
 </code></pre></div>
 <h3 id="jenkins">Jenkins</h3>
 <div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Security&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>

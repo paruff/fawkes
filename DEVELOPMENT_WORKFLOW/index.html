@@ -5883,23 +5883,28 @@
 <h3 id="creating-issues">Creating Issues</h3>
 <p>Every feature starts with a GitHub issue. Use this template:</p>
 <div class="highlight"><pre><span></span><code><span class="gu">## Summary</span>
+
 One-sentence description of the change.
 
 <span class="gu">## Motivation</span>
+
 Why this change is needed. Link to DORA research if applicable.
 
 <span class="gu">## Scope</span>
+
 <span class="k">-</span><span class="w"> </span><span class="gs">**Layer**</span>: services / infra / platform / scripts / docs
 <span class="k">-</span><span class="w"> </span><span class="gs">**Files to edit**</span>: [explicit list]
 <span class="k">-</span><span class="w"> </span><span class="gs">**Reference file**</span>: [path to canonical example, if applicable]
 
 <span class="gu">## Acceptance Criteria</span>
+
 <span class="k">- [ ]</span> Criterion 1
 <span class="k">- [ ]</span> Criterion 2
 <span class="k">- [ ]</span> Linters pass
 <span class="k">- [ ]</span> Tests added/updated
 
 <span class="gu">## Suggested Model: gemma4:e4b</span>
+
 <span class="gs">**Task type**</span>: single-file bug / multi-file refactor / docs / YAML
 </code></pre></div>
 <h3 id="assigning-to-gemma4e4b">Assigning to gemma4:e4b</h3>
@@ -5981,17 +5986,19 @@ Why this change is needed. Link to DORA research if applicable.
                                   ▼▼▼▼
                               (PRs merge back)
 </code></pre></div>
-<p><strong>Rules:</strong>
-1. <strong>Branch per feature</strong> — every change gets its own branch
-2. <strong>Naming convention</strong>: <code>&lt;type&gt;/&lt;short-description&gt;</code>
-   - <code>feat/add-health-endpoint</code>
-   - <code>fix/resolve-timeout-bug</code>
-   - <code>docs/update-api-surface</code>
-   - <code>refactor/extract-logging</code>
-   - <code>test/add-unit-tests</code>
-   - <code>chore/update-dependencies</code>
-3. <strong>Never commit directly to <code>main</code></strong> — all changes go through PRs
-4. <strong>Keep branches short-lived</strong> — merge within 2 days (DORA best practice)</p>
+<p><strong>Rules:</strong></p>
+<ol>
+<li><strong>Branch per feature</strong> — every change gets its own branch</li>
+<li><strong>Naming convention</strong>: <code>&lt;type&gt;/&lt;short-description&gt;</code></li>
+<li><code>feat/add-health-endpoint</code></li>
+<li><code>fix/resolve-timeout-bug</code></li>
+<li><code>docs/update-api-surface</code></li>
+<li><code>refactor/extract-logging</code></li>
+<li><code>test/add-unit-tests</code></li>
+<li><code>chore/update-dependencies</code></li>
+<li><strong>Never commit directly to <code>main</code></strong> — all changes go through PRs</li>
+<li><strong>Keep branches short-lived</strong> — merge within 2 days (DORA best practice)</li>
+</ol>
 <h3 id="creating-a-branch">Creating a Branch</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fetch latest</span>
 git<span class="w"> </span>fetch<span class="w"> </span>origin
@@ -6015,12 +6022,12 @@ git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span
 [optional footer]
 </code></pre></div>
 <p><strong>Types:</strong> <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>style</code>, <code>refactor</code>, <code>test</code>, <code>chore</code>, <code>ci</code>, <code>perf</code></p>
-<p><strong>Examples:</strong>
+<p><strong>Examples:</strong></p>
 <div class="highlight"><pre><span></span><code>feat(service): add /health endpoint to tracer-bullet
 fix(ci): pin action versions to SHA hashes
 docs: update DEVELOPMENT_WORKFLOW.md with GitOps branching
 test(service): add unit tests for /health endpoint
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="working-with-gemma4e4b-in-opencode">Working with gemma4:e4b in OpenCode</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Start OpenCode session</span>
 opencode
@@ -6150,10 +6157,12 @@ gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </spa
                     ▼
         main: feat(service): add /health endpoint (1 commit)
 </code></pre></div>
-<p><strong>Why squash?</strong>
-- Clean git history on <code>main</code>
-- One commit per feature = easy revert
-- DORA best practice: small, atomic commits</p>
+<p><strong>Why squash?</strong></p>
+<ul>
+<li>Clean git history on <code>main</code></li>
+<li>One commit per feature = easy revert</li>
+<li>DORA best practice: small, atomic commits</li>
+</ul>
 <h3 id="merge-requirements">Merge Requirements</h3>
 <ol>
 <li>All CI checks pass</li>

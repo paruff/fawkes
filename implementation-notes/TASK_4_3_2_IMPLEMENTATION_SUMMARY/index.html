@@ -5694,7 +5694,7 @@
   <a href="#examples-of-validation-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Examples of Validation Rules:
+        Examples of Validation Rules
       
     </span>
   </a>
@@ -5881,46 +5881,56 @@
 <li>Network Watcher integration</li>
 </ul>
 <h2 id="examples">Examples</h2>
-<p>Created comprehensive examples for each module:
-- <strong>AKS Example</strong>: Full cluster with monitoring and multiple node pools
-- <strong>Database Example</strong>: Both PostgreSQL and MySQL configurations
-- <strong>Storage Example</strong>: Blob containers with lifecycle policies
-- <strong>VNet Example</strong>: Multi-tier network with NSGs and service endpoints</p>
+<p>Created comprehensive examples for each module:</p>
+<ul>
+<li><strong>AKS Example</strong>: Full cluster with monitoring and multiple node pools</li>
+<li><strong>Database Example</strong>: Both PostgreSQL and MySQL configurations</li>
+<li><strong>Storage Example</strong>: Blob containers with lifecycle policies</li>
+<li><strong>VNet Example</strong>: Multi-tier network with NSGs and service endpoints</li>
+</ul>
 <p>Total Example Files: 8 (main.tf + outputs.tf for each module)</p>
 <h2 id="testing">Testing</h2>
 <h3 id="terratest-validation-teststerratestazure_new_modules_testgo">Terratest Validation (<code>tests/terratest/azure_new_modules_test.go</code>)</h3>
-<p>Created 8 test functions:
-- <code>TestAzureAKSModuleValidation</code>
-- <code>TestAzureDatabaseModuleValidation</code>
-- <code>TestAzureStorageModuleValidation</code>
-- <code>TestAzureVNetModuleValidation</code>
-- <code>TestAzureAKSExampleValidation</code>
-- <code>TestAzureDatabaseExampleValidation</code>
-- <code>TestAzureStorageExampleValidation</code>
-- <code>TestAzureVNetExampleValidation</code></p>
-<p>Each test performs:
-1. <code>terraform init</code>
-2. <code>terraform validate</code></p>
+<p>Created 8 test functions:</p>
+<ul>
+<li><code>TestAzureAKSModuleValidation</code></li>
+<li><code>TestAzureDatabaseModuleValidation</code></li>
+<li><code>TestAzureStorageModuleValidation</code></li>
+<li><code>TestAzureVNetModuleValidation</code></li>
+<li><code>TestAzureAKSExampleValidation</code></li>
+<li><code>TestAzureDatabaseExampleValidation</code></li>
+<li><code>TestAzureStorageExampleValidation</code></li>
+<li><code>TestAzureVNetExampleValidation</code></li>
+</ul>
+<p>Each test performs:</p>
+<ol>
+<li><code>terraform init</code></li>
+<li><code>terraform validate</code></li>
+</ol>
 <h2 id="documentation">Documentation</h2>
 <h3 id="main-readme-infraterraformmodulesazurereadmemd">Main README (<code>infra/terraform/modules/azure/README.md</code>)</h3>
-<p>Comprehensive documentation including:
-- Module descriptions and usage
-- Design principles
-- Security best practices
-- Cost optimization strategies
-- Observability patterns
-- Integration examples
-- Common patterns
-- Troubleshooting guide
-- Migration guide from old modules</p>
+<p>Comprehensive documentation including:</p>
+<ul>
+<li>Module descriptions and usage</li>
+<li>Design principles</li>
+<li>Security best practices</li>
+<li>Cost optimization strategies</li>
+<li>Observability patterns</li>
+<li>Integration examples</li>
+<li>Common patterns</li>
+<li>Troubleshooting guide</li>
+<li>Migration guide from old modules</li>
+</ul>
 <h2 id="validation-rules">Validation Rules</h2>
-<p>All modules include extensive input validation:
-- <strong>String lengths</strong>: Min/max character limits
-- <strong>Naming patterns</strong>: Regex validation for Azure naming conventions
-- <strong>CIDR blocks</strong>: Valid IP range validation
-- <strong>Enums</strong>: Allowed values for configuration options
-- <strong>Cross-variable validation</strong>: Dependencies and logical constraints</p>
-<h3 id="examples-of-validation-rules">Examples of Validation Rules:</h3>
+<p>All modules include extensive input validation:</p>
+<ul>
+<li><strong>String lengths</strong>: Min/max character limits</li>
+<li><strong>Naming patterns</strong>: Regex validation for Azure naming conventions</li>
+<li><strong>CIDR blocks</strong>: Valid IP range validation</li>
+<li><strong>Enums</strong>: Allowed values for configuration options</li>
+<li><strong>Cross-variable validation</strong>: Dependencies and logical constraints</li>
+</ul>
+<h3 id="examples-of-validation-rules">Examples of Validation Rules</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Cluster name validation</span>
 <span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.cluster_name</span><span class="p">)</span><span class="w"> </span><span class="err">&gt;</span><span class="p">=</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="err">&amp;&amp;</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.cluster_name</span><span class="p">)</span><span class="w"> </span><span class="err">&lt;</span><span class="p">=</span><span class="w"> </span><span class="m">63</span>
@@ -5991,18 +6001,22 @@
 <li>[ ] Modules pass tflint and tfsec scans (tools not available in environment, but code follows best practices)</li>
 </ul>
 <h2 id="note-on-issue-description">Note on Issue Description</h2>
-<p>The original issue description mentioned AWS-specific services (EKS, RDS, S3, VPC) but was titled "Create azure Terraform Modules". This implementation correctly created Azure equivalents:
-- EKS → AKS (Azure Kubernetes Service)
-- RDS → Azure Database for PostgreSQL/MySQL
-- S3 → Azure Storage Account with Blob Storage
-- VPC → Azure Virtual Network (VNet)</p>
+<p>The original issue description mentioned AWS-specific services (EKS, RDS, S3, VPC) but was titled "Create azure Terraform Modules". This implementation correctly created Azure equivalents:</p>
+<ul>
+<li>EKS → AKS (Azure Kubernetes Service)</li>
+<li>RDS → Azure Database for PostgreSQL/MySQL</li>
+<li>S3 → Azure Storage Account with Blob Storage</li>
+<li>VPC → Azure Virtual Network (VNet)</li>
+</ul>
 <p>All modules follow Azure best practices and naming conventions.</p>
 <h2 id="next-steps">Next Steps</h2>
-<p>To complete the acceptance criteria:
-1. Install tflint and tfsec in CI/CD pipeline
-2. Run validation scans
-3. Address any issues found by scanners
-4. Optionally add terraform-docs for auto-generated documentation</p>
+<p>To complete the acceptance criteria:</p>
+<ol>
+<li>Install tflint and tfsec in CI/CD pipeline</li>
+<li>Run validation scans</li>
+<li>Address any issues found by scanners</li>
+<li>Optionally add terraform-docs for auto-generated documentation</li>
+</ol>
 <h2 id="files-changed">Files Changed</h2>
 <div class="highlight"><pre><span></span><code>infra/terraform/modules/azure/
 ├── README.md                          (new)

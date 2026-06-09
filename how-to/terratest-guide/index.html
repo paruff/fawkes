@@ -6090,23 +6090,21 @@ brew<span class="w"> </span>install<span class="w"> </span>infracost<span class=
 </code></pre></div>
 <h3 id="setup">Setup</h3>
 <ol>
-<li>
-<p><strong>Authenticate with Azure</strong>:
-   <div class="highlight"><pre><span></span><code>az<span class="w"> </span>login
+<li><strong>Authenticate with Azure</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>login
 az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span><span class="s2">&quot;your-subscription-id&quot;</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Install Go dependencies</strong>:
-   <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>tests/terratest
+</code></pre></div>
+<ol>
+<li><strong>Install Go dependencies</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>tests/terratest
 go<span class="w"> </span>mod<span class="w"> </span>download
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Run validation tests</strong> (no cost):
+</code></pre></div>
+<ol>
+<li><strong>Run validation tests</strong> (no cost):
    <div class="highlight"><pre><span></span><code>make<span class="w"> </span>terraform-test
-</code></pre></div></p>
-</li>
+</code></pre></div></li>
 </ol>
 <h2 id="test-structure">Test Structure</h2>
 <h3 id="directory-layout">Directory Layout</h3>
@@ -6351,8 +6349,12 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 </table>
 <h3 id="cost-optimization">Cost Optimization</h3>
 <ol>
-<li><strong>Use minimal resources</strong>:</li>
-<li>Single node for AKS tests</li>
+<li>
+<p><strong>Use minimal resources</strong>:</p>
+</li>
+<li>
+<p>Single node for AKS tests</p>
+</li>
 <li>B-series VMs (cheapest)</li>
 <li>
 <p>Minimal address spaces</p>
@@ -6360,14 +6362,18 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <li>
 <p><strong>Quick cleanup</strong>:</p>
 </li>
-<li>Always use <code>defer terraform.Destroy()</code></li>
+<li>
+<p>Always use <code>defer terraform.Destroy()</code></p>
+</li>
 <li>
 <p>Monitor for stuck resources</p>
 </li>
 <li>
 <p><strong>Test selectively</strong>:</p>
 </li>
-<li>Run validation tests frequently (free)</li>
+<li>
+<p>Run validation tests frequently (free)</p>
+</li>
 <li>Run integration tests on main branch only</li>
 <li>
 <p>Run E2E tests manually/scheduled</p>
@@ -6459,10 +6465,12 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <li><strong>Run integration tests</strong>: <code>make terraform-test-integration</code></li>
 <li><strong>Add to CI/CD</strong>: Tests run automatically on PRs</li>
 </ol>
-<p>For detailed information, see:
-- <a href="README.md">Terratest README</a>
-- <a href="../../infra/terraform/modules/">Module-specific documentation</a>
-- <a href=".github/workflows/terraform-tests.yml">CI/CD workflow</a></p>
+<p>For detailed information, see:</p>
+<ul>
+<li><a href="README.md">Terratest README</a></li>
+<li><a href="../../infra/terraform/modules/">Module-specific documentation</a></li>
+<li><a href=".github/workflows/terraform-tests.yml">CI/CD workflow</a></li>
+</ul>
 
 
 

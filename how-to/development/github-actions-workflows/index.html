@@ -6548,18 +6548,18 @@
 <li><strong>MyPy</strong>: Static type checking</li>
 <li><strong>Pylint</strong>: Advanced code analysis</li>
 </ul>
-<p><strong>Configuration</strong>:
+<p><strong>Configuration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Max line length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">120 characters</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Ignore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">E203, W503 (Black compatibility)</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Type hints</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Required for public functions</span>
-</code></pre></div></p>
-<p><strong>Local commands</strong>:
+</code></pre></div>
+<p><strong>Local commands</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run all Python linters</span>
 black<span class="w"> </span>--check<span class="w"> </span>.
 flake8<span class="w"> </span>.<span class="w"> </span>--max-line-length<span class="o">=</span><span class="m">120</span><span class="w"> </span>--extend-ignore<span class="o">=</span>E203,W503
 mypy<span class="w"> </span>--ignore-missing-imports<span class="w"> </span>.
 pylint<span class="w"> </span><span class="k">$(</span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="k">)</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="2-python-test-coverage">2. Python Test Coverage</h4>
 <p>Runs pytest with coverage reporting:</p>
 <ul>
@@ -6568,14 +6568,14 @@ pylint<span class="w"> </span><span class="k">$(</span>find<span class="w"> </sp
 <li><strong>Coverage comment</strong>: Automatically comments on PRs with coverage report</li>
 </ul>
 <p><strong>Configuration</strong>: <code>.coveragerc</code>, <code>tests/pytest.ini</code></p>
-<p><strong>Local commands</strong>:
+<p><strong>Local commands</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run tests with coverage</span>
 pytest<span class="w"> </span>--cov<span class="o">=</span>.<span class="w"> </span>--cov-report<span class="o">=</span>term-missing<span class="w"> </span>--cov-report<span class="o">=</span>html
 
 <span class="c1"># View HTML report</span>
 open<span class="w"> </span>htmlcov/index.html<span class="w">  </span><span class="c1"># macOS</span>
 xdg-open<span class="w"> </span>htmlcov/index.html<span class="w">  </span><span class="c1"># Linux</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Coverage artifacts</strong>: Uploaded to GitHub Actions for review</p>
 <h4 id="3-typescriptjavascript-quality">3. TypeScript/JavaScript Quality</h4>
 <p>Runs for the design-system components:</p>
@@ -6585,12 +6585,12 @@ xdg-open<span class="w"> </span>htmlcov/index.html<span class="w">  </span><span
 <li><strong>Jest</strong>: Unit tests with coverage</li>
 </ul>
 <p><strong>Conditions</strong>: Only runs if TypeScript/JavaScript files are present</p>
-<p><strong>Local commands</strong>:
+<p><strong>Local commands</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>design-system
 npm<span class="w"> </span>run<span class="w"> </span>lint
 npx<span class="w"> </span>tsc<span class="w"> </span>--noEmit
 npm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--<span class="w"> </span>--coverage
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="4-go-quality">4. Go Quality</h4>
 <p>Runs golangci-lint for Go code:</p>
 <ul>
@@ -6599,18 +6599,18 @@ npm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-
 <li><strong>Timeout</strong>: 5 minutes</li>
 </ul>
 <p><strong>Conditions</strong>: Only runs if Go files are present</p>
-<p><strong>Local commands</strong>:
+<p><strong>Local commands</strong>:</p>
 <div class="highlight"><pre><span></span><code>golangci-lint<span class="w"> </span>run<span class="w"> </span>--timeout<span class="o">=</span>5m
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="5-shell-quality">5. Shell Quality</h4>
 <p>Runs ShellCheck on all shell scripts:</p>
 <ul>
 <li><strong>Severity</strong>: Warning level</li>
 <li><strong>Standards</strong>: POSIX compliance, best practices</li>
 </ul>
-<p><strong>Local commands</strong>:
+<p><strong>Local commands</strong>:</p>
 <div class="highlight"><pre><span></span><code>shellcheck<span class="w"> </span>--severity<span class="o">=</span>warning<span class="w"> </span>scripts/**/*.sh
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="6-security-integration-check">6. Security Integration Check</h4>
 <p>Verifies security tools are properly configured:</p>
 <ul>
@@ -6629,39 +6629,47 @@ npm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-
 <p>The workflow uses <strong>continue-on-error: true</strong> for most checks to provide comprehensive feedback without blocking PRs immediately. This allows developers to see all issues at once.</p>
 <p><strong>Exception</strong>: Security scanning failures should block deployment (handled in separate security workflow).</p>
 <h3 id="triggering-the-workflow">Triggering the Workflow</h3>
-<p><strong>Automatically</strong>:
-- On pull request to <code>main</code> or <code>develop</code>
-- On push to <code>main</code> or <code>develop</code></p>
-<p><strong>Manually</strong>:
+<p><strong>Automatically</strong>:</p>
+<ul>
+<li>On pull request to <code>main</code> or <code>develop</code></li>
+<li>On push to <code>main</code> or <code>develop</code></li>
+</ul>
+<p><strong>Manually</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Via GitHub UI: Actions → Code Quality → Run workflow</span>
 <span class="c1"># Or via GitHub CLI:</span>
 gh<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span>code-quality.yml
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="pre-commit-workflow">Pre-commit Workflow</h2>
 <p><strong>File</strong>: <code>.github/workflows/pre-commit.yml</code></p>
 <p>Runs all pre-commit hooks defined in <code>.pre-commit-config.yaml</code>.</p>
-<p><strong>Jobs</strong>:
-1. <strong>Pre-commit</strong>: Runs all hooks on all files
-2. <strong>GitOps Validation</strong>: ArgoCD application validation
-3. <strong>IDP Validation</strong>: Backstage catalog validation</p>
-<p><strong>Local setup</strong>:
+<p><strong>Jobs</strong>:</p>
+<ol>
+<li><strong>Pre-commit</strong>: Runs all hooks on all files</li>
+<li><strong>GitOps Validation</strong>: ArgoCD application validation</li>
+<li><strong>IDP Validation</strong>: Backstage catalog validation</li>
+</ol>
+<p><strong>Local setup</strong>:</p>
 <div class="highlight"><pre><span></span><code>make<span class="w"> </span>pre-commit-setup
 pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
-</code></pre></div></p>
+</code></pre></div>
 <p>See <a href="../PRE-COMMIT.md">Pre-commit Documentation</a> for details.</p>
 <h2 id="security-terraform-workflow">Security &amp; Terraform Workflow</h2>
 <p><strong>File</strong>: <code>.github/workflows/security-and-terraform.yml</code></p>
 <p>Combines security scanning with Terraform validation.</p>
-<p><strong>Security Checks</strong>:
-1. <strong>Gitleaks</strong>: Secret detection
-2. <strong>Trivy</strong>: Vulnerability scanning (filesystem and containers)
-3. <strong>SARIF Upload</strong>: Results to GitHub Security tab</p>
-<p><strong>Terraform Checks</strong>:
-1. <strong>terraform fmt</strong>: Formatting check
-2. <strong>terraform validate</strong>: Syntax validation
-3. <strong>TFLint</strong>: Linting and best practices
-4. <strong>tfsec</strong>: Security scanning</p>
-<p><strong>Local commands</strong>:
+<p><strong>Security Checks</strong>:</p>
+<ol>
+<li><strong>Gitleaks</strong>: Secret detection</li>
+<li><strong>Trivy</strong>: Vulnerability scanning (filesystem and containers)</li>
+<li><strong>SARIF Upload</strong>: Results to GitHub Security tab</li>
+</ol>
+<p><strong>Terraform Checks</strong>:</p>
+<ol>
+<li><strong>terraform fmt</strong>: Formatting check</li>
+<li><strong>terraform validate</strong>: Syntax validation</li>
+<li><strong>TFLint</strong>: Linting and best practices</li>
+<li><strong>tfsec</strong>: Security scanning</li>
+</ol>
+<p><strong>Local commands</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Security</span>
 gitleaks<span class="w"> </span>detect<span class="w"> </span>--redact
 trivy<span class="w"> </span>fs<span class="w"> </span>.
@@ -6671,23 +6679,27 @@ terraform<span class="w"> </span>fmt<span class="w"> </span>-recursive
 terraform<span class="w"> </span>validate
 tflint<span class="w"> </span>--recursive
 tfsec<span class="w"> </span>.
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="e2e-tests-workflow">E2E Tests Workflow</h2>
 <p><strong>File</strong>: <code>.github/workflows/idp-e2e-tests.yml</code></p>
 <p>Runs end-to-end tests for the entire platform.</p>
-<p><strong>Scope</strong>:
-- ArgoCD deployment verification
-- Backstage functionality
-- Jenkins pipeline execution
-- Observability stack validation</p>
+<p><strong>Scope</strong>:</p>
+<ul>
+<li>ArgoCD deployment verification</li>
+<li>Backstage functionality</li>
+<li>Jenkins pipeline execution</li>
+<li>Observability stack validation</li>
+</ul>
 <p><strong>Trigger</strong>: PR, manual, scheduled (nightly)</p>
 <h2 id="accessibility-testing-workflow">Accessibility Testing Workflow</h2>
 <p><strong>File</strong>: <code>.github/workflows/accessibility-testing.yml</code></p>
 <p>Ensures WCAG 2.1 AA compliance.</p>
-<p><strong>Tools</strong>:
-- <strong>Axe-core</strong>: Automated accessibility testing
-- <strong>Lighthouse CI</strong>: Performance and accessibility audits
-- <strong>Pa11y</strong>: Command-line accessibility testing</p>
+<p><strong>Tools</strong>:</p>
+<ul>
+<li><strong>Axe-core</strong>: Automated accessibility testing</li>
+<li><strong>Lighthouse CI</strong>: Performance and accessibility audits</li>
+<li><strong>Pa11y</strong>: Command-line accessibility testing</li>
+</ul>
 <p><strong>Scope</strong>: design-system components, Backstage UI</p>
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="for-contributors">For Contributors</h3>
@@ -6707,7 +6719,7 @@ tfsec<span class="w"> </span>.
 <h2 id="workflow-monitoring">Workflow Monitoring</h2>
 <h3 id="view-workflow-status">View Workflow Status</h3>
 <p><strong>GitHub UI</strong>: Repository → Actions tab</p>
-<p><strong>GitHub CLI</strong>:
+<p><strong>GitHub CLI</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># List workflow runs</span>
 gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--workflow<span class="o">=</span>code-quality.yml
 
@@ -6716,50 +6728,56 @@ gh<span class="w"> </span>run<span class="w"> </span>view<span class="w"> </span
 
 <span class="c1"># Download artifacts</span>
 gh<span class="w"> </span>run<span class="w"> </span>download<span class="w"> </span>&lt;run-id&gt;
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="workflow-badges">Workflow Badges</h3>
 <p>Add badges to documentation:</p>
 <div class="highlight"><pre><span></span><code>![<span class="nt">Code Quality</span>](<span class="na">https://github.com/paruff/fawkes/actions/workflows/code-quality.yml/badge.svg</span>)
 </code></pre></div>
 <h3 id="notifications">Notifications</h3>
-<p>Configure workflow notifications:
-- <strong>Settings</strong> → <strong>Notifications</strong> → <strong>Actions</strong>
-- Choose: All workflows, failed workflows only, or none</p>
+<p>Configure workflow notifications:</p>
+<ul>
+<li><strong>Settings</strong> → <strong>Notifications</strong> → <strong>Actions</strong></li>
+<li>Choose: All workflows, failed workflows only, or none</li>
+</ul>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="common-issues">Common Issues</h3>
 <h4 id="coverage-threshold-not-met">Coverage Threshold Not Met</h4>
 <p><strong>Error</strong>: <code>FAIL Required test coverage of 60% not met</code></p>
-<p><strong>Solution</strong>:
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run coverage locally</span>
 pytest<span class="w"> </span>--cov<span class="o">=</span>.<span class="w"> </span>--cov-report<span class="o">=</span>term-missing
 
 <span class="c1"># Identify untested code</span>
 <span class="c1"># Add tests for files with low coverage</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="linting-failures">Linting Failures</h4>
 <p><strong>Error</strong>: <code>Black would reformat files</code></p>
-<p><strong>Solution</strong>:
+<p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Auto-format</span>
 black<span class="w"> </span>.
 
 <span class="c1"># Commit changes</span>
 git<span class="w"> </span>add<span class="w"> </span>-u
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Apply Black formatting&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="security-scan-failures">Security Scan Failures</h4>
 <p><strong>Error</strong>: <code>Gitleaks detected secrets</code></p>
-<p><strong>Solution</strong>:
-1. Remove secrets from code
-2. Use environment variables instead
-3. Rotate compromised credentials
-4. Update <code>.gitleaks.toml</code> allowlist if false positive</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Remove secrets from code</li>
+<li>Use environment variables instead</li>
+<li>Rotate compromised credentials</li>
+<li>Update <code>.gitleaks.toml</code> allowlist if false positive</li>
+</ol>
 <h4 id="workflow-timeout">Workflow Timeout</h4>
 <p><strong>Error</strong>: Job exceeds 6 hour timeout</p>
-<p><strong>Solution</strong>:
-1. Optimize slow steps
-2. Add caching for dependencies
-3. Split into multiple jobs
-4. Increase timeout for specific jobs</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Optimize slow steps</li>
+<li>Add caching for dependencies</li>
+<li>Split into multiple jobs</li>
+<li>Increase timeout for specific jobs</li>
+</ol>
 <h2 id="maintenance">Maintenance</h2>
 <h3 id="updating-workflows">Updating Workflows</h3>
 <ol>
@@ -6778,14 +6796,14 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <li>Test on sample PRs</li>
 </ol>
 <h3 id="updating-dependencies">Updating Dependencies</h3>
-<p><strong>GitHub Actions</strong>:
+<p><strong>GitHub Actions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Update to latest versions</span>
 <span class="c1"># Edit workflow files to use @v6 instead of @v5, etc.</span>
-</code></pre></div></p>
-<p><strong>Pre-commit hooks</strong>:
+</code></pre></div>
+<p><strong>Pre-commit hooks</strong>:</p>
 <div class="highlight"><pre><span></span><code>pre-commit<span class="w"> </span>autoupdate
 git<span class="w"> </span>commit<span class="w"> </span>-am<span class="w"> </span><span class="s2">&quot;Update pre-commit hooks&quot;</span>
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>
 <li><a href="development/code-quality-standards.md">Code Quality Standards</a></li>
@@ -6800,8 +6818,8 @@ git<span class="w"> </span>commit<span class="w"> </span>-am<span class="w"> </s
 <li><strong>Mattermost</strong>: #platform-help channel</li>
 </ul>
 <hr />
-<p><strong>Maintained by</strong>: Fawkes Platform Team<br />
-<strong>Last Updated</strong>: December 2024<br />
+<p><strong>Maintained by</strong>: Fawkes Platform Team
+<strong>Last Updated</strong>: December 2024
 <strong>Related Issues</strong>: #111 (Code Quality CI/CD Pipeline)</p>
 
 

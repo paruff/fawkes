@@ -5923,10 +5923,12 @@
 <p>Trivy security scan was performed on the Fawkes repository to identify potential security vulnerabilities and misconfigurations. This document summarizes the findings and provides guidance on resolution.</p>
 <h2 id="executive-summary-all-issues-resolved">Executive Summary - ✅ ALL ISSUES RESOLVED</h2>
 <h3 id="security-status-clean">Security Status: ✅ CLEAN</h3>
-<p><strong>All security vulnerabilities have been resolved in this PR:</strong>
-- ✅ Terratest implementation has <strong>ZERO security issues</strong>
-- ✅ Pre-existing infrastructure issues have been <strong>FIXED</strong>
-- ✅ CI/CD security scans now <strong>PASS</strong> without suppressions</p>
+<p><strong>All security vulnerabilities have been resolved in this PR:</strong></p>
+<ul>
+<li>✅ Terratest implementation has <strong>ZERO security issues</strong></li>
+<li>✅ Pre-existing infrastructure issues have been <strong>FIXED</strong></li>
+<li>✅ CI/CD security scans now <strong>PASS</strong> without suppressions</li>
+</ul>
 <h3 id="issues-fixed-in-this-pr">Issues Fixed in This PR</h3>
 <p>The following security issues that were found in pre-existing infrastructure files have been <strong>resolved</strong>:</p>
 <ol>
@@ -5946,11 +5948,11 @@
 <li><strong>Impact</strong>: API server is accessible from any IP, increasing attack surface</li>
 <li><strong>Resolution</strong>: ✅ Configuration already includes <code>api_server_access_profile</code> with support for <code>authorized_ip_ranges</code> variable</li>
 </ul>
-<p><strong>Applied Fix:</strong>
+<p><strong>Applied Fix:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nb">api_server_access_profile</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">authorized_ip_ranges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.api_server_authorized_ip_ranges</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <p>Users can now configure authorized IP ranges via the <code>api_server_authorized_ip_ranges</code> variable to restrict API server access.</p>
 <h4 id="avd-azu-0043-high-no-network-policy-configured-fixed">AVD-AZU-0043 (HIGH): No Network Policy Configured - ✅ FIXED</h4>
 <ul>
@@ -5959,7 +5961,7 @@
 <li><strong>Impact</strong>: All pods can communicate without restrictions</li>
 <li><strong>Resolution</strong>: ✅ Added <code>network_policy</code> configuration with default value "azure"</li>
 </ul>
-<p><strong>Applied Fix:</strong>
+<p><strong>Applied Fix:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nb">network_profile</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">network_plugin</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">var.network_plugin</span>
 <span class="w">  </span><span class="na">network_policy</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">var.network_policy</span><span class="c1">  # Now configured with default &quot;azure&quot;</span>
@@ -5968,17 +5970,17 @@
 <span class="w">  </span><span class="na">load_balancer_sku</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;standard&quot;</span>
 <span class="w">  </span><span class="na">outbound_type</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;loadBalancer&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="2-aws-security-group-issues-infraawsmaintf-fixed">2. AWS Security Group Issues (infra/aws/main.tf) - ✅ FIXED</h3>
 <h4 id="avd-aws-0104-critical-unrestricted-egress-rules-3-occurrences">AVD-AWS-0104 (CRITICAL): Unrestricted Egress Rules (3 occurrences)</h4>
 <ul>
-<li><strong>Locations</strong>: </li>
+<li><strong>Locations</strong>:</li>
 <li><code>main.tf:140</code> (all_worker_mgmt security group)</li>
 <li><code>main.tf:97</code> (worker_group_mgmt_one)</li>
 </ul>
 <h4 id="avd-aws-0104-critical-unrestricted-egress-rules-fixed">AVD-AWS-0104 (CRITICAL): Unrestricted Egress Rules - ✅ FIXED</h4>
 <ul>
-<li><strong>Locations</strong>: </li>
+<li><strong>Locations</strong>:</li>
 <li><code>main.tf:140</code> (all_worker_mgmt security group)</li>
 <li><code>main.tf:97</code> (worker_group_mgmt_one)</li>
 <li><code>main.tf:119</code> (worker_group_mgmt_two)</li>
@@ -5986,7 +5988,7 @@
 <li><strong>Impact</strong>: Nodes can connect to any IP address on the internet</li>
 <li><strong>Resolution</strong>: ✅ Changed egress rules to restrict traffic to VPC CIDR only</li>
 </ul>
-<p><strong>Applied Fix:</strong>
+<p><strong>Applied Fix:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fixed in all_worker_mgmt security group</span>
 <span class="nb">egress</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">from_port</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
@@ -6002,7 +6004,7 @@
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/8&quot;</span><span class="c1">  # Private network range instead of 0.0.0.0/0</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="3-kubernetes-deployment-issues-infraawsproxy-allyaml-fixed">3. Kubernetes Deployment Issues (infra/aws/proxy-all.yaml) - ✅ FIXED</h3>
 <h4 id="avd-ksv-0014-high-read-only-root-filesystem-not-set-fixed">AVD-KSV-0014 (HIGH): Read-Only Root Filesystem Not Set - ✅ FIXED</h4>
 <ul>
@@ -6011,7 +6013,7 @@
 <li><strong>Impact</strong>: Attackers could write to the file system</li>
 <li><strong>Resolution</strong>: ✅ Added comprehensive security context with read-only root filesystem</li>
 </ul>
-<p><strong>Applied Fix:</strong>
+<p><strong>Applied Fix:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">containers</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;docker.com/paruff/fawkesproxy&quot;</span>
@@ -6023,7 +6025,7 @@
 <span class="w">      </span><span class="nt">capabilities</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">drop</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALL</span>
-</code></pre></div></p>
+</code></pre></div>
 <h4 id="avd-ksv-0118-high-default-security-context-fixed">AVD-KSV-0118 (HIGH): Default Security Context - ✅ FIXED</h4>
 <ul>
 <li><strong>Locations</strong>: Container and deployment level</li>
@@ -6031,7 +6033,7 @@
 <li><strong>Impact</strong>: Increases risk of container escape</li>
 <li><strong>Resolution</strong>: ✅ Added explicit security contexts at both pod and container levels</li>
 </ul>
-<p><strong>Applied Fix:</strong>
+<p><strong>Applied Fix:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">securityContext</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -6039,11 +6041,11 @@
 <span class="w">    </span><span class="nt">fsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
 <span class="w">    </span><span class="nt">seccompProfile</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RuntimeDefault</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="4-dockerfile-issues-multiple-files-fixed">4. Dockerfile Issues (Multiple files) - ✅ FIXED</h3>
 <h4 id="avd-ds-0002-high-no-non-root-user-specified">AVD-DS-0002 (HIGH): No Non-Root USER Specified</h4>
 <ul>
-<li><strong>Affected files</strong>: </li>
+<li><strong>Affected files</strong>:</li>
 <li><code>design-system/Dockerfile</code></li>
 <li><code>design-system/Dockerfile.prebuilt</code></li>
 <li><code>services/rag-service/Dockerfile</code></li>
@@ -6065,7 +6067,7 @@
 <span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
 
 <span class="c">#### AVD-DS-0002 (HIGH): No Non-Root USER Specified - ✅ FIXED</span>
--<span class="w"> </span>**Affected<span class="w"> </span>files**:<span class="w"> </span>
+-<span class="w"> </span>**Affected<span class="w"> </span>files**:
 <span class="w">  </span>-<span class="w"> </span><span class="sb">`</span>design-system/Dockerfile<span class="sb">`</span>
 <span class="w">  </span>-<span class="w"> </span><span class="sb">`</span>design-system/Dockerfile.prebuilt<span class="sb">`</span>
 <span class="w">  </span>-<span class="w"> </span>Others
@@ -6096,7 +6098,7 @@
 <h2 id="summary-of-applied-fixes">Summary of Applied Fixes</h2>
 <p>All security issues have been resolved in this PR:</p>
 <p>✅ <strong>Azure AKS Configuration</strong> - Added network policy support
-✅ <strong>AWS Security Groups</strong> - Restricted egress to VPC CIDR only<br />
+✅ <strong>AWS Security Groups</strong> - Restricted egress to VPC CIDR only
 ✅ <strong>Kubernetes Manifests</strong> - Added comprehensive security contexts
 ✅ <strong>Dockerfiles</strong> - Added non-root USER directives</p>
 <h2 id="impact-on-terratest-implementation">Impact on Terratest Implementation</h2>
@@ -6130,20 +6132,24 @@
 <p>The <code>.trivyignore</code> file has been updated to reflect that all issues are now resolved. No active suppressions are needed as all vulnerabilities have been fixed.</p>
 <h3 id="security-best-practices-now-implemented">Security Best Practices Now Implemented</h3>
 <p>This PR implements comprehensive security best practices across the codebase:</p>
-<p><strong>Infrastructure Security:</strong>
-1. ✅ <strong>Network Policies</strong>: AKS clusters now have network policy enforcement
-2. ✅ <strong>Access Controls</strong>: API server access can be restricted via variables
-3. ✅ <strong>Egress Restrictions</strong>: AWS security groups limited to VPC CIDR
-4. ✅ <strong>Least Privilege</strong>: Containers run as non-root users
-5. ✅ <strong>Immutable Filesystems</strong>: Read-only root filesystems enforced
-6. ✅ <strong>Security Contexts</strong>: Comprehensive pod and container security settings</p>
-<p><strong>Terratest Security:</strong>
-1. ✅ <strong>No Hardcoded Credentials</strong>: Uses environment variables for Azure authentication
-2. ✅ <strong>Least Privilege</strong>: Tests only request necessary permissions
-3. ✅ <strong>Secure CI/CD</strong>: GitHub Actions workflow uses OIDC and secrets management
-4. ✅ <strong>No Secrets in Code</strong>: All sensitive values are parameterized
-5. ✅ <strong>Safe Cleanup</strong>: Automatic resource cleanup prevents orphaned resources
-6. ✅ <strong>Minimal Attack Surface</strong>: Validation tests don't deploy real infrastructure</p>
+<p><strong>Infrastructure Security:</strong></p>
+<ol>
+<li>✅ <strong>Network Policies</strong>: AKS clusters now have network policy enforcement</li>
+<li>✅ <strong>Access Controls</strong>: API server access can be restricted via variables</li>
+<li>✅ <strong>Egress Restrictions</strong>: AWS security groups limited to VPC CIDR</li>
+<li>✅ <strong>Least Privilege</strong>: Containers run as non-root users</li>
+<li>✅ <strong>Immutable Filesystems</strong>: Read-only root filesystems enforced</li>
+<li>✅ <strong>Security Contexts</strong>: Comprehensive pod and container security settings</li>
+</ol>
+<p><strong>Terratest Security:</strong></p>
+<ol>
+<li>✅ <strong>No Hardcoded Credentials</strong>: Uses environment variables for Azure authentication</li>
+<li>✅ <strong>Least Privilege</strong>: Tests only request necessary permissions</li>
+<li>✅ <strong>Secure CI/CD</strong>: GitHub Actions workflow uses OIDC and secrets management</li>
+<li>✅ <strong>No Secrets in Code</strong>: All sensitive values are parameterized</li>
+<li>✅ <strong>Safe Cleanup</strong>: Automatic resource cleanup prevents orphaned resources</li>
+<li>✅ <strong>Minimal Attack Surface</strong>: Validation tests don't deploy real infrastructure</li>
+</ol>
 <h2 id="verification">Verification</h2>
 <p>To verify these findings:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run Trivy scan on Terratest files only (should show zero issues)</span>

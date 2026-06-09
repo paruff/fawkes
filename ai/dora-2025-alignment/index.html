@@ -5735,8 +5735,7 @@
 
 <h1 id="dora-2025-ai-capabilities-fawkes-alignment-guide">DORA 2025 AI Capabilities — Fawkes Alignment Guide</h1>
 <blockquote>
-<p><strong>Source:</strong> <a href="https://dora.dev/dora-report-2025/">DORA 2025 State of AI-Assisted Software Development</a><br />
-<strong>Category:</strong> Reference | AI Practices<br />
+<p><strong>Source:</strong> <a href="https://dora.dev/dora-report-2025/">DORA 2025 State of AI-Assisted Software Development</a> &gt; <strong>Category:</strong> Reference | AI Practices
 <strong>Audience:</strong> Platform engineers, AI coding agents, team leads</p>
 </blockquote>
 <hr />
@@ -5754,76 +5753,90 @@ worsen at greater speed.</p>
 <h3 id="1-clear-ai-stance-and-policy">1. Clear AI Stance and Policy</h3>
 <p>Ambiguity breeds risk. Teams need defined, communicated policies on when and how to
 leverage AI safely.</p>
-<p><strong>Fawkes implementation:</strong>
-- <code>AGENTS.md</code> — universal rules for all agents (Copilot, Claude, VS Code agent mode)
-- <code>.github/copilot-instructions.md</code> — Copilot-specific standards
-- <code>.github/agents/</code> — specialist agent profiles with task-scoped instructions
-- <code>AGENTS.md § 10</code> — Model Selection Policy with cost guardrails</p>
+<p><strong>Fawkes implementation:</strong></p>
+<ul>
+<li><code>AGENTS.md</code> — universal rules for all agents (Copilot, Claude, VS Code agent mode)</li>
+<li><code>.github/copilot-instructions.md</code> — Copilot-specific standards</li>
+<li><code>.github/agents/</code> — specialist agent profiles with task-scoped instructions</li>
+<li><code>AGENTS.md § 10</code> — Model Selection Policy with cost guardrails</li>
+</ul>
 <p><strong>What to improve:</strong> Ensure <code>docs/ai/usage-policy.md</code> is linked prominently from
 onboarding materials and kept current as model selection policy evolves.</p>
 <hr />
 <h3 id="2-healthy-data-ecosystem">2. Healthy Data Ecosystem</h3>
 <p>AI is only as good as the data it can access. Poor-quality data (undocumented
 functions, missing type hints, silent errors) stymies AI effectiveness.</p>
-<p><strong>Fawkes implementation:</strong>
-- <code>ruff</code> + <code>mypy</code> enforce type hints on all Python services
-- Google-style docstrings required on all public functions
-- Structured logs (structlog) provide machine-readable audit data
-- BDD features in business language create readable acceptance criteria</p>
+<p><strong>Fawkes implementation:</strong></p>
+<ul>
+<li><code>ruff</code> + <code>mypy</code> enforce type hints on all Python services</li>
+<li>Google-style docstrings required on all public functions</li>
+<li>Structured logs (structlog) provide machine-readable audit data</li>
+<li>BDD features in business language create readable acceptance criteria</li>
+</ul>
 <p><strong>What to improve:</strong> Track type-hint coverage as a metric in <code>docs/METRICS.md</code>.
 Target: 100% of public functions in <code>services/</code> have type hints.</p>
 <hr />
 <h3 id="3-ai-accessible-internal-data">3. AI-Accessible Internal Data</h3>
 <p>Connecting AI to internal documentation, codebases, and decision logs turns a
 generic assistant into a specialised expert for your context.</p>
-<p><strong>Fawkes implementation:</strong>
-- <code>docs/API_SURFACE.md</code> — complete public interface map
-- <code>docs/ARCHITECTURE.md</code> — component relationships
-- <code>docs/CHANGE_IMPACT_MAP.md</code> — which files break when a component changes
-- <code>AGENTS.md § 3</code> — ordered context file list agents must read first
-- RAG service (<code>docs/ai/vector-database.md</code>) for semantic doc search</p>
+<p><strong>Fawkes implementation:</strong></p>
+<ul>
+<li><code>docs/API_SURFACE.md</code> — complete public interface map</li>
+<li><code>docs/ARCHITECTURE.md</code> — component relationships</li>
+<li><code>docs/CHANGE_IMPACT_MAP.md</code> — which files break when a component changes</li>
+<li><code>AGENTS.md § 3</code> — ordered context file list agents must read first</li>
+<li>RAG service (<code>docs/ai/vector-database.md</code>) for semantic doc search</li>
+</ul>
 <p><strong>What to improve:</strong> Ensure every new service has an entry in <code>docs/API_SURFACE.md</code>
 added in the same PR that creates the service.</p>
 <hr />
 <h3 id="4-strong-version-control-practices">4. Strong Version Control Practices</h3>
 <p>As AI accelerates code generation, robust version control is more critical than ever
 to maintain quality and enable safe experimentation.</p>
-<p><strong>Fawkes implementation:</strong>
-- Conventional commits: <code>feat(scope):</code>, <code>fix(scope):</code>, <code>test(scope):</code>, <code>docs(scope):</code>
-- PR size gate: &gt; 400 lines blocked by CI; requires <code>large-pr-approved</code> label
-- Branch protection on <code>main</code> — no direct pushes
-- Every AI-generated commit must pass <code>make lint</code> before merge</p>
+<p><strong>Fawkes implementation:</strong></p>
+<ul>
+<li>Conventional commits: <code>feat(scope):</code>, <code>fix(scope):</code>, <code>test(scope):</code>, <code>docs(scope):</code></li>
+<li>PR size gate: &gt; 400 lines blocked by CI; requires <code>large-pr-approved</code> label</li>
+<li>Branch protection on <code>main</code> — no direct pushes</li>
+<li>Every AI-generated commit must pass <code>make lint</code> before merge</li>
+</ul>
 <p><strong>Enforcement:</strong> <code>AGENTS.md § 8</code> Instability Safeguards</p>
 <hr />
 <h3 id="5-working-in-small-batches">5. Working in Small Batches</h3>
 <p>AI increases the risk of introducing many changes at once. Small-batch practices
 prevent speed from undermining stability.</p>
-<p><strong>Fawkes implementation:</strong>
-- PR size limit: 400 lines (CI gate)
-- Issue template requires explicit file list — agents must not create files not listed
-- <code>AGENTS.md § 5</code> — agents must ask before touching more than 5 files in one task
-- DORA lead-time target: every issue completable in &lt; 2 days of agent work</p>
+<p><strong>Fawkes implementation:</strong></p>
+<ul>
+<li>PR size limit: 400 lines (CI gate)</li>
+<li>Issue template requires explicit file list — agents must not create files not listed</li>
+<li><code>AGENTS.md § 5</code> — agents must ask before touching more than 5 files in one task</li>
+<li>DORA lead-time target: every issue completable in &lt; 2 days of agent work</li>
+</ul>
 <p><strong>What to improve:</strong> Add a CI check that counts files changed and warns at 10+ files.</p>
 <hr />
 <h3 id="6-user-centric-focus">6. User-Centric Focus</h3>
 <p>Rapid AI-generated delivery only matters if aimed at real user needs. Teams must
 maintain tight feedback loops between delivery and user value.</p>
-<p><strong>Fawkes implementation:</strong>
-- BDD features written in business language (<code>tests/bdd/</code>) — user needs first
-- Backstage catalog (<code>catalog-info.yaml</code>) maps services to user-facing capabilities
-- Golden-path templates (<code>templates/</code>) reduce cognitive load for new engineers
-- Acceptance tests (<code>AT-E1-*</code>) validate platform capabilities from a user perspective</p>
+<p><strong>Fawkes implementation:</strong></p>
+<ul>
+<li>BDD features written in business language (<code>tests/bdd/</code>) — user needs first</li>
+<li>Backstage catalog (<code>catalog-info.yaml</code>) maps services to user-facing capabilities</li>
+<li>Golden-path templates (<code>templates/</code>) reduce cognitive load for new engineers</li>
+<li>Acceptance tests (<code>AT-E1-*</code>) validate platform capabilities from a user perspective</li>
+</ul>
 <p><strong>What to improve:</strong> Add user story links to every BDD feature file header.</p>
 <hr />
 <h3 id="7-quality-internal-platforms">7. Quality Internal Platforms</h3>
 <p>Internal platforms with paved paths, guardrails, and automated tooling are the
 critical multiplier for AI effectiveness. Poor platforms neutralise AI gains.</p>
-<p><strong>Fawkes implementation:</strong>
-- ArgoCD GitOps — declarative, automated reconciliation
-- Pre-commit hooks (<code>make pre-commit-setup</code>) — catch issues before CI
-- Helm charts with <code>helm lint</code> + <code>helm template</code> gates
-- <code>make</code> targets provide a single, documented CLI for all common tasks
-- Fawkes <em>is</em> the platform — every improvement here directly improves AI output quality</p>
+<p><strong>Fawkes implementation:</strong></p>
+<ul>
+<li>ArgoCD GitOps — declarative, automated reconciliation</li>
+<li>Pre-commit hooks (<code>make pre-commit-setup</code>) — catch issues before CI</li>
+<li>Helm charts with <code>helm lint</code> + <code>helm template</code> gates</li>
+<li><code>make</code> targets provide a single, documented CLI for all common tasks</li>
+<li>Fawkes <em>is</em> the platform — every improvement here directly improves AI output quality</li>
+</ul>
 <p><strong>What to improve:</strong> Measure and report platform paved-path adoption (% of services
 using golden-path templates) in <code>docs/METRICS.md</code>.</p>
 <hr />
@@ -5938,7 +5951,7 @@ foundation before enabling AI tooling — AI will accelerate their problems.</p>
 </tr>
 </tbody>
 </table>
-<p>Rework rate tracked in: <code>docs/METRICS.md</code><br />
+<p>Rework rate tracked in: <code>docs/METRICS.md</code>
 Weekly check: <code>scripts/weekly-metrics.sh</code></p>
 <hr />
 <h2 id="related-resources">Related Resources</h2>

@@ -5793,10 +5793,12 @@ investment available.</p>
 outcomes from AI tooling than teams with poor platforms. AI amplifies what already
 exists. If the platform is fragmented, undocumented, or inconsistent, AI generates
 fragmented, undocumented, inconsistent code — faster.</p>
-<p><strong>The compounding effect:</strong> Each Foundation 7 improvement:
-1. Makes the next AI-generated PR higher quality
-2. Reduces rework rate, freeing engineering time
-3. Frees time that can be reinvested in more Foundation 7 improvements</p>
+<p><strong>The compounding effect:</strong> Each Foundation 7 improvement:</p>
+<ol>
+<li>Makes the next AI-generated PR higher quality</li>
+<li>Reduces rework rate, freeing engineering time</li>
+<li>Frees time that can be reinvested in more Foundation 7 improvements</li>
+</ol>
 <hr />
 <h2 id="current-foundation-7-status-as-of-2026-03-13">Current Foundation 7 status (as of 2026-03-13)</h2>
 <table>
@@ -5868,14 +5870,16 @@ fragmented, undocumented, inconsistent code — faster.</p>
 Without a path-scoped instruction file, every agent must re-derive Python rules from
 <code>AGENTS.md</code>. A scoped file activates automatically whenever any <code>services/**/*.py</code>
 file is edited in Copilot.</p>
-<p><strong>What to include:</strong>
-- FastAPI route patterns (Pydantic models, <code>async def</code>, <code>HTTPException</code>)
-- Type hint requirements on all signatures
-- Error wrapping pattern (<code>raise HTTPException(...) from exc</code>)
-- OpenTelemetry instrumentation pattern
-- Structlog structured logging pattern
-- Pytest <code>TestClient</code> pattern for route tests
-- <code>ruff</code> + <code>black</code> + <code>mypy</code> commands to run locally</p>
+<p><strong>What to include:</strong></p>
+<ul>
+<li>FastAPI route patterns (Pydantic models, <code>async def</code>, <code>HTTPException</code>)</li>
+<li>Type hint requirements on all signatures</li>
+<li>Error wrapping pattern (<code>raise HTTPException(...) from exc</code>)</li>
+<li>OpenTelemetry instrumentation pattern</li>
+<li>Structlog structured logging pattern</li>
+<li>Pytest <code>TestClient</code> pattern for route tests</li>
+<li><code>ruff</code> + <code>black</code> + <code>mypy</code> commands to run locally</li>
+</ul>
 <p><strong>File to create:</strong> <code>.github/instructions/python-services.instructions.md</code>
 <strong>Suggested agent:</strong> <code>docs-writer</code> or <code>gpt41-default</code></p>
 <hr />
@@ -5947,12 +5951,14 @@ file is edited in Copilot.</p>
 agents. When <code>docs/API_SURFACE.md</code>, <code>docs/ARCHITECTURE.md</code>, and BDD features fall
 behind the code, agents invent endpoints and function names that do not exist.</p>
 <p><strong>Scope:</strong> All files in <code>docs/</code>, <code>README.md</code>, <code>CONTRIBUTING.md</code>, ADRs.</p>
-<p><strong>Key rules:</strong>
-- Read the code before updating the docs — never invent based on old docs
-- Diataxis structure: tutorials, how-to guides, reference, explanation
-- Every new service → entry in <code>docs/API_SURFACE.md</code> in the same PR
-- Every known limitation → entry in <code>docs/KNOWN_LIMITATIONS.md</code>
-- Every cross-component dependency change → update <code>docs/CHANGE_IMPACT_MAP.md</code></p>
+<p><strong>Key rules:</strong></p>
+<ul>
+<li>Read the code before updating the docs — never invent based on old docs</li>
+<li>Diataxis structure: tutorials, how-to guides, reference, explanation</li>
+<li>Every new service → entry in <code>docs/API_SURFACE.md</code> in the same PR</li>
+<li>Every known limitation → entry in <code>docs/KNOWN_LIMITATIONS.md</code></li>
+<li>Every cross-component dependency change → update <code>docs/CHANGE_IMPACT_MAP.md</code></li>
+</ul>
 <p><strong>File to create:</strong> <code>.github/agents/docs-writer.agent.md</code></p>
 <hr />
 <h3 id="tier-2-high-impact-medium-effort">Tier 2 — High impact, medium effort</h3>
@@ -5960,12 +5966,14 @@ behind the code, agents invent endpoints and function names that do not exist.</
 <p><strong>Why:</strong> The standard feature development workflow is documented in <code>AGENTS.md</code> but
 the dedicated <code>docs/GOLDEN_PATH.md</code> file referenced by AGENTS.md §12 does not exist.
 Without it, every new engineer must reconstruct the workflow from multiple sources.</p>
-<p><strong>What to include:</strong>
-1. Prerequisites: tools, access, environment setup
-2. Feature development loop: BDD first → implement → deploy locally → test → iterate
-3. Golden path commands: <code>make deploy-local</code>, <code>make test-bdd</code>, <code>make lint</code>, <code>make sync</code>
-4. PR checklist with DORA CI logging requirements
-5. Definition of "ready to merge" with links to specific CI gates</p>
+<p><strong>What to include:</strong></p>
+<ol>
+<li>Prerequisites: tools, access, environment setup</li>
+<li>Feature development loop: BDD first → implement → deploy locally → test → iterate</li>
+<li>Golden path commands: <code>make deploy-local</code>, <code>make test-bdd</code>, <code>make lint</code>, <code>make sync</code></li>
+<li>PR checklist with DORA CI logging requirements</li>
+<li>Definition of "ready to merge" with links to specific CI gates</li>
+</ol>
 <p><strong>File to create:</strong> <code>docs/GOLDEN_PATH.md</code>
 <strong>Suggested agent:</strong> <code>docs-writer</code></p>
 <hr />
@@ -5976,14 +5984,14 @@ modules with missing type hints or no existing tests.</p>
 <p><strong>What to add</strong> to each <code>services/&lt;service&gt;/README.md</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="gu">## AI-Readiness Status</span>
 
-| Criterion | Status |
-|---|---|
+| Criterion                          | Status  |
+| ---------------------------------- | ------- |
 | Type hints on all public functions | ✅ / ❌ |
-| Docstrings on all public classes | ✅ / ❌ |
-| Tests exist and are green | ✅ / ❌ |
-| Module is single-purpose | ✅ / ❌ |
-| Error messages include context | ✅ / ❌ |
-| Covered by BDD scenario | ✅ / ❌ |
+| Docstrings on all public classes   | ✅ / ❌ |
+| Tests exist and are green          | ✅ / ❌ |
+| Module is single-purpose           | ✅ / ❌ |
+| Error messages include context     | ✅ / ❌ |
+| Covered by BDD scenario            | ✅ / ❌ |
 </code></pre></div>
 <p><strong>Quick assessment script:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Count functions without type hints in a service</span>
@@ -6066,59 +6074,28 @@ every developer and AI tool sees the same configuration.</p>
 <p><strong>Why:</strong> Security review is the one area where 30% developer trust gap is highest.
 A dedicated security agent that applies OWASP, CWE, and container security standards
 builds trust faster than a generalist reviewer.</p>
-<p><strong>Key capabilities:</strong>
-- SAST review for Python (SQL injection, command injection, path traversal)
-- Secret scanning: detect accidentally committed credentials
-- Container security: run-as-non-root, read-only filesystem, no privileged
-- Terraform security: <code>tfsec</code>, public bucket detection, over-permissive IAM
-- Kubernetes RBAC: minimal-privilege principle, ClusterRole vs Role scope</p>
+<p><strong>Key capabilities:</strong></p>
+<ul>
+<li>SAST review for Python (SQL injection, command injection, path traversal)</li>
+<li>Secret scanning: detect accidentally committed credentials</li>
+<li>Container security: run-as-non-root, read-only filesystem, no privileged</li>
+<li>Terraform security: <code>tfsec</code>, public bucket detection, over-permissive IAM</li>
+<li>Kubernetes RBAC: minimal-privilege principle, ClusterRole vs Role scope</li>
+</ul>
 <p><strong>File to create:</strong> <code>.github/agents/security-agent.agent.md</code></p>
 <hr />
 <h4 id="32-update-docsmetricsmd-with-ai-effectiveness-metrics">3.2 Update <code>docs/METRICS.md</code> with AI-effectiveness metrics</h4>
 <p><strong>Why:</strong> DORA 2025 requires tracking AI-specific metrics alongside classic DORA
 metrics. Without a metrics tracking file, Foundation 7 progress is invisible.</p>
 <p><strong>Metrics to add:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Metric</th>
-<th>Target</th>
-<th>Measurement</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Rework rate (AI PRs)</td>
-<td>&lt; 10%</td>
-<td>PRs needing &gt; 1 round of review / total PRs</td>
-</tr>
-<tr>
-<td>Type-hint coverage (<code>services/</code>)</td>
-<td>&gt; 95%</td>
-<td><code>scripts/check-ai-readiness.sh</code> output</td>
-</tr>
-<tr>
-<td>BDD scenario coverage</td>
-<td>≥ 1 per service capability</td>
-<td><code>ls tests/bdd/features/ | wc -l</code></td>
-</tr>
-<tr>
-<td>Paved-path adoption</td>
-<td>&gt; 80% of services</td>
-<td>Services using golden-path template</td>
-</tr>
-<tr>
-<td>PR size (median)</td>
-<td>&lt; 200 lines</td>
-<td>GitHub Insights → Pull Requests</td>
-</tr>
-<tr>
-<td>CI pass rate (first attempt)</td>
-<td>&gt; 90%</td>
-<td>GitHub Actions → Workflow runs</td>
-</tr>
-</tbody>
-</table>
+<p>| Metric                           | Target                     | Measurement                                 |
+| -------------------------------- | -------------------------- | ------------------------------------------- | ------ |
+| Rework rate (AI PRs)             | &lt; 10%                      | PRs needing &gt; 1 round of review / total PRs |
+| Type-hint coverage (<code>services/</code>) | &gt; 95%                      | <code>scripts/check-ai-readiness.sh</code> output      |
+| BDD scenario coverage            | ≥ 1 per service capability | <code>ls tests/bdd/features/                     | wc -l</code> |
+| Paved-path adoption              | &gt; 80% of services          | Services using golden-path template         |
+| PR size (median)                 | &lt; 200 lines                | GitHub Insights → Pull Requests             |
+| CI pass rate (first attempt)     | &gt; 90%                      | GitHub Actions → Workflow runs              |</p>
 <hr />
 <h4 id="33-add-copilot-workspace-file-for-richer-context-injection">3.3 Add Copilot workspace file for richer context injection</h4>
 <p><strong>Why:</strong> GitHub Copilot workspace files allow injecting repository-specific context
