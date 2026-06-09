@@ -12,10 +12,13 @@ permissions:
   pull-requests: write
 
 jobs:
-  pre-commit:
-    name: Run Pre-commit Hooks
+  # ==========================================================================
+  # Layer 0 — Base: whitespace, syntax, secrets (fastest, ~30s)
+  # ==========================================================================
+  pre-commit-base:
+    name: "Pre-commit · Base"
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     permissions:
       contents: read
       pull-requests: write
@@ -32,30 +35,144 @@ jobs:
         with:
           fetch-depth: 0
 
-      # ========================================================================
-      # Setup Python for pre-commit
-      # ========================================================================
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.11"
-          cache: "pip"
-          cache-dependency-path: "requirements*.txt"
 
-      - name: Install Python dependencies
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Cache pre-commit environments
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-base-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            pre-commit-base-${{ runner.os }}-
+
+      - name: Run base hooks
+        id: pre-commit
         run: |
-          python -m pip install --upgrade pip
-          pip install pre-commit
+          pre-commit run trailing-whitespace --all-files
+          pre-commit run end-of-file-fixer --all-files
+          pre-commit run check-yaml --all-files
+          pre-commit run check-json --all-files
+          pre-commit run check-added-large-files --all-files
+          pre-commit run check-merge-conflict --all-files
+          pre-commit run mixed-line-ending --all-files
+          pre-commit run detect-private-key --all-files
+          pre-commit run prettier --all-files
+          pre-commit run insert-license --all-files
+        continue-on-error: true
 
-      # ========================================================================
-      # Setup Terraform
-      # ========================================================================
+      - name: Check status
+        if: steps.pre-commit.outcome == 'failure'
+        run: |
+          echo "::error::Base pre-commit hooks failed"
+          exit 1
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ==========================================================================
+  # Layer 1 — Language: Python, Shell, Go, Markdown
+  # ==========================================================================
+  pre-commit-language:
+    name: "Pre-commit · Language"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.22"
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Cache pre-commit environments
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-lang-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            pre-commit-lang-${{ runner.os }}-
+
+      - name: Run language hooks
+        id: pre-commit
+        run: |
+          pre-commit run black --all-files
+          pre-commit run ruff --all-files
+          pre-commit run flake8 --all-files
+          pre-commit run shellcheck --all-files
+          pre-commit run shfmt --all-files
+          pre-commit run golangci-lint --all-files
+          pre-commit run markdownlint --all-files
+        continue-on-error: true
+
+      - name: Check status
+        if: steps.pre-commit.outcome == 'failure'
+        run: |
+          echo "::error::Language pre-commit hooks failed"
+          exit 1
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ==========================================================================
+  # Layer 2 — Tool: YAML lint, Terraform fmt/validate/tflint
+  # ==========================================================================
+  pre-commit-tool:
+    name: "Pre-commit · Tool"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: 1.9.5
 
-      # Cache Terraform providers
       - name: Cache Terraform providers
         uses: actions/cache@v5
         with:
@@ -71,9 +188,67 @@ jobs:
         with:
           tflint_version: latest
 
-      # ========================================================================
-      # Setup Kubernetes tools (optional for local hooks)
-      # ========================================================================
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Cache pre-commit environments
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-tool-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            pre-commit-tool-${{ runner.os }}-
+
+      - name: Run tool hooks
+        id: pre-commit
+        run: |
+          pre-commit run yamllint --all-files
+          pre-commit run terraform_fmt --all-files
+          pre-commit run terraform_validate --all-files
+          pre-commit run terraform_tflint --all-files
+          pre-commit run terraform_docs --all-files
+          pre-commit run terraform_tfsec --all-files
+        continue-on-error: true
+
+      - name: Check status
+        if: steps.pre-commit.outcome == 'failure'
+        run: |
+          echo "::error::Tool pre-commit hooks failed"
+          exit 1
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ==========================================================================
+  # Layer 3 — Platform: K8s, ArgoCD, Helm, Backstage, MkDocs, security
+  # ==========================================================================
+  pre-commit-platform:
+    name: "Pre-commit · Platform"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: "requirements*.txt"
+
       - name: Setup kubectl
         uses: azure/setup-kubectl@v4
         with:
@@ -86,29 +261,24 @@ jobs:
 
       - name: Install kubeval
         run: |
-          wget https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
+          wget -q https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
           tar xf kubeval-linux-amd64.tar.gz
           sudo mv kubeval /usr/local/bin
           rm kubeval-linux-amd64.tar.gz
 
       - name: Install kustomize
         run: |
-          # Use direct binary download to avoid GitHub API rate limits
           VERSION="v5.3.0"
-          wget -O kustomize.tar.gz "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${VERSION}/kustomize_${VERSION}_linux_amd64.tar.gz"
+          wget -q -O kustomize.tar.gz "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${VERSION}/kustomize_${VERSION}_linux_amd64.tar.gz"
           tar -xzf kustomize.tar.gz
           sudo mv kustomize /usr/local/bin/
           rm kustomize.tar.gz
-          kustomize version
 
       - name: Install yq
         run: |
           sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           sudo chmod +x /usr/local/bin/yq
 
-      # ========================================================================
-      # Setup ArgoCD CLI (for GitOps validation)
-      # ========================================================================
       - name: Install ArgoCD CLI
         run: |
           curl -sSL -o argocd-linux-amd64 \
@@ -116,252 +286,39 @@ jobs:
           sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
           rm argocd-linux-amd64
 
-      # ========================================================================
-      # Install MkDocs for documentation validation
-      # ========================================================================
-      - name: Install MkDocs
-        run: |
-          pip install -r requirements.txt
+      - name: Install MkDocs deps
+        run: pip install -r requirements.txt
 
-      # ========================================================================
-      # Run pre-commit hooks
-      # ========================================================================
+      - name: Install pre-commit
+        run: pip install pre-commit
+
       - name: Cache pre-commit environments
         uses: actions/cache@v5
         with:
           path: ~/.cache/pre-commit
-          key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          key: pre-commit-platform-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
           restore-keys: |
-            pre-commit-${{ runner.os }}-
+            pre-commit-platform-${{ runner.os }}-
 
-      - name: Run pre-commit on all files
+      - name: Run platform hooks
         id: pre-commit
         run: |
-          # Run pre-commit and capture output
-          pre-commit run --all-files --show-diff-on-failure --color=always 2>&1 | tee pre-commit-output.txt
+          pre-commit run kubeval --all-files
+          pre-commit run kustomize-validate --all-files
+          pre-commit run backstage-catalog-validate --all-files
+          pre-commit run argocd-validate --all-files
+          pre-commit run helm-lint --all-files
+          pre-commit run check-k8s-secrets --all-files
+          pre-commit run mkdocs-validate --all-files
+          pre-commit run gitleaks --all-files
+          pre-commit run detect-secrets --all-files
         continue-on-error: true
 
-      - name: Check pre-commit status
+      - name: Check status
         if: steps.pre-commit.outcome == 'failure'
         run: |
-          echo "::warning::Pre-commit checks failed. Please review the output above and fix the issues."
+          echo "::error::Platform pre-commit hooks failed"
           exit 1
-
-      # ========================================================================
-      # Upload pre-commit results as artifact
-      # ========================================================================
-      - name: Upload pre-commit results
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: pre-commit-results
-          path: pre-commit-output.txt
-
-      # ========================================================================
-      # Comment on PR with results (optional)
-      # ========================================================================
-      - name: Comment PR with pre-commit results
-        if: failure() && github.event_name == 'pull_request'
-        uses: actions/github-script@v8
-        with:
-          script: |
-            const fs = require('fs');
-            let output = '';
-            try {
-              output = fs.readFileSync('pre-commit-output.txt', 'utf8');
-            } catch (error) {
-              output = 'Could not read pre-commit output file.';
-            }
-
-            const maxLength = 60000; // GitHub comment size limit
-            if (output.length > maxLength) {
-              output = output.substring(0, maxLength) + '\n\n... (output truncated)';
-            }
-
-            const body = `## ⚠️ Pre-commit Validation Failed
-
-            Some pre-commit hooks have failed. Please review and fix the issues below:
-
-            <details>
-            <summary>Pre-commit output</summary>
-
-            \`\`\`
-            ${output}
-            \`\`\`
-
-            </details>
-
-            ### How to fix:
-            1. Install pre-commit locally: \`make pre-commit-setup\`
-            2. Run pre-commit: \`pre-commit run --all-files\`
-            3. Fix the reported issues
-            4. Commit and push your changes
-
-            Or let pre-commit auto-fix issues:
-            \`\`\`bash
-            pre-commit run --all-files
-            git add -u
-            git commit -m "Fix pre-commit issues"
-            git push
-            \`\`\`
-            `;
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: body
-            });
-
-      - name: DORA job finish
-        if: always()
-        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-
-  # ==========================================================================
-  # GitOps Validation Job - Specific checks for ArgoCD and GitOps workflows
-  # ==========================================================================
-  gitops-validation:
-    name: GitOps & ArgoCD Validation
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-    steps:
-      - name: DORA job start
-        run: |
-          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          echo "sha:${{ github.sha }}"
-          echo "workflow:${{ github.workflow }}"
-          echo "job:${{ github.job }}"
-
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Install ArgoCD CLI
-        run: |
-          curl -sSL -o argocd-linux-amd64 \
-            https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-          sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
-          rm argocd-linux-amd64
-
-      - name: Validate ArgoCD Applications
-        run: |
-          echo "Validating ArgoCD application manifests..."
-          find . -name "*-application.yaml" -o -name "application.yaml" | while read app; do
-            echo "Validating $app"
-            # Basic YAML validation
-            python -c "import yaml; yaml.safe_load(open('$app'))" || exit 1
-            # Check required fields
-            if ! grep -q "kind: Application" "$app"; then
-              echo "Error: $app is missing 'kind: Application'"
-              exit 1
-            fi
-          done
-
-      - name: Check for GitOps best practices
-        run: |
-          echo "Checking GitOps best practices..."
-          # Check that manifests are organized properly
-          if [ -d "infra/kubernetes" ]; then
-            echo "✓ Kubernetes manifests directory exists"
-          fi
-          # Check for kustomization files
-          if find infra/kubernetes -name "kustomization.yaml" | grep -q .; then
-            echo "✓ Kustomization files found"
-          else
-            echo "⚠️  No kustomization files found - consider using Kustomize for GitOps"
-          fi
-
-      - name: DORA job finish
-        if: always()
-        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-
-  # ==========================================================================
-  # IDP Validation Job - Backstage and platform components
-  # ==========================================================================
-  idp-validation:
-    name: IDP Components Validation
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-    steps:
-      - name: DORA job start
-        run: |
-          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          echo "sha:${{ github.sha }}"
-          echo "workflow:${{ github.workflow }}"
-          echo "job:${{ github.job }}"
-
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.11"
-          cache: "pip"
-          cache-dependency-path: "requirements*.txt"
-
-      - name: Install yq
-        run: |
-          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-          sudo chmod +x /usr/local/bin/yq
-
-      - name: Validate Backstage catalog files
-        run: |
-          echo "Validating Backstage catalog files..."
-          find . -name "catalog-info.yaml" -o -name "*.catalog-info.yaml" | while read catalog; do
-            echo "Validating $catalog"
-            yq eval . "$catalog" > /dev/null || exit 1
-            # Check for required Backstage fields
-            if ! yq eval '.apiVersion' "$catalog" | grep -q "backstage.io"; then
-              echo "⚠️  $catalog might not be a valid Backstage catalog (missing backstage.io apiVersion)"
-            fi
-          done
-
-      - name: Validate Backstage Helm values
-        if: hashFiles('infra/kubernetes/backstage/values.yaml') != ''
-        run: |
-          echo "Validating Backstage Helm values..."
-          yq eval . infra/kubernetes/backstage/values.yaml > /dev/null
-
-      - name: Install MkDocs deps
-        run: |
-          pip install -r requirements.txt
-
-      - name: Build docs (non-strict for PRs and non-main pushes)
-        if: github.event_name != 'push' || github.ref != 'refs/heads/main'
-        run: |
-          echo "Building MkDocs without strict mode (warnings won't fail CI)..."
-          mkdocs build --verbose | tee mkdocs-build.txt
-          if grep -q "WARNING -" mkdocs-build.txt; then
-            echo "::warning::MkDocs produced warnings. See mkdocs-build.txt artifact."
-          fi
-
-      - name: Build docs (non-strict on main; warn only)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          echo "Building MkDocs without strict mode on main (warnings won't fail CI)..."
-          mkdocs build --verbose | tee mkdocs-build.txt
-          if grep -q "WARNING -" mkdocs-build.txt; then
-            echo "::warning::MkDocs produced warnings on main. See mkdocs-build.txt artifact."
-          fi
-
-      - name: Upload MkDocs build log
-        if: always() && hashFiles('mkdocs-build.txt') != ''
-        uses: actions/upload-artifact@v7
-        with:
-          name: mkdocs-build-log
-          path: mkdocs-build.txt
-
-      - name: Check documentation links
-        run: |
-          echo "Checking for broken documentation links..."
-          # This is a basic check - you might want to use a more sophisticated link checker
-          if [ -d "docs" ]; then
-            echo "✓ Documentation directory exists"
-          fi
 
       - name: DORA job finish
         if: always()
