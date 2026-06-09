@@ -5684,6 +5684,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#issue-kubectl-cannot-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: kubectl cannot connect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-ingress-controller-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Ingress controller not found
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-nodes-over-resource-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Nodes over resource limits
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5957,7 +5990,7 @@ az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</s
 <li>Check that cluster is deployed: <code>az aks list -o table</code></li>
 <li>Deploy cluster if needed: <code>./scripts/ignite.sh --provider azure --only-cluster dev</code></li>
 </ul>
-<p><strong>Issue: kubectl cannot connect</strong></p>
+<h3 id="issue-kubectl-cannot-connect">Issue: kubectl cannot connect</h3>
 <div class="highlight"><pre><span></span><code>[✗] kubectl Configuration: kubectl cannot connect to cluster
 </code></pre></div>
 <p>Solution:</p>
@@ -5976,7 +6009,7 @@ kubectl<span class="w"> </span>cluster-info
 <li>Check metrics-server pod status: <code>kubectl get pods -n kube-system -l k8s-app=metrics-server</code></li>
 <li>Check metrics-server logs: <code>kubectl logs -n kube-system -l k8s-app=metrics-server</code></li>
 </ul>
-<p><strong>Issue: Ingress controller not found</strong></p>
+<h3 id="issue-ingress-controller-not-found">Issue: Ingress controller not found</h3>
 <div class="highlight"><pre><span></span><code>[✗] Ingress Controller: No ingress controller (nginx/traefik) found
 </code></pre></div>
 <p>Solution:</p>
@@ -5985,7 +6018,7 @@ kubectl<span class="w"> </span>cluster-info
 <li>For nginx: <code>kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml</code></li>
 <li>Wait for deployment: <code>kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s</code></li>
 </ul>
-<p><strong>Issue: Nodes over resource limits</strong></p>
+<h3 id="issue-nodes-over-resource-limits">Issue: Nodes over resource limits</h3>
 <div class="highlight"><pre><span></span><code>[✗] Resource Limits: 1 node(s) over resource limits
 </code></pre></div>
 <p>Solution:</p>

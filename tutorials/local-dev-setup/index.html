@@ -5837,9 +5837,9 @@ runtime). No cloud account required.</p>
 </tbody>
 </table>
 <blockquote>
-<p><strong>macOS one-liner:</strong>
+<p><strong>macOS one-liner:</strong></p>
 <div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>k3d<span class="w"> </span>kubectl<span class="w"> </span>helm
-</code></pre></div></p>
+</code></pre></div>
 </blockquote>
 <p>Verify everything is installed:</p>
 <div class="highlight"><pre><span></span><code>make<span class="w"> </span>check-deps
@@ -5865,13 +5865,13 @@ Open a separate terminal tab for each one you want to access:</p>
 <h3 id="argocd">ArgoCD</h3>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>svc/argocd-server<span class="w"> </span><span class="m">8888</span>:80
 </code></pre></div>
-<p>Open <a href="http://localhost:8888">http://localhost:8888</a><br />
-Username: <code>admin</code><br />
+<p>Open <a href="http://localhost:8888">http://localhost:8888</a>
+Username: <code>admin</code>
 Password: printed by <code>make dev-status</code> (retrieved from the <code>argocd-initial-admin-secret</code> Secret)</p>
 <h3 id="vault">Vault</h3>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>svc/vault<span class="w"> </span><span class="m">8200</span>:8200
 </code></pre></div>
-<p>Open <a href="http://localhost:8200">http://localhost:8200</a><br />
+<p>Open <a href="http://localhost:8200">http://localhost:8200</a>
 Root token: <code>fawkes-dev-root</code></p>
 <blockquote>
 <p>Vault runs in <strong>dev mode</strong> — data is in-memory only and is reset when the pod restarts.
@@ -5884,8 +5884,8 @@ This is intentional for local development; do not use dev mode in production.</p
 <h3 id="grafana">Grafana</h3>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>svc/kube-prometheus-stack-grafana<span class="w"> </span><span class="m">3000</span>:80
 </code></pre></div>
-<p>Open <a href="http://localhost:3000">http://localhost:3000</a><br />
-Username: <code>admin</code><br />
+<p>Open <a href="http://localhost:3000">http://localhost:3000</a>
+Username: <code>admin</code>
 Password: <code>fawkes-grafana</code></p>
 <h3 id="prometheus">Prometheus</h3>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>svc/kube-prometheus-stack-prometheus<span class="w"> </span><span class="m">9090</span>:9090
@@ -5894,7 +5894,7 @@ Password: <code>fawkes-grafana</code></p>
 <h3 id="sample-app-podinfo">Sample App (podinfo)</h3>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>sample-apps<span class="w"> </span>svc/podinfo<span class="w"> </span><span class="m">9898</span>:9898
 </code></pre></div>
-<p>Open <a href="http://localhost:9898">http://localhost:9898</a><br />
+<p>Open <a href="http://localhost:9898">http://localhost:9898</a>
 podinfo is deployed and managed by ArgoCD — you can watch the sync in the ArgoCD UI.</p>
 <hr />
 <h2 id="tearing-down">Tearing Down</h2>

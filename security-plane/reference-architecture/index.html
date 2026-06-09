@@ -6078,35 +6078,53 @@
 <h2 id="components">Components</h2>
 <h3 id="1-scanning-engine">1. Scanning Engine</h3>
 <p><strong>Purpose</strong>: Detect security issues in code, dependencies, and containers</p>
-<p><strong>Tools</strong>:
-- <strong>Gitleaks</strong>: Secret scanning (API keys, tokens, credentials)
-- <strong>Trivy</strong>: Vulnerability scanning (CVEs, misconfigurations)
-- <strong>npm audit</strong>: Node.js dependency vulnerabilities
-- <strong>safety</strong>: Python dependency vulnerabilities</p>
+<p><strong>Tools</strong>:</p>
+<ul>
+<li><strong>Gitleaks</strong>: Secret scanning (API keys, tokens, credentials)</li>
+<li><strong>Trivy</strong>: Vulnerability scanning (CVEs, misconfigurations)</li>
+<li><strong>npm audit</strong>: Node.js dependency vulnerabilities</li>
+<li><strong>safety</strong>: Python dependency vulnerabilities</li>
+</ul>
 <p><strong>Workflow</strong>: <code>reusable-security-scanning.yml</code></p>
-<p><strong>Inputs</strong>:
-- <code>scan-type</code>: all, secrets, vulnerabilities, dependencies, container
-- <code>severity-threshold</code>: UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL
-- <code>fail-on-critical</code>: Block on critical vulnerabilities</p>
-<p><strong>Outputs</strong>:
-- SARIF files uploaded to GitHub Security
-- Summary in job output
-- Artifacts for detailed reports</p>
+<p><strong>Inputs</strong>:</p>
+<ul>
+<li><code>scan-type</code>: all, secrets, vulnerabilities, dependencies, container</li>
+<li><code>severity-threshold</code>: UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL</li>
+<li><code>fail-on-critical</code>: Block on critical vulnerabilities</li>
+</ul>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>SARIF files uploaded to GitHub Security</li>
+<li>Summary in job output</li>
+<li>Artifacts for detailed reports</li>
+</ul>
 <h3 id="2-policy-enforcement">2. Policy Enforcement</h3>
 <p><strong>Purpose</strong>: Enforce security best practices and compliance requirements</p>
-<p><strong>Tools</strong>:
-- <strong>Conftest</strong>: OPA/Rego policy evaluation
-- <strong>OPA</strong>: Open Policy Agent for policy-as-code</p>
+<p><strong>Tools</strong>:</p>
+<ul>
+<li><strong>Conftest</strong>: OPA/Rego policy evaluation</li>
+<li><strong>OPA</strong>: Open Policy Agent for policy-as-code</li>
+</ul>
 <p><strong>Workflow</strong>: <code>reusable-policy-enforcement.yml</code></p>
-<p><strong>Policy Types</strong>:
-1. <strong>Kubernetes Security</strong> (<code>kubernetes-security.rego</code>)
-   - Non-root containers
-   - Resource limits
-   - Security contexts
-   - Network policies</p>
+<p><strong>Policy Types</strong>:</p>
 <ol>
-<li><strong>Dockerfile Security</strong> (<code>dockerfile-security.rego</code>)</li>
-<li>No root user</li>
+<li>
+<p><strong>Kubernetes Security</strong> (<code>kubernetes-security.rego</code>)</p>
+</li>
+<li>
+<p>Non-root containers</p>
+</li>
+<li>Resource limits</li>
+<li>Security contexts</li>
+<li>
+<p>Network policies</p>
+</li>
+<li>
+<p><strong>Dockerfile Security</strong> (<code>dockerfile-security.rego</code>)</p>
+</li>
+<li>
+<p>No root user</p>
+</li>
 <li>Specific base image versions</li>
 <li>Health checks</li>
 <li>
@@ -6120,54 +6138,72 @@
 <li>Require image signatures</li>
 <li>Approved registries</li>
 </ol>
-<p><strong>Inputs</strong>:
-- <code>policy-path</code>: Path to policy files
-- <code>target-path</code>: Files to validate
-- <code>fail-on-violation</code>: Block on violations</p>
+<p><strong>Inputs</strong>:</p>
+<ul>
+<li><code>policy-path</code>: Path to policy files</li>
+<li><code>target-path</code>: Files to validate</li>
+<li><code>fail-on-violation</code>: Block on violations</li>
+</ul>
 <h3 id="3-sbom-generation">3. SBOM Generation</h3>
 <p><strong>Purpose</strong>: Create Software Bill of Materials for supply chain transparency</p>
-<p><strong>Tools</strong>:
-- <strong>Syft</strong>: SBOM generation (CycloneDX, SPDX formats)</p>
+<p><strong>Tools</strong>:</p>
+<ul>
+<li><strong>Syft</strong>: SBOM generation (CycloneDX, SPDX formats)</li>
+</ul>
 <p><strong>Workflow</strong>: <code>reusable-sbom-generation.yml</code></p>
-<p><strong>Inputs</strong>:
-- <code>image-name</code>: Container image name
-- <code>image-tag</code>: Image tag
-- <code>sbom-format</code>: cyclonedx-json, spdx-json, syft-json</p>
-<p><strong>Outputs</strong>:
-- SBOM file as GitHub artifact
-- Package count summary
-- Retention: 90 days</p>
+<p><strong>Inputs</strong>:</p>
+<ul>
+<li><code>image-name</code>: Container image name</li>
+<li><code>image-tag</code>: Image tag</li>
+<li><code>sbom-format</code>: cyclonedx-json, spdx-json, syft-json</li>
+</ul>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>SBOM file as GitHub artifact</li>
+<li>Package count summary</li>
+<li>Retention: 90 days</li>
+</ul>
 <h3 id="4-image-signing">4. Image Signing</h3>
 <p><strong>Purpose</strong>: Cryptographically sign container images for authenticity</p>
-<p><strong>Tools</strong>:
-- <strong>Cosign</strong>: Keyless image signing with Sigstore</p>
+<p><strong>Tools</strong>:</p>
+<ul>
+<li><strong>Cosign</strong>: Keyless image signing with Sigstore</li>
+</ul>
 <p><strong>Workflow</strong>: <code>reusable-image-signing.yml</code></p>
-<p><strong>Features</strong>:
-- Keyless signing with OIDC
-- SBOM attestation
-- Signature verification
-- Registry integration</p>
-<p><strong>Inputs</strong>:
-- <code>image-name</code>: Image to sign
-- <code>registry</code>: Container registry (ghcr.io)
-- <code>sign-sbom</code>: Also sign SBOM attestation</p>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Keyless signing with OIDC</li>
+<li>SBOM attestation</li>
+<li>Signature verification</li>
+<li>Registry integration</li>
+</ul>
+<p><strong>Inputs</strong>:</p>
+<ul>
+<li><code>image-name</code>: Image to sign</li>
+<li><code>registry</code>: Container registry (ghcr.io)</li>
+<li><code>sign-sbom</code>: Also sign SBOM attestation</li>
+</ul>
 <h3 id="5-orchestration-workflow">5. Orchestration Workflow</h3>
 <p><strong>Purpose</strong>: Coordinate all security plane components</p>
 <p><strong>Workflow</strong>: <code>security-plane-adoption.yml</code></p>
-<p><strong>Jobs</strong>:
-1. <code>security-scan</code>: Run all security scans
-2. <code>policy-enforcement</code>: Validate against policies
-3. <code>generate-sbom</code>: Create SBOM (if image specified)
-4. <code>sign-image</code>: Sign image (on push to main)
-5. <code>security-summary</code>: Generate status badge</p>
-<p><strong>Trigger Events</strong>:
-- <code>push</code>: On commits to main/develop
-- <code>pull_request</code>: On PRs
-- <code>workflow_dispatch</code>: Manual trigger with options</p>
+<p><strong>Jobs</strong>:</p>
+<ol>
+<li><code>security-scan</code>: Run all security scans</li>
+<li><code>policy-enforcement</code>: Validate against policies</li>
+<li><code>generate-sbom</code>: Create SBOM (if image specified)</li>
+<li><code>sign-image</code>: Sign image (on push to main)</li>
+<li><code>security-summary</code>: Generate status badge</li>
+</ol>
+<p><strong>Trigger Events</strong>:</p>
+<ul>
+<li><code>push</code>: On commits to main/develop</li>
+<li><code>pull_request</code>: On PRs</li>
+<li><code>workflow_dispatch</code>: Manual trigger with options</li>
+</ul>
 <h2 id="adoption-patterns">Adoption Patterns</h2>
 <h3 id="pattern-1-advisory-mode-getting-started">Pattern 1: Advisory Mode (Getting Started)</h3>
 <p><strong>Use Case</strong>: Understanding current security posture without blocking</p>
-<p><strong>Configuration</strong>:
+<p><strong>Configuration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/security.yml</span>
 <span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">security</span><span class="p">:</span>
@@ -6175,16 +6211,18 @@
 <span class="w">    </span><span class="nt">with</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">enforcement-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">advisory</span>
 <span class="w">      </span><span class="nt">fail-on-critical</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-</code></pre></div></p>
-<p><strong>Behavior</strong>:
-- ✅ Scans run on every PR and push
-- ✅ Results visible in GitHub Security
-- ❌ No blocking - PRs can merge
-- ✅ Team learns about issues</p>
+</code></pre></div>
+<p><strong>Behavior</strong>:</p>
+<ul>
+<li>✅ Scans run on every PR and push</li>
+<li>✅ Results visible in GitHub Security</li>
+<li>❌ No blocking - PRs can merge</li>
+<li>✅ Team learns about issues</li>
+</ul>
 <p><strong>Timeline</strong>: 1-2 weeks</p>
 <h3 id="pattern-2-progressive-enforcement">Pattern 2: Progressive Enforcement</h3>
 <p><strong>Use Case</strong>: Gradual rollout with critical-only blocking</p>
-<p><strong>Configuration</strong>:
+<p><strong>Configuration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">security</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">paruff/fawkes/.github/workflows/security-plane-adoption.yml@main</span>
@@ -6192,16 +6230,18 @@
 <span class="w">      </span><span class="nt">enforcement-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strict</span>
 <span class="w">      </span><span class="nt">fail-on-critical</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">severity-threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CRITICAL</span>
-</code></pre></div></p>
-<p><strong>Behavior</strong>:
-- ✅ Scans run on every PR and push
-- ❌ CRITICAL vulnerabilities block
-- ⚠️ HIGH/MEDIUM are warnings
-- ✅ Gradual improvement</p>
+</code></pre></div>
+<p><strong>Behavior</strong>:</p>
+<ul>
+<li>✅ Scans run on every PR and push</li>
+<li>❌ CRITICAL vulnerabilities block</li>
+<li>⚠️ HIGH/MEDIUM are warnings</li>
+<li>✅ Gradual improvement</li>
+</ul>
 <p><strong>Timeline</strong>: 2-4 weeks after advisory</p>
 <h3 id="pattern-3-strict-mode-production">Pattern 3: Strict Mode (Production)</h3>
 <p><strong>Use Case</strong>: Full enforcement for production-ready repos</p>
-<p><strong>Configuration</strong>:
+<p><strong>Configuration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">security</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">paruff/fawkes/.github/workflows/security-plane-adoption.yml@main</span>
@@ -6212,13 +6252,15 @@
 <span class="w">      </span><span class="nt">severity-threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MEDIUM</span>
 <span class="w">      </span><span class="nt">enable-signing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">enable-sbom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div></p>
-<p><strong>Behavior</strong>:
-- ❌ Any policy violation blocks
-- ❌ MEDIUM+ vulnerabilities block
-- ✅ Images must be signed
-- ✅ SBOMs required
-- ✅ Production-grade security</p>
+</code></pre></div>
+<p><strong>Behavior</strong>:</p>
+<ul>
+<li>❌ Any policy violation blocks</li>
+<li>❌ MEDIUM+ vulnerabilities block</li>
+<li>✅ Images must be signed</li>
+<li>✅ SBOMs required</li>
+<li>✅ Production-grade security</li>
+</ul>
 <p><strong>Timeline</strong>: 4-8 weeks after progressive</p>
 <h2 id="integration-with-fawkes-idp">Integration with Fawkes IDP</h2>
 <h3 id="golden-path-templates">Golden Path Templates</h3>
@@ -6243,8 +6285,8 @@
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-service</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">github.com/project-slug</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org/repo</span>
-<span class="w">    </span><span class="nt">security-plane/enabled</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
-<span class="w">    </span><span class="nt">security-plane/mode</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;strict&#39;</span>
+<span class="w">    </span><span class="nt">security-plane/enabled</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">security-plane/mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;strict&quot;</span>
 </code></pre></div>
 <h3 id="jenkins-integration">Jenkins Integration</h3>
 <p>Jenkins pipelines can call security workflows:</p>
@@ -6265,7 +6307,7 @@
 <span class="w">    </span><span class="nt">automated</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">syncOptions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate=true</span><span class="w">  </span><span class="c1"># Validates against policies</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate=true</span><span class="w"> </span><span class="c1"># Validates against policies</span>
 </code></pre></div>
 <h2 id="metrics-monitoring">Metrics &amp; Monitoring</h2>
 <h3 id="dora-metrics">DORA Metrics</h3>
@@ -6277,23 +6319,29 @@
 <li><strong>Mean Time to Recovery</strong>: Faster incident response with SBOMs</li>
 </ul>
 <h3 id="security-metrics">Security Metrics</h3>
-<p>Track over time:
-- Number of vulnerabilities (by severity)
-- Policy violations (by type)
-- MTTR for security issues
-- % of repos with security plane enabled
-- % of images signed
-- SBOM coverage</p>
+<p>Track over time:</p>
+<ul>
+<li>Number of vulnerabilities (by severity)</li>
+<li>Policy violations (by type)</li>
+<li>MTTR for security issues</li>
+<li>% of repos with security plane enabled</li>
+<li>% of images signed</li>
+<li>SBOM coverage</li>
+</ul>
 <h3 id="dashboards">Dashboards</h3>
-<p><strong>GitHub Security Tab</strong>:
-- Vulnerability alerts
-- Secret scanning alerts
-- SARIF results</p>
-<p><strong>Grafana Dashboard</strong> (planned):
-- Security posture overview
-- Vulnerability trends
-- Policy compliance rates
-- SBOM coverage</p>
+<p><strong>GitHub Security Tab</strong>:</p>
+<ul>
+<li>Vulnerability alerts</li>
+<li>Secret scanning alerts</li>
+<li>SARIF results</li>
+</ul>
+<p><strong>Grafana Dashboard</strong> (planned):</p>
+<ul>
+<li>Security posture overview</li>
+<li>Vulnerability trends</li>
+<li>Policy compliance rates</li>
+<li>SBOM coverage</li>
+</ul>
 <h2 id="extensibility">Extensibility</h2>
 <h3 id="adding-new-policies">Adding New Policies</h3>
 <ol>
@@ -6302,7 +6350,7 @@
 <li>Test locally with <code>conftest test</code></li>
 <li>Commit and policies are automatically enforced</li>
 </ol>
-<p>Example:
+<p>Example:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># .security-plane/policies/custom.rego</span>
 <span class="k">package</span><span class="w"> </span><span class="n">main</span>
 
@@ -6311,7 +6359,7 @@
 <span class="w">    </span><span class="c1"># Your custom logic</span>
 <span class="w">    </span><span class="n">msg</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s2">&quot;Your custom policy message&quot;</span>
 <span class="p">}</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="adding-new-languages">Adding New Languages</h3>
 <p>Update scanning workflows to include new language tools:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># reusable-security-scanning.yml</span>
@@ -6381,7 +6429,7 @@
 <li>📧 Email: security-team@example.com</li>
 </ul>
 <hr />
-<p><em>Last Updated: 2024-01-26</em><br />
+<p><em>Last Updated: 2024-01-26</em>
 <em>Version: 1.0.0</em></p>
 
 

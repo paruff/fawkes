@@ -5889,11 +5889,13 @@ git<span class="w"> </span>push
 <li>Click on the latest run</li>
 <li>Review the security scan results</li>
 </ol>
-<p>✅ You should see:
-- Secret scanning results
-- Vulnerability scan results
-- Policy check results
-- SBOM generation (if applicable)</p>
+<p>✅ You should see:</p>
+<ul>
+<li>Secret scanning results</li>
+<li>Vulnerability scan results</li>
+<li>Policy check results</li>
+<li>SBOM generation (if applicable)</li>
+</ul>
 <h2 id="step-4-review-results-3-minutes">Step 4: Review Results (3 minutes)</h2>
 <h3 id="check-github-security-tab">Check GitHub Security Tab</h3>
 <ol>
@@ -5908,14 +5910,18 @@ git<span class="w"> </span>push
 <li>Review security badges and counts</li>
 </ol>
 <h3 id="common-first-results">Common First Results</h3>
-<p><strong>✅ Good News</strong>:
-- "No secrets found"
-- "All policy checks passed"
-- "SBOM generated successfully"</p>
-<p><strong>⚠️ Action Needed</strong>:
-- "Found X critical vulnerabilities"
-- "Policy violations detected"
-- "Secrets found in code"</p>
+<p><strong>✅ Good News</strong>:</p>
+<ul>
+<li>"No secrets found"</li>
+<li>"All policy checks passed"</li>
+<li>"SBOM generated successfully"</li>
+</ul>
+<p><strong>⚠️ Action Needed</strong>:</p>
+<ul>
+<li>"Found X critical vulnerabilities"</li>
+<li>"Policy violations detected"</li>
+<li>"Secrets found in code"</li>
+</ul>
 <h2 id="next-steps">Next Steps</h2>
 <h3 id="if-you-have-issues-to-fix">If You Have Issues to Fix</h3>
 <ol>
@@ -5935,20 +5941,18 @@ git<span class="w"> </span>push
 <h3 id="if-everything-passes">If Everything Passes</h3>
 <p>Congratulations! 🎉 Consider:</p>
 <ol>
-<li>
-<p><strong>Enable stricter mode</strong> after 1-2 weeks:
-   <div class="highlight"><pre><span></span><code><span class="nt">enforcement-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strict</span>
+<li><strong>Enable stricter mode</strong> after 1-2 weeks:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">enforcement-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strict</span>
 <span class="nt">fail-on-critical</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Add security badge</strong> to README.md:
-   <div class="highlight"><pre><span></span><code>![<span class="nt">Security</span>](<span class="na">https://github.com/your-org/your-repo/workflows/Security%20Checks/badge.svg</span>)
-</code></pre></div></p>
-</li>
-<li>
-<p><strong>Train team members</strong> on security practices</p>
-</li>
+</code></pre></div>
+<ol>
+<li><strong>Add security badge</strong> to README.md:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>![<span class="nt">Security</span>](<span class="na">https://github.com/your-org/your-repo/workflows/Security%20Checks/badge.svg</span>)
+</code></pre></div>
+<ol>
+<li><strong>Train team members</strong> on security practices</li>
 <li><strong>Schedule regular security reviews</strong></li>
 </ol>
 <h2 id="testing-locally-optional">Testing Locally (Optional)</h2>
@@ -5994,28 +5998,36 @@ sudo<span class="w"> </span>mv<span class="w"> </span>gitleaks<span class="w"> <
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="workflow-fails-immediately">Workflow Fails Immediately</h3>
 <p><strong>Issue</strong>: Workflow fails before any scans run</p>
-<p><strong>Solution</strong>:
-1. Check workflow syntax: <code>yamllint .github/workflows/security.yml</code>
-2. Verify permissions in workflow file
-3. Ensure repository has Actions enabled</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Check workflow syntax: <code>yamllint .github/workflows/security.yml</code></li>
+<li>Verify permissions in workflow file</li>
+<li>Ensure repository has Actions enabled</li>
+</ol>
 <h3 id="too-many-false-positives">Too Many False Positives</h3>
 <p><strong>Issue</strong>: Legitimate code flagged as security issue</p>
-<p><strong>Solution</strong>:
-1. Create <code>.security-plane/exemptions.yaml</code>
-2. Add specific exemptions with justification
-3. Re-run workflow</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Create <code>.security-plane/exemptions.yaml</code></li>
+<li>Add specific exemptions with justification</li>
+<li>Re-run workflow</li>
+</ol>
 <h3 id="sbom-generation-fails">SBOM Generation Fails</h3>
 <p><strong>Issue</strong>: SBOM generation reports errors</p>
-<p><strong>Solution</strong>:
-1. Ensure you have a package manifest (package.json, requirements.txt, etc.)
-2. Check Syft supports your language
-3. Try different SBOM format in workflow config</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Ensure you have a package manifest (package.json, requirements.txt, etc.)</li>
+<li>Check Syft supports your language</li>
+<li>Try different SBOM format in workflow config</li>
+</ol>
 <h3 id="scans-take-too-long">Scans Take Too Long</h3>
 <p><strong>Issue</strong>: Security workflow runs for more than 10 minutes</p>
-<p><strong>Solution</strong>:
-1. Add <code>.trivyignore</code> to exclude large directories
-2. Use workflow caching for scan databases
-3. Run scans in parallel jobs</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Add <code>.trivyignore</code> to exclude large directories</li>
+<li>Use workflow caching for scan databases</li>
+<li>Run scans in parallel jobs</li>
+</ol>
 <h2 id="getting-help">Getting Help</h2>
 <ul>
 <li>📖 <strong>Full Documentation</strong>: <a href=".security-plane/README.md">.security-plane/README.md</a></li>

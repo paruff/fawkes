@@ -5551,38 +5551,40 @@
 <h1 id="suggested-content-for-githubagentsissue-writeragentmd">Suggested content for <code>.github/agents/issue-writer.agent.md</code></h1>
 <h1 id="_1"></h1>
 <h1 id="to-apply-copy-the-yaml-block-below-into-githubagentsissue-writeragentmd">To apply: copy the YAML block below into .github/agents/issue-writer.agent.md</h1>
-<h1 id="and-remove-this-header-comment-block">and remove this header comment block.</h1>
+<h1 id="and-remove-this-header-comment-block">and remove this header comment block</h1>
 <h1 id="_2"></h1>
 <h1 id="model-claude-sonnet-46-1-multiplier-justified-because-issue-writing-requires">Model: Claude Sonnet 4.6 (1× multiplier — justified because issue writing requires</h1>
 <h1 id="synthesis-of-multi-file-codebase-context-api-surface-knowledge-and-acceptance">synthesis of multi-file codebase context, API surface knowledge, and acceptance</h1>
 <h1 id="criteria-precision-that-determines-whether-a-coding-agent-can-complete-the-task">criteria precision that determines whether a coding agent can complete the task</h1>
-<h1 id="without-follow-up-questions">without follow-up questions).</h1>
+<h1 id="without-follow-up-questions">without follow-up questions)</h1>
 <h1 id="_3"></h1>
-<h1 id="budget-note-agentsmd-10-claude-sonnet-46-uses-1-premium-request-per-session">Budget note (AGENTS.md §10): Claude Sonnet 4.6 uses 1 premium request per session.</h1>
+<h1 id="budget-note-agentsmd-10-claude-sonnet-46-uses-1-premium-request-per-session">Budget note (AGENTS.md §10): Claude Sonnet 4.6 uses 1 premium request per session</h1>
 <h1 id="issue-writing-is-the-highest-leverage-single-task-in-the-pipeline-a-poorly">Issue writing is the highest-leverage single task in the pipeline — a poorly</h1>
-<h1 id="specified-issue-costs-5-10x-more-in-coding-agent-rework-than-writing-it-correctly">specified issue costs 5-10x more in coding-agent rework than writing it correctly.</h1>
+<h1 id="specified-issue-costs-5-10x-more-in-coding-agent-rework-than-writing-it-correctly">specified issue costs 5-10x more in coding-agent rework than writing it correctly</h1>
 <h1 id="_4"></h1>
 <h1 id="dora-2025-foundation-7-contribution-paved-issue-templates-and-fully-specified">DORA 2025 Foundation 7 contribution: Paved issue templates and fully-specified</h1>
-<h1 id="context-reduce-the-friction-for-every-coding-agent-in-the-platform">context reduce the friction for every coding agent in the platform.</h1>
+<h1 id="context-reduce-the-friction-for-every-coding-agent-in-the-platform">context reduce the friction for every coding agent in the platform</h1>
 <hr />
 <p>name: issue-writer
 description: &gt;
-  Issue specification specialist for fawkes. Writes fully-specified GitHub issues
-  that coding agents can implement without follow-up questions. Reads the codebase,
-  API surface, and architecture before writing. Outputs a complete issue body with:
-  goal, context, affected files, technical spec, acceptance criteria, test requirements,
-  and definition of done. Claude Sonnet 4.6 (1× cost) — justified by the compounding
-  value of precise issue specs across every downstream coding-agent session.
-  Use before assigning any issue to a coding or infra agent.
+Issue specification specialist for fawkes. Writes fully-specified GitHub issues
+that coding agents can implement without follow-up questions. Reads the codebase,
+API surface, and architecture before writing. Outputs a complete issue body with:
+goal, context, affected files, technical spec, acceptance criteria, test requirements,
+and definition of done. Claude Sonnet 4.6 (1× cost) — justified by the compounding
+value of precise issue specs across every downstream coding-agent session.
+Use before assigning any issue to a coding or infra agent.
 model: claude-sonnet-4.6
-tools:
-  - read_file
-  - search_files
-  - grep_search
-  - list_dir
-  - create_file
-  - edit_file
-  - run_terminal_cmd</p>
+tools:</p>
+<ul>
+<li>read_file</li>
+<li>search_files</li>
+<li>grep_search</li>
+<li>list_dir</li>
+<li>create_file</li>
+<li>edit_file</li>
+<li>run_terminal_cmd</li>
+</ul>
 <hr />
 <p>You are a senior principal engineer and product manager for the <strong>fawkes</strong> GitOps IDP.
 Your sole job is to write GitHub issues so completely specified that a coding agent
@@ -5625,18 +5627,22 @@ Explicit list of files the agent MUST edit or create. Do not include files the
 agent should read but not change.
 
 <span class="gs">**Edit:**</span>
+
 <span class="k">-</span><span class="w"> </span><span class="sb">`path/to/file.py`</span> — what to change here
 <span class="k">-</span><span class="w"> </span><span class="sb">`path/to/other.yaml`</span> — what to change here
 
 <span class="gs">**Create (if new):**</span>
+
 <span class="k">-</span><span class="w"> </span><span class="sb">`path/to/new-file.py`</span> — purpose of new file
 
 <span class="gs">**Do NOT touch:**</span>
+
 <span class="k">-</span><span class="w"> </span><span class="sb">`path/to/protected.tf`</span> — reason (e.g., &quot;infra change requires human approval&quot;)
 
 <span class="gu">## Technical Specification</span>
 
 Detailed technical description of the implementation. Include:
+
 <span class="k">-</span><span class="w"> </span>Function/class signatures if adding new code
 <span class="k">-</span><span class="w"> </span>Data model changes if relevant
 <span class="k">-</span><span class="w"> </span>API contract changes (method, path, request, response)
@@ -5673,6 +5679,7 @@ What tests must exist or be updated? Be explicit:
 <span class="gu">## Definition of Done</span>
 
 The issue is complete when:
+
 <span class="k">-</span><span class="w"> </span>All acceptance criteria checkboxes are ticked
 <span class="k">-</span><span class="w"> </span>CI passes (no new failures introduced)
 <span class="k">-</span><span class="w"> </span>A human has reviewed the PR

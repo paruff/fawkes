@@ -6069,11 +6069,13 @@
 </table>
 <h2 id="architecture">Architecture</h2>
 <h3 id="main-script-162-lines">Main Script (162 lines)</h3>
-<p>The new <code>scripts/ignite.sh</code> contains only:
-- Configuration defaults
-- Module sourcing
-- Cleanup handling
-- Main orchestration function</p>
+<p>The new <code>scripts/ignite.sh</code> contains only:</p>
+<ul>
+<li>Configuration defaults</li>
+<li>Module sourcing</li>
+<li>Cleanup handling</li>
+<li>Main orchestration function</li>
+</ul>
 <h3 id="library-modules-13-files-1616-lines">Library Modules (13 files, 1616 lines)</h3>
 <div class="highlight"><pre><span></span><code>scripts/lib/
 ├── README.md (267 lines)          # Comprehensive documentation
@@ -6093,55 +6095,63 @@
 </code></pre></div>
 <h2 id="key-features">Key Features</h2>
 <h3 id="1-clear-separation-of-concerns">1. Clear Separation of Concerns</h3>
-<p>Each module has a single, well-defined responsibility:
-- <strong>common.sh</strong> - Core utilities (error handling, state management)
-- <strong>flags.sh</strong> - Command-line parsing only
-- <strong>prereqs.sh</strong> - Tool validation only
-- <strong>terraform.sh</strong> - Terraform lifecycle management only
-- <strong>validation.sh</strong> - Cluster health validation only
-- <strong>cluster.sh</strong> - High-level orchestration only
-- <strong>argocd.sh</strong> - ArgoCD deployment only
-- <strong>summary.sh</strong> - Access information only
-- <strong>providers/</strong> - Provider-specific logic isolated</p>
+<p>Each module has a single, well-defined responsibility:</p>
+<ul>
+<li><strong>common.sh</strong> - Core utilities (error handling, state management)</li>
+<li><strong>flags.sh</strong> - Command-line parsing only</li>
+<li><strong>prereqs.sh</strong> - Tool validation only</li>
+<li><strong>terraform.sh</strong> - Terraform lifecycle management only</li>
+<li><strong>validation.sh</strong> - Cluster health validation only</li>
+<li><strong>cluster.sh</strong> - High-level orchestration only</li>
+<li><strong>argocd.sh</strong> - ArgoCD deployment only</li>
+<li><strong>summary.sh</strong> - Access information only</li>
+<li><strong>providers/</strong> - Provider-specific logic isolated</li>
+</ul>
 <h3 id="2-zero-code-duplication">2. Zero Code Duplication</h3>
-<p>All common functionality extracted to shared modules:
-- Error handling → <code>common.sh::error_exit()</code>
-- State management → <code>common.sh::state_*()</code> functions
-- Terraform operations → <code>terraform.sh::tf_*()</code> functions
-- Validation → <code>validation.sh::validate_*()</code> functions</p>
+<p>All common functionality extracted to shared modules:</p>
+<ul>
+<li>Error handling → <code>common.sh::error_exit()</code></li>
+<li>State management → <code>common.sh::state_*()</code> functions</li>
+<li>Terraform operations → <code>terraform.sh::tf_*()</code> functions</li>
+<li>Validation → <code>validation.sh::validate_*()</code> functions</li>
+</ul>
 <h3 id="3-independently-testable">3. Independently Testable</h3>
-<p>Created comprehensive test suite:
+<p>Created comprehensive test suite:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>./tests/unit/test_ignite_modules.sh
 Tests<span class="w"> </span>run:<span class="w">    </span><span class="m">40</span>
 Tests<span class="w"> </span>passed:<span class="w"> </span><span class="m">40</span>
 Tests<span class="w"> </span>failed:<span class="w"> </span><span class="m">0</span>
 ✅<span class="w"> </span>All<span class="w"> </span>tests<span class="w"> </span>passed!
-</code></pre></div></p>
-<p>Tests verify:
-- All 37 functions exist and are exported
-- Flag parsing works correctly
-- Architecture detection functions
-- Module loading and sourcing</p>
+</code></pre></div>
+<p>Tests verify:</p>
+<ul>
+<li>All 37 functions exist and are exported</li>
+<li>Flag parsing works correctly</li>
+<li>Architecture detection functions</li>
+<li>Module loading and sourcing</li>
+</ul>
 <h3 id="4-backward-compatibility">4. Backward Compatibility</h3>
-<p>All original functionality preserved:
-- ✅ All command-line flags work identically
-- ✅ All provider provisioning logic unchanged
-- ✅ State management and resume capability maintained
-- ✅ Error handling behavior consistent
-- ✅ Output format and messaging unchanged</p>
+<p>All original functionality preserved:</p>
+<ul>
+<li>✅ All command-line flags work identically</li>
+<li>✅ All provider provisioning logic unchanged</li>
+<li>✅ State management and resume capability maintained</li>
+<li>✅ Error handling behavior consistent</li>
+<li>✅ Output format and messaging unchanged</li>
+</ul>
 <h3 id="5-consistent-error-handling">5. Consistent Error Handling</h3>
-<p>All modules use the same pattern:
+<p>All modules use the same pattern:</p>
 <div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>condition_fails<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span>error_exit<span class="w"> </span><span class="s2">&quot;Descriptive error message with context&quot;</span>
 <span class="k">fi</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="6-provider-abstraction">6. Provider Abstraction</h3>
-<p>Clean provider separation enables easy extension:
+<p>Clean provider separation enables easy extension:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Add new provider in 3 steps:</span>
 <span class="m">1</span>.<span class="w"> </span>Create<span class="w"> </span>scripts/lib/providers/newprovider.sh
 <span class="m">2</span>.<span class="w"> </span>Implement<span class="w"> </span>provision_newprovider_cluster<span class="o">()</span><span class="w"> </span>and<span class="w"> </span>destroy_newprovider_cluster<span class="o">()</span>
 <span class="m">3</span>.<span class="w"> </span>Source<span class="w"> </span><span class="k">in</span><span class="w"> </span>scripts/ignite.sh<span class="w"> </span>and<span class="w"> </span>add<span class="w"> </span>to<span class="w"> </span>cluster.sh<span class="w"> </span><span class="k">case</span><span class="w"> </span>statement
-</code></pre></div></p>
+</code></pre></div>
 <h2 id="testing-strategy">Testing Strategy</h2>
 <h3 id="unit-tests-40-tests">Unit Tests (40 tests)</h3>
 <ul>
@@ -6164,14 +6174,16 @@ Tests<span class="w"> </span>failed:<span class="w"> </span><span class="m">0</s
 </ul>
 <h2 id="documentation">Documentation</h2>
 <h3 id="readme-267-lines">README (267 lines)</h3>
-<p>Comprehensive documentation covering:
-- Architecture overview
-- Module descriptions
-- Function references
-- Usage examples
-- Design principles
-- Extension guide
-- Contributing guidelines</p>
+<p>Comprehensive documentation covering:</p>
+<ul>
+<li>Architecture overview</li>
+<li>Module descriptions</li>
+<li>Function references</li>
+<li>Usage examples</li>
+<li>Design principles</li>
+<li>Extension guide</li>
+<li>Contributing guidelines</li>
+</ul>
 <h3 id="inline-documentation">Inline Documentation</h3>
 <ul>
 <li>All complex functions documented</li>
@@ -6243,13 +6255,15 @@ Tests<span class="w"> </span>failed:<span class="w"> </span><span class="m">0</s
 <li>On-premises support</li>
 </ul>
 <h2 id="conclusion">Conclusion</h2>
-<p>The refactoring successfully achieved all acceptance criteria:
-- ✅ Main script reduced to 162 lines (19% under target)
-- ✅ 13 focused, testable modules created
-- ✅ Zero code duplication
-- ✅ Consistent error handling
-- ✅ Full backward compatibility
-- ✅ Comprehensive documentation</p>
+<p>The refactoring successfully achieved all acceptance criteria:</p>
+<ul>
+<li>✅ Main script reduced to 162 lines (19% under target)</li>
+<li>✅ 13 focused, testable modules created</li>
+<li>✅ Zero code duplication</li>
+<li>✅ Consistent error handling</li>
+<li>✅ Full backward compatibility</li>
+<li>✅ Comprehensive documentation</li>
+</ul>
 <p>The modular architecture provides a solid foundation for future enhancements while maintaining the existing functionality that teams depend on.</p>
 <h2 id="files-changed">Files Changed</h2>
 <div class="highlight"><pre><span></span><code>.gitignore                         # Added exception for scripts/lib/

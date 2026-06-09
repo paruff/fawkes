@@ -5967,8 +5967,8 @@
 
 
 <h1 id="automated-code-formatting-implementation-summary">Automated Code Formatting Implementation Summary</h1>
-<p><strong>Issue</strong>: #110 - Implement Automated Code Formatting<br />
-<strong>Date</strong>: December 25, 2024<br />
+<p><strong>Issue</strong>: #110 - Implement Automated Code Formatting
+<strong>Date</strong>: December 25, 2024
 <strong>Status</strong>: ✅ Complete</p>
 <h2 id="overview">Overview</h2>
 <p>Successfully implemented automated code formatting for all languages in the Fawkes platform with comprehensive IDE integration and CI/CD enforcement.</p>
@@ -6031,7 +6031,7 @@
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/scop/pre-commit-shfmt</span>
 <span class="w">  </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shfmt</span>
-<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;-i&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;2&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;-ci&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;-bn&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;-sr&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;-w&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;-i&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;2&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-ci&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-bn&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-sr&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-w&quot;</span><span class="p p-Indicator">]</span>
 
 <span class="c1"># Prettier formatting (NEW)</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/mirrors-prettier</span>
@@ -6041,25 +6041,33 @@
 </code></pre></div>
 <h3 id="4-format-on-save-configuration">4. Format-on-Save Configuration</h3>
 <h4 id="vs-code-vscodesettingsjson">VS Code (<code>.vscode/settings.json</code>)</h4>
-<p>Configured automatic formatting for:
-- Python (Black)
-- Go (gofmt)
-- Shell scripts (shfmt)
-- JSON (Prettier)
-- YAML (Prettier)
-- Markdown (Prettier)
-- Terraform (terraform fmt)</p>
+<p>Configured automatic formatting for:</p>
+<ul>
+<li>Python (Black)</li>
+<li>Go (gofmt)</li>
+<li>Shell scripts (shfmt)</li>
+<li>JSON (Prettier)</li>
+<li>YAML (Prettier)</li>
+<li>Markdown (Prettier)</li>
+<li>Terraform (terraform fmt)</li>
+</ul>
 <h4 id="other-ides">Other IDEs</h4>
-<p>Comprehensive setup instructions provided for:
-- IntelliJ IDEA / PyCharm
-- Vim / Neovim
-- Emacs
-- Sublime Text</p>
+<p>Comprehensive setup instructions provided for:</p>
+<ul>
+<li>IntelliJ IDEA / PyCharm</li>
+<li>Vim / Neovim</li>
+<li>Emacs</li>
+<li>Sublime Text</li>
+</ul>
 <h3 id="5-documentation">5. Documentation</h3>
 <p>Created comprehensive documentation:</p>
 <ul>
-<li>✅ <strong>Format-on-Save Setup Guide</strong> (<code>docs/how-to/development/format-on-save-setup.md</code>)</li>
-<li>IDE setup instructions for all major editors</li>
+<li>
+<p>✅ <strong>Format-on-Save Setup Guide</strong> (<code>docs/how-to/development/format-on-save-setup.md</code>)</p>
+</li>
+<li>
+<p>IDE setup instructions for all major editors</p>
+</li>
 <li>Troubleshooting guide</li>
 <li>Best practices</li>
 <li>
@@ -6074,15 +6082,19 @@
 <li>Updated formatter configuration examples</li>
 </ul>
 <h3 id="6-code-formatting">6. Code Formatting</h3>
-<p>Formatted entire codebase:
-- ✅ 155+ Python files formatted with Black
-- ✅ 96 Shell scripts formatted with shfmt
-- ✅ 800+ JSON/YAML/Markdown files formatted with Prettier</p>
+<p>Formatted entire codebase:</p>
+<ul>
+<li>✅ 155+ Python files formatted with Black</li>
+<li>✅ 96 Shell scripts formatted with shfmt</li>
+<li>✅ 800+ JSON/YAML/Markdown files formatted with Prettier</li>
+</ul>
 <h3 id="7-cicd-integration">7. CI/CD Integration</h3>
-<p>The existing CI/CD pipeline already enforces formatting through:
-- <code>.github/workflows/pre-commit.yml</code> - Runs <code>pre-commit run --all-files</code>
-- All new formatters are now included in this check
-- PRs will fail if code is not properly formatted</p>
+<p>The existing CI/CD pipeline already enforces formatting through:</p>
+<ul>
+<li><code>.github/workflows/pre-commit.yml</code> - Runs <code>pre-commit run --all-files</code></li>
+<li>All new formatters are now included in this check</li>
+<li>PRs will fail if code is not properly formatted</li>
+</ul>
 <h2 id="acceptance-criteria-status">Acceptance Criteria Status</h2>
 <ul>
 <li>✅ <strong>All formatters configured</strong> - Black, gofmt, shfmt, prettier, terraform fmt</li>
@@ -6129,10 +6141,12 @@ docs/how-to/development/code-quality-standards.md (MODIFIED)
 <li>✅ No additional CI configuration needed</li>
 </ul>
 <h2 id="exclusions">Exclusions</h2>
-<p>Files excluded from formatting due to syntax errors or template variables:
-- <code>scripts/buildplatform.sh</code> - Deprecated script with syntax errors
-- <code>templates/*/skeleton/*.py</code> - Template files with placeholder variables
-- <code>data/issues/epic0_json(1).json</code> - Malformed JSON</p>
+<p>Files excluded from formatting due to syntax errors or template variables:</p>
+<ul>
+<li><code>scripts/buildplatform.sh</code> - Deprecated script with syntax errors</li>
+<li><code>templates/*/skeleton/*.py</code> - Template files with placeholder variables</li>
+<li><code>data/issues/epic0_json(1).json</code> - Malformed JSON</li>
+</ul>
 <h2 id="developer-experience-improvements">Developer Experience Improvements</h2>
 <ol>
 <li><strong>Automatic Formatting</strong>: Developers no longer need to manually format code</li>
@@ -6144,29 +6158,31 @@ docs/how-to/development/code-quality-standards.md (MODIFIED)
 <h2 id="usage">Usage</h2>
 <h3 id="for-developers">For Developers</h3>
 <ol>
-<li>
-<p><strong>Install pre-commit hooks</strong>:
-   <div class="highlight"><pre><span></span><code>make<span class="w"> </span>pre-commit-setup
-</code></pre></div></p>
-</li>
+<li><strong>Install pre-commit hooks</strong>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>pre-commit-setup
+</code></pre></div>
+<ol>
 <li>
 <p><strong>Configure IDE</strong> (VS Code):</p>
 </li>
-<li>Open the project in VS Code</li>
+<li>
+<p>Open the project in VS Code</p>
+</li>
 <li>Install recommended extensions when prompted</li>
 <li>
 <p>Format-on-save is already configured</p>
 </li>
 <li>
-<p><strong>Manual formatting</strong> (if needed):
-   <div class="highlight"><pre><span></span><code><span class="c1"># Format all files</span>
+<p><strong>Manual formatting</strong> (if needed):</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Format all files</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 
 <span class="c1"># Format specific files</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class="w"> </span>path/to/file.py
-</code></pre></div></p>
-</li>
-</ol>
+</code></pre></div>
 <h3 id="for-code-reviewers">For Code Reviewers</h3>
 <ul>
 <li>All new code will be automatically formatted by pre-commit hooks</li>
@@ -6190,10 +6206,12 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 </ul>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <p>See the <a href="docs/how-to/development/format-on-save-setup.md">Format-on-Save Setup Guide</a> for detailed troubleshooting instructions.</p>
-<p>Common issues:
-- <strong>Format on save not working</strong>: Check IDE extension installation
-- <strong>Pre-commit hook failing</strong>: Run <code>pre-commit autoupdate</code>
-- <strong>Formatter not found</strong>: Install missing formatter binary</p>
+<p>Common issues:</p>
+<ul>
+<li><strong>Format on save not working</strong>: Check IDE extension installation</li>
+<li><strong>Pre-commit hook failing</strong>: Run <code>pre-commit autoupdate</code></li>
+<li><strong>Formatter not found</strong>: Install missing formatter binary</li>
+</ul>
 <h2 id="dependencies">Dependencies</h2>
 <p>The following formatter versions are now enforced:</p>
 <table>
@@ -6246,16 +6264,18 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 <li><a href="docs/PRE-COMMIT.md">Pre-commit Documentation</a></li>
 </ul>
 <h2 id="future-improvements">Future Improvements</h2>
-<p>Potential enhancements (not in scope for this issue):
-- [ ] Add isort for Python import sorting (nice to have)
-- [ ] Add goimports for Go import sorting (nice to have)
-- [ ] Add ESLint/Prettier for JavaScript/TypeScript if needed
-- [ ] Add automatic formatting in GitHub Actions (auto-commit formatted code)</p>
+<p>Potential enhancements (not in scope for this issue):</p>
+<ul>
+<li>[ ] Add isort for Python import sorting (nice to have)</li>
+<li>[ ] Add goimports for Go import sorting (nice to have)</li>
+<li>[ ] Add ESLint/Prettier for JavaScript/TypeScript if needed</li>
+<li>[ ] Add automatic formatting in GitHub Actions (auto-commit formatted code)</li>
+</ul>
 <h2 id="conclusion">Conclusion</h2>
 <p>✅ <strong>All acceptance criteria met</strong>. Automated code formatting is now fully implemented and enforced across the Fawkes platform. Developers have format-on-save configured, CI/CD validates formatting, and all existing code has been formatted to meet the new standards.</p>
 <hr />
-<p><strong>Implementation Date</strong>: December 25, 2024<br />
-<strong>Implemented by</strong>: GitHub Copilot<br />
+<p><strong>Implementation Date</strong>: December 25, 2024
+<strong>Implemented by</strong>: GitHub Copilot
 <strong>Issue</strong>: paruff/fawkes#110</p>
 
 
