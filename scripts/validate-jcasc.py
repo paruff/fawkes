@@ -156,7 +156,7 @@ def validate_jcasc_file(file_path):
 
     # Skip if it's a ConfigMap (check structure)
     if isinstance(config, dict) and config.get("kind") == "ConfigMap":
-        print(f"ℹ️  File is a ConfigMap, extracting JCasC data...")
+        print("ℹ️  File is a ConfigMap, extracting JCasC data...")
         if "data" in config and "jcasc.yaml" in config["data"]:
             # Parse the embedded YAML
             try:
@@ -165,7 +165,7 @@ def validate_jcasc_file(file_path):
                 print(f"❌ Error parsing embedded JCasC: {e}")
                 return False
         else:
-            print(f"⚠️  ConfigMap doesn't contain jcasc.yaml data")
+            print("⚠️  ConfigMap doesn't contain jcasc.yaml data")
             return True
 
     # Validate structure

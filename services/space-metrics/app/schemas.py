@@ -4,7 +4,7 @@ Pydantic schemas for API requests and responses
 
 from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import Optional, Dict, Any
+from typing import Optional
 
 
 class SatisfactionMetrics(BaseModel):

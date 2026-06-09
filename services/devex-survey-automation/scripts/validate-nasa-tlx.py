@@ -14,7 +14,6 @@ import asyncio
 import sys
 import json
 from datetime import datetime
-from typing import Dict, List, Tuple
 
 # Colors for output
 GREEN = "\033[92m"

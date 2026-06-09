@@ -2,9 +2,7 @@
 Unit tests for NPS Survey Service.
 """
 
-import pytest
 from datetime import datetime, timedelta
-from fastapi.testclient import TestClient
 
 # Import the app - in real testing, we'd mock the database
 # For now, just test the score calculation logic

@@ -3,7 +3,6 @@
 Unit tests for Great Expectations configuration.
 """
 
-import os
 import json
 import yaml
 import pytest

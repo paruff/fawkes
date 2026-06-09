@@ -6,7 +6,6 @@ from typing import Dict, Any, Optional, List
 from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, Request, Form
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 import requests
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST

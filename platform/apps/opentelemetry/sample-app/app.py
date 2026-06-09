@@ -7,7 +7,7 @@ Demonstrates traces flowing to OpenTelemetry Collector.
 import os
 import time
 import logging
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.resources import Resource
@@ -129,7 +129,7 @@ def hello(name):
         logger.info(f"Greeting user: {name}")
 
         # Simulate some processing
-        result = simulate_work(0.1, "generate_greeting")
+        _ = simulate_work(0.1, "generate_greeting")
 
         greeting = f"Hello, {name}! Welcome to the OpenTelemetry sample application."
         span.set_attribute("greeting.message", greeting)

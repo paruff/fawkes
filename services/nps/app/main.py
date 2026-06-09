@@ -13,13 +13,13 @@ import os
 import logging
 import secrets
 from datetime import datetime, timedelta
-from typing import List, Optional
+from typing import Optional
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Depends, Query, Path
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import FastAPI, HTTPException, Query, Path
+from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field
 from prometheus_client import make_asgi_app, Counter, Histogram, Gauge
 import asyncpg
 

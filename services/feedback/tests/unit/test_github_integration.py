@@ -4,7 +4,6 @@ Unit tests for GitHub integration module.
 
 import pytest
 from unittest.mock import Mock, AsyncMock, patch
-import httpx
 
 from app.github_integration import (
     is_github_enabled,

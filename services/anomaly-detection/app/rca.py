@@ -12,8 +12,7 @@ This module performs root cause analysis when anomalies are detected by:
 import logging
 import os
 from datetime import datetime, timedelta
-from typing import List, Dict, Optional
-import httpx
+from typing import List
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +93,7 @@ async def _collect_recent_events(timestamp: datetime, http_client) -> List[str]:
 
     try:
         # Look back 30 minutes before the anomaly
-        lookback = timestamp - timedelta(minutes=30)
+        _ = timestamp - timedelta(minutes=30)
 
         # Query Prometheus for deployment events
         # This is a simplified version - in production, you'd query ArgoCD or K8s events

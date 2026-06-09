@@ -167,7 +167,7 @@ class BillingService:
             self.rate_limiter.acquire()
             quota = self.client.quota.get()
 
-            logger.info(f"✅ Retrieved Civo quota information")
+            logger.info("✅ Retrieved Civo quota information")
             return quota
 
         except Exception as e:

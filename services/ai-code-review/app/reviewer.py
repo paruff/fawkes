@@ -2,9 +2,8 @@
 Review engine for analyzing code and generating review comments.
 """
 
-import os
 import logging
-from typing import Dict, List, Optional
+from typing import Dict, List
 import httpx
 import json
 

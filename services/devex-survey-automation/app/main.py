@@ -4,16 +4,15 @@ FastAPI application for DevEx Survey Automation Service
 
 import logging
 import secrets
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List, Optional
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Path, Query
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import make_asgi_app, Counter, Gauge, Histogram
 from sqlalchemy import select, func, and_
-from sqlalchemy.orm import selectinload
 
 from .config import settings
 from .database import init_database, close_database, get_db_session, check_database_health
@@ -30,7 +29,6 @@ from .schemas import (
     SurveyDistributionRequest,
     CampaignResponse,
     PulseAnalytics,
-    WeeklyTrend,
     ResponseRateMetrics,
     HealthResponse,
     SurveySubmissionResponse,
@@ -1295,7 +1293,7 @@ async def get_nasa_tlx_analytics(
 
             # If no aggregates exist, generate them from raw assessments
             if not aggregates:
-                logger.info(f"No aggregates found, generating from raw assessments")
+                logger.info("No aggregates found, generating from raw assessments")
                 aggregates = await _generate_nasa_tlx_aggregates(
                     session, task_type, start_week, current_week, current_year
                 )

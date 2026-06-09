@@ -1,14 +1,12 @@
 """Main FastAPI application for Discovery Metrics service."""
 
-import os
 from typing import List, Optional
 from fastapi import FastAPI, Depends, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from sqlalchemy import func, and_
+from sqlalchemy import func
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 from fastapi.responses import Response
-from datetime import datetime, timedelta
 import logging
 
 from app import __version__

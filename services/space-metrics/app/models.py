@@ -2,7 +2,7 @@
 Database models for SPACE metrics
 """
 
-from sqlalchemy import Column, Integer, Float, String, DateTime, JSON, Boolean
+from sqlalchemy import Column, Integer, Float, String, DateTime, JSON
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 

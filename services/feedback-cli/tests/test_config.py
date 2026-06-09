@@ -1,6 +1,5 @@
 """Tests for configuration management."""
 
-import os
 import tempfile
 from pathlib import Path
 

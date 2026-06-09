@@ -12,7 +12,6 @@ from typing import Optional, Dict, Any
 from datetime import datetime
 
 from fastapi import FastAPI, Form, HTTPException, Request
-from fastapi.responses import JSONResponse
 import httpx
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST

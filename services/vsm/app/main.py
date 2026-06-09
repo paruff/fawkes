@@ -5,7 +5,6 @@ This service provides work item tracking through value stream stages
 from idea to production, with flow metrics and cycle time calculation.
 """
 
-import os
 import time
 import logging
 from datetime import datetime, timedelta, timezone
@@ -13,13 +12,12 @@ from typing import List, Optional
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Depends, Query
-from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from prometheus_client import make_asgi_app, Counter, Histogram, Gauge
 
-from app.database import get_db, init_db, engine
-from app.models import WorkItem, Stage, StageTransition, FlowMetrics, WorkItemType
+from app.database import get_db, init_db
+from app.models import WorkItem, Stage, StageTransition
 from app.schemas import (
     WorkItemCreate,
     WorkItemResponse,
@@ -122,7 +120,7 @@ app.mount("/metrics", metrics_app)
 @app.middleware("http")
 async def add_metrics(request, call_next):
     """Add prometheus metrics to all requests."""
-    start_time = time.time()
+    _ = time.time()
     response = await call_next(request)
 
     REQUEST_COUNT.labels(method=request.method, endpoint=request.url.path, status=response.status_code).inc()

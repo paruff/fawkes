@@ -1,7 +1,6 @@
 """Main CLI interface for Friction Logger."""
 
 import sys
-from typing import List, Optional
 
 import click
 from rich.console import Console
@@ -263,7 +262,6 @@ def show(ctx, friction_id):
 @main.group()
 def categories():
     """Manage friction categories."""
-    pass
 
 
 @categories.command(name="list")
@@ -301,7 +299,6 @@ def categories_list(ctx):
 @main.group()
 def config_group():
     """Manage CLI configuration."""
-    pass
 
 
 @config_group.command(name="show")

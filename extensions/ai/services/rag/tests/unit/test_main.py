@@ -4,14 +4,14 @@ Unit tests for RAG service main application.
 
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import patch, MagicMock
 import sys
 import os
 
 # Add parent directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../.."))
 
-from app.main import app, WEAVIATE_URL, SCHEMA_NAME, DEFAULT_TOP_K, DEFAULT_THRESHOLD
+from app.main import app, SCHEMA_NAME, DEFAULT_TOP_K
 
 
 @pytest.fixture

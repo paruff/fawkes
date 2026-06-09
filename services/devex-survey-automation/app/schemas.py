@@ -2,9 +2,9 @@
 Pydantic schemas for API requests and responses
 """
 
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, List
 
 
 class PulseSurveyResponse(BaseModel):

@@ -1,7 +1,7 @@
 """Pydantic schemas for request/response validation."""
 
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional
 from pydantic import BaseModel, Field
 
 
@@ -18,8 +18,6 @@ class InterviewBase(BaseModel):
 
 class InterviewCreate(InterviewBase):
     """Create interview schema."""
-
-    pass
 
 
 class InterviewUpdate(BaseModel):
@@ -62,8 +60,6 @@ class DiscoveryInsightBase(BaseModel):
 class DiscoveryInsightCreate(DiscoveryInsightBase):
     """Create discovery insight schema."""
 
-    pass
-
 
 class DiscoveryInsightUpdate(BaseModel):
     """Update discovery insight schema."""
@@ -101,8 +97,6 @@ class ExperimentBase(BaseModel):
 
 class ExperimentCreate(ExperimentBase):
     """Create experiment schema."""
-
-    pass
 
 
 class ExperimentUpdate(BaseModel):
@@ -146,8 +140,6 @@ class FeatureValidationBase(BaseModel):
 
 class FeatureValidationCreate(FeatureValidationBase):
     """Create feature validation schema."""
-
-    pass
 
 
 class FeatureValidationUpdate(BaseModel):

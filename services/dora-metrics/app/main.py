@@ -21,13 +21,13 @@ metrics. The DORA dashboard consumes these metrics directly.
 import os
 import time
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from typing import Optional
 
 import httpx
 from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
-from prometheus_client import Counter, Gauge, Histogram, generate_latest, REGISTRY
+from prometheus_client import Gauge, generate_latest, REGISTRY
 
 # ---------------------------------------------------------------------------
 # Config

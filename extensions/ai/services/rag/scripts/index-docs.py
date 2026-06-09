@@ -32,7 +32,7 @@ import argparse
 import hashlib
 import time
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Optional, Tuple
 from datetime import datetime
 
 try:
@@ -538,7 +538,7 @@ def main():
                 print(f"  ✅ Indexed {chunks} chunk(s)")
             else:
                 skipped_count += 1
-                print(f"  ⏭️  Skipped (no changes)")
+                print("  ⏭️  Skipped (no changes)")
         else:
             error_count += 1
 

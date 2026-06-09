@@ -2,13 +2,11 @@
 
 import os
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator, Dict, List, Optional
-from datetime import datetime, timedelta
+from typing import AsyncGenerator, List, Optional
 
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import make_asgi_app
-import httpx
 
 from .metrics import MetricsCollector
 from .data_aggregator import DataAggregator

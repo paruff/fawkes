@@ -17,7 +17,6 @@ Requirements:
 """
 
 import argparse
-import json
 import logging
 import sys
 import time
@@ -271,14 +270,14 @@ def main():
             robot_names.append(robot_name)
             logger.info(f"\n{'='*60}")
             logger.info(f"Robot Account: {robot_name}")
-            logger.info(f"Robot account created successfully")
-            logger.info(f"⚠️  Token generated but not displayed for security reasons")
-            logger.info(f"To retrieve the token:")
-            logger.info(f"  1. Login to Harbor UI at harbor.127.0.0.1.nip.io")
-            logger.info(f"  2. Navigate to Projects > Robot Accounts")
-            logger.info(f"  3. Recreate the robot account to get a new token")
-            logger.info(f"OR use Harbor API to retrieve/regenerate the token")
-            logger.info(f"Use this token in Jenkins credentials or GitLab CI/CD variables")
+            logger.info("Robot account created successfully")
+            logger.info("⚠️  Token generated but not displayed for security reasons")
+            logger.info("To retrieve the token:")
+            logger.info("  1. Login to Harbor UI at harbor.127.0.0.1.nip.io")
+            logger.info("  2. Navigate to Projects > Robot Accounts")
+            logger.info("  3. Recreate the robot account to get a new token")
+            logger.info("OR use Harbor API to retrieve/regenerate the token")
+            logger.info("Use this token in Jenkins credentials or GitLab CI/CD variables")
             logger.info(f"{'='*60}\n")
 
             robot_count += 1

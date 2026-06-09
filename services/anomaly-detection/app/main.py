@@ -6,14 +6,12 @@ to detect anomalies in real-time, and provides root cause analysis.
 """
 
 import os
-import time
 import logging
-from typing import Dict, List, Optional
+from typing import List, Optional
 from contextlib import asynccontextmanager
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, BackgroundTasks
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from prometheus_client import make_asgi_app, Counter, Histogram, Gauge
 import httpx

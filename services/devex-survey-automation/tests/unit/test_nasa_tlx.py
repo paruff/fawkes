@@ -60,7 +60,7 @@ def test_overall_workload_calculation():
     """Test that overall workload is calculated correctly"""
     # Overall workload should be average of all 6 dimensions
     # with performance inverted (100 - performance)
-    request = NASATLXRequest(
+    _ = NASATLXRequest(
         task_type="incident_response",
         mental_demand=80.0,
         physical_demand=40.0,
@@ -156,7 +156,7 @@ def test_performance_interpretation():
     # In workload calculation, it's inverted: (100 - performance)
     # So a high performance (good) contributes less to workload
 
-    high_performance = NASATLXRequest(
+    _ = NASATLXRequest(
         task_type="deployment",
         mental_demand=0.0,
         physical_demand=0.0,
@@ -169,7 +169,7 @@ def test_performance_interpretation():
     expected_workload_high = (0.0 + 0.0 + 0.0 + 0.0 + 0.0 + 0.0) / 6.0
     assert expected_workload_high == 0.0
 
-    low_performance = NASATLXRequest(
+    _ = NASATLXRequest(
         task_type="deployment",
         mental_demand=0.0,
         physical_demand=0.0,

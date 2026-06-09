@@ -14,8 +14,8 @@ import time
 from datetime import datetime
 
 from src.providers.civo_provider import CivoProvider
-from src.interfaces.provider import ClusterConfig, StorageConfig, DatabaseConfig
-from src.exceptions import CloudProviderError, ResourceNotFoundError
+from src.interfaces.provider import ClusterConfig, StorageConfig
+from src.exceptions import ResourceNotFoundError
 
 # Skip all tests in this file unless CIVO_TOKEN is set
 pytestmark = pytest.mark.skipif(
@@ -111,7 +111,7 @@ class TestCivoIntegrationCluster:
                 if "cluster_id" in locals():
                     print(f"🧹 Cleaning up cluster: {cluster_id}")
                     civo_provider.delete_cluster(cluster_id)
-            except:
+            except Exception:
                 pass
             raise
 
@@ -142,7 +142,7 @@ class TestCivoIntegrationStorage:
             assert retrieved_storage.id == storage_id
             assert retrieved_storage.name == storage_name
 
-            print(f"✅ Storage retrieved")
+            print("✅ Storage retrieved")
 
             # List storage
             print("📋 Listing all storage")
@@ -173,7 +173,7 @@ class TestCivoIntegrationStorage:
                 if "storage_id" in locals():
                     print(f"🧹 Cleaning up storage: {storage_id}")
                     civo_provider.delete_storage(storage_id)
-            except:
+            except Exception:
                 pass
             raise
 
@@ -201,7 +201,7 @@ class TestCivoIntegrationCosts:
         assert quota is not None
         assert isinstance(quota, dict)
 
-        print(f"✅ Quota retrieved:")
+        print("✅ Quota retrieved:")
         for key, value in quota.items():
             print(f"   {key}: {value}")
 
@@ -220,7 +220,6 @@ class TestCivoIntegrationDatabase:
 
         # Skipped because it takes 5+ minutes to deploy a cluster
         # and then additional time to deploy the database
-        pass
 
 
 # Cleanup function to remove any leftover test resources
@@ -236,7 +235,7 @@ def cleanup_test_resources(provider):
                 print(f"  Removing test cluster: {cluster.name}")
                 try:
                     provider.delete_cluster(cluster.id)
-                except:
+                except Exception:
                     pass
     except Exception as e:
         print(f"  Error cleaning clusters: {e}")
@@ -249,7 +248,7 @@ def cleanup_test_resources(provider):
                 print(f"  Removing test storage: {storage.name}")
                 try:
                     provider.delete_storage(storage.id)
-                except:
+                except Exception:
                     pass
     except Exception as e:
         print(f"  Error cleaning storage: {e}")

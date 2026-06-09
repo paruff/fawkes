@@ -2,18 +2,13 @@
 Unit tests for the Prometheus exporter.
 """
 
-import json
 import pytest
-import tempfile
-import importlib.util
 from pathlib import Path
-from unittest.mock import Mock, patch
 
 # Import the exporter module
 import sys
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from prometheus_client import REGISTRY
 
 
 def test_prometheus_exporter_imports():

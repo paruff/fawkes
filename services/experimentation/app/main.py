@@ -36,7 +36,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     yield
 
     # Shutdown: cleanup if needed
-    pass
 
 
 # Create FastAPI app

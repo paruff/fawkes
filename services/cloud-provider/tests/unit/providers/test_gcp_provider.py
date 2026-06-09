@@ -1,8 +1,7 @@
 """Unit tests for GCP Provider."""
 
 import pytest
-from unittest.mock import Mock, patch, MagicMock, PropertyMock
-from datetime import datetime
+from unittest.mock import Mock, patch
 
 from src.providers.gcp_provider import GCPProvider
 from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
@@ -471,9 +470,7 @@ class TestGCPProviderWorkloadIdentity:
     @pytest.mark.skip(reason="Requires google-cloud-iam library")
     def test_create_service_account(self, mock_credentials):
         """Test service account creation."""
-        pass
 
     @pytest.mark.skip(reason="Requires google-cloud-iam library")
     def test_bind_workload_identity(self, mock_credentials):
         """Test Workload Identity binding."""
-        pass

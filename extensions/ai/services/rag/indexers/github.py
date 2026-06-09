@@ -28,7 +28,6 @@ import sys
 import argparse
 import hashlib
 import time
-from pathlib import Path
 from typing import List, Dict, Any, Optional, Tuple
 from datetime import datetime
 import base64
@@ -451,7 +450,7 @@ class GitHubIndexer:
         # Index chunks
         indexed_count = 0
         timestamp = datetime.utcnow().isoformat() + "Z"
-        last_updated = file_info.get("sha", "")  # Use commit SHA as version
+        _ = file_info.get("sha", "")  # Use commit SHA as version
 
         try:
             with self.weaviate_client.batch as batch:
@@ -578,7 +577,7 @@ class GitHubIndexer:
                     print(f"  ✅ Indexed {chunks} chunk(s)")
                 else:
                     skipped_count += 1
-                    print(f"  ⏭️  Skipped (no changes)")
+                    print("  ⏭️  Skipped (no changes)")
             else:
                 error_count += 1
 

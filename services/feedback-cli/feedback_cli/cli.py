@@ -1,7 +1,6 @@
 """Main CLI interface for Feedback Tool."""
 
 import sys
-from typing import Optional
 
 import click
 from rich.console import Console
@@ -403,13 +402,12 @@ def queue_status(ctx):
         )
 
     console.print(table)
-    console.print(f"\n[dim]Run 'fawkes-feedback sync' to submit queued items[/dim]")
+    console.print("\n[dim]Run 'fawkes-feedback sync' to submit queued items[/dim]")
 
 
 @main.group()
 def config():
     """Manage CLI configuration."""
-    pass
 
 
 @config.command(name="show")

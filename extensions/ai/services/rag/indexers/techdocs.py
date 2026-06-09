@@ -531,7 +531,7 @@ class BackstageIndexer:
             techdocs_info = self.fetch_techdocs_metadata(entity)
 
             if not techdocs_info:
-                print(f"  ⚠️  No TechDocs found")
+                print("  ⚠️  No TechDocs found")
                 skipped_count += 1
                 continue
 
@@ -542,7 +542,7 @@ class BackstageIndexer:
             content = self.fetch_techdocs_content(docs_path)
 
             if not content:
-                print(f"  ⚠️  No content found")
+                print("  ⚠️  No content found")
                 skipped_count += 1
                 continue
 
@@ -559,7 +559,7 @@ class BackstageIndexer:
                     print(f"  ✅ Indexed {chunks} chunk(s)")
                 else:
                     skipped_count += 1
-                    print(f"  ⏭️  Skipped (no changes)")
+                    print("  ⏭️  Skipped (no changes)")
             else:
                 error_count += 1
 

@@ -293,7 +293,7 @@ class AKSService:
         Raises:
             CloudProviderError: If listing fails
         """
-        logger.info(f"Listing AKS clusters" + (f" in resource group {resource_group}" if resource_group else ""))
+        logger.info("Listing AKS clusters" + (" in resource group {resource_group}" if resource_group else ""))
 
         try:
             client = self._get_client()

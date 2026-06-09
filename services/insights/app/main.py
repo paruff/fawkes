@@ -1,6 +1,5 @@
 """Main FastAPI application for Insights service."""
 
-import os
 from typing import List, Optional
 from fastapi import FastAPI, Depends, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,7 +11,7 @@ import logging
 
 from app import __version__
 from app.database import get_db, check_db_connection
-from app.models import Insight, Tag, Category, insight_tags
+from app.models import Insight, Tag, Category
 from app.schemas import (
     InsightCreate,
     InsightUpdate,

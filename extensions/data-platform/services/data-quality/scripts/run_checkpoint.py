@@ -4,7 +4,6 @@ Run Great Expectations checkpoint and handle results.
 """
 
 import sys
-import os
 import json
 import argparse
 from pathlib import Path
@@ -13,7 +12,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import great_expectations as gx
-from great_expectations.checkpoint import Checkpoint
 
 
 def run_checkpoint(checkpoint_name: str, gx_dir: str = "gx") -> dict:
@@ -68,7 +66,7 @@ def main():
         else:
             print(f"\nCheckpoint: {results['checkpoint_name']}")
             print(f"Success: {results['success']}")
-            print(f"\nStatistics:")
+            print("\nStatistics:")
             print(f"  Evaluated: {results['statistics']['evaluated_expectations']}")
             print(f"  Successful: {results['statistics']['successful_expectations']}")
             print(f"  Failed: {results['statistics']['unsuccessful_expectations']}")

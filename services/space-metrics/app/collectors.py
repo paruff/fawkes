@@ -5,7 +5,6 @@ Metrics collectors for each SPACE dimension
 import os
 import logging
 from datetime import datetime
-from typing import Optional
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 

@@ -170,7 +170,7 @@ class DatabaseService:
                     provider="civo",
                 )
 
-            cluster_id = database_id.split("-", 1)[0]
+            _ = database_id.split("-", 1)[0]
 
             self.rate_limiter.acquire()
 

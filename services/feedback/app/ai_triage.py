@@ -8,7 +8,6 @@ labels and assignments.
 
 import os
 import logging
-import re
 from typing import Optional, Tuple, List, Dict
 from difflib import SequenceMatcher
 import httpx

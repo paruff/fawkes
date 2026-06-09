@@ -13,13 +13,11 @@ from typing import List, Optional, Dict
 from contextlib import asynccontextmanager
 from datetime import datetime
 
-from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 from prometheus_client import make_asgi_app, Counter, Histogram
 import weaviate
-from weaviate.util import generate_uuid5
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -123,7 +121,7 @@ async def add_metrics(request, call_next):
     """Add prometheus metrics to all requests."""
     start_time = time.time()
     response = await call_next(request)
-    duration = time.time() - start_time
+    _ = time.time() - start_time
 
     REQUEST_COUNT.labels(method=request.method, endpoint=request.url.path, status=response.status_code).inc()
 
@@ -403,7 +401,7 @@ async def get_stats():
 
         # Count unique documents (files)
         # Documents are considered unique by their filepath (without chunk suffix)
-        unique_docs = set()
+        _ = set()
         categories_count = {}
         last_indexed_timestamp = None
         storage_size_chars = 0
