@@ -98,6 +98,9 @@ jobs:
           echo "workflow:${{ github.workflow }}"
           echo "job:${{ github.job }}"
 
+      - name: Checkout code
+        uses: actions/checkout@v6
+
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
 
@@ -379,6 +382,9 @@ jobs:
           echo "workflow:${{ github.workflow }}"
           echo "job:${{ github.job }}"
 
+      - name: Checkout code
+        uses: actions/checkout@v6
+
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
 
@@ -406,6 +412,9 @@ jobs:
           echo "sha:${{ github.sha }}"
           echo "workflow:${{ github.workflow }}"
           echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
 
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -473,30 +482,14 @@ jobs:
   # ==========================================================================
   security-scanning:
     name: Security Scanning
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    continue-on-error: true
-    permissions:
-      contents: read
-      security-events: write
-    steps:
-      - name: DORA job start
-        run: |
-          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          echo "sha:${{ github.sha }}"
-          echo "workflow:${{ github.workflow }}"
-          echo "job:${{ github.job }}"
-
-      - name: Run security scanning
-        uses: ./.github/workflows/reusable-security-scanning.yml
-        with:
-          scan-type: all
-          scan-path: '.'
-          severity-threshold: LOW
-          fail-on-critical: false
-          upload-sarif: true
-
-      - name: DORA job finish
+    uses: ./.github/workflows/reusable-security-scanning.yml
+    if: always()
+    with:
+      scan-type: all
+      scan-path: '.'
+      severity-threshold: LOW
+      fail-on-critical: false
+      upload-sarif: true
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 

@@ -62,7 +62,7 @@ if [[ "${#MISSING[@]}" -gt 0 ]]; then
 fi
 ok "All prerequisites found"
 # Check if Docker daemon is running
-if ! docker info &>/dev/null; then
+if ! docker info &> /dev/null; then
   echo "❌ Docker is installed but not running."
   echo "Start Docker Desktop and retry."
   exit 1
@@ -91,11 +91,11 @@ ok "kubectl context switched to k3d-${CLUSTER_NAME}"
 # 3. Add Helm repositories
 # ---------------------------------------------------------------------------
 step "Adding Helm repositories"
-helm repo add argo https://argoproj.github.io/argo-helm 2>/dev/null || true
-helm repo add hashicorp https://helm.releases.hashicorp.com 2>/dev/null || true
-helm repo add backstage https://backstage.github.io/charts 2>/dev/null || true
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 2>/dev/null || true
-helm repo add podinfo https://stefanprodan.github.io/podinfo 2>/dev/null || true
+helm repo add argo https://argoproj.github.io/argo-helm 2> /dev/null || true
+helm repo add hashicorp https://helm.releases.hashicorp.com 2> /dev/null || true
+helm repo add backstage https://backstage.github.io/charts 2> /dev/null || true
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 2> /dev/null || true
+helm repo add podinfo https://stefanprodan.github.io/podinfo 2> /dev/null || true
 helm repo update
 ok "Helm repo updated (ArgoCD only)"
 
