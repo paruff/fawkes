@@ -164,19 +164,19 @@ module "vnet" {
   ]
 
   # NAT Gateway
-  enable_nat_gateway          = true
-  nat_gateway_zones           = ["1"]
-  nat_gateway_idle_timeout    = 10
+  enable_nat_gateway       = true
+  nat_gateway_zones        = ["1"]
+  nat_gateway_idle_timeout = 10
 
   # Flow Logs
-  enable_flow_logs            = true
-  flow_logs_retention_days    = 30
+  enable_flow_logs         = true
+  flow_logs_retention_days = 30
 
   # Traffic Analytics
-  enable_traffic_analytics              = true
-  log_analytics_workspace_id            = azurerm_log_analytics_workspace.example.workspace_id
-  log_analytics_workspace_resource_id   = azurerm_log_analytics_workspace.example.id
-  traffic_analytics_interval            = 10
+  enable_traffic_analytics            = true
+  log_analytics_workspace_id          = azurerm_log_analytics_workspace.example.workspace_id
+  log_analytics_workspace_resource_id = azurerm_log_analytics_workspace.example.id
+  traffic_analytics_interval          = 10
 
   tags = {
     Environment = "example"

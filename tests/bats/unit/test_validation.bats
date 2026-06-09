@@ -8,16 +8,16 @@ setup() {
   # Load test helpers
   load ../helpers/test_helper
   load ../helpers/mocks
-  
+
   # Setup test environment
   setup_test_env
-  
+
   # Source the common library first (required by validation.sh)
   source "${LIB_DIR}/common.sh"
-  
+
   # Source the validation library
   source "${LIB_DIR}/validation.sh"
-  
+
   # Setup kubectl mock
   setup_kubectl_mock
 }
@@ -39,7 +39,7 @@ teardown() {
 
 @test "validate_cluster: detects API unreachability" {
   # Create a mock kubectl that simulates unreachable API
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'EOF'
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'EOF'
 #!/usr/bin/env bash
 case "$1" in
   "cluster-info")
@@ -49,7 +49,7 @@ esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
   export PATH="${TEST_TEMP_DIR}/bin:${PATH}"
-  
+
   run validate_cluster
   assert_failure
   assert_output --partial "Kubernetes API is not reachable"
@@ -63,7 +63,7 @@ EOF
 
 @test "validate_cluster: fails when no ready nodes" {
   # Create a mock kubectl that returns no ready nodes
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'EOF'
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'EOF'
 #!/usr/bin/env bash
 case "$1" in
   "cluster-info")
@@ -79,7 +79,7 @@ case "$1" in
 esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
-  
+
   run timeout 5 validate_cluster
   # Should fail or timeout waiting for ready nodes
   assert_failure
@@ -93,7 +93,7 @@ EOF
 
 @test "validate_cluster: warns when no default StorageClass" {
   # Create mock kubectl with no default StorageClass
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'EOF'
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'EOF'
 #!/usr/bin/env bash
 case "$1" in
   "cluster-info")
@@ -111,7 +111,7 @@ case "$1" in
 esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
-  
+
   run validate_cluster
   assert_success
   assert_output --partial "[WARN] No default StorageClass detected"
@@ -119,7 +119,7 @@ EOF
 
 @test "validate_cluster: fails when no StorageClass found" {
   # Create mock kubectl with no StorageClass
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'EOF'
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'EOF'
 #!/usr/bin/env bash
 case "$1" in
   "cluster-info")
@@ -135,7 +135,7 @@ case "$1" in
 esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
-  
+
   run validate_cluster
   assert_failure
   assert_output --partial "No StorageClass resources found"
@@ -147,7 +147,7 @@ EOF
 
 @test "wait_for_workload: waits for deployment to be available" {
   # Create mock kubectl that simulates successful deployment
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'EOF'
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'EOF'
 #!/usr/bin/env bash
 case "$1" in
   "get")
@@ -162,7 +162,7 @@ case "$1" in
 esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
-  
+
   run wait_for_workload "test-app" "default" "60"
   assert_success
   assert_output --partial "Waiting for workload test-app in namespace default"
@@ -170,7 +170,7 @@ EOF
 
 @test "wait_for_workload: waits for statefulset when deployment not found" {
   # Create mock kubectl that finds statefulset
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'EOF'
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'EOF'
 #!/usr/bin/env bash
 case "$1" in
   "get")
@@ -187,14 +187,14 @@ case "$1" in
 esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
-  
+
   run wait_for_workload "test-app" "default" "60"
   assert_success
 }
 
 @test "wait_for_workload: uses default namespace when not specified" {
   # Create mock kubectl
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'EOF'
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'EOF'
 #!/usr/bin/env bash
 echo "kubectl $@" >> "${TEST_TEMP_DIR}/kubectl.log"
 case "$1" in
@@ -210,17 +210,17 @@ esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
   export PATH="${TEST_TEMP_DIR}/bin:${PATH}"
-  
+
   run wait_for_workload "test-app"
   assert_success
-  
+
   # Verify default namespace was used
   run grep -- "default" "${TEST_TEMP_DIR}/kubectl.log"
   assert_success
 }
 
 @test "wait_for_workload: uses default timeout of 300s when not specified" {
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'EOF'
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'EOF'
 #!/usr/bin/env bash
 echo "kubectl $@" >> "${TEST_TEMP_DIR}/kubectl.log"
 case "$1" in
@@ -236,10 +236,10 @@ esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
   export PATH="${TEST_TEMP_DIR}/bin:${PATH}"
-  
+
   run wait_for_workload "test-app" "default"
   assert_success
-  
+
   # Verify default timeout was used
   run grep -- "300s" "${TEST_TEMP_DIR}/kubectl.log"
   assert_success
@@ -247,7 +247,7 @@ EOF
 
 @test "wait_for_workload: fails when deployment wait times out" {
   # Create mock kubectl that simulates timeout
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'EOF'
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'EOF'
 #!/usr/bin/env bash
 case "$1" in
   "get")
@@ -266,16 +266,16 @@ case "$1" in
 esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
-  
+
   run wait_for_workload "test-app" "default" "5"
   assert_failure
 }
 
 @test "wait_for_workload: falls back to pod check when deployment and statefulset not found" {
   skip "Timeout behavior difficult to test reliably - covered by integration tests"
-  
+
   # This test verifies the function prints the fallback message
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'EOF'
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'EOF'
 #!/usr/bin/env bash
 # Return failure for deployment and statefulset checks
 if [[ "$1" == "get" && ("$2" == "deployment" || "$2" == "statefulset") ]]; then
@@ -289,17 +289,17 @@ exit 0
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
   export PATH="${TEST_TEMP_DIR}/bin:${PATH}"
-  
+
   # Run with short timeout and capture output
   run bash -c "wait_for_workload test-app default 2" || true
-  
+
   # Verify fallback message is shown
   assert_output --partial "falling back to pods with prefix"
 }
 
 @test "wait_for_workload: returns failure when pod is not ready" {
   # Create mock kubectl where pod never becomes ready
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'EOF'
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'EOF'
 #!/usr/bin/env bash
 case "$1" in
   "get")
@@ -317,13 +317,13 @@ case "$1" in
 esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
-  
+
   run timeout 5 wait_for_workload "test-app" "default" "2"
   assert_failure
 }
 
 @test "wait_for_workload: handles custom namespace correctly" {
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'EOF'
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'EOF'
 #!/usr/bin/env bash
 echo "kubectl $@" >> "${TEST_TEMP_DIR}/kubectl.log"
 case "$1" in
@@ -339,17 +339,17 @@ esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
   export PATH="${TEST_TEMP_DIR}/bin:${PATH}"
-  
+
   run wait_for_workload "test-app" "custom-namespace" "60"
   assert_success
-  
+
   # Verify custom namespace was used
   run grep -- "custom-namespace" "${TEST_TEMP_DIR}/kubectl.log"
   assert_success
 }
 
 @test "wait_for_workload: handles custom timeout correctly" {
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'EOF'
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'EOF'
 #!/usr/bin/env bash
 echo "kubectl $@" >> "${TEST_TEMP_DIR}/kubectl.log"
 case "$1" in
@@ -365,10 +365,10 @@ esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
   export PATH="${TEST_TEMP_DIR}/bin:${PATH}"
-  
+
   run wait_for_workload "test-app" "default" "120"
   assert_success
-  
+
   # Verify custom timeout was used
   run grep -- "120s" "${TEST_TEMP_DIR}/kubectl.log"
   assert_success

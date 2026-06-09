@@ -40,9 +40,9 @@ See [`REFACTORING.md`](../REFACTORING.md) for the full step-by-step migration gu
 
 ## Deprecation Timeline
 
-| Date | Action |
-|------|--------|
-| 2025-01-10 | Module marked as deprecated |
+| Date       | Action                       |
+| ---------- | ---------------------------- |
+| 2025-01-10 | Module marked as deprecated  |
 | 2025-07-31 | Module scheduled for removal |
 
 ## Why Deprecated?
@@ -55,6 +55,7 @@ enhancements.
 ## Support
 
 For questions or migration assistance:
+
 - Review [`../azure/network/README.md`](../azure/network/README.md)
 - Consult [`../REFACTORING.md`](../REFACTORING.md)
 - Open an issue referencing **FAW-BUG-08**

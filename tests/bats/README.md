@@ -144,7 +144,7 @@ tests/bats/
 setup() {
   load ../helpers/test_helper
   load ../helpers/mocks
-  
+
   setup_test_env
   source "${LIB_DIR}/your-script.sh"
 }
@@ -192,11 +192,11 @@ assert_dir_exists "/path/to/dir"
   # Setup mocks for external commands
   setup_kubectl_mock
   setup_az_mock
-  
+
   # Run function that uses kubectl and az
   run your_function
   assert_success
-  
+
   # Verify mocks were called
   assert_mock_called "kubectl"
   assert_mock_called_with "az" "aks get-credentials"
@@ -216,14 +216,14 @@ echo "mocked output"
 exit 0
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/custom-command"
-  
+
   # Add to PATH
   export PATH="${TEST_TEMP_DIR}/bin:${PATH}"
-  
+
   # Run test
   run your_function
   assert_success
-  
+
   # Verify mock was called
   assert_file_contains "${TEST_TEMP_DIR}/custom.log" "expected args"
 }
@@ -263,41 +263,41 @@ xdg-open reports/bats-coverage/index.html
 Add to `.github/workflows/code-quality.yml`:
 
 ```yaml
-  shell-tests:
-    name: Shell Script Tests (BATS)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+shell-tests:
+  name: Shell Script Tests (BATS)
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
 
-      - name: Install BATS
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y bats kcov
-          
-      - name: Run BATS tests
-        run: |
-          ./tests/bats/run-tests.sh --junit --coverage
+    - name: Install BATS
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y bats kcov
 
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: bats-test-results
-          path: reports/bats-results/
+    - name: Run BATS tests
+      run: |
+        ./tests/bats/run-tests.sh --junit --coverage
 
-      - name: Upload coverage report
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: bats-coverage-report
-          path: reports/bats-coverage/
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v6
+      with:
+        name: bats-test-results
+        path: reports/bats-results/
 
-      - name: Check coverage threshold
-        run: |
-          COVERAGE=$(kcov --help 2>&1 || true)
-          # Add coverage threshold check here
-          echo "Coverage check passed"
+    - name: Upload coverage report
+      if: always()
+      uses: actions/upload-artifact@v6
+      with:
+        name: bats-coverage-report
+        path: reports/bats-coverage/
+
+    - name: Check coverage threshold
+      run: |
+        COVERAGE=$(kcov --help 2>&1 || true)
+        # Add coverage threshold check here
+        echo "Coverage check passed"
 ```
 
 ### Makefile Integration
@@ -306,13 +306,13 @@ Add to `.github/workflows/code-quality.yml`:
 .PHONY: test-bats test-bats-coverage
 
 test-bats: ## Run BATS tests for shell scripts
-	@./tests/bats/run-tests.sh
+ @./tests/bats/run-tests.sh
 
 test-bats-coverage: ## Run BATS tests with coverage
-	@./tests/bats/run-tests.sh --coverage
+ @./tests/bats/run-tests.sh --coverage
 
 test-bats-ci: ## Run BATS tests with JUnit output for CI
-	@./tests/bats/run-tests.sh --junit --coverage
+ @./tests/bats/run-tests.sh --junit --coverage
 ```
 
 ## Best Practices
@@ -362,7 +362,7 @@ test-bats-ci: ## Run BATS tests with JUnit output for CI
 @test "function: handles missing dependencies" {
   # Remove command from PATH
   export PATH="/nonexistent:${PATH}"
-  
+
   run function_under_test
   assert_failure
 }

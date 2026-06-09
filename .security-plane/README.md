@@ -57,13 +57,13 @@ git push
 
 ### Reusable Workflows
 
-| Workflow | Purpose | Documentation |
-|----------|---------|---------------|
-| `reusable-security-scanning.yml` | Scan for secrets, vulnerabilities, dependencies | [Docs](docs/security-plane/scanning.md) |
-| `reusable-policy-enforcement.yml` | Enforce security policies with OPA | [Docs](docs/security-plane/policies.md) |
-| `reusable-sbom-generation.yml` | Generate SBOMs with Syft | [Docs](docs/security-plane/sbom.md) |
-| `reusable-image-signing.yml` | Sign images with Cosign | [Docs](docs/security-plane/signing.md) |
-| `security-plane-adoption.yml` | Complete security orchestration | [Docs](docs/security-plane/adoption.md) |
+| Workflow                          | Purpose                                         | Documentation                           |
+| --------------------------------- | ----------------------------------------------- | --------------------------------------- |
+| `reusable-security-scanning.yml`  | Scan for secrets, vulnerabilities, dependencies | [Docs](docs/security-plane/scanning.md) |
+| `reusable-policy-enforcement.yml` | Enforce security policies with OPA              | [Docs](docs/security-plane/policies.md) |
+| `reusable-sbom-generation.yml`    | Generate SBOMs with Syft                        | [Docs](docs/security-plane/sbom.md)     |
+| `reusable-image-signing.yml`      | Sign images with Cosign                         | [Docs](docs/security-plane/signing.md)  |
+| `security-plane-adoption.yml`     | Complete security orchestration                 | [Docs](docs/security-plane/adoption.md) |
 
 ### OPA/Rego Policies
 
@@ -91,16 +91,19 @@ git push
 ### Security Scanning
 
 ✅ **Secret Detection**
+
 - Gitleaks scans for hardcoded credentials
 - Patterns for API keys, tokens, passwords, private keys
 - Pre-commit hooks prevent secrets from being committed
 
 ✅ **Vulnerability Scanning**
+
 - Trivy scans containers, filesystems, and dependencies
 - CVE database checks
 - Severity reporting: UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL
 
 ✅ **Dependency Scanning**
+
 - npm audit for Node.js
 - safety for Python
 - Built-in scanning for Go, Java, Rust
@@ -108,6 +111,7 @@ git push
 ### SBOM Generation
 
 ✅ **Software Bill of Materials**
+
 - Generated with Syft
 - CycloneDX and SPDX formats
 - Uploaded as GitHub artifacts
@@ -116,6 +120,7 @@ git push
 ### Image Signing
 
 ✅ **Cryptographic Signatures**
+
 - Keyless signing with Cosign/Sigstore
 - OIDC authentication
 - SBOM attestations
@@ -124,6 +129,7 @@ git push
 ### Policy Enforcement
 
 ✅ **Policy as Code**
+
 - OPA/Rego policies
 - Kubernetes security best practices
 - Dockerfile hardening rules
@@ -140,9 +146,9 @@ enforcement-mode: advisory
 fail-on-critical: false
 ```
 
-✅ Scans run but don't block  
-✅ Visibility into issues  
-❌ No PR blocking  
+✅ Scans run but don't block
+✅ Visibility into issues
+❌ No PR blocking
 
 **Timeline**: 1-2 weeks
 
@@ -156,9 +162,9 @@ fail-on-critical: true
 severity-threshold: CRITICAL
 ```
 
-❌ Block CRITICAL vulnerabilities  
-⚠️ Warn on HIGH/MEDIUM  
-✅ Progressive enforcement  
+❌ Block CRITICAL vulnerabilities
+⚠️ Warn on HIGH/MEDIUM
+✅ Progressive enforcement
 
 **Timeline**: 2-4 weeks after advisory
 
@@ -174,10 +180,10 @@ enable-signing: true
 enable-sbom: true
 ```
 
-❌ Block all policy violations  
-❌ Block MEDIUM+ vulnerabilities  
-✅ Require signed images  
-✅ Require SBOMs  
+❌ Block all policy violations
+❌ Block MEDIUM+ vulnerabilities
+✅ Require signed images
+✅ Require SBOMs
 
 **Timeline**: 4-8 weeks after progressive
 
@@ -230,17 +236,20 @@ jobs:
 ## 📚 Documentation
 
 ### Getting Started
+
 - [Onboarding Guide](.security-plane/onboarding/ONBOARDING.md)
 - [Reference Architecture](docs/security-plane/reference-architecture.md)
 - [Adoption Patterns](docs/security-plane/adoption-patterns.md)
 
 ### Workflows
+
 - [Security Scanning](docs/security-plane/scanning.md)
 - [Policy Enforcement](docs/security-plane/policies.md)
 - [SBOM Generation](docs/security-plane/sbom.md)
 - [Image Signing](docs/security-plane/signing.md)
 
 ### Advanced Topics
+
 - [Custom Policies](docs/security-plane/custom-policies.md)
 - [Exemption Management](docs/security-plane/exemptions.md)
 - [CI/CD Integration](docs/security-plane/cicd-integration.md)
@@ -316,8 +325,8 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   annotations:
-    security-plane/enabled: 'true'
-    security-plane/mode: 'strict'
+    security-plane/enabled: "true"
+    security-plane/mode: "strict"
 ```
 
 ### Jenkins
@@ -382,6 +391,7 @@ This project is part of the Fawkes Internal Developer Platform.
 ## 🗺️ Roadmap
 
 ### Current (v1.0)
+
 - ✅ Security scanning (secrets, vulnerabilities)
 - ✅ SBOM generation
 - ✅ Image signing
@@ -389,6 +399,7 @@ This project is part of the Fawkes Internal Developer Platform.
 - ✅ Reusable workflows
 
 ### Planned (v1.1)
+
 - [ ] Runtime security monitoring (Falco)
 - [ ] Compliance reporting dashboards
 - [ ] Automated remediation workflows
@@ -396,6 +407,7 @@ This project is part of the Fawkes Internal Developer Platform.
 - [ ] Multi-cloud support
 
 ### Future (v2.0)
+
 - [ ] ML-powered vulnerability prediction
 - [ ] Automated security patching
 - [ ] Red team simulation tools
@@ -403,13 +415,13 @@ This project is part of the Fawkes Internal Developer Platform.
 
 ## 🌟 Success Stories
 
-> "The Security Plane reduced our critical vulnerability MTTR from 2 weeks to 2 days."  
+> "The Security Plane reduced our critical vulnerability MTTR from 2 weeks to 2 days."
 > — Platform Team, Company XYZ
 
-> "Advisory mode let us understand our security posture before enforcing policies. Game changer!"  
+> "Advisory mode let us understand our security posture before enforcing policies. Game changer!"
 > — DevOps Lead, Acme Corp
 
-> "Image signing was complex until we adopted the Security Plane. Now it's automatic."  
+> "Image signing was complex until we adopted the Security Plane. Now it's automatic."
 > — Security Engineer, Tech Startup
 
 ## 📊 Adoption Statistics
@@ -424,4 +436,4 @@ This project is part of the Fawkes Internal Developer Platform.
 
 **Made with ❤️ by the Fawkes Platform Team**
 
-*Securing the software supply chain, one repository at a time.*
+_Securing the software supply chain, one repository at a time._

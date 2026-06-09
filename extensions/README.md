@@ -16,10 +16,10 @@ to solve a specific problem.
 
 ## Available Extensions
 
-| Extension | Directory | Components | When to Add |
-|---|---|---|---|
-| **Data Platform** | `extensions/data-platform/` | DataHub, Great Expectations | You need a data catalog, lineage tracking, or data quality validation |
-| **AI** | `extensions/ai/` | Weaviate (vector DB), RAG service | You need semantic search, AI-powered docs retrieval, or LLM-backed tooling |
+| Extension         | Directory                   | Components                        | When to Add                                                                |
+| ----------------- | --------------------------- | --------------------------------- | -------------------------------------------------------------------------- |
+| **Data Platform** | `extensions/data-platform/` | DataHub, Great Expectations       | You need a data catalog, lineage tracking, or data quality validation      |
+| **AI**            | `extensions/ai/`            | Weaviate (vector DB), RAG service | You need semantic search, AI-powered docs retrieval, or LLM-backed tooling |
 
 ## How to Deploy an Extension
 

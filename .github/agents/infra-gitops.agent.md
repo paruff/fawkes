@@ -28,7 +28,7 @@ You validate everything by running commands — never mentally validate.
 You read files before editing them. You run syntax checks and dry-runs
 before committing.
 
------
+---
 
 ## MANDATORY first steps — do ALL before writing any code
 
@@ -53,7 +53,7 @@ run_terminal_cmd: grep -r "ignite\.sh\|<target>" . \
   --include="*.yml" --include="*.sh" --include="Makefile" -l
 ```
 
------
+---
 
 ## MANDATORY verification — run commands before every commit
 
@@ -80,21 +80,21 @@ run_terminal_cmd: python -m pytest tests/ --tb=short 2>/dev/null || true
 run_terminal_cmd: bash scripts/run-bats-tests.sh 2>/dev/null || true
 ```
 
------
+---
 
 ## Domain focus and file map
 
-|Domain        |Files                       |Key patterns                                   |
-|--------------|----------------------------|-----------------------------------------------|
-|Terraform     |`infra/<module>/*.tf`       |Variables need descriptions, outputs documented|
-|Helm          |`charts/<n>/`               |Bump `Chart.yaml` version on any values change |
-|GitHub Actions|`.github/workflows/*.yml`   |PIN action versions to SHA hashes              |
-|Kubernetes    |`platform/`, `charts/`      |Always set requests + limits                   |
-|ArgoCD        |`platform/apps/`            |`automated.prune: true` non-prod only          |
-|Shell modules |`scripts/lib/*.sh`          |Source common.sh first, use error_exit         |
-|Providers     |`scripts/lib/providers/*.sh`|Provider-specific bootstrap logic              |
+| Domain         | Files                        | Key patterns                                    |
+| -------------- | ---------------------------- | ----------------------------------------------- |
+| Terraform      | `infra/<module>/*.tf`        | Variables need descriptions, outputs documented |
+| Helm           | `charts/<n>/`                | Bump `Chart.yaml` version on any values change  |
+| GitHub Actions | `.github/workflows/*.yml`    | PIN action versions to SHA hashes               |
+| Kubernetes     | `platform/`, `charts/`       | Always set requests + limits                    |
+| ArgoCD         | `platform/apps/`             | `automated.prune: true` non-prod only           |
+| Shell modules  | `scripts/lib/*.sh`           | Source common.sh first, use error_exit          |
+| Providers      | `scripts/lib/providers/*.sh` | Provider-specific bootstrap logic               |
 
------
+---
 
 ## Shell scripting: fawkes conventions
 
@@ -138,7 +138,7 @@ my_function() {
 1. Never hardcode paths — use `ROOT_DIR`, `LIB_DIR`, `SCRIPT_DIR`
 1. Use `EXIT_*` constants from `common.sh`
 
------
+---
 
 ## Terraform working rules
 
@@ -150,7 +150,7 @@ my_function() {
 1. Never modify `infra/prod/` without explicit instruction
 1. Never commit `.terraform/` or `.tfstate` files
 
------
+---
 
 ## Helm working rules
 
@@ -160,7 +160,7 @@ my_function() {
 1. Never hardcode image tags — use `{{ .Values.image.tag }}`
 1. Always set `resources.requests` and `resources.limits`
 
------
+---
 
 ## GitHub Actions working rules
 
@@ -171,7 +171,7 @@ my_function() {
 1. Validate YAML syntax after every edit
 1. Check `on: workflow_call: inputs:` when modifying reusable workflows
 
------
+---
 
 ## Pre-PR checklist
 

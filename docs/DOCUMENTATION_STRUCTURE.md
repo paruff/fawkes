@@ -88,6 +88,7 @@ Maintainers building and operating the platform:
 **Purpose**: Help users learn by doing
 **Location**: `docs/tutorials/`
 **Characteristics**:
+
 - Step-by-step instructions
 - Reproducible examples
 - Focus on teaching, not explaining
@@ -98,6 +99,7 @@ Maintainers building and operating the platform:
 **Purpose**: Solve specific problems
 **Location**: `docs/how-to/`
 **Characteristics**:
+
 - Goal-oriented
 - Assume some knowledge
 - Focus on results, not understanding
@@ -108,6 +110,7 @@ Maintainers building and operating the platform:
 **Purpose**: Explain concepts and decisions
 **Location**: `docs/explanation/`, `docs/patterns/`, `docs/adr/`
 **Characteristics**:
+
 - Conceptual discussion
 - Background and context
 - Multiple perspectives
@@ -118,6 +121,7 @@ Maintainers building and operating the platform:
 **Purpose**: Provide technical information
 **Location**: `docs/reference/`, `docs/tools/`
 **Characteristics**:
+
 - Accurate and complete
 - Neutral description
 - Technical specifications
@@ -128,6 +132,7 @@ Maintainers building and operating the platform:
 ### Deployment
 
 Guides for deploying the platform and services:
+
 - Infrastructure provisioning
 - Platform installation
 - Service deployment
@@ -136,6 +141,7 @@ Guides for deploying the platform and services:
 ### Observability
 
 Monitoring, metrics, and DORA implementation:
+
 - Metrics collection
 - Dashboard creation
 - Alerting setup
@@ -144,6 +150,7 @@ Monitoring, metrics, and DORA implementation:
 ### Security
 
 Security features, policies, and procedures:
+
 - Security scanning
 - Policy enforcement
 - Secrets management
@@ -152,6 +159,7 @@ Security features, policies, and procedures:
 ### Testing
 
 Testing strategies and implementations:
+
 - Unit testing
 - Integration testing
 - E2E testing

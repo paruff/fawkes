@@ -5,10 +5,7 @@ This module provides step definitions for testing the complete Fawkes platform
 workflow from scaffolding to deployment to metrics collection.
 """
 
-import json
 import subprocess
-import time
-from typing import Dict, List
 
 from behave import given, when, then
 from kubernetes import client, config
@@ -131,7 +128,7 @@ def step_use_golden_path_template(context):
         full_path = os.path.join(template_dir, file_path)
         assert os.path.isfile(full_path), f"Template file missing: {file_path}"
 
-    context.test.log(f"✓ Golden path template validated")
+    context.test.log("✓ Golden path template validated")
 
 
 @then("the following resources should be created")
@@ -244,8 +241,6 @@ def step_jenkins_triggers_build(context):
 @then("the build should execute these stages in order")
 def step_build_executes_stages(context):
     """Verify pipeline stages are defined"""
-    import os
-
     pipeline_file = "jenkins-shared-library/vars/goldenPathPipeline.groovy"
 
     with open(pipeline_file, "r") as f:
@@ -263,8 +258,6 @@ def step_build_executes_stages(context):
 @then("the build should complete in under {minutes:d} minutes")
 def step_build_completes_in_time(context, minutes):
     """Verify build timeout is configured"""
-    import os
-
     pipeline_file = "jenkins-shared-library/vars/goldenPathPipeline.groovy"
 
     with open(pipeline_file, "r") as f:
@@ -272,7 +265,7 @@ def step_build_completes_in_time(context, minutes):
 
         # Check for timeout configuration
         if "timeout" in content:
-            context.test.log(f"✓ Timeout configured in pipeline")
+            context.test.log("✓ Timeout configured in pipeline")
 
 
 @then("build metrics should be sent to DevLake")
@@ -414,8 +407,6 @@ def step_no_high_vulns(context, severity, severity2):
 @then("all security scan reports should be archived")
 def step_reports_archived(context):
     """Verify report archiving is configured"""
-    import os
-
     pipeline_file = "jenkins-shared-library/vars/goldenPathPipeline.groovy"
 
     with open(pipeline_file, "r") as f:

@@ -69,10 +69,10 @@ module "storage" {
   resource_group_name  = azurerm_resource_group.example.name
 
   # Performance and Redundancy
-  account_tier    = "Standard"
+  account_tier     = "Standard"
   replication_type = "GRS"
-  account_kind    = "StorageV2"
-  access_tier     = "Hot"
+  account_kind     = "StorageV2"
+  access_tier      = "Hot"
 
   # Security
   enable_https_traffic_only       = true
@@ -81,11 +81,11 @@ module "storage" {
   shared_access_key_enabled       = true
 
   # Blob Properties
-  enable_versioning                   = true
-  enable_change_feed                  = true
-  change_feed_retention_days          = 7
-  enable_last_access_time_tracking    = true
-  blob_soft_delete_retention_days     = 7
+  enable_versioning                    = true
+  enable_change_feed                   = true
+  change_feed_retention_days           = 7
+  enable_last_access_time_tracking     = true
+  blob_soft_delete_retention_days      = 7
   container_soft_delete_retention_days = 7
 
   # CORS (if needed for web applications)
@@ -100,11 +100,11 @@ module "storage" {
   ]
 
   # Network Security
-  enable_network_rules    = false # Set to true for production
-  default_network_action  = "Deny"
-  network_bypass          = ["AzureServices"]
-  allowed_ip_addresses    = []
-  allowed_subnet_ids      = []
+  enable_network_rules   = false # Set to true for production
+  default_network_action = "Deny"
+  network_bypass         = ["AzureServices"]
+  allowed_ip_addresses   = []
+  allowed_subnet_ids     = []
 
   # Containers
   containers = {
@@ -131,8 +131,8 @@ module "storage" {
   # Lifecycle Management
   lifecycle_rules = [
     {
-      name    = "move-to-cool-after-30-days"
-      enabled = true
+      name         = "move-to-cool-after-30-days"
+      enabled      = true
       prefix_match = ["documents/"]
       blob_types   = ["blockBlob"]
       base_blob = {
@@ -142,8 +142,8 @@ module "storage" {
       }
     },
     {
-      name    = "delete-old-backups"
-      enabled = true
+      name         = "delete-old-backups"
+      enabled      = true
       prefix_match = ["backups/"]
       blob_types   = ["blockBlob"]
       base_blob = {
@@ -151,8 +151,8 @@ module "storage" {
       }
     },
     {
-      name    = "clean-snapshots"
-      enabled = true
+      name       = "clean-snapshots"
+      enabled    = true
       blob_types = ["blockBlob"]
       snapshot = {
         delete_after_days = 30
@@ -171,10 +171,10 @@ module "storage" {
   enable_diagnostic_settings = true
   log_analytics_workspace_id = azurerm_log_analytics_workspace.example.id
 
-  enable_alerts                         = true
-  action_group_id                       = azurerm_monitor_action_group.example.id
-  capacity_alert_threshold_bytes        = 107374182400 # 100 GB
-  availability_alert_threshold_percent  = 99.0
+  enable_alerts                        = true
+  action_group_id                      = azurerm_monitor_action_group.example.id
+  capacity_alert_threshold_bytes       = 107374182400 # 100 GB
+  availability_alert_threshold_percent = 99.0
 
   tags = {
     Environment = "example"

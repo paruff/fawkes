@@ -7,12 +7,14 @@ applyTo: "infra/**/*.tf,infra/**/*.tfvars"
 # Terraform Instructions — Fawkes
 
 ## Read First
+
 - `AGENTS.md` → IaC Rules section
 - `docs/CHANGE_IMPACT_MAP.md` → infra changes that cascade to platform/
 
 ## Fawkes Terraform Standards
 
 ### File Organisation (one resource type per file)
+
 ```
 infra/{module}/
   main.tf        → core resources
@@ -23,6 +25,7 @@ infra/{module}/
 ```
 
 ### Variable Rules
+
 ```hcl
 # ✅ Every variable needs description and type
 variable "cluster_name" {
@@ -35,6 +38,7 @@ variable "cluster_name" {}
 ```
 
 ### No Hardcoded Values
+
 ```hcl
 # ❌ Never
 resource "aws_instance" "web" {
@@ -49,6 +53,7 @@ resource "aws_instance" "web" {
 ```
 
 ### Pinned Module Versions
+
 ```hcl
 # ✅ Pinned version
 module "vpc" {
@@ -63,6 +68,7 @@ module "vpc" {
 ```
 
 ### Required Tags on All Resources
+
 ```hcl
 tags = {
   Project     = "fawkes"
@@ -73,6 +79,7 @@ tags = {
 ```
 
 ## Linters That Must Pass
+
 ```bash
 terraform fmt -check -recursive   # formatting
 terraform validate                 # syntax + provider validation
@@ -80,11 +87,13 @@ tflint --recursive                 # config in .tflint.hcl
 ```
 
 ## CI Behaviour
+
 - `terraform plan` runs on every PR touching `infra/`
 - `terraform apply` requires: plan output in PR + two human approvals
 - Never run `terraform apply` in CI automatically — always require manual approval step
 
 ## What Requires Human Approval
+
 - New Terraform provider
 - New external module dependency
 - Changes to state backend configuration

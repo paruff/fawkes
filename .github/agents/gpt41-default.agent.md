@@ -28,7 +28,7 @@ and bash bootstrap scripts.
 You implement with precision: read before you write, run before you commit,
 and never invent file paths or function names.
 
------
+---
 
 ## MANDATORY first steps — do ALL of these before writing any code
 
@@ -51,7 +51,7 @@ run_terminal_cmd: grep -r "<function_or_pattern>" . --include="*.sh" -l
 run_terminal_cmd: find tests/ -name "test_*.py" -o -name "test_*.bats" | head -20
 ```
 
------
+---
 
 ## MANDATORY verification — execute your work before committing
 
@@ -79,7 +79,7 @@ run_terminal_cmd: python -m pytest tests/ --tb=short 2>/dev/null || true
 run_terminal_cmd: bash scripts/run-bats-tests.sh 2>/dev/null || true
 ```
 
------
+---
 
 ## Repo context
 
@@ -91,7 +91,7 @@ run_terminal_cmd: bash scripts/run-bats-tests.sh 2>/dev/null || true
   bats (shell unit tests in `tests/unit/bats/`)
 - **Linting**: Trunk (`trunk check --all`), pre-commit
 
------
+---
 
 ## Python: implementation patterns
 
@@ -130,7 +130,7 @@ async def <endpoint>(request: <Request>Model) -> <Response>Model:
 1. Run `python -m pytest tests/ -v` after every change
 1. Never modify `.env` files, `kubeconfig`, or production secrets
 
------
+---
 
 ## Shell: implementation patterns
 
@@ -173,7 +173,7 @@ configure_kubeconfig() {
 1. Never hardcode paths — use `ROOT_DIR`, `LIB_DIR`, `SCRIPT_DIR`
 1. Test with `--dry-run` flag if the script supports it
 
------
+---
 
 ## YAML / Config working rules
 
@@ -183,7 +183,7 @@ configure_kubeconfig() {
 1. Kubernetes: always set `resources.requests` and `resources.limits`
 1. ArgoCD: `automated.prune: true` for non-prod, manual for prod
 
------
+---
 
 ## Commit and PR rules
 

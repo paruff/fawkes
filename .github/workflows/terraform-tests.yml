@@ -4,23 +4,23 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - 'infra/terraform/**'
-      - 'tests/terratest/**'
-      - '.github/workflows/terraform-tests.yml'
+      - "infra/terraform/**"
+      - "tests/terratest/**"
+      - ".github/workflows/terraform-tests.yml"
   push:
     branches: [main]
     paths:
-      - 'infra/terraform/**'
-      - 'tests/terratest/**'
+      - "infra/terraform/**"
+      - "tests/terratest/**"
   workflow_dispatch:
     inputs:
       run_integration_tests:
-        description: 'Run integration tests (deploys resources)'
+        description: "Run integration tests (deploys resources)"
         required: false
         type: boolean
         default: false
       run_e2e_tests:
-        description: 'Run E2E tests (expensive)'
+        description: "Run E2E tests (expensive)"
         required: false
         type: boolean
         default: false
@@ -48,7 +48,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.24'
+          go-version: "1.24"
           cache-dependency-path: tests/terratest/go.sum
 
       - name: Setup Terraform
@@ -96,7 +96,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.24'
+          go-version: "1.24"
           cache-dependency-path: tests/terratest/go.sum
 
       - name: Setup Terraform
@@ -117,7 +117,7 @@ jobs:
       - name: Run cost estimation tests
         working-directory: tests/terratest
         env:
-          RUN_TERRAFORM_COST_TESTS: 'true'
+          RUN_TERRAFORM_COST_TESTS: "true"
           INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
         run: |
           echo "Running cost estimation tests"
@@ -163,7 +163,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.24'
+          go-version: "1.24"
           cache-dependency-path: tests/terratest/go.sum
 
       - name: Setup Terraform
@@ -184,7 +184,7 @@ jobs:
       - name: Run integration tests
         working-directory: tests/terratest
         env:
-          RUN_TERRAFORM_INTEGRATION_TESTS: 'true'
+          RUN_TERRAFORM_INTEGRATION_TESTS: "true"
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -226,7 +226,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.24'
+          go-version: "1.24"
           cache-dependency-path: tests/terratest/go.sum
 
       - name: Setup Terraform
@@ -247,7 +247,7 @@ jobs:
       - name: Run E2E tests
         working-directory: tests/terratest
         env:
-          RUN_TERRAFORM_E2E_TESTS: 'true'
+          RUN_TERRAFORM_E2E_TESTS: "true"
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}

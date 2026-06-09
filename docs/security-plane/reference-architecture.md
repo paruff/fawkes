@@ -97,6 +97,7 @@ The **Fawkes Security Plane** is a comprehensive, repository-agnostic security f
 **Purpose**: Detect security issues in code, dependencies, and containers
 
 **Tools**:
+
 - **Gitleaks**: Secret scanning (API keys, tokens, credentials)
 - **Trivy**: Vulnerability scanning (CVEs, misconfigurations)
 - **npm audit**: Node.js dependency vulnerabilities
@@ -105,11 +106,13 @@ The **Fawkes Security Plane** is a comprehensive, repository-agnostic security f
 **Workflow**: `reusable-security-scanning.yml`
 
 **Inputs**:
+
 - `scan-type`: all, secrets, vulnerabilities, dependencies, container
 - `severity-threshold`: UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL
 - `fail-on-critical`: Block on critical vulnerabilities
 
 **Outputs**:
+
 - SARIF files uploaded to GitHub Security
 - Summary in job output
 - Artifacts for detailed reports
@@ -119,19 +122,23 @@ The **Fawkes Security Plane** is a comprehensive, repository-agnostic security f
 **Purpose**: Enforce security best practices and compliance requirements
 
 **Tools**:
+
 - **Conftest**: OPA/Rego policy evaluation
 - **OPA**: Open Policy Agent for policy-as-code
 
 **Workflow**: `reusable-policy-enforcement.yml`
 
 **Policy Types**:
+
 1. **Kubernetes Security** (`kubernetes-security.rego`)
+
    - Non-root containers
    - Resource limits
    - Security contexts
    - Network policies
 
 2. **Dockerfile Security** (`dockerfile-security.rego`)
+
    - No root user
    - Specific base image versions
    - Health checks
@@ -144,6 +151,7 @@ The **Fawkes Security Plane** is a comprehensive, repository-agnostic security f
    - Approved registries
 
 **Inputs**:
+
 - `policy-path`: Path to policy files
 - `target-path`: Files to validate
 - `fail-on-violation`: Block on violations
@@ -153,16 +161,19 @@ The **Fawkes Security Plane** is a comprehensive, repository-agnostic security f
 **Purpose**: Create Software Bill of Materials for supply chain transparency
 
 **Tools**:
+
 - **Syft**: SBOM generation (CycloneDX, SPDX formats)
 
 **Workflow**: `reusable-sbom-generation.yml`
 
 **Inputs**:
+
 - `image-name`: Container image name
 - `image-tag`: Image tag
 - `sbom-format`: cyclonedx-json, spdx-json, syft-json
 
 **Outputs**:
+
 - SBOM file as GitHub artifact
 - Package count summary
 - Retention: 90 days
@@ -172,17 +183,20 @@ The **Fawkes Security Plane** is a comprehensive, repository-agnostic security f
 **Purpose**: Cryptographically sign container images for authenticity
 
 **Tools**:
+
 - **Cosign**: Keyless image signing with Sigstore
 
 **Workflow**: `reusable-image-signing.yml`
 
 **Features**:
+
 - Keyless signing with OIDC
 - SBOM attestation
 - Signature verification
 - Registry integration
 
 **Inputs**:
+
 - `image-name`: Image to sign
 - `registry`: Container registry (ghcr.io)
 - `sign-sbom`: Also sign SBOM attestation
@@ -194,6 +208,7 @@ The **Fawkes Security Plane** is a comprehensive, repository-agnostic security f
 **Workflow**: `security-plane-adoption.yml`
 
 **Jobs**:
+
 1. `security-scan`: Run all security scans
 2. `policy-enforcement`: Validate against policies
 3. `generate-sbom`: Create SBOM (if image specified)
@@ -201,6 +216,7 @@ The **Fawkes Security Plane** is a comprehensive, repository-agnostic security f
 5. `security-summary`: Generate status badge
 
 **Trigger Events**:
+
 - `push`: On commits to main/develop
 - `pull_request`: On PRs
 - `workflow_dispatch`: Manual trigger with options
@@ -212,6 +228,7 @@ The **Fawkes Security Plane** is a comprehensive, repository-agnostic security f
 **Use Case**: Understanding current security posture without blocking
 
 **Configuration**:
+
 ```yaml
 # .github/workflows/security.yml
 jobs:
@@ -223,6 +240,7 @@ jobs:
 ```
 
 **Behavior**:
+
 - ✅ Scans run on every PR and push
 - ✅ Results visible in GitHub Security
 - ❌ No blocking - PRs can merge
@@ -235,6 +253,7 @@ jobs:
 **Use Case**: Gradual rollout with critical-only blocking
 
 **Configuration**:
+
 ```yaml
 jobs:
   security:
@@ -246,6 +265,7 @@ jobs:
 ```
 
 **Behavior**:
+
 - ✅ Scans run on every PR and push
 - ❌ CRITICAL vulnerabilities block
 - ⚠️ HIGH/MEDIUM are warnings
@@ -258,6 +278,7 @@ jobs:
 **Use Case**: Full enforcement for production-ready repos
 
 **Configuration**:
+
 ```yaml
 jobs:
   security:
@@ -272,6 +293,7 @@ jobs:
 ```
 
 **Behavior**:
+
 - ❌ Any policy violation blocks
 - ❌ MEDIUM+ vulnerabilities block
 - ✅ Images must be signed
@@ -311,8 +333,8 @@ metadata:
   name: my-service
   annotations:
     github.com/project-slug: org/repo
-    security-plane/enabled: 'true'
-    security-plane/mode: 'strict'
+    security-plane/enabled: "true"
+    security-plane/mode: "strict"
 ```
 
 ### Jenkins Integration
@@ -341,7 +363,7 @@ spec:
     automated:
       prune: true
     syncOptions:
-      - Validate=true  # Validates against policies
+      - Validate=true # Validates against policies
 ```
 
 ## Metrics & Monitoring
@@ -358,6 +380,7 @@ Security plane supports DORA metrics:
 ### Security Metrics
 
 Track over time:
+
 - Number of vulnerabilities (by severity)
 - Policy violations (by type)
 - MTTR for security issues
@@ -368,11 +391,13 @@ Track over time:
 ### Dashboards
 
 **GitHub Security Tab**:
+
 - Vulnerability alerts
 - Secret scanning alerts
 - SARIF results
 
 **Grafana Dashboard** (planned):
+
 - Security posture overview
 - Vulnerability trends
 - Policy compliance rates
@@ -388,6 +413,7 @@ Track over time:
 4. Commit and policies are automatically enforced
 
 Example:
+
 ```rego
 # .security-plane/policies/custom.rego
 package main
@@ -484,5 +510,5 @@ jobs:
 
 ---
 
-*Last Updated: 2024-01-26*  
-*Version: 1.0.0*
+_Last Updated: 2024-01-26_
+_Version: 1.0.0_

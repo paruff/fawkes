@@ -8,6 +8,7 @@ compatibility: opencode
 # New Service — Fawkes
 
 Structure:
+
 ```
 services/NAME/
   app/main.py          # FastAPI + OTEL + health endpoints
@@ -18,6 +19,7 @@ services/NAME/
 ```
 
 main.py:
+
 ```python
 from fastapi import FastAPI
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
@@ -33,6 +35,7 @@ async def ready(): return {"status": "READY"}
 ```
 
 Dockerfile:
+
 ```dockerfile
 FROM python:3.12-slim AS builder
 WORKDIR /app

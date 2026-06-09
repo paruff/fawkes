@@ -165,11 +165,8 @@ A persona is a fictional but data-driven representation of a key user segment. P
 ### Quotes from Research
 
 > "[Direct quote that captures their perspective on problem 1]"
-
 > "[Direct quote about their goals or motivations]"
-
 > "[Direct quote about pain points or frustrations]"
-
 > "[Direct quote about ideal solutions or features]"
 
 ---
@@ -371,11 +368,8 @@ A persona is a fictional but data-driven representation of a key user segment. P
 ### Quotes from Research
 
 > "I spend half my time answering questions that should be self-service. I want to build things that make me obsolete."
-
 > "The hardest part isn't the technology—it's getting 50 developers to use the platform consistently. We need golden paths, not just documentation."
-
 > "When an incident happens at 2 AM, I don't want to grep through logs. I need context: What changed? What's the impact? What's the fix?"
-
 > "Developer experience is my product. If developers don't love the platform, we've failed, regardless of our uptime numbers."
 
 ---
@@ -584,11 +578,8 @@ A persona is a fictional but data-driven representation of a key user segment. P
 ### Quotes from Research
 
 > "I just want to push a button and deploy. I shouldn't need to understand Kubernetes to ship a feature."
-
 > "When something breaks in production, I have no idea where to start. I end up bothering the platform team every time."
-
 > "I wish I knew what tools we have. I spent a week building a feature flag system, then learned we already had one."
-
 > "Deployment Friday? No way. Too risky. I'd rather work late Thursday than ruin my weekend."
 
 ---

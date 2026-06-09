@@ -113,6 +113,7 @@ kubectl apply -f platform/observability/aws/xray/daemon-daemonset.yaml
 #### Configuration
 
 Environment variables can be set in the DaemonSet YAML:
+
 - `AWS_REGION` - AWS region for X-Ray endpoint
 - `XRAY_DAEMON_ROLE_ARN` - IAM role for X-Ray daemon (IRSA)
 
@@ -126,10 +127,7 @@ The X-Ray daemon requires the following permissions:
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "xray:PutTraceSegments",
-        "xray:PutTelemetryRecords"
-      ],
+      "Action": ["xray:PutTraceSegments", "xray:PutTelemetryRecords"],
       "Resource": "*"
     }
   ]
@@ -167,6 +165,7 @@ kubectl apply -f platform/observability/aws/adot-config.yaml
 #### Configuration
 
 Key environment variables:
+
 - `AWS_REGION` - AWS region
 - `CLUSTER_NAME` - EKS cluster name
 - `ENVIRONMENT` - Deployment environment (dev/staging/prod)
@@ -186,6 +185,7 @@ Cost analysis and optimization using AWS Cost and Usage Reports.
 #### Setup
 
 1. **Enable CUR in AWS**:
+
    ```bash
    aws cur put-report-definition --report-definition \
      ReportName=fawkes-cur \
@@ -199,6 +199,7 @@ Cost analysis and optimization using AWS Cost and Usage Reports.
    ```
 
 2. **Deploy cost-collector service** (if not already deployed):
+
    ```bash
    kubectl apply -f platform/apps/cost-collector/
    ```
@@ -220,6 +221,7 @@ Cost analysis and optimization using AWS Cost and Usage Reports.
 The `log-insights-queries.json` file contains 20+ pre-built queries for common troubleshooting scenarios:
 
 ### Error Detection
+
 - EKS API Server Errors
 - Failed Pod Scheduling
 - Authentication Failures
@@ -227,26 +229,31 @@ The `log-insights-queries.json` file contains 20+ pre-built queries for common t
 - Network Errors
 
 ### Performance Analysis
+
 - High Latency API Requests
 - Scheduler Performance
 - Slow Database Queries
 
 ### Security Monitoring
+
 - Audit Log Analysis
 - Privilege Escalation Attempts
 - Certificate Errors
 
 ### Resource Management
+
 - Container Restarts
 - OOM Kills
 - Resource Exhaustion
 
 ### Cost Optimization
+
 - Top Log Producers (for reducing log costs)
 
 ### Usage
 
 1. **AWS Console**:
+
    - Navigate to CloudWatch → Logs → Insights
    - Select log groups
    - Copy query from JSON file
@@ -270,18 +277,20 @@ CloudWatch alarms send notifications to SNS topics, which forward to Mattermost.
 #### Setup
 
 1. **Create Mattermost incoming webhook**:
+
    - Go to Mattermost → Integrations → Incoming Webhooks
    - Create webhook for monitoring channel
    - Copy webhook URL
 
 2. **Configure Terraform**:
+
    ```hcl
    module "cloudwatch_alarms" {
      source = "./platform/observability/aws/cloudwatch"
-     
+
      cluster_name            = "fawkes-prod"
      mattermost_webhook_url  = var.mattermost_webhook_url
-     
+
      tags = {
        Environment = "production"
        Team        = "platform"
@@ -296,6 +305,7 @@ CloudWatch alarms send notifications to SNS topics, which forward to Mattermost.
 #### Alert Format
 
 Alerts include:
+
 - Alarm name and description
 - Current state (ALARM/OK)
 - Metric details
@@ -374,6 +384,7 @@ exporters:
 ### Grafana Integration
 
 1. **CloudWatch Data Source**:
+
    ```yaml
    apiVersion: 1
    datasources:
@@ -408,6 +419,7 @@ exporters:
 ### 1. Log Retention
 
 Balance cost vs. compliance requirements:
+
 - **Critical logs**: 90 days
 - **Debug logs**: 7 days
 - **Audit logs**: 1 year minimum
@@ -497,16 +509,19 @@ aws cloudwatch describe-alarms \
 ## Security Considerations
 
 1. **Encryption**:
+
    - Enable KMS encryption for SNS topics
    - Use encryption at rest for CloudWatch Logs
    - TLS in transit for all data
 
 2. **IAM Roles**:
+
    - Use IRSA (IAM Roles for Service Accounts)
    - Follow principle of least privilege
    - Regularly rotate credentials
 
 3. **Network Security**:
+
    - Use VPC endpoints for AWS services
    - Restrict egress traffic
    - Enable VPC Flow Logs
@@ -520,14 +535,14 @@ aws cloudwatch describe-alarms \
 
 Based on typical usage for a production EKS cluster:
 
-| Service | Usage | Monthly Cost |
-|---------|-------|--------------|
-| CloudWatch Logs | 50 GB ingested, 30-day retention | $25-30 |
-| CloudWatch Metrics | 100 custom metrics, 5-min resolution | $30-35 |
-| CloudWatch Dashboards | 3 dashboards | $9 |
-| X-Ray | 1M traces/month | $5 |
-| SNS | 10K notifications | $0.50 |
-| **Total** | | **~$70-80/month** |
+| Service               | Usage                                | Monthly Cost      |
+| --------------------- | ------------------------------------ | ----------------- |
+| CloudWatch Logs       | 50 GB ingested, 30-day retention     | $25-30            |
+| CloudWatch Metrics    | 100 custom metrics, 5-min resolution | $30-35            |
+| CloudWatch Dashboards | 3 dashboards                         | $9                |
+| X-Ray                 | 1M traces/month                      | $5                |
+| SNS                   | 10K notifications                    | $0.50             |
+| **Total**             |                                      | **~$70-80/month** |
 
 ## References
 
@@ -540,6 +555,7 @@ Based on typical usage for a production EKS cluster:
 ## Support
 
 For issues or questions:
+
 - File an issue in the Fawkes repository
 - Contact the platform team via Mattermost #platform-observability
 - Check the [Fawkes documentation](../../docs/)

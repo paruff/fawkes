@@ -1,6 +1,5 @@
 # tests/unit/test_terraform_utils.py
 
-import pytest
 from hypothesis import given, strategies as st
 from tests.unit.terraform_utils import validate_environment_name, create_cluster_config
 
@@ -9,14 +8,14 @@ def test_validate_environment_name():
     """Valid environment names should pass validation"""
     valid_names = ["dev", "staging", "production"]
     for name in valid_names:
-        assert validate_environment_name(name) == True
+        assert validate_environment_name(name) is True
 
 
 def test_invalid_environment_name():
     """Invalid environment names should fail validation"""
     invalid_names = ["Dev", "PROD", "test123", ""]
     for name in invalid_names:
-        assert validate_environment_name(name) == False
+        assert validate_environment_name(name) is False
 
 
 @given(st.integers(min_value=1, max_value=100))

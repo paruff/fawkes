@@ -391,6 +391,7 @@ Expected monthly costs for a production GKE cluster:
 ## Support
 
 For issues or questions:
+
 - File an issue in the Fawkes repository
 - Contact the platform team via Mattermost #platform-observability
 - Check the [main README](README.md) for detailed documentation

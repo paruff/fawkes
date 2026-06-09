@@ -7,7 +7,7 @@ A unified abstraction layer for interacting with multiple cloud providers, inclu
 - **Multi-cloud abstraction**: Common interface for cloud operations across providers
 - **AWS Support**: Full implementation for EKS, RDS, S3, CloudWatch, and Cost Explorer
 - **Azure Support**: Full implementation for AKS, Azure Database, Blob Storage, Azure Monitor, and Cost Management
-- **Flexible Authentication**: 
+- **Flexible Authentication**:
   - **AWS**: IAM roles, STS assume role, access keys, AWS profile, environment variables, instance metadata
   - **Azure**: Managed Identity, Service Principal, Azure CLI, DefaultAzureCredential
 - **Error Handling**: Comprehensive error handling with retries and exponential backoff
@@ -707,6 +707,7 @@ services/cloud-provider/
 Minimum permissions for each service:
 
 **EKS:**
+
 ```json
 {
   "Version": "2012-10-17",
@@ -728,18 +729,14 @@ Minimum permissions for each service:
 ```
 
 **RDS:**
+
 ```json
 {
   "Version": "2012-10-17",
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "rds:CreateDBInstance",
-        "rds:DescribeDBInstances",
-        "rds:DeleteDBInstance",
-        "rds:ListTagsForResource"
-      ],
+      "Action": ["rds:CreateDBInstance", "rds:DescribeDBInstances", "rds:DeleteDBInstance", "rds:ListTagsForResource"],
       "Resource": "*"
     }
   ]
@@ -747,6 +744,7 @@ Minimum permissions for each service:
 ```
 
 **S3:**
+
 ```json
 {
   "Version": "2012-10-17",
@@ -775,6 +773,7 @@ Minimum permissions for each service:
 ```
 
 **Cost Explorer & CloudWatch:**
+
 ```json
 {
   "Version": "2012-10-17",
@@ -845,6 +844,7 @@ See LICENSE file for details.
 ## Support
 
 For issues and questions:
+
 - GitHub Issues: https://github.com/paruff/fawkes/issues
 - Documentation: See `docs/` directory
 

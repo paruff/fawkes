@@ -10,6 +10,7 @@ compatibility: opencode
 ## Security checklist
 
 ### 1. Secret handling
+
 ```bash
 # Find hardcoded secrets (NEVER OK)
 grep -rn "password\|token\|secret\|key" .github/workflows/*.yml | grep -v "secrets\."
@@ -19,16 +20,18 @@ grep -n "env:" .github/workflows/*.yml -A2 | grep -v "secrets\."
 ```
 
 Rules:
+
 - **Never** `env: SECRET: hardcode-value`
 - **Always** `env: SECRET: ${{ secrets.SECRET_NAME }}`
 - **Never** `echo ${{ secrets.X }}` in `run:` — use env binding instead:
   ```yaml
   env:
     SECRET: ${{ secrets.X }}
-  run: echo "$SECRET"  # Safe — not interpolated by Actions
+  run: echo "$SECRET" # Safe — not interpolated by Actions
   ```
 
 ### 2. Permissions
+
 ```yaml
 # Required — minimal permissions per job
 permissions:
@@ -46,22 +49,26 @@ permissions:
 ```
 
 Rules:
+
 - Set `permissions:` at job level, not workflow level (when possible)
 - Never `permissions: write-all` or `permissions: *`
 - `contents: read` is the default for most jobs
 
 ### 3. Action pinning
+
 ```bash
 # Find unpinned actions
 grep "uses:" .github/workflows/*.yml | grep -v "@[a-f0-9]\{40\}"
 ```
 
 Rules:
+
 - Every `uses:` must pin to full SHA, not tag or branch
 - Exception: first-party Actions (actions/checkout, actions/setup-python) can use `@v4` etc.
 - Never `@main` or `@master`
 
 ### 4. Injection risks
+
 ```yaml
 # DANGEROUS — user input in run:
 run: echo "${{ github.event.pull_request.title }}"
@@ -73,11 +80,13 @@ run: echo "$TITLE"
 ```
 
 Rules:
+
 - Never interpolate `github.event.*` directly in `run:` scripts
 - Always bind to `env:` first, then use shell variable
 - Review `${{ }}` expressions in `run:` blocks
 
 ### 5. Code checkout safety
+
 ```yaml
 # DANGEROUS — checkout untrusted code with write access
 - uses: actions/checkout@SHA
@@ -92,6 +101,7 @@ Rules:
 ```
 
 ### 6. Reusable workflow secrets
+
 ```yaml
 # Caller must explicitly pass secrets
 jobs:
@@ -105,11 +115,13 @@ jobs:
 ```
 
 Rules:
+
 - Never hardcode secrets in reusable workflow
 - Caller must propagate secrets via `secrets:` block
 - `secrets: inherit` is acceptable for trusted reusable workflows
 
 ## Validate
+
 ```bash
 # Full security audit
 echo "=== Hardcoded secrets ==="

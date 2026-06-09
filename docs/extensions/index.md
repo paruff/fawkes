@@ -29,10 +29,10 @@ core platform and have a specific need.
 
 Adds data cataloging, lineage tracking, and data quality validation.
 
-| Component | Purpose |
-|---|---|
-| **DataHub** | Enterprise data catalog — discover, document, and track lineage across datasets |
-| **Great Expectations** | Data quality validation with Prometheus metrics export |
+| Component              | Purpose                                                                         |
+| ---------------------- | ------------------------------------------------------------------------------- |
+| **DataHub**            | Enterprise data catalog — discover, document, and track lineage across datasets |
+| **Great Expectations** | Data quality validation with Prometheus metrics export                          |
 
 **When to add**: Your organisation manages multiple data sources and needs a
 catalog, or you have data quality requirements that need automated validation.
@@ -50,9 +50,9 @@ catalog, or you have data quality requirements that need automated validation.
 Adds a vector database and Retrieval-Augmented Generation (RAG) service for
 semantic search and LLM-powered tooling.
 
-| Component | Purpose |
-|---|---|
-| **Weaviate** | Vector database for storing and querying AI embeddings |
+| Component       | Purpose                                                           |
+| --------------- | ----------------------------------------------------------------- |
+| **Weaviate**    | Vector database for storing and querying AI embeddings            |
 | **RAG Service** | FastAPI service providing semantic search over platform knowledge |
 
 **When to add**: You are building LLM-powered developer tooling, need semantic

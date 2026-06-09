@@ -14,7 +14,7 @@ Implement **AI-powered anomaly detection** in Grafana using ML algorithms.
 
 **Use Cases**:
 
-**1. Build Time Anomalies**
+### 1. Build Time Anomalies
 
 ```
 Normal: 15 min average build time
@@ -26,7 +26,7 @@ Suggested actions:
 - Compare with last week's successful builds
 ```
 
-**2. Deployment Failure Spike**
+### 2. Deployment Failure Spike
 
 ```
 Normal: 5% deployment failure rate
@@ -38,7 +38,7 @@ Potential causes (AI-generated):
 - Network instability (20% confidence)
 ```
 
-**3. Developer Satisfaction Drop**
+### 3. Developer Satisfaction Drop
 
 ```
 Normal: NPS 60-65

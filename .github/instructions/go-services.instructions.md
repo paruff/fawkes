@@ -7,6 +7,7 @@ applyTo: "services/**/*.go"
 # Go Service Instructions — Fawkes
 
 ## Read First
+
 - `AGENTS.md` → Language & Layer Map
 - `docs/ARCHITECTURE.md` → service boundary rules
 - `docs/API_SURFACE.md` → existing service interfaces (don't duplicate)
@@ -14,6 +15,7 @@ applyTo: "services/**/*.go"
 ## Fawkes Go Standards
 
 ### Package Structure
+
 ```
 services/{service-name}/
   cmd/          → main.go entrypoints only — no business logic
@@ -23,6 +25,7 @@ services/{service-name}/
 ```
 
 ### Error Handling
+
 ```go
 // ✅ Correct
 if err != nil {
@@ -39,6 +42,7 @@ _ = doSomething()  // discarded error
 ```
 
 ### All Exported Functions Need Godoc
+
 ```go
 // CreateUser provisions a new platform user and assigns default RBAC roles.
 // It returns ErrUserExists if the username is already taken.
@@ -46,6 +50,7 @@ func CreateUser(ctx context.Context, req CreateUserRequest) (*User, error) {
 ```
 
 ### No Global Mutable State
+
 ```go
 // ❌ Never
 var globalConfig *Config
@@ -55,6 +60,7 @@ func NewServer(cfg *Config, db *DB) *Server {
 ```
 
 ### Test Pattern
+
 ```go
 func TestCalculateLeadTime(t *testing.T) {
     tests := []struct {
@@ -77,6 +83,7 @@ func TestCalculateLeadTime(t *testing.T) {
 ## Linters That Must Pass
 
 Run before every commit:
+
 ```bash
 gofmt -l .           # no output = pass
 golangci-lint run    # uses .golangci.yml config
@@ -84,6 +91,7 @@ go test ./...        # all tests green
 ```
 
 ## What Requires Human Approval
+
 - New external Go dependencies (`go get`)
 - New inter-service gRPC/HTTP contracts
 - Changes to authentication or RBAC logic

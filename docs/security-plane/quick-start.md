@@ -78,6 +78,7 @@ git push
 5. Review the security scan results
 
 ✅ You should see:
+
 - Secret scanning results
 - Vulnerability scan results
 - Policy check results
@@ -100,11 +101,13 @@ git push
 ### Common First Results
 
 **✅ Good News**:
+
 - "No secrets found"
 - "All policy checks passed"
 - "SBOM generated successfully"
 
 **⚠️ Action Needed**:
+
 - "Found X critical vulnerabilities"
 - "Policy violations detected"
 - "Secrets found in code"
@@ -133,12 +136,14 @@ git push
 Congratulations! 🎉 Consider:
 
 1. **Enable stricter mode** after 1-2 weeks:
+
    ```yaml
    enforcement-mode: strict
    fail-on-critical: true
    ```
 
 2. **Add security badge** to README.md:
+
    ```markdown
    ![Security](https://github.com/your-org/your-repo/workflows/Security%20Checks/badge.svg)
    ```
@@ -213,6 +218,7 @@ gitleaks detect --source . --verbose
 **Issue**: Workflow fails before any scans run
 
 **Solution**:
+
 1. Check workflow syntax: `yamllint .github/workflows/security.yml`
 2. Verify permissions in workflow file
 3. Ensure repository has Actions enabled
@@ -222,6 +228,7 @@ gitleaks detect --source . --verbose
 **Issue**: Legitimate code flagged as security issue
 
 **Solution**:
+
 1. Create `.security-plane/exemptions.yaml`
 2. Add specific exemptions with justification
 3. Re-run workflow
@@ -231,6 +238,7 @@ gitleaks detect --source . --verbose
 **Issue**: SBOM generation reports errors
 
 **Solution**:
+
 1. Ensure you have a package manifest (package.json, requirements.txt, etc.)
 2. Check Syft supports your language
 3. Try different SBOM format in workflow config
@@ -240,6 +248,7 @@ gitleaks detect --source . --verbose
 **Issue**: Security workflow runs for more than 10 minutes
 
 **Solution**:
+
 1. Add `.trivyignore` to exclude large directories
 2. Use workflow caching for scan databases
 3. Run scans in parallel jobs
@@ -267,4 +276,4 @@ See [Adoption Patterns](docs/security-plane/adoption-patterns.md) for detailed t
 
 **🎉 Congratulations on securing your repository!**
 
-*You're now protected against secrets leaks, vulnerabilities, and security misconfigurations.*
+_You're now protected against secrets leaks, vulnerabilities, and security misconfigurations._

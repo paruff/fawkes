@@ -4,15 +4,15 @@ on:
   pull_request:
     branches: [main, develop]
     paths-ignore:
-      - 'docs/**'
-      - '**.md'
-      - 'design-system/**' # has its own CI in design-system-ci.yml
+      - "docs/**"
+      - "**.md"
+      - "design-system/**" # has its own CI in design-system-ci.yml
   push:
     branches: [main, develop]
     paths-ignore:
-      - 'docs/**'
-      - '**.md'
-      - 'design-system/**' # has its own CI in design-system-ci.yml
+      - "docs/**"
+      - "**.md"
+      - "design-system/**" # has its own CI in design-system-ci.yml
   workflow_dispatch:
 
 permissions:
@@ -167,9 +167,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: 'design-system/package-lock.json'
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "design-system/package-lock.json"
 
       - name: Install dependencies
         working-directory: ./design-system
@@ -225,7 +225,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.24'
+          go-version: "1.24"
           cache: true
           cache-dependency-path: tests/terratest/go.sum
 
@@ -485,7 +485,7 @@ jobs:
     uses: ./.github/workflows/reusable-security-scanning.yml
     with:
       scan-type: all
-      scan-path: '.'
+      scan-path: "."
       severity-threshold: LOW
       fail-on-critical: false
       upload-sarif: true
@@ -497,7 +497,18 @@ jobs:
     name: Quality Summary
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: [detect-changes, python-lint-and-test, typescript-quality, go-quality, shell-quality, shell-tests, yaml-quality, security-integration, security-scanning]
+    needs:
+      [
+        detect-changes,
+        python-lint-and-test,
+        typescript-quality,
+        go-quality,
+        shell-quality,
+        shell-tests,
+        yaml-quality,
+        security-integration,
+        security-scanning,
+      ]
     if: always()
     permissions:
       contents: read

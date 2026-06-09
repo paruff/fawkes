@@ -4,25 +4,25 @@ on:
   workflow_call:
     inputs:
       policy-path:
-        description: 'Path to OPA/Rego policy files'
+        description: "Path to OPA/Rego policy files"
         required: false
         type: string
-        default: '.security-plane/policies'
+        default: ".security-plane/policies"
       target-path:
-        description: 'Path to files to validate against policies'
+        description: "Path to files to validate against policies"
         required: false
         type: string
-        default: '.'
+        default: "."
       fail-on-violation:
-        description: 'Fail workflow on policy violations'
+        description: "Fail workflow on policy violations"
         required: false
         type: boolean
         default: true
       policy-namespaces:
-        description: 'Comma-separated list of policy namespaces to check'
+        description: "Comma-separated list of policy namespaces to check"
         required: false
         type: string
-        default: 'main,security,compliance'
+        default: "main,security,compliance"
 
 permissions:
   contents: read

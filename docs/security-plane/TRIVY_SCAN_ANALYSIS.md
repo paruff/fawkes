@@ -9,6 +9,7 @@ Trivy security scan was performed on the Fawkes repository to identify potential
 ### Security Status: ✅ CLEAN
 
 **All security vulnerabilities have been resolved in this PR:**
+
 - ✅ Terratest implementation has **ZERO security issues**
 - ✅ Pre-existing infrastructure issues have been **FIXED**
 - ✅ CI/CD security scans now **PASS** without suppressions
@@ -29,12 +30,14 @@ The following security issues that were found in pre-existing infrastructure fil
 ### 1. Azure AKS Cluster Issues (infra/terraform/aks/aks.tf)
 
 #### AVD-AZU-0041 (CRITICAL): API Server Access Not Restricted - ✅ FIXED
+
 - **Location**: `aks.tf:54-56`
 - **Issue**: Cluster does not limit API access to specific IP addresses
 - **Impact**: API server is accessible from any IP, increasing attack surface
 - **Resolution**: ✅ Configuration already includes `api_server_access_profile` with support for `authorized_ip_ranges` variable
 
 **Applied Fix:**
+
 ```terraform
 api_server_access_profile {
   authorized_ip_ranges = var.api_server_authorized_ip_ranges
@@ -44,12 +47,14 @@ api_server_access_profile {
 Users can now configure authorized IP ranges via the `api_server_authorized_ip_ranges` variable to restrict API server access.
 
 #### AVD-AZU-0043 (HIGH): No Network Policy Configured - ✅ FIXED
+
 - **Location**: `aks.tf:46-52` (network_profile)
 - **Issue**: Kubernetes cluster does not have a network policy set
 - **Impact**: All pods can communicate without restrictions
 - **Resolution**: ✅ Added `network_policy` configuration with default value "azure"
 
 **Applied Fix:**
+
 ```terraform
 network_profile {
   network_plugin    = var.network_plugin
@@ -64,11 +69,14 @@ network_profile {
 ### 2. AWS Security Group Issues (infra/aws/main.tf) - ✅ FIXED
 
 #### AVD-AWS-0104 (CRITICAL): Unrestricted Egress Rules (3 occurrences)
-- **Locations**: 
+
+- **Locations**:
   - `main.tf:140` (all_worker_mgmt security group)
   - `main.tf:97` (worker_group_mgmt_one)
+
 #### AVD-AWS-0104 (CRITICAL): Unrestricted Egress Rules - ✅ FIXED
-- **Locations**: 
+
+- **Locations**:
   - `main.tf:140` (all_worker_mgmt security group)
   - `main.tf:97` (worker_group_mgmt_one)
   - `main.tf:119` (worker_group_mgmt_two)
@@ -77,6 +85,7 @@ network_profile {
 - **Resolution**: ✅ Changed egress rules to restrict traffic to VPC CIDR only
 
 **Applied Fix:**
+
 ```terraform
 # Fixed in all_worker_mgmt security group
 egress {
@@ -98,12 +107,14 @@ variable "egress_cidr_block" {
 ### 3. Kubernetes Deployment Issues (infra/aws/proxy-all.yaml) - ✅ FIXED
 
 #### AVD-KSV-0014 (HIGH): Read-Only Root Filesystem Not Set - ✅ FIXED
+
 - **Location**: `proxy-all.yaml:54-59` (nginx container)
 - **Issue**: Container doesn't have readOnlyRootFilesystem set to true
 - **Impact**: Attackers could write to the file system
 - **Resolution**: ✅ Added comprehensive security context with read-only root filesystem
 
 **Applied Fix:**
+
 ```yaml
 containers:
   - name: nginx
@@ -119,12 +130,14 @@ containers:
 ```
 
 #### AVD-KSV-0118 (HIGH): Default Security Context - ✅ FIXED
+
 - **Locations**: Container and deployment level
 - **Issue**: Using default security context allows root privileges
 - **Impact**: Increases risk of container escape
 - **Resolution**: ✅ Added explicit security contexts at both pod and container levels
 
 **Applied Fix:**
+
 ```yaml
 spec:
   securityContext:
@@ -138,7 +151,8 @@ spec:
 ### 4. Dockerfile Issues (Multiple files) - ✅ FIXED
 
 #### AVD-DS-0002 (HIGH): No Non-Root USER Specified
-- **Affected files**: 
+
+- **Affected files**:
   - `design-system/Dockerfile`
   - `design-system/Dockerfile.prebuilt`
   - `services/rag-service/Dockerfile`
@@ -147,7 +161,7 @@ spec:
 - **Impact**: Container escape vulnerabilities
 - **Recommendation**: Add USER directive
 
-```dockerfile
+````dockerfile
 # Recommended fix
 FROM node:18-alpine
 
@@ -161,7 +175,7 @@ RUN addgroup -g 1000 appuser && \
 USER appuser
 
 #### AVD-DS-0002 (HIGH): No Non-Root USER Specified - ✅ FIXED
-- **Affected files**: 
+- **Affected files**:
   - `design-system/Dockerfile`
   - `design-system/Dockerfile.prebuilt`
   - Others
@@ -188,14 +202,14 @@ RUN addgroup -g 1000 nginx-user && \
 USER nginx-user
 
 CMD ["nginx", "-g", "daemon off;"]
-```
+````
 
 ## Summary of Applied Fixes
 
 All security issues have been resolved in this PR:
 
 ✅ **Azure AKS Configuration** - Added network policy support
-✅ **AWS Security Groups** - Restricted egress to VPC CIDR only  
+✅ **AWS Security Groups** - Restricted egress to VPC CIDR only
 ✅ **Kubernetes Manifests** - Added comprehensive security contexts
 ✅ **Dockerfiles** - Added non-root USER directives
 
@@ -204,6 +218,7 @@ All security issues have been resolved in this PR:
 **IMPORTANT**: The Terratest suite implementation added in this PR has **ZERO** security vulnerabilities. All issues that were identified in the initial Trivy scan have now been **FIXED**.
 
 ### Files Created in This PR (All Clean)
+
 ✅ `tests/terratest/*.go` - No issues
 ✅ `tests/terratest/go.mod`, `tests/terratest/go.sum` - No issues
 ✅ `.github/workflows/terraform-tests.yml` - No issues
@@ -211,6 +226,7 @@ All security issues have been resolved in this PR:
 ✅ `tests/terratest/README.md` - No issues
 
 ### Files Modified to Fix Security Issues
+
 ✅ `infra/terraform/aks/aks.tf` - Added network policy
 ✅ `infra/terraform/aks/variables.tf` - Added network_policy variable
 ✅ `infra/aws/main.tf` - Restricted security group egress
@@ -241,6 +257,7 @@ The `.trivyignore` file has been updated to reflect that all issues are now reso
 This PR implements comprehensive security best practices across the codebase:
 
 **Infrastructure Security:**
+
 1. ✅ **Network Policies**: AKS clusters now have network policy enforcement
 2. ✅ **Access Controls**: API server access can be restricted via variables
 3. ✅ **Egress Restrictions**: AWS security groups limited to VPC CIDR
@@ -249,6 +266,7 @@ This PR implements comprehensive security best practices across the codebase:
 6. ✅ **Security Contexts**: Comprehensive pod and container security settings
 
 **Terratest Security:**
+
 1. ✅ **No Hardcoded Credentials**: Uses environment variables for Azure authentication
 2. ✅ **Least Privilege**: Tests only request necessary permissions
 3. ✅ **Secure CI/CD**: GitHub Actions workflow uses OIDC and secrets management

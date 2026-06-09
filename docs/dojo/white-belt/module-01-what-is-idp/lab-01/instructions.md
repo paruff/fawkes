@@ -273,13 +273,13 @@ will create your own service from scratch using the same pattern.
 
 ## Troubleshooting
 
-| Problem | Cause | Fix |
-|---------|-------|-----|
-| `kubectl` cannot connect | `make dev-up` not run or failed | Run `make dev-up` and wait |
-| Pod stuck in `Pending` | Insufficient cluster resources | Run `kubectl describe pod -n dojo-lab-01` for details |
-| Pod stuck in `ImagePullBackOff` | No internet access to pull image | Check network and run `kubectl describe pod` |
-| curl returns non-200 | Pod not ready | Wait for `kubectl rollout status` to succeed |
-| Backstage not found | Service not running | Check `make dev-status` |
+| Problem                         | Cause                            | Fix                                                   |
+| ------------------------------- | -------------------------------- | ----------------------------------------------------- |
+| `kubectl` cannot connect        | `make dev-up` not run or failed  | Run `make dev-up` and wait                            |
+| Pod stuck in `Pending`          | Insufficient cluster resources   | Run `kubectl describe pod -n dojo-lab-01` for details |
+| Pod stuck in `ImagePullBackOff` | No internet access to pull image | Check network and run `kubectl describe pod`          |
+| curl returns non-200            | Pod not ready                    | Wait for `kubectl rollout status` to succeed          |
+| Backstage not found             | Service not running              | Check `make dev-status`                               |
 
 ---
 

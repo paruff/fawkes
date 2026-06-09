@@ -85,7 +85,6 @@
 **Direct Quotes**:
 
 > "[Capture exact words - especially expressions of confusion, frustration, or delight]"
-
 > "[Another quote]"
 
 **Issues Identified**:
@@ -247,7 +246,6 @@
 
 > "[Quote 1 - with context]"
 > — During [Task X], when [context]
-
 > "[Quote 2]"
 > — [Context]
 
@@ -255,7 +253,6 @@
 
 > "[Quote 1]"
 > — [Context]
-
 > "[Quote 2]"
 > — [Context]
 
@@ -263,7 +260,6 @@
 
 > "[Quote revealing what user expected]"
 > — [Context]
-
 > "[Quote showing user's understanding]"
 > — [Context]
 
@@ -393,13 +389,13 @@
 
 ### Task Success Criteria Reference
 
-**Task 1: [Name]**
+#### Task 1: [Name]
 
 - [ ] [Success criterion 1]
 - [ ] [Success criterion 2]
 - [ ] [Success criterion 3]
 
-**Task 2: [Name]**
+#### Task 2: [Name]
 
 - [ ] [Success criterion 1]
 - [ ] [Success criterion 2]

@@ -106,7 +106,7 @@ kubectl apply -f [manifest]
 
 ??? example "Expected Output"
 `[Example of what successful output looks like]]
-    `
+`
 
 ### Step 2: [Second Major Step]
 

@@ -41,12 +41,14 @@ brew install infracost  # macOS
 ### Setup
 
 1. **Authenticate with Azure**:
+
    ```bash
    az login
    az account set --subscription "your-subscription-id"
    ```
 
 2. **Install Go dependencies**:
+
    ```bash
    cd tests/terratest
    go mod download
@@ -155,13 +157,16 @@ export INFRACOST_API_KEY="your-api-key"
 Tests are automatically run in CI/CD via `.github/workflows/terraform-tests.yml`:
 
 #### On Pull Request
+
 - **Validation tests**: Always run (syntax check, no deployment)
 - **Cost estimation**: Runs if Infracost is configured
 
 #### On Merge to Main
+
 - **Integration tests**: Run automatically to validate modules
 
 #### Manual Trigger
+
 - **E2E tests**: Can be triggered via workflow_dispatch with confirmation
 
 ### Setting Up Secrets
@@ -213,12 +218,12 @@ import (
 
 func TestMyModule(t *testing.T) {
     t.Parallel()
-    
+
     // Gate expensive tests
     if os.Getenv("RUN_TERRAFORM_INTEGRATION_TESTS") != "true" {
         t.Skip("Skipping integration test")
     }
-    
+
     // Configure Terraform
     terraformOptions := &terraform.Options{
         TerraformDir: "../../infra/terraform/modules/my-module",
@@ -228,13 +233,13 @@ func TestMyModule(t *testing.T) {
         },
         NoColor: true,
     }
-    
+
     // Always cleanup
     defer terraform.Destroy(t, terraformOptions)
-    
+
     // Deploy infrastructure
     terraform.InitAndApply(t, terraformOptions)
-    
+
     // Validate outputs
     output := terraform.Output(t, terraformOptions, "resource_id")
     assert.NotEmpty(t, output, "Resource ID should be set")
@@ -294,26 +299,29 @@ terraform.InitAndApply(t, networkOptions)
 
 ### Expected Costs
 
-| Test Type | Duration | Resources | Est. Cost |
-|-----------|----------|-----------|-----------|
-| Validation | 1-2 min | None | $0.00 |
-| Resource Group Unit | 2-3 min | 1 RG | $0.00 |
-| Network Unit | 3-5 min | 1 VNet, 1 Subnet | $0.01 |
-| AKS Unit | 10-15 min | 1 node cluster | $1-2 |
-| Integration E2E | 25-35 min | Full stack | $5-10 |
+| Test Type           | Duration  | Resources        | Est. Cost |
+| ------------------- | --------- | ---------------- | --------- |
+| Validation          | 1-2 min   | None             | $0.00     |
+| Resource Group Unit | 2-3 min   | 1 RG             | $0.00     |
+| Network Unit        | 3-5 min   | 1 VNet, 1 Subnet | $0.01     |
+| AKS Unit            | 10-15 min | 1 node cluster   | $1-2      |
+| Integration E2E     | 25-35 min | Full stack       | $5-10     |
 
 ### Cost Optimization
 
 1. **Use minimal resources**:
+
    - Single node for AKS tests
    - B-series VMs (cheapest)
    - Minimal address spaces
 
 2. **Quick cleanup**:
+
    - Always use `defer terraform.Destroy()`
    - Monitor for stuck resources
 
 3. **Test selectively**:
+
    - Run validation tests frequently (free)
    - Run integration tests on main branch only
    - Run E2E tests manually/scheduled
@@ -427,6 +435,7 @@ go test -v -run TestMyModule 2>&1 | tee test-output.log
 5. **Add to CI/CD**: Tests run automatically on PRs
 
 For detailed information, see:
+
 - [Terratest README](README.md)
 - [Module-specific documentation](../../infra/terraform/modules/)
 - [CI/CD workflow](.github/workflows/terraform-tests.yml)

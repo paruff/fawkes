@@ -10,6 +10,7 @@ compatibility: opencode
 Every variable needs `description`. Sensitive vars get `sensitive = true`.
 
 Backend (KL-01):
+
 ```hcl
 # AWS
 terraform { backend "s3" {
@@ -30,11 +31,13 @@ terraform { backend "azurerm" {
 ```
 
 Tags on everything:
+
 ```hcl
 tags = { Project = "fawkes", Environment = var.environment, ManagedBy = "terraform" }
 ```
 
 Validate:
+
 ```bash
 cd infra/MODULE && terraform fmt -check . && terraform init -backend=false && terraform validate
 ```

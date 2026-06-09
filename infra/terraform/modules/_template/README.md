@@ -223,36 +223,38 @@ Manages a {Provider-Name} {resource-description}, extending the base {module-typ
 
 \`\`\`hcl
 module "{module-name}" {
-  source              = "../../modules/{provider-name}/{module-type}"
-  cluster_name        = "fawkes-cluster"  # or network_name, name
-  location            = "region-1"
-  resource_group_name = module.rg.name
-  # ... other variables
+source = "../../modules/{provider-name}/{module-type}"
+cluster_name = "fawkes-cluster" # or network_name, name
+location = "region-1"
+resource_group_name = module.rg.name
+
+# ... other variables
+
 }
 \`\`\`
 
 ## Requirements
 
-| Name | Version |
-|------|---------|
-| terraform | >= 1.6.0 |
+| Name            | Version  |
+| --------------- | -------- |
+| terraform       | >= 1.6.0 |
 | {provider-name} | >= X.Y.Z |
 
 ## Inputs
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|----------|
-| cluster_name | Name of the cluster | \`string\` | n/a | yes |
-| location | Provider region | \`string\` | n/a | yes |
-| ... | ... | ... | ... | ... |
+| Name         | Description         | Type       | Default | Required |
+| ------------ | ------------------- | ---------- | ------- | -------- |
+| cluster_name | Name of the cluster | \`string\` | n/a     | yes      |
+| location     | Provider region     | \`string\` | n/a     | yes      |
+| ...          | ...                 | ...        | ...     | ...      |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| cluster_id | The ID of the cluster |
+| Name         | Description             |
+| ------------ | ----------------------- |
+| cluster_id   | The ID of the cluster   |
 | cluster_name | The name of the cluster |
-| ... | ... |
+| ...          | ...                     |
 
 ## Validation Rules
 
@@ -289,7 +291,7 @@ import (
 
 func Test{ProviderName}{ModuleType}Module(t *testing.T) {
     t.Parallel()
-    
+
     // Test implementation
 }
 ```
@@ -341,6 +343,7 @@ See existing provider implementations for reference:
 ## Getting Help
 
 For questions about creating new provider modules:
+
 - Review the base module documentation in `modules/base/`
 - Check the Azure implementation as a reference
 - Consult the Terraform Best Practices guide

@@ -6,7 +6,7 @@
 # Mock kubectl with configurable responses
 setup_kubectl_mock() {
   export MOCK_KUBECTL_RESPONSES="${TEST_TEMP_DIR}/kubectl_responses.json"
-  cat > "${MOCK_KUBECTL_RESPONSES}" <<'EOF'
+  cat > "${MOCK_KUBECTL_RESPONSES}" << 'EOF'
 {
   "cluster-info": {"exit_code": 0, "output": "Kubernetes control plane is running"},
   "get_nodes": {"exit_code": 0, "output": "{\"items\":[{\"status\":{\"conditions\":[{\"type\":\"Ready\",\"status\":\"True\"}]}}]}"},
@@ -18,8 +18,8 @@ EOF
   # Create kubectl stub
   export PATH="${TEST_TEMP_DIR}/bin:${PATH}"
   mkdir -p "${TEST_TEMP_DIR}/bin"
-  
-  cat > "${TEST_TEMP_DIR}/bin/kubectl" <<'KUBECTL_MOCK'
+
+  cat > "${TEST_TEMP_DIR}/bin/kubectl" << 'KUBECTL_MOCK'
 #!/usr/bin/env bash
 # Log the command
 echo "kubectl $*" >> "${TEST_TEMP_DIR}/kubectl.log"
@@ -83,7 +83,7 @@ KUBECTL_MOCK
 # Mock az (Azure CLI)
 setup_az_mock() {
   mkdir -p "${TEST_TEMP_DIR}/bin"
-  cat > "${TEST_TEMP_DIR}/bin/az" <<'AZ_MOCK'
+  cat > "${TEST_TEMP_DIR}/bin/az" << 'AZ_MOCK'
 #!/usr/bin/env bash
 echo "az $*" >> "${TEST_TEMP_DIR}/az.log"
 
@@ -122,7 +122,7 @@ AZ_MOCK
 # Mock aws CLI
 setup_aws_mock() {
   mkdir -p "${TEST_TEMP_DIR}/bin"
-  cat > "${TEST_TEMP_DIR}/bin/aws" <<'AWS_MOCK'
+  cat > "${TEST_TEMP_DIR}/bin/aws" << 'AWS_MOCK'
 #!/usr/bin/env bash
 echo "aws $*" >> "${TEST_TEMP_DIR}/aws.log"
 
@@ -155,7 +155,7 @@ AWS_MOCK
 # Mock gcloud CLI
 setup_gcloud_mock() {
   mkdir -p "${TEST_TEMP_DIR}/bin"
-  cat > "${TEST_TEMP_DIR}/bin/gcloud" <<'GCLOUD_MOCK'
+  cat > "${TEST_TEMP_DIR}/bin/gcloud" << 'GCLOUD_MOCK'
 #!/usr/bin/env bash
 echo "gcloud $*" >> "${TEST_TEMP_DIR}/gcloud.log"
 
@@ -186,7 +186,7 @@ GCLOUD_MOCK
 # Mock terraform
 setup_terraform_mock() {
   mkdir -p "${TEST_TEMP_DIR}/bin"
-  cat > "${TEST_TEMP_DIR}/bin/terraform" <<'TERRAFORM_MOCK'
+  cat > "${TEST_TEMP_DIR}/bin/terraform" << 'TERRAFORM_MOCK'
 #!/usr/bin/env bash
 echo "terraform $*" >> "${TEST_TEMP_DIR}/terraform.log"
 
@@ -220,7 +220,7 @@ TERRAFORM_MOCK
 # Mock argocd CLI
 setup_argocd_mock() {
   mkdir -p "${TEST_TEMP_DIR}/bin"
-  cat > "${TEST_TEMP_DIR}/bin/argocd" <<'ARGOCD_MOCK'
+  cat > "${TEST_TEMP_DIR}/bin/argocd" << 'ARGOCD_MOCK'
 #!/usr/bin/env bash
 echo "argocd $*" >> "${TEST_TEMP_DIR}/argocd.log"
 
@@ -269,17 +269,17 @@ setup_all_mocks() {
 assert_mock_called() {
   local mock_name="$1"
   local log_file="${TEST_TEMP_DIR}/${mock_name}.log"
-  
+
   if [[ ! -f "${log_file}" ]]; then
     echo "Mock ${mock_name} was not called (log file not found)"
     return 1
   fi
-  
+
   if [[ ! -s "${log_file}" ]]; then
     echo "Mock ${mock_name} was not called (log file empty)"
     return 1
   fi
-  
+
   return 0
 }
 
@@ -288,13 +288,13 @@ assert_mock_called_with() {
   local mock_name="$1"
   local expected_args="$2"
   local log_file="${TEST_TEMP_DIR}/${mock_name}.log"
-  
+
   if ! grep -q "${expected_args}" "${log_file}"; then
     echo "Mock ${mock_name} was not called with expected arguments: ${expected_args}"
     echo "Actual calls:"
     cat "${log_file}"
     return 1
   fi
-  
+
   return 0
 }

@@ -1,6 +1,7 @@
 # Complete Civo Infrastructure Example
 
 This example demonstrates deploying a complete Civo infrastructure stack including:
+
 - Network with firewall rules
 - Kubernetes cluster with marketplace apps
 - PostgreSQL database with backups
@@ -15,26 +16,31 @@ This example demonstrates deploying a complete Civo infrastructure stack includi
 ## Usage
 
 1. Set your Civo API token:
+
 ```bash
 export TF_VAR_civo_token="your-civo-api-token"
 ```
 
 2. Initialize Terraform:
+
 ```bash
 terraform init
 ```
 
 3. Review the plan:
+
 ```bash
 terraform plan
 ```
 
 4. Apply the configuration:
+
 ```bash
 terraform apply
 ```
 
 5. Get outputs:
+
 ```bash
 terraform output
 terraform output -json > outputs.json
@@ -95,6 +101,7 @@ aws s3 ls \
 ## Cost Estimation
 
 Approximate monthly costs for default configuration (medium cluster, small database):
+
 - Kubernetes Cluster: ~$60-90
 - Database: ~$20-30
 - Object Storage: ~$5 (base) + usage

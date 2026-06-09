@@ -6,10 +6,10 @@ validation.
 
 ## Components
 
-| Component | Purpose | Resource Requirement |
-|---|---|---|
-| **DataHub** | Data catalog, lineage tracking, and data discovery | 4–8 GB RAM, 4 vCPU |
-| **Great Expectations** | Data quality validation and expectations | 512 MB RAM, 1 vCPU |
+| Component              | Purpose                                            | Resource Requirement |
+| ---------------------- | -------------------------------------------------- | -------------------- |
+| **DataHub**            | Data catalog, lineage tracking, and data discovery | 4–8 GB RAM, 4 vCPU   |
+| **Great Expectations** | Data quality validation and expectations           | 512 MB RAM, 1 vCPU   |
 
 ## Prerequisites
 

@@ -11,6 +11,7 @@ This example uses the new module structure with base modules and provider-specif
 ## Differences from Old Example
 
 The old example (`azure-complete`) uses deprecated module paths:
+
 - `azure-resource-group` → `azure/resource-group`
 - `azure-network` → `azure/network`
 - `azure-aks-cluster` → `azure/kubernetes-cluster`
@@ -18,4 +19,3 @@ The old example (`azure-complete`) uses deprecated module paths:
 Both examples are functionally identical. Use this one for new deployments.
 
 See [REFACTORING.md](../../modules/REFACTORING.md) for migration details.
-

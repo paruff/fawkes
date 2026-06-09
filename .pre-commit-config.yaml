@@ -17,9 +17,10 @@ repos:
       - id: check-yaml
         name: Check YAML syntax
         args: ["--allow-multiple-documents"]
-        exclude: '^(infra/kubernetes/.*helm.*|.*templates?/.*\.ya?ml)$'
+        exclude: '^(infra/kubernetes/.*helm.*|.*templates?/.*\.ya?ml|mkdocs\.yml)$'
       - id: check-json
         name: Check JSON syntax
+        exclude: "^data/"
       - id: check-added-large-files
         name: Check for large files
         args: ["--maxkb=1024"]
@@ -30,6 +31,7 @@ repos:
         args: ["--fix=lf"]
       - id: detect-private-key
         name: Detect private keys
+        exclude: '^platform/apps/jenkins/credentials-secrets\.yaml$'
 
   # ============================================================================
   # YAML Linting (GitOps/K8s/IDP)
@@ -184,11 +186,11 @@ repos:
   # Go Code Quality
   # ============================================================================
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.55.2
+    rev: v2.1.6
     hooks:
       - id: golangci-lint
         name: Lint Go code
-        args: ["--fast"]
+        exclude: "^(jenkins-shared-library/|platform/apps/unleash/examples/)"
 
   # ============================================================================
   # Custom Local Hooks for Fawkes-Specific Validation

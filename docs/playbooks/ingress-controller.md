@@ -121,7 +121,7 @@ kubectl get application -n fawkes ingress-nginx
 ??? example "Expected Output"
 `NAME            SYNC STATUS   HEALTH STATUSS
     ingress-nginx   Synced        Healthy
-    `
+`
 
 ### Step 2: Verify Ingress Controller Deployment
 
@@ -153,7 +153,7 @@ kubectl get application -n fawkes ingress-nginx
     ingress-nginx-controller-<hash>            1/1     Running   0          2m
     ingress-nginx-controller-<hash>            1/1     Running   0          2m
     ingress-nginx-defaultbackend-<hash>        1/1     Running   0          2m
-    `
+`
 
 !!! warning "Common Pitfall"
 If LoadBalancer is stuck in `<Pending>` state, verify that your cluster has LoadBalancer support (MetalLB for local, cloud provider LB for cloud environments).
@@ -183,7 +183,7 @@ kubectl get ingress -n ingress-test
 `NAME              CLASS   HOSTS                       ADDRESS         PORTS   AGEE
     echo-server       nginx   test.127.0.0.1.nip.io      192.168.1.100   80      1m
     echo-server-tls   nginx   test-tls.127.0.0.1.nip.io  192.168.1.100   80,443  1m
-    `
+`
 
 !!! info "TLS Certificate"
 The `generate-test-cert.sh` script creates a self-signed certificate valid for `*.127.0.0.1.nip.io`. This certificate is only for testing and should not be used in production. For production, use cert-manager with Let's Encrypt.

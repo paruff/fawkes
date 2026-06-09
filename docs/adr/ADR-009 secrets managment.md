@@ -125,7 +125,7 @@ We will use **External Secrets Operator (ESO)** as the primary secrets managemen
 
 ### Core Components
 
-**1. External Secrets Operator**
+### 1. External Secrets Operator
 
 - Deployed in `fawkes-system` namespace
 - Monitors `ExternalSecret` and `SecretStore` resources

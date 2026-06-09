@@ -36,15 +36,15 @@ Civo uses K3s (lightweight Kubernetes) instead of full Kubernetes, which has som
 
 ## Key Differences from AWS/GCP
 
-| Feature | AWS/GCP | Civo |
-|---------|---------|------|
-| Kubernetes | Full EKS/GKE | K3s (lightweight) |
-| Native Monitoring | CloudWatch/Cloud Monitoring | None - rely on platform stack |
-| Native Logging | CloudWatch Logs/Cloud Logging | None - use Fluent Bit |
-| Tracing | X-Ray/Cloud Trace | Platform-level (Jaeger) |
-| Cost API | Rich billing APIs | Simple API, limited granularity |
-| Regions | 20+ regions | 4 regions (NYC1, LON1, FRA1, PHX1) |
-| API Rate Limits | High (1000s/min) | Moderate (~100/min) |
+| Feature           | AWS/GCP                       | Civo                               |
+| ----------------- | ----------------------------- | ---------------------------------- |
+| Kubernetes        | Full EKS/GKE                  | K3s (lightweight)                  |
+| Native Monitoring | CloudWatch/Cloud Monitoring   | None - rely on platform stack      |
+| Native Logging    | CloudWatch Logs/Cloud Logging | None - use Fluent Bit              |
+| Tracing           | X-Ray/Cloud Trace             | Platform-level (Jaeger)            |
+| Cost API          | Rich billing APIs             | Simple API, limited granularity    |
+| Regions           | 20+ regions                   | 4 regions (NYC1, LON1, FRA1, PHX1) |
+| API Rate Limits   | High (1000s/min)              | Moderate (~100/min)                |
 
 ## Directory Structure
 
@@ -66,9 +66,10 @@ platform/observability/grafana/dashboards/
 **File**: `prometheus-config.yaml`
 
 Configures Prometheus to scrape metrics from:
+
 - **K3s Nodes**: Kubelet metrics from K3s nodes
 - **K3s API Server**: Control plane metrics
-- **K3s Scheduler**: Scheduler metrics  
+- **K3s Scheduler**: Scheduler metrics
 - **K3s Controller Manager**: Controller manager metrics
 - **Application Pods**: Pods with `prometheus.io/scrape: "true"` annotation
 
@@ -77,6 +78,7 @@ Configures Prometheus to scrape metrics from:
 Pre-aggregated metrics for efficient queries:
 
 **Cluster Resources**:
+
 - `civo:cluster:cpu_capacity_cores` - Total CPU capacity
 - `civo:cluster:memory_capacity_bytes` - Total memory capacity
 - `civo:cluster:cpu_utilization_percent` - CPU utilization %
@@ -85,6 +87,7 @@ Pre-aggregated metrics for efficient queries:
 - `civo:cluster:nodes_not_ready` - Number of not-ready nodes
 
 **Pod Metrics**:
+
 - `civo:cluster:pods_total` - Total pod count
 - `civo:cluster:pods_running` - Running pods
 - `civo:cluster:pods_pending` - Pending pods
@@ -92,11 +95,13 @@ Pre-aggregated metrics for efficient queries:
 - `civo:cluster:pod_restart_rate` - Pod restart rate per minute
 
 **API Rate Limits**:
+
 - `civo:api:calls_per_minute` - Civo API calls rate
 - `civo:api:error_rate` - API error rate
 - `civo:api:rate_limit_usage_percent` - Rate limit usage %
 
 **Cost Metrics**:
+
 - `civo:cost:cluster_hourly_usd` - Cluster cost per hour
 - `civo:cost:cluster_monthly_projected_usd` - Projected monthly cost
 - `civo:cost:namespace_hourly_usd` - Cost per namespace
@@ -105,6 +110,7 @@ Pre-aggregated metrics for efficient queries:
 #### ServiceMonitors
 
 Custom ServiceMonitors for:
+
 - **cost-collector**: Scrapes cost metrics every 5 minutes
 - **cloud-provider-service**: Scrapes Civo API metrics every minute
 
@@ -189,6 +195,7 @@ Alerts are routed to Mattermost channels based on severity:
 - **Cost alerts**: Separate channel for finance team, 12-hour repeat interval
 
 Configuration requires setting environment variables:
+
 - `MATTERMOST_WEBHOOK_URL`: Main alerts channel
 - `MATTERMOST_COST_WEBHOOK_URL`: Cost alerts channel (optional)
 
@@ -199,6 +206,7 @@ Configuration requires setting environment variables:
 Comprehensive dashboard with 24 panels organized into sections:
 
 #### Cluster Overview (6 panels)
+
 - Total Monthly Cost
 - CPU Utilization Gauge
 - Memory Utilization Gauge
@@ -206,29 +214,35 @@ Comprehensive dashboard with 24 panels organized into sections:
 - Running Pods
 
 #### Cost Tracking (5 panels)
+
 - Hourly Cost
 - Idle Resource Cost
 - Cost Trend (24h)
 - Cost by Namespace
 
 #### Resource Utilization (2 panels)
+
 - CPU Utilization by Node
 - Memory Utilization by Node
 
 #### K3s Performance (2 panels)
+
 - API Server Requests
 - API Server Latency (p99)
 
 #### Pod Status (2 panels)
+
 - Pod Status Distribution (pie chart)
 - Pod Restart Rate
 
 #### API Rate Limits (3 panels)
+
 - Civo API Calls Rate Gauge
 - API Error Rate
 - API Calls Trend
 
 **Variables**:
+
 - `$cluster`: Select cluster to view
 - `$region`: Filter by Civo region
 
@@ -367,6 +381,7 @@ Civo provides a simple billing API that can be integrated for cost tracking.
 ### Civo Billing API
 
 The `cost-collector` service queries the Civo API for:
+
 - Current cluster resource costs
 - Instance pricing
 - Volume pricing
@@ -392,14 +407,17 @@ civo_api_requests_total{method="GET", endpoint="/v2/kubernetes/clusters", status
 ### Cost Optimization
 
 1. **Identify Idle Resources**:
+
    - Query: `civo:cost:idle_pods_hourly_usd`
    - Scale down or delete pods with low CPU usage
 
 2. **Right-size Clusters**:
+
    - Monitor CPU/memory utilization
    - Downsize nodes if consistently < 50% utilized
 
 3. **Use Spot Instances** (if available):
+
    - Civo doesn't currently offer spot instances
    - Monitor for this feature in future
 
@@ -413,6 +431,7 @@ civo_api_requests_total{method="GET", endpoint="/v2/kubernetes/clusters", status
 ### 1. Metric Retention
 
 Configure Prometheus retention based on needs:
+
 - **Default**: 15 days
 - **Recommended**: 30 days for production
 - **Long-term**: Export to Thanos or Cortex for > 30 days
@@ -420,57 +439,35 @@ Configure Prometheus retention based on needs:
 ### 2. Log Retention
 
 Configure OpenSearch index lifecycle:
+
 - **Hot tier** (0-7 days): Standard storage
 - **Warm tier** (7-30 days): Slower storage
 - **Cold tier** (30-90 days): Archive storage
 - **Delete** (> 90 days): Remove old logs
 
 Example policy in `fluent-bit-config.yaml`:
+
 ```yaml
 # OpenSearch ILM policy (configure in OpenSearch)
 {
-  "policy": {
-    "description": "Civo logs lifecycle policy",
-    "default_state": "hot",
-    "states": [
-      {
-        "name": "hot",
-        "transitions": [
-          {
-            "state_name": "warm",
-            "conditions": {
-              "min_index_age": "7d"
-            }
-          }
-        ]
-      },
-      {
-        "name": "warm",
-        "transitions": [
-          {
-            "state_name": "delete",
-            "conditions": {
-              "min_index_age": "90d"
-            }
-          }
-        ]
-      },
-      {
-        "name": "delete",
-        "actions": [
-          {
-            "delete": {}
-          }
-        ]
-      }
-    ]
-  }
+  "policy":
+    {
+      "description": "Civo logs lifecycle policy",
+      "default_state": "hot",
+      "states":
+        [
+          { "name": "hot", "transitions": [{ "state_name": "warm", "conditions": { "min_index_age": "7d" } }] },
+          { "name": "warm", "transitions": [{ "state_name": "delete", "conditions": { "min_index_age": "90d" } }] },
+          { "name": "delete", "actions": [{ "delete": {} }] },
+        ],
+    },
 }
 ```
 
 ### 3. Alert Tuning
 
 Start with conservative thresholds and adjust based on actual usage:
+
 - **CPU**: 80% warning, 90% critical
 - **Memory**: 85% warning, 95% critical
 - **API rate limit**: 70% warning, 90% critical
@@ -480,6 +477,7 @@ Monitor alert frequency and adjust to reduce noise.
 ### 4. Dashboard Organization
 
 Organize Grafana dashboards by audience:
+
 - **Developers**: Focus on application metrics, logs, traces
 - **Platform team**: Focus on cluster health, K3s performance
 - **Finance**: Focus on cost tracking, optimization
@@ -587,17 +585,17 @@ If hitting rate limits:
 
 Based on typical usage for a production Civo cluster:
 
-| Service | Usage | Monthly Cost |
-|---------|-------|--------------|
-| Prometheus | 50GB storage, 2GB memory | Included in cluster |
-| OpenSearch | 100GB logs, 30-day retention | $15-25 |
-| Fluent Bit | DaemonSet on all nodes | Included (minimal overhead) |
-| Grafana | Dashboards and queries | Included in platform |
-| **Platform Overhead** | | **~$15-25/month** |
-| **Civo Cluster** | 3 nodes × g4s.kube.medium | **~$90/month** |
-| **Total** | | **~$105-115/month** |
+| Service               | Usage                        | Monthly Cost                |
+| --------------------- | ---------------------------- | --------------------------- |
+| Prometheus            | 50GB storage, 2GB memory     | Included in cluster         |
+| OpenSearch            | 100GB logs, 30-day retention | $15-25                      |
+| Fluent Bit            | DaemonSet on all nodes       | Included (minimal overhead) |
+| Grafana               | Dashboards and queries       | Included in platform        |
+| **Platform Overhead** |                              | **~$15-25/month**           |
+| **Civo Cluster**      | 3 nodes × g4s.kube.medium    | **~$90/month**              |
+| **Total**             |                              | **~$105-115/month**         |
 
-*Note: Civo clusters are significantly cheaper than EKS/GKE, with observability overhead around 15-20% of cluster cost.*
+_Note: Civo clusters are significantly cheaper than EKS/GKE, with observability overhead around 15-20% of cluster cost._
 
 ## Performance Impact
 
@@ -609,16 +607,19 @@ Based on typical usage for a production Civo cluster:
 ## Security Considerations
 
 1. **Secrets Management**:
+
    - Store Civo API keys in Kubernetes secrets
    - Use external secret management (Vault, AWS Secrets Manager)
    - Rotate API keys regularly
 
 2. **RBAC**:
+
    - Limit Prometheus scraping to necessary resources
    - Restrict Fluent Bit to read-only access
    - Use separate service accounts per component
 
 3. **Network Security**:
+
    - Use Network Policies to restrict pod-to-pod traffic
    - TLS for all external connections (OpenSearch, Mattermost)
    - Verify TLS certificates (don't use `insecure_skip_verify` in production)
@@ -641,6 +642,7 @@ Based on typical usage for a production Civo cluster:
 ## Support
 
 For issues or questions:
+
 - File an issue in the Fawkes repository
 - Contact the platform team via Mattermost #platform-observability
 - Check [Civo Community](https://www.civo.com/community)

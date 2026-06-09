@@ -196,6 +196,6 @@ Tools used: {{kubectl, terraform, helm, ArgoCD UI, etc.}}
 
 ## Changelog
 
-| Date | Prompt Changed | Reason |
-|---|---|---|
+| Date    | Prompt Changed  | Reason                           |
+| ------- | --------------- | -------------------------------- |
 | 2026-03 | Initial library | Fawkes copilot template adoption |

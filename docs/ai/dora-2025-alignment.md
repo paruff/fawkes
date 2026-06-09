@@ -1,7 +1,6 @@
 # DORA 2025 AI Capabilities — Fawkes Alignment Guide
 
-> **Source:** [DORA 2025 State of AI-Assisted Software Development](https://dora.dev/dora-report-2025/)  
-> **Category:** Reference | AI Practices  
+> **Source:** [DORA 2025 State of AI-Assisted Software Development](https://dora.dev/dora-report-2025/) > **Category:** Reference | AI Practices
 > **Audience:** Platform engineers, AI coding agents, team leads
 
 ---
@@ -14,7 +13,7 @@ whether AI accelerates or destabilises software delivery. Approximately 90% of
 technology professionals now use AI in their work, yet ~30% express little or no
 trust in AI-generated code. Speed without stability accelerates chaos, not value.
 
-**Key finding:** AI is an *amplifier* of existing practices, not a shortcut. High-performing
+**Key finding:** AI is an _amplifier_ of existing practices, not a shortcut. High-performing
 teams get measurably better with AI. Teams with weak foundations see their problems
 worsen at greater speed.
 
@@ -28,6 +27,7 @@ Ambiguity breeds risk. Teams need defined, communicated policies on when and how
 leverage AI safely.
 
 **Fawkes implementation:**
+
 - `AGENTS.md` — universal rules for all agents (Copilot, Claude, VS Code agent mode)
 - `.github/copilot-instructions.md` — Copilot-specific standards
 - `.github/agents/` — specialist agent profiles with task-scoped instructions
@@ -44,6 +44,7 @@ AI is only as good as the data it can access. Poor-quality data (undocumented
 functions, missing type hints, silent errors) stymies AI effectiveness.
 
 **Fawkes implementation:**
+
 - `ruff` + `mypy` enforce type hints on all Python services
 - Google-style docstrings required on all public functions
 - Structured logs (structlog) provide machine-readable audit data
@@ -60,6 +61,7 @@ Connecting AI to internal documentation, codebases, and decision logs turns a
 generic assistant into a specialised expert for your context.
 
 **Fawkes implementation:**
+
 - `docs/API_SURFACE.md` — complete public interface map
 - `docs/ARCHITECTURE.md` — component relationships
 - `docs/CHANGE_IMPACT_MAP.md` — which files break when a component changes
@@ -77,6 +79,7 @@ As AI accelerates code generation, robust version control is more critical than 
 to maintain quality and enable safe experimentation.
 
 **Fawkes implementation:**
+
 - Conventional commits: `feat(scope):`, `fix(scope):`, `test(scope):`, `docs(scope):`
 - PR size gate: > 400 lines blocked by CI; requires `large-pr-approved` label
 - Branch protection on `main` — no direct pushes
@@ -92,6 +95,7 @@ AI increases the risk of introducing many changes at once. Small-batch practices
 prevent speed from undermining stability.
 
 **Fawkes implementation:**
+
 - PR size limit: 400 lines (CI gate)
 - Issue template requires explicit file list — agents must not create files not listed
 - `AGENTS.md § 5` — agents must ask before touching more than 5 files in one task
@@ -107,6 +111,7 @@ Rapid AI-generated delivery only matters if aimed at real user needs. Teams must
 maintain tight feedback loops between delivery and user value.
 
 **Fawkes implementation:**
+
 - BDD features written in business language (`tests/bdd/`) — user needs first
 - Backstage catalog (`catalog-info.yaml`) maps services to user-facing capabilities
 - Golden-path templates (`templates/`) reduce cognitive load for new engineers
@@ -122,11 +127,12 @@ Internal platforms with paved paths, guardrails, and automated tooling are the
 critical multiplier for AI effectiveness. Poor platforms neutralise AI gains.
 
 **Fawkes implementation:**
+
 - ArgoCD GitOps — declarative, automated reconciliation
 - Pre-commit hooks (`make pre-commit-setup`) — catch issues before CI
 - Helm charts with `helm lint` + `helm template` gates
 - `make` targets provide a single, documented CLI for all common tasks
-- Fawkes *is* the platform — every improvement here directly improves AI output quality
+- Fawkes _is_ the platform — every improvement here directly improves AI output quality
 
 **What to improve:** Measure and report platform paved-path adoption (% of services
 using golden-path templates) in `docs/METRICS.md`.
@@ -171,13 +177,13 @@ Use this checklist before assigning an AI agent to a module:
 
 DORA 2025 defines seven team archetypes. Fawkes targets the top tier:
 
-| Archetype | AI Effectiveness | Fawkes Target |
-|---|---|---|
-| Harmonious high-achievers | Highest | ✅ Target |
-| Capable collaborators | High | Acceptable |
-| Productive but siloed | Medium | Needs improvement |
-| Legacy bottlenecks | Low | Unacceptable |
-| Dysfunctional foundations | Negative | Blocked from AI use |
+| Archetype                 | AI Effectiveness | Fawkes Target       |
+| ------------------------- | ---------------- | ------------------- |
+| Harmonious high-achievers | Highest          | ✅ Target           |
+| Capable collaborators     | High             | Acceptable          |
+| Productive but siloed     | Medium           | Needs improvement   |
+| Legacy bottlenecks        | Low              | Unacceptable        |
+| Dysfunctional foundations | Negative         | Blocked from AI use |
 
 Teams with "legacy bottlenecks" or "dysfunctional foundations" should fix their
 foundation before enabling AI tooling — AI will accelerate their problems.
@@ -188,16 +194,16 @@ foundation before enabling AI tooling — AI will accelerate their problems.
 
 Monitor these alongside classic DORA metrics when AI tooling is active:
 
-| Metric | Positive Signal | Warning Signal |
-|---|---|---|
-| Deployment frequency | Increasing | Unchanged or decreasing |
-| Lead time for changes | Decreasing | Increasing (AI rework) |
-| Change failure rate | Stable or decreasing | Increasing (AI-introduced bugs) |
-| MTTR | Stable or decreasing | Increasing (harder to debug AI code) |
-| Rework rate | < 10% | > 20% → stop, fix instructions |
-| PR size | Decreasing trend | Increasing (AI batch risk) |
+| Metric                | Positive Signal      | Warning Signal                       |
+| --------------------- | -------------------- | ------------------------------------ |
+| Deployment frequency  | Increasing           | Unchanged or decreasing              |
+| Lead time for changes | Decreasing           | Increasing (AI rework)               |
+| Change failure rate   | Stable or decreasing | Increasing (AI-introduced bugs)      |
+| MTTR                  | Stable or decreasing | Increasing (harder to debug AI code) |
+| Rework rate           | < 10%                | > 20% → stop, fix instructions       |
+| PR size               | Decreasing trend     | Increasing (AI batch risk)           |
 
-Rework rate tracked in: `docs/METRICS.md`  
+Rework rate tracked in: `docs/METRICS.md`
 Weekly check: `scripts/weekly-metrics.sh`
 
 ---

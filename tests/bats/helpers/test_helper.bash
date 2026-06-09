@@ -40,11 +40,11 @@ export FIXTURES_DIR="${BATS_TEST_DIRNAME}/fixtures"
 setup_test_env() {
   # Create temporary directory for test
   export TEST_TEMP_DIR="$(mktemp -d)"
-  
+
   # Create temporary state file
   export STATE_FILE="${TEST_TEMP_DIR}/test-state.json"
   echo '{}' > "${STATE_FILE}"
-  
+
   # Set test context
   export CONTEXT_ID="test-context"
   export DRY_RUN=0
@@ -63,7 +63,7 @@ mock_kubectl() {
   export -f kubectl
   kubectl() {
     echo "kubectl $*" >> "${TEST_TEMP_DIR}/kubectl.log"
-    
+
     # Handle common kubectl commands for testing
     case "$1" in
       "cluster-info")

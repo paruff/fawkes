@@ -217,11 +217,11 @@ Don't start from scratch. Deploy a production-ready platform and customize to yo
 
 Not sure where to begin? Choose the path that fits your goal:
 
-| Path | Goal | Time |
-|---|---|---|
-| **[A — Evaluate Locally](docs/getting-started.md#path-a-evaluate-locally)** | Try Fawkes on your laptop with k3d — no cloud account needed | ~20 min |
-| **[B — Deploy to Cloud](docs/getting-started.md#path-b-deploy-to-cloud-aws-eks)** | Production-capable deployment on AWS EKS | 2–4 hours |
-| **[C — Enterprise Multi-Cloud](docs/getting-started.md#path-c-enterprise-multi-cloud)** | Multi-cloud, SSO, RBAC, compliance | 1–2 days |
+| Path                                                                                    | Goal                                                         | Time      |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------------------ | --------- |
+| **[A — Evaluate Locally](docs/getting-started.md#path-a-evaluate-locally)**             | Try Fawkes on your laptop with k3d — no cloud account needed | ~20 min   |
+| **[B — Deploy to Cloud](docs/getting-started.md#path-b-deploy-to-cloud-aws-eks)**       | Production-capable deployment on AWS EKS                     | 2–4 hours |
+| **[C — Enterprise Multi-Cloud](docs/getting-started.md#path-c-enterprise-multi-cloud)** | Multi-cloud, SSO, RBAC, compliance                           | 1–2 days  |
 
 **Fastest start (Path A):**
 
@@ -426,10 +426,10 @@ Advanced capabilities available as opt-in add-ons. Extensions are **not** deploy
 by default — they add operational complexity and resource requirements beyond the
 core platform.
 
-| Extension | Components | When to Add |
-|---|---|---|
-| **[AI](extensions/ai/README.md)** | Weaviate (vector DB), RAG service for semantic search | LLM tooling, semantic doc search |
-| **[Data Platform](extensions/data-platform/README.md)** | DataHub (data catalog), Great Expectations (quality) | Data catalog, lineage tracking, quality validation |
+| Extension                                               | Components                                            | When to Add                                        |
+| ------------------------------------------------------- | ----------------------------------------------------- | -------------------------------------------------- |
+| **[AI](extensions/ai/README.md)**                       | Weaviate (vector DB), RAG service for semantic search | LLM tooling, semantic doc search                   |
+| **[Data Platform](extensions/data-platform/README.md)** | DataHub (data catalog), Great Expectations (quality)  | Data catalog, lineage tracking, quality validation |
 
 [View all extensions →](extensions/README.md)
 

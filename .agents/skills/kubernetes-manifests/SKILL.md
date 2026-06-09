@@ -8,6 +8,7 @@ compatibility: opencode
 # K8s Manifests — Fawkes
 
 Every deployment needs:
+
 - Labels: `app`, `version`, `component`, `managed-by: fawkes`
 - Resource limits (requests + limits)
 - Security context: `runAsNonRoot: true`, `readOnlyRootFilesystem: true`
@@ -29,6 +30,7 @@ resources:
 Namespaces: `argocd`, `fawkes-platform`, `fawkes-observability`, `fawkes-cicd`, `fawkes-security`, `fawkes-apps`
 
 Validate:
+
 ```bash
 python -c "import yaml; yaml.safe_load(open('FILE'))"
 grep -L "managed-by: fawkes" platform/apps/*/deployment.yaml

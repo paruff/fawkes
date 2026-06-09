@@ -2,17 +2,12 @@
 Step definitions for DORA Metrics Webhooks BDD tests
 """
 
-import json
-import hmac
-import hashlib
 import os
 import requests
 import pytest
 from datetime import datetime
 from pytest_bdd import scenarios, given, when, then, parsers
 from kubernetes import client, config
-import subprocess
-import time
 
 # Default DevLake service URL (mirrors the Groovy shared library default)
 DEVLAKE_DEFAULT_URL = "http://devlake.fawkes-devlake.svc:8080"

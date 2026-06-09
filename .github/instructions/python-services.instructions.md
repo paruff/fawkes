@@ -9,6 +9,7 @@ applyTo: "services/**/*.py"
 ## Read First
 
 Before writing any code:
+
 - `AGENTS.md` → Language & Layer Map, Python FastAPI Service Rules, DORA 2025 AI Capabilities
 - `docs/ARCHITECTURE.md` → service boundary rules, allowed dependencies
 - `docs/API_SURFACE.md` → existing service interfaces (don't duplicate)
@@ -220,6 +221,7 @@ async def process_request(request_id: str) -> str:
 ```
 
 Structured logging rules:
+
 - Use `structlog` (or the project's `services/shared/logging.py` if available)
 - Every log line must include `service`, `request_id`, and `level`
 - Never use bare `print()` for logs
@@ -273,13 +275,13 @@ def test_my_endpoint_returns_422_on_empty_field() -> None:
 
 ## DORA 2025 Foundations Applied to Python Services
 
-| Foundation | How it applies here |
-|---|---|
-| **Healthy data ecosystem** | Type hints + docstrings make every function AI-consumable without reading its implementation |
-| **Working in small batches** | One route, one model, or one service function per PR — never batch unrelated changes |
+| Foundation                     | How it applies here                                                                              |
+| ------------------------------ | ------------------------------------------------------------------------------------------------ |
+| **Healthy data ecosystem**     | Type hints + docstrings make every function AI-consumable without reading its implementation     |
+| **Working in small batches**   | One route, one model, or one service function per PR — never batch unrelated changes             |
 | **Quality internal platforms** | `ruff` + `black` + `mypy` in CI catch regressions before review; fix linter config, not the lint |
-| **User-centric focus** | Route names and error messages written from the caller's perspective, not the implementer's |
-| **Strong version control** | Conventional commits: `feat(service-name):`, `fix(service-name):`, `test(service-name):` |
+| **User-centric focus**         | Route names and error messages written from the caller's perspective, not the implementer's      |
+| **Strong version control**     | Conventional commits: `feat(service-name):`, `fix(service-name):`, `test(service-name):`         |
 
 ## What Requires Human Approval
 

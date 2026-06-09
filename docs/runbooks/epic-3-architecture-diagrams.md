@@ -9,14 +9,6 @@
 ## Table of Contents
 
 1. [Epic 3 Platform Overview](#epic-3-platform-overview)
-2. [SPACE Metrics Architecture](#space-metrics-architecture)
-3. [Multi-Channel Feedback System](#multi-channel-feedback-system)
-4. [Design System Architecture](#design-system-architecture)
-5. [Product Analytics Flow](#product-analytics-flow)
-6. [Feature Flags Architecture](#feature-flags-architecture)
-7. [Continuous Discovery Workflow](#continuous-discovery-workflow)
-8. [Data Flow Diagrams](#data-flow-diagrams)
-9. [Integration Points](#integration-points)
 
 ---
 

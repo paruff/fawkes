@@ -26,15 +26,15 @@ Civo is a cloud-native service provider focused on Kubernetes and developer expe
 
 ### Key Differences from AWS/GCP
 
-| Feature | AWS/GCP | Civo |
-|---------|---------|------|
-| Kubernetes | EKS/GKE (full K8s) | K3s (lightweight) |
-| Regions | 20+ global regions | 4 regions (NYC, LON, FRA, PHX) |
-| Databases | Managed services (RDS/CloudSQL) | K8s applications (PostgreSQL, MySQL, etc.) |
-| Networking | Complex VPC/subnet management | Simple networking model |
-| Cluster Creation | 10-15 minutes | 2-3 minutes |
-| Instance Sizes | 100+ instance types | ~10 optimized sizes |
-| Rate Limits | High (1000s/min) | Moderate (~100/min) |
+| Feature          | AWS/GCP                         | Civo                                       |
+| ---------------- | ------------------------------- | ------------------------------------------ |
+| Kubernetes       | EKS/GKE (full K8s)              | K3s (lightweight)                          |
+| Regions          | 20+ global regions              | 4 regions (NYC, LON, FRA, PHX)             |
+| Databases        | Managed services (RDS/CloudSQL) | K8s applications (PostgreSQL, MySQL, etc.) |
+| Networking       | Complex VPC/subnet management   | Simple networking model                    |
+| Cluster Creation | 10-15 minutes                   | 2-3 minutes                                |
+| Instance Sizes   | 100+ instance types             | ~10 optimized sizes                        |
+| Rate Limits      | High (1000s/min)                | Moderate (~100/min)                        |
 
 ## Prerequisites
 
@@ -208,6 +208,7 @@ database = provider.create_database(db_config)
 ```
 
 **Supported Database Engines**:
+
 - `postgresql` (PostgreSQL)
 - `mysql` (MySQL)
 - `mariadb` (MariaDB)
@@ -239,6 +240,7 @@ cluster_config = ClusterConfig(
 Civo offers ~10 optimized instance types vs 100+ in AWS/GCP:
 
 **Common Types**:
+
 - `g4s.kube.xsmall`: 1 vCPU, 1GB RAM (development)
 - `g4s.kube.small`: 1 vCPU, 2GB RAM
 - `g4s.kube.medium`: 2 vCPU, 4GB RAM (default)
@@ -259,6 +261,7 @@ provider = CivoProvider(
 ```
 
 **Rate Limit Best Practices**:
+
 - Batch operations when possible
 - Use exponential backoff (built into provider)
 - Cache results for frequently accessed data
@@ -364,7 +367,7 @@ regions = ["NYC1", "LON1", "FRA1"]
 
 for region in regions:
     provider = CivoProvider(api_key="key", region=region)
-    
+
     config = ClusterConfig(
         name=f"prod-{region.lower()}",
         region=region,
@@ -372,7 +375,7 @@ for region in regions:
         node_count=3,
         node_instance_type="g4s.kube.medium",
     )
-    
+
     cluster = provider.create_cluster(config)
     print(f"✅ {region}: {cluster.id}")
 ```
@@ -419,30 +422,30 @@ try:
         version="1.28.0",
         node_count=2,
     )
-    
+
     cluster = provider.create_cluster(config)
     print(f"✅ Created: {cluster.id}")
-    
+
     # Wait for cluster to be ready
     max_attempts = 30
     for attempt in range(max_attempts):
         cluster = provider.get_cluster(cluster.id)
         print(f"Status: {cluster.status}")
-        
+
         if cluster.status == "ACTIVE":
             print("✅ Cluster ready!")
             break
-        
+
         time.sleep(10)
-    
+
     # Use cluster...
     print(f"Endpoint: {cluster.endpoint}")
     print(f"Kubeconfig: {cluster.metadata.get('kubeconfig')}")
-    
+
     # Clean up
     provider.delete_cluster(cluster.id)
     print("✅ Deleted cluster")
-    
+
 except CloudProviderError as e:
     print(f"❌ Error: {e}")
     print(f"Provider: {e.provider}")
@@ -575,6 +578,7 @@ AuthenticationError: No Civo API key found.
 ```
 
 **Solution**:
+
 1. Generate API key in [Civo Dashboard](https://dashboard.civo.com/security)
 2. Set environment variable: `export CIVO_TOKEN="your-key"`
 3. Or pass to provider: `CivoProvider(api_key="your-key")`
@@ -586,6 +590,7 @@ AuthenticationError: Invalid API key
 ```
 
 **Solution**:
+
 1. Check API key is correct
 2. Verify key hasn't expired
 3. Ensure key has required permissions
@@ -598,6 +603,7 @@ RateLimitError: Rate limit timeout exceeded
 ```
 
 **Solution**:
+
 1. Reduce `rate_limit_calls` parameter
 2. Add delays between operations
 3. Use list operations instead of multiple gets
@@ -610,6 +616,7 @@ Cluster status stuck at "creating"
 ```
 
 **Solution**:
+
 1. Check Civo status page: [https://status.civo.com](https://status.civo.com)
 2. Wait longer (usually 2-3 minutes for Civo)
 3. Check account quota: `provider.get_quota()`
@@ -624,6 +631,7 @@ Note: Civo databases are deployed as cluster applications.
 ```
 
 **Solution**:
+
 1. Ensure `cluster_id` is provided in database config
 2. Check cluster exists and is active
 3. Verify database is in cluster's installed applications:
@@ -639,6 +647,7 @@ QuotaExceededError: Storage quota exceeded
 ```
 
 **Solution**:
+
 1. Check current usage: `provider.get_quota()`
 2. Delete unused buckets
 3. Request quota increase from Civo support
@@ -657,6 +666,7 @@ QuotaExceededError: Storage quota exceeded
 ## Support
 
 For issues with:
+
 - **This provider implementation**: Open issue in Fawkes repository
 - **Civo API/Service**: Contact [Civo Support](https://www.civo.com/contact)
 - **Civo Python SDK**: Open issue in [civo/client-python](https://github.com/civo/client-python)

@@ -22,10 +22,10 @@ By the end of this module, you will be able to:
 
 ## Module Structure
 
-| Section | Time | Description |
-|---------|------|-------------|
-| Theory | 15 min | What is an IDP, DORA metrics, Platform as a Product |
-| Lab 01 | 45 min | Deploy `hello-fawkes` via golden path template |
+| Section | Time   | Description                                         |
+| ------- | ------ | --------------------------------------------------- |
+| Theory  | 15 min | What is an IDP, DORA metrics, Platform as a Product |
+| Lab 01  | 45 min | Deploy `hello-fawkes` via golden path template      |
 
 ---
 
@@ -60,13 +60,13 @@ toil, enforcing quality gates, and providing golden paths.
 
 ### The Fawkes Platform Components
 
-| Component | Purpose |
-|-----------|---------|
-| **Backstage** | Developer portal — service catalog, TechDocs, golden path templates |
-| **ArgoCD** | GitOps — syncs Git state to Kubernetes automatically |
-| **Prometheus + Grafana** | Observability — metrics, dashboards, alerting |
-| **Vault** | Secrets management |
-| **k3d** | Local Kubernetes cluster for development |
+| Component                | Purpose                                                             |
+| ------------------------ | ------------------------------------------------------------------- |
+| **Backstage**            | Developer portal — service catalog, TechDocs, golden path templates |
+| **ArgoCD**               | GitOps — syncs Git state to Kubernetes automatically                |
+| **Prometheus + Grafana** | Observability — metrics, dashboards, alerting                       |
+| **Vault**                | Secrets management                                                  |
+| **k3d**                  | Local Kubernetes cluster for development                            |
 
 ---
 

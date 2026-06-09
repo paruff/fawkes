@@ -25,7 +25,7 @@ import os
 import uuid
 import pytest
 import logging
-from typing import Generator, Dict, Any
+from typing import Generator
 from datetime import datetime
 from pathlib import Path
 
@@ -245,7 +245,7 @@ def kubernetes_client():
         # Try to load config (in-cluster or kubeconfig)
         try:
             config.load_incluster_config()
-        except:
+        except Exception:
             config.load_kube_config()
 
         return client.CoreV1Api()

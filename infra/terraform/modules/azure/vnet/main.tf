@@ -129,16 +129,16 @@ resource "azurerm_network_security_rule" "public" {
     for rule in flatten([
       for subnet_name, subnet in { for idx, s in var.public_subnets : s.name => s } : [
         for rule_name, rule in lookup(subnet, "nsg_rules", {}) : {
-          key             = "${subnet_name}-${rule_name}"
-          nsg_name        = "${subnet_name}-nsg"
-          name            = rule_name
-          priority        = rule.priority
-          direction       = rule.direction
-          access          = rule.access
-          protocol        = rule.protocol
-          source_port_range = rule.source_port_range
-          destination_port_range = rule.destination_port_range
-          source_address_prefix = rule.source_address_prefix
+          key                        = "${subnet_name}-${rule_name}"
+          nsg_name                   = "${subnet_name}-nsg"
+          name                       = rule_name
+          priority                   = rule.priority
+          direction                  = rule.direction
+          access                     = rule.access
+          protocol                   = rule.protocol
+          source_port_range          = rule.source_port_range
+          destination_port_range     = rule.destination_port_range
+          source_address_prefix      = rule.source_address_prefix
           destination_address_prefix = rule.destination_address_prefix
         }
       ]
@@ -166,16 +166,16 @@ resource "azurerm_network_security_rule" "private" {
     for rule in flatten([
       for subnet_name, subnet in { for idx, s in var.private_subnets : s.name => s } : [
         for rule_name, rule in lookup(subnet, "nsg_rules", {}) : {
-          key             = "${subnet_name}-${rule_name}"
-          nsg_name        = "${subnet_name}-nsg"
-          name            = rule_name
-          priority        = rule.priority
-          direction       = rule.direction
-          access          = rule.access
-          protocol        = rule.protocol
-          source_port_range = rule.source_port_range
-          destination_port_range = rule.destination_port_range
-          source_address_prefix = rule.source_address_prefix
+          key                        = "${subnet_name}-${rule_name}"
+          nsg_name                   = "${subnet_name}-nsg"
+          name                       = rule_name
+          priority                   = rule.priority
+          direction                  = rule.direction
+          access                     = rule.access
+          protocol                   = rule.protocol
+          source_port_range          = rule.source_port_range
+          destination_port_range     = rule.destination_port_range
+          source_address_prefix      = rule.source_address_prefix
           destination_address_prefix = rule.destination_address_prefix
         }
       ]

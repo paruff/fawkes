@@ -28,7 +28,9 @@ scripts/lib/
 ## Module Descriptions
 
 ### common.sh
+
 Core utilities used across all modules:
+
 - `error_exit()` - Error handling with exit
 - `context_id()` - Generate unique context identifier
 - `state_setup()` - Initialize state tracking file
@@ -38,11 +40,14 @@ Core utilities used across all modules:
 - `cleanup_resources()` - Clean up ArgoCD and Fawkes resources
 
 ### flags.sh
+
 Command-line argument parsing:
+
 - `usage()` - Display help message
 - `parse_flags()` - Parse command-line flags and arguments
 
 Supported flags:
+
 - `--provider|-p` - Cloud provider (local|aws|azure|gcp)
 - `--cluster-name|-n` - Cluster name
 - `--region|-r` - AWS/GCP region
@@ -56,13 +61,17 @@ Supported flags:
 - `--access` - Show access summary only
 
 ### prereqs.sh
+
 Prerequisite validation:
+
 - `check_prereqs()` - Validate required tools (kubectl, jq, terraform, etc.)
 - Integrates with `tools.sh` for automated installation
 - Supports both macOS (Homebrew) and Linux installation
 
 ### terraform.sh
+
 Terraform lifecycle management:
+
 - `tf_apply_dir()` - Apply Terraform in specified directory
 - `tf_destroy_dir()` - Destroy Terraform resources
 - `try_set_kubeconfig_from_tf_outputs()` - Extract kubeconfig from outputs
@@ -70,19 +79,25 @@ Terraform lifecycle management:
 - Manages AKS node pool imports
 
 ### validation.sh
+
 Cluster health validation:
+
 - `validate_cluster()` - Validate Kubernetes API, nodes, storage
 - `wait_for_workload()` - Wait for deployment/statefulset readiness
 - Provides detailed error messages and troubleshooting tips
 
 ### cluster.sh
+
 High-level cluster provisioning orchestration:
+
 - `provision_cluster()` - Route to provider-specific provisioning
 - Handles context selection and validation
 - Supports interactive mode for existing contexts
 
 ### argocd.sh
+
 ArgoCD deployment and configuration:
+
 - `maybe_cleanup_argocd_cluster_resources()` - Clean pre-existing resources
 - `deploy_argocd()` - Deploy via Terraform with Helm
 - `ensure_argocd_workloads()` - Wait for all ArgoCD components
@@ -91,7 +106,9 @@ ArgoCD deployment and configuration:
 - Handles password management for local environments
 
 ### summary.sh
+
 Access information display:
+
 - `get_service_password()` - Retrieve service credentials
 - `print_access_summary()` - Display comprehensive access guide
 - `post_deploy_summary()` - Post-deployment summary
@@ -100,7 +117,9 @@ Access information display:
 ### Provider Modules
 
 #### providers/local.sh
+
 Local Kubernetes cluster provisioning:
+
 - `compute_minikube_resources()` - Calculate memory/CPU based on system
 - `compute_minikube_disk_size()` - Determine disk allocation
 - `detect_minikube_arch()` - Detect CPU architecture (arm64/amd64)
@@ -110,12 +129,16 @@ Local Kubernetes cluster provisioning:
 - `provision_local_cluster()` - Provision minikube cluster
 
 #### providers/aws.sh
+
 AWS EKS cluster provisioning:
+
 - `provision_aws_cluster()` - Apply Terraform for EKS
 - `destroy_aws_cluster()` - Destroy EKS cluster
 
 #### providers/azure.sh
+
 Azure AKS cluster provisioning with RBAC:
+
 - `install_kubelogin()` - Install kubelogin for AKS auth
 - `install_kubelogin_binary()` - Direct binary download
 - `refresh_aks_credentials()` - Update and validate credentials
@@ -125,19 +148,23 @@ Azure AKS cluster provisioning with RBAC:
 - Supports kubelogin authentication with azurecli
 
 #### providers/gcp.sh
+
 GCP GKE cluster provisioning:
+
 - `provision_gcp_cluster()` - Apply Terraform for GKE
 - `destroy_gcp_cluster()` - Destroy GKE cluster
 
 ## Usage Examples
 
 ### Source individual modules
+
 ```bash
 source scripts/lib/common.sh
 source scripts/lib/flags.sh
 ```
 
 ### Run complete bootstrap
+
 ```bash
 # Local cluster
 ./scripts/ignite.sh local
@@ -165,6 +192,7 @@ Unit tests are located in `tests/unit/test_ignite_modules.sh`:
 ```
 
 Tests verify:
+
 - All functions are properly exported
 - Flag parsing works correctly
 - Architecture detection functions
@@ -216,8 +244,8 @@ The state file (`.ignite-state.json`) tracks completed steps to enable resume:
   "runs": {
     "local:local:minikube::": {
       "steps": {
-        "check_prereqs": {"status": "done", "ts": "2025-12-26T12:00:00Z"},
-        "provision_cluster": {"status": "done", "ts": "2025-12-26T12:05:00Z"}
+        "check_prereqs": { "status": "done", "ts": "2025-12-26T12:00:00Z" },
+        "provision_cluster": { "status": "done", "ts": "2025-12-26T12:05:00Z" }
       }
     }
   }
@@ -227,6 +255,7 @@ The state file (`.ignite-state.json`) tracks completed steps to enable resume:
 ## Error Handling
 
 All modules use consistent error handling:
+
 - `error_exit()` for fatal errors
 - Descriptive error messages with context
 - Cleanup on failure (where applicable)
@@ -235,11 +264,12 @@ All modules use consistent error handling:
 ## Logging
 
 Logging conventions:
+
 - 🔎 Validation/checking
 - 🔧 Configuration/setup
 - 🚀 Execution/deployment
 - ✅ Success
-- ⚠️  Warning
+- ⚠️ Warning
 - ❌ Error
 - ⏳ Waiting/in-progress
 - 🧹 Cleanup
@@ -247,6 +277,7 @@ Logging conventions:
 ## Environment Variables
 
 Key environment variables:
+
 - `ARGOCD_NAMESPACE` - ArgoCD namespace (default: fawkes)
 - `AUTO_INSTALL` - Auto-install missing tools
 - `AUTO_CLEAN_ARGO` - Auto-cleanup existing ArgoCD
@@ -259,6 +290,7 @@ Key environment variables:
 ## Contributing
 
 When modifying modules:
+
 1. Maintain function signatures for backward compatibility
 2. Add tests for new functionality
 3. Update this README with changes

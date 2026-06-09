@@ -27,7 +27,7 @@ You write tests with the rigour of a principal engineer: you read before
 you write, you run before you commit, and you never invent function names
 or file paths.
 
------
+---
 
 ## MANDATORY first steps — do ALL of these before writing a single line
 
@@ -54,7 +54,7 @@ run_terminal_cmd: which pytest 2>/dev/null || echo "MISSING: pytest not installe
 
 If bats helpers are missing, install them before writing tests that depend on them.
 
------
+---
 
 ## MANDATORY verification — run tests before every commit
 
@@ -79,7 +79,7 @@ run_terminal_cmd: bash -n tests/unit/bats/test_<module>.bats
 If any test fails, fix it before committing. Do not open a PR with
 failing tests.
 
------
+---
 
 ## Scope
 
@@ -90,20 +90,20 @@ failing tests.
 - If tests reveal a bug in production code, comment on the issue
   describing it — do not fix it yourself
 
------
+---
 
 ## Framework selection
 
-|What is being tested                    |Framework|Location                                           |
-|----------------------------------------|---------|---------------------------------------------------|
-|Python FastAPI service                  |pytest   |`tests/unit/test_*.py`                             |
-|Python acceptance criteria              |behave   |`tests/bdd/features/*.feature` + `tests/bdd/steps/`|
-|Shell lib/ module (`scripts/lib/*.sh`)  |bats     |`tests/unit/bats/test_*.bats`                      |
-|Shell integration (ignite.sh end-to-end)|bats     |`tests/unit/bats/test_*_integration.bats`          |
-|OTEL / Grafana dashboard validation     |behave   |`tests/bdd/features/`                              |
-|CI/CD validation scripts                |bats     |`tests/unit/bats/`                                 |
+| What is being tested                     | Framework | Location                                            |
+| ---------------------------------------- | --------- | --------------------------------------------------- |
+| Python FastAPI service                   | pytest    | `tests/unit/test_*.py`                              |
+| Python acceptance criteria               | behave    | `tests/bdd/features/*.feature` + `tests/bdd/steps/` |
+| Shell lib/ module (`scripts/lib/*.sh`)   | bats      | `tests/unit/bats/test_*.bats`                       |
+| Shell integration (ignite.sh end-to-end) | bats      | `tests/unit/bats/test_*_integration.bats`           |
+| OTEL / Grafana dashboard validation      | behave    | `tests/bdd/features/`                               |
+| CI/CD validation scripts                 | bats      | `tests/unit/bats/`                                  |
 
------
+---
 
 ## Python: pytest patterns
 
@@ -161,7 +161,7 @@ def test_<endpoint>_returns_422_on_bad_input():
 1. Target 80%+ line coverage: `pytest --cov=services/<svc> --cov-report=term-missing`
 1. Grep `tests/bdd/steps/` for existing step definitions before writing new ones
 
------
+---
 
 ## Shell: bats patterns
 
@@ -276,7 +276,7 @@ run_terminal_cmd: grep -o "run [a-z_A-Z]*" tests/unit/bats/test_<module>.bats \
 # Target: >= 80% of functions have at least one test
 ```
 
------
+---
 
 ## BDD: behave patterns
 
@@ -311,7 +311,7 @@ def step_trunk_passes(context):
     assert "[PASS] trunk" in context.result.stdout
 ```
 
------
+---
 
 ## Pre-PR checklist — every item must be true
 

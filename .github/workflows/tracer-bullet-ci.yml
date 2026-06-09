@@ -12,13 +12,13 @@ on:
   push:
     branches: [main]
     paths:
-      - 'services/tracer-bullet/**'
-      - 'platform/apps/tracer-bullet/**'
+      - "services/tracer-bullet/**"
+      - "platform/apps/tracer-bullet/**"
   pull_request:
     branches: [main]
     paths:
-      - 'services/tracer-bullet/**'
-      - 'platform/apps/tracer-bullet/**'
+      - "services/tracer-bullet/**"
+      - "platform/apps/tracer-bullet/**"
 
 permissions:
   contents: write
@@ -51,9 +51,9 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.12'
-          cache: 'pip'
-          cache-dependency-path: '${{ env.SERVICE_DIR }}/requirements*.txt'
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: "${{ env.SERVICE_DIR }}/requirements*.txt"
 
       - name: Install dependencies
         working-directory: ${{ env.SERVICE_DIR }}
@@ -130,9 +130,9 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
-          format: 'table'
-          exit-code: '1'
-          severity: 'CRITICAL,HIGH'
+          format: "table"
+          exit-code: "1"
+          severity: "CRITICAL,HIGH"
 
       - name: DORA job finish
         if: always()

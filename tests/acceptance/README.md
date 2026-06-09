@@ -6,9 +6,9 @@ This directory contains acceptance test runners for Fawkes platform validation.
 
 ### Epic 0: Code Quality Standards
 
-| Test ID   | Category         | Description                            | Status         |
-| --------- | ---------------- | -------------------------------------- | -------------- |
-| AT-E0-001 | Code Quality     | Code quality standards validated       | ✅ Implemented |
+| Test ID   | Category     | Description                      | Status         |
+| --------- | ------------ | -------------------------------- | -------------- |
+| AT-E0-001 | Code Quality | Code quality standards validated | ✅ Implemented |
 
 ### Epic 1: DORA 2023 Foundation
 

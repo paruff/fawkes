@@ -3,9 +3,7 @@
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "iam:CreateServiceLinkedRole"
-      ],
+      "Action": ["iam:CreateServiceLinkedRole"],
       "Resource": "*",
       "Condition": {
         "StringEquals": {
@@ -67,24 +65,17 @@
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "ec2:AuthorizeSecurityGroupIngress",
-        "ec2:RevokeSecurityGroupIngress"
-      ],
+      "Action": ["ec2:AuthorizeSecurityGroupIngress", "ec2:RevokeSecurityGroupIngress"],
       "Resource": "*"
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "ec2:CreateSecurityGroup"
-      ],
+      "Action": ["ec2:CreateSecurityGroup"],
       "Resource": "*"
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "ec2:CreateTags"
-      ],
+      "Action": ["ec2:CreateTags"],
       "Resource": "arn:aws:ec2:*:*:security-group/*",
       "Condition": {
         "StringEquals": {
@@ -97,10 +88,7 @@
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "ec2:CreateTags",
-        "ec2:DeleteTags"
-      ],
+      "Action": ["ec2:CreateTags", "ec2:DeleteTags"],
       "Resource": "arn:aws:ec2:*:*:security-group/*",
       "Condition": {
         "Null": {
@@ -111,11 +99,7 @@
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "ec2:AuthorizeSecurityGroupIngress",
-        "ec2:RevokeSecurityGroupIngress",
-        "ec2:DeleteSecurityGroup"
-      ],
+      "Action": ["ec2:AuthorizeSecurityGroupIngress", "ec2:RevokeSecurityGroupIngress", "ec2:DeleteSecurityGroup"],
       "Resource": "*",
       "Condition": {
         "Null": {
@@ -125,10 +109,7 @@
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "elasticloadbalancing:CreateLoadBalancer",
-        "elasticloadbalancing:CreateTargetGroup"
-      ],
+      "Action": ["elasticloadbalancing:CreateLoadBalancer", "elasticloadbalancing:CreateTargetGroup"],
       "Resource": "*",
       "Condition": {
         "Null": {
@@ -148,10 +129,7 @@
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "elasticloadbalancing:AddTags",
-        "elasticloadbalancing:RemoveTags"
-      ],
+      "Action": ["elasticloadbalancing:AddTags", "elasticloadbalancing:RemoveTags"],
       "Resource": [
         "arn:aws:elasticloadbalancing:*:*:targetgroup/*/*",
         "arn:aws:elasticloadbalancing:*:*:loadbalancer/net/*/*",
@@ -166,10 +144,7 @@
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "elasticloadbalancing:AddTags",
-        "elasticloadbalancing:RemoveTags"
-      ],
+      "Action": ["elasticloadbalancing:AddTags", "elasticloadbalancing:RemoveTags"],
       "Resource": [
         "arn:aws:elasticloadbalancing:*:*:listener/net/*/*/*",
         "arn:aws:elasticloadbalancing:*:*:listener/app/*/*/*",
@@ -198,9 +173,7 @@
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "elasticloadbalancing:AddTags"
-      ],
+      "Action": ["elasticloadbalancing:AddTags"],
       "Resource": [
         "arn:aws:elasticloadbalancing:*:*:targetgroup/*/*",
         "arn:aws:elasticloadbalancing:*:*:loadbalancer/net/*/*",
@@ -208,10 +181,7 @@
       ],
       "Condition": {
         "StringEquals": {
-          "elasticloadbalancing:CreateAction": [
-            "CreateTargetGroup",
-            "CreateLoadBalancer"
-          ]
+          "elasticloadbalancing:CreateAction": ["CreateTargetGroup", "CreateLoadBalancer"]
         },
         "Null": {
           "aws:RequestTag/elbv2.k8s.aws/cluster": "false"
@@ -220,10 +190,7 @@
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "elasticloadbalancing:RegisterTargets",
-        "elasticloadbalancing:DeregisterTargets"
-      ],
+      "Action": ["elasticloadbalancing:RegisterTargets", "elasticloadbalancing:DeregisterTargets"],
       "Resource": "arn:aws:elasticloadbalancing:*:*:targetgroup/*/*"
     },
     {

@@ -1,7 +1,7 @@
 ---
 name: Security Plane Onboarding PR
 about: Template for onboarding a repository to the Fawkes Security Plane
-title: '[SECURITY] Onboard to Fawkes Security Plane'
+title: "[SECURITY] Onboard to Fawkes Security Plane"
 labels: security, enhancement
 ---
 
@@ -12,17 +12,20 @@ This PR onboards the repository to the **Fawkes Security Plane**, enabling autom
 ## What's Included
 
 ### ✅ Security Workflows
+
 - [x] Reusable security scanning workflow
 - [x] SBOM generation with Syft
 - [x] Image signing with Cosign
 - [x] Policy enforcement with OPA/Conftest
 
 ### 📋 Policy Files
+
 - [x] Kubernetes security policies
 - [x] Dockerfile best practices
 - [x] Supply chain security policies
 
 ### 📚 Documentation
+
 - [x] Onboarding guide
 - [x] Security baseline templates
 - [x] Remediation guidance
@@ -52,12 +55,14 @@ This PR configures the security plane in **{{ ADOPTION_MODE }}** mode:
 ## Security Scan Results
 
 ### Summary
+
 - **Secrets**: No hardcoded secrets found ✅
 - **Vulnerabilities**: X critical, Y high, Z medium
 - **Policy Violations**: X blocking, Y warnings
 - **SBOM**: Generated successfully ✅
 
 ### Critical Issues to Address
+
 <!-- List any critical vulnerabilities or policy violations that need attention -->
 
 1. Issue 1
@@ -67,29 +72,33 @@ This PR configures the security plane in **{{ ADOPTION_MODE }}** mode:
 
 ```yaml
 # Security workflow configuration
-enforcement-mode: {{ ENFORCEMENT_MODE }}
-fail-on-critical: {{ FAIL_ON_CRITICAL }}
-severity-threshold: {{ SEVERITY_THRESHOLD }}
+enforcement-mode: { { ENFORCEMENT_MODE } }
+fail-on-critical: { { FAIL_ON_CRITICAL } }
+severity-threshold: { { SEVERITY_THRESHOLD } }
 ```
 
 ## Rollout Plan
 
 ### Phase 1: Advisory Mode (Week 1-2)
+
 - Run scans in advisory mode
 - Identify and catalog existing issues
 - No blocking enforcement
 
 ### Phase 2: Fix Critical Issues (Week 3-4)
+
 - Address all CRITICAL vulnerabilities
 - Fix blocking policy violations
 - Update dependencies
 
 ### Phase 3: Progressive Enforcement (Week 5-6)
+
 - Enable blocking for CRITICAL vulnerabilities
 - Monitor for new issues
 - Train team on security practices
 
 ### Phase 4: Strict Mode (Week 7+)
+
 - Full enforcement enabled
 - All policies blocking
 - Continuous monitoring
@@ -132,6 +141,7 @@ None at this time.
 ## Next Steps
 
 After merging:
+
 1. Monitor security scan results in GitHub Actions
 2. Review GitHub Security tab for detailed findings
 3. Address critical and high-severity issues

@@ -31,42 +31,42 @@ calculates flow metrics (WIP, cycle time, throughput, lead time).
 
 ### Health / Infrastructure
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/v1/health` | Liveness — returns `status`, `service`, `version`, `database_connected` |
-| `GET` | `/ready` | Readiness — returns `{"status":"READY"}` or HTTP 503 |
-| `GET` | `/metrics` | Prometheus metrics (text/plain) |
+| Method | Path             | Description                                                             |
+| ------ | ---------------- | ----------------------------------------------------------------------- |
+| `GET`  | `/api/v1/health` | Liveness — returns `status`, `service`, `version`, `database_connected` |
+| `GET`  | `/ready`         | Readiness — returns `{"status":"READY"}` or HTTP 503                    |
+| `GET`  | `/metrics`       | Prometheus metrics (text/plain)                                         |
 
 ### Business Endpoints
 
-| Method | Path | Request | Response |
-|--------|------|---------|----------|
-| `POST` | `/api/v1/work-items` | `WorkItemCreate` — `title`, `description`, `type`, `assignee` | `WorkItemResponse` (201) |
-| `PUT` | `/api/v1/work-items/{id}/transition` | `StageTransitionCreate` — `to_stage`, `notes` | `StageTransitionResponse` |
-| `GET` | `/api/v1/work-items/{id}/history` | path: `work_item_id` | `WorkItemHistory` — ordered list of stage transitions |
-| `GET` | `/api/v1/metrics` | query: `days` (1–90, default 7) | `FlowMetricsResponse` — WIP, throughput, cycle time, lead time |
-| `GET` | `/api/v1/stages` | — | `List[StageResponse]` — all defined stages |
+| Method | Path                                 | Request                                                       | Response                                                       |
+| ------ | ------------------------------------ | ------------------------------------------------------------- | -------------------------------------------------------------- |
+| `POST` | `/api/v1/work-items`                 | `WorkItemCreate` — `title`, `description`, `type`, `assignee` | `WorkItemResponse` (201)                                       |
+| `PUT`  | `/api/v1/work-items/{id}/transition` | `StageTransitionCreate` — `to_stage`, `notes`                 | `StageTransitionResponse`                                      |
+| `GET`  | `/api/v1/work-items/{id}/history`    | path: `work_item_id`                                          | `WorkItemHistory` — ordered list of stage transitions          |
+| `GET`  | `/api/v1/metrics`                    | query: `days` (1–90, default 7)                               | `FlowMetricsResponse` — WIP, throughput, cycle time, lead time |
+| `GET`  | `/api/v1/stages`                     | —                                                             | `List[StageResponse]` — all defined stages                     |
 
 **Focalboard integration (optional — enabled when `FOCALBOARD_URL` is set):**
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `POST` | `/api/v1/focalboard/webhook` | Receive Focalboard card-change events |
-| `POST` | `/api/v1/focalboard/sync` | Trigger manual sync with Focalboard board |
-| `GET` | `/api/v1/focalboard/stages/mapping` | Return VSM stage → Focalboard column mapping |
+| Method | Path                                | Description                                  |
+| ------ | ----------------------------------- | -------------------------------------------- |
+| `POST` | `/api/v1/focalboard/webhook`        | Receive Focalboard card-change events        |
+| `POST` | `/api/v1/focalboard/sync`           | Trigger manual sync with Focalboard board    |
+| `GET`  | `/api/v1/focalboard/stages/mapping` | Return VSM stage → Focalboard column mapping |
 
 ### Prometheus Metrics
 
-| Metric | Type | Labels |
-|--------|------|--------|
-| `vsm_requests_total` | Counter | `method`, `endpoint`, `status` |
-| `vsm_work_items_created_total` | Counter | `type` |
-| `vsm_stage_transitions_total` | Counter | `from_stage`, `to_stage` |
-| `vsm_cycle_time_hours` | Histogram | — |
-| `vsm_work_in_progress` | Gauge | `stage` |
-| `vsm_stage_cycle_time_seconds` | Histogram | `stage` |
-| `vsm_throughput_per_day` | Counter | `date` |
-| `vsm_lead_time_seconds` | Histogram | — |
+| Metric                         | Type      | Labels                         |
+| ------------------------------ | --------- | ------------------------------ |
+| `vsm_requests_total`           | Counter   | `method`, `endpoint`, `status` |
+| `vsm_work_items_created_total` | Counter   | `type`                         |
+| `vsm_stage_transitions_total`  | Counter   | `from_stage`, `to_stage`       |
+| `vsm_cycle_time_hours`         | Histogram | —                              |
+| `vsm_work_in_progress`         | Gauge     | `stage`                        |
+| `vsm_stage_cycle_time_seconds` | Histogram | `stage`                        |
+| `vsm_throughput_per_day`       | Counter   | `date`                         |
+| `vsm_lead_time_seconds`        | Histogram | —                              |
 
 ---
 
@@ -82,29 +82,29 @@ indexing repository documents into a Weaviate vector store.
 
 ### Health / Infrastructure
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/v1/health` | Liveness — returns `status`, `service`, `version`, `weaviate_connected`, `weaviate_url` |
-| `GET` | `/ready` | Readiness — returns `{"status":"READY"}` or HTTP 503 |
-| `GET` | `/metrics` | Prometheus metrics (text/plain) |
+| Method | Path             | Description                                                                             |
+| ------ | ---------------- | --------------------------------------------------------------------------------------- |
+| `GET`  | `/api/v1/health` | Liveness — returns `status`, `service`, `version`, `weaviate_connected`, `weaviate_url` |
+| `GET`  | `/ready`         | Readiness — returns `{"status":"READY"}` or HTTP 503                                    |
+| `GET`  | `/metrics`       | Prometheus metrics (text/plain)                                                         |
 
 ### Business Endpoints
 
-| Method | Path | Request | Response |
-|--------|------|---------|----------|
-| `POST` | `/api/v1/query` | `QueryRequest` — `query` (str), `top_k` (1–20, default 5), `threshold` (0–1, default 0.7) | `QueryResponse` — `query`, `results[]`, `count`, `retrieval_time_ms` |
-| `GET` | `/api/v1/stats` | — | `StatsResponse` — `total_documents`, `total_chunks`, `categories{}`, `last_indexed`, `index_freshness_hours`, `storage_usage_mb` |
-| `GET` | `/dashboard` | — | HTML dashboard — indexing statistics and management UI |
+| Method | Path            | Request                                                                                   | Response                                                                                                                         |
+| ------ | --------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `POST` | `/api/v1/query` | `QueryRequest` — `query` (str), `top_k` (1–20, default 5), `threshold` (0–1, default 0.7) | `QueryResponse` — `query`, `results[]`, `count`, `retrieval_time_ms`                                                             |
+| `GET`  | `/api/v1/stats` | —                                                                                         | `StatsResponse` — `total_documents`, `total_chunks`, `categories{}`, `last_indexed`, `index_freshness_hours`, `storage_usage_mb` |
+| `GET`  | `/dashboard`    | —                                                                                         | HTML dashboard — indexing statistics and management UI                                                                           |
 
 **Query result shape (`ContextResult`):** `content`, `relevance_score`, `source`, `title`, `category`
 
 ### Prometheus Metrics
 
-| Metric | Type | Labels |
-|--------|------|--------|
-| `rag_requests_total` | Counter | `method`, `endpoint`, `status` |
-| `rag_query_duration_seconds` | Histogram | — |
-| `rag_relevance_score` | Histogram | — |
+| Metric                       | Type      | Labels                         |
+| ---------------------------- | --------- | ------------------------------ |
+| `rag_requests_total`         | Counter   | `method`, `endpoint`, `status` |
+| `rag_query_duration_seconds` | Histogram | —                              |
+| `rag_relevance_score`        | Histogram | —                              |
 
 ---
 
@@ -120,24 +120,24 @@ Satisfaction, Performance, Activity, Communication, Efficiency.
 
 ### Health / Infrastructure
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/health` | Liveness — returns `status`, `service`, `timestamp` |
-| `GET` | `/metrics` | Prometheus metrics (text/plain) |
+| Method | Path       | Description                                         |
+| ------ | ---------- | --------------------------------------------------- |
+| `GET`  | `/health`  | Liveness — returns `status`, `service`, `timestamp` |
+| `GET`  | `/metrics` | Prometheus metrics (text/plain)                     |
 
 ### Business Endpoints
 
-| Method | Path | Request | Response |
-|--------|------|---------|----------|
-| `GET` | `/api/v1/metrics/space` | query: `time_range` (`24h`\|`7d`\|`30d`\|`90d`, default `30d`) | `SpaceMetricsResponse` — all five dimensions + `health_score` |
-| `GET` | `/api/v1/metrics/space/satisfaction` | query: `time_range` | `SatisfactionMetrics` |
-| `GET` | `/api/v1/metrics/space/performance` | query: `time_range` | `PerformanceMetrics` |
-| `GET` | `/api/v1/metrics/space/activity` | query: `time_range` | `ActivityMetrics` |
-| `GET` | `/api/v1/metrics/space/communication` | query: `time_range` | `CommunicationMetrics` |
-| `GET` | `/api/v1/metrics/space/efficiency` | query: `time_range` | `EfficiencyMetrics` |
-| `GET` | `/api/v1/metrics/space/health` | — | `{ health_score, timestamp, status }` (`excellent`/`good`/`needs_improvement`) |
-| `POST` | `/api/v1/friction/log` | `FrictionLogRequest` — friction incident details | `{ status, message, id }` |
-| `POST` | `/api/v1/surveys/pulse/submit` | `PulseSurveyRequest` — `flow_state_days`, `valuable_work_percentage`, `cognitive_load` | `{ status, message }` |
+| Method | Path                                  | Request                                                                                | Response                                                                       |
+| ------ | ------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `GET`  | `/api/v1/metrics/space`               | query: `time_range` (`24h`\|`7d`\|`30d`\|`90d`, default `30d`)                         | `SpaceMetricsResponse` — all five dimensions + `health_score`                  |
+| `GET`  | `/api/v1/metrics/space/satisfaction`  | query: `time_range`                                                                    | `SatisfactionMetrics`                                                          |
+| `GET`  | `/api/v1/metrics/space/performance`   | query: `time_range`                                                                    | `PerformanceMetrics`                                                           |
+| `GET`  | `/api/v1/metrics/space/activity`      | query: `time_range`                                                                    | `ActivityMetrics`                                                              |
+| `GET`  | `/api/v1/metrics/space/communication` | query: `time_range`                                                                    | `CommunicationMetrics`                                                         |
+| `GET`  | `/api/v1/metrics/space/efficiency`    | query: `time_range`                                                                    | `EfficiencyMetrics`                                                            |
+| `GET`  | `/api/v1/metrics/space/health`        | —                                                                                      | `{ health_score, timestamp, status }` (`excellent`/`good`/`needs_improvement`) |
+| `POST` | `/api/v1/friction/log`                | `FrictionLogRequest` — friction incident details                                       | `{ status, message, id }`                                                      |
+| `POST` | `/api/v1/surveys/pulse/submit`        | `PulseSurveyRequest` — `flow_state_days`, `valuable_work_percentage`, `cognitive_load` | `{ status, message }`                                                          |
 
 ### Prometheus Metrics
 
@@ -158,18 +158,18 @@ Listens for GitHub pull-request webhook events, analyses changed files using an 
 
 ### Health / Infrastructure
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/health` | Liveness — returns `status`, `service`, `version`, `rag_connected`, `github_configured`, `llm_configured` |
-| `GET` | `/ready` | Readiness — HTTP 503 if `GITHUB_TOKEN` or `LLM_API_KEY` not set |
-| `GET` | `/metrics` | Prometheus metrics (text/plain) |
+| Method | Path       | Description                                                                                               |
+| ------ | ---------- | --------------------------------------------------------------------------------------------------------- |
+| `GET`  | `/health`  | Liveness — returns `status`, `service`, `version`, `rag_connected`, `github_configured`, `llm_configured` |
+| `GET`  | `/ready`   | Readiness — HTTP 503 if `GITHUB_TOKEN` or `LLM_API_KEY` not set                                           |
+| `GET`  | `/metrics` | Prometheus metrics (text/plain)                                                                           |
 
 ### Business Endpoints
 
-| Method | Path | Request | Response |
-|--------|------|---------|----------|
-| `POST` | `/webhook/github` | GitHub webhook payload (`pull_request` event); headers: `X-Hub-Signature-256`, `X-GitHub-Event` | HTTP 202 — review queued asynchronously |
-| `GET` | `/stats` | — | Redirects caller to `/metrics` for detailed statistics |
+| Method | Path              | Request                                                                                         | Response                                               |
+| ------ | ----------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `POST` | `/webhook/github` | GitHub webhook payload (`pull_request` event); headers: `X-Hub-Signature-256`, `X-GitHub-Event` | HTTP 202 — review queued asynchronously                |
+| `GET`  | `/stats`          | —                                                                                               | Redirects caller to `/metrics` for detailed statistics |
 
 **Review comment shape (`ReviewComment`):** `path`, `line`, `body`, `category`
 (`security`/`performance`/`quality`/`best_practices`), `severity`
@@ -177,13 +177,13 @@ Listens for GitHub pull-request webhook events, analyses changed files using an 
 
 ### Prometheus Metrics
 
-| Metric | Type | Labels |
-|--------|------|--------|
-| `ai_review_webhooks_total` | Counter | `event_type`, `action` |
-| `ai_review_reviews_total` | Counter | `repository`, `status` |
-| `ai_review_duration_seconds` | Histogram | — |
-| `ai_review_comments_total` | Counter | `repository`, `category`, `severity` |
-| `ai_review_false_positive_rate` | Gauge | `repository` |
+| Metric                          | Type      | Labels                               |
+| ------------------------------- | --------- | ------------------------------------ |
+| `ai_review_webhooks_total`      | Counter   | `event_type`, `action`               |
+| `ai_review_reviews_total`       | Counter   | `repository`, `status`               |
+| `ai_review_duration_seconds`    | Histogram | —                                    |
+| `ai_review_comments_total`      | Counter   | `repository`, `category`, `severity` |
+| `ai_review_false_positive_rate` | Gauge     | `repository`                         |
 
 ---
 
@@ -199,61 +199,61 @@ and intelligent routing to Mattermost, Slack, or PagerDuty.
 
 ### Health / Infrastructure
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/health` | Liveness — returns `status`, `service`, `version`, `redis_connected`, `rules_loaded` |
-| `GET` | `/ready` | Readiness — HTTP 503 if Redis, suppression engine, or correlator not initialised |
-| `GET` | `/metrics` | Prometheus metrics (text/plain) |
+| Method | Path       | Description                                                                          |
+| ------ | ---------- | ------------------------------------------------------------------------------------ |
+| `GET`  | `/health`  | Liveness — returns `status`, `service`, `version`, `redis_connected`, `rules_loaded` |
+| `GET`  | `/ready`   | Readiness — HTTP 503 if Redis, suppression engine, or correlator not initialised     |
+| `GET`  | `/metrics` | Prometheus metrics (text/plain)                                                      |
 
 ### Business Endpoints — Alert Ingestion
 
-| Method | Path | Request | Response |
-|--------|------|---------|----------|
+| Method | Path                        | Request                                                                        | Response                                    |
+| ------ | --------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------- |
 | `POST` | `/api/v1/alerts/prometheus` | `PrometheusAlertPayload` — `alerts[]`, `status`, `groupLabels`, `commonLabels` | `{ message, status: "processing" }` — async |
-| `POST` | `/api/v1/alerts/grafana` | `List[Alert]` | `{ message, status: "processing" }` — async |
-| `POST` | `/api/v1/alerts/datahub` | `List[Alert]` | `{ message, status: "processing" }` — async |
-| `POST` | `/api/v1/alerts/generic` | `List[Alert]` | `{ message, status: "processing" }` — async |
+| `POST` | `/api/v1/alerts/grafana`    | `List[Alert]`                                                                  | `{ message, status: "processing" }` — async |
+| `POST` | `/api/v1/alerts/datahub`    | `List[Alert]`                                                                  | `{ message, status: "processing" }` — async |
+| `POST` | `/api/v1/alerts/generic`    | `List[Alert]`                                                                  | `{ message, status: "processing" }` — async |
 
 ### Business Endpoints — Alert Management
 
-| Method | Path | Request | Response |
-|--------|------|---------|----------|
-| `GET` | `/api/v1/alert-groups` | query: `limit` (default 50) | `List[AlertGroup]` |
-| `GET` | `/api/v1/alert-groups/{group_id}` | — | `AlertGroup` |
-| `GET` | `/api/v1/alerts/{alert_id}` | — | `Alert` |
-| `PUT` | `/api/v1/alerts/{alert_id}/acknowledge` | — | `{ message, alert_id }` |
-| `PUT` | `/api/v1/alerts/{alert_id}/resolve` | — | `{ message, alert_id }` |
+| Method | Path                                    | Request                     | Response                |
+| ------ | --------------------------------------- | --------------------------- | ----------------------- |
+| `GET`  | `/api/v1/alert-groups`                  | query: `limit` (default 50) | `List[AlertGroup]`      |
+| `GET`  | `/api/v1/alert-groups/{group_id}`       | —                           | `AlertGroup`            |
+| `GET`  | `/api/v1/alerts/{alert_id}`             | —                           | `Alert`                 |
+| `PUT`  | `/api/v1/alerts/{alert_id}/acknowledge` | —                           | `{ message, alert_id }` |
+| `PUT`  | `/api/v1/alerts/{alert_id}/resolve`     | —                           | `{ message, alert_id }` |
 
 ### Business Endpoints — Suppression Rules
 
-| Method | Path | Request | Response |
-|--------|------|---------|----------|
-| `GET` | `/api/v1/rules` | — | `List[SuppressionRule]` |
-| `POST` | `/api/v1/rules` | `SuppressionRule` — `name`, `type`, `enabled`, `alert_pattern`, ... | `SuppressionRule` (echo) |
-| `GET` | `/api/v1/rules/{rule_id}` | — | `SuppressionRule` |
-| `PUT` | `/api/v1/rules/{rule_id}` | `SuppressionRule` | `SuppressionRule` (echo) |
-| `DELETE` | `/api/v1/rules/{rule_id}` | — | `{ message, rule_id }` |
+| Method   | Path                      | Request                                                             | Response                 |
+| -------- | ------------------------- | ------------------------------------------------------------------- | ------------------------ |
+| `GET`    | `/api/v1/rules`           | —                                                                   | `List[SuppressionRule]`  |
+| `POST`   | `/api/v1/rules`           | `SuppressionRule` — `name`, `type`, `enabled`, `alert_pattern`, ... | `SuppressionRule` (echo) |
+| `GET`    | `/api/v1/rules/{rule_id}` | —                                                                   | `SuppressionRule`        |
+| `PUT`    | `/api/v1/rules/{rule_id}` | `SuppressionRule`                                                   | `SuppressionRule` (echo) |
+| `DELETE` | `/api/v1/rules/{rule_id}` | —                                                                   | `{ message, rule_id }`   |
 
 ### Business Endpoints — Statistics
 
-| Method | Path | Response |
-|--------|------|----------|
-| `GET` | `/api/v1/stats` | `{ total_received, total_suppressed, total_grouped, total_routed, fatigue_reduction_percent }` |
-| `GET` | `/api/v1/stats/reduction` | `{ fatigue_reduction_percent, target: 50.0, target_met }` |
+| Method | Path                      | Response                                                                                       |
+| ------ | ------------------------- | ---------------------------------------------------------------------------------------------- |
+| `GET`  | `/api/v1/stats`           | `{ total_received, total_suppressed, total_grouped, total_routed, fatigue_reduction_percent }` |
+| `GET`  | `/api/v1/stats/reduction` | `{ fatigue_reduction_percent, target: 50.0, target_met }`                                      |
 
 **Rule types:** `maintenance_window`, `known_issue`, `flapping`, `cascade`, `time_based`
 
 ### Prometheus Metrics
 
-| Metric | Type | Labels |
-|--------|------|--------|
-| `smart_alerting_received_total` | Counter | `source` |
-| `smart_alerting_suppressed_total` | Counter | `reason` |
-| `smart_alerting_grouped_total` | Counter | — |
-| `smart_alerting_routed_total` | Counter | `channel` |
-| `smart_alerting_fatigue_reduction` | Gauge | — |
-| `smart_alerting_false_alert_rate` | Gauge | — |
-| `smart_alerting_processing_duration_seconds` | Histogram | — |
+| Metric                                       | Type      | Labels    |
+| -------------------------------------------- | --------- | --------- |
+| `smart_alerting_received_total`              | Counter   | `source`  |
+| `smart_alerting_suppressed_total`            | Counter   | `reason`  |
+| `smart_alerting_grouped_total`               | Counter   | —         |
+| `smart_alerting_routed_total`                | Counter   | `channel` |
+| `smart_alerting_fatigue_reduction`           | Gauge     | —         |
+| `smart_alerting_false_alert_rate`            | Gauge     | —         |
+| `smart_alerting_processing_duration_seconds` | Histogram | —         |
 
 ---
 
@@ -270,15 +270,15 @@ config) to list pods by namespace. No database or external dependencies.
 
 ### Health / Infrastructure
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/healthz` | Liveness — returns `{"status":"ok"}` |
+| Method | Path       | Description                          |
+| ------ | ---------- | ------------------------------------ |
+| `GET`  | `/healthz` | Liveness — returns `{"status":"ok"}` |
 
 ### Business Endpoints
 
-| Method | Path | Request | Response |
-|--------|------|---------|----------|
-| `GET` | `/pods` | query: `namespace` (default `fawkes`) | `[{ name, namespace, phase }]` — list of pod summaries |
+| Method | Path    | Request                               | Response                                               |
+| ------ | ------- | ------------------------------------- | ------------------------------------------------------ |
+| `GET`  | `/pods` | query: `namespace` (default `fawkes`) | `[{ name, namespace, phase }]` — list of pod summaries |
 
 ---
 

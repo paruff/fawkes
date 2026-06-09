@@ -93,7 +93,7 @@ module "postgresql" {
   # admin_password will be auto-generated
 
   # Storage
-  storage_mb              = 65536 # 64 GB
+  storage_mb                = 65536 # 64 GB
   storage_auto_grow_enabled = true
 
   # Backup
@@ -118,18 +118,18 @@ module "postgresql" {
     }
   ]
 
-  enable_private_endpoint     = false # Set to true for production
-  private_endpoint_subnet_id  = azurerm_subnet.example.id
+  enable_private_endpoint    = false # Set to true for production
+  private_endpoint_subnet_id = azurerm_subnet.example.id
 
   # Monitoring
-  enable_diagnostic_settings  = true
-  log_analytics_workspace_id  = azurerm_log_analytics_workspace.example.id
-  
-  enable_alerts       = true
-  action_group_id     = azurerm_monitor_action_group.example.id
-  cpu_alert_threshold = 80
+  enable_diagnostic_settings = true
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.example.id
+
+  enable_alerts           = true
+  action_group_id         = azurerm_monitor_action_group.example.id
+  cpu_alert_threshold     = 80
   storage_alert_threshold = 85
-  memory_alert_threshold = 85
+  memory_alert_threshold  = 85
 
   tags = {
     Environment = "example"
@@ -154,7 +154,7 @@ module "mysql" {
   # admin_password will be auto-generated
 
   # Storage
-  storage_mb              = 65536 # 64 GB
+  storage_mb                = 65536 # 64 GB
   storage_auto_grow_enabled = true
 
   # Backup
@@ -175,9 +175,9 @@ module "mysql" {
   ]
 
   # Monitoring
-  enable_diagnostic_settings  = true
-  log_analytics_workspace_id  = azurerm_log_analytics_workspace.example.id
-  
+  enable_diagnostic_settings = true
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.example.id
+
   enable_alerts   = true
   action_group_id = azurerm_monitor_action_group.example.id
 

@@ -5,9 +5,11 @@ This directory contains production-ready Terraform modules for Azure infrastruct
 ## Modules
 
 ### 1. AKS (Azure Kubernetes Service)
+
 **Path:** `./aks/`
 
 Comprehensive AKS cluster module with:
+
 - Managed node pools with autoscaling
 - Azure CNI network plugin support
 - Azure Monitor Container Insights integration
@@ -18,6 +20,7 @@ Comprehensive AKS cluster module with:
 - Security best practices
 
 **Usage:**
+
 ```hcl
 module "aks" {
   source = "./modules/azure/aks"
@@ -41,9 +44,11 @@ module "aks" {
 ```
 
 ### 2. Database (Azure Database for PostgreSQL/MySQL)
+
 **Path:** `./database/`
 
 Flexible server module supporting:
+
 - PostgreSQL (versions 11-16)
 - MySQL (versions 5.7, 8.0.21)
 - High availability (Zone Redundant or Same Zone)
@@ -54,6 +59,7 @@ Flexible server module supporting:
 - Azure Monitor integration with alerts
 
 **Usage:**
+
 ```hcl
 module "database" {
   source = "./modules/azure/database"
@@ -79,9 +85,11 @@ module "database" {
 ```
 
 ### 3. Storage (Azure Storage Account)
+
 **Path:** `./storage/`
 
 Storage account module with:
+
 - Blob container management
 - Versioning and soft delete
 - Lifecycle management policies
@@ -92,6 +100,7 @@ Storage account module with:
 - Capacity and availability alerts
 
 **Usage:**
+
 ```hcl
 module "storage" {
   source = "./modules/azure/storage"
@@ -101,7 +110,7 @@ module "storage" {
   resource_group_name  = "my-rg"
 
   replication_type = "GRS"
-  
+
   enable_versioning           = true
   blob_soft_delete_retention_days = 7
 
@@ -128,9 +137,11 @@ module "storage" {
 ```
 
 ### 4. VNet (Virtual Network)
+
 **Path:** `./vnet/`
 
 Enhanced virtual network module with:
+
 - Public and private subnets
 - Network Security Groups with custom rules
 - NAT Gateway for outbound connectivity
@@ -140,6 +151,7 @@ Enhanced virtual network module with:
 - Subnet delegation support
 
 **Usage:**
+
 ```hcl
 module "vnet" {
   source = "./modules/azure/vnet"
@@ -177,16 +189,20 @@ module "vnet" {
 ## Design Principles
 
 ### 1. Extending Base Modules
+
 All cloud-specific modules extend the base module definitions from `../base/`:
+
 - `base/kubernetes-cluster` → `azure/aks`
 - `base/network` → `azure/vnet`
 
 This ensures:
+
 - Consistent variable naming
 - Reusable validation patterns
 - Cross-cloud compatibility
 
 ### 2. Security Best Practices
+
 - Encryption at rest by default
 - HTTPS-only traffic
 - Minimum TLS 1.2
@@ -196,6 +212,7 @@ This ensures:
 - Least privilege access
 
 ### 3. Cost Optimization
+
 - Auto-tagging with "Cost" tags
 - Auto-scaling capabilities
 - Lifecycle policies for storage
@@ -203,6 +220,7 @@ This ensures:
 - Zone-redundant vs. single-zone options
 
 ### 4. Observability
+
 - Azure Monitor integration
 - Diagnostic settings
 - Flow logs for networks
@@ -213,12 +231,14 @@ This ensures:
 ## Examples
 
 Each module includes comprehensive examples in `./examples/<module-name>/`:
+
 - **aks**: Complete AKS cluster with monitoring
 - **database**: PostgreSQL and MySQL configurations
 - **storage**: Blob containers with lifecycle policies
 - **vnet**: Multi-tier network with NSGs
 
 To use an example:
+
 ```bash
 cd examples/aks
 terraform init
@@ -229,6 +249,7 @@ terraform apply
 ## Testing
 
 ### Terratest Validation
+
 All modules are validated using Terratest:
 
 ```bash
@@ -237,6 +258,7 @@ go test -v -run TestAzure
 ```
 
 Individual module tests:
+
 ```bash
 go test -v -run TestAzureAKSModuleValidation
 go test -v -run TestAzureDatabaseModuleValidation
@@ -247,6 +269,7 @@ go test -v -run TestAzureVNetModuleValidation
 ### Static Analysis
 
 #### tflint
+
 ```bash
 cd infra/terraform/modules/azure/aks
 tflint --init
@@ -254,6 +277,7 @@ tflint
 ```
 
 #### tfsec
+
 ```bash
 cd infra/terraform/modules/azure
 tfsec .
@@ -270,6 +294,7 @@ All modules include comprehensive input validation:
 - **Dependencies**: Cross-variable validation
 
 Example validation error:
+
 ```
 Error: Invalid value for variable
 
@@ -282,6 +307,7 @@ Cluster name must be between 1 and 63 characters.
 ## Integration
 
 ### AKS + VNet + Database
+
 ```hcl
 # Network
 module "vnet" {
@@ -292,7 +318,7 @@ module "vnet" {
 # Database
 module "database" {
   source = "./modules/azure/database"
-  
+
   private_endpoint_subnet_id = module.vnet.private_subnet_ids["data-subnet"]
   # ... configuration
 }
@@ -300,13 +326,14 @@ module "database" {
 # AKS
 module "aks" {
   source = "./modules/azure/aks"
-  
+
   subnet_id = module.vnet.private_subnet_ids["aks-subnet"]
   # ... configuration
 }
 ```
 
 ### Using Outputs
+
 All modules provide comprehensive outputs for integration:
 
 ```hcl
@@ -331,6 +358,7 @@ output "storage_endpoint" {
 ## Common Patterns
 
 ### Shared Log Analytics Workspace
+
 ```hcl
 resource "azurerm_log_analytics_workspace" "shared" {
   name                = "shared-logs"
@@ -354,6 +382,7 @@ module "database" {
 ```
 
 ### Tagging Strategy
+
 ```hcl
 locals {
   common_tags = {
@@ -377,6 +406,7 @@ module "aks" {
 ### Common Issues
 
 #### 1. Terraform Init Fails
+
 ```bash
 # Clear cache and reinitialize
 rm -rf .terraform
@@ -384,17 +414,22 @@ terraform init -upgrade
 ```
 
 #### 2. Resource Name Conflicts
+
 Ensure globally unique names for:
+
 - Storage accounts (3-24 lowercase alphanumeric)
 - Database servers (3-63 lowercase alphanumeric with hyphens)
 
 #### 3. Subnet Size
+
 Ensure subnets are large enough:
+
 - AKS: Minimum /24 for small clusters
 - Database: Minimum /28
 - NAT Gateway: Minimum /29
 
 #### 4. Service Endpoint Conflicts
+
 Cannot use private endpoints and firewall rules simultaneously on databases
 
 ## Migration from Old Modules
@@ -402,11 +437,13 @@ Cannot use private endpoints and firewall rules simultaneously on databases
 If migrating from `azure-aks-cluster`, `azure-network`, etc.:
 
 1. **Import existing resources**:
+
 ```bash
 terraform import module.aks.azurerm_kubernetes_cluster.main /subscriptions/.../resourceGroups/.../providers/Microsoft.ContainerService/managedClusters/...
 ```
 
 2. **Update references**:
+
 ```hcl
 # Old
 module "aks" {
@@ -424,6 +461,7 @@ module "aks" {
 ## Contributing
 
 When adding new features:
+
 1. Update variables with validation
 2. Add outputs for new resources
 3. Update examples

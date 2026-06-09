@@ -5,11 +5,9 @@ This module provides step definitions for testing Trivy container scanning
 integration with Jenkins pipelines and Harbor registry.
 """
 
-import json
 import time
-import requests
 from behave import given, when, then
-from kubernetes import client, config
+from kubernetes import client
 from kubernetes.client.rest import ApiException
 
 # Configuration constants

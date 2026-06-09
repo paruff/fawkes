@@ -22,33 +22,33 @@ module "network" {
 
 ## Requirements
 
-| Name | Version |
-|------|---------|
-| terraform | >= 1.6.0 |
-| azurerm | >= 3.110.0 |
+| Name      | Version    |
+| --------- | ---------- |
+| terraform | >= 1.6.0   |
+| azurerm   | >= 3.110.0 |
 
 ## Inputs
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|----------|
-| vnet_name | Name of the virtual network | `string` | n/a | yes |
-| location | Azure region for the virtual network | `string` | n/a | yes |
-| resource_group_name | Name of the resource group | `string` | n/a | yes |
-| address_space | Address space for the virtual network | `list(string)` | n/a | yes |
-| subnet_name | Name of the subnet | `string` | n/a | yes |
-| subnet_address_prefixes | Address prefixes for the subnet | `list(string)` | n/a | yes |
-| tags | Tags to apply to network resources | `map(string)` | `{}` | no |
+| Name                    | Description                           | Type           | Default | Required |
+| ----------------------- | ------------------------------------- | -------------- | ------- | -------- |
+| vnet_name               | Name of the virtual network           | `string`       | n/a     | yes      |
+| location                | Azure region for the virtual network  | `string`       | n/a     | yes      |
+| resource_group_name     | Name of the resource group            | `string`       | n/a     | yes      |
+| address_space           | Address space for the virtual network | `list(string)` | n/a     | yes      |
+| subnet_name             | Name of the subnet                    | `string`       | n/a     | yes      |
+| subnet_address_prefixes | Address prefixes for the subnet       | `list(string)` | n/a     | yes      |
+| tags                    | Tags to apply to network resources    | `map(string)`  | `{}`    | no       |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| vnet_id | The ID of the virtual network |
-| vnet_name | The name of the virtual network |
-| subnet_id | The ID of the subnet |
-| subnet_name | The name of the subnet |
-| address_space | The address space of the virtual network |
-| subnet_address_prefixes | The address prefixes of the subnet |
+| Name                    | Description                              |
+| ----------------------- | ---------------------------------------- |
+| vnet_id                 | The ID of the virtual network            |
+| vnet_name               | The name of the virtual network          |
+| subnet_id               | The ID of the subnet                     |
+| subnet_name             | The name of the subnet                   |
+| address_space           | The address space of the virtual network |
+| subnet_address_prefixes | The address prefixes of the subnet       |
 
 ## Validation Rules
 

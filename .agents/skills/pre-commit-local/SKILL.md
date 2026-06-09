@@ -9,39 +9,41 @@ compatibility: opencode
 
 ## Layer mapping
 
-| Layer | Make target | Hooks |
-|---|---|---|
-| Base | `make lint-base` | trailing-whitespace, end-of-file-fixer, check-yaml, check-json, check-added-large-files, check-merge-conflict, mixed-line-ending, detect-private-key, prettier, insert-license |
-| Language | `make lint-lang` | black, ruff, flake8, shellcheck, shfmt, golangci-lint, markdownlint |
-| Tool | `make lint-tool` | yamllint, terraform_fmt, terraform_validate, terraform_tflint, terraform_docs, terraform_tfsec |
-| Platform | `make lint-platform` | kubeval, kustomize-validate, backstage-catalog-validate, argocd-validate, helm-lint, check-k8s-secrets, mkdocs-validate, gitleaks, detect-secrets |
+| Layer    | Make target          | Hooks                                                                                                                                                                          |
+| -------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Base     | `make lint-base`     | trailing-whitespace, end-of-file-fixer, check-yaml, check-json, check-added-large-files, check-merge-conflict, mixed-line-ending, detect-private-key, prettier, insert-license |
+| Language | `make lint-lang`     | black, ruff, flake8, shellcheck, shfmt, golangci-lint, markdownlint                                                                                                            |
+| Tool     | `make lint-tool`     | yamllint, terraform_fmt, terraform_validate, terraform_tflint, terraform_docs, terraform_tfsec                                                                                 |
+| Platform | `make lint-platform` | kubeval, kustomize-validate, backstage-catalog-validate, argocd-validate, helm-lint, check-k8s-secrets, mkdocs-validate, gitleaks, detect-secrets                              |
 
 ## Workflow
 
 ### Step 1 — Detect staged files
+
 ```bash
 git diff --cached --name-only
 ```
 
 ### Step 2 — Map files to layers
 
-| File pattern | Layer(s) to run |
-|---|---|
-| `*.py` | Base + Language |
-| `*.sh` | Base + Language |
-| `*.go` | Base + Language |
-| `*.md` | Base + Language |
-| `*.yaml` / `*.yml` | Base + Tool + Platform |
-| `*.tf` | Base + Tool |
-| `infra/kubernetes/**` | Base + Platform |
-| `platform/**` | Base + Platform |
-| `services/**` | Base + Language |
-| `scripts/**` | Base + Language |
-| `tests/**` | Base + Language |
-| `docs/**` | Base + Language |
-| `.github/**` | Base + Tool |
+| File pattern          | Layer(s) to run        |
+| --------------------- | ---------------------- |
+| `*.py`                | Base + Language        |
+| `*.sh`                | Base + Language        |
+| `*.go`                | Base + Language        |
+| `*.md`                | Base + Language        |
+| `*.yaml` / `*.yml`    | Base + Tool + Platform |
+| `*.tf`                | Base + Tool            |
+| `infra/kubernetes/**` | Base + Platform        |
+| `platform/**`         | Base + Platform        |
+| `services/**`         | Base + Language        |
+| `scripts/**`          | Base + Language        |
+| `tests/**`            | Base + Language        |
+| `docs/**`             | Base + Language        |
+| `.github/**`          | Base + Tool            |
 
 ### Step 3 — Run targeted layer(s)
+
 ```bash
 # Always run base first (fast-fail)
 make lint-base
@@ -53,6 +55,7 @@ make lint-platform # if infra/kubernetes/**, platform/** staged
 ```
 
 ### Step 4 — Auto-fix and re-stage
+
 ```bash
 # If hooks fail, run auto-fix variants
 pre-commit run trailing-whitespace --all-files
@@ -85,9 +88,11 @@ pre-commit run
 ```
 
 ## CI parity
+
 The CI workflow (`.github/workflows/pre-commit.yml`) runs the same 4 layers in parallel on separate runners. Running `make lint-base && make lint-lang && make lint-tool && make lint-platform` locally produces the same result as CI.
 
 ## Validate
+
 ```bash
 # Verify all layers pass locally
 make lint-base && make lint-lang && make lint-tool && make lint-platform

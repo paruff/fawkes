@@ -60,7 +60,7 @@ module "gke" {
   cluster_name        = "fawkes-prod-gke"
   location            = "us-central1"
   project_id          = "my-project-id"
-  
+
   enable_autopilot    = false  # Set to true for Autopilot mode
   kubernetes_version  = "1.28"
 
@@ -215,6 +215,7 @@ locals {
 ```
 
 Each resource also gets a `cost` label for granular cost tracking:
+
 - `gke-control-plane` - GKE control plane costs
 - `gke-worker-nodes` - Compute Engine instances for GKE
 - `gke-addons` - GKE add-ons and service accounts
@@ -405,6 +406,7 @@ gcloud compute project-info describe --project=PROJECT_ID
 ## Support
 
 For questions or issues:
+
 - Review individual module READMEs for detailed documentation
 - Check examples for reference implementations
 - Consult [ADR-005: Terraform Decision](../../docs/adr/ADR-005%20terraform.md)

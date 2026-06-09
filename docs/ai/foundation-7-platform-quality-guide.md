@@ -18,6 +18,7 @@ exists. If the platform is fragmented, undocumented, or inconsistent, AI generat
 fragmented, undocumented, inconsistent code — faster.
 
 **The compounding effect:** Each Foundation 7 improvement:
+
 1. Makes the next AI-generated PR higher quality
 2. Reduces rework rate, freeing engineering time
 3. Frees time that can be reinvested in more Foundation 7 improvements
@@ -26,18 +27,18 @@ fragmented, undocumented, inconsistent code — faster.
 
 ## Current Foundation 7 status (as of 2026-03-13)
 
-| Element | Status | Evidence |
-|---|---|---|
-| ArgoCD GitOps reconciliation | ✅ Active | `platform/apps/` — 74 Application manifests |
-| Helm charts with `helm lint` gate | ✅ Active | `charts/`, `.github/workflows/` |
-| `make` CLI for common tasks | ✅ Active | `Makefile` |
-| Pre-commit hooks | ⚠️ Partial | `make pre-commit-setup` documented but hook adoption not tracked |
-| Golden path templates | ⚠️ Partial | `templates/` directory exists; not all services use it |
-| Path-scoped agent instructions | ⚠️ Partial | 5 files in `.github/instructions/` (missing Python services) |
-| Specialist coding agents | ⚠️ Partial | 4 agents exist; specialist coverage incomplete |
-| Platform health metrics | ❌ Missing | Type-hint %, paved-path %, rework rate not tracked |
-| Workspace configuration | ❌ Missing | No `.vscode/settings.json` or `.copilot/workspace.json` |
-| Python services instruction file | ❌ Missing | No `python-services.instructions.md` in `.github/instructions/` |
+| Element                           | Status     | Evidence                                                         |
+| --------------------------------- | ---------- | ---------------------------------------------------------------- |
+| ArgoCD GitOps reconciliation      | ✅ Active  | `platform/apps/` — 74 Application manifests                      |
+| Helm charts with `helm lint` gate | ✅ Active  | `charts/`, `.github/workflows/`                                  |
+| `make` CLI for common tasks       | ✅ Active  | `Makefile`                                                       |
+| Pre-commit hooks                  | ⚠️ Partial | `make pre-commit-setup` documented but hook adoption not tracked |
+| Golden path templates             | ⚠️ Partial | `templates/` directory exists; not all services use it           |
+| Path-scoped agent instructions    | ⚠️ Partial | 5 files in `.github/instructions/` (missing Python services)     |
+| Specialist coding agents          | ⚠️ Partial | 4 agents exist; specialist coverage incomplete                   |
+| Platform health metrics           | ❌ Missing | Type-hint %, paved-path %, rework rate not tracked               |
+| Workspace configuration           | ❌ Missing | No `.vscode/settings.json` or `.copilot/workspace.json`          |
+| Python services instruction file  | ❌ Missing | No `python-services.instructions.md` in `.github/instructions/`  |
 
 ---
 
@@ -53,6 +54,7 @@ Without a path-scoped instruction file, every agent must re-derive Python rules 
 file is edited in Copilot.
 
 **What to include:**
+
 - FastAPI route patterns (Pydantic models, `async def`, `HTTPException`)
 - Type hint requirements on all signatures
 - Error wrapping pattern (`raise HTTPException(...) from exc`)
@@ -70,16 +72,16 @@ file is edited in Copilot.
 
 The following agents are either missing or insufficiently specialised for fawkes:
 
-| Agent | Model | Gap it fills | Priority |
-|---|---|---|---|
-| `test-engineer.agent.md` | GPT-4.1 | pytest, pytest-bdd, bats tests | ⬅ Created (see suggestion file) |
-| `issue-writer.agent.md` | Claude Sonnet 4.6 | Fully-specified GitHub issues | ⬅ Created (see suggestion file) |
-| `code-reviewer.agent.md` | Claude Sonnet 4.6 | PR review across all layers | ⬅ Created (see suggestion file) |
-| `infra-gitops.agent.md` | GPT-4.1 | Terraform, Helm, ArgoCD, K8s | ⬅ Created (see suggestion file) |
-| `gpt41-default.agent.md` | GPT-4.1 | General fallback for any task | ⬅ Created (see suggestion file) |
-| `docs-writer.agent.md` | GPT-4.1 | Keep docs fresh (see §1.3) | High |
-| `security-agent.agent.md` | Claude Sonnet 4.6 | SAST, SBOM, secret scanning review | Medium |
-| `python-service.agent.md` | GPT-4.1 | FastAPI service development | Medium |
+| Agent                     | Model             | Gap it fills                       | Priority                         |
+| ------------------------- | ----------------- | ---------------------------------- | -------------------------------- |
+| `test-engineer.agent.md`  | GPT-4.1           | pytest, pytest-bdd, bats tests     | ⬅ Created (see suggestion file) |
+| `issue-writer.agent.md`   | Claude Sonnet 4.6 | Fully-specified GitHub issues      | ⬅ Created (see suggestion file) |
+| `code-reviewer.agent.md`  | Claude Sonnet 4.6 | PR review across all layers        | ⬅ Created (see suggestion file) |
+| `infra-gitops.agent.md`   | GPT-4.1           | Terraform, Helm, ArgoCD, K8s       | ⬅ Created (see suggestion file) |
+| `gpt41-default.agent.md`  | GPT-4.1           | General fallback for any task      | ⬅ Created (see suggestion file) |
+| `docs-writer.agent.md`    | GPT-4.1           | Keep docs fresh (see §1.3)         | High                             |
+| `security-agent.agent.md` | Claude Sonnet 4.6 | SAST, SBOM, secret scanning review | Medium                           |
+| `python-service.agent.md` | GPT-4.1           | FastAPI service development        | Medium                           |
 
 ---
 
@@ -92,6 +94,7 @@ behind the code, agents invent endpoints and function names that do not exist.
 **Scope:** All files in `docs/`, `README.md`, `CONTRIBUTING.md`, ADRs.
 
 **Key rules:**
+
 - Read the code before updating the docs — never invent based on old docs
 - Diataxis structure: tutorials, how-to guides, reference, explanation
 - Every new service → entry in `docs/API_SURFACE.md` in the same PR
@@ -111,6 +114,7 @@ the dedicated `docs/GOLDEN_PATH.md` file referenced by AGENTS.md §12 does not e
 Without it, every new engineer must reconstruct the workflow from multiple sources.
 
 **What to include:**
+
 1. Prerequisites: tools, access, environment setup
 2. Feature development loop: BDD first → implement → deploy locally → test → iterate
 3. Golden path commands: `make deploy-local`, `make test-bdd`, `make lint`, `make sync`
@@ -133,14 +137,14 @@ modules with missing type hints or no existing tests.
 ```markdown
 ## AI-Readiness Status
 
-| Criterion | Status |
-|---|---|
+| Criterion                          | Status  |
+| ---------------------------------- | ------- |
 | Type hints on all public functions | ✅ / ❌ |
-| Docstrings on all public classes | ✅ / ❌ |
-| Tests exist and are green | ✅ / ❌ |
-| Module is single-purpose | ✅ / ❌ |
-| Error messages include context | ✅ / ❌ |
-| Covered by BDD scenario | ✅ / ❌ |
+| Docstrings on all public classes   | ✅ / ❌ |
+| Tests exist and are green          | ✅ / ❌ |
+| Module is single-purpose           | ✅ / ❌ |
+| Error messages include context     | ✅ / ❌ |
+| Covered by BDD scenario            | ✅ / ❌ |
 ```
 
 **Quick assessment script:**
@@ -244,6 +248,7 @@ A dedicated security agent that applies OWASP, CWE, and container security stand
 builds trust faster than a generalist reviewer.
 
 **Key capabilities:**
+
 - SAST review for Python (SQL injection, command injection, path traversal)
 - Secret scanning: detect accidentally committed credentials
 - Container security: run-as-non-root, read-only filesystem, no privileged
@@ -261,14 +266,14 @@ metrics. Without a metrics tracking file, Foundation 7 progress is invisible.
 
 **Metrics to add:**
 
-| Metric | Target | Measurement |
-|---|---|---|
-| Rework rate (AI PRs) | < 10% | PRs needing > 1 round of review / total PRs |
-| Type-hint coverage (`services/`) | > 95% | `scripts/check-ai-readiness.sh` output |
-| BDD scenario coverage | ≥ 1 per service capability | `ls tests/bdd/features/ | wc -l` |
-| Paved-path adoption | > 80% of services | Services using golden-path template |
-| PR size (median) | < 200 lines | GitHub Insights → Pull Requests |
-| CI pass rate (first attempt) | > 90% | GitHub Actions → Workflow runs |
+| Metric                           | Target                     | Measurement                                 |
+| -------------------------------- | -------------------------- | ------------------------------------------- | ------ |
+| Rework rate (AI PRs)             | < 10%                      | PRs needing > 1 round of review / total PRs |
+| Type-hint coverage (`services/`) | > 95%                      | `scripts/check-ai-readiness.sh` output      |
+| BDD scenario coverage            | ≥ 1 per service capability | `ls tests/bdd/features/                     | wc -l` |
+| Paved-path adoption              | > 80% of services          | Services using golden-path template         |
+| PR size (median)                 | < 200 lines                | GitHub Insights → Pull Requests             |
+| CI pass rate (first attempt)     | > 90%                      | GitHub Actions → Workflow runs              |
 
 ---
 
@@ -297,18 +302,18 @@ context:
 
 ## Summary — recommended action sequence
 
-| Step | Action | Effort | Impact | Agent |
-|---|---|---|---|---|
-| 1 | Apply the 5 new agent suggestion files in `.github/agents/` | 30 min | Very High | Manual |
-| 2 | Create `.github/instructions/python-services.instructions.md` | 2h | Very High | `docs-writer` |
-| 3 | Create `docs/GOLDEN_PATH.md` | 2h | High | `docs-writer` |
-| 4 | Create `docs/agents/docs-writer.agent.md` | 1h | High | Manual / `gpt41-default` |
-| 5 | Create `scripts/check-ai-readiness.sh` | 2h | High | `test-engineer` or `gpt41-default` |
-| 6 | Add `.vscode/settings.json` | 30 min | Medium | `gpt41-default` |
-| 7 | Add AI-readiness table to each service README | 3h | Medium | `docs-writer` |
-| 8 | Update `docs/METRICS.md` with AI metrics | 1h | Medium | `docs-writer` |
-| 9 | Create `security-agent.agent.md` | 2h | High | Manual |
-| 10 | Add `scripts/check-ai-readiness.sh` CI step | 2h | Medium | `gpt41-default` |
+| Step | Action                                                        | Effort | Impact    | Agent                              |
+| ---- | ------------------------------------------------------------- | ------ | --------- | ---------------------------------- |
+| 1    | Apply the 5 new agent suggestion files in `.github/agents/`   | 30 min | Very High | Manual                             |
+| 2    | Create `.github/instructions/python-services.instructions.md` | 2h     | Very High | `docs-writer`                      |
+| 3    | Create `docs/GOLDEN_PATH.md`                                  | 2h     | High      | `docs-writer`                      |
+| 4    | Create `docs/agents/docs-writer.agent.md`                     | 1h     | High      | Manual / `gpt41-default`           |
+| 5    | Create `scripts/check-ai-readiness.sh`                        | 2h     | High      | `test-engineer` or `gpt41-default` |
+| 6    | Add `.vscode/settings.json`                                   | 30 min | Medium    | `gpt41-default`                    |
+| 7    | Add AI-readiness table to each service README                 | 3h     | Medium    | `docs-writer`                      |
+| 8    | Update `docs/METRICS.md` with AI metrics                      | 1h     | Medium    | `docs-writer`                      |
+| 9    | Create `security-agent.agent.md`                              | 2h     | High      | Manual                             |
+| 10   | Add `scripts/check-ai-readiness.sh` CI step                   | 2h     | Medium    | `gpt41-default`                    |
 
 ---
 

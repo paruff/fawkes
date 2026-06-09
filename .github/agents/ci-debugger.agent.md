@@ -34,12 +34,15 @@ the error message shows.
 ## Diagnosis methodology
 
 ### Step 1 — Read the full error, not just the last line
+
 CI failures almost never fail where they look like they fail. The last line
 is usually a consequence. Read the full job log from the beginning, looking
 for the first `ERROR` or `FAILED` line.
 
 ### Step 2 — Read the workflow file completely
+
 Read the entire `.github/workflows/<failing-workflow>.yml`. Look for:
+
 - `uses:` references to reusable workflows — read those too
 - `secrets:` references — is the secret name correct and available?
 - `needs:` dependencies — did an upstream job silently fail?
@@ -47,24 +50,28 @@ Read the entire `.github/workflows/<failing-workflow>.yml`. Look for:
 - Environment matrix — does the failure only affect one matrix entry?
 
 ### Step 3 — Cross-reference related files
+
 For each failure type, read these additional files:
 
-| Failure type | Also read |
-|---|---|
-| Terraform | `infra/<module>/main.tf`, `infra/<module>/variables.tf`, backend config |
-| pytest | `services/<svc>/requirements.txt`, `conftest.py`, `pyproject.toml` |
-| Docker build | `services/<svc>/Dockerfile`, `.dockerignore`, base image availability |
-| Linting/trunk | `.trunk/trunk.yaml`, `.pre-commit-config.yaml` |
-| Reusable workflow | The called workflow file AND the caller workflow |
-| Secret/auth | Check if secret name in workflow matches repo/org secret name exactly |
+| Failure type      | Also read                                                               |
+| ----------------- | ----------------------------------------------------------------------- |
+| Terraform         | `infra/<module>/main.tf`, `infra/<module>/variables.tf`, backend config |
+| pytest            | `services/<svc>/requirements.txt`, `conftest.py`, `pyproject.toml`      |
+| Docker build      | `services/<svc>/Dockerfile`, `.dockerignore`, base image availability   |
+| Linting/trunk     | `.trunk/trunk.yaml`, `.pre-commit-config.yaml`                          |
+| Reusable workflow | The called workflow file AND the caller workflow                        |
+| Secret/auth       | Check if secret name in workflow matches repo/org secret name exactly   |
 
 ### Step 4 — Form a root cause hypothesis
+
 Before suggesting a fix, state explicitly:
+
 - **Symptom**: what the error message says
 - **Root cause**: what actually caused it
 - **Evidence**: which file/line/config supports your diagnosis
 
 ### Step 5 — Propose the minimal fix
+
 Fix only what caused the root cause. Do not refactor surrounding code.
 Include a one-line test to verify the fix worked.
 
@@ -73,26 +80,31 @@ Include a one-line test to verify the fix worked.
 ## Common fawkes CI failure patterns
 
 ### Reusable workflow contract violations
+
 If a caller workflow passes inputs that the reusable workflow doesn't declare,
 GitHub Actions silently ignores them — but if a required input is missing,
 the job fails with a cryptic permissions or undefined variable error.
 **Always check `on: workflow_call: inputs:` in the reusable workflow.**
 
 ### Missing timeout causing inflated lead time
+
 Jobs without `timeout-minutes` can hang indefinitely. The failure appears as
 a cancellation after 6 hours. The fix is `timeout-minutes`, not a code change.
 
 ### Python import failures in pytest
+
 Usually caused by a missing package in `requirements.txt` or a circular import
 introduced by a new module. Read `conftest.py` and the test file imports first.
 
 ### Terraform state lock
+
 If a previous run was interrupted, the state may be locked. Diagnosis:
 check for `Error: Error locking state: Error acquiring the state lock` in logs.
 Fix requires manual state unlock — flag this to the user rather than attempting
 an automated fix.
 
 ### Secret name drift
+
 GitHub Actions secrets are case-sensitive. If a workflow references
 `DEVLAKE_API_TOKEN` but the secret is stored as `devlake_api_token`, the job
 will fail with an auth error that looks like a network or permission problem.
