@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup format format-check validate-research-structure validate-at-e0-001 validate-at-e0-002 validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-008 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-epic-3-final validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all terraform-test terraform-test-integration terraform-test-e2e terraform-test-cost terraform-test-all dev-up dev-down dev-status check-deps dojo-validate
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup format format-check lint lint-base lint-lang lint-tool lint-platform validate-research-structure validate-at-e0-001 validate-at-e0-002 validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-008 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-epic-3-final validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all terraform-test terraform-test-integration terraform-test-e2e terraform-test-cost terraform-test-all dev-up dev-down dev-status check-deps dojo-validate
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -85,6 +85,46 @@ k8s-validate: ## Validate Kubernetes manifests
 
 lint: ## Run all linters
 	@pre-commit run --all-files
+
+lint-base: ## Run base hooks (whitespace, YAML/JSON syntax, secrets, formatting)
+	@pre-commit run trailing-whitespace --all-files
+	@pre-commit run end-of-file-fixer --all-files
+	@pre-commit run check-yaml --all-files
+	@pre-commit run check-json --all-files
+	@pre-commit run check-added-large-files --all-files
+	@pre-commit run check-merge-conflict --all-files
+	@pre-commit run mixed-line-ending --all-files
+	@pre-commit run detect-private-key --all-files
+	@pre-commit run prettier --all-files
+	@pre-commit run insert-license --all-files
+
+lint-lang: ## Run language hooks (Python, Shell, Go, Markdown)
+	@pre-commit run black --all-files
+	@pre-commit run ruff --all-files
+	@pre-commit run flake8 --all-files
+	@pre-commit run shellcheck --all-files
+	@pre-commit run shfmt --all-files
+	@pre-commit run golangci-lint --all-files
+	@pre-commit run markdownlint --all-files
+
+lint-tool: ## Run tool hooks (YAML lint, Terraform fmt/validate/tflint)
+	@pre-commit run yamllint --all-files
+	@pre-commit run terraform_fmt --all-files
+	@pre-commit run terraform_validate --all-files
+	@pre-commit run terraform_tflint --all-files
+	@pre-commit run terraform_docs --all-files
+	@pre-commit run terraform_tfsec --all-files
+
+lint-platform: ## Run platform hooks (K8s, ArgoCD, Helm, Backstage, MkDocs, security)
+	@pre-commit run kubeval --all-files
+	@pre-commit run kustomize-validate --all-files
+	@pre-commit run backstage-catalog-validate --all-files
+	@pre-commit run argocd-validate --all-files
+	@pre-commit run helm-lint --all-files
+	@pre-commit run check-k8s-secrets --all-files
+	@pre-commit run mkdocs-validate --all-files
+	@pre-commit run gitleaks --all-files
+	@pre-commit run detect-secrets --all-files
 
 format: ## Apply all code formatters (Black, shfmt, prettier, terraform fmt)
 	@echo "🎨 Formatting Python with Black..."

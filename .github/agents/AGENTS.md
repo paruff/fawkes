@@ -31,5 +31,6 @@ Issue → "Assign to Copilot" → select agent from dropdown.
 | `reusable-workflow-builder` | Create/modify reusable workflows |
 | `dora-instrumentor` | Add DORA metrics to workflows |
 | `workflow-security-audit` | Audit workflow security |
+| `pre-commit-local` | Targeted pre-commit validation by layer |
 
 For OpenCode workflows, load skills directly via the `skill` tool instead.
