@@ -10,18 +10,18 @@ import yaml
 import tempfile
 from pathlib import Path
 from behave import given, when, then
-from subprocess import run, PIPE, CalledProcessError
+from subprocess import run
 
 
 @given("the Fawkes platform is operational")
-def step_impl(context):
+def step_given_platform_operational(context):
     """Verify Fawkes platform is running (stub for now)."""
     # In a real test, this would check K8s cluster health
     context.platform_operational = True
 
 
 @given("the SCORE transformer component is deployed")
-def step_impl(context):
+def step_given_score_transformer_deployed(context):
     """Verify SCORE transformer is available."""
     # Check if generator.py exists
     transformer_path = Path(__file__).parent.parent.parent.parent / "charts" / "score-transformer" / "generator.py"
@@ -30,20 +30,20 @@ def step_impl(context):
 
 
 @given("a developer scaffolds a new service using the Golden Path template")
-def step_impl(context):
+def step_given_developer_scaffolds_service(context):
     """Simulate scaffolding a new service."""
     template_path = Path(__file__).parent.parent.parent.parent / "templates" / "golden-path-service"
     context.template_path = template_path
 
 
 @when("they review the generated files")
-def step_impl(context):
+def step_when_review_generated_files(context):
     """Check generated files from template."""
     context.generated_files = list(context.template_path.glob("**/*"))
 
 
 @then("a score.yaml file is present")
-def step_impl(context):
+def step_then_score_yaml_present(context):
     """Verify score.yaml exists in template."""
     score_file = context.template_path / "score.yaml"
     assert score_file.exists(), f"score.yaml not found in {context.template_path}"
@@ -51,7 +51,7 @@ def step_impl(context):
 
 
 @then("the score.yaml defines application parameters")
-def step_impl(context):
+def step_then_score_defines_params(context):
     """Verify score.yaml has application parameters."""
     with open(context.score_file, "r") as f:
         score_data = yaml.safe_load(f)
@@ -61,7 +61,7 @@ def step_impl(context):
 
 
 @then("the score.yaml defines required resource components")
-def step_impl(context):
+def step_then_score_defines_resources(context):
     """Verify score.yaml defines resources."""
     with open(context.score_file, "r") as f:
         score_data = yaml.safe_load(f)
@@ -71,7 +71,7 @@ def step_impl(context):
 
 
 @given("a score.yaml file with memory limit of {memory}")
-def step_impl(context, memory):
+def step_given_score_with_memory_limit(context, memory):
     """Create a test score.yaml with specific memory limit."""
     context.test_score = {
         "apiVersion": "score.dev/v1b1",
@@ -90,13 +90,13 @@ def step_impl(context, memory):
 
 
 @when("a developer modifies the containers.resources.limits.memory field to {new_memory}")
-def step_impl(context, new_memory):
+def step_when_developer_modifies_memory(context, new_memory):
     """Modify memory limit in score.yaml."""
     context.test_score["containers"]["web"]["resources"]["limits"]["memory"] = new_memory
 
 
 @then("the change is automatically reflected in the generated Deployment manifest")
-def step_impl(context):
+def step_then_change_reflected_in_deployment(context):
     """Verify memory change is in generated manifest."""
     # Write test score.yaml
     with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
@@ -106,7 +106,7 @@ def step_impl(context):
     try:
         # Generate manifests using transformer
         output_dir = tempfile.mkdtemp()
-        result = run(
+        _ = run(
             [
                 "python3",
                 str(context.transformer_path),
@@ -140,7 +140,7 @@ def step_impl(context):
 
 
 @then("the developer does not need to modify raw Kubernetes YAML")
-def step_impl(context):
+def step_then_no_raw_k8s_yaml(context):
     """Verify abstraction - developers only modify score.yaml."""
     # This is verified by the fact that we only modified score.yaml
     # and the deployment manifest was auto-generated
@@ -148,7 +148,7 @@ def step_impl(context):
 
 
 @given("a score.yaml file is created for the {environment} environment")
-def step_impl(context, environment):
+def step_given_score_file_for_env(context, environment):
     """Create score.yaml for specific environment."""
     context.source_environment = environment.lower()
     context.test_score = {
@@ -160,7 +160,7 @@ def step_impl(context, environment):
 
 
 @when("the score.yaml file is deployed to the {environment} environment")
-def step_impl(context, environment):
+def step_when_score_deployed_to_env(context, environment):
     """Deploy score.yaml to target environment."""
     context.target_environment = environment.lower()
 
@@ -195,28 +195,28 @@ def step_impl(context, environment):
 
 
 @then("the application is successfully deployed")
-def step_impl(context):
+def step_then_app_deployed(context):
     """Verify successful deployment."""
     assert hasattr(context, "deployment_result"), "No deployment result found"
     assert context.deployment_result.returncode == 0, f"Deployment failed: {context.deployment_result.stderr}"
 
 
 @then("the Kubernetes manifests reference {environment}-specific resources")
-def step_impl(context, environment):
+def step_then_k8s_env_resources(context, environment):
     """Verify environment-specific resource references."""
     # This would check generated manifests reference correct env resources
     assert context.target_environment == environment.lower()
 
 
 @then("the Vault address matches the {environment} environment")
-def step_impl(context, environment):
+def step_then_vault_address(context, environment):
     """Verify Vault address is environment-specific."""
     # In a real test, this would check ExternalSecret manifests
     pass
 
 
 @then("the Ingress hostname matches the {environment} environment")
-def step_impl(context, environment):
+def step_then_ingress_hostname(context, environment):
     """Verify Ingress hostname is environment-specific."""
     ingress_file = Path(context.generated_manifests) / "ingress.yaml"
     if ingress_file.exists():
@@ -229,7 +229,7 @@ def step_impl(context, environment):
 
 
 @given("a valid score.yaml file with container and service definitions")
-def step_impl(context):
+def step_given_valid_score_file(context):
     """Create valid score.yaml for translation test."""
     context.test_score = {
         "apiVersion": "score.dev/v1b1",
@@ -241,7 +241,7 @@ def step_impl(context):
 
 
 @when("the SCORE transformer processes the file")
-def step_impl(context):
+def step_when_score_transformer_processes(context):
     """Run SCORE transformer on test file."""
     with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
         yaml.dump(context.test_score, f)
@@ -272,14 +272,14 @@ def step_impl(context):
 
 
 @then("a Kubernetes {resource_type} manifest is generated")
-def step_impl(context, resource_type):
+def step_then_manifest_generated(context, resource_type):
     """Verify specific K8s manifest was generated."""
     manifest_file = Path(context.generated_manifests) / f"{resource_type.lower()}.yaml"
     assert manifest_file.exists(), f"{resource_type} manifest not found"
 
 
 @then("all manifests contain the score.dev/source annotation")
-def step_impl(context):
+def step_then_manifests_have_annotation(context):
     """Verify all manifests have SCORE annotation."""
     for manifest_file in Path(context.generated_manifests).glob("*.yaml"):
         with open(manifest_file, "r") as f:

@@ -10,7 +10,7 @@ import json
 import subprocess
 import time
 import os
-from typing import Dict, Any
+from typing import Dict
 
 import pytest
 from pytest_bdd import given, when, then, parsers

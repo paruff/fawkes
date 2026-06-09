@@ -698,6 +698,6 @@ deliverables/epic-3/
 
 ---
 
-**END OF HANDOFF DOCUMENT**
+### END OF HANDOFF DOCUMENT
 
 Save this to: `docs/implementation-plan/IMPLEMENTATION_HANDOFF.md`

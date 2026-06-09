@@ -269,7 +269,7 @@ War room will remain open for 1 hour for follow-up.
 
 **Method**: Ask "why" five times to find root cause
 
-**Example: Website Down**
+### Example: Website Down
 
 ```
 Problem: Website is down
@@ -1673,20 +1673,20 @@ Module 16: Incident Management    ████████████ 100% ✓
 
 ### 🚀 What's Next?
 
-**Option 1: Take Brown Belt Certification Exam**
+### Option 1: Take Brown Belt Certification Exam
 
 - Validate your observability and SRE mastery
 - Earn "Fawkes SRE Practitioner" badge
 - Get LinkedIn-verified credential
 
-**Option 2: Continue to Black Belt**
+### Option 2: Continue to Black Belt
 
 - Module 17: Platform Architecture & Design
 - Module 18: Multi-Tenancy & RBAC
 - Module 19: Cost Optimization
 - Module 20: Platform Team Leadership
 
-**Option 3: Apply to Production**
+### Option 3: Apply to Production
 
 - Implement full observability stack
 - Define SLIs/SLOs for your services
@@ -1935,4 +1935,4 @@ _Fawkes Dojo - Where Platform Engineers Are Forged_
 _Version 1.0 | Last Updated: October 2025_
 _License: MIT | https://github.com/paruff/fawkes_
 
-**🎉 Brown Belt Complete - Congratulations, SRE Practitioner! 🎉**
+### 🎉 Brown Belt Complete - Congratulations, SRE Practitioner! 🎉

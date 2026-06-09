@@ -218,7 +218,7 @@ The JSON report includes:
 
 ### Common Issues
 
-**Issue: Azure CLI not authenticated**
+### Issue: Azure CLI not authenticated
 
 ```
 [✗] Prerequisites - Azure Auth: Not authenticated to Azure
@@ -231,7 +231,7 @@ az login
 az account set --subscription <your-subscription-id>
 ```
 
-**Issue: Cluster not found**
+### Issue: Cluster not found
 
 ```
 [✗] Cluster Exists: Cluster fawkes-aks not found in fawkes-rg
@@ -259,7 +259,7 @@ az aks get-credentials \
 kubectl cluster-info
 ```
 
-**Issue: Metrics not available**
+### Issue: Metrics not available
 
 ```
 [✗] Cluster Metrics: metrics-server deployed but not returning data

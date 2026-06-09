@@ -78,7 +78,7 @@ def verify_ha_cluster():
 @then("persistent storage should be allocated for each node")
 def verify_persistent_storage():
     """Verify PVCs are created for each database node."""
-    result = subprocess.run(
+    _ = subprocess.run(
         [
             "kubectl",
             "get",
@@ -102,7 +102,7 @@ def verify_persistent_storage():
 @then("credentials should be stored in Kubernetes Secrets")
 def verify_credentials_secret():
     """Verify database credentials are stored in Kubernetes Secrets."""
-    result = subprocess.run(
+    _ = subprocess.run(
         ["kubectl", "get", "secret", "db-focalboard-credentials", "-n", "fawkes", "-o", "jsonpath={.metadata.name}"],
         capture_output=True,
         text=True,
@@ -115,7 +115,7 @@ def verify_credentials_secret():
 @given("the PostgreSQL cluster is running with 1 primary and 2 replicas")
 def postgresql_cluster_running():
     """Verify PostgreSQL cluster is running with correct topology."""
-    result = subprocess.run(
+    _ = subprocess.run(
         ["kubectl", "get", "cluster", "db-focalboard-dev", "-n", "fawkes", "-o", "jsonpath={.status.instances}"],
         capture_output=True,
         text=True,

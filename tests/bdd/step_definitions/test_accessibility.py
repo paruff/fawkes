@@ -6,7 +6,6 @@ integrated into the CI/CD pipeline with axe-core and Lighthouse CI.
 """
 
 import json
-import os
 from pathlib import Path
 
 import pytest

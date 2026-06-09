@@ -156,11 +156,8 @@
 ### Quotes from Research
 
 > "I spend half my time answering questions that should be self-service. I want to build things that make me obsolete."
-
 > "The hardest part isn't the technology—it's getting 50 developers to use the platform consistently. We need golden paths, not just documentation."
-
 > "When an incident happens at 2 AM, I don't want to grep through logs. I need context: What changed? What's the impact? What's the fix?"
-
 > "Developer experience is my product. If developers don't love the platform, we've failed, regardless of our uptime numbers."
 
 ---
