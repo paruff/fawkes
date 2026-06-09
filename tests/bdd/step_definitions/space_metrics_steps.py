@@ -456,7 +456,7 @@ def step_request_aggregated_metrics(context):
         output = exec_in_pod(context.core_api, context.namespace, pod_name, command)
 
         context.aggregated_metrics = output
-        logger.info(f"Aggregated metrics received")
+        logger.info("Aggregated metrics received")
     except Exception as e:
         logger.error(f"Error requesting aggregated metrics: {e}")
         context.aggregated_metrics = ""

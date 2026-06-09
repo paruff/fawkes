@@ -39,7 +39,7 @@ def step_given_backstage_techdocs_enabled(context):
 
     try:
         deployment = context.apps_api.read_namespaced_deployment(name="backstage", namespace=context.namespace)
-        logger.info(f"Backstage deployment found")
+        logger.info("Backstage deployment found")
         context.backstage_deployment = deployment
     except client.exceptions.ApiException as e:
         raise AssertionError(f"Backstage deployment not found: {e}")
@@ -205,7 +205,7 @@ def step_then_volume_writable(context):
     # Check if read_only is False or None (defaults to writable)
     is_readonly = volume_mount.read_only if hasattr(volume_mount, "read_only") else False
 
-    assert not is_readonly, f"Volume mount is read-only but should be writable"
+    assert not is_readonly, "Volume mount is read-only but should be writable"
     logger.info("Volume mount is writable")
 
 

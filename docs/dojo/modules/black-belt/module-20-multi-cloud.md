@@ -592,7 +592,7 @@ data:
 - **CloudHealth**: Cross-cloud cost management
 - **Infracost**: Estimate Terraform costs before deployment
 
-**Example: Compare costs across clouds**
+### Example: Compare costs across clouds
 
 ```bash
 # Infracost for Terraform
@@ -604,7 +604,7 @@ infracost breakdown --path . --usage-file usage.yml
 # Azure:  $13,100/month (5% more expensive)
 ```
 
-**Strategy: Hybrid committed use discounts**
+### Strategy: Hybrid committed use discounts
 
 ```
 Single Cloud (AWS only):
@@ -960,7 +960,7 @@ D) To avoid making architectural decisions
 <details>
 <summary>Show Answer</summary>
 
-**Answer: B**
+**Answer:** B
 
 Data residency requirements (e.g., GDPR mandating EU data stay in EU) are legitimate drivers for multi-cloud. Learning, negotiation leverage, and avoiding decisions are poor reasons that don't justify the added complexity.
 
@@ -980,7 +980,7 @@ D) 100%+
 <details>
 <summary>Show Answer</summary>
 
-**Answer: C**
+**Answer:** C
 
 Industry studies show multi-cloud typically adds 30-50% operational overhead due to: multiple IAM systems, divergent tooling, team training, lost volume discounts, and increased complexity.
 
@@ -1000,7 +1000,7 @@ D) No DR needed
 <details>
 <summary>Show Answer</summary>
 
-**Answer: B**
+**Answer:** B
 
 Warm standby balances cost and recovery time. Cold standby takes too long (>30 min to provision infrastructure). Hot standby (active-active) is overkill for 30-minute RTO and significantly more expensive.
 
@@ -1020,7 +1020,7 @@ D) External Secrets Operator
 <details>
 <summary>Show Answer</summary>
 
-**Answer: C**
+**Answer:** C
 
 AWS Lambda is cloud-specific and tightly coupled to AWS. CSI drivers, Crossplane, and External Secrets Operator all provide abstraction layers that work across clouds.
 
@@ -1040,7 +1040,7 @@ D) Latency penalties
 <details>
 <summary>Show Answer</summary>
 
-**Answer: B**
+**Answer:** B
 
 Cloud providers charge significant egress fees (often $0.08-0.12/GB) when data leaves their network. This makes active-active multi-cloud with frequent data sync very expensive.
 
@@ -1060,7 +1060,7 @@ D) Container image registry
 <details>
 <summary>Show Answer</summary>
 
-**Answer: B**
+**Answer:** B
 
 East-west gateways enable secure, mTLS-encrypted communication between services in different Kubernetes clusters, even across cloud providers.
 
@@ -1080,7 +1080,7 @@ D) Crossplane is cheaper
 <details>
 <summary>Show Answer</summary>
 
-**Answer: B**
+**Answer:** B
 
 Crossplane provisions cloud resources using Kubernetes Custom Resources (declarative, reconciliation loops). Terraform uses its own CLI and state files (imperative with state management).
 
@@ -1100,7 +1100,7 @@ D) When you have unlimited budget
 <details>
 <summary>Show Answer</summary>
 
-**Answer: B**
+**Answer:** B
 
 Cloud-native services (Lambda, DynamoDB, BigQuery) offer better performance, features, and developer experience. Use them when portability is not a primary concern (which is most startups and many enterprises).
 
