@@ -225,7 +225,7 @@ class TestAzureProviderInitialization:
 
             # Mock resource management client for verification
             mock_client = MagicMock()
-            mock_rg_list = MagicMock()
+            _ = MagicMock()
             mock_client.resource_groups.list.return_value = iter([])
             mock_rm_client.return_value = mock_client
 
@@ -1021,7 +1021,7 @@ class TestAzureProviderCostAndMetrics:
             mock_monitor.get_metrics.return_value = expected_metrics
 
             # Call without aggregation parameter
-            metrics = provider.get_metrics(
+            _ = provider.get_metrics(
                 resource_id="/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.Compute/virtualMachines/test-vm",
                 metric_name="Memory Usage",
                 start_time="2024-01-01T00:00:00Z",

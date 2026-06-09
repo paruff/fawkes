@@ -531,13 +531,9 @@ graph LR
 ### Direct Quotes from Interviews
 
 > "I submitted a feature request 3 months ago and never heard back. I don't even know if anyone looked at it." - Application Developer, 1 year tenure
-
 > "I wish there was a way to upvote feature requests. I keep seeing the same requests from different teams." - Application Developer, 8 months tenure
-
 > "The platform team does great work, but I have no idea what they're working on or when my request might be addressed." - Product Manager, 2 years tenure
-
 > "I was really excited to beta test the new feature, but the docs were incomplete and I didn't know where to report issues." - Application Developer, 1.5 years tenure
-
 > "We ended up building our own solution because we didn't think the platform request would be prioritized. Now we're stuck maintaining it." - Application Developer, 3 years tenure
 
 ### Validation with Personas

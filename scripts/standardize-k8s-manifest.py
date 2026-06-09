@@ -230,8 +230,8 @@ def main():
 
         sys.exit(0)
 
-    print(f"This is a helper script. Manual updates recommended.")
-    print(f"Run with --analyze-only to see what needs to be standardized.")
+    print("This is a helper script. Manual updates recommended.")
+    print("Run with --analyze-only to see what needs to be standardized.")
 
 
 if __name__ == "__main__":

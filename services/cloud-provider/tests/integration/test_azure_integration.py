@@ -15,10 +15,9 @@ Required environment variables:
 import os
 import pytest
 import time
-from datetime import datetime, timedelta
 
 from src.providers.azure_provider import AzureProvider
-from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
+from src.interfaces.provider import ClusterConfig, StorageConfig
 from src.exceptions import ResourceNotFoundError, CloudProviderError
 
 # Skip all tests if SKIP_INTEGRATION_TESTS is set

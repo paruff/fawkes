@@ -8,8 +8,7 @@ detect anomalies using ML models, and trigger alerts.
 import asyncio
 import logging
 import os
-from datetime import datetime, timedelta
-from typing import List
+from datetime import datetime
 import uuid
 
 logger = logging.getLogger(__name__)

@@ -7,7 +7,6 @@ It supports automatic issue creation with labels, screenshot attachments, and li
 
 import os
 import logging
-import base64
 from typing import Optional, Tuple
 import httpx
 
@@ -93,7 +92,7 @@ async def create_github_issue(
             )
 
         body_parts.extend(
-            ["", "---", f"*This issue was automatically created from user feedback via the Fawkes Developer Portal.*"]
+            ["", "---", "*This issue was automatically created from user feedback via the Fawkes Developer Portal.*"]
         )
 
         body = "\n".join(body_parts)

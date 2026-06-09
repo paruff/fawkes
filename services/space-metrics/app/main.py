@@ -6,18 +6,14 @@ for Developer Experience measurement.
 """
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi.responses import PlainTextResponse
 from datetime import datetime, timedelta
-from typing import Optional, Dict, Any, List
+from typing import Optional
 import logging
 from contextlib import asynccontextmanager
 
 from .database import init_db, get_db_session
 from .models import (
-    SpaceSatisfaction,
-    SpacePerformance,
-    SpaceActivity,
-    SpaceCommunication,
     SpaceEfficiency,
 )
 from .schemas import (

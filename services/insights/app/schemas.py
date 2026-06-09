@@ -18,8 +18,6 @@ class TagBase(BaseModel):
 class TagCreate(TagBase):
     """Request model for creating a tag."""
 
-    pass
-
 
 class TagUpdate(BaseModel):
     """Request model for updating a tag."""
@@ -54,8 +52,6 @@ class CategoryBase(BaseModel):
 
 class CategoryCreate(CategoryBase):
     """Request model for creating a category."""
-
-    pass
 
 
 class CategoryUpdate(BaseModel):

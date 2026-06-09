@@ -1,6 +1,6 @@
 """Prometheus metrics collection"""
 
-from prometheus_client import Counter, Histogram, Gauge, Info
+from prometheus_client import Counter, Histogram, Gauge
 
 
 class MetricsCollector:

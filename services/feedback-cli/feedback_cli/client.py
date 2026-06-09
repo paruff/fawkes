@@ -1,6 +1,6 @@
 """API client for Feedback service."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 import requests
 from pydantic import BaseModel, Field

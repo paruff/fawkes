@@ -6,7 +6,6 @@ This script validates that the user research repository structure is correctly s
 with all required directories, documentation, and configuration files.
 """
 
-import os
 import sys
 from pathlib import Path
 

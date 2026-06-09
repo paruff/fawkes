@@ -13,40 +13,26 @@ class CloudProviderError(Exception):
 class AuthenticationError(CloudProviderError):
     """Raised when authentication fails."""
 
-    pass
-
 
 class ResourceNotFoundError(CloudProviderError):
     """Raised when a requested resource is not found."""
-
-    pass
 
 
 class ResourceAlreadyExistsError(CloudProviderError):
     """Raised when attempting to create a resource that already exists."""
 
-    pass
-
 
 class QuotaExceededError(CloudProviderError):
     """Raised when a quota or limit is exceeded."""
-
-    pass
 
 
 class RateLimitError(CloudProviderError):
     """Raised when API rate limit is exceeded."""
 
-    pass
-
 
 class ValidationError(CloudProviderError):
     """Raised when input validation fails."""
 
-    pass
-
 
 class OperationTimeoutError(CloudProviderError):
     """Raised when an operation times out."""
-
-    pass

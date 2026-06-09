@@ -5,7 +5,6 @@ import uuid
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 from sqlalchemy.orm import Session
-from sqlalchemy import func
 
 from .schema import Experiment, Assignment, Event
 from .models import (

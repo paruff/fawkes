@@ -10,7 +10,7 @@ Groups alerts by:
 import os
 import json
 import hashlib
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional
 from datetime import datetime, timedelta
 from collections import defaultdict
 import logging

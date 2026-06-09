@@ -9,9 +9,8 @@ Routes alerts based on:
 """
 
 import os
-import json
 import logging
-from typing import List, Dict, Optional
+from typing import List, Dict
 from datetime import datetime, timedelta
 
 import httpx
@@ -260,7 +259,7 @@ class AlertRouter:
 
             # Add runbooks
             if context.get("runbooks"):
-                message_text += f"\n**Runbooks:**\n"
+                message_text += "\n**Runbooks:**\n"
                 for url in context["runbooks"]:
                     message_text += f"• {url}\n"
 

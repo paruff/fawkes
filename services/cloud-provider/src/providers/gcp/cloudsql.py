@@ -204,7 +204,7 @@ class CloudSQLService:
             service = self._get_service()
 
             self.rate_limiter.acquire()
-            operation = service.instances().delete(project=self.project_id, instance=database_name).execute()
+            _ = service.instances().delete(project=self.project_id, instance=database_name).execute()
 
             logger.info(f"✅ Initiated Cloud SQL instance deletion: {database_name}")
             return True

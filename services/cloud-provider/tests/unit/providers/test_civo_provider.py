@@ -1,8 +1,7 @@
 """Unit tests for Civo Provider."""
 
 import pytest
-from unittest.mock import Mock, patch, MagicMock
-from datetime import datetime
+from unittest.mock import Mock, patch
 
 from src.providers.civo_provider import CivoProvider
 from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig

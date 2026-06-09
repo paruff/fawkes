@@ -13,7 +13,7 @@ from ..interfaces.provider import (
     StorageConfig,
 )
 from ..interfaces.models import Cluster, Database, Storage, CostData
-from ..exceptions import AuthenticationError, CloudProviderError
+from ..exceptions import AuthenticationError
 from ..utils import RateLimiter
 
 from .civo.kubernetes import KubernetesService

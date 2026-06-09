@@ -16,7 +16,7 @@ Sentiment classification:
 """
 
 import logging
-from typing import Dict, Optional, Tuple
+from typing import Dict, Tuple
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 logger = logging.getLogger(__name__)

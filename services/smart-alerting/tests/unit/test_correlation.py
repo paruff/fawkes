@@ -2,8 +2,7 @@
 
 import pytest
 from datetime import datetime
-from unittest.mock import AsyncMock, MagicMock
-import json
+from unittest.mock import AsyncMock
 
 from app.correlation import AlertCorrelator
 

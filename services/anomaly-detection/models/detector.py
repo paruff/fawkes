@@ -10,9 +10,8 @@ Implements:
 import logging
 import os
 from datetime import datetime, timedelta
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Tuple
 import numpy as np
-import pandas as pd
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
 

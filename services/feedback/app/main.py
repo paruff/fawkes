@@ -14,7 +14,6 @@ from typing import List, Optional
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Depends, Header, Query, BackgroundTasks
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, EmailStr
 from prometheus_client import make_asgi_app
@@ -41,7 +40,6 @@ from .ai_triage import triage_feedback
 from .notifications import (
     notify_issue_created,
     notify_duplicate_detected,
-    notify_high_priority_feedback,
     notify_automation_summary,
     is_notification_enabled,
 )
@@ -356,7 +354,7 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
                 )
 
                 # Create GitHub issue if requested and enabled
-                github_issue_url = None
+                _ = None
                 if feedback.create_github_issue and is_github_enabled():
                     logger.info(f"Creating GitHub issue for feedback ID {feedback_id}")
 

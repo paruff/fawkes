@@ -141,7 +141,7 @@ async def add_metrics(request, call_next):
     """Add prometheus metrics to all requests."""
     start_time = time.time()
     response = await call_next(request)
-    duration = time.time() - start_time
+    _ = time.time() - start_time
     return response
 
 

@@ -4,7 +4,6 @@ Prometheus metrics exporter and DevEx health score calculator
 
 import logging
 from datetime import datetime, timedelta
-from typing import Optional
 
 from .schemas import (
     SatisfactionMetrics,

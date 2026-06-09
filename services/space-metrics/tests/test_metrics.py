@@ -3,7 +3,6 @@ Unit tests for SPACE metrics service
 """
 
 import pytest
-from datetime import datetime, timedelta
 from app.metrics import calculate_devex_health_score
 from app.schemas import (
     SatisfactionMetrics,

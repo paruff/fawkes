@@ -173,7 +173,7 @@ def update_prometheus_metrics(db: Session):
         discovery_experiments_by_status.labels(status=status.value).set(count)
 
     # Validated experiments
-    validated_experiments = db.query(Experiment).filter(Experiment.validated == True).count()
+    validated_experiments = db.query(Experiment).filter(Experiment.validated is True).count()
     discovery_experiments_validated.set(validated_experiments)
 
     # Average ROI

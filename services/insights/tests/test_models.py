@@ -1,6 +1,5 @@
 """Tests for database models."""
 
-import pytest
 from datetime import datetime, timezone
 
 from app.models import Insight, Tag, Category

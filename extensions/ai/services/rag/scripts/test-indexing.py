@@ -23,8 +23,7 @@ Examples:
 import sys
 import argparse
 import time
-from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Dict
 
 try:
     import weaviate

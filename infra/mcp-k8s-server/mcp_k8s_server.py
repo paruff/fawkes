@@ -14,7 +14,6 @@ local kubeconfig (useful for local testing).
 
 from __future__ import annotations
 
-import os
 from contextlib import asynccontextmanager
 from typing import Dict, Any, List
 

@@ -2,7 +2,7 @@
 
 import pytest
 from click.testing import CliRunner
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 
 from friction_cli.cli import main
 from friction_cli.config import FrictionConfig

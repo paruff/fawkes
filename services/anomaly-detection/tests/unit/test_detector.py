@@ -3,7 +3,7 @@
 import pytest
 import numpy as np
 from datetime import datetime, timedelta
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 
 @pytest.fixture
@@ -90,7 +90,6 @@ async def test_isolation_forest_detection():
 async def test_detect_anomalies_integration(mock_http_client):
     """Test full anomaly detection pipeline."""
     from models.detector import detect_anomalies, initialize_models
-    from app.main import AnomalyScore
 
     # Initialize models first
     initialize_models()

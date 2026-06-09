@@ -14,14 +14,13 @@ Metrics exposed:
 """
 
 import os
-import sys
 import json
 import time
 import logging
 import argparse
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 from prometheus_client import Counter, Gauge, Histogram, generate_latest, CollectorRegistry, CONTENT_TYPE_LATEST

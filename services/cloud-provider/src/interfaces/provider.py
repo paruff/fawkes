@@ -76,7 +76,6 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If cluster creation fails
         """
-        pass
 
     @abstractmethod
     def get_cluster(self, cluster_id: str) -> Cluster:
@@ -92,7 +91,6 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If cluster not found or error occurs
         """
-        pass
 
     @abstractmethod
     def delete_cluster(self, cluster_id: str) -> bool:
@@ -108,7 +106,6 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If deletion fails
         """
-        pass
 
     @abstractmethod
     def list_clusters(self, region: Optional[str] = None) -> List[Cluster]:
@@ -124,7 +121,6 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If listing fails
         """
-        pass
 
     @abstractmethod
     def create_database(self, config: DatabaseConfig) -> Database:
@@ -140,7 +136,6 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If database creation fails
         """
-        pass
 
     @abstractmethod
     def get_database(self, database_id: str) -> Database:
@@ -156,7 +151,6 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If database not found or error occurs
         """
-        pass
 
     @abstractmethod
     def delete_database(self, database_id: str, skip_final_snapshot: bool = False) -> bool:
@@ -173,7 +167,6 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If deletion fails
         """
-        pass
 
     @abstractmethod
     def list_databases(self, region: Optional[str] = None) -> List[Database]:
@@ -189,7 +182,6 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If listing fails
         """
-        pass
 
     @abstractmethod
     def create_storage(self, config: StorageConfig) -> Storage:
@@ -205,7 +197,6 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If storage creation fails
         """
-        pass
 
     @abstractmethod
     def get_storage(self, storage_id: str) -> Storage:
@@ -221,7 +212,6 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If storage not found or error occurs
         """
-        pass
 
     @abstractmethod
     def delete_storage(self, storage_id: str, force: bool = False) -> bool:
@@ -238,7 +228,6 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If deletion fails
         """
-        pass
 
     @abstractmethod
     def list_storage(self, region: Optional[str] = None) -> List[Storage]:
@@ -254,7 +243,6 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If listing fails
         """
-        pass
 
     @abstractmethod
     def get_cost_data(self, timeframe: str, granularity: str = "MONTHLY") -> CostData:
@@ -271,7 +259,6 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If cost data retrieval fails
         """
-        pass
 
     @abstractmethod
     def get_metrics(self, resource_id: str, metric_name: str, start_time: str, end_time: str) -> Dict[str, Any]:
@@ -290,4 +277,3 @@ class CloudProvider(ABC):
         Raises:
             CloudProviderError: If metrics retrieval fails
         """
-        pass

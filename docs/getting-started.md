@@ -15,7 +15,7 @@ Welcome to the Fawkes Internal Developer Platform. Choose the path below that ma
 | **Components**    | 5 core components                        | Full core platform                    | Full platform + enterprise extensions      |
 | **Best for**      | Evaluation, learning, demos              | Teams adopting Fawkes                 | Platform teams operating at scale          |
 
-Jump to: [Path A](#path-a-evaluate-locally) · [Path B](#path-b-deploy-to-cloud-aws-eks) · [Path C](#path-c-enterprise-multi-cloud)
+Jump to: [Path A](#path-a--evaluate-locally) · [Path B](#path-b--deploy-to-cloud-aws-eks) · [Path C](#path-c--enterprise-multi-cloud)
 
 ---
 
@@ -83,7 +83,7 @@ After `make dev-up` completes, `make dev-status` prints the local URLs. Typical 
 
 - [Dojo White Belt](dojo/white-belt/README.md) — start your learning journey
 - [Quick Start Tutorial](tutorials/quick-start.md) — guided walkthrough of all features
-- When ready to deploy to the cloud, continue with [Path B](#path-b-deploy-to-cloud-aws-eks)
+- When ready to deploy to the cloud, continue with [Path B](#path-b--deploy-to-cloud-aws-eks)
 
 ---
 
@@ -168,7 +168,7 @@ make test-bdd
 - [Deployment Guide](deployment/) — operational runbooks and day-2 operations
 - [Golden Path Templates](golden-path-usage.md) — onboard your development teams
 - [DORA Metrics Setup](observability/) — configure team-level dashboards
-- For multi-cloud or enterprise needs, see [Path C](#path-c-enterprise-multi-cloud)
+- For multi-cloud or enterprise needs, see [Path C](#path-c--enterprise-multi-cloud)
 
 ---
 
@@ -243,6 +243,6 @@ fawkes/
 - [GitHub Issues](https://github.com/paruff/fawkes/issues)
 - [Community Discussions](https://github.com/paruff/fawkes/discussions)
 
-[Path A — Evaluate Locally :computer:](#path-a-evaluate-locally){ .md-button .md-button--primary }
-[Path B — Cloud Deployment :cloud:](#path-b-deploy-to-cloud-aws-eks){ .md-button }
+[Path A — Evaluate Locally :computer:](#path-a--evaluate-locally){ .md-button .md-button--primary }
+[Path B — Cloud Deployment :cloud:](#path-b--deploy-to-cloud-aws-eks){ .md-button }
 [Architecture Overview :books:](ARCHITECTURE.md){ .md-button }
