@@ -35,8 +35,6 @@ sections:
     - resources
 
 content: |-
-  {{ .Header }}
-
   {{ .Requirements }}
 
   {{ .Providers }}
@@ -51,9 +49,11 @@ output:
   file: README.md
   mode: inject
   template: |-
+    <!-- prettier-ignore-start -->
     <!-- BEGIN_TF_DOCS -->
     {{ .Content }}
     <!-- END_TF_DOCS -->
+    <!-- prettier-ignore-end -->
 
 sort:
   enabled: true
@@ -64,7 +64,7 @@ settings:
   color: true
   default: true
   description: true
-  escape: true
+  escape: false
   hide-empty: false
   html: true
   indent: 2
