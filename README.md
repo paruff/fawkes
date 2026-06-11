@@ -668,3 +668,19 @@ Make your first contribution and become part of the community.
 ## 🛡 License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## uFawkes Stack Ecosystem
+
+Fawkes is the core platform. The uFawkes stacks are composable components that extend the platform:
+
+| Stack | Description | Link |
+|-------|-------------|------|
+| **uFawkesObs** | Observability — Prometheus, Grafana, AI dashboards | [GitHub](https://github.com/paruff/ufawkesobs) |
+| **uFawkesPipe** | CI/CD — Jenkins, Buildpacks, DevSecOps | [GitHub](https://github.com/paruff/ufawkespipe) |
+| **uFawkesDORA** | DORA metrics — dashboards, VSM, delivery performance | [GitHub](https://github.com/paruff/ufawkesdora) |
+| **uFawkesSec** | Security — policy-as-code, supply chain, guardrails | [GitHub](https://github.com/paruff/ufawkessec) |
+| **uFawkesDevX** | Developer experience — golden paths, IDP templates | [GitHub](https://github.com/paruff/ufawkesdevx) |
+| **uFawkesAI** | AI agent templates — golden path scaffolding | [GitHub](https://github.com/paruff/ufawkesai) |
+
+**Marketing Site**: [ufawkes.dev](https://ufawkes.dev)
+**Product Suite Roadmap**: [ROADMAP.md](ROADMAP.md)
