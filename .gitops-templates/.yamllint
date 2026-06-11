@@ -1,0 +1,32 @@
+# .yamllint
+extends: default
+
+# Files and directories to ignore during linting
+ignore: |
+  .git/
+  node_modules/
+  vendor/
+  .venv/
+  venv/
+  build/
+  dist/
+
+rules:
+  line-length:
+    max: 120
+    level: warning
+  document-start: disable
+  comments-indentation: disable
+  indentation:
+    spaces: 2
+    indent-sequences: whatever
+  trailing-spaces: enable
+  empty-lines:
+    max: 2
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+  # Allow 'on:' in GitHub Actions workflows
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no', 'on', 'off']
+    check-keys: false
