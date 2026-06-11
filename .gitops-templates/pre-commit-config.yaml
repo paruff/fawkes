@@ -15,6 +15,7 @@ repos:
         name: Fix end of files
       - id: check-yaml
         name: Check YAML syntax
+        args: ["--allow-multiple-documents"]
       - id: check-json
         name: Check JSON syntax
       - id: check-added-large-files
@@ -36,7 +37,7 @@ repos:
     hooks:
       - id: yamllint
         name: Lint YAML files
-        args: ["-c", ".yamllint"]
+        args: ["-c", ".yamllint.yml"]
         types: [yaml]
 
   # ============================================================================
