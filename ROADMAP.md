@@ -129,7 +129,7 @@
 ## 7. Roadmap Phases
 
 ### Phase 0: Foundation (Now — 2 weeks)
-**Goal**: Establish governance, create missing repos, align marketing site
+**Goal**: Establish governance, create missing repos, align marketing site, GitOps standards
 
 | # | Task | Owner | Repo | Status |
 |---|------|-------|------|--------|
@@ -138,12 +138,17 @@
 | 0.3 | Create `uFawkesSec` repo with description, topics, README | You | uFawkesSec | ✅ Done (repo + topics) |
 | 0.4 | Fix uFawkesObs: add description, topics, README | You | uFawkesObs | ✅ Done (description + topics) |
 | 0.5 | Fix uFawkesDevX: add description, topics, README | You | uFawkesDevX | ✅ Done (description + topics) |
-| 0.6 | Add cross-repo links in all READMEs (↔ fawkes, ↔ uFawkes.dev) | You | All | ⬜ Pending (READMEs to add) |
+| 0.6 | Add cross-repo links in all READMEs (↔ fawkes, ↔ uFawkes.dev) | You | All | ✅ Done (all 7 repos + fawkes) |
 | 0.7 | Update uFawkes.dev stack pages to link real repos | You | uFawkes.dev | ✅ Done |
 | 0.8 | Add "Roadmap" link to uFawkes.dev navigation | You | uFawkes.dev | ✅ Done |
 | 0.9 | GitHub Sponsors setup | You | GitHub | ⬜ Pending |
+| 0.10 | GitOps: Create `.gitops-templates/` in fawkes (pre-commit, CI, dependabot, CODEOWNERS, Makefile, configs) | You | fawkes | 🔄 In progress |
+| 0.11 | GitOps: Initialize DORA, Sec, DevX with GitOps templates | You | DORA, Sec, DevX | ⬜ Not started |
+| 0.12 | GitOps: Migrate Obs, Pipe, AI, .dev to GitOps standards | You | Obs, Pipe, AI, .dev | ⬜ Not started |
+| 0.13 | GitOps: Apply branch protection Rulesets (all 8 repos) | You | All | ⬜ Not started |
+| 0.14 | GitOps: Create opencode GitOps agent + update AGENTS.md | You | opencode config | ⬜ Not started |
 
-**Acceptance criteria**: All 7 repos exist, documented, linked. uFawkes.dev stack pages link to real repos.
+**Acceptance criteria**: All 7 repos exist, documented, linked. All 8 repos have pre-commit, CI validation, dependabot, CODEOWNERS, branch protection.
 
 ### Phase 1: Stack Parity & DORA Integration (2—6 weeks)
 **Goal**: Each stack runnable in 60s, DORA metrics integrated
@@ -192,7 +197,7 @@
 | Phase | Metric | Target | Status |
 |-------|--------|--------|--------|
 | **Phase 0** | All 7 repos exist | 7/7 repos with description, topics | ✅ Done |
-| **Phase 0** | Cross-repo links | Every README links to fawkes + uFawkes.dev | ⬜ Pending |
+| **Phase 0** | Cross-repo links | Every README links to fawkes + uFawkes.dev | ✅ Done |
 | **Phase 1** | Stack operability | Each stack `docker compose up` → running in <60s | Not started |
 | **Phase 1** | DORA dashboards | Each stack has at least 1 pre-configured DORA dashboard | Not started |
 | **Phase 1** | DORA metric emission | Each stack emits deployment frequency, lead time, change failure rate, MTTR | Not started |
