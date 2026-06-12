@@ -281,5 +281,3 @@ resource "aws_cloudwatch_dashboard" "cost_usage" {
     ]
   })
 }
-
-

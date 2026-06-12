@@ -313,5 +313,3 @@ resource "aws_cloudwatch_metric_alarm" "node_disk_space_low" {
     }
   )
 }
-
-
