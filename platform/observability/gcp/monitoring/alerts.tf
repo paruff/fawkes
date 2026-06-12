@@ -18,17 +18,6 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-terraform {
-  required_version = ">= 1.6.0"
-
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 5.0.0"
-    }
-  }
-}
-
 # Pub/Sub Topics for Alerts
 resource "google_pubsub_topic" "critical_alerts" {
   name    = "${var.cluster_name}-critical-alerts"
@@ -638,75 +627,4 @@ resource "google_monitoring_alert_policy" "cost_anomaly" {
   )
 }
 
-# Variables
-variable "cluster_name" {
-  description = "Name of the GKE cluster"
-  type        = string
-}
 
-variable "project_id" {
-  description = "GCP project ID"
-  type        = string
-}
-
-variable "mattermost_webhook_url" {
-  description = "Mattermost incoming webhook URL for alert notifications"
-  type        = string
-  default     = ""
-  sensitive   = true
-}
-
-variable "cost_collector_endpoint" {
-  description = "Endpoint URL for cost-collector service"
-  type        = string
-  default     = ""
-}
-
-variable "api_server_endpoint" {
-  description = "GKE API server endpoint for uptime checks"
-  type        = string
-  default     = ""
-}
-
-variable "cost_anomaly_threshold" {
-  description = "Cost anomaly threshold in USD"
-  type        = number
-  default     = 100
-}
-
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
-  default     = {}
-}
-
-# Outputs
-output "critical_alerts_topic_name" {
-  description = "Name of the critical alerts Pub/Sub topic"
-  value       = google_pubsub_topic.critical_alerts.name
-}
-
-output "warning_alerts_topic_name" {
-  description = "Name of the warning alerts Pub/Sub topic"
-  value       = google_pubsub_topic.warning_alerts.name
-}
-
-output "cost_alerts_topic_name" {
-  description = "Name of the cost alerts Pub/Sub topic"
-  value       = google_pubsub_topic.cost_alerts.name
-}
-
-output "critical_notification_channel_id" {
-  description = "ID of the critical alerts notification channel"
-  value       = google_monitoring_notification_channel.critical_pubsub.id
-}
-
-output "warning_notification_channel_id" {
-  description = "ID of the warning alerts notification channel"
-  value       = google_monitoring_notification_channel.warning_pubsub.id
-}
-
-output "cost_notification_channel_id" {
-  description = "ID of the cost alerts notification channel"
-  value       = google_monitoring_notification_channel.cost_pubsub.id
-}
