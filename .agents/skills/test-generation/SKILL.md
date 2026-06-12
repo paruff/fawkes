@@ -10,8 +10,7 @@ metadata:
 
 # Skill: Test Generation
 
-> **Load trigger:** `"load test-generation skill"`
-> **DORA:** Cap 5 (Small Batches / Shift Left on Quality)
+> **Load trigger:** `"load test-generation skill"` > **DORA:** Cap 5 (Small Batches / Shift Left on Quality)
 > **Token cost:** Low
 
 ## TDD Pattern — Language Agnostic
@@ -43,9 +42,7 @@ describe("signIn", () => {
 
   it("throws AuthError when credentials are invalid", async () => {
     mockFirebaseAuth.mockRejectedValueOnce(new Error("auth/wrong-password"));
-    await expect(signIn("test@test.com", "wrong")).rejects.toThrow(
-      "auth/wrong-password",
-    );
+    await expect(signIn("test@test.com", "wrong")).rejects.toThrow("auth/wrong-password");
   });
 
   it("throws AuthError when email is malformed", async () => {

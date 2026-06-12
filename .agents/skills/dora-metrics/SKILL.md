@@ -1,6 +1,7 @@
 # DORA Metrics Skill
 
 ## When to activate
+
 When working on metrics collection, dashboards, reporting, or any code that tracks
 deployment frequency, lead time, change failure rate, failed deployment recovery time,
 or rework rate.
@@ -29,6 +30,7 @@ Target: < 10%. > 20%: stop features, update AGENTS.md.
 Monitor: change failure rate trend over 90 days of AI adoption.
 
 ## Implementation patterns
+
 - Calculate deployment frequency from git tags or CI deployment events, not commit frequency
 - Lead time (template definition): measure issue creation → production merge using GitHub
   Projects/Issues; not reliably derivable from local git history alone
@@ -38,6 +40,7 @@ Monitor: change failure rate trend over 90 days of AI adoption.
 - FDRT: time from incident label on issue to `resolved` label, rolling average
 
 ## Connecting to uFawkesObs
+
 If uFawkesObs is running, write metrics to OTEL endpoint:
 `OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318`
 Use `gen_ai.*` spans for AI-assisted work attribution.

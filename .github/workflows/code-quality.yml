@@ -36,6 +36,10 @@ jobs:
     outputs:
       typescript: ${{ steps.filter.outputs.typescript }}
       go: ${{ steps.filter.outputs.go }}
+      python: ${{ steps.filter.outputs.python }}
+      shell: ${{ steps.filter.outputs.shell }}
+      yaml: ${{ steps.filter.outputs.yaml }}
+      security: ${{ steps.filter.outputs.security }}
     steps:
       - name: DORA job start
         run: |
@@ -76,6 +80,42 @@ jobs:
             echo "ℹ️  No Go file changes"
           fi
 
+          # Check for Python file changes
+          if git diff --name-only "$BASE" HEAD -- '*.py' 'services/**' 'tests/**' 2>/dev/null | grep -q .; then
+            echo "python=true" >> $GITHUB_OUTPUT
+            echo "✅ Python files changed"
+          else
+            echo "python=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No Python file changes"
+          fi
+
+          # Check for Shell file changes
+          if git diff --name-only "$BASE" HEAD -- '*.sh' 'scripts/**' 'tests/bats/**' 2>/dev/null | grep -q .; then
+            echo "shell=true" >> $GITHUB_OUTPUT
+            echo "✅ Shell files changed"
+          else
+            echo "shell=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No shell file changes"
+          fi
+
+          # Check for YAML changes
+          if git diff --name-only "$BASE" HEAD -- '*.yaml' '*.yml' '.github/workflows/**' 2>/dev/null | grep -q .; then
+            echo "yaml=true" >> $GITHUB_OUTPUT
+            echo "✅ YAML files changed"
+          else
+            echo "yaml=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No YAML file changes"
+          fi
+
+          # Check for security-sensitive changes
+          if git diff --name-only "$BASE" HEAD -- 'services/**' 'infra/**' '.github/workflows/**' '.gitleaks.toml' '.pre-commit-config.yaml' 2>/dev/null | grep -q .; then
+            echo "security=true" >> $GITHUB_OUTPUT
+            echo "✅ Security-relevant files changed"
+          else
+            echo "security=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No security-relevant file changes"
+          fi
+
       - name: DORA job finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -87,6 +127,8 @@ jobs:
     name: Python Lint & Test
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    needs: detect-changes
+    if: needs.detect-changes.outputs.python == 'true'
     permissions:
       contents: read
       pull-requests: write
@@ -247,6 +289,8 @@ jobs:
     name: Shell Script Linting
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    needs: detect-changes
+    if: needs.detect-changes.outputs.shell == 'true'
     permissions:
       contents: read
     steps:
@@ -295,6 +339,8 @@ jobs:
     name: Shell Script Tests (BATS)
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    needs: detect-changes
+    if: needs.detect-changes.outputs.shell == 'true'
     permissions:
       contents: read
       checks: write
@@ -372,6 +418,8 @@ jobs:
     name: YAML Linting
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    needs: detect-changes
+    if: needs.detect-changes.outputs.yaml == 'true'
     permissions:
       contents: read
     steps:
@@ -402,6 +450,8 @@ jobs:
     name: Security Scanning Status
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    needs: detect-changes
+    if: needs.detect-changes.outputs.security == 'true'
     permissions:
       contents: read
       security-events: read
@@ -482,6 +532,8 @@ jobs:
   # ==========================================================================
   security-scanning:
     name: Security Scanning
+    needs: detect-changes
+    if: needs.detect-changes.outputs.security == 'true'
     uses: ./.github/workflows/reusable-security-scanning.yml
     with:
       scan-type: all

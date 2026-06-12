@@ -18,17 +18,6 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-terraform {
-  required_version = ">= 1.6.0"
-
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 5.0.0"
-    }
-  }
-}
-
 # GKE Cluster Overview Dashboard
 resource "google_monitoring_dashboard" "gke_cluster_overview" {
   dashboard_json = jsonencode({
@@ -554,42 +543,4 @@ resource "google_monitoring_dashboard" "cost_usage" {
   })
 
   project = var.project_id
-}
-
-# Variables
-variable "cluster_name" {
-  description = "Name of the GKE cluster"
-  type        = string
-}
-
-variable "project_id" {
-  description = "GCP project ID"
-  type        = string
-}
-
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
-  default     = {}
-}
-
-# Outputs
-output "cluster_overview_dashboard_id" {
-  description = "ID of the GKE cluster overview dashboard"
-  value       = google_monitoring_dashboard.gke_cluster_overview.id
-}
-
-output "node_performance_dashboard_id" {
-  description = "ID of the GKE node performance dashboard"
-  value       = google_monitoring_dashboard.gke_node_performance.id
-}
-
-output "application_performance_dashboard_id" {
-  description = "ID of the application performance dashboard"
-  value       = google_monitoring_dashboard.application_performance.id
-}
-
-output "cost_usage_dashboard_id" {
-  description = "ID of the cost and usage dashboard"
-  value       = google_monitoring_dashboard.cost_usage.id
 }

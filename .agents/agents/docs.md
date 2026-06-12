@@ -23,9 +23,7 @@ If a file in the context index does not exist yet, note it: "Creating `docs/API_
 ```markdown
 # [Title]
 
-> **Last updated:** [date]
-> **Maintained by:** [team or role]
-> **Status:** Draft | Active | Deprecated
+> **Last updated:** [date] > **Maintained by:** [team or role] > **Status:** Draft | Active | Deprecated
 ```
 
 ## ADR Format
@@ -33,9 +31,7 @@ If a file in the context index does not exist yet, note it: "Creating `docs/API_
 ```markdown
 # ADR-[NNN]: [Short Imperative Title]
 
-> **Status:** Proposed | Accepted | Deprecated | Superseded by ADR-[NNN]
-> **Date:** [YYYY-MM-DD]
-> **Author:** [name or "AI-assisted, approved by [name]"]
+> **Status:** Proposed | Accepted | Deprecated | Superseded by ADR-[NNN] > **Date:** [YYYY-MM-DD] > **Author:** [name or "AI-assisted, approved by [name]"]
 > **DORA Capability:** Cap [N] — [Name]
 
 ## Context

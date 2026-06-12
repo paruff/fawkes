@@ -10,8 +10,7 @@ metadata:
 
 # Skill: Pipeline Bootstrap
 
-> **Load trigger:** `"load pipeline-bootstrap skill"`
-> **Agent:** Used by pipe-agent
+> **Load trigger:** `"load pipeline-bootstrap skill"` > **Agent:** Used by pipe-agent
 > **DORA:** Cap 4 + Cap 6
 > **Token cost:** Medium
 

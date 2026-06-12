@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2034  # Many variables/constants are used by scripts that source this file
 # =============================================================================
 # File: scripts/lib/error_handling.sh
 # Purpose: Centralized error handling, logging, and rollback mechanisms
