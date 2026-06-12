@@ -10,8 +10,7 @@ metadata:
 
 # Skill: Language — Python
 
-> **Load trigger:** `"load lang-python skill"`
-> **Stack:** Python 3.11+, ruff, mypy, pytest, pytest-cov, uv or pip
+> **Load trigger:** `"load lang-python skill"` > **Stack:** Python 3.11+, ruff, mypy, pytest, pytest-cov, uv or pip
 > **Token cost:** Low
 
 ## Toolchain Reference

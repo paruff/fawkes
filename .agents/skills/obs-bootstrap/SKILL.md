@@ -10,8 +10,7 @@ metadata:
 
 # Skill: Observability Bootstrap
 
-> **Load trigger:** `"load obs-bootstrap skill"`
-> **Agent:** Used by obs-agent
+> **Load trigger:** `"load obs-bootstrap skill"` > **Agent:** Used by obs-agent
 > **DORA:** Cap 6 + Cap 2
 > **Token cost:** Medium
 
