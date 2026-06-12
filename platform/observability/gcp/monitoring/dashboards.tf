@@ -544,5 +544,3 @@ resource "google_monitoring_dashboard" "cost_usage" {
 
   project = var.project_id
 }
-
-
