@@ -10,8 +10,7 @@ metadata:
 
 # Skill: ADR Writer
 
-> **Load trigger:** `"load adr-writer skill"`
-> **DORA:** Cap 3 (AI-Accessible Internal Data)
+> **Load trigger:** `"load adr-writer skill"` > **DORA:** Cap 3 (AI-Accessible Internal Data)
 > **Token cost:** Low
 
 ## Purpose
@@ -48,11 +47,8 @@ Query existing ADRs: `ls docs/adr/` before assigning a number.
 ```markdown
 # ADR-[NNN]: [Short Imperative Title]
 
-> **Status:** Proposed | Accepted | Deprecated | Superseded by ADR-[NNN]
-> **Date:** [YYYY-MM-DD]
-> **Author:** [Human name or "AI-assisted, approved by [name]"]
-> **DORA Capability:** Cap [N] — [Name]
-> **Dojo Module:** [Belt] — [Module name] (if applicable)
+> **Status:** Proposed | Accepted | Deprecated | Superseded by ADR-[NNN] > **Date:** [YYYY-MM-DD] > **Author:** [Human name or "AI-assisted, approved by [name]"]
+> **DORA Capability:** Cap [N] — [Name] > **Dojo Module:** [Belt] — [Module name] (if applicable)
 
 ## Context
 

@@ -27,12 +27,12 @@ When given output from `npm run metrics` or `scripts/weekly-metrics.sh`:
 ```markdown
 ## Metrics Interpretation
 
-| Metric            | Value | Status                      | Change vs Last |
-| ----------------- | ----- | --------------------------- | -------------- |
+| Metric            | Value | Status                       | Change vs Last |
+| ----------------- | ----- | ---------------------------- | -------------- |
 | Rework rate       | [N]%  | ✅ OK / ⚠ WARNING / 🛑 STOP | [+/-N%]        |
-| PR revision rate  | ...   | ...                         | ...            |
-| CI cycle time     | ...   | ...                         | ...            |
-| Review turnaround | ...   | ...                         | ...            |
+| PR revision rate  | ...   | ...                          | ...            |
+| CI cycle time     | ...   | ...                          | ...            |
+| Review turnaround | ...   | ...                          | ...            |
 
 **Biggest gap:** [metric] at [value] (target [target])
 
