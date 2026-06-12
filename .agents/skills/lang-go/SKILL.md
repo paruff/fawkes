@@ -10,8 +10,7 @@ metadata:
 
 # Skill: Language — Go
 
-> **Load trigger:** `"load lang-go skill"`
-> **Stack:** Go 1.22+, golangci-lint, go vet, go test, go test -cover, go mod
+> **Load trigger:** `"load lang-go skill"` > **Stack:** Go 1.22+, golangci-lint, go vet, go test, go test -cover, go mod
 > **Token cost:** Low
 
 ## Toolchain Reference

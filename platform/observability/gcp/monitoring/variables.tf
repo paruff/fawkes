@@ -18,9 +18,43 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-version: 2
-updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
+variable "cluster_name" {
+  description = "Name of the GKE cluster"
+  type        = string
+}
+
+variable "project_id" {
+  description = "GCP project ID"
+  type        = string
+}
+
+variable "mattermost_webhook_url" {
+  description = "Mattermost incoming webhook URL for alert notifications"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "cost_collector_endpoint" {
+  description = "Endpoint URL for cost-collector service"
+  type        = string
+  default     = ""
+}
+
+variable "api_server_endpoint" {
+  description = "GKE API server endpoint for uptime checks"
+  type        = string
+  default     = ""
+}
+
+variable "cost_anomaly_threshold" {
+  description = "Cost anomaly threshold in USD"
+  type        = number
+  default     = 100
+}
+
+variable "tags" {
+  description = "Tags to apply to resources"
+  type        = map(string)
+  default     = {}
+}

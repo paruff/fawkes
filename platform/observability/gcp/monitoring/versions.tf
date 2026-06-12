@@ -18,9 +18,13 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-version: 2
-updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
+terraform {
+  required_version = ">= 1.6.0"
+
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = ">= 5.0.0"
+    }
+  }
+}

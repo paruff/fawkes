@@ -101,14 +101,33 @@ jobs:
             echo '{"version":"2.1.0","$schema":"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json","runs":[{"tool":{"driver":{"name":"gitleaks","informationUri":"https://github.com/gitleaks/gitleaks","semanticVersion":"8.24.3"}},"results":[]}]}' > gitleaks-results.sarif
           fi
 
-      # 3️⃣ Vulnerability / misconfiguration scanning
-      - name: Run Trivy (repo scan)
-        uses: aquasecurity/trivy-action@master
+      # 3️⃣ Vulnerability / misconfiguration scanning (with retry for transient 429s)
+      - name: Install Trivy
+        uses: aquasecurity/setup-trivy@3fb12ec12f41e471780db15c232d5dd185dcb514 # v0.2.6
         with:
-          scan-type: fs
-          scan-ref: .
-          format: sarif
-          output: trivy-results.sarif
+          version: latest
+
+      - name: Run Trivy (repo scan)
+        shell: bash
+        run: |
+          set -euo pipefail
+          MAX_RETRIES=3
+          RETRY_DELAY=30
+          for attempt in $(seq 1 $MAX_RETRIES); do
+            echo "Trivy scan attempt $attempt/$MAX_RETRIES"
+            if trivy fs --format sarif --output trivy-results.sarif --offline-scan --scanners vuln,misconfig .; then
+              echo "Trivy scan succeeded on attempt $attempt"
+              exit 0
+            fi
+            EXIT_CODE=$?
+            if [ $attempt -lt $MAX_RETRIES ]; then
+              echo "Trivy scan failed (exit $EXIT_CODE), retrying in ${RETRY_DELAY}s..."
+              sleep $RETRY_DELAY
+              RETRY_DELAY=$((RETRY_DELAY * 2))
+            fi
+          done
+          echo "Trivy scan failed after $MAX_RETRIES attempts"
+          exit 1
 
       # 4️⃣ Upload SARIF results for GitHub Security tab
       - name: Upload Trivy scan results to GitHub Security tab

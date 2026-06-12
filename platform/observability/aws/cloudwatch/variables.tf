@@ -18,9 +18,32 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-version: 2
-updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
+variable "cluster_name" {
+  description = "Name of the EKS cluster"
+  type        = string
+}
+
+variable "aws_region" {
+  description = "AWS region"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "kms_key_id" {
+  description = "KMS key ID for SNS topic encryption (optional)"
+  type        = string
+  default     = ""
+}
+
+variable "mattermost_webhook_url" {
+  description = "Mattermost incoming webhook URL for alert notifications"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "tags" {
+  description = "Tags to apply to resources"
+  type        = map(string)
+  default     = {}
+}
