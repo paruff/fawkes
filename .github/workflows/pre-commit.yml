@@ -12,6 +12,49 @@ permissions:
   pull-requests: write
 
 jobs:
+  detect-changes:
+    name: Detect Relevant Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      language: ${{ steps.filter.outputs.language }}
+      terraform: ${{ steps.filter.outputs.terraform }}
+      platform: ${{ steps.filter.outputs.platform }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed files by layer
+        id: filter
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE="HEAD~1"
+          fi
+
+          if git diff --name-only "$BASE" HEAD -- '*.py' '*.sh' '*.go' | grep -q .; then
+            echo "language=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "language=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if git diff --name-only "$BASE" HEAD -- '*.tf' '*.tfvars' | grep -q .; then
+            echo "terraform=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "terraform=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if git diff --name-only "$BASE" HEAD -- 'infra/kubernetes/**' 'platform/**' 'charts/**' | grep -q .; then
+            echo "platform=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "platform=false" >> "$GITHUB_OUTPUT"
+          fi
+
   # ==========================================================================
   # Layer 0 — Base: whitespace, syntax, secrets (fastest, ~30s)
   # ==========================================================================
@@ -83,6 +126,8 @@ jobs:
     name: "Pre-commit · Language"
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: detect-changes
+    if: needs.detect-changes.outputs.language == 'true'
     permissions:
       contents: read
     steps:
@@ -148,6 +193,8 @@ jobs:
     name: "Pre-commit · Tool"
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: detect-changes
+    if: needs.detect-changes.outputs.terraform == 'true'
     permissions:
       contents: read
     steps:
@@ -227,6 +274,8 @@ jobs:
     name: "Pre-commit · Platform"
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: detect-changes
+    if: needs.detect-changes.outputs.platform == 'true'
     permissions:
       contents: read
     steps:
