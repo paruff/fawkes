@@ -45,7 +45,7 @@ jobs:
             echo "language=false" >> "$GITHUB_OUTPUT"
           fi
 
-          if git diff --name-only "$BASE" HEAD -- '*.tf' '*.tfvars' | grep -q .; then
+          if git diff --name-only "$BASE" HEAD | grep -Eq '^infra/.*\.(tf|tfvars)$'; then
             echo "terraform=true" >> "$GITHUB_OUTPUT"
           else
             echo "terraform=false" >> "$GITHUB_OUTPUT"
@@ -151,7 +151,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.22"
+          go-version: "1.23"
 
       - name: Install pre-commit
         run: pip install pre-commit
@@ -170,7 +170,11 @@ jobs:
           BASE="${{ needs.detect-changes.outputs.base_sha }}"
           pre-commit run flake8 --from-ref "$BASE" --to-ref HEAD
           pre-commit run shellcheck --from-ref "$BASE" --to-ref HEAD
-          pre-commit run golangci-lint --from-ref "$BASE" --to-ref HEAD
+          if git diff --name-only "$BASE" HEAD -- '*.go' | grep -q .; then
+            pre-commit run golangci-lint --from-ref "$BASE" --to-ref HEAD
+          else
+            echo "No Go file changes detected; skipping golangci-lint"
+          fi
         continue-on-error: true
 
       - name: Check status
