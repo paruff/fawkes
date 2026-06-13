@@ -62,9 +62,9 @@ repos:
     hooks:
       - id: prettier
         name: Format with Prettier
+        entry: prettier --check --ignore-unknown
         types_or: [json, yaml, markdown]
         exclude: '^(package-lock\.json|.*\.catalog-info\.yaml|catalog-info\.yaml|mkdocs\.yml|\.trunk/.*)'
-        args: ["--write", "--ignore-unknown"]
 
   # ============================================================================
   # Terraform Formatting & Validation

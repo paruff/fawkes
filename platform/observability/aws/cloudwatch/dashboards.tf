@@ -18,17 +18,6 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-terraform {
-  required_version = ">= 1.6.0"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 5.0.0"
-    }
-  }
-}
-
 # EKS Cluster Overview Dashboard
 resource "aws_cloudwatch_dashboard" "eks_cluster_overview" {
   dashboard_name = "${var.cluster_name}-eks-overview"
@@ -291,22 +280,4 @@ resource "aws_cloudwatch_dashboard" "cost_usage" {
       }
     ]
   })
-}
-
-# Variables
-variable "cluster_name" {
-  description = "Name of the EKS cluster"
-  type        = string
-}
-
-variable "aws_region" {
-  description = "AWS region"
-  type        = string
-  default     = "us-east-1"
-}
-
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
-  default     = {}
 }
