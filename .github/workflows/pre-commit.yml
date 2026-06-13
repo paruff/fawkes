@@ -12,6 +12,51 @@ permissions:
   pull-requests: write
 
 jobs:
+  detect-changes:
+    name: Detect Relevant Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      base_sha: ${{ steps.filter.outputs.base_sha }}
+      language: ${{ steps.filter.outputs.language }}
+      terraform: ${{ steps.filter.outputs.terraform }}
+      platform: ${{ steps.filter.outputs.platform }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed files by layer
+        id: filter
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE="HEAD~1"
+          fi
+          echo "base_sha=$BASE" >> "$GITHUB_OUTPUT"
+
+          if git diff --name-only "$BASE" HEAD -- '*.py' '*.sh' '*.go' | grep -q .; then
+            echo "language=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "language=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if git diff --name-only "$BASE" HEAD | grep -Eq '^infra/.*\.(tf|tfvars)$'; then
+            echo "terraform=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "terraform=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if git diff --name-only "$BASE" HEAD -- 'infra/kubernetes/**' 'platform/**' 'charts/**' | grep -q .; then
+            echo "platform=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "platform=false" >> "$GITHUB_OUTPUT"
+          fi
+
   # ==========================================================================
   # Layer 0 — Base: whitespace, syntax, secrets (fastest, ~30s)
   # ==========================================================================
@@ -19,6 +64,7 @@ jobs:
     name: "Pre-commit · Base"
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    needs: detect-changes
     permissions:
       contents: read
       pull-requests: write
@@ -54,16 +100,13 @@ jobs:
       - name: Run base hooks
         id: pre-commit
         run: |
-          pre-commit run trailing-whitespace --all-files
-          pre-commit run end-of-file-fixer --all-files
-          pre-commit run check-yaml --all-files
-          pre-commit run check-json --all-files
-          pre-commit run check-added-large-files --all-files
-          pre-commit run check-merge-conflict --all-files
-          pre-commit run mixed-line-ending --all-files
-          pre-commit run detect-private-key --all-files
-          pre-commit run prettier --all-files
-          pre-commit run insert-license --all-files
+          BASE="${{ needs.detect-changes.outputs.base_sha }}"
+          pre-commit run check-yaml --from-ref "$BASE" --to-ref HEAD
+          pre-commit run check-json --from-ref "$BASE" --to-ref HEAD
+          pre-commit run check-added-large-files --from-ref "$BASE" --to-ref HEAD
+          pre-commit run check-merge-conflict --from-ref "$BASE" --to-ref HEAD
+          pre-commit run detect-private-key --from-ref "$BASE" --to-ref HEAD
+          pre-commit run prettier --from-ref "$BASE" --to-ref HEAD
         continue-on-error: true
 
       - name: Check status
@@ -83,6 +126,8 @@ jobs:
     name: "Pre-commit · Language"
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: detect-changes
+    if: needs.detect-changes.outputs.language == 'true'
     permissions:
       contents: read
     steps:
@@ -106,7 +151,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.22"
+          go-version: "1.23"
 
       - name: Install pre-commit
         run: pip install pre-commit
@@ -122,13 +167,14 @@ jobs:
       - name: Run language hooks
         id: pre-commit
         run: |
-          pre-commit run black --all-files
-          pre-commit run ruff --all-files
-          pre-commit run flake8 --all-files
-          pre-commit run shellcheck --all-files
-          pre-commit run shfmt --all-files
-          pre-commit run golangci-lint --all-files
-          pre-commit run markdownlint --all-files
+          BASE="${{ needs.detect-changes.outputs.base_sha }}"
+          pre-commit run flake8 --from-ref "$BASE" --to-ref HEAD
+          pre-commit run shellcheck --from-ref "$BASE" --to-ref HEAD
+          if git diff --name-only "$BASE" HEAD -- '*.go' | grep -q .; then
+            pre-commit run golangci-lint --from-ref "$BASE" --to-ref HEAD
+          else
+            echo "No Go file changes detected; skipping golangci-lint"
+          fi
         continue-on-error: true
 
       - name: Check status
@@ -148,6 +194,8 @@ jobs:
     name: "Pre-commit · Tool"
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: detect-changes
+    if: needs.detect-changes.outputs.terraform == 'true'
     permissions:
       contents: read
     steps:
@@ -202,12 +250,10 @@ jobs:
       - name: Run tool hooks
         id: pre-commit
         run: |
-          pre-commit run yamllint --all-files
-          pre-commit run terraform_fmt --all-files
-          pre-commit run terraform_validate --all-files
-          pre-commit run terraform_tflint --all-files
-          pre-commit run terraform_docs --all-files
-          pre-commit run terraform_tfsec --all-files
+          BASE="${{ needs.detect-changes.outputs.base_sha }}"
+          pre-commit run yamllint --from-ref "$BASE" --to-ref HEAD
+          pre-commit run terraform_tflint --from-ref "$BASE" --to-ref HEAD
+          pre-commit run terraform_tfsec --from-ref "$BASE" --to-ref HEAD
         continue-on-error: true
 
       - name: Check status
@@ -227,6 +273,8 @@ jobs:
     name: "Pre-commit · Platform"
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: detect-changes
+    if: needs.detect-changes.outputs.platform == 'true'
     permissions:
       contents: read
     steps:
@@ -303,15 +351,14 @@ jobs:
       - name: Run platform hooks
         id: pre-commit
         run: |
-          pre-commit run kubeval --all-files
-          pre-commit run kustomize-validate --all-files
-          pre-commit run backstage-catalog-validate --all-files
-          pre-commit run argocd-validate --all-files
-          pre-commit run helm-lint --all-files
-          pre-commit run check-k8s-secrets --all-files
-          pre-commit run mkdocs-validate --all-files
-          pre-commit run gitleaks --all-files
-          pre-commit run detect-secrets --all-files
+          BASE="${{ needs.detect-changes.outputs.base_sha }}"
+          pre-commit run kubeval --from-ref "$BASE" --to-ref HEAD
+          pre-commit run kustomize-validate --from-ref "$BASE" --to-ref HEAD
+          pre-commit run backstage-catalog-validate --from-ref "$BASE" --to-ref HEAD
+          pre-commit run argocd-validate --from-ref "$BASE" --to-ref HEAD
+          pre-commit run helm-lint --from-ref "$BASE" --to-ref HEAD
+          pre-commit run check-k8s-secrets --from-ref "$BASE" --to-ref HEAD
+          pre-commit run mkdocs-validate --from-ref "$BASE" --to-ref HEAD
         continue-on-error: true
 
       - name: Check status

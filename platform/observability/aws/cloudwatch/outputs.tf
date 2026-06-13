@@ -18,9 +18,12 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-version: 2
-updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
+output "critical_alerts_topic_arn" {
+  description = "ARN of the critical alerts SNS topic"
+  value       = aws_sns_topic.critical_alerts.arn
+}
+
+output "warning_alerts_topic_arn" {
+  description = "ARN of the warning alerts SNS topic"
+  value       = aws_sns_topic.warning_alerts.arn
+}
