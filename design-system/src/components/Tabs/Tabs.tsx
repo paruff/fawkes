@@ -20,11 +20,7 @@ export interface TabsProps extends BaseComponentProps {
 export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-tabs', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-tabs', className)} {...props}>
         {children}
       </div>
     );

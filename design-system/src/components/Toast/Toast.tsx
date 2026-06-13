@@ -20,11 +20,7 @@ export interface ToastProps extends BaseComponentProps {
 export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-toast', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-toast', className)} {...props}>
         {children}
       </div>
     );

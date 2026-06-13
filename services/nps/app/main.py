@@ -39,7 +39,9 @@ db_pool = None
 
 # Prometheus metrics
 nps_responses = Counter(
-    "nps_responses_total", "Total number of NPS responses", ["score_type"]  # promoter, passive, detractor
+    "nps_responses_total",
+    "Total number of NPS responses",
+    ["score_type"],  # promoter, passive, detractor
 )
 nps_score_gauge = Gauge("nps_score", "Current NPS score", ["period"])  # quarterly, overall
 survey_request_duration = Histogram(

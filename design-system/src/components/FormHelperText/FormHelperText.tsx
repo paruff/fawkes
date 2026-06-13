@@ -20,11 +20,7 @@ export interface FormHelperTextProps extends BaseComponentProps {
 export const FormHelperText = React.forwardRef<HTMLDivElement, FormHelperTextProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-formhelpertext', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-formhelpertext', className)} {...props}>
         {children}
       </div>
     );

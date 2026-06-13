@@ -20,11 +20,7 @@ export interface MenuProps extends BaseComponentProps {
 export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-menu', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-menu', className)} {...props}>
         {children}
       </div>
     );

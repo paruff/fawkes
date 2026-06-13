@@ -20,11 +20,7 @@ export interface FormErrorMessageProps extends BaseComponentProps {
 export const FormErrorMessage = React.forwardRef<HTMLDivElement, FormErrorMessageProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-formerrormessage', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-formerrormessage', className)} {...props}>
         {children}
       </div>
     );

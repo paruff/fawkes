@@ -12,7 +12,12 @@ declare module 'jest-axe' {
     toHaveNoViolations(): void;
   }
 
-  export function axe(html: Element | string, options?: Record<string, unknown>): Promise<AxeResults>;
+  export function axe(
+    html: Element | string,
+    options?: Record<string, unknown>
+  ): Promise<AxeResults>;
   export function configureAxe(options?: JestAxeConfigureOptions): typeof axe;
-  export const toHaveNoViolations: { toHaveNoViolations: () => { pass: boolean; message: () => string } };
+  export const toHaveNoViolations: {
+    toHaveNoViolations: () => { pass: boolean; message: () => string };
+  };
 }

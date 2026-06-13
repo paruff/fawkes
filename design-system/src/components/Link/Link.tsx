@@ -20,11 +20,7 @@ export interface LinkProps extends BaseComponentProps {
 export const Link = React.forwardRef<HTMLDivElement, LinkProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-link', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-link', className)} {...props}>
         {children}
       </div>
     );

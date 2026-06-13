@@ -20,11 +20,7 @@ export interface SpacerProps extends BaseComponentProps {
 export const Spacer = React.forwardRef<HTMLDivElement, SpacerProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-spacer', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-spacer', className)} {...props}>
         {children}
       </div>
     );

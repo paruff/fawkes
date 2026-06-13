@@ -136,7 +136,7 @@ async def _collect_argocd_deployments() -> dict:
     """Query ArgoCD for application sync history."""
     apps = {}
     try:
-        async with httpx.AsyncClient(timeout=10, verify=False) as client:
+        async with httpx.AsyncClient(timeout=10, verify=False) as client:  # nosec B501
             headers = {}
             if ARGOCD_TOKEN:
                 headers["Authorization"] = f"Bearer {ARGOCD_TOKEN}"

@@ -20,11 +20,7 @@ export interface SelectProps extends BaseComponentProps {
 export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-select', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-select', className)} {...props}>
         {children}
       </div>
     );

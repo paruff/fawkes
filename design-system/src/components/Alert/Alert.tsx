@@ -20,11 +20,7 @@ export interface AlertProps extends BaseComponentProps {
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-alert', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-alert', className)} {...props}>
         {children}
       </div>
     );

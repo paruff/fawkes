@@ -18,17 +18,6 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-terraform {
-  required_version = ">= 1.6.0"
-
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 5.0.0"
-    }
-  }
-}
-
 # Pub/Sub Topics for Alerts
 resource "google_pubsub_topic" "critical_alerts" {
   name    = "${var.cluster_name}-critical-alerts"
@@ -638,17 +627,7 @@ resource "google_monitoring_alert_policy" "cost_anomaly" {
   )
 }
 
-# Variables
-variable "cluster_name" {
-  description = "Name of the GKE cluster"
-  type        = string
-}
-
-variable "project_id" {
-  description = "GCP project ID"
-  type        = string
-}
-
+# Variables unique to alerts
 variable "mattermost_webhook_url" {
   description = "Mattermost incoming webhook URL for alert notifications"
   type        = string
@@ -672,12 +651,6 @@ variable "cost_anomaly_threshold" {
   description = "Cost anomaly threshold in USD"
   type        = number
   default     = 100
-}
-
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
-  default     = {}
 }
 
 # Outputs

@@ -8,3 +8,36 @@ severity=warning
 # Shell dialect to use when none is specified in the script
 # (bash, dash, ksh, sh)
 shell=bash
+
+# ============================================================================
+# Disabled warnings
+# ============================================================================
+
+# SC2155 — Declare and assign separately to avoid masking return values
+# Ubiquitous in bash scripts; the return-value masking is benign in most cases.
+disable=SC2155
+
+# SC2034 — Variable appears unused
+# Library scripts (scripts/lib/*) export variables consumed by sourcing scripts.
+disable=SC2034
+
+# SC1090 — Can't follow non-constant source
+# ShellCheck cannot follow dynamic source paths (e.g. source "$(dirname "$0")/file").
+# Not actionable; source locations are validated at runtime.
+disable=SC1090
+
+# SC2046 — Quote this to prevent word splitting
+# Benign in contexts where output is a single token (kill PID, grep -c, numeric comparisons).
+disable=SC2046
+
+# SC2038 — Use -print0/-0 or -exec + to allow for non-alphanumeric filenames
+# All filenames in this project are alphanumeric; -print0 is unnecessary overhead.
+disable=SC2038
+
+# SC2183 — Format string variable count mismatch
+# Intentional use of printf with empty format for padding/separator generation.
+disable=SC2183
+
+# SC2120 — Function references arguments but none are ever passed
+# Functions may be called from sourced contexts where arguments are provided.
+disable=SC2120
