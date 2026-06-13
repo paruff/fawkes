@@ -20,11 +20,7 @@ export interface TooltipProps extends BaseComponentProps {
 export const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-tooltip', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-tooltip', className)} {...props}>
         {children}
       </div>
     );

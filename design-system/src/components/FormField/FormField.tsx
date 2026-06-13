@@ -20,11 +20,7 @@ export interface FormFieldProps extends BaseComponentProps {
 export const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-formfield', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-formfield', className)} {...props}>
         {children}
       </div>
     );

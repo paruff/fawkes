@@ -3,7 +3,9 @@ import { cn } from '../../utils';
 import { BaseComponentProps } from '../../types';
 import './Button.css';
 
-export interface ButtonProps extends BaseComponentProps, React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps
+  extends BaseComponentProps,
+    React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** Button visual variant */
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   /** Button size */

@@ -20,11 +20,7 @@ export interface RadioProps extends BaseComponentProps {
 export const Radio = React.forwardRef<HTMLDivElement, RadioProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-radio', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-radio', className)} {...props}>
         {children}
       </div>
     );

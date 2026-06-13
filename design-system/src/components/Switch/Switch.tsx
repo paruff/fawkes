@@ -20,11 +20,7 @@ export interface SwitchProps extends BaseComponentProps {
 export const Switch = React.forwardRef<HTMLDivElement, SwitchProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-switch', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-switch', className)} {...props}>
         {children}
       </div>
     );

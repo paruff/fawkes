@@ -20,11 +20,7 @@ export interface SkeletonProps extends BaseComponentProps {
 export const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-skeleton', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-skeleton', className)} {...props}>
         {children}
       </div>
     );

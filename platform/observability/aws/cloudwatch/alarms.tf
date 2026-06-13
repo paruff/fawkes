@@ -18,17 +18,6 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-terraform {
-  required_version = ">= 1.6.0"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 5.0.0"
-    }
-  }
-}
-
 # SNS Topics for Alarms
 resource "aws_sns_topic" "critical_alerts" {
   name              = "${var.cluster_name}-critical-alerts"
@@ -325,12 +314,7 @@ resource "aws_cloudwatch_metric_alarm" "node_disk_space_low" {
   )
 }
 
-# Variables
-variable "cluster_name" {
-  description = "Name of the EKS cluster"
-  type        = string
-}
-
+# Variables unique to alarms
 variable "kms_key_id" {
   description = "KMS key ID for SNS topic encryption (optional)"
   type        = string
@@ -342,12 +326,6 @@ variable "mattermost_webhook_url" {
   type        = string
   default     = ""
   sensitive   = true
-}
-
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
-  default     = {}
 }
 
 # Outputs

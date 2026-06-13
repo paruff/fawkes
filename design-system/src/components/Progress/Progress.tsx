@@ -20,11 +20,7 @@ export interface ProgressProps extends BaseComponentProps {
 export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-progress', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-progress', className)} {...props}>
         {children}
       </div>
     );

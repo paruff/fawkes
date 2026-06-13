@@ -1,16 +1,16 @@
-const express = require('express');
-const promClient = require('prom-client');
-const winston = require('winston');
+const express = require("express");
+const promClient = require("prom-client");
+const winston = require("winston");
 
 // Configure logger
 const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || 'info',
+  level: process.env.LOG_LEVEL || "info",
   format: winston.format.json(),
   transports: [
     new winston.transports.Console({
-      format: winston.format.simple()
-    })
-  ]
+      format: winston.format.simple(),
+    }),
+  ],
 });
 
 // Create Express app
@@ -22,17 +22,17 @@ const register = new promClient.Registry();
 promClient.collectDefaultMetrics({ register });
 
 const httpRequestCounter = new promClient.Counter({
-  name: 'http_requests_total',
-  help: 'Total HTTP requests',
-  labelNames: ['method', 'route', 'status'],
-  registers: [register]
+  name: "http_requests_total",
+  help: "Total HTTP requests",
+  labelNames: ["method", "route", "status"],
+  registers: [register],
 });
 
 const httpRequestDuration = new promClient.Histogram({
-  name: 'http_request_duration_seconds',
-  help: 'HTTP request latency',
-  labelNames: ['method', 'route', 'status'],
-  registers: [register]
+  name: "http_request_duration_seconds",
+  help: "HTTP request latency",
+  labelNames: ["method", "route", "status"],
+  registers: [register],
 });
 
 // Middleware
@@ -42,7 +42,7 @@ app.use(express.json());
 app.use((req, res, next) => {
   const start = Date.now();
 
-  res.on('finish', () => {
+  res.on("finish", () => {
     const duration = (Date.now() - start) / 1000;
     httpRequestCounter.labels(req.method, req.route?.path || req.path, res.statusCode).inc();
     httpRequestDuration.labels(req.method, req.route?.path || req.path, res.statusCode).observe(duration);
@@ -58,46 +58,46 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.json({
-    service: 'sample-nodejs-app',
-    status: 'running',
-    version: '0.1.0'
+    service: "sample-nodejs-app",
+    status: "running",
+    version: "0.1.0",
   });
 });
 
-app.get('/health', (req, res) => {
+app.get("/health", (req, res) => {
   res.json({
-    status: 'UP',
-    service: 'sample-nodejs-app'
+    status: "UP",
+    service: "sample-nodejs-app",
   });
 });
 
-app.get('/ready', (req, res) => {
+app.get("/ready", (req, res) => {
   // Add any readiness checks here (database connection, etc.)
   res.json({
-    status: 'READY',
-    service: 'sample-nodejs-app'
+    status: "READY",
+    service: "sample-nodejs-app",
   });
 });
 
-app.get('/info', (req, res) => {
+app.get("/info", (req, res) => {
   res.json({
-    name: 'sample-nodejs-app',
-    description: 'Sample Node.js Express application for testing',
-    version: '0.1.0'
+    name: "sample-nodejs-app",
+    description: "Sample Node.js Express application for testing",
+    version: "0.1.0",
   });
 });
 
-app.get('/metrics', async (req, res) => {
-  res.set('Content-Type', register.contentType);
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", register.contentType);
   res.end(await register.metrics());
 });
 
 // Error handler
 app.use((err, req, res, next) => {
-  logger.error('Error:', err);
-  res.status(500).json({ error: 'Internal server error' });
+  logger.error("Error:", err);
+  res.status(500).json({ error: "Internal server error" });
 });
 
 // Start server

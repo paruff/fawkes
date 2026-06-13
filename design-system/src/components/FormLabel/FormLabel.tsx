@@ -20,11 +20,7 @@ export interface FormLabelProps extends BaseComponentProps {
 export const FormLabel = React.forwardRef<HTMLDivElement, FormLabelProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-formlabel', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-formlabel', className)} {...props}>
         {children}
       </div>
     );

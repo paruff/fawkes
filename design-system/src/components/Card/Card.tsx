@@ -20,11 +20,7 @@ export interface CardProps extends BaseComponentProps {
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-card', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-card', className)} {...props}>
         {children}
       </div>
     );

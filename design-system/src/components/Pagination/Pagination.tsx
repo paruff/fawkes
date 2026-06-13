@@ -20,11 +20,7 @@ export interface PaginationProps extends BaseComponentProps {
 export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-pagination', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-pagination', className)} {...props}>
         {children}
       </div>
     );

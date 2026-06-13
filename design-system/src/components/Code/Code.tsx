@@ -20,11 +20,7 @@ export interface CodeProps extends BaseComponentProps {
 export const Code = React.forwardRef<HTMLDivElement, CodeProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-code', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-code', className)} {...props}>
         {children}
       </div>
     );

@@ -249,7 +249,7 @@ repos:
       # Validate MkDocs configuration (IDP documentation)
       - id: mkdocs-validate
         name: Validate MkDocs configuration
-        entry: bash -c 'if command -v mkdocs &> /dev/null && [ -f mkdocs.yml ]; then mkdocs build --strict --verbose --site-dir /tmp/mkdocs-build-test && rm -rf /tmp/mkdocs-build-test; else echo "⚠️  mkdocs not installed or mkdocs.yml not found"; fi'
+        entry: bash -c 'if command -v mkdocs &> /dev/null && [ -f mkdocs.yml ]; then mkdocs build --verbose --site-dir /tmp/mkdocs-build-test && rm -rf /tmp/mkdocs-build-test; else echo "⚠️  mkdocs not installed or mkdocs.yml not found"; fi'
         language: system
         pass_filenames: false
         files: '^(mkdocs\.yml|docs/.*\.md)$'

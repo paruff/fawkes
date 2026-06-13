@@ -20,11 +20,7 @@ export interface ImageProps extends BaseComponentProps {
 export const Image = React.forwardRef<HTMLDivElement, ImageProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-image', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-image', className)} {...props}>
         {children}
       </div>
     );

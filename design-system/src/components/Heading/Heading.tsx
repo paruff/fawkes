@@ -20,11 +20,7 @@ export interface HeadingProps extends BaseComponentProps {
 export const Heading = React.forwardRef<HTMLDivElement, HeadingProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-heading', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-heading', className)} {...props}>
         {children}
       </div>
     );

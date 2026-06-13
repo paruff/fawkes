@@ -21,6 +21,7 @@ export const Default: Story = {
 
 export const Paragraph: Story = {
   args: {
-    children: 'This is a longer paragraph of text that demonstrates how the Text component renders longer content.',
+    children:
+      'This is a longer paragraph of text that demonstrates how the Text component renders longer content.',
   },
 };

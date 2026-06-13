@@ -20,11 +20,7 @@ export interface DrawerProps extends BaseComponentProps {
 export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-drawer', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-drawer', className)} {...props}>
         {children}
       </div>
     );
