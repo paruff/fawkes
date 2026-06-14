@@ -1,1058 +1,1124 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fawkes Dojo - Platform Engineering Mastery</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            line-height: 1.6;
-        }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #333;
+        line-height: 1.6;
+      }
 
-        .header {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            padding: 2rem 0;
-            text-align: center;
-            color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+      .header {
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        padding: 2rem 0;
+        text-align: center;
+        color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
 
+      .header h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header .subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+
+      .intro-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .intro-card h2 {
+        color: #667eea;
+        margin-bottom: 1rem;
+      }
+
+      .philosophy-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+      }
+
+      .philosophy-card {
+        background: #f8f9fa;
+        border-left: 4px solid #667eea;
+        padding: 1.5rem;
+        border-radius: 8px;
+      }
+
+      .philosophy-card h3 {
+        color: #667eea;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+
+      .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-card .number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        display: block;
+      }
+
+      .stat-card .label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .belt-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .belt-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 3px solid #eee;
+      }
+
+      .belt-icon {
+        font-size: 3rem;
+      }
+
+      .belt-info h3 {
+        font-size: 1.8rem;
+        color: #333;
+      }
+
+      .belt-meta {
+        display: flex;
+        gap: 2rem;
+        color: #666;
+        font-size: 0.9rem;
+        flex-wrap: wrap;
+      }
+
+      .belt-competencies {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+      }
+
+      .belt-competencies h4 {
+        color: #667eea;
+        margin-bottom: 0.5rem;
+      }
+
+      .belt-competencies ul {
+        margin-left: 1.5rem;
+      }
+
+      .belt-competencies li {
+        margin: 0.3rem 0;
+      }
+
+      .dora-coverage {
+        display: inline-block;
+        background: #e7f3ff;
+        color: #0066cc;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+      }
+
+      .modules-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+      }
+
+      .module-card {
+        background: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        text-decoration: none;
+        display: block;
+        color: inherit;
+      }
+
+      .module-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        border-color: #667eea;
+        text-decoration: none;
+      }
+
+      .module-number {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: #667eea;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .module-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+        padding-right: 3rem;
+      }
+
+      .module-duration {
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+      }
+
+      .module-description {
+        font-size: 0.9rem;
+        color: #555;
+        line-height: 1.4;
+      }
+
+      .progress-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 30px;
+        background: #e9ecef;
+        border-radius: 15px;
+        overflow: hidden;
+        margin: 1rem 0;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        transition: width 0.5s ease;
+      }
+
+      .cta-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        text-align: center;
+      }
+
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+        margin: 0.5rem;
+        transition: transform 0.3s ease;
+      }
+
+      .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+      }
+
+      .certification-path {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .cert-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .cert-card {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+      }
+
+      .cert-card .icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .belt-progression {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .progression-flow {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin: 2rem 0;
+        gap: 1rem;
+      }
+
+      .progression-step {
+        text-align: center;
+        flex: 1;
+        min-width: 150px;
+      }
+
+      .progression-icon {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .progression-arrow {
+        font-size: 2rem;
+        color: #667eea;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 2rem;
+        color: white;
+        opacity: 0.8;
+      }
+
+      @media (max-width: 768px) {
         .header h1 {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .header .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .intro-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .intro-card h2 {
-            color: #667eea;
-            margin-bottom: 1rem;
-        }
-
-        .philosophy-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .philosophy-card {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
-            padding: 1.5rem;
-            border-radius: 8px;
-        }
-
-        .philosophy-card h3 {
-            color: #667eea;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-card .number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            display: block;
-        }
-
-        .stat-card .label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        .belt-section {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .belt-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 3px solid #eee;
-        }
-
-        .belt-icon {
-            font-size: 3rem;
-        }
-
-        .belt-info h3 {
-            font-size: 1.8rem;
-            color: #333;
-        }
-
-        .belt-meta {
-            display: flex;
-            gap: 2rem;
-            color: #666;
-            font-size: 0.9rem;
-            flex-wrap: wrap;
-        }
-
-        .belt-competencies {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-
-        .belt-competencies h4 {
-            color: #667eea;
-            margin-bottom: 0.5rem;
-        }
-
-        .belt-competencies ul {
-            margin-left: 1.5rem;
-        }
-
-        .belt-competencies li {
-            margin: 0.3rem 0;
-        }
-
-        .dora-coverage {
-            display: inline-block;
-            background: #e7f3ff;
-            color: #0066cc;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-top: 0.5rem;
+          font-size: 2rem;
         }
 
         .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1rem;
+          grid-template-columns: 1fr;
         }
 
-        .module-card {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            text-decoration: none;
-            display: block;
-            color: inherit;
-        }
-
-        .module-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-            border-color: #667eea;
-            text-decoration: none;
-        }
-
-        .module-number {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: #667eea;
-            color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .module-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.5rem;
-            padding-right: 3rem;
-        }
-
-        .module-duration {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 0.5rem;
-        }
-
-        .module-description {
-            font-size: 0.9rem;
-            color: #555;
-            line-height: 1.4;
-        }
-
-        .progress-section {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 30px;
-            background: #e9ecef;
-            border-radius: 15px;
-            overflow: hidden;
-            margin: 1rem 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            transition: width 0.5s ease;
-        }
-
-        .cta-section {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-
-        .cta-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin: 0.5rem;
-            transition: transform 0.3s ease;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
-        }
-
-        .certification-path {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .cert-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .cert-card {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .cert-card .icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .belt-progression {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .progression-flow {
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin: 2rem 0;
-            gap: 1rem;
-        }
-
-        .progression-step {
-            text-align: center;
-            flex: 1;
-            min-width: 150px;
-        }
-
-        .progression-icon {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
+        .belt-meta {
+          flex-direction: column;
+          gap: 0.5rem;
         }
 
         .progression-arrow {
-            font-size: 2rem;
-            color: #667eea;
+          display: none;
         }
-
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            color: white;
-            opacity: 0.8;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .modules-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .belt-meta {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .progression-arrow {
-                display: none;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="header">
-        <h1>🥋 Fawkes Dojo</h1>
-        <p class="subtitle">Learn Platform Engineering by Building and Operating a Real Platform</p>
+      <h1>🥋 Fawkes Dojo</h1>
+      <p class="subtitle">Learn Platform Engineering by Building and Operating a Real Platform</p>
     </div>
 
     <div class="container">
-        <!-- Introduction -->
-        <div class="intro-card">
-            <h2>Welcome to the Fawkes Dojo</h2>
-            <p>
-                The Fawkes Dojo is not a traditional course or documentation site. It's an <strong>immersive learning environment</strong>
-                where you master platform engineering by building and operating real platform infrastructure in a production-like environment.
-            </p>
-            <p style="margin-top: 1rem;">
-                Through 20 hands-on modules organized by belt levels, you'll progress from Platform Fundamentals to Platform Architecture,
-                covering all 24 DORA capabilities. Each module combines theory, demonstration, hands-on labs, and immediate feedback.
-            </p>
+      <!-- Introduction -->
+      <div class="intro-card">
+        <h2>Welcome to the Fawkes Dojo</h2>
+        <p>
+          The Fawkes Dojo is not a traditional course or documentation site. It's an
+          <strong>immersive learning environment</strong>
+          where you master platform engineering by building and operating real platform infrastructure in a
+          production-like environment.
+        </p>
+        <p style="margin-top: 1rem">
+          Through 20 hands-on modules organized by belt levels, you'll progress from Platform Fundamentals to Platform
+          Architecture, covering all 24 DORA capabilities. Each module combines theory, demonstration, hands-on labs,
+          and immediate feedback.
+        </p>
 
-            <div class="philosophy-grid">
-                <div class="philosophy-card">
-                    <h3>✅ Learn by Doing</h3>
-                    <p>Every concept practiced immediately in production-like environment</p>
-                </div>
-                <div class="philosophy-card">
-                    <h3>✅ Safe to Fail</h3>
-                    <p>Isolated environments where mistakes are learning opportunities</p>
-                </div>
-                <div class="philosophy-card">
-                    <h3>✅ Immediate Feedback</h3>
-                    <p>Automated validation, metrics, and mentor review</p>
-                </div>
-                <div class="philosophy-card">
-                    <h3>✅ Progressive Mastery</h3>
-                    <p>Clear belt system showing skill progression</p>
-                </div>
-                <div class="philosophy-card">
-                    <h3>✅ Real Tools, Real Skills</h3>
-                    <p>Same tools used in production environments</p>
-                </div>
-                <div class="philosophy-card">
-                    <h3>✅ Recognized Credentials</h3>
-                    <p>Earn badges and certificates valued by employers</p>
-                </div>
+        <div class="philosophy-grid">
+          <div class="philosophy-card">
+            <h3>✅ Learn by Doing</h3>
+            <p>Every concept practiced immediately in production-like environment</p>
+          </div>
+          <div class="philosophy-card">
+            <h3>✅ Safe to Fail</h3>
+            <p>Isolated environments where mistakes are learning opportunities</p>
+          </div>
+          <div class="philosophy-card">
+            <h3>✅ Immediate Feedback</h3>
+            <p>Automated validation, metrics, and mentor review</p>
+          </div>
+          <div class="philosophy-card">
+            <h3>✅ Progressive Mastery</h3>
+            <p>Clear belt system showing skill progression</p>
+          </div>
+          <div class="philosophy-card">
+            <h3>✅ Real Tools, Real Skills</h3>
+            <p>Same tools used in production environments</p>
+          </div>
+          <div class="philosophy-card">
+            <h3>✅ Recognized Credentials</h3>
+            <p>Earn badges and certificates valued by employers</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat-card">
+          <span class="number">20</span>
+          <span class="label">Modules</span>
+        </div>
+        <div class="stat-card">
+          <span class="number">40</span>
+          <span class="label">Hours of Learning</span>
+        </div>
+        <div class="stat-card">
+          <span class="number">5</span>
+          <span class="label">Belt Levels</span>
+        </div>
+        <div class="stat-card">
+          <span class="number">24</span>
+          <span class="label">DORA Capabilities</span>
+        </div>
+      </div>
+
+      <!-- Belt Progression Overview -->
+      <div class="belt-progression">
+        <h2>Belt Progression Path</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 1rem">
+          Total Time: 40 hours (1 week full-time or 5 weeks part-time)
+        </p>
+        <div class="progression-flow">
+          <div class="progression-step">
+            <div class="progression-icon">⚪</div>
+            <div><strong>White Belt</strong></div>
+            <div style="font-size: 0.85rem; color: #666">8 hours</div>
+            <div style="font-size: 0.85rem; color: #666">Platform Fundamentals</div>
+          </div>
+          <div class="progression-arrow">→</div>
+          <div class="progression-step">
+            <div class="progression-icon">🟡</div>
+            <div><strong>Yellow Belt</strong></div>
+            <div style="font-size: 0.85rem; color: #666">8 hours</div>
+            <div style="font-size: 0.85rem; color: #666">CI/CD Mastery</div>
+          </div>
+          <div class="progression-arrow">→</div>
+          <div class="progression-step">
+            <div class="progression-icon">🟢</div>
+            <div><strong>Green Belt</strong></div>
+            <div style="font-size: 0.85rem; color: #666">8 hours</div>
+            <div style="font-size: 0.85rem; color: #666">GitOps & Deployment</div>
+          </div>
+          <div class="progression-arrow">→</div>
+          <div class="progression-step">
+            <div class="progression-icon">🟤</div>
+            <div><strong>Brown Belt</strong></div>
+            <div style="font-size: 0.85rem; color: #666">8 hours</div>
+            <div style="font-size: 0.85rem; color: #666">Observability & SRE</div>
+          </div>
+          <div class="progression-arrow">→</div>
+          <div class="progression-step">
+            <div class="progression-icon">⚫</div>
+            <div><strong>Black Belt</strong></div>
+            <div style="font-size: 0.85rem; color: #666">8 hours</div>
+            <div style="font-size: 0.85rem; color: #666">Platform Architecture</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Tracking -->
+      <div class="progress-section">
+        <h2>Your Progress</h2>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 0%" id="progressBar">0%</div>
+        </div>
+        <p style="text-align: center; color: #666">
+          Complete modules to track your progress toward Platform Architect certification
+        </p>
+      </div>
+
+      <!-- CTA Section -->
+      <div class="cta-section">
+        <h2>Ready to Begin Your Journey?</h2>
+        <p style="margin: 1rem 0">Start with Module 1 or jump to any belt level based on your experience</p>
+        <a href="#white-belt" class="cta-button">Start White Belt</a>
+        <a href="#certification" class="cta-button">View Certifications</a>
+      </div>
+
+      <!-- White Belt -->
+      <div class="belt-section" id="white-belt">
+        <div class="belt-header">
+          <div class="belt-icon">⚪</div>
+          <div class="belt-info">
+            <h3>White Belt: Platform Fundamentals</h3>
+            <div class="belt-meta">
+              <span>⏱️ 8 hours</span>
+              <span>📚 4 modules</span>
+              <span>🎓 Certification: Fawkes Platform Operator</span>
             </div>
+            <div class="dora-coverage">🎯 4 of 24 DORA Capabilities</div>
+          </div>
         </div>
 
-        <!-- Stats -->
-        <div class="stats">
-            <div class="stat-card">
-                <span class="number">20</span>
-                <span class="label">Modules</span>
-            </div>
-            <div class="stat-card">
-                <span class="number">40</span>
-                <span class="label">Hours of Learning</span>
-            </div>
-            <div class="stat-card">
-                <span class="number">5</span>
-                <span class="label">Belt Levels</span>
-            </div>
-            <div class="stat-card">
-                <span class="number">24</span>
-                <span class="label">DORA Capabilities</span>
-            </div>
+        <div class="belt-competencies">
+          <h4>Core Competencies</h4>
+          <ul>
+            <li>Understand what an Internal Delivery Platform is and why it matters</li>
+            <li>Explain DORA metrics and their business impact</li>
+            <li>Navigate Backstage portal and service catalog</li>
+            <li>Deploy an application using a golden path template</li>
+            <li>View and interpret basic DORA metrics</li>
+          </ul>
         </div>
 
-        <!-- Belt Progression Overview -->
-        <div class="belt-progression">
-            <h2>Belt Progression Path</h2>
-            <p style="text-align: center; color: #666; margin-bottom: 1rem;">
-                Total Time: 40 hours (1 week full-time or 5 weeks part-time)
-            </p>
-            <div class="progression-flow">
-                <div class="progression-step">
-                    <div class="progression-icon">⚪</div>
-                    <div><strong>White Belt</strong></div>
-                    <div style="font-size: 0.85rem; color: #666;">8 hours</div>
-                    <div style="font-size: 0.85rem; color: #666;">Platform Fundamentals</div>
-                </div>
-                <div class="progression-arrow">→</div>
-                <div class="progression-step">
-                    <div class="progression-icon">🟡</div>
-                    <div><strong>Yellow Belt</strong></div>
-                    <div style="font-size: 0.85rem; color: #666;">8 hours</div>
-                    <div style="font-size: 0.85rem; color: #666;">CI/CD Mastery</div>
-                </div>
-                <div class="progression-arrow">→</div>
-                <div class="progression-step">
-                    <div class="progression-icon">🟢</div>
-                    <div><strong>Green Belt</strong></div>
-                    <div style="font-size: 0.85rem; color: #666;">8 hours</div>
-                    <div style="font-size: 0.85rem; color: #666;">GitOps & Deployment</div>
-                </div>
-                <div class="progression-arrow">→</div>
-                <div class="progression-step">
-                    <div class="progression-icon">🟤</div>
-                    <div><strong>Brown Belt</strong></div>
-                    <div style="font-size: 0.85rem; color: #666;">8 hours</div>
-                    <div style="font-size: 0.85rem; color: #666;">Observability & SRE</div>
-                </div>
-                <div class="progression-arrow">→</div>
-                <div class="progression-step">
-                    <div class="progression-icon">⚫</div>
-                    <div><strong>Black Belt</strong></div>
-                    <div style="font-size: 0.85rem; color: #666;">8 hours</div>
-                    <div style="font-size: 0.85rem; color: #666;">Platform Architecture</div>
-                </div>
+        <div class="modules-grid">
+          <a href="modules/white-belt/module-01-what-is-idp/" class="module-card">
+            <div class="module-number">1</div>
+            <div class="module-title">Internal Delivery Platforms - What and Why</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              What is an IDP, why organizations need them, Platform as a Product mindset, and Fawkes platform tour.
             </div>
+          </a>
+          <a href="modules/white-belt/module-02-dora-metrics/" class="module-card">
+            <div class="module-number">2</div>
+            <div class="module-title">DORA Metrics - The North Star</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Four Key Metrics explained, high vs. low performers, business outcomes, and Fawkes DORA automation.
+            </div>
+          </a>
+          <a href="modules/white-belt/module-03-gitops-principles/" class="module-card">
+            <div class="module-number">3</div>
+            <div class="module-title">GitOps Principles</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Declarative infrastructure, Git as source of truth, automated reconciliation, and benefits.
+            </div>
+          </a>
+          <a href="modules/white-belt/module-04-first-deployment/" class="module-card">
+            <div class="module-number">4</div>
+            <div class="module-title">Your First Deployment</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Golden path templates, deployment process, monitoring progress, and viewing DORA metrics.
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Yellow Belt -->
+      <div class="belt-section" id="yellow-belt">
+        <div class="belt-header">
+          <div class="belt-icon">🟡</div>
+          <div class="belt-info">
+            <h3>Yellow Belt: CI/CD Mastery</h3>
+            <div class="belt-meta">
+              <span>⏱️ 8 hours</span>
+              <span>📚 4 modules</span>
+              <span>🎓 Certification: Fawkes CI/CD Specialist</span>
+            </div>
+            <div class="dora-coverage">🎯 6 additional DORA Capabilities (10 total)</div>
+          </div>
         </div>
 
-        <!-- Progress Tracking -->
-        <div class="progress-section">
-            <h2>Your Progress</h2>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: 0%;" id="progressBar">0%</div>
-            </div>
-            <p style="text-align: center; color: #666;">
-                Complete modules to track your progress toward Platform Architect certification
-            </p>
+        <div class="belt-competencies">
+          <h4>Core Competencies</h4>
+          <ul>
+            <li>Build custom Jenkins pipelines from scratch</li>
+            <li>Implement security scanning (SAST, dependency check, container scanning)</li>
+            <li>Configure quality gates and automated testing</li>
+            <li>Optimize build times and resource usage</li>
+            <li>Implement pipeline-as-code best practices</li>
+          </ul>
         </div>
 
-        <!-- CTA Section -->
-        <div class="cta-section">
-            <h2>Ready to Begin Your Journey?</h2>
-            <p style="margin: 1rem 0;">Start with Module 1 or jump to any belt level based on your experience</p>
-            <a href="#white-belt" class="cta-button">Start White Belt</a>
-            <a href="#certification" class="cta-button">View Certifications</a>
+        <div class="modules-grid">
+          <a href="modules/yellow-belt/module-05-ci-fundamentals/" class="module-card">
+            <div class="module-number">5</div>
+            <div class="module-title">Continuous Integration Fundamentals</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              CI principles, Jenkins architecture, Pipeline-as-code (Jenkinsfile), and build stages.
+            </div>
+          </a>
+          <a href="modules/yellow-belt/module-06-golden-path-pipelines/" class="module-card">
+            <div class="module-number">6</div>
+            <div class="module-title">Building Golden Path Pipelines</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Shared libraries, multi-stage pipelines, caching and optimization, parallel execution.
+            </div>
+          </a>
+          <a href="modules/yellow-belt/module-07-security-quality-gates/" class="module-card">
+            <div class="module-number">7</div>
+            <div class="module-title">Security Scanning & Quality Gates</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Static analysis, dependency scanning, container scanning, quality gates and policy enforcement.
+            </div>
+          </a>
+          <a href="modules/yellow-belt/module-08-artifact-management/" class="module-card">
+            <div class="module-number">8</div>
+            <div class="module-title">Artifact Management</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Container registry (Harbor), versioning strategies, artifact promotion, retention policies.
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Green Belt -->
+      <div class="belt-section" id="green-belt">
+        <div class="belt-header">
+          <div class="belt-icon">🟢</div>
+          <div class="belt-info">
+            <h3>Green Belt: GitOps & Deployment</h3>
+            <div class="belt-meta">
+              <span>⏱️ 8 hours</span>
+              <span>📚 4 modules</span>
+              <span>🎓 Certification: Fawkes Deployment Engineer</span>
+            </div>
+            <div class="dora-coverage">🎯 7 additional DORA Capabilities (17 total)</div>
+          </div>
         </div>
 
-        <!-- White Belt -->
-        <div class="belt-section" id="white-belt">
-            <div class="belt-header">
-                <div class="belt-icon">⚪</div>
-                <div class="belt-info">
-                    <h3>White Belt: Platform Fundamentals</h3>
-                    <div class="belt-meta">
-                        <span>⏱️ 8 hours</span>
-                        <span>📚 4 modules</span>
-                        <span>🎓 Certification: Fawkes Platform Operator</span>
-                    </div>
-                    <div class="dora-coverage">🎯 4 of 24 DORA Capabilities</div>
-                </div>
-            </div>
-
-            <div class="belt-competencies">
-                <h4>Core Competencies</h4>
-                <ul>
-                    <li>Understand what an Internal Delivery Platform is and why it matters</li>
-                    <li>Explain DORA metrics and their business impact</li>
-                    <li>Navigate Backstage portal and service catalog</li>
-                    <li>Deploy an application using a golden path template</li>
-                    <li>View and interpret basic DORA metrics</li>
-                </ul>
-            </div>
-
-            <div class="modules-grid">
-                <a href="modules/white-belt/module-01-what-is-idp/" class="module-card">
-                    <div class="module-number">1</div>
-                    <div class="module-title">Internal Delivery Platforms - What and Why</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        What is an IDP, why organizations need them, Platform as a Product mindset, and Fawkes platform tour.
-                    </div>
-                </a>
-                <a href="modules/white-belt/module-02-dora-metrics/" class="module-card">
-                    <div class="module-number">2</div>
-                    <div class="module-title">DORA Metrics - The North Star</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Four Key Metrics explained, high vs. low performers, business outcomes, and Fawkes DORA automation.
-                    </div>
-                </a>
-                <a href="modules/white-belt/module-03-gitops-principles/" class="module-card">
-                    <div class="module-number">3</div>
-                    <div class="module-title">GitOps Principles</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Declarative infrastructure, Git as source of truth, automated reconciliation, and benefits.
-                    </div>
-                </a>
-                <a href="modules/white-belt/module-04-first-deployment/" class="module-card">
-                    <div class="module-number">4</div>
-                    <div class="module-title">Your First Deployment</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Golden path templates, deployment process, monitoring progress, and viewing DORA metrics.
-                    </div>
-                </a>
-            </div>
+        <div class="belt-competencies">
+          <h4>Core Competencies</h4>
+          <ul>
+            <li>Implement GitOps workflows with ArgoCD</li>
+            <li>Configure blue-green and canary deployments</li>
+            <li>Implement progressive delivery with automated rollback</li>
+            <li>Manage multi-environment deployments (dev, staging, prod)</li>
+            <li>Troubleshoot deployment failures and rollback safely</li>
+          </ul>
         </div>
 
-        <!-- Yellow Belt -->
-        <div class="belt-section" id="yellow-belt">
-            <div class="belt-header">
-                <div class="belt-icon">🟡</div>
-                <div class="belt-info">
-                    <h3>Yellow Belt: CI/CD Mastery</h3>
-                    <div class="belt-meta">
-                        <span>⏱️ 8 hours</span>
-                        <span>📚 4 modules</span>
-                        <span>🎓 Certification: Fawkes CI/CD Specialist</span>
-                    </div>
-                    <div class="dora-coverage">🎯 6 additional DORA Capabilities (10 total)</div>
-                </div>
+        <div class="modules-grid">
+          <a href="modules/green-belt/module-09-gitops-argocd/" class="module-card">
+            <div class="module-number">9</div>
+            <div class="module-title">GitOps with ArgoCD</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              ArgoCD architecture, application definitions, sync policies, health assessment.
             </div>
+          </a>
+          <a href="modules/green-belt/module-10-deployment-strategies/" class="module-card">
+            <div class="module-number">10</div>
+            <div class="module-title">Deployment Strategies</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Blue-green, canary, rolling updates, feature flags with hands-on examples.
+            </div>
+          </a>
+          <a href="modules/green-belt/module-11-progressive-delivery/" class="module-card">
+            <div class="module-number">11</div>
+            <div class="module-title">Progressive Delivery</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Traffic splitting, automated rollback triggers, metrics-driven deployments, A/B testing.
+            </div>
+          </a>
+          <a href="modules/green-belt/module-12-rollback-incident-response/" class="module-card">
+            <div class="module-number">12</div>
+            <div class="module-title">Rollback & Incident Response</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              When and how to rollback, incident detection, emergency procedures, postmortem process.
+            </div>
+          </a>
+        </div>
+      </div>
 
-            <div class="belt-competencies">
-                <h4>Core Competencies</h4>
-                <ul>
-                    <li>Build custom Jenkins pipelines from scratch</li>
-                    <li>Implement security scanning (SAST, dependency check, container scanning)</li>
-                    <li>Configure quality gates and automated testing</li>
-                    <li>Optimize build times and resource usage</li>
-                    <li>Implement pipeline-as-code best practices</li>
-                </ul>
+      <!-- Brown Belt -->
+      <div class="belt-section" id="brown-belt">
+        <div class="belt-header">
+          <div class="belt-icon">🟤</div>
+          <div class="belt-info">
+            <h3>Brown Belt: Observability & SRE</h3>
+            <div class="belt-meta">
+              <span>⏱️ 8 hours</span>
+              <span>📚 4 modules</span>
+              <span>🎓 Certification: Fawkes SRE Practitioner</span>
             </div>
-
-            <div class="modules-grid">
-                <a href="modules/yellow-belt/module-05-ci-fundamentals/" class="module-card">
-                    <div class="module-number">5</div>
-                    <div class="module-title">Continuous Integration Fundamentals</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        CI principles, Jenkins architecture, Pipeline-as-code (Jenkinsfile), and build stages.
-                    </div>
-                </a>
-                <a href="modules/yellow-belt/module-06-golden-path-pipelines/" class="module-card">
-                    <div class="module-number">6</div>
-                    <div class="module-title">Building Golden Path Pipelines</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Shared libraries, multi-stage pipelines, caching and optimization, parallel execution.
-                    </div>
-                </a>
-                <a href="modules/yellow-belt/module-07-security-quality-gates/" class="module-card">
-                    <div class="module-number">7</div>
-                    <div class="module-title">Security Scanning & Quality Gates</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Static analysis, dependency scanning, container scanning, quality gates and policy enforcement.
-                    </div>
-                </a>
-                <a href="modules/yellow-belt/module-08-artifact-management/" class="module-card">
-                    <div class="module-number">8</div>
-                    <div class="module-title">Artifact Management</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Container registry (Harbor), versioning strategies, artifact promotion, retention policies.
-                    </div>
-                </a>
-            </div>
+            <div class="dora-coverage">🎯 5 additional DORA Capabilities (22 total)</div>
+          </div>
         </div>
 
-        <!-- Green Belt -->
-        <div class="belt-section" id="green-belt">
-            <div class="belt-header">
-                <div class="belt-icon">🟢</div>
-                <div class="belt-info">
-                    <h3>Green Belt: GitOps & Deployment</h3>
-                    <div class="belt-meta">
-                        <span>⏱️ 8 hours</span>
-                        <span>📚 4 modules</span>
-                        <span>🎓 Certification: Fawkes Deployment Engineer</span>
-                    </div>
-                    <div class="dora-coverage">🎯 7 additional DORA Capabilities (17 total)</div>
-                </div>
-            </div>
-
-            <div class="belt-competencies">
-                <h4>Core Competencies</h4>
-                <ul>
-                    <li>Implement GitOps workflows with ArgoCD</li>
-                    <li>Configure blue-green and canary deployments</li>
-                    <li>Implement progressive delivery with automated rollback</li>
-                    <li>Manage multi-environment deployments (dev, staging, prod)</li>
-                    <li>Troubleshoot deployment failures and rollback safely</li>
-                </ul>
-            </div>
-
-            <div class="modules-grid">
-                <a href="modules/green-belt/module-09-gitops-argocd/" class="module-card">
-                    <div class="module-number">9</div>
-                    <div class="module-title">GitOps with ArgoCD</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        ArgoCD architecture, application definitions, sync policies, health assessment.
-                    </div>
-                </a>
-                <a href="modules/green-belt/module-10-deployment-strategies/" class="module-card">
-                    <div class="module-number">10</div>
-                    <div class="module-title">Deployment Strategies</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Blue-green, canary, rolling updates, feature flags with hands-on examples.
-                    </div>
-                </a>
-                <a href="modules/green-belt/module-11-progressive-delivery/" class="module-card">
-                    <div class="module-number">11</div>
-                    <div class="module-title">Progressive Delivery</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Traffic splitting, automated rollback triggers, metrics-driven deployments, A/B testing.
-                    </div>
-                </a>
-                <a href="modules/green-belt/module-12-rollback-incident-response/" class="module-card">
-                    <div class="module-number">12</div>
-                    <div class="module-title">Rollback & Incident Response</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        When and how to rollback, incident detection, emergency procedures, postmortem process.
-                    </div>
-                </a>
-            </div>
+        <div class="belt-competencies">
+          <h4>Core Competencies</h4>
+          <ul>
+            <li>Configure comprehensive observability (metrics, logs, traces)</li>
+            <li>Design and implement custom DORA metrics dashboards</li>
+            <li>Define and track SLIs, SLOs, and error budgets</li>
+            <li>Implement distributed tracing for microservices</li>
+            <li>Conduct effective incident response and postmortems</li>
+          </ul>
         </div>
 
-        <!-- Brown Belt -->
-        <div class="belt-section" id="brown-belt">
-            <div class="belt-header">
-                <div class="belt-icon">🟤</div>
-                <div class="belt-info">
-                    <h3>Brown Belt: Observability & SRE</h3>
-                    <div class="belt-meta">
-                        <span>⏱️ 8 hours</span>
-                        <span>📚 4 modules</span>
-                        <span>🎓 Certification: Fawkes SRE Practitioner</span>
-                    </div>
-                    <div class="dora-coverage">🎯 5 additional DORA Capabilities (22 total)</div>
-                </div>
+        <div class="modules-grid">
+          <a href="modules/brown-belt/module-13-metrics-logs-traces/" class="module-card">
+            <div class="module-number">13</div>
+            <div class="module-title">Metrics, Logs, and Traces</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Three pillars of observability, Prometheus metrics, OpenSearch logs, Jaeger tracing.
             </div>
+          </a>
+          <a href="modules/brown-belt/module-14-dora-deep-dive/" class="module-card">
+            <div class="module-number">14</div>
+            <div class="module-title">DORA Metrics Deep Dive</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Advanced DORA calculation, custom dashboards, team vs. org metrics, continuous improvement.
+            </div>
+          </a>
+          <a href="modules/brown-belt/module-15-slis-slos-error-budgets/" class="module-card">
+            <div class="module-number">15</div>
+            <div class="module-title">SLIs, SLOs, and Error Budgets</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Defining SLIs, setting SLOs, calculating error budgets, using budgets for decisions.
+            </div>
+          </a>
+          <a href="modules/brown-belt/module-16-incident-management/" class="module-card">
+            <div class="module-number">16</div>
+            <div class="module-title">Incident Management & Postmortems</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Incident severity levels, on-call best practices, effective response, blameless postmortems.
+            </div>
+          </a>
+        </div>
+      </div>
 
-            <div class="belt-competencies">
-                <h4>Core Competencies</h4>
-                <ul>
-                    <li>Configure comprehensive observability (metrics, logs, traces)</li>
-                    <li>Design and implement custom DORA metrics dashboards</li>
-                    <li>Define and track SLIs, SLOs, and error budgets</li>
-                    <li>Implement distributed tracing for microservices</li>
-                    <li>Conduct effective incident response and postmortems</li>
-                </ul>
+      <!-- Black Belt -->
+      <div class="belt-section" id="black-belt">
+        <div class="belt-header">
+          <div class="belt-icon">⚫</div>
+          <div class="belt-info">
+            <h3>Black Belt: Platform Architecture</h3>
+            <div class="belt-meta">
+              <span>⏱️ 8 hours</span>
+              <span>📚 4 modules</span>
+              <span>🎓 Certification: Fawkes Platform Architect</span>
             </div>
-
-            <div class="modules-grid">
-                <a href="modules/brown-belt/module-13-metrics-logs-traces/" class="module-card">
-                    <div class="module-number">13</div>
-                    <div class="module-title">Metrics, Logs, and Traces</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Three pillars of observability, Prometheus metrics, OpenSearch logs, Jaeger tracing.
-                    </div>
-                </a>
-                <a href="modules/brown-belt/module-14-dora-deep-dive/" class="module-card">
-                    <div class="module-number">14</div>
-                    <div class="module-title">DORA Metrics Deep Dive</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Advanced DORA calculation, custom dashboards, team vs. org metrics, continuous improvement.
-                    </div>
-                </a>
-                <a href="modules/brown-belt/module-15-slis-slos-error-budgets/" class="module-card">
-                    <div class="module-number">15</div>
-                    <div class="module-title">SLIs, SLOs, and Error Budgets</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Defining SLIs, setting SLOs, calculating error budgets, using budgets for decisions.
-                    </div>
-                </a>
-                <a href="modules/brown-belt/module-16-incident-management/" class="module-card">
-                    <div class="module-number">16</div>
-                    <div class="module-title">Incident Management & Postmortems</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Incident severity levels, on-call best practices, effective response, blameless postmortems.
-                    </div>
-                </a>
-            </div>
+            <div class="dora-coverage">🎯 2 final DORA Capabilities (24 total - 100%)</div>
+          </div>
         </div>
 
-        <!-- Black Belt -->
-        <div class="belt-section" id="black-belt">
-            <div class="belt-header">
-                <div class="belt-icon">⚫</div>
-                <div class="belt-info">
-                    <h3>Black Belt: Platform Architecture</h3>
-                    <div class="belt-meta">
-                        <span>⏱️ 8 hours</span>
-                        <span>📚 4 modules</span>
-                        <span>🎓 Certification: Fawkes Platform Architect</span>
-                    </div>
-                    <div class="dora-coverage">🎯 2 final DORA Capabilities (24 total - 100%)</div>
-                </div>
-            </div>
-
-            <div class="belt-competencies">
-                <h4>Core Competencies</h4>
-                <ul>
-                    <li>Design platform architecture for new teams</li>
-                    <li>Implement multi-tenancy and resource governance</li>
-                    <li>Design security architecture (zero trust principles)</li>
-                    <li>Plan multi-cloud deployment strategies</li>
-                    <li>Mentor others in platform engineering</li>
-                    <li>Contribute to platform codebase</li>
-                </ul>
-            </div>
-
-            <div class="modules-grid">
-                <a href="modules/black-belt/module-17-platform-as-product/" class="module-card">
-                    <div class="module-number">17</div>
-                    <div class="module-title">Platform as a Product</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Treating platform as product, understanding developer needs, platform roadmapping, measuring success.
-                    </div>
-                </a>
-                <a href="modules/black-belt/module-18-multi-tenancy/" class="module-card">
-                    <div class="module-number">18</div>
-                    <div class="module-title">Multi-Tenancy & Resource Management</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Namespace isolation, resource quotas and limits, network policies, RBAC strategies.
-                    </div>
-                </a>
-                <a href="modules/black-belt/module-19-security-zero-trust/" class="module-card">
-                    <div class="module-number">19</div>
-                    <div class="module-title">Security & Zero Trust</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Zero trust principles, policy as code, secrets management, compliance automation.
-                    </div>
-                </a>
-                <a href="modules/black-belt/module-20-multi-cloud/" class="module-card">
-                    <div class="module-number">20</div>
-                    <div class="module-title">Multi-Cloud Strategies</div>
-                    <div class="module-duration">⏱️ 60 minutes</div>
-                    <div class="module-description">
-                        Multi-cloud patterns, Crossplane for abstraction, disaster recovery, cost optimization.
-                    </div>
-                </a>
-            </div>
+        <div class="belt-competencies">
+          <h4>Core Competencies</h4>
+          <ul>
+            <li>Design platform architecture for new teams</li>
+            <li>Implement multi-tenancy and resource governance</li>
+            <li>Design security architecture (zero trust principles)</li>
+            <li>Plan multi-cloud deployment strategies</li>
+            <li>Mentor others in platform engineering</li>
+            <li>Contribute to platform codebase</li>
+          </ul>
         </div>
 
-        <!-- Certification Path -->
-        <div class="certification-path" id="certification">
-            <h2>🎓 Certification Path</h2>
-            <p>Earn industry-recognized certifications as you progress through each belt level. Digital badges are verifiable and can be shared on LinkedIn.</p>
-            <div class="cert-grid">
-                <div class="cert-card">
-                    <div class="icon">⚪</div>
-                    <h4>Platform Operator</h4>
-                    <p>Complete White Belt</p>
-                    <p style="font-size: 0.85rem; margin-top: 0.5rem;">80% passing score</p>
-                </div>
-                <div class="cert-card">
-                    <div class="icon">🟡</div>
-                    <h4>CI/CD Specialist</h4>
-                    <p>Complete Yellow Belt</p>
-                    <p style="font-size: 0.85rem; margin-top: 0.5rem;">85% passing score</p>
-                </div>
-                <div class="cert-card">
-                    <div class="icon">🟢</div>
-                    <h4>Deployment Engineer</h4>
-                    <p>Complete Green Belt</p>
-                    <p style="font-size: 0.85rem; margin-top: 0.5rem;">85% passing score</p>
-                </div>
-                <div class="cert-card">
-                    <div class="icon">🟤</div>
-                    <h4>SRE Practitioner</h4>
-                    <p>Complete Brown Belt</p>
-                    <p style="font-size: 0.85rem; margin-top: 0.5rem;">85% passing score</p>
-                </div>
-                <div class="cert-card">
-                    <div class="icon">⚫</div>
-                    <h4>Platform Architect</h4>
-                    <p>Complete Black Belt</p>
-                    <p style="font-size: 0.85rem; margin-top: 0.5rem;">90% passing score + mentoring</p>
-                </div>
+        <div class="modules-grid">
+          <a href="modules/black-belt/module-17-platform-as-product/" class="module-card">
+            <div class="module-number">17</div>
+            <div class="module-title">Platform as a Product</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Treating platform as product, understanding developer needs, platform roadmapping, measuring success.
             </div>
-        </div>
-
-        <!-- DORA Capabilities Coverage -->
-        <div class="intro-card">
-            <h2>📊 Complete DORA Capabilities Coverage</h2>
-            <p>The Fawkes Dojo curriculum covers all 24 DORA capabilities across the belt progression:</p>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
-                <div style="background: #f0f7ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #667eea;">
-                    <h4 style="color: #667eea; margin-bottom: 0.5rem;">Continuous Delivery (8)</h4>
-                    <ul style="font-size: 0.9rem; margin-left: 1.2rem;">
-                        <li>Version Control</li>
-                        <li>Deployment Automation</li>
-                        <li>Continuous Integration</li>
-                        <li>Trunk-Based Development</li>
-                        <li>Test Automation</li>
-                        <li>Test Data Management</li>
-                        <li>Shift Left on Security</li>
-                        <li>Continuous Delivery</li>
-                    </ul>
-                </div>
-
-                <div style="background: #f0fff4; padding: 1rem; border-radius: 8px; border-left: 4px solid #48bb78;">
-                    <h4 style="color: #48bb78; margin-bottom: 0.5rem;">Architecture (3)</h4>
-                    <ul style="font-size: 0.9rem; margin-left: 1.2rem;">
-                        <li>Loosely Coupled Architecture</li>
-                        <li>Empowering Teams</li>
-                        <li>Database Change Management</li>
-                    </ul>
-                </div>
-
-                <div style="background: #fffaf0; padding: 1rem; border-radius: 8px; border-left: 4px solid #ed8936;">
-                    <h4 style="color: #ed8936; margin-bottom: 0.5rem;">Product & Process (6)</h4>
-                    <ul style="font-size: 0.9rem; margin-left: 1.2rem;">
-                        <li>Team Experimentation</li>
-                        <li>Work in Small Batches</li>
-                        <li>Visual Management</li>
-                        <li>WIP Limits</li>
-                        <li>Visualizing Work</li>
-                        <li>Change Approval Process</li>
-                    </ul>
-                </div>
-
-                <div style="background: #fef5ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #9f7aea;">
-                    <h4 style="color: #9f7aea; margin-bottom: 0.5rem;">Lean Management (4)</h4>
-                    <ul style="font-size: 0.9rem; margin-left: 1.2rem;">
-                        <li>Monitoring & Observability</li>
-                        <li>Proactive Failure Notification</li>
-                        <li>Lightweight Change Approval</li>
-                        <li>Code Review</li>
-                    </ul>
-                </div>
-
-                <div style="background: #fff5f5; padding: 1rem; border-radius: 8px; border-left: 4px solid #f56565;">
-                    <h4 style="color: #f56565; margin-bottom: 0.5rem;">Cultural (3)</h4>
-                    <ul style="font-size: 0.9rem; margin-left: 1.2rem;">
-                        <li>Generative Organizational Culture</li>
-                        <li>Learning Culture</li>
-                        <li>Job Satisfaction</li>
-                    </ul>
-                </div>
+          </a>
+          <a href="modules/black-belt/module-18-multi-tenancy/" class="module-card">
+            <div class="module-number">18</div>
+            <div class="module-title">Multi-Tenancy & Resource Management</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Namespace isolation, resource quotas and limits, network policies, RBAC strategies.
             </div>
+          </a>
+          <a href="modules/black-belt/module-19-security-zero-trust/" class="module-card">
+            <div class="module-number">19</div>
+            <div class="module-title">Security & Zero Trust</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Zero trust principles, policy as code, secrets management, compliance automation.
+            </div>
+          </a>
+          <a href="modules/black-belt/module-20-multi-cloud/" class="module-card">
+            <div class="module-number">20</div>
+            <div class="module-title">Multi-Cloud Strategies</div>
+            <div class="module-duration">⏱️ 60 minutes</div>
+            <div class="module-description">
+              Multi-cloud patterns, Crossplane for abstraction, disaster recovery, cost optimization.
+            </div>
+          </a>
         </div>
+      </div>
 
-        <!-- Getting Started -->
-        <div class="intro-card">
-            <h2>🚀 Getting Started</h2>
+      <!-- Certification Path -->
+      <div class="certification-path" id="certification">
+        <h2>🎓 Certification Path</h2>
+        <p>
+          Earn industry-recognized certifications as you progress through each belt level. Digital badges are verifiable
+          and can be shared on LinkedIn.
+        </p>
+        <div class="cert-grid">
+          <div class="cert-card">
+            <div class="icon">⚪</div>
+            <h4>Platform Operator</h4>
+            <p>Complete White Belt</p>
+            <p style="font-size: 0.85rem; margin-top: 0.5rem">80% passing score</p>
+          </div>
+          <div class="cert-card">
+            <div class="icon">🟡</div>
+            <h4>CI/CD Specialist</h4>
+            <p>Complete Yellow Belt</p>
+            <p style="font-size: 0.85rem; margin-top: 0.5rem">85% passing score</p>
+          </div>
+          <div class="cert-card">
+            <div class="icon">🟢</div>
+            <h4>Deployment Engineer</h4>
+            <p>Complete Green Belt</p>
+            <p style="font-size: 0.85rem; margin-top: 0.5rem">85% passing score</p>
+          </div>
+          <div class="cert-card">
+            <div class="icon">🟤</div>
+            <h4>SRE Practitioner</h4>
+            <p>Complete Brown Belt</p>
+            <p style="font-size: 0.85rem; margin-top: 0.5rem">85% passing score</p>
+          </div>
+          <div class="cert-card">
+            <div class="icon">⚫</div>
+            <h4>Platform Architect</h4>
+            <p>Complete Black Belt</p>
+            <p style="font-size: 0.85rem; margin-top: 0.5rem">90% passing score + mentoring</p>
+          </div>
+        </div>
+      </div>
 
-            <h3 style="margin-top: 1.5rem;">For Beginners (No platform experience)</h3>
-            <p>Start with <strong><a href="modules/white-belt/module-01-what-is-idp/" style="color: #667eea; text-decoration: none;">Module 1: Internal Delivery Platforms</a></strong> and progress sequentially through White Belt.</p>
+      <!-- DORA Capabilities Coverage -->
+      <div class="intro-card">
+        <h2>📊 Complete DORA Capabilities Coverage</h2>
+        <p>The Fawkes Dojo curriculum covers all 24 DORA capabilities across the belt progression:</p>
 
-            <h3 style="margin-top: 1.5rem;">For DevOps Engineers (Some CI/CD experience)</h3>
-            <p>Start with <strong><a href="modules/yellow-belt/module-05-ci-fundamentals/" style="color: #667eea; text-decoration: none;">Module 5: Continuous Integration Fundamentals</a></strong> (Yellow Belt) or take the placement assessment.</p>
-
-            <h3 style="margin-top: 1.5rem;">For Platform Engineers (Experienced)</h3>
-            <p>Jump to <strong><a href="modules/black-belt/module-17-platform-as-product/" style="color: #667eea; text-decoration: none;">Module 17: Platform as a Product</a></strong> (Black Belt) or focus on specific skill gaps.</p>
-
-            <h3 style="margin-top: 1.5rem;">Lab Environment</h3>
-            <p>Each module includes hands-on labs in isolated Kubernetes namespaces. Labs are auto-provisioned when you start a module and include:</p>
-            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
-                <li>Personal namespace with resource quotas</li>
-                <li>Pre-deployed sample applications</li>
-                <li>Automated validation and feedback</li>
-                <li>Real-time DORA metrics tracking</li>
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+          "
+        >
+          <div style="background: #f0f7ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #667eea">
+            <h4 style="color: #667eea; margin-bottom: 0.5rem">Continuous Delivery (8)</h4>
+            <ul style="font-size: 0.9rem; margin-left: 1.2rem">
+              <li>Version Control</li>
+              <li>Deployment Automation</li>
+              <li>Continuous Integration</li>
+              <li>Trunk-Based Development</li>
+              <li>Test Automation</li>
+              <li>Test Data Management</li>
+              <li>Shift Left on Security</li>
+              <li>Continuous Delivery</li>
             </ul>
+          </div>
 
-            <h3 style="margin-top: 1.5rem;">Assessment & Certification</h3>
-            <p>Each belt requires:</p>
-            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
-                <li>Complete all modules in the belt</li>
-                <li>Pass hands-on practical exam</li>
-                <li>Pass written assessment (80-90% depending on belt)</li>
-                <li>Black Belt also requires: platform design project, peer review, code contribution, and mentoring 2 learners</li>
+          <div style="background: #f0fff4; padding: 1rem; border-radius: 8px; border-left: 4px solid #48bb78">
+            <h4 style="color: #48bb78; margin-bottom: 0.5rem">Architecture (3)</h4>
+            <ul style="font-size: 0.9rem; margin-left: 1.2rem">
+              <li>Loosely Coupled Architecture</li>
+              <li>Empowering Teams</li>
+              <li>Database Change Management</li>
             </ul>
+          </div>
 
-            <h3 style="margin-top: 1.5rem;">Support & Community</h3>
-            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
-                <li>💬 <strong>Mattermost:</strong> #dojo-learners, #dojo-white-belt, #dojo-yellow-belt, etc.</li>
-                <li>📖 <strong>Documentation:</strong> <a href="https://docs.fawkes.io/dojo" style="color: #667eea;">docs.fawkes.io/dojo</a></li>
-                <li>🎥 <strong>Office Hours:</strong> Every Friday 2-3pm UTC (live Q&A with mentors)</li>
-                <li>🐛 <strong>Report Issues:</strong> <a href="https://github.com/fawkes/dojo/issues" style="color: #667eea;">GitHub Issues</a></li>
-                <li>🎓 <strong>Platform Engineering University:</strong> Co-branded learning paths and certification alignment</li>
+          <div style="background: #fffaf0; padding: 1rem; border-radius: 8px; border-left: 4px solid #ed8936">
+            <h4 style="color: #ed8936; margin-bottom: 0.5rem">Product & Process (6)</h4>
+            <ul style="font-size: 0.9rem; margin-left: 1.2rem">
+              <li>Team Experimentation</li>
+              <li>Work in Small Batches</li>
+              <li>Visual Management</li>
+              <li>WIP Limits</li>
+              <li>Visualizing Work</li>
+              <li>Change Approval Process</li>
             </ul>
+          </div>
 
-            <h3 style="margin-top: 1.5rem;">Learning Tips</h3>
-            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
-                <li>⏰ <strong>Time Commitment:</strong> Each module takes ~60 minutes. Plan for 8 hours per belt.</li>
-                <li>🔄 <strong>Spaced Repetition:</strong> Concepts are reinforced across multiple modules - this is intentional!</li>
-                <li>🤝 <strong>Cohort Learning:</strong> Join or form a study group - learning together accelerates mastery.</li>
-                <li>📝 <strong>Practice:</strong> Complete all labs, even if they seem easy. Muscle memory is key.</li>
-                <li>💡 <strong>Ask Questions:</strong> Use Mattermost channels actively - there are no silly questions.</li>
-                <li>🎯 <strong>Focus on Understanding:</strong> Don't just follow instructions - understand the "why" behind each step.</li>
+          <div style="background: #fef5ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #9f7aea">
+            <h4 style="color: #9f7aea; margin-bottom: 0.5rem">Lean Management (4)</h4>
+            <ul style="font-size: 0.9rem; margin-left: 1.2rem">
+              <li>Monitoring & Observability</li>
+              <li>Proactive Failure Notification</li>
+              <li>Lightweight Change Approval</li>
+              <li>Code Review</li>
             </ul>
+          </div>
+
+          <div style="background: #fff5f5; padding: 1rem; border-radius: 8px; border-left: 4px solid #f56565">
+            <h4 style="color: #f56565; margin-bottom: 0.5rem">Cultural (3)</h4>
+            <ul style="font-size: 0.9rem; margin-left: 1.2rem">
+              <li>Generative Organizational Culture</li>
+              <li>Learning Culture</li>
+              <li>Job Satisfaction</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Getting Started -->
+      <div class="intro-card">
+        <h2>🚀 Getting Started</h2>
+
+        <h3 style="margin-top: 1.5rem">For Beginners (No platform experience)</h3>
+        <p>
+          Start with
+          <strong
+            ><a href="modules/white-belt/module-01-what-is-idp/" style="color: #667eea; text-decoration: none"
+              >Module 1: Internal Delivery Platforms</a
+            ></strong
+          >
+          and progress sequentially through White Belt.
+        </p>
+
+        <h3 style="margin-top: 1.5rem">For DevOps Engineers (Some CI/CD experience)</h3>
+        <p>
+          Start with
+          <strong
+            ><a href="modules/yellow-belt/module-05-ci-fundamentals/" style="color: #667eea; text-decoration: none"
+              >Module 5: Continuous Integration Fundamentals</a
+            ></strong
+          >
+          (Yellow Belt) or take the placement assessment.
+        </p>
+
+        <h3 style="margin-top: 1.5rem">For Platform Engineers (Experienced)</h3>
+        <p>
+          Jump to
+          <strong
+            ><a href="modules/black-belt/module-17-platform-as-product/" style="color: #667eea; text-decoration: none"
+              >Module 17: Platform as a Product</a
+            ></strong
+          >
+          (Black Belt) or focus on specific skill gaps.
+        </p>
+
+        <h3 style="margin-top: 1.5rem">Lab Environment</h3>
+        <p>
+          Each module includes hands-on labs in isolated Kubernetes namespaces. Labs are auto-provisioned when you start
+          a module and include:
+        </p>
+        <ul style="margin-top: 0.5rem; margin-left: 1.5rem">
+          <li>Personal namespace with resource quotas</li>
+          <li>Pre-deployed sample applications</li>
+          <li>Automated validation and feedback</li>
+          <li>Real-time DORA metrics tracking</li>
+        </ul>
+
+        <h3 style="margin-top: 1.5rem">Assessment & Certification</h3>
+        <p>Each belt requires:</p>
+        <ul style="margin-top: 0.5rem; margin-left: 1.5rem">
+          <li>Complete all modules in the belt</li>
+          <li>Pass hands-on practical exam</li>
+          <li>Pass written assessment (80-90% depending on belt)</li>
+          <li>
+            Black Belt also requires: platform design project, peer review, code contribution, and mentoring 2 learners
+          </li>
+        </ul>
+
+        <h3 style="margin-top: 1.5rem">Support & Community</h3>
+        <ul style="margin-top: 0.5rem; margin-left: 1.5rem">
+          <li>💬 <strong>Mattermost:</strong> #dojo-learners, #dojo-white-belt, #dojo-yellow-belt, etc.</li>
+          <li>
+            📖 <strong>Documentation:</strong>
+            <a href="https://docs.fawkes.io/dojo" style="color: #667eea">docs.fawkes.io/dojo</a>
+          </li>
+          <li>🎥 <strong>Office Hours:</strong> Every Friday 2-3pm UTC (live Q&A with mentors)</li>
+          <li>
+            🐛 <strong>Report Issues:</strong>
+            <a href="https://github.com/fawkes/dojo/issues" style="color: #667eea">GitHub Issues</a>
+          </li>
+          <li>
+            🎓 <strong>Platform Engineering University:</strong> Co-branded learning paths and certification alignment
+          </li>
+        </ul>
+
+        <h3 style="margin-top: 1.5rem">Learning Tips</h3>
+        <ul style="margin-top: 0.5rem; margin-left: 1.5rem">
+          <li>⏰ <strong>Time Commitment:</strong> Each module takes ~60 minutes. Plan for 8 hours per belt.</li>
+          <li>
+            🔄 <strong>Spaced Repetition:</strong> Concepts are reinforced across multiple modules - this is
+            intentional!
+          </li>
+          <li>
+            🤝 <strong>Cohort Learning:</strong> Join or form a study group - learning together accelerates mastery.
+          </li>
+          <li>📝 <strong>Practice:</strong> Complete all labs, even if they seem easy. Muscle memory is key.</li>
+          <li>💡 <strong>Ask Questions:</strong> Use Mattermost channels actively - there are no silly questions.</li>
+          <li>
+            🎯 <strong>Focus on Understanding:</strong> Don't just follow instructions - understand the "why" behind
+            each step.
+          </li>
+        </ul>
+      </div>
+
+      <!-- PEU Integration -->
+      <div
+        class="intro-card"
+        style="background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%); border: 2px solid #667eea"
+      >
+        <h2>🎓 Platform Engineering University Integration</h2>
+        <p>The Fawkes Dojo partners with Platform Engineering University for co-branded learning paths:</p>
+
+        <div style="margin-top: 1.5rem">
+          <h3 style="color: #667eea">Observability in Platform Engineering → Brown Belt</h3>
+          <p>
+            Complete the PEU Observability course and get 50% credit toward Fawkes Brown Belt. You'll only need to
+            complete modules 15-16.
+          </p>
         </div>
 
-        <!-- PEU Integration -->
-        <div class="intro-card" style="background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%); border: 2px solid #667eea;">
-            <h2>🎓 Platform Engineering University Integration</h2>
-            <p>The Fawkes Dojo partners with Platform Engineering University for co-branded learning paths:</p>
-
-            <div style="margin-top: 1.5rem;">
-                <h3 style="color: #667eea;">Observability in Platform Engineering → Brown Belt</h3>
-                <p>Complete the PEU Observability course and get 50% credit toward Fawkes Brown Belt. You'll only need to complete modules 15-16.</p>
-            </div>
-
-            <div style="margin-top: 1.5rem;">
-                <h3 style="color: #667eea;">Cloud Development Environments → Yellow Belt</h3>
-                <p>PEU CDE certificate holders get credit toward Yellow Belt (skip module 5).</p>
-            </div>
-
-            <div style="margin-top: 1.5rem;">
-                <h3 style="color: #667eea;">Fawkes → PEU Path</h3>
-                <p>Complete Fawkes White + Yellow Belts and receive 20% discount on PEU courses plus tailored prep materials.</p>
-            </div>
+        <div style="margin-top: 1.5rem">
+          <h3 style="color: #667eea">Cloud Development Environments → Yellow Belt</h3>
+          <p>PEU CDE certificate holders get credit toward Yellow Belt (skip module 5).</p>
         </div>
+
+        <div style="margin-top: 1.5rem">
+          <h3 style="color: #667eea">Fawkes → PEU Path</h3>
+          <p>
+            Complete Fawkes White + Yellow Belts and receive 20% discount on PEU courses plus tailored prep materials.
+          </p>
+        </div>
+      </div>
     </div>
 
     <div class="footer">
-        <p>Fawkes Dojo | Platform Engineering Mastery | Version 1.0</p>
-        <p style="margin-top: 0.5rem;">Built with ❤️ by the Fawkes Platform Team</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Last Updated: October 26, 2025</p>
+      <p>Fawkes Dojo | Platform Engineering Mastery | Version 1.0</p>
+      <p style="margin-top: 0.5rem">Built with ❤️ by the Fawkes Platform Team</p>
+      <p style="margin-top: 0.5rem; font-size: 0.9rem">Last Updated: October 26, 2025</p>
     </div>
 
     <script>
-        // Simple progress tracking (integrates with backend)
-        function updateProgress() {
-            const completedModules = parseInt(localStorage.getItem('completedModules') || '0');
-            const percentage = (completedModules / 20) * 100;
-            const progressBar = document.getElementById('progressBar');
-            progressBar.style.width = percentage + '%';
-            progressBar.textContent = Math.round(percentage) + '%';
-        }
+      // Simple progress tracking (integrates with backend)
+      function updateProgress() {
+        const completedModules = parseInt(localStorage.getItem("completedModules") || "0");
+        const percentage = (completedModules / 20) * 100;
+        const progressBar = document.getElementById("progressBar");
+        progressBar.style.width = percentage + "%";
+        progressBar.textContent = Math.round(percentage) + "%";
+      }
 
-        // Track module clicks
-        document.querySelectorAll('.module-card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                // Track module engagement
-                const moduleTitle = this.querySelector('.module-title').textContent;
-                console.log('Module accessed:', moduleTitle);
+      // Track module clicks
+      document.querySelectorAll(".module-card").forEach((card) => {
+        card.addEventListener("click", function (e) {
+          // Track module engagement
+          const moduleTitle = this.querySelector(".module-title").textContent;
+          console.log("Module accessed:", moduleTitle);
 
-                // In production, send analytics to backend
-                // trackEvent('module_access', { module: moduleTitle });
-            });
+          // In production, send analytics to backend
+          // trackEvent('module_access', { module: moduleTitle });
         });
+      });
 
-        // Initialize progress
-        updateProgress();
+      // Initialize progress
+      updateProgress();
 
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
             });
+          }
         });
+      });
 
-        // Add visual feedback for belt sections on scroll
-        const observerOptions = {
-            threshold: 0.2
-        };
+      // Add visual feedback for belt sections on scroll
+      const observerOptions = {
+        threshold: 0.2,
+      };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.belt-section').forEach(section => {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-            section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            observer.observe(section);
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+          }
         });
+      }, observerOptions);
+
+      document.querySelectorAll(".belt-section").forEach((section) => {
+        section.style.opacity = "0";
+        section.style.transform = "translateY(20px)";
+        section.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+        observer.observe(section);
+      });
     </script>
-</body>
+  </body>
 </html>
