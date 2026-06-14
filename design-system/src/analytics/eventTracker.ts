@@ -79,9 +79,11 @@ export class EventTracker {
     if (typeof window === 'undefined') {
       return false;
     }
-    return window.location.hostname === 'localhost' ||
-           window.location.hostname === '127.0.0.1' ||
-           window.location.hostname === '[::1]';
+    return (
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname === '[::1]'
+    );
   }
 
   /**
@@ -93,9 +95,7 @@ export class EventTracker {
     }
 
     // Check if Plausible script for this domain already exists
-    const existingScript = document.querySelector(
-      `script[data-domain="${this.config.domain}"]`
-    );
+    const existingScript = document.querySelector(`script[data-domain="${this.config.domain}"]`);
     if (existingScript) {
       this.log('Plausible script already loaded');
       return;
@@ -153,7 +153,7 @@ export class EventTracker {
 
       // Use Plausible's built-in page view tracking
       window.plausible('pageview', {
-        props: properties as Record<string, string | number | boolean>
+        props: properties as Record<string, string | number | boolean>,
       });
     }
   }
@@ -166,7 +166,7 @@ export class EventTracker {
       this.log('Tracking custom event', eventName, properties);
 
       window.plausible(eventName, {
-        props: properties as Record<string, string | number | boolean>
+        props: properties as Record<string, string | number | boolean>,
       });
     }
   }
@@ -224,7 +224,7 @@ export class EventTracker {
     const events = [...this.queue];
     this.queue = [];
 
-    events.forEach(event => this.sendEvent(event));
+    events.forEach((event) => this.sendEvent(event));
   }
 
   /**

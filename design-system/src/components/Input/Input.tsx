@@ -20,11 +20,7 @@ export interface InputProps extends BaseComponentProps {
 export const Input = React.forwardRef<HTMLDivElement, InputProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-input', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-input', className)} {...props}>
         {children}
       </div>
     );

@@ -20,11 +20,7 @@ export interface SpinnerProps extends BaseComponentProps {
 export const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-spinner', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-spinner', className)} {...props}>
         {children}
       </div>
     );

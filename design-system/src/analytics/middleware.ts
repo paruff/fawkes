@@ -87,9 +87,7 @@ export function enrichmentMiddleware(defaultProperties: Record<string, any>): Ev
 /**
  * Filter middleware - filter events by category or action
  */
-export function filterMiddleware(
-  filter: (event: Event) => boolean
-): EventMiddleware {
+export function filterMiddleware(filter: (event: Event) => boolean): EventMiddleware {
   return (event: Event) => {
     if (!filter(event)) {
       return null;
@@ -101,10 +99,7 @@ export function filterMiddleware(
 /**
  * Rate limiting middleware - limit events by time window
  */
-export function rateLimitMiddleware(
-  maxEventsPerWindow: number,
-  windowMs: number
-): EventMiddleware {
+export function rateLimitMiddleware(maxEventsPerWindow: number, windowMs: number): EventMiddleware {
   const eventCounts = new Map<string, { count: number; windowStart: number }>();
 
   return (event: Event) => {
@@ -198,7 +193,7 @@ export const privacyMiddleware: EventMiddleware = (event: Event) => {
 
   // Remove sensitive fields
   for (const key of Object.keys(sanitized)) {
-    if (sensitivePatterns.some(pattern => pattern.test(key))) {
+    if (sensitivePatterns.some((pattern) => pattern.test(key))) {
       delete sanitized[key];
     }
   }
@@ -219,7 +214,9 @@ export const privacyMiddleware: EventMiddleware = (event: Event) => {
 /**
  * Logging middleware - log events for debugging
  */
-export function loggingMiddleware(logLevel: 'debug' | 'info' | 'warn' | 'error' = 'info'): EventMiddleware {
+export function loggingMiddleware(
+  logLevel: 'debug' | 'info' | 'warn' | 'error' = 'info'
+): EventMiddleware {
   return (event: Event) => {
     const message = `Event: ${event.category}.${event.action}`;
 
@@ -258,7 +255,9 @@ export const timestampMiddleware: EventMiddleware = (event: Event) => {
 /**
  * User context middleware - add user information
  */
-export function userContextMiddleware(getUserContext: () => { userId?: string; team?: string; role?: string }): EventMiddleware {
+export function userContextMiddleware(
+  getUserContext: () => { userId?: string; team?: string; role?: string }
+): EventMiddleware {
   return (event: Event) => {
     const context = getUserContext();
 

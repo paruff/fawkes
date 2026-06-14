@@ -20,11 +20,7 @@ export interface BadgeProps extends BaseComponentProps {
 export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-badge', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-badge', className)} {...props}>
         {children}
       </div>
     );

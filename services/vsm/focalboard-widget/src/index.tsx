@@ -8,8 +8,8 @@
  * - WIP limit warnings
  */
 
-import React, { useEffect, useState } from 'react';
-import './styles.css';
+import React, { useEffect, useState } from "react";
+import "./styles.css";
 
 interface FlowMetrics {
   throughput: number;
@@ -52,7 +52,7 @@ const VSMMetricsWidget: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [settings, setSettings] = useState<WidgetSettings>({
-    vsm_api_url: 'http://vsm-service.fawkes.svc:8000/api/v1',
+    vsm_api_url: "http://vsm-service.fawkes.svc:8000/api/v1",
     refresh_interval: 30,
     show_bottlenecks: true,
   });
@@ -68,8 +68,8 @@ const VSMMetricsWidget: React.FC = () => {
       setMetrics(data);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-      console.error('Error fetching VSM metrics:', err);
+      setError(err instanceof Error ? err.message : "Unknown error");
+      console.error("Error fetching VSM metrics:", err);
     }
   };
 
@@ -84,8 +84,8 @@ const VSMMetricsWidget: React.FC = () => {
       setStages(data);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-      console.error('Error fetching VSM stages:', err);
+      setError(err instanceof Error ? err.message : "Unknown error");
+      console.error("Error fetching VSM stages:", err);
     }
   };
 
@@ -98,10 +98,7 @@ const VSMMetricsWidget: React.FC = () => {
     const stageMetricsData: StageMetrics[] = stages.map((stage) => {
       // Mock WIP calculation - in production, fetch from Prometheus /metrics endpoint
       const mockWip = Math.floor(Math.random() * 15);
-      const isBottleneck =
-        settings.show_bottlenecks &&
-        stage.wip_limit !== null &&
-        mockWip > stage.wip_limit * 0.8; // 80% of WIP limit
+      const isBottleneck = settings.show_bottlenecks && stage.wip_limit !== null && mockWip > stage.wip_limit * 0.8; // 80% of WIP limit
 
       return {
         stage: stage.name,
@@ -144,7 +141,7 @@ const VSMMetricsWidget: React.FC = () => {
   }, [settings.refresh_interval]);
 
   const formatCycleTime = (hours: number | null): string => {
-    if (hours === null) return 'N/A';
+    if (hours === null) return "N/A";
     if (hours < 24) return `${hours.toFixed(1)}h`;
     return `${(hours / 24).toFixed(1)}d`;
   };
@@ -199,17 +196,13 @@ const VSMMetricsWidget: React.FC = () => {
 
         <div className="metric-card">
           <div className="metric-label">Cycle Time (P50)</div>
-          <div className="metric-value">
-            {formatCycleTime(metrics?.cycle_time_p50 || null)}
-          </div>
+          <div className="metric-value">{formatCycleTime(metrics?.cycle_time_p50 || null)}</div>
           <div className="metric-unit">median</div>
         </div>
 
         <div className="metric-card">
           <div className="metric-label">Cycle Time (P85)</div>
-          <div className="metric-value">
-            {formatCycleTime(metrics?.cycle_time_p85 || null)}
-          </div>
+          <div className="metric-value">{formatCycleTime(metrics?.cycle_time_p85 || null)}</div>
           <div className="metric-unit">85th percentile</div>
         </div>
       </div>
@@ -220,12 +213,7 @@ const VSMMetricsWidget: React.FC = () => {
           <h4>Stage Metrics</h4>
           <div className="stages-list">
             {stageMetrics.map((stageMetric) => (
-              <div
-                key={stageMetric.stage}
-                className={`stage-card ${
-                  stageMetric.isBottleneck ? 'bottleneck' : ''
-                }`}
-              >
+              <div key={stageMetric.stage} className={`stage-card ${stageMetric.isBottleneck ? "bottleneck" : ""}`}>
                 <div className="stage-name">
                   {stageMetric.isBottleneck && (
                     <span className="bottleneck-icon" title="Bottleneck detected!">
@@ -236,9 +224,7 @@ const VSMMetricsWidget: React.FC = () => {
                 </div>
                 <div className="stage-wip">
                   WIP: {stageMetric.wip}
-                  {stageMetric.wipLimit && (
-                    <span className="wip-limit"> / {stageMetric.wipLimit}</span>
-                  )}
+                  {stageMetric.wipLimit && <span className="wip-limit"> / {stageMetric.wipLimit}</span>}
                 </div>
               </div>
             ))}
@@ -247,24 +233,21 @@ const VSMMetricsWidget: React.FC = () => {
       )}
 
       {/* Bottleneck Warning */}
-      {settings.show_bottlenecks &&
-        stageMetrics.some((s) => s.isBottleneck) && (
-          <div className="bottleneck-warning">
-            <span className="warning-icon">⚠️</span>
-            <div>
-              <strong>Bottlenecks Detected</strong>
-              <p>
-                Some stages are approaching or exceeding WIP limits. Consider
-                moving items forward or addressing blockers.
-              </p>
-            </div>
+      {settings.show_bottlenecks && stageMetrics.some((s) => s.isBottleneck) && (
+        <div className="bottleneck-warning">
+          <span className="warning-icon">⚠️</span>
+          <div>
+            <strong>Bottlenecks Detected</strong>
+            <p>
+              Some stages are approaching or exceeding WIP limits. Consider moving items forward or addressing blockers.
+            </p>
           </div>
-        )}
+        </div>
+      )}
 
       <div className="vsm-widget-footer">
         <small>
-          Last updated: {new Date().toLocaleTimeString()} • Auto-refresh:{' '}
-          {settings.refresh_interval}s
+          Last updated: {new Date().toLocaleTimeString()} • Auto-refresh: {settings.refresh_interval}s
         </small>
       </div>
     </div>

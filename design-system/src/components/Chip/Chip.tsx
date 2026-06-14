@@ -20,11 +20,7 @@ export interface ChipProps extends BaseComponentProps {
 export const Chip = React.forwardRef<HTMLDivElement, ChipProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-chip', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-chip', className)} {...props}>
         {children}
       </div>
     );

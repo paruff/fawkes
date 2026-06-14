@@ -26,13 +26,13 @@ describe('Design System Accessibility (WCAG 2.1 AA)', () => {
       'image-alt': { enabled: true },
       'button-name': { enabled: true },
       'link-name': { enabled: true },
-      'label': { enabled: true },
+      label: { enabled: true },
       'aria-allowed-attr': { enabled: true },
       'aria-required-attr': { enabled: true },
       'aria-valid-attr': { enabled: true },
       'aria-valid-attr-value': { enabled: true },
       'landmark-one-main': { enabled: true },
-      'region': { enabled: true },
+      region: { enabled: true },
     },
   };
 

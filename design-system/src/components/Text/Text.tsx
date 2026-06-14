@@ -20,11 +20,7 @@ export interface TextProps extends BaseComponentProps {
 export const Text = React.forwardRef<HTMLDivElement, TextProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-text', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-text', className)} {...props}>
         {children}
       </div>
     );

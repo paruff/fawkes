@@ -20,11 +20,7 @@ export interface BreadcrumbsProps extends BaseComponentProps {
 export const Breadcrumbs = React.forwardRef<HTMLDivElement, BreadcrumbsProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-breadcrumbs', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-breadcrumbs', className)} {...props}>
         {children}
       </div>
     );

@@ -20,11 +20,7 @@ export interface ContainerProps extends BaseComponentProps {
 export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-container', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-container', className)} {...props}>
         {children}
       </div>
     );

@@ -20,11 +20,7 @@ export interface ButtonGroupProps extends BaseComponentProps {
 export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-buttongroup', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-buttongroup', className)} {...props}>
         {children}
       </div>
     );

@@ -20,11 +20,7 @@ export interface ModalProps extends BaseComponentProps {
 export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-modal', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-modal', className)} {...props}>
         {children}
       </div>
     );

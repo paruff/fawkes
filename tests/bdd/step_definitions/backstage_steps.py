@@ -429,7 +429,10 @@ def step_when_bypass_login(context):
     try:
         # Try to access a protected route
         response = requests.get(
-            f"{url}/catalog", timeout=10, verify=False, allow_redirects=False  # Don't follow redirects
+            f"{url}/catalog",
+            timeout=10,
+            verify=False,
+            allow_redirects=False,  # Don't follow redirects
         )
         context.bypass_response = response
         logger.info(f"Bypass attempt returned status {response.status_code}")
