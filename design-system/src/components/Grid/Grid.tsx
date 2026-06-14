@@ -20,11 +20,7 @@ export interface GridProps extends BaseComponentProps {
 export const Grid = React.forwardRef<HTMLDivElement, GridProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-grid', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-grid', className)} {...props}>
         {children}
       </div>
     );

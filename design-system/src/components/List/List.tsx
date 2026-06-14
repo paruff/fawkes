@@ -20,11 +20,7 @@ export interface ListProps extends BaseComponentProps {
 export const List = React.forwardRef<HTMLDivElement, ListProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-list', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-list', className)} {...props}>
         {children}
       </div>
     );

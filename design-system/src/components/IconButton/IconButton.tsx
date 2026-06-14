@@ -20,11 +20,7 @@ export interface IconButtonProps extends BaseComponentProps {
 export const IconButton = React.forwardRef<HTMLDivElement, IconButtonProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-iconbutton', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-iconbutton', className)} {...props}>
         {children}
       </div>
     );

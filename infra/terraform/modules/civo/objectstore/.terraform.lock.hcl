@@ -6,6 +6,7 @@ provider "registry.terraform.io/civo/civo" {
   constraints = ">= 1.0.0"
   hashes = [
     "h1:4eoRqHSMEWJdEYayqwolsX+26bXRxqWD1ctamJzo+l0=",
+    "h1:t/Ojjskh5gWy8Dv2LbIR0HK8i6ncvzPpu0PjfN3JhBI=",
     "zh:1bab1f4d257a556515247cd022e859e1a46defcbb39b728866b7a4704c7ae44b",
     "zh:231978d0e51baf12810f3d652e88ec2b73747274d08bfee0744ccff192fa2beb",
     "zh:29135373a22376268f456576f77a42e77397e81fc76991756b826594d81b162b",

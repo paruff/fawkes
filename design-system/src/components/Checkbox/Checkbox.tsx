@@ -20,11 +20,7 @@ export interface CheckboxProps extends BaseComponentProps {
 export const Checkbox = React.forwardRef<HTMLDivElement, CheckboxProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-checkbox', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-checkbox', className)} {...props}>
         {children}
       </div>
     );

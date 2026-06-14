@@ -20,11 +20,7 @@ export interface AvatarProps extends BaseComponentProps {
 export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-avatar', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-avatar', className)} {...props}>
         {children}
       </div>
     );

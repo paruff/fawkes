@@ -20,11 +20,7 @@ export interface StackProps extends BaseComponentProps {
 export const Stack = React.forwardRef<HTMLDivElement, StackProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-stack', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-stack', className)} {...props}>
         {children}
       </div>
     );

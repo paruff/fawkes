@@ -20,11 +20,7 @@ export interface TextareaProps extends BaseComponentProps {
 export const Textarea = React.forwardRef<HTMLDivElement, TextareaProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-textarea', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-textarea', className)} {...props}>
         {children}
       </div>
     );

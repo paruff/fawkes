@@ -132,13 +132,13 @@ deploy_argocd() {
           echo "[WARN] Could not obtain ArgoCD auth token via API proxy; keeping initial password." >&2
         fi
         if [[ -f /tmp/fawkes-kubectl-proxy.pid ]]; then
-          kill $(cat /tmp/fawkes-kubectl-proxy.pid) > /dev/null 2>&1 || true
+          kill "$(cat /tmp/fawkes-kubectl-proxy.pid)" > /dev/null 2>&1 || true
           rm -f /tmp/fawkes-kubectl-proxy.pid || true
         fi
       fi
       set -e
       if [[ -f /tmp/fawkes-argocd-pf.pid ]]; then
-        kill $(cat /tmp/fawkes-argocd-pf.pid) > /dev/null 2>&1 || true
+        kill "$(cat /tmp/fawkes-argocd-pf.pid)" > /dev/null 2>&1 || true
         rm -f /tmp/fawkes-argocd-pf.pid || true
       fi
     else

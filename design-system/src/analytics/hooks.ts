@@ -44,10 +44,7 @@ export function usePageViewTracking(dependencies: any[] = []) {
 /**
  * Hook to track component mount/unmount
  */
-export function useComponentTracking(
-  componentName: string,
-  properties?: EventProperties
-) {
+export function useComponentTracking(componentName: string, properties?: EventProperties) {
   const tracker = useRef(getTracker());
 
   useEffect(() => {
@@ -70,10 +67,7 @@ export function useComponentTracking(
 /**
  * Hook to track button clicks
  */
-export function useButtonClick(
-  buttonLabel: string,
-  properties?: EventProperties
-) {
+export function useButtonClick(buttonLabel: string, properties?: EventProperties) {
   const tracker = useRef(getTracker());
 
   return useCallback(() => {
@@ -96,20 +90,26 @@ export function useFormTracking(formName: string) {
     });
   }, [formName]);
 
-  const trackFormSubmit = useCallback((properties?: EventProperties) => {
-    tracker.current.trackCustom('form.submit', {
-      form: formName,
-      ...properties,
-    });
-  }, [formName]);
+  const trackFormSubmit = useCallback(
+    (properties?: EventProperties) => {
+      tracker.current.trackCustom('form.submit', {
+        form: formName,
+        ...properties,
+      });
+    },
+    [formName]
+  );
 
-  const trackFormError = useCallback((errorMessage: string, properties?: EventProperties) => {
-    tracker.current.trackCustom('form.error', {
-      form: formName,
-      error: errorMessage,
-      ...properties,
-    });
-  }, [formName]);
+  const trackFormError = useCallback(
+    (errorMessage: string, properties?: EventProperties) => {
+      tracker.current.trackCustom('form.error', {
+        form: formName,
+        error: errorMessage,
+        ...properties,
+      });
+    },
+    [formName]
+  );
 
   return { trackFormStart, trackFormSubmit, trackFormError };
 }
@@ -140,15 +140,12 @@ export function useSearchTracking(searchContext: string) {
 export function useNavigationTracking() {
   const tracker = useRef(getTracker());
 
-  const trackNavigation = useCallback(
-    (destination: string, properties?: EventProperties) => {
-      tracker.current.trackCustom('navigation.navigate', {
-        destination,
-        ...properties,
-      });
-    },
-    []
-  );
+  const trackNavigation = useCallback((destination: string, properties?: EventProperties) => {
+    tracker.current.trackCustom('navigation.navigate', {
+      destination,
+      ...properties,
+    });
+  }, []);
 
   return { trackNavigation };
 }
@@ -159,16 +156,13 @@ export function useNavigationTracking() {
 export function useErrorTracking() {
   const tracker = useRef(getTracker());
 
-  const trackError = useCallback(
-    (error: Error, context?: EventProperties) => {
-      tracker.current.trackPredefined(PredefinedEvents.PAGE_ERROR, {
-        errorMessage: error.message,
-        errorStack: error.stack?.substring(0, 500), // Limit stack trace length
-        ...context,
-      });
-    },
-    []
-  );
+  const trackError = useCallback((error: Error, context?: EventProperties) => {
+    tracker.current.trackPredefined(PredefinedEvents.PAGE_ERROR, {
+      errorMessage: error.message,
+      errorStack: error.stack?.substring(0, 500), // Limit stack trace length
+      ...context,
+    });
+  }, []);
 
   const trackAPIError = useCallback(
     (endpoint: string, statusCode: number, errorMessage: string) => {

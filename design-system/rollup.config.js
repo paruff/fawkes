@@ -37,11 +37,7 @@ export default {
       extensions,
       babelHelpers: 'bundled',
       exclude: 'node_modules/**',
-      presets: [
-        '@babel/preset-env',
-        '@babel/preset-react',
-        '@babel/preset-typescript',
-      ],
+      presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
     }),
     postcss({
       extract: true,

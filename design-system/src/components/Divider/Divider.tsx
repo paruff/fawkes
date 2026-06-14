@@ -20,11 +20,7 @@ export interface DividerProps extends BaseComponentProps {
 export const Divider = React.forwardRef<HTMLDivElement, DividerProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-divider', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-divider', className)} {...props}>
         {children}
       </div>
     );

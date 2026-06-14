@@ -20,11 +20,7 @@ export interface BoxProps extends BaseComponentProps {
 export const Box = React.forwardRef<HTMLDivElement, BoxProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn('fawkes-box', className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('fawkes-box', className)} {...props}>
         {children}
       </div>
     );
