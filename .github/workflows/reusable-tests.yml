@@ -1,0 +1,334 @@
+name: Reusable Tests
+
+on:
+  workflow_call:
+    inputs:
+      test-tiers:
+        description: "Comma-separated test tiers to run: unit, integration, compose-smoke, golden-path"
+        required: false
+        type: string
+        default: "unit,compose-smoke,integration"
+      python-version:
+        description: "Python version for test runners"
+        required: false
+        type: string
+        default: "3.12"
+      unit-test-command:
+        description: "Command to run unit tests"
+        required: false
+        type: string
+        default: "pytest tests/unit/ -v --tb=short"
+      integration-test-command:
+        description: "Command to run integration tests"
+        required: false
+        type: string
+        default: "pytest tests/integration/ -v --tb=short"
+      compose-profile:
+        description: "Docker Compose profile to use"
+        required: false
+        type: string
+        default: "core"
+      compose-file:
+        description: "Docker Compose file path"
+        required: false
+        type: string
+        default: "compose.yaml"
+      health-endpoints:
+        description: "Comma-separated health endpoints to verify"
+        required: false
+        type: string
+        default: ""
+      coverage-threshold:
+        description: "Minimum test coverage percentage"
+        required: false
+        type: number
+        default: 80
+      setup-command:
+        description: "Setup command to run before tests"
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  # ─── Unit Tests ────────────────────────────────────────────────────────────
+  unit-tests:
+    name: Unit Tests
+    if: contains(inputs.test-tiers, 'unit')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f tests/unit/requirements.txt ]; then
+            pip install -r tests/unit/requirements.txt
+          elif [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Run setup command
+        if: inputs.setup-command != ''
+        run: ${{ inputs.setup-command }}
+
+      - name: Run unit tests
+        run: ${{ inputs.unit-test-command }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-test-results
+          path: |
+            tests/unit/reports/
+            pytest-report.xml
+            coverage.xml
+          if-no-files-found: ignore
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ─── Compose Smoke Test ────────────────────────────────────────────────────
+  compose-smoke:
+    name: Compose Smoke
+    if: contains(inputs.test-tiers, 'compose-smoke')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Create data directories
+        run: |
+          mkdir -p data/{tempo,loki,alloy,prometheus,alertmanager,grafana}
+          chmod -R 777 data/
+
+      - name: Build and start stack
+        run: docker compose --profile ${{ inputs.compose-profile }} up -d --build
+
+      - name: Wait for services
+        run: sleep 90
+
+      - name: Verify health endpoints
+        run: |
+          ENDPOINTS="${{ inputs.health-endpoints }}"
+          if [ -z "$ENDPOINTS" ] || [ "$ENDPOINTS" == "" ]; then
+            echo "No health endpoints configured, skipping verification"
+            exit 0
+          fi
+
+          IFS=',' read -ra EP_ARRAY <<< "$ENDPOINTS"
+          for ep in "${EP_ARRAY[@]}"; do
+            ep=$(echo "$ep" | xargs)  # trim whitespace
+            echo "Checking: $ep"
+            curl -f "$ep" || { echo "Health check failed: $ep"; exit 1; }
+          done
+          echo "All health endpoints passed"
+
+      - name: Show logs on failure
+        if: failure()
+        run: |
+          docker compose ps
+          docker compose logs --tail=50
+
+      - name: Shutdown
+        if: always()
+        run: docker compose --profile ${{ inputs.compose-profile }} down -v
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ─── Integration Tests ─────────────────────────────────────────────────────
+  integration-tests:
+    name: Integration Tests
+    if: contains(inputs.test-tiers, 'integration')
+    needs: [compose-smoke]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f tests/integration/requirements.txt ]; then
+            pip install -r tests/integration/requirements.txt
+          elif [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Create data directories
+        run: |
+          mkdir -p data/{prometheus,grafana,tempo,loki,alertmanager}
+          chmod -R 777 data/
+
+      - name: Start observability stack
+        run: docker compose --profile ${{ inputs.compose-profile }} up -d --build
+
+      - name: Wait for services
+        run: sleep 90
+
+      - name: Run integration tests
+        run: ${{ inputs.integration-test-command }}
+
+      - name: Show logs on failure
+        if: failure()
+        run: |
+          docker compose ps
+          docker compose logs --tail=50
+
+      - name: Shutdown
+        if: always()
+        run: docker compose --profile ${{ inputs.compose-profile }} down -v
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: integration-test-results
+          path: |
+            tests/integration/reports/
+            pytest-report.xml
+          if-no-files-found: ignore
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ─── Golden Path App Test ──────────────────────────────────────────────────
+  golden-path:
+    name: Golden Path App
+    if: contains(inputs.test-tiers, 'golden-path')
+    needs: [compose-smoke]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Check for app services
+        id: check_apps
+        run: |
+          if grep -q '"8080:8080"' compose.yaml 2>/dev/null; then
+            echo "has_apps=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_apps=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build and start full stack
+        if: steps.check_apps.outputs.has_apps == 'true'
+        run: |
+          mkdir -p data/prometheus data/grafana
+          chmod -R 777 data/
+          docker compose --profile core --profile apps up -d --build
+
+      - name: Wait
+        if: steps.check_apps.outputs.has_apps == 'true'
+        run: sleep 30
+
+      - name: Hit endpoints
+        if: steps.check_apps.outputs.has_apps == 'true'
+        run: |
+          curl -f http://localhost:8080/
+          curl -f http://localhost:8080/slow
+          curl -f http://localhost:8080/error || true
+
+      - name: Shutdown
+        if: always() && steps.check_apps.outputs.has_apps == 'true'
+        run: docker compose down -v
+
+      - name: Skip
+        if: steps.check_apps.outputs.has_apps == 'false'
+        run: echo "No demo app services (port 8080) found. Skipping."
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ─── Test Summary ──────────────────────────────────────────────────────────
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [unit-tests, compose-smoke, integration-tests, golden-path]
+    if: always()
+
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Generate summary
+        run: |
+          echo "### Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Tier | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit Tests | ${{ needs.unit-tests.result == 'success' && '✅ Passed' || needs.unit-tests.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Compose Smoke | ${{ needs.compose-smoke.result == 'success' && '✅ Passed' || needs.compose-smoke.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Integration Tests | ${{ needs.integration-tests.result == 'success' && '✅ Passed' || needs.integration-tests.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Golden Path | ${{ needs.golden-path.result == 'success' && '✅ Passed' || needs.golden-path.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.unit-tests.result }}" == "failure" ] || \
+             [ "${{ needs.compose-smoke.result }}" == "failure" ] || \
+             [ "${{ needs.integration-tests.result }}" == "failure" ] || \
+             [ "${{ needs.golden-path.result }}" == "failure" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "❌ **One or more test tiers failed**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
