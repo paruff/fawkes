@@ -223,8 +223,8 @@ jobs:
             **Workflow**: [View Details](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
 
             ### Results
-            - Axe-Core: ${{ needs.axe-core-tests.result == 'failure' ? '❌ Failed' : '✅ Passed' }}
-            - Lighthouse: ${{ needs.lighthouse-ci.result == 'failure' ? '❌ Failed' : '✅ Passed' }}
+            - Axe-Core: ${{ needs.axe-core-tests.result == 'failure' && '❌ Failed' || '✅ Passed' }}
+            - Lighthouse: ${{ needs.lighthouse-ci.result == 'failure' && '❌ Failed' || '✅ Passed' }}
 
             ### Action Required
             1. Review test results in workflow artifacts
