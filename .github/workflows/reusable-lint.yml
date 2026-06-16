@@ -1,0 +1,382 @@
+name: Reusable Lint
+
+on:
+  workflow_call:
+    inputs:
+      languages:
+        description: "Comma-separated list of languages to lint (auto-detect if empty)"
+        required: false
+        type: string
+        default: ""
+      auto-detect:
+        description: "Auto-detect languages from file extensions"
+        required: false
+        type: boolean
+        default: true
+      fail-on-warning:
+        description: "Fail on warnings (not just errors)"
+        required: false
+        type: boolean
+        default: false
+      emergency-bypass:
+        description: "Skip this stage (emergency bypass label detected)"
+        required: false
+        type: boolean
+        default: false
+      timeout-minutes:
+        description: "Job timeout in minutes"
+        required: false
+        type: number
+        default: 5
+    outputs:
+      result:
+        description: "Lint result (pass/fail)"
+        value: ${{ jobs.lint-summary.outputs.result }}
+      python-detected:
+        description: "Python files detected"
+        value: ${{ jobs.detect-changes.outputs.python }}
+      shell-detected:
+        description: "Shell files detected"
+        value: ${{ jobs.detect-changes.outputs.shell }}
+      yaml-detected:
+        description: "YAML files detected"
+        value: ${{ jobs.detect-changes.outputs.yaml }}
+      typescript-detected:
+        description: "TypeScript files detected"
+        value: ${{ jobs.detect-changes.outputs.typescript }}
+      go-detected:
+        description: "Go files detected"
+        value: ${{ jobs.detect-changes.outputs.go }}
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  # ════════════════════════════════════════════════════════════════════════════
+  # File Change Detection
+  # ════════════════════════════════════════════════════════════════════════════
+  detect-changes:
+    name: Detect Languages
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      python: ${{ steps.filter.outputs.python }}
+      shell: ${{ steps.filter.outputs.shell }}
+      yaml: ${{ steps.filter.outputs.yaml }}
+      typescript: ${{ steps.filter.outputs.typescript }}
+      go: ${{ steps.filter.outputs.go }}
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Detect languages
+        id: filter
+        run: |
+          # Use git diff against base for PRs, HEAD~1 for pushes
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE="HEAD~1"
+          fi
+
+          # Detect Python files
+          if git diff --name-only "$BASE" HEAD 2>/dev/null | grep -qE '\.py$'; then
+            echo "python=true" >> $GITHUB_OUTPUT
+          else
+            echo "python=false" >> $GITHUB_OUTPUT
+          fi
+
+          # Detect Shell files
+          if git diff --name-only "$BASE" HEAD 2>/dev/null | grep -qE '\.(sh|bash)$'; then
+            echo "shell=true" >> $GITHUB_OUTPUT
+          else
+            echo "shell=false" >> $GITHUB_OUTPUT
+          fi
+
+          # Detect YAML files
+          if git diff --name-only "$BASE" HEAD 2>/dev/null | grep -qE '\.(yaml|yml)$'; then
+            echo "yaml=true" >> $GITHUB_OUTPUT
+          else
+            echo "yaml=false" >> $GITHUB_OUTPUT
+          fi
+
+          # Detect TypeScript files
+          if git diff --name-only "$BASE" HEAD 2>/dev/null | grep -qE '\.(ts|tsx|js|jsx)$'; then
+            echo "typescript=true" >> $GITHUB_OUTPUT
+          else
+            echo "typescript=false" >> $GITHUB_OUTPUT
+          fi
+
+          # Detect Go files
+          if git diff --name-only "$BASE" HEAD 2>/dev/null | grep -qE '\.go$'; then
+            echo "go=true" >> $GITHUB_OUTPUT
+          else
+            echo "go=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # Python Linting (Ruff + Black)
+  # ════════════════════════════════════════════════════════════════════════════
+  python-lint:
+    name: Python Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.python == 'true' &&
+      inputs.emergency-bypass != true
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install tools
+        run: pip install ruff black
+
+      - name: Ruff check
+        run: ruff check .
+
+      - name: Black format check
+        run: black --check --diff .
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # Shell Linting (ShellCheck + shfmt)
+  # ════════════════════════════════════════════════════════════════════════════
+  shell-lint:
+    name: Shell Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.shell == 'true' &&
+      inputs.emergency-bypass != true
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@2.0.0
+        with:
+          severity: error
+
+      - name: Set up Go (for shfmt)
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.24"
+          cache: false
+
+      - name: Install shfmt
+        run: |
+          go install mvdan.cc/sh/v3/cmd/shfmt@v3.8.0
+          echo "${HOME}/go/bin" >> "${GITHUB_PATH}"
+
+      - name: Check shell formatting
+        run: |
+          find . -name "*.sh" -not -path "./.git/*" -not -path "./node_modules/*" \
+            | xargs -r shfmt -i 2 -ci -bn -sr -d
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # YAML Linting
+  # ════════════════════════════════════════════════════════════════════════════
+  yaml-lint:
+    name: YAML Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.yaml == 'true' &&
+      inputs.emergency-bypass != true
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Run yamllint
+        run: yamllint -f github .
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # TypeScript/JavaScript Linting (ESLint)
+  # ════════════════════════════════════════════════════════════════════════════
+  typescript-lint:
+    name: TypeScript Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.typescript == 'true' &&
+      inputs.emergency-bypass != true
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # Go Linting (golangci-lint)
+  # ════════════════════════════════════════════════════════════════════════════
+  go-lint:
+    name: Go Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.go == 'true' &&
+      inputs.emergency-bypass != true
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.24"
+          cache: true
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: latest
+          args: --timeout=5m
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # Lint Summary
+  # ════════════════════════════════════════════════════════════════════════════
+  lint-summary:
+    name: Lint Summary
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    needs:
+      - detect-changes
+      - python-lint
+      - shell-lint
+      - yaml-lint
+      - typescript-lint
+      - go-lint
+    if: always()
+    outputs:
+      result: ${{ steps.outcome.outputs.result }}
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Check all lint jobs
+        id: outcome
+        run: |
+          if [[ "${{ needs.python-lint.result }}" == "failure" ]] || \
+             [[ "${{ needs.shell-lint.result }}" == "failure" ]] || \
+             [[ "${{ needs.yaml-lint.result }}" == "failure" ]] || \
+             [[ "${{ needs.typescript-lint.result }}" == "failure" ]] || \
+             [[ "${{ needs.go-lint.result }}" == "failure" ]]; then
+            echo "result=fail" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          echo "result=pass" >> $GITHUB_OUTPUT
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## Lint Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Language | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Python | ${{ needs.python-lint.result == 'skipped' && '⏭️ N/A' || (needs.python-lint.result == 'success' && '✅ Pass' || '❌ Fail') }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Shell | ${{ needs.shell-lint.result == 'skipped' && '⏭️ N/A' || (needs.shell-lint.result == 'success' && '✅ Pass' || '❌ Fail') }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| YAML | ${{ needs.yaml-lint.result == 'skipped' && '⏭️ N/A' || (needs.yaml-lint.result == 'success' && '✅ Pass' || '❌ Fail') }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| TypeScript | ${{ needs.typescript-lint.result == 'skipped' && '⏭️ N/A' || (needs.typescript-lint.result == 'success' && '✅ Pass' || '❌ Fail') }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Go | ${{ needs.go-lint.result == 'skipped' && '⏭️ N/A' || (needs.go-lint.result == 'success' && '✅ Pass' || '❌ Fail') }} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"

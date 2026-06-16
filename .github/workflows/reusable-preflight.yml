@@ -1,0 +1,256 @@
+name: Reusable Pre-flight
+
+on:
+  workflow_call:
+    inputs:
+      pr-size-limit:
+        description: "Maximum lines changed in PR (0 = no limit)"
+        required: false
+        type: number
+        default: 400
+      commit-format:
+        description: "Enforce commit message format (conventional)"
+        required: false
+        type: string
+        default: "conventional"
+      emergency-bypass:
+        description: "Skip this stage (emergency bypass label detected)"
+        required: false
+        type: boolean
+        default: false
+      timeout-minutes:
+        description: "Job timeout in minutes"
+        required: false
+        type: number
+        default: 2
+    outputs:
+      result:
+        description: "Preflight result (pass/fail)"
+        value: ${{ jobs.preflight.outputs.result }}
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  preflight:
+    name: Pre-flight Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    outputs:
+      result: ${{ steps.outcome.outputs.result }}
+    steps:
+      # ── DORA Timestamp ──────────────────────────────────────────────────────
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      # ── Checkout ────────────────────────────────────────────────────────────
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      # ── Emergency Bypass Check ──────────────────────────────────────────────
+      - name: Check emergency bypass
+        id: bypass
+        if: inputs.emergency-bypass && github.event_name == 'pull_request'
+        run: |
+          if [[ "${{ contains(github.event.pull_request.labels.*.name, 'emergency-bypass') }}" == "true" ]]; then
+            echo "⚠️ Emergency bypass label detected — skipping preflight checks"
+            echo "skipped=true" >> $GITHUB_OUTPUT
+          else
+            echo "skipped=false" >> $GITHUB_OUTPUT
+          fi
+
+      # ── Pre-commit Validation ───────────────────────────────────────────────
+      - name: Set up Python
+        if: steps.bypass.outputs.skipped != 'true'
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install pre-commit
+        if: steps.bypass.outputs.skipped != 'true'
+        run: pip install pre-commit
+
+      - name: Cache pre-commit environments
+        if: steps.bypass.outputs.skipped != 'true'
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            pre-commit-${{ runner.os }}-
+
+      - name: Run pre-commit hooks
+        if: steps.bypass.outputs.skipped != 'true'
+        run: pre-commit run --all-files
+
+      # ── Local Preflight Script ──────────────────────────────────────────────
+      - name: Run local preflight checks
+        if: |
+          steps.bypass.outputs.skipped != 'true' &&
+          hashFiles('scripts/preflight.sh') != ''
+        run: |
+          chmod +x scripts/preflight.sh
+          ./scripts/preflight.sh
+
+      # ── PR Size Gate ────────────────────────────────────────────────────────
+      - name: Check PR size
+        if: |
+          steps.bypass.outputs.skipped != 'true' &&
+          inputs.pr-size-limit > 0 &&
+          github.event_name == 'pull_request'
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+
+            const changed = pr.additions + pr.deletions;
+            const limit = ${{ inputs.pr-size-limit }};
+            const hasOverrideLabel = pr.labels.some(l => l.name === 'large-pr-approved');
+            const hasBypassLabel = pr.labels.some(l => l.name === 'emergency-bypass');
+
+            if (hasBypassLabel) {
+              console.log(`⚠️ Emergency bypass active: ${changed} lines changed`);
+              return;
+            }
+
+            if (changed > limit && !hasOverrideLabel) {
+              core.setFailed(
+                `❌ PR size: ${changed} lines changed (limit: ${limit}).\n` +
+                `Split this PR into smaller pieces, or ask a human reviewer to apply the 'large-pr-approved' label.`
+              );
+            } else if (changed > limit) {
+              core.warning(`⚠️ Large PR override active: ${changed} lines changed. Human approved.`);
+            } else {
+              console.log(`✅ PR size: ${changed} lines (within ${limit} limit)`);
+            }
+
+      # ── Commit Format Check ─────────────────────────────────────────────────
+      - name: Check commit messages
+        if: |
+          steps.bypass.outputs.skipped != 'true' &&
+          inputs.commit-format == 'conventional'
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const conventionalRegex = /^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|revert)(\(.+\))?: .{1,72}$/;
+            const mergeCommitRegex = /^Merge /;
+
+            let commits;
+            if (context.eventName === 'pull_request') {
+              const { data: prCommits } = await github.rest.pulls.listCommits({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                per_page: 100
+              });
+              commits = prCommits.map(c => ({ message: c.commit.message.split('\n')[0], sha: c.sha }));
+            } else {
+              const { data: pushCommits } = await github.rest.repos.listCommits({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: context.sha,
+                per_page: 10
+              });
+              commits = pushCommits.map(c => ({ message: c.commit.message.split('\n')[0], sha: c.sha }));
+            }
+
+            let failures = 0;
+            for (const commit of commits) {
+              if (mergeCommitRegex.test(commit.message)) continue;
+              if (!conventionalRegex.test(commit.message)) {
+                core.error(`❌ Commit ${commit.sha.slice(0, 7)}: "${commit.message}"`);
+                failures++;
+              }
+            }
+
+            if (failures > 0) {
+              core.setFailed(
+                `❌ ${failures} commit(s) don't follow Conventional Commits format.\n` +
+                `Expected: type(scope): description\n` +
+                `Types: feat, fix, docs, style, refactor, test, chore, ci, perf, build, revert`
+              );
+            } else {
+              console.log(`✅ All ${commits.length} commit(s) follow Conventional Commits format`);
+            }
+
+      # ── Secret Detection ────────────────────────────────────────────────────
+      - name: Verify .env.example has no concrete secrets
+        if: steps.bypass.outputs.skipped != 'true'
+        run: |
+          set -euo pipefail
+
+          if [ ! -f .env.example ]; then
+            echo "ℹ️ No .env.example found — skipping"
+            exit 0
+          fi
+
+          sensitive_key_regex='(SECRET|TOKEN|PASSWORD|PRIVATE_KEY|ACCESS_KEY|API_KEY|DATABASE_URL|CONN_STRING|DSN)'
+          placeholder_value_regex='^(|<.*>|REDACTED|CHANGEME|changeme|REPLACE_ME|example|your_.*)$'
+
+          while IFS= read -r line || [ -n "$line" ]; do
+            trimmed="$(printf '%s' "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+            [ -z "$trimmed" ] && continue
+            case "$trimmed" in
+              \#*) continue ;;
+            esac
+
+            key="${trimmed%%=*}"
+            value="${trimmed#*=}"
+
+            if printf '%s\n' "$key" | grep -Eiq "$sensitive_key_regex"; then
+              if ! printf '%s\n' "$value" | grep -Eq "$placeholder_value_regex"; then
+                echo "❌ Concrete value detected for sensitive key '$key' in .env.example"
+                exit 1
+              fi
+            fi
+          done < .env.example
+
+          echo "✅ .env.example secret-placeholder check passed"
+
+      - name: Run gitleaks
+        if: steps.bypass.outputs.skipped != 'true'
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── Outcome ─────────────────────────────────────────────────────────────
+      - name: Set outcome
+        if: always()
+        id: outcome
+        run: |
+          if [[ "${{ steps.bypass.outputs.skipped }}" == "true" ]]; then
+            echo "result=skipped" >> $GITHUB_OUTPUT
+          elif [[ "${{ job.status }}" == "success" ]]; then
+            echo "result=pass" >> $GITHUB_OUTPUT
+          else
+            echo "result=fail" >> $GITHUB_OUTPUT
+          fi
+
+      # ── DORA Timestamp ──────────────────────────────────────────────────────
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+      # ── Summary ─────────────────────────────────────────────────────────────
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## Pre-flight Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Pre-commit | ${{ steps.bypass.outputs.skipped == 'true' && '⏭️ Skipped' || (job.status == 'success' && '✅ Pass' || '❌ Fail') }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| PR Size | ${{ inputs.pr-size-limit > 0 && '✅ Checked' || '⏭️ Skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Commit Format | ${{ inputs.commit-format == 'conventional' && '✅ Checked' || '⏭️ Skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Secret Detection | ${{ steps.bypass.outputs.skipped == 'true' && '⏭️ Skipped' || '✅ Checked' }} |" >> $GITHUB_STEP_SUMMARY

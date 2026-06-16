@@ -89,7 +89,6 @@ echo ""
 # Check 3: GitHub workflows
 echo "⚙️  Checking GitHub workflows..."
 WORKFLOW_FILES=(
-  "reusable-security-scanning.yml"
   "reusable-policy-enforcement.yml"
   "reusable-sbom-generation.yml"
   "reusable-image-signing.yml"
