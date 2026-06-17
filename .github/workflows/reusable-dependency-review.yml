@@ -1,0 +1,172 @@
+name: Reusable Dependency Review
+
+on:
+  workflow_call:
+    inputs:
+      fail-on-severity:
+        description: "Minimum severity to block PR (critical, high, moderate, low)"
+        required: false
+        type: string
+        default: "high"
+      comment-summary-in-pr:
+        description: "Post PR comment with dependency review summary"
+        required: false
+        type: string
+        default: "true"
+      base-ref:
+        description: "Base ref for comparison (auto-detected for PRs)"
+        required: false
+        type: string
+        default: ""
+      head-ref:
+        description: "Head ref for comparison (auto-detected for PRs)"
+        required: false
+        type: string
+        default: ""
+      allow-licenses:
+        description: "Comma-separated list of allowed licenses (empty = allow all)"
+        required: false
+        type: string
+        default: ""
+      deny-licenses:
+        description: "Comma-separated list of denied licenses"
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Check dependency graph availability
+        id: dependency-graph
+        uses: actions/github-script@v9
+        with:
+          script: |
+            try {
+              const response = await github.request('GET /repos/{owner}/{repo}/dependency-graph/sbom', {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              });
+              core.setOutput('enabled', 'true');
+              console.log(`Dependency graph available (HTTP ${response.status})`);
+            } catch (error) {
+              const status = error.status;
+              if (status === 403 || status === 404) {
+                core.warning(
+                  `Dependency graph not enabled for ${context.repo.owner}/${context.repo.repo}; skipping (status: ${status}).`
+                );
+                core.setOutput('enabled', 'false');
+                return;
+              }
+              throw error;
+            }
+
+      - name: Determine refs
+        id: refs
+        if: steps.dependency-graph.outputs.enabled == 'true'
+        uses: actions/github-script@v9
+        with:
+          script: |
+            let baseRef = '${{ inputs.base-ref }}';
+            let headRef = '${{ inputs.head-ref }}';
+
+            // Auto-detect for PRs
+            if (!baseRef || !headRef) {
+              if (context.eventName === 'pull_request') {
+                baseRef = baseRef || context.payload.pull_request.base.sha;
+                headRef = headRef || context.payload.pull_request.head.sha;
+              } else if (context.eventName === 'push') {
+                // For push events, compare against the previous commit
+                baseRef = baseRef || context.payload.before;
+                headRef = headRef || context.sha;
+              }
+            }
+
+            if (!baseRef || !headRef) {
+              core.warning('Could not determine base/head refs; skipping dependency review');
+              core.setOutput('skip', 'true');
+              return;
+            }
+
+            console.log(`Base ref: ${baseRef}`);
+            console.log(`Head ref: ${headRef}`);
+            core.setOutput('base-ref', baseRef);
+            core.setOutput('head-ref', headRef);
+            core.setOutput('skip', 'false');
+
+      - name: Review dependencies
+        if: steps.dependency-graph.outputs.enabled == 'true' && steps.refs.outputs.skip != 'true'
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: ${{ inputs.fail-on-severity }}
+          base-ref: ${{ steps.refs.outputs.base-ref }}
+          head-ref: ${{ steps.refs.outputs.head-ref }}
+          comment-summary-in-pr: ${{ inputs.comment-summary-in-pr }}
+
+      - name: Deny specific licenses
+        if: inputs.deny-licenses != '' && steps.dependency-graph.outputs.enabled == 'true' && steps.refs.outputs.skip != 'true'
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const denyLicenses = '${{ inputs.deny-licenses }}'.split(',').map(l => l.trim()).filter(Boolean);
+            if (denyLicenses.length === 0) return;
+
+            console.log(`Checking for denied licenses: ${denyLicenses.join(', ')}`);
+
+            try {
+              const response = await github.request('GET /repos/{owner}/{repo}/dependency-graph/sbom', {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                mediaType: { format: 'json' }
+              });
+              const sbom = response.data;
+              const packages = sbom.sbom?.packages || sbom.packages || [];
+              const violations = packages.filter(p => {
+                const license = p.licenseConcluded || p.licenseDeclared || '';
+                return denyLicenses.some(d => license.toLowerCase().includes(d.toLowerCase()));
+              });
+
+              if (violations.length > 0) {
+                core.setFailed(`Found ${violations.length} package(s) with denied licenses:`);
+                violations.forEach(v => {
+                  console.log(`  - ${v.name}: ${v.licenseConcluded || v.licenseDeclared}`);
+                });
+              } else {
+                console.log('No denied licenses found');
+              }
+            } catch (error) {
+              core.warning(`License check failed: ${error.message}`);
+            }
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "### Dependency Review Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Parameter | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Fail on Severity | ${{ inputs.fail-on-severity }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Deny Licenses | ${{ inputs.deny-licenses || 'none' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependency Graph | ${{ steps.dependency-graph.outputs.enabled }} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
