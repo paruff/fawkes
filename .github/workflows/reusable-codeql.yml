@@ -1,0 +1,135 @@
+name: Reusable CodeQL SAST
+
+on:
+  workflow_call:
+    inputs:
+      languages:
+        description: "Comma-separated languages to analyze: python, javascript, typescript, go, java, csharp, cpp, ruby, swift"
+        required: false
+        type: string
+        default: "python"
+      query-suite:
+        description: "CodeQL query suite: security-and-quality, security-extended, security-and-quality-extended"
+        required: false
+        type: string
+        default: "security-and-quality"
+      upload-sarif:
+        description: "Upload SARIF results to GitHub Security tab"
+        required: false
+        type: boolean
+        default: true
+      fail-on-severity:
+        description: "Minimum severity to block: critical, high, moderate, low"
+        required: false
+        type: string
+        default: "high"
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  codeql-analysis:
+    name: CodeQL SAST
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ${{ fromJson(format('["{0}"]', join(inputs.languages, '","'))) }}
+
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+          echo "language:${{ matrix.language }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          queries: ${{ inputs.query-suite }}
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v4
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Perform CodeQL Analysis
+        id: codeql
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"
+          output: sarif-results
+          upload: ${{ inputs.upload-sarif }}
+
+      - name: Check severity threshold
+        if: inputs.fail-on-severity != ''
+        run: |
+          SARIF_FILE="sarif-results/${{ matrix.language }}.sarif"
+          if [ ! -f "$SARIF_FILE" ]; then
+            echo "No SARIF file found, skipping severity check"
+            exit 0
+          fi
+
+          CRITICAL=$(python3 -c "
+          import json, sys
+          with open('$SARIF_FILE') as f:
+              data = json.load(f)
+          count = sum(1 for r in data.get('runs', [])
+              for res in r.get('results', [])
+              if res.get('level') == 'error')
+          print(count)
+          " 2>/dev/null || echo "0")
+
+          HIGH=$(python3 -c "
+          import json, sys
+          with open('$SARIF_FILE') as f:
+              data = json.load(f)
+          count = sum(1 for r in data.get('runs', [])
+              for res in r.get('results', [])
+              if res.get('level') == 'warning')
+          print(count)
+          " 2>/dev/null || echo "0")
+
+          echo "Critical findings: $CRITICAL"
+          echo "High findings: $HIGH"
+
+          case "${{ inputs.fail-on-severity }}" in
+            critical)
+              if [ "$CRITICAL" -gt 0 ]; then
+                echo "❌ Found $CRITICAL critical finding(s)"
+                exit 1
+              fi
+              ;;
+            high)
+              if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+                echo "❌ Found $CRITICAL critical and $HIGH high findings"
+                exit 1
+              fi
+              ;;
+          esac
+
+          echo "✅ Severity threshold met"
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "### CodeQL SAST Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Parameter | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Language | ${{ matrix.language }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Query Suite | ${{ inputs.query-suite }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Upload SARIF | ${{ inputs.upload-sarif }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Fail on Severity | ${{ inputs.fail-on-severity }} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"

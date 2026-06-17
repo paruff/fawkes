@@ -1,0 +1,296 @@
+name: Reusable Accessibility Testing
+
+on:
+  workflow_call:
+    inputs:
+      test-type:
+        description: "Tests to run: axe-core, lighthouse, or both"
+        required: false
+        type: string
+        default: "both"
+      wcag-level:
+        description: "WCAG compliance level: A, AA, or AAA"
+        required: false
+        type: string
+        default: "AA"
+      target-url:
+        description: "URL to test (for Lighthouse). Empty = build Storybook first"
+        required: false
+        type: string
+        default: ""
+      working-directory:
+        description: "Directory containing package.json"
+        required: false
+        type: string
+        default: "."
+      create-issues:
+        description: "Auto-create GitHub issues for violations on main/schedule"
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: write
+
+jobs:
+  axe-core-tests:
+    name: Axe-Core Accessibility Tests
+    if: inputs.test-type == 'axe-core' || inputs.test-type == 'both'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "${{ inputs.working-directory }}/package-lock.json"
+
+      - name: Install dependencies
+        working-directory: ${{ inputs.working-directory }}
+        run: npm ci
+
+      - name: Run axe-core accessibility tests
+        working-directory: ${{ inputs.working-directory }}
+        run: npm run test:a11y:ci
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: axe-core-test-results
+          path: |
+            ${{ inputs.working-directory }}/coverage/
+            ${{ inputs.working-directory }}/junit.xml
+          retention-days: 30
+
+      - name: Publish test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: ${{ inputs.working-directory }}/junit.xml
+          check_name: Axe-Core Accessibility Tests
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  lighthouse-ci:
+    name: Lighthouse CI Audit
+    if: inputs.test-type == 'lighthouse' || inputs.test-type == 'both'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "${{ inputs.working-directory }}/package-lock.json"
+
+      - name: Install dependencies
+        working-directory: ${{ inputs.working-directory }}
+        run: npm ci
+
+      - name: Build Storybook
+        if: inputs.target-url == ''
+        working-directory: ${{ inputs.working-directory }}
+        run: npm run build-storybook
+
+      - name: Run Lighthouse CI
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          if [ -n "${{ inputs.target-url }}" ]; then
+            npx lhci autorun --collect.url="${{ inputs.target-url }}"
+          else
+            npm run lighthouse:ci
+          fi
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-reports
+          path: ${{ inputs.working-directory }}/.lighthouseci/
+          retention-days: 30
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const lhciDir = '${{ inputs.working-directory }}/.lighthouseci';
+            let comment = '## Lighthouse Accessibility Results\n\n';
+
+            try {
+              const manifestPath = path.join(lhciDir, 'manifest.json');
+              if (fs.existsSync(manifestPath)) {
+                const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+                const results = manifest[0];
+
+                if (results && results.summary) {
+                  const accessibility = results.summary.accessibility || 0;
+                  const score = Math.round(accessibility * 100);
+                  const icon = score >= 90 ? '✅' : score >= 70 ? '⚠️' : '❌';
+
+                  comment += `${icon} **Accessibility Score**: ${score}/100\n\n`;
+                  comment += `**WCAG Level**: ${{ inputs.wcag-level }}\n\n`;
+                  comment += `**Status**: ${score >= 90 ? 'PASSED' : 'NEEDS IMPROVEMENT'}\n\n`;
+                  comment += `Target: ≥90 for WCAG 2.1 ${{ inputs.wcag-level }} compliance\n\n`;
+                  comment += `[View detailed reports](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`;
+                }
+              } else {
+                comment += 'Lighthouse results not found. Check workflow logs.';
+              }
+            } catch (error) {
+              comment += `Error reading Lighthouse results: ${error.message}`;
+            }
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  create-issues:
+    name: Create Issues for Violations
+    runs-on: ubuntu-latest
+    needs: [axe-core-tests, lighthouse-ci]
+    if: inputs.create-issues && always() && (needs.axe-core-tests.result == 'failure' || needs.lighthouse-ci.result == 'failure')
+    timeout-minutes: 5
+
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Create GitHub issue
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const shouldCreateIssues = context.eventName === 'schedule' || context.ref === 'refs/heads/main';
+            if (!shouldCreateIssues) {
+              console.log('Skipping issue creation for PR builds');
+              return;
+            }
+
+            const title = `[A11Y] Accessibility Violations - ${new Date().toISOString().split('T')[0]}`;
+            const body = `
+            ## Accessibility Violations Detected
+
+            **Date**: ${new Date().toISOString()}
+            **Workflow**: [View Details](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
+
+            ### Results
+            - Axe-Core: ${{ needs.axe-core-tests.result == 'failure' && '❌ Failed' || '✅ Passed' }}
+            - Lighthouse: ${{ needs.lighthouse-ci.result == 'failure' && '❌ Failed' || '✅ Passed' }}
+
+            ### Action Required
+            1. Review test results in workflow artifacts
+            2. Fix violations
+            3. Verify with \`npm run test:a11y\` locally
+            4. Re-run workflow
+
+            ---
+            _Auto-generated by reusable-accessibility.yml_
+            `;
+
+            const existingIssues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'accessibility,automated',
+              state: 'open'
+            });
+
+            const recentIssues = existingIssues.data.filter(issue => {
+              const daysSince = (Date.now() - new Date(issue.created_at).getTime()) / (1000 * 60 * 60 * 24);
+              return daysSince < 7;
+            });
+
+            if (recentIssues.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['accessibility', 'automated', 'bug', 'P1']
+              });
+              console.log('Created accessibility issue');
+            } else {
+              console.log('Recent accessibility issue exists, skipping');
+            }
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  accessibility-summary:
+    name: Accessibility Summary
+    runs-on: ubuntu-latest
+    needs: [axe-core-tests, lighthouse-ci]
+    if: always()
+    timeout-minutes: 5
+
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Generate summary
+        run: |
+          echo "# Accessibility Testing Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Suite | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Axe-Core | ${{ needs.axe-core-tests.result == 'success' && '✅ Passed' || needs.axe-core-tests.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Lighthouse CI | ${{ needs.lighthouse-ci.result == 'success' && '✅ Passed' || needs.lighthouse-ci.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**WCAG Level**: ${{ inputs.wcag-level }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
