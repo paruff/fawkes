@@ -114,7 +114,7 @@ jobs:
 
       - name: Review dependencies
         if: steps.dependency-graph.outputs.enabled == 'true' && steps.refs.outputs.skip != 'true'
-        uses: actions/dependency-review-action@v4
+        uses: actions/dependency-review-action@v5
         with:
           fail-on-severity: ${{ inputs.fail-on-severity }}
           base-ref: ${{ steps.refs.outputs.base-ref }}
