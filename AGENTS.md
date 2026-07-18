@@ -48,6 +48,8 @@ Read this before touching any file. Each area of the repo has a primary language
 | 5        | `docs/CHANGE_IMPACT_MAP.md`       | Which files break when a component changes                              |
 | 6        | `.github/copilot-instructions.md` | Copilot-specific coding standards                                       |
 | 7        | `docs/BACKLOG.md`                 | Triaged backlog — value/effort scores, agent assignments, MVP wave plan |
+| 8        | `docs/PR_STANDARD.md`             | Conventional Commits, branch naming, CI requirements, PR body rules     |
+| 9        | `docs/DEPLOYMENT_STRATEGY.md`     | Current deploy model, target progressive delivery, rollback protocol    |
 
 ---
 
@@ -183,6 +185,22 @@ Every PR must include the AI-Assisted Review Block:
 - Infrastructure changes (anything in `infra/`) require a second human reviewer
 - New Helm chart versions require `helm lint` + `helm template` output in the PR
 - Rework rate > 10%: stop adding features, fix instructions
+
+### 8.1 Deployment Lifecycle Gates
+
+- **Main CI guard required** — every PR targeting `main` must pass `paruff/ufawkespipe/.github/workflows/reusable-main-ci-guard.yml@v1.2.0` validating `code-quality.yml` succeeds before merge
+- **Post-deployment verification** — `deploy.yml` must include post-deployment smoke tests or health checks; deployment is not complete until verification passes
+- **Rollback on failure** — any post-deployment verification failure triggers automatic rollback (revert GitOps commit → ArgoCD re-syncs previous state)
+- **Observability built-in** — every CI/CD job logs `job-start` and `job-finish` timestamps with workflow name, job name, and commit SHA for DORA metrics traceability
+
+### 8.2 uFawkesPipe Reusable Workflows
+
+This repo calls reusable workflows from `paruff/ufawkespipe` at version `v1.2.0`:
+
+- `reusable-main-ci-guard.yml` — validates the main CI pipeline passes before merge
+- Additional reusable workflows may be added as the deployment lifecycle matures
+
+See `docs/DEPLOYMENT_STRATEGY.md` for the full progressive delivery target model.
 
 ---
 
