@@ -57,7 +57,7 @@ jobs:
           for d in "${TF_DIRS[@]}"; do
             echo "\n=== Validating Terraform in $d ==="
             pushd "$d" >/dev/null
-            terraform init -backend=false -input=false -no-color
+            terraform init -backend=false -input=false -no-color -upgrade
             terraform validate -no-color
             popd >/dev/null
           done
