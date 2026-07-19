@@ -36,7 +36,7 @@ jobs:
 
       # Cache Terraform providers (global plugin cache only — avoids filling disk with per-module .terraform/)
       - name: Cache Terraform providers
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.terraform.d/plugin-cache
           key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
