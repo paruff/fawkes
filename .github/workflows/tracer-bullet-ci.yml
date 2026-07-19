@@ -126,13 +126,18 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Install Trivy
+        run: |
+          TRIVY_VERSION=0.70.0
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin ${TRIVY_VERSION}
+
       - name: Trivy scan
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          image-ref: ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
-          format: "table"
-          exit-code: "1"
-          severity: "CRITICAL,HIGH"
+        run: |
+          trivy image \
+            --exit-code 1 \
+            --severity CRITICAL,HIGH \
+            --no-progress \
+            ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
 
       - name: DORA job finish
         if: always()
