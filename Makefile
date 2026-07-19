@@ -95,7 +95,6 @@ lint-base: ## Run base hooks (whitespace, YAML/JSON syntax, secrets, formatting)
 	@pre-commit run check-merge-conflict --all-files
 	@pre-commit run mixed-line-ending --all-files
 	@pre-commit run detect-private-key --all-files
-	@pre-commit run prettier --all-files
 	@pre-commit run insert-license --all-files
 
 lint-lang: ## Run language hooks (Python, Shell, Go, Markdown)
@@ -126,7 +125,7 @@ lint-platform: ## Run platform hooks (K8s, ArgoCD, Helm, Backstage, MkDocs, secu
 	@pre-commit run gitleaks --all-files
 	@pre-commit run detect-secrets --all-files
 
-format: ## Apply all code formatters (Black, shfmt, prettier, terraform fmt)
+format: ## Apply all code formatters (Black, shfmt, terraform fmt)
 	@echo "🎨 Formatting Python with Black..."
 	@if command -v black > /dev/null 2>&1; then \
 		black .; \
@@ -138,12 +137,6 @@ format: ## Apply all code formatters (Black, shfmt, prettier, terraform fmt)
 		find . -name "*.sh" -not -path "./.git/*" | grep -vF '/$(SHFMT_EXCLUDE_PATTERN)' | xargs -r shfmt -i 2 -ci -bn -sr -w; \
 	else \
 		echo "⚠️  shfmt not installed, skipping shell formatting"; \
-	fi
-	@echo "🎨 Formatting JSON/YAML/Markdown with Prettier..."
-	@if command -v prettier > /dev/null 2>&1; then \
-		prettier --write "**/*.{json,yaml,yml,md}" --ignore-unknown; \
-	else \
-		echo "⚠️  prettier not installed, skipping JSON/YAML/Markdown formatting"; \
 	fi
 	@echo "🎨 Formatting Terraform with terraform fmt..."
 	@if command -v terraform > /dev/null 2>&1; then \
@@ -165,12 +158,6 @@ format-check: ## Check formatting without applying changes (fails if any files n
 		find . -name "*.sh" -not -path "./.git/*" | grep -vF '/$(SHFMT_EXCLUDE_PATTERN)' | xargs -r shfmt -i 2 -ci -bn -sr -d; \
 	else \
 		echo "⚠️  shfmt not installed, skipping shell format check (install shfmt to enforce)"; \
-	fi
-	@echo "🔍 Checking JSON/YAML/Markdown formatting with Prettier..."
-	@if command -v prettier > /dev/null 2>&1; then \
-		prettier --check "**/*.{json,yaml,yml,md}" --ignore-unknown; \
-	else \
-		echo "⚠️  prettier not installed, skipping JSON/YAML/Markdown format check (install prettier to enforce)"; \
 	fi
 	@echo "🔍 Checking Terraform formatting..."
 	@if command -v terraform > /dev/null 2>&1; then \
