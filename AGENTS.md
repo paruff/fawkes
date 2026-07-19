@@ -154,6 +154,7 @@ tests/        → Test the above layers. Never import from multiple layers in on
 - `ruff` + `black` — both must pass
 - Type hints on new functions
 - pytest for tests
+- **Dependency pinning** — all `requirements.txt` and `requirements-dev.txt` files must use exact versions (`==`), not ranges (`>=`). Dependabot handles version bumps. See ADR-034.
 
 ### Bash
 
