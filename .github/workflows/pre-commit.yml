@@ -90,7 +90,7 @@ jobs:
         run: pip install pre-commit
 
       - name: Cache pre-commit environments
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-base-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
@@ -157,7 +157,7 @@ jobs:
         run: pip install pre-commit
 
       - name: Cache pre-commit environments
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-lang-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
@@ -222,7 +222,7 @@ jobs:
           terraform_version: 1.9.5
 
       - name: Cache Terraform providers
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.terraform.d/plugin-cache
@@ -240,7 +240,7 @@ jobs:
         run: pip install pre-commit
 
       - name: Cache pre-commit environments
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-tool-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
@@ -341,7 +341,7 @@ jobs:
         run: pip install pre-commit
 
       - name: Cache pre-commit environments
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-platform-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
