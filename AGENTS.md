@@ -150,7 +150,6 @@ tests/        → Test the above layers. Never import from multiple layers in on
 
 - `helm lint` must pass
 - `yamllint` must pass (config in `.yamllint`)
-- `prettier` for formatting (config in `.prettierrc`)
 
 ### Python (scripts, tests)
 

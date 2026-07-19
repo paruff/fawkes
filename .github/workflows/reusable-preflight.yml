@@ -50,7 +50,7 @@ jobs:
 
       # ── Checkout ────────────────────────────────────────────────────────────
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -79,7 +79,7 @@ jobs:
 
       - name: Cache pre-commit environments
         if: steps.bypass.outputs.skipped != 'true'
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}

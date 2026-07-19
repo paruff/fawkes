@@ -43,12 +43,12 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.24"
+          go-version: "1.25"
           cache-dependency-path: tests/terratest/go.sum
 
       - name: Setup Terraform
@@ -91,12 +91,12 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.24"
+          go-version: "1.25"
           cache-dependency-path: tests/terratest/go.sum
 
       - name: Setup Terraform
@@ -106,7 +106,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Setup Infracost
-        uses: infracost/actions/setup@v3
+        uses: infracost/actions/setup@v4
         with:
           api-key: ${{ secrets.INFRACOST_API_KEY }}
 
@@ -125,7 +125,7 @@ jobs:
 
       - name: Comment PR with cost estimate
         if: always()
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const body = '## 💰 Infrastructure Cost Estimation\n\nCost estimation tests completed. Check the workflow logs for detailed cost breakdowns.\n\n**Note**: Costs are estimates and may vary based on usage patterns.';
@@ -158,12 +158,12 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.24"
+          go-version: "1.25"
           cache-dependency-path: tests/terratest/go.sum
 
       - name: Setup Terraform
@@ -173,7 +173,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Azure Login
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
@@ -221,12 +221,12 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.24"
+          go-version: "1.25"
           cache-dependency-path: tests/terratest/go.sum
 
       - name: Setup Terraform
@@ -236,7 +236,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Azure Login
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
