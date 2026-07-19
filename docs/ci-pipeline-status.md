@@ -25,7 +25,6 @@
 | `scripts/preflight.sh` | ✅ Merged |
 | `.env.example` | ✅ Merged |
 | `.markdownlint.json` | ✅ Merged |
-| `.prettierignore` | ✅ Merged |
 
 ### PR #110 (uFawkesObs — Fix main branch failures)
 
