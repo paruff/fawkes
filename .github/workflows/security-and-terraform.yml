@@ -26,7 +26,7 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # 1️⃣ Terraform validation
       - name: Setup Terraform
@@ -34,16 +34,14 @@ jobs:
         with:
           terraform_version: 1.9.5
 
-      # Cache Terraform providers
+      # Cache Terraform providers (global plugin cache only — avoids filling disk with per-module .terraform/)
       - name: Cache Terraform providers
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
-          path: |
-            ~/.terraform.d/plugin-cache
-            **/.terraform/providers
+          path: ~/.terraform.d/plugin-cache
           key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
           restore-keys: |
-            ${{ runner.os }}-terraform-
+            ${{ runner.os }}-terraform-${{ hashFiles('infra/**/.terraform.lock.hcl') }}
 
       - name: Terraform fmt check (non-blocking)
         run: terraform fmt -check -recursive || echo "⚠️ Formatting issues found"
@@ -59,7 +57,7 @@ jobs:
           for d in "${TF_DIRS[@]}"; do
             echo "\n=== Validating Terraform in $d ==="
             pushd "$d" >/dev/null
-            terraform init -backend=false -input=false -no-color
+            terraform init -backend=false -input=false -no-color -upgrade
             terraform validate -no-color
             popd >/dev/null
           done
@@ -103,7 +101,7 @@ jobs:
 
       # 3️⃣ Vulnerability / misconfiguration scanning (with retry for transient 429s)
       - name: Install Trivy
-        uses: aquasecurity/setup-trivy@3fb12ec12f41e471780db15c232d5dd185dcb514 # v0.2.6
+        uses: aquasecurity/setup-trivy@81e514348e19b6112ce2a7e3ecbafe19c1e1f567 # v0.3.1
         with:
           version: latest
 

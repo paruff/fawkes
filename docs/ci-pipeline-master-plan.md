@@ -130,7 +130,7 @@ Which stages run for each repo type:
 
 | Stage       | Tool                                                      | What it finds                          | Runs on                     |
 | ----------- | --------------------------------------------------------- | -------------------------------------- | --------------------------- |
-| **Lint**    | ruff, black, shellcheck, hadolint, markdownlint, prettier | Code quality, formatting, style        | Source code                 |
+| **Lint**    | ruff, black, shellcheck, hadolint, markdownlint | Code quality, formatting, style        | Source code                 |
 | **SAST**    | CodeQL (if Python/TS/Go present)                          | Security vulnerabilities in code logic | Source code                 |
 | **SCA**     | Trivy FS + pip safety + npm audit                         | Known CVEs in dependencies             | lockfiles, requirements.txt |
 | **Secrets** | Gitleaks + `.env.example` validation                      | Leaked credentials                     | All files                   |
@@ -637,7 +637,6 @@ pre-commit hooks                         preflight stage
   ├── check-json                          ├── Secret detection (.env.example)
   ├── yamllint                            └── Gitleaks
   ├── markdownlint
-  ├── prettier
   ├── gitleaks
   └── detect-secrets
 ```

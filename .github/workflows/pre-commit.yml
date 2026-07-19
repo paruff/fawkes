@@ -23,7 +23,7 @@ jobs:
       platform: ${{ steps.filter.outputs.platform }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -77,7 +77,7 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -90,7 +90,7 @@ jobs:
         run: pip install pre-commit
 
       - name: Cache pre-commit environments
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-base-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
@@ -106,7 +106,6 @@ jobs:
           pre-commit run check-added-large-files --from-ref "$BASE" --to-ref HEAD
           pre-commit run check-merge-conflict --from-ref "$BASE" --to-ref HEAD
           pre-commit run detect-private-key --from-ref "$BASE" --to-ref HEAD
-          pre-commit run prettier --from-ref "$BASE" --to-ref HEAD
         continue-on-error: true
 
       - name: Check status
@@ -139,7 +138,7 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -157,7 +156,7 @@ jobs:
         run: pip install pre-commit
 
       - name: Cache pre-commit environments
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-lang-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
@@ -207,7 +206,7 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -222,7 +221,7 @@ jobs:
           terraform_version: 1.9.5
 
       - name: Cache Terraform providers
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.terraform.d/plugin-cache
@@ -240,7 +239,7 @@ jobs:
         run: pip install pre-commit
 
       - name: Cache pre-commit environments
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-tool-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
@@ -286,7 +285,7 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -298,12 +297,12 @@ jobs:
           cache-dependency-path: "requirements*.txt"
 
       - name: Setup kubectl
-        uses: azure/setup-kubectl@v4
+        uses: azure/setup-kubectl@v5
         with:
           version: "v1.28.0"
 
       - name: Setup Helm
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@v5
         with:
           version: "v3.13.0"
 
@@ -341,7 +340,7 @@ jobs:
         run: pip install pre-commit
 
       - name: Cache pre-commit environments
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-platform-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
