@@ -29,7 +29,7 @@ We will enforce exact version pinning (`==`) in all Python `requirements.txt` fi
 ## Rationale
 
 - **Eliminate environmental drift**: CI, local dev, and production must resolve identical dependency trees. Without pinning, `pip install` is non-deterministic — dependabot evolves constraints but does not commit lock files for Python.
-- **Reduce the failure class we just fixed**: Three systemic CI failures (terraform lock staleness, go toolchain mismatch, python resolution drift) all share one root cause: constraints and locks out of sync. Pinning makes the constraint *equal to* the lock — they can't diverge.
+- **Reduce the failure class we just fixed**: Three systemic CI failures (terraform lock staleness, go toolchain mismatch, python resolution drift) all share one root cause: constraints and locks out of sync. Pinning makes the constraint _equal to_ the lock — they can't diverge.
 - **DORA-aligned**: Cap 2 (Healthy Data Ecosystem) and Cap 5 (Working in Small Batches) both require predictability. A build that succeeds on Monday and fails on Tuesday for no code change is not a small batch — it's a hidden batch triggered by upstream registry changes.
 - **Agent-enforceable**: "Use `==` in requirements.txt" is a mechanical rule that can be linted (e.g., pre-commit hook or `pip-audit` / `safety check`), making it a reliable constraint for both human and AI contributors.
 
@@ -57,12 +57,12 @@ We will enforce exact version pinning (`==`) in all Python `requirements.txt` fi
 
 ## Alternatives Considered
 
-| Option | Why Rejected |
-|--------|--------------|
+| Option                                                    | Why Rejected                                                                                                                                                                       |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `pip-compile` with `requirements.in` + `requirements.txt` | Adds tooling complexity. Fawkes has 23+ `requirements.txt` files; managing `*.in` files doubles the count. For a monorepo of this size, direct pinning with dependabot is simpler. |
-| Freeze at major version only (`>=X.0.0,<X+1.0.0`) | Still allows patch-level drift. The July 2026 CI failures happened because of *transitive* dependency resolution, not just direct deps. |
-| Status quo (keep mixed pinning/lax) | Proven failure mode — see PRs #1481-#1490. The mixed strategy creates surprise failures. |
-| Pinning with `poetry.lock` / `pipenv` | Introduces a new package manager. Fawkes uses `pip` + `requirements.txt` consistently; tooling change is out of scope for this decision. |
+| Freeze at major version only (`>=X.0.0,<X+1.0.0`)         | Still allows patch-level drift. The July 2026 CI failures happened because of _transitive_ dependency resolution, not just direct deps.                                            |
+| Status quo (keep mixed pinning/lax)                       | Proven failure mode — see PRs #1481-#1490. The mixed strategy creates surprise failures.                                                                                           |
+| Pinning with `poetry.lock` / `pipenv`                     | Introduces a new package manager. Fawkes uses `pip` + `requirements.txt` consistently; tooling change is out of scope for this decision.                                           |
 
 ## Implementation
 
