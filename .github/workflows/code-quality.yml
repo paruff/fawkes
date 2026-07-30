@@ -534,7 +534,7 @@ jobs:
     name: Security Scanning
     needs: detect-changes
     if: needs.detect-changes.outputs.security == 'true'
-    uses: paruff/uFawkesObs/.github/workflows/reusable-security-scanning.yml@main
+    uses: ./.github/workflows/reusable-security-scanning.yml
     with:
       scan-type: all
       scan-path: "."
