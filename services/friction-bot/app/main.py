@@ -222,10 +222,13 @@ async def slack_friction_command(
                 f"_Thanks for helping us improve the platform!_ 🎯"
             ),
         }
-    except Exception as e:
+    except Exception:
         friction_logs_total.labels(platform="slack", status="error").inc()
-        logger.error(f"Error creating insight: {e}")
-        return {"response_type": "ephemeral", "text": f"❌ Failed to log friction: {e!s}"}
+        logger.exception("Error creating insight")
+        return {
+            "response_type": "ephemeral",
+            "text": "❌ Failed to log friction due to an internal error. Please try again later.",
+        }
 
 
 @app.post("/mattermost/slash/friction")
