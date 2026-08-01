@@ -17,6 +17,7 @@ Sentiment classification:
 
 import logging
 from typing import Dict, Tuple
+
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 logger = logging.getLogger(__name__)
@@ -30,7 +31,7 @@ except Exception as e:
     analyzer = None
 
 
-def analyze_sentiment(text: str) -> Dict[str, float]:
+def analyze_sentiment(text: str) -> dict[str, float]:
     """
     Analyze sentiment of text using VADER.
 
@@ -80,7 +81,7 @@ def classify_sentiment(compound_score: float) -> str:
         return "neutral"
 
 
-def analyze_feedback_sentiment(comment: str) -> Tuple[str, float, float, float, float]:
+def analyze_feedback_sentiment(comment: str) -> tuple[str, float, float, float, float]:
     """
     Analyze feedback comment and return classification with scores.
 
@@ -121,7 +122,7 @@ def get_sentiment_emoji(sentiment: str) -> str:
     return emoji_map.get(sentiment, "❓")
 
 
-def batch_analyze_sentiments(comments: list[str]) -> list[Dict[str, any]]:
+def batch_analyze_sentiments(comments: list[str]) -> list[dict[str, any]]:
     """
     Analyze sentiment for multiple comments.
 
@@ -150,7 +151,7 @@ def batch_analyze_sentiments(comments: list[str]) -> list[Dict[str, any]]:
     return results
 
 
-def aggregate_sentiment_stats(sentiments: list[str]) -> Dict[str, any]:
+def aggregate_sentiment_stats(sentiments: list[str]) -> dict[str, any]:
     """
     Calculate aggregate sentiment statistics.
 

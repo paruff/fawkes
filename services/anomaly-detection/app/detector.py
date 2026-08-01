@@ -8,8 +8,8 @@ detect anomalies using ML models, and trigger alerts.
 import asyncio
 import logging
 import os
-from datetime import datetime
 import uuid
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ async def run_continuous_detection():
     """
     logger.info(f"Starting continuous anomaly detection (interval: {DETECTION_INTERVAL_SECONDS}s)")
 
-    from .main import http_client, recent_anomalies, ANOMALIES_DETECTED, FALSE_POSITIVE_RATE_GAUGE
+    from .main import ANOMALIES_DETECTED, FALSE_POSITIVE_RATE_GAUGE, http_client, recent_anomalies
     from .models import detector
 
     while True:

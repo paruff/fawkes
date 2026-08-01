@@ -1,7 +1,7 @@
 """Unit tests for VSM service API."""
 
-from fastapi.testclient import TestClient
 from app.main import app
+from fastapi.testclient import TestClient
 
 client = TestClient(app)
 
@@ -101,8 +101,9 @@ def test_prometheus_metrics_content():
 
 def test_calculate_cycle_time():
     """Test cycle time calculation function."""
-    from app.main import calculate_cycle_time
     from unittest.mock import Mock
+
+    from app.main import calculate_cycle_time
 
     # Mock database session
     db_mock = Mock()
@@ -120,8 +121,9 @@ def test_calculate_cycle_time():
 
 def test_calculate_lead_time():
     """Test lead time calculation function."""
-    from app.main import calculate_lead_time
     from unittest.mock import Mock
+
+    from app.main import calculate_lead_time
 
     # Mock database session
     db_mock = Mock()

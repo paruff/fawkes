@@ -1,16 +1,17 @@
 """Analytics Dashboard Service - Main Application"""
 
 import os
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator, List, Optional
+from typing import List, Optional
 
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import make_asgi_app
 
-from .metrics import MetricsCollector
 from .data_aggregator import DataAggregator
-from .models import UsageTrends, FeatureAdoption, ExperimentResults, UserSegments, FunnelData, DashboardData
+from .metrics import MetricsCollector
+from .models import DashboardData, ExperimentResults, FeatureAdoption, FunnelData, UsageTrends, UserSegments
 
 
 # Lifespan context manager for startup/shutdown
@@ -82,7 +83,7 @@ async def get_dashboard_data(time_range: str = "7d", aggregator: DataAggregator 
         data = await aggregator.get_dashboard_data(time_range)
         return data
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch dashboard data: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch dashboard data: {e!s}")
 
 
 @app.get("/api/v1/usage-trends", response_model=UsageTrends)
@@ -92,7 +93,7 @@ async def get_usage_trends(time_range: str = "7d", aggregator: DataAggregator = 
         data = await aggregator.get_usage_trends(time_range)
         return data
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch usage trends: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch usage trends: {e!s}")
 
 
 @app.get("/api/v1/feature-adoption", response_model=FeatureAdoption)
@@ -102,19 +103,19 @@ async def get_feature_adoption(time_range: str = "30d", aggregator: DataAggregat
         data = await aggregator.get_feature_adoption(time_range)
         return data
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch feature adoption: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch feature adoption: {e!s}")
 
 
-@app.get("/api/v1/experiment-results", response_model=List[ExperimentResults])
+@app.get("/api/v1/experiment-results", response_model=list[ExperimentResults])
 async def get_experiment_results(
-    status: Optional[str] = None, aggregator: DataAggregator = Depends(get_data_aggregator)
+    status: str | None = None, aggregator: DataAggregator = Depends(get_data_aggregator)
 ):
     """Get experiment results with statistical analysis"""
     try:
         data = await aggregator.get_experiment_results(status)
         return data
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch experiment results: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch experiment results: {e!s}")
 
 
 @app.get("/api/v1/user-segments", response_model=UserSegments)
@@ -124,7 +125,7 @@ async def get_user_segments(time_range: str = "30d", aggregator: DataAggregator 
         data = await aggregator.get_user_segments(time_range)
         return data
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch user segments: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch user segments: {e!s}")
 
 
 @app.get("/api/v1/funnel/{funnel_name}", response_model=FunnelData)
@@ -140,7 +141,7 @@ async def get_funnel_data(
         data = await aggregator.get_funnel_data(funnel_name, time_range)
         return data
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch funnel data: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch funnel data: {e!s}")
 
 
 @app.post("/api/v1/metrics/refresh")
@@ -150,7 +151,7 @@ async def refresh_metrics(aggregator: DataAggregator = Depends(get_data_aggregat
         await aggregator.refresh_all_metrics()
         return {"status": "success", "message": "Metrics refreshed successfully"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to refresh metrics: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to refresh metrics: {e!s}")
 
 
 @app.get("/api/v1/export/{format}")
@@ -167,4 +168,4 @@ async def export_data(format: str, time_range: str = "30d", aggregator: DataAggr
         data = await aggregator.export_data(format, time_range)
         return data
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to export data: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to export data: {e!s}")

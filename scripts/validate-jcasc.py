@@ -9,10 +9,11 @@ This script validates:
 4. No hardcoded credentials exist
 """
 
-import sys
-import yaml
 import re
+import sys
 from pathlib import Path
+
+import yaml
 
 # Configuration constants
 # Placeholder patterns for detecting template/example values (case-insensitive)

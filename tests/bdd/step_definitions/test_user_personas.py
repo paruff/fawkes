@@ -5,7 +5,8 @@ Tests validate that persona templates and documentation meet requirements.
 
 import re
 from pathlib import Path
-from pytest_bdd import given, when, then, scenarios, parsers
+
+from pytest_bdd import given, parsers, scenarios, then, when
 
 # Load all scenarios from the feature file
 scenarios("../features/user-personas.feature")

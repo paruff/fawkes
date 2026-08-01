@@ -1,9 +1,11 @@
 """Pydantic schemas for API request/response models."""
 
 from datetime import datetime
-from typing import Optional, List
-from pydantic import BaseModel, Field, ConfigDict
-from app.models import WorkItemType, StageType, StageCategory
+from typing import List, Optional
+
+from pydantic import BaseModel, ConfigDict, Field
+
+from app.models import StageCategory, StageType, WorkItemType
 
 
 # Work Item Schemas
@@ -24,7 +26,7 @@ class WorkItemResponse(BaseModel):
     type: WorkItemType = Field(..., description="Work item type")
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
-    current_stage: Optional[str] = Field(None, description="Current stage name")
+    current_stage: str | None = Field(None, description="Current stage name")
 
 
 # Stage Transition Schemas
@@ -41,7 +43,7 @@ class StageTransitionResponse(BaseModel):
 
     id: int = Field(..., description="Transition ID")
     work_item_id: int = Field(..., description="Work item ID")
-    from_stage: Optional[str] = Field(None, description="Source stage name")
+    from_stage: str | None = Field(None, description="Source stage name")
     to_stage: str = Field(..., description="Target stage name")
     timestamp: datetime = Field(..., description="Transition timestamp")
 
@@ -52,7 +54,7 @@ class WorkItemHistory(BaseModel):
 
     work_item_id: int = Field(..., description="Work item ID")
     work_item_title: str = Field(..., description="Work item title")
-    transitions: List[StageTransitionResponse] = Field(..., description="Stage transitions")
+    transitions: list[StageTransitionResponse] = Field(..., description="Stage transitions")
 
 
 # Flow Metrics Schemas
@@ -61,10 +63,10 @@ class FlowMetricsResponse(BaseModel):
 
     throughput: int = Field(..., description="Number of items completed in period")
     wip: float = Field(..., description="Average work in progress")
-    cycle_time_avg: Optional[float] = Field(None, description="Average cycle time in hours")
-    cycle_time_p50: Optional[float] = Field(None, description="Median cycle time in hours")
-    cycle_time_p85: Optional[float] = Field(None, description="85th percentile cycle time in hours")
-    cycle_time_p95: Optional[float] = Field(None, description="95th percentile cycle time in hours")
+    cycle_time_avg: float | None = Field(None, description="Average cycle time in hours")
+    cycle_time_p50: float | None = Field(None, description="Median cycle time in hours")
+    cycle_time_p85: float | None = Field(None, description="85th percentile cycle time in hours")
+    cycle_time_p95: float | None = Field(None, description="95th percentile cycle time in hours")
     period_start: datetime = Field(..., description="Period start date")
     period_end: datetime = Field(..., description="Period end date")
 
@@ -79,9 +81,9 @@ class StageResponse(BaseModel):
     name: str = Field(..., description="Stage name")
     order: int = Field(..., description="Stage order in value stream")
     type: StageType = Field(..., description="Stage type")
-    category: Optional[StageCategory] = Field(None, description="Stage category (wait/active/done)")
-    wip_limit: Optional[int] = Field(None, description="Work in progress limit")
-    description: Optional[str] = Field(None, description="Stage description")
+    category: StageCategory | None = Field(None, description="Stage category (wait/active/done)")
+    wip_limit: int | None = Field(None, description="Work in progress limit")
+    description: str | None = Field(None, description="Stage description")
 
 
 # Health Check Schema

@@ -24,13 +24,13 @@ Examples:
     python -m indexers.github --github-token ghp_xxx --org paruff --dry-run
 """
 
-import sys
 import argparse
-import hashlib
-import time
-from typing import List, Dict, Any, Optional, Tuple
-from datetime import datetime
 import base64
+import hashlib
+import sys
+import time
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple
 
 try:
     import requests
@@ -82,14 +82,14 @@ class RateLimiter:
         self.reset_time = None
         self.last_check = None
 
-    def update(self, headers: Dict[str, str]):
+    def update(self, headers: dict[str, str]):
         """Update rate limit info from GitHub API response headers."""
         if "X-RateLimit-Remaining" in headers:
             self.remaining = int(headers["X-RateLimit-Remaining"])
             self.reset_time = int(headers.get("X-RateLimit-Reset", 0))
             self.last_check = time.time()
 
-    def should_wait(self) -> Tuple[bool, int]:
+    def should_wait(self) -> tuple[bool, int]:
         """
         Check if we should wait before making another request.
 
@@ -161,7 +161,7 @@ class GitHubIndexer:
             print(f"❌ Failed to connect to Weaviate: {e}")
             sys.exit(1)  # Fatal error for CLI script
 
-    def _github_request(self, url: str, params: Optional[Dict] = None) -> Optional[Any]:
+    def _github_request(self, url: str, params: dict | None = None) -> Any | None:
         """
         Make a GitHub API request with rate limiting.
 
@@ -197,7 +197,7 @@ class GitHubIndexer:
             print(f"  ❌ Request error: {e}")
             return None
 
-    def fetch_org_repos(self, org: str) -> List[Dict[str, Any]]:
+    def fetch_org_repos(self, org: str) -> list[dict[str, Any]]:
         """
         Fetch all repositories for an organization.
 
@@ -232,7 +232,7 @@ class GitHubIndexer:
         print(f"✅ Found {len(repos)} total repositories")
         return repos
 
-    def fetch_repo(self, repo_full_name: str) -> Optional[Dict[str, Any]]:
+    def fetch_repo(self, repo_full_name: str) -> dict[str, Any] | None:
         """
         Fetch a specific repository.
 
@@ -246,7 +246,7 @@ class GitHubIndexer:
         url = f"{GITHUB_API_BASE}/repos/{repo_full_name}"
         return self._github_request(url)
 
-    def fetch_repo_contents(self, repo_full_name: str, path: str = "") -> List[Dict[str, Any]]:
+    def fetch_repo_contents(self, repo_full_name: str, path: str = "") -> list[dict[str, Any]]:
         """
         Fetch contents of a repository path.
 
@@ -267,7 +267,7 @@ class GitHubIndexer:
         else:
             return []
 
-    def fetch_file_content(self, file_info: Dict[str, Any]) -> Optional[str]:
+    def fetch_file_content(self, file_info: dict[str, Any]) -> str | None:
         """
         Fetch content of a file from GitHub.
 
@@ -305,7 +305,7 @@ class GitHubIndexer:
 
         return None
 
-    def scan_repo_for_docs(self, repo_full_name: str, paths: List[str] = None) -> List[Dict[str, Any]]:
+    def scan_repo_for_docs(self, repo_full_name: str, paths: list[str] = None) -> list[dict[str, Any]]:
         """
         Scan repository for documentation files.
 
@@ -327,7 +327,7 @@ class GitHubIndexer:
         return files_to_index
 
     def _scan_path_recursive(
-        self, repo_full_name: str, path: str, files_to_index: List[Dict[str, Any]], depth: int = 0, max_depth: int = 5
+        self, repo_full_name: str, path: str, files_to_index: list[dict[str, Any]], depth: int = 0, max_depth: int = 5
     ):
         """Recursively scan a path for documentation files."""
         if depth > max_depth:
@@ -357,7 +357,7 @@ class GitHubIndexer:
                 # Recursively scan directories
                 self._scan_path_recursive(repo_full_name, item_path, files_to_index, depth + 1, max_depth)
 
-    def chunk_content(self, content: str) -> List[str]:
+    def chunk_content(self, content: str) -> list[str]:
         """Chunk content into smaller pieces."""
         if len(content) <= MAX_CHUNK_CHARS:
             return [content]
@@ -395,7 +395,7 @@ class GitHubIndexer:
         """Calculate MD5 hash of content."""
         return hashlib.md5(content.encode("utf-8"), usedforsecurity=False).hexdigest()
 
-    def index_file(self, repo_full_name: str, file_info: Dict[str, Any], force: bool = False) -> Tuple[bool, int]:
+    def index_file(self, repo_full_name: str, file_info: dict[str, Any], force: bool = False) -> tuple[bool, int]:
         """
         Index a single file from GitHub.
 

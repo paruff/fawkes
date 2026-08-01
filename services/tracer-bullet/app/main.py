@@ -12,7 +12,7 @@ Instrumented with:
 import logging
 import os
 import time
-from typing import Callable
+from collections.abc import Callable
 
 from fastapi import FastAPI, Request, Response
 from opentelemetry import trace

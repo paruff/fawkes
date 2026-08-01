@@ -4,43 +4,43 @@ FastAPI application for DevEx Survey Automation Service
 
 import logging
 import secrets
+from contextlib import asynccontextmanager
 from datetime import datetime
 from typing import List, Optional
-from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Path, Query
-from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
-from prometheus_client import make_asgi_app, Counter, Gauge, Histogram
-from sqlalchemy import select, func, and_
+from fastapi.responses import HTMLResponse
+from integrations.mattermost import mattermost_client
+from integrations.space_metrics import space_metrics_client
+from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
+from sqlalchemy import and_, func, select
 
 from .config import settings
-from .database import init_database, close_database, get_db_session, check_database_health
+from .database import check_database_health, close_database, get_db_session, init_database
 from .models import (
-    SurveyCampaign,
-    SurveyRecipient,
-    PulseSurveyAggregate,
-    SurveyOptOut,
-    NASATLXAssessment,
     NASATLXAggregate,
+    NASATLXAssessment,
+    PulseSurveyAggregate,
+    SurveyCampaign,
+    SurveyOptOut,
+    SurveyRecipient,
 )
 from .schemas import (
-    PulseSurveyResponse,
-    SurveyDistributionRequest,
     CampaignResponse,
-    PulseAnalytics,
-    ResponseRateMetrics,
     HealthResponse,
-    SurveySubmissionResponse,
+    NASATLXAnalytics,
     NASATLXRequest,
     NASATLXResponse,
     NASATLXSubmissionResponse,
-    NASATLXAnalytics,
     NASATLXTrendData,
+    PulseAnalytics,
+    PulseSurveyResponse,
+    ResponseRateMetrics,
+    SurveyDistributionRequest,
+    SurveySubmissionResponse,
     TaskTypeStats,
 )
-from integrations.mattermost import mattermost_client
-from integrations.space_metrics import space_metrics_client
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -256,9 +256,9 @@ async def distribute_survey(request: SurveyDistributionRequest):
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/v1/survey/campaigns", response_model=List[CampaignResponse], tags=["Survey Management"])
+@app.get("/api/v1/survey/campaigns", response_model=list[CampaignResponse], tags=["Survey Management"])
 async def list_campaigns(
-    type: Optional[str] = Query(None, description="Filter by survey type"), limit: int = Query(10, ge=1, le=100)
+    type: str | None = Query(None, description="Filter by survey type"), limit: int = Query(10, ge=1, le=100)
 ):
     """List survey campaigns"""
     try:
@@ -730,7 +730,7 @@ async def thank_you_page(token: str = Path(..., description="Survey token")):
 @app.get("/nasa-tlx", response_class=HTMLResponse, tags=["NASA-TLX"])
 async def get_nasa_tlx_page(
     task_type: str = Query("general", description="Type of task being assessed"),
-    task_id: Optional[str] = Query(None, description="Optional task identifier"),
+    task_id: str | None = Query(None, description="Optional task identifier"),
     user_id: str = Query("anonymous", description="User identifier"),
 ):
     """Render NASA-TLX cognitive load assessment page"""
@@ -1109,7 +1109,7 @@ async def get_nasa_tlx_page(
     )
 
 
-@app.get("/api/v1/analytics/pulse/weekly", response_model=List[PulseAnalytics], tags=["Analytics"])
+@app.get("/api/v1/analytics/pulse/weekly", response_model=list[PulseAnalytics], tags=["Analytics"])
 async def get_pulse_weekly_analytics(weeks: int = Query(12, ge=1, le=52, description="Number of weeks to retrieve")):
     """Get weekly pulse survey analytics"""
     try:
@@ -1128,7 +1128,7 @@ async def get_pulse_weekly_analytics(weeks: int = Query(12, ge=1, le=52, descrip
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/v1/analytics/response-rate", response_model=List[ResponseRateMetrics], tags=["Analytics"])
+@app.get("/api/v1/analytics/response-rate", response_model=list[ResponseRateMetrics], tags=["Analytics"])
 async def get_response_rate_metrics():
     """Get response rate metrics for all survey types"""
     try:
@@ -1239,9 +1239,9 @@ async def submit_nasa_tlx(assessment: NASATLXRequest, user_id: str = Query(..., 
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/v1/nasa-tlx/assessments", response_model=List[NASATLXResponse], tags=["NASA-TLX"])
+@app.get("/api/v1/nasa-tlx/assessments", response_model=list[NASATLXResponse], tags=["NASA-TLX"])
 async def get_nasa_tlx_assessments(
-    task_type: Optional[str] = Query(None, description="Filter by task type"),
+    task_type: str | None = Query(None, description="Filter by task type"),
     limit: int = Query(50, ge=1, le=500, description="Number of assessments to return"),
 ):
     """Get NASA-TLX assessments with optional filtering"""
@@ -1262,9 +1262,9 @@ async def get_nasa_tlx_assessments(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/v1/nasa-tlx/analytics", response_model=List[NASATLXAnalytics], tags=["NASA-TLX"])
+@app.get("/api/v1/nasa-tlx/analytics", response_model=list[NASATLXAnalytics], tags=["NASA-TLX"])
 async def get_nasa_tlx_analytics(
-    task_type: Optional[str] = Query(None, description="Filter by task type"),
+    task_type: str | None = Query(None, description="Filter by task type"),
     weeks: int = Query(4, ge=1, le=52, description="Number of weeks to analyze"),
 ):
     """Get aggregated NASA-TLX analytics"""
@@ -1305,7 +1305,7 @@ async def get_nasa_tlx_analytics(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/v1/nasa-tlx/trends", response_model=List[NASATLXTrendData], tags=["NASA-TLX"])
+@app.get("/api/v1/nasa-tlx/trends", response_model=list[NASATLXTrendData], tags=["NASA-TLX"])
 async def get_nasa_tlx_trends(weeks: int = Query(12, ge=1, le=52, description="Number of weeks to analyze")):
     """Get NASA-TLX trends by task type over time"""
     try:
@@ -1362,7 +1362,7 @@ async def get_nasa_tlx_trends(weeks: int = Query(12, ge=1, le=52, description="N
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/v1/nasa-tlx/task-types", response_model=List[TaskTypeStats], tags=["NASA-TLX"])
+@app.get("/api/v1/nasa-tlx/task-types", response_model=list[TaskTypeStats], tags=["NASA-TLX"])
 async def get_task_type_stats():
     """Get statistics grouped by task type"""
     try:

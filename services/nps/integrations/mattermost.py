@@ -9,13 +9,13 @@ This module handles:
 - Preventing spam to users who already responded
 """
 
-import os
 import logging
-from typing import List, Dict, Optional
+import os
 from datetime import datetime, timedelta
+from typing import Dict, List, Optional
 
-import httpx
 import asyncpg
+import httpx
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ class MattermostClient:
         self.token = token
         self.headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
-    async def get_user_by_email(self, email: str) -> Optional[Dict]:
+    async def get_user_by_email(self, email: str) -> dict | None:
         """Get Mattermost user by email."""
         try:
             async with httpx.AsyncClient() as client:
@@ -54,7 +54,7 @@ class MattermostClient:
             logger.error(f"Error getting user by email {email}: {e}")
             return None
 
-    async def create_direct_channel(self, user_id: str, bot_user_id: str) -> Optional[str]:
+    async def create_direct_channel(self, user_id: str, bot_user_id: str) -> str | None:
         """Create a direct message channel between bot and user."""
         try:
             async with httpx.AsyncClient() as client:
@@ -163,11 +163,11 @@ _Survey expires in 30 days_
 
 async def send_surveys_to_users(
     db_pool: asyncpg.Pool,
-    users: List[Dict[str, str]],
+    users: list[dict[str, str]],
     base_survey_url: str,
     bot_user_id: str,
-    campaign_id: Optional[int] = None,
-) -> Dict[str, int]:
+    campaign_id: int | None = None,
+) -> dict[str, int]:
     """
     Send surveys to a list of users.
 
@@ -247,7 +247,7 @@ async def send_surveys_to_users(
     return results
 
 
-async def send_reminders(db_pool: asyncpg.Pool, base_survey_url: str, bot_user_id: str) -> Dict[str, int]:
+async def send_reminders(db_pool: asyncpg.Pool, base_survey_url: str, bot_user_id: str) -> dict[str, int]:
     """
     Send reminders to users who haven't responded after REMINDER_DAYS.
 

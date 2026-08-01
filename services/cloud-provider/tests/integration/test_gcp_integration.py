@@ -12,16 +12,16 @@ Environment variables:
     GCP_TEST_REGION: Region for testing (default: us-central1)
 """
 
-import pytest
 import os
 import time
 
-from src.providers.gcp_provider import GCPProvider
-from src.interfaces.provider import StorageConfig
+import pytest
 from src.exceptions import (
     CloudProviderError,
     ResourceNotFoundError,
 )
+from src.interfaces.provider import StorageConfig
+from src.providers.gcp_provider import GCPProvider
 
 
 def pytest_addoption(parser):
@@ -62,7 +62,7 @@ def gcp_provider(gcp_project_id):
         provider = GCPProvider(project_id=gcp_project_id)
         yield provider
     except Exception as e:
-        pytest.skip(f"Failed to initialize GCP provider: {str(e)}")
+        pytest.skip(f"Failed to initialize GCP provider: {e!s}")
 
 
 @pytest.fixture
@@ -93,7 +93,7 @@ class TestGCPProviderIntegration:
             assert isinstance(clusters, list)
             # May be empty if no clusters exist
         except CloudProviderError as e:
-            pytest.skip(f"Cannot list clusters: {str(e)}")
+            pytest.skip(f"Cannot list clusters: {e!s}")
 
     def test_list_databases(self, gcp_provider, gcp_test_region):
         """Test listing Cloud SQL instances."""
@@ -102,7 +102,7 @@ class TestGCPProviderIntegration:
             assert isinstance(databases, list)
             # May be empty if no databases exist
         except CloudProviderError as e:
-            pytest.skip(f"Cannot list databases: {str(e)}")
+            pytest.skip(f"Cannot list databases: {e!s}")
 
     def test_list_storage(self, gcp_provider, gcp_test_region):
         """Test listing GCS buckets."""
@@ -111,7 +111,7 @@ class TestGCPProviderIntegration:
             assert isinstance(buckets, list)
             # May be empty if no buckets exist
         except CloudProviderError as e:
-            pytest.skip(f"Cannot list buckets: {str(e)}")
+            pytest.skip(f"Cannot list buckets: {e!s}")
 
     @pytest.mark.slow
     def test_storage_lifecycle(self, gcp_provider, gcp_test_region, test_prefix):
@@ -151,7 +151,7 @@ class TestGCPProviderIntegration:
                 gcp_provider.delete_storage(bucket_name, force=True)
             except Exception:
                 pass
-            pytest.fail(f"Storage lifecycle test failed: {str(e)}")
+            pytest.fail(f"Storage lifecycle test failed: {e!s}")
 
     def test_get_cost_data(self, gcp_provider):
         """Test getting cost data."""
@@ -161,7 +161,7 @@ class TestGCPProviderIntegration:
             assert cost_data.currency == "USD"
             # Note: Cost data may be 0.0 if BigQuery export is not configured
         except CloudProviderError as e:
-            pytest.skip(f"Cannot get cost data: {str(e)}")
+            pytest.skip(f"Cannot get cost data: {e!s}")
 
     def test_resource_not_found(self, gcp_provider):
         """Test handling of non-existent resources."""
@@ -200,7 +200,7 @@ class TestWorkloadIdentityIntegration:
             # In production, you would need to delete the service account
 
         except CloudProviderError as e:
-            pytest.skip(f"Cannot create service account: {str(e)}")
+            pytest.skip(f"Cannot create service account: {e!s}")
 
 
 # Test fixtures for cleanup
@@ -219,7 +219,7 @@ def cleanup_test_resources(request, gcp_provider, gcp_test_region):
                     gcp_provider.delete_storage(bucket.name, force=True)
                     print(f"Cleaned up test bucket: {bucket.name}")
                 except Exception as e:
-                    print(f"Failed to cleanup bucket {bucket.name}: {str(e)}")
+                    print(f"Failed to cleanup bucket {bucket.name}: {e!s}")
 
     except Exception as e:
-        print(f"Cleanup failed: {str(e)}")
+        print(f"Cleanup failed: {e!s}")

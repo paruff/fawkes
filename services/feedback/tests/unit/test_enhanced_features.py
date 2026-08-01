@@ -3,11 +3,12 @@ Unit tests for enhanced feedback service features.
 Tests screenshot capture, GitHub integration, and contextual data.
 """
 
-import pytest
 import base64
-from fastapi.testclient import TestClient
-from unittest.mock import AsyncMock, patch, MagicMock
 from datetime import datetime
+from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
+from fastapi.testclient import TestClient
 
 
 @pytest.fixture

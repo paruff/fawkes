@@ -9,19 +9,19 @@ This service provides NPS survey automation including:
 - Integration with Mattermost for survey distribution
 """
 
-import os
 import logging
+import os
 import secrets
+from contextlib import asynccontextmanager
 from datetime import datetime, timedelta
 from typing import Optional
-from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Query, Path
-from fastapi.responses import HTMLResponse
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
-from prometheus_client import make_asgi_app, Counter, Histogram, Gauge
 import asyncpg
+from fastapi import FastAPI, HTTPException, Path, Query
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
+from pydantic import BaseModel, Field
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -54,7 +54,7 @@ class SurveyResponse(BaseModel):
     """Request model for NPS survey response."""
 
     score: int = Field(..., description="NPS score from 0-10", ge=0, le=10)
-    comment: Optional[str] = Field(None, description="Optional feedback comment", max_length=2000)
+    comment: str | None = Field(None, description="Optional feedback comment", max_length=2000)
 
 
 class SurveyResponseOut(BaseModel):
@@ -63,7 +63,7 @@ class SurveyResponseOut(BaseModel):
     id: int
     user_id: str
     score: int
-    comment: Optional[str]
+    comment: str | None
     score_type: str  # promoter, passive, detractor
     created_at: datetime
 
@@ -176,7 +176,7 @@ def calculate_score_type(score: int) -> str:
 
 
 async def calculate_nps(
-    conn: asyncpg.Connection, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None
+    conn: asyncpg.Connection, start_date: datetime | None = None, end_date: datetime | None = None
 ) -> NPSMetrics:
     """Calculate NPS metrics for a given period."""
     if not start_date:
@@ -721,8 +721,8 @@ async def submit_survey_response(token: str = Path(..., description="Survey toke
 # Get NPS metrics
 @app.get("/api/v1/nps/metrics", response_model=NPSMetrics, tags=["NPS"])
 async def get_nps_metrics(
-    start_date: Optional[datetime] = Query(None, description="Period start date"),
-    end_date: Optional[datetime] = Query(None, description="Period end date"),
+    start_date: datetime | None = Query(None, description="Period start date"),
+    end_date: datetime | None = Query(None, description="Period end date"),
 ):
     """Get NPS metrics for a given period."""
     if not db_pool:

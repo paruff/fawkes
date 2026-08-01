@@ -1,10 +1,11 @@
-from behave import given, when, then
+import logging
 import subprocess
 import time
-import logging
+
+import requests
+from behave import given, then, when
 from kubernetes import client, config
 from kubernetes.stream import stream
-import requests
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)

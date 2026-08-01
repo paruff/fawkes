@@ -6,43 +6,43 @@ Users can submit feedback with ratings, categories, and comments.
 Admins can view and manage all feedback submissions.
 """
 
-import os
-import logging
 import base64
+import logging
+import os
+from contextlib import asynccontextmanager
 from datetime import datetime
 from typing import List, Optional
-from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Depends, Header, Query, BackgroundTasks
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field, EmailStr
-from prometheus_client import make_asgi_app
 import asyncpg
-
-# Import metrics from metrics module
-from .metrics import (
-    feedback_submissions_total,
-    feedback_request_duration,
-    feedback_time_to_action_seconds,
-    update_all_metrics,
-)
-
-# Import sentiment analysis
-from .sentiment import analyze_feedback_sentiment
-
-# Import GitHub integration
-from .github_integration import create_github_issue, update_issue_status, is_github_enabled
+from fastapi import BackgroundTasks, Depends, FastAPI, Header, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+from prometheus_client import make_asgi_app
+from pydantic import BaseModel, EmailStr, Field
 
 # Import AI triage
 from .ai_triage import triage_feedback
 
+# Import GitHub integration
+from .github_integration import create_github_issue, is_github_enabled, update_issue_status
+
+# Import metrics from metrics module
+from .metrics import (
+    feedback_request_duration,
+    feedback_submissions_total,
+    feedback_time_to_action_seconds,
+    update_all_metrics,
+)
+
 # Import notifications
 from .notifications import (
-    notify_issue_created,
-    notify_duplicate_detected,
-    notify_automation_summary,
     is_notification_enabled,
+    notify_automation_summary,
+    notify_duplicate_detected,
+    notify_issue_created,
 )
+
+# Import sentiment analysis
+from .sentiment import analyze_feedback_sentiment
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -67,12 +67,12 @@ class FeedbackSubmission(BaseModel):
     rating: int = Field(..., description="Rating from 1-5", ge=1, le=5)
     category: str = Field(..., description="Feedback category", min_length=1, max_length=100)
     comment: str = Field(..., description="Feedback comment", min_length=1, max_length=2000)
-    email: Optional[EmailStr] = Field(None, description="Optional email for follow-up")
-    page_url: Optional[str] = Field(None, description="Page URL where feedback was submitted")
+    email: EmailStr | None = Field(None, description="Optional email for follow-up")
+    page_url: str | None = Field(None, description="Page URL where feedback was submitted")
     feedback_type: str = Field("feedback", description="Type of feedback (feedback, bug_report, feature_request)")
-    screenshot: Optional[str] = Field(None, description="Base64 encoded screenshot data (optional)")
-    browser_info: Optional[str] = Field(None, description="Browser information (name, version)")
-    user_agent: Optional[str] = Field(None, description="User agent string")
+    screenshot: str | None = Field(None, description="Base64 encoded screenshot data (optional)")
+    browser_info: str | None = Field(None, description="Browser information (name, version)")
+    user_agent: str | None = Field(None, description="User agent string")
     create_github_issue: bool = Field(False, description="Whether to automatically create a GitHub issue")
 
 
@@ -83,16 +83,16 @@ class FeedbackResponse(BaseModel):
     rating: int = Field(..., description="Rating from 1-5")
     category: str = Field(..., description="Feedback category")
     comment: str = Field(..., description="Feedback comment")
-    email: Optional[str] = Field(None, description="User email")
-    page_url: Optional[str] = Field(None, description="Page URL")
+    email: str | None = Field(None, description="User email")
+    page_url: str | None = Field(None, description="Page URL")
     status: str = Field(..., description="Feedback status")
-    sentiment: Optional[str] = Field(None, description="Sentiment classification (positive/neutral/negative)")
-    sentiment_compound: Optional[float] = Field(None, description="Sentiment compound score (-1 to +1)")
-    feedback_type: Optional[str] = Field(None, description="Type of feedback")
-    browser_info: Optional[str] = Field(None, description="Browser information")
-    user_agent: Optional[str] = Field(None, description="User agent string")
+    sentiment: str | None = Field(None, description="Sentiment classification (positive/neutral/negative)")
+    sentiment_compound: float | None = Field(None, description="Sentiment compound score (-1 to +1)")
+    feedback_type: str | None = Field(None, description="Type of feedback")
+    browser_info: str | None = Field(None, description="Browser information")
+    user_agent: str | None = Field(None, description="User agent string")
     has_screenshot: bool = Field(False, description="Whether screenshot is available")
-    github_issue_url: Optional[str] = Field(None, description="Associated GitHub issue URL")
+    github_issue_url: str | None = Field(None, description="Associated GitHub issue URL")
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
 
@@ -100,7 +100,7 @@ class FeedbackResponse(BaseModel):
 class FeedbackListResponse(BaseModel):
     """Response model for feedback list."""
 
-    items: List[FeedbackResponse] = Field(..., description="List of feedback items")
+    items: list[FeedbackResponse] = Field(..., description="List of feedback items")
     total: int = Field(..., description="Total number of feedback items")
     page: int = Field(..., description="Current page number")
     page_size: int = Field(..., description="Page size")
@@ -240,7 +240,7 @@ app.mount("/metrics", metrics_app)
 
 
 # Authentication dependency
-async def verify_admin_token(authorization: Optional[str] = Header(None)):
+async def verify_admin_token(authorization: str | None = Header(None)):
     """Verify admin token for protected endpoints."""
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid authorization header")
@@ -425,8 +425,8 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
 async def list_feedback(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Page size"),
-    status: Optional[str] = Query(None, description="Filter by status"),
-    category: Optional[str] = Query(None, description="Filter by category"),
+    status: str | None = Query(None, description="Filter by status"),
+    category: str | None = Query(None, description="Filter by category"),
     _token: str = Depends(verify_admin_token),
 ):
     """List all feedback (admin only)."""
@@ -806,7 +806,7 @@ async def triage_feedback_endpoint(feedback_id: int, _token: str = Depends(verif
 async def automate_validated_feedback(
     background_tasks: BackgroundTasks,
     min_rating: int = Query(None, ge=1, le=5, description="Minimum rating filter"),
-    feedback_type: Optional[str] = Query(None, description="Filter by feedback type"),
+    feedback_type: str | None = Query(None, description="Filter by feedback type"),
     limit: int = Query(10, ge=1, le=100, description="Maximum number to process"),
     _token: str = Depends(verify_admin_token),
 ):
@@ -948,7 +948,7 @@ async def automate_validated_feedback(
                     issues_created += 1
 
                 except Exception as e:
-                    error_msg = f"Error processing feedback ID {feedback['id']}: {str(e)}"
+                    error_msg = f"Error processing feedback ID {feedback['id']}: {e!s}"
                     logger.error(error_msg)
                     errors.append(error_msg)
 

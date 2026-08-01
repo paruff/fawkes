@@ -1,25 +1,26 @@
 """Data aggregation from multiple analytics sources"""
 
-import os
 import asyncio
-from typing import Dict, List, Optional
+import os
 from datetime import datetime, timedelta
+from typing import Dict, List, Optional
+
 import httpx
 
+from .metrics import MetricsCollector
 from .models import (
-    UsageTrends,
+    DashboardData,
+    ExperimentResults,
     FeatureAdoption,
     FeatureUsage,
-    ExperimentResults,
-    UserSegments,
-    UserSegment,
     FunnelData,
     FunnelStep,
-    DashboardData,
     TimeSeriesDataPoint,
+    UsageTrends,
+    UserSegment,
+    UserSegments,
     VariantMetrics,
 )
-from .metrics import MetricsCollector
 
 
 class DataAggregator:
@@ -86,7 +87,7 @@ class DataAggregator:
         }
         return mapping.get(time_range, timedelta(days=7))
 
-    async def _fetch_plausible_data(self, time_range: str) -> Dict:
+    async def _fetch_plausible_data(self, time_range: str) -> dict:
         """Fetch data from Plausible analytics"""
         # Simulate Plausible API calls
         # In production, this would call actual Plausible API
@@ -111,7 +112,7 @@ class DataAggregator:
             "sources": {"Direct": 650, "GitHub": 350, "Internal": 250},
         }
 
-    async def _fetch_experiment_data(self, status: Optional[str] = None) -> List[Dict]:
+    async def _fetch_experiment_data(self, status: str | None = None) -> list[dict]:
         """Fetch experiment results from experimentation service"""
         try:
             async with httpx.AsyncClient(timeout=10.0) as client:
@@ -252,7 +253,7 @@ class DataAggregator:
             adoption_trend=adoption_trend,
         )
 
-    async def get_experiment_results(self, status: Optional[str] = None) -> List[ExperimentResults]:
+    async def get_experiment_results(self, status: str | None = None) -> list[ExperimentResults]:
         """Get experiment results with statistical analysis"""
         exp_data = await self._fetch_experiment_data(status)
 
@@ -545,7 +546,7 @@ class DataAggregator:
         self._cache_timestamp[cache_key] = datetime.utcnow()
         return dashboard
 
-    async def export_data(self, format: str, time_range: str) -> Dict:
+    async def export_data(self, format: str, time_range: str) -> dict:
         """Export dashboard data in specified format"""
         data = await self.get_dashboard_data(time_range)
 

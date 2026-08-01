@@ -1,10 +1,10 @@
 """Unit tests for Focalboard integration."""
 
-import pytest
-from fastapi.testclient import TestClient
 from datetime import datetime
 
+import pytest
 from app.main import app
+from fastapi.testclient import TestClient
 
 client = TestClient(app)
 

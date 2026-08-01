@@ -9,13 +9,13 @@ Tests are skipped by default unless CIVO_TOKEN is set.
 """
 
 import os
-import pytest
 import time
 from datetime import datetime
 
-from src.providers.civo_provider import CivoProvider
-from src.interfaces.provider import ClusterConfig, StorageConfig
+import pytest
 from src.exceptions import ResourceNotFoundError
+from src.interfaces.provider import ClusterConfig, StorageConfig
+from src.providers.civo_provider import CivoProvider
 
 # Skip all tests in this file unless CIVO_TOKEN is set
 pytestmark = pytest.mark.skipif(

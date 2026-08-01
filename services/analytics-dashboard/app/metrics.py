@@ -1,7 +1,8 @@
 """Prometheus metrics collection for Analytics Dashboard"""
 
-from prometheus_client import Counter, Gauge, Histogram, Info
 from typing import Dict
+
+from prometheus_client import Counter, Gauge, Histogram, Info
 
 
 class MetricsCollector:
@@ -89,7 +90,7 @@ class MetricsCollector:
         # Set dashboard info
         self.dashboard_info.info({"version": "1.0.0", "service": "analytics-dashboard"})
 
-    def update_usage_metrics(self, data: Dict):
+    def update_usage_metrics(self, data: dict):
         """Update usage-related metrics"""
         self.total_users.set(data.get("total_users", 0))
         self.active_users.set(data.get("active_users", 0))
@@ -128,7 +129,7 @@ class MetricsCollector:
             self.segment_size.labels(segment_name=segment_name).set(segment.get("user_count", 0))
             self.segment_engagement.labels(segment_name=segment_name).set(segment.get("avg_engagement", 0))
 
-    def update_funnel_metrics(self, funnels: Dict):
+    def update_funnel_metrics(self, funnels: dict):
         """Update funnel metrics"""
         for funnel_name, funnel_data in funnels.items():
             self.funnel_conversion_rate.labels(funnel_name=funnel_name).set(

@@ -1,8 +1,9 @@
 # tests/e2e/step_definitions/infrastructure_steps.py
 
-from pytest_bdd import scenarios, given, when, then, parsers
 import subprocess
+
 import boto3
+from pytest_bdd import given, parsers, scenarios, then, when
 
 scenarios("../features/infrastructure_provisioning.feature")
 
@@ -26,7 +27,6 @@ def terraform_installed():
 def run_command(command):
     """Execute infrastructure provisioning command"""
     # This will be implemented once we have working script
-    pass
 
 
 @then(parsers.parse("the script completes successfully within {minutes:d} minutes"))

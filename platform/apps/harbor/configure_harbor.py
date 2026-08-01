@@ -72,7 +72,7 @@ class HarborConfigurer:
         logger.error(f"Harbor not ready after {timeout} seconds")
         return False
 
-    def create_project(self, name: str, public: bool = False, storage_limit: int = -1) -> Optional[Dict]:
+    def create_project(self, name: str, public: bool = False, storage_limit: int = -1) -> dict | None:
         """
         Create a Harbor project.
 
@@ -122,8 +122,8 @@ class HarborConfigurer:
         return None
 
     def create_robot_account(
-        self, project_name: str, robot_name: str, description: str, permissions: List[str]
-    ) -> Optional[Dict]:
+        self, project_name: str, robot_name: str, description: str, permissions: list[str]
+    ) -> dict | None:
         """
         Create a robot account for CI/CD.
 

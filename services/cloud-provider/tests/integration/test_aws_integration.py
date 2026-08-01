@@ -8,13 +8,13 @@ These tests run against real AWS services and require:
 Set SKIP_INTEGRATION_TESTS=1 to skip these tests.
 """
 
-import pytest
 import os
 from datetime import datetime
 
-from src.providers.aws_provider import AWSProvider
+import pytest
+from src.exceptions import ResourceAlreadyExistsError, ResourceNotFoundError
 from src.interfaces.provider import StorageConfig
-from src.exceptions import ResourceNotFoundError, ResourceAlreadyExistsError
+from src.providers.aws_provider import AWSProvider
 
 # Skip integration tests if environment variable is set
 pytestmark = pytest.mark.skipif(os.getenv("SKIP_INTEGRATION_TESTS", "0") == "1", reason="Integration tests disabled")
