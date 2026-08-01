@@ -311,7 +311,10 @@ async def mattermost_friction_command(request: Request):
     except Exception as e:
         friction_logs_total.labels(platform="mattermost", status="error").inc()
         logger.error(f"Error creating insight: {e}")
-        return {"response_type": "ephemeral", "text": f"❌ Failed to log friction: {e!s}"}
+        return {
+            "response_type": "ephemeral",
+            "text": "❌ Failed to log friction due to an internal error. Please try again later.",
+        }
 
 
 @app.post("/api/v1/friction")
