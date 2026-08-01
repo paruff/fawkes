@@ -156,7 +156,7 @@ Issues = "https://github.com/fawkes-platform/fawkes-cli/issues"
 
 [tool.black]
 line-length = 100
-target-version = ['py38', 'py39', 'py310', 'py311']
+target-version = ['py38', 'py39', 'py313', 'py313']
 
 [tool.isort]
 profile = "black"
