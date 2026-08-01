@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup format format-check lint lint-base lint-lang lint-tool lint-platform validate-research-structure validate-at-e0-001 validate-at-e0-002 validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-008 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-epic-3-final validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all terraform-test terraform-test-integration terraform-test-e2e terraform-test-cost terraform-test-all dev-up dev-down dev-status check-deps dojo-validate
+.PHONY: clean help deploy-local test-bdd validate sync pre-commit-setup format format-check lint lint-base lint-lang lint-tool lint-platform validate-research-structure validate-at-e0-001 validate-at-e0-002 validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-008 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-epic-3-final validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all terraform-test terraform-test-integration terraform-test-e2e terraform-test-cost terraform-test-all dev-up dev-down dev-status check-deps dojo-validate
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -13,6 +13,15 @@ SHFMT_EXCLUDE_PATTERN := buildplatform.sh
 help: ## Show this help message
 	@echo "Fawkes Development Commands:"
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+clean: ## Remove agent tooling caches, generated output, and build artifacts
+	rm -rf .opencode/node_modules/
+	rm -rf graphify-out/
+	rm -rf .agents/logs/
+	rm -rf __pycache__/ .pytest_cache/ .mypy_cache/ .ruff_cache/
+	find . -name '*.pyc' -delete
+	rm -f ci-diagnosis.md ci-fix-report.md
+	@echo "Cleaned agent tooling caches and build artifacts"
 
 # ─── Local platform (k3d) ───────────────────────────────────────────────────
 
