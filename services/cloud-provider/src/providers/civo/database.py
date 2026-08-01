@@ -6,19 +6,19 @@ This module provides an abstraction layer to maintain interface compatibility.
 """
 
 import logging
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
 
 from civo import Civo
 
-from ...interfaces.models import Database
-from ...interfaces.provider import DatabaseConfig
 from ...exceptions import (
     CloudProviderError,
     ResourceNotFoundError,
     ValidationError,
 )
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import Database
+from ...interfaces.provider import DatabaseConfig
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +39,7 @@ class DatabaseService:
         "redis": "Redis:5GB",
     }
 
-    def __init__(self, client: Civo, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, client: Civo, rate_limiter: RateLimiter | None = None):
         """
         Initialize Database service.
 
@@ -146,7 +146,7 @@ class DatabaseService:
         max_retries=3,
         retriable_exceptions=(Exception,),
     )
-    def get_database(self, database_id: str, region: Optional[str] = None) -> Database:
+    def get_database(self, database_id: str, region: str | None = None) -> Database:
         """
         Get database details.
 
@@ -196,7 +196,7 @@ class DatabaseService:
         retriable_exceptions=(Exception,),
     )
     def delete_database(
-        self, database_id: str, region: Optional[str] = None, skip_final_snapshot: bool = False
+        self, database_id: str, region: str | None = None, skip_final_snapshot: bool = False
     ) -> bool:
         """
         Delete a database instance.
@@ -242,7 +242,7 @@ class DatabaseService:
         max_retries=3,
         retriable_exceptions=(Exception,),
     )
-    def list_databases(self, region: Optional[str] = None) -> List[Database]:
+    def list_databases(self, region: str | None = None) -> list[Database]:
         """
         List all database instances.
 

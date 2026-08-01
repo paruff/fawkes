@@ -2,12 +2,13 @@
 BDD step definitions for feedback service tests.
 """
 
-from behave import given, when, then
-import requests
 import json
-import time
 import logging
 import os
+import time
+
+import requests
+from behave import given, then, when
 from kubernetes import client, config
 
 logger = logging.getLogger(__name__)
@@ -289,7 +290,6 @@ def step_feedback_healthy(context):
     except Exception as e:
         logger.warning(f"Health check failed: {e}")
         # Don't fail the test if service is not accessible yet
-        pass
 
 
 @then('the cluster "{cluster_name}" should exist')

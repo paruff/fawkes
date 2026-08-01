@@ -5,20 +5,20 @@ Prometheus metrics exporter and DevEx health score calculator
 import logging
 from datetime import datetime, timedelta
 
-from .schemas import (
-    SatisfactionMetrics,
-    PerformanceMetrics,
-    ActivityMetrics,
-    CommunicationMetrics,
-    EfficiencyMetrics,
-)
-from .database import get_db_session
 from .collectors import (
-    collect_satisfaction_metrics,
-    collect_performance_metrics,
     collect_activity_metrics,
     collect_communication_metrics,
     collect_efficiency_metrics,
+    collect_performance_metrics,
+    collect_satisfaction_metrics,
+)
+from .database import get_db_session
+from .schemas import (
+    ActivityMetrics,
+    CommunicationMetrics,
+    EfficiencyMetrics,
+    PerformanceMetrics,
+    SatisfactionMetrics,
 )
 
 logger = logging.getLogger(__name__)

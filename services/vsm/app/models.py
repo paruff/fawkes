@@ -1,9 +1,11 @@
 """Database models for VSM service."""
 
-from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float, Enum as SQLEnum
-from sqlalchemy.orm import declarative_base, relationship
 import enum
+from datetime import datetime, timezone
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 

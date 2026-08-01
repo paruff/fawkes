@@ -4,14 +4,15 @@ Alert handler for Great Expectations validation results.
 Sends alerts to Mattermost on validation failures.
 """
 
-import os
 import json
-import requests
-from typing import Dict, Any
+import os
 from datetime import datetime
+from typing import Any, Dict
+
+import requests
 
 
-def send_mattermost_alert(validation_result_suite: Any, data_docs_url: str = None) -> Dict[str, Any]:
+def send_mattermost_alert(validation_result_suite: Any, data_docs_url: str = None) -> dict[str, Any]:
     """
     Send alert to Mattermost when validation fails.
 
@@ -73,7 +74,7 @@ def send_mattermost_alert(validation_result_suite: Any, data_docs_url: str = Non
         return {"status": "error", "error": str(e)}
 
 
-def send_daily_summary(summary_data: Dict[str, Any]) -> Dict[str, Any]:
+def send_daily_summary(summary_data: dict[str, Any]) -> dict[str, Any]:
     """
     Send daily summary of data quality validations.
 

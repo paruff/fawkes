@@ -21,13 +21,14 @@ Usage:
         pass
 """
 
+import logging
 import os
 import uuid
-import pytest
-import logging
-from typing import Generator
+from collections.abc import Generator
 from datetime import datetime
 from pathlib import Path
+
+import pytest
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -146,7 +147,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     categories = {"unit": [], "integration": [], "e2e": [], "smoke": [], "security": []}
 
     for report in terminalreporter.stats.get("passed", []):
-        for category in categories.keys():
+        for category in categories:
             if category in report.keywords:
                 categories[category].append(report)
 
@@ -160,7 +161,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     dora_metrics = {"dora_deployment_frequency": 0, "dora_lead_time": 0, "dora_change_failure_rate": 0, "dora_mttr": 0}
 
     for report in terminalreporter.stats.get("passed", []):
-        for metric in dora_metrics.keys():
+        for metric in dora_metrics:
             if metric in report.keywords:
                 dora_metrics[metric] += 1
 
@@ -613,7 +614,7 @@ def clean_database(postgres_connection_string):
         sqlalchemy.engine.Engine: Database engine
     """
     try:
-        from sqlalchemy import create_engine, MetaData
+        from sqlalchemy import MetaData, create_engine
 
         engine = create_engine(postgres_connection_string)
         metadata = MetaData()

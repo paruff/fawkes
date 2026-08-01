@@ -1,25 +1,25 @@
 """Main FastAPI application for Experimentation Service"""
 
 import os
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
-from fastapi import FastAPI, HTTPException, Depends, Header
+from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import make_asgi_app
 from sqlalchemy.orm import Session
 
-from .database import engine, Base, get_db
-from .models import (
-    ExperimentCreate,
-    ExperimentResponse,
-    ExperimentUpdate,
-    VariantAssignment,
-    ExperimentStats,
-    ExperimentList,
-)
+from .database import Base, engine, get_db
 from .experiment_manager import ExperimentManager
 from .metrics import MetricsCollector
+from .models import (
+    ExperimentCreate,
+    ExperimentList,
+    ExperimentResponse,
+    ExperimentStats,
+    ExperimentUpdate,
+    VariantAssignment,
+)
 
 
 # Lifespan context manager for startup/shutdown

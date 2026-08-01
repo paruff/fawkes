@@ -7,8 +7,9 @@ These tests validate that:
 3. Markers work as expected
 """
 
-import pytest
 from datetime import datetime
+
+import pytest
 
 
 @pytest.mark.unit

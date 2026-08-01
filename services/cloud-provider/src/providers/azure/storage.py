@@ -1,25 +1,27 @@
 """Azure Blob Storage operations."""
 
 import logging
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
 
-from azure.mgmt.storage import StorageManagementClient
 from azure.core.exceptions import (
-    ResourceNotFoundError as AzureResourceNotFoundError,
     HttpResponseError,
     ResourceExistsError,
 )
+from azure.core.exceptions import (
+    ResourceNotFoundError as AzureResourceNotFoundError,
+)
+from azure.mgmt.storage import StorageManagementClient
 
-from ...interfaces.models import Storage
-from ...interfaces.provider import StorageConfig
 from ...exceptions import (
     CloudProviderError,
-    ResourceNotFoundError,
     ResourceAlreadyExistsError,
+    ResourceNotFoundError,
     ValidationError,
 )
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import Storage
+from ...interfaces.provider import StorageConfig
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +29,7 @@ logger = logging.getLogger(__name__)
 class AzureStorageService:
     """Azure Blob Storage service operations."""
 
-    def __init__(self, credential, subscription_id: str, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, credential, subscription_id: str, rate_limiter: RateLimiter | None = None):
         """
         Initialize Azure Storage service.
 
@@ -41,7 +43,7 @@ class AzureStorageService:
         self.rate_limiter = rate_limiter or RateLimiter(max_calls=10, time_window=1.0)
         self._clients = {}
 
-    def _get_client(self, subscription_id: Optional[str] = None) -> StorageManagementClient:
+    def _get_client(self, subscription_id: str | None = None) -> StorageManagementClient:
         """Get or create Storage management client."""
         sub_id = subscription_id or self.subscription_id
         if sub_id not in self._clients:
@@ -245,7 +247,7 @@ class AzureStorageService:
             raise CloudProviderError(f"Unexpected error deleting Azure Storage: {e}", provider="azure")
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(HttpResponseError,))
-    def list_storage(self, resource_group: Optional[str] = None, include_details: bool = False) -> List[Storage]:
+    def list_storage(self, resource_group: str | None = None, include_details: bool = False) -> list[Storage]:
         """
         List all Azure Storage Accounts.
 

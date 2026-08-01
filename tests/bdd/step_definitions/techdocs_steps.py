@@ -1,9 +1,10 @@
-from behave import given, when, then
-import os
-import yaml
 import logging
-from kubernetes import client, config
+import os
 from pathlib import Path
+
+import yaml
+from behave import given, then, when
+from kubernetes import client, config
 
 logger = logging.getLogger(__name__)
 

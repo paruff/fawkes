@@ -1,6 +1,7 @@
-import pytest
 import os
 import sys
+
+import pytest
 import requests
 from kubernetes import config
 

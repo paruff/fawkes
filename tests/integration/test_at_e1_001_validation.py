@@ -12,8 +12,9 @@ Usage:
 import json
 import os
 import subprocess
-import pytest
 from pathlib import Path
+
+import pytest
 
 
 class TestATE1001Validation:

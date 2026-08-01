@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -13,7 +14,7 @@ class InterviewBase(BaseModel):
     participant_team: str = Field(..., max_length=100)
     interviewer: str = Field(..., max_length=100)
     scheduled_date: datetime
-    notes: Optional[str] = None
+    notes: str | None = None
 
 
 class InterviewCreate(InterviewBase):
@@ -23,19 +24,19 @@ class InterviewCreate(InterviewBase):
 class InterviewUpdate(BaseModel):
     """Update interview schema."""
 
-    completed_date: Optional[datetime] = None
-    duration_minutes: Optional[int] = None
-    status: Optional[str] = None
-    insights_generated: Optional[int] = None
-    notes: Optional[str] = None
+    completed_date: datetime | None = None
+    duration_minutes: int | None = None
+    status: str | None = None
+    insights_generated: int | None = None
+    notes: str | None = None
 
 
 class InterviewResponse(InterviewBase):
     """Interview response schema."""
 
     id: int
-    completed_date: Optional[datetime] = None
-    duration_minutes: Optional[int] = None
+    completed_date: datetime | None = None
+    duration_minutes: int | None = None
     status: str
     insights_generated: int
     created_at: datetime
@@ -54,7 +55,7 @@ class DiscoveryInsightBase(BaseModel):
     category: str = Field(..., max_length=100)
     priority: str = Field(..., max_length=50)
     source: str = Field(..., max_length=100)
-    interview_id: Optional[int] = None
+    interview_id: int | None = None
 
 
 class DiscoveryInsightCreate(DiscoveryInsightBase):
@@ -64,9 +65,9 @@ class DiscoveryInsightCreate(DiscoveryInsightBase):
 class DiscoveryInsightUpdate(BaseModel):
     """Update discovery insight schema."""
 
-    status: Optional[str] = None
-    validated_date: Optional[datetime] = None
-    time_to_validation_days: Optional[float] = None
+    status: str | None = None
+    validated_date: datetime | None = None
+    time_to_validation_days: float | None = None
 
 
 class DiscoveryInsightResponse(DiscoveryInsightBase):
@@ -75,8 +76,8 @@ class DiscoveryInsightResponse(DiscoveryInsightBase):
     id: int
     status: str
     captured_date: datetime
-    validated_date: Optional[datetime] = None
-    time_to_validation_days: Optional[float] = None
+    validated_date: datetime | None = None
+    time_to_validation_days: float | None = None
     created_at: datetime
     updated_at: datetime
 
@@ -91,7 +92,7 @@ class ExperimentBase(BaseModel):
     name: str = Field(..., max_length=255)
     description: str
     hypothesis: str
-    insight_id: Optional[int] = None
+    insight_id: int | None = None
     success_criteria: str
 
 
@@ -102,13 +103,13 @@ class ExperimentCreate(ExperimentBase):
 class ExperimentUpdate(BaseModel):
     """Update experiment schema."""
 
-    status: Optional[str] = None
-    start_date: Optional[datetime] = None
-    end_date: Optional[datetime] = None
-    duration_days: Optional[int] = None
-    results: Optional[str] = None
-    validated: Optional[bool] = None
-    roi_percentage: Optional[float] = None
+    status: str | None = None
+    start_date: datetime | None = None
+    end_date: datetime | None = None
+    duration_days: int | None = None
+    results: str | None = None
+    validated: bool | None = None
+    roi_percentage: float | None = None
 
 
 class ExperimentResponse(ExperimentBase):
@@ -116,12 +117,12 @@ class ExperimentResponse(ExperimentBase):
 
     id: int
     status: str
-    start_date: Optional[datetime] = None
-    end_date: Optional[datetime] = None
-    duration_days: Optional[int] = None
-    results: Optional[str] = None
+    start_date: datetime | None = None
+    end_date: datetime | None = None
+    duration_days: int | None = None
+    results: str | None = None
     validated: bool
-    roi_percentage: Optional[float] = None
+    roi_percentage: float | None = None
     created_at: datetime
     updated_at: datetime
 
@@ -135,7 +136,7 @@ class FeatureValidationBase(BaseModel):
 
     feature_name: str = Field(..., max_length=255)
     description: str
-    experiment_id: Optional[int] = None
+    experiment_id: int | None = None
 
 
 class FeatureValidationCreate(FeatureValidationBase):
@@ -145,13 +146,13 @@ class FeatureValidationCreate(FeatureValidationBase):
 class FeatureValidationUpdate(BaseModel):
     """Update feature validation schema."""
 
-    status: Optional[str] = None
-    validated_date: Optional[datetime] = None
-    shipped_date: Optional[datetime] = None
-    time_to_validate_days: Optional[float] = None
-    time_to_ship_days: Optional[float] = None
-    adoption_rate: Optional[float] = None
-    user_satisfaction: Optional[float] = None
+    status: str | None = None
+    validated_date: datetime | None = None
+    shipped_date: datetime | None = None
+    time_to_validate_days: float | None = None
+    time_to_ship_days: float | None = None
+    adoption_rate: float | None = None
+    user_satisfaction: float | None = None
 
 
 class FeatureValidationResponse(FeatureValidationBase):
@@ -160,12 +161,12 @@ class FeatureValidationResponse(FeatureValidationBase):
     id: int
     status: str
     proposed_date: datetime
-    validated_date: Optional[datetime] = None
-    shipped_date: Optional[datetime] = None
-    time_to_validate_days: Optional[float] = None
-    time_to_ship_days: Optional[float] = None
-    adoption_rate: Optional[float] = None
-    user_satisfaction: Optional[float] = None
+    validated_date: datetime | None = None
+    shipped_date: datetime | None = None
+    time_to_validate_days: float | None = None
+    time_to_ship_days: float | None = None
+    adoption_rate: float | None = None
+    user_satisfaction: float | None = None
     created_at: datetime
     updated_at: datetime
 
@@ -190,9 +191,9 @@ class TeamPerformanceCreate(TeamPerformanceBase):
     experiments_run: int = 0
     features_validated: int = 0
     features_shipped: int = 0
-    avg_time_to_validation_days: Optional[float] = None
-    avg_time_to_ship_days: Optional[float] = None
-    discovery_velocity: Optional[float] = None
+    avg_time_to_validation_days: float | None = None
+    avg_time_to_ship_days: float | None = None
+    discovery_velocity: float | None = None
 
 
 class TeamPerformanceResponse(TeamPerformanceBase):
@@ -204,9 +205,9 @@ class TeamPerformanceResponse(TeamPerformanceBase):
     experiments_run: int
     features_validated: int
     features_shipped: int
-    avg_time_to_validation_days: Optional[float] = None
-    avg_time_to_ship_days: Optional[float] = None
-    discovery_velocity: Optional[float] = None
+    avg_time_to_validation_days: float | None = None
+    avg_time_to_ship_days: float | None = None
+    discovery_velocity: float | None = None
     created_at: datetime
     updated_at: datetime
 
@@ -227,8 +228,8 @@ class DiscoveryStatistics(BaseModel):
     total_features: int
     validated_features: int
     shipped_features: int
-    avg_time_to_validation_days: Optional[float] = None
-    avg_time_to_ship_days: Optional[float] = None
+    avg_time_to_validation_days: float | None = None
+    avg_time_to_ship_days: float | None = None
     validation_rate: float
     experiment_success_rate: float
     feature_validation_rate: float

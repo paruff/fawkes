@@ -4,14 +4,14 @@ Civo provides billing information through their API.
 """
 
 import logging
-from typing import Dict, Any, Optional
 from datetime import datetime, timedelta
+from typing import Any, Dict, Optional
 
 from civo import Civo
 
-from ...interfaces.models import CostData
 from ...exceptions import CloudProviderError
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import CostData
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class BillingService:
     """Civo Billing service operations."""
 
-    def __init__(self, client: Civo, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, client: Civo, rate_limiter: RateLimiter | None = None):
         """
         Initialize Billing service.
 
@@ -151,7 +151,7 @@ class BillingService:
         max_retries=3,
         retriable_exceptions=(Exception,),
     )
-    def get_quota(self) -> Dict[str, Any]:
+    def get_quota(self) -> dict[str, Any]:
         """
         Get account quota information.
 

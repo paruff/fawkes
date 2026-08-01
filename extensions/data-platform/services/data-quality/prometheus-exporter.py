@@ -13,17 +13,17 @@ Metrics exposed:
 - validation_runs_total: Total number of validation runs (counter)
 """
 
-import os
-import json
-import time
-import logging
 import argparse
-from pathlib import Path
+import json
+import logging
+import os
+import time
 from datetime import datetime
-from typing import Dict, Any
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
+from typing import Any, Dict
 
-from prometheus_client import Counter, Gauge, Histogram, generate_latest, CollectorRegistry, CONTENT_TYPE_LATEST
+from prometheus_client import CONTENT_TYPE_LATEST, CollectorRegistry, Counter, Gauge, Histogram, generate_latest
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -105,7 +105,7 @@ class MetricsExporter:
         self.last_update = {}
         logger.info(f"Initialized MetricsExporter with results_dir: {results_dir}")
 
-    def parse_checkpoint_result(self, result_data: Dict[str, Any]) -> None:
+    def parse_checkpoint_result(self, result_data: dict[str, Any]) -> None:
         """
         Parse a checkpoint result and update metrics.
 

@@ -5,37 +5,38 @@ FastAPI-based service for collecting and exposing SPACE framework metrics
 for Developer Experience measurement.
 """
 
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import PlainTextResponse
-from datetime import datetime, timedelta
-from typing import Optional
 import logging
 from contextlib import asynccontextmanager
+from datetime import datetime, timedelta
+from typing import Optional
 
-from .database import init_db, get_db_session
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import PlainTextResponse
+
+from .collectors import (
+    collect_activity_metrics,
+    collect_communication_metrics,
+    collect_efficiency_metrics,
+    collect_performance_metrics,
+    collect_satisfaction_metrics,
+)
+from .database import get_db_session, init_db
+from .metrics import (
+    calculate_devex_health_score,
+    expose_prometheus_metrics,
+)
 from .models import (
     SpaceEfficiency,
 )
 from .schemas import (
-    SatisfactionMetrics,
-    PerformanceMetrics,
     ActivityMetrics,
     CommunicationMetrics,
     EfficiencyMetrics,
-    SpaceMetricsResponse,
     FrictionLogRequest,
+    PerformanceMetrics,
     PulseSurveyRequest,
-)
-from .collectors import (
-    collect_satisfaction_metrics,
-    collect_performance_metrics,
-    collect_activity_metrics,
-    collect_communication_metrics,
-    collect_efficiency_metrics,
-)
-from .metrics import (
-    expose_prometheus_metrics,
-    calculate_devex_health_score,
+    SatisfactionMetrics,
+    SpaceMetricsResponse,
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -86,7 +87,7 @@ async def prometheus_metrics():
 
 
 @app.get("/api/v1/metrics/space", response_model=SpaceMetricsResponse)
-async def get_space_metrics(time_range: Optional[str] = "30d") -> SpaceMetricsResponse:
+async def get_space_metrics(time_range: str | None = "30d") -> SpaceMetricsResponse:
     """
     Get all SPACE dimension metrics (aggregated)
 
@@ -129,11 +130,11 @@ async def get_space_metrics(time_range: Optional[str] = "30d") -> SpaceMetricsRe
             )
     except Exception as e:
         logger.error(f"Error getting SPACE metrics: {e}")
-        raise HTTPException(status_code=500, detail=f"Error retrieving metrics: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error retrieving metrics: {e!s}")
 
 
 @app.get("/api/v1/metrics/space/satisfaction", response_model=SatisfactionMetrics)
-async def get_satisfaction_metrics(time_range: Optional[str] = "30d"):
+async def get_satisfaction_metrics(time_range: str | None = "30d"):
     """Get satisfaction dimension metrics"""
     try:
         now = datetime.utcnow()
@@ -148,7 +149,7 @@ async def get_satisfaction_metrics(time_range: Optional[str] = "30d"):
 
 
 @app.get("/api/v1/metrics/space/performance", response_model=PerformanceMetrics)
-async def get_performance_metrics(time_range: Optional[str] = "30d"):
+async def get_performance_metrics(time_range: str | None = "30d"):
     """Get performance dimension metrics"""
     try:
         now = datetime.utcnow()
@@ -163,7 +164,7 @@ async def get_performance_metrics(time_range: Optional[str] = "30d"):
 
 
 @app.get("/api/v1/metrics/space/activity", response_model=ActivityMetrics)
-async def get_activity_metrics(time_range: Optional[str] = "30d"):
+async def get_activity_metrics(time_range: str | None = "30d"):
     """Get activity dimension metrics"""
     try:
         now = datetime.utcnow()
@@ -178,7 +179,7 @@ async def get_activity_metrics(time_range: Optional[str] = "30d"):
 
 
 @app.get("/api/v1/metrics/space/communication", response_model=CommunicationMetrics)
-async def get_communication_metrics(time_range: Optional[str] = "30d"):
+async def get_communication_metrics(time_range: str | None = "30d"):
     """Get communication dimension metrics"""
     try:
         now = datetime.utcnow()
@@ -193,7 +194,7 @@ async def get_communication_metrics(time_range: Optional[str] = "30d"):
 
 
 @app.get("/api/v1/metrics/space/efficiency", response_model=EfficiencyMetrics)
-async def get_efficiency_metrics(time_range: Optional[str] = "30d"):
+async def get_efficiency_metrics(time_range: str | None = "30d"):
     """Get efficiency dimension metrics"""
     try:
         now = datetime.utcnow()

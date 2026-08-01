@@ -6,7 +6,7 @@ for dynamic agent provisioning.
 """
 
 import pytest
-from pytest_bdd import scenarios, given, when, then, parsers
+from pytest_bdd import given, parsers, scenarios, then, when
 
 # Load all scenarios from the feature file
 scenarios("../features/jenkins/jenkins-kubernetes-deployment.feature")

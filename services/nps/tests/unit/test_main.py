@@ -2,12 +2,12 @@
 Unit tests for NPS Survey Service.
 """
 
-from datetime import datetime, timedelta
+import os
 
 # Import the app - in real testing, we'd mock the database
 # For now, just test the score calculation logic
 import sys
-import os
+from datetime import datetime, timedelta
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../.."))
 

@@ -6,9 +6,10 @@ dashboard visualized through Grafana and a standalone timeline interface.
 """
 
 import os
+
 import pytest
 import requests
-from pytest_bdd import scenarios, given, when, then, parsers
+from pytest_bdd import given, parsers, scenarios, then, when
 
 # Load all scenarios from the feature file
 scenarios("../features/ai-observability-dashboard.feature")

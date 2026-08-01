@@ -27,13 +27,13 @@ Examples:
     python index-docs.py --force-reindex
 """
 
-import sys
 import argparse
 import hashlib
+import sys
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import List, Optional, Tuple
-from datetime import datetime
 
 try:
     import weaviate
@@ -100,7 +100,7 @@ def get_file_hash(filepath: Path) -> str:
     return hasher.hexdigest()
 
 
-def chunk_content(content: str, max_chars: int = MAX_CHUNK_CHARS) -> List[str]:
+def chunk_content(content: str, max_chars: int = MAX_CHUNK_CHARS) -> list[str]:
     """
     Chunk content into smaller pieces.
 
@@ -179,7 +179,7 @@ def categorize_file(filepath: Path) -> str:
         return "config"
 
 
-def scan_files(base_path: Path, scan_dirs: List[str]) -> List[Path]:
+def scan_files(base_path: Path, scan_dirs: list[str]) -> list[Path]:
     """Scan directories for files to index."""
     files_to_index = []
 
@@ -191,7 +191,7 @@ def scan_files(base_path: Path, scan_dirs: List[str]) -> List[Path]:
 
         print(f"📁 Scanning: {dir_path}")
 
-        for ext in FILE_EXTENSIONS.keys():
+        for ext in FILE_EXTENSIONS:
             for filepath in dir_path.rglob(f"*{ext}"):
                 if not should_exclude(filepath):
                     files_to_index.append(filepath)
@@ -199,7 +199,7 @@ def scan_files(base_path: Path, scan_dirs: List[str]) -> List[Path]:
     return sorted(files_to_index)
 
 
-def read_file_content(filepath: Path) -> Optional[str]:
+def read_file_content(filepath: Path) -> str | None:
     """Read file content, handling encoding errors."""
     try:
         with open(filepath, "r", encoding="utf-8") as f:
@@ -386,7 +386,7 @@ def index_file(
     base_path: Path,
     dry_run: bool = False,
     force: bool = False,
-) -> Tuple[bool, int]:
+) -> tuple[bool, int]:
     """
     Index a single file into Weaviate.
 

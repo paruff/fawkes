@@ -1,18 +1,20 @@
 """Prometheus metrics exporter for discovery metrics."""
 
-from prometheus_client import Gauge
-from sqlalchemy.orm import Session
-from sqlalchemy import func
 from datetime import datetime, timedelta
+
+from prometheus_client import Gauge
+from sqlalchemy import func
+from sqlalchemy.orm import Session
+
 from app.models import (
-    Interview,
-    InterviewStatus,
     DiscoveryInsight,
-    InsightStatus,
     Experiment,
     ExperimentStatus,
-    FeatureValidation,
     FeatureStatus,
+    FeatureValidation,
+    InsightStatus,
+    Interview,
+    InterviewStatus,
     TeamPerformance,
 )
 

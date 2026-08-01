@@ -1,8 +1,9 @@
 """Unit tests for main FastAPI application."""
 
-import pytest
-from unittest.mock import patch
 from datetime import datetime
+from unittest.mock import patch
+
+import pytest
 
 
 @pytest.mark.asyncio
@@ -45,8 +46,8 @@ async def test_root_endpoint():
 @pytest.mark.asyncio
 async def test_get_anomalies():
     """Test get anomalies endpoint."""
+    from app.main import AnomalyDetection, AnomalyScore
     from fastapi.testclient import TestClient
-    from app.main import AnomalyScore, AnomalyDetection
 
     with patch("app.main.lifespan"):
         from app.main import app, recent_anomalies
@@ -80,8 +81,8 @@ async def test_get_anomalies():
 @pytest.mark.asyncio
 async def test_get_anomalies_with_filters():
     """Test get anomalies with filters."""
+    from app.main import AnomalyDetection, AnomalyScore
     from fastapi.testclient import TestClient
-    from app.main import AnomalyScore, AnomalyDetection
 
     with patch("app.main.lifespan"):
         from app.main import app, recent_anomalies
@@ -124,8 +125,8 @@ async def test_get_anomalies_with_filters():
 @pytest.mark.asyncio
 async def test_get_anomaly_by_id():
     """Test get specific anomaly by ID."""
+    from app.main import AnomalyDetection, AnomalyScore
     from fastapi.testclient import TestClient
-    from app.main import AnomalyScore, AnomalyDetection
 
     with patch("app.main.lifespan"):
         from app.main import app, recent_anomalies
@@ -164,8 +165,8 @@ async def test_get_anomaly_by_id():
 @pytest.mark.asyncio
 async def test_get_stats():
     """Test get statistics endpoint."""
+    from app.main import AnomalyDetection, AnomalyScore
     from fastapi.testclient import TestClient
-    from app.main import AnomalyScore, AnomalyDetection
 
     with patch("app.main.lifespan"):
         from app.main import app, recent_anomalies

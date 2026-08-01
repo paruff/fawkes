@@ -4,20 +4,20 @@ Civo provides S3-compatible object storage.
 """
 
 import logging
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
 
 from civo import Civo
 
-from ...interfaces.models import Storage
-from ...interfaces.provider import StorageConfig
 from ...exceptions import (
     CloudProviderError,
-    ResourceNotFoundError,
     ResourceAlreadyExistsError,
+    ResourceNotFoundError,
     ValidationError,
 )
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import Storage
+from ...interfaces.provider import StorageConfig
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 class ObjectStoreService:
     """Civo Object Storage service operations."""
 
-    def __init__(self, client: Civo, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, client: Civo, rate_limiter: RateLimiter | None = None):
         """
         Initialize Object Storage service.
 
@@ -105,7 +105,7 @@ class ObjectStoreService:
         max_retries=3,
         retriable_exceptions=(Exception,),
     )
-    def get_storage(self, storage_id: str, region: Optional[str] = None) -> Storage:
+    def get_storage(self, storage_id: str, region: str | None = None) -> Storage:
         """
         Get object storage details.
 
@@ -157,7 +157,7 @@ class ObjectStoreService:
         max_retries=3,
         retriable_exceptions=(Exception,),
     )
-    def delete_storage(self, storage_id: str, region: Optional[str] = None, force: bool = False) -> bool:
+    def delete_storage(self, storage_id: str, region: str | None = None, force: bool = False) -> bool:
         """
         Delete an object storage bucket.
 
@@ -191,7 +191,7 @@ class ObjectStoreService:
         max_retries=3,
         retriable_exceptions=(Exception,),
     )
-    def list_storage(self, region: Optional[str] = None) -> List[Storage]:
+    def list_storage(self, region: str | None = None) -> list[Storage]:
         """
         List all object storage buckets.
 

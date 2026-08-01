@@ -2,10 +2,11 @@
 Unit tests for DevEx Survey Automation main application
 """
 
+from datetime import datetime
+from unittest.mock import AsyncMock, patch
+
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import AsyncMock, patch
-from datetime import datetime
 
 # Mock database before importing app
 with patch("app.database.init_database", new_callable=AsyncMock):

@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from src.interfaces.models import Cluster, Database, Storage, CostData
+from src.interfaces.models import Cluster, CostData, Database, Storage
 
 
 class TestCluster:

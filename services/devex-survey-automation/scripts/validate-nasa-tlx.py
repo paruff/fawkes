@@ -11,8 +11,8 @@ Validates that the NASA-TLX cognitive load assessment tool is deployed correctly
 """
 
 import asyncio
-import sys
 import json
+import sys
 from datetime import datetime
 
 # Colors for output

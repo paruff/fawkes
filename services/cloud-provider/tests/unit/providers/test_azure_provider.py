@@ -1,13 +1,13 @@
 """Unit tests for Azure Provider."""
 
-import pytest
-from unittest.mock import Mock, patch, MagicMock
 from datetime import datetime
+from unittest.mock import MagicMock, Mock, patch
 
-from src.providers.azure_provider import AzureProvider
-from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
-from src.interfaces.models import Cluster, Database, Storage, CostData
+import pytest
 from src.exceptions import AuthenticationError, ValidationError
+from src.interfaces.models import Cluster, CostData, Database, Storage
+from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
+from src.providers.azure_provider import AzureProvider
 
 
 @pytest.fixture

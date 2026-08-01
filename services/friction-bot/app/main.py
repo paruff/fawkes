@@ -2,14 +2,14 @@
 
 import logging
 import os
-from typing import Dict, Any, Optional, List
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from fastapi import FastAPI, HTTPException, Request, Form
-from pydantic import BaseModel, Field
 import requests
-from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import Response
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
+from pydantic import BaseModel, Field
 
 from app import __version__
 
@@ -46,8 +46,8 @@ class FrictionData(BaseModel):
     description: str = Field(..., description="Detailed description")
     category: str = Field(default="Developer Experience", description="Friction category")
     priority: str = Field(default="medium", description="Priority level")
-    tags: List[str] = Field(default_factory=list, description="Tags for categorization")
-    author: Optional[str] = Field(None, description="User who reported the friction")
+    tags: list[str] = Field(default_factory=list, description="Tags for categorization")
+    author: str | None = Field(None, description="User who reported the friction")
 
 
 class MattermostSlashCommand(BaseModel):
@@ -65,7 +65,7 @@ class MattermostSlashCommand(BaseModel):
     response_url: str
 
 
-def send_to_insights_api(friction_data: Dict[str, Any]) -> Dict[str, Any]:
+def send_to_insights_api(friction_data: dict[str, Any]) -> dict[str, Any]:
     """Send friction data to Insights API.
 
     Args:
@@ -101,7 +101,7 @@ def send_mattermost_response(response_url: str, message: str, ephemeral: bool = 
         logger.error(f"Failed to send Mattermost response: {e}")
 
 
-def parse_friction_command(text: str) -> Dict[str, str]:
+def parse_friction_command(text: str) -> dict[str, str]:
     """Parse friction command text.
 
     Format: /friction title | description | [category] | [priority]
@@ -225,7 +225,7 @@ async def slack_friction_command(
     except Exception as e:
         friction_logs_total.labels(platform="slack", status="error").inc()
         logger.error(f"Error creating insight: {e}")
-        return {"response_type": "ephemeral", "text": f"❌ Failed to log friction: {str(e)}"}
+        return {"response_type": "ephemeral", "text": f"❌ Failed to log friction: {e!s}"}
 
 
 @app.post("/mattermost/slash/friction")
@@ -311,7 +311,7 @@ async def mattermost_friction_command(request: Request):
     except Exception as e:
         friction_logs_total.labels(platform="mattermost", status="error").inc()
         logger.error(f"Error creating insight: {e}")
-        return {"response_type": "ephemeral", "text": f"❌ Failed to log friction: {str(e)}"}
+        return {"response_type": "ephemeral", "text": f"❌ Failed to log friction: {e!s}"}
 
 
 @app.post("/api/v1/friction")

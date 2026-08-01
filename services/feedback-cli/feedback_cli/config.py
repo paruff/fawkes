@@ -15,7 +15,7 @@ class FeedbackConfig(BaseModel):
         default="http://feedback-service.fawkes.svc.cluster.local:8000",
         description="URL of the feedback API service",
     )
-    api_key: Optional[str] = Field(
+    api_key: str | None = Field(
         default=None,
         description="API key for authentication (if required)",
     )
@@ -23,7 +23,7 @@ class FeedbackConfig(BaseModel):
         default="General",
         description="Default category for feedback",
     )
-    author: Optional[str] = Field(
+    author: str | None = Field(
         default=None,
         description="Default author name (uses git config if not set)",
     )
@@ -31,7 +31,7 @@ class FeedbackConfig(BaseModel):
         default=True,
         description="Enable offline queue for when service is unavailable",
     )
-    queue_path: Optional[str] = Field(
+    queue_path: str | None = Field(
         default=None,
         description="Path to offline queue file (defaults to ~/.fawkes-feedback/queue.json)",
     )
@@ -40,7 +40,7 @@ class FeedbackConfig(BaseModel):
 class ConfigManager:
     """Manages configuration for Feedback CLI."""
 
-    def __init__(self, config_path: Optional[Path] = None):
+    def __init__(self, config_path: Path | None = None):
         """Initialize config manager.
 
         Args:
@@ -49,7 +49,7 @@ class ConfigManager:
         if config_path is None:
             config_path = Path.home() / ".fawkes-feedback" / "config.yaml"
         self.config_path = config_path
-        self._config: Optional[FeedbackConfig] = None
+        self._config: FeedbackConfig | None = None
 
     def load(self) -> FeedbackConfig:
         """Load configuration from file or environment."""

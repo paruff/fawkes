@@ -1,11 +1,11 @@
 """Unit tests for GCP Provider."""
 
-import pytest
 from unittest.mock import Mock, patch
 
-from src.providers.gcp_provider import GCPProvider
-from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
+import pytest
 from src.exceptions import AuthenticationError
+from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
+from src.providers.gcp_provider import GCPProvider
 
 
 @pytest.fixture
@@ -421,8 +421,9 @@ class TestGCPProviderCostOperations:
             provider = GCPProvider(project_id="test-project")
 
             with patch.object(provider.billing, "get_cost_data") as mock_get:
-                from src.interfaces.models import CostData
                 from datetime import datetime
+
+                from src.interfaces.models import CostData
 
                 mock_get.return_value = CostData(
                     start_date=datetime(2024, 1, 1),

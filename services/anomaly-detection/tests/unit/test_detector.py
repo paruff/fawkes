@@ -1,9 +1,10 @@
 """Unit tests for anomaly detection models."""
 
-import pytest
-import numpy as np
 from datetime import datetime, timedelta
 from unittest.mock import AsyncMock, MagicMock
+
+import numpy as np
+import pytest
 
 
 @pytest.fixture
@@ -140,8 +141,8 @@ async def test_format_metric_name():
 
 def test_model_initialization():
     """Test model initialization."""
-    from models.detector import initialize_models
     from models import detector
+    from models.detector import initialize_models
 
     initialize_models()
 
@@ -166,7 +167,7 @@ def test_get_model_info():
 @pytest.mark.asyncio
 async def test_no_anomalies_in_normal_data():
     """Test that normal data doesn't trigger anomalies."""
-    from models.detector import _detect_zscore, _detect_iqr
+    from models.detector import _detect_iqr, _detect_zscore
 
     timestamps = [datetime.now() - timedelta(minutes=i) for i in range(60, 0, -1)]
     # All normal values - tighter variance
@@ -197,8 +198,9 @@ async def test_insufficient_samples():
 @pytest.mark.asyncio
 async def test_empty_prometheus_response(mock_http_client):
     """Test handling of empty Prometheus response."""
-    from models.detector import detect_anomalies, initialize_models
     import os
+
+    from models.detector import detect_anomalies, initialize_models
 
     initialize_models()
 

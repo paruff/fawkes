@@ -7,19 +7,19 @@ via google-api-python-client instead of google-cloud-sql which doesn't exist.
 import logging
 from typing import List, Optional
 
+from google.auth import default as get_default_credentials
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
-from google.auth import default as get_default_credentials
 
-from ...interfaces.models import Database
-from ...interfaces.provider import DatabaseConfig
 from ...exceptions import (
     CloudProviderError,
-    ResourceNotFoundError,
     ResourceAlreadyExistsError,
+    ResourceNotFoundError,
     ValidationError,
 )
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import Database
+from ...interfaces.provider import DatabaseConfig
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 class CloudSQLService:
     """GCP Cloud SQL service operations."""
 
-    def __init__(self, project_id: str, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, project_id: str, rate_limiter: RateLimiter | None = None):
         """
         Initialize Cloud SQL service.
 
@@ -116,16 +116,16 @@ class CloudSQLService:
             if e.resp.status == 409:
                 raise ResourceAlreadyExistsError(f"Database instance {config.name} already exists", provider="gcp")
             elif e.resp.status == 400:
-                raise ValidationError(f"Invalid parameter: {str(e)}", provider="gcp")
+                raise ValidationError(f"Invalid parameter: {e!s}", provider="gcp")
             else:
                 raise CloudProviderError(
-                    f"Failed to create Cloud SQL instance {config.name}: {str(e)}",
+                    f"Failed to create Cloud SQL instance {config.name}: {e!s}",
                     provider="gcp",
                     error_code=str(e.resp.status),
                 )
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(HttpError,))
-    def get_database(self, database_name: str, region: Optional[str] = None) -> Database:
+    def get_database(self, database_name: str, region: str | None = None) -> Database:
         """Get Cloud SQL instance details."""
         logger.debug(f"Getting Cloud SQL instance: {database_name}")
 
@@ -188,14 +188,14 @@ class CloudSQLService:
                 raise ResourceNotFoundError(f"Database instance {database_name} not found", provider="gcp")
             else:
                 raise CloudProviderError(
-                    f"Failed to get Cloud SQL instance {database_name}: {str(e)}",
+                    f"Failed to get Cloud SQL instance {database_name}: {e!s}",
                     provider="gcp",
                     error_code=str(e.resp.status),
                 )
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(HttpError,))
     def delete_database(
-        self, database_name: str, region: Optional[str] = None, skip_final_snapshot: bool = False
+        self, database_name: str, region: str | None = None, skip_final_snapshot: bool = False
     ) -> bool:
         """Delete a Cloud SQL instance."""
         logger.info(f"Deleting Cloud SQL instance: {database_name}")
@@ -214,13 +214,13 @@ class CloudSQLService:
                 raise ResourceNotFoundError(f"Database instance {database_name} not found", provider="gcp")
             else:
                 raise CloudProviderError(
-                    f"Failed to delete Cloud SQL instance {database_name}: {str(e)}",
+                    f"Failed to delete Cloud SQL instance {database_name}: {e!s}",
                     provider="gcp",
                     error_code=str(e.resp.status),
                 )
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(HttpError,))
-    def list_databases(self, region: Optional[str] = None) -> List[Database]:
+    def list_databases(self, region: str | None = None) -> list[Database]:
         """List all Cloud SQL instances in the project."""
         logger.debug(f"Listing Cloud SQL instances in project {self.project_id}")
 
@@ -274,7 +274,7 @@ class CloudSQLService:
 
         except HttpError as e:
             raise CloudProviderError(
-                f"Failed to list Cloud SQL instances: {str(e)}",
+                f"Failed to list Cloud SQL instances: {e!s}",
                 provider="gcp",
                 error_code=str(e.resp.status),
             )

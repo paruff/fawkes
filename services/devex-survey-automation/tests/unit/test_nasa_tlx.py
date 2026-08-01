@@ -2,8 +2,9 @@
 Unit tests for NASA-TLX cognitive load assessment endpoints
 """
 
-import pytest
 from datetime import datetime
+
+import pytest
 from app.schemas import NASATLXRequest, NASATLXResponse
 
 

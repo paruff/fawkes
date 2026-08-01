@@ -20,21 +20,22 @@ Usage:
     fawkes assessment validate --belt white
 """
 
-import click
-import subprocess
-import yaml
 import json
+import subprocess
 import sys
 from pathlib import Path
-from typing import Optional, Dict
+from typing import Dict, Optional
+
+import click
+import yaml
 
 # Import the lab automation classes we created earlier
 # In a real package, these would be in separate modules
 from lab_automation import (
-    FawkesLabCLI,
     AssessmentValidator,
-    setup_lab_environment,
+    FawkesLabCLI,
     cleanup_lab_environment,
+    setup_lab_environment,
 )
 
 # Version
@@ -53,7 +54,7 @@ class FawkesConfig:
         self.config_file = CONFIG_FILE
         self.config = self.load_config()
 
-    def load_config(self) -> Dict:
+    def load_config(self) -> dict:
         """Load configuration from file"""
         if not self.config_file.exists():
             return self.default_config()
@@ -67,7 +68,7 @@ class FawkesConfig:
         with open(self.config_file, "w") as f:
             yaml.dump(self.config, f)
 
-    def default_config(self) -> Dict:
+    def default_config(self) -> dict:
         """Default configuration"""
         return {
             "cluster": {"context": "default", "namespace_prefix": "lab"},
@@ -135,7 +136,7 @@ def lab():
 @lab.command()
 @click.option("--module", "-m", type=int, required=True, help="Module number (1-20)")
 @click.option("--user", "-u", help="User email for multi-user environments")
-def start(module: int, user: Optional[str]):
+def start(module: int, user: str | None):
     """Start a lab environment for a specific module"""
 
     click.echo(f"🚀 Starting lab environment for Module {module}...")
@@ -159,7 +160,7 @@ def start(module: int, user: Optional[str]):
         click.echo("   3. Run: fawkes lab validate --lab [lab-name]")
         click.echo(f"\n   Documentation: https://docs.fawkes.io/dojo/module-{module}")
     except Exception as e:
-        click.echo(f"❌ Error starting lab: {str(e)}", err=True)
+        click.echo(f"❌ Error starting lab: {e!s}", err=True)
         sys.exit(1)
 
 
@@ -204,7 +205,7 @@ def validate(lab: str, verbose: bool):
         click.echo("   Available labs: white-belt-lab1, white-belt-lab2, ...", err=True)
         sys.exit(1)
     except Exception as e:
-        click.echo(f"❌ Validation error: {str(e)}", err=True)
+        click.echo(f"❌ Validation error: {e!s}", err=True)
         sys.exit(1)
 
 
@@ -223,7 +224,7 @@ def stop(module: int, force: bool):
         cleanup_lab_environment(module)
         click.echo("✅ Lab environment cleaned up!")
     except Exception as e:
-        click.echo(f"❌ Cleanup error: {str(e)}", err=True)
+        click.echo(f"❌ Cleanup error: {e!s}", err=True)
         sys.exit(1)
 
 
@@ -282,7 +283,7 @@ def status(module: int):
         click.echo(result.stdout)
 
     except Exception as e:
-        click.echo(f"❌ Error checking status: {str(e)}", err=True)
+        click.echo(f"❌ Error checking status: {e!s}", err=True)
         sys.exit(1)
 
 
@@ -304,7 +305,7 @@ def logs(module: int, follow: bool):
     except KeyboardInterrupt:
         click.echo("\n👋 Stopped following logs")
     except Exception as e:
-        click.echo(f"❌ Error viewing logs: {str(e)}", err=True)
+        click.echo(f"❌ Error viewing logs: {e!s}", err=True)
         sys.exit(1)
 
 
@@ -362,7 +363,7 @@ def validate(belt: str):
             sys.exit(1)
 
     except Exception as e:
-        click.echo(f"❌ Assessment error: {str(e)}", err=True)
+        click.echo(f"❌ Assessment error: {e!s}", err=True)
         sys.exit(1)
 
 
@@ -401,7 +402,7 @@ def check_eligibility(belt: str):
 @click.option("--belt", "-b", required=True, type=click.Choice(["white", "yellow", "green", "brown", "black"]))
 @click.option("--date", "-d", help="Date (YYYY-MM-DD)")
 @click.option("--time", "-t", help="Time (HH:MM)")
-def schedule(belt: str, date: Optional[str], time: Optional[str]):
+def schedule(belt: str, date: str | None, time: str | None):
     """Schedule an assessment"""
 
     if not date:
@@ -483,7 +484,7 @@ def setup(force: bool):
         click.echo("   2. Complete Module 1 exercises")
         click.echo("   3. Run: fawkes lab validate --lab white-belt-lab1")
     except Exception as e:
-        click.echo(f"❌ Setup error: {str(e)}", err=True)
+        click.echo(f"❌ Setup error: {e!s}", err=True)
         sys.exit(1)
 
 

@@ -1,21 +1,21 @@
 """AWS S3 (Simple Storage Service) operations."""
 
 import logging
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
 
 import boto3
 from botocore.exceptions import ClientError
 
-from ...interfaces.models import Storage
-from ...interfaces.provider import StorageConfig
 from ...exceptions import (
     CloudProviderError,
-    ResourceNotFoundError,
     ResourceAlreadyExistsError,
+    ResourceNotFoundError,
     ValidationError,
 )
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import Storage
+from ...interfaces.provider import StorageConfig
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class S3Service:
     """AWS S3 service operations."""
 
-    def __init__(self, session: boto3.Session, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, session: boto3.Session, rate_limiter: RateLimiter | None = None):
         """
         Initialize S3 service.
 
@@ -281,7 +281,7 @@ class S3Service:
                 )
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(ClientError,))
-    def list_storage(self, region: Optional[str] = None, include_details: bool = False) -> List[Storage]:
+    def list_storage(self, region: str | None = None, include_details: bool = False) -> list[Storage]:
         """
         List all S3 buckets.
 

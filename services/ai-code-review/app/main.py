@@ -5,19 +5,19 @@ This service listens for GitHub PR webhooks, analyzes code using LLM,
 queries RAG for relevant patterns/standards, and posts review comments.
 """
 
-import os
-import time
-import logging
 import hashlib
 import hmac
-from typing import Dict, List, Optional
+import logging
+import os
+import time
 from contextlib import asynccontextmanager
+from typing import Dict, List, Optional
 
-from fastapi import FastAPI, HTTPException, Request, Header, BackgroundTasks
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field
-from prometheus_client import make_asgi_app, Counter, Histogram, Gauge
 import httpx
+from fastapi import BackgroundTasks, FastAPI, Header, HTTPException, Request
+from fastapi.responses import JSONResponse
+from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
+from pydantic import BaseModel, Field
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -35,7 +35,7 @@ SONARQUBE_TOKEN = os.getenv("SONARQUBE_TOKEN", "")
 FALSE_POSITIVE_THRESHOLD = float(os.getenv("FALSE_POSITIVE_THRESHOLD", "0.8"))
 
 # Global HTTP client
-http_client: Optional[httpx.AsyncClient] = None
+http_client: httpx.AsyncClient | None = None
 
 
 # Pydantic models
@@ -43,9 +43,9 @@ class WebhookPayload(BaseModel):
     """GitHub webhook payload model."""
 
     action: str
-    pull_request: Optional[Dict] = None
-    repository: Optional[Dict] = None
-    sender: Optional[Dict] = None
+    pull_request: dict | None = None
+    repository: dict | None = None
+    sender: dict | None = None
 
 
 class ReviewComment(BaseModel):
@@ -64,7 +64,7 @@ class ReviewResult(BaseModel):
 
     pr_number: int
     repository: str
-    comments: List[ReviewComment]
+    comments: list[ReviewComment]
     review_time_ms: float
     total_issues: int
     false_positive_rate: float
@@ -203,8 +203,8 @@ def verify_github_signature(payload_body: bytes, signature_header: str) -> bool:
 async def github_webhook(
     request: Request,
     background_tasks: BackgroundTasks,
-    x_hub_signature_256: Optional[str] = Header(None),
-    x_github_event: Optional[str] = Header(None),
+    x_hub_signature_256: str | None = Header(None),
+    x_github_event: str | None = Header(None),
 ):
     """Handle GitHub webhook events for pull requests."""
     # Read raw body for signature verification
@@ -241,7 +241,7 @@ async def github_webhook(
     return JSONResponse(content={"message": "Event ignored"})
 
 
-async def process_pull_request_review(pr_data: Dict, repo_data: Dict):
+async def process_pull_request_review(pr_data: dict, repo_data: dict):
     """Process pull request review asynchronously."""
     start_time = time.time()
     pr_number = pr_data.get("number")

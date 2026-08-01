@@ -5,9 +5,10 @@ These tests validate the test-indexing.py script's core functions
 without requiring a live Weaviate instance.
 """
 
-import pytest
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import pytest
 
 # Add services directory to path
 services_path = Path(__file__).parent.parent.parent / "services" / "rag" / "scripts"
@@ -66,7 +67,7 @@ def test_sample_documents_content():
 def test_schema_constants():
     """Test that constants are properly defined."""
     try:
-        from test_indexing import DEFAULT_WEAVIATE_URL, SCHEMA_NAME, MIN_RELEVANCE_SCORE
+        from test_indexing import DEFAULT_WEAVIATE_URL, MIN_RELEVANCE_SCORE, SCHEMA_NAME
     except ImportError:
         pytest.skip("weaviate-client not installed")
 

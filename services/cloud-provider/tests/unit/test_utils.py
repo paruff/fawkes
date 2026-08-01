@@ -1,11 +1,11 @@
 """Unit tests for utility functions."""
 
-import pytest
 import time
 from unittest.mock import Mock
 
-from src.utils import retry_with_backoff, RateLimiter, validate_region, validate_name
+import pytest
 from src.exceptions import RateLimitError, ValidationError
+from src.utils import RateLimiter, retry_with_backoff, validate_name, validate_region
 
 
 class TestRetryWithBackoff:

@@ -3,9 +3,9 @@ Integration with Space Metrics service for pulse survey data
 """
 
 import logging
-from typing import Dict, Any
-import httpx
+from typing import Any, Dict
 
+import httpx
 from app.config import settings
 
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ class SpaceMetricsClient:
     def __init__(self):
         self.base_url = settings.space_metrics_url
 
-    async def submit_pulse_survey(self, data: Dict[str, Any]) -> bool:
+    async def submit_pulse_survey(self, data: dict[str, Any]) -> bool:
         """Submit pulse survey response to space-metrics service"""
         try:
             payload = {

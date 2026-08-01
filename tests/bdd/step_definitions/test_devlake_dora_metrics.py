@@ -6,10 +6,11 @@ through DevLake and associated Grafana dashboards / Backstage plugin.
 """
 
 import os
+from datetime import datetime, timedelta, timezone
+
 import pytest
 import requests
-from datetime import datetime, timedelta, timezone
-from pytest_bdd import scenarios, given, when, then, parsers
+from pytest_bdd import given, parsers, scenarios, then, when
 
 # Load all scenarios from the feature file
 scenarios("../features/devlake-dora-metrics.feature")
@@ -72,7 +73,8 @@ def devlake_deployed_in_namespace():
     if not _K8S_AVAILABLE:
         pytest.skip("Kubernetes cluster not available in test environment")
     try:
-        from kubernetes import client, config as kconfig
+        from kubernetes import client
+        from kubernetes import config as kconfig
 
         kconfig.load_kube_config()
         v1 = client.CoreV1Api()

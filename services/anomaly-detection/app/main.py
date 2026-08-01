@@ -5,16 +5,16 @@ This service monitors metrics and logs from Prometheus, applies ML models
 to detect anomalies in real-time, and provides root cause analysis.
 """
 
-import os
 import logging
-from typing import List, Optional
+import os
 from contextlib import asynccontextmanager
 from datetime import datetime
+from typing import List, Optional
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks
-from pydantic import BaseModel, Field
-from prometheus_client import make_asgi_app, Counter, Histogram, Gauge
 import httpx
+from fastapi import BackgroundTasks, FastAPI, HTTPException
+from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
+from pydantic import BaseModel, Field
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -30,7 +30,7 @@ FALSE_POSITIVE_THRESHOLD = float(os.getenv("FALSE_POSITIVE_THRESHOLD", "0.05"))
 DETECTION_INTERVAL_SECONDS = int(os.getenv("DETECTION_INTERVAL_SECONDS", "60"))
 
 # Global HTTP client
-http_client: Optional[httpx.AsyncClient] = None
+http_client: httpx.AsyncClient | None = None
 
 
 # Pydantic models
@@ -50,11 +50,11 @@ class RootCause(BaseModel):
     """Root cause analysis result."""
 
     anomaly_id: str
-    likely_causes: List[str] = Field(..., description="List of likely root causes")
-    correlated_metrics: List[str] = Field(..., description="Correlated metrics showing anomalies")
-    recent_events: List[str] = Field(..., description="Recent deployments, config changes, etc.")
-    remediation_suggestions: List[str] = Field(..., description="Suggested remediation steps")
-    runbook_links: List[str] = Field(..., description="Links to relevant runbooks")
+    likely_causes: list[str] = Field(..., description="List of likely root causes")
+    correlated_metrics: list[str] = Field(..., description="Correlated metrics showing anomalies")
+    recent_events: list[str] = Field(..., description="Recent deployments, config changes, etc.")
+    remediation_suggestions: list[str] = Field(..., description="Suggested remediation steps")
+    runbook_links: list[str] = Field(..., description="Links to relevant runbooks")
 
 
 class AnomalyDetection(BaseModel):
@@ -62,7 +62,7 @@ class AnomalyDetection(BaseModel):
 
     id: str
     anomaly: AnomalyScore
-    root_cause: Optional[RootCause] = None
+    root_cause: RootCause | None = None
     detected_at: datetime
     alerted: bool = Field(default=False, description="Whether alert was sent")
 
@@ -108,6 +108,7 @@ async def lifespan(app: FastAPI):
 
     # Start background anomaly detection
     import asyncio
+
     from . import detector as detection_module
 
     detection_task = asyncio.create_task(detection_module.run_continuous_detection())
@@ -149,7 +150,7 @@ metrics_app = make_asgi_app()
 app.mount("/metrics", metrics_app)
 
 # Store recent anomalies
-recent_anomalies: List[AnomalyDetection] = []
+recent_anomalies: list[AnomalyDetection] = []
 MAX_RECENT_ANOMALIES = 100
 
 
@@ -198,7 +199,7 @@ async def ready():
             if response.status_code != 200:
                 raise HTTPException(status_code=503, detail="Prometheus not reachable")
     except Exception as e:
-        raise HTTPException(status_code=503, detail=f"Prometheus not ready: {str(e)}")
+        raise HTTPException(status_code=503, detail=f"Prometheus not ready: {e!s}")
 
     try:
         from .models import detector
@@ -206,15 +207,15 @@ async def ready():
         if not detector.models_initialized:
             raise HTTPException(status_code=503, detail="ML models not loaded")
     except Exception as e:
-        raise HTTPException(status_code=503, detail=f"Models not ready: {str(e)}")
+        raise HTTPException(status_code=503, detail=f"Models not ready: {e!s}")
 
     return {"status": "READY", "service": "anomaly-detection"}
 
 
 @app.get("/api/v1/anomalies")
 async def get_anomalies(
-    limit: int = 50, severity: Optional[str] = None, metric: Optional[str] = None
-) -> List[AnomalyDetection]:
+    limit: int = 50, severity: str | None = None, metric: str | None = None
+) -> list[AnomalyDetection]:
     """
     Get recent anomalies.
 
@@ -275,7 +276,7 @@ async def get_models():
 
         return {"models_loaded": detector.models_initialized, "models": detector.get_model_info()}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to get model info: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get model info: {e!s}")
 
 
 @app.get("/stats")

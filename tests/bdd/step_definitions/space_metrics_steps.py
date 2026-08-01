@@ -5,11 +5,12 @@ Tests SPACE framework (Satisfaction, Performance, Activity, Communication, Effic
 metrics collection, API endpoints, survey integration, and privacy compliance.
 """
 
-from behave import given, when, then
 import json
-import time
 import logging
 import math
+import time
+
+from behave import given, then, when
 from kubernetes import client, config
 from kubernetes.stream import stream
 

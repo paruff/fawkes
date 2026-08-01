@@ -5,17 +5,17 @@ This bot provides a conversational interface for collecting feedback
 with natural language processing, sentiment analysis, and auto-categorization.
 """
 
-import os
 import logging
+import os
 import re
-from typing import Optional, Dict, Any
 from datetime import datetime
+from typing import Any, Dict, Optional
 
-from fastapi import FastAPI, Form, HTTPException, Request
 import httpx
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from fastapi import FastAPI, Form, HTTPException, Request
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 from starlette.responses import Response
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -63,7 +63,7 @@ CATEGORY_KEYWORDS = {
 }
 
 
-def analyze_sentiment(text: str) -> Dict[str, Any]:
+def analyze_sentiment(text: str) -> dict[str, Any]:
     """
     Analyze sentiment of text using VADER.
 
@@ -111,7 +111,7 @@ def auto_categorize(text: str) -> str:
     return "General"
 
 
-def extract_rating(text: str) -> Optional[int]:
+def extract_rating(text: str) -> int | None:
     """
     Extract rating from natural language text.
 
@@ -150,7 +150,7 @@ def extract_rating(text: str) -> Optional[int]:
         return 1
 
 
-def parse_feedback(text: str, user_name: str, user_email: str) -> Dict[str, Any]:
+def parse_feedback(text: str, user_name: str, user_email: str) -> dict[str, Any]:
     """
     Parse natural language feedback into structured format.
 
@@ -183,7 +183,7 @@ def parse_feedback(text: str, user_name: str, user_email: str) -> Dict[str, Any]
     }
 
 
-async def submit_feedback_to_api(feedback_data: Dict[str, Any]) -> Dict[str, Any]:
+async def submit_feedback_to_api(feedback_data: dict[str, Any]) -> dict[str, Any]:
     """
     Submit parsed feedback to the feedback service API.
 
@@ -313,7 +313,7 @@ _Your feedback will be reviewed by the team._
 
         return {
             "response_type": "ephemeral",
-            "text": f"❌ **Error submitting feedback**\n\n{str(e)}\n\nPlease try again later.",
+            "text": f"❌ **Error submitting feedback**\n\n{e!s}\n\nPlease try again later.",
         }
 
 

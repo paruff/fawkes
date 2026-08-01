@@ -3,15 +3,15 @@
 import sys
 
 import click
-from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
-from rich.prompt import Prompt, Confirm
 from rich import box
+from rich.console import Console
+from rich.panel import Panel
+from rich.prompt import Confirm, Prompt
+from rich.table import Table
 
 from friction_cli import __version__
+from friction_cli.client import InsightCreate, InsightsClient
 from friction_cli.config import ConfigManager
-from friction_cli.client import InsightsClient, InsightCreate
 
 console = Console()
 

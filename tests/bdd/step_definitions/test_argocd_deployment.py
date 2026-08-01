@@ -16,13 +16,13 @@ from urllib.parse import urlparse
 
 import pytest
 import requests
-from pytest_bdd import given, when, then, parsers, scenarios
+from pytest_bdd import given, parsers, scenarios, then, when
 
 # Load all scenarios from the feature file
 scenarios("../features/argocd-deployment.feature")
 
 
-def _kubectl_json(args: list[str]) -> Dict:
+def _kubectl_json(args: list[str]) -> dict:
     """Run kubectl and return parsed JSON."""
     cmd = ["kubectl"] + args
     try:
@@ -65,7 +65,7 @@ def ingress_nginx_running():
 
 
 @when("I check for the argocd namespace")
-def check_argocd_namespace(context: Dict):
+def check_argocd_namespace(context: dict):
     """Check if argocd namespace exists."""
     try:
         ns = _kubectl_json(["get", "ns", "argocd", "-o", "json"])
@@ -75,14 +75,14 @@ def check_argocd_namespace(context: Dict):
 
 
 @then(parsers.cfparse('the namespace "{namespace}" should exist'))
-def namespace_exists(namespace: str, context: Dict):
+def namespace_exists(namespace: str, context: dict):
     """Verify namespace exists."""
     ns = context.get("argocd_namespace")
     assert ns is not None, f"Namespace {namespace} does not exist"
 
 
 @then(parsers.cfparse('the namespace "{namespace}" should be Active'))
-def namespace_active(namespace: str, context: Dict):
+def namespace_active(namespace: str, context: dict):
     """Verify namespace is in Active phase."""
     ns = context.get("argocd_namespace")
     phase = ns.get("status", {}).get("phase")
@@ -101,14 +101,14 @@ def argocd_deployed(namespace: str):
 
 
 @when("I check the ArgoCD pods")
-def check_argocd_pods(context: Dict):
+def check_argocd_pods(context: dict):
     """Get ArgoCD pods."""
     data = _kubectl_json(["-n", "argocd", "get", "pods", "-o", "json"])
     context["argocd_pods"] = data.get("items", [])
 
 
 @then(parsers.cfparse('the following pods should be running in namespace "{namespace}":\n{table}'))
-def pods_running(namespace: str, table, context: Dict):
+def pods_running(namespace: str, table, context: dict):
     """Verify specified pods are running."""
     pods = context.get("argocd_pods", [])
     pod_names = [pod["metadata"]["name"] for pod in pods]
@@ -149,14 +149,14 @@ def argocd_ingress_enabled():
 
 
 @when(parsers.cfparse('I check the ingress configuration in namespace "{namespace}"'))
-def check_ingress(namespace: str, context: Dict):
+def check_ingress(namespace: str, context: dict):
     """Get ingress configuration."""
     data = _kubectl_json(["-n", namespace, "get", "ingress", "-o", "json"])
     context["argocd_ingresses"] = data.get("items", [])
 
 
 @then(parsers.cfparse('an ingress should exist for "{service}"'))
-def ingress_exists(service: str, context: Dict):
+def ingress_exists(service: str, context: dict):
     """Verify ingress exists for service."""
     ingresses = context.get("argocd_ingresses", [])
     found = any(service in ing["metadata"]["name"] for ing in ingresses)
@@ -170,7 +170,7 @@ def ingress_exists(service: str, context: Dict):
 
 
 @then(parsers.cfparse('the ingress should have host "{host}"'))
-def ingress_has_host(host: str, context: Dict):
+def ingress_has_host(host: str, context: dict):
     """Verify ingress has the specified host."""
     ingress = context.get("argocd_ingress")
     rules = ingress.get("spec", {}).get("rules", [])
@@ -179,7 +179,7 @@ def ingress_has_host(host: str, context: Dict):
 
 
 @then(parsers.cfparse('the ingress should use ingressClassName "{classname}"'))
-def ingress_has_class(classname: str, context: Dict):
+def ingress_has_class(classname: str, context: dict):
     """Verify ingress uses the specified ingressClassName."""
     ingress = context.get("argocd_ingress")
     ing_class = ingress.get("spec", {}).get("ingressClassName")
@@ -219,7 +219,7 @@ def ui_accessible(url: str):
 
 
 @when("I retrieve the initial admin password")
-def retrieve_admin_password(context: Dict):
+def retrieve_admin_password(context: dict):
     """Retrieve admin password from secret."""
     try:
         secret = _kubectl_json(["-n", "argocd", "get", "secret", "argocd-initial-admin-secret", "-o", "json"])
@@ -229,14 +229,14 @@ def retrieve_admin_password(context: Dict):
 
 
 @then(parsers.cfparse('the secret "{secret_name}" should exist in namespace "{namespace}"'))
-def secret_exists(secret_name: str, namespace: str, context: Dict):
+def secret_exists(secret_name: str, namespace: str, context: dict):
     """Verify secret exists."""
     secret = context.get("admin_secret")
     assert secret is not None, f"Secret {secret_name} not found in namespace {namespace}"
 
 
 @then(parsers.cfparse('the secret should contain a "{key}" key'))
-def secret_has_key(key: str, context: Dict):
+def secret_has_key(key: str, context: dict):
     """Verify secret contains the specified key."""
     secret = context.get("admin_secret")
     data = secret.get("data", {})
@@ -244,7 +244,7 @@ def secret_has_key(key: str, context: Dict):
 
 
 @then("I should be able to login using argocd CLI")
-def argocd_cli_login(context: Dict):
+def argocd_cli_login(context: dict):
     """Verify argocd CLI can login (if CLI is installed)."""
     # Check if argocd CLI is available
     try:
@@ -264,7 +264,7 @@ def argocd_cli_login(context: Dict):
 
 
 @when("I check the admin credentials storage")
-def check_credentials_storage(context: Dict):
+def check_credentials_storage(context: dict):
     """Check how admin credentials are stored."""
     try:
         secret = _kubectl_json(["-n", "argocd", "get", "secret", "argocd-initial-admin-secret", "-o", "json"])
@@ -274,7 +274,7 @@ def check_credentials_storage(context: Dict):
 
 
 @then("the credentials should be stored in a Kubernetes secret")
-def credentials_in_secret(context: Dict):
+def credentials_in_secret(context: dict):
     """Verify credentials are in a Kubernetes secret."""
     secret = context.get("admin_secret")
     assert secret is not None, "Admin credentials secret not found"
@@ -282,7 +282,7 @@ def credentials_in_secret(context: Dict):
 
 
 @then(parsers.cfparse('the secret should be named "{name}"'))
-def secret_named(name: str, context: Dict):
+def secret_named(name: str, context: dict):
     """Verify secret has the correct name."""
     secret = context.get("admin_secret")
     actual_name = secret.get("metadata", {}).get("name")
@@ -290,7 +290,7 @@ def secret_named(name: str, context: Dict):
 
 
 @then(parsers.cfparse('the secret should be in namespace "{namespace}"'))
-def secret_in_namespace(namespace: str, context: Dict):
+def secret_in_namespace(namespace: str, context: dict):
     """Verify secret is in the correct namespace."""
     secret = context.get("admin_secret")
     actual_ns = secret.get("metadata", {}).get("namespace")
@@ -298,7 +298,7 @@ def secret_in_namespace(namespace: str, context: Dict):
 
 
 @then("the password should be base64 encoded")
-def password_base64_encoded(context: Dict):
+def password_base64_encoded(context: dict):
     """Verify password is base64 encoded."""
     secret = context.get("admin_secret")
     data = secret.get("data", {})
@@ -321,7 +321,7 @@ def argocd_server_running(namespace: str):
 
 
 @when("I check the ArgoCD server health endpoint")
-def check_health_endpoint(context: Dict):
+def check_health_endpoint(context: dict):
     """Check ArgoCD health endpoint."""
     # Port forward would be needed for full health check
     # For now, just verify the deployment is healthy
@@ -333,7 +333,7 @@ def check_health_endpoint(context: Dict):
 
 
 @then(parsers.cfparse('the health endpoint should return status "{status}"'))
-def health_status(status: str, context: Dict):
+def health_status(status: str, context: dict):
     """Verify health status (via deployment status)."""
     deployment = context.get("server_deployment")
     assert deployment is not None, "ArgoCD server deployment not found"
@@ -345,7 +345,7 @@ def health_status(status: str, context: Dict):
 
 
 @then("the API server should be responsive")
-def api_server_responsive(context: Dict):
+def api_server_responsive(context: dict):
     """Verify API server is responsive."""
     deployment = context.get("server_deployment")
     status = deployment.get("status", {})
@@ -358,14 +358,14 @@ def api_server_responsive(context: Dict):
 
 
 @when(parsers.cfparse("I check the resource specifications for ArgoCD deployments"))
-def check_resource_specs(context: Dict):
+def check_resource_specs(context: dict):
     """Get resource specifications for ArgoCD deployments."""
     data = _kubectl_json(["-n", "argocd", "get", "deployments", "-o", "json"])
     context["argocd_deployments"] = data.get("items", [])
 
 
 @then("all deployments should have CPU requests defined")
-def deployments_have_cpu_requests(context: Dict):
+def deployments_have_cpu_requests(context: dict):
     """Verify all deployments have CPU requests."""
     deployments = context.get("argocd_deployments", [])
     for deploy in deployments:
@@ -377,7 +377,7 @@ def deployments_have_cpu_requests(context: Dict):
 
 
 @then("all deployments should have memory requests defined")
-def deployments_have_memory_requests(context: Dict):
+def deployments_have_memory_requests(context: dict):
     """Verify all deployments have memory requests."""
     deployments = context.get("argocd_deployments", [])
     for deploy in deployments:
@@ -391,7 +391,7 @@ def deployments_have_memory_requests(context: Dict):
 
 
 @then("all deployments should have CPU limits defined")
-def deployments_have_cpu_limits(context: Dict):
+def deployments_have_cpu_limits(context: dict):
     """Verify all deployments have CPU limits."""
     deployments = context.get("argocd_deployments", [])
     for deploy in deployments:
@@ -403,7 +403,7 @@ def deployments_have_cpu_limits(context: Dict):
 
 
 @then("all deployments should have memory limits defined")
-def deployments_have_memory_limits(context: Dict):
+def deployments_have_memory_limits(context: dict):
     """Verify all deployments have memory limits."""
     deployments = context.get("argocd_deployments", [])
     for deploy in deployments:
@@ -426,14 +426,14 @@ def argocd_deployed_simple():
 
 
 @when("I check for ArgoCD Custom Resource Definitions")
-def check_argocd_crds(context: Dict):
+def check_argocd_crds(context: dict):
     """Get ArgoCD CRDs."""
     data = _kubectl_json(["get", "crd", "-o", "json"])
     context["all_crds"] = data.get("items", [])
 
 
 @then("the following CRDs should exist:\n{table}")
-def crds_exist(table, context: Dict):
+def crds_exist(table, context: dict):
     """Verify specified CRDs exist."""
     all_crds = context.get("all_crds", [])
     crd_names = [crd["metadata"]["name"] for crd in all_crds]
@@ -444,7 +444,7 @@ def crds_exist(table, context: Dict):
 
 
 @then("all CRDs should be established")
-def crds_established(context: Dict):
+def crds_established(context: dict):
     """Verify all ArgoCD CRDs are established."""
     all_crds = context.get("all_crds", [])
     # Filter CRDs that are part of ArgoCD (ending with argoproj.io)
@@ -460,14 +460,14 @@ def crds_established(context: Dict):
 
 
 @when(parsers.cfparse("I check the ArgoCD services"))
-def check_argocd_services(context: Dict):
+def check_argocd_services(context: dict):
     """Get ArgoCD services."""
     data = _kubectl_json(["-n", "argocd", "get", "services", "-o", "json"])
     context["argocd_services"] = data.get("items", [])
 
 
 @then(parsers.cfparse('a service "{service_name}" should exist'))
-def service_exists(service_name: str, context: Dict):
+def service_exists(service_name: str, context: dict):
     """Verify service exists."""
     services = context.get("argocd_services", [])
     service_names = [svc["metadata"]["name"] for svc in services]
@@ -481,7 +481,7 @@ def service_exists(service_name: str, context: Dict):
 
 
 @then(parsers.cfparse('the service "{service_name}" should be type "{svc_type}"'))
-def service_type(service_name: str, svc_type: str, context: Dict):
+def service_type(service_name: str, svc_type: str, context: dict):
     """Verify service type."""
     service = context.get("argocd_server_service")
     actual_type = service.get("spec", {}).get("type")
@@ -489,7 +489,7 @@ def service_type(service_name: str, svc_type: str, context: Dict):
 
 
 @then(parsers.cfparse("the service should expose port {port:d} for {protocol}"))
-def service_exposes_port(port: int, protocol: str, context: Dict):
+def service_exposes_port(port: int, protocol: str, context: dict):
     """Verify service exposes the specified port."""
     service = context.get("argocd_server_service")
     ports = service.get("spec", {}).get("ports", [])

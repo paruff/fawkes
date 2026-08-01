@@ -2,14 +2,14 @@
 Unit tests for GitHub integration module.
 """
 
-import pytest
-from unittest.mock import Mock, AsyncMock, patch
+from unittest.mock import AsyncMock, Mock, patch
 
+import pytest
 from app.github_integration import (
-    is_github_enabled,
-    create_github_issue,
-    update_issue_status,
     _attach_screenshot_to_issue,
+    create_github_issue,
+    is_github_enabled,
+    update_issue_status,
 )
 
 

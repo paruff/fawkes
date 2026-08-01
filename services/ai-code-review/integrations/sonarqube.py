@@ -2,6 +2,7 @@
 
 import logging
 from typing import Dict, List, Optional
+
 import httpx
 
 logger = logging.getLogger(__name__)
@@ -16,7 +17,7 @@ class SonarQubeIntegration:
         self.sonarqube_token = sonarqube_token
         self.http_client = http_client
 
-    async def get_pr_findings(self, repo: str, pr_number: int) -> List[Dict]:
+    async def get_pr_findings(self, repo: str, pr_number: int) -> list[dict]:
         """
         Fetch SonarQube analysis results for a pull request.
 
@@ -51,7 +52,7 @@ class SonarQubeIntegration:
             logger.error(f"Failed to fetch SonarQube findings: {e}")
             return []
 
-    async def _fetch_issues(self, project_key: str, pr_number: int) -> List[Dict]:
+    async def _fetch_issues(self, project_key: str, pr_number: int) -> list[dict]:
         """Fetch issues from SonarQube API."""
         try:
             # SonarQube API endpoint for issues
@@ -85,7 +86,7 @@ class SonarQubeIntegration:
             logger.error(f"Failed to fetch issues from SonarQube: {e}")
             return []
 
-    def _standardize_findings(self, sonarqube_issues: List[Dict]) -> List[Dict]:
+    def _standardize_findings(self, sonarqube_issues: list[dict]) -> list[dict]:
         """
         Convert SonarQube issues to standardized finding format.
 
@@ -138,7 +139,7 @@ class SonarQubeIntegration:
 
         return standardized
 
-    def _prioritize_findings(self, findings: List[Dict]) -> List[Dict]:
+    def _prioritize_findings(self, findings: list[dict]) -> list[dict]:
         """
         Prioritize findings by severity and category.
 
@@ -160,7 +161,7 @@ class SonarQubeIntegration:
 
         return sorted_findings
 
-    def deduplicate_with_ai_findings(self, ai_findings: List[Dict], sonarqube_findings: List[Dict]) -> List[Dict]:
+    def deduplicate_with_ai_findings(self, ai_findings: list[dict], sonarqube_findings: list[dict]) -> list[dict]:
         """
         Deduplicate findings between AI and SonarQube.
 
@@ -205,7 +206,7 @@ class SonarQubeIntegration:
 
         return deduplicated
 
-    async def get_project_metrics(self, project_key: str) -> Optional[Dict]:
+    async def get_project_metrics(self, project_key: str) -> dict | None:
         """
         Get quality metrics for a project.
 

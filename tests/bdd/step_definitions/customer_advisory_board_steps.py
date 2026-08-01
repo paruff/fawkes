@@ -3,8 +3,9 @@ Step definitions for Customer Advisory Board feature tests
 """
 
 import re
-from behave import given, when, then
 from pathlib import Path
+
+from behave import given, then, when
 
 
 # Helper functions
@@ -376,7 +377,6 @@ def step_guide_has_best_practices(context):
 def step_check_composition_section(context):
     """Extract composition section from charter"""
     # Content already loaded in previous steps
-    pass
 
 
 @then("the target size should be 5-7 members")
@@ -445,7 +445,7 @@ def step_diversity_geography(context):
 @when("I check the membership process section")
 def step_check_process_section(context):
     """Check membership process section"""
-    pass  # Content already loaded
+    # Content already loaded
 
 
 @then("the process should support self-nomination")
@@ -508,7 +508,7 @@ def step_process_renewal(context):
 @when("I check the meeting cadence section")
 def step_check_cadence_section(context):
     """Check meeting cadence section"""
-    pass  # Content already loaded
+    # Content already loaded
 
 
 @then("quarterly strategic meetings should be defined")
@@ -573,7 +573,7 @@ def step_adhoc_touchpoints(context):
 @when("I check the feedback process section")
 def step_check_feedback_section(context):
     """Check feedback process section"""
-    pass  # Content already loaded
+    # Content already loaded
 
 
 @then("input mechanisms should include quarterly meetings")
@@ -630,7 +630,7 @@ def step_feedback_tracking(context):
 @when("I check the communication channels section")
 def step_check_channels_section(context):
     """Check communication channels section"""
-    pass  # Content already loaded
+    # Content already loaded
 
 
 @then("Mattermost should be designated as primary channel")
@@ -679,7 +679,7 @@ def step_video_platform(context):
 @when("I check the Mattermost channel setup")
 def step_check_mattermost_setup(context):
     """Check Mattermost setup"""
-    pass  # Content already loaded
+    # Content already loaded
 
 
 @then("the channel purpose should be documented")
@@ -714,7 +714,7 @@ def step_channel_guidelines(context):
 @when("I check the recognition section")
 def step_check_recognition_section(context):
     """Check recognition section"""
-    pass  # Content already loaded
+    # Content already loaded
 
 
 @then("public recognition mechanisms should be defined")
@@ -769,7 +769,7 @@ def step_recognition_swag(context):
 @when("I check the success metrics section")
 def step_check_metrics_section(context):
     """Check success metrics section"""
-    pass  # Content already loaded
+    # Content already loaded
 
 
 @then("engagement metrics should be defined")
@@ -812,7 +812,7 @@ def step_metrics_reporting(context):
 @when("I check the onboarding process")
 def step_check_onboarding_process(context):
     """Check onboarding process"""
-    pass  # Content already loaded
+    # Content already loaded
 
 
 @then("week 1 checklist should be defined")
@@ -1067,7 +1067,7 @@ def step_has_appendix(context):
 @when("I check the meeting lifecycle")
 def step_check_meeting_lifecycle(context):
     """Check meeting lifecycle"""
-    pass  # Content already loaded
+    # Content already loaded
 
 
 @then("pre-meeting process should be documented")
@@ -1134,7 +1134,7 @@ def step_ongoing_timing(context):
 @when("I check the action item process")
 def step_check_action_items(context):
     """Check action item process"""
-    pass  # Content already loaded
+    # Content already loaded
 
 
 @then("GitHub issues should be created for action items")
@@ -1177,7 +1177,7 @@ def step_action_completion_notification(context):
 @when("I review the membership status")
 def step_review_membership_status(context):
     """Review membership status"""
-    pass  # Content already loaded
+    # Content already loaded
 
 
 @then('the status should indicate "Forming"')

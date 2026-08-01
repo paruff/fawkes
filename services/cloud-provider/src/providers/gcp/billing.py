@@ -1,15 +1,15 @@
 """GCP Cloud Billing operations."""
 
 import logging
-from typing import Optional
 from datetime import datetime, timedelta
+from typing import Optional
 
-from google.cloud import billing_v1
 from google.api_core import exceptions as gcp_exceptions
+from google.cloud import billing_v1
 
-from ...interfaces.models import CostData
 from ...exceptions import CloudProviderError
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import CostData
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class BillingService:
     """GCP Cloud Billing service operations."""
 
     def __init__(
-        self, project_id: str, billing_account_id: Optional[str] = None, rate_limiter: Optional[RateLimiter] = None
+        self, project_id: str, billing_account_id: str | None = None, rate_limiter: RateLimiter | None = None
     ):
         """
         Initialize Billing service.
@@ -163,7 +163,7 @@ class BillingService:
 
         except gcp_exceptions.GoogleAPICallError as e:
             raise CloudProviderError(
-                f"Failed to get billing data: {str(e)}", provider="gcp", error_code=e.grpc_status_code
+                f"Failed to get billing data: {e!s}", provider="gcp", error_code=e.grpc_status_code
             )
         except Exception as e:
-            raise CloudProviderError(f"Failed to get billing data: {str(e)}", provider="gcp")
+            raise CloudProviderError(f"Failed to get billing data: {e!s}", provider="gcp")
