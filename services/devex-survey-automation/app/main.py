@@ -2,7 +2,6 @@
 FastAPI application for DevEx Survey Automation Service
 """
 
-import html
 import logging
 import secrets
 from contextlib import asynccontextmanager
@@ -729,83 +728,81 @@ async def thank_you_page(token: str = Path(..., description="Survey token")):
 
 
 @app.get("/nasa-tlx", response_class=HTMLResponse, tags=["NASA-TLX"])
-async def get_nasa_tlx_page(
-    task_type: str = Query("general", description="Type of task being assessed"),
-    task_id: str | None = Query(None, description="Optional task identifier"),
-    user_id: str = Query("anonymous", description="User identifier"),
-):
-    """Render NASA-TLX cognitive load assessment page"""
-    task_type = html.escape(task_type)
-    task_id = html.escape(task_id) if task_id else task_id
-    user_id = html.escape(user_id)
+async def get_nasa_tlx_page():
+    """Render NASA-TLX cognitive load assessment page.
+
+    task_type/task_id/user_id are read client-side from the URL query string
+    (see script below) rather than interpolated server-side, so untrusted
+    request data never flows into the rendered HTML.
+    """
     return HTMLResponse(
-        content=f"""
+        content="""
         <!DOCTYPE html>
         <html>
         <head>
             <title>NASA-TLX Cognitive Load Assessment</title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <style>
-                body {{
+                body {
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
                     max-width: 800px;
                     margin: 30px auto;
                     padding: 20px;
                     background-color: #f5f5f5;
-                }}
-                .assessment-container {{
+                }
+                .assessment-container {
                     background: white;
                     padding: 40px;
                     border-radius: 8px;
                     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                }}
-                h1 {{
+                }
+                h1 {
                     color: #1976d2;
                     margin-bottom: 10px;
                     font-size: 28px;
-                }}
-                .subtitle {{
+                }
+                .subtitle {
                     color: #666;
                     font-size: 14px;
                     margin-bottom: 30px;
-                }}
-                .task-info {{
+                }
+                .task-info {
                     background: #e3f2fd;
                     padding: 15px;
                     border-radius: 6px;
                     margin-bottom: 30px;
-                }}
-                .task-info strong {{
+                }
+                .task-info strong {
                     color: #1976d2;
-                }}
-                .dimension {{
+                }
+                .dimension {
                     margin-bottom: 35px;
-                }}
-                .dimension-label {{
+                }
+                .dimension-label {
                     font-weight: 600;
                     color: #333;
                     margin-bottom: 8px;
                     font-size: 16px;
-                }}
-                .dimension-description {{
+                }
+                .dimension-description {
                     color: #666;
                     font-size: 13px;
                     margin-bottom: 12px;
                     font-style: italic;
-                }}
-                .slider-container {{
+                }
+                .slider-container {
                     position: relative;
                     margin: 15px 0;
-                }}
-                .slider {{
+                }
+                .slider {
                     -webkit-appearance: none;
                     width: 100%;
                     height: 8px;
                     border-radius: 5px;
                     background: #ddd;
                     outline: none;
-                }}
-                .slider::-webkit-slider-thumb {{
+                }
+                .slider::-webkit-slider-thumb {
                     -webkit-appearance: none;
                     appearance: none;
                     width: 24px;
@@ -813,51 +810,51 @@ async def get_nasa_tlx_page(
                     border-radius: 50%;
                     background: #1976d2;
                     cursor: pointer;
-                }}
-                .slider::-moz-range-thumb {{
+                }
+                .slider::-moz-range-thumb {
                     width: 24px;
                     height: 24px;
                     border-radius: 50%;
                     background: #1976d2;
                     cursor: pointer;
                     border: none;
-                }}
-                .slider-labels {{
+                }
+                .slider-labels {
                     display: flex;
                     justify-content: space-between;
                     font-size: 12px;
                     color: #666;
                     margin-top: 5px;
-                }}
-                .slider-value {{
+                }
+                .slider-value {
                     text-align: center;
                     font-weight: 600;
                     color: #1976d2;
                     font-size: 18px;
                     margin-top: 5px;
-                }}
-                .form-group {{
+                }
+                .form-group {
                     margin-bottom: 20px;
-                }}
-                .form-group label {{
+                }
+                .form-group label {
                     display: block;
                     font-weight: 600;
                     color: #333;
                     margin-bottom: 8px;
-                }}
-                .form-group input, .form-group textarea {{
+                }
+                .form-group input, .form-group textarea {
                     width: 100%;
                     padding: 10px;
                     border: 1px solid #ddd;
                     border-radius: 4px;
                     font-size: 14px;
                     box-sizing: border-box;
-                }}
-                textarea {{
+                }
+                textarea {
                     resize: vertical;
                     min-height: 80px;
-                }}
-                .submit-button {{
+                }
+                .submit-button {
                     width: 100%;
                     padding: 15px;
                     background: #1976d2;
@@ -868,23 +865,23 @@ async def get_nasa_tlx_page(
                     font-weight: 600;
                     cursor: pointer;
                     transition: background 0.3s;
-                }}
-                .submit-button:hover {{
+                }
+                .submit-button:hover {
                     background: #1565c0;
-                }}
-                .submit-button:disabled {{
+                }
+                .submit-button:disabled {
                     background: #ccc;
                     cursor: not-allowed;
-                }}
-                .error-message {{
+                }
+                .error-message {
                     display: none;
                     background: #ffebee;
                     color: #c62828;
                     padding: 12px;
                     border-radius: 4px;
                     margin-top: 15px;
-                }}
-                .success-message {{
+                }
+                .success-message {
                     display: none;
                     background: #e8f5e9;
                     color: #2e7d32;
@@ -892,19 +889,19 @@ async def get_nasa_tlx_page(
                     border-radius: 4px;
                     margin-top: 15px;
                     text-align: center;
-                }}
-                .info-box {{
+                }
+                .info-box {
                     background: #fff3e0;
                     padding: 15px;
                     border-radius: 6px;
                     margin-bottom: 25px;
                     border-left: 4px solid #ff9800;
-                }}
-                .info-box p {{
+                }
+                .info-box p {
                     margin: 5px 0;
                     font-size: 13px;
                     color: #666;
-                }}
+                }
             </style>
         </head>
         <body>
@@ -912,9 +909,9 @@ async def get_nasa_tlx_page(
                 <h1>🧠 NASA-TLX Cognitive Load Assessment</h1>
                 <p class="subtitle">Help us understand your experience with platform tasks</p>
 
-                <div class="task-info" id="pageContext" data-task-type="{task_type}" data-task-id="{task_id or ""}" data-user-id="{user_id}">
-                    <p><strong>Task Type:</strong> <span id="taskTypeDisplay">{task_type}</span></p>
-                    {f"<p><strong>Task ID:</strong> {task_id}</p>" if task_id else ""}
+                <div class="task-info" id="pageContext">
+                    <p><strong>Task Type:</strong> <span id="taskTypeDisplay"></span></p>
+                    <p id="taskIdRow" style="display: none;"><strong>Task ID:</strong> <span id="taskIdDisplay"></span></p>
                 </div>
 
                 <div class="info-box">
@@ -1029,31 +1026,42 @@ async def get_nasa_tlx_page(
             </div>
 
             <script>
-                // Task/user context, read from HTML-escaped data attributes rather than
-                // interpolated directly into JS syntax (avoids reflected-XSS sinks in <script>).
-                const pageContext = document.getElementById('pageContext').dataset;
+                // Task/user context comes from the URL query string, read entirely
+                // client-side so the server never reflects request data into the
+                // rendered HTML (avoids reflected-XSS sinks server-side).
+                const params = new URLSearchParams(window.location.search);
+                const pageContext = {
+                    taskType: params.get('task_type') || 'general',
+                    taskId: params.get('task_id') || null,
+                    userId: params.get('user_id') || 'anonymous'
+                };
+                document.getElementById('taskTypeDisplay').textContent = pageContext.taskType;
+                if (pageContext.taskId) {
+                    document.getElementById('taskIdDisplay').textContent = pageContext.taskId;
+                    document.getElementById('taskIdRow').style.display = 'block';
+                }
 
                 // Update slider values
                 const sliders = [
-                    {{'id': 'mentalDemand', 'valueId': 'mentalDemandValue'}},
-                    {{'id': 'physicalDemand', 'valueId': 'physicalDemandValue'}},
-                    {{'id': 'temporalDemand', 'valueId': 'temporalDemandValue'}},
-                    {{'id': 'performance', 'valueId': 'performanceValue'}},
-                    {{'id': 'effort', 'valueId': 'effortValue'}},
-                    {{'id': 'frustration', 'valueId': 'frustrationValue'}}
+                    {'id': 'mentalDemand', 'valueId': 'mentalDemandValue'},
+                    {'id': 'physicalDemand', 'valueId': 'physicalDemandValue'},
+                    {'id': 'temporalDemand', 'valueId': 'temporalDemandValue'},
+                    {'id': 'performance', 'valueId': 'performanceValue'},
+                    {'id': 'effort', 'valueId': 'effortValue'},
+                    {'id': 'frustration', 'valueId': 'frustrationValue'}
                 ];
 
-                sliders.forEach(slider => {{
+                sliders.forEach(slider => {
                     const input = document.getElementById(slider.id);
                     const value = document.getElementById(slider.valueId);
 
-                    input.addEventListener('input', (e) => {{
+                    input.addEventListener('input', (e) => {
                         value.textContent = e.target.value;
-                    }});
-                }});
+                    });
+                });
 
                 // Handle form submission
-                document.getElementById('nasaTlxForm').addEventListener('submit', async (e) => {{
+                document.getElementById('nasaTlxForm').addEventListener('submit', async (e) => {
                     e.preventDefault();
 
                     const submitButton = document.getElementById('submitButton');
@@ -1065,7 +1073,7 @@ async def get_nasa_tlx_page(
                     errorMessage.style.display = 'none';
                     successMessage.style.display = 'none';
 
-                    const data = {{
+                    const data = {
                         task_type: pageContext.taskType,
                         task_id: pageContext.taskId || null,
                         mental_demand: parseFloat(document.getElementById('mentalDemand').value),
@@ -1076,40 +1084,40 @@ async def get_nasa_tlx_page(
                         frustration: parseFloat(document.getElementById('frustration').value),
                         duration_minutes: parseInt(document.getElementById('duration').value) || null,
                         comment: document.getElementById('comment').value || null
-                    }};
+                    };
 
-                    try {{
-                        const response = await fetch('/api/v1/nasa-tlx/submit?user_id=' + encodeURIComponent(pageContext.userId), {{
+                    try {
+                        const response = await fetch('/api/v1/nasa-tlx/submit?user_id=' + encodeURIComponent(pageContext.userId), {
                             method: 'POST',
-                            headers: {{
+                            headers: {
                                 'Content-Type': 'application/json'
-                            }},
+                            },
                             body: JSON.stringify(data)
-                        }});
+                        });
 
                         const result = await response.json();
 
-                        if (response.ok) {{
-                            successMessage.textContent = `✓ Assessment submitted successfully! Overall workload: ${{result.overall_workload.toFixed(1)}}/100`;
+                        if (response.ok) {
+                            successMessage.textContent = `✓ Assessment submitted successfully! Overall workload: ${result.overall_workload.toFixed(1)}/100`;
                             successMessage.style.display = 'block';
                             document.getElementById('nasaTlxForm').reset();
                             // Reset slider values
-                            sliders.forEach(slider => {{
+                            sliders.forEach(slider => {
                                 document.getElementById(slider.valueId).textContent = document.getElementById(slider.id).value;
-                            }});
-                        }} else {{
+                            });
+                        } else {
                             errorMessage.textContent = result.detail || 'Failed to submit assessment';
                             errorMessage.style.display = 'block';
                             submitButton.disabled = false;
                             submitButton.textContent = 'Submit Assessment';
-                        }}
-                    }} catch (error) {{
+                        }
+                    } catch (error) {
                         errorMessage.textContent = 'Network error. Please try again.';
                         errorMessage.style.display = 'block';
                         submitButton.disabled = false;
                         submitButton.textContent = 'Submit Assessment';
-                    }}
-                }});
+                    }
+                });
             </script>
         </body>
         </html>
