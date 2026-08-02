@@ -12,16 +12,15 @@ Focalboard/Mattermost.
 
 import logging
 from datetime import datetime, timezone
-from typing import Optional, Dict, Any, List
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
-import httpx  # Required for future Focalboard API integration  # noqa: F401
-from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
+import httpx  # Required for future Focalboard API integration
+from app.database import get_db
+from app.models import Stage, StageTransition, WorkItem, WorkItemType
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
-
-from app.database import get_db
-from app.models import WorkItem, Stage, StageTransition, WorkItemType
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +60,7 @@ class FocalboardColumnStageMapping:
     }
 
     @classmethod
-    def get_stage(cls, column_name: str) -> Optional[str]:
+    def get_stage(cls, column_name: str) -> str | None:
         """
         Get VSM stage name from Focalboard column name.
 
@@ -75,7 +74,7 @@ class FocalboardColumnStageMapping:
         return cls.COLUMN_TO_STAGE.get(normalized)
 
     @classmethod
-    def get_column(cls, stage_name: str) -> Optional[str]:
+    def get_column(cls, stage_name: str) -> str | None:
         """
         Get Focalboard column name from VSM stage name.
 
@@ -100,7 +99,7 @@ class FocalboardCard(BaseModel):
     title: str = Field(..., description="Card title")
     board_id: str = Field(..., alias="boardId", description="Board ID")
     status: str = Field(..., description="Column/status name")
-    type: Optional[str] = Field(None, description="Card type")
+    type: str | None = Field(None, description="Card type")
     created_at: int = Field(..., alias="createAt", description="Creation timestamp (ms)")
     updated_at: int = Field(..., alias="updateAt", description="Update timestamp (ms)")
 
@@ -124,7 +123,7 @@ class FocalboardSyncRequest(BaseModel):
     """Request to sync a specific Focalboard board."""
 
     board_id: str = Field(..., description="Focalboard board ID to sync")
-    workspace_id: Optional[str] = Field(None, description="Workspace ID")
+    workspace_id: str | None = Field(None, description="Workspace ID")
 
 
 class FocalboardSyncResponse(BaseModel):
@@ -133,7 +132,7 @@ class FocalboardSyncResponse(BaseModel):
     status: str = Field(..., description="Sync status")
     synced_count: int = Field(..., description="Number of cards synced")
     failed_count: int = Field(0, description="Number of cards that failed to sync")
-    details: List[str] = Field(default_factory=list, description="Sync details")
+    details: list[str] = Field(default_factory=list, description="Sync details")
 
 
 @router.post("/webhook", status_code=200)
@@ -337,7 +336,7 @@ async def sync_focalboard_board(request: FocalboardSyncRequest, db: Session = De
 
             except Exception as e:
                 failed_count += 1
-                details.append(f"Failed to sync card: {str(e)}")
+                details.append(f"Failed to sync card: {e!s}")
                 logger.error(f"Failed to sync card: {e}", exc_info=True)
 
         return FocalboardSyncResponse(
@@ -346,10 +345,10 @@ async def sync_focalboard_board(request: FocalboardSyncRequest, db: Session = De
 
     except Exception as e:
         logger.error(f"Failed to sync Focalboard board: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Sync failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Sync failed: {e!s}")
 
 
-async def _fetch_focalboard_cards(board_id: str) -> List[Dict[str, Any]]:
+async def _fetch_focalboard_cards(board_id: str) -> list[dict[str, Any]]:
     """
     Fetch cards from Focalboard API.
 
@@ -444,7 +443,7 @@ async def sync_work_item_to_focalboard(work_item_id: int, db: Session = Depends(
         raise
     except Exception as e:
         logger.error(f"Failed to sync work item to Focalboard: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Sync failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Sync failed: {e!s}")
 
 
 @router.get("/stages/mapping")

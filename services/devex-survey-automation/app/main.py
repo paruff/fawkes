@@ -4,43 +4,43 @@ FastAPI application for DevEx Survey Automation Service
 
 import logging
 import secrets
-from datetime import datetime
-from typing import List, Optional
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
+from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException, Path, Query
-from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
-from prometheus_client import make_asgi_app, Counter, Gauge, Histogram
-from sqlalchemy import select, func, and_
+from fastapi.responses import HTMLResponse
+from integrations.mattermost import mattermost_client
+from integrations.space_metrics import space_metrics_client
+from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
+from sqlalchemy import and_, func, select
 
 from .config import settings
-from .database import init_database, close_database, get_db_session, check_database_health
+from .database import check_database_health, close_database, get_db_session, init_database
 from .models import (
-    SurveyCampaign,
-    SurveyRecipient,
-    PulseSurveyAggregate,
-    SurveyOptOut,
-    NASATLXAssessment,
     NASATLXAggregate,
+    NASATLXAssessment,
+    PulseSurveyAggregate,
+    SurveyCampaign,
+    SurveyOptOut,
+    SurveyRecipient,
 )
 from .schemas import (
-    PulseSurveyResponse,
-    SurveyDistributionRequest,
     CampaignResponse,
-    PulseAnalytics,
-    ResponseRateMetrics,
     HealthResponse,
-    SurveySubmissionResponse,
+    NASATLXAnalytics,
     NASATLXRequest,
     NASATLXResponse,
     NASATLXSubmissionResponse,
-    NASATLXAnalytics,
     NASATLXTrendData,
+    PulseAnalytics,
+    PulseSurveyResponse,
+    ResponseRateMetrics,
+    SurveyDistributionRequest,
+    SurveySubmissionResponse,
     TaskTypeStats,
 )
-from integrations.mattermost import mattermost_client
-from integrations.space_metrics import space_metrics_client
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -154,7 +154,7 @@ async def distribute_survey(request: SurveyDistributionRequest):
     with request_duration.labels(endpoint="distribute_survey").time():
         try:
             # Determine period
-            now = datetime.now()
+            now = datetime.now(timezone.utc)
             if request.type == "pulse":
                 period = f"W{now.isocalendar()[1]}"  # ISO week number
             else:  # deep_dive
@@ -256,9 +256,9 @@ async def distribute_survey(request: SurveyDistributionRequest):
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/v1/survey/campaigns", response_model=List[CampaignResponse], tags=["Survey Management"])
+@app.get("/api/v1/survey/campaigns", response_model=list[CampaignResponse], tags=["Survey Management"])
 async def list_campaigns(
-    type: Optional[str] = Query(None, description="Filter by survey type"), limit: int = Query(10, ge=1, le=100)
+    type: str | None = Query(None, description="Filter by survey type"), limit: int = Query(10, ge=1, le=100)
 ):
     """List survey campaigns"""
     try:
@@ -639,7 +639,7 @@ async def submit_survey(token: str = Path(..., description="Survey token"), resp
                 # Store response
                 response_data = response.model_dump()
                 recipient.response_data = response_data
-                recipient.responded_at = datetime.now()
+                recipient.responded_at = datetime.now(timezone.utc)
 
                 # Update campaign stats
                 result = await session.execute(select(SurveyCampaign).where(SurveyCampaign.id == recipient.campaign_id))
@@ -728,80 +728,81 @@ async def thank_you_page(token: str = Path(..., description="Survey token")):
 
 
 @app.get("/nasa-tlx", response_class=HTMLResponse, tags=["NASA-TLX"])
-async def get_nasa_tlx_page(
-    task_type: str = Query("general", description="Type of task being assessed"),
-    task_id: Optional[str] = Query(None, description="Optional task identifier"),
-    user_id: str = Query("anonymous", description="User identifier"),
-):
-    """Render NASA-TLX cognitive load assessment page"""
+async def get_nasa_tlx_page():
+    """Render NASA-TLX cognitive load assessment page.
+
+    task_type/task_id/user_id are read client-side from the URL query string
+    (see script below) rather than interpolated server-side, so untrusted
+    request data never flows into the rendered HTML.
+    """
     return HTMLResponse(
-        content=f"""
+        content="""
         <!DOCTYPE html>
         <html>
         <head>
             <title>NASA-TLX Cognitive Load Assessment</title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <style>
-                body {{
+                body {
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
                     max-width: 800px;
                     margin: 30px auto;
                     padding: 20px;
                     background-color: #f5f5f5;
-                }}
-                .assessment-container {{
+                }
+                .assessment-container {
                     background: white;
                     padding: 40px;
                     border-radius: 8px;
                     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                }}
-                h1 {{
+                }
+                h1 {
                     color: #1976d2;
                     margin-bottom: 10px;
                     font-size: 28px;
-                }}
-                .subtitle {{
+                }
+                .subtitle {
                     color: #666;
                     font-size: 14px;
                     margin-bottom: 30px;
-                }}
-                .task-info {{
+                }
+                .task-info {
                     background: #e3f2fd;
                     padding: 15px;
                     border-radius: 6px;
                     margin-bottom: 30px;
-                }}
-                .task-info strong {{
+                }
+                .task-info strong {
                     color: #1976d2;
-                }}
-                .dimension {{
+                }
+                .dimension {
                     margin-bottom: 35px;
-                }}
-                .dimension-label {{
+                }
+                .dimension-label {
                     font-weight: 600;
                     color: #333;
                     margin-bottom: 8px;
                     font-size: 16px;
-                }}
-                .dimension-description {{
+                }
+                .dimension-description {
                     color: #666;
                     font-size: 13px;
                     margin-bottom: 12px;
                     font-style: italic;
-                }}
-                .slider-container {{
+                }
+                .slider-container {
                     position: relative;
                     margin: 15px 0;
-                }}
-                .slider {{
+                }
+                .slider {
                     -webkit-appearance: none;
                     width: 100%;
                     height: 8px;
                     border-radius: 5px;
                     background: #ddd;
                     outline: none;
-                }}
-                .slider::-webkit-slider-thumb {{
+                }
+                .slider::-webkit-slider-thumb {
                     -webkit-appearance: none;
                     appearance: none;
                     width: 24px;
@@ -809,51 +810,51 @@ async def get_nasa_tlx_page(
                     border-radius: 50%;
                     background: #1976d2;
                     cursor: pointer;
-                }}
-                .slider::-moz-range-thumb {{
+                }
+                .slider::-moz-range-thumb {
                     width: 24px;
                     height: 24px;
                     border-radius: 50%;
                     background: #1976d2;
                     cursor: pointer;
                     border: none;
-                }}
-                .slider-labels {{
+                }
+                .slider-labels {
                     display: flex;
                     justify-content: space-between;
                     font-size: 12px;
                     color: #666;
                     margin-top: 5px;
-                }}
-                .slider-value {{
+                }
+                .slider-value {
                     text-align: center;
                     font-weight: 600;
                     color: #1976d2;
                     font-size: 18px;
                     margin-top: 5px;
-                }}
-                .form-group {{
+                }
+                .form-group {
                     margin-bottom: 20px;
-                }}
-                .form-group label {{
+                }
+                .form-group label {
                     display: block;
                     font-weight: 600;
                     color: #333;
                     margin-bottom: 8px;
-                }}
-                .form-group input, .form-group textarea {{
+                }
+                .form-group input, .form-group textarea {
                     width: 100%;
                     padding: 10px;
                     border: 1px solid #ddd;
                     border-radius: 4px;
                     font-size: 14px;
                     box-sizing: border-box;
-                }}
-                textarea {{
+                }
+                textarea {
                     resize: vertical;
                     min-height: 80px;
-                }}
-                .submit-button {{
+                }
+                .submit-button {
                     width: 100%;
                     padding: 15px;
                     background: #1976d2;
@@ -864,23 +865,23 @@ async def get_nasa_tlx_page(
                     font-weight: 600;
                     cursor: pointer;
                     transition: background 0.3s;
-                }}
-                .submit-button:hover {{
+                }
+                .submit-button:hover {
                     background: #1565c0;
-                }}
-                .submit-button:disabled {{
+                }
+                .submit-button:disabled {
                     background: #ccc;
                     cursor: not-allowed;
-                }}
-                .error-message {{
+                }
+                .error-message {
                     display: none;
                     background: #ffebee;
                     color: #c62828;
                     padding: 12px;
                     border-radius: 4px;
                     margin-top: 15px;
-                }}
-                .success-message {{
+                }
+                .success-message {
                     display: none;
                     background: #e8f5e9;
                     color: #2e7d32;
@@ -888,19 +889,19 @@ async def get_nasa_tlx_page(
                     border-radius: 4px;
                     margin-top: 15px;
                     text-align: center;
-                }}
-                .info-box {{
+                }
+                .info-box {
                     background: #fff3e0;
                     padding: 15px;
                     border-radius: 6px;
                     margin-bottom: 25px;
                     border-left: 4px solid #ff9800;
-                }}
-                .info-box p {{
+                }
+                .info-box p {
                     margin: 5px 0;
                     font-size: 13px;
                     color: #666;
-                }}
+                }
             </style>
         </head>
         <body>
@@ -908,9 +909,9 @@ async def get_nasa_tlx_page(
                 <h1>🧠 NASA-TLX Cognitive Load Assessment</h1>
                 <p class="subtitle">Help us understand your experience with platform tasks</p>
 
-                <div class="task-info">
-                    <p><strong>Task Type:</strong> <span id="taskTypeDisplay">{task_type}</span></p>
-                    {f'<p><strong>Task ID:</strong> {task_id}</p>' if task_id else ''}
+                <div class="task-info" id="pageContext">
+                    <p><strong>Task Type:</strong> <span id="taskTypeDisplay"></span></p>
+                    <p id="taskIdRow" style="display: none;"><strong>Task ID:</strong> <span id="taskIdDisplay"></span></p>
                 </div>
 
                 <div class="info-box">
@@ -1025,27 +1026,42 @@ async def get_nasa_tlx_page(
             </div>
 
             <script>
+                // Task/user context comes from the URL query string, read entirely
+                // client-side so the server never reflects request data into the
+                // rendered HTML (avoids reflected-XSS sinks server-side).
+                const params = new URLSearchParams(window.location.search);
+                const pageContext = {
+                    taskType: params.get('task_type') || 'general',
+                    taskId: params.get('task_id') || null,
+                    userId: params.get('user_id') || 'anonymous'
+                };
+                document.getElementById('taskTypeDisplay').textContent = pageContext.taskType;
+                if (pageContext.taskId) {
+                    document.getElementById('taskIdDisplay').textContent = pageContext.taskId;
+                    document.getElementById('taskIdRow').style.display = 'block';
+                }
+
                 // Update slider values
                 const sliders = [
-                    {{'id': 'mentalDemand', 'valueId': 'mentalDemandValue'}},
-                    {{'id': 'physicalDemand', 'valueId': 'physicalDemandValue'}},
-                    {{'id': 'temporalDemand', 'valueId': 'temporalDemandValue'}},
-                    {{'id': 'performance', 'valueId': 'performanceValue'}},
-                    {{'id': 'effort', 'valueId': 'effortValue'}},
-                    {{'id': 'frustration', 'valueId': 'frustrationValue'}}
+                    {'id': 'mentalDemand', 'valueId': 'mentalDemandValue'},
+                    {'id': 'physicalDemand', 'valueId': 'physicalDemandValue'},
+                    {'id': 'temporalDemand', 'valueId': 'temporalDemandValue'},
+                    {'id': 'performance', 'valueId': 'performanceValue'},
+                    {'id': 'effort', 'valueId': 'effortValue'},
+                    {'id': 'frustration', 'valueId': 'frustrationValue'}
                 ];
 
-                sliders.forEach(slider => {{
+                sliders.forEach(slider => {
                     const input = document.getElementById(slider.id);
                     const value = document.getElementById(slider.valueId);
 
-                    input.addEventListener('input', (e) => {{
+                    input.addEventListener('input', (e) => {
                         value.textContent = e.target.value;
-                    }});
-                }});
+                    });
+                });
 
                 // Handle form submission
-                document.getElementById('nasaTlxForm').addEventListener('submit', async (e) => {{
+                document.getElementById('nasaTlxForm').addEventListener('submit', async (e) => {
                     e.preventDefault();
 
                     const submitButton = document.getElementById('submitButton');
@@ -1057,9 +1073,9 @@ async def get_nasa_tlx_page(
                     errorMessage.style.display = 'none';
                     successMessage.style.display = 'none';
 
-                    const data = {{
-                        task_type: '{task_type}',
-                        task_id: '{task_id or ""}',
+                    const data = {
+                        task_type: pageContext.taskType,
+                        task_id: pageContext.taskId || null,
                         mental_demand: parseFloat(document.getElementById('mentalDemand').value),
                         physical_demand: parseFloat(document.getElementById('physicalDemand').value),
                         temporal_demand: parseFloat(document.getElementById('temporalDemand').value),
@@ -1068,40 +1084,40 @@ async def get_nasa_tlx_page(
                         frustration: parseFloat(document.getElementById('frustration').value),
                         duration_minutes: parseInt(document.getElementById('duration').value) || null,
                         comment: document.getElementById('comment').value || null
-                    }};
+                    };
 
-                    try {{
-                        const response = await fetch('/api/v1/nasa-tlx/submit?user_id={user_id}', {{
+                    try {
+                        const response = await fetch('/api/v1/nasa-tlx/submit?user_id=' + encodeURIComponent(pageContext.userId), {
                             method: 'POST',
-                            headers: {{
+                            headers: {
                                 'Content-Type': 'application/json'
-                            }},
+                            },
                             body: JSON.stringify(data)
-                        }});
+                        });
 
                         const result = await response.json();
 
-                        if (response.ok) {{
-                            successMessage.textContent = `✓ Assessment submitted successfully! Overall workload: ${{result.overall_workload.toFixed(1)}}/100`;
+                        if (response.ok) {
+                            successMessage.textContent = `✓ Assessment submitted successfully! Overall workload: ${result.overall_workload.toFixed(1)}/100`;
                             successMessage.style.display = 'block';
                             document.getElementById('nasaTlxForm').reset();
                             // Reset slider values
-                            sliders.forEach(slider => {{
+                            sliders.forEach(slider => {
                                 document.getElementById(slider.valueId).textContent = document.getElementById(slider.id).value;
-                            }});
-                        }} else {{
+                            });
+                        } else {
                             errorMessage.textContent = result.detail || 'Failed to submit assessment';
                             errorMessage.style.display = 'block';
                             submitButton.disabled = false;
                             submitButton.textContent = 'Submit Assessment';
-                        }}
-                    }} catch (error) {{
+                        }
+                    } catch (error) {
                         errorMessage.textContent = 'Network error. Please try again.';
                         errorMessage.style.display = 'block';
                         submitButton.disabled = false;
                         submitButton.textContent = 'Submit Assessment';
-                    }}
-                }});
+                    }
+                });
             </script>
         </body>
         </html>
@@ -1109,7 +1125,7 @@ async def get_nasa_tlx_page(
     )
 
 
-@app.get("/api/v1/analytics/pulse/weekly", response_model=List[PulseAnalytics], tags=["Analytics"])
+@app.get("/api/v1/analytics/pulse/weekly", response_model=list[PulseAnalytics], tags=["Analytics"])
 async def get_pulse_weekly_analytics(weeks: int = Query(12, ge=1, le=52, description="Number of weeks to retrieve")):
     """Get weekly pulse survey analytics"""
     try:
@@ -1128,7 +1144,7 @@ async def get_pulse_weekly_analytics(weeks: int = Query(12, ge=1, le=52, descrip
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/v1/analytics/response-rate", response_model=List[ResponseRateMetrics], tags=["Analytics"])
+@app.get("/api/v1/analytics/response-rate", response_model=list[ResponseRateMetrics], tags=["Analytics"])
 async def get_response_rate_metrics():
     """Get response rate metrics for all survey types"""
     try:
@@ -1239,9 +1255,9 @@ async def submit_nasa_tlx(assessment: NASATLXRequest, user_id: str = Query(..., 
             raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/v1/nasa-tlx/assessments", response_model=List[NASATLXResponse], tags=["NASA-TLX"])
+@app.get("/api/v1/nasa-tlx/assessments", response_model=list[NASATLXResponse], tags=["NASA-TLX"])
 async def get_nasa_tlx_assessments(
-    task_type: Optional[str] = Query(None, description="Filter by task type"),
+    task_type: str | None = Query(None, description="Filter by task type"),
     limit: int = Query(50, ge=1, le=500, description="Number of assessments to return"),
 ):
     """Get NASA-TLX assessments with optional filtering"""
@@ -1262,16 +1278,16 @@ async def get_nasa_tlx_assessments(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/v1/nasa-tlx/analytics", response_model=List[NASATLXAnalytics], tags=["NASA-TLX"])
+@app.get("/api/v1/nasa-tlx/analytics", response_model=list[NASATLXAnalytics], tags=["NASA-TLX"])
 async def get_nasa_tlx_analytics(
-    task_type: Optional[str] = Query(None, description="Filter by task type"),
+    task_type: str | None = Query(None, description="Filter by task type"),
     weeks: int = Query(4, ge=1, le=52, description="Number of weeks to analyze"),
 ):
     """Get aggregated NASA-TLX analytics"""
     try:
         async with get_db_session() as session:
             # Get current week
-            now = datetime.now()
+            now = datetime.now(timezone.utc)
             current_week = now.isocalendar()[1]
             current_year = now.year
 
@@ -1305,12 +1321,12 @@ async def get_nasa_tlx_analytics(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/v1/nasa-tlx/trends", response_model=List[NASATLXTrendData], tags=["NASA-TLX"])
+@app.get("/api/v1/nasa-tlx/trends", response_model=list[NASATLXTrendData], tags=["NASA-TLX"])
 async def get_nasa_tlx_trends(weeks: int = Query(12, ge=1, le=52, description="Number of weeks to analyze")):
     """Get NASA-TLX trends by task type over time"""
     try:
         async with get_db_session() as session:
-            now = datetime.now()
+            now = datetime.now(timezone.utc)
             current_week = now.isocalendar()[1]
             current_year = now.year
             start_week = max(1, current_week - weeks)
@@ -1362,7 +1378,7 @@ async def get_nasa_tlx_trends(weeks: int = Query(12, ge=1, le=52, description="N
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/v1/nasa-tlx/task-types", response_model=List[TaskTypeStats], tags=["NASA-TLX"])
+@app.get("/api/v1/nasa-tlx/task-types", response_model=list[TaskTypeStats], tags=["NASA-TLX"])
 async def get_task_type_stats():
     """Get statistics grouped by task type"""
     try:

@@ -2,26 +2,25 @@
 
 import logging
 import os
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional
 
 import boto3
 from botocore.exceptions import ClientError, NoCredentialsError
 
+from ..exceptions import AuthenticationError
+from ..interfaces.models import Cluster, CostData, Database, Storage
 from ..interfaces.provider import (
     CloudProvider,
     ClusterConfig,
     DatabaseConfig,
     StorageConfig,
 )
-from ..interfaces.models import Cluster, Database, Storage, CostData
-from ..exceptions import AuthenticationError
 from ..utils import RateLimiter
-
+from .aws.cloudwatch import CloudWatchService
+from .aws.cost_explorer import CostExplorerService
 from .aws.eks import EKSService
 from .aws.rds import RDSService
 from .aws.s3 import S3Service
-from .aws.cloudwatch import CloudWatchService
-from .aws.cost_explorer import CostExplorerService
 
 logger = logging.getLogger(__name__)
 
@@ -31,12 +30,12 @@ class AWSProvider(CloudProvider):
 
     def __init__(
         self,
-        region: Optional[str] = None,
-        access_key_id: Optional[str] = None,
-        secret_access_key: Optional[str] = None,
-        session_token: Optional[str] = None,
-        role_arn: Optional[str] = None,
-        profile_name: Optional[str] = None,
+        region: str | None = None,
+        access_key_id: str | None = None,
+        secret_access_key: str | None = None,
+        session_token: str | None = None,
+        role_arn: str | None = None,
+        profile_name: str | None = None,
         rate_limit_calls: int = 10,
         rate_limit_window: float = 1.0,
     ):
@@ -156,7 +155,7 @@ class AWSProvider(CloudProvider):
         """Create a Kubernetes cluster."""
         return self.eks.create_cluster(config)
 
-    def get_cluster(self, cluster_id: str, region: Optional[str] = None, include_node_count: bool = True) -> Cluster:
+    def get_cluster(self, cluster_id: str, region: str | None = None, include_node_count: bool = True) -> Cluster:
         """
         Get cluster details.
 
@@ -168,12 +167,12 @@ class AWSProvider(CloudProvider):
         region = region or self.region
         return self.eks.get_cluster(cluster_id, region, include_node_count)
 
-    def delete_cluster(self, cluster_id: str, region: Optional[str] = None) -> bool:
+    def delete_cluster(self, cluster_id: str, region: str | None = None) -> bool:
         """Delete a cluster."""
         region = region or self.region
         return self.eks.delete_cluster(cluster_id, region)
 
-    def list_clusters(self, region: Optional[str] = None, include_details: bool = False) -> List[Cluster]:
+    def list_clusters(self, region: str | None = None, include_details: bool = False) -> list[Cluster]:
         """
         List all clusters.
 
@@ -189,19 +188,17 @@ class AWSProvider(CloudProvider):
         """Create a database instance."""
         return self.rds.create_database(config)
 
-    def get_database(self, database_id: str, region: Optional[str] = None) -> Database:
+    def get_database(self, database_id: str, region: str | None = None) -> Database:
         """Get database details."""
         region = region or self.region
         return self.rds.get_database(database_id, region)
 
-    def delete_database(
-        self, database_id: str, region: Optional[str] = None, skip_final_snapshot: bool = False
-    ) -> bool:
+    def delete_database(self, database_id: str, region: str | None = None, skip_final_snapshot: bool = False) -> bool:
         """Delete a database instance."""
         region = region or self.region
         return self.rds.delete_database(database_id, region, skip_final_snapshot)
 
-    def list_databases(self, region: Optional[str] = None) -> List[Database]:
+    def list_databases(self, region: str | None = None) -> list[Database]:
         """List all database instances."""
         region = region or self.region
         return self.rds.list_databases(region)
@@ -211,17 +208,17 @@ class AWSProvider(CloudProvider):
         """Create a storage bucket."""
         return self.s3.create_storage(config)
 
-    def get_storage(self, storage_id: str, region: Optional[str] = None) -> Storage:
+    def get_storage(self, storage_id: str, region: str | None = None) -> Storage:
         """Get storage bucket details."""
         region = region or self.region
         return self.s3.get_storage(storage_id, region)
 
-    def delete_storage(self, storage_id: str, region: Optional[str] = None, force: bool = False) -> bool:
+    def delete_storage(self, storage_id: str, region: str | None = None, force: bool = False) -> bool:
         """Delete a storage bucket."""
         region = region or self.region
         return self.s3.delete_storage(storage_id, region, force)
 
-    def list_storage(self, region: Optional[str] = None, include_details: bool = False) -> List[Storage]:
+    def list_storage(self, region: str | None = None, include_details: bool = False) -> list[Storage]:
         """
         List all storage buckets.
 
@@ -242,10 +239,10 @@ class AWSProvider(CloudProvider):
         metric_name: str,
         start_time: str,
         end_time: str,
-        namespace: Optional[str] = None,
-        dimensions: Optional[List[Dict[str, str]]] = None,
-        region: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        namespace: str | None = None,
+        dimensions: list[dict[str, str]] | None = None,
+        region: str | None = None,
+    ) -> dict[str, Any]:
         """
         Get metrics for a resource.
 
@@ -278,7 +275,7 @@ class AWSProvider(CloudProvider):
 
         return self.cloudwatch.get_metrics(namespace, metric_name, dimensions, start_dt, end_dt, region)
 
-    def get_cost_forecast(self, days: int = 30) -> Dict[str, Any]:
+    def get_cost_forecast(self, days: int = 30) -> dict[str, Any]:
         """
         Get cost forecast.
 

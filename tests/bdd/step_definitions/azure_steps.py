@@ -1,9 +1,10 @@
 # tests/bdd/step_definitions/azure_steps.py
 
-from pytest_bdd import scenarios, given, when, then, parsers
-import subprocess
 import json
 import os
+import subprocess
+
+from pytest_bdd import given, parsers, scenarios, then, when
 
 scenarios("../features/azure_aks_provisioning.feature")
 
@@ -289,9 +290,9 @@ def all_nodes_ready():
         conditions = node["status"]["conditions"]
         ready_condition = next((c for c in conditions if c["type"] == "Ready"), None)
         assert ready_condition, f"Ready condition not found for node {node['metadata']['name']}"
-        assert (
-            ready_condition["status"] == "True"
-        ), f"Node {node['metadata']['name']} is not Ready: {ready_condition.get('reason')}"
+        assert ready_condition["status"] == "True", (
+            f"Node {node['metadata']['name']} is not Ready: {ready_condition.get('reason')}"
+        )
 
 
 @then(parsers.parse("the system node pool should have {count:d} nodes"))
@@ -389,7 +390,6 @@ def meets_acceptance_criteria(context):
     """Verify all AT-E1-001 acceptance criteria"""
     # This is a meta-check that other tests have passed
     # The actual validation happens in the individual test steps
-    pass
 
 
 @then("the script should complete successfully")
@@ -414,7 +414,6 @@ def cost_suggestions(context):
     _ = context.get("last_result")
     # If over budget, suggestions should be present
     # This is a soft check - suggestions may or may not appear
-    pass
 
 
 @then(parsers.parse('the VNet should have address space "{cidr}"'))
@@ -422,14 +421,13 @@ def vnet_address_space(context, cidr):
     """Verify VNet address space"""
     _ = context.get("network_profile", {})
     # In AKS, we don't directly see VNet config, but we can check pod CIDR
-    pass  # This would require additional Azure API calls
+    # This would require additional Azure API calls
 
 
 @then(parsers.parse('the AKS subnet should have address prefix "{prefix}"'))
 def aks_subnet_prefix(context, prefix):
     """Verify AKS subnet prefix"""
     # Would require querying VNet directly
-    pass
 
 
 @then(parsers.parse('the service CIDR should be "{cidr}"'))
@@ -508,7 +506,6 @@ def container_insights_collecting(context):
 def logs_retention(days):
     """Verify log retention"""
     # This would require querying Log Analytics workspace settings
-    pass
 
 
 @then("Terraform state should be stored in Azure Storage")
@@ -524,7 +521,6 @@ def volume_snapshots_configured():
     _ = run_cmd("kubectl get volumesnapshotclass", check=False)
     # Volume snapshots may not be configured by default
     # This is an optional check
-    pass
 
 
 @then("all infrastructure should be defined as code in Git")

@@ -1,9 +1,10 @@
 """Unit tests for the main FastAPI application."""
 
+from unittest.mock import Mock, patch
+
+import httpx
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import Mock, patch
-import httpx
 
 
 @pytest.fixture
@@ -92,9 +93,10 @@ def test_ready_endpoint_missing_config():
 
 def test_verify_github_signature_valid(mock_env):
     """Test GitHub signature verification with valid signature."""
-    from app.main import verify_github_signature
-    import hmac
     import hashlib
+    import hmac
+
+    from app.main import verify_github_signature
 
     payload = b'{"test": "data"}'
     secret = "test-secret"
@@ -130,10 +132,11 @@ def test_webhook_invalid_signature(mock_env):
 
 def test_webhook_pull_request_opened(mock_env):
     """Test webhook processes pull request opened event."""
-    from app.main import app
-    import hmac
     import hashlib
+    import hmac
     import json
+
+    from app.main import app
 
     client = TestClient(app)
 
@@ -144,7 +147,7 @@ def test_webhook_pull_request_opened(mock_env):
     }
 
     payload_bytes = json.dumps(payload).encode()
-    signature = hmac.new("test-secret".encode(), msg=payload_bytes, digestmod=hashlib.sha256).hexdigest()
+    signature = hmac.new(b"test-secret", msg=payload_bytes, digestmod=hashlib.sha256).hexdigest()
 
     with patch("app.main.process_pull_request_review"):
         response = client.post(
@@ -164,16 +167,17 @@ def test_webhook_pull_request_opened(mock_env):
 
 def test_webhook_ignores_other_events(mock_env):
     """Test webhook ignores non-PR events."""
-    from app.main import app
-    import hmac
     import hashlib
+    import hmac
     import json
+
+    from app.main import app
 
     client = TestClient(app)
 
     payload = {"action": "created"}
     payload_bytes = json.dumps(payload).encode()
-    signature = hmac.new("test-secret".encode(), msg=payload_bytes, digestmod=hashlib.sha256).hexdigest()
+    signature = hmac.new(b"test-secret", msg=payload_bytes, digestmod=hashlib.sha256).hexdigest()
 
     response = client.post(
         "/webhook/github",

@@ -301,8 +301,8 @@ See the [examples directory](../examples/) for complete usage examples:
 
 | Name | Version |
 | ---- | ------- |
-| <a name="provider_aws"></a> [aws](#provider_aws) | 6.27.0 |
-| <a name="provider_random"></a> [random](#provider_random) | 3.7.2 |
+| <a name="provider_aws"></a> [aws](#provider_aws) | 6.57.1 |
+| <a name="provider_random"></a> [random](#provider_random) | 3.9.0 |
 
 ## Resources
 

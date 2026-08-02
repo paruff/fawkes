@@ -18,23 +18,27 @@ The target model follows a canary → staging → production progression with au
 ### Phases
 
 #### Phase 1: Main CI Guard (NOW)
+
 - All PRs targeting `main` must pass `code-quality.yml` via the reusable main CI guard from `paruff/ufawkespipe`
 - Block merge if CI fails
 - Lay the foundation for artifact-based promotion
 
 #### Phase 2: Artifact Promotion with GitOps
+
 - Every `main` merge produces a versioned immutable artifact (Docker image + SBOM + signature)
 - A GitOps repo (separate from application code) tracks the desired state per environment
 - CI updates the GitOps overlay for the `staging` environment on every `main` merge
 - ArgoCD syncs the GitOps state to the staging cluster automatically
 
 #### Phase 3: Canary on Staging
+
 - Staging deployments use a canary strategy: 10% → 50% → 100% traffic shift
 - Automated smoke tests run at each step (health endpoints, BDD scenarios)
 - Rollback is automatic if smoke tests fail at any canary step
 - Metrics (error budget, latency SLOs) are evaluated before promotion
 
 #### Phase 4: Production Gate
+
 - Production promotion requires manual approval (human in the loop)
 - Post-deployment verification runs in production: smoke tests + metric validation
 - Full rollback on verification failure (revert GitOps commit → ArgoCD auto-syncs)

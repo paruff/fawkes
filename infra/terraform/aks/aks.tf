@@ -37,6 +37,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
     only_critical_addons_enabled = true
   }
 
+  node_provisioning_profile {
+    mode = "Manual"
+  }
+
   identity {
     type = var.enable_managed_identity ? "SystemAssigned" : "None"
   }

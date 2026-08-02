@@ -1,13 +1,12 @@
 """Test configuration and fixtures."""
 
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from fastapi.testclient import TestClient
-
-from app.models import Base
 from app.database import get_db
 from app.main import app
+from app.models import Base
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 # Use in-memory SQLite for tests
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
@@ -53,8 +52,9 @@ def client(db_session):
 @pytest.fixture
 def sample_category(db_session):
     """Create a sample category for testing."""
-    from app.models import Category
     from datetime import datetime, timezone
+
+    from app.models import Category
 
     category = Category(
         name="Test Category",
@@ -74,8 +74,9 @@ def sample_category(db_session):
 @pytest.fixture
 def sample_tag(db_session):
     """Create a sample tag for testing."""
-    from app.models import Tag
     from datetime import datetime, timezone
+
+    from app.models import Tag
 
     tag = Tag(
         name="Test Tag",
@@ -93,8 +94,9 @@ def sample_tag(db_session):
 @pytest.fixture
 def sample_insight(db_session, sample_category, sample_tag):
     """Create a sample insight for testing."""
-    from app.models import Insight
     from datetime import datetime, timezone
+
+    from app.models import Insight
 
     insight = Insight(
         title="Test Insight",

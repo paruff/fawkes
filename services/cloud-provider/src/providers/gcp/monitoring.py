@@ -1,14 +1,14 @@
 """GCP Cloud Monitoring operations."""
 
 import logging
-from typing import Dict, Any, Optional
 from datetime import datetime
+from typing import Any, Dict, Optional
 
-from google.cloud import monitoring_v3
 from google.api_core import exceptions as gcp_exceptions
+from google.cloud import monitoring_v3
 
 from ...exceptions import CloudProviderError
-from ...utils import retry_with_backoff, RateLimiter
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class MonitoringService:
     """GCP Cloud Monitoring service operations."""
 
-    def __init__(self, project_id: str, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, project_id: str, rate_limiter: RateLimiter | None = None):
         """
         Initialize Monitoring service.
 
@@ -44,11 +44,11 @@ class MonitoringService:
         self,
         metric_type: str,
         resource_type: str,
-        resource_labels: Dict[str, str],
+        resource_labels: dict[str, str],
         start_time: datetime,
         end_time: datetime,
-        region: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        region: str | None = None,
+    ) -> dict[str, Any]:
         """
         Get metrics from Cloud Monitoring.
 
@@ -133,7 +133,7 @@ class MonitoringService:
 
         except gcp_exceptions.GoogleAPICallError as e:
             raise CloudProviderError(
-                f"Failed to get metrics {metric_type}: {str(e)}", provider="gcp", error_code=e.grpc_status_code
+                f"Failed to get metrics {metric_type}: {e!s}", provider="gcp", error_code=e.grpc_status_code
             )
         except Exception as e:
-            raise CloudProviderError(f"Failed to get metrics {metric_type}: {str(e)}", provider="gcp")
+            raise CloudProviderError(f"Failed to get metrics {metric_type}: {e!s}", provider="gcp")

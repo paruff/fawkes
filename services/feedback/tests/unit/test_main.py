@@ -2,10 +2,11 @@
 Unit tests for feedback service main API.
 """
 
+from datetime import datetime, timezone
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import AsyncMock, patch, MagicMock
-from datetime import datetime
 
 
 @pytest.fixture
@@ -84,8 +85,8 @@ def test_submit_feedback_success(client):
             "user_agent": None,
             "github_issue_url": None,
             "has_screenshot": False,
-            "created_at": datetime.now(),
-            "updated_at": datetime.now(),
+            "created_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc),
         }
         mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
 
@@ -157,8 +158,8 @@ def test_list_feedback_success(client):
                 "user_agent": None,
                 "github_issue_url": None,
                 "has_screenshot": False,
-                "created_at": datetime.now(),
-                "updated_at": datetime.now(),
+                "created_at": datetime.now(timezone.utc),
+                "updated_at": datetime.now(timezone.utc),
             }
         ]
         mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
@@ -189,8 +190,8 @@ def test_update_feedback_status_success(client):
             "user_agent": None,
             "github_issue_url": None,
             "has_screenshot": False,
-            "created_at": datetime.now(),
-            "updated_at": datetime.now(),
+            "created_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc),
         }
         mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
 

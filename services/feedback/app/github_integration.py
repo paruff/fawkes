@@ -5,9 +5,10 @@ This module provides functionality to create GitHub issues from feedback submiss
 It supports automatic issue creation with labels, screenshot attachments, and linking.
 """
 
-import os
 import logging
+import os
 from typing import Optional, Tuple
+
 import httpx
 
 logger = logging.getLogger(__name__)
@@ -29,13 +30,13 @@ async def create_github_issue(
     feedback_type: str,
     category: str,
     comment: str,
-    page_url: Optional[str] = None,
-    rating: Optional[int] = None,
-    email: Optional[str] = None,
-    screenshot_data: Optional[str] = None,
-    browser_info: Optional[str] = None,
-    user_agent: Optional[str] = None,
-) -> Tuple[bool, Optional[str], Optional[str]]:
+    page_url: str | None = None,
+    rating: int | None = None,
+    email: str | None = None,
+    screenshot_data: str | None = None,
+    browser_info: str | None = None,
+    user_agent: str | None = None,
+) -> tuple[bool, str | None, str | None]:
     """
     Create a GitHub issue from feedback submission.
 
@@ -144,7 +145,7 @@ async def create_github_issue(
             return True, issue_url, None
 
     except Exception as e:
-        error_msg = f"Error creating GitHub issue: {str(e)}"
+        error_msg = f"Error creating GitHub issue: {e!s}"
         logger.error(error_msg)
         return False, None, error_msg
 
@@ -186,7 +187,7 @@ async def _attach_screenshot_to_issue(
         )
 
         if response.status_code not in [200, 201]:
-            logger.warning(f"Failed to add screenshot comment to issue #{issue_number}: " f"{response.status_code}")
+            logger.warning(f"Failed to add screenshot comment to issue #{issue_number}: {response.status_code}")
             return False
 
         logger.info(f"✅ Added screenshot note to GitHub issue #{issue_number}")
@@ -197,7 +198,7 @@ async def _attach_screenshot_to_issue(
         return False
 
 
-async def update_issue_status(issue_url: str, new_status: str, feedback_id: int) -> Tuple[bool, Optional[str]]:
+async def update_issue_status(issue_url: str, new_status: str, feedback_id: int) -> tuple[bool, str | None]:
     """
     Update a GitHub issue status based on feedback status changes.
 
@@ -276,10 +277,10 @@ async def update_issue_status(issue_url: str, new_status: str, feedback_id: int)
                 timeout=30.0,
             )
 
-            logger.info(f"✅ Updated GitHub issue #{issue_number} to {github_state} " f"for feedback ID {feedback_id}")
+            logger.info(f"✅ Updated GitHub issue #{issue_number} to {github_state} for feedback ID {feedback_id}")
             return True, None
 
     except Exception as e:
-        error_msg = f"Error updating GitHub issue: {str(e)}"
+        error_msg = f"Error updating GitHub issue: {e!s}"
         logger.error(error_msg)
         return False, error_msg
