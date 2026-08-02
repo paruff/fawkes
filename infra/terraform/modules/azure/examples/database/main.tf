@@ -53,7 +53,9 @@ resource "azurerm_subnet" "example" {
   virtual_network_name = azurerm_virtual_network.example.name
   address_prefixes     = ["10.0.1.0/24"]
 
-  service_endpoints = ["Microsoft.Sql"]
+  service_endpoint {
+    service = "Microsoft.Sql"
+  }
 }
 
 # Log Analytics Workspace
