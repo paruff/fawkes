@@ -1,6 +1,6 @@
 """Unit tests for stage metadata API."""
 
-from app.models import Stage, StageType, StageCategory
+from app.models import Stage, StageCategory, StageType
 
 
 def test_stage_category_enum_values():

@@ -1,15 +1,15 @@
 """Azure Cost Management operations."""
 
 import logging
-from typing import Dict, Any, Optional
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, Optional
 
-from azure.mgmt.costmanagement import CostManagementClient
 from azure.core.exceptions import HttpResponseError
+from azure.mgmt.costmanagement import CostManagementClient
 
-from ...interfaces.models import CostData
 from ...exceptions import CloudProviderError, ValidationError
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import CostData
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class AzureCostManagementService:
         "LAST_MONTH": "LAST_MONTH",
     }
 
-    def __init__(self, credential, subscription_id: str, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, credential, subscription_id: str, rate_limiter: RateLimiter | None = None):
         """
         Initialize Azure Cost Management service.
 
@@ -57,7 +57,7 @@ class AzureCostManagementService:
         Returns:
             Tuple of (start_date, end_date) as datetime objects
         """
-        today = datetime.utcnow().date()
+        today = datetime.now(timezone.utc).date()
 
         if timeframe == "THIS_MONTH":
             start_date = today.replace(day=1)
@@ -173,7 +173,7 @@ class AzureCostManagementService:
             raise CloudProviderError(f"Unexpected error getting cost data: {e}", provider="azure")
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(HttpResponseError,))
-    def get_cost_forecast(self, days: int = 30) -> Dict[str, Any]:
+    def get_cost_forecast(self, days: int = 30) -> dict[str, Any]:
         """
         Get cost forecast for specified number of days.
 
@@ -191,7 +191,7 @@ class AzureCostManagementService:
         try:
             client = self._get_client()
 
-            today = datetime.utcnow().date()
+            today = datetime.now(timezone.utc).date()
             start_date = today + timedelta(days=1)
             end_date = today + timedelta(days=days)
 

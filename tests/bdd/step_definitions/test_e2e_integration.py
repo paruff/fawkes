@@ -7,7 +7,7 @@ workflow from scaffolding to deployment to metrics collection.
 
 import subprocess
 
-from behave import given, when, then
+from behave import given, then, when
 from kubernetes import client, config
 
 # Load kubernetes config
@@ -179,6 +179,7 @@ def step_jenkinsfile_uses_golden_path(context):
 def step_catalog_info_valid(context):
     """Verify catalog-info.yaml has valid structure"""
     import os
+
     import yaml
 
     catalog_path = "templates/python-service/skeleton/catalog-info.yaml"
@@ -355,7 +356,7 @@ def step_sonarqube_analyzes(context):
     try:
         # Check if SonarQube is deployed
         result = subprocess.run(
-            ["kubectl", "get", "deployment", "sonarqube", "-n", "fawkes"], capture_output=True, text=True
+            ["kubectl", "get", "deployment", "sonarqube", "-n", "fawkes"], capture_output=True, text=True, check=False
         )
         if result.returncode == 0:
             context.test.log("✓ SonarQube is deployed")

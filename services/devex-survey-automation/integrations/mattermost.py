@@ -3,9 +3,9 @@ Mattermost integration for survey distribution
 """
 
 import logging
-from typing import Optional, Dict, Any
-import httpx
+from typing import Any, Dict, Optional
 
+import httpx
 from app.config import settings
 
 logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ class MattermostClient:
         self.bot_user_id = settings.mattermost_bot_user_id
         self.headers = {"Authorization": f"Bearer {self.token}", "Content-Type": "application/json"}
 
-    async def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
+    async def get_user_by_email(self, email: str) -> dict[str, Any] | None:
         """Get Mattermost user by email"""
         try:
             async with httpx.AsyncClient() as client:
@@ -36,7 +36,7 @@ class MattermostClient:
             logger.error(f"Error fetching Mattermost user {email}: {e}")
             return None
 
-    async def create_direct_channel(self, user_id: str) -> Optional[str]:
+    async def create_direct_channel(self, user_id: str) -> str | None:
         """Create a direct message channel with a user"""
         try:
             async with httpx.AsyncClient() as client:

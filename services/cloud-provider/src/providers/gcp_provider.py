@@ -2,27 +2,26 @@
 
 import logging
 import os
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional
 
+from google.api_core import exceptions as gcp_exceptions
 from google.auth import default as get_default_credentials
 from google.auth.exceptions import DefaultCredentialsError
-from google.api_core import exceptions as gcp_exceptions
 
+from ..exceptions import AuthenticationError
+from ..interfaces.models import Cluster, CostData, Database, Storage
 from ..interfaces.provider import (
     CloudProvider,
     ClusterConfig,
     DatabaseConfig,
     StorageConfig,
 )
-from ..interfaces.models import Cluster, Database, Storage, CostData
-from ..exceptions import AuthenticationError
 from ..utils import RateLimiter
-
-from .gcp.gke import GKEService
+from .gcp.billing import BillingService
 from .gcp.cloudsql import CloudSQLService
 from .gcp.gcs import GCSService
+from .gcp.gke import GKEService
 from .gcp.monitoring import MonitoringService
-from .gcp.billing import BillingService
 
 logger = logging.getLogger(__name__)
 
@@ -32,10 +31,10 @@ class GCPProvider(CloudProvider):
 
     def __init__(
         self,
-        project_id: Optional[str] = None,
-        credentials_path: Optional[str] = None,
-        service_account_email: Optional[str] = None,
-        billing_account_id: Optional[str] = None,
+        project_id: str | None = None,
+        credentials_path: str | None = None,
+        service_account_email: str | None = None,
+        billing_account_id: str | None = None,
         rate_limit_calls: int = 10,
         rate_limit_window: float = 1.0,
     ):
@@ -98,13 +97,13 @@ class GCPProvider(CloudProvider):
 
         except DefaultCredentialsError as e:
             raise AuthenticationError(
-                f"No GCP credentials found: {str(e)}. "
+                f"No GCP credentials found: {e!s}. "
                 "Please provide credentials via service account key file, "
                 "Application Default Credentials, or Workload Identity.",
                 provider="gcp",
             )
         except Exception as e:
-            raise AuthenticationError(f"GCP authentication failed: {str(e)}", provider="gcp")
+            raise AuthenticationError(f"GCP authentication failed: {e!s}", provider="gcp")
 
     def _verify_credentials(self):
         """Verify GCP credentials by making a test call."""
@@ -120,16 +119,15 @@ class GCPProvider(CloudProvider):
                 logger.info(f"Authenticated for project: {project.display_name} ({project.project_id})")
             except gcp_exceptions.NotFound:
                 logger.warning(
-                    f"Project {self.project_id} not found or no access. "
-                    "Continuing anyway - some operations may fail."
+                    f"Project {self.project_id} not found or no access. Continuing anyway - some operations may fail."
                 )
             except Exception as e:
-                logger.warning(f"Could not verify project access: {str(e)}. Continuing anyway.")
+                logger.warning(f"Could not verify project access: {e!s}. Continuing anyway.")
 
         except Exception as e:
-            logger.warning(f"Credential verification failed: {str(e)}. Continuing anyway.")
+            logger.warning(f"Credential verification failed: {e!s}. Continuing anyway.")
 
-    def create_service_account(self, name: str, display_name: str, description: str = "") -> Dict[str, str]:
+    def create_service_account(self, name: str, display_name: str, description: str = "") -> dict[str, str]:
         """
         Create a service account for Workload Identity.
 
@@ -145,6 +143,7 @@ class GCPProvider(CloudProvider):
             CloudProviderError: If service account creation fails
         """
         from google.cloud import iam_admin_v1
+
         from ..exceptions import CloudProviderError
 
         try:
@@ -172,7 +171,7 @@ class GCPProvider(CloudProvider):
 
         except gcp_exceptions.GoogleAPICallError as e:
             raise CloudProviderError(
-                f"Failed to create service account {name}: {str(e)}", provider="gcp", error_code=e.grpc_status_code
+                f"Failed to create service account {name}: {e!s}", provider="gcp", error_code=e.grpc_status_code
             )
 
     def bind_workload_identity(self, service_account_email: str, namespace: str, k8s_service_account: str) -> bool:
@@ -192,6 +191,7 @@ class GCPProvider(CloudProvider):
         """
         from google.cloud import iam_admin_v1
         from google.iam.v1 import policy_pb2
+
         from ..exceptions import CloudProviderError
 
         try:
@@ -233,7 +233,7 @@ class GCPProvider(CloudProvider):
 
         except gcp_exceptions.GoogleAPICallError as e:
             raise CloudProviderError(
-                f"Failed to bind Workload Identity: {str(e)}", provider="gcp", error_code=e.grpc_status_code
+                f"Failed to bind Workload Identity: {e!s}", provider="gcp", error_code=e.grpc_status_code
             )
 
     # Cluster operations
@@ -241,7 +241,7 @@ class GCPProvider(CloudProvider):
         """Create a Kubernetes cluster."""
         return self.gke.create_cluster(config)
 
-    def get_cluster(self, cluster_id: str, region: Optional[str] = None, include_node_count: bool = True) -> Cluster:
+    def get_cluster(self, cluster_id: str, region: str | None = None, include_node_count: bool = True) -> Cluster:
         """
         Get cluster details.
 
@@ -254,13 +254,13 @@ class GCPProvider(CloudProvider):
             raise ValueError("region parameter is required for GCP")
         return self.gke.get_cluster(cluster_id, region, include_node_count)
 
-    def delete_cluster(self, cluster_id: str, region: Optional[str] = None) -> bool:
+    def delete_cluster(self, cluster_id: str, region: str | None = None) -> bool:
         """Delete a cluster."""
         if not region:
             raise ValueError("region parameter is required for GCP")
         return self.gke.delete_cluster(cluster_id, region)
 
-    def list_clusters(self, region: Optional[str] = None, include_details: bool = False) -> List[Cluster]:
+    def list_clusters(self, region: str | None = None, include_details: bool = False) -> list[Cluster]:
         """
         List all clusters.
 
@@ -276,17 +276,15 @@ class GCPProvider(CloudProvider):
         """Create a database instance."""
         return self.cloudsql.create_database(config)
 
-    def get_database(self, database_id: str, region: Optional[str] = None) -> Database:
+    def get_database(self, database_id: str, region: str | None = None) -> Database:
         """Get database details."""
         return self.cloudsql.get_database(database_id, region)
 
-    def delete_database(
-        self, database_id: str, region: Optional[str] = None, skip_final_snapshot: bool = False
-    ) -> bool:
+    def delete_database(self, database_id: str, region: str | None = None, skip_final_snapshot: bool = False) -> bool:
         """Delete a database instance."""
         return self.cloudsql.delete_database(database_id, region, skip_final_snapshot)
 
-    def list_databases(self, region: Optional[str] = None) -> List[Database]:
+    def list_databases(self, region: str | None = None) -> list[Database]:
         """List all database instances."""
         return self.cloudsql.list_databases(region)
 
@@ -295,15 +293,15 @@ class GCPProvider(CloudProvider):
         """Create a storage bucket."""
         return self.gcs.create_storage(config)
 
-    def get_storage(self, storage_id: str, region: Optional[str] = None) -> Storage:
+    def get_storage(self, storage_id: str, region: str | None = None) -> Storage:
         """Get storage bucket details."""
         return self.gcs.get_storage(storage_id, region)
 
-    def delete_storage(self, storage_id: str, region: Optional[str] = None, force: bool = False) -> bool:
+    def delete_storage(self, storage_id: str, region: str | None = None, force: bool = False) -> bool:
         """Delete a storage bucket."""
         return self.gcs.delete_storage(storage_id, region, force)
 
-    def list_storage(self, region: Optional[str] = None, include_details: bool = False) -> List[Storage]:
+    def list_storage(self, region: str | None = None, include_details: bool = False) -> list[Storage]:
         """
         List all storage buckets.
 
@@ -324,10 +322,10 @@ class GCPProvider(CloudProvider):
         metric_name: str,
         start_time: str,
         end_time: str,
-        resource_type: Optional[str] = None,
-        resource_labels: Optional[Dict[str, str]] = None,
-        region: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        resource_type: str | None = None,
+        resource_labels: dict[str, str] | None = None,
+        region: str | None = None,
+    ) -> dict[str, Any]:
         """
         Get metrics for a resource.
 

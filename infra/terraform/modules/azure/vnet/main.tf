@@ -55,7 +55,12 @@ resource "azurerm_subnet" "public" {
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = each.value.address_prefixes
 
-  service_endpoints = lookup(each.value, "service_endpoints", [])
+  dynamic "service_endpoint" {
+    for_each = lookup(each.value, "service_endpoints", [])
+    content {
+      service = service_endpoint.value
+    }
+  }
 
   dynamic "delegation" {
     for_each = lookup(each.value, "delegations", [])
@@ -77,7 +82,12 @@ resource "azurerm_subnet" "private" {
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = each.value.address_prefixes
 
-  service_endpoints = lookup(each.value, "service_endpoints", [])
+  dynamic "service_endpoint" {
+    for_each = lookup(each.value, "service_endpoints", [])
+    content {
+      service = service_endpoint.value
+    }
+  }
 
   dynamic "delegation" {
     for_each = lookup(each.value, "delegations", [])
@@ -291,14 +301,14 @@ resource "azurerm_storage_account" "flow_logs" {
 
 # NSG Flow Logs for Public Subnets
 resource "azurerm_network_watcher_flow_log" "public" {
-  for_each                  = var.enable_flow_logs ? { for idx, subnet in var.public_subnets : subnet.name => subnet } : {}
-  network_watcher_name      = data.azurerm_network_watcher.main[0].name
-  resource_group_name       = data.azurerm_network_watcher.main[0].resource_group_name
-  name                      = "${each.key}-flow-log"
-  network_security_group_id = azurerm_network_security_group.public[each.key].id
-  storage_account_id        = var.flow_logs_storage_account_id != null ? var.flow_logs_storage_account_id : azurerm_storage_account.flow_logs[0].id
-  enabled                   = true
-  version                   = 2
+  for_each             = var.enable_flow_logs ? { for idx, subnet in var.public_subnets : subnet.name => subnet } : {}
+  network_watcher_name = data.azurerm_network_watcher.main[0].name
+  resource_group_name  = data.azurerm_network_watcher.main[0].resource_group_name
+  name                 = "${each.key}-flow-log"
+  target_resource_id   = azurerm_network_security_group.public[each.key].id
+  storage_account_id   = var.flow_logs_storage_account_id != null ? var.flow_logs_storage_account_id : azurerm_storage_account.flow_logs[0].id
+  enabled              = true
+  version              = 2
 
   retention_policy {
     enabled = true
@@ -327,14 +337,14 @@ resource "azurerm_network_watcher_flow_log" "public" {
 
 # NSG Flow Logs for Private Subnets
 resource "azurerm_network_watcher_flow_log" "private" {
-  for_each                  = var.enable_flow_logs ? { for idx, subnet in var.private_subnets : subnet.name => subnet } : {}
-  network_watcher_name      = data.azurerm_network_watcher.main[0].name
-  resource_group_name       = data.azurerm_network_watcher.main[0].resource_group_name
-  name                      = "${each.key}-flow-log"
-  network_security_group_id = azurerm_network_security_group.private[each.key].id
-  storage_account_id        = var.flow_logs_storage_account_id != null ? var.flow_logs_storage_account_id : azurerm_storage_account.flow_logs[0].id
-  enabled                   = true
-  version                   = 2
+  for_each             = var.enable_flow_logs ? { for idx, subnet in var.private_subnets : subnet.name => subnet } : {}
+  network_watcher_name = data.azurerm_network_watcher.main[0].name
+  resource_group_name  = data.azurerm_network_watcher.main[0].resource_group_name
+  name                 = "${each.key}-flow-log"
+  target_resource_id   = azurerm_network_security_group.private[each.key].id
+  storage_account_id   = var.flow_logs_storage_account_id != null ? var.flow_logs_storage_account_id : azurerm_storage_account.flow_logs[0].id
+  enabled              = true
+  version              = 2
 
   retention_policy {
     enabled = true

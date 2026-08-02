@@ -2,12 +2,12 @@
 Unit tests for NPS Survey Service.
 """
 
-from datetime import datetime, timedelta
+import os
 
 # Import the app - in real testing, we'd mock the database
 # For now, just test the score calculation logic
 import sys
-import os
+from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../.."))
 
@@ -150,8 +150,8 @@ class TestSurveyLinkExpiration:
 
     def test_link_expired(self):
         """Test expired link detection."""
-        expires_at = datetime.now() - timedelta(days=1)
-        current_time = datetime.now()
+        expires_at = datetime.now(timezone.utc) - timedelta(days=1)
+        current_time = datetime.now(timezone.utc)
 
         is_expired = current_time > expires_at
 
@@ -159,8 +159,8 @@ class TestSurveyLinkExpiration:
 
     def test_link_not_expired(self):
         """Test valid link detection."""
-        expires_at = datetime.now() + timedelta(days=29)
-        current_time = datetime.now()
+        expires_at = datetime.now(timezone.utc) + timedelta(days=29)
+        current_time = datetime.now(timezone.utc)
 
         is_expired = current_time > expires_at
 
@@ -168,7 +168,7 @@ class TestSurveyLinkExpiration:
 
     def test_link_expiry_30_days(self):
         """Test link expires after 30 days."""
-        created_at = datetime.now()
+        created_at = datetime.now(timezone.utc)
         expires_at = created_at + timedelta(days=30)
         check_time = created_at + timedelta(days=31)
 
@@ -182,8 +182,8 @@ class TestReminderLogic:
 
     def test_reminder_after_7_days(self):
         """Test reminder should be sent after 7 days."""
-        created_at = datetime.now() - timedelta(days=8)
-        reminder_threshold = datetime.now() - timedelta(days=7)
+        created_at = datetime.now(timezone.utc) - timedelta(days=8)
+        reminder_threshold = datetime.now(timezone.utc) - timedelta(days=7)
 
         should_send_reminder = created_at <= reminder_threshold
 
@@ -191,8 +191,8 @@ class TestReminderLogic:
 
     def test_no_reminder_before_7_days(self):
         """Test reminder should not be sent before 7 days."""
-        created_at = datetime.now() - timedelta(days=5)
-        reminder_threshold = datetime.now() - timedelta(days=7)
+        created_at = datetime.now(timezone.utc) - timedelta(days=5)
+        reminder_threshold = datetime.now(timezone.utc) - timedelta(days=7)
 
         should_send_reminder = created_at <= reminder_threshold
 

@@ -10,7 +10,7 @@ class PromptLoader:
     def __init__(self):
         """Initialize prompt loader."""
         self.prompts_dir = Path(__file__).parent.parent / "prompts"
-        self._prompts_cache: Dict[str, str] = {}
+        self._prompts_cache: dict[str, str] = {}
 
     def get_prompt(self, category: str, rag_context: str = "") -> str:
         """Get prompt for a specific review category."""

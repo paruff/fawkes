@@ -4,16 +4,14 @@ import os
 import sys
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from app.models import Base  # noqa: E402
-from app.database import DATABASE_URL  # noqa: E402
+from app.database import DATABASE_URL
+from app.models import Base
 
 # this is the Alembic Config object
 config = context.config
