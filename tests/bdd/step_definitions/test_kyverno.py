@@ -1,7 +1,7 @@
 """Step definitions for Kyverno policy enforcement tests."""
 
 import pytest
-from pytest_bdd import scenarios, given, when, then
+from pytest_bdd import given, scenarios, then, when
 
 # Load ALL scenarios from the feature file
 scenarios("../features/kyverno-policies.feature")

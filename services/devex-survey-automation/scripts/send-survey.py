@@ -7,8 +7,8 @@ Usage:
     python send-survey.py --type deep_dive --users user1@example.com user2@example.com
 """
 
-import asyncio
 import argparse
+import asyncio
 import sys
 from pathlib import Path
 

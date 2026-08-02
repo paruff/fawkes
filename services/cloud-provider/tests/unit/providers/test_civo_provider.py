@@ -1,12 +1,12 @@
 """Unit tests for Civo Provider."""
 
-import pytest
 from unittest.mock import Mock, patch
 
-from src.providers.civo_provider import CivoProvider
-from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
-from src.interfaces.models import Cluster, Database, Storage, CostData
+import pytest
 from src.exceptions import AuthenticationError, CloudProviderError, ResourceNotFoundError
+from src.interfaces.models import Cluster, CostData, Database, Storage
+from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
+from src.providers.civo_provider import CivoProvider
 
 
 @pytest.fixture

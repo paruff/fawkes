@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 
 import pytest
-from pytest_bdd import given, when, then, scenarios, parsers
+from pytest_bdd import given, parsers, scenarios, then, when
 
 # Load scenarios from feature file
 scenarios("../features/accessibility-testing.feature")
@@ -56,7 +56,6 @@ def fawkes_platform_deployed():
     """Verify Fawkes platform is deployed (or skip in CI)"""
     # In CI, we assume the platform is available
     # For local testing, this would check actual deployment
-    pass
 
 
 @given("the design system components are available")
@@ -236,7 +235,7 @@ def accessibility_tests_running(github_workflow_path):
 @when("any WCAG 2.1 AA violation is detected")
 def wcag_violation_detected():
     """Simulate WCAG violation detection"""
-    pass  # This is checked by the test framework
+    # This is checked by the test framework
 
 
 @then("the build should fail with a clear error message")
@@ -250,7 +249,6 @@ def build_fails_with_message(design_system_path):
 def violation_details_logged():
     """Verify violations are logged"""
     # Jest and Lighthouse automatically log violations
-    pass
 
 
 @then("a link to the full report should be provided")
@@ -292,7 +290,6 @@ def grafana_configured():
 @when("I navigate to the accessibility dashboard")
 def navigate_to_dashboard():
     """Navigate to dashboard (simulated in test)"""
-    pass
 
 
 @then("I should see the overall accessibility score")
@@ -368,7 +365,6 @@ def see_wcag_compliance():
 @given("accessibility tests detect violations")
 def tests_detect_violations():
     """Simulate violation detection"""
-    pass
 
 
 @given("the tests run on the main branch or on schedule")
@@ -383,7 +379,6 @@ def tests_on_main_or_schedule(github_workflow_path):
 @when("critical violations are found")
 def critical_violations_found():
     """Simulate critical violations"""
-    pass
 
 
 @then("a GitHub issue should be created automatically")
@@ -449,7 +444,6 @@ def service_uses_golden_path():
 @when("the Jenkins pipeline executes")
 def jenkins_pipeline_executes():
     """Simulate Jenkins pipeline execution"""
-    pass
 
 
 @then("there should be an accessibility testing stage")
@@ -464,7 +458,6 @@ def accessibility_stage_exists():
 def stage_timing(timing, reference_stage):
     """Verify stage order (logical check)"""
     # This is verified by pipeline structure
-    pass
 
 
 @then("axe-core tests should execute in the stage")

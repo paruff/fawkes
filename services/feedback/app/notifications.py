@@ -5,9 +5,10 @@ This module provides notification capabilities for feedback-to-issue automation.
 Supports multiple notification channels including Mattermost and webhooks.
 """
 
-import os
 import logging
-from typing import Optional, Dict, List
+import os
+from typing import Dict, List, Optional
+
 import httpx
 
 logger = logging.getLogger(__name__)
@@ -23,7 +24,7 @@ def is_notification_enabled() -> bool:
 
 
 async def send_mattermost_notification(
-    message: str, username: str = "Feedback Bot", icon_emoji: str = ":speech_balloon:", channel: Optional[str] = None
+    message: str, username: str = "Feedback Bot", icon_emoji: str = ":speech_balloon:", channel: str | None = None
 ) -> bool:
     """
     Send notification to Mattermost via webhook.
@@ -109,7 +110,7 @@ async def notify_issue_created(
 
 
 async def notify_duplicate_detected(
-    feedback_id: int, duplicates: List[Dict[str, any]], category: str, comment_preview: str
+    feedback_id: int, duplicates: list[dict[str, any]], category: str, comment_preview: str
 ) -> bool:
     """
     Send notification when duplicate issues are detected.
@@ -143,7 +144,7 @@ async def notify_duplicate_detected(
 
 > {comment_preview}
 
-**Potential Duplicate:** [#{top_duplicate['issue_number']}]({top_duplicate['issue_url']})
+**Potential Duplicate:** [#{top_duplicate["issue_number"]}]({top_duplicate["issue_url"]})
 **Similarity:** {similarity:.0%}
 **Total Matches:** {len(duplicates)}
 
@@ -154,7 +155,7 @@ Issue creation skipped. Consider commenting on existing issue instead.
 
 
 async def notify_high_priority_feedback(
-    feedback_id: int, priority: str, category: str, rating: int, comment_preview: str, sentiment: Optional[str] = None
+    feedback_id: int, priority: str, category: str, rating: int, comment_preview: str, sentiment: str | None = None
 ) -> bool:
     """
     Send immediate notification for high-priority feedback (P0/P1).
@@ -202,7 +203,7 @@ async def notify_high_priority_feedback(
 
 
 async def notify_automation_summary(
-    processed: int, issues_created: int, skipped_duplicates: int, errors: Optional[List[str]] = None
+    processed: int, issues_created: int, skipped_duplicates: int, errors: list[str] | None = None
 ) -> bool:
     """
     Send summary notification after automated processing.

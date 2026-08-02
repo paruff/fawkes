@@ -1,0 +1,98 @@
+# .claudeignore — keeps Claude Code's file tools (Read/Grep/Glob) out of
+# generated, vendored, and cache content that is large, noisy, or not
+# useful for reasoning about this repo. Modeled on .gitignore but scoped
+# to what actively bloats context/search here (see `du -sh */`: infra/
+# was 11G, mostly provider binaries under .terraform/).
+
+# ---- Version control ----
+.git/
+
+# ---- Terraform (biggest offender: 100s of MB-GB of provider binaries
+# and module caches per directory under infra/ and platform/observability/) ----
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+**/tfplan
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+terraform.log
+terraform_*.zip
+
+# ---- Node / JS build & package caches (design-system/node_modules ~500M) ----
+**/node_modules/
+.yarn/
+.pnp.*
+npm-debug.log*
+yarn-error.log*
+.next/
+dist/
+build/
+out/
+coverage/
+design-system/storybook-static/
+design-system/.lighthouseci/
+
+# ---- Python caches & envs ----
+**/__pycache__/
+*.py[cod]
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.hypothesis/
+.coverage
+coverage.xml
+htmlcov/
+*.egg-info/
+
+# ---- Built documentation site (mkdocs output, ~67M, mirrors docs/) ----
+site/
+
+# ---- Local agent/tooling scratch & caches (not part of the product) ----
+graphify-out/
+.opencode/
+.agents/logs/
+.serena/
+.trunk/
+scratch/
+ci-diagnosis.md
+ci-fix-report.md
+
+# ---- OS / editor cruft ----
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ---- Logs, archives, and binary blobs ----
+*.log
+*.tar
+*.tgz
+*.zip
+*.exe
+*.db
+
+# ---- Kubeconfigs & secrets (never useful to read, may contain sensitive data) ----
+*.kubeconfig
+kubeconfig_*
+fawkes-kubeconfig-*
+.env
+.env.*
+!env.example
+*.pem
+*.key
+
+# ---- Volatile generated reports (keep committed *.example fixtures) ----
+reports/*.xml
+reports/*.html
+reports/*.json
+!reports/*.example.*

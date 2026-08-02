@@ -6,15 +6,15 @@ from typing import List, Optional
 import boto3
 from botocore.exceptions import ClientError
 
-from ...interfaces.models import Cluster
-from ...interfaces.provider import ClusterConfig
 from ...exceptions import (
     CloudProviderError,
-    ResourceNotFoundError,
     ResourceAlreadyExistsError,
+    ResourceNotFoundError,
     ValidationError,
 )
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import Cluster
+from ...interfaces.provider import ClusterConfig
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class EKSService:
     """AWS EKS service operations."""
 
-    def __init__(self, session: boto3.Session, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, session: boto3.Session, rate_limiter: RateLimiter | None = None):
         """
         Initialize EKS service.
 
@@ -236,7 +236,7 @@ class EKSService:
                 )
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(ClientError,))
-    def list_clusters(self, region: str, include_details: bool = False) -> List[Cluster]:
+    def list_clusters(self, region: str, include_details: bool = False) -> list[Cluster]:
         """
         List all EKS clusters in a region.
 

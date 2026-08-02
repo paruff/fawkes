@@ -1,10 +1,11 @@
 """Database configuration and session management."""
 
 import os
+from collections.abc import Generator
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import QueuePool
-from typing import Generator
 
 # Database configuration from environment variables
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://insights:insights@localhost:5432/insights")

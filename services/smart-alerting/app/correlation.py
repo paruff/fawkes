@@ -7,13 +7,13 @@ Groups alerts by:
 - Symptom (similar alert patterns)
 """
 
-import os
-import json
 import hashlib
-from typing import List, Dict, Optional
-from datetime import datetime, timedelta
-from collections import defaultdict
+import json
 import logging
+import os
+from collections import defaultdict
+from datetime import datetime, timedelta, timezone
+from typing import Dict, List, Optional
 
 import redis.asyncio as redis
 
@@ -31,7 +31,7 @@ class AlertCorrelator:
         self.redis = redis_client
         self.time_window = timedelta(seconds=CORRELATION_TIME_WINDOW)
 
-    async def correlate_alerts(self, alerts: List[Dict]) -> List[Dict]:
+    async def correlate_alerts(self, alerts: list[dict]) -> list[dict]:
         """
         Correlate incoming alerts and group related ones.
 
@@ -63,7 +63,7 @@ class AlertCorrelator:
                 # Update existing group
                 existing_group["alerts"].extend(grouped_alerts)
                 existing_group["count"] = len(existing_group["alerts"])
-                existing_group["last_seen"] = datetime.now().isoformat()
+                existing_group["last_seen"] = datetime.now(timezone.utc).isoformat()
 
                 # Recalculate priority
                 existing_group["priority_score"] = self._calculate_priority(existing_group["alerts"])
@@ -77,8 +77,8 @@ class AlertCorrelator:
                     "alerts": grouped_alerts,
                     "grouping_key": grouping_key,
                     "priority_score": self._calculate_priority(grouped_alerts),
-                    "first_seen": datetime.now().isoformat(),
-                    "last_seen": datetime.now().isoformat(),
+                    "first_seen": datetime.now(timezone.utc).isoformat(),
+                    "last_seen": datetime.now(timezone.utc).isoformat(),
                     "count": len(grouped_alerts),
                     "suppressed": False,
                     "suppression_reason": None,
@@ -95,7 +95,7 @@ class AlertCorrelator:
 
         return groups
 
-    def _generate_grouping_key(self, alert: Dict) -> str:
+    def _generate_grouping_key(self, alert: dict) -> str:
         """
         Generate grouping key based on alert attributes.
 
@@ -116,7 +116,7 @@ class AlertCorrelator:
         hash_obj = hashlib.md5(grouping_key.encode(), usedforsecurity=False)
         return f"group-{hash_obj.hexdigest()[:8]}"
 
-    def _calculate_priority(self, alerts: List[Dict]) -> float:
+    def _calculate_priority(self, alerts: list[dict]) -> float:
         """
         Calculate priority score for alert group.
 
@@ -156,7 +156,7 @@ class AlertCorrelator:
 
         return round(priority, 2)
 
-    def _deduplicate_alerts(self, alerts: List[Dict]) -> List[Dict]:
+    def _deduplicate_alerts(self, alerts: list[dict]) -> list[dict]:
         """Remove duplicate alerts based on fingerprint or labels."""
         seen_fingerprints = set()
         deduplicated = []
@@ -176,7 +176,7 @@ class AlertCorrelator:
 
         return deduplicated
 
-    async def _get_existing_group(self, grouping_key: str) -> Optional[Dict]:
+    async def _get_existing_group(self, grouping_key: str) -> dict | None:
         """Get existing alert group from Redis."""
         group_id = self._generate_group_id(grouping_key)
         group_data = await self.redis.get(f"alert_group:{group_id}")
@@ -186,12 +186,12 @@ class AlertCorrelator:
 
             # Check if group is still within time window
             last_seen = datetime.fromisoformat(group["last_seen"])
-            if datetime.now() - last_seen < self.time_window:
+            if datetime.now(timezone.utc) - last_seen < self.time_window:
                 return group
 
         return None
 
-    async def _save_group(self, group: Dict):
+    async def _save_group(self, group: dict):
         """Save alert group to Redis."""
         group_id = group["id"]
 
@@ -204,7 +204,7 @@ class AlertCorrelator:
         await self.redis.lpush("alert_groups:recent", group_id)
         await self.redis.ltrim("alert_groups:recent", 0, 99)  # Keep last 100
 
-    async def get_recent_groups(self, limit: int = 50) -> List[Dict]:
+    async def get_recent_groups(self, limit: int = 50) -> list[dict]:
         """Get recent alert groups."""
         group_ids = await self.redis.lrange("alert_groups:recent", 0, limit - 1)
 
@@ -216,7 +216,7 @@ class AlertCorrelator:
 
         return groups
 
-    async def get_group(self, group_id: str) -> Optional[Dict]:
+    async def get_group(self, group_id: str) -> dict | None:
         """Get specific alert group."""
         group_data = await self.redis.get(f"alert_group:{group_id}")
 

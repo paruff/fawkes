@@ -4,6 +4,7 @@ Configuration management for DevEx Survey Automation Service
 
 import os
 from typing import Optional
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -26,18 +27,18 @@ class Settings(BaseSettings):
 
     # Mattermost
     mattermost_url: str = os.getenv("MATTERMOST_URL", "http://mattermost.fawkes.svc:8065")
-    mattermost_token: Optional[str] = os.getenv("MATTERMOST_TOKEN")
-    mattermost_bot_user_id: Optional[str] = os.getenv("MATTERMOST_BOT_USER_ID")
+    mattermost_token: str | None = os.getenv("MATTERMOST_TOKEN")
+    mattermost_bot_user_id: str | None = os.getenv("MATTERMOST_BOT_USER_ID")
 
     # Slack (optional)
-    slack_bot_token: Optional[str] = os.getenv("SLACK_BOT_TOKEN")
-    slack_signing_secret: Optional[str] = os.getenv("SLACK_SIGNING_SECRET")
+    slack_bot_token: str | None = os.getenv("SLACK_BOT_TOKEN")
+    slack_signing_secret: str | None = os.getenv("SLACK_SIGNING_SECRET")
 
     # Email (optional)
-    smtp_host: Optional[str] = os.getenv("SMTP_HOST")
+    smtp_host: str | None = os.getenv("SMTP_HOST")
     smtp_port: int = int(os.getenv("SMTP_PORT", "587"))
-    smtp_user: Optional[str] = os.getenv("SMTP_USER")
-    smtp_password: Optional[str] = os.getenv("SMTP_PASSWORD")
+    smtp_user: str | None = os.getenv("SMTP_USER")
+    smtp_password: str | None = os.getenv("SMTP_PASSWORD")
     from_email: str = os.getenv("FROM_EMAIL", "Fawkes DevEx <surveys@fawkes.idp>")
 
     # Survey Settings

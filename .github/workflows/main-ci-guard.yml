@@ -9,12 +9,13 @@ permissions:
   contents: read
   checks: write
   pull-requests: write
+  actions: read
 
 jobs:
-  main-ci-guard:
-    name: Main CI Gate
+  dora-logging:
+    name: DORA Logging
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 2
     steps:
       - name: DORA job start
         run: |
@@ -22,12 +23,13 @@ jobs:
           echo "sha:${{ github.sha }}"
           echo "workflow:${{ github.workflow }}"
           echo "job:${{ github.job }}"
-
-      - name: Call reusable main CI guard
-        uses: paruff/ufawkespipe/.github/workflows/reusable-main-ci-guard.yml@v1.2.0
-        with:
-          workflow-id: code-quality.yml
-
       - name: DORA job finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  main-ci-guard:
+    name: Main CI Gate
+    needs: dora-logging
+    uses: paruff/ufawkespipe/.github/workflows/reusable-main-ci-guard.yml@v1.2.0
+    with:
+      workflow-id: code-quality.yml

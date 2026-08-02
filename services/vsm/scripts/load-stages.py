@@ -31,15 +31,15 @@ script_dir = Path(__file__).parent
 service_dir = script_dir.parent
 sys.path.insert(0, str(service_dir))
 
-from app.models import Stage, StageType, StageCategory  # noqa: E402
-from app.database import DATABASE_URL  # noqa: E402
+from app.database import DATABASE_URL
+from app.models import Stage, StageCategory, StageType
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
-def load_stages_config(config_path: str) -> Dict:
+def load_stages_config(config_path: str) -> dict:
     """Load stages configuration from YAML file."""
     try:
         with open(config_path, "r") as f:
@@ -82,7 +82,7 @@ def map_stage_category(category_str: str) -> StageCategory:
     return category_mapping.get(category_str.lower(), StageCategory.ACTIVE)
 
 
-def load_stages(config: Dict, session, update: bool = False, dry_run: bool = False) -> Dict[str, int]:
+def load_stages(config: dict, session, update: bool = False, dry_run: bool = False) -> dict[str, int]:
     """
     Load stages from configuration into database.
 

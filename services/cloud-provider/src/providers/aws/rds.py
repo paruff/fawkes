@@ -1,21 +1,21 @@
 """AWS RDS (Relational Database Service) operations."""
 
 import logging
+from datetime import datetime, timezone
 from typing import List, Optional
-from datetime import datetime
 
 import boto3
 from botocore.exceptions import ClientError
 
-from ...interfaces.models import Database
-from ...interfaces.provider import DatabaseConfig
 from ...exceptions import (
     CloudProviderError,
-    ResourceNotFoundError,
     ResourceAlreadyExistsError,
+    ResourceNotFoundError,
     ValidationError,
 )
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import Database
+from ...interfaces.provider import DatabaseConfig
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class RDSService:
     """AWS RDS service operations."""
 
-    def __init__(self, session: boto3.Session, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, session: boto3.Session, rate_limiter: RateLimiter | None = None):
         """
         Initialize RDS service.
 
@@ -183,7 +183,7 @@ class RDSService:
 
             if not skip_final_snapshot:
                 # Generate final snapshot identifier
-                snapshot_id = f"{database_id}-final-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+                snapshot_id = f"{database_id}-final-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
                 delete_params["FinalDBSnapshotIdentifier"] = snapshot_id
 
             self.rate_limiter.acquire()
@@ -204,7 +204,7 @@ class RDSService:
                 )
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(ClientError,))
-    def list_databases(self, region: str) -> List[Database]:
+    def list_databases(self, region: str) -> list[Database]:
         """
         List all RDS database instances in a region.
 

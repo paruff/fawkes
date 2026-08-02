@@ -6,19 +6,19 @@ This module provides an abstraction layer to maintain interface compatibility.
 """
 
 import logging
+from datetime import datetime, timezone
 from typing import List, Optional
-from datetime import datetime
 
 from civo import Civo
 
-from ...interfaces.models import Database
-from ...interfaces.provider import DatabaseConfig
 from ...exceptions import (
     CloudProviderError,
     ResourceNotFoundError,
     ValidationError,
 )
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import Database
+from ...interfaces.provider import DatabaseConfig
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +39,7 @@ class DatabaseService:
         "redis": "Redis:5GB",
     }
 
-    def __init__(self, client: Civo, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, client: Civo, rate_limiter: RateLimiter | None = None):
         """
         Initialize Database service.
 
@@ -103,7 +103,7 @@ class DatabaseService:
             # 3. Track the deployment status
 
             # For now, we'll return a Database object representing the intended state
-            logger.info(f"✅ Database {config.name} would be deployed as {app_name} " f"in cluster {cluster_id}")
+            logger.info(f"✅ Database {config.name} would be deployed as {app_name} in cluster {cluster_id}")
 
             return Database(
                 id=f"{cluster_id}-{config.name}",
@@ -116,7 +116,7 @@ class DatabaseService:
                 region=config.region,
                 allocated_storage=config.allocated_storage,
                 instance_class=config.instance_class,
-                created_at=datetime.now(),
+                created_at=datetime.now(timezone.utc),
                 metadata={
                     "cluster_id": cluster_id,
                     "application": app_name,
@@ -146,7 +146,7 @@ class DatabaseService:
         max_retries=3,
         retriable_exceptions=(Exception,),
     )
-    def get_database(self, database_id: str, region: Optional[str] = None) -> Database:
+    def get_database(self, database_id: str, region: str | None = None) -> Database:
         """
         Get database details.
 
@@ -166,7 +166,7 @@ class DatabaseService:
             # Parse database_id to get cluster_id and db_name
             if "-" not in database_id:
                 raise ValidationError(
-                    f"Invalid database_id format: {database_id}. " "Expected format: cluster_id-db_name",
+                    f"Invalid database_id format: {database_id}. Expected format: cluster_id-db_name",
                     provider="civo",
                 )
 
@@ -181,7 +181,7 @@ class DatabaseService:
 
             # For now, return a placeholder
             raise ResourceNotFoundError(
-                f"Database {database_id} not found. " "Note: Civo databases are deployed as cluster applications.",
+                f"Database {database_id} not found. Note: Civo databases are deployed as cluster applications.",
                 provider="civo",
             )
 
@@ -195,9 +195,7 @@ class DatabaseService:
         max_retries=3,
         retriable_exceptions=(Exception,),
     )
-    def delete_database(
-        self, database_id: str, region: Optional[str] = None, skip_final_snapshot: bool = False
-    ) -> bool:
+    def delete_database(self, database_id: str, region: str | None = None, skip_final_snapshot: bool = False) -> bool:
         """
         Delete a database instance.
 
@@ -242,7 +240,7 @@ class DatabaseService:
         max_retries=3,
         retriable_exceptions=(Exception,),
     )
-    def list_databases(self, region: Optional[str] = None) -> List[Database]:
+    def list_databases(self, region: str | None = None) -> list[Database]:
         """
         List all database instances.
 

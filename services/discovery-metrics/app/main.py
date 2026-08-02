@@ -1,46 +1,47 @@
 """Main FastAPI application for Discovery Metrics service."""
 
-from typing import List, Optional
-from fastapi import FastAPI, Depends, HTTPException, Query, status
-from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
-from sqlalchemy import func
-from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
-from fastapi.responses import Response
 import logging
+from typing import List, Optional
+
+from fastapi import Depends, FastAPI, HTTPException, Query, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
+from sqlalchemy import func
+from sqlalchemy.orm import Session
 
 from app import __version__
-from app.database import get_db, check_db_connection
+from app.database import check_db_connection, get_db
 from app.models import (
-    Interview,
-    InterviewStatus,
     DiscoveryInsight,
-    InsightStatus,
     Experiment,
     ExperimentStatus,
-    FeatureValidation,
     FeatureStatus,
+    FeatureValidation,
+    InsightStatus,
+    Interview,
+    InterviewStatus,
     TeamPerformance,
 )
+from app.prometheus_exporter import update_prometheus_metrics
 from app.schemas import (
-    InterviewCreate,
-    InterviewUpdate,
-    InterviewResponse,
     DiscoveryInsightCreate,
-    DiscoveryInsightUpdate,
     DiscoveryInsightResponse,
+    DiscoveryInsightUpdate,
+    DiscoveryStatistics,
     ExperimentCreate,
-    ExperimentUpdate,
     ExperimentResponse,
+    ExperimentUpdate,
     FeatureValidationCreate,
-    FeatureValidationUpdate,
     FeatureValidationResponse,
+    FeatureValidationUpdate,
+    HealthResponse,
+    InterviewCreate,
+    InterviewResponse,
+    InterviewUpdate,
     TeamPerformanceCreate,
     TeamPerformanceResponse,
-    DiscoveryStatistics,
-    HealthResponse,
 )
-from app.prometheus_exporter import update_prometheus_metrics
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -104,9 +105,9 @@ async def create_interview(interview_data: InterviewCreate, db: Session = Depend
     return interview
 
 
-@app.get("/api/v1/interviews", response_model=List[InterviewResponse], tags=["Interviews"])
+@app.get("/api/v1/interviews", response_model=list[InterviewResponse], tags=["Interviews"])
 async def list_interviews(
-    status_filter: Optional[str] = None,
+    status_filter: str | None = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     db: Session = Depends(get_db),
@@ -157,11 +158,11 @@ async def create_insight(insight_data: DiscoveryInsightCreate, db: Session = Dep
     return insight
 
 
-@app.get("/api/v1/insights", response_model=List[DiscoveryInsightResponse], tags=["Insights"])
+@app.get("/api/v1/insights", response_model=list[DiscoveryInsightResponse], tags=["Insights"])
 async def list_insights(
-    status_filter: Optional[str] = None,
-    category: Optional[str] = None,
-    source: Optional[str] = None,
+    status_filter: str | None = None,
+    category: str | None = None,
+    source: str | None = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     db: Session = Depends(get_db),
@@ -221,10 +222,10 @@ async def create_experiment(experiment_data: ExperimentCreate, db: Session = Dep
     return experiment
 
 
-@app.get("/api/v1/experiments", response_model=List[ExperimentResponse], tags=["Experiments"])
+@app.get("/api/v1/experiments", response_model=list[ExperimentResponse], tags=["Experiments"])
 async def list_experiments(
-    status_filter: Optional[str] = None,
-    validated: Optional[bool] = None,
+    status_filter: str | None = None,
+    validated: bool | None = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     db: Session = Depends(get_db),
@@ -282,9 +283,9 @@ async def create_feature(feature_data: FeatureValidationCreate, db: Session = De
     return feature
 
 
-@app.get("/api/v1/features", response_model=List[FeatureValidationResponse], tags=["Features"])
+@app.get("/api/v1/features", response_model=list[FeatureValidationResponse], tags=["Features"])
 async def list_features(
-    status_filter: Optional[str] = None,
+    status_filter: str | None = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     db: Session = Depends(get_db),
@@ -347,9 +348,9 @@ async def create_team_performance(team_data: TeamPerformanceCreate, db: Session 
     return team
 
 
-@app.get("/api/v1/team-performance", response_model=List[TeamPerformanceResponse], tags=["Team Performance"])
+@app.get("/api/v1/team-performance", response_model=list[TeamPerformanceResponse], tags=["Team Performance"])
 async def list_team_performance(
-    team_name: Optional[str] = None,
+    team_name: str | None = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     db: Session = Depends(get_db),

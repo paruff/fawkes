@@ -2,24 +2,23 @@
 
 import logging
 import os
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional
 
 from civo import Civo
 
+from ..exceptions import AuthenticationError
+from ..interfaces.models import Cluster, CostData, Database, Storage
 from ..interfaces.provider import (
     CloudProvider,
     ClusterConfig,
     DatabaseConfig,
     StorageConfig,
 )
-from ..interfaces.models import Cluster, Database, Storage, CostData
-from ..exceptions import AuthenticationError
 from ..utils import RateLimiter
-
-from .civo.kubernetes import KubernetesService
-from .civo.database import DatabaseService
-from .civo.objectstore import ObjectStoreService
 from .civo.billing import BillingService
+from .civo.database import DatabaseService
+from .civo.kubernetes import KubernetesService
+from .civo.objectstore import ObjectStoreService
 
 logger = logging.getLogger(__name__)
 
@@ -42,8 +41,8 @@ class CivoProvider(CloudProvider):
 
     def __init__(
         self,
-        api_key: Optional[str] = None,
-        region: Optional[str] = None,
+        api_key: str | None = None,
+        region: str | None = None,
         rate_limit_calls: int = 5,  # Civo has stricter rate limits
         rate_limit_window: float = 1.0,
     ):
@@ -69,7 +68,7 @@ class CivoProvider(CloudProvider):
 
         # Validate region
         if self.region not in self.VALID_REGIONS:
-            logger.warning(f"Region {self.region} may not be valid. " f"Valid regions: {', '.join(self.VALID_REGIONS)}")
+            logger.warning(f"Region {self.region} may not be valid. Valid regions: {', '.join(self.VALID_REGIONS)}")
 
         try:
             # Get API key from parameter, environment, or config
@@ -143,7 +142,7 @@ class CivoProvider(CloudProvider):
         """Delete a cluster."""
         return self.kubernetes.delete_cluster(cluster_id)
 
-    def list_clusters(self, region: Optional[str] = None) -> List[Cluster]:
+    def list_clusters(self, region: str | None = None) -> list[Cluster]:
         """List all clusters."""
         return self.kubernetes.list_clusters(region)
 
@@ -173,7 +172,7 @@ class CivoProvider(CloudProvider):
         """
         return self.database.delete_database(database_id, skip_final_snapshot=skip_final_snapshot)
 
-    def list_databases(self, region: Optional[str] = None) -> List[Database]:
+    def list_databases(self, region: str | None = None) -> list[Database]:
         """
         List all database instances.
 
@@ -202,7 +201,7 @@ class CivoProvider(CloudProvider):
         """Delete a storage bucket."""
         return self.objectstore.delete_storage(storage_id, force=force)
 
-    def list_storage(self, region: Optional[str] = None) -> List[Storage]:
+    def list_storage(self, region: str | None = None) -> list[Storage]:
         """List all storage buckets."""
         return self.objectstore.list_storage(region)
 
@@ -224,7 +223,7 @@ class CivoProvider(CloudProvider):
         metric_name: str,
         start_time: str,
         end_time: str,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Get metrics for a resource.
 
@@ -236,7 +235,7 @@ class CivoProvider(CloudProvider):
         Note: This is a basic implementation. For production use,
         you should query Prometheus directly from the cluster.
         """
-        logger.info(f"Getting metrics for {resource_id}: {metric_name} " f"from {start_time} to {end_time}")
+        logger.info(f"Getting metrics for {resource_id}: {metric_name} from {start_time} to {end_time}")
 
         # Civo doesn't have a centralized metrics API like CloudWatch
         # Metrics are available through Prometheus in each cluster
@@ -252,7 +251,7 @@ class CivoProvider(CloudProvider):
             "Query the cluster's Prometheus instance directly for detailed metrics.",
         }
 
-    def get_quota(self) -> Dict[str, Any]:
+    def get_quota(self) -> dict[str, Any]:
         """
         Get account quota information.
 
