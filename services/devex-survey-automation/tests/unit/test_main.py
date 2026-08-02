@@ -58,6 +58,15 @@ def test_thank_you_page(client):
     assert "feedback has been submitted" in response.text
 
 
+def test_nasa_tlx_page_escapes_query_params(client):
+    """Reflected query params must not break out of HTML or <script> JS-string context"""
+    payload = "</script><img src=x onerror=alert(1)>'\";"
+    response = client.get("/nasa-tlx", params={"task_type": payload, "task_id": payload, "user_id": payload})
+    assert response.status_code == 200
+    assert "<img src=x onerror=alert(1)>" not in response.text
+    assert "</script><img" not in response.text
+
+
 @pytest.mark.parametrize(
     "flow_state,valuable_work,cognitive_load,friction",
     [
