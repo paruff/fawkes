@@ -131,6 +131,7 @@ All three golden path templates already integrated with SonarQube:
 ### 📊 Quality Gate Configuration
 
 **Default Quality Gate Requirements** (from ADR-014):
+
 | Metric | Operator | Threshold | Enforcement |
 |--------|----------|-----------|-------------|
 | New Bugs | Is Greater Than | 0 | FAIL |

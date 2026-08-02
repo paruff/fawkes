@@ -14,9 +14,9 @@ License: MIT
 
 import argparse
 import sys
-import yaml
 from pathlib import Path
-from typing import Dict, List
+
+import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
@@ -140,7 +140,7 @@ class ScoreGenerator:
 
         return template.render(**context)
 
-    def generate_resources(self) -> List[tuple]:
+    def generate_resources(self) -> list[tuple]:
         """Generate manifests for SCORE resources (DB, cache, secrets, volumes)."""
         manifests = []
         resources = self.score_data.get("resources", {})
@@ -158,7 +158,7 @@ class ScoreGenerator:
 
         return manifests
 
-    def generate_pvc(self, name: str, resource_def: Dict) -> str:
+    def generate_pvc(self, name: str, resource_def: dict) -> str:
         """Generate PersistentVolumeClaim for volume resources."""
         template = self.jinja_env.get_template("pvc.yaml.j2")
 
@@ -182,7 +182,7 @@ class ScoreGenerator:
 
         return template.render(**context)
 
-    def generate_external_secret(self, name: str, resource_def: Dict) -> str:
+    def generate_external_secret(self, name: str, resource_def: dict) -> str:
         """Generate ExternalSecret for databases, caches, and secrets."""
         # Use Jinja2 template for better maintainability
         template_str = """# ExternalSecret for {{ name }} ({{ resource_type }})

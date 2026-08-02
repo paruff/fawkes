@@ -17,13 +17,13 @@ from typing import Dict
 
 import pytest
 import requests
-from pytest_bdd import given, when, then, parsers, scenarios
+from pytest_bdd import given, parsers, scenarios, then, when
 
 # Load all scenarios from the feature file
 scenarios("../features/harbor-deployment.feature")
 
 
-def _kubectl_json(args: list[str]) -> Dict:
+def _kubectl_json(args: list[str]) -> dict:
     """Run kubectl and return parsed JSON."""
     cmd = ["kubectl"] + args
     try:
@@ -96,7 +96,7 @@ def cloudnativepg_running():
 
 
 @when("the Harbor database cluster is deployed")
-def deploy_harbor_database(context: Dict):
+def deploy_harbor_database(context: dict):
     """Check if Harbor database cluster exists."""
     try:
         cluster = _kubectl_json(["get", "cluster", "db-harbor-dev", "-n", "fawkes", "-o", "json"])
@@ -106,7 +106,7 @@ def deploy_harbor_database(context: Dict):
 
 
 @then(parsers.cfparse('the PostgreSQL cluster "{cluster_name}" should exist in namespace "{namespace}"'))
-def postgres_cluster_exists(cluster_name: str, namespace: str, context: Dict):
+def postgres_cluster_exists(cluster_name: str, namespace: str, context: dict):
     """Verify PostgreSQL cluster exists."""
     cluster = context.get("harbor_db_cluster")
     assert cluster is not None, f"PostgreSQL cluster {cluster_name} does not exist"
@@ -115,7 +115,7 @@ def postgres_cluster_exists(cluster_name: str, namespace: str, context: Dict):
 
 
 @then("the cluster should have 3 instances")
-def cluster_has_three_instances(context: Dict):
+def cluster_has_three_instances(context: dict):
     """Verify cluster has 3 instances."""
     cluster = context.get("harbor_db_cluster")
     assert cluster is not None, "No cluster data found"
@@ -139,7 +139,7 @@ def database_credentials_exist(secret_name: str):
 
 
 @when(parsers.cfparse("I check for the {namespace} namespace"))
-def check_namespace(namespace: str, context: Dict):
+def check_namespace(namespace: str, context: dict):
     """Check if namespace exists."""
     try:
         ns = _kubectl_json(["get", "ns", namespace, "-o", "json"])
@@ -149,14 +149,14 @@ def check_namespace(namespace: str, context: Dict):
 
 
 @then(parsers.cfparse('the namespace "{namespace}" should exist'))
-def namespace_exists(namespace: str, context: Dict):
+def namespace_exists(namespace: str, context: dict):
     """Verify namespace exists."""
     ns = context.get(f"{namespace}_namespace")
     assert ns is not None, f"Namespace {namespace} does not exist"
 
 
 @then(parsers.cfparse('the namespace "{namespace}" should be Active'))
-def namespace_is_active(namespace: str, context: Dict):
+def namespace_is_active(namespace: str, context: dict):
     """Verify namespace is Active."""
     ns = context.get(f"{namespace}_namespace")
     assert ns is not None, f"Namespace {namespace} does not exist"
@@ -179,7 +179,7 @@ def harbor_deployed(namespace: str):
 
 
 @when("I check the Harbor pods")
-def check_harbor_pods(context: Dict):
+def check_harbor_pods(context: dict):
     """Check Harbor pods status."""
     try:
         pods = _kubectl_json(["-n", "fawkes", "get", "pods", "-l", "app=harbor", "-o", "json"])
@@ -189,7 +189,7 @@ def check_harbor_pods(context: Dict):
 
 
 @then('the following pods should be running in namespace "fawkes":')
-def pods_running(datatable, context: Dict):
+def pods_running(datatable, context: dict):
     """Verify specified pods are running."""
     pods = context.get("harbor_pods", [])
     expected_components = [row["component"] for row in datatable]
@@ -204,7 +204,7 @@ def pods_running(datatable, context: Dict):
 
 
 @then(parsers.cfparse("all Harbor pods should be in Ready state within {timeout:d} seconds"))
-def all_harbor_pods_ready(timeout: int, context: Dict):
+def all_harbor_pods_ready(timeout: int, context: dict):
     """Wait for all Harbor pods to be ready."""
     start_time = time.time()
     while time.time() - start_time < timeout:
@@ -250,7 +250,7 @@ def harbor_ingress_enabled():
 
 
 @when(parsers.cfparse('I check the ingress configuration in namespace "{namespace}"'))
-def check_ingress_config(namespace: str, context: Dict):
+def check_ingress_config(namespace: str, context: dict):
     """Check ingress configuration."""
     try:
         ingresses = _kubectl_json(["-n", namespace, "get", "ingress", "-o", "json"])
@@ -260,7 +260,7 @@ def check_ingress_config(namespace: str, context: Dict):
 
 
 @then(parsers.cfparse('an ingress should exist for "{service}"'))
-def ingress_exists_for_service(service: str, context: Dict):
+def ingress_exists_for_service(service: str, context: dict):
     """Verify ingress exists for service."""
     ingresses = context.get("harbor_ingresses", [])
     matching = [i for i in ingresses if service.lower() in i["metadata"]["name"].lower()]
@@ -269,7 +269,7 @@ def ingress_exists_for_service(service: str, context: Dict):
 
 
 @then(parsers.cfparse('the ingress should have host "{host}"'))
-def ingress_has_host(host: str, context: Dict):
+def ingress_has_host(host: str, context: dict):
     """Verify ingress has expected host."""
     ingress = context.get("harbor_ingress")
     assert ingress is not None, "No ingress data found"
@@ -280,7 +280,7 @@ def ingress_has_host(host: str, context: Dict):
 
 
 @then(parsers.cfparse('the ingress should use ingressClassName "{class_name}"'))
-def ingress_has_class(class_name: str, context: Dict):
+def ingress_has_class(class_name: str, context: dict):
     """Verify ingress uses expected class."""
     ingress = context.get("harbor_ingress")
     assert ingress is not None, "No ingress data found"
@@ -315,21 +315,21 @@ def harbor_ui_accessible_given():
 
 
 @when("I attempt to login with admin credentials")
-def attempt_login(context: Dict):
+def attempt_login(context: dict):
     """Attempt to login to Harbor."""
     # This is a placeholder - actual login requires Harbor API
     context["login_attempted"] = True
 
 
 @then("I should successfully authenticate")
-def login_successful(context: Dict):
+def login_successful(context: dict):
     """Verify login was successful."""
     # This is a placeholder - would need Harbor API client
     assert context.get("login_attempted"), "Login not attempted"
 
 
 @then("I should see the Harbor dashboard")
-def see_dashboard(context: Dict):
+def see_dashboard(context: dict):
     """Verify dashboard is visible."""
     # This is a placeholder - would need Harbor API client
     assert context.get("login_attempted"), "Login not attempted"
@@ -339,7 +339,7 @@ def see_dashboard(context: Dict):
 
 
 @when("I check the Trivy scanner pod")
-def check_trivy_pod(context: Dict):
+def check_trivy_pod(context: dict):
     """Check Trivy scanner pod."""
     try:
         pods = _kubectl_json(["-n", "fawkes", "get", "pods", "-l", "component=trivy", "-o", "json"])
@@ -349,7 +349,7 @@ def check_trivy_pod(context: Dict):
 
 
 @then(parsers.cfparse('the pod with label "{label}" should be running'))
-def pod_with_label_running(label: str, context: Dict):
+def pod_with_label_running(label: str, context: dict):
     """Verify pod with label is running."""
     trivy_pods = context.get("trivy_pods", [])
     assert len(trivy_pods) > 0, f"No pods found with label {label}"
@@ -364,7 +364,6 @@ def trivy_registered():
     """Verify Trivy scanner is registered."""
     # This would require Harbor API call
     # Placeholder for now
-    pass
 
 
 # Additional placeholder steps for scenarios not fully implemented
@@ -377,13 +376,13 @@ def harbor_deployed_accessible():
 
 
 @when("I query Harbor API for projects")
-def query_harbor_projects(context: Dict):
+def query_harbor_projects(context: dict):
     """Query Harbor API for projects."""
     context["harbor_projects_queried"] = True
 
 
 @then(parsers.cfparse('the "{project}" project should exist'))
-def project_exists(project: str, context: Dict):
+def project_exists(project: str, context: dict):
     """Verify project exists."""
     # Placeholder - would need Harbor API client
     assert context.get("harbor_projects_queried")
@@ -393,30 +392,28 @@ def project_exists(project: str, context: Dict):
 def project_publicly_accessible():
     """Verify project is public."""
     # Placeholder - would need Harbor API client
-    pass
 
 
 @given("I am logged in with Docker CLI")
 def docker_login():
     """Login to Harbor with Docker CLI."""
     # Placeholder - would need actual Docker login
-    pass
 
 
 @when(parsers.cfparse('I tag a test image "{source}" as "{target}"'))
-def tag_image(source: str, target: str, context: Dict):
+def tag_image(source: str, target: str, context: dict):
     """Tag a test image."""
     context["image_tagged"] = True
 
 
 @when("I push the image to Harbor")
-def push_image(context: Dict):
+def push_image(context: dict):
     """Push image to Harbor."""
     context["image_pushed"] = True
 
 
 @then("the image should be successfully pushed")
-def image_pushed_successfully(context: Dict):
+def image_pushed_successfully(context: dict):
     """Verify image was pushed."""
     assert context.get("image_pushed")
 
@@ -424,13 +421,11 @@ def image_pushed_successfully(context: Dict):
 @then("the image should be visible in the Harbor UI")
 def image_visible_ui():
     """Verify image is visible in UI."""
-    pass
 
 
 @then("the image should be automatically scanned by Trivy")
 def image_scanned():
     """Verify image was scanned."""
-    pass
 
 
 @given("a container image is pushed to Harbor")
@@ -440,13 +435,13 @@ def image_pushed_to_harbor():
 
 
 @when("I query the scan results via Harbor API")
-def query_scan_results(context: Dict):
+def query_scan_results(context: dict):
     """Query scan results."""
     context["scan_results_queried"] = True
 
 
 @then("the scan results should show vulnerability counts")
-def scan_shows_vulnerabilities(context: Dict):
+def scan_shows_vulnerabilities(context: dict):
     """Verify scan results show vulnerabilities."""
     assert context.get("scan_results_queried")
 
@@ -454,23 +449,21 @@ def scan_shows_vulnerabilities(context: Dict):
 @then("the scan should have completed status")
 def scan_completed():
     """Verify scan completed."""
-    pass
 
 
 @given("I am logged in as admin")
 def logged_in_as_admin():
     """Login as admin."""
-    pass
 
 
 @when(parsers.cfparse('I create a robot account "{name}" with push/pull permissions'))
-def create_robot_account(name: str, context: Dict):
+def create_robot_account(name: str, context: dict):
     """Create robot account."""
     context["robot_account_created"] = True
 
 
 @then("the robot account should be created")
-def robot_account_created(context: Dict):
+def robot_account_created(context: dict):
     """Verify robot account created."""
     assert context.get("robot_account_created")
 
@@ -478,17 +471,15 @@ def robot_account_created(context: Dict):
 @then("I should receive a token for authentication")
 def receive_token():
     """Verify token received."""
-    pass
 
 
 @then("the robot account should be able to push images")
 def robot_can_push():
     """Verify robot can push."""
-    pass
 
 
 @when("I check for ServiceMonitor resources")
-def check_servicemonitor(context: Dict):
+def check_servicemonitor(context: dict):
     """Check for ServiceMonitor."""
     try:
         monitors = _kubectl_json(["-n", "fawkes", "get", "servicemonitor", "-o", "json"])
@@ -498,7 +489,7 @@ def check_servicemonitor(context: Dict):
 
 
 @then("a ServiceMonitor for Harbor should exist")
-def servicemonitor_exists(context: Dict):
+def servicemonitor_exists(context: dict):
     """Verify ServiceMonitor exists."""
     monitors = context.get("servicemonitors", [])
     harbor_monitors = [m for m in monitors if "harbor" in m["metadata"]["name"].lower()]
@@ -509,7 +500,6 @@ def servicemonitor_exists(context: Dict):
 def prometheus_scraping():
     """Verify Prometheus is scraping."""
     # Would need to check Prometheus targets
-    pass
 
 
 @given("Harbor is deployed with internal Redis")
@@ -519,7 +509,7 @@ def harbor_with_redis():
 
 
 @when(parsers.cfparse('I check Redis pod status in namespace "{namespace}"'))
-def check_redis_pod(namespace: str, context: Dict):
+def check_redis_pod(namespace: str, context: dict):
     """Check Redis pod."""
     try:
         pods = _kubectl_json(["-n", namespace, "get", "pods", "-l", "component=redis", "-o", "json"])
@@ -529,7 +519,7 @@ def check_redis_pod(namespace: str, context: Dict):
 
 
 @then("the Redis pod should be running")
-def redis_running(context: Dict):
+def redis_running(context: dict):
     """Verify Redis is running."""
     redis_pods = context.get("redis_pods", [])
     assert len(redis_pods) > 0, "No Redis pods found"
@@ -543,11 +533,10 @@ def redis_running(context: Dict):
 def harbor_connects_redis():
     """Verify Harbor can connect to Redis."""
     # Would need to check Harbor logs or connection
-    pass
 
 
 @when("I check the PersistentVolumeClaims")
-def check_pvcs(context: Dict):
+def check_pvcs(context: dict):
     """Check PVCs."""
     try:
         pvcs = _kubectl_json(["-n", "fawkes", "get", "pvc", "-o", "json"])
@@ -557,7 +546,7 @@ def check_pvcs(context: Dict):
 
 
 @then("PVCs should exist for:")
-def pvcs_exist_for_components(datatable, context: Dict):
+def pvcs_exist_for_components(datatable, context: dict):
     """Verify PVCs exist for components."""
     pvcs = context.get("pvcs", [])
     expected_components = [row["component"] for row in datatable]
@@ -570,7 +559,7 @@ def pvcs_exist_for_components(datatable, context: Dict):
 
 
 @then("all PVCs should be Bound")
-def all_pvcs_bound(context: Dict):
+def all_pvcs_bound(context: dict):
     """Verify all PVCs are bound."""
     pvcs = context.get("pvcs", [])
     for pvc in pvcs:
@@ -579,13 +568,13 @@ def all_pvcs_bound(context: Dict):
 
 
 @when("I configure a replication policy")
-def configure_replication(context: Dict):
+def configure_replication(context: dict):
     """Configure replication policy."""
     context["replication_configured"] = True
 
 
 @then("Harbor should support multi-registry replication")
-def harbor_supports_replication(context: Dict):
+def harbor_supports_replication(context: dict):
     """Verify replication support."""
     assert context.get("replication_configured")
 
@@ -593,11 +582,10 @@ def harbor_supports_replication(context: Dict):
 @then("artifacts should be replicated to target registry")
 def artifacts_replicated():
     """Verify artifacts replicated."""
-    pass
 
 
 @when(parsers.cfparse('I query the Harbor API endpoint "{endpoint}"'))
-def query_harbor_api(endpoint: str, context: Dict):
+def query_harbor_api(endpoint: str, context: dict):
     """Query Harbor API."""
     try:
         response = requests.get(f"http://harbor.127.0.0.1.nip.io{endpoint}", timeout=10)
@@ -607,7 +595,7 @@ def query_harbor_api(endpoint: str, context: Dict):
 
 
 @then("I should receive a valid JSON response")
-def valid_json_response(context: Dict):
+def valid_json_response(context: dict):
     """Verify valid JSON response."""
     response = context.get("api_response")
     assert response is not None, "No API response"
@@ -619,7 +607,7 @@ def valid_json_response(context: Dict):
 
 
 @then("the response should contain Harbor version information")
-def response_contains_version(context: Dict):
+def response_contains_version(context: dict):
     """Verify response contains version."""
     response = context.get("api_response")
     assert response is not None

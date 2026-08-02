@@ -4,9 +4,10 @@ Unit tests for Great Expectations configuration.
 """
 
 import json
-import yaml
-import pytest
 from pathlib import Path
+
+import pytest
+import yaml
 
 # Define base paths
 BASE_DIR = Path(__file__).parent.parent

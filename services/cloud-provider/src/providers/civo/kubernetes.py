@@ -1,20 +1,20 @@
 """Civo Kubernetes (K3s) operations."""
 
 import logging
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
 
 from civo import Civo
 
-from ...interfaces.models import Cluster
-from ...interfaces.provider import ClusterConfig
 from ...exceptions import (
     CloudProviderError,
-    ResourceNotFoundError,
     ResourceAlreadyExistsError,
+    ResourceNotFoundError,
     ValidationError,
 )
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import Cluster
+from ...interfaces.provider import ClusterConfig
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class KubernetesService:
     """Civo Kubernetes service operations."""
 
-    def __init__(self, client: Civo, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, client: Civo, rate_limiter: RateLimiter | None = None):
         """
         Initialize Kubernetes service.
 
@@ -118,7 +118,7 @@ class KubernetesService:
         max_retries=3,
         retriable_exceptions=(Exception,),
     )
-    def get_cluster(self, cluster_id: str, region: Optional[str] = None) -> Cluster:
+    def get_cluster(self, cluster_id: str, region: str | None = None) -> Cluster:
         """
         Get cluster details.
 
@@ -171,7 +171,7 @@ class KubernetesService:
         max_retries=3,
         retriable_exceptions=(Exception,),
     )
-    def delete_cluster(self, cluster_id: str, region: Optional[str] = None) -> bool:
+    def delete_cluster(self, cluster_id: str, region: str | None = None) -> bool:
         """
         Delete a cluster.
 
@@ -204,7 +204,7 @@ class KubernetesService:
         max_retries=3,
         retriable_exceptions=(Exception,),
     )
-    def list_clusters(self, region: Optional[str] = None) -> List[Cluster]:
+    def list_clusters(self, region: str | None = None) -> list[Cluster]:
         """
         List all clusters.
 

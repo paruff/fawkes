@@ -3,11 +3,12 @@ Unit tests for enhanced feedback service features.
 Tests screenshot capture, GitHub integration, and contextual data.
 """
 
-import pytest
 import base64
+from datetime import datetime, timezone
+from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import AsyncMock, patch, MagicMock
-from datetime import datetime
 
 
 @pytest.fixture
@@ -56,8 +57,8 @@ class TestEnhancedFeedbackSubmission:
                 "user_agent": "Mozilla/5.0",
                 "github_issue_url": None,
                 "has_screenshot": False,
-                "created_at": datetime.now(),
-                "updated_at": datetime.now(),
+                "created_at": datetime.now(timezone.utc),
+                "updated_at": datetime.now(timezone.utc),
             }
             mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
 
@@ -97,8 +98,8 @@ class TestEnhancedFeedbackSubmission:
                 "user_agent": "Mozilla/5.0 Firefox",
                 "github_issue_url": None,
                 "has_screenshot": True,
-                "created_at": datetime.now(),
-                "updated_at": datetime.now(),
+                "created_at": datetime.now(timezone.utc),
+                "updated_at": datetime.now(timezone.utc),
             }
             mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
 
@@ -140,8 +141,8 @@ class TestEnhancedFeedbackSubmission:
                 "user_agent": "Mozilla/5.0 Safari/17.1",
                 "github_issue_url": None,
                 "has_screenshot": False,
-                "created_at": datetime.now(),
-                "updated_at": datetime.now(),
+                "created_at": datetime.now(timezone.utc),
+                "updated_at": datetime.now(timezone.utc),
             }
             mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
 
@@ -251,8 +252,8 @@ class TestGitHubIntegration:
                 "user_agent": "Mozilla/5.0",
                 "github_issue_url": None,
                 "has_screenshot": False,
-                "created_at": datetime.now(),
-                "updated_at": datetime.now(),
+                "created_at": datetime.now(timezone.utc),
+                "updated_at": datetime.now(timezone.utc),
             }
             mock_conn.execute = AsyncMock()
             mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
@@ -298,8 +299,8 @@ class TestGitHubIntegration:
                 "user_agent": None,
                 "github_issue_url": None,
                 "has_screenshot": False,
-                "created_at": datetime.now(),
-                "updated_at": datetime.now(),
+                "created_at": datetime.now(timezone.utc),
+                "updated_at": datetime.now(timezone.utc),
             }
             mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
 

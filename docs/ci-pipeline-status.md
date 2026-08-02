@@ -12,6 +12,7 @@
 **Branch**: `ci/phase2-build-security` | **Status**: MERGED
 
 **Files merged:**
+
 | File | Status |
 |------|--------|
 | `reusable-preflight.yml` | ✅ Merged |
@@ -31,6 +32,7 @@
 **Branch**: `fix/ci-main-failures` | **Status**: OPEN
 
 **Issues fixed:**
+
 | Issue | Root Cause | Fix |
 |-------|-----------|-----|
 | Dependency Review: wrong input | `comment-summary` → `comment-summary-in-pr` | ✅ Fixed |
@@ -40,6 +42,7 @@
 | Trivy version | 0.35.0 outdated | ✅ Updated to 0.38.0 |
 
 **Remaining issue (configuration, not code):**
+
 | Issue | Root Cause | Action Required |
 |-------|-----------|-----------------|
 | Deploy: missing secrets | DEPLOY_KEY, DEPLOY_USER, DEPLOY_HOST not configured | Add in repo Settings → Secrets |

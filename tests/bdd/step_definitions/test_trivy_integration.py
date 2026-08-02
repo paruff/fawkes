@@ -6,7 +6,8 @@ integration with Jenkins pipelines and Harbor registry.
 """
 
 import time
-from behave import given, when, then
+
+from behave import given, then, when
 from kubernetes import client
 from kubernetes.client.rest import ApiException
 

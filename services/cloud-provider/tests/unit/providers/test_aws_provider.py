@@ -1,14 +1,13 @@
 """Unit tests for AWS Provider."""
 
-import pytest
+from unittest.mock import MagicMock, Mock, patch
+
 import boto3
-from unittest.mock import Mock, patch, MagicMock
+import pytest
 from moto import mock_aws
-
-
-from src.providers.aws_provider import AWSProvider
-from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
 from src.exceptions import AuthenticationError
+from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
+from src.providers.aws_provider import AWSProvider
 
 
 @pytest.fixture
@@ -429,12 +428,13 @@ class TestAWSProviderCostOperations:
         provider = AWSProvider()
 
         with patch.object(provider.cost_explorer, "get_cost_data") as mock_get:
+            from datetime import datetime, timezone
+
             from src.interfaces.models import CostData
-            from datetime import datetime
 
             mock_get.return_value = CostData(
-                start_date=datetime(2024, 1, 1),
-                end_date=datetime(2024, 1, 31),
+                start_date=datetime(2024, 1, 1, tzinfo=timezone.utc),
+                end_date=datetime(2024, 1, 31, tzinfo=timezone.utc),
                 total_cost=1000.50,
                 currency="USD",
                 breakdown={"EC2": 500.0, "S3": 200.0, "RDS": 300.50},

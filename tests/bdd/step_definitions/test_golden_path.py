@@ -1,7 +1,7 @@
 """Step definitions for Golden Path CI/CD pipeline tests."""
 
 import pytest
-from pytest_bdd import scenarios, given, when, then, parsers
+from pytest_bdd import given, parsers, scenarios, then, when
 
 # Load ALL scenarios from the feature file
 scenarios("../features/jenkins/golden-path.feature")

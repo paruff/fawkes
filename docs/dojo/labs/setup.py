@@ -2,8 +2,9 @@
 # setup.py - Package installation configuration
 # =============================================================================
 
-from setuptools import setup, find_packages
 from pathlib import Path
+
+from setuptools import find_packages, setup
 
 # Read README for long description
 this_directory = Path(__file__).parent
@@ -156,7 +157,7 @@ Issues = "https://github.com/fawkes-platform/fawkes-cli/issues"
 
 [tool.black]
 line-length = 100
-target-version = ['py38', 'py39', 'py310', 'py311']
+target-version = ['py38', 'py39', 'py313', 'py313']
 
 [tool.isort]
 profile = "black"

@@ -25,7 +25,7 @@ LOKI_URL = os.getenv("LOKI_URL", "http://loki.fawkes.svc:3100")
 ARGOCD_URL = os.getenv("ARGOCD_URL", "http://argocd-server.fawkes.svc:80")
 
 
-async def perform_root_cause_analysis(anomaly_detection, recent_anomalies: List):
+async def perform_root_cause_analysis(anomaly_detection, recent_anomalies: list):
     """
     Perform comprehensive root cause analysis for an anomaly.
 
@@ -33,7 +33,7 @@ async def perform_root_cause_analysis(anomaly_detection, recent_anomalies: List)
         anomaly_detection: AnomalyDetection object
         recent_anomalies: List of recent anomaly detections for correlation
     """
-    from .main import RootCause, ROOT_CAUSE_ANALYSES, http_client
+    from .main import ROOT_CAUSE_ANALYSES, RootCause, http_client
 
     logger.info(f"Starting RCA for anomaly {anomaly_detection.id}")
 
@@ -78,7 +78,7 @@ async def perform_root_cause_analysis(anomaly_detection, recent_anomalies: List)
         ROOT_CAUSE_ANALYSES.labels(status="error").inc()
 
 
-async def _collect_recent_events(timestamp: datetime, http_client) -> List[str]:
+async def _collect_recent_events(timestamp: datetime, http_client) -> list[str]:
     """
     Collect recent events like deployments and config changes.
 
@@ -122,12 +122,12 @@ async def _collect_recent_events(timestamp: datetime, http_client) -> List[str]:
 
     except Exception as e:
         logger.error(f"Error collecting recent events: {e}")
-        events.append(f"Error collecting events: {str(e)}")
+        events.append(f"Error collecting events: {e!s}")
 
     return events[:5]  # Return top 5 events
 
 
-async def _query_error_logs(timestamp: datetime, metric: str, http_client) -> List[str]:
+async def _query_error_logs(timestamp: datetime, metric: str, http_client) -> list[str]:
     """
     Query logs for errors around the anomaly time.
 
@@ -156,12 +156,12 @@ async def _query_error_logs(timestamp: datetime, metric: str, http_client) -> Li
 
     except Exception as e:
         logger.error(f"Error querying logs: {e}")
-        errors.append(f"Error querying logs: {str(e)}")
+        errors.append(f"Error querying logs: {e!s}")
 
     return errors[:10]  # Return top 10 errors
 
 
-async def _find_correlated_metrics(anomaly, recent_anomalies: List, http_client) -> List[str]:
+async def _find_correlated_metrics(anomaly, recent_anomalies: list, http_client) -> list[str]:
     """
     Find metrics that show anomalies correlated with this one.
 
@@ -201,8 +201,8 @@ async def _find_correlated_metrics(anomaly, recent_anomalies: List, http_client)
 
 
 async def _generate_llm_suggestions(
-    anomaly, recent_events: List[str], log_errors: List[str], correlated_metrics: List[str], http_client
-) -> tuple[List[str], List[str]]:
+    anomaly, recent_events: list[str], log_errors: list[str], correlated_metrics: list[str], http_client
+) -> tuple[list[str], list[str]]:
     """
     Use LLM to generate root cause suggestions and remediation steps.
 
@@ -296,7 +296,7 @@ REMEDIATION:
     return _generate_rule_based_suggestions(anomaly, recent_events, correlated_metrics)
 
 
-def _parse_llm_response(content: str) -> tuple[List[str], List[str]]:
+def _parse_llm_response(content: str) -> tuple[list[str], list[str]]:
     """Parse LLM response into causes and remediation lists."""
     causes = []
     remediation = []
@@ -328,8 +328,8 @@ def _parse_llm_response(content: str) -> tuple[List[str], List[str]]:
 
 
 def _generate_rule_based_suggestions(
-    anomaly, recent_events: List[str], correlated_metrics: List[str]
-) -> tuple[List[str], List[str]]:
+    anomaly, recent_events: list[str], correlated_metrics: list[str]
+) -> tuple[list[str], list[str]]:
     """
     Generate rule-based suggestions when LLM is not available.
 
@@ -396,7 +396,7 @@ def _generate_rule_based_suggestions(
     return causes[:3], remediation[:3]
 
 
-def _find_runbooks(anomaly) -> List[str]:
+def _find_runbooks(anomaly) -> list[str]:
     """
     Find relevant runbook links based on anomaly characteristics.
 

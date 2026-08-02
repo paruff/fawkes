@@ -2,15 +2,15 @@
 Unit tests for AI triage module.
 """
 
-import pytest
-from unittest.mock import Mock, AsyncMock, patch
+from unittest.mock import AsyncMock, Mock, patch
 
+import pytest
 from app.ai_triage import (
-    calculate_priority_score,
-    suggest_labels,
-    detect_duplicates,
     _calculate_similarity,
+    calculate_priority_score,
+    detect_duplicates,
     determine_milestone,
+    suggest_labels,
     triage_feedback,
 )
 

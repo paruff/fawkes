@@ -84,7 +84,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Install pre-commit
         run: pip install pre-commit
@@ -145,7 +145,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Set up Go
         uses: actions/setup-go@v7
@@ -167,7 +167,8 @@ jobs:
         id: pre-commit
         run: |
           BASE="${{ needs.detect-changes.outputs.base_sha }}"
-          pre-commit run flake8 --from-ref "$BASE" --to-ref HEAD
+          pre-commit run ruff --from-ref "$BASE" --to-ref HEAD
+          pre-commit run ruff-format --from-ref "$BASE" --to-ref HEAD
           pre-commit run shellcheck --from-ref "$BASE" --to-ref HEAD
           if git diff --name-only "$BASE" HEAD -- '*.go' | grep -q .; then
             pre-commit run golangci-lint --from-ref "$BASE" --to-ref HEAD
@@ -213,7 +214,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v4
@@ -234,6 +235,12 @@ jobs:
         uses: terraform-linters/setup-tflint@v6
         with:
           tflint_version: latest
+
+      - name: Install tfsec
+        run: |
+          sudo curl -sSL -o /usr/local/bin/tfsec \
+            https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-linux-amd64
+          sudo chmod +x /usr/local/bin/tfsec
 
       - name: Install pre-commit
         run: pip install pre-commit
@@ -292,7 +299,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: "3.11"
+          python-version: "3.13"
           cache: "pip"
           cache-dependency-path: "requirements*.txt"
 

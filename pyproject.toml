@@ -1,6 +1,6 @@
 [tool.black]
 line-length = 120
-target-version = ['py311']
+target-version = ['py313']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
@@ -67,6 +67,7 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-# Match the ignore list used by flake8 so ruff only flags new critical issues
-# Note: W503 is a pycodestyle-only rule not supported by ruff
-ignore = ["E203", "F401", "F841", "F541", "E402", "F811", "E501", "E722", "E712"]
+# Style-only ignores: formatting, modernization, and intentional patterns.
+# Reliability rules (DTZ*, B023, PLW1510, S110, ASYNC230/251) are intentionally
+# NOT ignored — they catch real bugs and must be fixed, not suppressed.
+ignore = ["E203", "F401", "F841", "F541", "E402", "F811", "E501", "E722", "E712", "B008", "BLE001", "UP035", "RUF012", "RUF013", "B017", "B018", "G201", "C401", "TRY002", "EXE001", "SIM102", "RUF059", "UP022", "TRY401", "SIM117", "PLC0206"]

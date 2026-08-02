@@ -8,13 +8,16 @@ These tests run against real AWS services and require:
 Set SKIP_INTEGRATION_TESTS=1 to skip these tests.
 """
 
-import pytest
+import logging
 import os
-from datetime import datetime
+from datetime import UTC, datetime
 
-from src.providers.aws_provider import AWSProvider
+import pytest
+from src.exceptions import ResourceAlreadyExistsError, ResourceNotFoundError
 from src.interfaces.provider import StorageConfig
-from src.exceptions import ResourceNotFoundError, ResourceAlreadyExistsError
+from src.providers.aws_provider import AWSProvider
+
+logger = logging.getLogger(__name__)
 
 # Skip integration tests if environment variable is set
 pytestmark = pytest.mark.skipif(os.getenv("SKIP_INTEGRATION_TESTS", "0") == "1", reason="Integration tests disabled")
@@ -31,7 +34,7 @@ def aws_provider():
 @pytest.fixture(scope="module")
 def test_prefix():
     """Generate unique test prefix to avoid conflicts."""
-    return f"fawkes-test-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+    return f"fawkes-test-{datetime.now(UTC).strftime('%Y%m%d%H%M%S')}"
 
 
 class TestAWSProviderIntegrationStorage:
@@ -95,7 +98,7 @@ class TestAWSProviderIntegrationStorage:
             try:
                 aws_provider.delete_storage(bucket_name, "us-west-2", force=True)
             except Exception:
-                pass
+                logger.debug("Cleanup of test bucket %s failed", bucket_name, exc_info=True)
 
 
 class TestAWSProviderIntegrationCost:

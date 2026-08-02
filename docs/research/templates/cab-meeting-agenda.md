@@ -223,6 +223,7 @@
 - Commitments made to CAB
 
 **Action Items**:
+
 | Action | Owner | Due Date |
 |--------|-------|----------|
 | [Action 1] | [Name] | [Date] |

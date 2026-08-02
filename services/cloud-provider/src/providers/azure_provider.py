@@ -2,31 +2,30 @@
 
 import logging
 import os
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional
 
+from azure.core.exceptions import ClientAuthenticationError, HttpResponseError
 from azure.identity import (
-    DefaultAzureCredential,
-    ClientSecretCredential,
-    ManagedIdentityCredential,
     AzureCliCredential,
+    ClientSecretCredential,
+    DefaultAzureCredential,
+    ManagedIdentityCredential,
 )
-from azure.core.exceptions import HttpResponseError, ClientAuthenticationError
 
+from ..exceptions import AuthenticationError
+from ..interfaces.models import Cluster, CostData, Database, Storage
 from ..interfaces.provider import (
     CloudProvider,
     ClusterConfig,
     DatabaseConfig,
     StorageConfig,
 )
-from ..interfaces.models import Cluster, Database, Storage, CostData
-from ..exceptions import AuthenticationError
 from ..utils import RateLimiter
-
 from .azure.aks import AKSService
-from .azure.database import AzureDatabaseService as DatabaseService
-from .azure.storage import AzureStorageService as StorageService
-from .azure.monitor import AzureMonitorService as MonitorService
 from .azure.cost_management import AzureCostManagementService as CostManagementService
+from .azure.database import AzureDatabaseService as DatabaseService
+from .azure.monitor import AzureMonitorService as MonitorService
+from .azure.storage import AzureStorageService as StorageService
 
 logger = logging.getLogger(__name__)
 
@@ -36,10 +35,10 @@ class AzureProvider(CloudProvider):
 
     def __init__(
         self,
-        subscription_id: Optional[str] = None,
-        tenant_id: Optional[str] = None,
-        client_id: Optional[str] = None,
-        client_secret: Optional[str] = None,
+        subscription_id: str | None = None,
+        tenant_id: str | None = None,
+        client_id: str | None = None,
+        client_secret: str | None = None,
         use_managed_identity: bool = False,
         use_cli: bool = False,
         rate_limit_calls: int = 10,
@@ -162,7 +161,7 @@ class AzureProvider(CloudProvider):
         return self.aks.create_cluster(config)
 
     def get_cluster(
-        self, cluster_id: str, resource_group: Optional[str] = None, include_node_count: bool = True
+        self, cluster_id: str, resource_group: str | None = None, include_node_count: bool = True
     ) -> Cluster:
         """
         Get cluster details.
@@ -193,7 +192,7 @@ class AzureProvider(CloudProvider):
 
         return self.aks.get_cluster(cluster_name, resource_group, include_node_count)
 
-    def delete_cluster(self, cluster_id: str, resource_group: Optional[str] = None) -> bool:
+    def delete_cluster(self, cluster_id: str, resource_group: str | None = None) -> bool:
         """
         Delete a cluster.
 
@@ -223,8 +222,8 @@ class AzureProvider(CloudProvider):
         return self.aks.delete_cluster(cluster_name, resource_group)
 
     def list_clusters(
-        self, region: Optional[str] = None, resource_group: Optional[str] = None, include_details: bool = False
-    ) -> List[Cluster]:
+        self, region: str | None = None, resource_group: str | None = None, include_details: bool = False
+    ) -> list[Cluster]:
         """
         List all clusters.
 
@@ -257,7 +256,7 @@ class AzureProvider(CloudProvider):
         """
         return self.database.create_database(config)
 
-    def get_database(self, database_id: str, resource_group: Optional[str] = None) -> Database:
+    def get_database(self, database_id: str, resource_group: str | None = None) -> Database:
         """
         Get database details.
 
@@ -287,7 +286,7 @@ class AzureProvider(CloudProvider):
         return self.database.get_database_any_engine(server_name, resource_group)
 
     def delete_database(
-        self, database_id: str, resource_group: Optional[str] = None, skip_final_snapshot: bool = False
+        self, database_id: str, resource_group: str | None = None, skip_final_snapshot: bool = False
     ) -> bool:
         """
         Delete a database instance.
@@ -318,7 +317,7 @@ class AzureProvider(CloudProvider):
 
         return self.database.delete_database_any_engine(server_name, resource_group)
 
-    def list_databases(self, region: Optional[str] = None, resource_group: Optional[str] = None) -> List[Database]:
+    def list_databases(self, region: str | None = None, resource_group: str | None = None) -> list[Database]:
         """
         List all database instances.
 
@@ -350,7 +349,7 @@ class AzureProvider(CloudProvider):
         """
         return self.storage.create_storage(config)
 
-    def get_storage(self, storage_id: str, resource_group: Optional[str] = None) -> Storage:
+    def get_storage(self, storage_id: str, resource_group: str | None = None) -> Storage:
         """
         Get storage bucket/account details.
 
@@ -379,7 +378,7 @@ class AzureProvider(CloudProvider):
 
         return self.storage.get_storage(account_name, resource_group)
 
-    def delete_storage(self, storage_id: str, resource_group: Optional[str] = None, force: bool = False) -> bool:
+    def delete_storage(self, storage_id: str, resource_group: str | None = None, force: bool = False) -> bool:
         """
         Delete a storage bucket/account.
 
@@ -410,8 +409,8 @@ class AzureProvider(CloudProvider):
         return self.storage.delete_storage(account_name, resource_group, force)
 
     def list_storage(
-        self, region: Optional[str] = None, resource_group: Optional[str] = None, include_details: bool = False
-    ) -> List[Storage]:
+        self, region: str | None = None, resource_group: str | None = None, include_details: bool = False
+    ) -> list[Storage]:
         """
         List all storage buckets/accounts.
 
@@ -451,8 +450,8 @@ class AzureProvider(CloudProvider):
         metric_name: str,
         start_time: str,
         end_time: str,
-        aggregation: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        aggregation: str | None = None,
+    ) -> dict[str, Any]:
         """
         Get metrics for a resource.
 
@@ -487,7 +486,7 @@ class AzureProvider(CloudProvider):
             aggregation,
         )
 
-    def get_cost_forecast(self, days: int = 30) -> Dict[str, Any]:
+    def get_cost_forecast(self, days: int = 30) -> dict[str, Any]:
         """
         Get cost forecast.
 
