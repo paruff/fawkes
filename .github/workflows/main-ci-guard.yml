@@ -9,12 +9,13 @@ permissions:
   contents: read
   checks: write
   pull-requests: write
+  actions: read
 
 jobs:
   dora-start:
     name: DORA job start
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 2
     steps:
       - name: DORA job start
         run: |
@@ -42,3 +43,10 @@ jobs:
     steps:
       - name: DORA job finish
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  main-ci-guard:
+    name: Main CI Gate
+    needs: dora-logging
+    uses: paruff/ufawkespipe/.github/workflows/reusable-main-ci-guard.yml@v1.2.0
+    with:
+      workflow-id: code-quality.yml

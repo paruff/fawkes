@@ -1,8 +1,9 @@
 """Statistical analysis for A/B testing"""
 
+from typing import Dict, List, Optional
+
 import numpy as np
 from scipy import stats
-from typing import List, Dict, Optional
 
 from .models import ExperimentStats, VariantStats
 
@@ -15,8 +16,8 @@ class StatisticalAnalyzer:
         experiment_id: str,
         experiment_name: str,
         status: str,
-        variants: List[Dict],
-        variant_data: Dict[str, Dict],
+        variants: list[dict],
+        variant_data: dict[str, dict],
         significance_level: float = 0.05,
     ) -> ExperimentStats:
         """
@@ -108,7 +109,7 @@ class StatisticalAnalyzer:
         )
 
     def _calculate_variant_stats(
-        self, variant: str, sample_size: int, conversions: int, values: List[float]
+        self, variant: str, sample_size: int, conversions: int, values: list[float]
     ) -> VariantStats:
         """Calculate statistics for a single variant"""
         conversion_rate = conversions / sample_size if sample_size > 0 else 0.0
@@ -181,11 +182,11 @@ class StatisticalAnalyzer:
         self,
         status: str,
         significant: bool,
-        winner: Optional[str],
+        winner: str | None,
         control: str,
         p_value: float,
         alpha: float,
-        variant_stats: List[VariantStats],
+        variant_stats: list[VariantStats],
     ) -> str:
         """Generate actionable recommendation based on analysis"""
         # Check if we have enough data
@@ -209,6 +210,8 @@ class StatisticalAnalyzer:
                 effect_pct = variant_stats[1].conversion_rate / variant_stats[0].conversion_rate - 1
                 return f"✅ Winner: {winner} shows {effect_pct:.1%} improvement over {control} (p={p_value:.4f}). Recommend rolling out {winner} to 100% traffic."
             else:
-                return f"✅ Winner: {winner} detected (p={p_value:.4f}). Recommend rolling out {winner} to 100% traffic."
+                return (
+                    f"✅ Winner: {winner} detected (p={p_value:.4f}). Recommend rolling out {winner} to 100% traffic."
+                )
         else:
             return f"Significant difference found (p={p_value:.4f}) but no clear winner. Review variant performance and consider additional testing."

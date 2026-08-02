@@ -18,16 +18,16 @@ APIs on a configurable interval, caches results, and exposes them as Prometheus
 metrics. The DORA dashboard consumes these metrics directly.
 """
 
+import logging
 import os
 import time
-import logging
 from datetime import datetime, timezone
 from typing import Optional
 
 import httpx
 from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
-from prometheus_client import Gauge, generate_latest, REGISTRY
+from prometheus_client import REGISTRY, Gauge, generate_latest
 
 # ---------------------------------------------------------------------------
 # Config
@@ -104,7 +104,7 @@ PR_CONTEXT_LOAD = Gauge(
 # ---------------------------------------------------------------------------
 app = FastAPI(title="DORA Metrics Exporter", version="1.0.0")
 
-_last_scrape: Optional[float] = None
+_last_scrape: float | None = None
 
 
 @app.get("/health")
@@ -301,9 +301,7 @@ def _scrape_dora_metrics():
             environment=argocd_apps[name]["environment"],
             team="platform-team",
             service=name,
-        ).set(
-            0
-        )  # Will be populated when Alertmanager is wired
+        ).set(0)  # Will be populated when Alertmanager is wired
 
     # --- AI Amplification Metrics ---
     # These will be populated by GitHub API analysis of PR labels/metadata
@@ -313,7 +311,7 @@ def _scrape_dora_metrics():
         AI_REVIEW_TIME_RATIO.labels(service=name).set(1.0)  # TODO: compare review times
 
     _last_scrape = time.time()
-    logger.info(f"Scrape complete: {len(argocd_apps)} ArgoCD apps, " f"{len(github_runs)} GitHub workflows")
+    logger.info(f"Scrape complete: {len(argocd_apps)} ArgoCD apps, {len(github_runs)} GitHub workflows")
 
 
 # ---------------------------------------------------------------------------

@@ -7,20 +7,20 @@ health checks, context retrieval, and integration with Weaviate.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import time
-import os
 from typing import Dict
 
 import pytest
-from pytest_bdd import given, when, then, parsers
 import requests
+from pytest_bdd import given, parsers, then, when
 
 if os.getenv("FAWKES_DEBUG_STEPS") == "1":  # pragma: no cover
     print("[bdd] Loaded rag_service_steps definitions")
 
 
-def _kubectl_json(args: list[str]) -> Dict:
+def _kubectl_json(args: list[str]) -> dict:
     """Run kubectl and return parsed JSON."""
     cmd = ["kubectl"] + args
     try:
@@ -91,14 +91,14 @@ def weaviate_deployed():
 
 
 @when(parsers.cfparse('I check the RAG service deployment in namespace "{namespace}"'))
-def check_rag_deployment(namespace: str, context: Dict):
+def check_rag_deployment(namespace: str, context: dict):
     """Check RAG service deployment."""
     deployment = _kubectl_json(["get", "deployment", "rag-service", "-n", namespace, "-o", "json"])
     context["rag_deployment"] = deployment
 
 
 @then(parsers.cfparse('the deployment "{name}" should exist'))
-def deployment_exists(name: str, context: Dict):
+def deployment_exists(name: str, context: dict):
     """Verify deployment exists."""
     deployment = context.get("rag_deployment")
     assert deployment is not None, f"Deployment {name} not found"
@@ -106,7 +106,7 @@ def deployment_exists(name: str, context: Dict):
 
 
 @then(parsers.cfparse("the deployment should have {replicas:d} replicas"))
-def deployment_has_replicas(replicas: int, context: Dict):
+def deployment_has_replicas(replicas: int, context: dict):
     """Verify deployment has specified replicas."""
     deployment = context.get("rag_deployment")
     assert deployment is not None
@@ -122,7 +122,7 @@ def rag_pods_ready(timeout: int):
 
 
 @given(parsers.cfparse('RAG service is deployed in namespace "{namespace}"'))
-def rag_service_deployed(namespace: str, context: Dict):
+def rag_service_deployed(namespace: str, context: dict):
     """Check RAG service is deployed."""
     try:
         deployment = _kubectl_json(["get", "deployment", "rag-service", "-n", namespace, "-o", "json"])
@@ -132,14 +132,14 @@ def rag_service_deployed(namespace: str, context: Dict):
 
 
 @when(parsers.cfparse("I check the RAG service"))
-def check_rag_service(context: Dict):
+def check_rag_service(context: dict):
     """Check RAG service."""
     service = _kubectl_json(["get", "service", "rag-service", "-n", "fawkes", "-o", "json"])
     context["rag_service"] = service
 
 
 @then(parsers.cfparse('a service "{name}" should exist in namespace "{namespace}"'))
-def service_exists(name: str, namespace: str, context: Dict):
+def service_exists(name: str, namespace: str, context: dict):
     """Verify service exists."""
     service = context.get("rag_service")
     assert service is not None, f"Service {name} not found"
@@ -148,7 +148,7 @@ def service_exists(name: str, namespace: str, context: Dict):
 
 
 @then(parsers.cfparse('the service should be type "{service_type}"'))
-def service_type_matches(service_type: str, context: Dict):
+def service_type_matches(service_type: str, context: dict):
     """Verify service type."""
     service = context.get("rag_service")
     assert service is not None
@@ -157,7 +157,7 @@ def service_type_matches(service_type: str, context: Dict):
 
 
 @then(parsers.cfparse("the service should expose port {port:d}"))
-def service_exposes_port(port: int, context: Dict):
+def service_exposes_port(port: int, context: dict):
     """Verify service exposes specified port."""
     service = context.get("rag_service")
     assert service is not None
@@ -176,21 +176,21 @@ def rag_service_with_ingress():
 
 
 @when(parsers.cfparse('I check the ingress configuration in namespace "{namespace}"'))
-def check_ingress(namespace: str, context: Dict):
+def check_ingress(namespace: str, context: dict):
     """Check ingress configuration."""
     ingress = _kubectl_json(["get", "ingress", "rag-service", "-n", namespace, "-o", "json"])
     context["rag_ingress"] = ingress
 
 
 @then(parsers.cfparse('an ingress should exist for "{name}"'))
-def ingress_exists(name: str, context: Dict):
+def ingress_exists(name: str, context: dict):
     """Verify ingress exists."""
     ingress = context.get("rag_ingress")
     assert ingress is not None, f"Ingress for {name} not found"
 
 
 @then(parsers.cfparse('the ingress should have host "{host}"'))
-def ingress_has_host(host: str, context: Dict):
+def ingress_has_host(host: str, context: dict):
     """Verify ingress has specified host."""
     ingress = context.get("rag_ingress")
     assert ingress is not None
@@ -200,7 +200,7 @@ def ingress_has_host(host: str, context: Dict):
 
 
 @then(parsers.cfparse('the ingress should use ingressClassName "{class_name}"'))
-def ingress_class_matches(class_name: str, context: Dict):
+def ingress_class_matches(class_name: str, context: dict):
     """Verify ingress class."""
     ingress = context.get("rag_ingress")
     assert ingress is not None
@@ -224,7 +224,7 @@ def rag_service_running(namespace: str):
 
 
 @when(parsers.cfparse('I query the health endpoint at "{path}"'))
-def query_health_endpoint(path: str, context: Dict):
+def query_health_endpoint(path: str, context: dict):
     """Query health endpoint."""
     # Port forward to service
     url = f"http://rag-service.127.0.0.1.nip.io{path}"
@@ -236,7 +236,7 @@ def query_health_endpoint(path: str, context: Dict):
 
 
 @then(parsers.cfparse("the response status should be {status:d}"))
-def response_status(status: int, context: Dict):
+def response_status(status: int, context: dict):
     """Verify response status code."""
     response = context.get("health_response") or context.get("query_response")
     assert response is not None, "No response in context"
@@ -244,7 +244,7 @@ def response_status(status: int, context: Dict):
 
 
 @then(parsers.cfparse('the response should contain status "{status1}" or "{status2}"'))
-def response_contains_status(status1: str, status2: str, context: Dict):
+def response_contains_status(status1: str, status2: str, context: dict):
     """Verify response contains one of the specified statuses."""
     response = context.get("health_response")
     assert response is not None
@@ -254,7 +254,7 @@ def response_contains_status(status1: str, status2: str, context: Dict):
 
 
 @then("the response should indicate weaviate_connected status")
-def response_has_weaviate_status(context: Dict):
+def response_has_weaviate_status(context: dict):
     """Verify response has weaviate_connected field."""
     response = context.get("health_response")
     assert response is not None
@@ -293,7 +293,7 @@ def documentation_indexed():
 
 
 @when(parsers.cfparse('I send a query "{query}"'))
-def send_query(query: str, context: Dict):
+def send_query(query: str, context: dict):
     """Send query to RAG service."""
     url = "http://rag-service.127.0.0.1.nip.io/api/v1/query"
     start_time = time.time()
@@ -307,7 +307,7 @@ def send_query(query: str, context: Dict):
 
 
 @then(parsers.cfparse("the response should return within {max_ms:d} milliseconds"))
-def response_within_time(max_ms: int, context: Dict):
+def response_within_time(max_ms: int, context: dict):
     """Verify response time."""
     elapsed_ms = context.get("query_elapsed_ms", float("inf"))
     assert elapsed_ms <= max_ms, f"Response time {elapsed_ms:.2f}ms exceeds {max_ms}ms"
@@ -315,7 +315,7 @@ def response_within_time(max_ms: int, context: Dict):
 
 @then(parsers.cfparse("the response should contain at least {min_count:d} result"))
 @then(parsers.cfparse("the response should contain at least {min_count:d} results"))
-def response_has_results(min_count: int, context: Dict):
+def response_has_results(min_count: int, context: dict):
     """Verify response has minimum number of results."""
     response = context.get("query_response")
     assert response is not None
@@ -325,7 +325,7 @@ def response_has_results(min_count: int, context: Dict):
 
 
 @then("the response should include retrieval_time_ms field")
-def response_has_retrieval_time(context: Dict):
+def response_has_retrieval_time(context: dict):
     """Verify response has retrieval_time_ms field."""
     response = context.get("query_response")
     assert response is not None
@@ -334,7 +334,7 @@ def response_has_retrieval_time(context: Dict):
 
 
 @then("the response should contain results")
-def response_contains_results(context: Dict):
+def response_contains_results(context: dict):
     """Verify response contains results."""
     response = context.get("query_response")
     assert response is not None
@@ -344,7 +344,7 @@ def response_contains_results(context: Dict):
 
 
 @then(parsers.cfparse("at least one result should have relevance_score greater than {threshold:f}"))
-def result_has_high_relevance(threshold: float, context: Dict):
+def result_has_high_relevance(threshold: float, context: dict):
     """Verify at least one result has high relevance score."""
     response = context.get("query_response")
     assert response is not None
@@ -356,7 +356,7 @@ def result_has_high_relevance(threshold: float, context: Dict):
 
 
 @then("each result should have content, source, and relevance_score fields")
-def results_have_required_fields(context: Dict):
+def results_have_required_fields(context: dict):
     """Verify results have required fields."""
     response = context.get("query_response")
     assert response is not None
@@ -370,21 +370,21 @@ def results_have_required_fields(context: Dict):
 
 
 @when(parsers.cfparse("I check the RAG service configuration"))
-def check_rag_config(context: Dict):
+def check_rag_config(context: dict):
     """Check RAG service configuration."""
     configmap = _kubectl_json(["get", "configmap", "rag-service-config", "-n", "fawkes", "-o", "json"])
     context["rag_configmap"] = configmap
 
 
 @then(parsers.cfparse('the ConfigMap "{name}" should exist'))
-def configmap_exists(name: str, context: Dict):
+def configmap_exists(name: str, context: dict):
     """Verify ConfigMap exists."""
     configmap = context.get("rag_configmap")
     assert configmap is not None, f"ConfigMap {name} not found"
 
 
 @then("it should contain weaviate_url pointing to Weaviate service")
-def configmap_has_weaviate_url(context: Dict):
+def configmap_has_weaviate_url(context: dict):
     """Verify ConfigMap has weaviate_url."""
     configmap = context.get("rag_configmap")
     assert configmap is not None
@@ -408,14 +408,14 @@ def rag_connects_to_weaviate():
 
 
 @when(parsers.cfparse("I check the resource specifications for RAG service deployment"))
-def check_rag_resources(context: Dict):
+def check_rag_resources(context: dict):
     """Check RAG service resource specifications."""
     deployment = _kubectl_json(["get", "deployment", "rag-service", "-n", "fawkes", "-o", "json"])
     context["rag_deployment"] = deployment
 
 
 @then(parsers.cfparse('the deployment should have CPU requests of "{cpu}"'))
-def deployment_has_cpu_request(cpu: str, context: Dict):
+def deployment_has_cpu_request(cpu: str, context: dict):
     """Verify deployment has CPU request."""
     deployment = context.get("rag_deployment")
     assert deployment is not None
@@ -427,7 +427,7 @@ def deployment_has_cpu_request(cpu: str, context: Dict):
 
 
 @then(parsers.cfparse('the deployment should have memory requests of "{memory}"'))
-def deployment_has_memory_request(memory: str, context: Dict):
+def deployment_has_memory_request(memory: str, context: dict):
     """Verify deployment has memory request."""
     deployment = context.get("rag_deployment")
     assert deployment is not None
@@ -439,7 +439,7 @@ def deployment_has_memory_request(memory: str, context: Dict):
 
 
 @then(parsers.cfparse('the deployment should have CPU limits of "{cpu}"'))
-def deployment_has_cpu_limit(cpu: str, context: Dict):
+def deployment_has_cpu_limit(cpu: str, context: dict):
     """Verify deployment has CPU limit."""
     deployment = context.get("rag_deployment")
     assert deployment is not None
@@ -451,7 +451,7 @@ def deployment_has_cpu_limit(cpu: str, context: Dict):
 
 
 @then(parsers.cfparse('the deployment should have memory limits of "{memory}"'))
-def deployment_has_memory_limit(memory: str, context: Dict):
+def deployment_has_memory_limit(memory: str, context: dict):
     """Verify deployment has memory limit."""
     deployment = context.get("rag_deployment")
     assert deployment is not None
@@ -463,14 +463,14 @@ def deployment_has_memory_limit(memory: str, context: Dict):
 
 
 @when(parsers.cfparse("I check the security context for RAG service pods"))
-def check_security_context(context: Dict):
+def check_security_context(context: dict):
     """Check security context for RAG service pods."""
     deployment = _kubectl_json(["get", "deployment", "rag-service", "-n", "fawkes", "-o", "json"])
     context["rag_deployment"] = deployment
 
 
 @then("the pods should run as non-root user")
-def pods_run_as_nonroot(context: Dict):
+def pods_run_as_nonroot(context: dict):
     """Verify pods run as non-root."""
     deployment = context.get("rag_deployment")
     assert deployment is not None
@@ -480,7 +480,7 @@ def pods_run_as_nonroot(context: Dict):
 
 
 @then(parsers.cfparse("the pods should have readOnlyRootFilesystem set to {value}"))
-def pods_have_readonly_fs(value: str, context: Dict):
+def pods_have_readonly_fs(value: str, context: dict):
     """Verify readOnlyRootFilesystem setting."""
     deployment = context.get("rag_deployment")
     assert deployment is not None
@@ -493,7 +493,7 @@ def pods_have_readonly_fs(value: str, context: Dict):
 
 
 @then("the pods should drop all capabilities")
-def pods_drop_capabilities(context: Dict):
+def pods_drop_capabilities(context: dict):
     """Verify pods drop all capabilities."""
     deployment = context.get("rag_deployment")
     assert deployment is not None
@@ -513,7 +513,7 @@ def serviceaccount_exists(name: str):
 
 
 @when(parsers.cfparse('I access the OpenAPI documentation at "{path}"'))
-def access_openapi_docs(path: str, context: Dict):
+def access_openapi_docs(path: str, context: dict):
     """Access OpenAPI documentation."""
     url = f"http://rag-service.127.0.0.1.nip.io{path}"
     try:
@@ -524,7 +524,7 @@ def access_openapi_docs(path: str, context: Dict):
 
 
 @then("the documentation should be accessible")
-def docs_accessible(context: Dict):
+def docs_accessible(context: dict):
     """Verify documentation is accessible."""
     response = context.get("docs_response")
     assert response is not None
@@ -532,7 +532,7 @@ def docs_accessible(context: Dict):
 
 
 @then(parsers.cfparse('it should document the "{endpoint}" endpoint'))
-def docs_contain_endpoint(endpoint: str, context: Dict):
+def docs_contain_endpoint(endpoint: str, context: dict):
     """Verify documentation contains endpoint."""
     response = context.get("docs_response")
     assert response is not None
@@ -542,7 +542,7 @@ def docs_contain_endpoint(endpoint: str, context: Dict):
 
 
 @then(parsers.cfparse("the query endpoint should accept query, top_k, and threshold parameters"))
-def query_endpoint_has_parameters(context: Dict):
+def query_endpoint_has_parameters(context: dict):
     """Verify query endpoint accepts required parameters."""
     response = context.get("docs_response")
     assert response is not None
@@ -553,7 +553,7 @@ def query_endpoint_has_parameters(context: Dict):
 
 
 @when(parsers.cfparse('I query the metrics endpoint at "{path}"'))
-def query_metrics_endpoint(path: str, context: Dict):
+def query_metrics_endpoint(path: str, context: dict):
     """Query metrics endpoint."""
     url = f"http://rag-service.127.0.0.1.nip.io{path}"
     try:
@@ -564,7 +564,7 @@ def query_metrics_endpoint(path: str, context: Dict):
 
 
 @then(parsers.cfparse('the response should contain metric "{metric}"'))
-def response_contains_metric(metric: str, context: Dict):
+def response_contains_metric(metric: str, context: dict):
     """Verify response contains metric."""
     response = context.get("metrics_response")
     assert response is not None

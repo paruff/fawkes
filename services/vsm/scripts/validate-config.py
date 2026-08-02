@@ -11,8 +11,9 @@ This script validates that:
 """
 
 import sys
-import yaml
 from pathlib import Path
+
+import yaml
 
 # Try to import StageCategory for validation, but don't fail if not available
 try:

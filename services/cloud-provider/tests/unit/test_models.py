@@ -1,8 +1,8 @@
 """Unit tests for interface models."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 
-from src.interfaces.models import Cluster, Database, Storage, CostData
+from src.interfaces.models import Cluster, CostData, Database, Storage
 
 
 class TestCluster:
@@ -73,7 +73,7 @@ class TestDatabase:
 
     def test_database_with_created_at(self):
         """Test database with creation timestamp."""
-        created_at = datetime(2024, 1, 1, 12, 0, 0)
+        created_at = datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
 
         database = Database(
             id="db-1",
@@ -128,8 +128,8 @@ class TestCostData:
 
     def test_cost_data_creation(self):
         """Test creating a cost data object."""
-        start_date = datetime(2024, 1, 1)
-        end_date = datetime(2024, 1, 31)
+        start_date = datetime(2024, 1, 1, tzinfo=timezone.utc)
+        end_date = datetime(2024, 1, 31, tzinfo=timezone.utc)
         breakdown = {"EC2": 500.0, "S3": 200.0, "RDS": 300.0}
 
         cost_data = CostData(
@@ -145,7 +145,11 @@ class TestCostData:
 
     def test_cost_data_defaults(self):
         """Test cost data with default values."""
-        cost_data = CostData(start_date=datetime(2024, 1, 1), end_date=datetime(2024, 1, 31), total_cost=500.0)
+        cost_data = CostData(
+            start_date=datetime(2024, 1, 1, tzinfo=timezone.utc),
+            end_date=datetime(2024, 1, 31, tzinfo=timezone.utc),
+            total_cost=500.0,
+        )
 
         assert cost_data.currency == "USD"
         assert cost_data.breakdown == {}
@@ -156,7 +160,10 @@ class TestCostData:
         metadata = {"granularity": "DAILY", "timeframe": "LAST_30_DAYS"}
 
         cost_data = CostData(
-            start_date=datetime(2024, 1, 1), end_date=datetime(2024, 1, 31), total_cost=500.0, metadata=metadata
+            start_date=datetime(2024, 1, 1, tzinfo=timezone.utc),
+            end_date=datetime(2024, 1, 31, tzinfo=timezone.utc),
+            total_cost=500.0,
+            metadata=metadata,
         )
 
         assert cost_data.metadata["granularity"] == "DAILY"

@@ -1,8 +1,9 @@
 """Pydantic models for Analytics Dashboard Service"""
 
-from typing import List, Dict, Optional, Any
-from pydantic import BaseModel, Field
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, Field
 
 
 class TimeSeriesDataPoint(BaseModel):
@@ -10,7 +11,7 @@ class TimeSeriesDataPoint(BaseModel):
 
     timestamp: datetime
     value: float
-    label: Optional[str] = None
+    label: str | None = None
 
 
 class UsageTrends(BaseModel):
@@ -24,10 +25,10 @@ class UsageTrends(BaseModel):
     bounce_rate: float = Field(description="Bounce rate percentage")
 
     # Time series data
-    users_over_time: List[TimeSeriesDataPoint] = Field(description="User activity over time")
-    pageviews_over_time: List[TimeSeriesDataPoint] = Field(description="Page views over time")
-    top_pages: Dict[str, int] = Field(description="Top pages by view count")
-    traffic_sources: Dict[str, int] = Field(description="Traffic sources breakdown")
+    users_over_time: list[TimeSeriesDataPoint] = Field(description="User activity over time")
+    pageviews_over_time: list[TimeSeriesDataPoint] = Field(description="Page views over time")
+    top_pages: dict[str, int] = Field(description="Top pages by view count")
+    traffic_sources: dict[str, int] = Field(description="Traffic sources breakdown")
 
 
 class FeatureUsage(BaseModel):
@@ -38,18 +39,18 @@ class FeatureUsage(BaseModel):
     unique_users: int
     adoption_rate: float = Field(description="Percentage of users using this feature")
     trend: str = Field(description="up, down, or stable")
-    first_seen: Optional[datetime] = None
-    last_used: Optional[datetime] = None
+    first_seen: datetime | None = None
+    last_used: datetime | None = None
 
 
 class FeatureAdoption(BaseModel):
     """Feature adoption metrics"""
 
     total_features: int
-    features: List[FeatureUsage]
+    features: list[FeatureUsage]
     most_adopted: str = Field(description="Most adopted feature name")
     least_adopted: str = Field(description="Least adopted feature name")
-    adoption_trend: List[TimeSeriesDataPoint] = Field(description="Overall adoption over time")
+    adoption_trend: list[TimeSeriesDataPoint] = Field(description="Overall adoption over time")
 
 
 class VariantMetrics(BaseModel):
@@ -70,13 +71,13 @@ class ExperimentResults(BaseModel):
     experiment_id: str
     experiment_name: str
     status: str = Field(description="draft, running, stopped")
-    start_date: Optional[datetime] = None
-    end_date: Optional[datetime] = None
+    start_date: datetime | None = None
+    end_date: datetime | None = None
 
     # Statistical analysis
-    variants: List[VariantMetrics]
-    winner: Optional[str] = Field(description="Variant ID of the winner, if determined")
-    p_value: Optional[float] = Field(description="Statistical significance p-value")
+    variants: list[VariantMetrics]
+    winner: str | None = Field(description="Variant ID of the winner, if determined")
+    p_value: float | None = Field(description="Statistical significance p-value")
     confidence_level: float = Field(default=0.95, description="Confidence level for analysis")
     is_significant: bool = Field(description="Whether results are statistically significant")
     recommendation: str = Field(description="Recommendation based on results")
@@ -89,14 +90,14 @@ class UserSegment(BaseModel):
     user_count: int
     percentage: float
     avg_engagement: float = Field(description="Average engagement score")
-    characteristics: Dict[str, Any] = Field(description="Segment characteristics")
+    characteristics: dict[str, Any] = Field(description="Segment characteristics")
 
 
 class UserSegments(BaseModel):
     """User segmentation analysis"""
 
     total_users: int
-    segments: List[UserSegment]
+    segments: list[UserSegment]
     segmentation_method: str = Field(description="Method used for segmentation")
     last_updated: datetime
 
@@ -110,7 +111,7 @@ class FunnelStep(BaseModel):
     users_completed: int
     completion_rate: float
     drop_off_rate: float
-    avg_time_to_next_step: Optional[float] = Field(description="Average time to next step in seconds")
+    avg_time_to_next_step: float | None = Field(description="Average time to next step in seconds")
 
 
 class FunnelData(BaseModel):
@@ -118,11 +119,11 @@ class FunnelData(BaseModel):
 
     funnel_name: str
     description: str
-    steps: List[FunnelStep]
+    steps: list[FunnelStep]
     overall_conversion_rate: float
     total_users: int
     completed_users: int
-    avg_completion_time: Optional[float] = Field(description="Average time to complete funnel in seconds")
+    avg_completion_time: float | None = Field(description="Average time to complete funnel in seconds")
 
 
 class DashboardData(BaseModel):
@@ -132,6 +133,6 @@ class DashboardData(BaseModel):
     time_range: str
     usage_trends: UsageTrends
     feature_adoption: FeatureAdoption
-    experiments: List[ExperimentResults]
+    experiments: list[ExperimentResults]
     user_segments: UserSegments
-    funnels: Dict[str, FunnelData] = Field(description="Key funnels by name")
+    funnels: dict[str, FunnelData] = Field(description="Key funnels by name")

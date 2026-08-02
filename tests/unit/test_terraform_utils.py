@@ -1,7 +1,9 @@
 # tests/unit/test_terraform_utils.py
 
-from hypothesis import given, strategies as st
-from tests.unit.terraform_utils import validate_environment_name, create_cluster_config
+from hypothesis import given
+from hypothesis import strategies as st
+
+from tests.unit.terraform_utils import create_cluster_config, validate_environment_name
 
 
 def test_validate_environment_name():

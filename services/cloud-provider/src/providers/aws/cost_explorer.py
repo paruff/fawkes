@@ -1,15 +1,15 @@
 """AWS Cost Explorer operations."""
 
 import logging
-from typing import Dict, Any, Optional
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, Optional
 
 import boto3
 from botocore.exceptions import ClientError
 
-from ...interfaces.models import CostData
 from ...exceptions import CloudProviderError, ValidationError
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import CostData
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ class CostExplorerService:
         "LAST_MONTH": "LAST_MONTH",
     }
 
-    def __init__(self, session: boto3.Session, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, session: boto3.Session, rate_limiter: RateLimiter | None = None):
         """
         Initialize Cost Explorer service.
 
@@ -47,7 +47,7 @@ class CostExplorerService:
             logger.debug("Created Cost Explorer client")
         return self._client
 
-    def _calculate_time_period(self, timeframe: str) -> Dict[str, str]:
+    def _calculate_time_period(self, timeframe: str) -> dict[str, str]:
         """
         Calculate start and end dates for timeframe.
 
@@ -57,7 +57,7 @@ class CostExplorerService:
         Returns:
             Dictionary with 'Start' and 'End' dates in YYYY-MM-DD format
         """
-        today = datetime.utcnow().date()
+        today = datetime.now(timezone.utc).date()
 
         if timeframe == "THIS_MONTH":
             start_date = today.replace(day=1)
@@ -133,8 +133,8 @@ class CostExplorerService:
                         breakdown[service] = cost
 
             # Parse dates
-            start_date = datetime.strptime(time_period["Start"], "%Y-%m-%d")
-            end_date = datetime.strptime(time_period["End"], "%Y-%m-%d")
+            start_date = datetime.strptime(time_period["Start"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            end_date = datetime.strptime(time_period["End"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
 
             logger.info(f"✅ Retrieved cost data: ${total_cost:.2f} total")
 
@@ -161,7 +161,7 @@ class CostExplorerService:
                 raise CloudProviderError(f"Failed to get cost data: {error_msg}", provider="aws", error_code=error_code)
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(ClientError,))
-    def get_cost_forecast(self, days: int = 30) -> Dict[str, Any]:
+    def get_cost_forecast(self, days: int = 30) -> dict[str, Any]:
         """
         Get cost forecast for specified number of days.
 
@@ -179,7 +179,7 @@ class CostExplorerService:
         try:
             client = self._get_client()
 
-            today = datetime.utcnow().date()
+            today = datetime.now(timezone.utc).date()
             start_date = today + timedelta(days=1)  # Forecast starts tomorrow
             end_date = today + timedelta(days=days)
 

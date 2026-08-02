@@ -2,9 +2,9 @@
 BDD step definitions for health checks
 """
 
-from behave import when, then
-from fastapi.testclient import TestClient
 from app.main import app
+from behave import then, when
+from fastapi.testclient import TestClient
 
 client = TestClient(app)
 

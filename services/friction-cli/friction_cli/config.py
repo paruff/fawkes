@@ -1,11 +1,14 @@
 """Configuration management for Friction CLI."""
 
+import logging
 import os
 from pathlib import Path
 from typing import Optional
 
 import yaml
 from pydantic import BaseModel, Field
+
+logger = logging.getLogger(__name__)
 
 
 class FrictionConfig(BaseModel):
@@ -15,7 +18,7 @@ class FrictionConfig(BaseModel):
         default="http://insights-service.fawkes.svc.cluster.local:8000",
         description="URL of the insights API service",
     )
-    api_key: Optional[str] = Field(
+    api_key: str | None = Field(
         default=None,
         description="API key for authentication (if required)",
     )
@@ -27,7 +30,7 @@ class FrictionConfig(BaseModel):
         default="medium",
         description="Default priority for friction logs",
     )
-    author: Optional[str] = Field(
+    author: str | None = Field(
         default=None,
         description="Default author name (uses git config if not set)",
     )
@@ -36,7 +39,7 @@ class FrictionConfig(BaseModel):
 class ConfigManager:
     """Manages configuration for Friction CLI."""
 
-    def __init__(self, config_path: Optional[Path] = None):
+    def __init__(self, config_path: Path | None = None):
         """Initialize config manager.
 
         Args:
@@ -45,7 +48,7 @@ class ConfigManager:
         if config_path is None:
             config_path = Path.home() / ".friction" / "config.yaml"
         self.config_path = config_path
-        self._config: Optional[FrictionConfig] = None
+        self._config: FrictionConfig | None = None
 
     def load(self) -> FrictionConfig:
         """Load configuration from file or environment."""
@@ -78,7 +81,7 @@ class ConfigManager:
                 if result.returncode == 0:
                     config_data["author"] = result.stdout.strip()
             except Exception:
-                pass
+                logger.debug("Could not determine author from git config", exc_info=True)
 
         self._config = FrictionConfig(**config_data)
         return self._config
