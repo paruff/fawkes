@@ -120,6 +120,7 @@ def step_then_change_reflected_in_deployment(context):
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         # Check if deployment was generated
@@ -186,6 +187,7 @@ def step_when_score_deployed_to_env(context, environment):
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         context.deployment_result = result
@@ -262,6 +264,7 @@ def step_when_score_transformer_processes(context):
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         context.transformation_result = result

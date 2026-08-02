@@ -119,8 +119,7 @@ class GCPProvider(CloudProvider):
                 logger.info(f"Authenticated for project: {project.display_name} ({project.project_id})")
             except gcp_exceptions.NotFound:
                 logger.warning(
-                    f"Project {self.project_id} not found or no access. "
-                    "Continuing anyway - some operations may fail."
+                    f"Project {self.project_id} not found or no access. Continuing anyway - some operations may fail."
                 )
             except Exception as e:
                 logger.warning(f"Could not verify project access: {e!s}. Continuing anyway.")
@@ -281,9 +280,7 @@ class GCPProvider(CloudProvider):
         """Get database details."""
         return self.cloudsql.get_database(database_id, region)
 
-    def delete_database(
-        self, database_id: str, region: str | None = None, skip_final_snapshot: bool = False
-    ) -> bool:
+    def delete_database(self, database_id: str, region: str | None = None, skip_final_snapshot: bool = False) -> bool:
         """Delete a database instance."""
         return self.cloudsql.delete_database(database_id, region, skip_final_snapshot)
 

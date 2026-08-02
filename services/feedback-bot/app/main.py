@@ -8,7 +8,7 @@ with natural language processing, sentiment analysis, and auto-categorization.
 import logging
 import os
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
 import httpx
@@ -179,7 +179,11 @@ def parse_feedback(text: str, user_name: str, user_email: str) -> dict[str, Any]
         "page_url": None,  # Not available from Mattermost
         "sentiment": sentiment_result["sentiment"],
         "sentiment_compound": sentiment_result["compound"],
-        "metadata": {"source": "mattermost", "user_name": user_name, "processed_at": datetime.utcnow().isoformat()},
+        "metadata": {
+            "source": "mattermost",
+            "user_name": user_name,
+            "processed_at": datetime.now(timezone.utc).isoformat(),
+        },
     }
 
 
@@ -296,10 +300,10 @@ Just tell me what you think, and I'll handle the rest! 🎯
 > {text}
 
 **My analysis:**
-• **Sentiment:** {feedback_data['sentiment'].title()} {emoji}
-• **Category:** {feedback_data['category']}
-• **Rating:** {'⭐' * feedback_data['rating']} ({feedback_data['rating']}/5)
-• **ID:** #{result.get('id', 'unknown')}
+• **Sentiment:** {feedback_data["sentiment"].title()} {emoji}
+• **Category:** {feedback_data["category"]}
+• **Rating:** {"⭐" * feedback_data["rating"]} ({feedback_data["rating"]}/5)
+• **ID:** #{result.get("id", "unknown")}
 
 Thank you for helping us improve Fawkes! 🎯
 

@@ -131,9 +131,9 @@ def check_no_hardcoded_credentials(content, file_path):
 
 def validate_jcasc_file(file_path):
     """Validate a single JCasC file."""
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print(f"Validating: {file_path}")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
     # Read file content
     try:
@@ -188,9 +188,9 @@ def main():
         base_path / "platform/apps/jenkins/jenkins-casc-configmap.yaml",
     ]
 
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print("Jenkins Configuration as Code (JCasC) Validation")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
     all_passed = True
     for file_path in jcasc_files:
@@ -200,14 +200,14 @@ def main():
         else:
             print(f"⚠️  File not found: {file_path}")
 
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     if all_passed:
         print("✅ All JCasC validations PASSED")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
         return 0
     else:
         print("❌ Some JCasC validations FAILED")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
         return 1
 
 

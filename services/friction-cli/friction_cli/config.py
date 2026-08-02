@@ -1,11 +1,14 @@
 """Configuration management for Friction CLI."""
 
+import logging
 import os
 from pathlib import Path
 from typing import Optional
 
 import yaml
 from pydantic import BaseModel, Field
+
+logger = logging.getLogger(__name__)
 
 
 class FrictionConfig(BaseModel):
@@ -78,7 +81,7 @@ class ConfigManager:
                 if result.returncode == 0:
                     config_data["author"] = result.stdout.strip()
             except Exception:
-                pass
+                logger.debug("Could not determine author from git config", exc_info=True)
 
         self._config = FrictionConfig(**config_data)
         return self._config

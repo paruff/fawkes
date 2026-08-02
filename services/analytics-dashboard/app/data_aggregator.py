@@ -2,7 +2,7 @@
 
 import asyncio
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
 
 import httpx
@@ -162,8 +162,8 @@ class DataAggregator:
     async def get_usage_trends(self, time_range: str) -> UsageTrends:
         """Get usage trends from Plausible"""
         cache_key = f"usage_trends_{time_range}"
-        if cache_key in self._cache and datetime.utcnow() - self._cache_timestamp.get(
-            cache_key, datetime.min
+        if cache_key in self._cache and datetime.now(timezone.utc) - self._cache_timestamp.get(
+            cache_key, datetime.min.replace(tzinfo=timezone.utc)
         ) < timedelta(minutes=5):
             return self._cache[cache_key]
 
@@ -171,7 +171,7 @@ class DataAggregator:
 
         # Generate time series data (mock for now)
         delta = self._parse_time_range(time_range)
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         time_series = []
         for i in range(20):
             ts = now - delta + (delta / 20) * i
@@ -205,7 +205,7 @@ class DataAggregator:
         )
 
         self._cache[cache_key] = usage_trends
-        self._cache_timestamp[cache_key] = datetime.utcnow()
+        self._cache_timestamp[cache_key] = datetime.now(timezone.utc)
         return usage_trends
 
     async def get_feature_adoption(self, time_range: str) -> FeatureAdoption:
@@ -239,7 +239,7 @@ class DataAggregator:
 
         # Generate adoption trend
         delta = self._parse_time_range(time_range)
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         adoption_trend = []
         for i in range(15):
             ts = now - delta + (delta / 15) * i
@@ -342,7 +342,7 @@ class DataAggregator:
             total_users=sum(s.user_count for s in segments),
             segments=segments,
             segmentation_method="behavioral",
-            last_updated=datetime.utcnow(),
+            last_updated=datetime.now(timezone.utc),
         )
 
     async def get_funnel_data(self, funnel_name: str, time_range: str) -> FunnelData:
@@ -515,8 +515,8 @@ class DataAggregator:
     async def get_dashboard_data(self, time_range: str) -> DashboardData:
         """Get complete dashboard data"""
         cache_key = f"dashboard_{time_range}"
-        if cache_key in self._cache and datetime.utcnow() - self._cache_timestamp.get(
-            cache_key, datetime.min
+        if cache_key in self._cache and datetime.now(timezone.utc) - self._cache_timestamp.get(
+            cache_key, datetime.min.replace(tzinfo=timezone.utc)
         ) < timedelta(minutes=5):
             return self._cache[cache_key]
 
@@ -543,7 +543,7 @@ class DataAggregator:
         )
 
         self._cache[cache_key] = dashboard
-        self._cache_timestamp[cache_key] = datetime.utcnow()
+        self._cache_timestamp[cache_key] = datetime.now(timezone.utc)
         return dashboard
 
     async def export_data(self, format: str, time_range: str) -> dict:

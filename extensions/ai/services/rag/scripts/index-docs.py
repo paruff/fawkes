@@ -31,7 +31,7 @@ import argparse
 import hashlib
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional, Tuple
 
@@ -436,7 +436,7 @@ def index_file(
 
     # Index chunks
     indexed_count = 0
-    timestamp = datetime.utcnow().isoformat() + "Z"
+    timestamp = datetime.now(timezone.utc).isoformat() + "Z"
 
     try:
         with client.batch as batch:

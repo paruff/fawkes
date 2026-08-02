@@ -44,9 +44,9 @@ def test_limitrange_applied():
 def test_resourcequota_applied():
     out = subprocess.check_output(["kubectl", "get", "resourcequota", "-n", "fawkes", "-o", "json"])
     data = json.loads(out)
-    assert any(
-        item["metadata"]["name"].startswith("fawkes-") for item in data.get("items", [])
-    ), "ResourceQuota missing"
+    assert any(item["metadata"]["name"].startswith("fawkes-") for item in data.get("items", [])), (
+        "ResourceQuota missing"
+    )
 
 
 @pytest.mark.smoke

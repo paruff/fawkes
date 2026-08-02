@@ -187,7 +187,7 @@ async def _attach_screenshot_to_issue(
         )
 
         if response.status_code not in [200, 201]:
-            logger.warning(f"Failed to add screenshot comment to issue #{issue_number}: " f"{response.status_code}")
+            logger.warning(f"Failed to add screenshot comment to issue #{issue_number}: {response.status_code}")
             return False
 
         logger.info(f"✅ Added screenshot note to GitHub issue #{issue_number}")
@@ -277,7 +277,7 @@ async def update_issue_status(issue_url: str, new_status: str, feedback_id: int)
                 timeout=30.0,
             )
 
-            logger.info(f"✅ Updated GitHub issue #{issue_number} to {github_state} " f"for feedback ID {feedback_id}")
+            logger.info(f"✅ Updated GitHub issue #{issue_number} to {github_state} for feedback ID {feedback_id}")
             return True, None
 
     except Exception as e:

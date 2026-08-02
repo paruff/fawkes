@@ -2,7 +2,7 @@
 Unit tests for DevEx Survey Automation main application
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -125,7 +125,7 @@ def test_campaign_response_model():
         type="pulse",
         period="W50",
         year=2024,
-        started_at=datetime.now(),
+        started_at=datetime.now(timezone.utc),
         completed_at=None,
         total_sent=100,
         total_responses=65,

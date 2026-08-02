@@ -356,7 +356,7 @@ def step_sonarqube_analyzes(context):
     try:
         # Check if SonarQube is deployed
         result = subprocess.run(
-            ["kubectl", "get", "deployment", "sonarqube", "-n", "fawkes"], capture_output=True, text=True
+            ["kubectl", "get", "deployment", "sonarqube", "-n", "fawkes"], capture_output=True, text=True, check=False
         )
         if result.returncode == 0:
             context.test.log("✓ SonarQube is deployed")

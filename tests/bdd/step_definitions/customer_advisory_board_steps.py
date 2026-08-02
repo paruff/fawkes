@@ -149,49 +149,49 @@ def step_file_should_exist(context, filepath):
 @then("the charter should define board composition")
 def step_charter_defines_composition(context):
     """Check charter has board composition section"""
-    assert check_section_in_content(
-        context.charter_content, "Board Composition"
-    ), "Charter should have Board Composition section"
+    assert check_section_in_content(context.charter_content, "Board Composition"), (
+        "Charter should have Board Composition section"
+    )
 
 
 @then("the charter should define member criteria")
 def step_charter_defines_criteria(context):
     """Check charter has member criteria"""
-    assert check_section_in_content(
-        context.charter_content, "Member Criteria"
-    ), "Charter should have Member Criteria section"
+    assert check_section_in_content(context.charter_content, "Member Criteria"), (
+        "Charter should have Member Criteria section"
+    )
 
 
 @then("the charter should define membership process")
 def step_charter_defines_process(context):
     """Check charter has membership process"""
-    assert check_section_in_content(
-        context.charter_content, "Membership Process"
-    ), "Charter should have Membership Process section"
+    assert check_section_in_content(context.charter_content, "Membership Process"), (
+        "Charter should have Membership Process section"
+    )
 
 
 @then("the charter should define meeting cadence")
 def step_charter_defines_cadence(context):
     """Check charter has meeting cadence"""
-    assert check_section_in_content(
-        context.charter_content, "Meeting Cadence"
-    ), "Charter should have Meeting Cadence section"
+    assert check_section_in_content(context.charter_content, "Meeting Cadence"), (
+        "Charter should have Meeting Cadence section"
+    )
 
 
 @then("the charter should define feedback process")
 def step_charter_defines_feedback(context):
     """Check charter has feedback process"""
-    assert check_section_in_content(
-        context.charter_content, "Feedback Process"
-    ), "Charter should have Feedback Process section"
+    assert check_section_in_content(context.charter_content, "Feedback Process"), (
+        "Charter should have Feedback Process section"
+    )
 
 
 @then("the charter should define communication channels")
 def step_charter_defines_channels(context):
     """Check charter has communication channels"""
-    assert check_section_in_content(
-        context.charter_content, "Communication Channels"
-    ), "Charter should have Communication Channels section"
+    assert check_section_in_content(context.charter_content, "Communication Channels"), (
+        "Charter should have Communication Channels section"
+    )
 
 
 # Template content checks
@@ -204,25 +204,25 @@ def step_nomination_has_info(context):
 @then("the nomination template should include Fawkes experience")
 def step_nomination_has_experience(context):
     """Check nomination template has Fawkes experience section"""
-    assert (
-        "Fawkes Experience" in context.nomination_content
-    ), "Nomination template should include Fawkes experience section"
+    assert "Fawkes Experience" in context.nomination_content, (
+        "Nomination template should include Fawkes experience section"
+    )
 
 
 @then("the nomination template should include qualifications")
 def step_nomination_has_qualifications(context):
     """Check nomination template has qualifications"""
-    assert (
-        "Background and Qualifications" in context.nomination_content
-    ), "Nomination template should include qualifications section"
+    assert "Background and Qualifications" in context.nomination_content, (
+        "Nomination template should include qualifications section"
+    )
 
 
 @then("the nomination template should include community involvement")
 def step_nomination_has_community(context):
     """Check nomination template has community involvement"""
-    assert (
-        "Community Involvement" in context.nomination_content
-    ), "Nomination template should include community involvement section"
+    assert "Community Involvement" in context.nomination_content, (
+        "Nomination template should include community involvement section"
+    )
 
 
 @then("the meeting template should include agenda sections")
@@ -246,9 +246,9 @@ def step_meeting_has_actions(context):
 @then("the meeting template should include notes section")
 def step_meeting_has_notes(context):
     """Check meeting template has notes section"""
-    assert (
-        "Notes" in context.meeting_content or "Meeting Notes" in context.meeting_content
-    ), "Meeting template should include notes section"
+    assert "Notes" in context.meeting_content or "Meeting Notes" in context.meeting_content, (
+        "Meeting template should include notes section"
+    )
 
 
 @then("the feedback form should include relevance assessment")
@@ -285,50 +285,50 @@ def step_welcome_has_time_commitment(context):
 @then("the welcome packet should include first steps checklist")
 def step_welcome_has_checklist(context):
     """Check welcome packet has first steps checklist"""
-    assert (
-        "First Steps" in context.welcome_packet_content or "Checklist" in context.welcome_packet_content
-    ), "Welcome packet should include first steps checklist"
+    assert "First Steps" in context.welcome_packet_content or "Checklist" in context.welcome_packet_content, (
+        "Welcome packet should include first steps checklist"
+    )
 
 
 @then("the welcome packet should include communication channels")
 def step_welcome_has_channels(context):
     """Check welcome packet has communication channels"""
-    assert (
-        "Communication Channels" in context.welcome_packet_content
-    ), "Welcome packet should include communication channels"
+    assert "Communication Channels" in context.welcome_packet_content, (
+        "Welcome packet should include communication channels"
+    )
 
 
 @then("the welcome packet should include meeting schedule")
 def step_welcome_has_schedule(context):
     """Check welcome packet has meeting schedule"""
-    assert (
-        "Meeting Schedule" in context.welcome_packet_content or "Quarterly" in context.welcome_packet_content
-    ), "Welcome packet should include meeting schedule"
+    assert "Meeting Schedule" in context.welcome_packet_content or "Quarterly" in context.welcome_packet_content, (
+        "Welcome packet should include meeting schedule"
+    )
 
 
 @then("the welcome packet should include how to provide feedback")
 def step_welcome_has_feedback_process(context):
     """Check welcome packet has feedback process"""
-    assert (
-        "Provide Feedback" in context.welcome_packet_content or "How to" in context.welcome_packet_content
-    ), "Welcome packet should include how to provide feedback"
+    assert "Provide Feedback" in context.welcome_packet_content or "How to" in context.welcome_packet_content, (
+        "Welcome packet should include how to provide feedback"
+    )
 
 
 # Member directory checks
 @then("the member directory should indicate recruitment status")
 def step_directory_has_status(context):
     """Check directory has recruitment status"""
-    assert (
-        "Forming" in context.member_directory_content or "Recruiting" in context.member_directory_content
-    ), "Member directory should indicate recruitment status"
+    assert "Forming" in context.member_directory_content or "Recruiting" in context.member_directory_content, (
+        "Member directory should indicate recruitment status"
+    )
 
 
 @then("the member directory should include how to join section")
 def step_directory_has_join_info(context):
     """Check directory has how to join info"""
-    assert (
-        "How to Join" in context.member_directory_content or "Apply" in context.member_directory_content
-    ), "Member directory should include how to join section"
+    assert "How to Join" in context.member_directory_content or "Apply" in context.member_directory_content, (
+        "Member directory should include how to join section"
+    )
 
 
 @then("the member directory should have template for member profiles")
@@ -343,33 +343,33 @@ def step_directory_has_template(context):
 @then("the guide should include pre-meeting checklist")
 def step_guide_has_pre_meeting(context):
     """Check guide has pre-meeting checklist"""
-    assert (
-        "Pre-Meeting" in context.howto_guide_content or "Before" in context.howto_guide_content
-    ), "Guide should include pre-meeting checklist"
+    assert "Pre-Meeting" in context.howto_guide_content or "Before" in context.howto_guide_content, (
+        "Guide should include pre-meeting checklist"
+    )
 
 
 @then("the guide should include during-meeting facilitation tips")
 def step_guide_has_during_meeting(context):
     """Check guide has during-meeting tips"""
-    assert (
-        "During Meeting" in context.howto_guide_content or "Facilitat" in context.howto_guide_content
-    ), "Guide should include during-meeting facilitation tips"
+    assert "During Meeting" in context.howto_guide_content or "Facilitat" in context.howto_guide_content, (
+        "Guide should include during-meeting facilitation tips"
+    )
 
 
 @then("the guide should include post-meeting follow-up steps")
 def step_guide_has_post_meeting(context):
     """Check guide has post-meeting follow-up"""
-    assert (
-        "Post-Meeting" in context.howto_guide_content or "Follow" in context.howto_guide_content
-    ), "Guide should include post-meeting follow-up steps"
+    assert "Post-Meeting" in context.howto_guide_content or "Follow" in context.howto_guide_content, (
+        "Guide should include post-meeting follow-up steps"
+    )
 
 
 @then("the guide should include facilitator best practices")
 def step_guide_has_best_practices(context):
     """Check guide has best practices"""
-    assert (
-        "Best Practices" in context.howto_guide_content or "Tips" in context.howto_guide_content
-    ), "Guide should include facilitator best practices"
+    assert "Best Practices" in context.howto_guide_content or "Tips" in context.howto_guide_content, (
+        "Guide should include facilitator best practices"
+    )
 
 
 # Detailed charter checks
@@ -388,25 +388,25 @@ def step_target_size(context):
 @then("member criteria should include active Fawkes usage")
 def step_criteria_active_usage(context):
     """Check active usage criterion"""
-    assert (
-        "Active Fawkes user" in context.charter_content or "active user" in context.charter_content.lower()
-    ), "Member criteria should include active Fawkes usage"
+    assert "Active Fawkes user" in context.charter_content or "active user" in context.charter_content.lower(), (
+        "Member criteria should include active Fawkes usage"
+    )
 
 
 @then("member criteria should include production or staging deployment")
 def step_criteria_deployment(context):
     """Check deployment criterion"""
-    assert (
-        "production" in context.charter_content.lower() and "staging" in context.charter_content.lower()
-    ), "Member criteria should include production or staging deployment"
+    assert "production" in context.charter_content.lower() and "staging" in context.charter_content.lower(), (
+        "Member criteria should include production or staging deployment"
+    )
 
 
 @then("member criteria should include leadership role requirement")
 def step_criteria_leadership(context):
     """Check leadership criterion"""
-    assert (
-        "leadership" in context.charter_content.lower() or "lead" in context.charter_content.lower()
-    ), "Member criteria should include leadership role requirement"
+    assert "leadership" in context.charter_content.lower() or "lead" in context.charter_content.lower(), (
+        "Member criteria should include leadership role requirement"
+    )
 
 
 @then("member criteria should include time commitment")
@@ -420,25 +420,25 @@ def step_criteria_time(context):
 @then("the composition should aim for diversity in organization size")
 def step_diversity_org_size(context):
     """Check organization size diversity"""
-    assert (
-        "organization size" in context.charter_content.lower() or "startup" in context.charter_content.lower()
-    ), "Composition should aim for diversity in organization size"
+    assert "organization size" in context.charter_content.lower() or "startup" in context.charter_content.lower(), (
+        "Composition should aim for diversity in organization size"
+    )
 
 
 @then("the composition should aim for diversity in industries")
 def step_diversity_industries(context):
     """Check industry diversity"""
-    assert (
-        "industr" in context.charter_content.lower() or "vertical" in context.charter_content.lower()
-    ), "Composition should aim for diversity in industries"
+    assert "industr" in context.charter_content.lower() or "vertical" in context.charter_content.lower(), (
+        "Composition should aim for diversity in industries"
+    )
 
 
 @then("the composition should aim for diversity in geographic regions")
 def step_diversity_geography(context):
     """Check geographic diversity"""
-    assert (
-        "geographic" in context.charter_content.lower() or "region" in context.charter_content.lower()
-    ), "Composition should aim for diversity in geographic regions"
+    assert "geographic" in context.charter_content.lower() or "region" in context.charter_content.lower(), (
+        "Composition should aim for diversity in geographic regions"
+    )
 
 
 # Process checks
@@ -477,9 +477,9 @@ def step_process_community_nomination(context):
 @then("the process should include review and selection criteria")
 def step_process_review(context):
     """Check review and selection"""
-    assert (
-        "review" in context.charter_content.lower() and "selection" in context.charter_content.lower()
-    ), "Process should include review and selection criteria"
+    assert "review" in context.charter_content.lower() and "selection" in context.charter_content.lower(), (
+        "Process should include review and selection criteria"
+    )
 
 
 @then("the process should include onboarding procedures")
@@ -491,17 +491,17 @@ def step_process_onboarding(context):
 @then("the process should include term length definition")
 def step_process_term_length(context):
     """Check term length definition"""
-    assert (
-        "term" in context.charter_content.lower() and "months" in context.charter_content.lower()
-    ), "Process should include term length definition"
+    assert "term" in context.charter_content.lower() and "months" in context.charter_content.lower(), (
+        "Process should include term length definition"
+    )
 
 
 @then("the process should include renewal process")
 def step_process_renewal(context):
     """Check renewal process"""
-    assert (
-        "renewal" in context.charter_content.lower() or "renew" in context.charter_content.lower()
-    ), "Process should include renewal process"
+    assert "renewal" in context.charter_content.lower() or "renew" in context.charter_content.lower(), (
+        "Process should include renewal process"
+    )
 
 
 # Meeting cadence checks
@@ -520,25 +520,25 @@ def step_quarterly_meetings(context):
 @then("the meeting duration should be 2 hours")
 def step_meeting_duration(context):
     """Check meeting duration"""
-    assert (
-        "2 hours" in context.charter_content.lower() or "2 hour" in context.charter_content.lower()
-    ), "Meeting duration should be 2 hours"
+    assert "2 hours" in context.charter_content.lower() or "2 hour" in context.charter_content.lower(), (
+        "Meeting duration should be 2 hours"
+    )
 
 
 @then("the meeting format should be virtual")
 def step_meeting_format(context):
     """Check meeting format"""
-    assert (
-        "virtual" in context.charter_content.lower() or "video" in context.charter_content.lower()
-    ), "Meeting format should be virtual"
+    assert "virtual" in context.charter_content.lower() or "video" in context.charter_content.lower(), (
+        "Meeting format should be virtual"
+    )
 
 
 @then("the typical agenda should include platform updates")
 def step_agenda_platform_updates(context):
     """Check agenda includes platform updates"""
-    assert (
-        "platform updates" in context.charter_content.lower() or "progress" in context.charter_content.lower()
-    ), "Agenda should include platform updates"
+    assert "platform updates" in context.charter_content.lower() or "progress" in context.charter_content.lower(), (
+        "Agenda should include platform updates"
+    )
 
 
 @then("the typical agenda should include roadmap review")
@@ -550,9 +550,9 @@ def step_agenda_roadmap(context):
 @then("the typical agenda should include member feedback")
 def step_agenda_feedback(context):
     """Check agenda includes member feedback"""
-    assert (
-        "member feedback" in context.charter_content.lower() or "feedback" in context.charter_content.lower()
-    ), "Agenda should include member feedback"
+    assert "member feedback" in context.charter_content.lower() or "feedback" in context.charter_content.lower(), (
+        "Agenda should include member feedback"
+    )
 
 
 @then("the typical agenda should include deep dive topic")
@@ -564,9 +564,9 @@ def step_agenda_deep_dive(context):
 @then("ad-hoc touchpoints should be defined")
 def step_adhoc_touchpoints(context):
     """Check ad-hoc touchpoints"""
-    assert (
-        "ad-hoc" in context.charter_content.lower() or "as needed" in context.charter_content.lower()
-    ), "Ad-hoc touchpoints should be defined"
+    assert "ad-hoc" in context.charter_content.lower() or "as needed" in context.charter_content.lower(), (
+        "Ad-hoc touchpoints should be defined"
+    )
 
 
 # Feedback process checks
@@ -585,17 +585,17 @@ def step_input_quarterly(context):
 @then("input mechanisms should include async channel")
 def step_input_async(context):
     """Check async channel as input mechanism"""
-    assert (
-        "async" in context.charter_content.lower() or "asynchronous" in context.charter_content.lower()
-    ), "Input mechanisms should include async channel"
+    assert "async" in context.charter_content.lower() or "asynchronous" in context.charter_content.lower(), (
+        "Input mechanisms should include async channel"
+    )
 
 
 @then("input mechanisms should include surveys and polls")
 def step_input_surveys(context):
     """Check surveys and polls as input mechanism"""
-    assert (
-        "survey" in context.charter_content.lower() or "poll" in context.charter_content.lower()
-    ), "Input mechanisms should include surveys and polls"
+    assert "survey" in context.charter_content.lower() or "poll" in context.charter_content.lower(), (
+        "Input mechanisms should include surveys and polls"
+    )
 
 
 @then("input mechanisms should include early access testing")
@@ -613,17 +613,17 @@ def step_input_rfc(context):
 @then("feedback integration process should be documented")
 def step_feedback_integration(context):
     """Check feedback integration"""
-    assert (
-        "integration" in context.charter_content.lower() or "how input is used" in context.charter_content.lower()
-    ), "Feedback integration process should be documented"
+    assert "integration" in context.charter_content.lower() or "how input is used" in context.charter_content.lower(), (
+        "Feedback integration process should be documented"
+    )
 
 
 @then("feedback tracking approach should be defined")
 def step_feedback_tracking(context):
     """Check feedback tracking"""
-    assert (
-        "tracking" in context.charter_content.lower() or "github" in context.charter_content.lower()
-    ), "Feedback tracking approach should be defined"
+    assert "tracking" in context.charter_content.lower() or "github" in context.charter_content.lower(), (
+        "Feedback tracking approach should be defined"
+    )
 
 
 # Communication channels checks
@@ -636,9 +636,9 @@ def step_check_channels_section(context):
 @then("Mattermost should be designated as primary channel")
 def step_mattermost_primary(context):
     """Check Mattermost is primary"""
-    assert (
-        "mattermost" in context.charter_content.lower() and "primary" in context.charter_content.lower()
-    ), "Mattermost should be designated as primary channel"
+    assert "mattermost" in context.charter_content.lower() and "primary" in context.charter_content.lower(), (
+        "Mattermost should be designated as primary channel"
+    )
 
 
 @then('the channel name should be "cab-advisory-board"')
@@ -656,9 +656,9 @@ def step_channel_private(context):
 @then('GitHub team "@fawkes/advisory-board" should be defined')
 def step_github_team(context):
     """Check GitHub team"""
-    assert (
-        "@fawkes/advisory-board" in context.charter_content or "advisory-board" in context.charter_content.lower()
-    ), "GitHub team @fawkes/advisory-board should be defined"
+    assert "@fawkes/advisory-board" in context.charter_content or "advisory-board" in context.charter_content.lower(), (
+        "GitHub team @fawkes/advisory-board should be defined"
+    )
 
 
 @then("email communication option should be available")
@@ -670,9 +670,9 @@ def step_email_option(context):
 @then("video call platform should be identified")
 def step_video_platform(context):
     """Check video platform"""
-    assert any(
-        platform in context.charter_content.lower() for platform in ["zoom", "meet", "teams", "video"]
-    ), "Video call platform should be identified"
+    assert any(platform in context.charter_content.lower() for platform in ["zoom", "meet", "teams", "video"]), (
+        "Video call platform should be identified"
+    )
 
 
 # Mattermost setup checks
@@ -697,17 +697,17 @@ def step_channel_members_cab(context):
 @then("the channel members should include product team")
 def step_channel_members_product(context):
     """Check channel members include product team"""
-    assert (
-        "product team" in context.charter_content.lower() or "product-team" in context.charter_content.lower()
-    ), "Channel members should include product team"
+    assert "product team" in context.charter_content.lower() or "product-team" in context.charter_content.lower(), (
+        "Channel members should include product team"
+    )
 
 
 @then("the channel guidelines should be defined")
 def step_channel_guidelines(context):
     """Check channel guidelines"""
-    assert (
-        "guidelines" in context.charter_content.lower() or "rules" in context.charter_content.lower()
-    ), "Channel guidelines should be defined"
+    assert "guidelines" in context.charter_content.lower() or "rules" in context.charter_content.lower(), (
+        "Channel guidelines should be defined"
+    )
 
 
 # Recognition checks
@@ -726,17 +726,17 @@ def step_recognition_mechanisms(context):
 @then("member directory listing should be included")
 def step_recognition_directory(context):
     """Check directory listing"""
-    assert (
-        "directory" in context.charter_content.lower() or "member" in context.charter_content.lower()
-    ), "Member directory listing should be included"
+    assert "directory" in context.charter_content.lower() or "member" in context.charter_content.lower(), (
+        "Member directory listing should be included"
+    )
 
 
 @then("release note credits should be mentioned")
 def step_recognition_release_notes(context):
     """Check release note credits"""
-    assert (
-        "release note" in context.charter_content.lower() or "credit" in context.charter_content.lower()
-    ), "Release note credits should be mentioned"
+    assert "release note" in context.charter_content.lower() or "credit" in context.charter_content.lower(), (
+        "Release note credits should be mentioned"
+    )
 
 
 @then("blog post opportunities should be mentioned")
@@ -748,9 +748,9 @@ def step_recognition_blog(context):
 @then("speaking opportunities should be mentioned")
 def step_recognition_speaking(context):
     """Check speaking opportunities"""
-    assert (
-        "speaking" in context.charter_content.lower() or "talk" in context.charter_content.lower()
-    ), "Speaking opportunities should be mentioned"
+    assert "speaking" in context.charter_content.lower() or "talk" in context.charter_content.lower(), (
+        "Speaking opportunities should be mentioned"
+    )
 
 
 @then("digital badges should be offered")
@@ -775,17 +775,17 @@ def step_check_metrics_section(context):
 @then("engagement metrics should be defined")
 def step_metrics_engagement(context):
     """Check engagement metrics"""
-    assert (
-        "engagement" in context.charter_content.lower() or "attendance" in context.charter_content.lower()
-    ), "Engagement metrics should be defined"
+    assert "engagement" in context.charter_content.lower() or "attendance" in context.charter_content.lower(), (
+        "Engagement metrics should be defined"
+    )
 
 
 @then("engagement metric targets should be specified")
 def step_metrics_targets(context):
     """Check metric targets"""
-    assert (
-        "target" in context.charter_content.lower() or "%" in context.charter_content
-    ), "Engagement metric targets should be specified"
+    assert "target" in context.charter_content.lower() or "%" in context.charter_content, (
+        "Engagement metric targets should be specified"
+    )
 
 
 @then("impact metrics should be defined")
@@ -797,9 +797,9 @@ def step_metrics_impact(context):
 @then("satisfaction metrics should be defined")
 def step_metrics_satisfaction(context):
     """Check satisfaction metrics"""
-    assert (
-        "satisfaction" in context.charter_content.lower() or "survey" in context.charter_content.lower()
-    ), "Satisfaction metrics should be defined"
+    assert "satisfaction" in context.charter_content.lower() or "survey" in context.charter_content.lower(), (
+        "Satisfaction metrics should be defined"
+    )
 
 
 @then("reporting cadence should be quarterly")
@@ -853,9 +853,9 @@ def step_onboarding_roadmap(context):
 @then("channel introduction should be encouraged")
 def step_onboarding_intro(context):
     """Check channel introduction"""
-    assert (
-        "introduce" in context.welcome_packet_content.lower() or "hello" in context.welcome_packet_content.lower()
-    ), "Channel introduction should be encouraged"
+    assert "introduce" in context.welcome_packet_content.lower() or "hello" in context.welcome_packet_content.lower(), (
+        "Channel introduction should be encouraged"
+    )
 
 
 # Template completeness checks
@@ -970,25 +970,25 @@ def step_has_doc_info(context):
 @then("it should have overview section")
 def step_has_overview(context):
     """Check overview section"""
-    assert any(
-        "overview" in section.lower() for section in context.charter_sections
-    ), "Charter should have overview section"
+    assert any("overview" in section.lower() for section in context.charter_sections), (
+        "Charter should have overview section"
+    )
 
 
 @then("it should have board composition section")
 def step_has_composition(context):
     """Check board composition section"""
-    assert any(
-        "composition" in section.lower() for section in context.charter_sections
-    ), "Charter should have board composition section"
+    assert any("composition" in section.lower() for section in context.charter_sections), (
+        "Charter should have board composition section"
+    )
 
 
 @then("it should have membership process section")
 def step_has_membership_process(context):
     """Check membership process section"""
-    assert any(
-        "membership process" in section.lower() for section in context.charter_sections
-    ), "Charter should have membership process section"
+    assert any("membership process" in section.lower() for section in context.charter_sections), (
+        "Charter should have membership process section"
+    )
 
 
 @then("it should have meeting cadence section")
@@ -1010,9 +1010,9 @@ def step_has_feedback_process(context):
 @then("it should have communication channels section")
 def step_has_communication(context):
     """Check communication channels section"""
-    assert any(
-        "communication" in section.lower() for section in context.charter_sections
-    ), "Charter should have communication channels section"
+    assert any("communication" in section.lower() for section in context.charter_sections), (
+        "Charter should have communication channels section"
+    )
 
 
 @then("it should have confidentiality and IP section")
@@ -1027,9 +1027,9 @@ def step_has_confidentiality(context):
 @then("it should have recognition section")
 def step_has_recognition(context):
     """Check recognition section"""
-    assert any(
-        "recognition" in section.lower() for section in context.charter_sections
-    ), "Charter should have recognition section"
+    assert any("recognition" in section.lower() for section in context.charter_sections), (
+        "Charter should have recognition section"
+    )
 
 
 @then("it should have success metrics section")
@@ -1043,9 +1043,9 @@ def step_has_success_metrics(context):
 @then("it should have administration section")
 def step_has_administration(context):
     """Check administration section"""
-    assert any(
-        "administration" in section.lower() for section in context.charter_sections
-    ), "Charter should have administration section"
+    assert any("administration" in section.lower() for section in context.charter_sections), (
+        "Charter should have administration section"
+    )
 
 
 @then("it should have FAQs section")
@@ -1079,9 +1079,9 @@ def step_pre_meeting_documented(context):
 @then("pre-meeting should start 4-6 weeks before")
 def step_pre_meeting_timing(context):
     """Check pre-meeting timing"""
-    assert (
-        "4-6 weeks" in context.howto_guide_content or "6 weeks" in context.howto_guide_content
-    ), "Pre-meeting should start 4-6 weeks before"
+    assert "4-6 weeks" in context.howto_guide_content or "6 weeks" in context.howto_guide_content, (
+        "Pre-meeting should start 4-6 weeks before"
+    )
 
 
 @then("during-meeting facilitation should be documented")
@@ -1095,9 +1095,9 @@ def step_during_meeting_documented(context):
 @then("during-meeting should be 2 hours")
 def step_during_meeting_duration(context):
     """Check during-meeting duration"""
-    assert (
-        "2 hours" in context.howto_guide_content or "2 hour" in context.howto_guide_content
-    ), "During-meeting should be 2 hours"
+    assert "2 hours" in context.howto_guide_content or "2 hour" in context.howto_guide_content, (
+        "During-meeting should be 2 hours"
+    )
 
 
 @then("post-meeting follow-up should be documented")
@@ -1109,25 +1109,25 @@ def step_post_meeting_documented(context):
 @then("post-meeting should complete within 48 hours")
 def step_post_meeting_timing(context):
     """Check post-meeting timing"""
-    assert (
-        "48 hours" in context.howto_guide_content or "48" in context.howto_guide_content
-    ), "Post-meeting should complete within 48 hours"
+    assert "48 hours" in context.howto_guide_content or "48" in context.howto_guide_content, (
+        "Post-meeting should complete within 48 hours"
+    )
 
 
 @then("ongoing follow-up should be documented")
 def step_ongoing_documented(context):
     """Check ongoing follow-up"""
-    assert (
-        "follow-up" in context.howto_guide_content.lower() or "ongoing" in context.howto_guide_content.lower()
-    ), "Ongoing follow-up should be documented"
+    assert "follow-up" in context.howto_guide_content.lower() or "ongoing" in context.howto_guide_content.lower(), (
+        "Ongoing follow-up should be documented"
+    )
 
 
 @then("ongoing follow-up should complete within 1 month")
 def step_ongoing_timing(context):
     """Check ongoing timing"""
-    assert (
-        "1 month" in context.howto_guide_content or "month" in context.howto_guide_content
-    ), "Ongoing follow-up should complete within 1 month"
+    assert "1 month" in context.howto_guide_content or "month" in context.howto_guide_content, (
+        "Ongoing follow-up should complete within 1 month"
+    )
 
 
 # Action item tracking checks
@@ -1160,17 +1160,17 @@ def step_action_meeting_date(context):
 @then("progress updates should be posted in Mattermost")
 def step_action_mattermost_updates(context):
     """Check Mattermost updates"""
-    assert (
-        "mattermost" in context.howto_guide_content.lower() and "update" in context.howto_guide_content.lower()
-    ), "Progress updates should be posted in Mattermost"
+    assert "mattermost" in context.howto_guide_content.lower() and "update" in context.howto_guide_content.lower(), (
+        "Progress updates should be posted in Mattermost"
+    )
 
 
 @then("members should be notified of completion")
 def step_action_completion_notification(context):
     """Check completion notification"""
-    assert (
-        "notif" in context.howto_guide_content.lower() or "update" in context.howto_guide_content.lower()
-    ), "Members should be notified of completion"
+    assert "notif" in context.howto_guide_content.lower() or "update" in context.howto_guide_content.lower(), (
+        "Members should be notified of completion"
+    )
 
 
 # Recruitment status checks
@@ -1198,9 +1198,9 @@ def step_current_size_shown(context):
 @then("the target size should be shown")
 def step_target_size_shown(context):
     """Check target size"""
-    assert (
-        "target size" in context.member_directory_content.lower() or "5-7" in context.member_directory_content
-    ), "Target size should be shown"
+    assert "target size" in context.member_directory_content.lower() or "5-7" in context.member_directory_content, (
+        "Target size should be shown"
+    )
 
 
 @then("nomination instructions should be available")

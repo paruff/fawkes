@@ -68,7 +68,7 @@ class CivoProvider(CloudProvider):
 
         # Validate region
         if self.region not in self.VALID_REGIONS:
-            logger.warning(f"Region {self.region} may not be valid. " f"Valid regions: {', '.join(self.VALID_REGIONS)}")
+            logger.warning(f"Region {self.region} may not be valid. Valid regions: {', '.join(self.VALID_REGIONS)}")
 
         try:
             # Get API key from parameter, environment, or config
@@ -235,7 +235,7 @@ class CivoProvider(CloudProvider):
         Note: This is a basic implementation. For production use,
         you should query Prometheus directly from the cluster.
         """
-        logger.info(f"Getting metrics for {resource_id}: {metric_name} " f"from {start_time} to {end_time}")
+        logger.info(f"Getting metrics for {resource_id}: {metric_name} from {start_time} to {end_time}")
 
         # Civo doesn't have a centralized metrics API like CloudWatch
         # Metrics are available through Prometheus in each cluster

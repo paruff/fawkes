@@ -10,7 +10,7 @@ Routes alerts based on:
 
 import logging
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List
 
 import httpx
@@ -213,7 +213,7 @@ class AlertRouter:
                             {"title": "First Seen", "value": alert_group.get("first_seen", "Unknown"), "short": True},
                         ],
                         "footer": "Fawkes Smart Alerting",
-                        "ts": int(datetime.now().timestamp()),
+                        "ts": int(datetime.now(timezone.utc).timestamp()),
                     }
                 ]
             }

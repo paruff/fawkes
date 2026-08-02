@@ -1,6 +1,6 @@
 """Unit tests for alert correlation engine."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest.mock import AsyncMock
 
 import pytest
@@ -35,7 +35,7 @@ async def test_correlate_alerts_groups_by_service(correlator, redis_mock):
             "fingerprint": "fp1",
             "labels": {"alertname": "HighErrorRate", "service": "api-gateway", "severity": "critical"},
             "annotations": {"summary": "Error rate high"},
-            "startsAt": datetime.now().isoformat(),
+            "startsAt": datetime.now(timezone.utc).isoformat(),
             "status": "firing",
         },
         {
@@ -43,7 +43,7 @@ async def test_correlate_alerts_groups_by_service(correlator, redis_mock):
             "fingerprint": "fp2",
             "labels": {"alertname": "HighErrorRate", "service": "api-gateway", "severity": "critical"},
             "annotations": {"summary": "Error rate high"},
-            "startsAt": datetime.now().isoformat(),
+            "startsAt": datetime.now(timezone.utc).isoformat(),
             "status": "firing",
         },
     ]
@@ -64,14 +64,14 @@ async def test_correlate_alerts_separate_groups_different_services(correlator, r
             "id": "1",
             "labels": {"alertname": "HighErrorRate", "service": "service-a", "severity": "critical"},
             "annotations": {},
-            "startsAt": datetime.now().isoformat(),
+            "startsAt": datetime.now(timezone.utc).isoformat(),
             "status": "firing",
         },
         {
             "id": "2",
             "labels": {"alertname": "HighErrorRate", "service": "service-b", "severity": "critical"},
             "annotations": {},
-            "startsAt": datetime.now().isoformat(),
+            "startsAt": datetime.now(timezone.utc).isoformat(),
             "status": "firing",
         },
     ]

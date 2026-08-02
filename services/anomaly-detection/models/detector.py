@@ -9,7 +9,7 @@ Implements:
 
 import logging
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Tuple
 
 import numpy as np
@@ -111,7 +111,7 @@ async def detect_anomalies(metric_query: str, http_client) -> list:
 
     try:
         # Query Prometheus for time series data
-        end_time = datetime.now()
+        end_time = datetime.now(timezone.utc)
         start_time = end_time - timedelta(minutes=LOOKBACK_MINUTES)
 
         params = {
@@ -152,7 +152,7 @@ async def detect_anomalies(metric_query: str, http_client) -> list:
                 continue
 
             # Extract timestamps and values
-            timestamps = [datetime.fromtimestamp(v[0]) for v in values]
+            timestamps = [datetime.fromtimestamp(v[0], tz=timezone.utc) for v in values]
             metric_values = [float(v[1]) for v in values]
 
             # Run multiple detection methods

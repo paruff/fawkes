@@ -1,6 +1,6 @@
 """Unit tests for Focalboard integration."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 from app.main import app
@@ -30,8 +30,8 @@ def test_focalboard_webhook_endpoint_exists():
             "title": "Test Card",
             "boardId": "test-board",
             "status": "Backlog",
-            "createAt": int(datetime.now().timestamp() * 1000),
-            "updateAt": int(datetime.now().timestamp() * 1000),
+            "createAt": int(datetime.now(timezone.utc).timestamp() * 1000),
+            "updateAt": int(datetime.now(timezone.utc).timestamp() * 1000),
         },
         "boardId": "test-board",
         "workspaceId": "test-workspace",

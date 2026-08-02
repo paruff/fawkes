@@ -107,9 +107,7 @@ async def get_feature_adoption(time_range: str = "30d", aggregator: DataAggregat
 
 
 @app.get("/api/v1/experiment-results", response_model=list[ExperimentResults])
-async def get_experiment_results(
-    status: str | None = None, aggregator: DataAggregator = Depends(get_data_aggregator)
-):
+async def get_experiment_results(status: str | None = None, aggregator: DataAggregator = Depends(get_data_aggregator)):
     """Get experiment results with statistical analysis"""
     try:
         data = await aggregator.get_experiment_results(status)

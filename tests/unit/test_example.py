@@ -7,7 +7,7 @@ These tests validate that:
 3. Markers work as expected
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 
@@ -39,7 +39,7 @@ def test_with_dora_marker():
 @pytest.mark.unit
 def test_datetime_operations():
     """Test datetime handling."""
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     assert now.year >= 2025
 
 

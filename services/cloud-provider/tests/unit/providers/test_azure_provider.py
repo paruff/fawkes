@@ -1,6 +1,6 @@
 """Unit tests for Azure Provider."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest.mock import MagicMock, Mock, patch
 
 import pytest
@@ -885,8 +885,8 @@ class TestAzureProviderCostAndMetrics:
             provider = AzureProvider(subscription_id="test-sub-id")
 
             expected_cost_data = CostData(
-                start_date=datetime(2024, 1, 1),
-                end_date=datetime(2024, 1, 31),
+                start_date=datetime(2024, 1, 1, tzinfo=timezone.utc),
+                end_date=datetime(2024, 1, 31, tzinfo=timezone.utc),
                 total_cost=1500.75,
                 currency="USD",
                 breakdown={"Compute": 800.0, "Storage": 300.0, "Database": 400.75},

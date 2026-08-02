@@ -7,7 +7,7 @@ for Developer Experience measurement.
 
 import logging
 from contextlib import asynccontextmanager
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException
@@ -71,7 +71,7 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "space-metrics",
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -95,7 +95,7 @@ async def get_space_metrics(time_range: str | None = "30d") -> SpaceMetricsRespo
     """
     try:
         # Parse time range
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         if time_range == "24h":
             start_time = now - timedelta(hours=24)
         elif time_range == "7d":
@@ -137,7 +137,7 @@ async def get_space_metrics(time_range: str | None = "30d") -> SpaceMetricsRespo
 async def get_satisfaction_metrics(time_range: str | None = "30d"):
     """Get satisfaction dimension metrics"""
     try:
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         start_time = now - timedelta(days=30)
 
         async with get_db_session() as session:
@@ -152,7 +152,7 @@ async def get_satisfaction_metrics(time_range: str | None = "30d"):
 async def get_performance_metrics(time_range: str | None = "30d"):
     """Get performance dimension metrics"""
     try:
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         start_time = now - timedelta(days=30)
 
         async with get_db_session() as session:
@@ -167,7 +167,7 @@ async def get_performance_metrics(time_range: str | None = "30d"):
 async def get_activity_metrics(time_range: str | None = "30d"):
     """Get activity dimension metrics"""
     try:
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         start_time = now - timedelta(days=30)
 
         async with get_db_session() as session:
@@ -182,7 +182,7 @@ async def get_activity_metrics(time_range: str | None = "30d"):
 async def get_communication_metrics(time_range: str | None = "30d"):
     """Get communication dimension metrics"""
     try:
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         start_time = now - timedelta(days=30)
 
         async with get_db_session() as session:
@@ -197,7 +197,7 @@ async def get_communication_metrics(time_range: str | None = "30d"):
 async def get_efficiency_metrics(time_range: str | None = "30d"):
     """Get efficiency dimension metrics"""
     try:
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         start_time = now - timedelta(days=30)
 
         async with get_db_session() as session:
@@ -215,7 +215,7 @@ async def log_friction_incident(request: FrictionLogRequest):
         async with get_db_session() as session:
             # Create efficiency record with friction incident
             efficiency = SpaceEfficiency(
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(timezone.utc),
                 friction_incidents=1,
                 friction_details=request.dict(),
             )
@@ -239,7 +239,7 @@ async def submit_pulse_survey(request: PulseSurveyRequest):
         async with get_db_session() as session:
             # Create efficiency record with flow state and valuable work
             efficiency = SpaceEfficiency(
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(timezone.utc),
                 flow_state_days=request.flow_state_days,
                 valuable_work_percentage=request.valuable_work_percentage,
                 cognitive_load_avg=request.cognitive_load,
@@ -260,7 +260,7 @@ async def submit_pulse_survey(request: PulseSurveyRequest):
 async def get_devex_health():
     """Get overall DevEx health score"""
     try:
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         start_time = now - timedelta(days=30)
 
         async with get_db_session() as session:

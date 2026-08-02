@@ -149,8 +149,8 @@ class TestGCPProviderIntegration:
             # Clean up on error
             try:
                 gcp_provider.delete_storage(bucket_name, force=True)
-            except Exception:
-                pass
+            except Exception as cleanup_error:
+                print(f"Failed to cleanup bucket {bucket_name}: {cleanup_error!s}")
             pytest.fail(f"Storage lifecycle test failed: {e!s}")
 
     def test_get_cost_data(self, gcp_provider):

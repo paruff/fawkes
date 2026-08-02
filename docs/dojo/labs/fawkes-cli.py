@@ -24,7 +24,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Optional
 
 import click
 import yaml
@@ -274,7 +274,7 @@ def status(module: int):
 
     try:
         # Get all resources
-        result = subprocess.run(["kubectl", "get", "all", "-n", namespace], capture_output=True, text=True)
+        result = subprocess.run(["kubectl", "get", "all", "-n", namespace], capture_output=True, text=True, check=False)
 
         if result.returncode != 0:
             click.echo(f"❌ Lab not found. Start with: fawkes lab start --module {module}")
@@ -300,7 +300,7 @@ def logs(module: int, follow: bool):
         if follow:
             cmd.append("-f")
 
-        subprocess.run(cmd)
+        subprocess.run(cmd, check=False)
 
     except KeyboardInterrupt:
         click.echo("\n👋 Stopped following logs")
@@ -518,14 +518,16 @@ def status():
         click.echo("✅ Kubernetes cluster: Connected")
 
         # Check monitoring
-        result = subprocess.run(["kubectl", "get", "pods", "-n", "monitoring"], capture_output=True, text=True)
+        result = subprocess.run(
+            ["kubectl", "get", "pods", "-n", "monitoring"], capture_output=True, text=True, check=False
+        )
         if "prometheus" in result.stdout:
             click.echo("✅ Monitoring: Running")
         else:
             click.echo("⚠️  Monitoring: Not installed")
 
         # Check ArgoCD
-        result = subprocess.run(["kubectl", "get", "pods", "-n", "argocd"], capture_output=True, text=True)
+        result = subprocess.run(["kubectl", "get", "pods", "-n", "argocd"], capture_output=True, text=True, check=False)
         if "argocd-server" in result.stdout:
             click.echo("✅ ArgoCD: Running")
         else:

@@ -65,9 +65,7 @@ class EfficiencyMetrics(BaseModel):
     """Efficiency dimension metrics"""
 
     flow_state_days: float | None = Field(None, description="Days per week in flow state")
-    valuable_work_percentage: float | None = Field(
-        None, ge=0, le=100, description="Percentage time on valuable work"
-    )
+    valuable_work_percentage: float | None = Field(None, ge=0, le=100, description="Percentage time on valuable work")
     friction_incidents: int = Field(0, description="Number of friction incidents")
     context_switches: float | None = Field(None, description="Context switches per day")
     cognitive_load_avg: float | None = Field(None, ge=1, le=5, description="Average cognitive load")

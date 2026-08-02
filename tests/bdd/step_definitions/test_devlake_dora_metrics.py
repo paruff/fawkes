@@ -318,15 +318,15 @@ def no_error_shown():
 @given("DevLake correlates a commit timestamp with its ArgoCD sync completion")
 def devlake_correlates_commit():
     """Set up lead time correlation context."""
-    _ctx.incident_created_at = datetime(2024, 1, 1, 9, 0, 0)
-    _ctx.incident_restored_at = datetime(2024, 1, 1, 13, 15, 0)
+    _ctx.incident_created_at = datetime(2024, 1, 1, 9, 0, 0, tzinfo=timezone.utc)
+    _ctx.incident_restored_at = datetime(2024, 1, 1, 13, 15, 0, tzinfo=timezone.utc)
 
 
 @given("the commit was made at 09:00 and deployed at 13:15")
 def commit_at_0900_deployed_at_1315():
     """Confirm commit-to-deploy times."""
-    _ctx.incident_created_at = datetime(2024, 1, 1, 9, 0, 0)
-    _ctx.incident_restored_at = datetime(2024, 1, 1, 13, 15, 0)
+    _ctx.incident_created_at = datetime(2024, 1, 1, 9, 0, 0, tzinfo=timezone.utc)
+    _ctx.incident_restored_at = datetime(2024, 1, 1, 13, 15, 0, tzinfo=timezone.utc)
 
 
 @when("an Application Developer views the Lead Time for Changes metric")
@@ -416,14 +416,14 @@ def cfr_rating_indicates_level(level):
 def incident_created_at_time(time_str):
     """Set incident creation time."""
     hour, minute = map(int, time_str.split(":"))
-    _ctx.incident_created_at = datetime(2024, 1, 1, hour, minute, 0)
+    _ctx.incident_created_at = datetime(2024, 1, 1, hour, minute, 0, tzinfo=timezone.utc)
 
 
 @given(parsers.parse("a successful restore ArgoCD sync occurred at {time_str}"))
 def restore_sync_at_time(time_str):
     """Set restore time."""
     hour, minute = map(int, time_str.split(":"))
-    _ctx.incident_restored_at = datetime(2024, 1, 1, hour, minute, 0)
+    _ctx.incident_restored_at = datetime(2024, 1, 1, hour, minute, 0, tzinfo=timezone.utc)
 
 
 @when("an Application Developer views the MTTR metric")

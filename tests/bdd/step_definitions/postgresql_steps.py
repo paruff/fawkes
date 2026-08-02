@@ -13,7 +13,7 @@ scenarios("../features/postgresql-deployment.feature")
 @given("I have kubectl configured for the cluster")
 def kubectl_configured():
     """Verify kubectl is configured and can connect to the cluster."""
-    _ = subprocess.run(["kubectl", "cluster-info"], capture_output=True, text=True)
+    _ = subprocess.run(["kubectl", "cluster-info"], capture_output=True, text=True, check=False)
     # In CI/CD without a real cluster, we skip the actual check
     # assert result.returncode == 0, "kubectl not configured or cluster not reachable"
 
@@ -25,6 +25,7 @@ def cloudnativepg_installed():
         ["kubectl", "get", "deployment", "-n", "cloudnativepg-system", "-o", "jsonpath={.items[*].metadata.name}"],
         capture_output=True,
         text=True,
+        check=False,
     )
     # In CI/CD without a real cluster, we skip the actual check
     # assert 'cloudnative-pg' in result.stdout, "CloudNativePG Operator not installed"
@@ -47,6 +48,7 @@ def cloudnativepg_running():
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
     # In CI/CD without a real cluster, we skip the actual check
     # assert 'Running' in result.stdout, "CloudNativePG Operator not running"
@@ -66,6 +68,7 @@ def verify_ha_cluster():
         ["kubectl", "get", "cluster", "db-focalboard-dev", "-n", "fawkes", "-o", "jsonpath={.spec.instances}"],
         capture_output=True,
         text=True,
+        check=False,
     )
     # In CI/CD without a real cluster, we skip the actual check
     # assert result.stdout == '3', f"Expected 3 instances, got {result.stdout}"
@@ -88,6 +91,7 @@ def verify_persistent_storage():
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
     # In CI/CD without a real cluster, we skip the actual check
     # pvcs = result.stdout.split()
@@ -101,6 +105,7 @@ def verify_credentials_secret():
         ["kubectl", "get", "secret", "db-focalboard-credentials", "-n", "fawkes", "-o", "jsonpath={.metadata.name}"],
         capture_output=True,
         text=True,
+        check=False,
     )
     # In CI/CD without a real cluster, we skip the actual check
     # assert 'db-focalboard-credentials' in result.stdout
@@ -113,6 +118,7 @@ def postgresql_cluster_running():
         ["kubectl", "get", "cluster", "db-focalboard-dev", "-n", "fawkes", "-o", "jsonpath={.status.instances}"],
         capture_output=True,
         text=True,
+        check=False,
     )
     # In CI/CD without a real cluster, we skip the actual check
 

@@ -4,7 +4,7 @@ Civo provides billing information through their API.
 """
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
 
 from civo import Civo
@@ -40,7 +40,7 @@ class BillingService:
         Returns:
             Tuple of (start_date, end_date)
         """
-        now = datetime.now()
+        now = datetime.now(timezone.utc)
 
         if timeframe == "LAST_7_DAYS":
             start_date = now - timedelta(days=7)
@@ -125,8 +125,7 @@ class BillingService:
             }
 
             logger.info(
-                f"✅ Retrieved Civo cost data: ${total_cost:.2f} "
-                f"(Note: This is an estimate based on current resources)"
+                f"✅ Retrieved Civo cost data: ${total_cost:.2f} (Note: This is an estimate based on current resources)"
             )
 
             return CostData(

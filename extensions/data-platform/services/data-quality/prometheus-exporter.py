@@ -18,7 +18,7 @@ import json
 import logging
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from typing import Any, Dict
@@ -264,7 +264,7 @@ class MetricsHandler(BaseHTTPRequestHandler):
             health_data = {
                 "status": "healthy",
                 "service": "data-quality-prometheus-exporter",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
             self.write_output(json.dumps(health_data).encode())
 

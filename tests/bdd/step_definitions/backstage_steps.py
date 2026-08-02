@@ -210,9 +210,9 @@ def step_given_backstage_deployed(context):
     try:
         deployment = context.apps_api.read_namespaced_deployment(name="backstage", namespace=context.namespace)
         logger.info(f"Backstage deployment found with {deployment.status.available_replicas} replicas")
-        assert (
-            deployment.status.available_replicas and deployment.status.available_replicas > 0
-        ), "Backstage deployment has no available replicas"
+        assert deployment.status.available_replicas and deployment.status.available_replicas > 0, (
+            "Backstage deployment has no available replicas"
+        )
     except client.exceptions.ApiException as e:
         raise AssertionError(f"Backstage deployment not found: {e}")
 
@@ -380,9 +380,9 @@ def step_then_redirected_to_homepage(context):
 
         # 404 is expected when accessing callback without auth code
         # 500 would indicate configuration error
-        assert (
-            response.strip() in EXPECTED_OAUTH_REDIRECT_CODES
-        ), f"OAuth callback endpoint returned unexpected status: {response.strip()}"
+        assert response.strip() in EXPECTED_OAUTH_REDIRECT_CODES, (
+            f"OAuth callback endpoint returned unexpected status: {response.strip()}"
+        )
 
         logger.info(f"OAuth callback endpoint is configured (returned {response.strip()})")
     except Exception as e:
@@ -449,9 +449,9 @@ def step_then_request_intercepted(context):
 
     if response:
         # Should get redirect or 401/403
-        assert (
-            response.status_code in EXPECTED_AUTH_REQUIRED_CODES
-        ), f"Expected redirect or auth error, got {response.status_code}"
+        assert response.status_code in EXPECTED_AUTH_REQUIRED_CODES, (
+            f"Expected redirect or auth error, got {response.status_code}"
+        )
         logger.info("Unauthenticated request was properly intercepted")
     else:
         logger.warning("Could not verify request interception")
@@ -466,8 +466,8 @@ def step_then_redirected_to_sso(context):
         location = response.headers.get("Location", "")
         logger.info(f"Redirect location: {location}")
         # Should redirect to auth or login page
-        assert (
-            "auth" in location.lower() or "login" in location.lower()
-        ), f"Redirect location doesn't appear to be auth/login: {location}"
+        assert "auth" in location.lower() or "login" in location.lower(), (
+            f"Redirect location doesn't appear to be auth/login: {location}"
+        )
     else:
         logger.warning("Could not verify SSO redirect")

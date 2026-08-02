@@ -28,8 +28,8 @@ import hashlib
 import re
 import sys
 import time
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from datetime import datetime, timezone
+from typing import Any, Optional
 
 try:
     import requests
@@ -381,7 +381,7 @@ class BackstageIndexer:
 
         # Index sections
         indexed_count = 0
-        timestamp = datetime.utcnow().isoformat() + "Z"
+        timestamp = datetime.now(timezone.utc).isoformat() + "Z"
 
         try:
             with self.weaviate_client.batch as batch:
@@ -488,9 +488,9 @@ class BackstageIndexer:
         Args:
             force: Force re-indexing even if unchanged
         """
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print("Indexing Backstage TechDocs")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
         # Fetch catalog entities
         entities = self.fetch_catalog_entities()
@@ -564,16 +564,16 @@ class BackstageIndexer:
                 error_count += 1
 
         # Summary
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print("TechDocs Indexing Summary")
-        print(f"{'='*70}")
+        print(f"{'=' * 70}")
         print(f"Total entities: {len(entities)}")
         print(f"Entities with TechDocs: {techdocs_count}")
         print(f"Successfully indexed: {success_count}")
         print(f"Skipped (unchanged/no content): {skipped_count}")
         print(f"Errors: {error_count}")
         print(f"Total chunks indexed: {total_chunks}")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
 
 def main():
@@ -633,7 +633,7 @@ def main():
 
     elapsed_time = time.time() - start_time
 
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print(f"⏱️  Total time elapsed: {elapsed_time:.2f} seconds")
 
     if args.dry_run:
@@ -641,7 +641,7 @@ def main():
     else:
         print("✅ Indexing complete!")
 
-    print(f"{'='*70}\n")
+    print(f"{'=' * 70}\n")
 
 
 if __name__ == "__main__":

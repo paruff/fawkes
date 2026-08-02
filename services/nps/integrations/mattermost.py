@@ -11,7 +11,7 @@ This module handles:
 
 import logging
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
 
 import asyncpg
@@ -119,7 +119,7 @@ class MattermostClient:
             message = f"""
 ### :bell: Reminder: Fawkes Platform Survey
 
-Hi {user.get('first_name', 'there')}! 👋
+Hi {user.get("first_name", "there")}! 👋
 
 We noticed you haven't completed our quarterly platform survey yet. Your feedback is valuable to us!
 
@@ -137,7 +137,7 @@ Thank you for your time! 🙏
             message = f"""
 ### :clipboard: Fawkes Platform Quarterly Survey
 
-Hi {user.get('first_name', 'there')}! 👋
+Hi {user.get("first_name", "there")}! 👋
 
 We'd love to hear your thoughts on Fawkes Platform! Your feedback helps us improve and deliver better experiences.
 
@@ -221,7 +221,7 @@ async def send_surveys_to_users(
                 import secrets
 
                 token = secrets.token_urlsafe(32)
-                expires_at = datetime.now() + timedelta(days=30)
+                expires_at = datetime.now(timezone.utc) + timedelta(days=30)
 
                 await conn.execute(
                     """
@@ -257,7 +257,7 @@ async def send_reminders(db_pool: asyncpg.Pool, base_survey_url: str, bot_user_i
     client = MattermostClient()
     results = {"sent": 0, "skipped": 0}
 
-    reminder_threshold = datetime.now() - timedelta(days=REMINDER_DAYS)
+    reminder_threshold = datetime.now(timezone.utc) - timedelta(days=REMINDER_DAYS)
 
     async with db_pool.acquire() as conn:
         # Find users who need reminders

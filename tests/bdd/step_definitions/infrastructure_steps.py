@@ -19,7 +19,7 @@ def aws_credentials():
 @given("I have Terraform installed")
 def terraform_installed():
     """Verify Terraform is available"""
-    result = subprocess.run(["terraform", "--version"], capture_output=True)
+    result = subprocess.run(["terraform", "--version"], capture_output=True, check=False)
     assert result.returncode == 0, "Terraform not installed"
 
 

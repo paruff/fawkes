@@ -9,11 +9,12 @@ Supports multiple suppression types:
 - Time-based suppression
 """
 
+import asyncio
 import logging
 import os
 import re
 from datetime import datetime, timedelta
-from pathlib import Path
+from pathlib import Path, timezone
 from typing import Dict, List, Optional, Tuple
 
 import redis.asyncio as redis
@@ -51,14 +52,18 @@ class SuppressionEngine:
 
         for rule_file in rules_path.glob("*.yaml"):
             try:
-                with open(rule_file, "r") as f:
-                    rule_data = yaml.safe_load(f)
 
-                    # Add file path for tracking
-                    rule_data["file_path"] = str(rule_file)
+                def _read_rule(fp):
+                    with open(fp, "r") as f:
+                        return yaml.safe_load(f)
 
-                    self.rules.append(rule_data)
-                    logger.info(f"Loaded rule: {rule_data.get('name')} from {rule_file}")
+                rule_data = await asyncio.to_thread(_read_rule, rule_file)
+
+                # Add file path for tracking
+                rule_data["file_path"] = str(rule_file)
+
+                self.rules.append(rule_data)
+                logger.info(f"Loaded rule: {rule_data.get('name')} from {rule_file}")
             except Exception as e:
                 logger.error(f"Failed to load rule from {rule_file}: {e}")
 
@@ -86,10 +91,13 @@ class SuppressionEngine:
         ]
 
         for i, rule in enumerate(example_rules):
-            rule_file = rules_path / f"example-{i+1}.yaml"
-            with open(rule_file, "w") as f:
-                yaml.dump(rule, f, default_flow_style=False)
-            logger.info(f"Created example rule: {rule_file}")
+            rule_file = rules_path / f"example-{i + 1}.yaml"
+
+            def _write_rule(fp, data):
+                with open(fp, "w") as f:
+                    yaml.dump(data, f, default_flow_style=False)
+
+            await asyncio.to_thread(_write_rule, rule_file, rule)
 
     async def should_suppress(self, alert_group: dict) -> tuple[bool, str | None]:
         """
@@ -137,12 +145,12 @@ class SuppressionEngine:
 
         # Check if we're in a maintenance window
         try:
-            cron = croniter(schedule, datetime.now())
+            cron = croniter(schedule, datetime.now(timezone.utc))
             last_run = cron.get_prev(datetime)
 
             window_end = last_run + timedelta(seconds=duration)
 
-            if datetime.now() < window_end:
+            if datetime.now(timezone.utc) < window_end:
                 # Check if alert matches services
                 services = rule.get("services", [])
                 suppress_severity = rule.get("suppress_severity", [])
@@ -213,7 +221,7 @@ class SuppressionEngine:
         occurrences_key = f"flapping:{grouping_key}"
 
         # Get recent occurrences
-        now = datetime.now().timestamp()
+        now = datetime.now(timezone.utc).timestamp()
         window_start = now - window
 
         # Remove old occurrences
@@ -235,7 +243,7 @@ class SuppressionEngine:
                         if re.match(alert_pattern, alertname):
                             return True
                     except Exception:
-                        pass
+                        logger.warning("Silent exception caught")
             else:
                 return True
 
@@ -280,7 +288,7 @@ class SuppressionEngine:
         suppress_days = rule.get("suppress_days", [])  # e.g., ["saturday", "sunday"]
         suppress_severity = rule.get("suppress_severity", ["low", "info"])
 
-        now = datetime.now()
+        now = datetime.now(timezone.utc)
 
         # Check hour
         if suppress_hours and now.hour in suppress_hours:
