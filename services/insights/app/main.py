@@ -1,5 +1,6 @@
 """Main FastAPI application for Insights service."""
 
+import os
 import logging
 from typing import List, Optional
 
@@ -51,9 +52,13 @@ app = FastAPI(
 )
 
 # Configure CORS
+ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "https://backstage.fawkes.idp,https://insights.fawkes.idp").split(
+    ","
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,5 +1,6 @@
 """Main FastAPI application for Discovery Metrics service."""
 
+import os
 import logging
 from typing import List, Optional
 
@@ -65,9 +66,13 @@ app = FastAPI(
 )
 
 # Configure CORS
+ALLOWED_ORIGINS = os.getenv(
+    "CORS_ALLOWED_ORIGINS", "https://backstage.fawkes.idp,https://discovery-metrics.fawkes.idp"
+).split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
