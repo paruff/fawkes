@@ -332,61 +332,51 @@ jobs:
   lint-summary:
     name: Lint Summary
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ inputs.timeout-minutes }}
-    needs:
-      - detect-changes
-      - python-lint
-      - shell-lint
-      - yaml-lint
-      - typescript-lint
-      - go-lint
-    if: always()
-    outputs:
-      result: ${{ steps.outcome.outputs.result }}
-    steps:
-      - name: DORA job start
-        run: |
-          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          echo "sha:${{ github.sha }}"
-          echo "workflow:${{ github.workflow }}"
-          echo "job:${{ github.job }}"
+  timeout-minutes: ${{ inputs.timeout-minutes }}
+  needs:
+    - detect-changes
+    - python-lint
+    - shell-lint
+    - yaml-lint
+    - typescript-lint
+    - go-lint
+  if: always()
+  outputs:
+    result: ${{ steps.outcome.outputs.result }}
+  steps:
+    - name: DORA job start
+      run: |
+        echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+        echo "sha:${{ github.sha }}"
+        echo "workflow:${{ github.workflow }}"
+        echo "job:${{ github.job }}"
 
-      - name: Check all lint jobs
-        id: outcome
-        run: |
-          if [[ "${{ needs.python-lint.result }}" == "failure" ]] || \
-             [[ "${{ needs.shell-lint.result }}" == "failure" ]] || \
-             [[ "${{ needs.yaml-lint.result }}" == "failure" ]] || \
-             [[ "${{ needs.typescript-lint.result }}" == "failure" ]] || \
-             [[ "${{ needs.go-lint.result }}" == "failure" ]]; then
-            echo "result=fail" >> $GITHUB_OUTPUT
-            exit 1
-          fi
-          echo "result=pass" >> $GITHUB_OUTPUT
+    - name: Check all lint jobs
+      id: outcome
+      run: |
+        if [[ "${{ needs.python-lint.result }}" == "failure" ]] || \
+           [[ "${{ needs.shell-lint.result }}" == "failure" ]] || \
+           [[ "${{ needs.yaml-lint.result }}" == "failure" ]] || \
+           [[ "${{ needs.typescript-lint.result }}" == "failure" ]] || \
+           [[ "${{ needs.go-lint.result }}" == "failure" ]]; then
+          echo "result=fail" >> $GITHUB_OUTPUT
+          exit 1
+        fi
+        echo "result=pass" >> $GITHUB_OUTPUT
 
-      - name: Generate summary
-        if: always()
-        run: |
-echo "## Lint Results" >> $GITHUB_STEP_SUMMARY
-echo "" >> $GITHUB_STEP_SUMMARY
-echo "| Language | Status |" >> $GITHUB_STEP_SUMMARY
-echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
-python_status=$([[ "${{ needs.python-lint.result }}" == "skipped" ]] && echo "⏭️ N/A" || \
-  ([[ "${{ needs.python-lint.result }}" == "success" ]] && echo "✅ Pass" || echo "❌ Fail"))
-echo "| Python | ${python_status} |" >> $GITHUB_STEP_SUMMARY
-shell_status=$([[ "${{ needs.shell-lint.result }}" == "skipped" ]] && echo "⏭️ N/A" || \
-  ([[ "${{ needs.shell-lint.result }}" == "success" ]] && echo "✅ Pass" || echo "❌ Fail"))
-echo "| Shell | ${shell_status} |" >> $GITHUB_STEP_SUMMARY
-yaml_status=$([[ "${{ needs.yaml-lint.result }}" == "skipped" ]] && echo "⏭️ N/A" || \
-  ([[ "${{ needs.yaml-lint.result }}" == "success" ]] && echo "✅ Pass" || echo "❌ Fail"))
-echo "| YAML | ${yaml_status} |" >> $GITHUB_STEP_SUMMARY
-ts_status=$([[ "${{ needs.typescript-lint.result }}" == "skipped" ]] && echo "⏭️ N/A" || \
-  ([[ "${{ needs.typescript-lint.result }}" == "success" ]] && echo "✅ Pass" || echo "❌ Fail"))
-echo "| TypeScript | ${ts_status} |" >> $GITHUB_STEP_SUMMARY
-go_status=$([[ "${{ needs.go-lint.result }}" == "skipped" ]] && echo "⏭️ N/A" || \
-  ([[ "${{ needs.go-lint.result }}" == "success" ]] && echo "✅ Pass" || echo "❌ Fail"))
-echo "| Go | ${go_status} |" >> $GITHUB_STEP_SUMMARY
+    - name: Generate summary
+      if: always()
+      run: |
+        echo "## Lint Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Language | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Python | ${{ needs.python-lint.result == 'skipped' && '⏭️ N/A' || (needs.python-lint.result == 'success' && '✅ Pass' || '❌ Fail') }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Shell | ${{ needs.shell-lint.result == 'skipped' && '⏭️ N/A' || (needs.shell-lint.result == 'success' && '✅ Pass' || '❌ Fail') }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| YAML | ${{ needs.yaml-lint.result == 'skipped' && '⏭️ N/A' || (needs.yaml-lint.result == 'success' && '✅ Pass' || '❌ Fail') }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| TypeScript | ${{ needs.typescript-lint.result == 'skipped' && '⏭️ N/A' || (needs.typescript-lint.result == 'success' && '✅ Pass' || '❌ Fail') }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Go | ${{ needs.go-lint.result == 'skipped' && '⏭️ N/A' || (needs.go-lint.result == 'success' && '✅ Pass' || '❌ Fail') }} |" >> $GITHUB_STEP_SUMMARY
 
-      - name: DORA job finish
-        if: always()
-        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    - name: DORA job finish
+      if: always()
+      run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
