@@ -226,12 +226,4 @@ resource "azurerm_monitor_diagnostic_setting" "aks" {
       category = enabled_log.value
     }
   }
-
-  dynamic "metric" {
-    for_each = ["AllMetrics"]
-    content {
-      category = metric.value
-      enabled  = true
-    }
-  }
 }
