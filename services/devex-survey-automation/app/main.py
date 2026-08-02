@@ -3,7 +3,6 @@ FastAPI application for DevEx Survey Automation Service
 """
 
 import html
-import json
 import logging
 import secrets
 from contextlib import asynccontextmanager
@@ -739,11 +738,6 @@ async def get_nasa_tlx_page(
     task_type = html.escape(task_type)
     task_id = html.escape(task_id) if task_id else task_id
     user_id = html.escape(user_id)
-    # JSON-encode for safe embedding as JS string literals inside the <script> block below;
-    # HTML-escaping (above) sanitizes for HTML text context but not JS-string context.
-    task_type_js = json.dumps(task_type).replace("<", "\\u003c")
-    task_id_js = json.dumps(task_id).replace("<", "\\u003c") if task_id else "null"
-    user_id_js = json.dumps(user_id).replace("<", "\\u003c")
     return HTMLResponse(
         content=f"""
         <!DOCTYPE html>
@@ -918,7 +912,7 @@ async def get_nasa_tlx_page(
                 <h1>🧠 NASA-TLX Cognitive Load Assessment</h1>
                 <p class="subtitle">Help us understand your experience with platform tasks</p>
 
-                <div class="task-info">
+                <div class="task-info" id="pageContext" data-task-type="{task_type}" data-task-id="{task_id or ""}" data-user-id="{user_id}">
                     <p><strong>Task Type:</strong> <span id="taskTypeDisplay">{task_type}</span></p>
                     {f"<p><strong>Task ID:</strong> {task_id}</p>" if task_id else ""}
                 </div>
@@ -1035,6 +1029,10 @@ async def get_nasa_tlx_page(
             </div>
 
             <script>
+                // Task/user context, read from HTML-escaped data attributes rather than
+                // interpolated directly into JS syntax (avoids reflected-XSS sinks in <script>).
+                const pageContext = document.getElementById('pageContext').dataset;
+
                 // Update slider values
                 const sliders = [
                     {{'id': 'mentalDemand', 'valueId': 'mentalDemandValue'}},
@@ -1068,8 +1066,8 @@ async def get_nasa_tlx_page(
                     successMessage.style.display = 'none';
 
                     const data = {{
-                        task_type: {task_type_js},
-                        task_id: {task_id_js},
+                        task_type: pageContext.taskType,
+                        task_id: pageContext.taskId || null,
                         mental_demand: parseFloat(document.getElementById('mentalDemand').value),
                         physical_demand: parseFloat(document.getElementById('physicalDemand').value),
                         temporal_demand: parseFloat(document.getElementById('temporalDemand').value),
@@ -1081,7 +1079,7 @@ async def get_nasa_tlx_page(
                     }};
 
                     try {{
-                        const response = await fetch('/api/v1/nasa-tlx/submit?user_id=' + encodeURIComponent({user_id_js}), {{
+                        const response = await fetch('/api/v1/nasa-tlx/submit?user_id=' + encodeURIComponent(pageContext.userId), {{
                             method: 'POST',
                             headers: {{
                                 'Content-Type': 'application/json'
