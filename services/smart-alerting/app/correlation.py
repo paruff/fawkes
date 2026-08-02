@@ -12,7 +12,7 @@ import json
 import logging
 import os
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
 
 import redis.asyncio as redis
@@ -63,7 +63,7 @@ class AlertCorrelator:
                 # Update existing group
                 existing_group["alerts"].extend(grouped_alerts)
                 existing_group["count"] = len(existing_group["alerts"])
-                existing_group["last_seen"] = datetime.now().isoformat()
+                existing_group["last_seen"] = datetime.now(timezone.utc).isoformat()
 
                 # Recalculate priority
                 existing_group["priority_score"] = self._calculate_priority(existing_group["alerts"])
@@ -77,8 +77,8 @@ class AlertCorrelator:
                     "alerts": grouped_alerts,
                     "grouping_key": grouping_key,
                     "priority_score": self._calculate_priority(grouped_alerts),
-                    "first_seen": datetime.now().isoformat(),
-                    "last_seen": datetime.now().isoformat(),
+                    "first_seen": datetime.now(timezone.utc).isoformat(),
+                    "last_seen": datetime.now(timezone.utc).isoformat(),
                     "count": len(grouped_alerts),
                     "suppressed": False,
                     "suppression_reason": None,
@@ -186,7 +186,7 @@ class AlertCorrelator:
 
             # Check if group is still within time window
             last_seen = datetime.fromisoformat(group["last_seen"])
-            if datetime.now() - last_seen < self.time_window:
+            if datetime.now(timezone.utc) - last_seen < self.time_window:
                 return group
 
         return None

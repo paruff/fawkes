@@ -1,7 +1,7 @@
 """AWS S3 (Simple Storage Service) operations."""
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 
 import boto3
@@ -118,7 +118,7 @@ class S3Service:
                 region=config.region,
                 versioning_enabled=config.versioning_enabled,
                 encryption_enabled=config.encryption_enabled,
-                created_at=datetime.utcnow(),
+                created_at=datetime.now(timezone.utc),
                 metadata={"tags": config.tags, "lifecycle_rules": config.lifecycle_rules},
             )
 

@@ -4,7 +4,7 @@ Civo provides S3-compatible object storage.
 """
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from civo import Civo
@@ -80,7 +80,7 @@ class ObjectStoreService:
                 region=config.region,
                 size_bytes=0,  # Newly created
                 object_count=0,
-                created_at=datetime.now(),
+                created_at=datetime.now(timezone.utc),
                 versioning_enabled=False,  # Civo doesn't support versioning by default
                 encryption_enabled=True,  # Civo encrypts by default
                 metadata={

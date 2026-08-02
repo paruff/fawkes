@@ -77,6 +77,7 @@ class TestATE1006Validation:
                 ],
                 capture_output=True,
                 text=True,
+                check=False,
                 timeout=validation_timeout,
             )
 
@@ -202,9 +203,9 @@ class TestATE1006Validation:
                 (t for t in validation_result["report"]["results"] if "node_exporter" in t["test"]), None
             )
             assert node_exporter_test is not None, "Node Exporter test not found"
-            assert (
-                node_exporter_test["status"] == "PASS"
-            ), f"Node Exporter check failed: {node_exporter_test['message']}"
+            assert node_exporter_test["status"] == "PASS", (
+                f"Node Exporter check failed: {node_exporter_test['message']}"
+            )
 
     @pytest.mark.integration
     @pytest.mark.observability

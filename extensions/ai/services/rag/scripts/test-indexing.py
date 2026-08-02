@@ -65,8 +65,8 @@ def create_schema(client: weaviate.Client) -> None:
     try:
         client.schema.delete_class(SCHEMA_NAME)
         print(f"🗑️  Deleted existing schema '{SCHEMA_NAME}'")
-    except Exception:
-        pass  # Schema doesn't exist, which is fine
+    except Exception as e:
+        print(f"ℹ️  No existing schema to delete: {e}")
 
     # Define schema
     schema = {

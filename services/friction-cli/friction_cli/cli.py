@@ -86,7 +86,7 @@ def log(ctx, title, description, category, priority, tags, interactive):
     if interactive or not (title and description):
         console.print(
             Panel.fit(
-                "[bold cyan]Friction Logger - Interactive Mode[/bold cyan]\n" "Let's capture that friction point!",
+                "[bold cyan]Friction Logger - Interactive Mode[/bold cyan]\nLet's capture that friction point!",
                 box=box.DOUBLE,
             )
         )
@@ -334,7 +334,7 @@ def config_init(ctx, api_url, api_key, author):
 
     console.print(
         Panel.fit(
-            "[bold cyan]Friction CLI Configuration Setup[/bold cyan]\n" "Let's configure the CLI for your environment",
+            "[bold cyan]Friction CLI Configuration Setup[/bold cyan]\nLet's configure the CLI for your environment",
             box=box.DOUBLE,
         )
     )

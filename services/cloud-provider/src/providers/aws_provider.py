@@ -193,9 +193,7 @@ class AWSProvider(CloudProvider):
         region = region or self.region
         return self.rds.get_database(database_id, region)
 
-    def delete_database(
-        self, database_id: str, region: str | None = None, skip_final_snapshot: bool = False
-    ) -> bool:
+    def delete_database(self, database_id: str, region: str | None = None, skip_final_snapshot: bool = False) -> bool:
         """Delete a database instance."""
         region = region or self.region
         return self.rds.delete_database(database_id, region, skip_final_snapshot)

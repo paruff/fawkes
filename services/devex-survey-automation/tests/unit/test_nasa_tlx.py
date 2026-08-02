@@ -2,7 +2,7 @@
 Unit tests for NASA-TLX cognitive load assessment endpoints
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 from app.schemas import NASATLXRequest, NASATLXResponse
@@ -109,7 +109,7 @@ def test_nasa_tlx_response_schema():
         "overall_workload": 45.0,
         "duration_minutes": 15,
         "comment": "Test comment",
-        "submitted_at": datetime.now(),
+        "submitted_at": datetime.now(timezone.utc),
     }
 
     response = NASATLXResponse(**response_data)

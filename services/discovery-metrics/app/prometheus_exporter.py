@@ -1,6 +1,6 @@
 """Prometheus metrics exporter for discovery metrics."""
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from prometheus_client import Gauge
 from sqlalchemy import func
@@ -96,7 +96,7 @@ def update_prometheus_metrics(db: Session):
         discovery_interviews_by_status.labels(status=status.value).set(count)
 
     # Recent interviews
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     seven_days_ago = now - timedelta(days=7)
     thirty_days_ago = now - timedelta(days=30)
 

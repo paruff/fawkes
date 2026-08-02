@@ -1,7 +1,7 @@
 """Azure Blob Storage operations."""
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from azure.core.exceptions import (
@@ -119,7 +119,7 @@ class AzureStorageService:
                 region=config.region,
                 versioning_enabled=config.versioning_enabled,
                 encryption_enabled=config.encryption_enabled,
-                created_at=account_data.creation_time if account_data else datetime.utcnow(),
+                created_at=account_data.creation_time if account_data else datetime.now(timezone.utc),
                 metadata={
                     "resource_group": resource_group,
                     "sku": config.metadata.get("sku", "Standard_LRS"),

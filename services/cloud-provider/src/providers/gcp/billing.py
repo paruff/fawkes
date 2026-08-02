@@ -1,7 +1,7 @@
 """GCP Cloud Billing operations."""
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from google.api_core import exceptions as gcp_exceptions
@@ -17,9 +17,7 @@ logger = logging.getLogger(__name__)
 class BillingService:
     """GCP Cloud Billing service operations."""
 
-    def __init__(
-        self, project_id: str, billing_account_id: str | None = None, rate_limiter: RateLimiter | None = None
-    ):
+    def __init__(self, project_id: str, billing_account_id: str | None = None, rate_limiter: RateLimiter | None = None):
         """
         Initialize Billing service.
 
@@ -51,7 +49,7 @@ class BillingService:
         Returns:
             Tuple of (start_date, end_date)
         """
-        end_date = datetime.now()
+        end_date = datetime.now(timezone.utc)
 
         if timeframe == "LAST_7_DAYS":
             start_date = end_date - timedelta(days=7)

@@ -5,11 +5,12 @@ This service provides context retrieval from Weaviate vector database
 for AI assistants and code generation tools.
 """
 
+import asyncio
 import logging
 import os
 import time
 from contextlib import asynccontextmanager
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -39,9 +40,7 @@ class QueryRequest(BaseModel):
 
     query: str = Field(..., description="Search query for context retrieval", min_length=1)
     top_k: int | None = Field(DEFAULT_TOP_K, description="Number of results to return", ge=1, le=20)
-    threshold: float | None = Field(
-        DEFAULT_THRESHOLD, description="Minimum relevance score threshold", ge=0.0, le=1.0
-    )
+    threshold: float | None = Field(DEFAULT_THRESHOLD, description="Minimum relevance score threshold", ge=0.0, le=1.0)
 
 
 class ContextResult(BaseModel):
@@ -160,8 +159,8 @@ async def dashboard():
 
     try:
         if dashboard_path.exists():
-            with open(dashboard_path, "r") as f:
-                return HTMLResponse(content=f.read())
+            content = await asyncio.to_thread(dashboard_path.read_text)
+            return HTMLResponse(content=content)
     except Exception as e:
         logger.warning(f"Could not load dashboard from {dashboard_path}: {e}")
 
@@ -347,7 +346,7 @@ async def ready():
             if weaviate_client.is_ready():
                 return {"status": "READY"}
         except Exception:
-            pass
+            logger.debug("Weaviate readiness check failed", exc_info=True)
 
     raise HTTPException(status_code=503, detail="Service not ready")
 
@@ -431,7 +430,7 @@ async def get_stats():
                 if last_indexed_dt.tzinfo:
                     now = datetime.now(last_indexed_dt.tzinfo)
                 else:
-                    now = datetime.now()
+                    now = datetime.now(UTC).replace(tzinfo=None)
                     last_indexed_dt = last_indexed_dt.replace(tzinfo=None)
 
                 delta = now - last_indexed_dt

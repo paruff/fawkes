@@ -404,9 +404,9 @@ def verify_idle_termination_minutes(jenkins_context, minutes):
     """Verify idle termination is set correctly."""
     templates = jenkins_context.get("agent_templates", [])
     for template in templates:
-        assert (
-            template.get("idleTerminationMinutes") == minutes
-        ), f"Template {template.get('name')} has incorrect idle termination"
+        assert template.get("idleTerminationMinutes") == minutes, (
+            f"Template {template.get('name')} has incorrect idle termination"
+        )
 
 
 @then("idle agents should be terminated after the configured time")

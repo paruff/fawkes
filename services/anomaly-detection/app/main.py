@@ -171,14 +171,14 @@ async def health() -> HealthResponse:
             response = await http_client.get(f"{PROMETHEUS_URL}/api/v1/status/config", timeout=5.0)
             prometheus_connected = response.status_code == 200
     except Exception:
-        pass
+        logger.debug("Prometheus health check failed", exc_info=True)
 
     try:
         from .models import detector
 
         models_loaded = detector.models_initialized
     except Exception:
-        pass
+        logger.debug("Model status check failed", exc_info=True)
 
     return HealthResponse(
         status="UP",

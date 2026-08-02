@@ -1,11 +1,14 @@
 """Configuration management for Feedback CLI."""
 
+import logging
 import os
 from pathlib import Path
 from typing import Optional
 
 import yaml
 from pydantic import BaseModel, Field
+
+logger = logging.getLogger(__name__)
 
 
 class FeedbackConfig(BaseModel):
@@ -84,7 +87,7 @@ class ConfigManager:
                 if result.returncode == 0:
                     config_data["author"] = result.stdout.strip()
             except Exception:
-                pass
+                logger.debug("Could not determine author from git config", exc_info=True)
 
         # If queue path not set, use default
         if not config_data.get("queue_path"):

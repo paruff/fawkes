@@ -160,7 +160,7 @@ async def health() -> HealthResponse:
             response = await http_client.get(f"{RAG_SERVICE_URL}/health", timeout=5.0)
             rag_connected = response.status_code == 200
     except Exception:
-        pass
+        logger.debug("RAG service health check failed", exc_info=True)
 
     return HealthResponse(
         status="UP",

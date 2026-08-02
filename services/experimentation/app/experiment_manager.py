@@ -2,7 +2,7 @@
 
 import hashlib
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from sqlalchemy.orm import Session
@@ -48,7 +48,7 @@ class ExperimentManager:
             target_sample_size=experiment.target_sample_size,
             significance_level=experiment.significance_level,
             traffic_allocation=experiment.traffic_allocation,
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
         )
 
         self.db.add(db_experiment)
@@ -124,7 +124,7 @@ class ExperimentManager:
 
         if experiment.status == "draft":
             experiment.status = "running"
-            experiment.started_at = datetime.utcnow()
+            experiment.started_at = datetime.now(timezone.utc)
             self.db.commit()
             self.db.refresh(experiment)
 
@@ -140,7 +140,7 @@ class ExperimentManager:
 
         if experiment.status == "running":
             experiment.status = "stopped"
-            experiment.stopped_at = datetime.utcnow()
+            experiment.stopped_at = datetime.now(timezone.utc)
             self.db.commit()
             self.db.refresh(experiment)
 
@@ -181,7 +181,7 @@ class ExperimentManager:
             user_id=user_id,
             variant=variant,
             context=context,
-            assigned_at=datetime.utcnow(),
+            assigned_at=datetime.now(timezone.utc),
         )
 
         self.db.add(assignment)
@@ -215,7 +215,7 @@ class ExperimentManager:
             variant=assignment.variant,
             event_name=event_name,
             value=value,
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
         )
 
         self.db.add(event)

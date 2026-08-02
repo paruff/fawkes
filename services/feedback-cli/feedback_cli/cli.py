@@ -347,7 +347,7 @@ def sync(ctx):
             # Mark for removal by setting to None
             queued_items[i] = None
         except Exception as e:
-            console.print(f"[red]✗[/red] Failed to submit item {i+1}: {e}")
+            console.print(f"[red]✗[/red] Failed to submit item {i + 1}: {e}")
             queue.increment_attempts(i)
             failed_indices.append(i)
 

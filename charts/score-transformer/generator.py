@@ -15,7 +15,6 @@ License: MIT
 import argparse
 import sys
 from pathlib import Path
-from typing import Dict, List
 
 import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape

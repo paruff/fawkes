@@ -77,6 +77,7 @@ class TestATE1001Validation:
                 ],
                 capture_output=True,
                 text=True,
+                check=False,
                 timeout=validation_timeout,
             )
 
@@ -123,9 +124,9 @@ class TestATE1001Validation:
     @pytest.mark.smoke
     def test_all_acceptance_criteria_pass(self, validation_result):
         """Test that all AT-E1-001 acceptance criteria pass."""
-        assert (
-            validation_result["exit_code"] == 0
-        ), f"Validation failed. Check output:\n{validation_result['stdout']}\n{validation_result['stderr']}"
+        assert validation_result["exit_code"] == 0, (
+            f"Validation failed. Check output:\n{validation_result['stdout']}\n{validation_result['stderr']}"
+        )
 
         if validation_result["report"]:
             summary = validation_result["report"]["summary"]

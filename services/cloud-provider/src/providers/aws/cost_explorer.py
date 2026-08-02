@@ -1,7 +1,7 @@
 """AWS Cost Explorer operations."""
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
 
 import boto3
@@ -57,7 +57,7 @@ class CostExplorerService:
         Returns:
             Dictionary with 'Start' and 'End' dates in YYYY-MM-DD format
         """
-        today = datetime.utcnow().date()
+        today = datetime.now(timezone.utc).date()
 
         if timeframe == "THIS_MONTH":
             start_date = today.replace(day=1)
@@ -133,8 +133,8 @@ class CostExplorerService:
                         breakdown[service] = cost
 
             # Parse dates
-            start_date = datetime.strptime(time_period["Start"], "%Y-%m-%d")
-            end_date = datetime.strptime(time_period["End"], "%Y-%m-%d")
+            start_date = datetime.strptime(time_period["Start"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            end_date = datetime.strptime(time_period["End"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
 
             logger.info(f"✅ Retrieved cost data: ${total_cost:.2f} total")
 
@@ -179,7 +179,7 @@ class CostExplorerService:
         try:
             client = self._get_client()
 
-            today = datetime.utcnow().date()
+            today = datetime.now(timezone.utc).date()
             start_date = today + timedelta(days=1)  # Forecast starts tomorrow
             end_date = today + timedelta(days=days)
 

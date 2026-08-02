@@ -1,7 +1,7 @@
 """Azure Cost Management operations."""
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
 
 from azure.core.exceptions import HttpResponseError
@@ -57,7 +57,7 @@ class AzureCostManagementService:
         Returns:
             Tuple of (start_date, end_date) as datetime objects
         """
-        today = datetime.utcnow().date()
+        today = datetime.now(timezone.utc).date()
 
         if timeframe == "THIS_MONTH":
             start_date = today.replace(day=1)
@@ -191,7 +191,7 @@ class AzureCostManagementService:
         try:
             client = self._get_client()
 
-            today = datetime.utcnow().date()
+            today = datetime.now(timezone.utc).date()
             start_date = today + timedelta(days=1)
             end_date = today + timedelta(days=days)
 

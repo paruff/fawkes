@@ -25,7 +25,7 @@ import logging
 import os
 import uuid
 from collections.abc import Generator
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pytest
@@ -464,7 +464,7 @@ def dora_metrics_client(dora_metrics_url):
             repo_commits = {k: v for k, v in self._commit_times.items() if k.startswith(f"{repo}/")}
             if repo_commits:
                 return max(repo_commits.values())
-            return datetime.utcnow()
+            return datetime.now(timezone.utc)
 
         def record_deployment(self, service: str, version: str, status: str):
             """Record a deployment event."""
@@ -478,8 +478,8 @@ def dora_metrics_client(dora_metrics_url):
                         "version": version,
                         "environment": "test",
                         "commit_sha": version,
-                        "commit_timestamp": datetime.utcnow().isoformat(),
-                        "deployment_timestamp": datetime.utcnow().isoformat(),
+                        "commit_timestamp": datetime.now(timezone.utc).isoformat(),
+                        "deployment_timestamp": datetime.now(timezone.utc).isoformat(),
                         "status": status,
                     },
                     timeout=5,

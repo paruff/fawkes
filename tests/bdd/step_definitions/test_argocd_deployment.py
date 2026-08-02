@@ -385,9 +385,9 @@ def deployments_have_memory_requests(context: dict):
         for container in containers:
             resources = container.get("resources", {})
             requests = resources.get("requests", {})
-            assert (
-                "memory" in requests
-            ), f"Memory request not defined for {deploy['metadata']['name']}/{container['name']}"
+            assert "memory" in requests, (
+                f"Memory request not defined for {deploy['metadata']['name']}/{container['name']}"
+            )
 
 
 @then("all deployments should have CPU limits defined")

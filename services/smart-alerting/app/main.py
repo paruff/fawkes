@@ -12,7 +12,7 @@ import logging
 import os
 import uuid
 from contextlib import asynccontextmanager
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any, Dict, List, Optional
 
 import httpx
@@ -229,7 +229,7 @@ async def health() -> HealthResponse:
             await redis_client.ping()
             redis_connected = True
     except Exception:
-        pass
+        logger.debug("Redis health check failed", exc_info=True)
 
     if suppression_engine:
         rules_loaded = len(suppression_engine.rules)
@@ -348,7 +348,7 @@ async def acknowledge_alert(alert_id: str):
         raise HTTPException(status_code=503, detail="Redis not initialized")
 
     await redis_client.hset(f"alert:{alert_id}", "acknowledged", "true")
-    await redis_client.hset(f"alert:{alert_id}", "acknowledged_at", datetime.now().isoformat())
+    await redis_client.hset(f"alert:{alert_id}", "acknowledged_at", datetime.now(UTC).isoformat())
 
     return {"message": "Alert acknowledged", "alert_id": alert_id}
 
@@ -360,7 +360,7 @@ async def resolve_alert(alert_id: str):
         raise HTTPException(status_code=503, detail="Redis not initialized")
 
     await redis_client.hset(f"alert:{alert_id}", "status", "resolved")
-    await redis_client.hset(f"alert:{alert_id}", "resolved_at", datetime.now().isoformat())
+    await redis_client.hset(f"alert:{alert_id}", "resolved_at", datetime.now(UTC).isoformat())
 
     return {"message": "Alert resolved", "alert_id": alert_id}
 
@@ -478,7 +478,7 @@ async def get_reduction_stats():
 
 async def process_alerts(alerts: list[Alert], source: str):
     """Process incoming alerts through correlation, suppression, and routing."""
-    start_time = datetime.now()
+    start_time = datetime.now(UTC)
 
     try:
         # Correlate alerts
@@ -507,7 +507,7 @@ async def process_alerts(alerts: list[Alert], source: str):
         await redis_client.incr("stats:total_received", len(alerts))
         await redis_client.incr("stats:total_grouped", len(groups))
 
-        duration = (datetime.now() - start_time).total_seconds()
+        duration = (datetime.now(UTC) - start_time).total_seconds()
         PROCESSING_DURATION.observe(duration)
 
         logger.info(f"Processed {len(alerts)} alerts from {source} in {duration:.2f}s")

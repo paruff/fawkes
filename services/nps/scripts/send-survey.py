@@ -13,7 +13,7 @@ import asyncio
 import logging
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 import asyncpg
 
@@ -121,7 +121,7 @@ async def send_all_surveys(db_pool: asyncpg.Pool):
         return
 
     # Get current quarter
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     quarter = (now.month - 1) // 3 + 1
     year = now.year
 

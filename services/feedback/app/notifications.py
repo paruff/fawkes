@@ -144,7 +144,7 @@ async def notify_duplicate_detected(
 
 > {comment_preview}
 
-**Potential Duplicate:** [#{top_duplicate['issue_number']}]({top_duplicate['issue_url']})
+**Potential Duplicate:** [#{top_duplicate["issue_number"]}]({top_duplicate["issue_url"]})
 **Similarity:** {similarity:.0%}
 **Total Matches:** {len(duplicates)}
 

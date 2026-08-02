@@ -2,10 +2,11 @@
 FastAPI application for DevEx Survey Automation Service
 """
 
+import html
 import logging
 import secrets
 from contextlib import asynccontextmanager
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException, Path, Query
@@ -154,7 +155,7 @@ async def distribute_survey(request: SurveyDistributionRequest):
     with request_duration.labels(endpoint="distribute_survey").time():
         try:
             # Determine period
-            now = datetime.now()
+            now = datetime.now(timezone.utc)
             if request.type == "pulse":
                 period = f"W{now.isocalendar()[1]}"  # ISO week number
             else:  # deep_dive
@@ -639,7 +640,7 @@ async def submit_survey(token: str = Path(..., description="Survey token"), resp
                 # Store response
                 response_data = response.model_dump()
                 recipient.response_data = response_data
-                recipient.responded_at = datetime.now()
+                recipient.responded_at = datetime.now(timezone.utc)
 
                 # Update campaign stats
                 result = await session.execute(select(SurveyCampaign).where(SurveyCampaign.id == recipient.campaign_id))
@@ -734,6 +735,9 @@ async def get_nasa_tlx_page(
     user_id: str = Query("anonymous", description="User identifier"),
 ):
     """Render NASA-TLX cognitive load assessment page"""
+    task_type = html.escape(task_type)
+    task_id = html.escape(task_id) if task_id else task_id
+    user_id = html.escape(user_id)
     return HTMLResponse(
         content=f"""
         <!DOCTYPE html>
@@ -910,7 +914,7 @@ async def get_nasa_tlx_page(
 
                 <div class="task-info">
                     <p><strong>Task Type:</strong> <span id="taskTypeDisplay">{task_type}</span></p>
-                    {f'<p><strong>Task ID:</strong> {task_id}</p>' if task_id else ''}
+                    {f"<p><strong>Task ID:</strong> {task_id}</p>" if task_id else ""}
                 </div>
 
                 <div class="info-box">
@@ -1271,7 +1275,7 @@ async def get_nasa_tlx_analytics(
     try:
         async with get_db_session() as session:
             # Get current week
-            now = datetime.now()
+            now = datetime.now(timezone.utc)
             current_week = now.isocalendar()[1]
             current_year = now.year
 
@@ -1310,7 +1314,7 @@ async def get_nasa_tlx_trends(weeks: int = Query(12, ge=1, le=52, description="N
     """Get NASA-TLX trends by task type over time"""
     try:
         async with get_db_session() as session:
-            now = datetime.now()
+            now = datetime.now(timezone.utc)
             current_week = now.isocalendar()[1]
             current_year = now.year
             start_week = max(1, current_week - weeks)

@@ -190,8 +190,7 @@ class SonarQubeIntegration:
                     if sq_finding["category"] == ai_finding.get("category"):
                         is_duplicate = True
                         logger.debug(
-                            f"Deduplicating: SQ finding at {sq_finding['file']}:{sq_finding['line']} "
-                            f"matches AI finding"
+                            f"Deduplicating: SQ finding at {sq_finding['file']}:{sq_finding['line']} matches AI finding"
                         )
                         break
 

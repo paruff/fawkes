@@ -214,8 +214,7 @@ async def detect_duplicates(
         # Search for open issues with feedback label and similar category
         category_normalized = category.lower().replace("/", "-").replace(" ", "-")
         search_query = (
-            f"repo:{GITHUB_OWNER}/{GITHUB_REPO} "
-            f"is:issue is:open label:feedback label:category:{category_normalized}"
+            f"repo:{GITHUB_OWNER}/{GITHUB_REPO} is:issue is:open label:feedback label:category:{category_normalized}"
         )
 
         async with httpx.AsyncClient() as client:
@@ -257,7 +256,7 @@ async def detect_duplicates(
                             "state": issue.get("state"),
                         }
                     )
-                    logger.info(f"Potential duplicate found: #{issue.get('number')} " f"(similarity: {similarity:.2f})")
+                    logger.info(f"Potential duplicate found: #{issue.get('number')} (similarity: {similarity:.2f})")
 
             # Sort by similarity (highest first)
             duplicates.sort(key=lambda x: x["similarity"], reverse=True)

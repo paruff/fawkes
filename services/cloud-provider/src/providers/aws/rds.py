@@ -1,7 +1,7 @@
 """AWS RDS (Relational Database Service) operations."""
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 
 import boto3
@@ -183,7 +183,7 @@ class RDSService:
 
             if not skip_final_snapshot:
                 # Generate final snapshot identifier
-                snapshot_id = f"{database_id}-final-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+                snapshot_id = f"{database_id}-final-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
                 delete_params["FinalDBSnapshotIdentifier"] = snapshot_id
 
             self.rate_limiter.acquire()

@@ -3,7 +3,7 @@ Prometheus metrics exporter and DevEx health score calculator
 """
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from .collectors import (
     collect_activity_metrics,
@@ -107,7 +107,7 @@ async def expose_prometheus_metrics() -> str:
     Generate Prometheus metrics in text format
     """
     try:
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         start_time = now - timedelta(hours=1)  # Last hour for current metrics
 
         async with get_db_session() as session:

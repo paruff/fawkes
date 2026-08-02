@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 
 import requests
 
@@ -24,7 +24,7 @@ class DORAMetricsCollector:
         metric = DORAMetric(
             metric_type="deployment",
             value=duration,
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
             test_name="automated_test",
             tags=["success" if success else "failure"],
         )
@@ -35,7 +35,7 @@ class DORAMetricsCollector:
         metric = DORAMetric(
             metric_type="mttr",
             value=duration,
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
             test_name="recovery_test",
             tags=["recovery"],
         )

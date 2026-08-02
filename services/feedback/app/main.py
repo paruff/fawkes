@@ -884,7 +884,7 @@ async def automate_validated_feedback(
                     # Skip if duplicates found
                     if not triage_result["should_create_issue"]:
                         skipped_duplicates += 1
-                        logger.info(f"Skipping feedback ID {feedback['id']}: " f"{triage_result['triage_reason']}")
+                        logger.info(f"Skipping feedback ID {feedback['id']}: {triage_result['triage_reason']}")
 
                         # Notify about duplicates
                         if triage_result["potential_duplicates"]:
@@ -899,18 +899,21 @@ async def automate_validated_feedback(
                         continue
 
                     # Create GitHub issue in background
-                    async def create_issue_background():
+                    # Bind loop variables as defaults: BackgroundTasks run after the
+                    # loop finishes, so referencing `feedback`/`triage_result` directly
+                    # would capture the last iteration for every task (B023).
+                    async def create_issue_background(feedback_item=feedback, triage=triage_result):
                         success, issue_url, error = await create_github_issue(
-                            feedback_id=feedback["id"],
-                            feedback_type=feedback["feedback_type"] or "feedback",
-                            category=feedback["category"],
-                            comment=feedback["comment"],
-                            page_url=feedback["page_url"],
-                            rating=feedback["rating"],
-                            email=feedback["email"],
+                            feedback_id=feedback_item["id"],
+                            feedback_type=feedback_item["feedback_type"] or "feedback",
+                            category=feedback_item["category"],
+                            comment=feedback_item["comment"],
+                            page_url=feedback_item["page_url"],
+                            rating=feedback_item["rating"],
+                            email=feedback_item["email"],
                             screenshot_data=None,  # Screenshots not auto-attached in batch
-                            browser_info=feedback["browser_info"],
-                            user_agent=feedback["user_agent"],
+                            browser_info=feedback_item["browser_info"],
+                            user_agent=feedback_item["user_agent"],
                         )
 
                         if success and issue_url:
@@ -925,24 +928,24 @@ async def automate_validated_feedback(
                                     WHERE id = $2
                                     """,
                                     issue_url,
-                                    feedback["id"],
+                                    feedback_item["id"],
                                 )
                             logger.info(
-                                f"✅ Automated issue created for feedback ID {feedback['id']}: "
-                                f"{issue_url} (Priority: {triage_result['priority']})"
+                                f"✅ Automated issue created for feedback ID {feedback_item['id']}: "
+                                f"{issue_url} (Priority: {triage['priority']})"
                             )
 
                             # Send notification about issue creation
                             await notify_issue_created(
-                                feedback_id=feedback["id"],
+                                feedback_id=feedback_item["id"],
                                 issue_url=issue_url,
-                                priority=triage_result["priority"],
-                                category=feedback["category"],
-                                feedback_type=feedback["feedback_type"] or "feedback",
-                                comment_preview=feedback["comment"],
+                                priority=triage["priority"],
+                                category=feedback_item["category"],
+                                feedback_type=feedback_item["feedback_type"] or "feedback",
+                                comment_preview=feedback_item["comment"],
                             )
                         elif error:
-                            logger.error(f"❌ Failed to create issue for feedback ID {feedback['id']}: {error}")
+                            logger.error(f"❌ Failed to create issue for feedback ID {feedback_item['id']}: {error}")
 
                     background_tasks.add_task(create_issue_background)
                     issues_created += 1

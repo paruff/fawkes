@@ -64,7 +64,7 @@ def step_feedback_service_accessible(context):
                 logger.info("Feedback service is accessible")
                 return
         except requests.exceptions.RequestException as e:
-            logger.debug(f"Waiting for feedback service (attempt {i+1}/{max_retries}): {e}")
+            logger.debug(f"Waiting for feedback service (attempt {i + 1}/{max_retries}): {e}")
             time.sleep(2)
 
     # Service not accessible, but continue for other tests
@@ -663,7 +663,7 @@ def step_check_security(context):
         if container.resources and container.resources.limits:
             context.security_checks["feedback_service"] = True
     except Exception:
-        pass
+        logger.debug("feedback-service deployment check failed", exc_info=True)
 
     # Check feedback-bot
     try:
@@ -672,7 +672,7 @@ def step_check_security(context):
         if container.resources and container.resources.limits:
             context.security_checks["feedback_bot"] = True
     except Exception:
-        pass
+        logger.debug("feedback-bot deployment check failed", exc_info=True)
 
 
 @when("I verify all feedback channels")
@@ -694,7 +694,7 @@ def step_verify_all_channels(context):
         apps_api.read_namespaced_deployment("feedback-service", namespace)
         context.channels["backstage_widget"] = True
     except Exception:
-        pass
+        logger.debug("backstage_widget channel check failed", exc_info=True)
 
     # Check CLI tool
     if os.path.exists("services/feedback-cli/setup.py"):
@@ -705,14 +705,14 @@ def step_verify_all_channels(context):
         apps_api.read_namespaced_deployment("feedback-bot", namespace)
         context.channels["mattermost_bot"] = True
     except Exception:
-        pass
+        logger.debug("mattermost_bot channel check failed", exc_info=True)
 
     # Check automation
     try:
         batch_api.read_namespaced_cron_job("feedback-automation", namespace)
         context.channels["automation"] = True
     except Exception:
-        pass
+        logger.debug("automation channel check failed", exc_info=True)
 
     # Check analytics dashboard
     if os.path.exists("platform/apps/grafana/dashboards/feedback-analytics.json"):
@@ -996,7 +996,7 @@ def step_all_components_non_root(context):
                 security_context is not None or deployment.spec.template.spec.containers[0].security_context is not None
             )
         except Exception:
-            pass  # Deployment might not exist
+            logger.debug("%s deployment might not exist", deployment_name, exc_info=True)
 
 
 @then("all components should have security contexts defined")

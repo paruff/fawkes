@@ -29,8 +29,8 @@ import base64
 import hashlib
 import sys
 import time
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from datetime import datetime, timezone
+from typing import Any, Optional
 
 try:
     import requests
@@ -449,7 +449,7 @@ class GitHubIndexer:
 
         # Index chunks
         indexed_count = 0
-        timestamp = datetime.utcnow().isoformat() + "Z"
+        timestamp = datetime.now(timezone.utc).isoformat() + "Z"
         _ = file_info.get("sha", "")  # Use commit SHA as version
 
         try:
@@ -546,9 +546,9 @@ class GitHubIndexer:
             repo_full_name: Repository in format "owner/repo"
             force: Force re-indexing even if unchanged
         """
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print(f"Indexing Repository: {repo_full_name}")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
         # Scan for documentation files
         files = self.scan_repo_for_docs(repo_full_name)
@@ -582,15 +582,15 @@ class GitHubIndexer:
                 error_count += 1
 
         # Summary
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print(f"Repository Summary: {repo_full_name}")
-        print(f"{'='*70}")
+        print(f"{'=' * 70}")
         print(f"Files processed: {len(files)}")
         print(f"Successfully indexed: {success_count}")
         print(f"Skipped (unchanged): {skipped_count}")
         print(f"Errors: {error_count}")
         print(f"Total chunks: {total_chunks}")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
 
 def main():
@@ -668,7 +668,7 @@ def main():
 
     elapsed_time = time.time() - start_time
 
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print(f"⏱️  Total time elapsed: {elapsed_time:.2f} seconds")
 
     if args.dry_run:
@@ -676,7 +676,7 @@ def main():
     else:
         print("✅ Indexing complete!")
 
-    print(f"{'='*70}\n")
+    print(f"{'=' * 70}\n")
 
 
 if __name__ == "__main__":

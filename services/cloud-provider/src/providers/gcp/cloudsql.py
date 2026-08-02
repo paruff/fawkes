@@ -194,9 +194,7 @@ class CloudSQLService:
                 )
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(HttpError,))
-    def delete_database(
-        self, database_name: str, region: str | None = None, skip_final_snapshot: bool = False
-    ) -> bool:
+    def delete_database(self, database_name: str, region: str | None = None, skip_final_snapshot: bool = False) -> bool:
         """Delete a Cloud SQL instance."""
         logger.info(f"Deleting Cloud SQL instance: {database_name}")
 

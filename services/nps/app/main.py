@@ -13,7 +13,7 @@ import logging
 import os
 import secrets
 from contextlib import asynccontextmanager
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import asyncpg
@@ -180,9 +180,9 @@ async def calculate_nps(
 ) -> NPSMetrics:
     """Calculate NPS metrics for a given period."""
     if not start_date:
-        start_date = datetime.now() - timedelta(days=90)  # Last quarter
+        start_date = datetime.now(timezone.utc) - timedelta(days=90)  # Last quarter
     if not end_date:
-        end_date = datetime.now()
+        end_date = datetime.now(timezone.utc)
 
     # Get response counts by score type
     stats = await conn.fetchrow(
@@ -353,7 +353,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                 """
                 )
 
-            if datetime.now() > link["expires_at"]:
+            if datetime.now(timezone.utc) > link["expires_at"]:
                 return HTMLResponse(
                     content="""
                     <!DOCTYPE html>
@@ -504,7 +504,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                             </div>
 
                             <div class="score-buttons" id="scoreButtons">
-                                {''.join([f'<button type="button" class="score-button" data-score="{i}">{i}</button>' for i in range(11)])}
+                                {"".join([f'<button type="button" class="score-button" data-score="{i}">{i}</button>' for i in range(11)])}
                             </div>
 
                             <div class="score-labels">
@@ -669,7 +669,7 @@ async def submit_survey_response(token: str = Path(..., description="Survey toke
                 if link["responded"]:
                     raise HTTPException(status_code=400, detail="Survey already completed")
 
-                if datetime.now() > link["expires_at"]:
+                if datetime.now(timezone.utc) > link["expires_at"]:
                     raise HTTPException(status_code=400, detail="Survey link expired")
 
                 # Calculate score type
@@ -751,7 +751,7 @@ async def generate_survey_link(user_id: str, email: str):
 
     try:
         token = secrets.token_urlsafe(32)
-        expires_at = datetime.now() + timedelta(days=SURVEY_EXPIRY_DAYS)
+        expires_at = datetime.now(timezone.utc) + timedelta(days=SURVEY_EXPIRY_DAYS)
 
         async with db_pool.acquire() as conn:
             await conn.execute(
