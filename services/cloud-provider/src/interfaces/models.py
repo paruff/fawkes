@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
 
 @dataclass
@@ -13,11 +13,11 @@ class Cluster:
     name: str
     status: str
     version: str
-    endpoint: Optional[str] = None
+    endpoint: str | None = None
     region: str = ""
     node_count: int = 0
-    created_at: Optional[datetime] = None
-    metadata: Dict[str, Any] = None
+    created_at: datetime | None = None
+    metadata: dict[str, Any] = None
 
     def __post_init__(self):
         if self.metadata is None:
@@ -33,13 +33,13 @@ class Database:
     engine: str
     engine_version: str
     status: str
-    endpoint: Optional[str] = None
-    port: Optional[int] = None
+    endpoint: str | None = None
+    port: int | None = None
     region: str = ""
     allocated_storage: int = 0
     instance_class: str = ""
-    created_at: Optional[datetime] = None
-    metadata: Dict[str, Any] = None
+    created_at: datetime | None = None
+    metadata: dict[str, Any] = None
 
     def __post_init__(self):
         if self.metadata is None:
@@ -55,10 +55,10 @@ class Storage:
     region: str
     size_bytes: int = 0
     object_count: int = 0
-    created_at: Optional[datetime] = None
+    created_at: datetime | None = None
     versioning_enabled: bool = False
     encryption_enabled: bool = False
-    metadata: Dict[str, Any] = None
+    metadata: dict[str, Any] = None
 
     def __post_init__(self):
         if self.metadata is None:
@@ -73,8 +73,8 @@ class CostData:
     end_date: datetime
     total_cost: float
     currency: str = "USD"
-    breakdown: Dict[str, float] = None
-    metadata: Dict[str, Any] = None
+    breakdown: dict[str, float] = None
+    metadata: dict[str, Any] = None
 
     def __post_init__(self):
         if self.breakdown is None:

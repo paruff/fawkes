@@ -1,9 +1,8 @@
 """Step definitions for observability BDD tests."""
 
-from behave import given, when, then
-from fastapi.testclient import TestClient
-
 from app.main import app
+from behave import given, then, when
+from fastapi.testclient import TestClient
 
 
 @given("the tracer-bullet service is running")

@@ -3,6 +3,7 @@ Example of integrating OpenFeature with Unleash in Python services.
 """
 
 import os
+
 from openfeature import api
 from openfeature.contrib.provider.unleash import UnleashProvider
 from openfeature.evaluation_context import EvaluationContext

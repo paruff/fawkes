@@ -1,9 +1,10 @@
 """Unit tests for anomaly detection models."""
 
-import pytest
-import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest.mock import AsyncMock, MagicMock
+
+import numpy as np
+import pytest
 
 
 @pytest.fixture
@@ -16,7 +17,7 @@ def mock_http_client():
 @pytest.fixture
 def sample_time_series():
     """Generate sample time series data."""
-    timestamps = [datetime.now() - timedelta(minutes=i) for i in range(60, 0, -1)]
+    timestamps = [datetime.now(timezone.utc) - timedelta(minutes=i) for i in range(60, 0, -1)]
     # Normal values with one anomaly
     values = [100.0] * 50 + [500.0] + [100.0] * 9
     return timestamps, values
@@ -27,7 +28,7 @@ async def test_zscore_detection():
     """Test Z-score based anomaly detection."""
     from models.detector import _detect_zscore
 
-    timestamps = [datetime.now() - timedelta(minutes=i) for i in range(60, 0, -1)]
+    timestamps = [datetime.now(timezone.utc) - timedelta(minutes=i) for i in range(60, 0, -1)]
     # Create data with clear anomaly
     values = [100.0] * 50 + [500.0] + [100.0] * 9
 
@@ -43,7 +44,7 @@ async def test_iqr_detection():
     """Test IQR based anomaly detection."""
     from models.detector import _detect_iqr
 
-    timestamps = [datetime.now() - timedelta(minutes=i) for i in range(60, 0, -1)]
+    timestamps = [datetime.now(timezone.utc) - timedelta(minutes=i) for i in range(60, 0, -1)]
     # Create data with very clear anomaly - extremely large deviation
     values = [100.0] * 55 + [2000.0] + [100.0] * 4
 
@@ -63,7 +64,7 @@ async def test_rate_of_change_detection():
     """Test rate of change anomaly detection."""
     from models.detector import _detect_rate_of_change
 
-    timestamps = [datetime.now() - timedelta(minutes=i) for i in range(60, 0, -1)]
+    timestamps = [datetime.now(timezone.utc) - timedelta(minutes=i) for i in range(60, 0, -1)]
     # Gradual values then sudden spike
     values = list(range(100, 150)) + [500.0] + list(range(150, 160))
 
@@ -77,7 +78,7 @@ async def test_isolation_forest_detection():
     """Test Isolation Forest anomaly detection."""
     from models.detector import _detect_isolation_forest
 
-    timestamps = [datetime.now() - timedelta(minutes=i) for i in range(60, 0, -1)]
+    timestamps = [datetime.now(timezone.utc) - timedelta(minutes=i) for i in range(60, 0, -1)]
     values = [100.0] * 50 + [500.0] + [100.0] * 9
 
     anomalies = _detect_isolation_forest(timestamps, values)
@@ -104,7 +105,8 @@ async def test_detect_anomalies_integration(mock_http_client):
                 {
                     "metric": {"__name__": "test_metric"},
                     "values": [
-                        [datetime.now().timestamp() - i, str(100.0 if i != 30 else 500.0)] for i in range(60, 0, -1)
+                        [datetime.now(timezone.utc).timestamp() - i, str(100.0 if i != 30 else 500.0)]
+                        for i in range(60, 0, -1)
                     ],
                 }
             ]
@@ -140,8 +142,8 @@ async def test_format_metric_name():
 
 def test_model_initialization():
     """Test model initialization."""
-    from models.detector import initialize_models
     from models import detector
+    from models.detector import initialize_models
 
     initialize_models()
 
@@ -166,9 +168,9 @@ def test_get_model_info():
 @pytest.mark.asyncio
 async def test_no_anomalies_in_normal_data():
     """Test that normal data doesn't trigger anomalies."""
-    from models.detector import _detect_zscore, _detect_iqr
+    from models.detector import _detect_iqr, _detect_zscore
 
-    timestamps = [datetime.now() - timedelta(minutes=i) for i in range(60, 0, -1)]
+    timestamps = [datetime.now(timezone.utc) - timedelta(minutes=i) for i in range(60, 0, -1)]
     # All normal values - tighter variance
     values = [100.0 + np.random.normal(0, 1) for _ in range(60)]
 
@@ -186,7 +188,7 @@ async def test_insufficient_samples():
     """Test handling of insufficient samples."""
     from models.detector import _detect_zscore
 
-    timestamps = [datetime.now()]
+    timestamps = [datetime.now(timezone.utc)]
     values = [100.0]
 
     anomalies = _detect_zscore(timestamps, values)
@@ -197,8 +199,9 @@ async def test_insufficient_samples():
 @pytest.mark.asyncio
 async def test_empty_prometheus_response(mock_http_client):
     """Test handling of empty Prometheus response."""
-    from models.detector import detect_anomalies, initialize_models
     import os
+
+    from models.detector import detect_anomalies, initialize_models
 
     initialize_models()
 

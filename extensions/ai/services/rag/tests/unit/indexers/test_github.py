@@ -2,8 +2,8 @@
 Unit tests for GitHub indexer.
 """
 
-import sys
 import os
+import sys
 from unittest.mock import Mock, patch
 
 # Add parent directory to path

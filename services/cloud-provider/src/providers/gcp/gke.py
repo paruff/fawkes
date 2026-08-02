@@ -3,18 +3,18 @@
 import logging
 from typing import List, Optional
 
-from google.cloud import container_v1
 from google.api_core import exceptions as gcp_exceptions
+from google.cloud import container_v1
 
-from ...interfaces.models import Cluster
-from ...interfaces.provider import ClusterConfig
 from ...exceptions import (
     CloudProviderError,
-    ResourceNotFoundError,
     ResourceAlreadyExistsError,
+    ResourceNotFoundError,
     ValidationError,
 )
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import Cluster
+from ...interfaces.provider import ClusterConfig
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class GKEService:
     """GCP GKE service operations."""
 
-    def __init__(self, project_id: str, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, project_id: str, rate_limiter: RateLimiter | None = None):
         """
         Initialize GKE service.
 
@@ -120,10 +120,10 @@ class GKEService:
         except gcp_exceptions.AlreadyExists:
             raise ResourceAlreadyExistsError(f"Cluster {config.name} already exists", provider="gcp")
         except gcp_exceptions.InvalidArgument as e:
-            raise ValidationError(f"Invalid parameter: {str(e)}", provider="gcp")
+            raise ValidationError(f"Invalid parameter: {e!s}", provider="gcp")
         except gcp_exceptions.GoogleAPICallError as e:
             raise CloudProviderError(
-                f"Failed to create GKE cluster {config.name}: {str(e)}", provider="gcp", error_code=e.grpc_status_code
+                f"Failed to create GKE cluster {config.name}: {e!s}", provider="gcp", error_code=e.grpc_status_code
             )
 
     @retry_with_backoff(
@@ -181,7 +181,7 @@ class GKEService:
             raise ResourceNotFoundError(f"Cluster {cluster_name} not found", provider="gcp")
         except gcp_exceptions.GoogleAPICallError as e:
             raise CloudProviderError(
-                f"Failed to get GKE cluster {cluster_name}: {str(e)}", provider="gcp", error_code=e.grpc_status_code
+                f"Failed to get GKE cluster {cluster_name}: {e!s}", provider="gcp", error_code=e.grpc_status_code
             )
 
     @retry_with_backoff(
@@ -218,14 +218,14 @@ class GKEService:
             raise ResourceNotFoundError(f"Cluster {cluster_name} not found", provider="gcp")
         except gcp_exceptions.GoogleAPICallError as e:
             raise CloudProviderError(
-                f"Failed to delete GKE cluster {cluster_name}: {str(e)}", provider="gcp", error_code=e.grpc_status_code
+                f"Failed to delete GKE cluster {cluster_name}: {e!s}", provider="gcp", error_code=e.grpc_status_code
             )
 
     @retry_with_backoff(
         max_retries=3,
         retriable_exceptions=(gcp_exceptions.ServiceUnavailable, gcp_exceptions.DeadlineExceeded),
     )
-    def list_clusters(self, region: str, include_details: bool = False) -> List[Cluster]:
+    def list_clusters(self, region: str, include_details: bool = False) -> list[Cluster]:
         """
         List all GKE clusters in a region.
 
@@ -287,5 +287,5 @@ class GKEService:
 
         except gcp_exceptions.GoogleAPICallError as e:
             raise CloudProviderError(
-                f"Failed to list GKE clusters in {region}: {str(e)}", provider="gcp", error_code=e.grpc_status_code
+                f"Failed to list GKE clusters in {region}: {e!s}", provider="gcp", error_code=e.grpc_status_code
             )

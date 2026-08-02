@@ -1,7 +1,8 @@
 """SQLAlchemy database schema"""
 
 from datetime import datetime
-from sqlalchemy import Column, String, Integer, Float, DateTime, JSON, ForeignKey, Text
+
+from sqlalchemy import JSON, Column, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from .database import Base

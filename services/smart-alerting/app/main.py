@@ -8,22 +8,22 @@ This service provides intelligent alerting that reduces noise through:
 - Intelligent routing to appropriate teams and channels
 """
 
-import os
 import logging
-from typing import Dict, List, Optional, Any
-from contextlib import asynccontextmanager
-from datetime import datetime
+import os
 import uuid
+from contextlib import asynccontextmanager
+from datetime import UTC, datetime
+from typing import Any, Dict, List, Optional
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks
-from pydantic import BaseModel, Field
-from prometheus_client import make_asgi_app, Counter, Histogram, Gauge
-import redis.asyncio as redis
 import httpx
+import redis.asyncio as redis
+from fastapi import BackgroundTasks, FastAPI, HTTPException
+from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
+from pydantic import BaseModel, Field
 
 from .correlation import AlertCorrelator
-from .suppression import SuppressionEngine
 from .routing import AlertRouter
+from .suppression import SuppressionEngine
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -41,11 +41,11 @@ SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL", "")
 PAGERDUTY_API_KEY = os.getenv("PAGERDUTY_API_KEY", "")
 
 # Global clients
-redis_client: Optional[redis.Redis] = None
-http_client: Optional[httpx.AsyncClient] = None
-correlator: Optional[AlertCorrelator] = None
-suppression_engine: Optional[SuppressionEngine] = None
-router: Optional[AlertRouter] = None
+redis_client: redis.Redis | None = None
+http_client: httpx.AsyncClient | None = None
+correlator: AlertCorrelator | None = None
+suppression_engine: SuppressionEngine | None = None
+router: AlertRouter | None = None
 
 
 # Pydantic models
@@ -53,56 +53,56 @@ class AlertLabel(BaseModel):
     """Alert labels."""
 
     alertname: str
-    service: Optional[str] = None
-    severity: Optional[str] = "medium"
-    namespace: Optional[str] = None
-    pod: Optional[str] = None
+    service: str | None = None
+    severity: str | None = "medium"
+    namespace: str | None = None
+    pod: str | None = None
 
 
 class AlertAnnotation(BaseModel):
     """Alert annotations."""
 
-    summary: Optional[str] = None
-    description: Optional[str] = None
-    runbook_url: Optional[str] = None
+    summary: str | None = None
+    description: str | None = None
+    runbook_url: str | None = None
 
 
 class Alert(BaseModel):
     """Alert model."""
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    labels: Dict[str, Any]
-    annotations: Dict[str, Any] = Field(default_factory=dict)
+    labels: dict[str, Any]
+    annotations: dict[str, Any] = Field(default_factory=dict)
     startsAt: datetime
-    endsAt: Optional[datetime] = None
+    endsAt: datetime | None = None
     status: str = "firing"
-    generatorURL: Optional[str] = None
-    fingerprint: Optional[str] = None
+    generatorURL: str | None = None
+    fingerprint: str | None = None
 
 
 class AlertGroup(BaseModel):
     """Grouped alerts."""
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    alerts: List[Alert]
+    alerts: list[Alert]
     grouping_key: str
     priority_score: float
     first_seen: datetime
     last_seen: datetime
     count: int
     suppressed: bool = False
-    suppression_reason: Optional[str] = None
-    routed_to: Optional[List[str]] = None
+    suppression_reason: str | None = None
+    routed_to: list[str] | None = None
 
 
 class PrometheusAlertPayload(BaseModel):
     """Prometheus webhook alert payload."""
 
-    alerts: List[Alert]
+    alerts: list[Alert]
     status: str = "firing"
-    groupLabels: Dict[str, str] = Field(default_factory=dict)
-    commonLabels: Dict[str, str] = Field(default_factory=dict)
-    commonAnnotations: Dict[str, str] = Field(default_factory=dict)
+    groupLabels: dict[str, str] = Field(default_factory=dict)
+    commonLabels: dict[str, str] = Field(default_factory=dict)
+    commonAnnotations: dict[str, str] = Field(default_factory=dict)
 
 
 class SuppressionRule(BaseModel):
@@ -112,17 +112,17 @@ class SuppressionRule(BaseModel):
     name: str
     type: str  # maintenance_window, known_issue, flapping, cascade, time_based
     enabled: bool = True
-    alert_pattern: Optional[str] = None
-    services: Optional[List[str]] = None
-    schedule: Optional[str] = None
-    duration: Optional[int] = None
-    threshold: Optional[int] = None
-    window: Optional[int] = None
-    expires_at: Optional[datetime] = None
-    ticket_url: Optional[str] = None
-    root_cause_alert: Optional[str] = None
-    dependent_alerts: Optional[List[str]] = None
-    suppress_severity: Optional[List[str]] = None
+    alert_pattern: str | None = None
+    services: list[str] | None = None
+    schedule: str | None = None
+    duration: int | None = None
+    threshold: int | None = None
+    window: int | None = None
+    expires_at: datetime | None = None
+    ticket_url: str | None = None
+    root_cause_alert: str | None = None
+    dependent_alerts: list[str] | None = None
+    suppress_severity: list[str] | None = None
     action: str = "suppress"
 
 
@@ -229,7 +229,7 @@ async def health() -> HealthResponse:
             await redis_client.ping()
             redis_connected = True
     except Exception:
-        pass
+        logger.debug("Redis health check failed", exc_info=True)
 
     if suppression_engine:
         rules_loaded = len(suppression_engine.rules)
@@ -252,7 +252,7 @@ async def ready():
         else:
             raise HTTPException(status_code=503, detail="Redis client not initialized")
     except Exception as e:
-        raise HTTPException(status_code=503, detail=f"Redis not ready: {str(e)}")
+        raise HTTPException(status_code=503, detail=f"Redis not ready: {e!s}")
 
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
@@ -274,7 +274,7 @@ async def ingest_prometheus_alerts(payload: PrometheusAlertPayload, background_t
 
 
 @app.post("/api/v1/alerts/grafana")
-async def ingest_grafana_alerts(alerts: List[Alert], background_tasks: BackgroundTasks):
+async def ingest_grafana_alerts(alerts: list[Alert], background_tasks: BackgroundTasks):
     """Ingest alerts from Grafana."""
     ALERTS_RECEIVED.labels(source="grafana").inc(len(alerts))
 
@@ -284,7 +284,7 @@ async def ingest_grafana_alerts(alerts: List[Alert], background_tasks: Backgroun
 
 
 @app.post("/api/v1/alerts/datahub")
-async def ingest_datahub_alerts(alerts: List[Alert], background_tasks: BackgroundTasks):
+async def ingest_datahub_alerts(alerts: list[Alert], background_tasks: BackgroundTasks):
     """Ingest alerts from DataHub."""
     ALERTS_RECEIVED.labels(source="datahub").inc(len(alerts))
 
@@ -294,7 +294,7 @@ async def ingest_datahub_alerts(alerts: List[Alert], background_tasks: Backgroun
 
 
 @app.post("/api/v1/alerts/generic")
-async def ingest_generic_alerts(alerts: List[Alert], background_tasks: BackgroundTasks):
+async def ingest_generic_alerts(alerts: list[Alert], background_tasks: BackgroundTasks):
     """Ingest generic alerts."""
     ALERTS_RECEIVED.labels(source="generic").inc(len(alerts))
 
@@ -304,7 +304,7 @@ async def ingest_generic_alerts(alerts: List[Alert], background_tasks: Backgroun
 
 
 @app.get("/api/v1/alert-groups")
-async def get_alert_groups(limit: int = 50) -> List[AlertGroup]:
+async def get_alert_groups(limit: int = 50) -> list[AlertGroup]:
     """Get recent alert groups."""
     if not correlator:
         raise HTTPException(status_code=503, detail="Correlator not initialized")
@@ -348,7 +348,7 @@ async def acknowledge_alert(alert_id: str):
         raise HTTPException(status_code=503, detail="Redis not initialized")
 
     await redis_client.hset(f"alert:{alert_id}", "acknowledged", "true")
-    await redis_client.hset(f"alert:{alert_id}", "acknowledged_at", datetime.now().isoformat())
+    await redis_client.hset(f"alert:{alert_id}", "acknowledged_at", datetime.now(UTC).isoformat())
 
     return {"message": "Alert acknowledged", "alert_id": alert_id}
 
@@ -360,13 +360,13 @@ async def resolve_alert(alert_id: str):
         raise HTTPException(status_code=503, detail="Redis not initialized")
 
     await redis_client.hset(f"alert:{alert_id}", "status", "resolved")
-    await redis_client.hset(f"alert:{alert_id}", "resolved_at", datetime.now().isoformat())
+    await redis_client.hset(f"alert:{alert_id}", "resolved_at", datetime.now(UTC).isoformat())
 
     return {"message": "Alert resolved", "alert_id": alert_id}
 
 
 @app.get("/api/v1/rules")
-async def get_suppression_rules() -> List[SuppressionRule]:
+async def get_suppression_rules() -> list[SuppressionRule]:
     """Get all suppression rules."""
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
@@ -476,9 +476,9 @@ async def get_reduction_stats():
     }
 
 
-async def process_alerts(alerts: List[Alert], source: str):
+async def process_alerts(alerts: list[Alert], source: str):
     """Process incoming alerts through correlation, suppression, and routing."""
-    start_time = datetime.now()
+    start_time = datetime.now(UTC)
 
     try:
         # Correlate alerts
@@ -507,7 +507,7 @@ async def process_alerts(alerts: List[Alert], source: str):
         await redis_client.incr("stats:total_received", len(alerts))
         await redis_client.incr("stats:total_grouped", len(groups))
 
-        duration = (datetime.now() - start_time).total_seconds()
+        duration = (datetime.now(UTC) - start_time).total_seconds()
         PROCESSING_DURATION.observe(duration)
 
         logger.info(f"Processed {len(alerts)} alerts from {source} in {duration:.2f}s")

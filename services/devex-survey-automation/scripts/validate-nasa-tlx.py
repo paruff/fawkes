@@ -11,9 +11,9 @@ Validates that the NASA-TLX cognitive load assessment tool is deployed correctly
 """
 
 import asyncio
-import sys
 import json
-from datetime import datetime
+import sys
+from datetime import datetime, timezone
 
 # Colors for output
 GREEN = "\033[92m"
@@ -33,9 +33,9 @@ def print_test(name: str, passed: bool, message: str = ""):
 
 def print_header(text: str):
     """Print section header"""
-    print(f"\n{BLUE}{'='*60}{RESET}")
+    print(f"\n{BLUE}{'=' * 60}{RESET}")
     print(f"{BLUE}{text}{RESET}")
-    print(f"{BLUE}{'='*60}{RESET}\n")
+    print(f"{BLUE}{'=' * 60}{RESET}\n")
 
 
 async def check_database_tables():
@@ -143,7 +143,7 @@ async def test_submit_assessment():
         # Sample assessment data
         test_data = {
             "task_type": "validation_test",
-            "task_id": f"test-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
+            "task_id": f"test-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}",
             "mental_demand": 45.0,
             "physical_demand": 20.0,
             "temporal_demand": 55.0,
@@ -279,9 +279,9 @@ def check_documentation():
 
 async def main():
     """Run all validation checks"""
-    print(f"\n{BLUE}{'='*60}{RESET}")
+    print(f"\n{BLUE}{'=' * 60}{RESET}")
     print(f"{BLUE}NASA-TLX Cognitive Load Assessment - Deployment Validation{RESET}")
-    print(f"{BLUE}{'='*60}{RESET}")
+    print(f"{BLUE}{'=' * 60}{RESET}")
 
     results = []
 

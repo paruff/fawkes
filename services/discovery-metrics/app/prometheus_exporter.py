@@ -1,18 +1,20 @@
 """Prometheus metrics exporter for discovery metrics."""
 
+from datetime import datetime, timedelta, timezone
+
 from prometheus_client import Gauge
-from sqlalchemy.orm import Session
 from sqlalchemy import func
-from datetime import datetime, timedelta
+from sqlalchemy.orm import Session
+
 from app.models import (
-    Interview,
-    InterviewStatus,
     DiscoveryInsight,
-    InsightStatus,
     Experiment,
     ExperimentStatus,
-    FeatureValidation,
     FeatureStatus,
+    FeatureValidation,
+    InsightStatus,
+    Interview,
+    InterviewStatus,
     TeamPerformance,
 )
 
@@ -94,7 +96,7 @@ def update_prometheus_metrics(db: Session):
         discovery_interviews_by_status.labels(status=status.value).set(count)
 
     # Recent interviews
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     seven_days_ago = now - timedelta(days=7)
     thirty_days_ago = now - timedelta(days=30)
 

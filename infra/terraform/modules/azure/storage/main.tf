@@ -126,7 +126,7 @@ resource "azurerm_storage_account" "main" {
 resource "azurerm_storage_container" "main" {
   for_each              = var.containers
   name                  = each.key
-  storage_account_name  = azurerm_storage_account.main.name
+  storage_account_id    = azurerm_storage_account.main.id
   container_access_type = lookup(each.value, "access_type", "private")
 
   metadata = lookup(each.value, "metadata", {})
@@ -218,14 +218,6 @@ resource "azurerm_monitor_diagnostic_setting" "blob" {
     for_each = ["StorageRead", "StorageWrite", "StorageDelete"]
     content {
       category = enabled_log.value
-    }
-  }
-
-  dynamic "metric" {
-    for_each = ["Transaction", "Capacity"]
-    content {
-      category = metric.value
-      enabled  = true
     }
   }
 }
