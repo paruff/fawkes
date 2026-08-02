@@ -188,10 +188,10 @@ Every PR must include the AI-Assisted Review Block:
 
 ### 8.1 Deployment Lifecycle Gates
 
-- **Main CI guard required** — every PR targeting `main` must pass `paruff/ufawkespipe/.github/workflows/reusable-main-ci-guard.yml@v1.2.0` validating `code-quality.yml` succeeds before merge
-- **Post-deployment verification** — `deploy.yml` must include post-deployment smoke tests or health checks; deployment is not complete until verification passes
-- **Rollback on failure** — any post-deployment verification failure triggers automatic rollback (revert GitOps commit → ArgoCD re-syncs previous state)
-- **Observability built-in** — every CI/CD job logs `job-start` and `job-finish` timestamps with workflow name, job name, and commit SHA for DORA metrics traceability
+- **Main CI guard required (implemented)** — every PR targeting `main` must pass `paruff/ufawkespipe/.github/workflows/reusable-main-ci-guard.yml@v1.2.0` validating `code-quality.yml` succeeds before merge
+- **Post-deployment verification (target, not yet built)** — `deploy.yml` will need post-deployment smoke tests or health checks before deployment can be considered complete; see `docs/DEPLOYMENT_STRATEGY.md` Phase 3/4
+- **Rollback on failure (target, not yet built)** — once verification exists, any failure should trigger automatic rollback (revert GitOps commit → ArgoCD re-syncs previous state)
+- **Observability built-in (implemented)** — every CI/CD job logs `job-start` and `job-finish` timestamps with workflow name, job name, and commit SHA for DORA metrics traceability
 
 ### 8.2 uFawkesPipe Reusable Workflows
 
