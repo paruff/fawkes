@@ -6,11 +6,12 @@ These steps test the SCORE workload specification integration in Fawkes.
 
 import os
 import shutil
-import yaml
 import tempfile
 from pathlib import Path
-from behave import given, when, then
 from subprocess import run
+
+import yaml
+from behave import given, then, when
 
 
 @given("the Fawkes platform is operational")
@@ -119,6 +120,7 @@ def step_then_change_reflected_in_deployment(context):
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         # Check if deployment was generated
@@ -185,6 +187,7 @@ def step_when_score_deployed_to_env(context, environment):
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         context.deployment_result = result
@@ -212,7 +215,6 @@ def step_then_k8s_env_resources(context, environment):
 def step_then_vault_address(context, environment):
     """Verify Vault address is environment-specific."""
     # In a real test, this would check ExternalSecret manifests
-    pass
 
 
 @then("the Ingress hostname matches the {environment} environment")
@@ -262,6 +264,7 @@ def step_when_score_transformer_processes(context):
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         context.transformation_result = result

@@ -1,14 +1,14 @@
 """Azure Monitor operations for metrics."""
 
 import logging
-from typing import Dict, Any, Optional, List
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from azure.mgmt.monitor import MonitorManagementClient
 from azure.core.exceptions import HttpResponseError
+from azure.mgmt.monitor import MonitorManagementClient
 
 from ...exceptions import CloudProviderError, ValidationError
-from ...utils import retry_with_backoff, RateLimiter
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class AzureMonitorService:
     """Azure Monitor service operations."""
 
-    def __init__(self, credential, subscription_id: str, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, credential, subscription_id: str, rate_limiter: RateLimiter | None = None):
         """
         Initialize Azure Monitor service.
 
@@ -30,7 +30,7 @@ class AzureMonitorService:
         self.rate_limiter = rate_limiter or RateLimiter(max_calls=10, time_window=1.0)
         self._clients = {}
 
-    def _get_client(self, subscription_id: Optional[str] = None) -> MonitorManagementClient:
+    def _get_client(self, subscription_id: str | None = None) -> MonitorManagementClient:
         """Get or create Monitor client."""
         sub_id = subscription_id or self.subscription_id
         if sub_id not in self._clients:
@@ -46,8 +46,8 @@ class AzureMonitorService:
         metric_name: str,
         start_time: datetime,
         end_time: datetime,
-        aggregation: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        aggregation: str | None = None,
+    ) -> dict[str, Any]:
         """
         Get Azure Monitor metrics for a resource.
 
@@ -145,7 +145,7 @@ class AzureMonitorService:
             raise CloudProviderError(f"Unexpected error getting metrics: {e}", provider="azure")
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(HttpResponseError,))
-    def list_metric_definitions(self, resource_id: str) -> List[Dict[str, Any]]:
+    def list_metric_definitions(self, resource_id: str) -> list[dict[str, Any]]:
         """
         List available metric definitions for a resource.
 
@@ -203,9 +203,9 @@ class AzureMonitorService:
         self,
         start_time: datetime,
         end_time: datetime,
-        resource_group: Optional[str] = None,
-        resource_id: Optional[str] = None,
-    ) -> List[Dict[str, Any]]:
+        resource_group: str | None = None,
+        resource_id: str | None = None,
+    ) -> list[dict[str, Any]]:
         """
         Get Azure Activity Logs.
 

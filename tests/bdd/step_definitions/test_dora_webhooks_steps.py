@@ -3,11 +3,12 @@ Step definitions for DORA Metrics Webhooks BDD tests
 """
 
 import os
-import requests
+from datetime import datetime, timezone
+
 import pytest
-from datetime import datetime
-from pytest_bdd import scenarios, given, when, then, parsers
+import requests
 from kubernetes import client, config
+from pytest_bdd import given, parsers, scenarios, then, when
 
 # Default DevLake service URL (mirrors the Groovy shared library default)
 DEVLAKE_DEFAULT_URL = "http://devlake.fawkes-devlake.svc:8080"
@@ -128,7 +129,7 @@ def devlake_receives_commit():
             {
                 "id": webhook_context.last_commit_sha,
                 "message": "test: webhook test commit",
-                "timestamp": datetime.utcnow().isoformat() + "Z",
+                "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
                 "author": {"name": "Test User", "email": "test@example.com"},
             }
         ],
@@ -215,7 +216,7 @@ def webhook_sent_to_url(webhook_url):
         "duration_ms": 60000,
         "stage": "build",
         "is_retry": False,
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
         "url": "http://jenkins.test/job/test/42/",
         "type": "ci_build",
     }
@@ -281,8 +282,8 @@ def devlake_receives_deployment():
         "namespace": "default",
         "revision": "abc123def456",
         "commit_sha": "abc123def456",
-        "sync_started_at": datetime.utcnow().isoformat() + "Z",
-        "sync_finished_at": datetime.utcnow().isoformat() + "Z",
+        "sync_started_at": datetime.now(timezone.utc).isoformat() + "Z",
+        "sync_finished_at": datetime.now(timezone.utc).isoformat() + "Z",
         "health_status": "Healthy",
         "sync_status": "Synced",
     }
@@ -500,9 +501,9 @@ def is_rework_commit_returns_true():
         assert webhook_context.is_rework_result is True
     else:
         # Fallback: verify logic directly — rate > threshold → True
-        assert (
-            rework_rate > REWORK_RATE_THRESHOLD
-        ), f"Expected rework rate > {REWORK_RATE_THRESHOLD} % to trigger True, got {rework_rate}"
+        assert rework_rate > REWORK_RATE_THRESHOLD, (
+            f"Expected rework rate > {REWORK_RATE_THRESHOLD} % to trigger True, got {rework_rate}"
+        )
 
 
 @then("it should return false without failing the pipeline")

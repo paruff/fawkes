@@ -5,12 +5,13 @@ Adds standard labels, annotations, security contexts where missing.
 """
 
 import sys
-import yaml
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
+import yaml
 
 
-def ensure_standard_labels(resource: Dict[str, Any], app_name: str, component: str = None, version: str = None) -> None:
+def ensure_standard_labels(resource: dict[str, Any], app_name: str, component: str = None, version: str = None) -> None:
     """Add standard labels to a Kubernetes resource."""
     if "metadata" not in resource:
         resource["metadata"] = {}
@@ -36,7 +37,7 @@ def ensure_standard_labels(resource: Dict[str, Any], app_name: str, component: s
         labels["app.kubernetes.io/version"] = version
 
 
-def ensure_prometheus_annotations(resource: Dict[str, Any], port: str = "8000", path: str = "/metrics") -> None:
+def ensure_prometheus_annotations(resource: dict[str, Any], port: str = "8000", path: str = "/metrics") -> None:
     """Add Prometheus scraping annotations to Deployment pod template."""
     if resource.get("kind") != "Deployment":
         return
@@ -59,7 +60,7 @@ def ensure_prometheus_annotations(resource: Dict[str, Any], port: str = "8000", 
         annotations["prometheus.io/path"] = path
 
 
-def ensure_pod_security_context(resource: Dict[str, Any]) -> None:
+def ensure_pod_security_context(resource: dict[str, Any]) -> None:
     """Ensure pod-level security context is set."""
     if resource.get("kind") not in ["Deployment", "CronJob"]:
         return
@@ -88,7 +89,7 @@ def ensure_pod_security_context(resource: Dict[str, Any]) -> None:
         sec_ctx["fsGroup"] = 65534
 
 
-def ensure_container_security_context(container: Dict[str, Any]) -> None:
+def ensure_container_security_context(container: dict[str, Any]) -> None:
     """Ensure container-level security context is set."""
     if "securityContext" not in container:
         container["securityContext"] = {}
@@ -111,7 +112,7 @@ def ensure_container_security_context(container: Dict[str, Any]) -> None:
         sec_ctx["seccompProfile"] = {"type": "RuntimeDefault"}
 
 
-def check_resource_limits(container: Dict[str, Any]) -> List[str]:
+def check_resource_limits(container: dict[str, Any]) -> list[str]:
     """Check if resource limits are defined."""
     warnings = []
 
@@ -127,7 +128,7 @@ def check_resource_limits(container: Dict[str, Any]) -> List[str]:
     return warnings
 
 
-def check_health_checks(container: Dict[str, Any]) -> List[str]:
+def check_health_checks(container: dict[str, Any]) -> list[str]:
     """Check if health checks are defined."""
     warnings = []
 
@@ -139,7 +140,7 @@ def check_health_checks(container: Dict[str, Any]) -> List[str]:
     return warnings
 
 
-def analyze_manifest(file_path: Path) -> Dict[str, Any]:
+def analyze_manifest(file_path: Path) -> dict[str, Any]:
     """Analyze a manifest file and return findings."""
     with open(file_path, "r") as f:
         content = f.read()

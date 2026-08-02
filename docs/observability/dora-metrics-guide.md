@@ -57,6 +57,7 @@ Deployment Frequency = Number of successful ArgoCD syncs to production / Time pe
 ```
 
 **Performance Levels**:
+
 | Level | Frequency |
 |-------|-----------|
 | Elite | Multiple times per day |
@@ -95,6 +96,7 @@ The lead time includes:
 4. **GitOps Sync Time**: ArgoCD reconciliation
 
 **Performance Levels**:
+
 | Level | Lead Time |
 |-------|-----------|
 | Elite | Less than 1 hour |
@@ -133,6 +135,7 @@ A deployment is considered a failure if:
 - A rollback sync is triggered
 
 **Performance Levels**:
+
 | Level | CFR |
 |-------|-----|
 | Elite | 0-5% |
@@ -171,6 +174,7 @@ Resolution is detected when:
 - Manual resolution via webhook/API
 
 **Performance Levels**:
+
 | Level | MTTR |
 |-------|------|
 | Elite | Less than 1 hour |
@@ -214,6 +218,7 @@ SLO Adherence = Time within SLO / Total Time × 100%
 - **Error Rate**: Percentage of failed requests
 
 **Performance Levels**:
+
 | Level | SLO Adherence |
 |-------|---------------|
 | Elite | 99.99%+ |

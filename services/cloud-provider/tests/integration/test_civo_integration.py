@@ -9,13 +9,13 @@ Tests are skipped by default unless CIVO_TOKEN is set.
 """
 
 import os
-import pytest
 import time
-from datetime import datetime
+from datetime import UTC, datetime
 
-from src.providers.civo_provider import CivoProvider
-from src.interfaces.provider import ClusterConfig, StorageConfig
+import pytest
 from src.exceptions import ResourceNotFoundError
+from src.interfaces.provider import ClusterConfig, StorageConfig
+from src.providers.civo_provider import CivoProvider
 
 # Skip all tests in this file unless CIVO_TOKEN is set
 pytestmark = pytest.mark.skipif(
@@ -36,7 +36,7 @@ def civo_provider():
 @pytest.fixture
 def unique_name():
     """Generate a unique name for test resources."""
-    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    timestamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
     return f"test-{timestamp}"
 
 
@@ -111,8 +111,8 @@ class TestCivoIntegrationCluster:
                 if "cluster_id" in locals():
                     print(f"🧹 Cleaning up cluster: {cluster_id}")
                     civo_provider.delete_cluster(cluster_id)
-            except Exception:
-                pass
+            except Exception as cleanup_error:
+                print(f"⚠️  Cleanup failed: {cleanup_error}")
             raise
 
 
@@ -173,8 +173,8 @@ class TestCivoIntegrationStorage:
                 if "storage_id" in locals():
                     print(f"🧹 Cleaning up storage: {storage_id}")
                     civo_provider.delete_storage(storage_id)
-            except Exception:
-                pass
+            except Exception as cleanup_error:
+                print(f"⚠️  Cleanup failed: {cleanup_error}")
             raise
 
 
@@ -235,8 +235,8 @@ def cleanup_test_resources(provider):
                 print(f"  Removing test cluster: {cluster.name}")
                 try:
                     provider.delete_cluster(cluster.id)
-                except Exception:
-                    pass
+                except Exception as cleanup_error:
+                    print(f"  Failed to remove cluster {cluster.name}: {cleanup_error}")
     except Exception as e:
         print(f"  Error cleaning clusters: {e}")
 
@@ -248,8 +248,8 @@ def cleanup_test_resources(provider):
                 print(f"  Removing test storage: {storage.name}")
                 try:
                     provider.delete_storage(storage.id)
-                except Exception:
-                    pass
+                except Exception as cleanup_error:
+                    print(f"  Failed to remove storage {storage.name}: {cleanup_error}")
     except Exception as e:
         print(f"  Error cleaning storage: {e}")
 

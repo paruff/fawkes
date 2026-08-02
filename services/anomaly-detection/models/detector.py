@@ -9,8 +9,9 @@ Implements:
 
 import logging
 import os
-from datetime import datetime, timedelta
-from typing import List, Dict, Tuple
+from datetime import datetime, timedelta, timezone
+from typing import Dict, List, Tuple
+
 import numpy as np
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
@@ -60,7 +61,7 @@ def initialize_models():
         raise
 
 
-def get_model_info() -> List[Dict]:
+def get_model_info() -> list[dict]:
     """Get information about loaded models."""
     return [
         {
@@ -87,7 +88,7 @@ def get_model_info() -> List[Dict]:
     ]
 
 
-async def detect_anomalies(metric_query: str, http_client) -> List:
+async def detect_anomalies(metric_query: str, http_client) -> list:
     """
     Detect anomalies for a given Prometheus query.
 
@@ -99,10 +100,10 @@ async def detect_anomalies(metric_query: str, http_client) -> List:
         List of AnomalyScore objects
     """
     try:
-        from app.main import AnomalyScore, PROMETHEUS_URL
+        from app.main import PROMETHEUS_URL, AnomalyScore
     except ImportError:
         # During testing
-        from ..app.main import AnomalyScore, PROMETHEUS_URL
+        from ..app.main import PROMETHEUS_URL, AnomalyScore
 
     if not models_initialized:
         logger.warning("Models not initialized, skipping detection")
@@ -110,7 +111,7 @@ async def detect_anomalies(metric_query: str, http_client) -> List:
 
     try:
         # Query Prometheus for time series data
-        end_time = datetime.now()
+        end_time = datetime.now(timezone.utc)
         start_time = end_time - timedelta(minutes=LOOKBACK_MINUTES)
 
         params = {
@@ -151,7 +152,7 @@ async def detect_anomalies(metric_query: str, http_client) -> List:
                 continue
 
             # Extract timestamps and values
-            timestamps = [datetime.fromtimestamp(v[0]) for v in values]
+            timestamps = [datetime.fromtimestamp(v[0], tz=timezone.utc) for v in values]
             metric_values = [float(v[1]) for v in values]
 
             # Run multiple detection methods
@@ -216,7 +217,7 @@ async def detect_anomalies(metric_query: str, http_client) -> List:
         return []
 
 
-def _format_metric_name(metric_dict: Dict, query: str) -> str:
+def _format_metric_name(metric_dict: dict, query: str) -> str:
     """Format metric name from labels."""
     if not metric_dict:
         return query
@@ -235,7 +236,7 @@ def _format_metric_name(metric_dict: Dict, query: str) -> str:
     return name
 
 
-def _detect_zscore(timestamps: List[datetime], values: List[float]) -> List[Tuple]:
+def _detect_zscore(timestamps: list[datetime], values: list[float]) -> list[tuple]:
     """
     Detect anomalies using Z-score method.
 
@@ -263,7 +264,7 @@ def _detect_zscore(timestamps: List[datetime], values: List[float]) -> List[Tupl
     return anomalies
 
 
-def _detect_iqr(timestamps: List[datetime], values: List[float]) -> List[Tuple]:
+def _detect_iqr(timestamps: list[datetime], values: list[float]) -> list[tuple]:
     """
     Detect anomalies using Interquartile Range method.
 
@@ -299,7 +300,7 @@ def _detect_iqr(timestamps: List[datetime], values: List[float]) -> List[Tuple]:
     return anomalies
 
 
-def _detect_rate_of_change(timestamps: List[datetime], values: List[float]) -> List[Tuple]:
+def _detect_rate_of_change(timestamps: list[datetime], values: list[float]) -> list[tuple]:
     """
     Detect anomalies based on sudden rate of change.
 
@@ -334,7 +335,7 @@ def _detect_rate_of_change(timestamps: List[datetime], values: List[float]) -> L
     return anomalies
 
 
-def _detect_isolation_forest(timestamps: List[datetime], values: List[float]) -> List[Tuple]:
+def _detect_isolation_forest(timestamps: list[datetime], values: list[float]) -> list[tuple]:
     """
     Detect anomalies using Isolation Forest.
 

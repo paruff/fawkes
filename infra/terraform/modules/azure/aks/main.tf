@@ -63,6 +63,10 @@ resource "azurerm_kubernetes_cluster" "main" {
     }
   }
 
+  node_provisioning_profile {
+    mode = "Manual"
+  }
+
   # Managed Identity
   identity {
     type = "SystemAssigned"
@@ -220,14 +224,6 @@ resource "azurerm_monitor_diagnostic_setting" "aks" {
     for_each = var.diagnostic_log_categories
     content {
       category = enabled_log.value
-    }
-  }
-
-  dynamic "metric" {
-    for_each = ["AllMetrics"]
-    content {
-      category = metric.value
-      enabled  = true
     }
   }
 }

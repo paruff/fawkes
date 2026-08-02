@@ -2,8 +2,8 @@
 Unit tests for Backstage TechDocs indexer.
 """
 
-import sys
 import os
+import sys
 from unittest.mock import Mock, patch
 
 # Add parent directory to path
