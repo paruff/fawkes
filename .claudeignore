@@ -22,6 +22,11 @@ override.tf.json
 *_override.tf.json
 terraform.log
 terraform_*.zip
+*.tfvars
+*.tfvars.json
+*auto.tfvars
+*auto.tfvars.json
+!*.tfvars.example
 
 # ---- Node / JS build & package caches (design-system/node_modules ~500M) ----
 **/node_modules/
@@ -52,6 +57,15 @@ env/
 coverage.xml
 htmlcov/
 *.egg-info/
+.tox/
+
+# ---- Go vendored deps ----
+vendor/
+
+# ---- Shell env / direnv / generic tool caches ----
+.direnv/
+.cache/
+.pre-commit-cache/
 
 # ---- Built documentation site (mkdocs output, ~67M, mirrors docs/) ----
 site/
@@ -65,6 +79,7 @@ graphify-out/
 scratch/
 ci-diagnosis.md
 ci-fix-report.md
+jenkins_home/
 
 # ---- OS / editor cruft ----
 .DS_Store
@@ -72,6 +87,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
+.idea/
 
 # ---- Logs, archives, and binary blobs ----
 *.log
