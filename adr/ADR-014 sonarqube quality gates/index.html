@@ -5958,15 +5958,55 @@
 └─────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h3 id="quality-gate-strategy">Quality Gate Strategy</h3>
-<p><strong>Default Quality Gate Conditions</strong>:
-| Metric | Operator | Threshold | Rationale |
-|--------|----------|-----------|-----------|
-| New Bugs | Is Greater Than | 0 | Prevent bug introduction |
-| New Vulnerabilities | Is Greater Than | 0 | Security-first approach |
-| New Security Hotspots Reviewed | Is Less Than | 100% | Ensure security review |
-| New Code Coverage | Is Less Than | 80% | Maintain test coverage |
-| New Duplicated Lines (%) | Is Greater Than | 3% | Limit code duplication |
-| New Maintainability Rating | Is Worse Than | A | Quality standards |</p>
+<p><strong>Default Quality Gate Conditions</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Operator</th>
+<th>Threshold</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New Bugs</td>
+<td>Is Greater Than</td>
+<td>0</td>
+<td>Prevent bug introduction</td>
+</tr>
+<tr>
+<td>New Vulnerabilities</td>
+<td>Is Greater Than</td>
+<td>0</td>
+<td>Security-first approach</td>
+</tr>
+<tr>
+<td>New Security Hotspots Reviewed</td>
+<td>Is Less Than</td>
+<td>100%</td>
+<td>Ensure security review</td>
+</tr>
+<tr>
+<td>New Code Coverage</td>
+<td>Is Less Than</td>
+<td>80%</td>
+<td>Maintain test coverage</td>
+</tr>
+<tr>
+<td>New Duplicated Lines (%)</td>
+<td>Is Greater Than</td>
+<td>3%</td>
+<td>Limit code duplication</td>
+</tr>
+<tr>
+<td>New Maintainability Rating</td>
+<td>Is Worse Than</td>
+<td>A</td>
+<td>Quality standards</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Quality Gate Enforcement</strong>:</p>
 <ol>
 <li>Main branch commits MUST pass Quality Gate before image push</li>

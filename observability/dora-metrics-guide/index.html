@@ -5989,13 +5989,33 @@ stability, and identify areas for improvement.</p>
 <p><strong>Calculation</strong>:</p>
 <div class="highlight"><pre><span></span><code>Deployment Frequency = Number of successful ArgoCD syncs to production / Time period
 </code></pre></div>
-<p><strong>Performance Levels</strong>:
-| Level | Frequency |
-|-------|-----------|
-| Elite | Multiple times per day |
-| High | Once per day to once per week |
-| Medium | Once per week to once per month |
-| Low | Less than once per month |</p>
+<p><strong>Performance Levels</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elite</td>
+<td>Multiple times per day</td>
+</tr>
+<tr>
+<td>High</td>
+<td>Once per day to once per week</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>Once per week to once per month</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>Less than once per month</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Fawkes Implementation</strong>:</p>
 <ul>
 <li>DevLake ArgoCD plugin collects sync events</li>
@@ -6020,13 +6040,33 @@ stability, and identify areas for improvement.</p>
 <li><strong>CI Time</strong>: Jenkins build and test execution</li>
 <li><strong>GitOps Sync Time</strong>: ArgoCD reconciliation</li>
 </ol>
-<p><strong>Performance Levels</strong>:
-| Level | Lead Time |
-|-------|-----------|
-| Elite | Less than 1 hour |
-| High | 1 hour to 1 day |
-| Medium | 1 day to 1 week |
-| Low | More than 1 week |</p>
+<p><strong>Performance Levels</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Lead Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elite</td>
+<td>Less than 1 hour</td>
+</tr>
+<tr>
+<td>High</td>
+<td>1 hour to 1 day</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>1 day to 1 week</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>More than 1 week</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Fawkes Implementation</strong>:</p>
 <ul>
 <li>DevLake correlates GitHub commits with ArgoCD syncs</li>
@@ -6051,13 +6091,33 @@ stability, and identify areas for improvement.</p>
 <li>An incident is created within a configured time window after sync</li>
 <li>A rollback sync is triggered</li>
 </ul>
-<p><strong>Performance Levels</strong>:
-| Level | CFR |
-|-------|-----|
-| Elite | 0-5% |
-| High | 5-10% |
-| Medium | 10-15% |
-| Low | 15%+ |</p>
+<p><strong>Performance Levels</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>CFR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elite</td>
+<td>0-5%</td>
+</tr>
+<tr>
+<td>High</td>
+<td>5-10%</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>10-15%</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>15%+</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Fawkes Implementation</strong>:</p>
 <ul>
 <li>ArgoCD sync failures are automatically tracked</li>
@@ -6082,13 +6142,33 @@ stability, and identify areas for improvement.</p>
 <li>Alertmanager alert resolves</li>
 <li>Manual resolution via webhook/API</li>
 </ul>
-<p><strong>Performance Levels</strong>:
-| Level | MTTR |
-|-------|------|
-| Elite | Less than 1 hour |
-| High | 1 hour to 1 day |
-| Medium | 1 day to 1 week |
-| Low | More than 1 week |</p>
+<p><strong>Performance Levels</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>MTTR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elite</td>
+<td>Less than 1 hour</td>
+</tr>
+<tr>
+<td>High</td>
+<td>1 hour to 1 day</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>1 day to 1 week</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>More than 1 week</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Fawkes Implementation</strong>:</p>
 <ul>
 <li>Incidents are created automatically from Alertmanager</li>
@@ -6115,13 +6195,33 @@ stability, and identify areas for improvement.</p>
 <li><strong>Latency P99</strong>: 99th percentile response time</li>
 <li><strong>Error Rate</strong>: Percentage of failed requests</li>
 </ul>
-<p><strong>Performance Levels</strong>:
-| Level | SLO Adherence |
-|-------|---------------|
-| Elite | 99.99%+ |
-| High | 99.9-99.99% |
-| Medium | 99-99.9% |
-| Low | Below 99% |</p>
+<p><strong>Performance Levels</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>SLO Adherence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elite</td>
+<td>99.99%+</td>
+</tr>
+<tr>
+<td>High</td>
+<td>99.9-99.99%</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>99-99.9%</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>Below 99%</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="jenkins-cirework-metrics">Jenkins CI/Rework Metrics</h2>
 <p>While DORA metrics focus on deployment and production, Jenkins provides valuable
