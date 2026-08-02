@@ -8,8 +8,8 @@ detect anomalies using ML models, and trigger alerts.
 import asyncio
 import logging
 import os
-from datetime import datetime
 import uuid
+from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
@@ -28,12 +28,12 @@ async def run_continuous_detection():
     """
     logger.info(f"Starting continuous anomaly detection (interval: {DETECTION_INTERVAL_SECONDS}s)")
 
-    from .main import http_client, recent_anomalies, ANOMALIES_DETECTED, FALSE_POSITIVE_RATE_GAUGE
+    from .main import ANOMALIES_DETECTED, FALSE_POSITIVE_RATE_GAUGE, http_client, recent_anomalies
     from .models import detector
 
     while True:
         try:
-            start_time = datetime.now()
+            start_time = datetime.now(timezone.utc)
 
             # Query Prometheus for metrics to monitor
             metrics_to_check = [
@@ -67,7 +67,7 @@ async def run_continuous_detection():
                 from .main import AnomalyDetection
 
                 anomaly_detection = AnomalyDetection(
-                    id=str(uuid.uuid4()), anomaly=anomaly_score, detected_at=datetime.now(), alerted=False
+                    id=str(uuid.uuid4()), anomaly=anomaly_score, detected_at=datetime.now(timezone.utc), alerted=False
                 )
 
                 # Add to recent anomalies
@@ -104,7 +104,7 @@ async def run_continuous_detection():
                 fp_rate = low_confidence / min(50, len(recent_anomalies))
                 FALSE_POSITIVE_RATE_GAUGE.set(fp_rate)
 
-            duration = (datetime.now() - start_time).total_seconds()
+            duration = (datetime.now(timezone.utc) - start_time).total_seconds()
             logger.debug(f"Detection cycle completed in {duration:.2f}s")
 
             # Wait for next interval

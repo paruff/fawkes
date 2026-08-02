@@ -12,19 +12,19 @@ class InsightCreate(BaseModel):
     title: str = Field(..., description="Brief title of the friction point")
     description: str = Field(..., description="Detailed description of the friction")
     content: str = Field(..., description="Full content including context and impact")
-    category_id: Optional[int] = Field(None, description="Category ID")
-    category_name: Optional[str] = Field(None, description="Category name (if ID not provided)")
-    tags: List[str] = Field(default_factory=list, description="Tags for the friction point")
+    category_id: int | None = Field(None, description="Category ID")
+    category_name: str | None = Field(None, description="Category name (if ID not provided)")
+    tags: list[str] = Field(default_factory=list, description="Tags for the friction point")
     priority: str = Field(default="medium", description="Priority: low, medium, high, critical")
     source: str = Field(default="CLI", description="Source of the insight")
-    author: Optional[str] = Field(None, description="Author of the friction log")
-    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional metadata")
+    author: str | None = Field(None, description="Author of the friction log")
+    metadata: dict[str, Any] | None = Field(default_factory=dict, description="Additional metadata")
 
 
 class InsightsClient:
     """Client for interacting with Insights API."""
 
-    def __init__(self, base_url: str, api_key: Optional[str] = None):
+    def __init__(self, base_url: str, api_key: str | None = None):
         """Initialize Insights API client.
 
         Args:
@@ -37,7 +37,7 @@ class InsightsClient:
         if api_key:
             self.session.headers["Authorization"] = f"Bearer {api_key}"
 
-    def create_insight(self, insight: InsightCreate) -> Dict[str, Any]:
+    def create_insight(self, insight: InsightCreate) -> dict[str, Any]:
         """Create a new insight (friction log).
 
         Args:
@@ -58,12 +58,12 @@ class InsightsClient:
 
     def list_insights(
         self,
-        category: Optional[str] = None,
-        priority: Optional[str] = None,
-        status: Optional[str] = None,
+        category: str | None = None,
+        priority: str | None = None,
+        status: str | None = None,
         limit: int = 10,
         offset: int = 0,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """List insights with optional filters.
 
         Args:
@@ -91,7 +91,7 @@ class InsightsClient:
         response.raise_for_status()
         return response.json()
 
-    def get_insight(self, insight_id: int) -> Dict[str, Any]:
+    def get_insight(self, insight_id: int) -> dict[str, Any]:
         """Get a specific insight by ID.
 
         Args:
@@ -107,7 +107,7 @@ class InsightsClient:
         response.raise_for_status()
         return response.json()
 
-    def list_categories(self) -> List[Dict[str, Any]]:
+    def list_categories(self) -> list[dict[str, Any]]:
         """List all available categories.
 
         Returns:
@@ -120,7 +120,7 @@ class InsightsClient:
         response.raise_for_status()
         return response.json()
 
-    def list_tags(self) -> List[Dict[str, Any]]:
+    def list_tags(self) -> list[dict[str, Any]]:
         """List all available tags.
 
         Returns:

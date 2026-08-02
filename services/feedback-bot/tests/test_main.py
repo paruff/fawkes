@@ -1,14 +1,15 @@
 """Unit tests for Mattermost Feedback Bot."""
 
+import os
+import sys
+
 import pytest
 from fastapi.testclient import TestClient
-import sys
-import os
 
 # Add parent directory to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.main import app, analyze_sentiment, auto_categorize
+from app.main import analyze_sentiment, app, auto_categorize
 
 client = TestClient(app)
 

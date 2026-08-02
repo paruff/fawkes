@@ -2,9 +2,9 @@
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Optional, Dict, Any, List
+from typing import Any, Dict, List, Optional
 
-from .models import Cluster, Database, Storage, CostData
+from .models import Cluster, CostData, Database, Storage
 
 
 @dataclass
@@ -16,11 +16,11 @@ class ClusterConfig:
     version: str
     node_count: int = 3
     node_instance_type: str = "t3.medium"
-    vpc_id: Optional[str] = None
-    subnet_ids: List[str] = field(default_factory=list)
-    security_group_ids: List[str] = field(default_factory=list)
-    tags: Dict[str, str] = field(default_factory=dict)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    vpc_id: str | None = None
+    subnet_ids: list[str] = field(default_factory=list)
+    security_group_ids: list[str] = field(default_factory=list)
+    tags: dict[str, str] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -34,15 +34,15 @@ class DatabaseConfig:
     region: str
     allocated_storage: int = 20
     master_username: str = "admin"
-    master_password: Optional[str] = None
-    vpc_id: Optional[str] = None
-    subnet_ids: List[str] = field(default_factory=list)
-    security_group_ids: List[str] = field(default_factory=list)
+    master_password: str | None = None
+    vpc_id: str | None = None
+    subnet_ids: list[str] = field(default_factory=list)
+    security_group_ids: list[str] = field(default_factory=list)
     backup_retention_days: int = 7
     multi_az: bool = False
     publicly_accessible: bool = False
-    tags: Dict[str, str] = field(default_factory=dict)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    tags: dict[str, str] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -54,9 +54,9 @@ class StorageConfig:
     versioning_enabled: bool = False
     encryption_enabled: bool = True
     public_access_blocked: bool = True
-    lifecycle_rules: List[Dict[str, Any]] = field(default_factory=list)
-    tags: Dict[str, str] = field(default_factory=dict)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    lifecycle_rules: list[dict[str, Any]] = field(default_factory=list)
+    tags: dict[str, str] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 class CloudProvider(ABC):
@@ -108,7 +108,7 @@ class CloudProvider(ABC):
         """
 
     @abstractmethod
-    def list_clusters(self, region: Optional[str] = None) -> List[Cluster]:
+    def list_clusters(self, region: str | None = None) -> list[Cluster]:
         """
         List all clusters.
 
@@ -169,7 +169,7 @@ class CloudProvider(ABC):
         """
 
     @abstractmethod
-    def list_databases(self, region: Optional[str] = None) -> List[Database]:
+    def list_databases(self, region: str | None = None) -> list[Database]:
         """
         List all database instances.
 
@@ -230,7 +230,7 @@ class CloudProvider(ABC):
         """
 
     @abstractmethod
-    def list_storage(self, region: Optional[str] = None) -> List[Storage]:
+    def list_storage(self, region: str | None = None) -> list[Storage]:
         """
         List all storage buckets.
 
@@ -261,7 +261,7 @@ class CloudProvider(ABC):
         """
 
     @abstractmethod
-    def get_metrics(self, resource_id: str, metric_name: str, start_time: str, end_time: str) -> Dict[str, Any]:
+    def get_metrics(self, resource_id: str, metric_name: str, start_time: str, end_time: str) -> dict[str, Any]:
         """
         Get metrics for a resource.
 

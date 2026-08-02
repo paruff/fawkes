@@ -15,7 +15,7 @@ local kubeconfig (useful for local testing).
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 from fastapi import FastAPI, HTTPException
 from kubernetes import client, config
@@ -39,12 +39,12 @@ app = FastAPI(title="MCP K8s Inspector", version="0.1.0", lifespan=lifespan)
 
 
 @app.get("/health")
-def health() -> Dict[str, str]:
+def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
 @app.get("/applications")
-def list_applications(namespace: str = "fawkes") -> List[Dict[str, Any]]:
+def list_applications(namespace: str = "fawkes") -> list[dict[str, Any]]:
     try:
         co = client.CustomObjectsApi()
         data = co.list_namespaced_custom_object(
@@ -72,7 +72,7 @@ def list_applications(namespace: str = "fawkes") -> List[Dict[str, Any]]:
 
 
 @app.get("/pods")
-def list_pods(namespace: str | None = None) -> List[Dict[str, Any]]:
+def list_pods(namespace: str | None = None) -> list[dict[str, Any]]:
     try:
         v1 = client.CoreV1Api()
         if namespace:

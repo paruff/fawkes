@@ -8,9 +8,9 @@ feature describing the expected GitOps bootstrap state.
 from pytest_bdd import scenarios
 
 try:
-    from .step_definitions import argocd_steps  # noqa: F401  Ensure step definitions are registered
+    from .step_definitions import argocd_steps
 except Exception:  # pragma: no cover
-    from tests.bdd.step_definitions import argocd_steps  # noqa: F401
+    from tests.bdd.step_definitions import argocd_steps
 
 # Provide the feature filename only; pytest-bdd will resolve it relative to the
 # default feature base directory to avoid duplicating 'features/features'.

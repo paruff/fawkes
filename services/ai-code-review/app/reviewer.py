@@ -2,10 +2,11 @@
 Review engine for analyzing code and generating review comments.
 """
 
+import json
 import logging
 from typing import Dict, List
+
 import httpx
-import json
 
 from .main import ReviewComment, ReviewResult
 
@@ -42,7 +43,7 @@ class ReviewEngine:
         self.sonarqube_token = sonarqube_token
         self.http_client = http_client
 
-    async def review_pull_request(self, pr_data: Dict, repo_data: Dict) -> ReviewResult:
+    async def review_pull_request(self, pr_data: dict, repo_data: dict) -> ReviewResult:
         """Review a pull request and post comments."""
         import time
 
@@ -97,7 +98,7 @@ class ReviewEngine:
             logger.error(f"Failed to fetch PR diff: {e}")
             return ""
 
-    async def _fetch_pr_files(self, repo: str, pr_number: int) -> List[Dict]:
+    async def _fetch_pr_files(self, repo: str, pr_number: int) -> list[dict]:
         """Fetch list of files changed in PR."""
         try:
             url = f"https://api.github.com/repos/{repo}/pulls/{pr_number}/files"
@@ -109,7 +110,7 @@ class ReviewEngine:
             logger.error(f"Failed to fetch PR files: {e}")
             return []
 
-    async def _query_rag_for_context(self, files: List[Dict]) -> str:
+    async def _query_rag_for_context(self, files: list[dict]) -> str:
         """Query RAG service for relevant patterns and standards."""
         try:
             # Build query from changed files
@@ -138,7 +139,7 @@ class ReviewEngine:
             logger.error(f"Failed to query RAG service: {e}")
             return ""
 
-    async def _fetch_sonarqube_findings(self, repo: str, pr_number: int) -> List[Dict]:
+    async def _fetch_sonarqube_findings(self, repo: str, pr_number: int) -> list[dict]:
         """Fetch SonarQube analysis findings."""
         try:
             # Lazy import to avoid loading unless needed
@@ -154,8 +155,8 @@ class ReviewEngine:
             return []
 
     async def _generate_review_comments(
-        self, diff: str, files: List[Dict], rag_context: str, sonarqube_findings: List[Dict]
-    ) -> List[ReviewComment]:
+        self, diff: str, files: list[dict], rag_context: str, sonarqube_findings: list[dict]
+    ) -> list[ReviewComment]:
         """Generate review comments using LLM."""
         comments = []
 
@@ -195,7 +196,7 @@ class ReviewEngine:
 
     async def _analyze_file_with_llm(
         self, filename: str, patch: str, category: str, rag_context: str, prompt_loader
-    ) -> List[ReviewComment]:
+    ) -> list[ReviewComment]:
         """Analyze a file using LLM for specific category."""
         try:
             # Get prompt for category
@@ -248,7 +249,7 @@ Provide review comments in JSON format:
             logger.error(f"Failed to analyze file with LLM: {e}")
             return []
 
-    def _parse_llm_response(self, content: str, filename: str, category: str) -> List[ReviewComment]:
+    def _parse_llm_response(self, content: str, filename: str, category: str) -> list[ReviewComment]:
         """Parse LLM response into ReviewComment objects."""
         comments = []
 
@@ -284,8 +285,8 @@ Provide review comments in JSON format:
         return comments
 
     def _merge_with_sonarqube(
-        self, ai_comments: List[ReviewComment], sonarqube_findings: List[Dict]
-    ) -> List[ReviewComment]:
+        self, ai_comments: list[ReviewComment], sonarqube_findings: list[dict]
+    ) -> list[ReviewComment]:
         """Merge AI comments with SonarQube findings, deduplicating."""
         # For now, just add both (deduplication logic can be added later)
         merged = list(ai_comments)
@@ -304,12 +305,12 @@ Provide review comments in JSON format:
 
         return merged
 
-    def _filter_comments(self, comments: List[ReviewComment]) -> List[ReviewComment]:
+    def _filter_comments(self, comments: list[ReviewComment]) -> list[ReviewComment]:
         """Filter out low-confidence comments."""
         # Keep comments with confidence >= 0.6
         return [c for c in comments if c.confidence >= 0.6]
 
-    def _estimate_false_positive_rate(self, comments: List[ReviewComment]) -> float:
+    def _estimate_false_positive_rate(self, comments: list[ReviewComment]) -> float:
         """Estimate false positive rate based on confidence scores."""
         if not comments:
             return 0.0
@@ -318,7 +319,7 @@ Provide review comments in JSON format:
         avg_confidence = sum(c.confidence for c in comments) / len(comments)
         return max(0.0, 1.0 - avg_confidence)
 
-    async def _post_review_to_github(self, repo: str, pr_number: int, comments: List[ReviewComment]):
+    async def _post_review_to_github(self, repo: str, pr_number: int, comments: list[ReviewComment]):
         """Post review comments to GitHub PR."""
         try:
             # Prepare review comments (limit to avoid API rate limits)

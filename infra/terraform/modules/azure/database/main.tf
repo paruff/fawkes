@@ -256,14 +256,6 @@ resource "azurerm_monitor_diagnostic_setting" "postgresql" {
       category = enabled_log.value
     }
   }
-
-  dynamic "metric" {
-    for_each = ["AllMetrics"]
-    content {
-      category = metric.value
-      enabled  = true
-    }
-  }
 }
 
 # Diagnostic Settings for MySQL
@@ -277,14 +269,6 @@ resource "azurerm_monitor_diagnostic_setting" "mysql" {
     for_each = ["MySqlSlowLogs", "MySqlAuditLogs"]
     content {
       category = enabled_log.value
-    }
-  }
-
-  dynamic "metric" {
-    for_each = ["AllMetrics"]
-    content {
-      category = metric.value
-      enabled  = true
     }
   }
 }

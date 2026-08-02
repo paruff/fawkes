@@ -2,10 +2,11 @@
 Unit tests for DevEx Survey Automation main application
 """
 
+from datetime import datetime, timezone
+from unittest.mock import AsyncMock, patch
+
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import AsyncMock, patch
-from datetime import datetime
 
 # Mock database before importing app
 with patch("app.database.init_database", new_callable=AsyncMock):
@@ -55,6 +56,15 @@ def test_thank_you_page(client):
     assert response.status_code == 200
     assert "Thank You!" in response.text
     assert "feedback has been submitted" in response.text
+
+
+def test_nasa_tlx_page_escapes_query_params(client):
+    """Reflected query params must not break out of HTML or <script> JS-string context"""
+    payload = "</script><img src=x onerror=alert(1)>'\";"
+    response = client.get("/nasa-tlx", params={"task_type": payload, "task_id": payload, "user_id": payload})
+    assert response.status_code == 200
+    assert "<img src=x onerror=alert(1)>" not in response.text
+    assert "</script><img" not in response.text
 
 
 @pytest.mark.parametrize(
@@ -124,7 +134,7 @@ def test_campaign_response_model():
         type="pulse",
         period="W50",
         year=2024,
-        started_at=datetime.now(),
+        started_at=datetime.now(timezone.utc),
         completed_at=None,
         total_sent=100,
         total_responses=65,

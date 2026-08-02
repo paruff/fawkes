@@ -2,25 +2,26 @@
 Metrics collectors for each SPACE dimension
 """
 
-import os
 import logging
+import os
 from datetime import datetime
-from sqlalchemy import select, func
+
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import (
-    SpaceSatisfaction,
-    SpacePerformance,
     SpaceActivity,
     SpaceCommunication,
     SpaceEfficiency,
+    SpacePerformance,
+    SpaceSatisfaction,
 )
 from .schemas import (
-    SatisfactionMetrics,
-    PerformanceMetrics,
     ActivityMetrics,
     CommunicationMetrics,
     EfficiencyMetrics,
+    PerformanceMetrics,
+    SatisfactionMetrics,
 )
 
 logger = logging.getLogger(__name__)

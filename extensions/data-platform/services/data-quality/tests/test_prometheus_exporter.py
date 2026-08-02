@@ -2,11 +2,11 @@
 Unit tests for the Prometheus exporter.
 """
 
-import pytest
-from pathlib import Path
-
 # Import the exporter module
 import sys
+from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -140,6 +140,6 @@ def test_requirements_includes_prometheus_client():
 
     with open(requirements_path, "r") as f:
         content = f.read()
-        assert (
-            "prometheus-client" in content or "prometheus_client" in content
-        ), "prometheus-client not found in requirements.txt"
+        assert "prometheus-client" in content or "prometheus_client" in content, (
+            "prometheus-client not found in requirements.txt"
+        )
