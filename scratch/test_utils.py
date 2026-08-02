@@ -1,6 +1,6 @@
 import pytest
 
-from scratch.utils import add, subtract, multiply, divide, modulo, power
+from scratch.utils import add, divide, modulo, multiply, power, subtract
 
 
 def test_add_integers():

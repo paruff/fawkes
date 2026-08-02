@@ -6,10 +6,11 @@ It analyzes feedback to determine priority, detect duplicates, and suggest appro
 labels and assignments.
 """
 
-import os
 import logging
-from typing import Optional, Tuple, List, Dict
+import os
 from difflib import SequenceMatcher
+from typing import Dict, List, Optional, Tuple
+
 import httpx
 
 logger = logging.getLogger(__name__)
@@ -46,8 +47,8 @@ PRIORITY_THRESHOLDS = {
 
 
 def calculate_priority_score(
-    feedback_type: str, category: str, comment: str, rating: int, sentiment_compound: Optional[float] = None
-) -> Tuple[str, float, Dict[str, any]]:
+    feedback_type: str, category: str, comment: str, rating: int, sentiment_compound: float | None = None
+) -> tuple[str, float, dict[str, any]]:
     """
     Calculate priority for feedback using AI-based scoring.
 
@@ -134,7 +135,7 @@ def calculate_priority_score(
     return priority, score, details
 
 
-def suggest_labels(feedback_type: str, category: str, priority: str, comment: str) -> List[str]:
+def suggest_labels(feedback_type: str, category: str, priority: str, comment: str) -> list[str]:
     """
     Suggest GitHub labels for the issue based on feedback characteristics.
 
@@ -186,7 +187,7 @@ def suggest_labels(feedback_type: str, category: str, priority: str, comment: st
 
 async def detect_duplicates(
     comment: str, category: str, feedback_type: str, similarity_threshold: float = 0.7
-) -> List[Dict[str, any]]:
+) -> list[dict[str, any]]:
     """
     Detect potential duplicate issues in GitHub repository.
 
@@ -213,8 +214,7 @@ async def detect_duplicates(
         # Search for open issues with feedback label and similar category
         category_normalized = category.lower().replace("/", "-").replace(" ", "-")
         search_query = (
-            f"repo:{GITHUB_OWNER}/{GITHUB_REPO} "
-            f"is:issue is:open label:feedback label:category:{category_normalized}"
+            f"repo:{GITHUB_OWNER}/{GITHUB_REPO} is:issue is:open label:feedback label:category:{category_normalized}"
         )
 
         async with httpx.AsyncClient() as client:
@@ -256,7 +256,7 @@ async def detect_duplicates(
                             "state": issue.get("state"),
                         }
                     )
-                    logger.info(f"Potential duplicate found: #{issue.get('number')} " f"(similarity: {similarity:.2f})")
+                    logger.info(f"Potential duplicate found: #{issue.get('number')} (similarity: {similarity:.2f})")
 
             # Sort by similarity (highest first)
             duplicates.sort(key=lambda x: x["similarity"], reverse=True)
@@ -288,7 +288,7 @@ def _calculate_similarity(text1: str, text2: str) -> float:
     return matcher.ratio()
 
 
-def determine_milestone(priority: str, feedback_type: str) -> Optional[str]:
+def determine_milestone(priority: str, feedback_type: str) -> str | None:
     """
     Determine appropriate milestone for the issue based on priority.
 
@@ -315,8 +315,8 @@ async def triage_feedback(
     category: str,
     comment: str,
     rating: int,
-    sentiment_compound: Optional[float] = None,
-) -> Dict[str, any]:
+    sentiment_compound: float | None = None,
+) -> dict[str, any]:
     """
     Perform complete AI triage on feedback submission.
 

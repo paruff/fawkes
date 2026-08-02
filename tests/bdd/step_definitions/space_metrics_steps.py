@@ -5,11 +5,12 @@ Tests SPACE framework (Satisfaction, Performance, Activity, Communication, Effic
 metrics collection, API endpoints, survey integration, and privacy compliance.
 """
 
-from behave import given, when, then
 import json
-import time
 import logging
 import math
+import time
+
+from behave import given, then, when
 from kubernetes import client, config
 from kubernetes.stream import stream
 
@@ -179,17 +180,17 @@ def step_check_health_endpoint(context):
 def step_verify_status(context, status):
     """Verify the service status."""
     assert context.health_status_code == 200, f"Expected 200, got {context.health_status_code}"
-    assert (
-        context.health_response.get("status") == status
-    ), f"Expected status '{status}', got '{context.health_response.get('status')}'"
+    assert context.health_response.get("status") == status, (
+        f"Expected status '{status}', got '{context.health_response.get('status')}'"
+    )
 
 
 @then('the response should include service name "{service_name}"')
 def step_verify_service_name(context, service_name):
     """Verify the service name in response."""
-    assert (
-        context.health_response.get("service") == service_name
-    ), f"Expected service '{service_name}', got '{context.health_response.get('service')}'"
+    assert context.health_response.get("service") == service_name, (
+        f"Expected service '{service_name}', got '{context.health_response.get('service')}'"
+    )
 
 
 # SPACE dimensions steps
@@ -415,9 +416,9 @@ def step_verify_health_score_range(context, min_score, max_score):
 @then("the response should include a status indicator")
 def step_verify_status_indicator(context):
     """Verify status indicator is present."""
-    assert (
-        "status" in context.health_score_response or "indicator" in context.health_score_response
-    ), "No status indicator found in response"
+    assert "status" in context.health_score_response or "indicator" in context.health_score_response, (
+        "No status indicator found in response"
+    )
 
 
 # Prometheus metrics steps
@@ -488,9 +489,9 @@ def step_verify_aggregation_threshold(context, threshold):
                 f"Aggregation threshold configuration is invalid: '{threshold_value}' is not a valid integer"
             ) from e
 
-        assert (
-            config_threshold >= threshold
-        ), f"Aggregation threshold {config_threshold} is less than required {threshold}"
+        assert config_threshold >= threshold, (
+            f"Aggregation threshold {config_threshold} is less than required {threshold}"
+        )
         logger.info(f"Aggregation threshold verified: {config_threshold}")
     except client.exceptions.ApiException as e:
         logger.warning(f"Could not verify aggregation threshold: {e}")

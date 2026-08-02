@@ -3,15 +3,15 @@
 import sys
 
 import click
-from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
-from rich.prompt import Prompt, Confirm, IntPrompt
 from rich import box
+from rich.console import Console
+from rich.panel import Panel
+from rich.prompt import Confirm, IntPrompt, Prompt
+from rich.table import Table
 
 from feedback_cli import __version__
-from feedback_cli.config import ConfigManager, FeedbackConfig
 from feedback_cli.client import FeedbackClient, FeedbackSubmission
+from feedback_cli.config import ConfigManager, FeedbackConfig
 from feedback_cli.queue import OfflineQueue
 
 console = Console()
@@ -347,7 +347,7 @@ def sync(ctx):
             # Mark for removal by setting to None
             queued_items[i] = None
         except Exception as e:
-            console.print(f"[red]✗[/red] Failed to submit item {i+1}: {e}")
+            console.print(f"[red]✗[/red] Failed to submit item {i + 1}: {e}")
             queue.increment_attempts(i)
             failed_indices.append(i)
 

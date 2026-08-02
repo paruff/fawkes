@@ -2,7 +2,7 @@
 Database models for DevEx Survey Automation
 """
 
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float, ForeignKey, JSON, Text
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy.sql import func
 

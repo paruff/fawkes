@@ -2,9 +2,10 @@
 Pydantic schemas for API requests and responses
 """
 
-from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import Optional, Dict, List
+from typing import Dict, List, Optional
+
+from pydantic import BaseModel, Field
 
 
 class PulseSurveyResponse(BaseModel):
@@ -14,7 +15,7 @@ class PulseSurveyResponse(BaseModel):
     valuable_work_pct: float = Field(..., ge=0, le=100, description="Percentage time on valuable work")
     cognitive_load: float = Field(..., ge=1, le=5, description="Cognitive load rating 1-5")
     friction_incidents: bool = Field(..., description="Experienced friction this week")
-    comment: Optional[str] = Field(None, max_length=1000, description="Optional feedback")
+    comment: str | None = Field(None, max_length=1000, description="Optional feedback")
 
     class Config:
         json_schema_extra = {
@@ -33,7 +34,7 @@ class SurveyDistributionRequest(BaseModel):
 
     type: str = Field(..., description="Survey type: pulse or deep_dive")
     test_mode: bool = Field(False, description="Test mode sends to limited users")
-    test_users: Optional[List[str]] = Field(None, description="Specific users for test mode")
+    test_users: list[str] | None = Field(None, description="Specific users for test mode")
 
     class Config:
         json_schema_extra = {
@@ -49,7 +50,7 @@ class CampaignResponse(BaseModel):
     period: str
     year: int
     started_at: datetime
-    completed_at: Optional[datetime]
+    completed_at: datetime | None
     total_sent: int
     total_responses: int
     response_rate: float
@@ -76,12 +77,12 @@ class PulseAnalytics(BaseModel):
 class WeeklyTrend(BaseModel):
     """Weekly trend data"""
 
-    weeks: List[int]
-    flow_state_trend: List[float]
-    valuable_work_trend: List[float]
-    cognitive_load_trend: List[float]
-    friction_trend: List[float]
-    response_counts: List[int]
+    weeks: list[int]
+    flow_state_trend: list[float]
+    valuable_work_trend: list[float]
+    cognitive_load_trend: list[float]
+    friction_trend: list[float]
+    response_counts: list[int]
 
 
 class ResponseRateMetrics(BaseModel):
@@ -103,7 +104,7 @@ class HealthResponse(BaseModel):
     service: str
     version: str
     database_connected: bool
-    integrations: Dict[str, bool]
+    integrations: dict[str, bool]
 
 
 class SurveySubmissionResponse(BaseModel):
@@ -119,7 +120,7 @@ class NASATLXRequest(BaseModel):
     """NASA-TLX assessment request"""
 
     task_type: str = Field(..., description="Type of task: deployment, pr_review, incident_response, build, etc.")
-    task_id: Optional[str] = Field(None, description="Optional reference to specific task")
+    task_id: str | None = Field(None, description="Optional reference to specific task")
 
     # NASA-TLX dimensions (0-100 scale)
     mental_demand: float = Field(..., ge=0, le=100, description="How mentally demanding was the task?")
@@ -130,8 +131,8 @@ class NASATLXRequest(BaseModel):
     frustration: float = Field(..., ge=0, le=100, description="How insecure, discouraged, irritated were you?")
 
     # Optional context
-    duration_minutes: Optional[int] = Field(None, ge=0, description="How long did the task take?")
-    comment: Optional[str] = Field(None, max_length=2000, description="Optional feedback")
+    duration_minutes: int | None = Field(None, ge=0, description="How long did the task take?")
+    comment: str | None = Field(None, max_length=2000, description="Optional feedback")
 
     class Config:
         json_schema_extra = {
@@ -156,7 +157,7 @@ class NASATLXResponse(BaseModel):
     id: int
     user_id: str
     task_type: str
-    task_id: Optional[str]
+    task_id: str | None
 
     mental_demand: float
     physical_demand: float
@@ -166,8 +167,8 @@ class NASATLXResponse(BaseModel):
     frustration: float
     overall_workload: float
 
-    duration_minutes: Optional[int]
-    comment: Optional[str]
+    duration_minutes: int | None
+    comment: str | None
     submitted_at: datetime
 
     class Config:
@@ -209,15 +210,15 @@ class NASATLXTrendData(BaseModel):
     """NASA-TLX trend data over time"""
 
     task_type: str
-    weeks: List[int]
-    mental_demand_trend: List[float]
-    physical_demand_trend: List[float]
-    temporal_demand_trend: List[float]
-    performance_trend: List[float]
-    effort_trend: List[float]
-    frustration_trend: List[float]
-    overall_workload_trend: List[float]
-    response_counts: List[int]
+    weeks: list[int]
+    mental_demand_trend: list[float]
+    physical_demand_trend: list[float]
+    temporal_demand_trend: list[float]
+    performance_trend: list[float]
+    effort_trend: list[float]
+    frustration_trend: list[float]
+    overall_workload_trend: list[float]
+    response_counts: list[int]
 
 
 class TaskTypeStats(BaseModel):
@@ -226,6 +227,6 @@ class TaskTypeStats(BaseModel):
     task_type: str
     total_assessments: int
     avg_workload: float
-    avg_duration_minutes: Optional[float]
+    avg_duration_minutes: float | None
     most_demanding_dimension: str  # Which dimension has highest average
     health_status: str  # healthy, warning, critical based on workload

@@ -1,14 +1,14 @@
 """AWS CloudWatch operations."""
 
 import logging
-from typing import Dict, Any, Optional
 from datetime import datetime
+from typing import Any, Dict, Optional
 
 import boto3
 from botocore.exceptions import ClientError
 
 from ...exceptions import CloudProviderError, ValidationError
-from ...utils import retry_with_backoff, RateLimiter
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class CloudWatchService:
     """AWS CloudWatch service operations."""
 
-    def __init__(self, session: boto3.Session, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, session: boto3.Session, rate_limiter: RateLimiter | None = None):
         """
         Initialize CloudWatch service.
 
@@ -39,7 +39,7 @@ class CloudWatchService:
     @retry_with_backoff(max_retries=3, retriable_exceptions=(ClientError,))
     def get_metrics(
         self, namespace: str, metric_name: str, dimensions: list, start_time: datetime, end_time: datetime, region: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Get CloudWatch metrics.
 
@@ -102,7 +102,7 @@ class CloudWatchService:
                 )
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(ClientError,))
-    def list_metrics(self, namespace: Optional[str] = None, region: str = "us-east-1") -> list:
+    def list_metrics(self, namespace: str | None = None, region: str = "us-east-1") -> list:
         """
         List available CloudWatch metrics.
 

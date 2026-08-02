@@ -3,22 +3,24 @@
 import logging
 from typing import List, Optional
 
-from azure.mgmt.rdbms.postgresql import PostgreSQLManagementClient
-from azure.mgmt.rdbms.mysql import MySQLManagementClient
 from azure.core.exceptions import (
-    ResourceNotFoundError as AzureResourceNotFoundError,
     HttpResponseError,
 )
+from azure.core.exceptions import (
+    ResourceNotFoundError as AzureResourceNotFoundError,
+)
+from azure.mgmt.rdbms.mysql import MySQLManagementClient
+from azure.mgmt.rdbms.postgresql import PostgreSQLManagementClient
 
-from ...interfaces.models import Database
-from ...interfaces.provider import DatabaseConfig
 from ...exceptions import (
     CloudProviderError,
-    ResourceNotFoundError,
     ResourceAlreadyExistsError,
+    ResourceNotFoundError,
     ValidationError,
 )
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import Database
+from ...interfaces.provider import DatabaseConfig
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ logger = logging.getLogger(__name__)
 class AzureDatabaseService:
     """Azure Database for PostgreSQL/MySQL service operations."""
 
-    def __init__(self, credential, subscription_id: str, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, credential, subscription_id: str, rate_limiter: RateLimiter | None = None):
         """
         Initialize Azure Database service.
 
@@ -41,7 +43,7 @@ class AzureDatabaseService:
         self._pg_clients = {}
         self._mysql_clients = {}
 
-    def _get_client(self, engine: str, subscription_id: Optional[str] = None):
+    def _get_client(self, engine: str, subscription_id: str | None = None):
         """Get or create database client based on engine type."""
         sub_id = subscription_id or self.subscription_id
 
@@ -281,7 +283,7 @@ class AzureDatabaseService:
             raise CloudProviderError(f"Unexpected error deleting Azure Database: {e}", provider="azure")
 
     @retry_with_backoff(max_retries=3, retriable_exceptions=(HttpResponseError,))
-    def list_databases(self, engine: str, resource_group: Optional[str] = None) -> List[Database]:
+    def list_databases(self, engine: str, resource_group: str | None = None) -> list[Database]:
         """
         List all Azure Database instances.
 
@@ -421,7 +423,7 @@ class AzureDatabaseService:
                 provider="azure",
             )
 
-    def list_all_databases(self, resource_group: Optional[str] = None) -> List[Database]:
+    def list_all_databases(self, resource_group: str | None = None) -> list[Database]:
         """
         List all databases (both PostgreSQL and MySQL).
 

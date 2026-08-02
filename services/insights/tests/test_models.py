@@ -2,7 +2,7 @@
 
 from datetime import datetime, timezone
 
-from app.models import Insight, Tag, Category
+from app.models import Category, Insight, Tag
 
 
 def test_create_category(db_session):

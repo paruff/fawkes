@@ -1,8 +1,9 @@
 """Pydantic schemas for API request/response models."""
 
 from datetime import datetime
-from typing import Optional, List
-from pydantic import BaseModel, Field, ConfigDict
+from typing import List, Optional
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 # Tag Schemas
@@ -11,8 +12,8 @@ class TagBase(BaseModel):
 
     name: str = Field(..., description="Tag name", min_length=1, max_length=50)
     slug: str = Field(..., description="URL-friendly slug", min_length=1, max_length=50)
-    description: Optional[str] = Field(None, description="Tag description")
-    color: Optional[str] = Field(None, description="Hex color code", pattern=r"^#[0-9A-Fa-f]{6}$")
+    description: str | None = Field(None, description="Tag description")
+    color: str | None = Field(None, description="Hex color code", pattern=r"^#[0-9A-Fa-f]{6}$")
 
 
 class TagCreate(TagBase):
@@ -22,10 +23,10 @@ class TagCreate(TagBase):
 class TagUpdate(BaseModel):
     """Request model for updating a tag."""
 
-    name: Optional[str] = Field(None, min_length=1, max_length=50)
-    slug: Optional[str] = Field(None, min_length=1, max_length=50)
-    description: Optional[str] = None
-    color: Optional[str] = Field(None, pattern=r"^#[0-9A-Fa-f]{6}$")
+    name: str | None = Field(None, min_length=1, max_length=50)
+    slug: str | None = Field(None, min_length=1, max_length=50)
+    description: str | None = None
+    color: str | None = Field(None, pattern=r"^#[0-9A-Fa-f]{6}$")
 
 
 class TagResponse(TagBase):
@@ -44,10 +45,10 @@ class CategoryBase(BaseModel):
 
     name: str = Field(..., description="Category name", min_length=1, max_length=100)
     slug: str = Field(..., description="URL-friendly slug", min_length=1, max_length=100)
-    description: Optional[str] = Field(None, description="Category description")
-    parent_id: Optional[int] = Field(None, description="Parent category ID for hierarchy")
-    color: Optional[str] = Field(None, description="Hex color code", pattern=r"^#[0-9A-Fa-f]{6}$")
-    icon: Optional[str] = Field(None, description="Icon name for UI display")
+    description: str | None = Field(None, description="Category description")
+    parent_id: int | None = Field(None, description="Parent category ID for hierarchy")
+    color: str | None = Field(None, description="Hex color code", pattern=r"^#[0-9A-Fa-f]{6}$")
+    icon: str | None = Field(None, description="Icon name for UI display")
 
 
 class CategoryCreate(CategoryBase):
@@ -57,12 +58,12 @@ class CategoryCreate(CategoryBase):
 class CategoryUpdate(BaseModel):
     """Request model for updating a category."""
 
-    name: Optional[str] = Field(None, min_length=1, max_length=100)
-    slug: Optional[str] = Field(None, min_length=1, max_length=100)
-    description: Optional[str] = None
-    parent_id: Optional[int] = None
-    color: Optional[str] = Field(None, pattern=r"^#[0-9A-Fa-f]{6}$")
-    icon: Optional[str] = None
+    name: str | None = Field(None, min_length=1, max_length=100)
+    slug: str | None = Field(None, min_length=1, max_length=100)
+    description: str | None = None
+    parent_id: int | None = None
+    color: str | None = Field(None, pattern=r"^#[0-9A-Fa-f]{6}$")
+    icon: str | None = None
 
 
 class CategoryResponse(CategoryBase):
@@ -73,7 +74,7 @@ class CategoryResponse(CategoryBase):
     id: int = Field(..., description="Category ID")
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
-    insight_count: Optional[int] = Field(None, description="Number of insights in this category")
+    insight_count: int | None = Field(None, description="Number of insights in this category")
 
 
 # Insight Schemas
@@ -82,10 +83,10 @@ class InsightBase(BaseModel):
 
     title: str = Field(..., description="Insight title", min_length=1, max_length=500)
     description: str = Field(..., description="Short description or summary")
-    content: Optional[str] = Field(None, description="Extended content or details")
-    source: Optional[str] = Field(None, description="Source of the insight", max_length=255)
+    content: str | None = Field(None, description="Extended content or details")
+    source: str | None = Field(None, description="Source of the insight", max_length=255)
     author: str = Field(..., description="Insight author", max_length=255)
-    category_id: Optional[int] = Field(None, description="Category ID")
+    category_id: int | None = Field(None, description="Category ID")
     priority: str = Field("medium", description="Priority level: low, medium, high, critical")
     status: str = Field("draft", description="Status: draft, published, archived")
 
@@ -93,21 +94,21 @@ class InsightBase(BaseModel):
 class InsightCreate(InsightBase):
     """Request model for creating an insight."""
 
-    tag_ids: Optional[List[int]] = Field(default_factory=list, description="List of tag IDs")
+    tag_ids: list[int] | None = Field(default_factory=list, description="List of tag IDs")
 
 
 class InsightUpdate(BaseModel):
     """Request model for updating an insight."""
 
-    title: Optional[str] = Field(None, min_length=1, max_length=500)
-    description: Optional[str] = None
-    content: Optional[str] = None
-    source: Optional[str] = Field(None, max_length=255)
-    author: Optional[str] = Field(None, max_length=255)
-    category_id: Optional[int] = None
-    priority: Optional[str] = None
-    status: Optional[str] = None
-    tag_ids: Optional[List[int]] = None
+    title: str | None = Field(None, min_length=1, max_length=500)
+    description: str | None = None
+    content: str | None = None
+    source: str | None = Field(None, max_length=255)
+    author: str | None = Field(None, max_length=255)
+    category_id: int | None = None
+    priority: str | None = None
+    status: str | None = None
+    tag_ids: list[int] | None = None
 
 
 class InsightResponse(InsightBase):
@@ -118,9 +119,9 @@ class InsightResponse(InsightBase):
     id: int = Field(..., description="Insight ID")
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
-    published_at: Optional[datetime] = Field(None, description="Publication timestamp")
-    tags: List[TagResponse] = Field(default_factory=list, description="Associated tags")
-    category: Optional[CategoryResponse] = Field(None, description="Category information")
+    published_at: datetime | None = Field(None, description="Publication timestamp")
+    tags: list[TagResponse] = Field(default_factory=list, description="Associated tags")
+    category: CategoryResponse | None = Field(None, description="Category information")
 
 
 class InsightListResponse(BaseModel):
@@ -129,18 +130,18 @@ class InsightListResponse(BaseModel):
     total: int = Field(..., description="Total number of insights")
     page: int = Field(..., description="Current page number")
     page_size: int = Field(..., description="Number of items per page")
-    insights: List[InsightResponse] = Field(..., description="List of insights")
+    insights: list[InsightResponse] = Field(..., description="List of insights")
 
 
 class InsightSearchRequest(BaseModel):
     """Request model for searching insights."""
 
-    query: Optional[str] = Field(None, description="Search query string")
-    category_id: Optional[int] = Field(None, description="Filter by category")
-    tag_ids: Optional[List[int]] = Field(None, description="Filter by tags (AND logic)")
-    priority: Optional[str] = Field(None, description="Filter by priority")
-    status: Optional[str] = Field(None, description="Filter by status")
-    author: Optional[str] = Field(None, description="Filter by author")
+    query: str | None = Field(None, description="Search query string")
+    category_id: int | None = Field(None, description="Filter by category")
+    tag_ids: list[int] | None = Field(None, description="Filter by tags (AND logic)")
+    priority: str | None = Field(None, description="Filter by priority")
+    status: str | None = Field(None, description="Filter by status")
+    author: str | None = Field(None, description="Filter by author")
     page: int = Field(1, description="Page number", ge=1)
     page_size: int = Field(20, description="Items per page", ge=1, le=100)
 
@@ -155,7 +156,7 @@ class InsightStatistics(BaseModel):
     insights_by_category: dict = Field(..., description="Count of insights by category")
     total_tags: int = Field(..., description="Total number of tags")
     total_categories: int = Field(..., description="Total number of categories")
-    recent_insights: List[InsightResponse] = Field(..., description="Most recent insights")
+    recent_insights: list[InsightResponse] = Field(..., description="Most recent insights")
 
 
 # Health Check Schema

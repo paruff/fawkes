@@ -20,10 +20,10 @@ Examples:
     python test-indexing.py --weaviate-url http://weaviate.fawkes.svc:80
 """
 
-import sys
 import argparse
+import sys
 import time
-from typing import List, Dict
+from typing import Dict, List
 
 try:
     import weaviate
@@ -65,8 +65,8 @@ def create_schema(client: weaviate.Client) -> None:
     try:
         client.schema.delete_class(SCHEMA_NAME)
         print(f"🗑️  Deleted existing schema '{SCHEMA_NAME}'")
-    except Exception:
-        pass  # Schema doesn't exist, which is fine
+    except Exception as e:
+        print(f"ℹ️  No existing schema to delete: {e}")
 
     # Define schema
     schema = {
@@ -113,7 +113,7 @@ def create_schema(client: weaviate.Client) -> None:
         sys.exit(1)
 
 
-def get_sample_documents() -> List[Dict[str, str]]:
+def get_sample_documents() -> list[dict[str, str]]:
     """Return sample documents for testing."""
     return [
         {
@@ -251,7 +251,7 @@ We will use Weaviate as our vector database.
     ]
 
 
-def index_documents(client: weaviate.Client, documents: List[Dict[str, str]]) -> None:
+def index_documents(client: weaviate.Client, documents: list[dict[str, str]]) -> None:
     """Index documents into Weaviate."""
     print(f"\n📝 Indexing {len(documents)} sample documents...")
 
