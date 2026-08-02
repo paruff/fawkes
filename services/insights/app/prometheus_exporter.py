@@ -1,11 +1,12 @@
 """Prometheus metrics exporter for Insights service."""
 
-from prometheus_client import Gauge
-from sqlalchemy.orm import Session
-from sqlalchemy import func
 from datetime import datetime, timedelta, timezone
 
-from app.models import Insight, Tag, Category
+from prometheus_client import Gauge
+from sqlalchemy import func
+from sqlalchemy.orm import Session
+
+from app.models import Category, Insight, Tag
 
 # Define Prometheus metrics
 insights_total = Gauge("research_insights_total", "Total number of research insights")

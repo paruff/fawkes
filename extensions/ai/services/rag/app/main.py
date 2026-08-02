@@ -5,19 +5,20 @@ This service provides context retrieval from Weaviate vector database
 for AI assistants and code generation tools.
 """
 
+import asyncio
+import logging
 import os
 import time
-import logging
-from pathlib import Path
-from typing import List, Optional, Dict
 from contextlib import asynccontextmanager
-from datetime import datetime
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Dict, List, Optional
 
+import weaviate
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
+from prometheus_client import Counter, Histogram, make_asgi_app
 from pydantic import BaseModel, Field
-from prometheus_client import make_asgi_app, Counter, Histogram
-import weaviate
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -38,10 +39,8 @@ class QueryRequest(BaseModel):
     """Request model for context query."""
 
     query: str = Field(..., description="Search query for context retrieval", min_length=1)
-    top_k: Optional[int] = Field(DEFAULT_TOP_K, description="Number of results to return", ge=1, le=20)
-    threshold: Optional[float] = Field(
-        DEFAULT_THRESHOLD, description="Minimum relevance score threshold", ge=0.0, le=1.0
-    )
+    top_k: int | None = Field(DEFAULT_TOP_K, description="Number of results to return", ge=1, le=20)
+    threshold: float | None = Field(DEFAULT_THRESHOLD, description="Minimum relevance score threshold", ge=0.0, le=1.0)
 
 
 class ContextResult(BaseModel):
@@ -50,15 +49,15 @@ class ContextResult(BaseModel):
     content: str = Field(..., description="Document content")
     relevance_score: float = Field(..., description="Relevance score (0-1)")
     source: str = Field(..., description="Source file path")
-    title: Optional[str] = Field(None, description="Document title")
-    category: Optional[str] = Field(None, description="Document category")
+    title: str | None = Field(None, description="Document title")
+    category: str | None = Field(None, description="Document category")
 
 
 class QueryResponse(BaseModel):
     """Response model for context query."""
 
     query: str = Field(..., description="Original query")
-    results: List[ContextResult] = Field(..., description="Ranked context results")
+    results: list[ContextResult] = Field(..., description="Ranked context results")
     count: int = Field(..., description="Number of results returned")
     retrieval_time_ms: float = Field(..., description="Query execution time in milliseconds")
 
@@ -160,8 +159,8 @@ async def dashboard():
 
     try:
         if dashboard_path.exists():
-            with open(dashboard_path, "r") as f:
-                return HTMLResponse(content=f.read())
+            content = await asyncio.to_thread(dashboard_path.read_text)
+            return HTMLResponse(content=content)
     except Exception as e:
         logger.warning(f"Could not load dashboard from {dashboard_path}: {e}")
 
@@ -273,7 +272,7 @@ async def query_context(request: QueryRequest):
             raise HTTPException(status_code=503, detail="Weaviate is not ready")
     except Exception as e:
         logger.error(f"Weaviate readiness check failed: {e}")
-        raise HTTPException(status_code=503, detail=f"Weaviate connection error: {str(e)}")
+        raise HTTPException(status_code=503, detail=f"Weaviate connection error: {e!s}")
 
     # Start timing
     start_time = time.time()
@@ -332,7 +331,7 @@ async def query_context(request: QueryRequest):
 
     except Exception as e:
         logger.error(f"Query execution failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Query execution failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Query execution failed: {e!s}")
 
 
 @app.get("/ready", include_in_schema=False)
@@ -347,7 +346,7 @@ async def ready():
             if weaviate_client.is_ready():
                 return {"status": "READY"}
         except Exception:
-            pass
+            logger.debug("Weaviate readiness check failed", exc_info=True)
 
     raise HTTPException(status_code=503, detail="Service not ready")
 
@@ -357,11 +356,11 @@ class StatsResponse(BaseModel):
 
     total_documents: int = Field(..., description="Total number of documents indexed")
     total_chunks: int = Field(..., description="Total number of chunks indexed")
-    categories: Dict[str, int] = Field(..., description="Document count by category")
-    last_indexed: Optional[str] = Field(None, description="Most recent indexing timestamp")
-    index_freshness_hours: Optional[float] = Field(None, description="Hours since last indexing")
-    storage_usage_mb: Optional[float] = Field(None, description="Approximate storage usage in MB")
-    avg_query_time_ms: Optional[float] = Field(None, description="Average query time in milliseconds")
+    categories: dict[str, int] = Field(..., description="Document count by category")
+    last_indexed: str | None = Field(None, description="Most recent indexing timestamp")
+    index_freshness_hours: float | None = Field(None, description="Hours since last indexing")
+    storage_usage_mb: float | None = Field(None, description="Approximate storage usage in MB")
+    avg_query_time_ms: float | None = Field(None, description="Average query time in milliseconds")
 
 
 @app.get("/api/v1/stats", response_model=StatsResponse, tags=["Stats"])
@@ -381,7 +380,7 @@ async def get_stats():
             raise HTTPException(status_code=503, detail="Weaviate is not ready")
     except Exception as e:
         logger.error(f"Weaviate readiness check failed: {e}")
-        raise HTTPException(status_code=503, detail=f"Weaviate connection error: {str(e)}")
+        raise HTTPException(status_code=503, detail=f"Weaviate connection error: {e!s}")
 
     try:
         # Get all documents to calculate stats
@@ -431,7 +430,7 @@ async def get_stats():
                 if last_indexed_dt.tzinfo:
                     now = datetime.now(last_indexed_dt.tzinfo)
                 else:
-                    now = datetime.now()
+                    now = datetime.now(UTC).replace(tzinfo=None)
                     last_indexed_dt = last_indexed_dt.replace(tzinfo=None)
 
                 delta = now - last_indexed_dt
@@ -464,7 +463,7 @@ async def get_stats():
 
     except Exception as e:
         logger.error(f"Failed to get stats: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to retrieve statistics: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve statistics: {e!s}")
 
 
 if __name__ == "__main__":

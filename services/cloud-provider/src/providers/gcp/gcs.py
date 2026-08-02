@@ -3,18 +3,18 @@
 import logging
 from typing import List, Optional
 
-from google.cloud import storage
 from google.api_core import exceptions as gcp_exceptions
+from google.cloud import storage
 
-from ...interfaces.models import Storage
-from ...interfaces.provider import StorageConfig
 from ...exceptions import (
     CloudProviderError,
-    ResourceNotFoundError,
     ResourceAlreadyExistsError,
+    ResourceNotFoundError,
     ValidationError,
 )
-from ...utils import retry_with_backoff, RateLimiter
+from ...interfaces.models import Storage
+from ...interfaces.provider import StorageConfig
+from ...utils import RateLimiter, retry_with_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class GCSService:
     """GCP Cloud Storage service operations."""
 
-    def __init__(self, project_id: str, rate_limiter: Optional[RateLimiter] = None):
+    def __init__(self, project_id: str, rate_limiter: RateLimiter | None = None):
         """
         Initialize GCS service.
 
@@ -128,19 +128,19 @@ class GCSService:
         except gcp_exceptions.Conflict:
             raise ResourceAlreadyExistsError(f"Bucket {config.name} already exists", provider="gcp")
         except gcp_exceptions.InvalidArgument as e:
-            raise ValidationError(f"Invalid parameter: {str(e)}", provider="gcp")
+            raise ValidationError(f"Invalid parameter: {e!s}", provider="gcp")
         except gcp_exceptions.GoogleAPICallError as e:
             raise CloudProviderError(
-                f"Failed to create GCS bucket {config.name}: {str(e)}", provider="gcp", error_code=e.grpc_status_code
+                f"Failed to create GCS bucket {config.name}: {e!s}", provider="gcp", error_code=e.grpc_status_code
             )
         except Exception as e:
-            raise CloudProviderError(f"Failed to create GCS bucket {config.name}: {str(e)}", provider="gcp")
+            raise CloudProviderError(f"Failed to create GCS bucket {config.name}: {e!s}", provider="gcp")
 
     @retry_with_backoff(
         max_retries=3,
         retriable_exceptions=(gcp_exceptions.ServiceUnavailable, gcp_exceptions.DeadlineExceeded),
     )
-    def get_storage(self, bucket_name: str, region: Optional[str] = None) -> Storage:
+    def get_storage(self, bucket_name: str, region: str | None = None) -> Storage:
         """
         Get GCS bucket details.
 
@@ -169,7 +169,7 @@ class GCSService:
             object_count = 0
             try:
                 logger.warning(
-                    f"Calculating bucket size for {bucket_name}. " "This may be slow for buckets with many objects."
+                    f"Calculating bucket size for {bucket_name}. This may be slow for buckets with many objects."
                 )
                 self.rate_limiter.acquire()
                 blobs = bucket.list_blobs(max_results=1000)  # Limit to first 1000 objects
@@ -207,16 +207,16 @@ class GCSService:
             raise ResourceNotFoundError(f"Bucket {bucket_name} not found", provider="gcp")
         except gcp_exceptions.GoogleAPICallError as e:
             raise CloudProviderError(
-                f"Failed to get GCS bucket {bucket_name}: {str(e)}", provider="gcp", error_code=e.grpc_status_code
+                f"Failed to get GCS bucket {bucket_name}: {e!s}", provider="gcp", error_code=e.grpc_status_code
             )
         except Exception as e:
-            raise CloudProviderError(f"Failed to get GCS bucket {bucket_name}: {str(e)}", provider="gcp")
+            raise CloudProviderError(f"Failed to get GCS bucket {bucket_name}: {e!s}", provider="gcp")
 
     @retry_with_backoff(
         max_retries=3,
         retriable_exceptions=(gcp_exceptions.ServiceUnavailable, gcp_exceptions.DeadlineExceeded),
     )
-    def delete_storage(self, bucket_name: str, region: Optional[str] = None, force: bool = False) -> bool:
+    def delete_storage(self, bucket_name: str, region: str | None = None, force: bool = False) -> bool:
         """
         Delete a GCS bucket.
 
@@ -262,16 +262,16 @@ class GCSService:
             raise ResourceNotFoundError(f"Bucket {bucket_name} not found", provider="gcp")
         except gcp_exceptions.GoogleAPICallError as e:
             raise CloudProviderError(
-                f"Failed to delete GCS bucket {bucket_name}: {str(e)}", provider="gcp", error_code=e.grpc_status_code
+                f"Failed to delete GCS bucket {bucket_name}: {e!s}", provider="gcp", error_code=e.grpc_status_code
             )
         except Exception as e:
-            raise CloudProviderError(f"Failed to delete GCS bucket {bucket_name}: {str(e)}", provider="gcp")
+            raise CloudProviderError(f"Failed to delete GCS bucket {bucket_name}: {e!s}", provider="gcp")
 
     @retry_with_backoff(
         max_retries=3,
         retriable_exceptions=(gcp_exceptions.ServiceUnavailable, gcp_exceptions.DeadlineExceeded),
     )
-    def list_storage(self, region: Optional[str] = None, include_details: bool = False) -> List[Storage]:
+    def list_storage(self, region: str | None = None, include_details: bool = False) -> list[Storage]:
         """
         List all GCS buckets in the project.
 
@@ -349,7 +349,7 @@ class GCSService:
 
         except gcp_exceptions.GoogleAPICallError as e:
             raise CloudProviderError(
-                f"Failed to list GCS buckets: {str(e)}", provider="gcp", error_code=e.grpc_status_code
+                f"Failed to list GCS buckets: {e!s}", provider="gcp", error_code=e.grpc_status_code
             )
         except Exception as e:
-            raise CloudProviderError(f"Failed to list GCS buckets: {str(e)}", provider="gcp")
+            raise CloudProviderError(f"Failed to list GCS buckets: {e!s}", provider="gcp")

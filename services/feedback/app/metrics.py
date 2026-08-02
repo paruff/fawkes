@@ -9,8 +9,9 @@ This module provides enhanced metrics for feedback analytics including:
 """
 
 import logging
-from prometheus_client import Counter, Gauge, Histogram
+
 import asyncpg
+from prometheus_client import Counter, Gauge, Histogram
 
 logger = logging.getLogger(__name__)
 

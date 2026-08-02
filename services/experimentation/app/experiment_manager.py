@@ -2,21 +2,22 @@
 
 import hashlib
 import uuid
-from datetime import datetime
-from typing import Optional, List, Dict, Any
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from sqlalchemy.orm import Session
 
-from .schema import Experiment, Assignment, Event
+from .metrics import MetricsCollector
 from .models import (
     ExperimentCreate,
-    ExperimentUpdate,
-    ExperimentResponse,
-    VariantAssignment,
     ExperimentList,
+    ExperimentResponse,
+    ExperimentUpdate,
+    VariantAssignment,
     VariantConfig,
 )
+from .schema import Assignment, Event, Experiment
 from .statistical_analysis import StatisticalAnalyzer
-from .metrics import MetricsCollector
 
 
 class ExperimentManager:
@@ -47,7 +48,7 @@ class ExperimentManager:
             target_sample_size=experiment.target_sample_size,
             significance_level=experiment.significance_level,
             traffic_allocation=experiment.traffic_allocation,
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
         )
 
         self.db.add(db_experiment)
@@ -73,14 +74,14 @@ class ExperimentManager:
             experiments=[self._to_response(exp) for exp in experiments], total=total, skip=skip, limit=limit
         )
 
-    def get_experiment(self, experiment_id: str) -> Optional[ExperimentResponse]:
+    def get_experiment(self, experiment_id: str) -> ExperimentResponse | None:
         """Get experiment by ID"""
         experiment = self.db.query(Experiment).filter(Experiment.id == experiment_id).first()
         if not experiment:
             return None
         return self._to_response(experiment)
 
-    def update_experiment(self, experiment_id: str, update: ExperimentUpdate) -> Optional[ExperimentResponse]:
+    def update_experiment(self, experiment_id: str, update: ExperimentUpdate) -> ExperimentResponse | None:
         """Update experiment configuration"""
         experiment = self.db.query(Experiment).filter(Experiment.id == experiment_id).first()
         if not experiment:
@@ -115,7 +116,7 @@ class ExperimentManager:
 
         return True
 
-    def start_experiment(self, experiment_id: str) -> Optional[ExperimentResponse]:
+    def start_experiment(self, experiment_id: str) -> ExperimentResponse | None:
         """Start an experiment"""
         experiment = self.db.query(Experiment).filter(Experiment.id == experiment_id).first()
         if not experiment:
@@ -123,7 +124,7 @@ class ExperimentManager:
 
         if experiment.status == "draft":
             experiment.status = "running"
-            experiment.started_at = datetime.utcnow()
+            experiment.started_at = datetime.now(timezone.utc)
             self.db.commit()
             self.db.refresh(experiment)
 
@@ -131,7 +132,7 @@ class ExperimentManager:
 
         return self._to_response(experiment)
 
-    def stop_experiment(self, experiment_id: str) -> Optional[ExperimentResponse]:
+    def stop_experiment(self, experiment_id: str) -> ExperimentResponse | None:
         """Stop an experiment"""
         experiment = self.db.query(Experiment).filter(Experiment.id == experiment_id).first()
         if not experiment:
@@ -139,7 +140,7 @@ class ExperimentManager:
 
         if experiment.status == "running":
             experiment.status = "stopped"
-            experiment.stopped_at = datetime.utcnow()
+            experiment.stopped_at = datetime.now(timezone.utc)
             self.db.commit()
             self.db.refresh(experiment)
 
@@ -147,7 +148,7 @@ class ExperimentManager:
 
         return self._to_response(experiment)
 
-    def assign_variant(self, experiment_id: str, user_id: str, context: Dict[str, Any]) -> Optional[VariantAssignment]:
+    def assign_variant(self, experiment_id: str, user_id: str, context: dict[str, Any]) -> VariantAssignment | None:
         """Assign a variant to a user using consistent hashing"""
         experiment = self.db.query(Experiment).filter(Experiment.id == experiment_id).first()
         if not experiment or experiment.status != "running":
@@ -180,7 +181,7 @@ class ExperimentManager:
             user_id=user_id,
             variant=variant,
             context=context,
-            assigned_at=datetime.utcnow(),
+            assigned_at=datetime.now(timezone.utc),
         )
 
         self.db.add(assignment)
@@ -214,7 +215,7 @@ class ExperimentManager:
             variant=assignment.variant,
             event_name=event_name,
             value=value,
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
         )
 
         self.db.add(event)
@@ -273,7 +274,7 @@ class ExperimentManager:
         hash_value = int(hashlib.sha256(key.encode()).hexdigest(), 16)
         return (hash_value % 10000) / 10000.0
 
-    def _select_variant(self, experiment_id: str, user_id: str, variants: List[Dict]) -> str:
+    def _select_variant(self, experiment_id: str, user_id: str, variants: list[dict]) -> str:
         """Select variant using consistent hashing with allocation weights"""
         user_hash = self._hash_user(f"{experiment_id}:{user_id}")
 

@@ -1,10 +1,11 @@
 """Utility functions for cloud provider operations."""
 
 import logging
-import time
-from functools import wraps
-from typing import Callable, TypeVar, Optional
 import random
+import time
+from collections.abc import Callable
+from functools import wraps
+from typing import Optional, TypeVar
 
 from .exceptions import RateLimitError
 
@@ -49,7 +50,7 @@ def retry_with_backoff(
                     last_exception = e
 
                     if attempt == max_retries:
-                        logger.error(f"Max retries ({max_retries}) exceeded for {func.__name__}: {str(e)}")
+                        logger.error(f"Max retries ({max_retries}) exceeded for {func.__name__}: {e!s}")
                         raise
 
                     # Calculate delay with exponential backoff
@@ -60,7 +61,7 @@ def retry_with_backoff(
                         delay = delay * (0.5 + random.random())
 
                     logger.warning(
-                        f"Retry {attempt + 1}/{max_retries} for {func.__name__} after {delay:.2f}s. Error: {str(e)}"
+                        f"Retry {attempt + 1}/{max_retries} for {func.__name__} after {delay:.2f}s. Error: {e!s}"
                     )
                     time.sleep(delay)
 
@@ -90,7 +91,7 @@ class RateLimiter:
         self.last_update = time.time()
         self.lock_count = 0
 
-    def acquire(self, timeout: Optional[float] = None) -> bool:
+    def acquire(self, timeout: float | None = None) -> bool:
         """
         Acquire permission to make an API call.
 
@@ -148,7 +149,7 @@ def validate_region(region: str, valid_regions: list) -> None:
         raise ValidationError(f"Invalid region: {region}. Valid regions: {', '.join(valid_regions)}")
 
 
-def validate_name(name: str, min_length: int = 1, max_length: int = 255, pattern: Optional[str] = None) -> None:
+def validate_name(name: str, min_length: int = 1, max_length: int = 255, pattern: str | None = None) -> None:
     """
     Validate resource name.
 
@@ -161,8 +162,9 @@ def validate_name(name: str, min_length: int = 1, max_length: int = 255, pattern
     Raises:
         ValidationError: If name is invalid
     """
-    from .exceptions import ValidationError
     import re
+
+    from .exceptions import ValidationError
 
     if not name or len(name) < min_length:
         raise ValidationError(f"Name must be at least {min_length} characters")

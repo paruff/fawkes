@@ -4,21 +4,21 @@ Sample Python application with OpenTelemetry instrumentation.
 Demonstrates traces flowing to OpenTelemetry Collector.
 """
 
-import os
-import time
-import logging
-from flask import Flask, jsonify
-from opentelemetry import trace
-from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from opentelemetry.instrumentation.flask import FlaskInstrumentor
-from opentelemetry.instrumentation.requests import RequestsInstrumentor
-
 # Configure logging with JSON structure
 # Note: For production, consider using python-json-logger or structlog
 import json
+import logging
+import os
+import time
+
+from flask import Flask, jsonify
+from opentelemetry import trace
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 
 class JSONFormatter(logging.Formatter):

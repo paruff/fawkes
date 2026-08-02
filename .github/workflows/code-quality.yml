@@ -534,13 +534,10 @@ jobs:
     name: Security Scanning
     needs: detect-changes
     if: needs.detect-changes.outputs.security == 'true'
-    uses: ./.github/workflows/reusable-security-scanning.yml
+    uses: paruff/ufawkespipe/.github/workflows/reusable-security-scanning.yml@v1.2.0
     with:
-      scan-type: all
       scan-path: "."
       severity-threshold: LOW
-      fail-on-critical: false
-      upload-sarif: true
 
   # ==========================================================================
   # Quality Summary Report
@@ -586,7 +583,7 @@ jobs:
           echo "| Shell Quality | ${{ needs.shell-quality.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Shell Tests (BATS) | ${{ needs.shell-tests.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| YAML Quality | ${{ needs.yaml-quality.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Security Integration | ${{ needs.security-integration.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "            | Security Integration | ${{ needs.security-integration.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Security Scanning | ${{ needs.security-scanning.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📈 Next Steps" >> $GITHUB_STEP_SUMMARY
@@ -616,7 +613,6 @@ jobs:
             | Security Scanning | ${{ needs.security-scanning.result }} |
 
             ### 📈 Quality Gates
-
             ✅ **Passed**: All checks completed successfully
             ⚠️  **Warning**: Some checks have warnings
             ❌ **Failed**: Critical issues found

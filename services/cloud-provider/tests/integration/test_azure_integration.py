@@ -13,12 +13,12 @@ Required environment variables:
 """
 
 import os
-import pytest
 import time
 
-from src.providers.azure_provider import AzureProvider
+import pytest
+from src.exceptions import CloudProviderError, ResourceNotFoundError
 from src.interfaces.provider import ClusterConfig, StorageConfig
-from src.exceptions import ResourceNotFoundError, CloudProviderError
+from src.providers.azure_provider import AzureProvider
 
 # Skip all tests if SKIP_INTEGRATION_TESTS is set
 pytestmark = pytest.mark.skipif(

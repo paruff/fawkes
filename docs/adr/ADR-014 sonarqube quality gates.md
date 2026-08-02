@@ -98,6 +98,7 @@ Specifically:
 ### Quality Gate Strategy
 
 **Default Quality Gate Conditions**:
+
 | Metric | Operator | Threshold | Rationale |
 |--------|----------|-----------|-----------|
 | New Bugs | Is Greater Than | 0 | Prevent bug introduction |

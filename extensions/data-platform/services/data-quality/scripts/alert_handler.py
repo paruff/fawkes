@@ -4,14 +4,15 @@ Alert handler for Great Expectations validation results.
 Sends alerts to Mattermost on validation failures.
 """
 
-import os
 import json
+import os
+from datetime import datetime, timezone
+from typing import Any, Dict
+
 import requests
-from typing import Dict, Any
-from datetime import datetime
 
 
-def send_mattermost_alert(validation_result_suite: Any, data_docs_url: str = None) -> Dict[str, Any]:
+def send_mattermost_alert(validation_result_suite: Any, data_docs_url: str = None) -> dict[str, Any]:
     """
     Send alert to Mattermost when validation fails.
 
@@ -42,7 +43,7 @@ def send_mattermost_alert(validation_result_suite: Any, data_docs_url: str = Non
 
     # Build alert message
     expectation_suite_name = validation_result_suite.meta.get("expectation_suite_name", "Unknown")
-    run_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
+    run_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 
     successful_expectations = statistics.get("successful_expectations", 0)
     failed_expectations = statistics.get("unsuccessful_expectations", 0)
@@ -73,7 +74,7 @@ def send_mattermost_alert(validation_result_suite: Any, data_docs_url: str = Non
         return {"status": "error", "error": str(e)}
 
 
-def send_daily_summary(summary_data: Dict[str, Any]) -> Dict[str, Any]:
+def send_daily_summary(summary_data: dict[str, Any]) -> dict[str, Any]:
     """
     Send daily summary of data quality validations.
 
@@ -92,7 +93,7 @@ def send_daily_summary(summary_data: Dict[str, Any]) -> Dict[str, Any]:
     # Build summary message
     message = {
         "text": f"## 📊 Daily Data Quality Summary\n\n"
-        f"**Date:** {datetime.now().strftime('%Y-%m-%d')}\n\n"
+        f"**Date:** {datetime.now(timezone.utc).strftime('%Y-%m-%d')}\n\n"
         f"**Validations Run:** {summary_data.get('total_validations', 0)}\n"
         f"**Passed:** ✅ {summary_data.get('passed_validations', 0)}\n"
         f"**Failed:** ❌ {summary_data.get('failed_validations', 0)}\n\n"

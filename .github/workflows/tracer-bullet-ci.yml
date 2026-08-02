@@ -51,7 +51,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v7
         with:
-          python-version: "3.12"
+          python-version: "3.13"
           cache: "pip"
           cache-dependency-path: "${{ env.SERVICE_DIR }}/requirements*.txt"
 
@@ -128,7 +128,7 @@ jobs:
 
       - name: Install Trivy
         run: |
-          TRIVY_VERSION=0.70.0
+          TRIVY_VERSION=v0.70.0
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin ${TRIVY_VERSION}
 
       - name: Trivy scan

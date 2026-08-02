@@ -1,13 +1,13 @@
 """Unit tests for Azure Provider."""
 
-import pytest
-from unittest.mock import Mock, patch, MagicMock
-from datetime import datetime
+from datetime import datetime, timezone
+from unittest.mock import MagicMock, Mock, patch
 
-from src.providers.azure_provider import AzureProvider
-from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
-from src.interfaces.models import Cluster, Database, Storage, CostData
+import pytest
 from src.exceptions import AuthenticationError, ValidationError
+from src.interfaces.models import Cluster, CostData, Database, Storage
+from src.interfaces.provider import ClusterConfig, DatabaseConfig, StorageConfig
+from src.providers.azure_provider import AzureProvider
 
 
 @pytest.fixture
@@ -885,8 +885,8 @@ class TestAzureProviderCostAndMetrics:
             provider = AzureProvider(subscription_id="test-sub-id")
 
             expected_cost_data = CostData(
-                start_date=datetime(2024, 1, 1),
-                end_date=datetime(2024, 1, 31),
+                start_date=datetime(2024, 1, 1, tzinfo=timezone.utc),
+                end_date=datetime(2024, 1, 31, tzinfo=timezone.utc),
                 total_cost=1500.75,
                 currency="USD",
                 breakdown={"Compute": 800.0, "Storage": 300.0, "Database": 400.75},
