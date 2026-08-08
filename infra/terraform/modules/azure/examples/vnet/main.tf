@@ -76,7 +76,7 @@ module "vnet" {
           protocol                   = "Tcp"
           source_port_range          = "*"
           destination_port_range     = "80"
-          source_address_prefix      = "*"
+          source_address_prefix      = "203.0.113.0/24" # Replace with your IP range
           destination_address_prefix = "*"
         }
         allow_https = {
@@ -86,7 +86,7 @@ module "vnet" {
           protocol                   = "Tcp"
           source_port_range          = "*"
           destination_port_range     = "443"
-          source_address_prefix      = "*"
+          source_address_prefix      = "203.0.113.0/24" # Replace with your IP range
           destination_address_prefix = "*"
         }
         allow_ssh = {
