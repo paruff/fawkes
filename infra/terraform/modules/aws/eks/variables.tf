@@ -80,9 +80,9 @@ variable "endpoint_public_access" {
 }
 
 variable "api_server_authorized_ip_ranges" {
-  description = "Authorized IP ranges for API server access (empty list allows all)"
+  description = "Authorized IP ranges for API server access (empty list denies all public access)"
   type        = list(string)
-  default     = ["0.0.0.0/0"]
+  default     = []
 
   validation {
     condition = alltrue([
@@ -90,6 +90,25 @@ variable "api_server_authorized_ip_ranges" {
       can(cidrhost(cidr, 0))
     ])
     error_message = "All IP ranges must be valid CIDR blocks."
+  }
+
+  validation {
+    condition     = alltrue([for cidr in var.api_server_authorized_ip_ranges : cidr != "0.0.0.0/0"])
+    error_message = "0.0.0.0/0 is not allowed; specify explicit authorized IP ranges."
+  }
+}
+
+variable "egress_cidr_blocks" {
+  description = "List of CIDR blocks allowed for outbound traffic (defaults to the VPC CIDR when empty)"
+  type        = list(string)
+  default     = []
+
+  validation {
+    condition = alltrue([
+      for cidr in var.egress_cidr_blocks :
+      can(cidrhost(cidr, 0))
+    ])
+    error_message = "All egress CIDR blocks must be valid."
   }
 }
 

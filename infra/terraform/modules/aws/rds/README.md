@@ -82,6 +82,7 @@ module "rds" {
 | monitoring_interval          | Enhanced monitoring interval             | `number`       | `0`             |    no    |
 | allowed_security_group_ids   | Allowed security groups                  | `list(string)` | `[]`            |    no    |
 | allowed_cidr_blocks          | Allowed CIDR blocks                      | `list(string)` | `[]`            |    no    |
+| egress_cidr_blocks           | Egress CIDR blocks (defaults to VPC CIDR) | `list(string)` | `[]`            |    no    |
 | tags                         | Tags to apply to resources               | `map(string)`  | `{}`            |    no    |
 
 ## Outputs
@@ -342,6 +343,7 @@ See the [examples directory](../examples/) for complete usage examples:
 | <a name="input_database_connections_threshold"></a> [database_connections_threshold](#input_database_connections_threshold) | Database connections threshold for CloudWatch alarm | `number` | `100` | no |
 | <a name="input_database_name"></a> [database_name](#input_database_name) | Name of the default database to create | `string` | `null` | no |
 | <a name="input_deletion_protection"></a> [deletion_protection](#input_deletion_protection) | Enable deletion protection | `bool` | `true` | no |
+| <a name="input_egress_cidr_blocks"></a> [egress_cidr_blocks](#input_egress_cidr_blocks) | List of CIDR blocks allowed for outbound traffic (defaults to the VPC CIDR when empty) | `list(string)` | `[]` | no |
 | <a name="input_enabled_cloudwatch_logs_exports"></a> [enabled_cloudwatch_logs_exports](#input_enabled_cloudwatch_logs_exports) | List of log types to export to CloudWatch | `list(string)` | `[]` | no |
 | <a name="input_free_storage_space_threshold"></a> [free_storage_space_threshold](#input_free_storage_space_threshold) | Free storage space threshold in bytes for CloudWatch alarm | `number` | `5000000000` | no |
 | <a name="input_instance_class"></a> [instance_class](#input_instance_class) | The instance class to use | `string` | `"db.t3.micro"` | no |
