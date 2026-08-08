@@ -8,11 +8,13 @@
 
 The Customer Advisory Board consists of 5-7 key users who provide strategic input and feedback to help shape the Fawkes platform.
 
-### Membership Status: 🚀 Forming
+### Membership Status: ⚠️ Formation Stalled
 
-**Board Formation**: In Progress
+**Board Formation**: Never completed — this page has said "Forming, accepting nominations"
+since December 2025 with no members recruited. See [CUSTOMER_ADVISORY_BOARD.md](CUSTOMER_ADVISORY_BOARD.md)
+for the charter; nominations are open but no formation timeline is currently active.
 **Target Size**: 5-7 members
-**Current Size**: Accepting nominations
+**Current Size**: 0
 
 ---
 
