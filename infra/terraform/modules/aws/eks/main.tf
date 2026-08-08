@@ -69,6 +69,11 @@ resource "aws_iam_role_policy_attachment" "cluster_amazon_eks_vpc_resource_contr
   role       = aws_iam_role.cluster.name
 }
 
+# Look up VPC CIDR so egress defaults to the VPC instead of 0.0.0.0/0
+data "aws_vpc" "this" {
+  id = var.vpc_id
+}
+
 # EKS Cluster Security Group
 resource "aws_security_group" "cluster" {
   name        = "${var.cluster_name}-cluster-sg"
@@ -76,11 +81,11 @@ resource "aws_security_group" "cluster" {
   vpc_id      = var.vpc_id
 
   egress {
-    description = "Allow all outbound traffic"
+    description = "Allow outbound to VPC CIDR by default (override via egress_cidr_blocks)"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = length(var.egress_cidr_blocks) > 0 ? var.egress_cidr_blocks : [data.aws_vpc.this.cidr_block]
   }
 
   tags = merge(

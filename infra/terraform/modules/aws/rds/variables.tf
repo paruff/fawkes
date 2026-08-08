@@ -303,6 +303,20 @@ variable "allowed_cidr_blocks" {
   }
 }
 
+variable "egress_cidr_blocks" {
+  description = "List of CIDR blocks allowed for outbound traffic (defaults to the VPC CIDR when empty)"
+  type        = list(string)
+  default     = []
+
+  validation {
+    condition = alltrue([
+      for cidr in var.egress_cidr_blocks :
+      can(cidrhost(cidr, 0))
+    ])
+    error_message = "All egress CIDR blocks must be valid."
+  }
+}
+
 variable "create_cloudwatch_alarms" {
   description = "Create CloudWatch alarms for monitoring"
   type        = bool
