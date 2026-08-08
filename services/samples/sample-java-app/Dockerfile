@@ -1,6 +1,6 @@
 # Multi-stage Dockerfile for Java Spring Boot
 # Stage 1: Build
-FROM maven:3.9-eclipse-temurin-21 AS build
+FROM maven:3.9.16-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # Copy pom.xml and download dependencies (layer caching)
@@ -12,7 +12,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Stage 2: Runtime
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21.0.11_10-jre-alpine
 WORKDIR /app
 
 # Update packages and install netcat for healthcheck
