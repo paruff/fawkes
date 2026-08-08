@@ -27,25 +27,15 @@ Fawkes provides comprehensive observability with metrics, logs, traces, and dash
 
 ### Dashboards & Analytics
 
-- [AI Observability Dashboard](../implementation-notes/AI_OBSERVABILITY_DASHBOARD_SUMMARY.md) - AI-powered observability insights
-- [Analytics Dashboard](../implementation-notes/ANALYTICS_DASHBOARD_IMPLEMENTATION.md) - Platform analytics
-- [Discovery Metrics Dashboard](../implementation-notes/DISCOVERY_METRICS_DASHBOARD_IMPLEMENTATION.md) - Product discovery metrics
-- [Research Insights Dashboard](../implementation-notes/RESEARCH_INSIGHTS_DASHBOARD_IMPLEMENTATION.md) - User research insights
-
 ## Monitoring Implementations
 
 ### Alerting & Detection
-
-- [Smart Alerting](../implementation-notes/SMART_ALERTING_IMPLEMENTATION.md) - Intelligent alerting system
-- [Anomaly Detection](../implementation-notes/ANOMALY_DETECTION_IMPLEMENTATION.md) - Automated anomaly detection
 
 ### Validation & Testing
 
 - [OpenTelemetry Validation](../validation/OPENTELEMETRY_VALIDATION.md) - Verify OpenTelemetry setup
 
 ## Cloud-Specific Observability
-
-- [GCP Observability Implementation](../implementation-notes/IMPLEMENTATION_SUMMARY_GCP_OBSERVABILITY.md) - Google Cloud Platform observability
 
 ## Related Documentation
 
