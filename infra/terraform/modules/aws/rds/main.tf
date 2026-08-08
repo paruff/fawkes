@@ -69,6 +69,11 @@ resource "aws_db_parameter_group" "main" {
   )
 }
 
+# Look up VPC CIDR so egress defaults to the VPC instead of 0.0.0.0/0
+data "aws_vpc" "this" {
+  id = var.vpc_id
+}
+
 # Security Group
 resource "aws_security_group" "rds" {
   name        = "${var.identifier}-rds-sg"
@@ -88,11 +93,11 @@ resource "aws_security_group" "rds" {
   }
 
   egress {
-    description = "Allow all outbound"
+    description = "Allow outbound to VPC CIDR by default (override via egress_cidr_blocks)"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = length(var.egress_cidr_blocks) > 0 ? var.egress_cidr_blocks : [data.aws_vpc.this.cidr_block]
   }
 
   tags = merge(

@@ -32,7 +32,7 @@ module "eks" {
 
   endpoint_private_access = true
   endpoint_public_access  = true
-  api_server_authorized_ip_ranges = ["0.0.0.0/0"]
+  api_server_authorized_ip_ranges = ["203.0.113.10/32"]
 
   enable_ebs_csi_driver              = true
   enable_cluster_autoscaler          = true
@@ -73,6 +73,8 @@ module "eks" {
 | enable_cluster_autoscaler           | Enable Cluster Autoscaler IAM role | `bool`         | `true`                  |    no    |
 | enable_aws_load_balancer_controller | Enable AWS LB Controller IAM role  | `bool`         | `true`                  |    no    |
 | cluster_log_types                   | Control plane log types            | `list(string)` | `["api", "audit", ...]` |    no    |
+| api_server_authorized_ip_ranges     | Authorized API server CIDRs (empty = deny all) | `list(string)` | `[]`            |    no    |
+| egress_cidr_blocks                  | Egress CIDR blocks (defaults to VPC CIDR) | `list(string)` | `[]`            |    no    |
 | tags                                | Tags to apply to resources         | `map(string)`  | `{}`                    |    no    |
 
 ## Outputs
@@ -219,7 +221,7 @@ See the [examples directory](../examples/) for complete usage examples:
 | <a name="input_cluster_name"></a> [cluster_name](#input_cluster_name)                                                                      | Name of the EKS cluster                                            | `string`                                                                                     | n/a                                                                                                           |   yes    |
 | <a name="input_private_subnet_ids"></a> [private_subnet_ids](#input_private_subnet_ids)                                                    | List of private subnet IDs for EKS nodes                           | `list(string)`                                                                               | n/a                                                                                                           |   yes    |
 | <a name="input_vpc_id"></a> [vpc_id](#input_vpc_id)                                                                                        | ID of the VPC where EKS cluster will be created                    | `string`                                                                                     | n/a                                                                                                           |   yes    |
-| <a name="input_api_server_authorized_ip_ranges"></a> [api_server_authorized_ip_ranges](#input_api_server_authorized_ip_ranges)             | Authorized IP ranges for API server access (empty list allows all) | `list(string)`                                                                               | <pre>[<br/> "0.0.0.0/0"<br/>]</pre>                                                                           |    no    |
+| <a name="input_api_server_authorized_ip_ranges"></a> [api_server_authorized_ip_ranges](#input_api_server_authorized_ip_ranges)             | Authorized IP ranges for API server access (empty list denies all public access) | `list(string)`                                                                               | `[]`                                                                           |    no    |
 | <a name="input_cluster_log_retention_days"></a> [cluster_log_retention_days](#input_cluster_log_retention_days)                            | Number of days to retain cluster logs in CloudWatch                | `number`                                                                                     | `7`                                                                                                           |    no    |
 | <a name="input_cluster_log_types"></a> [cluster_log_types](#input_cluster_log_types)                                                       | List of control plane logging types to enable                      | `list(string)`                                                                               | <pre>[<br/> "api",<br/> "audit",<br/> "authenticator",<br/> "controllerManager",<br/> "scheduler"<br/>]</pre> |    no    |
 | <a name="input_coredns_addon_version"></a> [coredns_addon_version](#input_coredns_addon_version)                                           | Version of the CoreDNS addon                                       | `string`                                                                                     | `null`                                                                                                        |    no    |
@@ -321,11 +323,12 @@ See the [examples directory](../examples/) for complete usage examples:
 | <a name="input_cluster_name"></a> [cluster_name](#input_cluster_name) | Name of the EKS cluster | `string` | n/a | yes |
 | <a name="input_private_subnet_ids"></a> [private_subnet_ids](#input_private_subnet_ids) | List of private subnet IDs for EKS nodes | `list(string)` | n/a | yes |
 | <a name="input_vpc_id"></a> [vpc_id](#input_vpc_id) | ID of the VPC where EKS cluster will be created | `string` | n/a | yes |
-| <a name="input_api_server_authorized_ip_ranges"></a> [api_server_authorized_ip_ranges](#input_api_server_authorized_ip_ranges) | Authorized IP ranges for API server access (empty list allows all) | `list(string)` | <pre>[<br/>  "0.0.0.0/0"<br/>]</pre> | no |
+| <a name="input_api_server_authorized_ip_ranges"></a> [api_server_authorized_ip_ranges](#input_api_server_authorized_ip_ranges) | Authorized IP ranges for API server access (empty list denies all public access) | `list(string)` | `[]` | no |
 | <a name="input_cluster_log_retention_days"></a> [cluster_log_retention_days](#input_cluster_log_retention_days) | Number of days to retain cluster logs in CloudWatch | `number` | `7` | no |
 | <a name="input_cluster_log_types"></a> [cluster_log_types](#input_cluster_log_types) | List of control plane logging types to enable | `list(string)` | <pre>[<br/>  "api",<br/>  "audit",<br/>  "authenticator",<br/>  "controllerManager",<br/>  "scheduler"<br/>]</pre> | no |
 | <a name="input_coredns_addon_version"></a> [coredns_addon_version](#input_coredns_addon_version) | Version of the CoreDNS addon | `string` | `null` | no |
 | <a name="input_ebs_csi_driver_addon_version"></a> [ebs_csi_driver_addon_version](#input_ebs_csi_driver_addon_version) | Version of the EBS CSI driver addon | `string` | `null` | no |
+| <a name="input_egress_cidr_blocks"></a> [egress_cidr_blocks](#input_egress_cidr_blocks) | List of CIDR blocks allowed for outbound traffic (defaults to the VPC CIDR when empty) | `list(string)` | `[]` | no |
 | <a name="input_enable_aws_load_balancer_controller"></a> [enable_aws_load_balancer_controller](#input_enable_aws_load_balancer_controller) | Enable IAM role for AWS Load Balancer Controller | `bool` | `true` | no |
 | <a name="input_enable_cluster_autoscaler"></a> [enable_cluster_autoscaler](#input_enable_cluster_autoscaler) | Enable IAM role for Cluster Autoscaler | `bool` | `true` | no |
 | <a name="input_enable_ebs_csi_driver"></a> [enable_ebs_csi_driver](#input_enable_ebs_csi_driver) | Enable EBS CSI driver addon | `bool` | `true` | no |
