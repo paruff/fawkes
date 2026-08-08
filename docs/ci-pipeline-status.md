@@ -1,5 +1,9 @@
 # uFawkes CI Pipeline — Status
 
+> ⚠️ **Point-in-time snapshot, not a live tracker.** Captured 2026-06-14; PR/stage
+> statuses below have not been re-verified against current CI state. Treat as historical
+> context, not a current-status source.
+>
 > **Session**: 2026-06-14 | **Status**: In Progress
 > **Plan**: `fawkes/docs/ci-pipeline-master-plan.md` (comprehensive, 5-gate architecture)
 
