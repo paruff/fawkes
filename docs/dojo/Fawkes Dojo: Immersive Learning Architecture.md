@@ -50,6 +50,29 @@ The Fawkes Dojo is not a traditional course or documentation site. It's an **imm
 6. ✅ **Community Learning**: Learn with peers, share achievements, get help
 7. ✅ **Recognized Credentials**: Earn badges/certificates valued by employers
 
+### Evidence Base for Self-Directed Learning
+
+The Dojo's self-directed, learn-by-doing model is not just a design preference — it's
+supported by software-engineering education research:
+
+- Self-directed learning capability mediates the effect of learning-environment design
+  on competency gains for CS/engineering students, with motivation (both intrinsic and
+  extrinsic) as a key driver — [Computer science and engineering students' self-directed
+  learning strategies and satisfaction with online learning](https://www.sciencedirect.com/science/article/pii/S2666557324000090),
+  *ScienceDirect*, 2024.
+- Learners use metacognitive strategies — self-assessment, peer discussion, progress
+  tracking — as core self-directed learning mechanisms, which is why the Dojo's belt
+  progression, mentor review, and community learning features exist rather than being
+  a self-paced reading list.
+- Practicing engineers increasingly use self-directed learning to build career-relevant
+  skills outside formal coursework — [Engineers Are Using Self-Directed Learning to Take
+  Control of Their Careers](https://www.asme.org/topics-resources/content/engineers-are-using-self-directed-learning-to-take-control-of-their-careers),
+  *ASME*.
+
+This grounds the Dojo's "Immediate Feedback" and "Progressive Mastery" principles below:
+without structured feedback loops and visible progression, self-directed learning
+correlates with fatigue and disengagement rather than skill gain.
+
 ### Learning Philosophy
 
 #### 1. **Production-First Learning**
