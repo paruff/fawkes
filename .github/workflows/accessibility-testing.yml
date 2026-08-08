@@ -47,7 +47,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "24.19.0"
           cache: "npm"
           cache-dependency-path: "design-system/package-lock.json"
 
@@ -71,7 +71,7 @@ jobs:
 
       - name: Publish test results
         if: always()
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action@d0a4676d0e0b938bc201470d88276b7c74c712b3 # v2
         with:
           files: design-system/junit.xml
           check_name: Axe-Core Accessibility Tests
@@ -99,7 +99,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "24.19.0"
           cache: "npm"
           cache-dependency-path: "design-system/package-lock.json"
 
