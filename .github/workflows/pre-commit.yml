@@ -234,12 +234,12 @@ jobs:
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v6
         with:
-          tflint_version: latest
+          tflint_version: v0.64.0
 
       - name: Install tfsec
         run: |
           sudo curl -sSL -o /usr/local/bin/tfsec \
-            https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-linux-amd64
+            https://github.com/aquasecurity/tfsec/releases/download/v1.28.14/tfsec-linux-amd64
           sudo chmod +x /usr/local/bin/tfsec
 
       - name: Install pre-commit
@@ -306,16 +306,16 @@ jobs:
       - name: Setup kubectl
         uses: azure/setup-kubectl@v5
         with:
-          version: "v1.28.0"
+          version: "v1.31.0"
 
       - name: Setup Helm
         uses: azure/setup-helm@v5
         with:
-          version: "v3.13.0"
+          version: "v3.21.3"
 
       - name: Install kubeval
         run: |
-          wget -q https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
+          wget -q https://github.com/instrumenta/kubeval/releases/download/v0.16.1/kubeval-linux-amd64.tar.gz
           tar xf kubeval-linux-amd64.tar.gz
           sudo mv kubeval /usr/local/bin
           rm kubeval-linux-amd64.tar.gz
@@ -330,13 +330,13 @@ jobs:
 
       - name: Install yq
         run: |
-          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_amd64
           sudo chmod +x /usr/local/bin/yq
 
       - name: Install ArgoCD CLI
         run: |
           curl -sSL -o argocd-linux-amd64 \
-            https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+            https://github.com/argoproj/argo-cd/releases/download/v3.5.0/argocd-linux-amd64
           sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
           rm argocd-linux-amd64
 

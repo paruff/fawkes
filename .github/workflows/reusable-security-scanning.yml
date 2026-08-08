@@ -81,7 +81,7 @@ jobs:
           echo "🔍 Scanning dependencies..."
           docker run --rm \
             -v "${{ github.workspace }}:/workspace" \
-            aquasec/trivy fs \
+            aquasec/trivy:0.73.0 fs \
             --scanners vuln \
             --severity ${{ inputs.severity-threshold }} \
             --format table \
@@ -106,7 +106,7 @@ jobs:
             echo "📋 Scanning Dockerfile: $dockerfile"
             docker run --rm \
               -v "${{ github.workspace }}:/workspace" \
-              aquasec/trivy config \
+              aquasec/trivy:0.73.0 config \
               --severity ${{ inputs.severity-threshold }} \
               "/workspace/$dockerfile"
           done

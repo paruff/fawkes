@@ -209,7 +209,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "24.19.0"
           cache: "npm"
           cache-dependency-path: "design-system/package-lock.json"
 
@@ -274,7 +274,7 @@ jobs:
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
-          version: latest
+          version: v2.12.2
           working-directory: tests/terratest
           args: --timeout=5m --config ../../.golangci.yml
 
