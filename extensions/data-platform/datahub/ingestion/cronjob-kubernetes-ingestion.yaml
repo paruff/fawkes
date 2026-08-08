@@ -206,12 +206,13 @@ metadata:
     component: ingestion
 rules:
   # Read access to Kubernetes resources
+  # NOTE: "secrets" intentionally excluded — ingestion catalogs resource existence,
+  # not secret values. See paruff/fawkes#337 / #1533.
   - apiGroups: [""]
     resources:
       - "pods"
       - "services"
       - "configmaps"
-      - "secrets"
       - "persistentvolumeclaims"
       - "namespaces"
     verbs: ["get", "list"]
