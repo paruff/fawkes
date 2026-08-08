@@ -196,7 +196,7 @@ variable "cors_rules" {
 variable "enable_network_rules" {
   description = "Enable network rules for storage account"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "default_network_action" {

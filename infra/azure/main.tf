@@ -189,6 +189,12 @@ resource "azurerm_storage_account" "terraform_state" {
   account_tier             = "Standard"
   account_replication_type = var.storage_replication_type
 
+  network_rules {
+    default_action             = "Deny"
+    bypass                     = ["AzureServices"]
+    virtual_network_subnet_ids = [azurerm_subnet.aks_subnet.id]
+  }
+
   tags = var.tags
 }
 
