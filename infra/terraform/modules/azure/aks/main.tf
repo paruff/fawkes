@@ -63,6 +63,10 @@ resource "azurerm_kubernetes_cluster" "main" {
     }
   }
 
+  node_provisioning_profile {
+    mode = "Manual"
+  }
+
   # Managed Identity
   identity {
     type = "SystemAssigned"
