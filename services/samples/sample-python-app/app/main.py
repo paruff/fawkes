@@ -2,10 +2,11 @@
 FastAPI application for sample-python-app
 """
 
-from fastapi import FastAPI
-from prometheus_client import make_asgi_app, Counter, Histogram
-import time
 import logging
+import time
+
+from fastapi import FastAPI
+from prometheus_client import Counter, Histogram, make_asgi_app
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

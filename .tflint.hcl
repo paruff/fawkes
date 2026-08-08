@@ -71,6 +71,9 @@ rule "terraform_unused_required_providers" {
   enabled = true
 }
 
-rule "terraform_standard_module_structure" {
-  enabled = true
-}
+# Disabled: this rule flags root Terraform configs as "bad modules" —
+# our repo has both root configs (infra/terraform/aks/) and modules,
+# and pre-commit runs TFLint across all of them indiscriminately.
+# rule "terraform_standard_module_structure" {
+#   enabled = true
+# }

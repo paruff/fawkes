@@ -1,7 +1,8 @@
 """Pydantic models for API requests and responses"""
 
 from datetime import datetime
-from typing import List, Optional, Dict, Any
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -10,7 +11,7 @@ class VariantConfig(BaseModel):
 
     name: str = Field(..., description="Variant name (e.g., 'control', 'variant-a')")
     allocation: float = Field(..., ge=0, le=1, description="Traffic allocation (0-1)")
-    config: Dict[str, Any] = Field(default_factory=dict, description="Variant-specific configuration")
+    config: dict[str, Any] = Field(default_factory=dict, description="Variant-specific configuration")
 
 
 class ExperimentCreate(BaseModel):
@@ -19,8 +20,8 @@ class ExperimentCreate(BaseModel):
     name: str = Field(..., description="Experiment name")
     description: str = Field(..., description="Experiment description")
     hypothesis: str = Field(..., description="Hypothesis being tested")
-    variants: List[VariantConfig] = Field(..., min_items=2, description="Experiment variants")
-    metrics: List[str] = Field(..., min_items=1, description="Metrics to track")
+    variants: list[VariantConfig] = Field(..., min_items=2, description="Experiment variants")
+    metrics: list[str] = Field(..., min_items=1, description="Metrics to track")
     target_sample_size: int = Field(default=1000, ge=10, description="Target sample size per variant")
     significance_level: float = Field(default=0.05, ge=0.01, le=0.1, description="Statistical significance level")
     traffic_allocation: float = Field(default=1.0, ge=0, le=1, description="Overall traffic allocation")
@@ -29,9 +30,9 @@ class ExperimentCreate(BaseModel):
 class ExperimentUpdate(BaseModel):
     """Request model for updating an experiment"""
 
-    description: Optional[str] = None
-    traffic_allocation: Optional[float] = Field(None, ge=0, le=1)
-    target_sample_size: Optional[int] = Field(None, ge=10)
+    description: str | None = None
+    traffic_allocation: float | None = Field(None, ge=0, le=1)
+    target_sample_size: int | None = Field(None, ge=10)
 
 
 class ExperimentResponse(BaseModel):
@@ -42,14 +43,14 @@ class ExperimentResponse(BaseModel):
     description: str
     hypothesis: str
     status: str
-    variants: List[VariantConfig]
-    metrics: List[str]
+    variants: list[VariantConfig]
+    metrics: list[str]
     target_sample_size: int
     significance_level: float
     traffic_allocation: float
     created_at: datetime
-    started_at: Optional[datetime]
-    stopped_at: Optional[datetime]
+    started_at: datetime | None
+    stopped_at: datetime | None
 
     class Config:
         from_attributes = True
@@ -58,7 +59,7 @@ class ExperimentResponse(BaseModel):
 class ExperimentList(BaseModel):
     """Response model for listing experiments"""
 
-    experiments: List[ExperimentResponse]
+    experiments: list[ExperimentResponse]
     total: int
     skip: int
     limit: int
@@ -94,9 +95,9 @@ class ExperimentStats(BaseModel):
     experiment_id: str
     experiment_name: str
     status: str
-    variants: List[VariantStats]
+    variants: list[VariantStats]
     control_variant: str
-    winner: Optional[str] = None
+    winner: str | None = None
     statistical_significance: bool
     p_value: float
     confidence_level: float

@@ -5,11 +5,11 @@ Unit tests for SPACE metrics service
 import pytest
 from app.metrics import calculate_devex_health_score
 from app.schemas import (
-    SatisfactionMetrics,
-    PerformanceMetrics,
     ActivityMetrics,
     CommunicationMetrics,
     EfficiencyMetrics,
+    PerformanceMetrics,
+    SatisfactionMetrics,
 )
 
 

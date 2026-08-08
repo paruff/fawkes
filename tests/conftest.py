@@ -21,13 +21,14 @@ Usage:
         pass
 """
 
+import logging
 import os
 import uuid
-import pytest
-import logging
-from typing import Generator
-from datetime import datetime
+from collections.abc import Generator
+from datetime import datetime, timezone
 from pathlib import Path
+
+import pytest
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -146,7 +147,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     categories = {"unit": [], "integration": [], "e2e": [], "smoke": [], "security": []}
 
     for report in terminalreporter.stats.get("passed", []):
-        for category in categories.keys():
+        for category in categories:
             if category in report.keywords:
                 categories[category].append(report)
 
@@ -160,7 +161,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     dora_metrics = {"dora_deployment_frequency": 0, "dora_lead_time": 0, "dora_change_failure_rate": 0, "dora_mttr": 0}
 
     for report in terminalreporter.stats.get("passed", []):
-        for metric in dora_metrics.keys():
+        for metric in dora_metrics:
             if metric in report.keywords:
                 dora_metrics[metric] += 1
 
@@ -463,7 +464,7 @@ def dora_metrics_client(dora_metrics_url):
             repo_commits = {k: v for k, v in self._commit_times.items() if k.startswith(f"{repo}/")}
             if repo_commits:
                 return max(repo_commits.values())
-            return datetime.utcnow()
+            return datetime.now(timezone.utc)
 
         def record_deployment(self, service: str, version: str, status: str):
             """Record a deployment event."""
@@ -477,8 +478,8 @@ def dora_metrics_client(dora_metrics_url):
                         "version": version,
                         "environment": "test",
                         "commit_sha": version,
-                        "commit_timestamp": datetime.utcnow().isoformat(),
-                        "deployment_timestamp": datetime.utcnow().isoformat(),
+                        "commit_timestamp": datetime.now(timezone.utc).isoformat(),
+                        "deployment_timestamp": datetime.now(timezone.utc).isoformat(),
                         "status": status,
                     },
                     timeout=5,
@@ -613,7 +614,7 @@ def clean_database(postgres_connection_string):
         sqlalchemy.engine.Engine: Database engine
     """
     try:
-        from sqlalchemy import create_engine, MetaData
+        from sqlalchemy import MetaData, create_engine
 
         engine = create_engine(postgres_connection_string)
         metadata = MetaData()

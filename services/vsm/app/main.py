@@ -5,28 +5,28 @@ This service provides work item tracking through value stream stages
 from idea to production, with flow metrics and cycle time calculation.
 """
 
-import time
 import logging
+import time
+from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 from typing import List, Optional
-from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Depends, Query
-from sqlalchemy.orm import Session
+from fastapi import Depends, FastAPI, HTTPException, Query
+from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
 from sqlalchemy import func
-from prometheus_client import make_asgi_app, Counter, Histogram, Gauge
+from sqlalchemy.orm import Session
 
 from app.database import get_db, init_db
-from app.models import WorkItem, Stage, StageTransition
+from app.models import Stage, StageTransition, WorkItem
 from app.schemas import (
-    WorkItemCreate,
-    WorkItemResponse,
+    FlowMetricsResponse,
+    HealthResponse,
+    StageResponse,
     StageTransitionCreate,
     StageTransitionResponse,
+    WorkItemCreate,
     WorkItemHistory,
-    FlowMetricsResponse,
-    StageResponse,
-    HealthResponse,
+    WorkItemResponse,
 )
 
 # Configure logging
@@ -243,7 +243,7 @@ async def create_work_item(work_item: WorkItemCreate, db: Session = Depends(get_
     except Exception as e:
         logger.error(f"Failed to create work item: {e}")
         db.rollback()
-        raise HTTPException(status_code=500, detail=f"Failed to create work item: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to create work item: {e!s}")
 
 
 @app.put("/api/v1/work-items/{work_item_id}/transition", response_model=StageTransitionResponse, tags=["Work Items"])
@@ -333,7 +333,7 @@ async def transition_work_item(
     except Exception as e:
         logger.error(f"Failed to transition work item: {e}")
         db.rollback()
-        raise HTTPException(status_code=500, detail=f"Failed to transition work item: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to transition work item: {e!s}")
 
 
 @app.get("/api/v1/work-items/{work_item_id}/history", response_model=WorkItemHistory, tags=["Work Items"])
@@ -511,10 +511,10 @@ async def get_flow_metrics(
 
     except Exception as e:
         logger.error(f"Failed to calculate flow metrics: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to calculate flow metrics: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to calculate flow metrics: {e!s}")
 
 
-@app.get("/api/v1/stages", response_model=List[StageResponse], tags=["Stages"])
+@app.get("/api/v1/stages", response_model=list[StageResponse], tags=["Stages"])
 async def list_stages(db: Session = Depends(get_db)):
     """
     List all available stages.
@@ -540,7 +540,7 @@ async def list_stages(db: Session = Depends(get_db)):
     ]
 
 
-def calculate_cycle_time(work_item_id: int, db: Session) -> Optional[float]:
+def calculate_cycle_time(work_item_id: int, db: Session) -> float | None:
     """
     Calculate cycle time for a work item in hours.
 
@@ -571,7 +571,7 @@ def calculate_cycle_time(work_item_id: int, db: Session) -> Optional[float]:
     return cycle_time_hours
 
 
-def calculate_lead_time(work_item_id: int, db: Session) -> Optional[float]:
+def calculate_lead_time(work_item_id: int, db: Session) -> float | None:
     """
     Calculate lead time for a work item in seconds (from backlog to production).
 

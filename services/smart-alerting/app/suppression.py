@@ -9,15 +9,16 @@ Supports multiple suppression types:
 - Time-based suppression
 """
 
-import os
-import yaml
+import asyncio
 import logging
-from typing import List, Dict, Optional, Tuple
-from datetime import datetime, timedelta
-from pathlib import Path
+import os
 import re
+from datetime import datetime, timedelta
+from pathlib import Path, timezone
+from typing import Dict, List, Optional, Tuple
 
 import redis.asyncio as redis
+import yaml
 from croniter import croniter
 
 logger = logging.getLogger(__name__)
@@ -33,7 +34,7 @@ class SuppressionEngine:
     def __init__(self, redis_client: redis.Redis):
         """Initialize suppression engine."""
         self.redis = redis_client
-        self.rules: List[Dict] = []
+        self.rules: list[dict] = []
         self.flapping_threshold = FLAPPING_THRESHOLD
         self.flapping_window = timedelta(seconds=FLAPPING_WINDOW)
 
@@ -51,14 +52,18 @@ class SuppressionEngine:
 
         for rule_file in rules_path.glob("*.yaml"):
             try:
-                with open(rule_file, "r") as f:
-                    rule_data = yaml.safe_load(f)
 
-                    # Add file path for tracking
-                    rule_data["file_path"] = str(rule_file)
+                def _read_rule(fp):
+                    with open(fp, "r") as f:
+                        return yaml.safe_load(f)
 
-                    self.rules.append(rule_data)
-                    logger.info(f"Loaded rule: {rule_data.get('name')} from {rule_file}")
+                rule_data = await asyncio.to_thread(_read_rule, rule_file)
+
+                # Add file path for tracking
+                rule_data["file_path"] = str(rule_file)
+
+                self.rules.append(rule_data)
+                logger.info(f"Loaded rule: {rule_data.get('name')} from {rule_file}")
             except Exception as e:
                 logger.error(f"Failed to load rule from {rule_file}: {e}")
 
@@ -86,12 +91,15 @@ class SuppressionEngine:
         ]
 
         for i, rule in enumerate(example_rules):
-            rule_file = rules_path / f"example-{i+1}.yaml"
-            with open(rule_file, "w") as f:
-                yaml.dump(rule, f, default_flow_style=False)
-            logger.info(f"Created example rule: {rule_file}")
+            rule_file = rules_path / f"example-{i + 1}.yaml"
 
-    async def should_suppress(self, alert_group: Dict) -> Tuple[bool, Optional[str]]:
+            def _write_rule(fp, data):
+                with open(fp, "w") as f:
+                    yaml.dump(data, f, default_flow_style=False)
+
+            await asyncio.to_thread(_write_rule, rule_file, rule)
+
+    async def should_suppress(self, alert_group: dict) -> tuple[bool, str | None]:
         """
         Check if alert group should be suppressed.
 
@@ -127,7 +135,7 @@ class SuppressionEngine:
 
         return False, None
 
-    async def _check_maintenance_window(self, alert_group: Dict, rule: Dict) -> bool:
+    async def _check_maintenance_window(self, alert_group: dict, rule: dict) -> bool:
         """Check if alert falls within maintenance window."""
         schedule = rule.get("schedule")
         duration = rule.get("duration", 3600)  # Default 1 hour
@@ -137,12 +145,12 @@ class SuppressionEngine:
 
         # Check if we're in a maintenance window
         try:
-            cron = croniter(schedule, datetime.now())
+            cron = croniter(schedule, datetime.now(timezone.utc))
             last_run = cron.get_prev(datetime)
 
             window_end = last_run + timedelta(seconds=duration)
 
-            if datetime.now() < window_end:
+            if datetime.now(timezone.utc) < window_end:
                 # Check if alert matches services
                 services = rule.get("services", [])
                 suppress_severity = rule.get("suppress_severity", [])
@@ -165,7 +173,7 @@ class SuppressionEngine:
 
         return False
 
-    async def _check_known_issue(self, alert_group: Dict, rule: Dict) -> bool:
+    async def _check_known_issue(self, alert_group: dict, rule: dict) -> bool:
         """Check if alert matches a known issue."""
         alert_pattern = rule.get("alert_pattern")
         services = rule.get("services", [])
@@ -201,7 +209,7 @@ class SuppressionEngine:
 
         return False
 
-    async def _check_flapping(self, alert_group: Dict, rule: Dict) -> bool:
+    async def _check_flapping(self, alert_group: dict, rule: dict) -> bool:
         """Check if alert is flapping (firing repeatedly)."""
         threshold = rule.get("threshold", self.flapping_threshold)
         window = rule.get("window", FLAPPING_WINDOW)
@@ -213,7 +221,7 @@ class SuppressionEngine:
         occurrences_key = f"flapping:{grouping_key}"
 
         # Get recent occurrences
-        now = datetime.now().timestamp()
+        now = datetime.now(timezone.utc).timestamp()
         window_start = now - window
 
         # Remove old occurrences
@@ -235,13 +243,13 @@ class SuppressionEngine:
                         if re.match(alert_pattern, alertname):
                             return True
                     except Exception:
-                        pass
+                        logger.warning("Silent exception caught")
             else:
                 return True
 
         return False
 
-    async def _check_cascade(self, alert_group: Dict, rule: Dict) -> bool:
+    async def _check_cascade(self, alert_group: dict, rule: dict) -> bool:
         """Check if alert is a cascade of a root cause alert."""
         root_cause_alert = rule.get("root_cause_alert")
         dependent_alerts = rule.get("dependent_alerts", [])
@@ -273,14 +281,14 @@ class SuppressionEngine:
 
         return False
 
-    async def _check_time_based(self, alert_group: Dict, rule: Dict) -> bool:
+    async def _check_time_based(self, alert_group: dict, rule: dict) -> bool:
         """Check if alert should be suppressed based on time of day."""
         # Simple implementation: suppress non-critical alerts during off-hours
         suppress_hours = rule.get("suppress_hours", [])  # e.g., [0, 1, 2, 3, 4, 5, 6]
         suppress_days = rule.get("suppress_days", [])  # e.g., ["saturday", "sunday"]
         suppress_severity = rule.get("suppress_severity", ["low", "info"])
 
-        now = datetime.now()
+        now = datetime.now(timezone.utc)
 
         # Check hour
         if suppress_hours and now.hour in suppress_hours:
@@ -301,12 +309,12 @@ class SuppressionEngine:
 
         return False
 
-    async def add_rule(self, rule: Dict):
+    async def add_rule(self, rule: dict):
         """Add a new suppression rule."""
         self.rules.append(rule)
         logger.info(f"Added rule: {rule.get('name')}")
 
-    async def update_rule(self, rule: Dict):
+    async def update_rule(self, rule: dict):
         """Update existing suppression rule."""
         rule_id = rule.get("id")
 

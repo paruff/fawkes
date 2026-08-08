@@ -23,13 +23,13 @@ Examples:
     python -m indexers.techdocs --backstage-url http://backstage.example.com --dry-run
 """
 
-import sys
 import argparse
 import hashlib
-import time
-from typing import List, Dict, Any, Optional, Tuple
-from datetime import datetime
 import re
+import sys
+import time
+from datetime import datetime, timezone
+from typing import Any, Optional
 
 try:
     import requests
@@ -69,7 +69,7 @@ class BackstageIndexer:
         self,
         backstage_url: str,
         weaviate_url: str = DEFAULT_WEAVIATE_URL,
-        auth_token: Optional[str] = None,
+        auth_token: str | None = None,
         dry_run: bool = False,
     ):
         """
@@ -116,7 +116,7 @@ class BackstageIndexer:
             print(f"❌ Failed to connect to Weaviate: {e}")
             sys.exit(1)  # Fatal error for CLI script
 
-    def _backstage_request(self, path: str, params: Optional[Dict] = None) -> Optional[Any]:
+    def _backstage_request(self, path: str, params: dict | None = None) -> Any | None:
         """
         Make a Backstage API request.
 
@@ -144,7 +144,7 @@ class BackstageIndexer:
             print(f"  ❌ Request error: {e}")
             return None
 
-    def fetch_catalog_entities(self) -> List[Dict[str, Any]]:
+    def fetch_catalog_entities(self) -> list[dict[str, Any]]:
         """
         Fetch all catalog entities from Backstage.
 
@@ -168,7 +168,7 @@ class BackstageIndexer:
             print("⚠️  No entities found or unexpected response format")
             return []
 
-    def fetch_techdocs_metadata(self, entity: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    def fetch_techdocs_metadata(self, entity: dict[str, Any]) -> dict[str, Any] | None:
         """
         Fetch TechDocs metadata for an entity.
 
@@ -200,7 +200,7 @@ class BackstageIndexer:
 
         return None
 
-    def fetch_techdocs_content(self, docs_path: str) -> Optional[str]:
+    def fetch_techdocs_content(self, docs_path: str) -> str | None:
         """
         Fetch TechDocs content (HTML or markdown).
 
@@ -255,7 +255,7 @@ class BackstageIndexer:
             text = re.sub(r"\s+", " ", text)
             return text.strip()
 
-    def extract_sections(self, content: str) -> List[Dict[str, str]]:
+    def extract_sections(self, content: str) -> list[dict[str, str]]:
         """
         Extract sections from content based on headings.
 
@@ -295,7 +295,7 @@ class BackstageIndexer:
 
         return sections
 
-    def chunk_content(self, content: str) -> List[str]:
+    def chunk_content(self, content: str) -> list[str]:
         """Chunk content into smaller pieces."""
         if len(content) <= MAX_CHUNK_CHARS:
             return [content]
@@ -335,7 +335,7 @@ class BackstageIndexer:
 
     def index_techdocs(
         self, entity_ref: str, content: str, backstage_url: str, force: bool = False
-    ) -> Tuple[bool, int]:
+    ) -> tuple[bool, int]:
         """
         Index TechDocs content.
 
@@ -381,7 +381,7 @@ class BackstageIndexer:
 
         # Index sections
         indexed_count = 0
-        timestamp = datetime.utcnow().isoformat() + "Z"
+        timestamp = datetime.now(timezone.utc).isoformat() + "Z"
 
         try:
             with self.weaviate_client.batch as batch:
@@ -488,9 +488,9 @@ class BackstageIndexer:
         Args:
             force: Force re-indexing even if unchanged
         """
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print("Indexing Backstage TechDocs")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
         # Fetch catalog entities
         entities = self.fetch_catalog_entities()
@@ -564,16 +564,16 @@ class BackstageIndexer:
                 error_count += 1
 
         # Summary
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print("TechDocs Indexing Summary")
-        print(f"{'='*70}")
+        print(f"{'=' * 70}")
         print(f"Total entities: {len(entities)}")
         print(f"Entities with TechDocs: {techdocs_count}")
         print(f"Successfully indexed: {success_count}")
         print(f"Skipped (unchanged/no content): {skipped_count}")
         print(f"Errors: {error_count}")
         print(f"Total chunks indexed: {total_chunks}")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
 
 def main():
@@ -633,7 +633,7 @@ def main():
 
     elapsed_time = time.time() - start_time
 
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print(f"⏱️  Total time elapsed: {elapsed_time:.2f} seconds")
 
     if args.dry_run:
@@ -641,7 +641,7 @@ def main():
     else:
         print("✅ Indexing complete!")
 
-    print(f"{'='*70}\n")
+    print(f"{'=' * 70}\n")
 
 
 if __name__ == "__main__":

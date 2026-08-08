@@ -72,7 +72,7 @@ class HarborConfigurer:
         logger.error(f"Harbor not ready after {timeout} seconds")
         return False
 
-    def create_project(self, name: str, public: bool = False, storage_limit: int = -1) -> Optional[Dict]:
+    def create_project(self, name: str, public: bool = False, storage_limit: int = -1) -> dict | None:
         """
         Create a Harbor project.
 
@@ -118,12 +118,12 @@ class HarborConfigurer:
             if response.status_code == 200 and response.json():
                 return response.json()[0]
         else:
-            logger.error(f"Failed to create project '{name}': " f"{response.status_code} - {response.text}")
+            logger.error(f"Failed to create project '{name}': {response.status_code} - {response.text}")
         return None
 
     def create_robot_account(
-        self, project_name: str, robot_name: str, description: str, permissions: List[str]
-    ) -> Optional[Dict]:
+        self, project_name: str, robot_name: str, description: str, permissions: list[str]
+    ) -> dict | None:
         """
         Create a robot account for CI/CD.
 
@@ -171,7 +171,7 @@ class HarborConfigurer:
             logger.info("Robot token generated successfully (returned in response)")
             return robot_info
         else:
-            logger.error(f"Failed to create robot account: " f"{response.status_code} - {response.text}")
+            logger.error(f"Failed to create robot account: {response.status_code} - {response.text}")
         return None
 
     def configure_scan_policy(self, project_name: str) -> bool:
@@ -204,7 +204,7 @@ class HarborConfigurer:
             logger.info(f"Scan policy configured for '{project_name}'")
             return True
         else:
-            logger.error(f"Failed to configure scan policy: " f"{response.status_code} - {response.text}")
+            logger.error(f"Failed to configure scan policy: {response.status_code} - {response.text}")
         return False
 
 
@@ -268,7 +268,7 @@ def main():
         if robot:
             robot_name = robot.get("name", "unknown")
             robot_names.append(robot_name)
-            logger.info(f"\n{'='*60}")
+            logger.info(f"\n{'=' * 60}")
             logger.info(f"Robot Account: {robot_name}")
             logger.info("Robot account created successfully")
             logger.info("⚠️  Token generated but not displayed for security reasons")
@@ -278,7 +278,7 @@ def main():
             logger.info("  3. Recreate the robot account to get a new token")
             logger.info("OR use Harbor API to retrieve/regenerate the token")
             logger.info("Use this token in Jenkins credentials or GitLab CI/CD variables")
-            logger.info(f"{'='*60}\n")
+            logger.info(f"{'=' * 60}\n")
 
             robot_count += 1
 

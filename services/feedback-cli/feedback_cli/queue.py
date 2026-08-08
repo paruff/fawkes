@@ -3,7 +3,7 @@
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -14,8 +14,8 @@ class QueuedFeedback(BaseModel):
     rating: int = Field(..., description="Rating from 1-5")
     category: str = Field(..., description="Feedback category")
     comment: str = Field(..., description="Feedback comment")
-    email: Optional[str] = Field(None, description="User email")
-    page_url: Optional[str] = Field(None, description="Page URL")
+    email: str | None = Field(None, description="User email")
+    page_url: str | None = Field(None, description="Page URL")
     feedback_type: str = Field("feedback", description="Feedback type")
     queued_at: str = Field(..., description="Timestamp when queued")
     attempts: int = Field(0, description="Number of sync attempts")
@@ -33,7 +33,7 @@ class OfflineQueue:
         self.queue_path = Path(queue_path)
         self.queue_path.parent.mkdir(parents=True, exist_ok=True)
 
-    def add(self, feedback_data: Dict[str, Any]) -> None:
+    def add(self, feedback_data: dict[str, Any]) -> None:
         """Add feedback to offline queue.
 
         Args:
@@ -46,7 +46,7 @@ class OfflineQueue:
         queue.append(queued_feedback.model_dump())
         self._save_queue(queue)
 
-    def get_all(self) -> List[Dict[str, Any]]:
+    def get_all(self) -> list[dict[str, Any]]:
         """Get all queued feedback items.
 
         Returns:
@@ -88,7 +88,7 @@ class OfflineQueue:
         """
         return len(self._load_queue())
 
-    def _load_queue(self) -> List[Dict[str, Any]]:
+    def _load_queue(self) -> list[dict[str, Any]]:
         """Load queue from file.
 
         Returns:
@@ -100,10 +100,10 @@ class OfflineQueue:
         try:
             with open(self.queue_path, "r") as f:
                 return json.load(f)
-        except (json.JSONDecodeError, IOError):
+        except (OSError, json.JSONDecodeError):
             return []
 
-    def _save_queue(self, queue: List[Dict[str, Any]]) -> None:
+    def _save_queue(self, queue: list[dict[str, Any]]) -> None:
         """Save queue to file.
 
         Args:

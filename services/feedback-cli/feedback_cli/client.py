@@ -12,15 +12,15 @@ class FeedbackSubmission(BaseModel):
     rating: int = Field(..., description="Rating from 1-5", ge=1, le=5)
     category: str = Field(..., description="Feedback category")
     comment: str = Field(..., description="Feedback comment", min_length=1)
-    email: Optional[str] = Field(None, description="Optional email for follow-up")
-    page_url: Optional[str] = Field(None, description="Page URL where feedback was submitted")
+    email: str | None = Field(None, description="Optional email for follow-up")
+    page_url: str | None = Field(None, description="Page URL where feedback was submitted")
     feedback_type: str = Field("feedback", description="Type of feedback (feedback, bug_report, feature_request)")
 
 
 class FeedbackClient:
     """Client for interacting with Feedback API."""
 
-    def __init__(self, base_url: str, api_key: Optional[str] = None):
+    def __init__(self, base_url: str, api_key: str | None = None):
         """Initialize Feedback API client.
 
         Args:
@@ -33,7 +33,7 @@ class FeedbackClient:
         if api_key:
             self.session.headers["Authorization"] = f"Bearer {api_key}"
 
-    def submit_feedback(self, feedback: FeedbackSubmission) -> Dict[str, Any]:
+    def submit_feedback(self, feedback: FeedbackSubmission) -> dict[str, Any]:
         """Submit new feedback.
 
         Args:
@@ -55,11 +55,11 @@ class FeedbackClient:
 
     def list_feedback(
         self,
-        category: Optional[str] = None,
-        status: Optional[str] = None,
+        category: str | None = None,
+        status: str | None = None,
         limit: int = 10,
         page: int = 1,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """List feedback with optional filters.
 
         Args:
@@ -88,7 +88,7 @@ class FeedbackClient:
         response.raise_for_status()
         return response.json()
 
-    def get_feedback(self, feedback_id: int) -> Dict[str, Any]:
+    def get_feedback(self, feedback_id: int) -> dict[str, Any]:
         """Get a specific feedback by ID.
 
         Args:
@@ -107,7 +107,7 @@ class FeedbackClient:
         response.raise_for_status()
         return response.json()
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get feedback statistics.
 
         Returns:

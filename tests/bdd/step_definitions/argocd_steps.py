@@ -8,17 +8,17 @@ Synced & Healthy.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 from typing import Dict
-import os
 
-from pytest_bdd import given, when, then, parsers
+from pytest_bdd import given, parsers, then, when
 
 if os.getenv("FAWKES_DEBUG_STEPS") == "1":  # pragma: no cover
     print("[bdd] Loaded argocd_steps definitions")
 
 
-def _kubectl_json(args: list[str]) -> Dict:
+def _kubectl_json(args: list[str]) -> dict:
     """Run kubectl and return parsed JSON.
 
     Args:
@@ -54,14 +54,14 @@ def k8s_api_reachable():
 
 
 @when(parsers.cfparse('I list Argo CD Applications in namespace "{namespace}"'))
-def list_argocd_applications(namespace: str, context: Dict):
+def list_argocd_applications(namespace: str, context: dict):
     data = _kubectl_json(["-n", namespace, "get", "applications.argoproj.io", "-o", "json"])
     apps = {item["metadata"]["name"]: item for item in data.get("items", [])}
     context["apps"] = apps
     assert apps, f"No Applications found in namespace {namespace}"
 
 
-def _assert_app_synced_healthy(app: Dict, name: str):
+def _assert_app_synced_healthy(app: dict, name: str):
     status = app.get("status", {})
     sync_status = status.get("sync", {}).get("status")
     health_status = status.get("health", {}).get("status")
@@ -70,15 +70,15 @@ def _assert_app_synced_healthy(app: Dict, name: str):
 
 
 @then(parsers.cfparse('Application "{app_name}" is Synced and Healthy'))
-def application_synced_healthy(app_name: str, context: Dict):
-    apps: Dict[str, Dict] = context.get("apps", {})
+def application_synced_healthy(app_name: str, context: dict):
+    apps: dict[str, dict] = context.get("apps", {})
     assert app_name in apps, f"Application {app_name} not found in listed apps ({list(apps)})"
     _assert_app_synced_healthy(apps[app_name], app_name)
 
 
 # Alias to support Scenario Outline step text
 @then(parsers.cfparse('Application "{appName}" is Synced and Healthy'))
-def application_synced_healthy_outline(appName: str, context: Dict):
-    apps: Dict[str, Dict] = context.get("apps", {})
+def application_synced_healthy_outline(appName: str, context: dict):
+    apps: dict[str, dict] = context.get("apps", {})
     assert appName in apps, f"Application {appName} not found in listed apps ({list(apps)})"
     _assert_app_synced_healthy(apps[appName], appName)
