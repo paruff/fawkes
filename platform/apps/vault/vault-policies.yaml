@@ -38,7 +38,8 @@ metadata:
     vault.hashicorp.com/agent-inject: "true"
     vault.hashicorp.com/role: "platform-service"
 ---
-# ClusterRole for reading secrets via Vault
+# ClusterRole for Vault — configmaps only (secrets grant removed; use namespace-scoped Role below)
+# See paruff/fawkes#1188 / #1533 — blanket cluster-wide secrets/get was over-broad RBAC.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -47,13 +48,6 @@ metadata:
     app: vault
     component: rbac
 rules:
-  # Allow reading secrets that Vault Agent creates in vault namespace
-  # NOTE: For tighter security, use namespace-scoped Role instead of ClusterRole
-  - apiGroups: [""]
-    resources: ["secrets"]
-    verbs: ["get"]
-    # Restrict to secrets with vault prefix
-    resourceNames: []
   # Allow reading configmaps for Vault configuration
   - apiGroups: [""]
     resources: ["configmaps"]
