@@ -1,5 +1,5 @@
 # Minimal image for FastAPI + Kubernetes client
-FROM python:3.13-slim
+FROM python:3.13.14-slim
 WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
