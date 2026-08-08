@@ -190,6 +190,12 @@ resource "azurerm_storage_account" "backup_staging" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
+  network_rules {
+    default_action             = "Deny"
+    bypass                     = ["AzureServices"]
+    virtual_network_subnet_ids = [azurerm_subnet.aks_subnet.id]
+  }
+
   tags = merge(var.tags, {
     component = "backup"
     purpose   = "backup-staging"
