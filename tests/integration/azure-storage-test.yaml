@@ -118,6 +118,16 @@ spec:
       volumeMounts:
         - name: data
           mountPath: /data
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: false
+        capabilities:
+          drop:
+            - ALL
+  securityContext:
+    fsGroup: 1000
   volumes:
     - name: data
       persistentVolumeClaim:
@@ -154,6 +164,16 @@ spec:
       volumeMounts:
         - name: data
           mountPath: /data
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: false
+        capabilities:
+          drop:
+            - ALL
+  securityContext:
+    fsGroup: 1000
   volumes:
     - name: data
       persistentVolumeClaim:
@@ -187,6 +207,14 @@ spec:
       volumeMounts:
         - name: data
           mountPath: /data
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: false
+        capabilities:
+          drop:
+            - ALL
   volumes:
     - name: data
       persistentVolumeClaim:
@@ -224,6 +252,14 @@ spec:
       volumeMounts:
         - name: data
           mountPath: /data
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: false
+        capabilities:
+          drop:
+            - ALL
   volumes:
     - name: data
       persistentVolumeClaim:
@@ -265,6 +301,14 @@ spec:
       volumeMounts:
         - name: data
           mountPath: /data
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
   volumes:
     - name: data
       persistentVolumeClaim:
