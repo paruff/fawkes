@@ -71,6 +71,10 @@ jobs:
         working-directory: ${{ env.SERVICE_DIR }}
         run: pytest --cov=app --cov-report=term-missing --cov-fail-under=80 tests/
 
+      - name: BDD observability tests
+        working-directory: ${{ env.SERVICE_DIR }}
+        run: behave tests/bdd/features/observability.feature
+
       - name: DORA job finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
