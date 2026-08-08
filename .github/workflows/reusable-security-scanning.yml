@@ -52,7 +52,7 @@ jobs:
 
       - name: Run secret scanning
         if: inputs.scan-type == 'all' || inputs.scan-type == 'secrets'
-        uses: gitleaks/gitleaks-action@v3
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_ENABLE_SUMMARY: true
@@ -81,7 +81,7 @@ jobs:
           echo "🔍 Scanning dependencies..."
           docker run --rm \
             -v "${{ github.workspace }}:/workspace" \
-            aquasec/trivy fs \
+            aquasec/trivy:0.73.0 fs \
             --scanners vuln \
             --severity ${{ inputs.severity-threshold }} \
             --format table \
@@ -106,7 +106,7 @@ jobs:
             echo "📋 Scanning Dockerfile: $dockerfile"
             docker run --rm \
               -v "${{ github.workspace }}:/workspace" \
-              aquasec/trivy config \
+              aquasec/trivy:0.73.0 config \
               --severity ${{ inputs.severity-threshold }} \
               "/workspace/$dockerfile"
           done
