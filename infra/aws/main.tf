@@ -33,18 +33,6 @@ terraform {
       source  = "hashicorp/random"
       version = "~> 3.6"
     }
-    time = {
-      source  = "hashicorp/time"
-      version = ">= 0.9.0"
-    }
-    tls = {
-      source  = "hashicorp/tls"
-      version = ">= 4.0.0"
-    }
-    cloudinit = {
-      source  = "hashicorp/cloudinit"
-      version = ">= 2.0.0"
-    }
   }
 }
 
@@ -249,6 +237,21 @@ module "eks" {
   tags = local.tags
 }
 
+module "tracer_bullet_irsa" {
+  source = "../terraform/modules/aws/eks-namespace"
+
+  namespace = "fawkes"
+  # ArgoCD owns namespace creation via CreateNamespace=true
+  # (platform/apps/tracer-bullet/tracer-bullet-application.yaml) — this
+  # module call only manages the IRSA role, not the namespace object.
+  manage_namespace     = false
+  create_irsa_role     = true
+  service_account_name = "tracer-bullet"
+  oidc_provider_arn    = module.eks.oidc_provider_arn
+  oidc_provider_url    = module.eks.oidc_provider
+  iam_policy_arns      = []
+}
+
 data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_name
 }
@@ -258,14 +261,21 @@ data "aws_eks_cluster_auth" "cluster" {
 }
 
 output "cluster_name" {
-  value = module.eks.cluster_name
+  description = "Name of the EKS cluster."
+  value       = module.eks.cluster_name
 }
 
 output "cluster_endpoint" {
-  value = data.aws_eks_cluster.cluster.endpoint
+  description = "API server endpoint of the EKS cluster."
+  value       = data.aws_eks_cluster.cluster.endpoint
 }
 
-
 output "vpc_id" {
-  value = module.vpc.vpc_id
+  description = "ID of the VPC created for the EKS cluster."
+  value       = module.vpc.vpc_id
+}
+
+output "tracer_bullet_irsa_role_arn" {
+  description = "IAM role ARN for tracer-bullet's IRSA-bound ServiceAccount."
+  value       = module.tracer_bullet_irsa.irsa_role_arn
 }
