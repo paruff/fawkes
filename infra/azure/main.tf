@@ -123,6 +123,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
     ]
   }
 
+  # Node pools are managed manually via azurerm_kubernetes_cluster_node_pool (no AKS Node Auto Provisioning)
+  node_provisioning_profile {
+    mode = "Manual"
+  }
+
   tags = var.tags
 }
 
