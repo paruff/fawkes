@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:18-alpine AS builder
+FROM node:24.19.0-alpine AS builder
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ COPY . .
 RUN npm run build-storybook
 
 # Stage 2: Serve
-FROM nginx:alpine
+FROM nginx:1.28.3-alpine
 
 # Create non-root user for running nginx
 RUN addgroup -g 1000 nginx-user && \

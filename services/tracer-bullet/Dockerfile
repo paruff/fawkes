@@ -2,7 +2,7 @@
 # =============================================================================
 
 # --- Build stage ---
-FROM python:3.13-slim AS builder
+FROM python:3.13.14-slim AS builder
 
 WORKDIR /build
 
@@ -10,7 +10,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # --- Runtime stage ---
-FROM python:3.13-slim AS runtime
+FROM python:3.13.14-slim AS runtime
 
 # Security: upgrade packages, create non-root user
 RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
