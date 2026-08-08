@@ -1,6 +1,6 @@
 # ADR-029: Flow Metrics Storage Strategy
 
-**Status**: Proposed
+**Status**: Accepted (implemented via hybrid PostgreSQL + Prometheus, per VSM service delivery)
 
 **Date**: 2025-01-15
 
