@@ -30,7 +30,7 @@ Organizations often measure _outputs_ (deployments, lines of code, tickets close
 - Disconnect between platform team goals and developer needs
 
 **Industry Context**:
-The SPACE framework, developed by researchers at GitHub, Microsoft, and University of Victoria, provides a holistic approach to measuring developer productivity and experience across five dimensions:
+The SPACE framework — Forsgren, Storey, Maddila, Zimmermann, Houck, and Butler, ["The SPACE of Developer Productivity"](https://queue.acm.org/detail.cfm?id=3454124), _ACM Queue_, Feb 2021 — developed by researchers at GitHub, Microsoft, and University of Victoria, provides a holistic approach to measuring developer productivity and experience across five dimensions:
 
 1. **S**atisfaction: How fulfilled developers feel
 1. **P**erformance: System and process outcomes

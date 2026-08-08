@@ -28,10 +28,9 @@ leverage AI safely.
 
 **Fawkes implementation:**
 
-- `AGENTS.md` — universal rules for all agents (Copilot, Claude, VS Code agent mode)
-- `.github/copilot-instructions.md` — Copilot-specific standards
+- `AGENTS.md` — universal instructions for any AI coding agent working in this repo
 - `.github/agents/` — specialist agent profiles with task-scoped instructions
-- `AGENTS.md § 10` — Model Selection Policy with cost guardrails
+- `AGENTS.md § 11` — Task Routing & Supportive Resources
 
 **What to improve:** Ensure `docs/ai/usage-policy.md` is linked prominently from
 onboarding materials and kept current as model selection policy evolves.
@@ -210,10 +209,10 @@ Weekly check: `scripts/weekly-metrics.sh`
 
 ## Related Resources
 
+- [DORA Research Index](../research/dora/README.md) — all three reports, gap analysis, metrics
 - [DORA 2025 Report](https://dora.dev/dora-report-2025/)
 - [DORA AI Capabilities Model PDF](https://services.google.com/fh/files/misc/2025_dora_ai_capabilities_model.pdf)
 - [AI Usage Policy](usage-policy.md)
-- [Copilot Setup](copilot-setup.md)
 - [AGENTS.md](../../AGENTS.md) — universal agent instructions
-- [Model Selection Policy](../../AGENTS.md#section-10--model-selection-policy)
+- [Task Routing & Supportive Resources](../../AGENTS.md#11-task-routing--supportive-resources)
 - [METRICS.md](../METRICS.md)

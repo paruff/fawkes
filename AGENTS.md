@@ -1,6 +1,6 @@
 # Agent Instructions — Fawkes IDP
 
-> Universal instructions for all agents: GitHub Copilot, VS Code agent mode, Claude, and all others.
+> Universal instructions for any AI coding agent working in this repository.
 > Fawkes is a polyglot platform. Read the **Language & Layer Map** before touching any file.
 > **Do not modify this file without maintainer approval.**
 
@@ -33,6 +33,11 @@ If it could be a third of the size, rewrite it.
 comments, or formatting. Match existing style even if you'd do it differently. Remove
 imports/variables your change orphaned; leave pre-existing dead code alone (mention it,
 don't delete it). Every changed line should trace to the request.
+
+**GitOps is the source of truth.** Desired state lives in Git, not in a cluster or cloud
+console. Land infra/platform changes via PR + CI + automated reconciliation (ArgoCD for
+`platform/`, CI-gated `terraform apply` for `infra/`) — never `kubectl apply`, `terraform
+apply`, or console edits against a shared environment by hand.
 
 **Goal-driven execution.** Turn tasks into verifiable goals: "fix the bug" → write a test
 that reproduces it, then make it pass. For multi-step work, state a brief plan with a
@@ -69,10 +74,9 @@ Read this before touching any file. Each area of the repo has a primary language
 | 3        | `docs/API_SURFACE.md`             | Public interfaces across services                                       |
 | 4        | `docs/KNOWN_LIMITATIONS.md`       | Known issues — do not make these worse                                  |
 | 5        | `docs/CHANGE_IMPACT_MAP.md`       | Which files break when a component changes                              |
-| 6        | `.github/copilot-instructions.md` | Copilot-specific coding standards                                       |
-| 7        | `docs/BACKLOG.md`                 | Triaged backlog — value/effort scores, agent assignments, MVP wave plan |
-| 8        | `docs/PR_STANDARD.md`             | Conventional Commits, branch naming, CI requirements, PR body rules     |
-| 9        | `docs/DEPLOYMENT_STRATEGY.md`     | Current deploy model, target progressive delivery, rollback protocol    |
+| 6        | `docs/BACKLOG.md`                 | Triaged backlog — value/effort scores, agent assignments, MVP wave plan |
+| 7        | `docs/PR_STANDARD.md`             | Conventional Commits, branch naming, CI requirements, PR body rules     |
+| 8        | `docs/DEPLOYMENT_STRATEGY.md`     | Current deploy model, target progressive delivery, rollback protocol    |
 
 ---
 
@@ -169,12 +173,9 @@ added/updated, linters passing locally, judgment calls flagged for human review,
 
 ### Deployment Gates
 
-- Every PR targeting `main` must pass `paruff/ufawkespipe/.github/workflows/reusable-main-ci-guard.yml@v1.2.0`
+- Every PR targeting `main` must pass `paruff/ufawkespipe/.github/workflows/reusable-main-ci-guard.yml@v1.2.0` (more reusable workflows from `paruff/ufawkespipe` may be added as the deployment lifecycle matures)
 - Post-deployment verification and auto-rollback on failure are targets, not yet built — see `docs/DEPLOYMENT_STRATEGY.md`
 - Every CI/CD job logs `job-start`/`job-finish` with workflow, job, and SHA for DORA traceability
-
-This repo calls reusable workflows from `paruff/ufawkespipe@v1.2.0` (currently:
-`reusable-main-ci-guard.yml`). More may be added as the deployment lifecycle matures.
 
 ---
 
@@ -192,38 +193,40 @@ Fawkes **is** a DORA platform — its own development must model what it teaches
 
 ---
 
-## 11. Model Selection (Copilot Coding Agent)
+## 11. Task Routing & Supportive Resources
 
-Budget: Copilot Pro, 300 premium requests/month. **Default to GPT-4.1 (multiplier 0, free)
-for everything** unless a task below justifies a higher tier.
+Most tasks (bug fixes, refactors, docs, YAML, Terraform, tests, mechanical edits) need no
+special handling beyond the rules already in this file. A few task types benefit from
+dedicated reference material before starting:
 
-| Task                                              | Model         | Cost |
-| --------------------------------------------------- | --------------- | ------ |
-| Everything by default (bug fixes, refactors, docs, YAML, Terraform, tests) | GPT-4.1       | 0    |
-| Purely mechanical single-line edits (`.gitignore`, version bumps, one-line docs) | GPT-5 mini    | 0    |
-| PromQL/alert rules, OTEL `gen_ai.*` spans, Grafana dashboard JSON | GPT-5.1-Codex | 1    |
-| Interactive IDE chat (not agent tasks)            | Claude Haiku 4.5 | 0.33 |
-| Git history rewrite, sprint retro, security incident response | Human         | N/A  |
+| Task type                                                    | Where to look                                    |
+| -------------------------------------------------------------- | --------------------------------------------------- |
+| PromQL/alert rules, OTEL `gen_ai.*` spans, Grafana dashboards | `docs/PROMPT_LIBRARY.md`, `docs/observability/`  |
+| Terraform module design, IaC security posture                | `docs/ARCHITECTURE.md`, `.github/instructions/`  |
+| Auth, RBAC, secrets, or any infra-touching change             | Security-sensitive by default — see §12          |
 
-**Prohibited:** Claude Opus (any variant) without explicit written budget approval — 3–30×
-multiplier. **Sticky UI:** the GitHub model selector doesn't read this file — set it manually
-per issue.
+**Always escalate to a human, regardless of agent:** git history rewrites, sprint retros,
+security incident response.
 
-Every Copilot issue should state: suggested model, task type, files to edit, reference file
-(if any), what not to do, and measurable acceptance criteria.
+Every issue assigned to an agent should state: task type, files to edit, reference file
+(if any), what not to do, and measurable acceptance criteria — this drives rework rate far
+more than which agent runs it.
 
 If rework rate for a task type exceeds 20% after 5 PRs: first improve the issue body
-(file targets, constraints, reference files); only escalate model tier if that doesn't help.
+(file targets, constraints, reference files); only escalate to a human reviewer or a
+different agent if that doesn't help.
 
 ---
 
 ## 12. AI Trust & Verify
 
-DORA 2025 names seven foundations for AI to accelerate rather than destabilize delivery:
-policy clarity, healthy/accessible data, version control discipline, small batches,
-user-centric focus, and platform quality. Fawkes implements these via this file, type
-hints + structured logs, `docs/API_SURFACE.md`, the 400-line PR gate, golden-path
-templates, and CI.
+The DORA AI Capabilities Model names seven capabilities that determine whether AI
+accelerates or destabilizes delivery: clear and communicated AI stance, healthy data
+ecosystems, AI-accessible internal data, strong version control practices, working in
+small batches, user-centric focus, and quality internal platforms. Fawkes implements
+these via this file, type hints + structured logs, `docs/API_SURFACE.md`, the 400-line
+PR gate, golden-path templates, and CI — see `docs/research/dora/README.md` for the
+full capability-by-capability gap analysis.
 
 Follow **Read → Run → Review** for all AI-generated code:
 
@@ -239,7 +242,6 @@ responsibility, contextual error messages, and BDD coverage. Note gaps as TODO i
 
 ## 13. See Also
 
-- `.github/copilot-instructions.md` — Copilot-specific subset (merged with this file at runtime)
 - `.github/agents/` — specialist agent profiles
 - `.github/instructions/` — path-scoped instruction files by language
 - `docs/BACKLOG.md` — triaged backlog with value/effort scores, agent assignments, MVP wave plan
