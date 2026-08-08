@@ -33,7 +33,7 @@ PR titles use the same Conventional Commits format and **must** match the first 
 
 Every PR must pass the following CI gates before merge:
 
-1. **Main CI Guard** — calls `paruff/ufawkespipe/.github/workflows/reusable-main-ci-guard.yml@v1.2` to validate the main CI workflow (`code-quality.yml`) succeeds
+1. **Main CI Guard** — calls `paruff/ufawkespipe/.github/workflows/reusable-main-ci-guard.yml@v1.2.0` to validate the main CI workflow (`code-quality.yml`) succeeds
 2. **Code Quality** — Python lint, TypeScript lint, Go lint, Shell lint, YAML lint, security scanning
 3. **Pre-commit Validation** — base, language, tool, and platform pre-commit hooks
 4. **PR Size Gate** — maximum 400 lines changed (override with `large-pr-approved` label)

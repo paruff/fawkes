@@ -1,9 +1,10 @@
 """Database models for Insights service."""
 
-from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Table, Index
-from sqlalchemy.orm import declarative_base, relationship
 import enum
+from datetime import datetime, timezone
+
+from sqlalchemy import Column, DateTime, ForeignKey, Index, Integer, String, Table, Text
+from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 

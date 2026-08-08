@@ -13,16 +13,16 @@ from __future__ import annotations
 import json
 import subprocess
 import time
-from typing import Dict, Any
+from typing import Any, Dict
 
 import pytest
-from pytest_bdd import given, when, then, parsers, scenarios
+from pytest_bdd import given, parsers, scenarios, then, when
 
 # Load all scenarios from the feature file
 scenarios("../features/prometheus-stack-deployment.feature")
 
 
-def _kubectl_json(args: list[str]) -> Dict[str, Any]:
+def _kubectl_json(args: list[str]) -> dict[str, Any]:
     """Run kubectl and return parsed JSON."""
     cmd = ["kubectl"] + args
     try:
@@ -65,7 +65,7 @@ def ingress_nginx_running():
 
 
 @when("I check for the monitoring namespace")
-def check_monitoring_namespace(context: Dict):
+def check_monitoring_namespace(context: dict):
     """Check if monitoring namespace exists."""
     try:
         ns = _kubectl_json(["get", "namespace", "monitoring", "-o", "json"])
@@ -75,7 +75,7 @@ def check_monitoring_namespace(context: Dict):
 
 
 @then(parsers.cfparse('the namespace "{namespace}" should exist'))
-def namespace_exists(namespace: str, context: Dict):
+def namespace_exists(namespace: str, context: dict):
     """Verify namespace exists."""
     ns_key = f"{namespace.replace('-', '_')}_namespace"
     ns = context.get(ns_key, context.get("monitoring_namespace"))
@@ -84,7 +84,7 @@ def namespace_exists(namespace: str, context: Dict):
 
 
 @then(parsers.cfparse('the namespace "{namespace}" should be Active'))
-def namespace_active(namespace: str, context: Dict):
+def namespace_active(namespace: str, context: dict):
     """Verify namespace is in Active state."""
     ns_key = f"{namespace.replace('-', '_')}_namespace"
     ns = context.get(ns_key, context.get("monitoring_namespace"))
@@ -106,7 +106,7 @@ def argocd_deployed(namespace: str):
 
 
 @when(parsers.cfparse('I check for ArgoCD Application "{app_name}"'))
-def check_argocd_application(app_name: str, context: Dict):
+def check_argocd_application(app_name: str, context: dict):
     """Check if ArgoCD Application exists."""
     try:
         app = _kubectl_json(["get", "application", app_name, "-n", "fawkes", "-o", "json"])
@@ -116,7 +116,7 @@ def check_argocd_application(app_name: str, context: Dict):
 
 
 @then(parsers.cfparse('the Application should exist in namespace "{namespace}"'))
-def application_exists(namespace: str, context: Dict):
+def application_exists(namespace: str, context: dict):
     """Verify ArgoCD Application exists."""
     app = context.get("argocd_application")
     assert app is not None, "ArgoCD Application does not exist"
@@ -125,7 +125,7 @@ def application_exists(namespace: str, context: Dict):
 
 
 @then("the Application should be Healthy")
-def application_healthy(context: Dict):
+def application_healthy(context: dict):
     """Verify ArgoCD Application is healthy."""
     app = context.get("argocd_application")
     assert app is not None, "ArgoCD Application does not exist"
@@ -134,7 +134,7 @@ def application_healthy(context: Dict):
 
 
 @then("the Application should be Synced")
-def application_synced(context: Dict):
+def application_synced(context: dict):
     """Verify ArgoCD Application is synced."""
     app = context.get("argocd_application")
     assert app is not None, "ArgoCD Application does not exist"
@@ -155,7 +155,7 @@ def prometheus_stack_deployed(namespace: str):
 
 
 @when("I check the Prometheus pods")
-def check_prometheus_pods(context: Dict):
+def check_prometheus_pods(context: dict):
     """Get list of Prometheus-related pods."""
     try:
         pods = _kubectl_json(["-n", "monitoring", "get", "pods", "-o", "json"])
@@ -165,7 +165,7 @@ def check_prometheus_pods(context: Dict):
 
 
 @then(parsers.cfparse('the following pods should be running in namespace "{namespace}"'))
-def pods_running(namespace: str, datatable, context: Dict):
+def pods_running(namespace: str, datatable, context: dict):
     """Verify specified pods are running."""
     pods = context.get("prometheus_pods", [])
     pod_names = [pod.get("metadata", {}).get("name", "") for pod in pods]
@@ -188,7 +188,7 @@ def pods_running(namespace: str, datatable, context: Dict):
 
 
 @then(parsers.cfparse("all Prometheus pods should be in Ready state within {timeout:d} seconds"))
-def all_pods_ready(timeout: int, context: Dict):
+def all_pods_ready(timeout: int, context: dict):
     """Verify all Prometheus pods are ready within timeout."""
     start_time = time.time()
 
@@ -232,7 +232,7 @@ def prometheus_running():
 
 
 @when("I query Prometheus for active targets")
-def query_prometheus_targets(context: Dict):
+def query_prometheus_targets(context: dict):
     """Query Prometheus for active targets via port-forward."""
     # Note: In a real environment, we'd port-forward or use the service
     # For testing, we'll check if the targets API is reachable
@@ -240,21 +240,20 @@ def query_prometheus_targets(context: Dict):
 
 
 @then("Prometheus should have active scrape targets")
-def prometheus_has_targets(context: Dict):
+def prometheus_has_targets(context: dict):
     """Verify Prometheus has active targets."""
     assert context.get("prometheus_targets_checked"), "Prometheus targets not checked"
     # In a real scenario, we'd verify the actual targets via API
 
 
 @then("the targets should include")
-def targets_include(datatable, context: Dict):
+def targets_include(datatable, context: dict):
     """Verify specific targets are being scraped."""
     # In a real scenario, we'd parse the targets from Prometheus API
     # For now, we'll check if ServiceMonitors exist
     for row in datatable:
         _ = row["target_type"]
         # Verification would happen here
-        pass
 
 
 # Storage scenario steps
@@ -270,7 +269,7 @@ def prometheus_deployed_in_namespace(namespace: str):
 
 
 @when(parsers.cfparse('I check the PersistentVolumeClaims in namespace "{namespace}"'))
-def check_pvcs(namespace: str, context: Dict):
+def check_pvcs(namespace: str, context: dict):
     """Get PVCs in the namespace."""
     try:
         pvcs = _kubectl_json(["-n", namespace, "get", "pvc", "-o", "json"])
@@ -280,7 +279,7 @@ def check_pvcs(namespace: str, context: Dict):
 
 
 @then("a PVC for Prometheus should exist")
-def pvc_for_prometheus_exists(context: Dict):
+def pvc_for_prometheus_exists(context: dict):
     """Verify a PVC for Prometheus exists."""
     pvcs = context.get("pvcs", [])
     prometheus_pvcs = [pvc for pvc in pvcs if "prometheus" in pvc.get("metadata", {}).get("name", "").lower()]
@@ -288,7 +287,7 @@ def pvc_for_prometheus_exists(context: Dict):
 
 
 @then("the PVC should be Bound")
-def pvc_bound(context: Dict):
+def pvc_bound(context: dict):
     """Verify PVC is bound."""
     pvcs = context.get("pvcs", [])
     prometheus_pvcs = [pvc for pvc in pvcs if "prometheus" in pvc.get("metadata", {}).get("name", "").lower()]
@@ -300,7 +299,7 @@ def pvc_bound(context: Dict):
 
 
 @then(parsers.cfparse("the PVC size should be at least {size}"))
-def pvc_size(size: str, context: Dict):
+def pvc_size(size: str, context: dict):
     """Verify PVC size is at least the specified size."""
     pvcs = context.get("pvcs", [])
     prometheus_pvcs = [pvc for pvc in pvcs if "prometheus" in pvc.get("metadata", {}).get("name", "").lower()]
@@ -327,7 +326,7 @@ def grafana_ingress_enabled():
 
 
 @when(parsers.cfparse('I check the ingress configuration in namespace "{namespace}"'))
-def check_ingress(namespace: str, context: Dict):
+def check_ingress(namespace: str, context: dict):
     """Get ingresses in the namespace."""
     try:
         ingresses = _kubectl_json(["-n", namespace, "get", "ingress", "-o", "json"])
@@ -337,7 +336,7 @@ def check_ingress(namespace: str, context: Dict):
 
 
 @then(parsers.cfparse('an ingress should exist for "{service}"'))
-def ingress_exists(service: str, context: Dict):
+def ingress_exists(service: str, context: dict):
     """Verify ingress exists for the service."""
     ingresses = context.get("ingresses", [])
     matching_ingresses = [
@@ -348,7 +347,7 @@ def ingress_exists(service: str, context: Dict):
 
 
 @then(parsers.cfparse('the ingress should have host "{host}"'))
-def ingress_has_host(host: str, context: Dict):
+def ingress_has_host(host: str, context: dict):
     """Verify ingress has the specified host."""
     ingress = context.get("current_ingress")
     assert ingress is not None, "No ingress to check"
@@ -359,7 +358,7 @@ def ingress_has_host(host: str, context: Dict):
 
 
 @then(parsers.cfparse('the ingress should use ingressClassName "{class_name}"'))
-def ingress_uses_class(class_name: str, context: Dict):
+def ingress_uses_class(class_name: str, context: dict):
     """Verify ingress uses the specified class."""
     ingress = context.get("current_ingress")
     assert ingress is not None, "No ingress to check"
@@ -373,7 +372,6 @@ def grafana_ui_accessible(url: str):
     """Verify Grafana UI is accessible."""
     # In a real scenario, we'd make an HTTP request
     # For testing, we'll just verify the ingress configuration
-    pass
 
 
 # Grafana authentication scenario steps
@@ -389,23 +387,22 @@ def grafana_ui_accessible_given():
 
 
 @when("I attempt to login with admin credentials")
-def attempt_grafana_login(context: Dict):
+def attempt_grafana_login(context: dict):
     """Attempt to login to Grafana."""
     # In a real scenario, we'd make an HTTP request with credentials
     context["grafana_login_attempted"] = True
 
 
 @then("I should successfully authenticate")
-def grafana_authentication_successful(context: Dict):
+def grafana_authentication_successful(context: dict):
     """Verify Grafana authentication is successful."""
     assert context.get("grafana_login_attempted"), "Login not attempted"
 
 
 @then("I should see the Grafana dashboard")
-def see_grafana_dashboard(context: Dict):
+def see_grafana_dashboard(context: dict):
     """Verify Grafana dashboard is visible."""
     # In a real scenario, we'd verify the dashboard page loaded
-    pass
 
 
 # Grafana datasource scenario steps
@@ -421,30 +418,28 @@ def grafana_deployed_and_accessible():
 
 
 @when("I check the Grafana datasources")
-def check_grafana_datasources(context: Dict):
+def check_grafana_datasources(context: dict):
     """Check Grafana datasources."""
     # In a real scenario, we'd query Grafana API
     context["grafana_datasources_checked"] = True
 
 
 @then("a Prometheus datasource should be configured")
-def prometheus_datasource_configured(context: Dict):
+def prometheus_datasource_configured(context: dict):
     """Verify Prometheus datasource is configured."""
     assert context.get("grafana_datasources_checked"), "Datasources not checked"
 
 
 @then("the datasource should be set as default")
-def datasource_is_default(context: Dict):
+def datasource_is_default(context: dict):
     """Verify datasource is set as default."""
     # In a real scenario, we'd verify via Grafana API
-    pass
 
 
 @then("the datasource should be healthy")
-def datasource_is_healthy(context: Dict):
+def datasource_is_healthy(context: dict):
     """Verify datasource is healthy."""
     # In a real scenario, we'd verify via Grafana API
-    pass
 
 
 # Grafana dashboards scenario steps
@@ -457,21 +452,20 @@ def grafana_with_dashboards():
 
 
 @when("I query Grafana API for dashboards")
-def query_grafana_dashboards(context: Dict):
+def query_grafana_dashboards(context: dict):
     """Query Grafana API for dashboards."""
     # In a real scenario, we'd query Grafana API
     context["grafana_dashboards_queried"] = True
 
 
 @then("the following dashboards should exist")
-def dashboards_exist(datatable, context: Dict):
+def dashboards_exist(datatable, context: dict):
     """Verify specified dashboards exist."""
     assert context.get("grafana_dashboards_queried"), "Dashboards not queried"
     # In a real scenario, we'd verify each dashboard exists
     for row in datatable:
         _ = row["dashboard_name"]
         # Verification would happen here
-        pass
 
 
 # Alertmanager scenario steps
@@ -490,7 +484,6 @@ def alertmanager_ingress_enabled():
 def alertmanager_ui_accessible(url: str):
     """Verify Alertmanager UI is accessible."""
     # In a real scenario, we'd make an HTTP request
-    pass
 
 
 @given(parsers.cfparse('Alertmanager is deployed in namespace "{namespace}"'))
@@ -503,7 +496,7 @@ def alertmanager_deployed(namespace: str):
 
 
 @when("I check the Alertmanager configuration")
-def check_alertmanager_config(context: Dict):
+def check_alertmanager_config(context: dict):
     """Check Alertmanager configuration."""
     try:
         config = _kubectl_json(
@@ -515,14 +508,14 @@ def check_alertmanager_config(context: Dict):
 
 
 @then("the configuration should include route definitions")
-def config_has_routes(context: Dict):
+def config_has_routes(context: dict):
     """Verify Alertmanager config has routes."""
     config = context.get("alertmanager_config")
     assert config is not None, "Alertmanager config not found"
 
 
 @then("the configuration should include receiver definitions")
-def config_has_receivers(context: Dict):
+def config_has_receivers(context: dict):
     """Verify Alertmanager config has receivers."""
     config = context.get("alertmanager_config")
     assert config is not None, "Alertmanager config not found"
@@ -552,7 +545,7 @@ def servicemonitors_configured(namespace: str):
 
 
 @when(parsers.cfparse('I check for ServiceMonitor "{name}"'))
-def check_servicemonitor(name: str, context: Dict):
+def check_servicemonitor(name: str, context: dict):
     """Check for a specific ServiceMonitor."""
     try:
         sm = _kubectl_json(["-n", "monitoring", "get", "servicemonitor", name, "-o", "json"])
@@ -562,14 +555,14 @@ def check_servicemonitor(name: str, context: Dict):
 
 
 @then("the ServiceMonitor should exist")
-def servicemonitor_exists(context: Dict):
+def servicemonitor_exists(context: dict):
     """Verify ServiceMonitor exists."""
     sm = context.get("current_servicemonitor")
     assert sm is not None, "ServiceMonitor does not exist"
 
 
 @then(parsers.cfparse('the ServiceMonitor should target namespace "{namespace}"'))
-def servicemonitor_targets_namespace(namespace: str, context: Dict):
+def servicemonitor_targets_namespace(namespace: str, context: dict):
     """Verify ServiceMonitor targets the specified namespace."""
     sm = context.get("current_servicemonitor")
     assert sm is not None, "ServiceMonitor does not exist"
@@ -585,7 +578,6 @@ def servicemonitor_targets_namespace(namespace: str, context: Dict):
 def prometheus_scraping_metrics(component: str):
     """Verify Prometheus is scraping metrics from the component."""
     # In a real scenario, we'd query Prometheus for these metrics
-    pass
 
 
 # Node exporter scenario steps
@@ -601,7 +593,7 @@ def kube_prometheus_stack_deployed():
 
 
 @when("I check for node-exporter pods")
-def check_node_exporter(context: Dict):
+def check_node_exporter(context: dict):
     """Check for node-exporter pods."""
     try:
         pods = _kubectl_json(
@@ -617,7 +609,7 @@ def check_node_exporter(context: Dict):
 
 
 @then("node-exporter pods should be running on all nodes")
-def node_exporter_on_all_nodes(context: Dict):
+def node_exporter_on_all_nodes(context: dict):
     """Verify node-exporter is running on all nodes."""
     pods = context.get("node_exporter_pods", [])
     nodes = context.get("cluster_nodes", [])
@@ -627,31 +619,29 @@ def node_exporter_on_all_nodes(context: Dict):
 
 
 @then("each node should have exactly one node-exporter pod")
-def one_exporter_per_node(context: Dict):
+def one_exporter_per_node(context: dict):
     """Verify each node has exactly one node-exporter pod."""
     # In a real scenario, we'd verify the DaemonSet scheduling
-    pass
 
 
 # Kube-state-metrics scenario steps
 
 
 @when("I query Prometheus for kube_state_metrics")
-def query_kube_state_metrics(context: Dict):
+def query_kube_state_metrics(context: dict):
     """Query Prometheus for kube-state-metrics."""
     # In a real scenario, we'd query Prometheus API
     context["kube_state_metrics_queried"] = True
 
 
 @then("metrics should be available for")
-def metrics_available(datatable, context: Dict):
+def metrics_available(datatable, context: dict):
     """Verify specified metrics are available."""
     assert context.get("kube_state_metrics_queried"), "Metrics not queried"
     # In a real scenario, we'd verify each metric type
     for row in datatable:
         _ = row["metric_type"]
         # Verification would happen here
-        pass
 
 
 # Prometheus API scenario steps
@@ -667,53 +657,50 @@ def prometheus_deployed_and_accessible():
 
 
 @when(parsers.cfparse('I query the Prometheus API endpoint "{endpoint}"'))
-def query_prometheus_api(endpoint: str, context: Dict):
+def query_prometheus_api(endpoint: str, context: dict):
     """Query Prometheus API."""
     # In a real scenario, we'd make an HTTP request
     context["prometheus_api_queried"] = True
 
 
 @then("I should receive a valid JSON response")
-def receive_json_response(context: Dict):
+def receive_json_response(context: dict):
     """Verify we received a valid JSON response."""
     assert context.get("prometheus_api_queried"), "API not queried"
 
 
 @then("the response should confirm Prometheus is operational")
-def prometheus_operational(context: Dict):
+def prometheus_operational(context: dict):
     """Verify Prometheus is operational."""
     # In a real scenario, we'd verify the response content
-    pass
 
 
 # Alert rules scenario steps
 
 
 @when("I query Prometheus for loaded alert rules")
-def query_alert_rules(context: Dict):
+def query_alert_rules(context: dict):
     """Query Prometheus for loaded alert rules."""
     # In a real scenario, we'd query Prometheus API
     context["alert_rules_queried"] = True
 
 
 @then("alert rules should be loaded")
-def alert_rules_loaded(context: Dict):
+def alert_rules_loaded(context: dict):
     """Verify alert rules are loaded."""
     assert context.get("alert_rules_queried"), "Alert rules not queried"
 
 
 @then("the rules should include Kubernetes cluster alerts")
-def rules_include_cluster_alerts(context: Dict):
+def rules_include_cluster_alerts(context: dict):
     """Verify rules include Kubernetes cluster alerts."""
     # In a real scenario, we'd verify specific rules exist
-    pass
 
 
 @then("the rules should include node alerts")
-def rules_include_node_alerts(context: Dict):
+def rules_include_node_alerts(context: dict):
     """Verify rules include node alerts."""
     # In a real scenario, we'd verify specific rules exist
-    pass
 
 
 # Platform monitoring scenario steps
@@ -726,7 +713,7 @@ def prometheus_stack_scraping():
 
 
 @when("I query Prometheus for metrics from platform components")
-def query_platform_metrics(context: Dict):
+def query_platform_metrics(context: dict):
     """Query Prometheus for platform component metrics."""
     # In a real scenario, we'd query Prometheus API
     context["platform_metrics_queried"] = True
@@ -736,7 +723,7 @@ def query_platform_metrics(context: Dict):
 
 
 @when("I check the resource specifications for Prometheus deployments")
-def check_resource_specs(context: Dict):
+def check_resource_specs(context: dict):
     """Check resource specifications for Prometheus deployments."""
     try:
         deployments = _kubectl_json(["-n", "monitoring", "get", "deployments", "-o", "json"])
@@ -750,7 +737,7 @@ def check_resource_specs(context: Dict):
 
 
 @then("all deployments should have CPU requests defined")
-def cpu_requests_defined(context: Dict):
+def cpu_requests_defined(context: dict):
     """Verify all deployments have CPU requests."""
     deployments = context.get("prometheus_deployments", [])
     statefulsets = context.get("prometheus_statefulsets", [])
@@ -766,7 +753,7 @@ def cpu_requests_defined(context: Dict):
 
 
 @then("all deployments should have memory requests defined")
-def memory_requests_defined(context: Dict):
+def memory_requests_defined(context: dict):
     """Verify all deployments have memory requests."""
     deployments = context.get("prometheus_deployments", [])
     statefulsets = context.get("prometheus_statefulsets", [])
@@ -782,7 +769,7 @@ def memory_requests_defined(context: Dict):
 
 
 @then("all deployments should have CPU limits defined")
-def cpu_limits_defined(context: Dict):
+def cpu_limits_defined(context: dict):
     """Verify all deployments have CPU limits."""
     deployments = context.get("prometheus_deployments", [])
     statefulsets = context.get("prometheus_statefulsets", [])
@@ -798,7 +785,7 @@ def cpu_limits_defined(context: Dict):
 
 
 @then("all deployments should have memory limits defined")
-def memory_limits_defined(context: Dict):
+def memory_limits_defined(context: dict):
     """Verify all deployments have memory limits."""
     deployments = context.get("prometheus_deployments", [])
     statefulsets = context.get("prometheus_statefulsets", [])
@@ -817,7 +804,7 @@ def memory_limits_defined(context: Dict):
 
 
 @then("a PVC for Alertmanager should exist")
-def pvc_for_alertmanager_exists(context: Dict):
+def pvc_for_alertmanager_exists(context: dict):
     """Verify a PVC for Alertmanager exists."""
     pvcs = context.get("pvcs", [])
     alertmanager_pvcs = [pvc for pvc in pvcs if "alertmanager" in pvc.get("metadata", {}).get("name", "").lower()]
@@ -834,20 +821,19 @@ def prometheus_remote_write_enabled():
 
 
 @when("I check the Prometheus configuration")
-def check_prometheus_config(context: Dict):
+def check_prometheus_config(context: dict):
     """Check Prometheus configuration."""
     # In a real scenario, we'd check the Prometheus ConfigMap
     context["prometheus_config_checked"] = True
 
 
 @then("the remote write receiver should be enabled")
-def remote_write_enabled(context: Dict):
+def remote_write_enabled(context: dict):
     """Verify remote write receiver is enabled."""
     assert context.get("prometheus_config_checked"), "Prometheus config not checked"
 
 
 @then("OpenTelemetry Collector should be able to push metrics to Prometheus")
-def otel_can_push_metrics(context: Dict):
+def otel_can_push_metrics(context: dict):
     """Verify OpenTelemetry Collector can push metrics to Prometheus."""
     # In a real scenario, we'd verify the OpenTelemetry Collector configuration
-    pass

@@ -8,10 +8,10 @@ Routes alerts based on:
 - Escalation policies
 """
 
-import os
 import logging
-from typing import List, Dict
-from datetime import datetime, timedelta
+import os
+from datetime import datetime, timedelta, timezone
+from typing import Dict, List
 
 import httpx
 
@@ -40,7 +40,7 @@ class AlertRouter:
         self.pagerduty_api_key = pagerduty_api_key
         self.escalation_timeout = timedelta(seconds=ESCALATION_TIMEOUT)
 
-    async def route_alert_group(self, alert_group: Dict) -> List[str]:
+    async def route_alert_group(self, alert_group: dict) -> list[str]:
         """
         Route alert group to appropriate channels.
 
@@ -98,7 +98,7 @@ class AlertRouter:
         else:
             return "P3"  # Low
 
-    async def _get_service_owners(self, alert_group: Dict) -> List[str]:
+    async def _get_service_owners(self, alert_group: dict) -> list[str]:
         """Get service owners from Backstage."""
         owners = []
         services = set()
@@ -129,7 +129,7 @@ class AlertRouter:
 
         return list(set(owners))  # Deduplicate
 
-    async def _enrich_context(self, alert_group: Dict) -> Dict:
+    async def _enrich_context(self, alert_group: dict) -> dict:
         """Enrich alert with context."""
         context = {"recent_changes": [], "log_samples": [], "similar_incidents": [], "runbooks": []}
 
@@ -151,7 +151,7 @@ class AlertRouter:
 
         return context
 
-    async def _send_to_pagerduty(self, alert_group: Dict, owners: List[str], context: Dict) -> bool:
+    async def _send_to_pagerduty(self, alert_group: dict, owners: list[str], context: dict) -> bool:
         """Send alert to PagerDuty."""
         if not self.pagerduty_api_key:
             return False
@@ -187,7 +187,7 @@ class AlertRouter:
             logger.error(f"Error sending to PagerDuty: {e}")
             return False
 
-    async def _send_to_slack(self, alert_group: Dict, owners: List[str], context: Dict, severity: str) -> bool:
+    async def _send_to_slack(self, alert_group: dict, owners: list[str], context: dict, severity: str) -> bool:
         """Send alert to Slack."""
         if not self.slack_webhook:
             return False
@@ -213,7 +213,7 @@ class AlertRouter:
                             {"title": "First Seen", "value": alert_group.get("first_seen", "Unknown"), "short": True},
                         ],
                         "footer": "Fawkes Smart Alerting",
-                        "ts": int(datetime.now().timestamp()),
+                        "ts": int(datetime.now(timezone.utc).timestamp()),
                     }
                 ]
             }
@@ -241,7 +241,7 @@ class AlertRouter:
             logger.error(f"Error sending to Slack: {e}")
             return False
 
-    async def _send_to_mattermost(self, alert_group: Dict, owners: List[str], context: Dict, severity: str) -> bool:
+    async def _send_to_mattermost(self, alert_group: dict, owners: list[str], context: dict, severity: str) -> bool:
         """Send alert to Mattermost."""
         if not self.mattermost_webhook:
             return False
@@ -278,7 +278,7 @@ class AlertRouter:
             logger.error(f"Error sending to Mattermost: {e}")
             return False
 
-    def _format_summary(self, alert_group: Dict) -> str:
+    def _format_summary(self, alert_group: dict) -> str:
         """Format alert group summary."""
         alerts = alert_group.get("alerts", [])
 
@@ -297,7 +297,7 @@ class AlertRouter:
         else:
             return f"{alertname} affecting {service}"
 
-    def _format_details(self, alert_group: Dict) -> str:
+    def _format_details(self, alert_group: dict) -> str:
         """Format alert group details."""
         details = []
 

@@ -1,8 +1,9 @@
 """Unit tests for main FastAPI application."""
 
-import pytest
+from datetime import datetime, timezone
 from unittest.mock import patch
-from datetime import datetime
+
+import pytest
 
 
 @pytest.mark.asyncio
@@ -45,8 +46,8 @@ async def test_root_endpoint():
 @pytest.mark.asyncio
 async def test_get_anomalies():
     """Test get anomalies endpoint."""
+    from app.main import AnomalyDetection, AnomalyScore
     from fastapi.testclient import TestClient
-    from app.main import AnomalyScore, AnomalyDetection
 
     with patch("app.main.lifespan"):
         from app.main import app, recent_anomalies
@@ -54,7 +55,7 @@ async def test_get_anomalies():
         # Add test anomaly
         anomaly_score = AnomalyScore(
             metric="test_metric",
-            timestamp=datetime.now(),
+            timestamp=datetime.now(timezone.utc),
             score=0.85,
             confidence=0.9,
             value=500.0,
@@ -63,7 +64,7 @@ async def test_get_anomalies():
         )
 
         anomaly_detection = AnomalyDetection(
-            id="test-123", anomaly=anomaly_score, detected_at=datetime.now(), alerted=False
+            id="test-123", anomaly=anomaly_score, detected_at=datetime.now(timezone.utc), alerted=False
         )
 
         recent_anomalies.insert(0, anomaly_detection)
@@ -80,8 +81,8 @@ async def test_get_anomalies():
 @pytest.mark.asyncio
 async def test_get_anomalies_with_filters():
     """Test get anomalies with filters."""
+    from app.main import AnomalyDetection, AnomalyScore
     from fastapi.testclient import TestClient
-    from app.main import AnomalyScore, AnomalyDetection
 
     with patch("app.main.lifespan"):
         from app.main import app, recent_anomalies
@@ -92,7 +93,7 @@ async def test_get_anomalies_with_filters():
         for i, severity in enumerate(["critical", "high", "medium"]):
             anomaly_score = AnomalyScore(
                 metric=f"test_metric_{i}",
-                timestamp=datetime.now(),
+                timestamp=datetime.now(timezone.utc),
                 score=0.85,
                 confidence=0.9,
                 value=500.0,
@@ -101,7 +102,7 @@ async def test_get_anomalies_with_filters():
             )
 
             anomaly_detection = AnomalyDetection(
-                id=f"test-{i}", anomaly=anomaly_score, detected_at=datetime.now(), alerted=False
+                id=f"test-{i}", anomaly=anomaly_score, detected_at=datetime.now(timezone.utc), alerted=False
             )
 
             recent_anomalies.insert(0, anomaly_detection)
@@ -124,8 +125,8 @@ async def test_get_anomalies_with_filters():
 @pytest.mark.asyncio
 async def test_get_anomaly_by_id():
     """Test get specific anomaly by ID."""
+    from app.main import AnomalyDetection, AnomalyScore
     from fastapi.testclient import TestClient
-    from app.main import AnomalyScore, AnomalyDetection
 
     with patch("app.main.lifespan"):
         from app.main import app, recent_anomalies
@@ -134,7 +135,7 @@ async def test_get_anomaly_by_id():
 
         anomaly_score = AnomalyScore(
             metric="test_metric",
-            timestamp=datetime.now(),
+            timestamp=datetime.now(timezone.utc),
             score=0.85,
             confidence=0.9,
             value=500.0,
@@ -143,7 +144,7 @@ async def test_get_anomaly_by_id():
         )
 
         anomaly_detection = AnomalyDetection(
-            id="test-specific", anomaly=anomaly_score, detected_at=datetime.now(), alerted=False
+            id="test-specific", anomaly=anomaly_score, detected_at=datetime.now(timezone.utc), alerted=False
         )
 
         recent_anomalies.insert(0, anomaly_detection)
@@ -164,8 +165,8 @@ async def test_get_anomaly_by_id():
 @pytest.mark.asyncio
 async def test_get_stats():
     """Test get statistics endpoint."""
+    from app.main import AnomalyDetection, AnomalyScore
     from fastapi.testclient import TestClient
-    from app.main import AnomalyScore, AnomalyDetection
 
     with patch("app.main.lifespan"):
         from app.main import app, recent_anomalies
@@ -176,7 +177,7 @@ async def test_get_stats():
         for i in range(5):
             anomaly_score = AnomalyScore(
                 metric=f"test_metric_{i}",
-                timestamp=datetime.now(),
+                timestamp=datetime.now(timezone.utc),
                 score=0.85,
                 confidence=0.9,
                 value=500.0,
@@ -185,7 +186,7 @@ async def test_get_stats():
             )
 
             anomaly_detection = AnomalyDetection(
-                id=f"test-{i}", anomaly=anomaly_score, detected_at=datetime.now(), alerted=(i % 3 == 0)
+                id=f"test-{i}", anomaly=anomaly_score, detected_at=datetime.now(timezone.utc), alerted=(i % 3 == 0)
             )
 
             recent_anomalies.insert(0, anomaly_detection)

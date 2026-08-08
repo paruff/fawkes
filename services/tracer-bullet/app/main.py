@@ -9,10 +9,11 @@ Instrumented with:
 - Structured logging with trace ID injection
 """
 
+import asyncio
 import logging
 import os
 import time
-from typing import Callable
+from collections.abc import Callable
 
 from fastapi import FastAPI, Request, Response
 from opentelemetry import trace
@@ -153,6 +154,6 @@ async def demo_span() -> dict:
     with tracer.start_as_current_span("demo-work") as span:
         span.set_attribute("demo.key", "hello-tracer-bullet")
         span.add_event("processing started")
-        time.sleep(0.01)  # Simulate work
+        await asyncio.sleep(0.01)  # Simulate work
         span.add_event("processing finished")
     return {"trace_id": format(trace.get_current_span().get_span_context().trace_id, "032x")}

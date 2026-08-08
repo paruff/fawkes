@@ -3,9 +3,9 @@
 Run Great Expectations checkpoint and handle results.
 """
 
-import sys
-import json
 import argparse
+import json
+import sys
 from pathlib import Path
 
 # Add parent directory to path

@@ -1,9 +1,10 @@
-from behave import given, when, then
-import os
-import yaml
 import logging
-from kubernetes import client, config
+import os
 from pathlib import Path
+
+import yaml
+from behave import given, then, when
+from kubernetes import client, config
 
 logger = logging.getLogger(__name__)
 
@@ -166,9 +167,9 @@ def step_then_deployment_has_volume(context, volume_name):
     volumes = deployment.spec.template.spec.volumes or []
 
     volume_names = [v.name for v in volumes]
-    assert (
-        volume_name in volume_names
-    ), f"Volume '{volume_name}' not found in deployment. Available volumes: {volume_names}"
+    assert volume_name in volume_names, (
+        f"Volume '{volume_name}' not found in deployment. Available volumes: {volume_names}"
+    )
 
     # Store the volume for further checks
     context.checked_volume = next(v for v in volumes if v.name == volume_name)
@@ -246,9 +247,9 @@ def step_then_has_annotation(context, annotation_key):
     entity = context.backstage_component
     annotations = entity.get("metadata", {}).get("annotations", {})
 
-    assert (
-        annotation_key in annotations
-    ), f"Annotation '{annotation_key}' not found. Available annotations: {list(annotations.keys())}"
+    assert annotation_key in annotations, (
+        f"Annotation '{annotation_key}' not found. Available annotations: {list(annotations.keys())}"
+    )
 
     context.checked_annotation_value = annotations[annotation_key]
     logger.info(f"Found annotation '{annotation_key}' with value '{context.checked_annotation_value}'")

@@ -1,33 +1,35 @@
 """Main FastAPI application for Insights service."""
 
-from typing import List, Optional
-from fastapi import FastAPI, Depends, HTTPException, Query, status
-from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
-from sqlalchemy import or_, func
-from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
-from fastapi.responses import Response
+import os
 import logging
+from typing import List, Optional
+
+from fastapi import Depends, FastAPI, HTTPException, Query, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
+from sqlalchemy import func, or_
+from sqlalchemy.orm import Session
 
 from app import __version__
-from app.database import get_db, check_db_connection
-from app.models import Insight, Tag, Category
-from app.schemas import (
-    InsightCreate,
-    InsightUpdate,
-    InsightResponse,
-    InsightListResponse,
-    InsightSearchRequest,
-    TagCreate,
-    TagUpdate,
-    TagResponse,
-    CategoryCreate,
-    CategoryUpdate,
-    CategoryResponse,
-    InsightStatistics,
-    HealthResponse,
-)
+from app.database import check_db_connection, get_db
+from app.models import Category, Insight, Tag
 from app.prometheus_exporter import update_prometheus_metrics
+from app.schemas import (
+    CategoryCreate,
+    CategoryResponse,
+    CategoryUpdate,
+    HealthResponse,
+    InsightCreate,
+    InsightListResponse,
+    InsightResponse,
+    InsightSearchRequest,
+    InsightStatistics,
+    InsightUpdate,
+    TagCreate,
+    TagResponse,
+    TagUpdate,
+)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -50,9 +52,13 @@ app = FastAPI(
 )
 
 # Configure CORS
+ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "https://backstage.fawkes.idp,https://insights.fawkes.idp").split(
+    ","
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -93,7 +99,7 @@ async def create_tag(tag_data: TagCreate, db: Session = Depends(get_db)):
     return tag
 
 
-@app.get("/tags", response_model=List[TagResponse], tags=["Tags"])
+@app.get("/tags", response_model=list[TagResponse], tags=["Tags"])
 async def list_tags(skip: int = Query(0, ge=0), limit: int = Query(100, ge=1, le=1000), db: Session = Depends(get_db)):
     """List all tags."""
     tags = db.query(Tag).order_by(Tag.name).offset(skip).limit(limit).all()
@@ -154,7 +160,7 @@ async def create_category(category_data: CategoryCreate, db: Session = Depends(g
     return category
 
 
-@app.get("/categories", response_model=List[CategoryResponse], tags=["Categories"])
+@app.get("/categories", response_model=list[CategoryResponse], tags=["Categories"])
 async def list_categories(
     skip: int = Query(0, ge=0), limit: int = Query(100, ge=1, le=1000), db: Session = Depends(get_db)
 ):
@@ -251,10 +257,10 @@ async def create_insight(insight_data: InsightCreate, db: Session = Depends(get_
 async def list_insights(
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
-    status: Optional[str] = None,
-    priority: Optional[str] = None,
-    category_id: Optional[int] = None,
-    author: Optional[str] = None,
+    status: str | None = None,
+    priority: str | None = None,
+    category_id: int | None = None,
+    author: str | None = None,
     db: Session = Depends(get_db),
 ):
     """List insights with pagination and filters."""
