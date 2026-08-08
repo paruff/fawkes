@@ -1,6 +1,6 @@
 # ADR-034: Tiered Dependency Pinning for Deterministic Builds
 
-> **Status:** Proposed
+> **Status:** Accepted (exact-pin migration completed in PR #1493)
 > **Date:** 2026-07-19
 > **Author:** AI-assisted, approved by @paruff
 > **DORA Capability:** Cap 2 — Healthy Data Ecosystem
