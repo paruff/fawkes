@@ -2,7 +2,7 @@
 
 ## Status
 
-**Proposed** - Pending team review and approval
+**Accepted** - Implemented (VSM service shipped; see docs/vsm/index.md)
 
 **Date**: December 2025
 
