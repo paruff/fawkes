@@ -123,9 +123,9 @@ def metrics():
 
 
 @app.get("/api/v1/scrape")
-def trigger_scrape():
+async def trigger_scrape():
     """Manually trigger a scrape cycle."""
-    _scrape_dora_metrics()
+    await _scrape_dora_metrics()
     return {"status": "scraped", "timestamp": datetime.now(timezone.utc).isoformat()}
 
 
@@ -258,23 +258,14 @@ async def _collect_github_deployments() -> dict:
 # ---------------------------------------------------------------------------
 # Scrape Logic
 # ---------------------------------------------------------------------------
-def _scrape_dora_metrics():
+async def _scrape_dora_metrics():
     """Main scrape cycle — collects from all sources and updates Prometheus gauges."""
     global _last_scrape
 
     logger.info("Starting DORA metrics scrape cycle")
 
-    # Run async collection
-    import asyncio
-
-    try:
-        loop = asyncio.get_event_loop()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-
-    argocd_apps = loop.run_until_complete(_collect_argocd_deployments())
-    github_runs = loop.run_until_complete(_collect_github_deployments())
+    argocd_apps = await _collect_argocd_deployments()
+    github_runs = await _collect_github_deployments()
 
     # --- DORA Metric: Deployment Frequency ---
     # Count successful ArgoCD syncs as deployments
@@ -324,7 +315,7 @@ async def start_scraper():
     async def _loop():
         while True:
             try:
-                _scrape_dora_metrics()
+                await _scrape_dora_metrics()
             except Exception as e:
                 logger.error(f"Scrape failed: {e}")
             await asyncio.sleep(SCRAPE_INTERVAL)
