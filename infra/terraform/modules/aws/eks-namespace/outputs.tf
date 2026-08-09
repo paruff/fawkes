@@ -19,11 +19,21 @@
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
 output "namespace_name" {
-  description = "Name of the created Kubernetes namespace"
-  value       = kubernetes_namespace.app.metadata[0].name
+  description = "Name of the created Kubernetes namespace (null if manage_namespace is false)"
+  value       = var.manage_namespace ? kubernetes_namespace.app[0].metadata[0].name : null
 }
 
 output "namespace_uid" {
-  description = "UID of the created Kubernetes namespace"
-  value       = kubernetes_namespace.app.metadata[0].uid
+  description = "UID of the created Kubernetes namespace (null if manage_namespace is false)"
+  value       = var.manage_namespace ? kubernetes_namespace.app[0].metadata[0].uid : null
+}
+
+output "irsa_role_arn" {
+  description = "ARN of the IRSA IAM role (null if create_irsa_role is false)"
+  value       = var.create_irsa_role ? aws_iam_role.irsa[0].arn : null
+}
+
+output "irsa_role_name" {
+  description = "Name of the IRSA IAM role (null if create_irsa_role is false)"
+  value       = var.create_irsa_role ? aws_iam_role.irsa[0].name : null
 }

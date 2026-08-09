@@ -32,9 +32,13 @@ locals {
 }
 
 # ---------------------------------------------------------------------------
-# Namespace
+# Namespace (optional — skip when a GitOps controller like ArgoCD already
+# owns namespace creation via CreateNamespace=true, and this module is only
+# being used for its IRSA support)
 # ---------------------------------------------------------------------------
 resource "kubernetes_namespace" "app" {
+  count = var.manage_namespace ? 1 : 0
+
   metadata {
     name   = var.namespace
     labels = local.labels
@@ -45,11 +49,11 @@ resource "kubernetes_namespace" "app" {
 # Resource Quota (optional)
 # ---------------------------------------------------------------------------
 resource "kubernetes_resource_quota" "app" {
-  count = var.resource_quota != null ? 1 : 0
+  count = var.manage_namespace && var.resource_quota != null ? 1 : 0
 
   metadata {
     name      = "${var.namespace}-quota"
-    namespace = kubernetes_namespace.app.metadata[0].name
+    namespace = kubernetes_namespace.app[0].metadata[0].name
   }
 
   spec {
@@ -67,15 +71,60 @@ resource "kubernetes_resource_quota" "app" {
 # Network Policy — default deny-all (optional)
 # ---------------------------------------------------------------------------
 resource "kubernetes_network_policy" "default_deny" {
-  count = var.network_policy ? 1 : 0
+  count = var.manage_namespace && var.network_policy ? 1 : 0
 
   metadata {
     name      = "default-deny-all"
-    namespace = kubernetes_namespace.app.metadata[0].name
+    namespace = kubernetes_namespace.app[0].metadata[0].name
   }
 
   spec {
     pod_selector {}
     policy_types = ["Ingress", "Egress"]
   }
+}
+
+# ---------------------------------------------------------------------------
+# IRSA (optional) — IAM role assumable by a Kubernetes ServiceAccount via
+# the cluster's OIDC provider, scoped to this namespace + service account.
+# ---------------------------------------------------------------------------
+data "aws_iam_policy_document" "irsa_trust" {
+  count = var.create_irsa_role ? 1 : 0
+
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type        = "Federated"
+      identifiers = [var.oidc_provider_arn]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${var.oidc_provider_url}:sub"
+      values   = ["system:serviceaccount:${var.namespace}:${var.service_account_name}"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${var.oidc_provider_url}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "irsa" {
+  count = var.create_irsa_role ? 1 : 0
+
+  name               = coalesce(var.iam_role_name, "${var.namespace}-${var.service_account_name}-irsa")
+  assume_role_policy = data.aws_iam_policy_document.irsa_trust[0].json
+  tags               = local.labels
+}
+
+resource "aws_iam_role_policy_attachment" "irsa" {
+  for_each = var.create_irsa_role ? toset(var.iam_policy_arns) : toset([])
+
+  role       = aws_iam_role.irsa[0].name
+  policy_arn = each.value
 }
