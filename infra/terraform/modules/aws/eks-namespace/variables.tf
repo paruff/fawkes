@@ -51,3 +51,45 @@ variable "network_policy" {
   type        = bool
   default     = false
 }
+
+variable "manage_namespace" {
+  description = "Whether this module creates the Kubernetes namespace. Set false when a GitOps controller (e.g. ArgoCD with CreateNamespace=true) already owns it and this module is only used for IRSA."
+  type        = bool
+  default     = true
+}
+
+variable "create_irsa_role" {
+  description = "Whether to create an IAM role assumable by a Kubernetes ServiceAccount via IRSA"
+  type        = bool
+  default     = false
+}
+
+variable "service_account_name" {
+  description = "Kubernetes ServiceAccount name the IRSA role trusts (required if create_irsa_role is true)"
+  type        = string
+  default     = null
+}
+
+variable "oidc_provider_arn" {
+  description = "ARN of the EKS cluster's IAM OIDC provider, e.g. module.eks.oidc_provider_arn (required if create_irsa_role is true)"
+  type        = string
+  default     = null
+}
+
+variable "oidc_provider_url" {
+  description = "Issuer URL of the EKS cluster's OIDC provider without the https:// prefix, e.g. module.eks.oidc_provider (required if create_irsa_role is true)"
+  type        = string
+  default     = null
+}
+
+variable "iam_policy_arns" {
+  description = "IAM policy ARNs to attach to the IRSA role"
+  type        = list(string)
+  default     = []
+}
+
+variable "iam_role_name" {
+  description = "Name for the IRSA IAM role. Defaults to \"<namespace>-<service_account_name>-irsa\" if not set"
+  type        = string
+  default     = null
+}

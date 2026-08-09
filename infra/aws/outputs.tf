@@ -23,7 +23,7 @@ output "cluster_security_group_id" {
   value       = module.eks.cluster_security_group_id
 }
 
-// kubectl config and aws-auth outputs removed in eks module v19
+# kubectl config and aws-auth outputs removed in eks module v19
 
 output "region" {
   description = "AWS region."
