@@ -231,6 +231,19 @@ spec:
                 - name: config
                   mountPath: /config
                   readOnly: true
+                - name: tmp
+                  mountPath: /tmp
+
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 1000
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
 
               resources:
                 requests:
@@ -244,6 +257,8 @@ spec:
             - name: config
               configMap:
                 name: datahub-postgres-ingestion-config
+            - name: tmp
+              emptyDir: {}
 
 ---
 # ServiceAccount for ingestion jobs
