@@ -74,6 +74,16 @@ spec:
 
                   asyncio.run(send_reminders())
                   EOF
+              securityContext:
+                # ponytail: pip install writes to rootfs at runtime, so readOnlyRootFilesystem
+                # is intentionally omitted. Pre-baked image needed for full hardening.
+                runAsNonRoot: true
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
           securityContext:
             runAsNonRoot: true
             runAsUser: 65534
