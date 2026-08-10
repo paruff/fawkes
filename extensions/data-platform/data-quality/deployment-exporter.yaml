@@ -72,6 +72,16 @@ spec:
               value: "9110"
             - name: GX_RESULTS_DIR
               value: "/app/gx/uncommitted/validations"
+          securityContext:
+            # ponytail: pip install at startup requires root + writable rootfs, so
+            # runAsNonRoot/readOnly are intentionally omitted. Pre-baked image needed
+            # for full hardening.
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
           volumeMounts:
             - name: exporter-script
               mountPath: /app/prometheus-exporter.py
