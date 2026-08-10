@@ -60,6 +60,21 @@ spec:
                     -H "Content-Type: application/json" \
                     -d '{"type": "deep_dive", "test_mode": false}' \
                     -f || exit 1
+              securityContext:
+                runAsNonRoot: true
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
           securityContext:
             runAsNonRoot: true
             runAsUser: 65534
+          volumes:
+            - name: tmp
+              emptyDir: {}

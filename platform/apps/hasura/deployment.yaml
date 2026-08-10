@@ -141,11 +141,21 @@ spec:
             failureThreshold: 3
 
           securityContext:
+            runAsNonRoot: true
             allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
             capabilities:
               drop:
                 - ALL
-            readOnlyRootFilesystem: false
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+
+      volumes:
+        - name: tmp
+          emptyDir: {}
 
       affinity:
         podAntiAffinity:
