@@ -172,7 +172,7 @@
 | **Assessment**    | Add capability maturity assessments           | Diagnostic for which stack/profile fits (maps to CNCF maturity levels)                 |
 | **Monetization**  | Free core, paid cohorts/certification         | Sustainable via GitHub Sponsors                                                        |
 
-**Acceptance criteria**: Dojo repo live, 3+ capability modules published, 100+ learners.
+**Acceptance criteria**: Dojo repo live ✅ (github.com/paruff/uFawkesDojo, 20 modules migrated from fawkes), 3+ capability modules published, 100+ learners.
 
 ### Phase 3: Platform Engineering Research Integration (Ongoing)
 
@@ -200,7 +200,7 @@
 | **Phase 1** | Stack operability    | Each stack `docker compose up` → running in <60s                            | Not started |
 | **Phase 1** | DORA dashboards      | Each stack has at least 1 pre-configured DORA dashboard                     | Not started |
 | **Phase 1** | DORA metric emission | Each stack emits deployment frequency, lead time, change failure rate, MTTR | Not started |
-| **Phase 2** | Dojo modules         | 3+ capability-based modules published                                       | Not started |
+| **Phase 2** | Dojo modules         | 3+ capability-based modules published                                       | Repo live, 20 modules migrated |
 | **Phase 2** | Learner adoption     | 100+ registered learners                                                    | Not started |
 | **Phase 3** | Research citations   | Each stack README cites relevant research                                   | Not started |
 | **Phase 3** | Quarterly review     | Research library updated quarterly                                          | Not started |
