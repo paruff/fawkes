@@ -421,7 +421,7 @@ gantt
 - **ADR**: [ADR-020: Platform-as-Product Operating Model](../../adr/ADR-020%20Platform-as-Product%20Operating%20Model.md)
 - **ADR**: [ADR-018: Developer Experience Measurement Framework (SPACE)](../../adr/ADR-018%20Developer%20Experience%20Measurement%20Framework%20SPACE.md)
 - **ADR**: [ADR-019: User Research & Feedback Collection System](../../adr/ADR-019%20UserResearch%20%26%20Feedback%20Collection%20System.md)
-- **Tutorial**: [Module 17: Platform as Product](../../dojo/modules/black-belt/module-17-platform-product.md)
+- **Tutorial**: [Module 17: Platform as Product](https://github.com/paruff/uFawkesDojo/blob/main/modules/black-belt/module-17-platform-product.md)
 - **Reference**: [SPACE Framework](https://queue.acm.org/detail.cfm?id=3454124)
 - **Reference**: [Team Topologies (Platform as Product)](https://teamtopologies.com/key-concepts)
 

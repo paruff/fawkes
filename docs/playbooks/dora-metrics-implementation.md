@@ -63,7 +63,7 @@ This section lists required Fawkes components, versions, and environment specifi
 | Prometheus | 2.47+           | ✅          | See [Prometheus Tool](../tools/prometheus.md)                              |
 | Grafana    | 10.2+           | ✅          | See [Observability](../observability/dora-metrics-guide.md)                |
 | Jenkins    | 2.426+          | ✅          | See [Jenkins Tool](../tools/jenkins.md)                                    |
-| ArgoCD     | 2.9+            | ✅          | See [GitOps Module](../dojo/modules/green-belt/module-09-gitops-argocd.md) |
+| ArgoCD     | 2.9+            | ✅          | See [GitOps Module](https://github.com/paruff/uFawkesDojo/blob/main/modules/green-belt/module-09-gitops-argocd.md) |
 | DevLake    | 0.19+           | ⬜ Optional | See [DevLake ADR](../adr/ADR-016%20devlake-dora-strategy.md)               |
 
 ### Environment Requirements
@@ -594,7 +594,7 @@ With baseline metrics established, the next step is to identify your primary bot
 
 ### Related Resources
 
-- [Module 2: DORA Metrics](../dojo/modules/white-belt/module-02-dora-metrics.md) - Conceptual background on the four key metrics
+- [Module 2: DORA Metrics](https://github.com/paruff/uFawkesDojo/blob/main/modules/white-belt/module-02-dora-metrics.md) - Conceptual background on the four key metrics
 - [Prometheus Tool Reference](../tools/prometheus.md) - Metrics collection details
 - [DORA Metrics Guide](../observability/dora-metrics-guide.md) - Detailed DORA implementation guide
 

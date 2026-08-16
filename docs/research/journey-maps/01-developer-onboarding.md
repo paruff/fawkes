@@ -451,7 +451,7 @@ This journey map aligns with:
 - [Application Developer Persona](../personas/application-developer.md)
 - [Platform Developer Persona](../personas/platform-developer.md)
 - [Developer Onboarding Interview Guide](../interviews/application-developer-interview-guide.md)
-- [Fawkes Dojo Learning Modules](../../dojo/README.md)
+- [Fawkes Dojo Learning Modules](https://github.com/paruff/uFawkesDojo)
 - [Backstage Developer Portal](../../architecture.md#developer-experience-layer)
 
 ---

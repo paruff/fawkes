@@ -381,7 +381,7 @@ extensions:
 ## Related Reading
 
 - **How-To**: [Debug Buildpack Failures](../../how-to/development/debug-buildpack-failure.md)
-- **Tutorial**: [Module 6: Golden Path](../../dojo/modules/yellow-belt/module-06-golden-path.md)
+- **Tutorial**: [Module 6: Golden Path](https://github.com/paruff/uFawkesDojo/blob/main/modules/yellow-belt/module-06-golden-path.md)
 - **Reference**: [Paketo Buildpacks Documentation](https://paketo.io)
 - **Reference**: [Cloud Native Buildpacks Specification](https://buildpacks.io)
 

@@ -270,4 +270,4 @@ If the collector is using too much memory, adjust the `memory_limiter` settings 
 
 - [Architecture Overview](../architecture.md)
 - [ADR-011 Centralized Log Management](../adr/ADR-011%20Centralized%20Log%20Management.md)
-- [Module 13: Observability](../dojo/modules/brown-belt/module-13-observability.md)
+- [Module 13: Observability](https://github.com/paruff/uFawkesDojo/blob/main/modules/brown-belt/module-13-observability.md)

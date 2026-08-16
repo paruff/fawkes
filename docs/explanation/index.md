@@ -25,7 +25,7 @@ The following explanatory content provides deep-dive understanding of Fawkes arc
 | Topic                                              | Description                                                                                                                                   |
 | -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | [GitOps Strategy](architecture/gitops-strategy.md) | Why ArgoCD, the App-of-Apps pattern, and the shift from push to pull deployment                                                               |
-| GitOps Principles                                  | Declarative, version-controlled infrastructure - See [Module 3: GitOps Principles](../dojo/modules/white-belt/module-03-gitops-principles.md) |
+| GitOps Principles                                  | Declarative, version-controlled infrastructure - See [Module 3: GitOps Principles](https://github.com/paruff/uFawkesDojo/blob/main/modules/white-belt/module-03-gitops-principles.md) |
 | Loosely Coupled Architecture                       | Why independence matters - See [Architecture](../architecture.md)                                                                             |
 
 ### Containers & Build Strategy
@@ -40,8 +40,8 @@ The following explanatory content provides deep-dive understanding of Fawkes arc
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | [Zero Trust Model](security/zero-trust-model.md)           | How Vault, Kyverno, and Istio/Ingress work together for defense in depth                                                           |
 | [Policy as Code Tiers](governance/policy-as-code-tiers.md) | Understanding the Audit vs. Enforce governance model                                                                               |
-| Shift Left Security                                        | Why early security testing matters - See [Module 7: Security Scanning](../dojo/modules/yellow-belt/module-07-security-scanning.md) |
-| Zero Trust Architecture                                    | Modern security principles - See [Module 19: Security Zero Trust](../dojo/modules/black-belt/module-19-security-zerotrust.md)      |
+| Shift Left Security                                        | Why early security testing matters - See [Module 7: Security Scanning](https://github.com/paruff/uFawkesDojo/blob/main/modules/yellow-belt/module-07-security-scanning.md) |
+| Zero Trust Architecture                                    | Modern security principles - See [Module 19: Security Zero Trust](https://github.com/paruff/uFawkesDojo/blob/main/modules/black-belt/module-19-security-zerotrust.md)      |
 
 ### Observability
 
@@ -54,7 +54,7 @@ The following explanatory content provides deep-dive understanding of Fawkes arc
 | Topic                                                                               | Description                                                                                                                |
 | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | [Product Discovery & Delivery Flow (IP3dP)](idp/product-discovery-delivery-flow.md) | How to treat your platform as a product with continuous discovery and measurement                                          |
-| What is an Internal Developer Platform?                                             | Understanding IDPs and their value - See [Module 1: What is IDP](../dojo/modules/white-belt/module-01-what-is-idp.md)      |
+| What is an Internal Developer Platform?                                             | Understanding IDPs and their value - See [Module 1: What is IDP](https://github.com/paruff/uFawkesDojo/blob/main/modules/white-belt/module-01-what-is-idp.md)      |
 | Platform as a Product                                                               | Operating your platform with product thinking - See [ADR-020](../adr/ADR-020%20Platform-as-Product%20Operating%20Model.md) |
 | Golden Paths                                                                        | Paved roads for developer productivity - See [Golden Path Usage](../golden-path-usage.md)                                  |
 
@@ -62,7 +62,7 @@ The following explanatory content provides deep-dive understanding of Fawkes arc
 
 | Topic                      | Description                                                                                                                   |
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Understanding DORA Metrics | The four key metrics and why they matter - See [Module 2: DORA Metrics](../dojo/modules/white-belt/module-02-dora-metrics.md) |
+| Understanding DORA Metrics | The four key metrics and why they matter - See [Module 2: DORA Metrics](https://github.com/paruff/uFawkesDojo/blob/main/modules/white-belt/module-02-dora-metrics.md) |
 | Elite Performance          | What it means to be an elite performer - See [Home page](../index.md)                                                         |
 
 ## Business Value
