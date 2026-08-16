@@ -119,7 +119,7 @@ Total: 40 hours from novice to platform architect
 ✅ **Community Learning** - Learn with peers, get mentorship
 ✅ **Platform Engineering University Integration** - Aligned with industry certifications
 
-**[Start Your Dojo Journey →](docs/dojo/getting-started.md)**
+**[Start Your Dojo Journey →](https://github.com/paruff/uFawkesDojo)**
 
 ---
 
@@ -284,7 +284,7 @@ Fawkes is built on a modern, cloud-native architecture:
 
 ### Path 1: I Want to Learn Platform Engineering
 
-**Start Here**: [Dojo White Belt](docs/dojo/white-belt/README.md)
+**Start Here**: [Dojo White Belt](https://github.com/paruff/uFawkesDojo/tree/main/white-belt)
 
 1. Enroll in White Belt (8 hours)
 2. Complete 4 modules with hands-on labs
@@ -353,12 +353,12 @@ Comprehensive documentation for all aspects of Fawkes:
 
 ### Dojo Learning
 
-- [Dojo Architecture](docs/dojo/DOJO_ARCHITECTURE.md)
-- [White Belt Curriculum](docs/dojo/white-belt/)
-- [Yellow Belt Curriculum](docs/dojo/yellow-belt/)
-- [Green Belt Curriculum](docs/dojo/green-belt/)
-- [Brown Belt Curriculum](docs/dojo/brown-belt/)
-- [Black Belt Curriculum](docs/dojo/black-belt/)
+- [Dojo Architecture](https://github.com/paruff/uFawkesDojo/blob/main/Fawkes%20Dojo%3A%20Immersive%20Learning%20Architecture.md)
+- [White Belt Curriculum](https://github.com/paruff/uFawkesDojo/tree/main/white-belt)
+- [Yellow Belt Curriculum](https://github.com/paruff/uFawkesDojo/tree/main/modules/yellow-belt)
+- [Green Belt Curriculum](https://github.com/paruff/uFawkesDojo/tree/main/modules/green-belt)
+- [Brown Belt Curriculum](https://github.com/paruff/uFawkesDojo/tree/main/modules/brown-belt)
+- [Black Belt Curriculum](https://github.com/paruff/uFawkesDojo/tree/main/modules/black-belt)
 
 ### Platform Components
 
@@ -624,7 +624,7 @@ Choose your path:
 
 ### 🎓 Learn Platform Engineering
 
-**[Enroll in Dojo White Belt →](docs/dojo/white-belt/)**
+**[Enroll in Dojo White Belt →](https://github.com/paruff/uFawkesDojo)**
 
 Start your journey from novice to platform architect. 8 hours to your first certification.
 
