@@ -186,7 +186,7 @@ CI System → Updates Git → ArgoCD (running IN cluster) syncs
 
 | Challenge              | Mitigation                                                                                                                                                                 |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Learning Curve**     | ArgoCD concepts (Applications, Sync Policies) require training. **Mitigation**: Fawkes Dojo has [GitOps module](../../dojo/modules/green-belt/module-09-gitops-argocd.md)  |
+| **Learning Curve**     | ArgoCD concepts (Applications, Sync Policies) require training. **Mitigation**: Fawkes Dojo has [GitOps module](https://github.com/paruff/uFawkesDojo/blob/main/modules/green-belt/module-09-gitops-argocd.md)  |
 | **Git as Bottleneck**  | Emergency fixes must go through Git/PR process. **Mitigation**: "Break-glass" procedure for true emergencies, webhooks for instant sync                                    |
 | **Secret Management**  | Can't commit secrets to Git. **Mitigation**: External Secrets Operator fetches from Vault (see [ADR-015](../../adr/ADR-015%20vault%20deployment.md))                       |
 | **Sync Delays**        | Default 3-minute poll interval. **Mitigation**: Use webhooks for instant notification, or manual refresh for urgent changes                                                |
@@ -317,7 +317,7 @@ When a client asks **"Why can't we just use Jenkins for deployments?"**:
 - **How-To**: [Onboard a Service to ArgoCD](../../how-to/gitops/onboard-service-argocd.md)
 - **How-To**: [Sync an ArgoCD Application](../../how-to/gitops/sync-argocd-app.md)
 - **ADR**: [ADR-003: ArgoCD for GitOps](../../adr/ADR-003%20argocd.md) (detailed decision rationale)
-- **Tutorial**: [Module 9: GitOps with ArgoCD](../../dojo/modules/green-belt/module-09-gitops-argocd.md)
+- **Tutorial**: [Module 9: GitOps with ArgoCD](https://github.com/paruff/uFawkesDojo/blob/main/modules/green-belt/module-09-gitops-argocd.md)
 - **Reference**: [ArgoCD Best Practices](https://argo-cd.readthedocs.io/en/stable/user-guide/best_practices/)
 
 ## Conclusion

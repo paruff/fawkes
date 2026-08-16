@@ -573,7 +573,7 @@ SELECT * FROM customers;
 
 | Challenge                | Mitigation                                                                                                                                                                                                |
 | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Complexity**           | More components (Vault, Kyverno, Istio) to learn and maintain. **Mitigation**: Fawkes Dojo has [Zero Trust module](../../dojo/modules/black-belt/module-19-security-zerotrust.md)                         |
+| **Complexity**           | More components (Vault, Kyverno, Istio) to learn and maintain. **Mitigation**: Fawkes Dojo has [Zero Trust module](https://github.com/paruff/uFawkesDojo/blob/main/modules/black-belt/module-19-security-zerotrust.md)                         |
 | **Operational Overhead** | Vault HA, secret rotation, policy management. **Mitigation**: Automated via GitOps; platform team handles                                                                                                 |
 | **Debugging Difficulty** | mTLS/network policies can block legitimate traffic during troubleshooting. **Mitigation**: [Troubleshooting guides](../../how-to/policy/troubleshoot-kyverno-violation.md) and `istioctl` debugging tools |
 | **Performance Impact**   | mTLS encryption adds latency (~1-5ms per hop). **Mitigation**: Acceptable for security gain; not noticeable in most apps                                                                                  |
@@ -641,7 +641,7 @@ Policies that encourage good practices but don't block:
 - **ADR**: [ADR-010: Ingress Controller](../../adr/ADR-010%3A%20Ingress%20Controller%20for%20Service%20Access.md)
 - **How-To**: [Rotate Vault Secrets](../../how-to/security/rotate-vault-secrets.md)
 - **How-To**: [Troubleshoot Kyverno Violations](../../how-to/policy/troubleshoot-kyverno-violation.md)
-- **Tutorial**: [Module 19: Zero Trust Security](../../dojo/modules/black-belt/module-19-security-zerotrust.md)
+- **Tutorial**: [Module 19: Zero Trust Security](https://github.com/paruff/uFawkesDojo/blob/main/modules/black-belt/module-19-security-zerotrust.md)
 
 ## Conclusion
 
