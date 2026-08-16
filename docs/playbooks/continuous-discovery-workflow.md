@@ -1529,7 +1529,7 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 - [Journey Map Template](../research/templates/journey-map.md)
 - [Persona Template](../research/templates/persona.md)
 - [SPACE Framework (DX Metrics)](https://queue.acm.org/detail.cfm?id=3454124)
-- [Platform as Product (Dojo Module)](../dojo/modules/black-belt/module-17-platform-product.md)
+- [Platform as Product (Dojo Module)](https://github.com/paruff/uFawkesDojo/blob/main/modules/black-belt/module-17-platform-product.md)
 
 ---
 
@@ -1722,7 +1722,7 @@ After 6 months of continuous discovery, expect to see:
 When implementing continuous discovery, refer to:
 
 - **Explanation**: [Product Discovery & Delivery Flow (IP3dP)](../explanation/idp/product-discovery-delivery-flow.md)
-- **Tutorial**: [Module 17: Platform as Product](../dojo/modules/black-belt/module-17-platform-product.md)
+- **Tutorial**: [Module 17: Platform as Product](https://github.com/paruff/uFawkesDojo/blob/main/modules/black-belt/module-17-platform-product.md)
 - **Reference**: [Interview Guide Template](../research/templates/interview-guide.md)
 - **Reference**: [Journey Map Template](../research/templates/journey-map.md)
 - **Reference**: [Persona Template](../research/templates/persona.md)

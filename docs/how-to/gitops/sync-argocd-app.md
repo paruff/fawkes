@@ -369,4 +369,4 @@ After mastering ArgoCD sync:
 - [Onboard a Service to ArgoCD](onboard-service-argocd.md) - Create a new ArgoCD Application
 - [ArgoCD Sync Phases Documentation](https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/)
 - [GitOps Pattern Explanation](../../explanation/index.md)
-- [Green Belt Module: GitOps with ArgoCD](../../dojo/modules/green-belt/module-09-gitops-argocd.md)
+- [Green Belt Module: GitOps with ArgoCD](https://github.com/paruff/uFawkesDojo/blob/main/modules/green-belt/module-09-gitops-argocd.md)

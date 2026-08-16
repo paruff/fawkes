@@ -232,7 +232,7 @@ service:
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Missing Vendor Features**  | Vendor agents have proprietary features (e.g., Datadog Live Profiling). **Mitigation**: Use OTel for core observability, add vendor agent only for specific features if justified |
 | **Configuration Complexity** | OTel Collector config can be verbose. **Mitigation**: Fawkes provides templates and Helm charts for common patterns                                                               |
-| **Learning Curve**           | New standard to learn vs. familiar vendor tools. **Mitigation**: [Dojo Module 13: Observability](../../dojo/modules/brown-belt/module-13-observability.md) covers OTel            |
+| **Learning Curve**           | New standard to learn vs. familiar vendor tools. **Mitigation**: [Dojo Module 13: Observability](https://github.com/paruff/uFawkesDojo/blob/main/modules/brown-belt/module-13-observability.md) covers OTel            |
 | **Maturity Gaps**            | Some language SDKs less mature than vendor equivalents. **Mitigation**: Java, Go, Python, Node.js are production-ready (Fawkes primary languages)                                 |
 | **Backend Performance**      | Prometheus/Tempo/Loki may not match Datadog polish initially. **Mitigation**: Acceptable trade-off for avoiding lock-in; Grafana ecosystem rapidly improving                      |
 
@@ -514,7 +514,7 @@ Think of OpenTelemetry like the **OSI Network Model**:
 - **ADR**: [ADR-013: Distributed Tracing](../../adr/ADR-013%20distributed%20tracing.md)
 - **ADR**: [ADR-011: Centralized Log Management](../../adr/ADR-011%20Centralized%20Log%20Management.md)
 - **ADR**: [ADR-012: Metrics Monitoring](../../adr/ADR-012%20Metrics%20Monitoring%20and%20Management.md)
-- **Tutorial**: [Module 13: Observability](../../dojo/modules/brown-belt/module-13-observability.md)
+- **Tutorial**: [Module 13: Observability](https://github.com/paruff/uFawkesDojo/blob/main/modules/brown-belt/module-13-observability.md)
 - **Reference**: [OpenTelemetry Documentation](https://opentelemetry.io/docs/)
 
 ## Conclusion

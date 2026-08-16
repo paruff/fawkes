@@ -301,4 +301,4 @@ After successfully onboarding your service:
 - [Continuous Delivery Pattern](../../patterns/continuous-delivery.md) - Understand the CD workflow
 - [ArgoCD Architecture](../../architecture.md) - Learn how ArgoCD works
 - [GitOps Explanation](../../explanation/index.md) - Conceptual background
-- [Green Belt Module: GitOps with ArgoCD](../../dojo/modules/green-belt/module-09-gitops-argocd.md)
+- [Green Belt Module: GitOps with ArgoCD](https://github.com/paruff/uFawkesDojo/blob/main/modules/green-belt/module-09-gitops-argocd.md)

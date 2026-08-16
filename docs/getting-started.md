@@ -81,7 +81,7 @@ After `make dev-up` completes, `make dev-status` prints the local URLs. Typical 
 
 ### Next steps after Path A
 
-- [Dojo White Belt](dojo/white-belt/README.md) — start your learning journey
+- [Dojo White Belt](https://github.com/paruff/uFawkesDojo) — start your learning journey
 - [Quick Start Tutorial](tutorials/quick-start.md) — guided walkthrough of all features
 - When ready to deploy to the cloud, continue with [Path B](#path-b--deploy-to-cloud-aws-eks)
 
