@@ -113,7 +113,7 @@ Organizations that implement capabilities across all three categories (Flow, Fee
 
 [View All Tutorials](tutorials/index.md){ .md-button }
 [Explore All Capabilities](capabilities.md){ .md-button }
-[Dojo Learning Path](dojo/getting-started.md){ .md-button }
+[Dojo Learning Path](https://github.com/paruff/uFawkesDojo){ .md-button }
 
 ---
 

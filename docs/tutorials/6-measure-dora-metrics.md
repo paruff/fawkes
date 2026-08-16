@@ -501,7 +501,7 @@ Congratulations on completing the entire Fawkes tutorial series! You now have:
 
 ### Next Steps
 
-1. **[Join the Dojo](../dojo/modules/white-belt/module-01-what-is-idp.md)** - Start your White Belt journey
+1. **[Join the Dojo](https://github.com/paruff/uFawkesDojo/blob/main/modules/white-belt/module-01-what-is-idp.md)** - Start your White Belt journey
 2. **[Explore How-To Guides](../how-to/index.md)** - Solve specific problems
 3. **[Read Explanations](../explanation/index.md)** - Deepen your understanding
 4. **[Contribute](../contributing.md)** - Help improve Fawkes

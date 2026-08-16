@@ -427,4 +427,4 @@ After mastering request tracing:
 - [Distributed Tracing with OpenTelemetry and Tempo](../../observability/distributed-tracing.md) - Architecture and setup
 - [ADR-013: Distributed Tracing](../../adr/ADR-013%20distributed%20tracing.md) - Technical decisions
 - [Centralized Logging](../../observability/centralized-logging.md) - Trace-to-logs correlation
-- [Brown Belt Module: Observability](../../dojo/modules/brown-belt/module-13-observability.md) - Hands-on training
+- [Brown Belt Module: Observability](https://github.com/paruff/uFawkesDojo/blob/main/modules/brown-belt/module-13-observability.md) - Hands-on training
