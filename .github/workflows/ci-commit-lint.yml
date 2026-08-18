@@ -1,0 +1,50 @@
+name: Commit Lint
+
+# .github/workflows/reusable-preflight.yml already contains a commit-format
+# check, but nothing in this repo calls that reusable workflow — it's dead
+# code. This is a small standalone check instead, matching ci-pr-size.yml's
+# pattern rather than wiring up the unused multi-purpose reusable workflow.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  commit-lint:
+    name: "📝 Conventional Commits Check"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Check commit messages
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const regex = /^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|revert)(\(.+\))?: .{1,72}$/;
+            const { data: commits } = await github.rest.pulls.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            const bad = commits
+              .map((c) => c.commit.message.split("\n")[0])
+              .filter((subject) => !subject.startsWith("Merge ") && !regex.test(subject));
+            if (bad.length > 0) {
+              core.setFailed(
+                "Commit message(s) do not follow Conventional Commits format " +
+                "(type(scope): description, 1-72 chars) -- see AGENTS.md:\n" +
+                bad.map((s) => `  "${s}"`).join("\n")
+              );
+            } else {
+              console.log(`✅ All ${commits.length} commit message(s) follow Conventional Commits`);
+            }
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
