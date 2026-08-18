@@ -152,6 +152,8 @@ Bypass pre-commit hooks with `--no-verify`. Use `latest` image tags.
 | Python          | `ruff`, `black`, `pytest`                    | Type hints on new functions; pin exact versions (`==`) in requirements files — see ADR-034 |
 | Bash            | `shellcheck`                                 | `set -euo pipefail` at the top; no hardcoded paths                   |
 
+Across all languages: never swallow an exception/error in a check, validator, or test assertion without logging what broke — a silently-caught failure is indistinguishable from a check that never ran, and hides real bugs indefinitely.
+
 Conventional commits throughout: `feat(scope):`, `fix(scope):`, `test(scope):`.
 
 ---
