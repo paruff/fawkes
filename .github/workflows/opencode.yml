@@ -41,12 +41,14 @@ jobs:
         with:
           # Model routing by comment tag: default is the free Zen model;
           # add [security] or [feature] anywhere in the comment to route to
-          # NVIDIA-hosted nemotron-3-ultra (paid, 1M context) instead, e.g.
+          # NVIDIA NIM's free Qwen3 Coder (480B/35B-active MoE, 262K context,
+          # purpose-built for agentic coding) instead, e.g.
           # "/oc [security] fix this CVE". The tag must sit alongside a
           # whole-word /oc or /opencode mention, never fused to it
           # (i.e. "/oc [security] ..." not "/oc-security ...") — the
           # action's own mention check requires /oc as a standalone word.
-          model: ${{ (contains(github.event.comment.body, '[security]') || contains(github.event.comment.body, '[feature]')) && 'nvidia/nemotron-3-ultra-550b-a55b' || 'opencode/deepseek-v4-flash-free' }}
+          # Every model referenced here must stay on a $0 free tier.
+          model: ${{ (contains(github.event.comment.body, '[security]') || contains(github.event.comment.body, '[feature]')) && 'nvidia/qwen3-coder-480b-a35b-instruct' || 'opencode/deepseek-v4-flash-free' }}
 
       - name: job-finish
         if: always()
