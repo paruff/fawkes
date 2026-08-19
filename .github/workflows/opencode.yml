@@ -39,7 +39,14 @@ jobs:
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         with:
-          model: opencode/deepseek-v4-flash-free
+          # Model routing by comment tag: default is the free Zen model;
+          # add [security] or [feature] anywhere in the comment to route to
+          # NVIDIA-hosted nemotron-3-ultra (paid, 1M context) instead, e.g.
+          # "/oc [security] fix this CVE". The tag must sit alongside a
+          # whole-word /oc or /opencode mention, never fused to it
+          # (i.e. "/oc [security] ..." not "/oc-security ...") — the
+          # action's own mention check requires /oc as a standalone word.
+          model: ${{ (contains(github.event.comment.body, '[security]') || contains(github.event.comment.body, '[feature]')) && 'nvidia/nemotron-3-ultra-550b-a55b' || 'opencode/deepseek-v4-flash-free' }}
 
       - name: job-finish
         if: always()
