@@ -17,6 +17,7 @@ jobs:
     permissions:
       id-token: write
       actions: write
+      contents: write
     steps:
       - name: job-start
         run: echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ) sha:${{ github.sha }}"
@@ -59,11 +60,55 @@ jobs:
           # endpoint "Free Endpoint" in its own product metadata — do not
           # trust models.dev's cost field for NVIDIA NIM models without
           # cross-checking build.nvidia.com directly, it has been wrong here.
-          # The tag must sit alongside a whole-word /oc or /opencode mention,
-          # never fused to it (i.e. "/oc [security] ..." not
-          # "/oc-security ...") — the action's own mention check requires
-          # /oc as a standalone word.
+          # The bracket tag is required for THIS routing expression to match
+          # ("/oc-security ..." does not contain "[security]" so it silently
+          # falls through to the default model below) — confirmed live:
+          # "/oc-security ..." does still trigger the action itself (issue
+          # #1587, run 32296616870), just without escalating the model.
           model: ${{ (contains(github.event.comment.body, '[security]') || contains(github.event.comment.body, '[feature]')) && 'nvidia/nemotron-3-ultra-550b-a55b' || 'opencode/deepseek-v4-flash-free' }}
+
+      # opencode does not reliably follow this repo's Conventional Commits
+      # rule despite it being stated in AGENTS.md and a dedicated skill
+      # (.opencode/skills/commit-message-format) -- confirmed non-compliant
+      # on PR #1619 and #1625 even with both in place. Documentation alone
+      # isn't reliable enough; enforce mechanically instead of hoping.
+      - name: Normalize commit message if non-compliant
+        if: always()
+        run: |
+          set -euo pipefail
+          if ! git rev-parse --verify HEAD >/dev/null 2>&1; then
+            echo "No commits to check."
+            exit 0
+          fi
+          if [ "$(git rev-parse HEAD)" = "${{ github.sha }}" ]; then
+            echo "No new commits; nothing to normalize."
+            exit 0
+          fi
+          subject="$(git log -1 --format=%s)"
+          if echo "$subject" | grep -qE '^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|revert)(\(.+\))?: .{1,72}$'; then
+            echo "Commit message already compliant: $subject"
+            exit 0
+          fi
+          echo "Non-compliant commit subject, rewriting: $subject"
+          desc="$subject"
+          if [ "${#desc}" -gt 69 ]; then
+            desc="${desc:0:69}..."
+          fi
+          body="$(git log -1 --format=%b)"
+          {
+            echo "fix: ${desc}"
+            echo
+            echo "Original subject: ${subject}"
+            if [ -n "$body" ]; then
+              echo
+              echo "$body"
+            fi
+          } > /tmp/normalized_commit_msg.txt
+          git commit --amend -F /tmp/normalized_commit_msg.txt
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          git push --force-with-lease
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: job-finish
         if: always()
