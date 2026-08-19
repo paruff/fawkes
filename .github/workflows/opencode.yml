@@ -46,6 +46,18 @@ jobs:
           tflint_version: v0.64.0
           github_token: ${{ github.token }}
 
+      # Install the same commit-msg hook humans get via `make pre-commit-setup`
+      # (.pre-commit-config.yaml's conventional-commit-msg hook), so opencode's
+      # own `git commit` gets rejected with the actual regex+reason inline and
+      # can retry, instead of only finding out from ci-commit-lint.yml after
+      # pushing. Only the commit-msg hook type -- not the full pre-commit
+      # stage, which runs unrelated file-content checks (tflint, kubeval, ...)
+      # that could block a commit for issues in files opencode didn't touch.
+      - name: Install commit-msg hook
+        run: |
+          pip install --quiet pre-commit
+          pre-commit install --hook-type commit-msg
+
       - name: Run OpenCode
         uses: anomalyco/opencode/github@31406ccc51b4bd2a4e1e086b2bcaa5f7f804f26d  # v1.18.18
         env:
