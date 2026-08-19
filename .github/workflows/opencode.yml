@@ -32,6 +32,19 @@ jobs:
           git config --global user.name "opencode-agent[bot]"
           git config --global user.email "opencode-agent[bot]@users.noreply.github.com"
 
+      # Pre-install Terraform/TFLint so opencode never needs to self-install
+      # them mid-session. Same pinned versions as security-and-terraform.yml.
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e  # v4
+        with:
+          terraform_version: 1.15.8
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@6e1e0642c0289bd619021bf6b34e3c08ed1e005a  # v6
+        with:
+          tflint_version: v0.64.0
+          github_token: ${{ github.token }}
+
       - name: Run OpenCode
         uses: anomalyco/opencode/github@31406ccc51b4bd2a4e1e086b2bcaa5f7f804f26d  # v1.18.18
         env:
@@ -41,11 +54,15 @@ jobs:
         with:
           # Model routing by comment tag: default is the free Zen model;
           # add [security] or [feature] anywhere in the comment to route to
-          # NVIDIA-hosted nemotron-3-ultra (paid, 1M context) instead, e.g.
-          # "/oc [security] fix this CVE". The tag must sit alongside a
-          # whole-word /oc or /opencode mention, never fused to it
-          # (i.e. "/oc [security] ..." not "/oc-security ...") — the
-          # action's own mention check requires /oc as a standalone word.
+          # NVIDIA NIM's nemotron-3-ultra (1M context) instead, e.g.
+          # "/oc [security] fix this CVE". build.nvidia.com labels this
+          # endpoint "Free Endpoint" in its own product metadata — do not
+          # trust models.dev's cost field for NVIDIA NIM models without
+          # cross-checking build.nvidia.com directly, it has been wrong here.
+          # The tag must sit alongside a whole-word /oc or /opencode mention,
+          # never fused to it (i.e. "/oc [security] ..." not
+          # "/oc-security ...") — the action's own mention check requires
+          # /oc as a standalone word.
           model: ${{ (contains(github.event.comment.body, '[security]') || contains(github.event.comment.body, '[feature]')) && 'nvidia/nemotron-3-ultra-550b-a55b' || 'opencode/deepseek-v4-flash-free' }}
 
       - name: job-finish
