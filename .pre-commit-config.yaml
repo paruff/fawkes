@@ -3,6 +3,12 @@
 # Install: make pre-commit-setup
 # Run manually: pre-commit run --all-files
 
+# `pre-commit install` (called by make pre-commit-setup) installs both hook
+# types below without needing extra flags -- commit-msg is what actually
+# enforces Conventional Commits at commit time, matching the regex
+# ci-commit-lint.yml checks in CI (AGENTS.md SS7).
+default_install_hook_types: [pre-commit, commit-msg]
+
 repos:
   # ============================================================================
   # General Code Quality
@@ -164,6 +170,26 @@ repos:
   # ============================================================================
   - repo: local
     hooks:
+      # Conventional Commits check, mirroring ci-commit-lint.yml's regex
+      # exactly so a commit can't fail in CI after passing here.
+      - id: conventional-commit-msg
+        name: Check commit message follows Conventional Commits
+        entry: |
+          bash -c '
+            subject=$(head -1 "$1")
+            if [[ "$subject" == Merge\ * ]]; then exit 0; fi
+            if echo "$subject" | grep -qE "^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|revert)(\(.+\))?: .{1,72}$"; then
+              exit 0
+            fi
+            echo "Commit message does not follow Conventional Commits format:"
+            echo "  \"$subject\""
+            echo "Expected: type(scope): description, 1-72 chars -- see AGENTS.md"
+            echo "Types: feat fix docs style refactor test chore ci perf build revert"
+            exit 1
+          ' --
+        language: system
+        stages: [commit-msg]
+
       # Kubernetes manifest validation with kubeconform (preferred) or kubeval (fallback)
       - id: kubeval
         name: Validate Kubernetes manifests (kubeconform/kubeval)
