@@ -124,6 +124,17 @@ resource "aws_eks_cluster" "main" {
 
   enabled_cluster_log_types = var.cluster_log_types
 
+  dynamic "encryption_config" {
+    for_each = var.kms_key_arn != null ? [1] : []
+    content {
+      resources = ["secrets"]
+
+      provider {
+        key_arn = var.kms_key_arn
+      }
+    }
+  }
+
   depends_on = [
     aws_iam_role_policy_attachment.cluster_amazon_eks_cluster_policy,
     aws_iam_role_policy_attachment.cluster_amazon_eks_vpc_resource_controller,

@@ -191,6 +191,14 @@ variable "master_authorized_networks" {
     ])
     error_message = "All CIDR blocks must be valid."
   }
+
+  validation {
+    condition = alltrue([
+      for network in var.master_authorized_networks :
+      network.cidr_block != "0.0.0.0/0"
+    ])
+    error_message = "0.0.0.0/0 is not allowed; specify explicit authorized networks instead."
+  }
 }
 
 variable "maintenance_start_time" {

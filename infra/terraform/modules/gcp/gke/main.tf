@@ -227,7 +227,7 @@ resource "google_container_node_pool" "node_pools" {
 
     # Labels, metadata, and tags
     labels   = merge(var.tags, each.value.labels, { node_pool = each.value.name, cost = "gke-worker-nodes" })
-    metadata = each.value.metadata
+    metadata = merge(each.value.metadata, { disable-legacy-endpoints = "true" })
     tags     = each.value.network_tags
 
     # Shielded instance configuration
