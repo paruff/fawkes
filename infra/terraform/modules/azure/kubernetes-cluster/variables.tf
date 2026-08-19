@@ -118,6 +118,17 @@ variable "network_plugin" {
   }
 }
 
+variable "network_policy" {
+  description = "Network policy to use (azure or calico)"
+  type        = string
+  default     = "azure"
+
+  validation {
+    condition     = contains(["azure", "calico"], var.network_policy)
+    error_message = "Network policy must be either 'azure' or 'calico'."
+  }
+}
+
 variable "service_cidr" {
   description = "Service CIDR for Kubernetes services"
   type        = string
