@@ -39,9 +39,15 @@ console. Land infra/platform changes via PR + CI + automated reconciliation (Arg
 `platform/`, CI-gated `terraform apply` for `infra/`) — never `kubectl apply`, `terraform
 apply`, or console edits against a shared environment by hand.
 
-**Goal-driven execution.** Turn tasks into verifiable goals: "fix the bug" → write a test
-that reproduces it, then make it pass. For multi-step work, state a brief plan with a
-verification check per step, then loop to green independently.
+**Goal-driven execution, test-first.** Turn tasks into verifiable goals: before writing
+implementation code or config, write the test (or, for infra, the `terraform plan`/
+`kubeconform`/`helm template` check) that captures the intent — a bug's reproduction, a new
+function's contract, a config's expected effect. Run it and confirm it actually fails (red)
+for the reason you expect, not for an unrelated reason (missing import, typo) — a red that
+fails wrong proves nothing. Only then write the minimum code to pass (green). Never write
+the test after the implementation to match what it already does. For multi-step work, state
+a brief plan with a red/green verification check per step, then loop to green independently.
+See §7 below for the per-language test command to run.
 
 ---
 
