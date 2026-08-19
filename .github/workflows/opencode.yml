@@ -1,4 +1,4 @@
- name: opencode
+name: opencode
 
 on:
   issue_comment:
@@ -12,6 +12,7 @@ jobs:
       contains(github.event.comment.body, '/oc') ||
       contains(github.event.comment.body, '/opencode')
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       id-token: write
     steps:
@@ -25,13 +26,13 @@ jobs:
           persist-credentials: false
 
       - name: Run OpenCode
-        uses: anomalyco/opencode/github@latest
+        uses: anomalyco/opencode/github@803d9eb7ad5f4dfd832d7506a7cad83ded52253e  # v1.4.9
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         with:
-          model: opencode-zen/deepseek-v4-flash-free
-          # share: true
-          # github_token: ${{ secrets.GITHUB_TOKEN }}
+          model: opencode/deepseek-v4-flash-free
 
       - name: job-finish
         if: always()
