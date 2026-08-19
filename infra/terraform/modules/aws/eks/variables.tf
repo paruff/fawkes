@@ -98,6 +98,12 @@ variable "api_server_authorized_ip_ranges" {
   }
 }
 
+variable "kms_key_arn" {
+  description = "KMS key ARN for EKS secrets encryption. If null, encryption is disabled."
+  type        = string
+  default     = null
+}
+
 variable "egress_cidr_blocks" {
   description = "List of CIDR blocks allowed for outbound traffic (defaults to the VPC CIDR when empty)"
   type        = list(string)
