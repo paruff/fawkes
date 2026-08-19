@@ -155,6 +155,13 @@ Bypass pre-commit hooks with `--no-verify`. Use `latest` image tags.
 Across all languages: never swallow an exception/error in a check, validator, or test assertion without logging what broke — a silently-caught failure is indistinguishable from a check that never ran, and hides real bugs indefinitely.
 
 Conventional commits throughout: `feat(scope):`, `fix(scope):`, `test(scope):`.
+Enforced by CI (`.github/workflows/ci-commit-lint.yml`) on every commit in a
+PR, not just the PR title — a PR with one bad commit message fails the check
+even if every other commit is fine. Exact rule: the first line must match
+`type(scope): description`, where `type` is one of `feat fix docs style
+refactor test chore ci perf build revert`, `(scope)` is optional, and
+`description` is 1–72 characters. Put detail in the commit body, not the
+subject — a subject over 72 chars fails CI regardless of how accurate it is.
 
 ---
 
