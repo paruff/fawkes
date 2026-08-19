@@ -77,7 +77,23 @@ jobs:
           # falls through to the default model below) — confirmed live:
           # "/oc-security ..." does still trigger the action itself (issue
           # #1587, run 32296616870), just without escalating the model.
-          model: ${{ (contains(github.event.comment.body, '[security]') || contains(github.event.comment.body, '[feature]')) && 'nvidia/nemotron-3-ultra-550b-a55b' || 'opencode/deepseek-v4-flash-free' }}
+          #
+          # Model string is doubled ("nvidia/nvidia/...") deliberately, not a
+          # typo: NVIDIA-published models on NVIDIA's own NIM catalog carry
+          # "nvidia/" as part of the model's own org/name identifier (an
+          # org/model convention, same as e.g. "microsoft/phi-4-..." models
+          # hosted on the same catalog) -- confirmed against models.dev's raw
+          # JSON directly (data['nvidia']['models'] keys). opencode splits on
+          # the FIRST "/" only for provider vs. model, so referencing this
+          # specific model needs provider "nvidia" + catalog key
+          # "nvidia/nemotron-3-ultra-550b-a55b" == "nvidia/nvidia/...". The
+          # single-prefixed form failed on issue #1570 with "Model not found:
+          # nvidia/nemotron-3-ultra-550b-a55b. Did you mean:
+          # nvidia/nemotron-3-ultra-550b-a55b?" -- both sides of that message
+          # render identically because the suggestion is the raw catalog key,
+          # not re-prefixed with the provider (confirmed in opencode's
+          # ModelNotFoundError source), which is what made this non-obvious.
+          model: ${{ (contains(github.event.comment.body, '[security]') || contains(github.event.comment.body, '[feature]')) && 'nvidia/nvidia/nemotron-3-ultra-550b-a55b' || 'opencode/deepseek-v4-flash-free' }}
 
       # opencode does not reliably follow this repo's Conventional Commits
       # rule despite it being stated in AGENTS.md and a dedicated skill
