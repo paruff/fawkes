@@ -42,14 +42,14 @@ def _contains(haystack: str, needle: str) -> bool:
 def _load_if_expression() -> str:
     with open(WORKFLOW_PATH) as f:
         workflow = yaml.safe_load(f)
-    return workflow["jobs"]["opencode"]["if"].replace("\n", " ")
+    return str(workflow["jobs"]["opencode"]["if"]).replace("\n", " ")
 
 
 def _load_resolve_model_script() -> str:
     with open(WORKFLOW_PATH) as f:
         workflow = yaml.safe_load(f)
     step = next(s for s in workflow["jobs"]["opencode"]["steps"] if s.get("id") == "resolve_model")
-    return step["run"]
+    return str(step["run"])
 
 
 def _evaluate_if(expr: str, body: str, user_type: str) -> bool:
