@@ -46,17 +46,60 @@ jobs:
           tflint_version: v0.64.0
           github_token: ${{ github.token }}
 
-      # Install the same commit-msg hook humans get via `make pre-commit-setup`
-      # (.pre-commit-config.yaml's conventional-commit-msg hook), so opencode's
-      # own `git commit` gets rejected with the actual regex+reason inline and
-      # can retry, instead of only finding out from ci-commit-lint.yml after
-      # pushing. Only the commit-msg hook type -- not the full pre-commit
-      # stage, which runs unrelated file-content checks (tflint, kubeval, ...)
-      # that could block a commit for issues in files opencode didn't touch.
-      - name: Install commit-msg hook
+      # Resolve the model against the LIVE models.dev catalog rather than
+      # trusting a hardcoded string. Zen/NVIDIA model IDs have broken us
+      # twice this session (wrong provider id on issue #1587's timeout
+      # investigation; wrong NVIDIA org/model prefix on issue #1570) --
+      # both were catalog-format mistakes we'd have caught immediately by
+      # checking the catalog first. This step keeps that check permanent:
+      # if our preferred model still exists, use it unchanged (deterministic,
+      # same choice every run); if it's been renamed or removed, fall back to
+      # another free tool-calling model on the same provider and post a
+      # visible ::warning:: so the drift doesn't go unnoticed. Untrusted
+      # comment body goes through env:, never interpolated into the script.
+      - name: Resolve model
+        id: resolve_model
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
         run: |
-          pip install --quiet pre-commit
-          pre-commit install --hook-type commit-msg
+          set -euo pipefail
+          if echo "$COMMENT_BODY" | grep -qiF '[security]' || echo "$COMMENT_BODY" | grep -qiF '[feature]'; then
+            PREFERRED="nvidia/nvidia/nemotron-3-ultra-550b-a55b"
+          else
+            PREFERRED="opencode/deepseek-v4-flash-free"
+          fi
+
+          curl -fsSL https://models.dev/api.json -o /tmp/catalog.json
+
+          PROVIDER="${PREFERRED%%/*}"
+          MODEL_ID="${PREFERRED#*/}"
+
+          EXISTS=$(jq --arg p "$PROVIDER" --arg m "$MODEL_ID" '.[$p].models[$m] != null' /tmp/catalog.json)
+
+          if [ "$EXISTS" = "true" ]; then
+            echo "model=$PREFERRED" >> "$GITHUB_OUTPUT"
+            echo "Model verified against live catalog: $PREFERRED"
+            exit 0
+          fi
+
+          echo "::warning::Preferred model '$PREFERRED' no longer exists in the live models.dev catalog (renamed or removed) -- falling back to a free tool-calling model on the same provider ($PROVIDER)."
+
+          FALLBACK=$(jq -r --arg p "$PROVIDER" '
+            .[$p].models
+            | to_entries
+            | map(select(.value.cost.input == 0 and .value.cost.output == 0 and .value.tool_call == true))
+            | sort_by(.value.release_date // "0000-00-00")
+            | reverse
+            | .[0].key // empty
+          ' /tmp/catalog.json)
+
+          if [ -z "$FALLBACK" ]; then
+            echo "::error::No free tool-calling fallback model found for provider $PROVIDER either. Failing closed rather than silently using a paid or non-functional model."
+            exit 1
+          fi
+
+          echo "::warning::Falling back to $PROVIDER/$FALLBACK"
+          echo "model=$PROVIDER/$FALLBACK" >> "$GITHUB_OUTPUT"
 
       - name: Run OpenCode
         uses: anomalyco/opencode/github@31406ccc51b4bd2a4e1e086b2bcaa5f7f804f26d  # v1.18.18
@@ -65,35 +108,7 @@ jobs:
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         with:
-          # Model routing by comment tag: default is the free Zen model;
-          # add [security] or [feature] anywhere in the comment to route to
-          # NVIDIA NIM's nemotron-3-ultra (1M context) instead, e.g.
-          # "/oc [security] fix this CVE". build.nvidia.com labels this
-          # endpoint "Free Endpoint" in its own product metadata — do not
-          # trust models.dev's cost field for NVIDIA NIM models without
-          # cross-checking build.nvidia.com directly, it has been wrong here.
-          # The bracket tag is required for THIS routing expression to match
-          # ("/oc-security ..." does not contain "[security]" so it silently
-          # falls through to the default model below) — confirmed live:
-          # "/oc-security ..." does still trigger the action itself (issue
-          # #1587, run 32296616870), just without escalating the model.
-          #
-          # Model string is doubled ("nvidia/nvidia/...") deliberately, not a
-          # typo: NVIDIA-published models on NVIDIA's own NIM catalog carry
-          # "nvidia/" as part of the model's own org/name identifier (an
-          # org/model convention, same as e.g. "microsoft/phi-4-..." models
-          # hosted on the same catalog) -- confirmed against models.dev's raw
-          # JSON directly (data['nvidia']['models'] keys). opencode splits on
-          # the FIRST "/" only for provider vs. model, so referencing this
-          # specific model needs provider "nvidia" + catalog key
-          # "nvidia/nemotron-3-ultra-550b-a55b" == "nvidia/nvidia/...". The
-          # single-prefixed form failed on issue #1570 with "Model not found:
-          # nvidia/nemotron-3-ultra-550b-a55b. Did you mean:
-          # nvidia/nemotron-3-ultra-550b-a55b?" -- both sides of that message
-          # render identically because the suggestion is the raw catalog key,
-          # not re-prefixed with the provider (confirmed in opencode's
-          # ModelNotFoundError source), which is what made this non-obvious.
-          model: ${{ (contains(github.event.comment.body, '[security]') || contains(github.event.comment.body, '[feature]')) && 'nvidia/nvidia/nemotron-3-ultra-550b-a55b' || 'opencode/deepseek-v4-flash-free' }}
+          model: ${{ steps.resolve_model.outputs.model }}
 
       # opencode does not reliably follow this repo's Conventional Commits
       # rule despite it being stated in AGENTS.md and a dedicated skill
