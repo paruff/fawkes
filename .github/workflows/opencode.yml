@@ -148,6 +148,13 @@ jobs:
             fi
           } > /tmp/normalized_commit_msg.txt
           git commit --amend -F /tmp/normalized_commit_msg.txt
+          # Run OpenCode's own push already authenticated via an
+          # http.extraheader config; leaving it in place while we also embed
+          # a token in the remote URL sends two conflicting credentials on
+          # the same request and GitHub rejects both (confirmed root cause
+          # of PR #1631's normalize-step push failure: "Invalid username or
+          # token. Password authentication is not supported").
+          git config --unset-all http.https://github.com/.extraheader || true
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
           git push --force-with-lease
         env:
