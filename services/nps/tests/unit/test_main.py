@@ -215,3 +215,23 @@ class TestReminderLogic:
         should_send_reminder = not responded and not reminder_sent
 
         assert should_send_reminder is False
+
+
+class TestSurveyTokenEscaping:
+    """
+    Reflected `token` path param must not break out of the <script>
+    JS-string context (CodeQL py/reflective-xss, code-scanning alert #73).
+    """
+
+    def test_token_is_url_encoded_before_script_embed(self):
+        import inspect
+
+        from app.main import get_survey_page
+
+        source = inspect.getsource(get_survey_page)
+        assert "token_url = quote(token" in source
+        assert "fetch('/api/v1/survey/{token_url}/submit'" in source
+        assert "window.location.href = '/survey/{token_url}/thanks'" in source
+        # the raw, unescaped token must never be embedded directly again
+        assert "{token}/submit" not in source
+        assert "{token}/thanks" not in source

