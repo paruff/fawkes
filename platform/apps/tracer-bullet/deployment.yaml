@@ -51,7 +51,8 @@ spec:
         prometheus.io/port: "8000"
         prometheus.io/path: "/metrics"
     spec:
-      automountServiceAccountToken: false
+      serviceAccountName: tracer-bullet
+      automountServiceAccountToken: true
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
