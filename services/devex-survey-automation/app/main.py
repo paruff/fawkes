@@ -2,11 +2,13 @@
 FastAPI application for DevEx Survey Automation Service
 """
 
+import html
 import logging
 import secrets
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from typing import List, Optional
+from urllib.parse import quote
 
 from fastapi import FastAPI, HTTPException, Path, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -365,6 +367,11 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
 
 def _render_pulse_survey(token: str) -> HTMLResponse:
     """Render pulse survey HTML"""
+    # token is percent-encoded before embedding in the <script> block below:
+    # it's interpolated into single-quoted JS string literals, so
+    # HTML-escaping alone wouldn't stop a value containing a `'` or
+    # `</script>` from breaking out of that context.
+    token_url = quote(token, safe="")
     return HTMLResponse(
         content=f"""
         <!DOCTYPE html>
@@ -566,7 +573,7 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
                     }};
 
                     try {{
-                        const response = await fetch('/api/v1/survey/{token}/submit', {{
+                        const response = await fetch('/api/v1/survey/{token_url}/submit', {{
                             method: 'POST',
                             headers: {{
                                 'Content-Type': 'application/json',
@@ -575,7 +582,7 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
                         }});
 
                         if (response.ok) {{
-                            window.location.href = '/survey/{token}/thanks';
+                            window.location.href = '/survey/{token_url}/thanks';
                         }} else {{
                             const error = await response.json();
                             errorMessage.textContent = error.detail || 'Failed to submit survey';
@@ -599,6 +606,7 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
 
 def _render_deep_dive_survey(token: str) -> HTMLResponse:
     """Render deep-dive survey HTML (placeholder)"""
+    token_html = html.escape(token)
     return HTMLResponse(
         content=f"""
         <!DOCTYPE html>
@@ -613,7 +621,7 @@ def _render_deep_dive_survey(token: str) -> HTMLResponse:
         <body>
             <h1>Quarterly Developer Experience Survey</h1>
             <p>This comprehensive survey is integrated with the NPS service.</p>
-            <p>Token: {token}</p>
+            <p>Token: {token_html}</p>
         </body>
         </html>
     """

@@ -15,6 +15,7 @@ import secrets
 from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 from typing import Optional
+from urllib.parse import quote
 
 import asyncpg
 from fastapi import FastAPI, HTTPException, Path, Query
@@ -375,6 +376,11 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                 )
 
             # Render survey form
+            # token is percent-encoded before embedding in the <script> block
+            # below: it's interpolated into single-quoted JS string literals,
+            # so HTML-escaping alone wouldn't stop a value containing a `'`
+            # or `</script>` from breaking out of that context.
+            token_url = quote(token, safe="")
             return HTMLResponse(
                 content=f"""
                 <!DOCTYPE html>
@@ -559,7 +565,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                             const comment = document.getElementById('comment').value;
 
                             try {{
-                                const response = await fetch('/api/v1/survey/{token}/submit', {{
+                                const response = await fetch('/api/v1/survey/{token_url}/submit', {{
                                     method: 'POST',
                                     headers: {{
                                         'Content-Type': 'application/json',
@@ -571,7 +577,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                                 }});
 
                                 if (response.ok) {{
-                                    window.location.href = '/survey/{token}/thanks';
+                                    window.location.href = '/survey/{token_url}/thanks';
                                 }} else {{
                                     const error = await response.json();
                                     errorMessage.textContent = error.detail || 'Failed to submit survey';
