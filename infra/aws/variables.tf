@@ -92,21 +92,18 @@ variable "eks_version" {
 }
 
 variable "ssh_ingress_cidr_one" {
-  description = "CIDR block allowed to SSH to worker group 1 management SG."
+  description = "CIDR block allowed to SSH to worker group 1 management SG. No default — must be explicitly set to a trusted operator/bastion CIDR. Leaving this unset will cause terraform plan to fail."
   type        = string
-  default     = "0.0.0.0/0"
 }
 
 variable "ssh_ingress_cidr_two" {
-  description = "CIDR block allowed to SSH to worker group 2 management SG."
+  description = "CIDR block allowed to SSH to worker group 2 management SG. No default — must be explicitly set to a trusted operator/bastion CIDR. Leaving this unset will cause terraform plan to fail."
   type        = string
-  default     = "0.0.0.0/0"
 }
 
 variable "ssh_ingress_cidrs" {
-  description = "List of CIDR blocks allowed to SSH to all workers."
+  description = "List of CIDR blocks allowed to SSH to all workers. No default — must be explicitly set to trusted operator/bastion CIDRs. Leaving this unset will cause terraform plan to fail."
   type        = list(string)
-  default     = ["0.0.0.0/0"]
 }
 
 variable "egress_cidr_block" {
