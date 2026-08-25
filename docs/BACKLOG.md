@@ -20,6 +20,7 @@
    - [Wave 1 — Tracer Bullet Core](#wave-1--tracer-bullet-core)
    - [Wave 2 — Observable Golden Path](#wave-2--observable-golden-path)
    - [Wave 3 — Self-Service & GitOps Polish](#wave-3--self-service--gitops-polish)
+   - [Post-MVP — Jenkins → Tekton CI Migration](#post-mvp--jenkins--tekton-ci-migration)
    - [Post-MVP — Epic 3 Discovery & UX](#post-mvp--epic-3-discovery--ux)
    - [Post-MVP — Remaining Epic 0](#post-mvp--remaining-epic-0)
    - [GAP Issues](#gap-issues)
@@ -158,6 +159,25 @@ PR merges.
 | **#53** | I want a standardized build tool for paved paths                             | 3   | L   | 2     | P           | `infra-gitops`  | Cloud Native Buildpacks in Jenkins Shared Library; needs issue body                        |
 | **#54** | I want comprehensive BDD tests                                               | 3   | L   | 2     | P           | `test-engineer` | BDD step definitions for KL-05 gap; needs issue body per service                           |
 | **#55** | I want comprehensive integration tests                                       | 3   | L   | 2     | P           | `test-engineer` | pytest integration suite; needs per-service scope in issue body                            |
+
+---
+
+### Post-MVP — Jenkins → Tekton CI Migration
+
+> Fawkes' "Golden Path CI/CD" product (`platform/apps/jenkins/`,
+> `jenkins-shared-library/`) migrating from Jenkins to Tekton. NOT MVP-blocking —
+> the MVP definition already accepts "Jenkins (or GH Actions)" for the tracer-bullet
+> CI pipeline (#85). Jenkins stays fully operational throughout Phase 1; nothing is
+> removed until the final decommission phase (not yet issued). Phases 2-6 (porting
+> each Groovy pipeline step, pilot migration on tracer-bullet, Backstage template
+> updates, decommission) are not yet broken into issues — file them after Phase 1
+> proves out.
+
+| #         | Title                                                            | V   | E   | Score | Agent Ready | Agent          | Notes                                                                             |
+| --------- | ----------------------------------------------------------------- | --- | --- | ----- | ----------- | -------------- | ------------------------------------------------------------------------------- |
+| **#1659** | Deploy Tekton Pipelines + Triggers via new ArgoCD Application    | 3   | M   | 3     | P           | `infra-gitops` | New ArgoCD `Application` — Must Ask Before (AGENTS.md §6); propose, don't merge  |
+| **#1660** | Wire GitHub webhook EventListener (skeleton, no pipeline yet)    | 3   | M   | 3     | P           | `infra-gitops` | New network-exposure surface — security-sensitive, flag for human review        |
+| **#1661** | Validate Phase 1 deployment (AT-TEKTON-001)                      | 2   | S   | 2     | Y           | `test-engineer`| Run after #1659 and #1660 land                                                  |
 
 ---
 
