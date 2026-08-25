@@ -20,6 +20,7 @@
    - [Wave 1 — Tracer Bullet Core](#wave-1--tracer-bullet-core)
    - [Wave 2 — Observable Golden Path](#wave-2--observable-golden-path)
    - [Wave 3 — Self-Service & GitOps Polish](#wave-3--self-service--gitops-polish)
+   - [Post-MVP — Jenkins → Tekton CI Migration](#post-mvp--jenkins--tekton-ci-migration)
    - [Post-MVP — Epic 3 Discovery & UX](#post-mvp--epic-3-discovery--ux)
    - [Post-MVP — Remaining Epic 0](#post-mvp--remaining-epic-0)
    - [GAP Issues](#gap-issues)
@@ -96,13 +97,13 @@ PR merges.
 
 | #        | Title                                               | V   | E   | Score | Agent Ready | Agent           | Notes                                                                                                                                                                                            |
 | -------- | --------------------------------------------------- | --- | --- | ----- | ----------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **#621** | Validate Code Quality Standards (AT-E0-001)         | 5   | S   | 8     | Y           | `test-engineer` | Run `ruff`, `black`, `mypy`, `shellcheck`; fix any failures                                                                                                                                      |
-| **#632** | Refactor ignite.sh into Modular Architecture        | 4   | L   | 4     | Y           | `gpt41-default` | Split monolithic script into modules (do not change CLI interface); `shellcheck` must pass; break into sub-issues if > 400 lines changed; flag for human review if module boundaries are unclear |
-| **#633** | Implement Comprehensive Error Handling              | 3   | M   | 3     | Y           | `gpt41-default` | Add trap-based error handling in Bash scripts                                                                                                                                                    |
-| **#634** | Create BATS Testing Framework for Scripts           | 4   | M   | 5     | Y           | `test-engineer` | Use bats-core (not legacy bats); see AGENTS.md                                                                                                                                                   |
-| **#635** | Validate Script Refactoring (AT-E0-002)             | 3   | S   | 4     | Y           | `test-engineer` | Run bats tests; assert shellcheck clean                                                                                                                                                          |
-| **#645** | Refactor Terraform for Module Reusability           | 3   | L   | 2     | P           | `infra-gitops`  | Needs list of modules to consolidate; add descriptions to all variables                                                                                                                          |
-| **#646** | Implement Terraform State Management Best Practices | 4   | M   | 5     | P           | `infra-gitops`  | Add S3 backend + DynamoDB locking; see KL-01 and #1153 (GAP-07)                                                                                                                                  |
+| **#621** | ✅ Validate Code Quality Standards (AT-E0-001)      | 5   | S   | 8     | ✅ Done      | `test-engineer` | Run `ruff`, `black`, `mypy`, `shellcheck`; fix any failures                                                                                                                                      |
+| **#632** | ✅ Refactor ignite.sh into Modular Architecture     | 4   | L   | 4     | ✅ Done      | `gpt41-default` | Split monolithic script into modules (do not change CLI interface); `shellcheck` must pass; break into sub-issues if > 400 lines changed; flag for human review if module boundaries are unclear |
+| **#633** | ✅ Implement Comprehensive Error Handling           | 3   | M   | 3     | ✅ Done      | `gpt41-default` | Add trap-based error handling in Bash scripts                                                                                                                                                    |
+| **#634** | ✅ Create BATS Testing Framework for Scripts        | 4   | M   | 5     | ✅ Done      | `test-engineer` | Use bats-core (not legacy bats); see AGENTS.md                                                                                                                                                   |
+| **#635** | ✅ Validate Script Refactoring (AT-E0-002)          | 3   | S   | 4     | ✅ Done      | `test-engineer` | Run bats tests; assert shellcheck clean                                                                                                                                                          |
+| **#645** | ✅ Refactor Terraform for Module Reusability        | 3   | L   | 2     | ✅ Done      | `infra-gitops`  | Needs list of modules to consolidate; add descriptions to all variables                                                                                                                          |
+| **#646** | ✅ Implement Terraform State Management Best Practices | 4 | M   | 5     | ✅ Done      | `infra-gitops`  | Add S3 backend + DynamoDB locking; see KL-01 and #1153 (GAP-07)                                                                                                                                  |
 | **#647** | Create Terratest Suite for Infrastructure           | 3   | L   | 2     | P           | `test-engineer` | Use `tests/terratest/`; go 1.24.11 required (see repo memories)                                                                                                                                  |
 | **#648** | Standardize Kubernetes Manifests                    | 4   | M   | 5     | Y           | `infra-gitops`  | Add required labels (`app`, `version`, `component`, `managed-by: fawkes`); add resource limits                                                                                                   |
 | **#649** | Implement Kustomize for Environment Management      | 3   | M   | 3     | Y           | `infra-gitops`  | Scope to ONE service PoC first (see AGENTS.md task routing)                                                                                                                                      |
@@ -158,6 +159,25 @@ PR merges.
 | **#53** | I want a standardized build tool for paved paths                             | 3   | L   | 2     | P           | `infra-gitops`  | Cloud Native Buildpacks in Jenkins Shared Library; needs issue body                        |
 | **#54** | I want comprehensive BDD tests                                               | 3   | L   | 2     | P           | `test-engineer` | BDD step definitions for KL-05 gap; needs issue body per service                           |
 | **#55** | I want comprehensive integration tests                                       | 3   | L   | 2     | P           | `test-engineer` | pytest integration suite; needs per-service scope in issue body                            |
+
+---
+
+### Post-MVP — Jenkins → Tekton CI Migration
+
+> Fawkes' "Golden Path CI/CD" product (`platform/apps/jenkins/`,
+> `jenkins-shared-library/`) migrating from Jenkins to Tekton. NOT MVP-blocking —
+> the MVP definition already accepts "Jenkins (or GH Actions)" for the tracer-bullet
+> CI pipeline (#85). Jenkins stays fully operational throughout Phase 1; nothing is
+> removed until the final decommission phase (not yet issued). Phases 2-6 (porting
+> each Groovy pipeline step, pilot migration on tracer-bullet, Backstage template
+> updates, decommission) are not yet broken into issues — file them after Phase 1
+> proves out.
+
+| #         | Title                                                            | V   | E   | Score | Agent Ready | Agent          | Notes                                                                             |
+| --------- | ----------------------------------------------------------------- | --- | --- | ----- | ----------- | -------------- | ------------------------------------------------------------------------------- |
+| **#1659** | Deploy Tekton Pipelines + Triggers via new ArgoCD Application    | 3   | M   | 3     | P           | `infra-gitops` | New ArgoCD `Application` — Must Ask Before (AGENTS.md §6); propose, don't merge  |
+| **#1660** | Wire GitHub webhook EventListener (skeleton, no pipeline yet)    | 3   | M   | 3     | P           | `infra-gitops` | New network-exposure surface — security-sensitive, flag for human review        |
+| **#1661** | Validate Phase 1 deployment (AT-TEKTON-001)                      | 2   | S   | 2     | Y           | `test-engineer`| Run after #1659 and #1660 land                                                  |
 
 ---
 
