@@ -130,6 +130,36 @@ spec:
         key: /my-app/api-key
 ```
 
+**Bitnami Sealed Secrets** (for GitOps secret management):
+
+Sealed Secrets allows you to encrypt Kubernetes Secrets into `SealedSecret` resources that can be safely committed to Git. Only the Sealed Secrets controller in your cluster can decrypt them.
+
+```yaml
+# SealedSecret (commit this to Git)
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: my-app-secret
+  namespace: fawkes
+spec:
+  encryptedData:
+    api-key: AgBy3i4OJSWK+PiTySYZZA9rO...
+    database-password: AgBy3i4OJSWK+PiTySYZZA9rO...
+  template:
+    metadata:
+      name: my-app-secret
+      namespace: fawkes
+    type: Opaque
+```
+
+**Workflow:**
+1. Create plaintext secret locally (never commit)
+2. Seal it: `kubeseal --controller-name=sealed-secrets --controller-namespace=kube-system < secret.yaml > sealed-secret.yaml`
+3. Commit the SealedSecret to Git
+4. ArgoCD syncs, controller decrypts to Secret
+
+See [Sealed Secrets Developer Guide](sealed-secrets-guide.md) for details.
+
 ### ✅ DO: Use Environment Variables
 
 ```bash
@@ -484,6 +514,10 @@ Review changes carefully before committing.
 - [Gitleaks Documentation](https://github.com/gitleaks/gitleaks)
 - [HashiCorp Vault for Kubernetes](../../../platform/apps/vault/README.md)
 - [External Secrets Operator](../../../platform/apps/external-secrets/README.md)
+- [Bitnami Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets)
+- [Sealed Secrets Developer Guide](sealed-secrets-guide.md)
+- [Sealed Secrets Rotation](rotate-sealed-secrets.md)
+- [Sealed Secrets Backup Strategy](sealed-secrets-backup.md)
 - [Pre-commit Hooks Setup](../../PRE-COMMIT.md)
 - [Fawkes Security Architecture](../../architecture.md#security-architecture)
 
