@@ -5581,12 +5581,12 @@ git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </
 <p>Move completed items from the "planned" lists into the current release bullet list with ✅ checkmarks.</p>
 <h3 id="4-commit-the-version-bump">4. Commit the version bump</h3>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>CHANGELOG.md<span class="w"> </span>README.md
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore(release): prepare vX.Y.Z&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"chore(release): prepare vX.Y.Z"</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
 </code></pre></div>
 <h3 id="5-tag-the-release">5. Tag the release</h3>
 <p>Create an annotated tag:</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>vX.Y.Z<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Release vX.Y.Z — &lt;short title&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>vX.Y.Z<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Release vX.Y.Z — &lt;short title&gt;"</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>vX.Y.Z
 </code></pre></div>
 <blockquote>
@@ -5614,8 +5614,8 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <p>For critical fixes on a released version (e.g., hotfix to v0.3.0 → v0.3.1):</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>hotfix/v0.3.1<span class="w"> </span>v0.3.0
 <span class="c1"># Make fixes</span>
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix(scope): description of fix&quot;</span>
-git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v0.3.1<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Hotfix v0.3.1 — &lt;description&gt;&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"fix(scope): description of fix"</span>
+git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v0.3.1<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Hotfix v0.3.1 — &lt;description&gt;"</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v0.3.1
 git<span class="w"> </span>checkout<span class="w"> </span>main
 git<span class="w"> </span>merge<span class="w"> </span>hotfix/v0.3.1

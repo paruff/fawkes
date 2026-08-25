@@ -5773,15 +5773,15 @@ Custom microservice for DORA metrics calculation:</p>
 <span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
 <span class="w">      </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PlatformServiceDown</span>
-<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">up{job=~&quot;argocd|jenkins|backstage&quot;} == 0</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">up{job=~"argocd|jenkins|backstage"} == 0</span>
 <span class="w">          </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
 <span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
 <span class="w">            </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform</span>
 <span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Platform</span><span class="nv"> </span><span class="s">service</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">down&quot;</span>
-<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">been</span><span class="nv"> </span><span class="s">unavailable</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">5</span><span class="nv"> </span><span class="s">minutes&quot;</span>
-<span class="w">            </span><span class="nt">runbook_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://docs.fawkes.io/runbooks/service-down&quot;</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"Platform</span><span class="nv"> </span><span class="s">service</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">down"</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">been</span><span class="nv"> </span><span class="s">unavailable</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">5</span><span class="nv"> </span><span class="s">minutes"</span>
+<span class="w">            </span><span class="nt">runbook_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://docs.fawkes.io/runbooks/service-down"</span>
 
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighMemoryUsage</span>
 <span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes &gt; 0.85</span>
@@ -5790,8 +5790,8 @@ Custom microservice for DORA metrics calculation:</p>
 <span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
 <span class="w">            </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform</span>
 <span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.instance</span><span class="nv"> </span><span class="s">}}&quot;</span>
-<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">85%</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">10</span><span class="nv"> </span><span class="s">minutes&quot;</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"High</span><span class="nv"> </span><span class="s">memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.instance</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"Memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">85%</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">10</span><span class="nv"> </span><span class="s">minutes"</span>
 
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PodCrashLooping</span>
 <span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(kube_pod_container_status_restarts_total[15m]) &gt; 0</span>
@@ -5799,7 +5799,7 @@ Custom microservice for DORA metrics calculation:</p>
 <span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
 <span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pod</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.namespace</span><span class="nv"> </span><span class="s">}}/{{</span><span class="nv"> </span><span class="s">$labels.pod</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">crash</span><span class="nv"> </span><span class="s">looping&quot;</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"Pod</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.namespace</span><span class="nv"> </span><span class="s">}}/{{</span><span class="nv"> </span><span class="s">$labels.pod</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">crash</span><span class="nv"> </span><span class="s">looping"</span>
 </code></pre></div>
 <p><strong>DORA Metrics Recording Rules</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring.coreos.com/v1</span>
@@ -5885,7 +5885,7 @@ Custom microservice for DORA metrics calculation:</p>
 <span class="w">  </span><span class="nt">storageSpec</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">volumeClaimTemplate</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">spec</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">accessModes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;ReadWriteOnce&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">accessModes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"ReadWriteOnce"</span><span class="p p-Indicator">]</span>
 <span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100Gi</span>
@@ -6008,22 +6008,22 @@ Custom microservice for DORA metrics calculation:</p>
 </ul>
 <p><strong>Metrics Exposed</strong>:</p>
 <div class="highlight"><pre><span></span><code># Deployment Frequency
-fawkes_deployment_total{team=&quot;teamA&quot;,environment=&quot;production&quot;} 45
+fawkes_deployment_total{team="teamA",environment="production"} 45
 
 # Lead Time (histogram)
-fawkes_lead_time_seconds_bucket{team=&quot;teamA&quot;,le=&quot;3600&quot;} 30
-fawkes_lead_time_seconds_bucket{team=&quot;teamA&quot;,le=&quot;7200&quot;} 50
-fawkes_lead_time_seconds_sum{team=&quot;teamA&quot;} 180000
-fawkes_lead_time_seconds_count{team=&quot;teamA&quot;} 75
+fawkes_lead_time_seconds_bucket{team="teamA",le="3600"} 30
+fawkes_lead_time_seconds_bucket{team="teamA",le="7200"} 50
+fawkes_lead_time_seconds_sum{team="teamA"} 180000
+fawkes_lead_time_seconds_count{team="teamA"} 75
 
 # Change Failure Rate
-fawkes_deployment_failed_total{team=&quot;teamA&quot;,environment=&quot;production&quot;} 5
+fawkes_deployment_failed_total{team="teamA",environment="production"} 5
 
 # MTTR (histogram)
-fawkes_incident_resolution_seconds_bucket{team=&quot;teamA&quot;,le=&quot;1800&quot;} 12
-fawkes_incident_resolution_seconds_bucket{team=&quot;teamA&quot;,le=&quot;3600&quot;} 18
-fawkes_incident_resolution_seconds_sum{team=&quot;teamA&quot;} 54000
-fawkes_incident_resolution_seconds_count{team=&quot;teamA&quot;} 20
+fawkes_incident_resolution_seconds_bucket{team="teamA",le="1800"} 12
+fawkes_incident_resolution_seconds_bucket{team="teamA",le="3600"} 18
+fawkes_incident_resolution_seconds_sum{team="teamA"} 54000
+fawkes_incident_resolution_seconds_count{team="teamA"} 20
 </code></pre></div>
 <p><strong>API Endpoints</strong>:</p>
 <ul>

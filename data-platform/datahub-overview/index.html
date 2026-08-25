@@ -6834,8 +6834,8 @@
 <h4 id="graphql-api">GraphQL API</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># GraphQL endpoint</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://datahub.127.0.0.1.nip.io/api/graphql<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;: &quot;{ search(input: {type: DATASET, query: \&quot;*\&quot;, start: 0, count: 10}) { total } }&quot;}&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"query": "{ search(input: {type: DATASET, query: \"*\", start: 0, count: 10}) { total } }"}'</span>
 </code></pre></div>
 <h4 id="rest-api-via-gms">REST API (via GMS)</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Internal GMS REST API</span>
@@ -6876,11 +6876,11 @@ curl<span class="w"> </span>http://datahub-datahub-gms.fawkes.svc:8080/entities
 </ul>
 <h3 id="4-using-the-cli">4. Using the CLI</h3>
 <p>Install DataHub CLI:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;acryl-datahub[all]&#39;</span>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'acryl-datahub[all]'</span>
 </code></pre></div>
 <p>Search from command line:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Search for datasets</span>
-datahub<span class="w"> </span>get<span class="w"> </span>--urn<span class="w"> </span><span class="s2">&quot;urn:li:dataset:(urn:li:dataPlatform:postgres,backstage.users,PROD)&quot;</span>
+datahub<span class="w"> </span>get<span class="w"> </span>--urn<span class="w"> </span><span class="s2">"urn:li:dataset:(urn:li:dataPlatform:postgres,backstage.users,PROD)"</span>
 </code></pre></div>
 <hr />
 <h2 id="how-to-add-metadata">How to Add Metadata</h2>
@@ -6910,10 +6910,10 @@ datahub<span class="w"> </span>get<span class="w"> </span>--urn<span class="w"> 
 <span class="nt">source</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
 <span class="w">  </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">host_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;db-backstage-dev-rw.fawkes.svc.cluster.local:5432&quot;</span>
-<span class="w">    </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;backstage_db&quot;</span>
-<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${POSTGRES_USER}&quot;</span>
-<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${POSTGRES_PASSWORD}&quot;</span>
+<span class="w">    </span><span class="nt">host_port</span><span class="p">:</span><span class="w"> </span><span class="s">"db-backstage-dev-rw.fawkes.svc.cluster.local:5432"</span>
+<span class="w">    </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">"backstage_db"</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="s">"${POSTGRES_USER}"</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">"${POSTGRES_PASSWORD}"</span>
 <span class="w">    </span><span class="nt">include_tables</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">include_views</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">profiling</span><span class="p">:</span>
@@ -6923,12 +6923,12 @@ datahub<span class="w"> </span>get<span class="w"> </span>--urn<span class="w"> 
 <span class="nt">sink</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datahub-rest</span>
 <span class="w">  </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://datahub-datahub-gms.fawkes.svc:8080&quot;</span>
+<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">"http://datahub-datahub-gms.fawkes.svc:8080"</span>
 </code></pre></div>
 <p>Run ingestion:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Set credentials</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">POSTGRES_USER</span><span class="o">=</span><span class="s2">&quot;backstage_user&quot;</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span><span class="s2">&quot;your-password&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">POSTGRES_USER</span><span class="o">=</span><span class="s2">"backstage_user"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span><span class="s2">"your-password"</span>
 
 <span class="c1"># Ingest metadata</span>
 datahub<span class="w"> </span>ingest<span class="w"> </span>-c<span class="w"> </span>postgres-recipe.yml
@@ -6940,28 +6940,28 @@ datahub<span class="w"> </span>ingest<span class="w"> </span>-c<span class="w"> 
 <span class="kn">from</span><span class="w"> </span><span class="nn">datahub.metadata.schema_classes</span><span class="w"> </span><span class="kn">import</span> <span class="n">GlobalTagsClass</span><span class="p">,</span> <span class="n">TagAssociationClass</span>
 
 <span class="c1"># Initialize emitter</span>
-<span class="n">emitter</span> <span class="o">=</span> <span class="n">DatahubRestEmitter</span><span class="p">(</span><span class="s2">&quot;http://datahub-datahub-gms.fawkes.svc:8080&quot;</span><span class="p">)</span>
+<span class="n">emitter</span> <span class="o">=</span> <span class="n">DatahubRestEmitter</span><span class="p">(</span><span class="s2">"http://datahub-datahub-gms.fawkes.svc:8080"</span><span class="p">)</span>
 
 <span class="c1"># Create dataset URN</span>
 <span class="n">dataset_urn</span> <span class="o">=</span> <span class="n">make_dataset_urn</span><span class="p">(</span>
-    <span class="n">platform</span><span class="o">=</span><span class="s2">&quot;postgres&quot;</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;backstage.users&quot;</span><span class="p">,</span>
-    <span class="n">env</span><span class="o">=</span><span class="s2">&quot;PROD&quot;</span>
+    <span class="n">platform</span><span class="o">=</span><span class="s2">"postgres"</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">"backstage.users"</span><span class="p">,</span>
+    <span class="n">env</span><span class="o">=</span><span class="s2">"PROD"</span>
 <span class="p">)</span>
 
 <span class="c1"># Add tags</span>
 <span class="n">tags</span> <span class="o">=</span> <span class="n">GlobalTagsClass</span><span class="p">(</span>
     <span class="n">tags</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">TagAssociationClass</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;urn:li:tag:PII&quot;</span><span class="p">),</span>
-        <span class="n">TagAssociationClass</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;urn:li:tag:Critical&quot;</span><span class="p">)</span>
+        <span class="n">TagAssociationClass</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">"urn:li:tag:PII"</span><span class="p">),</span>
+        <span class="n">TagAssociationClass</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">"urn:li:tag:Critical"</span><span class="p">)</span>
     <span class="p">]</span>
 <span class="p">)</span>
 
 <span class="c1"># Emit metadata</span>
 <span class="n">emitter</span><span class="o">.</span><span class="n">emit_mcp</span><span class="p">(</span>
-    <span class="n">entityType</span><span class="o">=</span><span class="s2">&quot;dataset&quot;</span><span class="p">,</span>
+    <span class="n">entityType</span><span class="o">=</span><span class="s2">"dataset"</span><span class="p">,</span>
     <span class="n">entityUrn</span><span class="o">=</span><span class="n">dataset_urn</span><span class="p">,</span>
-    <span class="n">aspectName</span><span class="o">=</span><span class="s2">&quot;globalTags&quot;</span><span class="p">,</span>
+    <span class="n">aspectName</span><span class="o">=</span><span class="s2">"globalTags"</span><span class="p">,</span>
     <span class="n">aspect</span><span class="o">=</span><span class="n">tags</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -7012,21 +7012,21 @@ datahub<span class="w"> </span>ingest<span class="w"> </span>-c<span class="w"> 
 <span class="n">upstream</span> <span class="o">=</span> <span class="n">UpstreamLineageClass</span><span class="p">(</span>
     <span class="n">upstreams</span><span class="o">=</span><span class="p">[</span>
         <span class="n">UpstreamClass</span><span class="p">(</span>
-            <span class="n">dataset</span><span class="o">=</span><span class="n">make_dataset_urn</span><span class="p">(</span><span class="s2">&quot;postgres&quot;</span><span class="p">,</span> <span class="s2">&quot;backstage.services&quot;</span><span class="p">),</span>
-            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;TRANSFORMED&quot;</span>
+            <span class="n">dataset</span><span class="o">=</span><span class="n">make_dataset_urn</span><span class="p">(</span><span class="s2">"postgres"</span><span class="p">,</span> <span class="s2">"backstage.services"</span><span class="p">),</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">"TRANSFORMED"</span>
         <span class="p">),</span>
         <span class="n">UpstreamClass</span><span class="p">(</span>
-            <span class="n">dataset</span><span class="o">=</span><span class="n">make_dataset_urn</span><span class="p">(</span><span class="s2">&quot;postgres&quot;</span><span class="p">,</span> <span class="s2">&quot;backstage.catalog&quot;</span><span class="p">),</span>
-            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;TRANSFORMED&quot;</span>
+            <span class="n">dataset</span><span class="o">=</span><span class="n">make_dataset_urn</span><span class="p">(</span><span class="s2">"postgres"</span><span class="p">,</span> <span class="s2">"backstage.catalog"</span><span class="p">),</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">"TRANSFORMED"</span>
         <span class="p">)</span>
     <span class="p">]</span>
 <span class="p">)</span>
 
 <span class="c1"># Emit lineage</span>
 <span class="n">emitter</span><span class="o">.</span><span class="n">emit_mcp</span><span class="p">(</span>
-    <span class="n">entityType</span><span class="o">=</span><span class="s2">&quot;dataset&quot;</span><span class="p">,</span>
-    <span class="n">entityUrn</span><span class="o">=</span><span class="n">make_dataset_urn</span><span class="p">(</span><span class="s2">&quot;postgres&quot;</span><span class="p">,</span> <span class="s2">&quot;analytics.service_stats&quot;</span><span class="p">),</span>
-    <span class="n">aspectName</span><span class="o">=</span><span class="s2">&quot;upstreamLineage&quot;</span><span class="p">,</span>
+    <span class="n">entityType</span><span class="o">=</span><span class="s2">"dataset"</span><span class="p">,</span>
+    <span class="n">entityUrn</span><span class="o">=</span><span class="n">make_dataset_urn</span><span class="p">(</span><span class="s2">"postgres"</span><span class="p">,</span> <span class="s2">"analytics.service_stats"</span><span class="p">),</span>
+    <span class="n">aspectName</span><span class="o">=</span><span class="s2">"upstreamLineage"</span><span class="p">,</span>
     <span class="n">aspect</span><span class="o">=</span><span class="n">upstream</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -7111,11 +7111,11 @@ kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"
 <p><strong>Checks</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check OpenSearch is healthy</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>-n<span class="w"> </span>logging<span class="w"> </span>opensearch-cluster-master-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>curl<span class="w"> </span>-XGET<span class="w"> </span><span class="s2">&quot;http://localhost:9200/_cluster/health?pretty&quot;</span>
+<span class="w">  </span>curl<span class="w"> </span>-XGET<span class="w"> </span><span class="s2">"http://localhost:9200/_cluster/health?pretty"</span>
 
 <span class="c1"># Check indices exist</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>-n<span class="w"> </span>logging<span class="w"> </span>opensearch-cluster-master-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>curl<span class="w"> </span>-XGET<span class="w"> </span><span class="s2">&quot;http://localhost:9200/_cat/indices?v&quot;</span>
+<span class="w">  </span>curl<span class="w"> </span>-XGET<span class="w"> </span><span class="s2">"http://localhost:9200/_cat/indices?v"</span>
 </code></pre></div>
 <p><strong>Solutions</strong>:</p>
 <ol>
@@ -7152,7 +7152,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> <
 
 <span class="c1"># Check database connections</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-datahub-dev-1<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>datahub_user<span class="w"> </span>-d<span class="w"> </span>datahub<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_stat_activity;&quot;</span>
+<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>datahub_user<span class="w"> </span>-d<span class="w"> </span>datahub<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT count(*) FROM pg_stat_activity;"</span>
 </code></pre></div>
 <p><strong>Solutions</strong>:</p>
 <ol>

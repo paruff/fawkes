@@ -6059,18 +6059,18 @@ CI quality metrics:</p>
 <h3 id="build-duration-trend">Build Duration Trend</h3>
 <p>Tracks average and P95 build durations over time.</p>
 <p><strong>Example Jenkins Pipeline Usage</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">'fawkes-pipeline-library'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 
 <span class="c1">// Record build metrics</span>
 <span class="n">doraMetrics</span><span class="o">.</span><span class="na">recordBuild</span><span class="o">(</span>
-<span class="w">    </span><span class="nl">service:</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span><span class="o">,</span>
-<span class="w">    </span><span class="nl">status:</span><span class="w"> </span><span class="s1">&#39;success&#39;</span><span class="o">,</span>
-<span class="w">    </span><span class="nl">stage:</span><span class="w"> </span><span class="s1">&#39;build&#39;</span>
+<span class="w">    </span><span class="nl">service:</span><span class="w"> </span><span class="s1">'my-service'</span><span class="o">,</span>
+<span class="w">    </span><span class="nl">status:</span><span class="w"> </span><span class="s1">'success'</span><span class="o">,</span>
+<span class="w">    </span><span class="nl">stage:</span><span class="w"> </span><span class="s1">'build'</span>
 <span class="o">)</span>
 
 <span class="c1">// Record quality gate results</span>
 <span class="n">doraMetrics</span><span class="o">.</span><span class="na">recordQualityGate</span><span class="o">(</span>
-<span class="w">    </span><span class="nl">service:</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span><span class="o">,</span>
+<span class="w">    </span><span class="nl">service:</span><span class="w"> </span><span class="s1">'my-service'</span><span class="o">,</span>
 <span class="w">    </span><span class="nl">passed:</span><span class="w"> </span><span class="kc">true</span><span class="o">,</span>
 <span class="w">    </span><span class="nl">coveragePercent:</span><span class="w"> </span><span class="mi">85</span><span class="o">,</span>
 <span class="w">    </span><span class="nl">vulnerabilities:</span><span class="w"> </span><span class="mi">0</span>
@@ -6078,7 +6078,7 @@ CI quality metrics:</p>
 
 <span class="c1">// Record test results for flakiness tracking</span>
 <span class="n">doraMetrics</span><span class="o">.</span><span class="na">recordTestResults</span><span class="o">(</span>
-<span class="w">    </span><span class="nl">service:</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span><span class="o">,</span>
+<span class="w">    </span><span class="nl">service:</span><span class="w"> </span><span class="s1">'my-service'</span><span class="o">,</span>
 <span class="w">    </span><span class="nl">totalTests:</span><span class="w"> </span><span class="mi">150</span><span class="o">,</span>
 <span class="w">    </span><span class="nl">passedTests:</span><span class="w"> </span><span class="mi">148</span><span class="o">,</span>
 <span class="w">    </span><span class="nl">failedTests:</span><span class="w"> </span><span class="mi">2</span><span class="o">,</span>
@@ -6086,7 +6086,7 @@ CI quality metrics:</p>
 <span class="o">)</span>
 
 <span class="c1">// At pipeline end</span>
-<span class="n">doraMetrics</span><span class="o">.</span><span class="na">recordPipelineComplete</span><span class="o">(</span><span class="nl">service:</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span><span class="o">)</span>
+<span class="n">doraMetrics</span><span class="o">.</span><span class="na">recordPipelineComplete</span><span class="o">(</span><span class="nl">service:</span><span class="w"> </span><span class="s1">'my-service'</span><span class="o">)</span>
 </code></pre></div>
 <hr />
 <h2 id="data-flow-architecture">Data Flow Architecture</h2>
@@ -6180,7 +6180,7 @@ CI quality metrics:</p>
 </ul>
 <h3 id="jenkins-pipeline">Jenkins Pipeline</h3>
 <p>View DORA metrics summary in pipeline output:</p>
-<div class="highlight"><pre><span></span><code><span class="n">doraMetrics</span><span class="o">.</span><span class="na">getMetricsSummary</span><span class="o">(</span><span class="s1">&#39;my-service&#39;</span><span class="o">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">doraMetrics</span><span class="o">.</span><span class="na">getMetricsSummary</span><span class="o">(</span><span class="s1">'my-service'</span><span class="o">)</span>
 </code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="improving-deployment-frequency">Improving Deployment Frequency</h3>

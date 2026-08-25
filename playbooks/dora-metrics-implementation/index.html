@@ -6583,7 +6583,7 @@
 <ol>
 <li>Get the DORA collector service endpoint:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>dora-collector<span class="w"> </span>-n<span class="w"> </span>dora-metrics<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.clusterIP}&#39;</span>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>dora-collector<span class="w"> </span>-n<span class="w"> </span>dora-metrics<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.clusterIP}'</span>
 </code></pre></div>
 <ol>
 <li>Configure ArgoCD notifications to send deployment events:</li>
@@ -6606,13 +6606,13 @@
 <span class="w">        </span><span class="no">method: POST</span>
 <span class="w">        </span><span class="no">body: |</span>
 <span class="w">          </span><span class="no">{</span>
-<span class="w">            </span><span class="no">&quot;application&quot;: &quot;{{.app.metadata.name}}&quot;,</span>
-<span class="w">            </span><span class="no">&quot;status&quot;: &quot;{{.app.status.sync.status}}&quot;,</span>
-<span class="w">            </span><span class="no">&quot;revision&quot;: &quot;{{.app.status.sync.revision}}&quot;,</span>
-<span class="w">            </span><span class="no">&quot;timestamp&quot;: &quot;{{.app.status.operationState.finishedAt}}&quot;</span>
+<span class="w">            </span><span class="no">"application": "{{.app.metadata.name}}",</span>
+<span class="w">            </span><span class="no">"status": "{{.app.status.sync.status}}",</span>
+<span class="w">            </span><span class="no">"revision": "{{.app.status.sync.revision}}",</span>
+<span class="w">            </span><span class="no">"timestamp": "{{.app.status.operationState.finishedAt}}"</span>
 <span class="w">          </span><span class="no">}</span>
 <span class="w">  </span><span class="nt">trigger.on-sync-succeeded</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">- when: app.status.sync.status == &#39;Synced&#39;</span>
+<span class="w">    </span><span class="no">- when: app.status.sync.status == 'Synced'</span>
 <span class="w">      </span><span class="no">send: [deployment-event]</span>
 </code></pre></div>
 <ol>
@@ -6634,51 +6634,51 @@
 <span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">endTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span>
 <span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">leadTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">endTime</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">startTime</span>
 
-<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">"""</span>
 <span class="s2">        curl -X POST http://dora-collector.dora-metrics:8080/metrics/deployment \\</span>
-<span class="s2">            -H &#39;Content-Type: application/json&#39; \\</span>
-<span class="s2">            -d &#39;{</span>
-<span class="s2">                &quot;service&quot;: &quot;${config.service}&quot;,</span>
-<span class="s2">                &quot;environment&quot;: &quot;${config.environment}&quot;,</span>
-<span class="s2">                &quot;commit_sha&quot;: &quot;${config.commitSha}&quot;,</span>
-<span class="s2">                &quot;lead_time_ms&quot;: ${leadTime},</span>
-<span class="s2">                &quot;status&quot;: &quot;${currentBuild.result ?: &#39;SUCCESS&#39;}&quot;</span>
-<span class="s2">            }&#39;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">            -H 'Content-Type: application/json' \\</span>
+<span class="s2">            -d '{</span>
+<span class="s2">                "service": "${config.service}",</span>
+<span class="s2">                "environment": "${config.environment}",</span>
+<span class="s2">                "commit_sha": "${config.commitSha}",</span>
+<span class="s2">                "lead_time_ms": ${leadTime},</span>
+<span class="s2">                "status": "${currentBuild.result ?: 'SUCCESS'}"</span>
+<span class="s2">            }'</span>
+<span class="s2">    """</span>
 <span class="o">}</span>
 
 <span class="kt">def</span><span class="w"> </span><span class="nf">recordFailure</span><span class="o">(</span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">"""</span>
 <span class="s2">        curl -X POST http://dora-collector.dora-metrics:8080/metrics/failure \\</span>
-<span class="s2">            -H &#39;Content-Type: application/json&#39; \\</span>
-<span class="s2">            -d &#39;{</span>
-<span class="s2">                &quot;service&quot;: &quot;${config.service}&quot;,</span>
-<span class="s2">                &quot;environment&quot;: &quot;${config.environment}&quot;,</span>
-<span class="s2">                &quot;type&quot;: &quot;${config.type}&quot;,</span>
-<span class="s2">                &quot;detected_at&quot;: &quot;${new Date().toInstant()}&quot;</span>
-<span class="s2">            }&#39;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">            -H 'Content-Type: application/json' \\</span>
+<span class="s2">            -d '{</span>
+<span class="s2">                "service": "${config.service}",</span>
+<span class="s2">                "environment": "${config.environment}",</span>
+<span class="s2">                "type": "${config.type}",</span>
+<span class="s2">                "detected_at": "${new Date().toInstant()}"</span>
+<span class="s2">            }'</span>
+<span class="s2">    """</span>
 <span class="o">}</span>
 </code></pre></div>
 <ol>
 <li>Update pipelines to emit DORA metrics:</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="c1">// Example Jenkinsfile integration</span>
-<span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-shared-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<span class="nd">@Library</span><span class="o">(</span><span class="s1">'fawkes-shared-library'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 
 <span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
 <span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Deploy&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Deploy'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
 <span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
 <span class="w">                    </span><span class="c1">// Deployment logic here</span>
-<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;kubectl apply -f manifests/&#39;</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">'kubectl apply -f manifests/'</span>
 
 <span class="w">                    </span><span class="c1">// Record deployment for DORA metrics</span>
 <span class="w">                    </span><span class="n">doraMetrics</span><span class="o">.</span><span class="na">recordDeployment</span><span class="o">(</span>
-<span class="w">                        </span><span class="nl">service:</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span><span class="o">,</span>
-<span class="w">                        </span><span class="nl">environment:</span><span class="w"> </span><span class="s1">&#39;production&#39;</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">service:</span><span class="w"> </span><span class="s1">'my-service'</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">environment:</span><span class="w"> </span><span class="s1">'production'</span><span class="o">,</span>
 <span class="w">                        </span><span class="nl">commitSha:</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">GIT_COMMIT</span>
 <span class="w">                    </span><span class="o">)</span>
 <span class="w">                </span><span class="o">}</span>
@@ -6689,9 +6689,9 @@
 <span class="w">        </span><span class="n">failure</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
 <span class="w">                </span><span class="n">doraMetrics</span><span class="o">.</span><span class="na">recordFailure</span><span class="o">(</span>
-<span class="w">                    </span><span class="nl">service:</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span><span class="o">,</span>
-<span class="w">                    </span><span class="nl">environment:</span><span class="w"> </span><span class="s1">&#39;production&#39;</span><span class="o">,</span>
-<span class="w">                    </span><span class="nl">type:</span><span class="w"> </span><span class="s1">&#39;deployment_failure&#39;</span>
+<span class="w">                    </span><span class="nl">service:</span><span class="w"> </span><span class="s1">'my-service'</span><span class="o">,</span>
+<span class="w">                    </span><span class="nl">environment:</span><span class="w"> </span><span class="s1">'production'</span><span class="o">,</span>
+<span class="w">                    </span><span class="nl">type:</span><span class="w"> </span><span class="s1">'deployment_failure'</span>
 <span class="w">                </span><span class="o">)</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
@@ -6720,22 +6720,22 @@
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-incidents</span>
 <span class="w">      </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceDown</span>
-<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">up{job=~&quot;.*production.*&quot;} == 0</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">up{job=~".*production.*"} == 0</span>
 <span class="w">          </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
 <span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
-<span class="w">            </span><span class="nt">dora_incident</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">            </span><span class="nt">dora_incident</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 <span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Service</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">down&quot;</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"Service</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">down"</span>
 
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighErrorRate</span>
-<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(http_requests_total{status=~&quot;5..&quot;}[5m]) &gt; 0.1</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(http_requests_total{status=~"5.."}[5m]) &gt; 0.1</span>
 <span class="w">          </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2m</span>
 <span class="w">          </span><span class="nt">labels</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
-<span class="w">            </span><span class="nt">dora_incident</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">            </span><span class="nt">dora_incident</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 <span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.service</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"High</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.service</span><span class="nv"> </span><span class="s">}}"</span>
 </code></pre></div>
 <ol>
 <li>Configure Alertmanager to notify DORA collector:</li>
@@ -6744,14 +6744,14 @@
 <span class="nt">receivers</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
 <span class="w">    </span><span class="nt">webhook_configs</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://dora-collector.dora-metrics:8080/webhooks/alertmanager&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">"http://dora-collector.dora-metrics:8080/webhooks/alertmanager"</span>
 <span class="w">        </span><span class="nt">send_resolved</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
 <span class="nt">route</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">receiver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
 <span class="w">  </span><span class="nt">routes</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">dora_incident</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">        </span><span class="nt">dora_incident</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 <span class="w">      </span><span class="nt">receiver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
 </code></pre></div>
 <p><strong>Verification</strong>: Trigger a test alert and verify it's recorded.</p>
@@ -6768,38 +6768,38 @@
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-dashboard</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring</span>
 <span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">grafana_dashboard</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">grafana_dashboard</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 <span class="nt">data</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">dora-metrics.json</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">{</span>
-<span class="w">      </span><span class="no">&quot;title&quot;: &quot;DORA Metrics Dashboard&quot;,</span>
-<span class="w">      </span><span class="no">&quot;panels&quot;: [</span>
+<span class="w">      </span><span class="no">"title": "DORA Metrics Dashboard",</span>
+<span class="w">      </span><span class="no">"panels": [</span>
 <span class="w">        </span><span class="no">{</span>
-<span class="w">          </span><span class="no">&quot;title&quot;: &quot;Deployment Frequency&quot;,</span>
-<span class="w">          </span><span class="no">&quot;type&quot;: &quot;stat&quot;,</span>
-<span class="w">          </span><span class="no">&quot;targets&quot;: [{</span>
-<span class="w">            </span><span class="no">&quot;expr&quot;: &quot;sum(increase(dora_deployments_total[7d]))&quot;</span>
+<span class="w">          </span><span class="no">"title": "Deployment Frequency",</span>
+<span class="w">          </span><span class="no">"type": "stat",</span>
+<span class="w">          </span><span class="no">"targets": [{</span>
+<span class="w">            </span><span class="no">"expr": "sum(increase(dora_deployments_total[7d]))"</span>
 <span class="w">          </span><span class="no">}]</span>
 <span class="w">        </span><span class="no">},</span>
 <span class="w">        </span><span class="no">{</span>
-<span class="w">          </span><span class="no">&quot;title&quot;: &quot;Lead Time for Changes&quot;,</span>
-<span class="w">          </span><span class="no">&quot;type&quot;: &quot;gauge&quot;,</span>
-<span class="w">          </span><span class="no">&quot;targets&quot;: [{</span>
-<span class="w">            </span><span class="no">&quot;expr&quot;: &quot;avg(dora_lead_time_seconds)&quot;</span>
+<span class="w">          </span><span class="no">"title": "Lead Time for Changes",</span>
+<span class="w">          </span><span class="no">"type": "gauge",</span>
+<span class="w">          </span><span class="no">"targets": [{</span>
+<span class="w">            </span><span class="no">"expr": "avg(dora_lead_time_seconds)"</span>
 <span class="w">          </span><span class="no">}]</span>
 <span class="w">        </span><span class="no">},</span>
 <span class="w">        </span><span class="no">{</span>
-<span class="w">          </span><span class="no">&quot;title&quot;: &quot;Change Failure Rate&quot;,</span>
-<span class="w">          </span><span class="no">&quot;type&quot;: &quot;gauge&quot;,</span>
-<span class="w">          </span><span class="no">&quot;targets&quot;: [{</span>
-<span class="w">            </span><span class="no">&quot;expr&quot;: &quot;sum(dora_deployment_failures_total) / sum(dora_deployments_total) * 100&quot;</span>
+<span class="w">          </span><span class="no">"title": "Change Failure Rate",</span>
+<span class="w">          </span><span class="no">"type": "gauge",</span>
+<span class="w">          </span><span class="no">"targets": [{</span>
+<span class="w">            </span><span class="no">"expr": "sum(dora_deployment_failures_total) / sum(dora_deployments_total) * 100"</span>
 <span class="w">          </span><span class="no">}]</span>
 <span class="w">        </span><span class="no">},</span>
 <span class="w">        </span><span class="no">{</span>
-<span class="w">          </span><span class="no">&quot;title&quot;: &quot;Mean Time to Restore&quot;,</span>
-<span class="w">          </span><span class="no">&quot;type&quot;: &quot;gauge&quot;,</span>
-<span class="w">          </span><span class="no">&quot;targets&quot;: [{</span>
-<span class="w">            </span><span class="no">&quot;expr&quot;: &quot;avg(dora_mttr_seconds)&quot;</span>
+<span class="w">          </span><span class="no">"title": "Mean Time to Restore",</span>
+<span class="w">          </span><span class="no">"type": "gauge",</span>
+<span class="w">          </span><span class="no">"targets": [{</span>
+<span class="w">            </span><span class="no">"expr": "avg(dora_mttr_seconds)"</span>
 <span class="w">          </span><span class="no">}]</span>
 <span class="w">        </span><span class="no">}</span>
 <span class="w">      </span><span class="no">]</span>
@@ -6830,17 +6830,17 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <h4 id="test-2-lead-time-calculation">Test 2: Lead Time Calculation</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Query Prometheus for lead time</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>deploy/prometheus<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>promtool<span class="w"> </span>query<span class="w"> </span>instant<span class="w"> </span><span class="s1">&#39;avg(dora_lead_time_seconds)&#39;</span>
+<span class="w">  </span>promtool<span class="w"> </span>query<span class="w"> </span>instant<span class="w"> </span><span class="s1">'avg(dora_lead_time_seconds)'</span>
 </code></pre></div>
 <p><strong>Expected Result</strong>: Returns a valid duration in seconds.</p>
 <h4 id="test-3-mttr-recording">Test 3: MTTR Recording</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Simulate an incident resolution</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://dora-collector.dora-metrics:8080/incidents/resolve<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;incident_id&quot;: &quot;test-123&quot;, &quot;resolved_at&quot;: &quot;&#39;</span><span class="k">$(</span>date<span class="w"> </span>-Iseconds<span class="k">)</span><span class="s1">&#39;&quot;}&#39;</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"incident_id": "test-123", "resolved_at": "'</span><span class="k">$(</span>date<span class="w"> </span>-Iseconds<span class="k">)</span><span class="s1">'"}'</span>
 
 <span class="c1"># Verify MTTR metric</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>deploy/prometheus<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>promtool<span class="w"> </span>query<span class="w"> </span>instant<span class="w"> </span><span class="s1">&#39;dora_mttr_seconds&#39;</span>
+<span class="w">  </span>promtool<span class="w"> </span>query<span class="w"> </span>instant<span class="w"> </span><span class="s1">'dora_mttr_seconds'</span>
 </code></pre></div>
 <p><strong>Expected Result</strong>: MTTR metric is populated.</p>
 <h3 id="success-metrics">Success Metrics</h3>

@@ -6311,10 +6311,10 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">principals</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cluster.local/ns/production/sa/api-service&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">            </span><span class="nt">principals</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"cluster.local/ns/production/sa/api-service"</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">to</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">operation</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">ports</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;5432&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">            </span><span class="nt">ports</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"5432"</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <p><strong>Translation</strong>: Only the <code>api-service</code> service account can connect to Postgres port 5432. Everything else denied.</p>
 <h3 id="layer-2-policy-enforcement-with-kyverno">Layer 2: Policy Enforcement with Kyverno</h3>
@@ -6336,7 +6336,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <span class="w">              </span><span class="nt">kinds</span><span class="p">:</span>
 <span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
 <span class="w">      </span><span class="nt">validate</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Containers</span><span class="nv"> </span><span class="s">must</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">run</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">root&quot;</span>
+<span class="w">        </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">"Containers</span><span class="nv"> </span><span class="s">must</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">run</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">root"</span>
 <span class="w">        </span><span class="nt">pattern</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">containers</span><span class="p">:</span>
@@ -6384,7 +6384,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <span class="w">      </span><span class="nt">generate</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NetworkPolicy</span>
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default-deny-ingress</span>
-<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{request.object.metadata.name}}&quot;</span>
+<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">"{{request.object.metadata.name}}"</span>
 <span class="w">        </span><span class="nt">data</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">podSelector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
@@ -6436,7 +6436,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <span class="w">        </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">legacy-app-pod-123</span>
 <span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
-<span class="w">    </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Container</span><span class="nv"> </span><span class="s">&#39;app&#39;</span><span class="nv"> </span><span class="s">runs</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">root</span><span class="nv"> </span><span class="s">user&quot;</span>
+<span class="w">    </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">"Container</span><span class="nv"> </span><span class="s">'app'</span><span class="nv"> </span><span class="s">runs</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">root</span><span class="nv"> </span><span class="s">user"</span>
 </code></pre></div>
 <p><strong>Visibility</strong>: Platform team sees violations, can track compliance over time.</p>
 <h3 id="layer-3-secrets-management-with-vault">Layer 3: Secrets Management with Vault</h3>
@@ -6465,11 +6465,11 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-pod</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">vault.hashicorp.com/agent-inject</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">    </span><span class="nt">vault.hashicorp.com/role</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;api-service&quot;</span>
-<span class="w">    </span><span class="nt">vault.hashicorp.com/agent-inject-secret-database</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;secret/data/database&quot;</span>
+<span class="w">    </span><span class="nt">vault.hashicorp.com/agent-inject</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+<span class="w">    </span><span class="nt">vault.hashicorp.com/role</span><span class="p">:</span><span class="w"> </span><span class="s">"api-service"</span>
+<span class="w">    </span><span class="nt">vault.hashicorp.com/agent-inject-secret-database</span><span class="p">:</span><span class="w"> </span><span class="s">"secret/data/database"</span>
 <span class="w">    </span><span class="nt">vault.hashicorp.com/agent-inject-template-database</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">      </span><span class="no">{{- with secret &quot;secret/data/database&quot; -}}</span>
+<span class="w">      </span><span class="no">{{- with secret "secret/data/database" -}}</span>
 <span class="w">      </span><span class="no">DB_HOST={{ .Data.data.host }}</span>
 <span class="w">      </span><span class="no">DB_USER={{ .Data.data.username }}</span>
 <span class="w">      </span><span class="no">DB_PASS={{ .Data.data.password }}</span>
@@ -6525,14 +6525,14 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <div class="highlight"><pre><span></span><code><span class="c1"># Vault configuration</span>
 <span class="l l-Scalar l-Scalar-Plain">vault write database/config/postgres \</span>
 <span class="l l-Scalar l-Scalar-Plain">plugin_name=postgresql-database-plugin \</span>
-<span class="l l-Scalar l-Scalar-Plain">allowed_roles=&quot;api-role&quot; \</span>
-<span class="l l-Scalar l-Scalar-Plain">connection_url=&quot;postgresql://{{username}}:{{password}}@postgres:5432/production&quot;</span>
+<span class="l l-Scalar l-Scalar-Plain">allowed_roles="api-role" \</span>
+<span class="l l-Scalar l-Scalar-Plain">connection_url="postgresql://{{username}}:{{password}}@postgres:5432/production"</span>
 
 <span class="l l-Scalar l-Scalar-Plain">vault write database/roles/api-role \</span>
 <span class="l l-Scalar l-Scalar-Plain">db_name=postgres \</span>
-<span class="l l-Scalar l-Scalar-Plain">creation_statements=&quot;CREATE ROLE \&quot;{{name}}\&quot; WITH LOGIN PASSWORD &#39;{{password}}&#39; VALID UNTIL &#39;{{expiration}}&#39;; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \&quot;{{name}}\&quot;;&quot; \</span>
-<span class="l l-Scalar l-Scalar-Plain">default_ttl=&quot;1h&quot; \</span>
-<span class="l l-Scalar l-Scalar-Plain">max_ttl=&quot;24h&quot;</span>
+<span class="l l-Scalar l-Scalar-Plain">creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \</span>
+<span class="l l-Scalar l-Scalar-Plain">default_ttl="1h" \</span>
+<span class="l l-Scalar l-Scalar-Plain">max_ttl="24h"</span>
 </code></pre></div>
 <p><strong>What This Enables:</strong></p>
 <ul>
@@ -6555,8 +6555,8 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">vault.hashicorp.com/agent-inject</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">        </span><span class="nt">vault.hashicorp.com/role</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;api&quot;</span>
+<span class="w">        </span><span class="nt">vault.hashicorp.com/agent-inject</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+<span class="w">        </span><span class="nt">vault.hashicorp.com/role</span><span class="p">:</span><span class="w"> </span><span class="s">"api"</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
@@ -6624,7 +6624,7 @@ vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span
 </code></pre></div>
 <p><strong>❌ Blocked</strong>: Kyverno policy rejects images from unapproved registries. Admission denied.</p>
 <p><strong>Attack 6: Exfiltrate data from accessible database</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Assume attacker accesses DB using app&#39;s connection</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Assume attacker accesses DB using app's connection</span>
 SELECT<span class="w"> </span>*<span class="w"> </span>FROM<span class="w"> </span>customers<span class="p">;</span>
 </code></pre></div>
 <p><strong>✅ Possible</strong>: If app has database access, attacker can read data the app can read.</p>

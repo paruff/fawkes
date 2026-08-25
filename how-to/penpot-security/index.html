@@ -5582,7 +5582,7 @@
 <span class="c1"># Update database credentials</span>
 kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>penpot-db-credentials<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">username</span><span class="o">=</span>penpot<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">password</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">password</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PASSWORD</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--dry-run<span class="o">=</span>client<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-
 
@@ -5591,9 +5591,9 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 
 <span class="c1"># Update Penpot secrets</span>
 kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>penpot-secrets<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">PENPOT_DATABASE_URI</span><span class="o">=</span><span class="s2">&quot;postgresql://penpot:</span><span class="nv">$PASSWORD</span><span class="s2">@penpot-db-rw.fawkes.svc:5432/penpot&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">PENPOT_REDIS_URI</span><span class="o">=</span><span class="s2">&quot;redis://penpot-redis.fawkes.svc:6379/0&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">PENPOT_SECRET_KEY</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$SECRET_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">PENPOT_DATABASE_URI</span><span class="o">=</span><span class="s2">"postgresql://penpot:</span><span class="nv">$PASSWORD</span><span class="s2">@penpot-db-rw.fawkes.svc:5432/penpot"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">PENPOT_REDIS_URI</span><span class="o">=</span><span class="s2">"redis://penpot-redis.fawkes.svc:6379/0"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">PENPOT_SECRET_KEY</span><span class="o">=</span><span class="s2">"</span><span class="nv">$SECRET_KEY</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--dry-run<span class="o">=</span>client<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-
 </code></pre></div>
@@ -5601,8 +5601,8 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <p>For production environments, use External Secrets Operator to pull credentials from a secret manager (AWS Secrets Manager, Azure Key Vault, HashiCorp Vault, etc.).</p>
 <h4 id="example-aws-secrets-manager">Example: AWS Secrets Manager</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create secrets in AWS Secrets Manager first</span>
-<span class="c1"># aws secretsmanager create-secret --name penpot/database-password --secret-string &quot;your-strong-password&quot;</span>
-<span class="c1"># aws secretsmanager create-secret --name penpot/secret-key --secret-string &quot;your-secret-key&quot;</span>
+<span class="c1"># aws secretsmanager create-secret --name penpot/database-password --secret-string "your-strong-password"</span>
+<span class="c1"># aws secretsmanager create-secret --name penpot/secret-key --secret-string "your-secret-key"</span>
 
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
@@ -5743,8 +5743,8 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <h3 id="validation">Validation</h3>
 <p>Check that secrets are configured correctly:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify placeholder values are not in use (should return nothing)</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>penpot-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;CHANGE_ME_&quot;</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>penpot-db-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;CHANGE_ME_&quot;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>penpot-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"CHANGE_ME_"</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>penpot-db-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"CHANGE_ME_"</span>
 
 <span class="c1"># If either command returns results, secrets are NOT properly configured!</span>
 </code></pre></div>
@@ -5753,16 +5753,16 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 <p><strong>Symptom</strong>: Backend pod logs show database authentication failures</p>
 <p><strong>Solution</strong>: Verify database password matches in both secrets:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get password from db credentials</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>penpot-db-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.password}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>penpot-db-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.password}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
 
 <span class="c1"># Get password from connection string</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>penpot-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.PENPOT_DATABASE_URI}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>penpot-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.PENPOT_DATABASE_URI}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
 </code></pre></div>
 <p>The passwords must match!</p>
 <h4 id="secret-key-errors">Secret key errors</h4>
 <p><strong>Symptom</strong>: Penpot backend logs show "Invalid secret key" or session errors</p>
 <p><strong>Solution</strong>: Ensure PENPOT_SECRET_KEY is at least 16 characters:</p>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>penpot-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.PENPOT_SECRET_KEY}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-c
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>penpot-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.PENPOT_SECRET_KEY}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-c
 </code></pre></div>
 <p>Should return at least 16.</p>
 <h2 id="related-documentation">Related Documentation</h2>

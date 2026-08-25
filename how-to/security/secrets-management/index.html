@@ -5879,7 +5879,7 @@
 <h3 id="pre-commit-protection">Pre-commit Protection</h3>
 <p>When you commit code locally, pre-commit hooks automatically scan for secrets:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>myfile.py
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add feature&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Add feature"</span>
 <span class="c1"># ⚡ Pre-commit hooks run automatically</span>
 <span class="c1"># ✅ Gitleaks: Passed</span>
 <span class="c1"># ✅ detect-secrets: Passed</span>
@@ -5894,11 +5894,11 @@ Your<span class="w"> </span>commit<span class="w"> </span>has<span class="w"> </
 </code></pre></div>
 <h3 id="pipeline-protection">Pipeline Protection</h3>
 <p>Every Jenkins pipeline includes a <strong>Secrets Scan</strong> stage:</p>
-<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Secrets Scan&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">'Secrets Scan'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;gitleaks&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">container</span><span class="o">(</span><span class="s1">'gitleaks'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="c1">// Gitleaks scans entire repository</span>
-<span class="w">            </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;gitleaks detect --source . --verbose&#39;</span>
+<span class="w">            </span><span class="n">sh</span><span class="w"> </span><span class="s1">'gitleaks detect --source . --verbose'</span>
 <span class="w">        </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
@@ -5924,9 +5924,9 @@ Your<span class="w"> </span>commit<span class="w"> </span>has<span class="w"> </
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">vault.hashicorp.com/agent-inject</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">    </span><span class="nt">vault.hashicorp.com/role</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;my-app&quot;</span>
-<span class="w">    </span><span class="nt">vault.hashicorp.com/agent-inject-secret-config</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;secret/data/my-app&quot;</span>
+<span class="w">    </span><span class="nt">vault.hashicorp.com/agent-inject</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+<span class="w">    </span><span class="nt">vault.hashicorp.com/role</span><span class="p">:</span><span class="w"> </span><span class="s">"my-app"</span>
+<span class="w">    </span><span class="nt">vault.hashicorp.com/agent-inject-secret-config</span><span class="p">:</span><span class="w"> </span><span class="s">"secret/data/my-app"</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
 </code></pre></div>
@@ -5948,7 +5948,7 @@ Your<span class="w"> </span>commit<span class="w"> </span>has<span class="w"> </
 </code></pre></div>
 <h3 id="do-use-environment-variables">✅ DO: Use Environment Variables</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># In Dockerfile (reference only, not the value)</span>
-ENV<span class="w"> </span><span class="nv">API_KEY</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+ENV<span class="w"> </span><span class="nv">API_KEY</span><span class="o">=</span><span class="s2">""</span>
 
 <span class="c1"># Inject at runtime via Kubernetes</span>
 apiVersion:<span class="w"> </span>v1
@@ -5977,19 +5977,19 @@ credentials.json
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># Prefer environment variables</span>
-<span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;API_KEY&#39;</span><span class="p">)</span>
+<span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'API_KEY'</span><span class="p">)</span>
 
 <span class="c1"># Fallback to gitignored file</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span><span class="p">:</span>
-    <span class="n">secrets_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;.env&#39;</span><span class="p">)</span>
+    <span class="n">secrets_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'.env'</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">secrets_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="c1"># Load from file (not in Git)</span>
         <span class="k">pass</span>
 </code></pre></div>
 <h3 id="dont-hardcode-secrets">❌ DON'T: Hardcode Secrets</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># ❌ NEVER DO THIS</span>
-<span class="n">api_key</span> <span class="o">=</span> <span class="s2">&quot;sk-1234567890abcdef&quot;</span>  <span class="c1"># DETECTED BY GITLEAKS</span>
-<span class="n">db_password</span> <span class="o">=</span> <span class="s2">&quot;MySecretPass123&quot;</span>   <span class="c1"># DETECTED BY GITLEAKS</span>
+<span class="n">api_key</span> <span class="o">=</span> <span class="s2">"sk-1234567890abcdef"</span>  <span class="c1"># DETECTED BY GITLEAKS</span>
+<span class="n">db_password</span> <span class="o">=</span> <span class="s2">"MySecretPass123"</span>   <span class="c1"># DETECTED BY GITLEAKS</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># ❌ NEVER DO THIS</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
@@ -5997,7 +5997,7 @@ credentials.json
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-secret</span>
 <span class="nt">stringData</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hardcoded-secret&quot;</span><span class="w"> </span><span class="c1"># DETECTED BY GITLEAKS</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">"hardcoded-secret"</span><span class="w"> </span><span class="c1"># DETECTED BY GITLEAKS</span>
 </code></pre></div>
 <h3 id="dont-commit-example-secrets">❌ DON'T: Commit Example Secrets</h3>
 <p>Even in example code, avoid realistic-looking secrets:</p>
@@ -6011,19 +6011,19 @@ credentials.json
 <h2 id="configuration">Configuration</h2>
 <h3 id="gitleaks-configuration">Gitleaks Configuration</h3>
 <p>Edit <code>.gitleaks.toml</code> to customize detection rules:</p>
-<div class="highlight"><pre><span></span><code><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Fawkes Gitleaks Configuration&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Fawkes Gitleaks Configuration"</span>
 
 <span class="k">[allowlist]</span>
-<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow placeholders used in educational materials&quot;</span>
+<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Allow placeholders used in educational materials"</span>
 <span class="n">regexes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="s1">&#39;&#39;&#39;PLACEHOLDER_BASE64_VALUE&#39;&#39;&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">&#39;&#39;&#39;CHANGEME_NOT_COMMITTED&#39;&#39;&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">&#39;&#39;&#39;YOUR_.*_HERE&#39;&#39;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'''PLACEHOLDER_BASE64_VALUE'''</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'''CHANGEME_NOT_COMMITTED'''</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'''YOUR_.*_HERE'''</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="n">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="s1">&#39;&#39;&#39;tests/.*&#39;&#39;&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">&#39;&#39;&#39;.*test.*\.py&#39;&#39;&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">&#39;&#39;&#39;examples/.*&#39;&#39;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'''tests/.*'''</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'''.*test.*\.py'''</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'''examples/.*'''</span><span class="p">,</span>
 <span class="p">]</span>
 </code></pre></div>
 <h3 id="baseline-for-false-positives">Baseline for False Positives</h3>
@@ -6048,7 +6048,7 @@ detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<spa
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">detect-secrets</span>
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Detect secrets</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;--baseline&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;.secrets.baseline&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"--baseline"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">".secrets.baseline"</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <hr />
 <h2 id="handling-detected-secrets">Handling Detected Secrets</h2>
@@ -6067,7 +6067,7 @@ vim<span class="w"> </span>config.yaml<span class="w">  </span><span class="c1">
 
 <span class="c1"># Commit again</span>
 git<span class="w"> </span>add<span class="w"> </span>config.yaml
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add feature (secrets removed)&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Add feature (secrets removed)"</span>
 </code></pre></div>
 <h3 id="if-pipeline-fails-on-secrets-scan">If Pipeline Fails on Secrets Scan</h3>
 <ol>
@@ -6077,7 +6077,7 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <li><strong>Push the fix</strong>:</li>
 </ol>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix: Remove hardcoded secrets&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"fix: Remove hardcoded secrets"</span>
 git<span class="w"> </span>push
 </code></pre></div>
 <h3 id="if-you-accidentally-committed-a-secret">If You Accidentally Committed a Secret</h3>
@@ -6088,7 +6088,7 @@ git<span class="w"> </span>push
 </ol>
 <div class="highlight"><pre><span></span><code><span class="c1"># Use BFG Repo-Cleaner or git filter-branch</span>
 git<span class="w"> </span>filter-branch<span class="w"> </span>--force<span class="w"> </span>--index-filter<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;git rm --cached --ignore-unmatch config/secrets.yaml&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"git rm --cached --ignore-unmatch config/secrets.yaml"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--prune-empty<span class="w"> </span>--tag-name-filter<span class="w"> </span>cat<span class="w"> </span>--<span class="w"> </span>--all
 
 <span class="c1"># Force push (requires admin privileges)</span>
@@ -6114,8 +6114,8 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>gitleaks<span class
 <p>Add a test file with a fake secret to verify detection:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># test_secrets_detection.py</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_pipeline_blocks_secrets</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This should fail in CI/CD&quot;&quot;&quot;</span>
-    <span class="n">fake_aws_key</span> <span class="o">=</span> <span class="s2">&quot;AKIAIOSFODNN7EXAMPLE&quot;</span>  <span class="c1"># Gitleaks will catch this</span>
+<span class="w">    </span><span class="sd">"""This should fail in CI/CD"""</span>
+    <span class="n">fake_aws_key</span> <span class="o">=</span> <span class="s2">"AKIAIOSFODNN7EXAMPLE"</span>  <span class="c1"># Gitleaks will catch this</span>
 </code></pre></div>
 <p>Commit and push - the pipeline should <strong>fail</strong> on the Secrets Scan stage.</p>
 <hr />
@@ -6129,30 +6129,30 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>gitleaks<span class
 <span class="n">load_dotenv</span><span class="p">()</span>
 
 <span class="c1"># Get secrets from environment</span>
-<span class="n">DATABASE_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DATABASE_URL&#39;</span><span class="p">)</span>
-<span class="n">API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;API_KEY&#39;</span><span class="p">)</span>
+<span class="n">DATABASE_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'DATABASE_URL'</span><span class="p">)</span>
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'API_KEY'</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">DATABASE_URL</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;DATABASE_URL environment variable is required&quot;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"DATABASE_URL environment variable is required"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="nodejs-application">Node.js Application</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// Load from .env file (gitignored)</span>
-<span class="nx">require</span><span class="p">(</span><span class="s2">&quot;dotenv&quot;</span><span class="p">).</span><span class="nx">config</span><span class="p">();</span>
+<span class="nx">require</span><span class="p">(</span><span class="s2">"dotenv"</span><span class="p">).</span><span class="nx">config</span><span class="p">();</span>
 
 <span class="c1">// Get secrets from environment</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">dbUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DATABASE_URL</span><span class="p">;</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">apiKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">API_KEY</span><span class="p">;</span>
 
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">dbUrl</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;DATABASE_URL environment variable is required&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">"DATABASE_URL environment variable is required"</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="go-application">Go Application</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;os&quot;</span>
-<span class="w">    </span><span class="s">&quot;github.com/joho/godotenv&quot;</span>
+<span class="w">    </span><span class="s">"os"</span>
+<span class="w">    </span><span class="s">"github.com/joho/godotenv"</span>
 <span class="p">)</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -6160,22 +6160,22 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>gitleaks<span class
 <span class="w">    </span><span class="nx">godotenv</span><span class="p">.</span><span class="nx">Load</span><span class="p">()</span>
 
 <span class="w">    </span><span class="c1">// Get secrets from environment</span>
-<span class="w">    </span><span class="nx">dbUrl</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;DATABASE_URL&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">apiKey</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;API_KEY&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">dbUrl</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">"DATABASE_URL"</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">apiKey</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">"API_KEY"</span><span class="p">)</span>
 
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">dbUrl</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nb">panic</span><span class="p">(</span><span class="s">&quot;DATABASE_URL environment variable is required&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">dbUrl</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">""</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">panic</span><span class="p">(</span><span class="s">"DATABASE_URL environment variable is required"</span><span class="p">)</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="java-application">Java Application</h3>
 <div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Config</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">DB_URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">getenv</span><span class="p">(</span><span class="s">&quot;DATABASE_URL&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">API_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">getenv</span><span class="p">(</span><span class="s">&quot;API_KEY&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">DB_URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">getenv</span><span class="p">(</span><span class="s">"DATABASE_URL"</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">API_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">getenv</span><span class="p">(</span><span class="s">"API_KEY"</span><span class="p">);</span>
 
 <span class="w">    </span><span class="kd">static</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">DB_URL</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">DB_URL</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">IllegalStateException</span><span class="p">(</span><span class="s">&quot;DATABASE_URL environment variable is required&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">IllegalStateException</span><span class="p">(</span><span class="s">"DATABASE_URL environment variable is required"</span><span class="p">);</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
@@ -6188,7 +6188,7 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>gitleaks<span class
 <p><strong>A:</strong> Add it to the allowlist in <code>.gitleaks.toml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[allowlist]</span>
 <span class="n">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="s1">&#39;&#39;&#39;tests/fixtures/.*&#39;&#39;&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'''tests/fixtures/.*'''</span><span class="p">,</span>
 <span class="p">]</span>
 </code></pre></div>
 <h3 id="q-how-do-i-update-the-secrets-baseline">Q: How do I update the secrets baseline?</h3>
@@ -6210,7 +6210,7 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>gitleaks<span class
 <span class="w">  </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trufflehog</span>
 <span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TruffleHog secret scan</span>
-<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;filesystem&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;.&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;--json&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"filesystem"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"."</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"--json"</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <hr />
 <h2 id="resources">Resources</h2>

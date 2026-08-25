@@ -5798,7 +5798,7 @@ helm<span class="w"> </span>install<span class="w"> </span>jenkins<span class="w
 <span class="w">  </span><span class="nt">ingress</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">hostName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins.fawkes.local</span>
-<span class="w">  </span><span class="nt">adminPassword</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-secure-password&quot;</span>
+<span class="w">  </span><span class="nt">adminPassword</span><span class="p">:</span><span class="w"> </span><span class="s">"your-secure-password"</span>
 
 <span class="nt">persistence</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -5816,26 +5816,26 @@ helm<span class="w"> </span>install<span class="w"> </span>jenkins<span class="w
 <span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
 
 <span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Build'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn clean package&#39;</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">'mvn clean package'</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Test'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn test&#39;</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">'mvn test'</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Deploy&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Deploy'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;kubectl apply -f k8s/&#39;</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">'kubectl apply -f k8s/'</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>
 
 <span class="w">    </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">always</span><span class="w"> </span><span class="o">{</span>
-<span class="w">            </span><span class="n">junit</span><span class="w"> </span><span class="s1">&#39;**/target/surefire-reports/TEST-*.xml&#39;</span>
+<span class="w">            </span><span class="n">junit</span><span class="w"> </span><span class="s1">'**/target/surefire-reports/TEST-*.xml'</span>
 <span class="w">        </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
@@ -5845,7 +5845,7 @@ helm<span class="w"> </span>install<span class="w"> </span>jenkins<span class="w
 <span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span>
-<span class="w">            </span><span class="n">yaml</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="w">            </span><span class="n">yaml</span><span class="w"> </span><span class="s1">'''</span>
 <span class="s1">                apiVersion: v1</span>
 <span class="s1">                kind: Pod</span>
 <span class="s1">                spec:</span>
@@ -5860,26 +5860,26 @@ helm<span class="w"> </span>install<span class="w"> </span>jenkins<span class="w
 <span class="s1">                    command:</span>
 <span class="s1">                    - cat</span>
 <span class="s1">                    tty: true</span>
-<span class="s1">            &#39;&#39;&#39;</span>
+<span class="s1">            '''</span>
 <span class="w">        </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>
 
 <span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build &amp; Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Build &amp; Test'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn clean verify&#39;</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">'maven'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">'mvn clean verify'</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Deploy to Kubernetes&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Deploy to Kubernetes'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;kubectl&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">'kubectl'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">'''</span>
 <span class="s1">                        kubectl apply -f k8s/</span>
 <span class="s1">                        kubectl rollout status deployment/fawkes-app</span>
-<span class="s1">                    &#39;&#39;&#39;</span>
+<span class="s1">                    '''</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
@@ -5941,10 +5941,10 @@ helm<span class="w"> </span>install<span class="w"> </span>jenkins<span class="w
 </table>
 <h2 id="monitoring-jenkins">Monitoring Jenkins</h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Prometheus configuration</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;jenkins&quot;</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">"jenkins"</span>
 <span class="w">  </span><span class="nt">metrics_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/prometheus</span>
 <span class="w">  </span><span class="nt">static_configs</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;jenkins.fawkes.local:8080&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"jenkins.fawkes.local:8080"</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <h2 id="additional-resources">Additional Resources</h2>
 <ul>

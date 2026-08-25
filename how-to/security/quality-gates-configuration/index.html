@@ -6441,11 +6441,11 @@
 </table>
 <h4 id="configuration-in-pipeline">Configuration in Pipeline</h4>
 <p>The quality gate is automatically enforced in the Golden Path pipeline:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">'fawkes-pipeline-library'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 <span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
-<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;java&#39;</span>
-<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;harbor.fawkes.local/fawkes/my-service&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service'</span>
+<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'java'</span>
+<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'harbor.fawkes.local/fawkes/my-service'</span>
 <span class="w">    </span><span class="c1">// SonarQube quality gate is automatically enforced</span>
 <span class="w">    </span><span class="c1">// To skip security scanning entirely (not recommended):</span>
 <span class="w">    </span><span class="c1">// runSecurityScan = false  // Requires approval!</span>
@@ -6501,7 +6501,7 @@ open<span class="w"> </span>https://sonarqube.fawkes.example.com
 <li><strong>Inline Suppression</strong> (Code-level):</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="c1">// Java example</span>
-<span class="nd">@SuppressWarnings</span><span class="p">(</span><span class="s">&quot;java:S1234&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1">// Document reason!</span>
+<span class="nd">@SuppressWarnings</span><span class="p">(</span><span class="s">"java:S1234"</span><span class="p">)</span><span class="w">  </span><span class="c1">// Document reason!</span>
 <span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">problematicMethod</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// Implementation</span>
 <span class="p">}</span>
@@ -6525,7 +6525,7 @@ open<span class="w"> </span>https://sonarqube.fawkes.example.com
 <li>Get approval from Tech Lead and Security Team</li>
 <li>Option: Disable entire security scanning stage:
      <div class="highlight"><pre><span></span><code><span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service'</span>
 <span class="w">    </span><span class="n">runSecurityScan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="w">  </span><span class="c1">// Requires justification!</span>
 <span class="o">}</span>
 </code></pre></div></li>
@@ -6541,7 +6541,7 @@ open<span class="w"> </span>https://sonarqube.fawkes.example.com
 <span class="c1">// Remediation Plan: Full security scan scheduled for next sprint</span>
 <span class="c1">// Expiration: 2024-12-31</span>
 <span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service'</span>
 <span class="w">    </span><span class="n">runSecurityScan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="w">  </span><span class="c1">// Disables entire security scan stage</span>
 <span class="o">}</span>
 </code></pre></div>
@@ -6582,21 +6582,21 @@ open<span class="w"> </span>https://sonarqube.fawkes.example.com
 </table>
 <h4 id="configuration-in-pipeline_1">Configuration in Pipeline</h4>
 <p>Container scanning is automatically enabled in the Golden Path pipeline:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">'fawkes-pipeline-library'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 <span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
-<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;java&#39;</span>
-<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;harbor.fawkes.local/fawkes/my-service&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service'</span>
+<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'java'</span>
+<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'harbor.fawkes.local/fawkes/my-service'</span>
 <span class="w">    </span><span class="c1">// Trivy scanning is automatically enabled</span>
-<span class="w">    </span><span class="n">trivySeverity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;HIGH,CRITICAL&#39;</span><span class="w">  </span><span class="c1">// Default severity filter</span>
-<span class="w">    </span><span class="n">trivyExitCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;1&#39;</span><span class="w">              </span><span class="c1">// Fail on vulnerabilities (default)</span>
+<span class="w">    </span><span class="n">trivySeverity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'HIGH,CRITICAL'</span><span class="w">  </span><span class="c1">// Default severity filter</span>
+<span class="w">    </span><span class="n">trivyExitCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'1'</span><span class="w">              </span><span class="c1">// Fail on vulnerabilities (default)</span>
 <span class="o">}</span>
 </code></pre></div>
 <h4 id="customizing-trivy-severity-thresholds">Customizing Trivy Severity Thresholds</h4>
 <p><strong>Option 1: Change Severity Filter</strong> (Pipeline-level):</p>
 <div class="highlight"><pre><span></span><code><span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
-<span class="w">    </span><span class="n">trivySeverity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;CRITICAL&#39;</span><span class="w">  </span><span class="c1">// Only fail on CRITICAL</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service'</span>
+<span class="w">    </span><span class="n">trivySeverity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'CRITICAL'</span><span class="w">  </span><span class="c1">// Only fail on CRITICAL</span>
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>Option 2: Disable Failure</strong> (Emergency use only, requires approval):</p>
@@ -6605,8 +6605,8 @@ open<span class="w"> </span>https://sonarqube.fawkes.example.com
 <span class="c1">// Approved by: incident-commander@example.com, security@example.com</span>
 <span class="c1">// Full scan required within 24 hours</span>
 <span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
-<span class="w">    </span><span class="n">trivyExitCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="w">  </span><span class="c1">// Don&#39;t fail pipeline on vulnerabilities</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service'</span>
+<span class="w">    </span><span class="n">trivyExitCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'0'</span><span class="w">  </span><span class="c1">// Don't fail pipeline on vulnerabilities</span>
 <span class="o">}</span>
 </code></pre></div>
 <h4 id="override-process-for-trivy">Override Process for Trivy</h4>
@@ -6625,7 +6625,7 @@ open<span class="w"> </span>https://sonarqube.fawkes.example.com
 # Format: CVE-ID [exp:YYYY-MM-DD] [# comment]
 #
 
-# Example 1: False positive - application doesn&#39;t use vulnerable code path
+# Example 1: False positive - application doesn't use vulnerable code path
 CVE-2023-12345  # PostgreSQL CVE, but we use prepared statements exclusively
 
 # Example 2: No fix available yet, mitigation in place
@@ -6661,8 +6661,8 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 <span class="c1">// Approved by: incident-commander@example.com</span>
 <span class="c1">// Full scan required within 24 hours</span>
 <span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
-<span class="w">    </span><span class="n">trivySeverity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;CRITICAL&#39;</span><span class="w">  </span><span class="c1">// Only block on CRITICAL</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service'</span>
+<span class="w">    </span><span class="n">trivySeverity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'CRITICAL'</span><span class="w">  </span><span class="c1">// Only block on CRITICAL</span>
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>Override Approval Process</strong>:</p>
@@ -6699,22 +6699,22 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 <div class="highlight"><pre><span></span><code><span class="c1"># .gitleaks.toml</span>
 
 <span class="k">[allowlist]</span>
-<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allowlist for false positives&quot;</span>
+<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Allowlist for false positives"</span>
 
 <span class="c1"># Allow specific pattern</span>
 <span class="n">regexes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;EXAMPLE_NOT_REAL_KEY&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># Test fixtures</span>
+<span class="w">    </span><span class="s2">"EXAMPLE_NOT_REAL_KEY"</span><span class="p">,</span><span class="w">  </span><span class="c1"># Test fixtures</span>
 <span class="p">]</span>
 
 <span class="c1"># Allow specific file paths</span>
 <span class="n">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;tests/fixtures/test-data.json&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;docs/examples/&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"tests/fixtures/test-data.json"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"docs/examples/"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="c1"># Allow specific commits (use sparingly!)</span>
 <span class="n">commits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;abc123def456&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># Migration commit with dummy data</span>
+<span class="w">    </span><span class="s2">"abc123def456"</span><span class="p">,</span><span class="w">  </span><span class="c1"># Migration commit with dummy data</span>
 <span class="p">]</span>
 </code></pre></div>
 <ol>
@@ -6738,7 +6738,7 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 <span class="c1">// Temporary bypass for critical production fix</span>
 <span class="c1">// Full security review required within 2 hours</span>
 <span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service'</span>
 <span class="w">    </span><span class="n">runSecurityScan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="w">  </span><span class="c1">// Disables ALL security scans including secrets</span>
 <span class="o">}</span>
 </code></pre></div>
@@ -6808,16 +6808,16 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 <h2 id="language-specific-examples">Language-Specific Examples</h2>
 <h3 id="java-example">Java Example</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// Jenkinsfile</span>
-<span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<span class="nd">@Library</span><span class="o">(</span><span class="s1">'fawkes-pipeline-library'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 <span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;user-service&#39;</span>
-<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;java&#39;</span>
-<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;harbor.fawkes.local/fawkes/user-service&#39;</span>
-<span class="w">    </span><span class="n">sonarProject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;user-service&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'user-service'</span>
+<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'java'</span>
+<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'harbor.fawkes.local/fawkes/user-service'</span>
+<span class="w">    </span><span class="n">sonarProject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'user-service'</span>
 
 <span class="w">    </span><span class="c1">// Quality gates (using defaults)</span>
-<span class="w">    </span><span class="c1">// trivySeverity = &#39;HIGH,CRITICAL&#39;  // default</span>
-<span class="w">    </span><span class="c1">// trivyExitCode = &#39;1&#39;               // default</span>
+<span class="w">    </span><span class="c1">// trivySeverity = 'HIGH,CRITICAL'  // default</span>
+<span class="w">    </span><span class="c1">// trivyExitCode = '1'               // default</span>
 <span class="w">    </span><span class="c1">// runSecurityScan = true            // default</span>
 <span class="o">}</span>
 </code></pre></div>
@@ -6830,14 +6830,14 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 </code></pre></div>
 <h3 id="python-example">Python Example</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// Jenkinsfile</span>
-<span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<span class="nd">@Library</span><span class="o">(</span><span class="s1">'fawkes-pipeline-library'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 <span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;analytics-api&#39;</span>
-<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;python&#39;</span>
-<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;harbor.fawkes.local/fawkes/analytics-api&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'analytics-api'</span>
+<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'python'</span>
+<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'harbor.fawkes.local/fawkes/analytics-api'</span>
 
 <span class="w">    </span><span class="c1">// Quality gates use defaults</span>
-<span class="w">    </span><span class="c1">// trivySeverity = &#39;HIGH,CRITICAL&#39;</span>
+<span class="w">    </span><span class="c1">// trivySeverity = 'HIGH,CRITICAL'</span>
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>SonarQube configuration</strong> (sonar-project.properties):</p>
@@ -6849,11 +6849,11 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 </code></pre></div>
 <h3 id="nodejs-example">Node.js Example</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// Jenkinsfile</span>
-<span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<span class="nd">@Library</span><span class="o">(</span><span class="s1">'fawkes-pipeline-library'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 <span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;web-frontend&#39;</span>
-<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;node&#39;</span>
-<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;harbor.fawkes.local/fawkes/web-frontend&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'web-frontend'</span>
+<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'node'</span>
+<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'harbor.fawkes.local/fawkes/web-frontend'</span>
 
 <span class="w">    </span><span class="c1">// All quality gates enabled by default</span>
 <span class="o">}</span>
@@ -6861,12 +6861,12 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 <p><strong>SonarQube configuration</strong> (sonar-project.js):</p>
 <div class="highlight"><pre><span></span><code><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">sonar</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">projectKey</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;web-frontend&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">sources</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;src&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">tests</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;tests&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">projectKey</span><span class="o">:</span><span class="w"> </span><span class="s2">"web-frontend"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">sources</span><span class="o">:</span><span class="w"> </span><span class="s2">"src"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">tests</span><span class="o">:</span><span class="w"> </span><span class="s2">"tests"</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">javascript</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nx">lcov</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">reportPaths</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;coverage/lcov.info&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">reportPaths</span><span class="o">:</span><span class="w"> </span><span class="s2">"coverage/lcov.info"</span><span class="p">,</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">  </span><span class="p">},</span>
@@ -6874,11 +6874,11 @@ CVE-2023-11111  # Alpine maintainers confirmed package version not affected
 </code></pre></div>
 <h3 id="go-example">Go Example</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// Jenkinsfile</span>
-<span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<span class="nd">@Library</span><span class="o">(</span><span class="s1">'fawkes-pipeline-library'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 <span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;event-processor&#39;</span>
-<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;go&#39;</span>
-<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;harbor.fawkes.local/fawkes/event-processor&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'event-processor'</span>
+<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'go'</span>
+<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'harbor.fawkes.local/fawkes/event-processor'</span>
 
 <span class="w">    </span><span class="c1">// Quality gates enabled by default</span>
 <span class="o">}</span>
@@ -6954,7 +6954,7 @@ Common secrets detected:
 </ol>
 <div class="highlight"><pre><span></span><code><span class="c1"># Remove from history if committed</span>
 git<span class="w"> </span>filter-branch<span class="w"> </span>--force<span class="w"> </span>--index-filter<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;git rm --cached --ignore-unmatch path/to/file&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"git rm --cached --ignore-unmatch path/to/file"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--prune-empty<span class="w"> </span>--tag-name-filter<span class="w"> </span>cat<span class="w"> </span>--<span class="w"> </span>--all
 </code></pre></div>
 <h2 id="monitoring-and-metrics">Monitoring and Metrics</h2>

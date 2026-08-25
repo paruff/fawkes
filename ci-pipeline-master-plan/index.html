@@ -5683,7 +5683,7 @@
 <hr />
 <h2 id="1-core-insight">1. Core Insight</h2>
 <p>The pipeline answer depends on <strong>what the repo produces</strong>. There is no universal pipeline. There are 5 repo types, each with different artifacts, different "production ready" criteria, and different stages.</p>
-<div class="highlight"><pre><span></span><code>&quot;Production ready&quot; = the pipeline VERIFIED the artifact works,
+<div class="highlight"><pre><span></span><code>"Production ready" = the pipeline VERIFIED the artifact works,
                     the artifact CAN be deployed, and
                     the artifact MEETS quality standards.
 </code></pre></div>
@@ -6343,43 +6343,43 @@
 <h4 id="acceptance-test-pattern-ufawkesobs-example">Acceptance Test Pattern (uFawkesObs Example)</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># tests/acceptance/test_observability_flow.py</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_metric_flows_from_app_to_prometheus</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a metric, verify it appears in Prometheus.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Generate a metric, verify it appears in Prometheus."""</span>
     <span class="c1"># 1. Hit telemetry-generator endpoint</span>
-    <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://localhost:8080/metrics&quot;</span><span class="p">)</span>
+    <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"http://localhost:8080/metrics"</span><span class="p">)</span>
     <span class="c1"># 2. Wait for scrape cycle (15s)</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
     <span class="c1"># 3. Query Prometheus</span>
-    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://localhost:9090/api/v1/query&quot;</span><span class="p">,</span>
-        <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;telemetry_generator_requests_total&quot;</span><span class="p">})</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"http://localhost:9090/api/v1/query"</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">"query"</span><span class="p">:</span> <span class="s2">"telemetry_generator_requests_total"</span><span class="p">})</span>
     <span class="c1"># 4. Assert metric exists and has correct labels</span>
-    <span class="k">assert</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;result&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;metric&quot;</span><span class="p">][</span><span class="s2">&quot;job&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;telemetry-generator&quot;</span>
+    <span class="k">assert</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">"data"</span><span class="p">][</span><span class="s2">"result"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"metric"</span><span class="p">][</span><span class="s2">"job"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"telemetry-generator"</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_grafana_dashboard_renders</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify Grafana dashboards load and show data.&quot;&quot;&quot;</span>
-    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://localhost:3000/api/dashboards/uid/observability&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Verify Grafana dashboards load and show data."""</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"http://localhost:3000/api/dashboards/uid/observability"</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;dashboard&quot;</span><span class="p">][</span><span class="s2">&quot;panels&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">"dashboard"</span><span class="p">][</span><span class="s2">"panels"</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span>
 </code></pre></div>
 <h4 id="load-test-pattern-k6-example">Load Test Pattern (k6 Example)</h4>
 <div class="highlight"><pre><span></span><code><span class="c1">// tests/load/metric_ingestion.js</span>
-<span class="k">import</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;k6/http&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">check</span><span class="p">,</span><span class="w"> </span><span class="nx">sleep</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;k6&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"k6/http"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">check</span><span class="p">,</span><span class="w"> </span><span class="nx">sleep</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"k6"</span><span class="p">;</span>
 
 <span class="k">export</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">stages</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">duration</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;30s&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="mf">50</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="c1">// ramp up</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">duration</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1m&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="mf">50</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="c1">// sustained load</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">duration</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;30s&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="c1">// ramp down</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">duration</span><span class="o">:</span><span class="w"> </span><span class="s2">"30s"</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="mf">50</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="c1">// ramp up</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">duration</span><span class="o">:</span><span class="w"> </span><span class="s2">"1m"</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="mf">50</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="c1">// sustained load</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">duration</span><span class="o">:</span><span class="w"> </span><span class="s2">"30s"</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="c1">// ramp down</span>
 <span class="w">  </span><span class="p">],</span>
 <span class="w">  </span><span class="nx">thresholds</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">http_req_duration</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;p(95)&lt;500&quot;</span><span class="p">],</span><span class="w"> </span><span class="c1">// 95% of requests under 500ms</span>
-<span class="w">    </span><span class="nx">http_req_failed</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;rate&lt;0.01&quot;</span><span class="p">],</span><span class="w"> </span><span class="c1">// &lt;1% error rate</span>
+<span class="w">    </span><span class="nx">http_req_duration</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"p(95)&lt;500"</span><span class="p">],</span><span class="w"> </span><span class="c1">// 95% of requests under 500ms</span>
+<span class="w">    </span><span class="nx">http_req_failed</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"rate&lt;0.01"</span><span class="p">],</span><span class="w"> </span><span class="c1">// &lt;1% error rate</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="p">};</span>
 
 <span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;http://localhost:9090/api/v1/query?up&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="nx">check</span><span class="p">(</span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;status is 200&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">r</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">200</span><span class="w"> </span><span class="p">});</span>
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">"http://localhost:9090/api/v1/query?up"</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">check</span><span class="p">(</span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"status is 200"</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">r</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">200</span><span class="w"> </span><span class="p">});</span>
 <span class="w">  </span><span class="nx">sleep</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6587,7 +6587,7 @@ FAIL if:
 </table>
 <hr />
 <h2 id="6-pipelineyml-schema-v2-final">6. <code>.pipeline.yml</code> Schema v2 (Final)</h2>
-<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"2"</span>
 <span class="nt">repo-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stack | core | site | template | bootstrap</span>
 
 <span class="c1"># What this repo produces</span>
@@ -6700,7 +6700,7 @@ FAIL if:
 <hr />
 <h2 id="7-per-repo-pipelineyml-examples">7. Per-Repo <code>.pipeline.yml</code> Examples</h2>
 <h3 id="ufawkesobs-stack">uFawkesObs (stack)</h3>
-<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"2"</span>
 <span class="nt">repo-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stack</span>
 <span class="nt">artifact</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker-compose</span>
@@ -6737,7 +6737,7 @@ FAIL if:
 <span class="w">  </span><span class="nt">deploy</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> enabled</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">,</span><span class="nt"> strategy</span><span class="p">:</span><span class="w"> </span><span class="nv">ssh-gitops</span><span class="w"> </span><span class="p p-Indicator">}</span>
 </code></pre></div>
 <h3 id="fawkes-core">fawkes (core)</h3>
-<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"2"</span>
 <span class="nt">repo-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">core</span>
 <span class="nt">artifact</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes</span>
@@ -6775,7 +6775,7 @@ FAIL if:
 <span class="w">  </span><span class="nt">deploy</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> enabled</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">,</span><span class="nt"> strategy</span><span class="p">:</span><span class="w"> </span><span class="nv">argocd</span><span class="w"> </span><span class="p p-Indicator">}</span>
 </code></pre></div>
 <h3 id="ufawkesdev-site">uFawkes.dev (site)</h3>
-<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"2"</span>
 <span class="nt">repo-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">site</span>
 <span class="nt">artifact</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">static-site</span>
@@ -6795,7 +6795,7 @@ FAIL if:
 <span class="w">  </span><span class="nt">deploy</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> enabled</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">,</span><span class="nt"> strategy</span><span class="p">:</span><span class="w"> </span><span class="nv">github-pages</span><span class="w"> </span><span class="p p-Indicator">}</span>
 </code></pre></div>
 <h3 id="ufawkesai-template">uFawkesAI (template)</h3>
-<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"2"</span>
 <span class="nt">repo-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">template</span>
 <span class="nt">artifact</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">template</span>
@@ -6925,7 +6925,7 @@ FAIL if:
 </table>
 <hr />
 <h2 id="10-pre-commit-pre-flight-relationship">10. Pre-commit ↔ Pre-flight Relationship</h2>
-<div class="highlight"><pre><span></span><code>Developer&#39;s machine (local)              GitHub Actions (CI)
+<div class="highlight"><pre><span></span><code>Developer's machine (local)              GitHub Actions (CI)
 ─────────────────────────                ──────────────────────
 git commit                               PR opened
   │                                        │

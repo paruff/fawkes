@@ -6003,24 +6003,24 @@ npm<span class="w"> </span>run<span class="w"> </span>lighthouse:assert
 </code></pre></div>
 <h3 id="writing-accessibility-tests">Writing Accessibility Tests</h3>
 <p>Create tests for your components using jest-axe:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">render</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@testing-library/react&#39;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">axe</span><span class="p">,</span><span class="w"> </span><span class="nx">toHaveNoViolations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;jest-axe&#39;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">MyComponent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./MyComponent&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">render</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@testing-library/react'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">axe</span><span class="p">,</span><span class="w"> </span><span class="nx">toHaveNoViolations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'jest-axe'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">MyComponent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./MyComponent'</span><span class="p">;</span>
 
 <span class="nx">expect</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">toHaveNoViolations</span><span class="p">);</span>
 
-<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;MyComponent Accessibility&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should have no accessibility violations&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'MyComponent Accessibility'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">'should have no accessibility violations'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">container</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">MyComponent</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">);</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axe</span><span class="p">(</span><span class="nx">container</span><span class="p">);</span>
 <span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">results</span><span class="p">).</span><span class="nx">toHaveNoViolations</span><span class="p">();</span>
 <span class="w">  </span><span class="p">});</span>
 
-<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should be keyboard accessible&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">'should be keyboard accessible'</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">container</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">MyComponent</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">);</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axe</span><span class="p">(</span><span class="nx">container</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="s1">&#39;keyboard-access&#39;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="s1">'keyboard-access'</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">});</span>
 <span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">results</span><span class="p">).</span><span class="nx">toHaveNoViolations</span><span class="p">();</span>
@@ -6039,21 +6039,21 @@ npm<span class="w"> </span>run<span class="w"> </span>lighthouse:assert
 <p><strong>Workflow:</strong> <code>.github/workflows/accessibility-testing.yml</code></p>
 <h3 id="jenkins-pipeline">Jenkins Pipeline</h3>
 <p>For services using the Golden Path pipeline, add accessibility testing:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">'fawkes-pipeline-library'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 
 <span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
-<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;node&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service'</span>
+<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'node'</span>
 <span class="w">    </span><span class="c1">// ... other config</span>
 <span class="o">}</span>
 
 <span class="c1">// Add accessibility stage after unit tests</span>
-<span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Accessibility Tests&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="n">stage</span><span class="o">(</span><span class="s1">'Accessibility Tests'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">accessibilityTest</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">runAxeCore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">            </span><span class="n">runLighthouse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">            </span><span class="n">wcagLevel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;AA&#39;</span>
+<span class="w">            </span><span class="n">wcagLevel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'AA'</span>
 <span class="w">            </span><span class="n">failOnViolations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">            </span><span class="n">lighthouseScoreThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">90</span>
 <span class="w">        </span><span class="o">}</span>
@@ -6106,13 +6106,13 @@ npm<span class="w"> </span>run<span class="w"> </span>lighthouse:assert
 <div class="highlight"><pre><span></span><code>❌ 2 violations found:
 
 1. color-contrast (serious)
-   - Element: &lt;button class=&quot;btn-primary&quot;&gt;Submit&lt;/button&gt;
-   - Description: Element&#39;s background color could not be determined due to a background image
+   - Element: &lt;button class="btn-primary"&gt;Submit&lt;/button&gt;
+   - Description: Element's background color could not be determined due to a background image
    - Fix: Ensure sufficient color contrast (4.5:1 for normal text)
    - More info: https://dequeuniversity.com/rules/axe/4.8/color-contrast
 
 2. label (critical)
-   - Element: &lt;input type=&quot;text&quot; id=&quot;email&quot;&gt;
+   - Element: &lt;input type="text" id="email"&gt;
    - Description: Form element does not have an associated label
    - Fix: Add a &lt;label&gt; element or aria-label attribute
    - More info: https://dequeuniversity.com/rules/axe/4.8/label
@@ -6135,10 +6135,10 @@ npm<span class="w"> </span>run<span class="w"> </span>lighthouse:assert
 <h3 id="common-violations-and-fixes">Common Violations and Fixes</h3>
 <h4 id="1-missing-alt-text">1. Missing Alt Text</h4>
 <p><strong>Problem:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;logo.png&quot;</span> <span class="p">/&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">"logo.png"</span> <span class="p">/&gt;</span>
 </code></pre></div>
 <p><strong>Fix:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;logo.png&quot;</span> <span class="na">alt</span><span class="o">=</span><span class="s">&quot;Company logo&quot;</span> <span class="p">/&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">"logo.png"</span> <span class="na">alt</span><span class="o">=</span><span class="s">"Company logo"</span> <span class="p">/&gt;</span>
 </code></pre></div>
 <h4 id="2-poor-color-contrast">2. Poor Color Contrast</h4>
 <p><strong>Problem:</strong></p>
@@ -6157,31 +6157,31 @@ npm<span class="w"> </span>run<span class="w"> </span>lighthouse:assert
 </code></pre></div>
 <h4 id="3-missing-form-labels">3. Missing Form Labels</h4>
 <p><strong>Problem:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;email&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;email&quot;</span> <span class="p">/&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"email"</span> <span class="na">id</span><span class="o">=</span><span class="s">"email"</span> <span class="p">/&gt;</span>
 </code></pre></div>
 <p><strong>Fix:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">label</span> <span class="na">htmlFor</span><span class="o">=</span><span class="s">&quot;email&quot;</span><span class="p">&gt;</span>Email Address<span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;email&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;email&quot;</span> <span class="p">/&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">label</span> <span class="na">htmlFor</span><span class="o">=</span><span class="s">"email"</span><span class="p">&gt;</span>Email Address<span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"email"</span> <span class="na">id</span><span class="o">=</span><span class="s">"email"</span> <span class="p">/&gt;</span>
 </code></pre></div>
 <p>Or use aria-label:</p>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;email&quot;</span> <span class="na">aria-label</span><span class="o">=</span><span class="s">&quot;Email Address&quot;</span> <span class="p">/&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"email"</span> <span class="na">aria-label</span><span class="o">=</span><span class="s">"Email Address"</span> <span class="p">/&gt;</span>
 </code></pre></div>
 <h4 id="4-invalid-aria-attributes">4. Invalid ARIA Attributes</h4>
 <p><strong>Problem:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">role</span><span class="o">=</span><span class="s">&quot;button&quot;</span> <span class="na">aria-pressed</span><span class="o">=</span><span class="s">&quot;yes&quot;</span><span class="p">&gt;</span>Click me<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">role</span><span class="o">=</span><span class="s">"button"</span> <span class="na">aria-pressed</span><span class="o">=</span><span class="s">"yes"</span><span class="p">&gt;</span>Click me<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></div>
 <p><strong>Fix:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">aria-pressed</span><span class="o">=</span><span class="s">&quot;true&quot;</span><span class="p">&gt;</span>Click me<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">aria-pressed</span><span class="o">=</span><span class="s">"true"</span><span class="p">&gt;</span>Click me<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 </code></pre></div>
 <h4 id="5-missing-keyboard-access">5. Missing Keyboard Access</h4>
 <p><strong>Problem:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">onClick</span><span class="o">=</span><span class="s">&quot;{handleClick}&quot;</span><span class="p">&gt;</span>Clickable<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">onClick</span><span class="o">=</span><span class="s">"{handleClick}"</span><span class="p">&gt;</span>Clickable<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></div>
 <p><strong>Fix:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="o">=</span><span class="s">&quot;{handleClick}&quot;</span><span class="p">&gt;</span>Clickable<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">onClick</span><span class="o">=</span><span class="s">"{handleClick}"</span><span class="p">&gt;</span>Clickable<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 </code></pre></div>
 <p>Or make div keyboard accessible:</p>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">role</span><span class="o">=</span><span class="s">&quot;button&quot;</span> <span class="na">tabindex</span><span class="o">=</span><span class="s">&quot;{0}&quot;</span> <span class="na">onClick</span><span class="o">=</span><span class="s">&quot;{handleClick}&quot;</span> <span class="na">onKeyPress</span><span class="o">=</span><span class="s">&quot;{(e)&quot;</span> <span class="err">=&quot;&quot;</span><span class="p">&gt;</span>
-  e.key === &#39;Enter&#39; <span class="err">&amp;&amp;</span> handleClick()} &gt; Clickable
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">role</span><span class="o">=</span><span class="s">"button"</span> <span class="na">tabindex</span><span class="o">=</span><span class="s">"{0}"</span> <span class="na">onClick</span><span class="o">=</span><span class="s">"{handleClick}"</span> <span class="na">onKeyPress</span><span class="o">=</span><span class="s">"{(e)"</span> <span class="err">=""</span><span class="p">&gt;</span>
+  e.key === 'Enter' <span class="err">&amp;&amp;</span> handleClick()} &gt; Clickable
 <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></div>
 <h3 id="testing-your-fixes">Testing Your Fixes</h3>
@@ -6257,8 +6257,8 @@ npx<span class="w"> </span>http-server<span class="w"> </span>storybook-static
 <li>Check if it's a legitimate issue</li>
 <li>If it's a false positive, add to <code>.axerc.json</code>:
    <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;rule-id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">"rules"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"rule-id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></li>
@@ -6281,9 +6281,9 @@ npx<span class="w"> </span>http-server<span class="w"> </span>storybook-static
 <li>Check Jenkins console output</li>
 <li>Increase timeout in <code>lighthouserc.json</code>:
    <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;ci&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;collect&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;numberOfRuns&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="nt">"ci"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"collect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"numberOfRuns"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>

@@ -5800,7 +5800,7 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># Trunk-based development workflow</span>
 git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/small-change
 <span class="c1"># Make small, incremental changes</span>
-git<span class="w"> </span>commit<span class="w"> </span>-am<span class="w"> </span><span class="s2">&quot;feat: add new feature behind flag&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-am<span class="w"> </span><span class="s2">"feat: add new feature behind flag"</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/small-change
 <span class="c1"># Merge to trunk within 24 hours</span>
 </code></pre></div>
@@ -5809,24 +5809,24 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <span class="l l-Scalar l-Scalar-Plain">pipeline {</span>
 <span class="l l-Scalar l-Scalar-Plain">agent any</span>
 <span class="l l-Scalar l-Scalar-Plain">stages {</span>
-<span class="l l-Scalar l-Scalar-Plain">stage(&#39;Build&#39;) {</span>
+<span class="l l-Scalar l-Scalar-Plain">stage('Build') {</span>
 <span class="l l-Scalar l-Scalar-Plain">steps {</span>
-<span class="l l-Scalar l-Scalar-Plain">sh &#39;make build&#39;</span>
+<span class="l l-Scalar l-Scalar-Plain">sh 'make build'</span>
 <span class="l l-Scalar l-Scalar-Plain">}</span>
 <span class="l l-Scalar l-Scalar-Plain">}</span>
-<span class="l l-Scalar l-Scalar-Plain">stage(&#39;Test&#39;) {</span>
+<span class="l l-Scalar l-Scalar-Plain">stage('Test') {</span>
 <span class="l l-Scalar l-Scalar-Plain">parallel {</span>
-<span class="l l-Scalar l-Scalar-Plain">stage(&#39;Unit&#39;) {</span>
-<span class="l l-Scalar l-Scalar-Plain">steps { sh &#39;make test-unit&#39; }</span>
+<span class="l l-Scalar l-Scalar-Plain">stage('Unit') {</span>
+<span class="l l-Scalar l-Scalar-Plain">steps { sh 'make test-unit' }</span>
 <span class="l l-Scalar l-Scalar-Plain">}</span>
-<span class="l l-Scalar l-Scalar-Plain">stage(&#39;Integration&#39;) {</span>
-<span class="l l-Scalar l-Scalar-Plain">steps { sh &#39;make test-integration&#39; }</span>
+<span class="l l-Scalar l-Scalar-Plain">stage('Integration') {</span>
+<span class="l l-Scalar l-Scalar-Plain">steps { sh 'make test-integration' }</span>
 <span class="l l-Scalar l-Scalar-Plain">}</span>
 <span class="l l-Scalar l-Scalar-Plain">}</span>
 <span class="l l-Scalar l-Scalar-Plain">}</span>
-<span class="l l-Scalar l-Scalar-Plain">stage(&#39;Deploy&#39;) {</span>
+<span class="l l-Scalar l-Scalar-Plain">stage('Deploy') {</span>
 <span class="l l-Scalar l-Scalar-Plain">steps {</span>
-<span class="l l-Scalar l-Scalar-Plain">sh &#39;make deploy&#39;</span>
+<span class="l l-Scalar l-Scalar-Plain">sh 'make deploy'</span>
 <span class="l l-Scalar l-Scalar-Plain">}</span>
 <span class="l l-Scalar l-Scalar-Plain">}</span>
 <span class="l l-Scalar l-Scalar-Plain">}</span>
@@ -5834,7 +5834,7 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 </code></pre></div>
 <h3 id="3-feature-flags">3. Feature Flags</h3>
 <div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">FeatureFlags</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">FLAG_NEW_FEATURE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;new-feature&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">FLAG_NEW_FEATURE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"new-feature"</span><span class="p">;</span>
 
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isEnabled</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">flag</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">LaunchDarkly</span><span class="p">.</span><span class="na">client</span><span class="p">().</span><span class="na">boolVariation</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>

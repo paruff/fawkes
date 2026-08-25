@@ -5907,7 +5907,7 @@ brew<span class="w"> </span>install<span class="w"> </span>infracost<span class=
 <li><strong>Authenticate with Azure</strong>:</li>
 </ol>
 <div class="highlight"><pre><span></span><code>az<span class="w"> </span>login
-az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span><span class="s2">&quot;your-subscription-id&quot;</span>
+az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span><span class="s2">"your-subscription-id"</span>
 </code></pre></div>
 <ol>
 <li><strong>Install Go dependencies</strong>:</li>
@@ -5966,10 +5966,10 @@ make<span class="w"> </span>terraform-test-all
 go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v<span class="w"> </span>-timeout<span class="w"> </span>30m<span class="w"> </span>-run<span class="w"> </span>TestAzureResourceGroupModule
 
 <span class="c1"># Run all validation tests</span>
-go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v<span class="w"> </span>-timeout<span class="w"> </span>30m<span class="w"> </span>-run<span class="w"> </span><span class="s2">&quot;Validation&quot;</span>
+go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v<span class="w"> </span>-timeout<span class="w"> </span>30m<span class="w"> </span>-run<span class="w"> </span><span class="s2">"Validation"</span>
 
 <span class="c1"># Run tests matching pattern</span>
-go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v<span class="w"> </span>-timeout<span class="w"> </span>30m<span class="w"> </span>-run<span class="w"> </span><span class="s2">&quot;Azure&quot;</span>
+go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v<span class="w"> </span>-timeout<span class="w"> </span>30m<span class="w"> </span>-run<span class="w"> </span><span class="s2">"Azure"</span>
 
 <span class="c1"># Run tests in parallel</span>
 go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v<span class="w"> </span>-timeout<span class="w"> </span>60m<span class="w"> </span>-parallel<span class="w"> </span><span class="m">4</span><span class="w"> </span>./...
@@ -5986,13 +5986,13 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="nb">export</span><span class="w"> </span><span class="nv">RUN_TERRAFORM_COST_TESTS</span><span class="o">=</span><span class="nb">true</span>
 
 <span class="c1"># Azure credentials (for integration tests)</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">ARM_SUBSCRIPTION_ID</span><span class="o">=</span><span class="s2">&quot;your-subscription-id&quot;</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">ARM_TENANT_ID</span><span class="o">=</span><span class="s2">&quot;your-tenant-id&quot;</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">ARM_CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;your-client-id&quot;</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">ARM_CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;your-client-secret&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ARM_SUBSCRIPTION_ID</span><span class="o">=</span><span class="s2">"your-subscription-id"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ARM_TENANT_ID</span><span class="o">=</span><span class="s2">"your-tenant-id"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ARM_CLIENT_ID</span><span class="o">=</span><span class="s2">"your-client-id"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ARM_CLIENT_SECRET</span><span class="o">=</span><span class="s2">"your-client-secret"</span>
 
 <span class="c1"># Infracost API key (for cost tests)</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">INFRACOST_API_KEY</span><span class="o">=</span><span class="s2">&quot;your-api-key&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">INFRACOST_API_KEY</span><span class="o">=</span><span class="s2">"your-api-key"</span>
 </code></pre></div>
 <h2 id="cicd-integration">CI/CD Integration</h2>
 <h3 id="github-actions-workflow">GitHub Actions Workflow</h3>
@@ -6015,19 +6015,19 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <div class="highlight"><pre><span></span><code><span class="c1"># Azure credentials (for integration tests)</span>
 <span class="nt">AZURE_CREDENTIALS</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">{</span>
-<span class="w">    </span><span class="no">&quot;clientId&quot;: &quot;xxx&quot;,</span>
-<span class="w">    </span><span class="no">&quot;clientSecret&quot;: &quot;xxx&quot;,</span>
-<span class="w">    </span><span class="no">&quot;subscriptionId&quot;: &quot;xxx&quot;,</span>
-<span class="w">    </span><span class="no">&quot;tenantId&quot;: &quot;xxx&quot;</span>
+<span class="w">    </span><span class="no">"clientId": "xxx",</span>
+<span class="w">    </span><span class="no">"clientSecret": "xxx",</span>
+<span class="w">    </span><span class="no">"subscriptionId": "xxx",</span>
+<span class="w">    </span><span class="no">"tenantId": "xxx"</span>
 <span class="w">  </span><span class="no">}</span>
 
-<span class="nt">ARM_SUBSCRIPTION_ID</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-subscription-id&quot;</span>
-<span class="nt">ARM_TENANT_ID</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-tenant-id&quot;</span>
-<span class="nt">ARM_CLIENT_ID</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-client-id&quot;</span>
-<span class="nt">ARM_CLIENT_SECRET</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-client-secret&quot;</span>
+<span class="nt">ARM_SUBSCRIPTION_ID</span><span class="p">:</span><span class="w"> </span><span class="s">"your-subscription-id"</span>
+<span class="nt">ARM_TENANT_ID</span><span class="p">:</span><span class="w"> </span><span class="s">"your-tenant-id"</span>
+<span class="nt">ARM_CLIENT_ID</span><span class="p">:</span><span class="w"> </span><span class="s">"your-client-id"</span>
+<span class="nt">ARM_CLIENT_SECRET</span><span class="p">:</span><span class="w"> </span><span class="s">"your-client-secret"</span>
 
 <span class="c1"># Optional: Infracost API key</span>
-<span class="nt">INFRACOST_API_KEY</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-infracost-api-key&quot;</span>
+<span class="nt">INFRACOST_API_KEY</span><span class="p">:</span><span class="w"> </span><span class="s">"your-infracost-api-key"</span>
 </code></pre></div>
 <h3 id="workflow-dispatch">Workflow Dispatch</h3>
 <p>Manually trigger E2E tests:</p>
@@ -6043,26 +6043,26 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nx">test</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;testing&quot;</span>
-<span class="w">    </span><span class="s">&quot;os&quot;</span>
-<span class="w">    </span><span class="s">&quot;github.com/gruntwork-io/terratest/modules/terraform&quot;</span>
-<span class="w">    </span><span class="s">&quot;github.com/stretchr/testify/assert&quot;</span>
+<span class="w">    </span><span class="s">"testing"</span>
+<span class="w">    </span><span class="s">"os"</span>
+<span class="w">    </span><span class="s">"github.com/gruntwork-io/terratest/modules/terraform"</span>
+<span class="w">    </span><span class="s">"github.com/stretchr/testify/assert"</span>
 <span class="p">)</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="nx">TestMyModule</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">t</span><span class="p">.</span><span class="nx">Parallel</span><span class="p">()</span>
 
 <span class="w">    </span><span class="c1">// Gate expensive tests</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;RUN_TERRAFORM_INTEGRATION_TESTS&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">t</span><span class="p">.</span><span class="nx">Skip</span><span class="p">(</span><span class="s">&quot;Skipping integration test&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">"RUN_TERRAFORM_INTEGRATION_TESTS"</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s">"true"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">t</span><span class="p">.</span><span class="nx">Skip</span><span class="p">(</span><span class="s">"Skipping integration test"</span><span class="p">)</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">// Configure Terraform</span>
 <span class="w">    </span><span class="nx">terraformOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
-<span class="w">        </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../../infra/terraform/modules/my-module&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
-<span class="w">            </span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test-resource&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;eastus2&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">"../../infra/terraform/modules/my-module"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kt">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+<span class="w">            </span><span class="s">"name"</span><span class="p">:</span><span class="w"> </span><span class="s">"test-resource"</span><span class="p">,</span>
+<span class="w">            </span><span class="s">"location"</span><span class="p">:</span><span class="w"> </span><span class="s">"eastus2"</span><span class="p">,</span>
 <span class="w">        </span><span class="p">},</span>
 <span class="w">        </span><span class="nx">NoColor</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">    </span><span class="p">}</span>
@@ -6074,8 +6074,8 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="w">    </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
 
 <span class="w">    </span><span class="c1">// Validate outputs</span>
-<span class="w">    </span><span class="nx">output</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;resource_id&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">output</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Resource ID should be set&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">output</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">"resource_id"</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">output</span><span class="p">,</span><span class="w"> </span><span class="s">"Resource ID should be set"</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="best-practices">Best Practices</h3>
@@ -6090,8 +6090,8 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 </ol>
 <h3 id="testing-patterns">Testing Patterns</h3>
 <h4 id="testing-module-outputs">Testing Module Outputs</h4>
-<div class="highlight"><pre><span></span><code><span class="nx">outputName</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">opts</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">)</span>
-<span class="nx">outputID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">opts</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nx">outputName</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">opts</span><span class="p">,</span><span class="w"> </span><span class="s">"name"</span><span class="p">)</span>
+<span class="nx">outputID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">opts</span><span class="p">,</span><span class="w"> </span><span class="s">"id"</span><span class="p">)</span>
 <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">expectedName</span><span class="p">,</span><span class="w"> </span><span class="nx">outputName</span><span class="p">)</span>
 <span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">outputID</span><span class="p">)</span>
 </code></pre></div>
@@ -6105,14 +6105,14 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 </code></pre></div>
 <h4 id="testing-dependencies">Testing Dependencies</h4>
 <div class="highlight"><pre><span></span><code><span class="c1">// Create dependency first</span>
-<span class="nx">rgOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="nx">rgOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{...}</span>
 <span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">rgOptions</span><span class="p">)</span>
-<span class="nx">rgName</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">rgOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">)</span>
+<span class="nx">rgName</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">rgOptions</span><span class="p">,</span><span class="w"> </span><span class="s">"name"</span><span class="p">)</span>
 
 <span class="c1">// Use output in dependent module</span>
 <span class="nx">networkOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
-<span class="w">    </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
-<span class="w">        </span><span class="s">&quot;resource_group_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="nx">rgName</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kt">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+<span class="w">        </span><span class="s">"resource_group_name"</span><span class="p">:</span><span class="w"> </span><span class="nx">rgName</span><span class="p">,</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="p">}</span>
 <span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">networkOptions</span><span class="p">)</span>
@@ -6208,7 +6208,7 @@ az<span class="w"> </span>consumption<span class="w"> </span>budget<span class="
 infracost<span class="w"> </span>auth<span class="w"> </span>login
 
 <span class="c1"># Set environment variable</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">INFRACOST_API_KEY</span><span class="o">=</span><span class="s2">&quot;your-key&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">INFRACOST_API_KEY</span><span class="o">=</span><span class="s2">"your-key"</span>
 
 <span class="c1"># Run cost tests</span>
 make<span class="w"> </span>terraform-test-cost
@@ -6223,7 +6223,7 @@ az<span class="w"> </span>account<span class="w"> </span>show
 
 <span class="c1"># Verify subscription</span>
 az<span class="w"> </span>account<span class="w"> </span>list<span class="w"> </span>--output<span class="w"> </span>table
-az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span><span class="s2">&quot;your-subscription-id&quot;</span>
+az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span><span class="s2">"your-subscription-id"</span>
 </code></pre></div>
 <h4 id="test-timeouts">Test Timeouts</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Increase timeout</span>

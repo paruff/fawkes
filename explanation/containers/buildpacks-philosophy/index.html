@@ -6196,16 +6196,16 @@
 <h2 id="the-problem-dockerfile-sprawl-and-security-debt">The Problem: Dockerfile Sprawl and Security Debt</h2>
 <h3 id="the-traditional-dockerfile-approach">The Traditional Dockerfile Approach</h3>
 <p>Every team writes their own container build logic:</p>
-<div class="highlight"><pre><span></span><code><span class="c"># Team A&#39;s Node.js Dockerfile</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Team A's Node.js Dockerfile</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:16-alpine</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--production
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"server.js"</span><span class="p">]</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c"># Team B&#39;s Node.js Dockerfile (slightly different)</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Team B's Node.js Dockerfile (slightly different)</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:14</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/usr/src/app</span>
@@ -6213,7 +6213,7 @@
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>install
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;start&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"npm"</span><span class="p">,</span><span class="w"> </span><span class="s2">"start"</span><span class="p">]</span>
 </code></pre></div>
 <p><strong>What's Wrong Here?</strong></p>
 <ol>
@@ -6238,10 +6238,10 @@
 <strong>Deployment Frequency</strong>: ⬇️ (Slowed by rebuild toil)</p>
 <h3 id="the-works-on-my-machine-syndrome">The "Works on My Machine" Syndrome</h3>
 <p>Developers optimize for local development:</p>
-<div class="highlight"><pre><span></span><code><span class="c"># &quot;I need curl for debugging&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="c"># "I need curl for debugging"</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl<span class="w"> </span>wget<span class="w"> </span>netcat<span class="w"> </span>vim
 
-<span class="c"># &quot;I&#39;ll clean this up later&quot; (Narrator: They didn&#39;t)</span>
+<span class="c"># "I'll clean this up later" (Narrator: They didn't)</span>
 <span class="k">COPY</span><span class="w"> </span>devtools.sh<span class="w"> </span>/usr/local/bin/
 </code></pre></div>
 <p><strong>Result:</strong></p>
@@ -6257,7 +6257,7 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># No Dockerfile needed</span>
 pack<span class="w"> </span>build<span class="w"> </span>my-app<span class="w"> </span>--builder<span class="w"> </span>paketobuildpacks/builder:base
 
-<span class="c1"># Buildpack detects: &quot;This is a Node.js app&quot;</span>
+<span class="c1"># Buildpack detects: "This is a Node.js app"</span>
 <span class="c1"># Buildpack installs: Node.js runtime, npm dependencies</span>
 <span class="c1"># Buildpack configures: Start command, environment</span>
 <span class="c1"># Buildpack outputs: Optimized multi-layer image</span>
@@ -6457,13 +6457,13 @@ pack<span class="w"> </span>build<span class="w"> </span>my-app<span class="w"> 
 <h3 id="the-maintenance-burden-shift">The Maintenance Burden Shift</h3>
 <p><strong>Before Buildpacks (Dockerfile Era):</strong></p>
 <div class="highlight"><pre><span></span><code>Platform Team:
-- Writes &quot;recommended Dockerfile&quot; guide
+- Writes "recommended Dockerfile" guide
 - Reviews 200 Dockerfiles in PRs
 - Manually reminds teams to update base images
 
 Developers:
 - Copy-paste Dockerfiles from other projects
-- Cargo-cult optimizations they don&#39;t understand
+- Cargo-cult optimizations they don't understand
 - Ignore security patches (too much work)
 </code></pre></div>
 <p><strong>After Buildpacks:</strong></p>

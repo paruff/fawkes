@@ -5832,8 +5832,8 @@
 <h4 id="opensearch-exporter">OpenSearch Exporter</h4>
 <div class="highlight"><pre><span></span><code><span class="nt">opensearch</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">http</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://opensearch-cluster-master.logging.svc.cluster.local:9200&quot;</span>
-<span class="w">  </span><span class="nt">logs_index</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;otel-logs&quot;</span>
+<span class="w">    </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="s">"http://opensearch-cluster-master.logging.svc.cluster.local:9200"</span>
+<span class="w">  </span><span class="nt">logs_index</span><span class="p">:</span><span class="w"> </span><span class="s">"otel-logs"</span>
 <span class="w">  </span><span class="nt">retry</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">max_elapsed_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300s</span>
@@ -5855,23 +5855,23 @@
 <h3 id="searching-logs-in-opensearch">Searching Logs in OpenSearch</h3>
 <p>Access OpenSearch Dashboards and use these query patterns:</p>
 <p><strong>Find logs from a specific namespace:</strong></p>
-<div class="highlight"><pre><span></span><code>resource.attributes.k8s.namespace.name: &quot;my-namespace&quot;
+<div class="highlight"><pre><span></span><code>resource.attributes.k8s.namespace.name: "my-namespace"
 </code></pre></div>
 <p><strong>Find logs with a specific trace ID:</strong></p>
-<div class="highlight"><pre><span></span><code>traceId: &quot;&lt;your-32-character-trace-id&gt;&quot;
+<div class="highlight"><pre><span></span><code>traceId: "&lt;your-32-character-trace-id&gt;"
 </code></pre></div>
 <p><strong>Find error logs from a deployment:</strong></p>
-<div class="highlight"><pre><span></span><code>resource.attributes.k8s.deployment.name: &quot;my-app&quot; AND severityText: &quot;ERROR&quot;
+<div class="highlight"><pre><span></span><code>resource.attributes.k8s.deployment.name: "my-app" AND severityText: "ERROR"
 </code></pre></div>
 <h3 id="structured-logging-best-practices">Structured Logging Best Practices</h3>
 <p>For optimal trace correlation, applications should emit structured JSON logs:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;@timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-07T10:30:00.123Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User login successful&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;traceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;32-character-hex-trace-id&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;spanId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;16-character-hex-span-id&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;userId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user-123&quot;</span>
+<span class="w">  </span><span class="nt">"@timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-07T10:30:00.123Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INFO"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User login successful"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"traceId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;32-character-hex-trace-id&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"spanId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;16-character-hex-span-id&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user-123"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="required-fields">Required Fields</h3>

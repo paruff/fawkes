@@ -5808,7 +5808,7 @@
 │  │   data:                                                │ │
 │  │     jcasc.yaml: |                                      │ │
 │  │       jenkins:                                         │ │
-│  │         systemMessage: &quot;...&quot;                           │ │
+│  │         systemMessage: "..."                           │ │
 │  │         clouds: ...                                    │ │
 │  └───────────────────────────────────────────────────────┘ │
 │                  │                                          │
@@ -5842,21 +5842,21 @@
 <p>The JCasC configuration is organized into sections:</p>
 <h3 id="1-jenkins-core-settings">1. Jenkins Core Settings</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">jenkins</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">systemMessage</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Fawkes</span><span class="nv"> </span><span class="s">CI/CD</span><span class="nv"> </span><span class="s">Platform</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">Golden</span><span class="nv"> </span><span class="s">Path</span><span class="nv"> </span><span class="s">Enabled&quot;</span>
+<span class="w">  </span><span class="nt">systemMessage</span><span class="p">:</span><span class="w"> </span><span class="s">"Fawkes</span><span class="nv"> </span><span class="s">CI/CD</span><span class="nv"> </span><span class="s">Platform</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">Golden</span><span class="nv"> </span><span class="s">Path</span><span class="nv"> </span><span class="s">Enabled"</span>
 <span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NORMAL</span>
 <span class="w">  </span><span class="nt">numExecutors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"> </span><span class="c1"># No builds on controller</span>
 </code></pre></div>
 <h3 id="2-kubernetes-cloud-configuration">2. Kubernetes Cloud Configuration</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">clouds</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kubernetes</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes&quot;</span>
-<span class="w">      </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fawkes&quot;</span>
-<span class="w">      </span><span class="nt">jenkinsUrl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://jenkins:8080&quot;</span>
-<span class="w">      </span><span class="nt">jenkinsTunnel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;jenkins-agent:50000&quot;</span>
-<span class="w">      </span><span class="nt">containerCapStr</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;20&quot;</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"kubernetes"</span>
+<span class="w">      </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">"fawkes"</span>
+<span class="w">      </span><span class="nt">jenkinsUrl</span><span class="p">:</span><span class="w"> </span><span class="s">"http://jenkins:8080"</span>
+<span class="w">      </span><span class="nt">jenkinsTunnel</span><span class="p">:</span><span class="w"> </span><span class="s">"jenkins-agent:50000"</span>
+<span class="w">      </span><span class="nt">containerCapStr</span><span class="p">:</span><span class="w"> </span><span class="s">"20"</span>
 <span class="w">      </span><span class="nt">templates</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven-agent&quot;</span>
-<span class="w">          </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven</span><span class="nv"> </span><span class="s">java&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"maven-agent"</span>
+<span class="w">          </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">"maven</span><span class="nv"> </span><span class="s">java"</span>
 <span class="w">          </span><span class="c1"># ... agent configuration</span>
 </code></pre></div>
 <h3 id="3-security-realm-authorization">3. Security Realm &amp; Authorization</h3>
@@ -5864,8 +5864,8 @@
 <span class="w">  </span><span class="nt">local</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">allowsSignup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">    </span><span class="nt">users</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;admin&quot;</span>
-<span class="w">        </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${ADMIN_PASSWORD}&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"admin"</span>
+<span class="w">        </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">"${ADMIN_PASSWORD}"</span>
 
 <span class="nt">authorizationStrategy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">loggedInUsersCanDoAnything</span><span class="p">:</span>
@@ -5878,42 +5878,42 @@
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">credentials</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">string</span><span class="p">:</span>
 <span class="w">              </span><span class="nt">scope</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GLOBAL</span>
-<span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;github-token&quot;</span>
-<span class="w">              </span><span class="nt">secret</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${GITHUB_TOKEN}&quot;</span>
+<span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"github-token"</span>
+<span class="w">              </span><span class="nt">secret</span><span class="p">:</span><span class="w"> </span><span class="s">"${GITHUB_TOKEN}"</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">string</span><span class="p">:</span>
 <span class="w">              </span><span class="nt">scope</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GLOBAL</span>
-<span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sonarqube-token&quot;</span>
-<span class="w">              </span><span class="nt">secret</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${SONARQUBE_TOKEN}&quot;</span>
+<span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"sonarqube-token"</span>
+<span class="w">              </span><span class="nt">secret</span><span class="p">:</span><span class="w"> </span><span class="s">"${SONARQUBE_TOKEN}"</span>
 </code></pre></div>
 <h3 id="5-global-libraries">5. Global Libraries</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">unclassified</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">globalLibraries</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">libraries</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fawkes-pipeline-library&quot;</span>
-<span class="w">        </span><span class="nt">defaultVersion</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;main&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"fawkes-pipeline-library"</span>
+<span class="w">        </span><span class="nt">defaultVersion</span><span class="p">:</span><span class="w"> </span><span class="s">"main"</span>
 <span class="w">        </span><span class="nt">implicit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">        </span><span class="nt">retriever</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">modernSCM</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">scm</span><span class="p">:</span>
 <span class="w">              </span><span class="nt">git</span><span class="p">:</span>
-<span class="w">                </span><span class="nt">remote</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://github.com/paruff/fawkes&quot;</span>
-<span class="w">                </span><span class="nt">credentialsId</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;github-token&quot;</span>
-<span class="w">            </span><span class="nt">libraryPath</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;jenkins-shared-library&quot;</span>
+<span class="w">                </span><span class="nt">remote</span><span class="p">:</span><span class="w"> </span><span class="s">"https://github.com/paruff/fawkes"</span>
+<span class="w">                </span><span class="nt">credentialsId</span><span class="p">:</span><span class="w"> </span><span class="s">"github-token"</span>
+<span class="w">            </span><span class="nt">libraryPath</span><span class="p">:</span><span class="w"> </span><span class="s">"jenkins-shared-library"</span>
 </code></pre></div>
 <h3 id="6-tool-installations">6. Tool Installations</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">tool</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">git</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">installations</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Default&quot;</span>
-<span class="w">        </span><span class="nt">home</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;git&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"Default"</span>
+<span class="w">        </span><span class="nt">home</span><span class="p">:</span><span class="w"> </span><span class="s">"git"</span>
 <span class="w">  </span><span class="nt">maven</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">installations</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Maven</span><span class="nv"> </span><span class="s">3.9&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"Maven</span><span class="nv"> </span><span class="s">3.9"</span>
 <span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">installSource</span><span class="p">:</span>
 <span class="w">              </span><span class="nt">installers</span><span class="p">:</span>
 <span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">maven</span><span class="p">:</span>
-<span class="w">                    </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.9.6&quot;</span>
+<span class="w">                    </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"3.9.6"</span>
 </code></pre></div>
 <h2 id="plugin-management">Plugin Management</h2>
 <p>Plugins are managed via Helm values in <code>jenkins-application.yaml</code>:</p>
@@ -5946,10 +5946,10 @@
 <li>Create a Kubernetes Secret (using secure method to avoid shell history):</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="c1"># Method 1: Using --from-file (recommended)</span>
-<span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;ghp_your_token&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/github-token
-<span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;squ_your_token&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/sonarqube-token
-<span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;admin&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/docker-username
-<span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;your_password&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/docker-password
+<span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"ghp_your_token"</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/github-token
+<span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"squ_your_token"</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/sonarqube-token
+<span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"admin"</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/docker-username
+<span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"your_password"</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/docker-password
 
 kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>jenkins-credentials<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
@@ -5963,10 +5963,10 @@ shred<span class="w"> </span>-u<span class="w"> </span>/tmp/github-token<span cl
 
 <span class="c1"># Method 2: Using stdin (also recommended)</span>
 kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>jenkins-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">read</span><span class="w"> </span>-s<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;GitHub Token: &#39;</span><span class="w"> </span>token<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$token</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">SONARQUBE_TOKEN</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">read</span><span class="w"> </span>-s<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;SonarQube Token: &#39;</span><span class="w"> </span>token<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$token</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">DOCKER_REGISTRY_USERNAME</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">read</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;Docker Username: &#39;</span><span class="w"> </span>user<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$user</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">DOCKER_REGISTRY_PASSWORD</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">read</span><span class="w"> </span>-s<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;Docker Password: &#39;</span><span class="w"> </span>pass<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$pass</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">read</span><span class="w"> </span>-s<span class="w"> </span>-p<span class="w"> </span><span class="s1">'GitHub Token: '</span><span class="w"> </span>token<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$token</span><span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">SONARQUBE_TOKEN</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">read</span><span class="w"> </span>-s<span class="w"> </span>-p<span class="w"> </span><span class="s1">'SonarQube Token: '</span><span class="w"> </span>token<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$token</span><span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">DOCKER_REGISTRY_USERNAME</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">read</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">'Docker Username: '</span><span class="w"> </span>user<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$user</span><span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">DOCKER_REGISTRY_PASSWORD</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">read</span><span class="w"> </span>-s<span class="w"> </span>-p<span class="w"> </span><span class="s1">'Docker Password: '</span><span class="w"> </span>pass<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$pass</span><span class="k">)</span><span class="s2">"</span>
 </code></pre></div>
 <p><strong>Security Note</strong>: Never use <code>--from-literal</code> with plaintext values as shown in simple examples, as this exposes credentials in:</p>
 <ul>
@@ -5999,8 +5999,8 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <span class="w">    </span><span class="nt">domainCredentials</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">credentials</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">string</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;github-token&quot;</span>
-<span class="w">              </span><span class="nt">secret</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${GITHUB_TOKEN}&quot;</span>
+<span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"github-token"</span>
+<span class="w">              </span><span class="nt">secret</span><span class="p">:</span><span class="w"> </span><span class="s">"${GITHUB_TOKEN}"</span>
 </code></pre></div>
 <h3 id="production-setup-with-external-secrets-operator">Production Setup with External Secrets Operator</h3>
 <p>For production environments, use External Secrets Operator to sync from:</p>
@@ -6067,7 +6067,7 @@ vim<span class="w"> </span>platform/apps/jenkins/jcasc.yaml
 
 <span class="c1"># 3. Commit and push</span>
 git<span class="w"> </span>add<span class="w"> </span>platform/apps/jenkins/jcasc.yaml
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update Jenkins JCasC configuration&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Update Jenkins JCasC configuration"</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/jenkins-config-update
 
 <span class="c1"># 4. Create pull request and merge</span>
@@ -6104,7 +6104,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <ol>
 <li>Check Jenkins logs for errors:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>deployment/jenkins<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;configuration as code&quot;</span>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>deployment/jenkins<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"configuration as code"</span>
 </code></pre></div>
 <h3 id="environment-variables-not-resolved">Environment Variables Not Resolved</h3>
 <ol>
@@ -6115,7 +6115,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <ol>
 <li>Check environment variables in pod:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>jenkins-0<span class="w"> </span>--<span class="w"> </span>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;GITHUB_TOKEN|SONARQUBE_TOKEN&quot;</span>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>jenkins-0<span class="w"> </span>--<span class="w"> </span>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"GITHUB_TOKEN|SONARQUBE_TOKEN"</span>
 </code></pre></div>
 <h3 id="plugin-compatibility-issues">Plugin Compatibility Issues</h3>
 <ol>
@@ -6142,10 +6142,10 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 </ol>
 <div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Test'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">withCredentials</span><span class="o">([</span><span class="n">string</span><span class="o">(</span><span class="nl">credentialsId:</span><span class="w"> </span><span class="s1">&#39;github-token&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">variable:</span><span class="w"> </span><span class="s1">&#39;GITHUB_TOKEN&#39;</span><span class="o">)])</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;echo &quot;Token: $GITHUB_TOKEN&quot;&#39;</span>
+<span class="w">                </span><span class="n">withCredentials</span><span class="o">([</span><span class="n">string</span><span class="o">(</span><span class="nl">credentialsId:</span><span class="w"> </span><span class="s1">'github-token'</span><span class="o">,</span><span class="w"> </span><span class="nl">variable:</span><span class="w"> </span><span class="s1">'GITHUB_TOKEN'</span><span class="o">)])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">'echo "Token: $GITHUB_TOKEN"'</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
@@ -6213,50 +6213,50 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <h2 id="configuration-examples">Configuration Examples</h2>
 <h3 id="adding-a-new-kubernetes-agent-template">Adding a New Kubernetes Agent Template</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">templates</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;rust-agent&quot;</span>
-<span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;rust</span><span class="nv"> </span><span class="s">cargo&quot;</span>
-<span class="w">    </span><span class="nt">remoteFs</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/home/jenkins&quot;</span>
-<span class="w">    </span><span class="nt">instanceCapStr</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;5&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"rust-agent"</span>
+<span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">"rust</span><span class="nv"> </span><span class="s">cargo"</span>
+<span class="w">    </span><span class="nt">remoteFs</span><span class="p">:</span><span class="w"> </span><span class="s">"/home/jenkins"</span>
+<span class="w">    </span><span class="nt">instanceCapStr</span><span class="p">:</span><span class="w"> </span><span class="s">"5"</span>
 <span class="w">    </span><span class="nt">idleTerminationMinutes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 <span class="w">    </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;rust&quot;</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;rust:1.75&quot;</span>
-<span class="w">        </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cat&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"rust"</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">"rust:1.75"</span>
+<span class="w">        </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">"cat"</span>
 <span class="w">        </span><span class="nt">ttyEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">        </span><span class="nt">resourceRequestCpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span>
-<span class="w">        </span><span class="nt">resourceRequestMemory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1Gi&quot;</span>
-<span class="w">        </span><span class="nt">resourceLimitCpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2&quot;</span>
-<span class="w">        </span><span class="nt">resourceLimitMemory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;4Gi&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;jnlp&quot;</span>
-<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;jenkins/inbound-agent:latest&quot;</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${computer.jnlpmac}</span><span class="nv"> </span><span class="s">${computer.name}&quot;</span>
+<span class="w">        </span><span class="nt">resourceRequestCpu</span><span class="p">:</span><span class="w"> </span><span class="s">"500m"</span>
+<span class="w">        </span><span class="nt">resourceRequestMemory</span><span class="p">:</span><span class="w"> </span><span class="s">"1Gi"</span>
+<span class="w">        </span><span class="nt">resourceLimitCpu</span><span class="p">:</span><span class="w"> </span><span class="s">"2"</span>
+<span class="w">        </span><span class="nt">resourceLimitMemory</span><span class="p">:</span><span class="w"> </span><span class="s">"4Gi"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"jnlp"</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">"jenkins/inbound-agent:latest"</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="s">"${computer.jnlpmac}</span><span class="nv"> </span><span class="s">${computer.name}"</span>
 </code></pre></div>
 <h3 id="adding-oauthoidc-authentication">Adding OAuth/OIDC Authentication</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">securityRealm</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">github</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">githubWebUri</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://github.com&quot;</span>
-<span class="w">    </span><span class="nt">githubApiUri</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://api.github.com&quot;</span>
-<span class="w">    </span><span class="nt">clientID</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${GITHUB_OAUTH_CLIENT_ID}&quot;</span>
-<span class="w">    </span><span class="nt">clientSecret</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${GITHUB_OAUTH_CLIENT_SECRET}&quot;</span>
-<span class="w">    </span><span class="nt">oauthScopes</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;read:org,user:email&quot;</span>
+<span class="w">    </span><span class="nt">githubWebUri</span><span class="p">:</span><span class="w"> </span><span class="s">"https://github.com"</span>
+<span class="w">    </span><span class="nt">githubApiUri</span><span class="p">:</span><span class="w"> </span><span class="s">"https://api.github.com"</span>
+<span class="w">    </span><span class="nt">clientID</span><span class="p">:</span><span class="w"> </span><span class="s">"${GITHUB_OAUTH_CLIENT_ID}"</span>
+<span class="w">    </span><span class="nt">clientSecret</span><span class="p">:</span><span class="w"> </span><span class="s">"${GITHUB_OAUTH_CLIENT_SECRET}"</span>
+<span class="w">    </span><span class="nt">oauthScopes</span><span class="p">:</span><span class="w"> </span><span class="s">"read:org,user:email"</span>
 </code></pre></div>
 <h3 id="adding-role-based-access-control">Adding Role-Based Access Control</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">authorizationStrategy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">roleBased</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">roles</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">global</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;admin&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"admin"</span>
 <span class="w">          </span><span class="nt">permissions</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Overall/Administer&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Overall/Administer"</span>
 <span class="w">          </span><span class="nt">assignments</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;admin&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;developer&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"admin"</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"developer"</span>
 <span class="w">          </span><span class="nt">permissions</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Overall/Read&quot;</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Job/Build&quot;</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Job/Read&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Overall/Read"</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Job/Build"</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Job/Read"</span>
 <span class="w">          </span><span class="nt">assignments</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;authenticated&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"authenticated"</span>
 </code></pre></div>
 <h2 id="references">References</h2>
 <ul>

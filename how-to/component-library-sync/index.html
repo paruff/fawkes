@@ -5664,34 +5664,34 @@
 <span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
 <span class="w">    </span><span class="n">triggers</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">cron</span><span class="o">(</span><span class="s1">&#39;0 * * * *&#39;</span><span class="o">)</span><span class="w">  </span><span class="c1">// Every hour</span>
+<span class="w">        </span><span class="n">cron</span><span class="o">(</span><span class="s1">'0 * * * *'</span><span class="o">)</span><span class="w">  </span><span class="c1">// Every hour</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Fetch Penpot Projects&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Fetch Penpot Projects'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
 <span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">                        curl -H &quot;Authorization: Token ${PENPOT_API_TOKEN}&quot; \</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">'''</span>
+<span class="s1">                        curl -H "Authorization: Token ${PENPOT_API_TOKEN}" \</span>
 <span class="s1">                             https://penpot.fawkes.local/api/rpc/command/get-projects \</span>
 <span class="s1">                             &gt; penpot-projects.json</span>
-<span class="s1">                    &#39;&#39;&#39;</span>
+<span class="s1">                    '''</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Extract Components&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Extract Components'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
 <span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">'''</span>
 <span class="s1">                        python3 scripts/extract-penpot-components.py \</span>
 <span class="s1">                            --input penpot-projects.json \</span>
 <span class="s1">                            --output penpot-components.json</span>
-<span class="s1">                    &#39;&#39;&#39;</span>
+<span class="s1">                    '''</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Store Inventory&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Store Inventory'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">archiveArtifacts</span><span class="w"> </span><span class="nl">artifacts:</span><span class="w"> </span><span class="s1">&#39;penpot-components.json&#39;</span>
+<span class="w">                </span><span class="n">archiveArtifacts</span><span class="w"> </span><span class="nl">artifacts:</span><span class="w"> </span><span class="s1">'penpot-components.json'</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>
@@ -5707,29 +5707,29 @@
 
     <span class="k">for</span> <span class="n">penpot_comp</span> <span class="ow">in</span> <span class="n">penpot_components</span><span class="p">:</span>
         <span class="c1"># Try exact name match</span>
-        <span class="n">ds_comp</span> <span class="o">=</span> <span class="n">find_by_name</span><span class="p">(</span><span class="n">design_system_components</span><span class="p">,</span> <span class="n">penpot_comp</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+        <span class="n">ds_comp</span> <span class="o">=</span> <span class="n">find_by_name</span><span class="p">(</span><span class="n">design_system_components</span><span class="p">,</span> <span class="n">penpot_comp</span><span class="p">[</span><span class="s1">'name'</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="n">ds_comp</span><span class="p">:</span>
             <span class="n">mappings</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                <span class="s1">&#39;penpot&#39;</span><span class="p">:</span> <span class="n">penpot_comp</span><span class="p">,</span>
-                <span class="s1">&#39;designSystem&#39;</span><span class="p">:</span> <span class="n">ds_comp</span><span class="p">,</span>
-                <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;mapped&#39;</span>
+                <span class="s1">'penpot'</span><span class="p">:</span> <span class="n">penpot_comp</span><span class="p">,</span>
+                <span class="s1">'designSystem'</span><span class="p">:</span> <span class="n">ds_comp</span><span class="p">,</span>
+                <span class="s1">'status'</span><span class="p">:</span> <span class="s1">'mapped'</span>
             <span class="p">})</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Try fuzzy match</span>
-            <span class="n">ds_comp</span> <span class="o">=</span> <span class="n">fuzzy_match</span><span class="p">(</span><span class="n">design_system_components</span><span class="p">,</span> <span class="n">penpot_comp</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+            <span class="n">ds_comp</span> <span class="o">=</span> <span class="n">fuzzy_match</span><span class="p">(</span><span class="n">design_system_components</span><span class="p">,</span> <span class="n">penpot_comp</span><span class="p">[</span><span class="s1">'name'</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">ds_comp</span><span class="p">:</span>
                 <span class="n">mappings</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                    <span class="s1">&#39;penpot&#39;</span><span class="p">:</span> <span class="n">penpot_comp</span><span class="p">,</span>
-                    <span class="s1">&#39;designSystem&#39;</span><span class="p">:</span> <span class="n">ds_comp</span><span class="p">,</span>
-                    <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;fuzzy-mapped&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;confidence&#39;</span><span class="p">:</span> <span class="mf">0.85</span>
+                    <span class="s1">'penpot'</span><span class="p">:</span> <span class="n">penpot_comp</span><span class="p">,</span>
+                    <span class="s1">'designSystem'</span><span class="p">:</span> <span class="n">ds_comp</span><span class="p">,</span>
+                    <span class="s1">'status'</span><span class="p">:</span> <span class="s1">'fuzzy-mapped'</span><span class="p">,</span>
+                    <span class="s1">'confidence'</span><span class="p">:</span> <span class="mf">0.85</span>
                 <span class="p">})</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">mappings</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                    <span class="s1">&#39;penpot&#39;</span><span class="p">:</span> <span class="n">penpot_comp</span><span class="p">,</span>
-                    <span class="s1">&#39;designSystem&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                    <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;unmapped&#39;</span>
+                    <span class="s1">'penpot'</span><span class="p">:</span> <span class="n">penpot_comp</span><span class="p">,</span>
+                    <span class="s1">'designSystem'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s1">'status'</span><span class="p">:</span> <span class="s1">'unmapped'</span>
                 <span class="p">})</span>
 
     <span class="k">return</span> <span class="n">mappings</span>
@@ -5780,45 +5780,45 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_design_tokens</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">design_system_component</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate that design tokens are used consistently.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Validate that design tokens are used consistently."""</span>
     <span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="c1"># Check colors</span>
     <span class="n">penpot_colors</span> <span class="o">=</span> <span class="n">extract_colors</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">penpot_colors</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_design_token</span><span class="p">(</span><span class="n">color</span><span class="p">):</span>
-            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Color </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s2"> is not a design token&quot;</span><span class="p">)</span>
+            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Color </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s2"> is not a design token"</span><span class="p">)</span>
 
     <span class="c1"># Check spacing</span>
     <span class="n">penpot_spacing</span> <span class="o">=</span> <span class="n">extract_spacing</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">spacing</span> <span class="ow">in</span> <span class="n">penpot_spacing</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_spacing_token</span><span class="p">(</span><span class="n">spacing</span><span class="p">):</span>
-            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Spacing </span><span class="si">{</span><span class="n">spacing</span><span class="si">}</span><span class="s2"> is not a design token&quot;</span><span class="p">)</span>
+            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Spacing </span><span class="si">{</span><span class="n">spacing</span><span class="si">}</span><span class="s2"> is not a design token"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">issues</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_accessibility</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate accessibility requirements.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Validate accessibility requirements."""</span>
     <span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="c1"># Check color contrast</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">meets_contrast_ratio</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">,</span> <span class="n">min_ratio</span><span class="o">=</span><span class="mf">4.5</span><span class="p">):</span>
-        <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Color contrast ratio below 4.5:1&quot;</span><span class="p">)</span>
+        <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"Color contrast ratio below 4.5:1"</span><span class="p">)</span>
 
     <span class="c1"># Check touch targets</span>
     <span class="n">size</span> <span class="o">=</span> <span class="n">get_component_size</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">size</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">44</span> <span class="ow">or</span> <span class="n">size</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">44</span><span class="p">:</span>
-        <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Touch target too small: </span><span class="si">{</span><span class="n">size</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">size</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">px (min 44x44px)&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">size</span><span class="p">[</span><span class="s1">'width'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">44</span> <span class="ow">or</span> <span class="n">size</span><span class="p">[</span><span class="s1">'height'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">44</span><span class="p">:</span>
+        <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Touch target too small: </span><span class="si">{</span><span class="n">size</span><span class="p">[</span><span class="s1">'width'</span><span class="p">]</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">size</span><span class="p">[</span><span class="s1">'height'</span><span class="p">]</span><span class="si">}</span><span class="s2">px (min 44x44px)"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">issues</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_component</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">design_system_component</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run all validations on a component.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Run all validations on a component."""</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s1">&#39;component&#39;</span><span class="p">:</span> <span class="n">penpot_component</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;token_issues&#39;</span><span class="p">:</span> <span class="n">validate_design_tokens</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">,</span> <span class="n">design_system_component</span><span class="p">),</span>
-        <span class="s1">&#39;accessibility_issues&#39;</span><span class="p">:</span> <span class="n">validate_accessibility</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">),</span>
-        <span class="s1">&#39;mapping_confidence&#39;</span><span class="p">:</span> <span class="n">calculate_mapping_confidence</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">,</span> <span class="n">design_system_component</span><span class="p">)</span>
+        <span class="s1">'component'</span><span class="p">:</span> <span class="n">penpot_component</span><span class="p">[</span><span class="s1">'name'</span><span class="p">],</span>
+        <span class="s1">'token_issues'</span><span class="p">:</span> <span class="n">validate_design_tokens</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">,</span> <span class="n">design_system_component</span><span class="p">),</span>
+        <span class="s1">'accessibility_issues'</span><span class="p">:</span> <span class="n">validate_accessibility</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">),</span>
+        <span class="s1">'mapping_confidence'</span><span class="p">:</span> <span class="n">calculate_mapping_confidence</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">,</span> <span class="n">design_system_component</span><span class="p">)</span>
     <span class="p">}</span>
 </code></pre></div>
 <h3 id="4-sync-phase">4. Sync Phase</h3>
@@ -5853,22 +5853,22 @@
 </ol>
 <p><strong>Storybook Integration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Example: Adding Penpot preview to Storybook</span>
-<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react&#39;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Meta</span><span class="p">,</span><span class="w"> </span><span class="nx">Story</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@storybook/react&#39;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Button</span><span class="p">,</span><span class="w"> </span><span class="nx">ButtonProps</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./Button&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Meta</span><span class="p">,</span><span class="w"> </span><span class="nx">Story</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@storybook/react'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Button</span><span class="p">,</span><span class="w"> </span><span class="nx">ButtonProps</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'./Button'</span><span class="p">;</span>
 
 <span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Components/Button&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s1">'Components/Button'</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="kt">Button</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">parameters</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">penpot</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">designId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;project-123/file-456&#39;</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">page</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Buttons&#39;</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">frame</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Primary Button&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">designId</span><span class="o">:</span><span class="w"> </span><span class="s1">'project-123/file-456'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">page</span><span class="o">:</span><span class="w"> </span><span class="s1">'Buttons'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">frame</span><span class="o">:</span><span class="w"> </span><span class="s1">'Primary Button'</span><span class="p">,</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="nx">design</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;penpot&#39;</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://penpot.fawkes.local/workspace/project-123/file-456&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'penpot'</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s1">'https://penpot.fawkes.local/workspace/project-123/file-456'</span><span class="p">,</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="p">}</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Meta</span><span class="p">;</span>
@@ -5877,15 +5877,15 @@
 
 <span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">Primary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Template</span><span class="p">.</span><span class="nx">bind</span><span class="p">({});</span>
 <span class="nx">Primary</span><span class="p">.</span><span class="nx">args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">variant</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;primary&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Primary Button&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">variant</span><span class="o">:</span><span class="w"> </span><span class="s1">'primary'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="s1">'Primary Button'</span><span class="p">,</span>
 <span class="p">};</span>
 </code></pre></div>
 <h3 id="5-reporting-phase">5. Reporting Phase</h3>
 <p><strong>Report Generation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Example sync report</span>
 <span class="nt">sync_report</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">timestamp</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2024-12-24T10:00:00Z&quot;</span>
+<span class="w">  </span><span class="nt">timestamp</span><span class="p">:</span><span class="w"> </span><span class="s">"2024-12-24T10:00:00Z"</span>
 <span class="w">  </span><span class="nt">penpot_components</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45</span>
 <span class="w">  </span><span class="nt">design_system_components</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
 
@@ -5900,45 +5900,45 @@
 <span class="w">    </span><span class="nt">errors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 
 <span class="w">  </span><span class="nt">issues</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Alert/Info&quot;</span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;warning&quot;</span>
-<span class="w">      </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Color</span><span class="nv"> </span><span class="s">#1E90FF</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">design</span><span class="nv"> </span><span class="s">token&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="s">"Alert/Info"</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">"warning"</span>
+<span class="w">      </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">"Color</span><span class="nv"> </span><span class="s">#1E90FF</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">design</span><span class="nv"> </span><span class="s">token"</span>
 
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Button/Large&quot;</span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;warning&quot;</span>
-<span class="w">      </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Height</span><span class="nv"> </span><span class="s">48px</span><span class="nv"> </span><span class="s">doesn&#39;t</span><span class="nv"> </span><span class="s">match</span><span class="nv"> </span><span class="s">design</span><span class="nv"> </span><span class="s">token</span><span class="nv"> </span><span class="s">scale&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="s">"Button/Large"</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">"warning"</span>
+<span class="w">      </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">"Height</span><span class="nv"> </span><span class="s">48px</span><span class="nv"> </span><span class="s">doesn't</span><span class="nv"> </span><span class="s">match</span><span class="nv"> </span><span class="s">design</span><span class="nv"> </span><span class="s">token</span><span class="nv"> </span><span class="s">scale"</span>
 
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;IconButton&quot;</span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;unmapped&quot;</span>
-<span class="w">      </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;No</span><span class="nv"> </span><span class="s">matching</span><span class="nv"> </span><span class="s">Design</span><span class="nv"> </span><span class="s">System</span><span class="nv"> </span><span class="s">component</span><span class="nv"> </span><span class="s">found&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="s">"IconButton"</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">"unmapped"</span>
+<span class="w">      </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">"No</span><span class="nv"> </span><span class="s">matching</span><span class="nv"> </span><span class="s">Design</span><span class="nv"> </span><span class="s">System</span><span class="nv"> </span><span class="s">component</span><span class="nv"> </span><span class="s">found"</span>
 
 <span class="w">  </span><span class="nt">recommendations</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Add</span><span class="nv"> </span><span class="s">IconButton</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">Design</span><span class="nv"> </span><span class="s">System&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Update</span><span class="nv"> </span><span class="s">Alert/Info</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">use</span><span class="nv"> </span><span class="s">tokens.colors.info[500]&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Review</span><span class="nv"> </span><span class="s">Button</span><span class="nv"> </span><span class="s">size</span><span class="nv"> </span><span class="s">variants&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Add</span><span class="nv"> </span><span class="s">IconButton</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">Design</span><span class="nv"> </span><span class="s">System"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Update</span><span class="nv"> </span><span class="s">Alert/Info</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">use</span><span class="nv"> </span><span class="s">tokens.colors.info[500]"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Review</span><span class="nv"> </span><span class="s">Button</span><span class="nv"> </span><span class="s">size</span><span class="nv"> </span><span class="s">variants"</span>
 </code></pre></div>
 <p><strong>Notification</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;channel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#design-system&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;🎨 Component Sync Report - 2024-12-24&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;attachments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"channel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#design-system"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"🎨 Component Sync Report - 2024-12-24"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;warning&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="nt">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"warning"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">          </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Summary&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;38 mapped, 4 fuzzy, 3 unmapped&quot;</span>
+<span class="w">          </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Summary"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"38 mapped, 4 fuzzy, 3 unmapped"</span>
 <span class="w">        </span><span class="p">},</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">          </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Issues&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;7 warnings, 0 errors&quot;</span>
+<span class="w">          </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issues"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7 warnings, 0 errors"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;actions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="nt">"actions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;button&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;View Full Report&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://jenkins.fawkes.local/job/penpot-sync/lastBuild&quot;</span>
+<span class="w">          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"button"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"View Full Report"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://jenkins.fawkes.local/job/penpot-sync/lastBuild"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
@@ -5950,7 +5950,7 @@
 <p>Configure sync frequency in Jenkins:</p>
 <div class="highlight"><pre><span></span><code><span class="n">triggers</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="c1">// Run every hour</span>
-<span class="w">    </span><span class="n">cron</span><span class="o">(</span><span class="s1">&#39;0 * * * *&#39;</span><span class="o">)</span>
+<span class="w">    </span><span class="n">cron</span><span class="o">(</span><span class="s1">'0 * * * *'</span><span class="o">)</span>
 
 <span class="w">    </span><span class="c1">// Or run on Penpot webhook (future)</span>
 <span class="w">    </span><span class="c1">// genericTrigger(...)</span>
@@ -5968,7 +5968,7 @@
 <span class="w">    </span><span class="c1"># Prefix match (Button/* → Button)</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prefix</span>
 <span class="w">      </span><span class="nt">priority</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="w">      </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;^([^/]+)/.*&quot;</span>
+<span class="w">      </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">"^([^/]+)/.*"</span>
 
 <span class="w">    </span><span class="c1"># Fuzzy match with similarity threshold</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fuzzy</span>
@@ -5977,9 +5977,9 @@
 
 <span class="w">  </span><span class="nt">exclusions</span><span class="p">:</span>
 <span class="w">    </span><span class="c1"># Ignore these Penpot components</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Template/*&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Archive/*&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Draft/*&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Template/*"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Archive/*"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Draft/*"</span>
 </code></pre></div>
 <h3 id="validation-rules">Validation Rules</h3>
 <p>Configure validation strictness:</p>
@@ -6029,8 +6029,8 @@ kubectl<span class="w"> </span>create<span class="w"> </span>job<span class="w">
 <p><strong>Fix</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Add explicit mapping</span>
 <span class="nt">mappings</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">penpotComponent</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Icon</span><span class="nv"> </span><span class="s">Button&quot;</span>
-<span class="w">    </span><span class="nt">designSystemComponent</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;IconButton&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">penpotComponent</span><span class="p">:</span><span class="w"> </span><span class="s">"Icon</span><span class="nv"> </span><span class="s">Button"</span>
+<span class="w">    </span><span class="nt">designSystemComponent</span><span class="p">:</span><span class="w"> </span><span class="s">"IconButton"</span>
 </code></pre></div>
 <h3 id="false-validation-errors">False Validation Errors</h3>
 <p><strong>Adjust thresholds</strong>:</p>

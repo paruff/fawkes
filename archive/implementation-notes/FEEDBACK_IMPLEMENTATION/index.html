@@ -5839,7 +5839,7 @@
 <p><strong>Proxy Configuration</strong> (<code>platform/apps/backstage/app-config.yaml</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">proxy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
-<span class="w">    </span><span class="s">&quot;/feedback/api&quot;</span><span class="p p-Indicator">:</span>
+<span class="w">    </span><span class="s">"/feedback/api"</span><span class="p p-Indicator">:</span>
 <span class="w">      </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://feedback-service.fawkes.svc:8000/</span>
 <span class="w">      </span><span class="nt">changeOrigin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">secure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
@@ -5886,7 +5886,7 @@
 <span class="w">    </span><span class="k">comment</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
 <span class="w">    </span><span class="n">email</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
 <span class="w">    </span><span class="n">page_url</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
-<span class="w">    </span><span class="n">status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;open&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">'open'</span><span class="p">,</span>
 <span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
 <span class="w">    </span><span class="n">updated_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span>
 <span class="p">);</span>
@@ -5973,21 +5973,21 @@ behave<span class="w"> </span>tests/bdd/features/feedback-widget.feature<span cl
 <h3 id="manual-api-testing">Manual API Testing</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Submit feedback</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://feedback.127.0.0.1.nip.io/api/v1/feedback<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<span class="s1">    &quot;rating&quot;: 5,</span>
-<span class="s1">    &quot;category&quot;: &quot;UI/UX&quot;,</span>
-<span class="s1">    &quot;comment&quot;: &quot;Great interface!&quot;,</span>
-<span class="s1">    &quot;email&quot;: &quot;user@example.com&quot;</span>
-<span class="s1">  }&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<span class="s1">    "rating": 5,</span>
+<span class="s1">    "category": "UI/UX",</span>
+<span class="s1">    "comment": "Great interface!",</span>
+<span class="s1">    "email": "user@example.com"</span>
+<span class="s1">  }'</span>
 
 <span class="c1"># List feedback (admin)</span>
 curl<span class="w"> </span>http://feedback.127.0.0.1.nip.io/api/v1/feedback<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;admin-token&gt;&quot;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer &lt;admin-token&gt;"</span>
 
 <span class="c1"># Get statistics (admin)</span>
 curl<span class="w"> </span>http://feedback.127.0.0.1.nip.io/api/v1/feedback/stats<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;admin-token&gt;&quot;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer &lt;admin-token&gt;"</span>
 
 <span class="c1"># Check health</span>
 curl<span class="w"> </span>http://feedback.127.0.0.1.nip.io/health

@@ -6264,7 +6264,7 @@
 </code></pre></div>
 <p>Run specific scenarios:</p>
 <div class="highlight"><pre><span></span><code>behave<span class="w"> </span>tests/bdd/features/e2e-platform-integration.feature<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;Complete workflow - Scaffold new Python service&quot;</span>
+<span class="w">  </span>--name<span class="w"> </span><span class="s2">"Complete workflow - Scaffold new Python service"</span>
 </code></pre></div>
 <p>Run with tags:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run all E2E tests</span>
@@ -6404,7 +6404,7 @@ All components are properly integrated from scaffold to deploy to metrics.
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup kubeconfig</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">mkdir -p ~/.kube</span>
-<span class="w">          </span><span class="no">echo &quot;${{ secrets.KUBECONFIG }}&quot; &gt; ~/.kube/config</span>
+<span class="w">          </span><span class="no">echo "${{ secrets.KUBECONFIG }}" &gt; ~/.kube/config</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run E2E Integration Tests</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
@@ -6418,13 +6418,13 @@ All components are properly integrated from scaffold to deploy to metrics.
 <span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test-reports/e2e/</span>
 </code></pre></div>
 <h4 id="jenkins-pipeline">Jenkins Pipeline</h4>
-<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;E2E Integration Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">'E2E Integration Test'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;make test-e2e-integration&#39;</span>
+<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s1">'make test-e2e-integration'</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="w">    </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">always</span><span class="w"> </span><span class="o">{</span>
-<span class="w">            </span><span class="n">archiveArtifacts</span><span class="w"> </span><span class="nl">artifacts:</span><span class="w"> </span><span class="s1">&#39;test-reports/e2e/*.txt&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">allowEmptyArchive:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">            </span><span class="n">archiveArtifacts</span><span class="w"> </span><span class="nl">artifacts:</span><span class="w"> </span><span class="s1">'test-reports/e2e/*.txt'</span><span class="o">,</span><span class="w"> </span><span class="nl">allowEmptyArchive:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">        </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
@@ -6449,7 +6449,7 @@ All components are properly integrated from scaffold to deploy to metrics.
 kubectl<span class="w"> </span>cluster-info
 
 <span class="c1"># Check namespaces</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;fawkes|argocd|monitoring&quot;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"fawkes|argocd|monitoring"</span>
 
 <span class="c1"># Install required tools</span>
 brew<span class="w"> </span>install<span class="w"> </span>kubectl<span class="w"> </span>helm<span class="w"> </span>jq<span class="w">  </span><span class="c1"># macOS</span>

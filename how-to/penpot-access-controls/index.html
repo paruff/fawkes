@@ -5858,7 +5858,7 @@
 <p><strong>Configuration</strong> (in <code>deployment.yaml</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_FLAGS</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;enable-registration</span><span class="nv"> </span><span class="s">enable-login-with-password&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"enable-registration</span><span class="nv"> </span><span class="s">enable-login-with-password"</span>
 </code></pre></div>
 <p><strong>User Registration</strong>:</p>
 <ul>
@@ -5892,13 +5892,13 @@
 <p><strong>Configuration Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_LDAP_HOST</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ldap.example.com&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"ldap.example.com"</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_LDAP_PORT</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;389&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"389"</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_LDAP_BIND_DN</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cn=admin,dc=example,dc=com&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"cn=admin,dc=example,dc=com"</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_LDAP_BASE_DN</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ou=users,dc=example,dc=com&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"ou=users,dc=example,dc=com"</span>
 </code></pre></div>
 <h2 id="role-based-access-control">Role-Based Access Control</h2>
 <h3 id="user-roles">User Roles</h3>
@@ -6073,7 +6073,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <li><strong>Create Service Account</strong>:</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="c1"># API tokens are per-user in Penpot</span>
-<span class="c1"># Create a dedicated &quot;service&quot; user for automation</span>
+<span class="c1"># Create a dedicated "service" user for automation</span>
 </code></pre></div>
 <ol>
 <li>
@@ -6093,7 +6093,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="c1"># Create Kubernetes secret</span>
 kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>penpot-api-token<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">token</span><span class="o">=</span><span class="s1">&#39;YOUR_TOKEN_HERE&#39;</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">token</span><span class="o">=</span><span class="s1">'YOUR_TOKEN_HERE'</span>
 </code></pre></div>
 <ol>
 <li><strong>Use in Sync Jobs</strong>:
@@ -6110,7 +6110,7 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <p>Configure strong password requirements:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_FLAGS</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;enable-registration</span><span class="nv"> </span><span class="s">enable-login-with-password&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"enable-registration</span><span class="nv"> </span><span class="s">enable-login-with-password"</span>
 <span class="w">  </span><span class="c1"># Password requirements enforced by Penpot defaults:</span>
 <span class="w">  </span><span class="c1"># - Minimum 8 characters</span>
 <span class="w">  </span><span class="c1"># - Mix of letters and numbers recommended</span>
@@ -6118,7 +6118,7 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <h3 id="session-management">Session Management</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_REDIS_URI</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;redis://penpot-redis.fawkes.svc:6379/0&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"redis://penpot-redis.fawkes.svc:6379/0"</span>
 <span class="w">  </span><span class="c1"># Sessions stored in Redis for scalability</span>
 <span class="w">  </span><span class="c1"># Sessions expire after 7 days of inactivity (Penpot default)</span>
 </code></pre></div>
@@ -6133,7 +6133,7 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <p>Enable audit logging for compliance:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_FLAGS</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;enable-audit-log&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"enable-audit-log"</span>
 <span class="w">  </span><span class="c1"># Audit logs include:</span>
 <span class="w">  </span><span class="c1"># - User login/logout events</span>
 <span class="w">  </span><span class="c1"># - Project access</span>
@@ -6141,7 +6141,7 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <span class="w">  </span><span class="c1"># - Permission changes</span>
 </code></pre></div>
 <p>Access audit logs:</p>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>penpot-backend-xxx<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;audit&quot;</span>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>penpot-backend-xxx<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"audit"</span>
 </code></pre></div>
 <h2 id="monitoring-and-alerts">Monitoring and Alerts</h2>
 <h3 id="user-activity-monitoring">User Activity Monitoring</h3>
@@ -6175,11 +6175,11 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MultipleFailedLogins</span>
 <span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(penpot_failed_login_attempts[5m]) &gt; 5</span>
 <span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Multiple</span><span class="nv"> </span><span class="s">failed</span><span class="nv"> </span><span class="s">login</span><span class="nv"> </span><span class="s">attempts</span><span class="nv"> </span><span class="s">detected&quot;</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"Multiple</span><span class="nv"> </span><span class="s">failed</span><span class="nv"> </span><span class="s">login</span><span class="nv"> </span><span class="s">attempts</span><span class="nv"> </span><span class="s">detected"</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UnusualAPIActivity</span>
 <span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(penpot_api_requests[1m]) &gt; 100</span>
 <span class="w">          </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Unusual</span><span class="nv"> </span><span class="s">API</span><span class="nv"> </span><span class="s">activity</span><span class="nv"> </span><span class="s">detected&quot;</span>
+<span class="w">            </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"Unusual</span><span class="nv"> </span><span class="s">API</span><span class="nv"> </span><span class="s">activity</span><span class="nv"> </span><span class="s">detected"</span>
 </code></pre></div>
 <h2 id="compliance">Compliance</h2>
 <h3 id="data-privacy">Data Privacy</h3>
@@ -6201,7 +6201,7 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <div class="highlight"><pre><span></span><code><span class="c1"># In deployment.yaml</span>
 <span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PENPOT_DATA_RETENTION_DAYS</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;365&quot;</span><span class="w"> </span><span class="c1"># Keep inactive projects for 1 year</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"365"</span><span class="w"> </span><span class="c1"># Keep inactive projects for 1 year</span>
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="user-cannot-log-in">User Cannot Log In</h3>
@@ -6209,7 +6209,7 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <li><strong>Check user exists</strong>:</li>
 </ol>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>penpot-backend-xxx<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>penpot<span class="w"> </span>-d<span class="w"> </span>penpot<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT email FROM profile;&quot;</span>
+<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>penpot<span class="w"> </span>-d<span class="w"> </span>penpot<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT email FROM profile;"</span>
 </code></pre></div>
 <ol>
 <li>
@@ -6225,7 +6225,7 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <p><strong>Check account status</strong>:
    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>penpot-backend-xxx<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>penpot<span class="w"> </span>-d<span class="w"> </span>penpot<span class="w"> </span>-c<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;SELECT email, is_active FROM profile WHERE email=&#39;user@example.com&#39;;&quot;</span>
+<span class="w">  </span><span class="s2">"SELECT email, is_active FROM profile WHERE email='user@example.com';"</span>
 </code></pre></div></p>
 </li>
 </ol>
@@ -6252,7 +6252,7 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <ol>
 <li><strong>Verify token is valid</strong>:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Token YOUR_TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Token YOUR_TOKEN"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>https://penpot.fawkes.local/api/rpc/command/get-profile
 </code></pre></div>
 <ol>

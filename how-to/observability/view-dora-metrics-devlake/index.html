@@ -6434,11 +6434,11 @@
 <h4 id="open-grafana">Open Grafana</h4>
 <p>Navigate to Grafana:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get Grafana URL</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;https://grafana.127.0.0.1.nip.io&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"https://grafana.127.0.0.1.nip.io"</span>
 
 <span class="c1"># Get admin password (if needed)</span>
 kubectl<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>grafana-admin<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.admin-password}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">"{.data.admin-password}"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
 </code></pre></div>
 <p>Log in with your credentials.</p>
 <h3 id="2-locate-dora-metrics-dashboard">2. Locate DORA Metrics Dashboard</h3>
@@ -6764,7 +6764,7 @@ Time Range: Last 90 days
 <p>Check that metrics reflect recent deployments:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># List recent deployments from ArgoCD</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>applications<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{range .items[*]}{.metadata.name}{&quot;\t&quot;}{.status.sync.revision}{&quot;\t&quot;}{.status.operationState.finishedAt}{&quot;\n&quot;}{end}&#39;</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{range .items[*]}{.metadata.name}{"\t"}{.status.sync.revision}{"\t"}{.status.operationState.finishedAt}{"\n"}{end}'</span>
 
 <span class="c1"># Compare with dashboard deployment count</span>
 <span class="c1"># Numbers should match</span>
@@ -6772,10 +6772,10 @@ kubectl<span class="w"> </span>get<span class="w"> </span>applications<span clas
 <h3 id="2-verify-lead-time-calculation">2. Verify Lead Time Calculation</h3>
 <p>Manually verify a recent deployment:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get commit timestamp</span>
-git<span class="w"> </span>log<span class="w"> </span>-1<span class="w"> </span>--format<span class="o">=</span><span class="s2">&quot;%ai&quot;</span><span class="w"> </span>&lt;commit-sha&gt;
+git<span class="w"> </span>log<span class="w"> </span>-1<span class="w"> </span>--format<span class="o">=</span><span class="s2">"%ai"</span><span class="w"> </span>&lt;commit-sha&gt;
 
 <span class="c1"># Get deployment timestamp from ArgoCD</span>
-argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>my-service-prod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sync Status&quot;</span>
+argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>my-service-prod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Sync Status"</span>
 
 <span class="c1"># Calculate lead time manually</span>
 <span class="c1"># Should match DevLake dashboard</span>

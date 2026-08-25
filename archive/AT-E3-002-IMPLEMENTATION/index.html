@@ -5721,23 +5721,23 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space/efficienc
 <h3 id="4-survey-integration-validation">4. Survey Integration Validation</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Submit pulse survey</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/v1/surveys/pulse/submit<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<span class="s1">    &quot;valuable_work_percentage&quot;: 70.0,</span>
-<span class="s1">    &quot;flow_state_days&quot;: 3.0,</span>
-<span class="s1">    &quot;cognitive_load&quot;: 3.0</span>
-<span class="s1">  }&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<span class="s1">    "valuable_work_percentage": 70.0,</span>
+<span class="s1">    "flow_state_days": 3.0,</span>
+<span class="s1">    "cognitive_load": 3.0</span>
+<span class="s1">  }'</span>
 </code></pre></div>
 <p><strong>Expected Result</strong>: Survey submission succeeds with success confirmation</p>
 <h3 id="5-friction-logging-validation">5. Friction Logging Validation</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Log friction incident</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/v1/friction/log<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<span class="s1">    &quot;title&quot;: &quot;Test friction&quot;,</span>
-<span class="s1">    &quot;description&quot;: &quot;Testing friction logging&quot;,</span>
-<span class="s1">    &quot;severity&quot;: &quot;low&quot;</span>
-<span class="s1">  }&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<span class="s1">    "title": "Test friction",</span>
+<span class="s1">    "description": "Testing friction logging",</span>
+<span class="s1">    "severity": "low"</span>
+<span class="s1">  }'</span>
 </code></pre></div>
 <p><strong>Expected Result</strong>: Friction incident logged successfully</p>
 <h3 id="6-prometheus-metrics-validation">6. Prometheus Metrics Validation</h3>
@@ -5758,7 +5758,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitor<span cl
 kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>space-metrics-config<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-o<span class="w"> </span>yaml
 
 <span class="c1"># Verify no individual data in API response</span>
-curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;user_id\|username\|email&quot;</span>
+curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"user_id\|username\|email"</span>
 </code></pre></div>
 <p><strong>Expected Result</strong>:</p>
 <ul>
@@ -5771,7 +5771,7 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>space-metrics-db-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes-local
 
 <span class="c1"># Check pod logs for database errors</span>
-kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>space-metrics<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;database\|error&quot;</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>space-metrics<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"database\|error"</span>
 </code></pre></div>
 <p><strong>Expected Result</strong>:</p>
 <ul>

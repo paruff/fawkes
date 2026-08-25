@@ -6354,11 +6354,11 @@
 <h4 id="1-access-argocd-ui">1. Access ArgoCD UI</h4>
 <p>Navigate to the ArgoCD web interface:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get ArgoCD URL</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;https://argocd.127.0.0.1.nip.io&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"https://argocd.127.0.0.1.nip.io"</span>
 
 <span class="c1"># Get admin password (if needed)</span>
 kubectl<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>argocd-initial-admin-secret<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.password}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">"{.data.password}"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
 </code></pre></div>
 <h4 id="2-locate-your-application">2. Locate Your Application</h4>
 <ol>
@@ -6409,11 +6409,11 @@ argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </s
 <div class="highlight"><pre><span></span><code><span class="c1"># Trigger sync using kubectl patch</span>
 kubectl<span class="w"> </span>patch<span class="w"> </span>application<span class="w"> </span>my-service-dev<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--type<span class="w"> </span>merge<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;operation&quot;:{&quot;initiatedBy&quot;:{&quot;username&quot;:&quot;admin&quot;},&quot;sync&quot;:{}}}&#39;</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="s1">'{"operation":{"initiatedBy":{"username":"admin"},"sync":{}}}'</span>
 
 <span class="c1"># Check sync status</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>application<span class="w"> </span>my-service-dev<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.sync.status}&#39;</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.sync.status}'</span>
 </code></pre></div>
 <h3 id="method-4-enable-automated-sync">Method 4: Enable Automated Sync</h3>
 <p>Configure your Application to automatically sync on Git changes:</p>
@@ -6449,8 +6449,8 @@ kubectl<span class="w"> </span>get<span class="w"> </span>application<span class
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>my-service-dev.yaml
 </code></pre></div>
 <h4 id="3-verify-automated-sync-is-enabled">3. Verify Automated Sync is Enabled</h4>
-<div class="highlight"><pre><span></span><code>argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>my-service-dev<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sync Policy&quot;</span>
-<span class="c1"># Expected: &quot;Sync Policy:        Automated (Prune)&quot;</span>
+<div class="highlight"><pre><span></span><code>argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>my-service-dev<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Sync Policy"</span>
+<span class="c1"># Expected: "Sync Policy:        Automated (Prune)"</span>
 </code></pre></div>
 <h3 id="method-5-sync-with-hooks-and-waves">Method 5: Sync with Hooks and Waves</h3>
 <p>For complex deployments, use sync phases and waves:</p>
@@ -6461,14 +6461,14 @@ kubectl<span class="w"> </span>get<span class="w"> </span>application<span class
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-config</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">argocd.argoproj.io/sync-wave</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="c1"># Sync first</span>
+<span class="w">    </span><span class="nt">argocd.argoproj.io/sync-wave</span><span class="p">:</span><span class="w"> </span><span class="s">"0"</span><span class="w"> </span><span class="c1"># Sync first</span>
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-service</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">argocd.argoproj.io/sync-wave</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="c1"># Sync after ConfigMap</span>
+<span class="w">    </span><span class="nt">argocd.argoproj.io/sync-wave</span><span class="p">:</span><span class="w"> </span><span class="s">"1"</span><span class="w"> </span><span class="c1"># Sync after ConfigMap</span>
 </code></pre></div>
 <h4 id="2-add-sync-hooks">2. Add Sync Hooks</h4>
 <p>For tasks that run before or after sync:</p>
@@ -6485,7 +6485,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>application<span class
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">migrate</span>
 <span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app:latest</span>
-<span class="w">          </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;./migrate-db.sh&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"./migrate-db.sh"</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Never</span>
 </code></pre></div>
 <h4 id="3-sync-with-hooks">3. Sync with Hooks</h4>
@@ -6510,9 +6510,9 @@ argocd<span class="w"> </span>app<span class="w"> </span>manifests<span class="w
 <h3 id="3-check-application-health">3. Check Application Health</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># View application health</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>application<span class="w"> </span>my-service-dev<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.health.status}&#39;</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.health.status}'</span>
 
-<span class="c1"># Expected: &quot;Healthy&quot;</span>
+<span class="c1"># Expected: "Healthy"</span>
 </code></pre></div>
 <h3 id="4-verify-pods-are-running">4. Verify Pods are Running</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># List pods in the namespace</span>
@@ -6528,7 +6528,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <span class="c1"># Then verify ArgoCD detected and synced the change</span>
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>my-service-dev
 
-<span class="c1"># Check the &quot;Synced to&quot; commit SHA matches your latest commit</span>
+<span class="c1"># Check the "Synced to" commit SHA matches your latest commit</span>
 </code></pre></div>
 <h2 id="sync-policies-explained">Sync Policies Explained</h2>
 <h3 id="automated-sync-options">Automated Sync Options</h3>
@@ -6574,7 +6574,7 @@ argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </s
 <span class="w">  </span><span class="nt">syncPolicy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">syncWindows</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">allow</span>
-<span class="w">        </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1-5&quot;</span><span class="w"> </span><span class="c1"># Mon-Fri, 9 AM</span>
+<span class="w">        </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">"0</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1-5"</span><span class="w"> </span><span class="c1"># Mon-Fri, 9 AM</span>
 <span class="w">        </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8h</span><span class="w"> </span><span class="c1"># 8-hour window</span>
 <span class="w">        </span><span class="nt">applications</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-service-dev</span>
@@ -6604,7 +6604,7 @@ argocd<span class="w"> </span>app<span class="w"> </span>resources<span class="w
 kubectl<span class="w"> </span>describe<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>my-service-dev
 
 <span class="c1"># Check for image pull errors, CrashLoopBackOff</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>my-service-dev<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>my-service-dev<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">'.lastTimestamp'</span>
 </code></pre></div>
 <h3 id="automated-sync-not-triggering">Automated Sync Not Triggering</h3>
 <p><strong>Cause</strong>: ArgoCD hasn't detected Git changes yet.</p>
@@ -6613,7 +6613,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w">
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>my-service-dev<span class="w"> </span>--refresh
 
 <span class="c1"># Check last sync attempt time</span>
-argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>my-service-dev<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Last Sync&quot;</span>
+argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>my-service-dev<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Last Sync"</span>
 
 <span class="c1"># Verify webhook is configured (optional)</span>
 <span class="c1"># For faster sync, configure Git webhook to ArgoCD</span>

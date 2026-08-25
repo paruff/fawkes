@@ -5892,7 +5892,7 @@
 fawkes-feedback<span class="w"> </span>config<span class="w"> </span>init
 
 <span class="c1"># Submit feedback</span>
-fawkes-feedback<span class="w"> </span>submit<span class="w"> </span>-r<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;UI/UX&quot;</span><span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Great dashboard!&quot;</span>
+fawkes-feedback<span class="w"> </span>submit<span class="w"> </span>-r<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">"UI/UX"</span><span class="w"> </span>-m<span class="w"> </span><span class="s2">"Great dashboard!"</span>
 
 <span class="c1"># Interactive mode</span>
 fawkes-feedback<span class="w"> </span>submit<span class="w"> </span>-i
@@ -6009,20 +6009,20 @@ curl<span class="w"> </span>http://localhost:8000/health
 
 <span class="c1"># Submit test feedback</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/v1/feedback<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<span class="s1">    &quot;rating&quot;: 5,</span>
-<span class="s1">    &quot;category&quot;: &quot;Test&quot;,</span>
-<span class="s1">    &quot;comment&quot;: &quot;Testing feedback system&quot;</span>
-<span class="s1">  }&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<span class="s1">    "rating": 5,</span>
+<span class="s1">    "category": "Test",</span>
+<span class="s1">    "comment": "Testing feedback system"</span>
+<span class="s1">  }'</span>
 </code></pre></div>
 <h4 id="2-verify-cli-tool">2. Verify CLI Tool</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check code exists</span>
 ls<span class="w"> </span>-la<span class="w"> </span>services/feedback-cli/
 
 <span class="c1"># Check commands</span>
-grep<span class="w"> </span><span class="s2">&quot;def submit&quot;</span><span class="w"> </span>services/feedback-cli/feedback_cli/cli.py
-grep<span class="w"> </span><span class="s2">&quot;def list&quot;</span><span class="w"> </span>services/feedback-cli/feedback_cli/cli.py
+grep<span class="w"> </span><span class="s2">"def submit"</span><span class="w"> </span>services/feedback-cli/feedback_cli/cli.py
+grep<span class="w"> </span><span class="s2">"def list"</span><span class="w"> </span>services/feedback-cli/feedback_cli/cli.py
 
 <span class="c1"># Install and test</span>
 <span class="nb">cd</span><span class="w"> </span>services/feedback-cli
@@ -6037,8 +6037,8 @@ kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class=
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>feedback-bot<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
 
 <span class="c1"># Check NLP capabilities</span>
-grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;sentiment&quot;</span><span class="w"> </span>services/feedback-bot/app/main.py
-grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;categorize&quot;</span><span class="w"> </span>services/feedback-bot/app/main.py
+grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"sentiment"</span><span class="w"> </span>services/feedback-bot/app/main.py
+grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"categorize"</span><span class="w"> </span>services/feedback-bot/app/main.py
 
 <span class="c1"># Test in Mattermost</span>
 <span class="c1"># Go to Mattermost and type:</span>
@@ -6049,7 +6049,7 @@ grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;cat
 kubectl<span class="w"> </span>get<span class="w"> </span>cronjob<span class="w"> </span>feedback-automation<span class="w"> </span>-n<span class="w"> </span>fawkes
 
 <span class="c1"># Check schedule</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>cronjob<span class="w"> </span>feedback-automation<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.schedule}&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>cronjob<span class="w"> </span>feedback-automation<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.schedule}'</span>
 
 <span class="c1"># Check recent runs</span>
 kubectl<span class="w"> </span>get<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>feedback-automation
@@ -6068,13 +6068,13 @@ ls<span class="w"> </span>-la<span class="w"> </span>platform/apps/grafana/dashb
 python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span>platform/apps/grafana/dashboards/feedback-analytics.json<span class="w"> </span>&gt;<span class="w"> </span>/dev/null
 
 <span class="c1"># Check for key metrics</span>
-grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;nps&quot;</span><span class="w"> </span>platform/apps/grafana/dashboards/feedback-analytics.json
-grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;sentiment&quot;</span><span class="w"> </span>platform/apps/grafana/dashboards/feedback-analytics.json
-grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;rating&quot;</span><span class="w"> </span>platform/apps/grafana/dashboards/feedback-analytics.json
+grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"nps"</span><span class="w"> </span>platform/apps/grafana/dashboards/feedback-analytics.json
+grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"sentiment"</span><span class="w"> </span>platform/apps/grafana/dashboards/feedback-analytics.json
+grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"rating"</span><span class="w"> </span>platform/apps/grafana/dashboards/feedback-analytics.json
 
 <span class="c1"># Access Grafana</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>svc/grafana<span class="w"> </span><span class="m">3000</span>:3000
-<span class="c1"># Open http://localhost:3000 and find &quot;Feedback Analytics&quot; dashboard</span>
+<span class="c1"># Open http://localhost:3000 and find "Feedback Analytics" dashboard</span>
 </code></pre></div>
 <h4 id="6-verify-integration">6. Verify Integration</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check ServiceMonitors</span>
@@ -6083,8 +6083,8 @@ kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitor<span cl
 <span class="c1"># Test end-to-end flow</span>
 <span class="c1"># 1. Submit feedback via Backstage widget</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://feedback-service:8000/api/v1/feedback<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;rating&quot;: 1, &quot;category&quot;: &quot;Bug&quot;, &quot;comment&quot;: &quot;Critical issue&quot;}&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"rating": 1, "category": "Bug", "comment": "Critical issue"}'</span>
 
 <span class="c1"># 2. Wait for automation to process (up to 15 minutes)</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>feedback-automation<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
@@ -6099,10 +6099,10 @@ curl<span class="w"> </span>http://localhost:8000/metrics<span class="w"> </span
 <h2 id="bdd-test-execution">BDD Test Execution</h2>
 <p>Run BDD tests for multi-channel feedback:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run all feedback tests</span>
-pytest<span class="w"> </span>tests/bdd<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;feedback&quot;</span><span class="w"> </span>-v
+pytest<span class="w"> </span>tests/bdd<span class="w"> </span>-k<span class="w"> </span><span class="s2">"feedback"</span><span class="w"> </span>-v
 
 <span class="c1"># Run specific AT-E3-003 test</span>
-pytest<span class="w"> </span>tests/bdd<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;at-e3-003&quot;</span><span class="w"> </span>-v
+pytest<span class="w"> </span>tests/bdd<span class="w"> </span>-k<span class="w"> </span><span class="s2">"at-e3-003"</span><span class="w"> </span>-v
 
 <span class="c1"># Run with specific tags</span>
 behave<span class="w"> </span>tests/bdd/features<span class="w"> </span>--tags<span class="o">=</span>@multi-channel
@@ -6248,7 +6248,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 
 <span class="c1"># Manually trigger</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://feedback-service:8000/api/v1/automation/process-validated<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 </code></pre></div>
 <h3 id="dashboard-not-showing-data">Dashboard Not Showing Data</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Grafana deployment</span>

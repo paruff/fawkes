@@ -5998,47 +5998,47 @@
 </ul>
 <h3 id="application-integration">Application Integration</h3>
 <p><strong>Backstage (TypeScript):</strong></p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openfeature/server-sdk&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UnleashProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openfeature/unleash-provider&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@openfeature/server-sdk"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UnleashProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@openfeature/unleash-provider"</span><span class="p">;</span>
 
 <span class="k">await</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">setProviderAndWait</span><span class="p">(</span>
 <span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">UnleashProvider</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://unleash.fawkes.idp/api&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">appName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">"https://unleash.fawkes.idp/api"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">appName</span><span class="o">:</span><span class="w"> </span><span class="s2">"backstage"</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">apiToken</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.UNLEASH_API_TOKEN</span><span class="p">,</span>
 <span class="w">  </span><span class="p">})</span>
 <span class="p">);</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">getClient</span><span class="p">();</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s2">&quot;new-feature&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s2">"new-feature"</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
 </code></pre></div>
 <p><strong>Python Services:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">openfeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">openfeature.contrib.provider.unleash</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnleashProvider</span>
 
 <span class="n">api</span><span class="o">.</span><span class="n">set_provider</span><span class="p">(</span><span class="n">UnleashProvider</span><span class="p">(</span>
-    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://unleash.fawkes.idp/api&quot;</span><span class="p">,</span>
-    <span class="n">app_name</span><span class="o">=</span><span class="s2">&quot;python-service&quot;</span><span class="p">,</span>
-    <span class="n">api_token</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;UNLEASH_API_TOKEN&quot;</span><span class="p">)</span>
+    <span class="n">url</span><span class="o">=</span><span class="s2">"https://unleash.fawkes.idp/api"</span><span class="p">,</span>
+    <span class="n">app_name</span><span class="o">=</span><span class="s2">"python-service"</span><span class="p">,</span>
+    <span class="n">api_token</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"UNLEASH_API_TOKEN"</span><span class="p">)</span>
 <span class="p">))</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
-<span class="n">enabled</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_boolean_value</span><span class="p">(</span><span class="s2">&quot;new-feature&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">enabled</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_boolean_value</span><span class="p">(</span><span class="s2">"new-feature"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Go Services:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;github.com/open-feature/go-sdk/openfeature&quot;</span>
-<span class="w">    </span><span class="nx">unleash</span><span class="w"> </span><span class="s">&quot;github.com/open-feature/go-sdk-contrib/providers/unleash/pkg&quot;</span>
+<span class="w">    </span><span class="s">"github.com/open-feature/go-sdk/openfeature"</span>
+<span class="w">    </span><span class="nx">unleash</span><span class="w"> </span><span class="s">"github.com/open-feature/go-sdk-contrib/providers/unleash/pkg"</span>
 <span class="p">)</span>
 
 <span class="nx">openfeature</span><span class="p">.</span><span class="nx">SetProvider</span><span class="p">(</span><span class="nx">unleash</span><span class="p">.</span><span class="nx">NewProvider</span><span class="p">(</span>
-<span class="w">    </span><span class="nx">unleash</span><span class="p">.</span><span class="nx">WithURL</span><span class="p">(</span><span class="s">&quot;https://unleash.fawkes.idp/api&quot;</span><span class="p">),</span>
-<span class="w">    </span><span class="nx">unleash</span><span class="p">.</span><span class="nx">WithAppName</span><span class="p">(</span><span class="s">&quot;go-service&quot;</span><span class="p">),</span>
-<span class="w">    </span><span class="nx">unleash</span><span class="p">.</span><span class="nx">WithAPIToken</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">&quot;UNLEASH_API_TOKEN&quot;</span><span class="p">)),</span>
+<span class="w">    </span><span class="nx">unleash</span><span class="p">.</span><span class="nx">WithURL</span><span class="p">(</span><span class="s">"https://unleash.fawkes.idp/api"</span><span class="p">),</span>
+<span class="w">    </span><span class="nx">unleash</span><span class="p">.</span><span class="nx">WithAppName</span><span class="p">(</span><span class="s">"go-service"</span><span class="p">),</span>
+<span class="w">    </span><span class="nx">unleash</span><span class="p">.</span><span class="nx">WithAPIToken</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">"UNLEASH_API_TOKEN"</span><span class="p">)),</span>
 <span class="p">))</span>
 
-<span class="nx">client</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">openfeature</span><span class="p">.</span><span class="nx">NewClient</span><span class="p">(</span><span class="s">&quot;my-app&quot;</span><span class="p">)</span>
-<span class="nx">enabled</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">BooleanValue</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;new-feature&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">openfeature</span><span class="p">.</span><span class="nx">EvaluationContext</span><span class="p">{})</span>
+<span class="nx">client</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">openfeature</span><span class="p">.</span><span class="nx">NewClient</span><span class="p">(</span><span class="s">"my-app"</span><span class="p">)</span>
+<span class="nx">enabled</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">BooleanValue</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="s">"new-feature"</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">openfeature</span><span class="p">.</span><span class="nx">EvaluationContext</span><span class="p">{})</span>
 </code></pre></div>
 <h2 id="consequences">Consequences</h2>
 <h3 id="positive">Positive</h3>

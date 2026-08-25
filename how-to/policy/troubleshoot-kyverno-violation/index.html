@@ -6569,12 +6569,12 @@
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>my-deployment.yaml
 
 <span class="c1"># Error message will reference the policy:</span>
-<span class="c1"># Error from server: admission webhook &quot;validate.kyverno.svc&quot; denied the request:</span>
+<span class="c1"># Error from server: admission webhook "validate.kyverno.svc" denied the request:</span>
 <span class="c1">#</span>
 <span class="c1"># policy Deployment/my-app-deployment for resource violation:</span>
 <span class="c1">#</span>
 <span class="c1"># require-non-root:</span>
-<span class="c1">#   runAsNonRoot: &#39;must set runAsNonRoot to true&#39;</span>
+<span class="c1">#   runAsNonRoot: 'must set runAsNonRoot to true'</span>
 </code></pre></div>
 <h4 id="view-policyreports">View PolicyReports</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># List all PolicyReports in namespace</span>
@@ -6585,7 +6585,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>policyreport<span clas
 
 <span class="c1"># Filter for failures only</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>policyreport<span class="w"> </span>-n<span class="w"> </span>my-namespace<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[].results[] | select(.result == &quot;fail&quot;)&#39;</span>
+<span class="w">  </span>jq<span class="w"> </span><span class="s1">'.items[].results[] | select(.result == "fail")'</span>
 </code></pre></div>
 <h4 id="check-clusterpolicyreports">Check ClusterPolicyReports</h4>
 <p>For cluster-wide resources:</p>
@@ -6604,7 +6604,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy
 kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy<span class="w"> </span>require-non-root<span class="w"> </span>-o<span class="w"> </span>yaml
 
 <span class="c1"># View policy in readable format</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy<span class="w"> </span>require-non-root<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.rules[*].validate.message}&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy<span class="w"> </span>require-non-root<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.rules[*].validate.message}'</span>
 </code></pre></div>
 <h4 id="understand-policy-rules">Understand Policy Rules</h4>
 <p>Common Kyverno policies in Fawkes:</p>
@@ -6696,11 +6696,11 @@ kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy<span cla
 <span class="w">          </span><span class="c1"># Add resource limits</span>
 <span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
-<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">"100m"</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">"128Mi"</span>
 <span class="w">            </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span>
-<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span>
+<span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">"500m"</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">"512Mi"</span>
 </code></pre></div>
 <h4 id="violation-required-labels-missing">Violation: "required labels missing"</h4>
 <p><strong>Policy:</strong> <code>require-labels</code></p>
@@ -6810,7 +6810,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy<span cla
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate-runAsNonRoot</span>
 
 <span class="w">  </span><span class="c1"># Justification (good practice)</span>
-<span class="w">  </span><span class="nt">background</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Legacy</span><span class="nv"> </span><span class="s">database</span><span class="nv"> </span><span class="s">container</span><span class="nv"> </span><span class="s">requires</span><span class="nv"> </span><span class="s">root</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">initialization</span><span class="nv"> </span><span class="s">scripts&quot;</span>
+<span class="w">  </span><span class="nt">background</span><span class="p">:</span><span class="w"> </span><span class="s">"Legacy</span><span class="nv"> </span><span class="s">database</span><span class="nv"> </span><span class="s">container</span><span class="nv"> </span><span class="s">requires</span><span class="nv"> </span><span class="s">root</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">initialization</span><span class="nv"> </span><span class="s">scripts"</span>
 </code></pre></div>
 <p>Apply the exception:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create exception</span>
@@ -6847,17 +6847,17 @@ kubectl<span class="w"> </span>kyverno<span class="w"> </span>apply<span class="
 <span class="c1"># validate-manifests.sh</span>
 
 <span class="k">for</span><span class="w"> </span>manifest<span class="w"> </span><span class="k">in</span><span class="w"> </span>manifests/*.yaml<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Validating </span><span class="nv">$manifest</span><span class="s2">...&quot;</span>
-<span class="w">  </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$manifest</span><span class="s2">&quot;</span><span class="w"> </span>--dry-run<span class="o">=</span>server<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Validating </span><span class="nv">$manifest</span><span class="s2">..."</span>
+<span class="w">  </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="nv">$manifest</span><span class="s2">"</span><span class="w"> </span>--dry-run<span class="o">=</span>server<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">done</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;All manifests passed policy validation!&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"All manifests passed policy validation!"</span>
 </code></pre></div>
 <h3 id="6-monitor-policy-reports">6. Monitor Policy Reports</h3>
 <h4 id="create-alert-on-policy-violations">Create Alert on Policy Violations</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># View recent violations</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>policyreport<span class="w"> </span>-A<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[].results[] | select(.result == &quot;fail&quot;) | {policy: .policy, resource: .resources[0].name, message: .message}&#39;</span>
+<span class="w">  </span>jq<span class="w"> </span><span class="s1">'.items[].results[] | select(.result == "fail") | {policy: .policy, resource: .resources[0].name, message: .message}'</span>
 
 <span class="c1"># Set up Prometheus alert (if metrics enabled)</span>
 </code></pre></div>
@@ -6883,14 +6883,14 @@ kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class=
 <h3 id="2-verify-policyreport-shows-pass">2. Verify PolicyReport Shows Pass</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check PolicyReport for resource</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>policyreport<span class="w"> </span>-n<span class="w"> </span>my-namespace<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[].results[] | select(.resources[0].name == &quot;my-app&quot;)&#39;</span>
+<span class="w">  </span>jq<span class="w"> </span><span class="s1">'.items[].results[] | select(.resources[0].name == "my-app")'</span>
 
-<span class="c1"># Should show: &quot;result&quot;: &quot;pass&quot;</span>
+<span class="c1"># Should show: "result": "pass"</span>
 </code></pre></div>
 <h3 id="3-verify-no-violations-in-audit-mode">3. Verify No Violations in Audit Mode</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check for any fail results</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>policyreport<span class="w"> </span>-A<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[].results[] | select(.result == &quot;fail&quot;) | length&#39;</span>
+<span class="w">  </span>jq<span class="w"> </span><span class="s1">'.items[].results[] | select(.result == "fail") | length'</span>
 
 <span class="c1"># Expected: 0 (no failures)</span>
 </code></pre></div>
@@ -6898,7 +6898,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>policyreport<span clas
 <h3 id="audit-mode">Audit Mode</h3>
 <p>Policy violations are logged but not blocked:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Audit</span><span class="w"> </span><span class="c1"># Log violations, don&#39;t block</span>
+<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Audit</span><span class="w"> </span><span class="c1"># Log violations, don't block</span>
 </code></pre></div>
 <p>Resources are created, but violations appear in PolicyReports.</p>
 <h3 id="enforce-mode">Enforce Mode</h3>
@@ -6909,7 +6909,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>policyreport<span clas
 <p>Resources fail to create if they violate the policy.</p>
 <h3 id="check-policy-mode">Check Policy Mode</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># View policy mode</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy<span class="w"> </span>require-non-root<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.validationFailureAction}&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy<span class="w"> </span>require-non-root<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.validationFailureAction}'</span>
 
 <span class="c1"># Output: Audit or Enforce</span>
 </code></pre></div>
@@ -6933,12 +6933,12 @@ kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy<span cla
 <span class="w">          </span><span class="nt">kinds</span><span class="p">:</span>
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="w">      </span><span class="nt">validate</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Deployments</span><span class="nv"> </span><span class="s">must</span><span class="nv"> </span><span class="s">have</span><span class="nv"> </span><span class="s">&#39;owner&#39;</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">&#39;cost-center&#39;</span><span class="nv"> </span><span class="s">annotations&quot;</span>
+<span class="w">        </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">"Deployments</span><span class="nv"> </span><span class="s">must</span><span class="nv"> </span><span class="s">have</span><span class="nv"> </span><span class="s">'owner'</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">'cost-center'</span><span class="nv"> </span><span class="s">annotations"</span>
 <span class="w">        </span><span class="nt">pattern</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;?*&quot;</span>
-<span class="w">              </span><span class="nt">cost-center</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;?*&quot;</span>
+<span class="w">              </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="s">"?*"</span>
+<span class="w">              </span><span class="nt">cost-center</span><span class="p">:</span><span class="w"> </span><span class="s">"?*"</span>
 </code></pre></div>
 <h3 id="mutate-resources-auto-fix">Mutate Resources (Auto-Fix)</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kyverno.io/v1</span>
@@ -6958,18 +6958,18 @@ kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy<span cla
 <span class="w">            </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">              </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">                </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">(name)</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;*&quot;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">(name)</span><span class="p">:</span><span class="w"> </span><span class="s">"*"</span>
 <span class="w">                    </span><span class="nt">resources</span><span class="p">:</span>
 <span class="w">                      </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">                        </span><span class="nt">+(memory)</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span>
-<span class="w">                        </span><span class="nt">+(cpu)</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span>
+<span class="w">                        </span><span class="nt">+(memory)</span><span class="p">:</span><span class="w"> </span><span class="s">"512Mi"</span>
+<span class="w">                        </span><span class="nt">+(cpu)</span><span class="p">:</span><span class="w"> </span><span class="s">"500m"</span>
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="policy-not-being-enforced">Policy Not Being Enforced</h3>
 <p><strong>Cause:</strong> Policy mode is <code>Audit</code> or policy doesn't match resources.</p>
 <p><strong>Solution:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check policy mode</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.validationFailureAction}&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.validationFailureAction}'</span>
 
 <span class="c1"># Check if policy matches resource</span>
 kubectl<span class="w"> </span>describe<span class="w"> </span>clusterpolicy<span class="w"> </span>&lt;policy-name&gt;
@@ -6980,11 +6980,11 @@ kubectl<span class="w"> </span>describe<span class="w"> </span>clusterpolicy<spa
 <p><strong>Cause:</strong> Background scanning disabled or reports not generated yet.</p>
 <p><strong>Solution:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check if background scanning is enabled</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.background}&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicy<span class="w"> </span>&lt;policy-name&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.background}'</span>
 
 <span class="c1"># Trigger manual scan</span>
 kubectl<span class="w"> </span>annotate<span class="w"> </span>deployment<span class="w"> </span>my-app<span class="w"> </span>-n<span class="w"> </span>my-namespace<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>policies.kyverno.io/last-applied-patches<span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="w">  </span>policies.kyverno.io/last-applied-patches<span class="o">=</span><span class="s2">""</span>
 
 <span class="c1"># Wait 1-2 minutes for report to update</span>
 </code></pre></div>

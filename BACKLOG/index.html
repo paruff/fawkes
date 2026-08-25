@@ -5454,6 +5454,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#post-mvp-jenkins-tekton-ci-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-MVP — Jenkins → Tekton CI Migration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#post-mvp-epic-3-discovery-ux" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5550,6 +5561,7 @@ DORA metrics automated.
 <li><a href="#wave-1--tracer-bullet-core">Wave 1 — Tracer Bullet Core</a></li>
 <li><a href="#wave-2--observable-golden-path">Wave 2 — Observable Golden Path</a></li>
 <li><a href="#wave-3--self-service--gitops-polish">Wave 3 — Self-Service &amp; GitOps Polish</a></li>
+<li><a href="#post-mvp--jenkins--tekton-ci-migration">Post-MVP — Jenkins → Tekton CI Migration</a></li>
 <li><a href="#post-mvp--epic-3-discovery--ux">Post-MVP — Epic 3 Discovery &amp; UX</a></li>
 <li><a href="#post-mvp--remaining-epic-0">Post-MVP — Remaining Epic 0</a></li>
 <li><a href="#gap-issues">GAP Issues</a></li>
@@ -5737,71 +5749,71 @@ PR merges.</p>
 <tbody>
 <tr>
 <td><strong>#621</strong></td>
-<td>Validate Code Quality Standards (AT-E0-001)</td>
+<td>✅ Validate Code Quality Standards (AT-E0-001)</td>
 <td>5</td>
 <td>S</td>
 <td>8</td>
-<td>Y</td>
+<td>✅ Done</td>
 <td><code>test-engineer</code></td>
 <td>Run <code>ruff</code>, <code>black</code>, <code>mypy</code>, <code>shellcheck</code>; fix any failures</td>
 </tr>
 <tr>
 <td><strong>#632</strong></td>
-<td>Refactor ignite.sh into Modular Architecture</td>
+<td>✅ Refactor ignite.sh into Modular Architecture</td>
 <td>4</td>
 <td>L</td>
 <td>4</td>
-<td>Y</td>
+<td>✅ Done</td>
 <td><code>gpt41-default</code></td>
 <td>Split monolithic script into modules (do not change CLI interface); <code>shellcheck</code> must pass; break into sub-issues if &gt; 400 lines changed; flag for human review if module boundaries are unclear</td>
 </tr>
 <tr>
 <td><strong>#633</strong></td>
-<td>Implement Comprehensive Error Handling</td>
+<td>✅ Implement Comprehensive Error Handling</td>
 <td>3</td>
 <td>M</td>
 <td>3</td>
-<td>Y</td>
+<td>✅ Done</td>
 <td><code>gpt41-default</code></td>
 <td>Add trap-based error handling in Bash scripts</td>
 </tr>
 <tr>
 <td><strong>#634</strong></td>
-<td>Create BATS Testing Framework for Scripts</td>
+<td>✅ Create BATS Testing Framework for Scripts</td>
 <td>4</td>
 <td>M</td>
 <td>5</td>
-<td>Y</td>
+<td>✅ Done</td>
 <td><code>test-engineer</code></td>
 <td>Use bats-core (not legacy bats); see AGENTS.md</td>
 </tr>
 <tr>
 <td><strong>#635</strong></td>
-<td>Validate Script Refactoring (AT-E0-002)</td>
+<td>✅ Validate Script Refactoring (AT-E0-002)</td>
 <td>3</td>
 <td>S</td>
 <td>4</td>
-<td>Y</td>
+<td>✅ Done</td>
 <td><code>test-engineer</code></td>
 <td>Run bats tests; assert shellcheck clean</td>
 </tr>
 <tr>
 <td><strong>#645</strong></td>
-<td>Refactor Terraform for Module Reusability</td>
+<td>✅ Refactor Terraform for Module Reusability</td>
 <td>3</td>
 <td>L</td>
 <td>2</td>
-<td>P</td>
+<td>✅ Done</td>
 <td><code>infra-gitops</code></td>
 <td>Needs list of modules to consolidate; add descriptions to all variables</td>
 </tr>
 <tr>
 <td><strong>#646</strong></td>
-<td>Implement Terraform State Management Best Practices</td>
+<td>✅ Implement Terraform State Management Best Practices</td>
 <td>4</td>
 <td>M</td>
 <td>5</td>
-<td>P</td>
+<td>✅ Done</td>
 <td><code>infra-gitops</code></td>
 <td>Add S3 backend + DynamoDB locking; see KL-01 and #1153 (GAP-07)</td>
 </tr>
@@ -6147,6 +6159,64 @@ PR merges.</p>
 <td>P</td>
 <td><code>test-engineer</code></td>
 <td>pytest integration suite; needs per-service scope in issue body</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="post-mvp-jenkins-tekton-ci-migration">Post-MVP — Jenkins → Tekton CI Migration</h3>
+<blockquote>
+<p>Fawkes' "Golden Path CI/CD" product (<code>platform/apps/jenkins/</code>,
+<code>jenkins-shared-library/</code>) migrating from Jenkins to Tekton. NOT MVP-blocking —
+the MVP definition already accepts "Jenkins (or GH Actions)" for the tracer-bullet
+CI pipeline (#85). Jenkins stays fully operational throughout Phase 1; nothing is
+removed until the final decommission phase (not yet issued). Phases 2-6 (porting
+each Groovy pipeline step, pilot migration on tracer-bullet, Backstage template
+updates, decommission) are not yet broken into issues — file them after Phase 1
+proves out.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Title</th>
+<th>V</th>
+<th>E</th>
+<th>Score</th>
+<th>Agent Ready</th>
+<th>Agent</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>#1659</strong></td>
+<td>Deploy Tekton Pipelines + Triggers via new ArgoCD Application</td>
+<td>3</td>
+<td>M</td>
+<td>3</td>
+<td>P</td>
+<td><code>infra-gitops</code></td>
+<td>New ArgoCD <code>Application</code> — Must Ask Before (AGENTS.md §6); propose, don't merge</td>
+</tr>
+<tr>
+<td><strong>#1660</strong></td>
+<td>Wire GitHub webhook EventListener (skeleton, no pipeline yet)</td>
+<td>3</td>
+<td>M</td>
+<td>3</td>
+<td>P</td>
+<td><code>infra-gitops</code></td>
+<td>New network-exposure surface — security-sensitive, flag for human review</td>
+</tr>
+<tr>
+<td><strong>#1661</strong></td>
+<td>Validate Phase 1 deployment (AT-TEKTON-001)</td>
+<td>2</td>
+<td>S</td>
+<td>2</td>
+<td>Y</td>
+<td><code>test-engineer</code></td>
+<td>Run after #1659 and #1660 land</td>
 </tr>
 </tbody>
 </table>

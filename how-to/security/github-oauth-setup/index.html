@@ -5769,10 +5769,10 @@
 </ul>
 <h2 id="architecture">Architecture</h2>
 <div class="highlight"><pre><span></span><code>┌──────────────┐
-│   User&#39;s     │
+│   User's     │
 │   Browser    │
 └──────┬───────┘
-       │ 1. Click &quot;Sign in with GitHub&quot;
+       │ 1. Click "Sign in with GitHub"
        ▼
 ┌──────────────────────────────────────┐
 │    Backstage Frontend                │
@@ -5876,8 +5876,8 @@ vim<span class="w"> </span>platform/apps/backstage/secrets.yaml
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes</span>
 <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Opaque</span>
 <span class="nt">stringData</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">github-client-id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;YOUR_CLIENT_ID_HERE&quot;</span>
-<span class="w">  </span><span class="nt">github-client-secret</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;YOUR_CLIENT_SECRET_HERE&quot;</span>
+<span class="w">  </span><span class="nt">github-client-id</span><span class="p">:</span><span class="w"> </span><span class="s">"YOUR_CLIENT_ID_HERE"</span>
+<span class="w">  </span><span class="nt">github-client-secret</span><span class="p">:</span><span class="w"> </span><span class="s">"YOUR_CLIENT_SECRET_HERE"</span>
 </code></pre></div>
 <p>Apply the updated secret:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/backstage/secrets.yaml
@@ -5886,8 +5886,8 @@ vim<span class="w"> </span>platform/apps/backstage/secrets.yaml
 <p>This method doesn't store secrets in Git:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create the secret directly</span>
 kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>backstage-oauth-credentials<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-literal<span class="o">=</span>github-client-id<span class="o">=</span><span class="s1">&#39;YOUR_CLIENT_ID_HERE&#39;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-literal<span class="o">=</span>github-client-secret<span class="o">=</span><span class="s1">&#39;YOUR_CLIENT_SECRET_HERE&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span>github-client-id<span class="o">=</span><span class="s1">'YOUR_CLIENT_ID_HERE'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span>github-client-secret<span class="o">=</span><span class="s1">'YOUR_CLIENT_SECRET_HERE'</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--namespace<span class="o">=</span>fawkes<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--dry-run<span class="o">=</span>client<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-
 </code></pre></div>
@@ -5897,8 +5897,8 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <li>Store secrets in Vault:</li>
 </ol>
 <div class="highlight"><pre><span></span><code>vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </span>secret/backstage/oauth<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>github-client-id<span class="o">=</span><span class="s2">&quot;YOUR_CLIENT_ID_HERE&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>github-client-secret<span class="o">=</span><span class="s2">&quot;YOUR_CLIENT_SECRET_HERE&quot;</span>
+<span class="w">  </span>github-client-id<span class="o">=</span><span class="s2">"YOUR_CLIENT_ID_HERE"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>github-client-secret<span class="o">=</span><span class="s2">"YOUR_CLIENT_SECRET_HERE"</span>
 </code></pre></div>
 <ol>
 <li>Create ExternalSecret resource:</li>
@@ -5965,7 +5965,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>backstage<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>auth
 
 <span class="c1"># Look for successful auth messages like:</span>
-<span class="c1"># &quot;GitHub authentication successful for user: username&quot;</span>
+<span class="c1"># "GitHub authentication successful for user: username"</span>
 </code></pre></div>
 <h3 id="verify-environment-variables">Verify Environment Variables</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check that secrets are mounted correctly</span>
@@ -5973,7 +5973,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 
 <span class="c1"># Should show:</span>
 <span class="c1"># AUTH_GITHUB_CLIENT_ID=&lt;your-client-id&gt;</span>
-<span class="c1"># (Client secret won&#39;t be displayed for security)</span>
+<span class="c1"># (Client secret won't be displayed for security)</span>
 </code></pre></div>
 <h2 id="step-5-configure-user-resolver-optional">Step 5: Configure User Resolver (Optional)</h2>
 <p>By default, Backstage uses <code>usernameMatchingUserEntityName</code> resolver. You can configure additional resolvers in <code>app-config.yaml</code>:</p>
@@ -6009,7 +6009,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <p><strong>Solution</strong>:</p>
 <ol>
 <li>Verify the secret values in Kubernetes:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>backstage-oauth-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.github-client-id}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
+   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>backstage-oauth-credentials<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.github-client-id}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
 </code></pre></div></li>
 <li>Compare with your GitHub OAuth app</li>
 <li>Regenerate client secret if necessary and update Kubernetes secret</li>
@@ -6093,7 +6093,7 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 <span class="c1"># 2. Open browser</span>
 open<span class="w"> </span>http://localhost:7007
 
-<span class="c1"># 3. Click &quot;Sign in with GitHub&quot;</span>
+<span class="c1"># 3. Click "Sign in with GitHub"</span>
 
 <span class="c1"># 4. Verify redirect to GitHub</span>
 
@@ -6101,7 +6101,7 @@ open<span class="w"> </span>http://localhost:7007
 
 <span class="c1"># 6. Verify redirect back to Backstage</span>
 
-<span class="c1"># 7. Confirm you&#39;re logged in (your username should appear)</span>
+<span class="c1"># 7. Confirm you're logged in (your username should appear)</span>
 </code></pre></div>
 <h3 id="automated-bdd-test">Automated BDD Test</h3>
 <p>Run the acceptance test for OAuth:</p>

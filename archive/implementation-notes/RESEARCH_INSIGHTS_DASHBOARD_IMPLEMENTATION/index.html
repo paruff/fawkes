@@ -5898,7 +5898,7 @@
 <h3 id="4-verify-metrics-collection">4. Verify Metrics Collection</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Prometheus targets</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>svc/prometheus-prometheus<span class="w"> </span><span class="m">9090</span>:9090
-<span class="c1"># Navigate to http://localhost:9090/targets and look for &quot;insights-metrics&quot;</span>
+<span class="c1"># Navigate to http://localhost:9090/targets and look for "insights-metrics"</span>
 
 <span class="c1"># Query metrics</span>
 curl<span class="w"> </span>http://localhost:9090/api/v1/query?query<span class="o">=</span>research_insights_total
@@ -5977,10 +5977,10 @@ Grafana queries Prometheus and displays in dashboard
 <span class="nv">research_insights_total</span>
 
 <span class="c1"># Validation rate for specific category</span>
-<span class="nv">research_insights_validation_rate</span><span class="p">{</span><span class="nl">category</span><span class="o">=</span><span class="p">&quot;</span><span class="s">User Experience</span><span class="p">&quot;}</span>
+<span class="nv">research_insights_validation_rate</span><span class="p">{</span><span class="nl">category</span><span class="o">=</span><span class="p">"</span><span class="s">User Experience</span><span class="p">"}</span>
 
 <span class="c1"># Time to action in hours</span>
-<span class="nv">research_insights_time_to_action_seconds</span><span class="p">{</span><span class="nl">category</span><span class="o">=</span><span class="p">&quot;</span><span class="s">Performance</span><span class="p">&quot;}</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">3600</span>
+<span class="nv">research_insights_time_to_action_seconds</span><span class="p">{</span><span class="nl">category</span><span class="o">=</span><span class="p">"</span><span class="s">Performance</span><span class="p">"}</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">3600</span>
 
 <span class="c1"># Recent publication velocity</span>
 <span class="kr">rate</span><span class="o">(</span><span class="nv">research_insights_published_last_7d</span><span class="p">[</span><span class="s">1h</span><span class="p">]</span><span class="o">)</span>

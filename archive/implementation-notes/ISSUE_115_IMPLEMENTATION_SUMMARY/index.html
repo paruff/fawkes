@@ -5897,34 +5897,34 @@
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>dirname<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/lib/error_handling.sh&quot;</span>
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>dirname<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">"</span><span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="k">)</span><span class="s2">"</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/lib/error_handling.sh"</span>
 
 <span class="c1"># Check prerequisites</span>
-require_command<span class="w"> </span><span class="s2">&quot;kubectl&quot;</span>
-require_var<span class="w"> </span><span class="s2">&quot;NAMESPACE&quot;</span>
+require_command<span class="w"> </span><span class="s2">"kubectl"</span>
+require_var<span class="w"> </span><span class="s2">"NAMESPACE"</span>
 
 <span class="c1"># Main logic</span>
-log_info<span class="w"> </span><span class="s2">&quot;Starting deployment...&quot;</span>
-<span class="k">if</span><span class="w"> </span>!<span class="w"> </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>app.yaml<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NAMESPACE</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span>error_exit<span class="w"> </span><span class="s2">&quot;Deployment failed&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXIT_GENERAL_ERROR</span><span class="s2">&quot;</span>
+log_info<span class="w"> </span><span class="s2">"Starting deployment..."</span>
+<span class="k">if</span><span class="w"> </span>!<span class="w"> </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>app.yaml<span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$NAMESPACE</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span>error_exit<span class="w"> </span><span class="s2">"Deployment failed"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$EXIT_GENERAL_ERROR</span><span class="s2">"</span>
 <span class="k">fi</span>
-log_success<span class="w"> </span><span class="s2">&quot;Deployment complete!&quot;</span>
+log_success<span class="w"> </span><span class="s2">"Deployment complete!"</span>
 </code></pre></div>
 <h3 id="with-cleanup-and-rollback">With Cleanup and Rollback</h3>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/lib/error_handling.sh&quot;</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/lib/error_handling.sh"</span>
 
 cleanup<span class="o">()</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span>log_debug<span class="w"> </span><span class="s2">&quot;Cleaning up...&quot;</span>
+<span class="w">  </span>log_debug<span class="w"> </span><span class="s2">"Cleaning up..."</span>
 <span class="w">  </span>rm<span class="w"> </span>-f<span class="w"> </span>/tmp/temp-*.txt
 <span class="o">}</span>
 register_cleanup_function<span class="w"> </span>cleanup
 
 rollback<span class="o">()</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span>log_warn<span class="w"> </span><span class="s2">&quot;Rolling back changes...&quot;</span>
+<span class="w">  </span>log_warn<span class="w"> </span><span class="s2">"Rolling back changes..."</span>
 <span class="w">  </span>kubectl<span class="w"> </span>rollout<span class="w"> </span>undo<span class="w"> </span>deployment/myapp<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
 <span class="o">}</span>
 register_rollback_function<span class="w"> </span>rollback
@@ -5933,7 +5933,7 @@ register_rollback_function<span class="w"> </span>rollback
 </code></pre></div>
 <h3 id="with-retry">With Retry</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Retry network operations with exponential backoff</span>
-retry_command<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;kubectl get nodes&quot;</span>
+retry_command<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">"kubectl get nodes"</span>
 </code></pre></div>
 <h2 id="acceptance-criteria-status">Acceptance Criteria Status</h2>
 <ul>

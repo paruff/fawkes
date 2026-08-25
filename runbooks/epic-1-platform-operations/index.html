@@ -6030,13 +6030,13 @@
 <h2 id="component-status-checks">Component Status Checks</h2>
 <h3 id="quick-health-check-all-components">Quick Health Check (All Components)</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check all platform namespaces</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;argocd|backstage|jenkins|sonarqube|prometheus|grafana|harbor|devlake|vault|kyverno&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'argocd|backstage|jenkins|sonarqube|prometheus|grafana|harbor|devlake|vault|kyverno'</span>
 
 <span class="c1"># Check pod status across all platform components</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;argocd|backstage|jenkins|sonarqube|prometheus|grafana|harbor|devlake|vault|kyverno&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'argocd|backstage|jenkins|sonarqube|prometheus|grafana|harbor|devlake|vault|kyverno'</span>
 
 <span class="c1"># Check all critical services</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;argocd-server|backstage|jenkins|sonarqube|prometheus|grafana|harbor|devlake|vault&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'argocd-server|backstage|jenkins|sonarqube|prometheus|grafana|harbor|devlake|vault'</span>
 </code></pre></div>
 <h3 id="kubernetes-cluster">Kubernetes Cluster</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check node status</span>
@@ -6044,14 +6044,14 @@ kubectl<span class="w"> </span>get<span class="w"> </span>nodes
 kubectl<span class="w"> </span>top<span class="w"> </span>nodes
 
 <span class="c1"># Check cluster resource utilization (should be &lt;70%)</span>
-kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">&#39;s/%//&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{sum+=$1; count++} END {print &quot;Average CPU: &quot; sum/count &quot;%&quot;}&#39;</span>
-kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $5}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">&#39;s/%//&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{sum+=$1; count++} END {print &quot;Average Memory: &quot; sum/count &quot;%&quot;}&#39;</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $3}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">'s/%//'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{sum+=$1; count++} END {print "Average CPU: " sum/count "%"}'</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $5}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">'s/%//'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{sum+=$1; count++} END {print "Average Memory: " sum/count "%"}'</span>
 
 <span class="c1"># Check for pending pods</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
 
 <span class="c1"># Check for failed pods</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;Error|CrashLoopBackOff|ImagePullBackOff&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'Error|CrashLoopBackOff|ImagePullBackOff'</span>
 </code></pre></div>
 <h3 id="argocd-gitops">ArgoCD (GitOps)</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check ArgoCD health</span>
@@ -6092,7 +6092,7 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>-l<span class="w"> </span>jenkins/label
 
 <span class="c1"># Get Jenkins admin password</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>jenkins<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.jenkins-admin-password}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>--decode
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>jenkins<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">"{.data.jenkins-admin-password}"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>--decode
 
 <span class="c1"># Access Jenkins UI</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/jenkins<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span><span class="m">8080</span>:8080
@@ -6118,8 +6118,8 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 
 <span class="c1"># Check all Vault pods are unsealed</span>
 <span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Checking vault-</span><span class="nv">$i</span><span class="s2">:&quot;</span>
-<span class="w">  </span>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-<span class="nv">$i</span><span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sealed&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Checking vault-</span><span class="nv">$i</span><span class="s2">:"</span>
+<span class="w">  </span>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-<span class="nv">$i</span><span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Sealed"</span>
 <span class="k">done</span>
 
 <span class="c1"># Check Vault operator logs</span>
@@ -6134,7 +6134,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicies
 kubectl<span class="w"> </span>get<span class="w"> </span>policyreports<span class="w"> </span>-A
 
 <span class="c1"># View policy violations</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>policyreports<span class="w"> </span>-A<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | select(.results[].result==&quot;fail&quot;) | {namespace: .metadata.namespace, name: .metadata.name, violations: .results}&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>policyreports<span class="w"> </span>-A<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.items[] | select(.results[].result=="fail") | {namespace: .metadata.namespace, name: .metadata.name, violations: .results}'</span>
 </code></pre></div>
 <h3 id="prometheus-grafana-observability">Prometheus &amp; Grafana (Observability)</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check Prometheus health</span>
@@ -6242,7 +6242,7 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 </code></pre></div>
 <h3 id="viewing-events">Viewing Events</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get recent events for a namespace</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">'.lastTimestamp'</span>
 
 <span class="c1"># Watch events in real-time</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>-w
@@ -6270,7 +6270,7 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span
 </ol>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check node resources</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>nodes
-kubectl<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Allocated resources&quot;</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">"Allocated resources"</span>
 </code></pre></div>
 <p><strong>Solution</strong>: Scale down other workloads or add nodes</p>
 <ol>
@@ -6543,7 +6543,7 @@ vi<span class="w"> </span>platform/&lt;component&gt;/values.yaml
 
 <span class="c1"># 2. Commit and push</span>
 git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update &lt;component&gt; to version &lt;version&gt;&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Update &lt;component&gt; to version &lt;version&gt;"</span>
 git<span class="w"> </span>push
 
 <span class="c1"># 3. Sync ArgoCD application</span>
@@ -6627,7 +6627,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>&gt;<span class="w"> </span>incident-logs.txt
 
 <span class="c1"># Collect events</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>incident-events.txt
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">'.lastTimestamp'</span><span class="w"> </span>&gt;<span class="w"> </span>incident-events.txt
 
 <span class="c1"># Check resource usage</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w"> </span>&gt;<span class="w"> </span>incident-resources.txt
@@ -6691,57 +6691,57 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 <p>Save this as <code>scripts/health-check.sh</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Fawkes Platform Health Check ===&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Timestamp: </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Fawkes Platform Health Check ==="</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Timestamp: </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">"</span>
 <span class="nb">echo</span>
 
 <span class="c1"># Cluster health</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Cluster Health ---&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"--- Cluster Health ---"</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>nodes
 <span class="nb">echo</span>
 
 <span class="c1"># Resource utilization</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Resource Utilization ---&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"--- Resource Utilization ---"</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>nodes
 <span class="nb">echo</span>
 
 <span class="c1"># Critical namespaces</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Critical Namespaces ---&quot;</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;argocd|backstage|jenkins|prometheus|grafana|vault&#39;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"--- Critical Namespaces ---"</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'argocd|backstage|jenkins|prometheus|grafana|vault'</span>
 <span class="nb">echo</span>
 
 <span class="c1"># Pod health</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Pod Health (Non-Running) ---&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"--- Pod Health (Non-Running) ---"</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Completed
 <span class="nb">echo</span>
 
 <span class="c1"># ArgoCD sync status</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- ArgoCD Applications ---&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"--- ArgoCD Applications ---"</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>applications<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>-o<span class="w"> </span>custom-columns<span class="o">=</span>NAME:.metadata.name,SYNC:.status.sync.status,HEALTH:.status.health.status
 <span class="nb">echo</span>
 
 <span class="c1"># Prometheus targets</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Prometheus Targets (Down) ---&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"--- Prometheus Targets (Down) ---"</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span>prometheus-kube-prometheus-prometheus-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>wget<span class="w"> </span>-qO-<span class="w"> </span><span class="s1">&#39;http://localhost:9090/api/v1/targets&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.data.activeTargets[] | select(.health!=&quot;up&quot;) | &quot;\(.labels.job) - \(.health)&quot;&#39;</span>
+<span class="w">  </span>wget<span class="w"> </span>-qO-<span class="w"> </span><span class="s1">'http://localhost:9090/api/v1/targets'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.data.activeTargets[] | select(.health!="up") | "\(.labels.job) - \(.health)"'</span>
 <span class="nb">echo</span>
 
 <span class="c1"># Certificate expiry</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Certificates Expiring Soon ---&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"--- Certificates Expiring Soon ---"</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>certificates<span class="w"> </span>-A<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.items[] | select(.status.notAfter) | &quot;\(.metadata.namespace)/\(.metadata.name): \(.status.notAfter)&quot;&#39;</span>
+<span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.items[] | select(.status.notAfter) | "\(.metadata.namespace)/\(.metadata.name): \(.status.notAfter)"'</span>
 <span class="nb">echo</span>
 
 <span class="c1"># Vault seal status</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Vault Seal Status ---&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"--- Vault Seal Status ---"</span>
 <span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;vault-</span><span class="nv">$i</span><span class="s2">: &quot;</span>
-<span class="w">  </span>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-<span class="nv">$i</span><span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sealed&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Check failed&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"vault-</span><span class="nv">$i</span><span class="s2">: "</span>
+<span class="w">  </span>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-<span class="nv">$i</span><span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"Sealed"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Check failed"</span>
 <span class="k">done</span>
 <span class="nb">echo</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Health Check Complete ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Health Check Complete ==="</span>
 </code></pre></div>
 <p>Make it executable:</p>
 <div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>scripts/health-check.sh

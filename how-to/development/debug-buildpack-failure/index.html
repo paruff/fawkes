@@ -6434,7 +6434,7 @@
 <h3 id="1-locate-the-build-failure">1. Locate the Build Failure</h3>
 <h4 id="access-jenkins-build-logs">Access Jenkins Build Logs</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get Jenkins URL</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;https://jenkins.127.0.0.1.nip.io&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"https://jenkins.127.0.0.1.nip.io"</span>
 
 <span class="c1"># Navigate to the failed build</span>
 <span class="c1"># Jobs → Your Pipeline → Build #XX → Console Output</span>
@@ -6531,14 +6531,14 @@ ls<span class="w"> </span>-la<span class="w"> </span>go.mod
 <div class="highlight"><pre><span></span><code><span class="c1"># Node.js example</span>
 cat<span class="w"> </span>&gt;<span class="w"> </span>package.json<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
 <span class="s">{</span>
-<span class="s">  &quot;name&quot;: &quot;my-app&quot;,</span>
-<span class="s">  &quot;version&quot;: &quot;1.0.0&quot;,</span>
-<span class="s">  &quot;main&quot;: &quot;index.js&quot;,</span>
-<span class="s">  &quot;scripts&quot;: {</span>
-<span class="s">    &quot;start&quot;: &quot;node index.js&quot;</span>
+<span class="s">  "name": "my-app",</span>
+<span class="s">  "version": "1.0.0",</span>
+<span class="s">  "main": "index.js",</span>
+<span class="s">  "scripts": {</span>
+<span class="s">    "start": "node index.js"</span>
 <span class="s">  },</span>
-<span class="s">  &quot;dependencies&quot;: {</span>
-<span class="s">    &quot;express&quot;: &quot;^4.18.0&quot;</span>
+<span class="s">  "dependencies": {</span>
+<span class="s">    "express": "^4.18.0"</span>
 <span class="s">  }</span>
 <span class="s">}</span>
 <span class="s">EOF</span>
@@ -6553,20 +6553,20 @@ cat<span class="w"> </span>&gt;<span class="w"> </span>requirements.txt<span cla
 <p>If dependencies can't be resolved:</p>
 <h4 id="check-version-constraints">Check Version Constraints</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Node.js: View dependency versions</span>
-cat<span class="w"> </span>package.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.dependencies, .devDependencies&#39;</span>
+cat<span class="w"> </span>package.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.dependencies, .devDependencies'</span>
 
 <span class="c1"># Python: Check requirements</span>
 cat<span class="w"> </span>requirements.txt
 
 <span class="c1"># Java: Check Maven dependencies</span>
-cat<span class="w"> </span>pom.xml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;&lt;dependencies&gt;&quot;</span>
+cat<span class="w"> </span>pom.xml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">"&lt;dependencies&gt;"</span>
 </code></pre></div>
 <h4 id="fix-update-dependency-versions">Fix: Update Dependency Versions</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Node.js: Use compatible versions</span>
 npm<span class="w"> </span>install<span class="w"> </span>express@4.18.0
 
 <span class="c1"># Python: Pin versions</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;flask==2.3.0&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>requirements.txt
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"flask==2.3.0"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>requirements.txt
 
 <span class="c1"># Java: Update in pom.xml</span>
 &lt;dependency&gt;
@@ -6606,25 +6606,25 @@ ENOENT: no such file or directory
 <div class="highlight"><pre><span></span><code><span class="c1"># Ensure all files are committed</span>
 git<span class="w"> </span>status
 
-<span class="c1"># Check .gitignore doesn&#39;t exclude required files</span>
+<span class="c1"># Check .gitignore doesn't exclude required files</span>
 cat<span class="w"> </span>.gitignore
 
 <span class="c1"># Add missing files</span>
 git<span class="w"> </span>add<span class="w"> </span>src/config.js
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix: add missing config file&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"fix: add missing config file"</span>
 </code></pre></div>
 <p><strong>Python:</strong></p>
 <div class="highlight"><pre><span></span><code>ERROR: Could not find a version that satisfies the requirement
 </code></pre></div>
 <p><strong>Fix:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Use compatible Python version</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;python_version = \&quot;3.11\&quot;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>runtime.txt
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"python_version = \"3.11\""</span><span class="w"> </span>&gt;<span class="w"> </span>runtime.txt
 
 <span class="c1"># Or specify in buildpack config</span>
 cat<span class="w"> </span>&gt;<span class="w"> </span>project.toml<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
 <span class="s">[[build.env]]</span>
-<span class="s">name = &quot;BP_PYTHON_VERSION&quot;</span>
-<span class="s">value = &quot;3.11.*&quot;</span>
+<span class="s">name = "BP_PYTHON_VERSION"</span>
+<span class="s">value = "3.11.*"</span>
 <span class="s">EOF</span>
 </code></pre></div>
 <p><strong>Java:</strong></p>
@@ -6655,7 +6655,7 @@ chmod<span class="w"> </span>+x<span class="w"> </span>scripts/*.sh
 
 <span class="c1"># Commit permission changes</span>
 git<span class="w"> </span>add<span class="w"> </span>--chmod<span class="o">=</span>+x<span class="w"> </span>scripts/entrypoint.sh
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix: make entrypoint executable&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"fix: make entrypoint executable"</span>
 </code></pre></div>
 <h3 id="7-cache-issues">7. Cache Issues</h3>
 <p>If layer restoration fails:</p>
@@ -6664,15 +6664,15 @@ ERROR: layer restoration failed
 </code></pre></div>
 <h4 id="fix-clear-build-cache">Fix: Clear Build Cache</h4>
 <p>In Jenkins pipeline:</p>
-<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build with Buildpack&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">'Build with Buildpack'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s1">'''</span>
 <span class="s1">            # Clear buildpack cache</span>
 <span class="s1">            pack build my-app:latest \</span>
 <span class="s1">              --builder paketobuildpacks/builder:base \</span>
 <span class="s1">              --clear-cache \</span>
 <span class="s1">              --path .</span>
-<span class="s1">        &#39;&#39;&#39;</span>
+<span class="s1">        '''</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
@@ -6687,49 +6687,49 @@ rm<span class="w"> </span>-rf<span class="w"> </span>/var/cache/buildpacks/*
 <p>Customize buildpack behavior with a configuration file:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># project.toml - place in repository root</span>
 <span class="k">[_]</span>
-<span class="n">schema-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.2&quot;</span>
+<span class="n">schema-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"0.2"</span>
 
 <span class="k">[[build.env]]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_NODE_VERSION&quot;</span>
-<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;20.*&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"BP_NODE_VERSION"</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"20.*"</span>
 
 <span class="k">[[build.env]]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_NPM_INSTALL_ARGS&quot;</span>
-<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;--production&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"BP_NPM_INSTALL_ARGS"</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"--production"</span>
 
 <span class="k">[[build.buildpacks]]</span>
-<span class="n">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;docker://gcr.io/paketo-buildpacks/nodejs:latest&quot;</span>
+<span class="n">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"docker://gcr.io/paketo-buildpacks/nodejs:latest"</span>
 
 <span class="k">[[build.buildpacks]]</span>
-<span class="n">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;docker://gcr.io/paketo-buildpacks/npm-install:latest&quot;</span>
+<span class="n">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"docker://gcr.io/paketo-buildpacks/npm-install:latest"</span>
 </code></pre></div>
 <p>Common configuration options:</p>
 <p><strong>Node.js:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">[[build.env]]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_NODE_VERSION&quot;</span>
-<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;20.*&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"BP_NODE_VERSION"</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"20.*"</span>
 
 <span class="k">[[build.env]]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_NPM_INSTALL_ARGS&quot;</span>
-<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;--production&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"BP_NPM_INSTALL_ARGS"</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"--production"</span>
 </code></pre></div>
 <p><strong>Python:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">[[build.env]]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_PYTHON_VERSION&quot;</span>
-<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3.11.*&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"BP_PYTHON_VERSION"</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"3.11.*"</span>
 
 <span class="k">[[build.env]]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_PIP_ARGS&quot;</span>
-<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;--no-cache-dir&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"BP_PIP_ARGS"</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"--no-cache-dir"</span>
 </code></pre></div>
 <p><strong>Java:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">[[build.env]]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_JVM_VERSION&quot;</span>
-<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;17.*&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"BP_JVM_VERSION"</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"17.*"</span>
 
 <span class="k">[[build.env]]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_MAVEN_BUILD_ARGUMENTS&quot;</span>
-<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;clean install -DskipTests&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"BP_MAVEN_BUILD_ARGUMENTS"</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"clean install -DskipTests"</span>
 </code></pre></div>
 <h3 id="9-test-locally-before-pushing">9. Test Locally Before Pushing</h3>
 <p>Always test buildpack builds locally:</p>
@@ -6811,28 +6811,28 @@ pack<span class="w"> </span>build<span class="w"> </span>my-app<span class="w"> 
 <p><strong>Solution:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Add to project.toml</span>
 <span class="k">[[build.env]]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_NODE_VERSION&quot;</span>
-<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;20.*&quot;</span><span class="w">  </span><span class="c1"># Use wildcard for flexibility</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"BP_NODE_VERSION"</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"20.*"</span><span class="w">  </span><span class="c1"># Use wildcard for flexibility</span>
 </code></pre></div>
 <h3 id="issue-npm-install-fails-with-network-error">Issue: "npm install fails with network error"</h3>
 <p><strong>Solution:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Configure npm registry</span>
 <span class="o">[[</span>build.env<span class="o">]]</span>
-<span class="nv">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;NPM_CONFIG_REGISTRY&quot;</span>
-<span class="nv">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://registry.npmjs.org&quot;</span>
+<span class="nv">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"NPM_CONFIG_REGISTRY"</span>
+<span class="nv">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"https://registry.npmjs.org"</span>
 
 <span class="c1"># Or use .npmrc</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;registry=https://registry.npmjs.org&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.npmrc
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"registry=https://registry.npmjs.org"</span><span class="w"> </span>&gt;<span class="w"> </span>.npmrc
 </code></pre></div>
 <h3 id="issue-out-of-memory-during-build">Issue: "Out of memory during build"</h3>
 <p><strong>Solution:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Increase memory in Jenkins pipeline</span>
-<span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="n">stage</span><span class="o">(</span><span class="s1">'Build'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">PACK_MEMORY_LIMIT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;4G&#39;</span>
+<span class="w">        </span><span class="n">PACK_MEMORY_LIMIT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'4G'</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;pack build my-app --memory 4G&#39;</span>
+<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s1">'pack build my-app --memory 4G'</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>

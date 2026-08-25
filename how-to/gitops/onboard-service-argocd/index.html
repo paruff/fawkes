@@ -6000,7 +6000,7 @@
 <span class="w">      </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># Force sync when cluster state deviates</span>
 <span class="w">      </span><span class="nt">allowEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">    </span><span class="nt">syncOptions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span><span class="w"> </span><span class="c1"># Auto-create namespace if it doesn&#39;t exist</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span><span class="w"> </span><span class="c1"># Auto-create namespace if it doesn't exist</span>
 <span class="w">    </span><span class="nt">retry</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
 <span class="w">      </span><span class="nt">backoff</span><span class="p">:</span>
@@ -6035,7 +6035,7 @@ git<span class="w"> </span>add<span class="w"> </span>manifests/argocd/apps/my-s
 git<span class="w"> </span>add<span class="w"> </span>manifests/argocd/apps/kustomization.yaml
 
 <span class="c1"># Commit with descriptive message</span>
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: onboard my-service to ArgoCD (dev environment)&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"feat: onboard my-service to ArgoCD (dev environment)"</span>
 
 <span class="c1"># Push to remote</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
@@ -6049,7 +6049,7 @@ argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </
 <span class="c1"># Or using kubectl</span>
 kubectl<span class="w"> </span>patch<span class="w"> </span>app<span class="w"> </span>my-service-dev<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--type<span class="w"> </span>merge<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;operation&quot;:{&quot;initiatedBy&quot;:{&quot;username&quot;:&quot;admin&quot;},&quot;sync&quot;:{}}}&#39;</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="s1">'{"operation":{"initiatedBy":{"username":"admin"},"sync":{}}}'</span>
 </code></pre></div>
 <h3 id="6-monitor-deployment-progress">6. Monitor Deployment Progress</h3>
 <p>Watch the deployment status:</p>
@@ -6060,7 +6060,7 @@ argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </s
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>my-service-dev<span class="w"> </span>--watch
 
 <span class="c1"># Check ArgoCD sync status</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>application<span class="w"> </span>my-service-dev<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.sync.status}&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>application<span class="w"> </span>my-service-dev<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.sync.status}'</span>
 </code></pre></div>
 <h2 id="verification">Verification</h2>
 <p>Verify your service is successfully onboarded and healthy:</p>
@@ -6106,12 +6106,12 @@ curl<span class="w"> </span>http://localhost:8080/health
 <span class="c1"># Edit overlays/dev/kustomization.yaml</span>
 
 git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;test: update environment variable&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"test: update environment variable"</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
 
 <span class="c1"># Wait 1-3 minutes and verify ArgoCD auto-synced</span>
 argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>my-service-dev
-<span class="c1"># Check &quot;Sync Status&quot; shows new commit SHA</span>
+<span class="c1"># Check "Sync Status" shows new commit SHA</span>
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="application-shows-outofsync-status">Application Shows "OutOfSync" Status</h3>
