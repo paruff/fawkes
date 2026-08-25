@@ -5962,11 +5962,11 @@
 <h2 id="quick-start">Quick Start</h2>
 <h3 id="1-add-a-jenkinsfile">1. Add a Jenkinsfile</h3>
 <p>Create a <code>Jenkinsfile</code> in your repository root:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">'fawkes-pipeline-library'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 
 <span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
-<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;java&#39;</span><span class="w">  </span><span class="c1">// java, python, node, go</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service'</span>
+<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'java'</span><span class="w">  </span><span class="c1">// java, python, node, go</span>
 <span class="o">}</span>
 </code></pre></div>
 <h3 id="2-push-to-main-branch">2. Push to Main Branch</h3>
@@ -6082,12 +6082,12 @@
 <h2 id="language-specific-configuration">Language-Specific Configuration</h2>
 <h3 id="java-maven">Java (Maven)</h3>
 <div class="highlight"><pre><span></span><code><span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;java-service&#39;</span>
-<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;java&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'java-service'</span>
+<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'java'</span>
 <span class="w">    </span><span class="c1">// Defaults:</span>
-<span class="w">    </span><span class="c1">// buildCommand = &#39;mvn clean package -DskipTests&#39;</span>
-<span class="w">    </span><span class="c1">// testCommand = &#39;mvn test&#39;</span>
-<span class="w">    </span><span class="c1">// bddTestCommand = &#39;mvn verify -Pcucumber&#39;</span>
+<span class="w">    </span><span class="c1">// buildCommand = 'mvn clean package -DskipTests'</span>
+<span class="w">    </span><span class="c1">// testCommand = 'mvn test'</span>
+<span class="w">    </span><span class="c1">// bddTestCommand = 'mvn verify -Pcucumber'</span>
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>Required Files:</strong></p>
@@ -6120,12 +6120,12 @@
 </code></pre></div>
 <h3 id="python">Python</h3>
 <div class="highlight"><pre><span></span><code><span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;python-service&#39;</span>
-<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;python&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'python-service'</span>
+<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'python'</span>
 <span class="w">    </span><span class="c1">// Defaults:</span>
-<span class="w">    </span><span class="c1">// buildCommand = &#39;pip install -r requirements.txt &amp;&amp; pip install -e .&#39;</span>
-<span class="w">    </span><span class="c1">// testCommand = &#39;pytest tests/unit --junitxml=test-results.xml --cov=src --cov-report=xml&#39;</span>
-<span class="w">    </span><span class="c1">// bddTestCommand = &#39;behave --junit --junit-directory=bdd-results&#39;</span>
+<span class="w">    </span><span class="c1">// buildCommand = 'pip install -r requirements.txt &amp;&amp; pip install -e .'</span>
+<span class="w">    </span><span class="c1">// testCommand = 'pytest tests/unit --junitxml=test-results.xml --cov=src --cov-report=xml'</span>
+<span class="w">    </span><span class="c1">// bddTestCommand = 'behave --junit --junit-directory=bdd-results'</span>
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>Required Files:</strong></p>
@@ -6144,12 +6144,12 @@
 </code></pre></div>
 <h3 id="nodejs">Node.js</h3>
 <div class="highlight"><pre><span></span><code><span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;node-service&#39;</span>
-<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;node&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'node-service'</span>
+<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'node'</span>
 <span class="w">    </span><span class="c1">// Defaults:</span>
-<span class="w">    </span><span class="c1">// buildCommand = &#39;npm ci &amp;&amp; npm run build&#39;</span>
-<span class="w">    </span><span class="c1">// testCommand = &#39;npm test -- --ci --reporters=jest-junit&#39;</span>
-<span class="w">    </span><span class="c1">// bddTestCommand = &#39;npm run test:bdd&#39;</span>
+<span class="w">    </span><span class="c1">// buildCommand = 'npm ci &amp;&amp; npm run build'</span>
+<span class="w">    </span><span class="c1">// testCommand = 'npm test -- --ci --reporters=jest-junit'</span>
+<span class="w">    </span><span class="c1">// bddTestCommand = 'npm run test:bdd'</span>
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>Required Files:</strong></p>
@@ -6162,22 +6162,22 @@
 <p><strong>Cucumber.js Integration:</strong></p>
 <p>Add to <code>package.json</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;test:bdd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cucumber-js&quot;</span>
+<span class="w">  </span><span class="nt">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"test:bdd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cucumber-js"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;devDependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;@cucumber/cucumber&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^9.0.0&quot;</span>
+<span class="w">  </span><span class="nt">"devDependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"@cucumber/cucumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^9.0.0"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="go">Go</h3>
 <div class="highlight"><pre><span></span><code><span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;go-service&#39;</span>
-<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;go&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'go-service'</span>
+<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'go'</span>
 <span class="w">    </span><span class="c1">// Defaults:</span>
-<span class="w">    </span><span class="c1">// buildCommand = &#39;go build -v ./...&#39;</span>
-<span class="w">    </span><span class="c1">// testCommand = &#39;go test -v -coverprofile=coverage.out ./...&#39;</span>
-<span class="w">    </span><span class="c1">// bddTestCommand = &#39;go test -v ./features/...&#39;</span>
+<span class="w">    </span><span class="c1">// buildCommand = 'go build -v ./...'</span>
+<span class="w">    </span><span class="c1">// testCommand = 'go test -v -coverprofile=coverage.out ./...'</span>
+<span class="w">    </span><span class="c1">// bddTestCommand = 'go test -v ./features/...'</span>
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>Required Files:</strong></p>
@@ -6190,17 +6190,17 @@
 <h2 id="custom-commands">Custom Commands</h2>
 <p>Override default commands when needed:</p>
 <div class="highlight"><pre><span></span><code><span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
-<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;java&#39;</span>
+<span class="w">    </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service'</span>
+<span class="w">    </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'java'</span>
 
 <span class="w">    </span><span class="c1">// Custom build with production profile</span>
-<span class="w">    </span><span class="n">buildCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;mvn clean package -P production -DskipTests&#39;</span>
+<span class="w">    </span><span class="n">buildCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'mvn clean package -P production -DskipTests'</span>
 
 <span class="w">    </span><span class="c1">// Run only specific tests</span>
-<span class="w">    </span><span class="n">testCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;mvn test -Dtest=UnitTests&#39;</span>
+<span class="w">    </span><span class="n">testCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'mvn test -Dtest=UnitTests'</span>
 
 <span class="w">    </span><span class="c1">// Run only smoke BDD tests</span>
-<span class="w">    </span><span class="n">bddTestCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;mvn verify -Dcucumber.filter.tags=&quot;@smoke&quot;&#39;</span>
+<span class="w">    </span><span class="n">bddTestCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'mvn verify -Dcucumber.filter.tags="@smoke"'</span>
 <span class="o">}</span>
 </code></pre></div>
 <h2 id="bddgherkin-testing">BDD/Gherkin Testing</h2>
@@ -6223,9 +6223,9 @@
 
 <span class="nf">  </span><span class="nt">@validation</span>
 <span class="nf">  </span><span class="k">Scenario Outline:</span><span class="nf"> Invalid registration data</span>
-<span class="k">    Given </span><span class="nf">I provide &quot;</span><span class="nv">&lt;field&gt;</span><span class="nf">&quot; with &quot;</span><span class="nv">&lt;value&gt;</span><span class="nf">&quot;</span>
+<span class="k">    Given </span><span class="nf">I provide "</span><span class="nv">&lt;field&gt;</span><span class="nf">" with "</span><span class="nv">&lt;value&gt;</span><span class="nf">"</span>
 <span class="nf">    </span><span class="k">When </span><span class="nf">I submit the registration form</span>
-<span class="nf">    </span><span class="k">Then </span><span class="nf">I receive error &quot;</span><span class="nv">&lt;error&gt;</span><span class="nf">&quot;</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I receive error "</span><span class="nv">&lt;error&gt;</span><span class="nf">"</span>
 
 <span class="nf">    </span><span class="k">Examples:</span>
 <span class="k">      |</span><span class="nv"> field</span><span class="k">    |</span><span class="nv"> value</span><span class="k"> |</span><span class="nv"> error</span><span class="k">               |</span>
@@ -6235,17 +6235,17 @@
 <h3 id="step-definitions">Step Definitions</h3>
 <h4 id="java-cucumber">Java (Cucumber)</h4>
 <div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">UserRegistrationSteps</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nd">@Given</span><span class="p">(</span><span class="s">&quot;the registration service is available&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Given</span><span class="p">(</span><span class="s">"the registration service is available"</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">serviceIsAvailable</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="c1">// Verify service is running</span>
 <span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="nd">@When</span><span class="p">(</span><span class="s">&quot;I submit the registration form&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@When</span><span class="p">(</span><span class="s">"I submit the registration form"</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">submitForm</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="c1">// Submit registration</span>
 <span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="nd">@Then</span><span class="p">(</span><span class="s">&quot;my account is created&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@Then</span><span class="p">(</span><span class="s">"my account is created"</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">accountCreated</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="c1">// Verify account exists</span>
 <span class="w">    </span><span class="p">}</span>
@@ -6254,17 +6254,17 @@
 <h4 id="python-behave">Python (Behave)</h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">behave</span><span class="w"> </span><span class="kn">import</span> <span class="n">given</span><span class="p">,</span> <span class="n">when</span><span class="p">,</span> <span class="n">then</span>
 
-<span class="nd">@given</span><span class="p">(</span><span class="s1">&#39;the registration service is available&#39;</span><span class="p">)</span>
+<span class="nd">@given</span><span class="p">(</span><span class="s1">'the registration service is available'</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">service_available</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
     <span class="c1"># Verify service is running</span>
     <span class="k">pass</span>
 
-<span class="nd">@when</span><span class="p">(</span><span class="s1">&#39;I submit the registration form&#39;</span><span class="p">)</span>
+<span class="nd">@when</span><span class="p">(</span><span class="s1">'I submit the registration form'</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">submit_form</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
     <span class="c1"># Submit registration</span>
     <span class="k">pass</span>
 
-<span class="nd">@then</span><span class="p">(</span><span class="s1">&#39;my account is created&#39;</span><span class="p">)</span>
+<span class="nd">@then</span><span class="p">(</span><span class="s1">'my account is created'</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">account_created</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
     <span class="c1"># Verify account exists</span>
     <span class="k">pass</span>
@@ -6280,8 +6280,8 @@
 <h3 id="trivy">Trivy</h3>
 <p>Container scanning is automatic. Customize severity threshold:</p>
 <div class="highlight"><pre><span></span><code><span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">trivySeverity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;CRITICAL&#39;</span><span class="w">  </span><span class="c1">// Only fail on critical</span>
-<span class="w">    </span><span class="n">trivyExitCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="w">         </span><span class="c1">// Don&#39;t fail build (warning only)</span>
+<span class="w">    </span><span class="n">trivySeverity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'CRITICAL'</span><span class="w">  </span><span class="c1">// Only fail on critical</span>
+<span class="w">    </span><span class="n">trivyExitCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'0'</span><span class="w">         </span><span class="c1">// Don't fail build (warning only)</span>
 <span class="o">}</span>
 </code></pre></div>
 <h3 id="dependency-checks">Dependency Checks</h3>
@@ -6295,7 +6295,7 @@
 <h2 id="notifications">Notifications</h2>
 <p>Build notifications are sent to Mattermost:</p>
 <div class="highlight"><pre><span></span><code><span class="n">goldenPathPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">notifyChannel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-team-builds&#39;</span>
+<span class="w">    </span><span class="n">notifyChannel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-team-builds'</span>
 <span class="o">}</span>
 </code></pre></div>
 <p>Notifications include:</p>
@@ -6423,13 +6423,13 @@
 
 <span class="nt">containers</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">web</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;harbor.fawkes.local/my-team/my-service:latest&quot;</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">"harbor.fawkes.local/my-team/my-service:latest"</span>
 <span class="w">    </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">limits</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span><span class="p p-Indicator">,</span><span class="nt"> cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span><span class="w"> </span><span class="p p-Indicator">}</span>
-<span class="w">      </span><span class="nt">requests</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span><span class="p p-Indicator">,</span><span class="nt"> cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;250m&quot;</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">limits</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> memory</span><span class="p">:</span><span class="w"> </span><span class="s">"512Mi"</span><span class="p p-Indicator">,</span><span class="nt"> cpu</span><span class="p">:</span><span class="w"> </span><span class="s">"500m"</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">requests</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> memory</span><span class="p">:</span><span class="w"> </span><span class="s">"256Mi"</span><span class="p p-Indicator">,</span><span class="nt"> cpu</span><span class="p">:</span><span class="w"> </span><span class="s">"250m"</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">    </span><span class="nt">variables</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">LOG_LEVEL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;info&quot;</span>
-<span class="w">      </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${resources.db.connection_string}&quot;</span>
+<span class="w">      </span><span class="nt">LOG_LEVEL</span><span class="p">:</span><span class="w"> </span><span class="s">"info"</span>
+<span class="w">      </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="s">"${resources.db.connection_string}"</span>
 
 <span class="nt">service</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
@@ -6439,10 +6439,10 @@
 <span class="w">  </span><span class="nt">db</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
 <span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;myapp&quot;</span>
+<span class="w">      </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">"myapp"</span>
 
 <span class="nt">route</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;my-service.${ENVIRONMENT}.fawkes.idp&quot;</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">"my-service.${ENVIRONMENT}.fawkes.idp"</span>
 <span class="w">  </span><span class="nt">tls</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> enabled</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="w"> </span><span class="p p-Indicator">}</span>
 </code></pre></div>
 <p>The platform automatically translates this into:</p>

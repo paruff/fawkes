@@ -6112,31 +6112,31 @@ make<span class="w"> </span>validate-at-e3-012
 <h2 id="usage-example">Usage Example</h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. Create experiment</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://experimentation.fawkes.idp/api/v1/experiments<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer dev-admin-token&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<span class="s1">    &quot;name&quot;: &quot;New Feature Test&quot;,</span>
-<span class="s1">    &quot;description&quot;: &quot;Testing new feature impact&quot;,</span>
-<span class="s1">    &quot;hypothesis&quot;: &quot;Feature increases conversion by 10%&quot;,</span>
-<span class="s1">    &quot;variants&quot;: [</span>
-<span class="s1">      {&quot;name&quot;: &quot;control&quot;, &quot;allocation&quot;: 0.5, &quot;config&quot;: {}},</span>
-<span class="s1">      {&quot;name&quot;: &quot;new-feature&quot;, &quot;allocation&quot;: 0.5, &quot;config&quot;: {&quot;enabled&quot;: true}}</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer dev-admin-token"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<span class="s1">    "name": "New Feature Test",</span>
+<span class="s1">    "description": "Testing new feature impact",</span>
+<span class="s1">    "hypothesis": "Feature increases conversion by 10%",</span>
+<span class="s1">    "variants": [</span>
+<span class="s1">      {"name": "control", "allocation": 0.5, "config": {}},</span>
+<span class="s1">      {"name": "new-feature", "allocation": 0.5, "config": {"enabled": true}}</span>
 <span class="s1">    ],</span>
-<span class="s1">    &quot;metrics&quot;: [&quot;conversion&quot;],</span>
-<span class="s1">    &quot;target_sample_size&quot;: 1000</span>
-<span class="s1">  }&#39;</span>
+<span class="s1">    "metrics": ["conversion"],</span>
+<span class="s1">    "target_sample_size": 1000</span>
+<span class="s1">  }'</span>
 
 <span class="c1"># 2. Start experiment</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://experimentation.fawkes.idp/api/v1/experiments/<span class="o">{</span>id<span class="o">}</span>/start<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer dev-admin-token&quot;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer dev-admin-token"</span>
 
 <span class="c1"># 3. Assign variant</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://experimentation.fawkes.idp/api/v1/experiments/<span class="o">{</span>id<span class="o">}</span>/assign<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;user_id&quot;: &quot;user123&quot;}&#39;</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"user_id": "user123"}'</span>
 
 <span class="c1"># 4. Track event</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://experimentation.fawkes.idp/api/v1/experiments/<span class="o">{</span>id<span class="o">}</span>/track<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;user_id&quot;: &quot;user123&quot;, &quot;event_name&quot;: &quot;conversion&quot;, &quot;value&quot;: 1.0}&#39;</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"user_id": "user123", "event_name": "conversion", "value": 1.0}'</span>
 
 <span class="c1"># 5. Get results</span>
 curl<span class="w"> </span>https://experimentation.fawkes.idp/api/v1/experiments/<span class="o">{</span>id<span class="o">}</span>/stats

@@ -6170,14 +6170,14 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 </code></pre></div>
 <p><strong>Node.js Applications (Backstage, Express)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// app.js - Add at the very top</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/sdk-node&quot;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/exporter-trace-otlp-http&quot;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/auto-instrumentations-node&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"@opentelemetry/sdk-node"</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"@opentelemetry/exporter-trace-otlp-http"</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"@opentelemetry/auto-instrumentations-node"</span><span class="p">);</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">sdk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">serviceName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">serviceName</span><span class="o">:</span><span class="w"> </span><span class="s2">"backstage"</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">traceExporter</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;http://otel-collector:4318/v1/traces&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">"http://otel-collector:4318/v1/traces"</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}),</span>
 <span class="w">  </span><span class="nx">instrumentations</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">getNodeAutoInstrumentations</span><span class="p">()],</span>
 <span class="p">});</span>
@@ -6187,16 +6187,16 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <p><strong>Manual Instrumentation</strong> (For custom spans):</p>
 <p><strong>Go Example (ArgoCD, custom controllers)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;go.opentelemetry.io/otel&quot;</span>
-<span class="w">    </span><span class="s">&quot;go.opentelemetry.io/otel/trace&quot;</span>
+<span class="w">    </span><span class="s">"go.opentelemetry.io/otel"</span>
+<span class="w">    </span><span class="s">"go.opentelemetry.io/otel/trace"</span>
 <span class="p">)</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="nx">processDeployment</span><span class="p">(</span><span class="nx">ctx</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">tracer</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">otel</span><span class="p">.</span><span class="nx">Tracer</span><span class="p">(</span><span class="s">&quot;argocd&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">span</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">tracer</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;process-deployment&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">tracer</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">otel</span><span class="p">.</span><span class="nx">Tracer</span><span class="p">(</span><span class="s">"argocd"</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">span</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">tracer</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="s">"process-deployment"</span><span class="p">,</span>
 <span class="w">        </span><span class="nx">trace</span><span class="p">.</span><span class="nx">WithAttributes</span><span class="p">(</span>
-<span class="w">            </span><span class="nx">attribute</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">&quot;app.name&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">app</span><span class="p">),</span>
-<span class="w">            </span><span class="nx">attribute</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">&quot;namespace&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;default&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nx">attribute</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">"app.name"</span><span class="p">,</span><span class="w"> </span><span class="nx">app</span><span class="p">),</span>
+<span class="w">            </span><span class="nx">attribute</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">"namespace"</span><span class="p">,</span><span class="w"> </span><span class="s">"default"</span><span class="p">),</span>
 <span class="w">        </span><span class="p">),</span>
 <span class="w">    </span><span class="p">)</span>
 <span class="w">    </span><span class="k">defer</span><span class="w"> </span><span class="nx">span</span><span class="p">.</span><span class="nx">End</span><span class="p">()</span>
@@ -6251,7 +6251,7 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 
 <span class="w">      </span><span class="no"># Add Kubernetes metadata</span>
 <span class="w">      </span><span class="no">k8sattributes:</span>
-<span class="w">        </span><span class="no">auth_type: &quot;serviceAccount&quot;</span>
+<span class="w">        </span><span class="no">auth_type: "serviceAccount"</span>
 <span class="w">        </span><span class="no">passthrough: false</span>
 <span class="w">        </span><span class="no">extract:</span>
 <span class="w">          </span><span class="no">metadata:</span>
@@ -6394,7 +6394,7 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage</span>
 <span class="w">      </span><span class="nt">spec</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">accessModes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;ReadWriteOnce&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">accessModes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"ReadWriteOnce"</span><span class="p p-Indicator">]</span>
 <span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100Gi</span>
@@ -6402,15 +6402,15 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <h3 id="trace-correlation-with-logs">Trace Correlation with Logs</h3>
 <p><strong>Log Entry with Trace Context</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-07T10:30:45Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Failed to sync application&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;service&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;argocd&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;trace_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4bf92f3577b34da6a3ce929d0e0e4736&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;span_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;00f067aa0ba902b7&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;trace_flags&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;01&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;app_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;payment-service&quot;</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-07T10:30:45Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERROR"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Failed to sync application"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"argocd"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"trace_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4bf92f3577b34da6a3ce929d0e0e4736"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"span_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00f067aa0ba902b7"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"trace_flags"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"app_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"payment-service"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Loki Configuration for Trace Correlation</strong>:</p>
@@ -6424,9 +6424,9 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nt">jsonData</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">derivedFields</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">datasourceUid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo</span>
-<span class="w">          </span><span class="nt">matcherRegex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;trace_id=(\\w+)&quot;</span>
+<span class="w">          </span><span class="nt">matcherRegex</span><span class="p">:</span><span class="w"> </span><span class="s">"trace_id=(\\w+)"</span>
 <span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TraceID</span>
-<span class="w">          </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;$${__value.raw}&quot;</span>
+<span class="w">          </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">"$${__value.raw}"</span>
 </code></pre></div>
 <h3 id="grafana-dashboard-configuration">Grafana Dashboard Configuration</h3>
 <p><strong>Service Dependency Graph</strong>:</p>
@@ -6438,17 +6438,17 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 </ul>
 <p><strong>TraceQL Queries</strong>:</p>
 <p><strong>Find slow database queries</strong>:</p>
-<div class="highlight"><pre><span></span><code>{span.db.system=&quot;postgresql&quot; &amp;&amp; duration &gt; 1s}
+<div class="highlight"><pre><span></span><code>{span.db.system="postgresql" &amp;&amp; duration &gt; 1s}
 </code></pre></div>
 <p><strong>Find all traces with errors in production</strong>:</p>
-<div class="highlight"><pre><span></span><code>{status=error &amp;&amp; resource.namespace=&quot;production&quot;}
+<div class="highlight"><pre><span></span><code>{status=error &amp;&amp; resource.namespace="production"}
 </code></pre></div>
 <p><strong>Find traces for specific user</strong>:</p>
-<div class="highlight"><pre><span></span><code>{resource.service.name=&quot;backstage&quot; &amp;&amp; span.http.route=&quot;/api/catalog/*&quot; &amp;&amp; trace.user.id=&quot;alice@example.com&quot;}
+<div class="highlight"><pre><span></span><code>{resource.service.name="backstage" &amp;&amp; span.http.route="/api/catalog/*" &amp;&amp; trace.user.id="alice@example.com"}
 </code></pre></div>
 <p><strong>Deployment trace (commit to production)</strong>:</p>
-<div class="highlight"><pre><span></span><code>{resource.service.name=&quot;jenkins&quot; || resource.service.name=&quot;argocd&quot;}
-  | {span.git.commit.sha=&quot;abc123def&quot;}
+<div class="highlight"><pre><span></span><code>{resource.service.name="jenkins" || resource.service.name="argocd"}
+  | {span.git.commit.sha="abc123def"}
 </code></pre></div>
 <h3 id="sampling-strategies">Sampling Strategies</h3>
 <p><strong>Head-Based Sampling</strong> (at application):</p>
@@ -6481,8 +6481,8 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <li>Application start → final span with health check</li>
 </ol>
 <p><strong>Query to calculate lead time</strong>:</p>
-<div class="highlight"><pre><span></span><code>{span.git.commit.sha=&quot;abc123&quot;}
-  | {span.name=&quot;deploy-to-production&quot;}
+<div class="highlight"><pre><span></span><code>{span.git.commit.sha="abc123"}
+  | {span.name="deploy-to-production"}
 </code></pre></div>
 <p><strong>Change Failure Rate</strong>:</p>
 <ul>
@@ -6514,14 +6514,14 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <span class="w">      </span><span class="c1"># Redact email addresses</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user.email</span>
 <span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update</span>
-<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;REDACTED&quot;</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"REDACTED"</span>
 
 <span class="w">      </span><span class="c1"># Remove credit card numbers from URLs</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http.url</span>
 <span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update</span>
 <span class="w">        </span><span class="nt">from_attribute</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http.url</span>
-<span class="w">        </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;\d{4}-\d{4}-\d{4}-\d{4}&#39;</span>
-<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXX-XXXX-XXXX-XXXX&quot;</span>
+<span class="w">        </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">'\d{4}-\d{4}-\d{4}-\d{4}'</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"XXXX-XXXX-XXXX-XXXX"</span>
 </code></pre></div>
 <p><strong>Access Control</strong>:</p>
 <ul>
@@ -6880,21 +6880,21 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo_alerts</span>
 <span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TempoHighIngestionErrors</span>
-<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(tempo_distributor_spans_received_total{status=&quot;error&quot;}[5m]) &gt; 100</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(tempo_distributor_spans_received_total{status="error"}[5m]) &gt; 100</span>
 <span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
 <span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">trace</span><span class="nv"> </span><span class="s">ingestion</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate&quot;</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"High</span><span class="nv"> </span><span class="s">trace</span><span class="nv"> </span><span class="s">ingestion</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate"</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TempoHighQueryLatency</span>
 <span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">histogram_quantile(0.95, tempo_query_frontend_duration_seconds_bucket) &gt; 10</span>
 <span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
 <span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Tempo</span><span class="nv"> </span><span class="s">query</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">P95</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">10s&quot;</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"Tempo</span><span class="nv"> </span><span class="s">query</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">P95</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">10s"</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TempoStorageUsageHigh</span>
 <span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo_ingester_bytes_metric_total &gt; 100e9</span><span class="w"> </span><span class="c1"># 100GB</span>
 <span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Tempo</span><span class="nv"> </span><span class="s">ingester</span><span class="nv"> </span><span class="s">storage</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">high&quot;</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"Tempo</span><span class="nv"> </span><span class="s">ingester</span><span class="nv"> </span><span class="s">storage</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">high"</span>
 </code></pre></div>
 <h3 id="opentelemetry-collector-health">OpenTelemetry Collector Health</h3>
 <p><strong>Key Metrics</strong>:</p>

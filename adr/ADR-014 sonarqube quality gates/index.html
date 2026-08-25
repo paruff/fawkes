@@ -6014,27 +6014,27 @@
 <span class="w">  </span><span class="nt">source</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">repoURL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://charts.sonarsource.com</span>
 <span class="w">    </span><span class="nt">chart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sonarqube</span>
-<span class="w">    </span><span class="nt">targetRevision</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2025.1.0&quot;</span>
+<span class="w">    </span><span class="nt">targetRevision</span><span class="p">:</span><span class="w"> </span><span class="s">"2025.1.0"</span>
 <span class="w">    </span><span class="nt">helm</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">        </span><span class="no">jdbcOverwrite:</span>
 <span class="w">          </span><span class="no">enable: true</span>
-<span class="w">          </span><span class="no">jdbcUrl: &quot;jdbc:postgresql://db-sonarqube-dev-rw.fawkes.svc:5432/sonarqube&quot;</span>
+<span class="w">          </span><span class="no">jdbcUrl: "jdbc:postgresql://db-sonarqube-dev-rw.fawkes.svc:5432/sonarqube"</span>
 </code></pre></div>
 <p><strong>Jenkins Credentials Configuration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">credentials</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sonarqube-token</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secretText</span>
 <span class="w">    </span><span class="nt">secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${SONARQUBE_TOKEN}</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;SonarQube</span><span class="nv"> </span><span class="s">Scanner</span><span class="nv"> </span><span class="s">Token&quot;</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"SonarQube</span><span class="nv"> </span><span class="s">Scanner</span><span class="nv"> </span><span class="s">Token"</span>
 </code></pre></div>
 <h3 id="quality-gate-enforcement-in-pipeline">Quality Gate Enforcement in Pipeline</h3>
-<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Quality Gate&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">'Quality Gate'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">timeout</span><span class="o">(</span><span class="nl">time:</span><span class="w"> </span><span class="mi">5</span><span class="o">,</span><span class="w"> </span><span class="nl">unit:</span><span class="w"> </span><span class="s1">&#39;MINUTES&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">timeout</span><span class="o">(</span><span class="nl">time:</span><span class="w"> </span><span class="mi">5</span><span class="o">,</span><span class="w"> </span><span class="nl">unit:</span><span class="w"> </span><span class="s1">'MINUTES'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="kt">def</span><span class="w"> </span><span class="n">qg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">waitForQualityGate</span><span class="o">()</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="o">(</span><span class="n">qg</span><span class="o">.</span><span class="na">status</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s1">&#39;OK&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">error</span><span class="w"> </span><span class="s2">&quot;Quality Gate failed: ${qg.status}&quot;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="o">(</span><span class="n">qg</span><span class="o">.</span><span class="na">status</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s1">'OK'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">error</span><span class="w"> </span><span class="s2">"Quality Gate failed: ${qg.status}"</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>

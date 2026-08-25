@@ -6216,15 +6216,15 @@
 <h2 id="component-status-checks">Component Status Checks</h2>
 <h3 id="quick-health-check-all-components">Quick Health Check (All Components)</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check all Epic 3 namespaces</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;fawkes|fawkes-local&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'fawkes|fawkes-local'</span>
 
 <span class="c1"># Check pod status across all Epic 3 components</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">epic</span><span class="o">=</span><span class="m">3</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">epic</span><span class="o">=</span><span class="m">3</span>
 
 <span class="c1"># Check all Epic 3 services</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;space-metrics|feedback|unleash&#39;</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;space-metrics|feedback&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'space-metrics|feedback|unleash'</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'space-metrics|feedback'</span>
 </code></pre></div>
 <h3 id="individual-component-checks">Individual Component Checks</h3>
 <h4 id="1-space-metrics-service">1. SPACE Metrics Service</h4>
@@ -6294,7 +6294,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>cronjob<span class="w"
 kubectl<span class="w"> </span>get<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">cronjob</span><span class="o">=</span>feedback-automation
 
 <span class="c1"># View recent job logs</span>
-<span class="nv">LATEST_JOB</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">cronjob</span><span class="o">=</span>feedback-automation<span class="w"> </span>--sort-by<span class="o">=</span>.metadata.creationTimestamp<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[-1].metadata.name}&#39;</span><span class="k">)</span>
+<span class="nv">LATEST_JOB</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">cronjob</span><span class="o">=</span>feedback-automation<span class="w"> </span>--sort-by<span class="o">=</span>.metadata.creationTimestamp<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[-1].metadata.name}'</span><span class="k">)</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>job/<span class="nv">$LATEST_JOB</span>
 </code></pre></div>
 <p><strong>Expected State</strong>:</p>
@@ -6345,11 +6345,11 @@ curl<span class="w"> </span>http://localhost:6006
 </ul>
 <h4 id="7-product-analytics-platform">7. Product Analytics Platform</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check if PostHog/analytics platform is deployed</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;posthog|analytics&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'posthog|analytics'</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>posthog
 
 <span class="c1"># Check analytics ingress</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;analytics|posthog&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'analytics|posthog'</span>
 </code></pre></div>
 <p><strong>Expected State</strong>:</p>
 <ul>
@@ -6445,7 +6445,7 @@ curl<span class="w"> </span>http://localhost:8080/api/v1/feedback<span class="w"
 curl<span class="w"> </span>http://localhost:8080/api/v1/feedback/stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 
 <span class="c1"># Filter feedback by status</span>
-curl<span class="w"> </span><span class="s1">&#39;http://localhost:8080/api/v1/feedback?status=validated&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+curl<span class="w"> </span><span class="s1">'http://localhost:8080/api/v1/feedback?status=validated'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
 <h4 id="view-prometheus-metrics">View Prometheus Metrics</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># SPACE metrics Prometheus endpoint</span>
@@ -6495,7 +6495,7 @@ kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class
 <h4 id="issue-no-space-metrics-data-being-collected">Issue: No SPACE metrics data being collected</h4>
 <p><strong>Symptoms</strong>: API returns empty results</p>
 <p><strong>Diagnosis</strong>:</p>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>space-metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;collect\|error&quot;</span>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>space-metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"collect\|error"</span>
 </code></pre></div>
 <p><strong>Resolution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check if data collection jobs are running</span>
@@ -6506,7 +6506,7 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 <span class="c1"># Test connectivity from SPACE metrics pod</span>
 
 <span class="c1"># Manually trigger collection</span>
-kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-it<span class="w"> </span>deployment/space-metrics<span class="w"> </span>--<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from app.collectors import collect_all; collect_all()&quot;</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-it<span class="w"> </span>deployment/space-metrics<span class="w"> </span>--<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"from app.collectors import collect_all; collect_all()"</span>
 </code></pre></div>
 <h3 id="feedback-system-issues">Feedback System Issues</h3>
 <h4 id="issue-feedback-submissions-failing">Issue: Feedback submissions failing</h4>
@@ -6539,7 +6539,7 @@ kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w
 </code></pre></div>
 <p><strong>Resolution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check bot token secret</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>feedback-bot-secret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.MATTERMOST_TOKEN}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>feedback-bot-secret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.MATTERMOST_TOKEN}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
 
 <span class="c1"># Verify Mattermost connectivity</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-it<span class="w"> </span>deployment/feedback-bot<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>-v<span class="w"> </span>https://mattermost.fawkes.local/api/v4/users/me
@@ -6550,15 +6550,15 @@ kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class
 <h4 id="issue-feedback-automation-not-creating-github-issues">Issue: Feedback automation not creating GitHub issues</h4>
 <p><strong>Symptoms</strong>: CronJob runs but no issues created</p>
 <p><strong>Diagnosis</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">LATEST_JOB</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">cronjob</span><span class="o">=</span>feedback-automation<span class="w"> </span>--sort-by<span class="o">=</span>.metadata.creationTimestamp<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[-1].metadata.name}&#39;</span><span class="k">)</span>
+<div class="highlight"><pre><span></span><code><span class="nv">LATEST_JOB</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">cronjob</span><span class="o">=</span>feedback-automation<span class="w"> </span>--sort-by<span class="o">=</span>.metadata.creationTimestamp<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[-1].metadata.name}'</span><span class="k">)</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>job/<span class="nv">$LATEST_JOB</span>
 </code></pre></div>
 <p><strong>Resolution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check GitHub token</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>feedback-automation-github<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.GITHUB_TOKEN}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-c
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>feedback-automation-github<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.GITHUB_TOKEN}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-c
 
 <span class="c1"># Verify GitHub API connectivity</span>
-kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-it<span class="w"> </span>deployment/feedback-service<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: token </span><span class="nv">$GITHUB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span>https://api.github.com/user
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-it<span class="w"> </span>deployment/feedback-service<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: token </span><span class="nv">$GITHUB_TOKEN</span><span class="s2">"</span><span class="w"> </span>https://api.github.com/user
 
 <span class="c1"># Manually trigger job</span>
 kubectl<span class="w"> </span>create<span class="w"> </span>job<span class="w"> </span>--from<span class="o">=</span>cronjob/feedback-automation<span class="w"> </span>manual-run-<span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span>-n<span class="w"> </span>fawkes
@@ -6597,7 +6597,7 @@ curl<span class="w"> </span>http://unleash.fawkes.svc.cluster.local:4242/api/cli
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>unleash<span class="w"> </span>-n<span class="w"> </span>fawkes
 
 <span class="c1"># Verify database integrity</span>
-kubectl<span class="w"> </span>cnpg<span class="w"> </span>psql<span class="w"> </span>db-unleash<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT * FROM features;&quot;</span>
+kubectl<span class="w"> </span>cnpg<span class="w"> </span>psql<span class="w"> </span>db-unleash<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT * FROM features;"</span>
 </code></pre></div>
 <h3 id="design-system-storybook-issues">Design System (Storybook) Issues</h3>
 <h4 id="issue-storybook-not-loading">Issue: Storybook not loading</h4>
@@ -6622,12 +6622,12 @@ kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class
 <h4 id="1-database-cleanup-first-monday-of-month">1. Database Cleanup (First Monday of Month)</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Clean up old feedback entries (older than 1 year)</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-it<span class="w"> </span>deployment/feedback-service<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;DELETE FROM feedback WHERE created_at &lt; NOW() - INTERVAL &#39;1 year&#39;;&quot;</span>
+<span class="w">  </span>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">"DELETE FROM feedback WHERE created_at &lt; NOW() - INTERVAL '1 year';"</span>
 
 <span class="c1"># Vacuum databases</span>
-kubectl<span class="w"> </span>cnpg<span class="w"> </span>psql<span class="w"> </span>space-metrics-pg<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>--<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;VACUUM ANALYZE;&quot;</span>
-kubectl<span class="w"> </span>cnpg<span class="w"> </span>psql<span class="w"> </span>feedback-db<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;VACUUM ANALYZE;&quot;</span>
-kubectl<span class="w"> </span>cnpg<span class="w"> </span>psql<span class="w"> </span>db-unleash<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;VACUUM ANALYZE;&quot;</span>
+kubectl<span class="w"> </span>cnpg<span class="w"> </span>psql<span class="w"> </span>space-metrics-pg<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>--<span class="w"> </span>-c<span class="w"> </span><span class="s2">"VACUUM ANALYZE;"</span>
+kubectl<span class="w"> </span>cnpg<span class="w"> </span>psql<span class="w"> </span>feedback-db<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--<span class="w"> </span>-c<span class="w"> </span><span class="s2">"VACUUM ANALYZE;"</span>
+kubectl<span class="w"> </span>cnpg<span class="w"> </span>psql<span class="w"> </span>db-unleash<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--<span class="w"> </span>-c<span class="w"> </span><span class="s2">"VACUUM ANALYZE;"</span>
 </code></pre></div>
 <h4 id="2-backup-verification-second-monday-of-month">2. Backup Verification (Second Monday of Month)</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify recent backups exist</span>
@@ -6640,9 +6640,9 @@ kubectl<span class="w"> </span>get<span class="w"> </span>backup<span class="w">
 </code></pre></div>
 <h4 id="3-security-updates-third-monday-of-month">3. Security Updates (Third Monday of Month)</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check for image vulnerabilities with Trivy</span>
-trivy<span class="w"> </span>image<span class="w"> </span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>space-metrics<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.template.spec.containers[0].image}&#39;</span><span class="k">)</span>
-trivy<span class="w"> </span>image<span class="w"> </span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>feedback-service<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.template.spec.containers[0].image}&#39;</span><span class="k">)</span>
-trivy<span class="w"> </span>image<span class="w"> </span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>unleash<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.template.spec.containers[0].image}&#39;</span><span class="k">)</span>
+trivy<span class="w"> </span>image<span class="w"> </span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>space-metrics<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.template.spec.containers[0].image}'</span><span class="k">)</span>
+trivy<span class="w"> </span>image<span class="w"> </span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>feedback-service<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.template.spec.containers[0].image}'</span><span class="k">)</span>
+trivy<span class="w"> </span>image<span class="w"> </span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>unleash<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.template.spec.containers[0].image}'</span><span class="k">)</span>
 
 <span class="c1"># Update images if vulnerabilities found</span>
 <span class="c1"># (rebuild images, push to Harbor, update manifests via ArgoCD)</span>
@@ -6662,7 +6662,7 @@ python<span class="w"> </span>scripts/generate-epic3-report.py<span class="w"> <
 <h3 id="quarterly-maintenance-tasks">Quarterly Maintenance Tasks</h3>
 <h4 id="1-capacity-planning-review">1. Capacity Planning Review</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check resource usage trends</span>
-kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;space-metrics|feedback|unleash&#39;</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'space-metrics|feedback|unleash'</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>space-metrics
 
 <span class="c1"># Review Grafana dashboards for capacity metrics</span>
@@ -6722,8 +6722,8 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <li><strong>Diagnosis</strong> (5-15 minutes)</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check recent events</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">'.lastTimestamp'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">'.lastTimestamp'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 
 <span class="c1"># Review logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">epic</span><span class="o">=</span><span class="m">3</span><span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
@@ -6771,7 +6771,7 @@ kubectl<span class="w"> </span>cnpg<span class="w"> </span>restore<span class="w
 <span class="w">  </span>-n<span class="w"> </span>fawkes-local
 
 <span class="c1"># Verify restore</span>
-kubectl<span class="w"> </span>cnpg<span class="w"> </span>psql<span class="w"> </span>space-metrics-pg-restored<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>--<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM metrics;&quot;</span>
+kubectl<span class="w"> </span>cnpg<span class="w"> </span>psql<span class="w"> </span>space-metrics-pg-restored<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>--<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT COUNT(*) FROM metrics;"</span>
 
 <span class="c1"># Update application to use restored database</span>
 kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>deployment/space-metrics<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span><span class="se">\</span>
@@ -6790,7 +6790,7 @@ kubectl<span class="w"> </span>cnpg<span class="w"> </span>restore<span class="w
 <span class="w">  </span>-n<span class="w"> </span>fawkes
 
 <span class="c1"># Verify and reconnect</span>
-kubectl<span class="w"> </span>cnpg<span class="w"> </span>psql<span class="w"> </span>feedback-db-restored<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM feedback;&quot;</span>
+kubectl<span class="w"> </span>cnpg<span class="w"> </span>psql<span class="w"> </span>feedback-db-restored<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT COUNT(*) FROM feedback;"</span>
 kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>deployment/feedback-service<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="nv">DATABASE_HOST</span><span class="o">=</span>feedback-db-restored-rw.fawkes.svc.cluster.local
 
@@ -6804,52 +6804,52 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span clas
 <div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 <span class="nb">set</span><span class="w"> </span>-e
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Epic 3 Health Check ===&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Epic 3 Health Check ==="</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
 <span class="c1"># SPACE Metrics</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1. SPACE Metrics Service&quot;</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>space-metrics<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.readyReplicas}/{.spec.replicas}&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; replicas ready&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"1. SPACE Metrics Service"</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>space-metrics<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.readyReplicas}/{.spec.replicas}'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">" replicas ready"</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>svc/space-metrics<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="nv">PF_PID</span><span class="o">=</span><span class="nv">$!</span>
 sleep<span class="w"> </span><span class="m">2</span>
-curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8000/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.status&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; - Health: OK&quot;</span>
+curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8000/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.status'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">" - Health: OK"</span>
 <span class="nb">kill</span><span class="w"> </span><span class="nv">$PF_PID</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
 <span class="c1"># Feedback Service</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;2. Feedback Service&quot;</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>feedback-service<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.readyReplicas}/{.spec.replicas}&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; replicas ready&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"2. Feedback Service"</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>feedback-service<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.readyReplicas}/{.spec.replicas}'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">" replicas ready"</span>
 kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>svc/feedback-service<span class="w"> </span><span class="m">8080</span>:8080<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="nv">PF_PID</span><span class="o">=</span><span class="nv">$!</span>
 sleep<span class="w"> </span><span class="m">2</span>
-curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8080/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; - Health: OK&quot;</span>
+curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8080/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">" - Health: OK"</span>
 <span class="nb">kill</span><span class="w"> </span><span class="nv">$PF_PID</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
 <span class="c1"># Feedback Bot</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;3. Feedback Bot&quot;</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>feedback-bot<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.readyReplicas}/{.spec.replicas}&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; replicas ready&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"3. Feedback Bot"</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>feedback-bot<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.readyReplicas}/{.spec.replicas}'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">" replicas ready"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
 <span class="c1"># Unleash</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;4. Unleash (Feature Flags)&quot;</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>unleash<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.readyReplicas}/{.spec.replicas}&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; replicas ready&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"4. Unleash (Feature Flags)"</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>unleash<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.readyReplicas}/{.spec.replicas}'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">" replicas ready"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
 <span class="c1"># Storybook</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;5. Storybook (Design System)&quot;</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>storybook<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.readyReplicas}/{.spec.replicas}&#39;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; replicas ready&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Not deployed&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"5. Storybook (Design System)"</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>storybook<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.readyReplicas}/{.spec.replicas}'</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">" replicas ready"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Not deployed"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
 <span class="c1"># Databases</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;6. Databases&quot;</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>space-metrics-pg<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.phase}&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; - space-metrics-pg&quot;</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>feedback-db<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.phase}&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; - feedback-db&quot;</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-unleash<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.phase}&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; - db-unleash&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"6. Databases"</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>space-metrics-pg<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.phase}'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">" - space-metrics-pg"</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>feedback-db<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.phase}'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">" - feedback-db"</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-unleash<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.phase}'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">" - db-unleash"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">""</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Health Check Complete ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Health Check Complete ==="</span>
 </code></pre></div>
 <p>Usage:</p>
 <div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>scripts/health-check-epic3.sh

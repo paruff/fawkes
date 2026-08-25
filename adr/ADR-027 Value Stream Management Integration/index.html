@@ -6004,14 +6004,14 @@
 <span class="w">    </span><span class="nx">Stage</span><span class="w">           </span><span class="kt">string</span>
 <span class="w">    </span><span class="nx">Timestamp</span><span class="w">       </span><span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
 <span class="w">    </span><span class="nx">Source</span><span class="w">          </span><span class="kt">string</span><span class="w"> </span><span class="c1">// focalboard, github, jenkins, argocd</span>
-<span class="w">    </span><span class="nx">Metadata</span><span class="w">        </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}</span>
+<span class="w">    </span><span class="nx">Metadata</span><span class="w">        </span><span class="kt">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}</span>
 <span class="p">}</span>
 
 <span class="kd">type</span><span class="w"> </span><span class="nx">FlowMetrics</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">WorkItemID</span><span class="w">      </span><span class="kt">string</span>
 <span class="w">    </span><span class="nx">CycleTime</span><span class="w">       </span><span class="nx">duration</span><span class="w"> </span><span class="c1">// total time from start to done</span>
 <span class="w">    </span><span class="nx">LeadTime</span><span class="w">        </span><span class="nx">duration</span><span class="w"> </span><span class="c1">// time from commit to deploy</span>
-<span class="w">    </span><span class="nx">StageTimings</span><span class="w">    </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="nx">duration</span>
+<span class="w">    </span><span class="nx">StageTimings</span><span class="w">    </span><span class="kt">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="nx">duration</span>
 <span class="w">    </span><span class="nx">WaitTime</span><span class="w">        </span><span class="nx">duration</span>
 <span class="w">    </span><span class="nx">ActiveTime</span><span class="w">      </span><span class="nx">duration</span>
 <span class="w">    </span><span class="nx">BlockedTime</span><span class="w">     </span><span class="nx">duration</span>
@@ -6020,7 +6020,7 @@
 <h4 id="2-work-item-correlation-strategy">2. Work Item Correlation Strategy</h4>
 <p><strong>Convention</strong>: All tools must reference work items using consistent identifiers</p>
 <p><strong>GitHub Commits</strong>:</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;[FOC-123] Add user authentication feature&quot;</span>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"[FOC-123] Add user authentication feature"</span>
 </code></pre></div>
 <p><strong>Branch Naming</strong>:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/FOC-123-user-auth
@@ -6109,11 +6109,11 @@
 
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">current_items</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">time_in_stage</span> <span class="o">&gt;</span> <span class="n">avg_cycle_time</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">std_dev</span><span class="p">):</span>
-            <span class="n">alert</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Item </span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> stuck in </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">alert</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Item </span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> stuck in </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Stage-level bottleneck</span>
     <span class="k">if</span> <span class="n">count</span><span class="p">(</span><span class="n">current_items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">historical_average_wip</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">:</span>
-        <span class="n">alert</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bottleneck detected in </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">alert</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Bottleneck detected in </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Rule-Based Alerts</strong>:</p>
 <ul>
@@ -6200,18 +6200,18 @@ Inform Product Roadmap
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Extract Work Item ID</span>
 <span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">work_item</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">echo &quot;ID=$(git log -1 --pretty=%B | grep -oP &#39;FOC-\d+&#39;)&quot; &gt;&gt; $GITHUB_OUTPUT</span>
+<span class="w">          </span><span class="no">echo "ID=$(git log -1 --pretty=%B | grep -oP 'FOC-\d+')" &gt;&gt; $GITHUB_OUTPUT</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Notify VSM Hub</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">curl -X POST $VSM_HUB_URL/events \</span>
-<span class="w">            </span><span class="no">-H &quot;Content-Type: application/json&quot; \</span>
-<span class="w">            </span><span class="no">-d &#39;{</span>
-<span class="w">              </span><span class="no">&quot;work_item_id&quot;: &quot;${{ steps.work_item.outputs.ID }}&quot;,</span>
-<span class="w">              </span><span class="no">&quot;event&quot;: &quot;commit&quot;,</span>
-<span class="w">              </span><span class="no">&quot;source&quot;: &quot;github&quot;,</span>
-<span class="w">              </span><span class="no">&quot;timestamp&quot;: &quot;&#39;$(date -Iseconds)&#39;&quot;</span>
-<span class="w">            </span><span class="no">}&#39;</span>
+<span class="w">            </span><span class="no">-H "Content-Type: application/json" \</span>
+<span class="w">            </span><span class="no">-d '{</span>
+<span class="w">              </span><span class="no">"work_item_id": "${{ steps.work_item.outputs.ID }}",</span>
+<span class="w">              </span><span class="no">"event": "commit",</span>
+<span class="w">              </span><span class="no">"source": "github",</span>
+<span class="w">              </span><span class="no">"timestamp": "'$(date -Iseconds)'"</span>
+<span class="w">            </span><span class="no">}'</span>
 </code></pre></div>
 <h4 id="jenkins-integration">Jenkins Integration</h4>
 <p><strong>Webhooks</strong>:</p>
@@ -6224,24 +6224,24 @@ Inform Product Roadmap
 <div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
 <span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">WORK_ITEM_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sh</span><span class="o">(</span><span class="nl">script:</span><span class="w"> </span><span class="s2">&quot;git log -1 --pretty=%B | grep -oP &#39;FOC-\\d+&#39;&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">returnStdout:</span><span class="w"> </span><span class="kc">true</span><span class="o">).</span><span class="na">trim</span><span class="o">()</span>
+<span class="w">        </span><span class="n">WORK_ITEM_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sh</span><span class="o">(</span><span class="nl">script:</span><span class="w"> </span><span class="s2">"git log -1 --pretty=%B | grep -oP 'FOC-\\d+'"</span><span class="o">,</span><span class="w"> </span><span class="nl">returnStdout:</span><span class="w"> </span><span class="kc">true</span><span class="o">).</span><span class="na">trim</span><span class="o">()</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Build'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn clean package&#39;</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">'mvn clean package'</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">            </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
 <span class="w">                </span><span class="n">always</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">"""</span>
 <span class="s2">                        curl -X POST $VSM_HUB_URL/events \</span>
-<span class="s2">                          -H &#39;Content-Type: application/json&#39; \</span>
-<span class="s2">                          -d &#39;{</span>
-<span class="s2">                            &quot;work_item_id&quot;: &quot;$WORK_ITEM_ID&quot;,</span>
-<span class="s2">                            &quot;event&quot;: &quot;build_complete&quot;,</span>
-<span class="s2">                            &quot;status&quot;: &quot;$currentBuild.result&quot;</span>
-<span class="s2">                          }&#39;</span>
-<span class="s2">                    &quot;&quot;&quot;</span>
+<span class="s2">                          -H 'Content-Type: application/json' \</span>
+<span class="s2">                          -d '{</span>
+<span class="s2">                            "work_item_id": "$WORK_ITEM_ID",</span>
+<span class="s2">                            "event": "build_complete",</span>
+<span class="s2">                            "status": "$currentBuild.result"</span>
+<span class="s2">                          }'</span>
+<span class="s2">                    """</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
@@ -6269,7 +6269,7 @@ Inform Product Roadmap
 <span class="w">      </span><span class="no">value: application/json</span>
 
 <span class="w">  </span><span class="nt">trigger.on-deployed</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">- when: app.status.operationState.phase in [&#39;Succeeded&#39;]</span>
+<span class="w">    </span><span class="no">- when: app.status.operationState.phase in ['Succeeded']</span>
 <span class="w">      </span><span class="no">send: [vsm-hub-deployment-success]</span>
 </code></pre></div>
 <h4 id="backstage-plugin-new">Backstage Plugin (New)</h4>
@@ -6395,16 +6395,16 @@ Inform Product Roadmap
 </code></pre></div>
 <p><strong>Time-Series Data</strong> (Prometheus):</p>
 <div class="highlight"><pre><span></span><code># Gauge: Current WIP by stage
-vsm_wip_current{stage=&quot;code_review&quot;, team=&quot;payments&quot;} 5
+vsm_wip_current{stage="code_review", team="payments"} 5
 
 # Histogram: Cycle time distribution
-vsm_cycle_time_seconds{stage=&quot;build&quot;, team=&quot;payments&quot;} 3600
+vsm_cycle_time_seconds{stage="build", team="payments"} 3600
 
 # Counter: Work items completed
-vsm_items_completed_total{type=&quot;feature&quot;, team=&quot;payments&quot;} 45
+vsm_items_completed_total{type="feature", team="payments"} 45
 
 # Gauge: Flow efficiency
-vsm_flow_efficiency{team=&quot;payments&quot;} 0.38
+vsm_flow_efficiency{team="payments"} 0.38
 </code></pre></div>
 <hr />
 <h2 id="consequences">Consequences</h2>

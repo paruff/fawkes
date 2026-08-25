@@ -5952,7 +5952,7 @@
 
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;start&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"npm"</span><span class="p">,</span><span class="w"> </span><span class="s2">"start"</span><span class="p">]</span>
 </code></pre></div>
 <ol>
 <li>
@@ -6023,18 +6023,18 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 <li>Verify your <code>package.json</code> has a start script:</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hello-fawkes&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3.0.0&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node server.js&quot;</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hello-fawkes"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node server.js"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;express&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^4.18.2&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;node-vault&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^0.10.2&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;@opentelemetry/api&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^1.4.1&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;@opentelemetry/sdk-node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^0.41.0&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;@opentelemetry/auto-instrumentations-node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^0.39.1&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;@opentelemetry/exporter-trace-otlp-http&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^0.41.0&quot;</span>
+<span class="w">  </span><span class="nt">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"express"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^4.18.2"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"node-vault"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^0.10.2"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"@opentelemetry/api"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^1.4.1"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"@opentelemetry/sdk-node"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^0.41.0"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"@opentelemetry/auto-instrumentations-node"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^0.39.1"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"@opentelemetry/exporter-trace-otlp-http"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^0.41.0"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6056,7 +6056,7 @@ node_modules/
 <ol>
 <li>Commit these changes:
    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.packignore<span class="w"> </span>package.json<span class="w"> </span>package-lock.json
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Prepare for Buildpacks migration&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Prepare for Buildpacks migration"</span>
 </code></pre></div></li>
 </ol>
 <div class="admonition success">
@@ -6103,8 +6103,8 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 [builder] Installing node_modules...
 
 ===&gt; EXPORTING
-[exporter] Adding layer &#39;paketo-buildpacks/node-engine:node&#39;
-[exporter] Adding layer &#39;paketo-buildpacks/npm-install:modules&#39;
+[exporter] Adding layer 'paketo-buildpacks/node-engine:node'
+[exporter] Adding layer 'paketo-buildpacks/npm-install:modules'
 </code></pre></div>
 <ol>
 <li>Verify the image was created:
@@ -6166,11 +6166,11 @@ docker<span class="w"> </span><span class="nb">history</span><span class="w"> </
 </code></pre></div>
 <p>Should return:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hello from Fawkes!&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-12-06T12:00:00.000Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3.0.0&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;tracing&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;secrets&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;managed by Vault&quot;</span>
+<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello from Fawkes!"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-12-06T12:00:00.000Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"tracing"</span><span class="p">:</span><span class="w"> </span><span class="s2">"enabled"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"secrets"</span><span class="p">:</span><span class="w"> </span><span class="s2">"managed by Vault"</span>
 <span class="p">}</span>
 </code></pre></div>
 <ol>
@@ -6218,7 +6218,7 @@ docker<span class="w"> </span>rm<span class="w"> </span>hello-fawkes-test
 <span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
 <span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v4</span>
 <span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">buildpack.io/builder</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;paketobuildpacks/builder:base&quot;</span>
+<span class="w">        </span><span class="nt">buildpack.io/builder</span><span class="p">:</span><span class="w"> </span><span class="s">"paketobuildpacks/builder:base"</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-fawkes</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
@@ -6230,7 +6230,7 @@ docker<span class="w"> </span>rm<span class="w"> </span>hello-fawkes-test
 <li>Commit and push:</li>
 </ol>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>k8s/deployment.yaml
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Deploy Buildpack-built image&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Deploy Buildpack-built image"</span>
 git<span class="w"> </span>push
 </code></pre></div>
 <ol>
@@ -6307,34 +6307,34 @@ git<span class="w"> </span>push
 <li>Optional: Add a <code>project.toml</code> for Buildpack configuration:</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="k">[_]</span>
-<span class="n">schema-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.2&quot;</span>
+<span class="n">schema-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"0.2"</span>
 
 <span class="k">[[io.buildpacks.build.env]]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_NODE_VERSION&quot;</span>
-<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;18&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"BP_NODE_VERSION"</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"18"</span>
 
 <span class="k">[[io.buildpacks.build.env]]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_NPM_INSTALL_ARGS&quot;</span>
-<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;--production&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"BP_NPM_INSTALL_ARGS"</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"--production"</span>
 </code></pre></div>
 <ol>
 <li>Update your CI/CD pipeline to use <code>pack build</code> instead of <code>docker build</code>.</li>
 </ol>
 <p>Example Jenkins pipeline snippet:</p>
-<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build Image&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">'Build Image'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s1">'''</span>
 <span class="s1">      pack build ${IMAGE_NAME}:${VERSION} \</span>
 <span class="s1">        --builder paketobuildpacks/builder:base \</span>
 <span class="s1">        --publish</span>
-<span class="s1">    &#39;&#39;&#39;</span>
+<span class="s1">    '''</span>
 <span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
 <ol>
 <li>Commit the changes:
    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>Dockerfile<span class="w"> </span>project.toml
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Remove Dockerfile, migrate to Buildpacks&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Remove Dockerfile, migrate to Buildpacks"</span>
 git<span class="w"> </span>push
 </code></pre></div></li>
 </ol>
@@ -6385,7 +6385,7 @@ pack<span class="w"> </span>build<span class="w"> </span>myimage<span class="w">
 <div class="highlight"><pre><span></span><code><span class="c1"># Check the buildpack-detected start command</span>
 pack<span class="w"> </span>inspect<span class="w"> </span>YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
 
-<span class="c1"># Verify your package.json &quot;start&quot; script</span>
+<span class="c1"># Verify your package.json "start" script</span>
 cat<span class="w"> </span>package.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A2<span class="w"> </span>scripts
 
 <span class="c1"># Test locally first</span>

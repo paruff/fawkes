@@ -6455,13 +6455,13 @@
 <h4 id="1-locate-trace-id-in-application-logs">1. Locate Trace ID in Application Logs</h4>
 <p>Application logs should include trace IDs. Example log entry:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-06T10:30:45Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Payment processing failed&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;trace_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4bf92f3577b34da6a3ce929d0e0e4736&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;span_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;00f067aa0ba902b7&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;service&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;payment-service&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Database connection timeout&quot;</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-06T10:30:45Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERROR"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Payment processing failed"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"trace_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4bf92f3577b34da6a3ce929d0e0e4736"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"span_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00f067aa0ba902b7"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"payment-service"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Database connection timeout"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h4 id="2-open-grafana-explore">2. Open Grafana Explore</h4>
@@ -6506,17 +6506,17 @@
 <div class="highlight"><pre><span></span><code>{duration &gt; 1s}
 </code></pre></div>
 <p><strong>Find traces for a specific service:</strong></p>
-<div class="highlight"><pre><span></span><code>{resource.service.name = &quot;payment-service&quot;}
+<div class="highlight"><pre><span></span><code>{resource.service.name = "payment-service"}
 </code></pre></div>
 <p><strong>Find traces with database errors:</strong></p>
-<div class="highlight"><pre><span></span><code>{span.db.system = &quot;postgresql&quot; &amp;&amp; status = error}
+<div class="highlight"><pre><span></span><code>{span.db.system = "postgresql" &amp;&amp; status = error}
 </code></pre></div>
 <p><strong>Find traces for a specific HTTP route:</strong></p>
-<div class="highlight"><pre><span></span><code>{span.http.route = &quot;/api/orders/*&quot; &amp;&amp; span.http.method = &quot;POST&quot;}
+<div class="highlight"><pre><span></span><code>{span.http.route = "/api/orders/*" &amp;&amp; span.http.method = "POST"}
 </code></pre></div>
 <p><strong>Combine multiple conditions:</strong></p>
 <div class="highlight"><pre><span></span><code>{
-  resource.service.name = &quot;payment-service&quot; &amp;&amp;
+  resource.service.name = "payment-service" &amp;&amp;
   duration &gt; 500ms &amp;&amp;
   span.http.status_code = 500
 }
@@ -6547,7 +6547,7 @@
 </ol>
 <h4 id="2-query-application-logs">2. Query Application Logs</h4>
 <p>Example query for recent errors:</p>
-<div class="highlight"><pre><span></span><code>{namespace=&quot;my-service-dev&quot;} |~ &quot;ERROR&quot;
+<div class="highlight"><pre><span></span><code>{namespace="my-service-dev"} |~ "ERROR"
 </code></pre></div>
 <h4 id="3-click-trace-id-link">3. Click Trace ID Link</h4>
 <p>In the log results:</p>
@@ -6584,18 +6584,18 @@
 <h4 id="1-build-query-with-custom-attributes">1. Build Query with Custom Attributes</h4>
 <p>Example queries using custom attributes:</p>
 <p><strong>Find traces for a specific user:</strong></p>
-<div class="highlight"><pre><span></span><code>{span.user.id = &quot;alice@example.com&quot;}
+<div class="highlight"><pre><span></span><code>{span.user.id = "alice@example.com"}
 </code></pre></div>
 <p><strong>Find traces for a specific order:</strong></p>
-<div class="highlight"><pre><span></span><code>{span.order.id = &quot;ORD-12345&quot;}
+<div class="highlight"><pre><span></span><code>{span.order.id = "ORD-12345"}
 </code></pre></div>
 <p><strong>Find traces with feature flag enabled:</strong></p>
-<div class="highlight"><pre><span></span><code>{span.feature.flag.new_checkout = &quot;true&quot;}
+<div class="highlight"><pre><span></span><code>{span.feature.flag.new_checkout = "true"}
 </code></pre></div>
 <h4 id="2-combine-with-other-filters">2. Combine with Other Filters</h4>
 <div class="highlight"><pre><span></span><code>{
-  span.user.id = &quot;alice@example.com&quot; &amp;&amp;
-  resource.service.name = &quot;checkout-service&quot; &amp;&amp;
+  span.user.id = "alice@example.com" &amp;&amp;
+  resource.service.name = "checkout-service" &amp;&amp;
   duration &gt; 2s
 }
 </code></pre></div>
@@ -6730,11 +6730,11 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 { }  # Returns all traces in time range
 
 # Gradually narrow down
-{resource.service.name = &quot;payment-service&quot;}
+{resource.service.name = "payment-service"}
 
 # Check attribute spelling and case sensitivity
-{span.http.method = &quot;POST&quot;}  # Correct
-{span.HTTP.Method = &quot;POST&quot;}  # Incorrect (case-sensitive)
+{span.http.method = "POST"}  # Correct
+{span.HTTP.Method = "POST"}  # Incorrect (case-sensitive)
 </code></pre></div>
 <h3 id="trace-shows-high-latency-but-no-bottleneck">Trace Shows High Latency but No Bottleneck</h3>
 <p><strong>Cause</strong>: Network latency or waiting between spans.</p>
@@ -6744,7 +6744,7 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 <li>Check for asynchronous operations or queued tasks</li>
 <li>Verify inter-service network latency:
    <div class="highlight"><pre><span></span><code><span class="c1"># Test network latency between pods</span>
-kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>namespace1<span class="w"> </span>pod1<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;@curl-format.txt&quot;</span><span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-s<span class="w"> </span>http://service2.namespace2.svc.cluster.local
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>namespace1<span class="w"> </span>pod1<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>-w<span class="w"> </span><span class="s2">"@curl-format.txt"</span><span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-s<span class="w"> </span>http://service2.namespace2.svc.cluster.local
 </code></pre></div></li>
 </ol>
 <h2 id="next-steps">Next Steps</h2>

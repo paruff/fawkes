@@ -6096,11 +6096,11 @@ Authorization:<span class="w"> </span>Bearer<span class="w"> </span><span class=
 </ul>
 <p><strong>Examples</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;feedback_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bug_report&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Security&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;priority&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P0&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Critical security vulnerability in UI&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;labels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;feedback&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;automated&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bug&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;P0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;category:security&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;security&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ux&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"feedback_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bug_report"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Security"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"priority"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"comment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Critical security vulnerability in UI"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"feedback"</span><span class="p">,</span><span class="w"> </span><span class="s2">"automated"</span><span class="p">,</span><span class="w"> </span><span class="s2">"bug"</span><span class="p">,</span><span class="w"> </span><span class="s2">"P0"</span><span class="p">,</span><span class="w"> </span><span class="s2">"category:security"</span><span class="p">,</span><span class="w"> </span><span class="s2">"security"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ux"</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -6154,7 +6154,7 @@ Authorization:<span class="w"> </span>Bearer<span class="w"> </span><span class=
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">feedback-mattermost-webhook</span>
 <span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">url</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NOTIFICATION_ENABLED</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 </code></pre></div>
 <p><strong>Notification Features</strong>:</p>
 <ul>
@@ -6555,88 +6555,88 @@ curl<span class="w"> </span>http://feedback-service:8000/metrics<span class="w">
 <h2 id="api-usage-examples">API Usage Examples</h2>
 <h3 id="submit-feedback-with-auto-issue">Submit Feedback with Auto-Issue</h3>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://feedback-service:8000/api/v1/feedback<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<span class="s1">    &quot;rating&quot;: 1,</span>
-<span class="s1">    &quot;category&quot;: &quot;Security&quot;,</span>
-<span class="s1">    &quot;comment&quot;: &quot;Critical security vulnerability in login page&quot;,</span>
-<span class="s1">    &quot;feedback_type&quot;: &quot;bug_report&quot;,</span>
-<span class="s1">    &quot;create_github_issue&quot;: true</span>
-<span class="s1">  }&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<span class="s1">    "rating": 1,</span>
+<span class="s1">    "category": "Security",</span>
+<span class="s1">    "comment": "Critical security vulnerability in login page",</span>
+<span class="s1">    "feedback_type": "bug_report",</span>
+<span class="s1">    "create_github_issue": true</span>
+<span class="s1">  }'</span>
 </code></pre></div>
 <h3 id="manual-triage">Manual Triage</h3>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://feedback-service:8000/api/v1/feedback/123/triage<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer admin-token&quot;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer admin-token"</span>
 </code></pre></div>
 <p>Response:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;triage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;feedback_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;priority&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P0&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;priority_score&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.78</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;suggested_labels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;bug&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;P0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;category:security&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;security&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;potential_duplicates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">    </span><span class="nt">&quot;suggested_milestone&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hotfix&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;should_create_issue&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;triage_reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Priority P0 based on score 0.78&quot;</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"triage"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"feedback_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"priority"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P0"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"priority_score"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.78</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"suggested_labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"bug"</span><span class="p">,</span><span class="w"> </span><span class="s2">"P0"</span><span class="p">,</span><span class="w"> </span><span class="s2">"category:security"</span><span class="p">,</span><span class="w"> </span><span class="s2">"security"</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"potential_duplicates"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="nt">"suggested_milestone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hotfix"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"should_create_issue"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"triage_reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Priority P0 based on score 0.78"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="run-automation">Run Automation</h3>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://feedback-service:8000/api/v1/automation/process-validated?limit=10&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer admin-token&quot;</span>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"http://feedback-service:8000/api/v1/automation/process-validated?limit=10"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer admin-token"</span>
 </code></pre></div>
 <p>Response:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Processed 8 feedback items&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;processed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;issues_created&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;skipped_duplicates&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;errors&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Processed 8 feedback items"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"processed"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"issues_created"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"skipped_duplicates"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"errors"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="monitoring-and-alerts">Monitoring and Alerts</h2>
 <h3 id="key-metrics">Key Metrics</h3>
 <div class="highlight"><pre><span></span><code># Feedback volume
-feedback_submissions_total{category=&quot;Security&quot;,rating=&quot;1&quot;}
+feedback_submissions_total{category="Security",rating="1"}
 
 # NPS score
-nps_score{period=&quot;overall&quot;}
+nps_score{period="overall"}
 
 # Sentiment distribution
-feedback_sentiment_score{category=&quot;Performance&quot;,sentiment=&quot;negative&quot;}
+feedback_sentiment_score{category="Performance",sentiment="negative"}
 
 # Request duration
-feedback_request_duration_seconds{endpoint=&quot;submit_feedback&quot;}
+feedback_request_duration_seconds{endpoint="submit_feedback"}
 </code></pre></div>
 <h3 id="recommended-alerts">Recommended Alerts</h3>
 <ol>
 <li><strong>High Priority Feedback</strong></li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighPriorityFeedbackReceived</span>
-<span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">increase(feedback_submissions_total{rating=&quot;1&quot;}[5m]) &gt; 0</span>
+<span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">increase(feedback_submissions_total{rating="1"}[5m]) &gt; 0</span>
 <span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
 <span class="nt">annotations</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;P0</span><span class="nv"> </span><span class="s">feedback</span><span class="nv"> </span><span class="s">received</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">immediate</span><span class="nv"> </span><span class="s">attention</span><span class="nv"> </span><span class="s">required&quot;</span>
+<span class="w">  </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"P0</span><span class="nv"> </span><span class="s">feedback</span><span class="nv"> </span><span class="s">received</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">immediate</span><span class="nv"> </span><span class="s">attention</span><span class="nv"> </span><span class="s">required"</span>
 </code></pre></div>
 <ol>
 <li><strong>NPS Drop</strong></li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NPSDropped</span>
-<span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nps_score{period=&quot;last_30d&quot;} &lt; 0</span>
+<span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nps_score{period="last_30d"} &lt; 0</span>
 <span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15m</span>
 <span class="nt">annotations</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NPS</span><span class="nv"> </span><span class="s">score</span><span class="nv"> </span><span class="s">dropped</span><span class="nv"> </span><span class="s">below</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">investigate</span><span class="nv"> </span><span class="s">user</span><span class="nv"> </span><span class="s">satisfaction&quot;</span>
+<span class="w">  </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"NPS</span><span class="nv"> </span><span class="s">score</span><span class="nv"> </span><span class="s">dropped</span><span class="nv"> </span><span class="s">below</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">investigate</span><span class="nv"> </span><span class="s">user</span><span class="nv"> </span><span class="s">satisfaction"</span>
 </code></pre></div>
 <ol>
 <li><strong>Automation Failures</strong>
    <div class="highlight"><pre><span></span><code><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AutomationFailed</span>
-<span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kube_job_status_failed{job=~&quot;feedback-automation.*&quot;} &gt; 0</span>
+<span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kube_job_status_failed{job=~"feedback-automation.*"} &gt; 0</span>
 <span class="nt">annotations</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Feedback</span><span class="nv"> </span><span class="s">automation</span><span class="nv"> </span><span class="s">job</span><span class="nv"> </span><span class="s">failed</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">check</span><span class="nv"> </span><span class="s">logs&quot;</span>
+<span class="w">  </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"Feedback</span><span class="nv"> </span><span class="s">automation</span><span class="nv"> </span><span class="s">job</span><span class="nv"> </span><span class="s">failed</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">check</span><span class="nv"> </span><span class="s">logs"</span>
 </code></pre></div></li>
 </ol>
 <hr />
@@ -6788,7 +6788,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 
 <span class="c1"># Test GitHub API access</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>deployment/feedback-service<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$GITHUB_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$GITHUB_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>https://api.github.com/user
 
 <span class="c1"># Check service logs</span>
@@ -6796,21 +6796,21 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 </code></pre></div>
 <p><strong>Issue</strong>: No notifications sent</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check if notifications are enabled</span>
-curl<span class="w"> </span>http://feedback-service:8000/<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.features.notifications&#39;</span>
+curl<span class="w"> </span>http://feedback-service:8000/<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.features.notifications'</span>
 
 <span class="c1"># Verify webhook URL</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>feedback-mattermost-webhook<span class="w"> </span>-n<span class="w"> </span>fawkes
 
 <span class="c1"># Test webhook manually</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>deployment/feedback-service<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$MATTERMOST_WEBHOOK_URL</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;text&quot;:&quot;Test notification&quot;}&#39;</span>
+<span class="w">  </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"</span><span class="nv">$MATTERMOST_WEBHOOK_URL</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"text":"Test notification"}'</span>
 </code></pre></div>
 <h3 id="debug-mode">Debug Mode</h3>
 <p>Enable verbose logging:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOG_LEVEL</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;DEBUG&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"DEBUG"</span>
 </code></pre></div>
 <hr />
 <h2 id="conclusion">Conclusion</h2>

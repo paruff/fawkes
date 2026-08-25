@@ -6245,7 +6245,7 @@ curl<span class="w"> </span>https://raw.githubusercontent.com/helm/helm/main/scr
 az<span class="w"> </span>login
 
 <span class="c1"># Set your subscription</span>
-az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span><span class="s2">&quot;YOUR_SUBSCRIPTION_ID&quot;</span>
+az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span><span class="s2">"YOUR_SUBSCRIPTION_ID"</span>
 
 <span class="c1"># Verify current subscription</span>
 az<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>--output<span class="w"> </span>table
@@ -6274,22 +6274,22 @@ nano<span class="w"> </span>terraform.tfvars
 <li><code>storage_account_name</code>: Must be globally unique (lowercase alphanumeric only)</li>
 </ul>
 <p>Example customization:</p>
-<div class="highlight"><pre><span></span><code><span class="na">acr_name</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkesacr20241213&quot;</span>
-<span class="na">key_vault_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes-kv-20241213&quot;</span>
-<span class="na">storage_account_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkestfstate20241213&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="na">acr_name</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">"fawkesacr20241213"</span>
+<span class="na">key_vault_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"fawkes-kv-20241213"</span>
+<span class="na">storage_account_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"fawkestfstate20241213"</span>
 </code></pre></div>
 <p><strong>Production Security Settings</strong>:</p>
 <p>For production environments, update these security-critical settings:</p>
-<div class="highlight"><pre><span></span><code><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"prod"</span>
 
 <span class="c1"># Key Vault security (production-ready)</span>
 <span class="na">key_vault_soft_delete_retention_days</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">90</span><span class="c1">      # Longer retention for recovery</span>
 <span class="na">key_vault_purge_protection_enabled</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">    # Prevent permanent deletion</span>
-<span class="na">key_vault_network_acls_default_action</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span><span class="c1">  # Restrict network access</span>
+<span class="na">key_vault_network_acls_default_action</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Deny"</span><span class="c1">  # Restrict network access</span>
 
 <span class="c1"># Then configure allowed IP ranges or VNets in main.tf:</span>
 <span class="c1"># network_acls {</span>
-<span class="c1">#   ip_rules = [&quot;YOUR_OFFICE_IP/32&quot;, &quot;YOUR_CI_IP/32&quot;]</span>
+<span class="c1">#   ip_rules = ["YOUR_OFFICE_IP/32", "YOUR_CI_IP/32"]</span>
 <span class="c1">#   virtual_network_subnet_ids = [azurerm_subnet.aks_subnet.id]</span>
 <span class="c1"># }</span>
 </code></pre></div>
@@ -6356,7 +6356,7 @@ az<span class="w"> </span>aks<span class="w"> </span>check-acr<span class="w"> <
 az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;addonProfiles.omsagent.enabled&quot;</span>
+<span class="w">  </span>--query<span class="w"> </span><span class="s2">"addonProfiles.omsagent.enabled"</span>
 
 <span class="c1"># Should return: true</span>
 
@@ -6385,13 +6385,13 @@ az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span
 <div class="highlight"><pre><span></span><code><span class="c1"># Grant user AKS admin role</span>
 az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--assignee<span class="w"> </span>user@example.com<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--role<span class="w"> </span><span class="s2">&quot;Azure Kubernetes Service RBAC Cluster Admin&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--role<span class="w"> </span><span class="s2">"Azure Kubernetes Service RBAC Cluster Admin"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--scope<span class="w"> </span><span class="k">$(</span>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span>-g<span class="w"> </span>fawkes-rg<span class="w"> </span>-n<span class="w"> </span>fawkes-aks<span class="w"> </span>--query<span class="w"> </span>id<span class="w"> </span>-o<span class="w"> </span>tsv<span class="k">)</span>
 
 <span class="c1"># Grant user AKS reader role</span>
 az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--assignee<span class="w"> </span>user@example.com<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--role<span class="w"> </span><span class="s2">&quot;Azure Kubernetes Service RBAC Reader&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--role<span class="w"> </span><span class="s2">"Azure Kubernetes Service RBAC Reader"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--scope<span class="w"> </span><span class="k">$(</span>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span>-g<span class="w"> </span>fawkes-rg<span class="w"> </span>-n<span class="w"> </span>fawkes-aks<span class="w"> </span>--query<span class="w"> </span>id<span class="w"> </span>-o<span class="w"> </span>tsv<span class="k">)</span>
 </code></pre></div>
 <h3 id="container-registry-access">Container Registry Access</h3>
@@ -6498,9 +6498,9 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/paruf
 <h4 id="issue-terraform-fails-with-name-not-available">Issue: Terraform fails with "name not available"</h4>
 <p><strong>Symptom</strong>: ACR, Key Vault, or Storage Account name already taken</p>
 <p><strong>Solution</strong>: Update names in <code>terraform.tfvars</code> to be globally unique:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">acr_name</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkesacr</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span>
-<span class="nv">key_vault_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes-kv-</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span>
-<span class="nv">storage_account_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tfstate</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nv">acr_name</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">"fawkesacr</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">"</span>
+<span class="nv">key_vault_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"fawkes-kv-</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">"</span>
+<span class="nv">storage_account_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"tfstate</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">"</span>
 </code></pre></div>
 <h4 id="issue-nodes-not-joining-cluster">Issue: Nodes not joining cluster</h4>
 <p><strong>Symptom</strong>: <code>kubectl get nodes</code> shows NotReady or missing nodes</p>
@@ -6548,7 +6548,7 @@ az<span class="w"> </span>aks<span class="w"> </span>update<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="c1"># Check current costs</span>
 az<span class="w"> </span>cost-management<span class="w"> </span>query<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--type<span class="w"> </span>Usage<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--dataset-filter<span class="w"> </span><span class="s2">&quot;{\&quot;and\&quot;:[{\&quot;dimensions\&quot;:{\&quot;name\&quot;:\&quot;ResourceGroup\&quot;,\&quot;operator\&quot;:\&quot;In\&quot;,\&quot;values\&quot;:[\&quot;fawkes-rg\&quot;]}}]}&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dataset-filter<span class="w"> </span><span class="s2">"{\"and\":[{\"dimensions\":{\"name\":\"ResourceGroup\",\"operator\":\"In\",\"values\":[\"fawkes-rg\"]}}]}"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--timeframe<span class="w"> </span>MonthToDate
 
 <span class="c1"># Scale down user pool</span>
@@ -6580,22 +6580,22 @@ kubectl<span class="w"> </span>debug<span class="w"> </span>node/aks-user-123456
 az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;{provisioningState:provisioningState,powerState:powerState.code}&quot;</span>
+<span class="w">  </span>--query<span class="w"> </span><span class="s2">"{provisioningState:provisioningState,powerState:powerState.code}"</span>
 
 <span class="c1"># View node pool health</span>
 az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>user<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;{provisioningState:provisioningState,powerState:powerState.code}&quot;</span>
+<span class="w">  </span>--query<span class="w"> </span><span class="s2">"{provisioningState:provisioningState,powerState:powerState.code}"</span>
 
 <span class="c1"># Check Azure Monitor logs</span>
 az<span class="w"> </span>monitor<span class="w"> </span>log-analytics<span class="w"> </span>query<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--workspace<span class="w"> </span>&lt;workspace-id&gt;<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--analytics-query<span class="w"> </span><span class="s2">&quot;ContainerLog | where TimeGenerated &gt; ago(1h) | limit 100&quot;</span>
+<span class="w">  </span>--analytics-query<span class="w"> </span><span class="s2">"ContainerLog | where TimeGenerated &gt; ago(1h) | limit 100"</span>
 
 <span class="c1"># Get kubectl diagnostics</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">'.lastTimestamp'</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>nodes
 kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A
 </code></pre></div>
@@ -6603,14 +6603,14 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> <
 <h2 id="cost-optimization">Cost Optimization</h2>
 <h3 id="development-environment-optimizations">Development Environment Optimizations</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># terraform.tfvars for dev environment</span>
-<span class="na">system_node_pool_vm_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard_D2s_v3&quot;</span>
+<span class="na">system_node_pool_vm_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard_D2s_v3"</span>
 <span class="na">system_node_pool_count</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
 
-<span class="na">user_node_pool_vm_size</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard_D2s_v3&quot;</span>
+<span class="na">user_node_pool_vm_size</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard_D2s_v3"</span>
 <span class="na">user_node_pool_min_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
 <span class="na">user_node_pool_max_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
 
-<span class="na">acr_sku</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Basic&quot;</span>
+<span class="na">acr_sku</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Basic"</span>
 <span class="na">log_retention_days</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span>
 </code></pre></div>
 <p>Estimated savings: ~$550/month</p>
@@ -6646,10 +6646,10 @@ az<span class="w"> </span>aks<span class="w"> </span>start<span class="w"> </spa
 <p>Schedule workloads on spot nodes:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">tolerations</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes.azure.com/scalesetpriority&quot;</span>
-<span class="w">      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Equal&quot;</span>
-<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;spot&quot;</span>
-<span class="w">      </span><span class="nt">effect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NoSchedule&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">"kubernetes.azure.com/scalesetpriority"</span>
+<span class="w">      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="s">"Equal"</span>
+<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"spot"</span>
+<span class="w">      </span><span class="nt">effect</span><span class="p">:</span><span class="w"> </span><span class="s">"NoSchedule"</span>
 <span class="w">  </span><span class="nt">nodeSelector</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">kubernetes.azure.com/scalesetpriority</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spot</span>
 </code></pre></div>

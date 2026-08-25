@@ -6403,16 +6403,16 @@
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/prod/*/*</span>
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{path.basename}}&quot;</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"{{path.basename}}"</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 <span class="w">      </span><span class="nt">source</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">repoURL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/paruff/fawkes-gitops</span>
 <span class="w">        </span><span class="nt">targetRevision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HEAD</span>
-<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{path}}&quot;</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"{{path}}"</span>
 <span class="w">      </span><span class="nt">destination</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://kubernetes.default.svc</span>
-<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{path[1]}}&quot;</span><span class="w"> </span><span class="c1"># team name from path</span>
+<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">"{{path[1]}}"</span><span class="w"> </span><span class="c1"># team name from path</span>
 <span class="w">      </span><span class="nt">syncPolicy</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">automated</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -6483,10 +6483,10 @@
 <span class="w">  </span><span class="nt">template.app-deployed</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">message: |</span>
 <span class="w">      </span><span class="no">Application {{.app.metadata.name}} is now running new version.</span>
-<span class="w">      </span><span class="no">{{if eq .serviceType &quot;slack&quot;}}:white_check_mark:{{end}} Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.</span>
+<span class="w">      </span><span class="no">{{if eq .serviceType "slack"}}:white_check_mark:{{end}} Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.</span>
 
 <span class="w">  </span><span class="nt">trigger.on-deployed</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">- when: app.status.operationState.phase in [&#39;Succeeded&#39;]</span>
+<span class="w">    </span><span class="no">- when: app.status.operationState.phase in ['Succeeded']</span>
 <span class="w">      </span><span class="no">send: [app-deployed]</span>
 </code></pre></div>
 <p><strong>Subscribe Application</strong>:</p>
@@ -6524,14 +6524,14 @@ argocd<span class="w"> </span>cluster<span class="w"> </span>add<span class="w">
 <span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://prod-cluster</span>
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-app-{{cluster}}&quot;</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"sample-app-{{cluster}}"</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 <span class="w">      </span><span class="nt">source</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">repoURL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/paruff/fawkes-gitops</span>
-<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;apps/{{cluster}}/sample-app&quot;</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"apps/{{cluster}}/sample-app"</span>
 <span class="w">      </span><span class="nt">destination</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{url}}&quot;</span>
+<span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">"{{url}}"</span>
 <span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample-app</span>
 </code></pre></div>
 <h3 id="rbac-configuration">RBAC Configuration</h3>
@@ -6543,9 +6543,9 @@ argocd<span class="w"> </span>cluster<span class="w"> </span>add<span class="w">
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Team A applications</span>
 <span class="w">  </span><span class="nt">sourceRepos</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;https://github.com/paruff/fawkes-gitops&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"https://github.com/paruff/fawkes-gitops"</span>
 <span class="w">  </span><span class="nt">destinations</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;team-a-*&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">"team-a-*"</span>
 <span class="w">      </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://kubernetes.default.svc</span>
 <span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-a-developer</span>
@@ -6593,7 +6593,7 @@ argocd<span class="w"> </span>cluster<span class="w"> </span>add<span class="w">
 <h3 id="secret-management">Secret Management</h3>
 <p><strong>Option 1: Sealed Secrets</strong> (recommended for MVP):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Encrypt secret</span>
-<span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;my-secret-value&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>my-secret<span class="w"> </span><span class="se">\</span>
+<span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">'my-secret-value'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>my-secret<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--dry-run<span class="o">=</span>client<span class="w"> </span>--from-file<span class="o">=</span><span class="nv">password</span><span class="o">=</span>/dev/stdin<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>kubeseal<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;<span class="w"> </span>sealed-secret.yaml
 

@@ -5908,7 +5908,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-sonarqube-dev
 
 <span class="c1"># Verify cluster is ready</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-sonarqube-dev<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.phase}&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-sonarqube-dev<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.phase}'</span>
 <span class="c1"># Expected output: Cluster in healthy state</span>
 </code></pre></div>
 <p><strong>Database Details</strong>:</p>
@@ -5958,8 +5958,8 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>sonarqube<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span><span class="w"> </span>-f
 
 <span class="c1"># Expected in logs:</span>
-<span class="c1"># &quot;SonarQube is operational&quot;</span>
-<span class="c1"># &quot;Process[web] is up&quot;</span>
+<span class="c1"># "SonarQube is operational"</span>
+<span class="c1"># "Process[web] is up"</span>
 </code></pre></div>
 <p><strong>Check Service</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify service is created</span>
@@ -6007,16 +6007,16 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 <h4 id="52-generate-authentication-token-for-jenkins">5.2 Generate Authentication Token for Jenkins</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Via UI:</span>
 <span class="c1"># 1. Go to My Account → Security → Generate Tokens</span>
-<span class="c1"># 2. Name: &quot;jenkins-scanner&quot;</span>
-<span class="c1"># 3. Type: &quot;Project Analysis Token&quot; or &quot;Global Analysis Token&quot;</span>
-<span class="c1"># 4. Click &quot;Generate&quot;</span>
-<span class="c1"># 5. Copy the token (you won&#39;t see it again!)</span>
+<span class="c1"># 2. Name: "jenkins-scanner"</span>
+<span class="c1"># 3. Type: "Project Analysis Token" or "Global Analysis Token"</span>
+<span class="c1"># 4. Click "Generate"</span>
+<span class="c1"># 5. Copy the token (you won't see it again!)</span>
 
 <span class="c1"># Via API:</span>
-<span class="nv">SONAR_PASSWORD</span><span class="o">=</span><span class="s2">&quot;your-new-admin-password&quot;</span>
+<span class="nv">SONAR_PASSWORD</span><span class="o">=</span><span class="s2">"your-new-admin-password"</span>
 curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${</span><span class="nv">SONAR_PASSWORD</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;http://sonarqube.fawkes.svc:9000/api/user_tokens/generate?name=jenkins-scanner&quot;</span>
+<span class="w">  </span><span class="s2">"http://sonarqube.fawkes.svc:9000/api/user_tokens/generate?name=jenkins-scanner"</span>
 
 <span class="c1"># Save the token output for Jenkins configuration</span>
 </code></pre></div>
@@ -6027,15 +6027,15 @@ curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${<
 <span class="c1"># 2. Select domain: (global)</span>
 <span class="c1"># 3. Add Credentials → Secret text</span>
 <span class="c1"># 4. Secret: &lt;paste token&gt;</span>
-<span class="c1"># 5. ID: &quot;sonarqube-token&quot;</span>
-<span class="c1"># 6. Description: &quot;SonarQube Scanner Token&quot;</span>
+<span class="c1"># 5. ID: "sonarqube-token"</span>
+<span class="c1"># 6. Description: "SonarQube Scanner Token"</span>
 
 <span class="c1"># Via Jenkins Configuration as Code (JCasC):</span>
 <span class="c1"># Already configured in jenkins-casc-configmap.yaml</span>
 </code></pre></div>
 <p><strong>Configure SonarQube Server in Jenkins</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Already configured in Jenkins Shared Library</span>
-<span class="n">withSonarQubeEnv</span><span class="o">(</span><span class="s1">&#39;SonarQube&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="n">withSonarQubeEnv</span><span class="o">(</span><span class="s1">'SonarQube'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="c1">// SonarQube server URL: http://sonarqube.fawkes.svc:9000</span>
 <span class="w">    </span><span class="c1">// Scanner authentication via token</span>
 <span class="o">}</span>
@@ -6057,17 +6057,17 @@ curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${<
 <div class="highlight"><pre><span></span><code><span class="c1"># Create custom Quality Gate via API</span>
 curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${</span><span class="nv">SONAR_PASSWORD</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;http://sonarqube.fawkes.svc:9000/api/qualitygates/create?name=Fawkes%20Gate&quot;</span>
+<span class="w">  </span><span class="s2">"http://sonarqube.fawkes.svc:9000/api/qualitygates/create?name=Fawkes%20Gate"</span>
 
 <span class="c1"># Add conditions (example: no new bugs)</span>
 curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${</span><span class="nv">SONAR_PASSWORD</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;http://sonarqube.fawkes.svc:9000/api/qualitygates/create_condition?gateName=Fawkes%20Gate&amp;metric=new_bugs&amp;op=GT&amp;error=0&quot;</span>
+<span class="w">  </span><span class="s2">"http://sonarqube.fawkes.svc:9000/api/qualitygates/create_condition?gateName=Fawkes%20Gate&amp;metric=new_bugs&amp;op=GT&amp;error=0"</span>
 
 <span class="c1"># Set as default</span>
 curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${</span><span class="nv">SONAR_PASSWORD</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;http://sonarqube.fawkes.svc:9000/api/qualitygates/set_as_default?name=Fawkes%20Gate&quot;</span>
+<span class="w">  </span><span class="s2">"http://sonarqube.fawkes.svc:9000/api/qualitygates/set_as_default?name=Fawkes%20Gate"</span>
 </code></pre></div>
 <p>Or configure via UI:</p>
 <ol>
@@ -6089,12 +6089,12 @@ curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${<
 </code></pre></div>
 <p><strong>Trigger Jenkins Build</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Push code to trigger Jenkins pipeline</span>
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Test SonarQube integration&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Test SonarQube integration"</span>
 git<span class="w"> </span>push
 
 <span class="c1"># Monitor Jenkins build</span>
-<span class="c1"># Should see &quot;SonarQube Analysis&quot; stage execute successfully</span>
-<span class="c1"># Should see &quot;Quality Gate&quot; stage check results</span>
+<span class="c1"># Should see "SonarQube Analysis" stage execute successfully</span>
+<span class="c1"># Should see "Quality Gate" stage check results</span>
 </code></pre></div>
 <p><strong>Verify in SonarQube</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check project appears in SonarQube UI</span>
@@ -6200,7 +6200,7 @@ curl<span class="w"> </span>http://localhost:9000/api/monitoring/metrics
 <div class="highlight"><pre><span></span><code><span class="c1"># Via API</span>
 curl<span class="w"> </span>http://sonarqube.fawkes.svc:9000/api/system/health
 
-<span class="c1"># Expected response: {&quot;health&quot;:&quot;GREEN&quot;,&quot;causes&quot;:[]}</span>
+<span class="c1"># Expected response: {"health":"GREEN","causes":[]}</span>
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="pod-not-starting">Pod Not Starting</h3>
@@ -6227,7 +6227,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-sonarqube-dev-1
 
 <span class="c1"># Test database connection</span>
-kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-sonarqube-dev-1<span class="w"> </span>--<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>sonarqube_user<span class="w"> </span>-d<span class="w"> </span>sonarqube<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT version();&quot;</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-sonarqube-dev-1<span class="w"> </span>--<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>sonarqube_user<span class="w"> </span>-d<span class="w"> </span>sonarqube<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT version();"</span>
 
 <span class="c1"># Verify credentials match</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-sonarqube-credentials<span class="w"> </span>-o<span class="w"> </span>yaml
@@ -6252,13 +6252,13 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 <p><strong>Symptoms</strong>: Jenkins pipeline times out waiting for Quality Gate</p>
 <p><strong>Solutions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Increase timeout in Jenkinsfile</span>
-timeout<span class="o">(</span>time:<span class="w"> </span><span class="m">10</span>,<span class="w"> </span>unit:<span class="w"> </span><span class="s1">&#39;MINUTES&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+timeout<span class="o">(</span>time:<span class="w"> </span><span class="m">10</span>,<span class="w"> </span>unit:<span class="w"> </span><span class="s1">'MINUTES'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span>waitForQualityGate<span class="w"> </span>abortPipeline:<span class="w"> </span><span class="nb">true</span>
 <span class="o">}</span>
 
 <span class="c1"># Check SonarQube compute engine</span>
 curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${</span><span class="nv">SONAR_PASSWORD</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;http://sonarqube.fawkes.svc:9000/api/ce/activity&quot;</span>
+<span class="w">  </span><span class="s2">"http://sonarqube.fawkes.svc:9000/api/ce/activity"</span>
 
 <span class="c1"># Restart SonarQube pod if compute engine is stuck</span>
 kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>sonarqube
@@ -6271,8 +6271,8 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
 
 <span class="c1"># Adjust JVM heap settings in sonarqube-application.yaml:</span>
 sonarProperties:
-<span class="w">  </span>sonar.web.javaAdditionalOpts:<span class="w"> </span><span class="s2">&quot;-Xms512m -Xmx2g&quot;</span>
-<span class="w">  </span>sonar.ce.javaAdditionalOpts:<span class="w"> </span><span class="s2">&quot;-Xms512m -Xmx2g&quot;</span>
+<span class="w">  </span>sonar.web.javaAdditionalOpts:<span class="w"> </span><span class="s2">"-Xms512m -Xmx2g"</span>
+<span class="w">  </span>sonar.ce.javaAdditionalOpts:<span class="w"> </span><span class="s2">"-Xms512m -Xmx2g"</span>
 
 <span class="c1"># Increase pod limits</span>
 resources:
@@ -6295,7 +6295,7 @@ resources:
 <span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SECRET_ACCESS_KEY</span>
 <span class="w">    </span><span class="nt">wal</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">compression</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gzip</span>
-<span class="w">  </span><span class="nt">retentionPolicy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;30d&quot;</span>
+<span class="w">  </span><span class="nt">retentionPolicy</span><span class="p">:</span><span class="w"> </span><span class="s">"30d"</span>
 </code></pre></div>
 <p><strong>Manual Backup</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Export database</span>
@@ -6304,7 +6304,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 
 <span class="c1"># Backup quality profiles</span>
 curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${</span><span class="nv">SONAR_PASSWORD</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;http://sonarqube.fawkes.svc:9000/api/qualityprofiles/backup?language=java&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"http://sonarqube.fawkes.svc:9000/api/qualityprofiles/backup?language=java"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>&gt;<span class="w"> </span>fawkes-java-profile.xml
 </code></pre></div>
 <h3 id="restore">Restore</h3>
@@ -6316,8 +6316,8 @@ cat<span class="w"> </span>sonarqube-backup.sql<span class="w"> </span><span cla
 <span class="c1"># Restore quality profiles</span>
 curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${</span><span class="nv">SONAR_PASSWORD</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;backup=@fawkes-java-profile.xml&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;http://sonarqube.fawkes.svc:9000/api/qualityprofiles/restore&quot;</span>
+<span class="w">  </span>-F<span class="w"> </span><span class="s2">"backup=@fawkes-java-profile.xml"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"http://sonarqube.fawkes.svc:9000/api/qualityprofiles/restore"</span>
 </code></pre></div>
 <h2 id="upgrade">Upgrade</h2>
 <h3 id="upgrading-sonarqube">Upgrading SonarQube</h3>
@@ -6341,8 +6341,8 @@ curl<span class="w"> </span>http://sonarqube.fawkes.svc:9000/api/system/status
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>sonarqube<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span>-f
 
 <span class="c1"># Look for:</span>
-<span class="c1"># &quot;Executing DB migrations...&quot;</span>
-<span class="c1"># &quot;DB migration | success&quot;</span>
+<span class="c1"># "Executing DB migrations..."</span>
+<span class="c1"># "DB migration | success"</span>
 </code></pre></div>
 <h2 id="maintenance">Maintenance</h2>
 <h3 id="housekeeping">Housekeeping</h3>
@@ -6352,14 +6352,14 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 <span class="c1"># Or via API (delete analyses older than 90 days)</span>
 curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${</span><span class="nv">SONAR_PASSWORD</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;http://sonarqube.fawkes.svc:9000/api/projects/bulk_delete?analyzedBefore=2024-09-01&quot;</span>
+<span class="w">  </span><span class="s2">"http://sonarqube.fawkes.svc:9000/api/projects/bulk_delete?analyzedBefore=2024-09-01"</span>
 </code></pre></div>
 <h3 id="reindexing">Reindexing</h3>
 <p>If search is slow or not working:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Trigger reindex</span>
 curl<span class="w"> </span>-u<span class="w"> </span>admin:<span class="si">${</span><span class="nv">SONAR_PASSWORD</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;http://sonarqube.fawkes.svc:9000/api/system/restart&quot;</span>
+<span class="w">  </span><span class="s2">"http://sonarqube.fawkes.svc:9000/api/system/restart"</span>
 
 <span class="c1"># Monitor logs</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>sonarqube<span class="w"> </span>-f

@@ -6176,7 +6176,7 @@ container_cpu_cfs_throttled_seconds_total
 container_oom_events_total
 
 # Evictions
-kube_pod_status_reason{reason=&quot;Evicted&quot;}
+kube_pod_status_reason{reason="Evicted"}
 </code></pre></div>
 <h3 id="resource-requestlimit-ratio-guidelines">Resource Request/Limit Ratio Guidelines</h3>
 <p><strong>Recommended Ratios:</strong></p>
@@ -6244,7 +6244,7 @@ kube_pod_status_reason{reason=&quot;Evicted&quot;}
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage</span>
 <span class="w">  </span><span class="nt">updatePolicy</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">updateMode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Auto&quot;</span><span class="w"> </span><span class="c1"># or &quot;Recreate&quot; or &quot;Initial&quot;</span>
+<span class="w">    </span><span class="nt">updateMode</span><span class="p">:</span><span class="w"> </span><span class="s">"Auto"</span><span class="w"> </span><span class="c1"># or "Recreate" or "Initial"</span>
 <span class="w">  </span><span class="nt">resourcePolicy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">containerPolicies</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage</span>
@@ -6265,7 +6265,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> <
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--field-selector<span class="o">=</span>status.phase<span class="o">=</span>Failed
 
 <span class="c1"># Check resource pressure</span>
-kubectl<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Allocated resources&quot;</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">"Allocated resources"</span>
 </code></pre></div>
 <h3 id="automated-validation">Automated Validation</h3>
 <p>Use the provided validation script:</p>
@@ -6286,25 +6286,25 @@ kubectl<span class="w"> </span>describe<span class="w"> </span>nodes<span class=
 <span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighCPUUsage</span>
 <span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">(sum(rate(container_cpu_usage_seconds_total{namespace=&quot;fawkes&quot;}[5m])) by (pod, container)</span>
-<span class="w">          </span><span class="no">/ sum(container_spec_cpu_quota{namespace=&quot;fawkes&quot;} / container_spec_cpu_period{namespace=&quot;fawkes&quot;}) by (pod, container)) &gt; 0.7</span>
+<span class="w">          </span><span class="no">(sum(rate(container_cpu_usage_seconds_total{namespace="fawkes"}[5m])) by (pod, container)</span>
+<span class="w">          </span><span class="no">/ sum(container_spec_cpu_quota{namespace="fawkes"} / container_spec_cpu_period{namespace="fawkes"}) by (pod, container)) &gt; 0.7</span>
 <span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15m</span>
 <span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
 <span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">CPU</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">detected&quot;</span>
-<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pod</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.pod</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">container</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.container</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">CPU</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">70%&quot;</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"High</span><span class="nv"> </span><span class="s">CPU</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">detected"</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"Pod</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.pod</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">container</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.container</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">CPU</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">70%"</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighMemoryUsage</span>
 <span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">(sum(container_memory_working_set_bytes{namespace=&quot;fawkes&quot;}) by (pod, container)</span>
-<span class="w">          </span><span class="no">/ sum(container_spec_memory_limit_bytes{namespace=&quot;fawkes&quot;}) by (pod, container)) &gt; 0.7</span>
+<span class="w">          </span><span class="no">(sum(container_memory_working_set_bytes{namespace="fawkes"}) by (pod, container)</span>
+<span class="w">          </span><span class="no">/ sum(container_spec_memory_limit_bytes{namespace="fawkes"}) by (pod, container)) &gt; 0.7</span>
 <span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15m</span>
 <span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
 <span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">detected&quot;</span>
-<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pod</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.pod</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">container</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.container</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">70%&quot;</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"High</span><span class="nv"> </span><span class="s">memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">detected"</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"Pod</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.pod</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">container</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.container</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">memory</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">70%"</span>
 </code></pre></div>
 <h2 id="performance-benchmarks">Performance Benchmarks</h2>
 <h3 id="expected-performance-after-optimization">Expected Performance After Optimization</h3>

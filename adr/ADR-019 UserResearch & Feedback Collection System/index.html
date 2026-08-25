@@ -5815,7 +5815,7 @@
 │  └────────────────────────────────────────────────────────┘  │
 │                            ↓                                  │
 │  ┌────────────────────────────────────────────────────────┐  │
-│  │ &quot;You Said, We Did&quot; Communication                       │  │
+│  │ "You Said, We Did" Communication                       │  │
 │  │ - Monthly update post (Mattermost + email)             │  │
 │  │ - Quarterly DevEx town hall                            │  │
 │  │ - Close the loop on every piece of feedback            │  │
@@ -5830,8 +5830,8 @@
 <span class="c1">// Appears in every Backstage page header</span>
 
 <span class="kd">interface</span><span class="w"> </span><span class="nx">FeedbackSubmission</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;bug&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;friction&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;feature-request&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;praise&quot;</span><span class="p">;</span>
-<span class="w">  </span><span class="nx">category</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ci-cd&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;gitops&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;docs&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;dojo&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;other&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">"bug"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">"friction"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">"feature-request"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">"praise"</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">category</span><span class="o">:</span><span class="w"> </span><span class="s2">"ci-cd"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">"gitops"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">"docs"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">"dojo"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">"other"</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">page</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
@@ -5839,7 +5839,7 @@
 <span class="w">    </span><span class="nx">userRole</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="w">    </span><span class="nx">anonymized</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span>
 <span class="w">  </span><span class="p">};</span>
-<span class="w">  </span><span class="nx">sentiment</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;neutral&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;negative&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">sentiment</span><span class="o">:</span><span class="w"> </span><span class="s2">"positive"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">"neutral"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">"negative"</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Features</strong>:</p>
@@ -5852,16 +5852,16 @@
 <li>“Thank you” confirmation with ticket number</li>
 </ul>
 <p><strong>Example Flow</strong>:</p>
-<div class="highlight"><pre><span></span><code>[User clicks &quot;Give Feedback&quot; button in Backstage header]
+<div class="highlight"><pre><span></span><code>[User clicks "Give Feedback" button in Backstage header]
 
 ┌─────────────────────────────────────────┐
 │  Quick Feedback (30 seconds)            │
 │                                          │
 │  What type of feedback?                 │
-│  ( ) Bug - Something&#39;s broken           │
-│  (•) Friction - Something&#39;s annoying    │
+│  ( ) Bug - Something's broken           │
+│  (•) Friction - Something's annoying    │
 │  ( ) Feature Request - I need...        │
-│  ( ) Praise - Something&#39;s great!        │
+│  ( ) Praise - Something's great!        │
 │                                          │
 │  Which area?                             │
 │  [Dropdown: CI/CD, GitOps, Docs, etc.]  │
@@ -5902,7 +5902,7 @@ It used to be 15 minutes last month. Anyone else seeing this?
 🐌
 
 @platform_engineer [10:41 AM]
-Thanks for flagging @developer_alice! We&#39;ll investigate.
+Thanks for flagging @developer_alice! We'll investigate.
 Can you share which service? (DM if sensitive)
 
 @developer_bob [11:02 AM]
@@ -5911,7 +5911,7 @@ Seems like it started after the Jenkins upgrade last week?
 
 @platform_engineer [11:15 AM]
 Good catch on the timing. We upgraded Jenkins on Oct 28th.
-I&#39;ll check if we inadvertently changed build parallelism settings.
+I'll check if we inadvertently changed build parallelism settings.
 Created ticket: FAWKES-567. Will update here by EOD.
 
 @platform_engineer [4:30 PM]
@@ -6003,20 +6003,20 @@ Introduction (5 min):
 
 Warm-Up (5 min):
 
-<span class="k">-</span><span class="w"> </span>What&#39;s your role and team?
+<span class="k">-</span><span class="w"> </span>What's your role and team?
 <span class="k">-</span><span class="w"> </span>How long have you been using Fawkes?
 <span class="k">-</span><span class="w"> </span>On a scale of 1-5, how would you rate your overall experience?
 
 Current Workflow (15 min):
 
 <span class="k">-</span><span class="w"> </span>Walk me through your typical day using Fawkes
-<span class="k">-</span><span class="w"> </span>What&#39;s the first thing you do in the morning?
+<span class="k">-</span><span class="w"> </span>What's the first thing you do in the morning?
 <span class="k">-</span><span class="w"> </span>How do you deploy code from idea to production?
 <span class="k">-</span><span class="w"> </span>[Screen share: Show me how you do X]
 
 Pain Points (15 min):
 
-<span class="k">-</span><span class="w"> </span>What&#39;s the most frustrating part of using Fawkes?
+<span class="k">-</span><span class="w"> </span>What's the most frustrating part of using Fawkes?
 <span class="k">-</span><span class="w"> </span>When was the last time Fawkes slowed you down?
 <span class="k">-</span><span class="w"> </span>If you could fix one thing tomorrow, what would it be?
 <span class="k">-</span><span class="w"> </span>What workarounds have you developed?
@@ -6034,7 +6034,7 @@ Aspirations (5 min):
 
 Wrap-Up (5 min):
 
-<span class="k">-</span><span class="w"> </span>Anything we haven&#39;t covered?
+<span class="k">-</span><span class="w"> </span>Anything we haven't covered?
 <span class="k">-</span><span class="w"> </span>Can we follow up if we have clarifying questions?
 <span class="k">-</span><span class="w"> </span>Thank you + next steps
 </code></pre></div>
@@ -6071,7 +6071,7 @@ Stage 2: First Deploy
 
 Stage 3: Monitoring
 😐 Okay: Grafana dashboard is powerful but overwhelming
-😢 Frustrating: Can&#39;t tell if my service is healthy without asking SRE team
+😢 Frustrating: Can't tell if my service is healthy without asking SRE team
 
 Top Pain Points:
 1. IAM permissions are black magic (fix: better templates + error messages)
@@ -6104,12 +6104,12 @@ Success Criteria:
 
 Observations (n=5 developers):
 ✅ All completed task in 12-18 minutes
-⚠️  3/5 were confused by &quot;Create Component&quot; vs &quot;Create Service&quot; buttons
-⚠️  4/5 didn&#39;t notice deployment status indicator
+⚠️  3/5 were confused by "Create Component" vs "Create Service" buttons
+⚠️  4/5 didn't notice deployment status indicator
 ✅ Average satisfaction: 4.2/5
 
 Recommendations:
-1. Merge &quot;Create Component&quot; and &quot;Create Service&quot; into one flow
+1. Merge "Create Component" and "Create Service" into one flow
 2. Make deployment status more prominent (add animation)
 3. Add contextual help tooltip on first use
 </code></pre></div>
@@ -6117,10 +6117,10 @@ Recommendations:
 <h3 id="31-feedback-database-schema">3.1 Feedback Database Schema</h3>
 <div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">feedback</span><span class="w"> </span><span class="p">(</span>
 <span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
-<span class="w">  </span><span class="k">type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"> </span><span class="c1">-- &#39;bug&#39;, &#39;friction&#39;, &#39;feature-request&#39;, &#39;praise&#39;</span>
-<span class="w">  </span><span class="n">category</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"> </span><span class="c1">-- &#39;ci-cd&#39;, &#39;gitops&#39;, &#39;docs&#39;, &#39;dojo&#39;, &#39;other&#39;</span>
+<span class="w">  </span><span class="k">type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"> </span><span class="c1">-- 'bug', 'friction', 'feature-request', 'praise'</span>
+<span class="w">  </span><span class="n">category</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"> </span><span class="c1">-- 'ci-cd', 'gitops', 'docs', 'dojo', 'other'</span>
 <span class="w">  </span><span class="n">description</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">  </span><span class="k">source</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"> </span><span class="c1">-- &#39;widget&#39;, &#39;mattermost&#39;, &#39;interview&#39;, &#39;github&#39;</span>
+<span class="w">  </span><span class="k">source</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"> </span><span class="c1">-- 'widget', 'mattermost', 'interview', 'github'</span>
 
 <span class="w">  </span><span class="c1">-- Context</span>
 <span class="w">  </span><span class="n">user_id</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span><span class="w"> </span><span class="c1">-- NULL if anonymous</span>
@@ -6129,12 +6129,12 @@ Recommendations:
 <span class="w">  </span><span class="k">timestamp</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
 
 <span class="w">  </span><span class="c1">-- Analysis</span>
-<span class="w">  </span><span class="n">sentiment</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span><span class="w"> </span><span class="c1">-- &#39;positive&#39;, &#39;neutral&#39;, &#39;negative&#39; (AI-generated)</span>
-<span class="w">  </span><span class="n">themes</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">[],</span><span class="w"> </span><span class="c1">-- e.g., [&#39;performance&#39;, &#39;documentation&#39;, &#39;jenkins&#39;]</span>
+<span class="w">  </span><span class="n">sentiment</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span><span class="w"> </span><span class="c1">-- 'positive', 'neutral', 'negative' (AI-generated)</span>
+<span class="w">  </span><span class="n">themes</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">[],</span><span class="w"> </span><span class="c1">-- e.g., ['performance', 'documentation', 'jenkins']</span>
 <span class="w">  </span><span class="n">impact_score</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="c1">-- 1-5 based on affected users + frequency</span>
 
 <span class="w">  </span><span class="c1">-- Lifecycle</span>
-<span class="w">  </span><span class="n">status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;new&#39;</span><span class="p">,</span><span class="w"> </span><span class="c1">-- &#39;new&#39;, &#39;triaged&#39;, &#39;in-progress&#39;, &#39;resolved&#39;, &#39;wont-fix&#39;</span>
+<span class="w">  </span><span class="n">status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">'new'</span><span class="p">,</span><span class="w"> </span><span class="c1">-- 'new', 'triaged', 'in-progress', 'resolved', 'wont-fix'</span>
 <span class="w">  </span><span class="n">assigned_to</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
 <span class="w">  </span><span class="n">resolution_notes</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
 <span class="w">  </span><span class="n">resolved_at</span><span class="w"> </span><span class="k">TIMESTAMP</span>
@@ -6149,26 +6149,26 @@ Recommendations:
 <div class="highlight"><pre><span></span><code><span class="c1"># Using OpenAI API for sentiment classification</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">analyze_sentiment</span><span class="p">(</span><span class="n">feedback_text</span><span class="p">):</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">openai</span><span class="o">.</span><span class="n">ChatCompletion</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-        <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="s2">"gpt-4"</span><span class="p">,</span>
         <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
-            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Classify sentiment as positive, neutral, or negative.&quot;</span><span class="p">},</span>
-            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">feedback_text</span><span class="p">}</span>
+            <span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"system"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"Classify sentiment as positive, neutral, or negative."</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">feedback_text</span><span class="p">}</span>
         <span class="p">]</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>  <span class="c1"># &#39;positive&#39; | &#39;neutral&#39; | &#39;negative&#39;</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>  <span class="c1"># 'positive' | 'neutral' | 'negative'</span>
 </code></pre></div>
 <p><strong>Theme Extraction</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Identify common themes across feedback</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">extract_themes</span><span class="p">(</span><span class="n">feedback_batch</span><span class="p">):</span>
-    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"""</span>
 <span class="s2">    Analyze these </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">feedback_batch</span><span class="p">)</span><span class="si">}</span><span class="s2"> feedback items and identify 3-5 recurring themes.</span>
 
 <span class="s2">    Feedback:</span>
 <span class="s2">    </span><span class="si">{</span><span class="n">format_feedback</span><span class="p">(</span><span class="n">feedback_batch</span><span class="p">)</span><span class="si">}</span>
 
-<span class="s2">    Return themes as a JSON array, e.g., [&quot;performance&quot;, &quot;documentation&quot;, &quot;onboarding&quot;]</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-    <span class="c1"># Returns: [&#39;jenkins-slow&#39;, &#39;backstage-search&#39;, &#39;dojo-outdated&#39;, ...]</span>
+<span class="s2">    Return themes as a JSON array, e.g., ["performance", "documentation", "onboarding"]</span>
+<span class="s2">    """</span>
+    <span class="c1"># Returns: ['jenkins-slow', 'backstage-search', 'dojo-outdated', ...]</span>
 </code></pre></div>
 <p><strong>Impact Scoring Algorithm</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calculate_impact_score</span><span class="p">(</span><span class="n">feedback</span><span class="p">):</span>
@@ -6178,11 +6178,11 @@ Recommendations:
     <span class="n">score</span> <span class="o">+=</span> <span class="n">count_similar_feedback</span><span class="p">(</span><span class="n">feedback</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># 0-10 points</span>
 
     <span class="c1"># Severity (based on type)</span>
-    <span class="n">severity_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bug&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;friction&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;feature-request&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;praise&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+    <span class="n">severity_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'bug'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'friction'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'feature-request'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'praise'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
     <span class="n">score</span> <span class="o">+=</span> <span class="n">severity_weights</span><span class="p">[</span><span class="n">feedback</span><span class="o">.</span><span class="n">type</span><span class="p">]</span>
 
     <span class="c1"># Sentiment (negative = more urgent)</span>
-    <span class="k">if</span> <span class="n">feedback</span><span class="o">.</span><span class="n">sentiment</span> <span class="o">==</span> <span class="s1">&#39;negative&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">feedback</span><span class="o">.</span><span class="n">sentiment</span> <span class="o">==</span> <span class="s1">'negative'</span><span class="p">:</span>
         <span class="n">score</span> <span class="o">+=</span> <span class="mi">2</span>
 
     <span class="c1"># Recency (recent = more relevant)</span>
@@ -6215,12 +6215,12 @@ Recommendations:
    - Assign owners and set deadlines
 
 4. Experiment Review (15 min)
-   - Did last month&#39;s changes work?
+   - Did last month's changes work?
    - Measure before/after metrics
    - Lessons learned
 
 5. Communication Planning (5 min)
-   - Draft &quot;You Said, We Did&quot; post
+   - Draft "You Said, We Did" post
    - Plan quarterly town hall content
 </code></pre></div>
 <p><strong>Output</strong>:</p>
@@ -6233,7 +6233,7 @@ Recommendations:
 <p><strong>Monthly Post</strong> (Mattermost + Email):</p>
 <div class="highlight"><pre><span></span><code><span class="gu">## You Said, We Did - November 2024</span>
 
-Hey team! Here&#39;s what we heard from you last month and what we&#39;re doing about it.
+Hey team! Here's what we heard from you last month and what we're doing about it.
 
 <span class="gu">### 📊 Feedback by the Numbers</span>
 
@@ -6246,7 +6246,7 @@ Hey team! Here&#39;s what we heard from you last month and what we&#39;re doing 
 <span class="k">1.</span> <span class="gs">**Jenkins builds are slow**</span> (18 mentions)
    👉 WE DID: Optimized build parallelism, reduced avg build time 45min → 18min
 
-<span class="k">2.</span> <span class="gs">**Backstage search doesn&#39;t find docs**</span> (12 mentions)
+<span class="k">2.</span> <span class="gs">**Backstage search doesn't find docs**</span> (12 mentions)
    👉 WE DID: Upgraded search index, now indexes TechDocs + ADRs + Mattermost
 
 <span class="k">3.</span> <span class="gs">**Dojo modules are outdated**</span> (9 mentions)
@@ -6258,7 +6258,7 @@ Hey team! Here&#39;s what we heard from you last month and what we&#39;re doing 
 <span class="k">-</span><span class="w"> </span>Deployment frequency hit 2.4/day (↑ from 1.9/day)
 <span class="k">-</span><span class="w"> </span>NPS score: 62 (↑ from 58)
 
-<span class="gu">### 💡 What We&#39;re Focusing on Next Month</span>
+<span class="gu">### 💡 What We're Focusing on Next Month</span>
 
 <span class="k">-</span><span class="w"> </span>AI-powered code review suggestions (pilot with 3 teams)
 <span class="k">-</span><span class="w"> </span>Improved error messages in ArgoCD
@@ -6268,7 +6268,7 @@ Hey team! Here&#39;s what we heard from you last month and what we&#39;re doing 
 
 <span class="k">-</span><span class="w"> </span>Use the feedback button in Backstage
 <span class="k">-</span><span class="w"> </span>Join office hours (next one: Nov 20, 2pm)
-<span class="k">-</span><span class="w"> </span>DM us anytime in <span class="ni">#platform</span>-feedback
+<span class="k">-</span><span class="w"> </span>DM us anytime in <span class="ni">#platform-feedback</span>
 
 Thanks for making Fawkes better! 🚀
 

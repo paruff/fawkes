@@ -6562,7 +6562,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt-prod</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">acme</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># Let&#39;s Encrypt production server</span>
+<span class="w">    </span><span class="c1"># Let's Encrypt production server</span>
 <span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://acme-v02.api.letsencrypt.org/directory</span>
 
 <span class="w">    </span><span class="c1"># Email for certificate expiration notifications</span>
@@ -6585,7 +6585,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt-staging</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">acme</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># Let&#39;s Encrypt staging server (higher rate limits, use for testing)</span>
+<span class="w">    </span><span class="c1"># Let's Encrypt staging server (higher rate limits, use for testing)</span>
 <span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://acme-staging-v02.api.letsencrypt.org/directory</span>
 <span class="w">    </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-team@example.com</span>
 <span class="w">    </span><span class="nt">privateKeySecretRef</span><span class="p">:</span>
@@ -6609,9 +6609,9 @@ kubectl<span class="w"> </span>get<span class="w"> </span>clusterissuer<span cla
 <p>Get the Ingress Controller external IP:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get external IP</span>
 <span class="nv">INGRESS_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>ingress-nginx-controller<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.loadBalancer.ingress[0].ip}'</span><span class="k">)</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Ingress IP: </span><span class="nv">$INGRESS_IP</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Ingress IP: </span><span class="nv">$INGRESS_IP</span><span class="s2">"</span>
 </code></pre></div>
 <p>Create a DNS A record:</p>
 <div class="highlight"><pre><span></span><code>Type: A
@@ -6647,18 +6647,18 @@ nslookup<span class="w"> </span>my-app.example.com
 <span class="w">    </span><span class="nt">cert-manager.io/cluster-issuer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt-prod</span>
 
 <span class="w">    </span><span class="c1"># NGINX-specific annotations</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/ssl-redirect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="c1"># Force HTTPS</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/force-ssl-redirect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/ssl-redirect</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span><span class="w"> </span><span class="c1"># Force HTTPS</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/force-ssl-redirect</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 
 <span class="w">    </span><span class="c1"># Optional: Client body size limit (for file uploads)</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/proxy-body-size</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10m&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/proxy-body-size</span><span class="p">:</span><span class="w"> </span><span class="s">"10m"</span>
 
 <span class="w">    </span><span class="c1"># Optional: Request timeout</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/proxy-read-timeout</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;600&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/proxy-read-timeout</span><span class="p">:</span><span class="w"> </span><span class="s">"600"</span>
 
 <span class="w">    </span><span class="c1"># Optional: CORS headers</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/enable-cors</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/cors-allow-origin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://example.com&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/enable-cors</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/cors-allow-origin</span><span class="p">:</span><span class="w"> </span><span class="s">"https://example.com"</span>
 
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># TLS configuration</span>
@@ -6709,7 +6709,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 
 <span class="c1"># View certificate details</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>my-app-tls-cert<span class="w"> </span>-n<span class="w"> </span>my-namespace<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.tls\.crt}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-text<span class="w"> </span>-noout
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.tls\.crt}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-text<span class="w"> </span>-noout
 </code></pre></div>
 <h3 id="6-test-https-access">6. Test HTTPS Access</h3>
 <h4 id="access-via-browser">Access via Browser</h4>
@@ -6731,7 +6731,7 @@ curl<span class="w"> </span>-v<span class="w"> </span>https://my-app.example.com
 <span class="c1"># * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384</span>
 <span class="c1"># * Server certificate:</span>
 <span class="c1"># *  subject: CN=my-app.example.com</span>
-<span class="c1"># *  issuer: C=US; O=Let&#39;s Encrypt; CN=R3</span>
+<span class="c1"># *  issuer: C=US; O=Let's Encrypt; CN=R3</span>
 <span class="c1"># HTTP/2 200</span>
 </code></pre></div>
 <h4 id="test-http-redirect">Test HTTP Redirect</h4>
@@ -6755,7 +6755,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"
 <h3 id="2-verify-certificate-is-valid">2. Verify Certificate is Valid</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check certificate expiration</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>certificate<span class="w"> </span>my-app-tls-cert<span class="w"> </span>-n<span class="w"> </span>my-namespace<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.notAfter}&#39;</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.notAfter}'</span>
 
 <span class="c1"># Should show expiration ~90 days in the future</span>
 </code></pre></div>
@@ -6763,7 +6763,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>certificate<span class
 <div class="highlight"><pre><span></span><code><span class="c1"># Get NGINX Ingress Controller pod</span>
 <span class="nv">NGINX_POD</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-l<span class="w"> </span>app.kubernetes.io/component<span class="o">=</span>controller<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span><span class="k">)</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span>
 
 <span class="c1"># Check NGINX configuration for your ingress</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span><span class="nv">$NGINX_POD</span><span class="w"> </span>--<span class="w"> </span>cat<span class="w"> </span>/etc/nginx/nginx.conf<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>my-app
@@ -6777,7 +6777,7 @@ openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span cla
 <span class="c1"># Verify:</span>
 <span class="c1"># - Certificate chain OK</span>
 <span class="c1"># - No errors</span>
-<span class="c1"># - Issuer: Let&#39;s Encrypt</span>
+<span class="c1"># - Issuer: Let's Encrypt</span>
 </code></pre></div>
 <h3 id="5-verify-auto-renewal">5. Verify Auto-Renewal</h3>
 <p>cert-manager automatically renews certificates 30 days before expiration.</p>
@@ -6860,8 +6860,8 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <h3 id="rate-limiting">Rate Limiting</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/limit-rps</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10&quot;</span><span class="w"> </span><span class="c1"># 10 requests per second</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/limit-connections</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;5&quot;</span><span class="w"> </span><span class="c1"># 5 concurrent connections</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/limit-rps</span><span class="p">:</span><span class="w"> </span><span class="s">"10"</span><span class="w"> </span><span class="c1"># 10 requests per second</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/limit-connections</span><span class="p">:</span><span class="w"> </span><span class="s">"5"</span><span class="w"> </span><span class="c1"># 5 concurrent connections</span>
 </code></pre></div>
 <h3 id="basic-authentication">Basic Authentication</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create htpasswd file</span>
@@ -6876,7 +6876,7 @@ kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/auth-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span>
 <span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/auth-secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic-auth</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/auth-realm</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Authentication</span><span class="nv"> </span><span class="s">Required&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/auth-realm</span><span class="p">:</span><span class="w"> </span><span class="s">"Authentication</span><span class="nv"> </span><span class="s">Required"</span>
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="certificate-stuck-in-false-status">Certificate Stuck in "False" Status</h3>
@@ -6912,9 +6912,9 @@ kubectl<span class="w"> </span>describe<span class="w"> </span>ingress<span clas
 <p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># Tell app it&#39;s already behind HTTPS</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/ssl-redirect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/backend-protocol</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;HTTP&quot;</span>
+<span class="w">    </span><span class="c1"># Tell app it's already behind HTTPS</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/ssl-redirect</span><span class="p">:</span><span class="w"> </span><span class="s">"false"</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/backend-protocol</span><span class="p">:</span><span class="w"> </span><span class="s">"HTTP"</span>
 </code></pre></div>
 <h3 id="lets-encrypt-rate-limit-exceeded">Let's Encrypt Rate Limit Exceeded</h3>
 <p><strong>Cause</strong>: Too many certificate requests (5 per week for same domain).</p>

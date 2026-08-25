@@ -5900,13 +5900,13 @@ Cluster-wide secret store for shared secrets:</p>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">provider</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">vault</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://vault.fawkes.example.com&quot;</span>
-<span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;secret&quot;</span>
-<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;v2&quot;</span>
+<span class="w">      </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">"https://vault.fawkes.example.com"</span>
+<span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"secret"</span>
+<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"v2"</span>
 <span class="w">      </span><span class="nt">auth</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">kubernetes</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes&quot;</span>
-<span class="w">          </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fawkes-platform&quot;</span>
+<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="s">"kubernetes"</span>
+<span class="w">          </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="s">"fawkes-platform"</span>
 </code></pre></div>
 <p><strong>4. ExternalSecret Resources</strong>
 Define which secrets to sync and how:</p>
@@ -5990,8 +5990,8 @@ Define which secrets to sync and how:</p>
 <span class="w">    </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">engineVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2</span>
 <span class="w">      </span><span class="nt">data</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">admin.password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">.adminPassword</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">bcrypt</span><span class="nv"> </span><span class="s">}}&quot;</span>
-<span class="w">        </span><span class="nt">server.secretkey</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">.serverSecretKey</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">        </span><span class="nt">admin.password</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">.adminPassword</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">bcrypt</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">        </span><span class="nt">server.secretkey</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">.serverSecretKey</span><span class="nv"> </span><span class="s">}}"</span>
 <span class="w">  </span><span class="nt">dataFrom</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">extract</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/core/argocd/credentials</span>
@@ -6045,10 +6045,10 @@ Define which secrets to sync and how:</p>
 <span class="w">    </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">engineVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2</span>
 <span class="w">      </span><span class="nt">data</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">postgres-password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">.rootPassword</span><span class="nv"> </span><span class="s">}}&quot;</span>
-<span class="w">        </span><span class="nt">backstage-password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">.backstagePassword</span><span class="nv"> </span><span class="s">}}&quot;</span>
-<span class="w">        </span><span class="nt">argocd-password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">.argocdPassword</span><span class="nv"> </span><span class="s">}}&quot;</span>
-<span class="w">        </span><span class="nt">connection-string</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;postgresql://postgres:{{</span><span class="nv"> </span><span class="s">.rootPassword</span><span class="nv"> </span><span class="s">}}@postgres.fawkes-core.svc.cluster.local:5432/postgres&quot;</span>
+<span class="w">        </span><span class="nt">postgres-password</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">.rootPassword</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">        </span><span class="nt">backstage-password</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">.backstagePassword</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">        </span><span class="nt">argocd-password</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">.argocdPassword</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">        </span><span class="nt">connection-string</span><span class="p">:</span><span class="w"> </span><span class="s">"postgresql://postgres:{{</span><span class="nv"> </span><span class="s">.rootPassword</span><span class="nv"> </span><span class="s">}}@postgres.fawkes-core.svc.cluster.local:5432/postgres"</span>
 <span class="w">  </span><span class="nt">dataFrom</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">extract</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/core/postgres/passwords</span>
@@ -6070,7 +6070,7 @@ Deploy Reloader to automatically restart pods when secrets change:</p>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins-config</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-cicd</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">reloader.stakater.com/match</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">reloader.stakater.com/match</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
@@ -6078,7 +6078,7 @@ Deploy Reloader to automatically restart pods when secrets change:</p>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-cicd</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">reloader.stakater.com/auto</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">reloader.stakater.com/auto</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
@@ -6114,10 +6114,10 @@ Restrict access to secrets by namespace and role:</p>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret-reader</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-core</span>
 <span class="nt">rules</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;secrets&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">resourceNames</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;argocd-secret&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;postgres-credentials&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">""</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"secrets"</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"get"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"list"</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resourceNames</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"argocd-secret"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"postgres-credentials"</span><span class="p p-Indicator">]</span>
 <span class="nn">---</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RoleBinding</span>
@@ -6162,24 +6162,24 @@ Enable Kubernetes audit logs for secret access:</p>
 <span class="nt">rules</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Metadata</span>
 <span class="w">    </span><span class="nt">resources</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
-<span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;secrets&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">""</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"secrets"</span><span class="p p-Indicator">]</span>
 <span class="w">    </span><span class="nt">omitStages</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequestReceived</span>
 </code></pre></div>
 <h3 id="aws-secrets-manager-integration">AWS Secrets Manager Integration</h3>
 <p><strong>IAM Role for ESO (IRSA)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="s2">&quot;secretsmanager:GetSecretValue&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;secretsmanager:DescribeSecret&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;secretsmanager:ListSecretVersionIds&quot;</span>
+<span class="w">      </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"secretsmanager:GetSecretValue"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"secretsmanager:DescribeSecret"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"secretsmanager:ListSecretVersionIds"</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:secretsmanager:us-east-1:123456789012:secret:fawkes/*&quot;</span>
+<span class="w">      </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:secretsmanager:us-east-1:123456789012:secret:fawkes/*"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
@@ -6216,13 +6216,13 @@ vault<span class="w"> </span>auth<span class="w"> </span><span class="nb">enable
 
 <span class="c1"># Configure Kubernetes auth</span>
 vault<span class="w"> </span>write<span class="w"> </span>auth/kubernetes/config<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span><span class="nv">kubernetes_host</span><span class="o">=</span><span class="s2">&quot;https://kubernetes.default.svc:443&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">kubernetes_host</span><span class="o">=</span><span class="s2">"https://kubernetes.default.svc:443"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">kubernetes_ca_cert</span><span class="o">=</span>@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 
 <span class="c1"># Create policy</span>
 vault<span class="w"> </span>policy<span class="w"> </span>write<span class="w"> </span>fawkes-secrets<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<span class="s">path &quot;secret/data/fawkes/*&quot; {</span>
-<span class="s">  capabilities = [&quot;read&quot;]</span>
+<span class="s">path "secret/data/fawkes/*" {</span>
+<span class="s">  capabilities = ["read"]</span>
 <span class="s">}</span>
 <span class="s">EOF</span>
 
@@ -6241,13 +6241,13 @@ vault<span class="w"> </span>write<span class="w"> </span>auth/kubernetes/role/f
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">provider</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">vault</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://vault.fawkes.example.com&quot;</span>
-<span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;secret&quot;</span>
-<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;v2&quot;</span>
+<span class="w">      </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">"https://vault.fawkes.example.com"</span>
+<span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"secret"</span>
+<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"v2"</span>
 <span class="w">      </span><span class="nt">auth</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">kubernetes</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes&quot;</span>
-<span class="w">          </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fawkes-platform&quot;</span>
+<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="s">"kubernetes"</span>
+<span class="w">          </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="s">"fawkes-platform"</span>
 <span class="w">          </span><span class="nt">serviceAccountRef</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets-sa</span>
 <span class="w">            </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-system</span>

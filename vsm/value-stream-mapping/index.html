@@ -6227,11 +6227,11 @@
 <h2 id="how-to-track-work-items">How to Track Work Items</h2>
 <h3 id="creating-a-work-item">Creating a Work Item</h3>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://vsm-service/api/v1/work-items<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<span class="s1">    &quot;title&quot;: &quot;Add user authentication&quot;,</span>
-<span class="s1">    &quot;type&quot;: &quot;feature&quot;</span>
-<span class="s1">  }&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<span class="s1">    "title": "Add user authentication",</span>
+<span class="s1">    "type": "feature"</span>
+<span class="s1">  }'</span>
 </code></pre></div>
 <p><strong>Work Item Types</strong>:</p>
 <ul>
@@ -6242,10 +6242,10 @@
 </ul>
 <h3 id="transitioning-between-stages">Transitioning Between Stages</h3>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>http://vsm-service/api/v1/work-items/123/transition<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<span class="s1">    &quot;to_stage&quot;: &quot;Development&quot;</span>
-<span class="s1">  }&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<span class="s1">    "to_stage": "Development"</span>
+<span class="s1">  }'</span>
 </code></pre></div>
 <h3 id="viewing-work-item-history">Viewing Work Item History</h3>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://vsm-service/api/v1/work-items/123/history
@@ -6314,7 +6314,7 @@ Wait Time = Backlog + Code Review + Deployment Approval
 <strong>Example</strong>: 8+ items in Code Review stage</p>
 <p><strong>Investigation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check current WIP by stage</span>
-curl<span class="w"> </span>http://vsm-service/api/v1/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.wip&#39;</span>
+curl<span class="w"> </span>http://vsm-service/api/v1/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.wip'</span>
 
 <span class="c1"># View Prometheus metrics</span>
 curl<span class="w"> </span>http://vsm-service/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vsm_work_in_progress
@@ -6511,21 +6511,21 @@ curl<span class="w"> </span>http://vsm-service/api/v1/metrics?days<span class="o
 <div class="highlight"><pre><span></span><code><span class="c1"># In catalog-info.yaml</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">fawkes.io/vsm-enabled</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">fawkes.io/vsm-enabled</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 </code></pre></div>
 <h3 id="jenkins-integration">Jenkins Integration</h3>
 <p>Jenkins pipelines automatically update VSM on key events:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// In Jenkinsfile</span>
 <span class="n">post</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">success</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">updateVSMStage</span><span class="o">(</span><span class="nl">workItemId:</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">WORK_ITEM_ID</span><span class="o">,</span><span class="w"> </span><span class="nl">stage:</span><span class="w"> </span><span class="s1">&#39;Deploy&#39;</span><span class="o">)</span>
+<span class="w">        </span><span class="n">updateVSMStage</span><span class="o">(</span><span class="nl">workItemId:</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">WORK_ITEM_ID</span><span class="o">,</span><span class="w"> </span><span class="nl">stage:</span><span class="w"> </span><span class="s1">'Deploy'</span><span class="o">)</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
 <h3 id="prometheusgrafana">Prometheus/Grafana</h3>
 <p>VSM exports metrics to Prometheus for dashboarding:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Throughput rate (items/day)</span>
-<span class="kr">rate</span><span class="o">(</span><span class="nv">vsm_stage_transitions_total</span><span class="p">{</span><span class="nl">to_stage</span><span class="o">=</span><span class="p">&quot;</span><span class="s">Production</span><span class="p">&quot;}[</span><span class="s">7d</span><span class="p">]</span><span class="o">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">86400</span>
+<span class="kr">rate</span><span class="o">(</span><span class="nv">vsm_stage_transitions_total</span><span class="p">{</span><span class="nl">to_stage</span><span class="o">=</span><span class="p">"</span><span class="s">Production</span><span class="p">"}[</span><span class="s">7d</span><span class="p">]</span><span class="o">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">86400</span>
 
 <span class="c1"># Average WIP</span>
 <span class="k">avg</span><span class="o">(</span><span class="nv">vsm_work_in_progress</span><span class="o">)</span>
@@ -6541,10 +6541,10 @@ curl<span class="w"> </span>http://vsm-service/api/v1/metrics?days<span class="o
 <p>Returns all configured stages with their properties:</p>
 <div class="highlight"><pre><span></span><code><span class="p">[</span>
 <span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Backlog&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;order&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;backlog&quot;</span>
+<span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Backlog"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"order"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"backlog"</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="err">...</span>
 <span class="p">]</span>
@@ -6554,8 +6554,8 @@ curl<span class="w"> </span>http://vsm-service/api/v1/metrics?days<span class="o
 Content-Type:<span class="w"> </span>application/json
 
 <span class="o">{</span>
-<span class="w">  </span><span class="s2">&quot;title&quot;</span>:<span class="w"> </span><span class="s2">&quot;Implement feature X&quot;</span>,
-<span class="w">  </span><span class="s2">&quot;type&quot;</span>:<span class="w"> </span><span class="s2">&quot;feature&quot;</span>
+<span class="w">  </span><span class="s2">"title"</span>:<span class="w"> </span><span class="s2">"Implement feature X"</span>,
+<span class="w">  </span><span class="s2">"type"</span>:<span class="w"> </span><span class="s2">"feature"</span>
 <span class="o">}</span>
 </code></pre></div>
 <h3 id="transition-work-item">Transition Work Item</h3>
@@ -6563,7 +6563,7 @@ Content-Type:<span class="w"> </span>application/json
 Content-Type:<span class="w"> </span>application/json
 
 <span class="o">{</span>
-<span class="w">  </span><span class="s2">&quot;to_stage&quot;</span>:<span class="w"> </span><span class="s2">&quot;Development&quot;</span>
+<span class="w">  </span><span class="s2">"to_stage"</span>:<span class="w"> </span><span class="s2">"Development"</span>
 <span class="o">}</span>
 </code></pre></div>
 <h3 id="get-work-item-history">Get Work Item History</h3>

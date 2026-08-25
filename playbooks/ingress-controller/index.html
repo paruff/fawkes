@@ -5980,7 +5980,7 @@
 <span class="c1"># Network requirements</span>
 <span class="nt">load_balancer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MetalLB (local) or cloud provider LB (AWS/Azure/GCP)</span>
 <span class="nt">dns</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nip.io (local) or ExternalDNS (production)</span>
-<span class="nt">certificates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Self-signed (local) or cert-manager with Let&#39;s Encrypt (production)</span>
+<span class="nt">certificates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Self-signed (local) or cert-manager with Let's Encrypt (production)</span>
 </code></pre></div>
 <h3 id="access-requirements">Access Requirements</h3>
 <ul>
@@ -6034,7 +6034,7 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 </code></pre></div>
 <ol>
 <li>Verify LoadBalancer has external IP assigned:
-   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span>
+   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.loadBalancer.ingress[0].ip}'</span>
 </code></pre></div></li>
 </ol>
 <p><strong>Verification</strong>: All pods should be in <code>Running</code> state and LoadBalancer service should have an external IP</p>
@@ -6078,13 +6078,13 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 <ol>
 <li>Get the LoadBalancer IP:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="nv">LB_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;LoadBalancer IP: </span><span class="nv">$LB_IP</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nv">LB_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.loadBalancer.ingress[0].ip}'</span><span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"LoadBalancer IP: </span><span class="nv">$LB_IP</span><span class="s2">"</span>
 </code></pre></div>
 <ol>
 <li>Test HTTP endpoint:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Host: test.127.0.0.1.nip.io&quot;</span><span class="w"> </span>http://<span class="nv">$LB_IP</span>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Host: test.127.0.0.1.nip.io"</span><span class="w"> </span>http://<span class="nv">$LB_IP</span>
 </code></pre></div>
 <p>Or if using nip.io DNS:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://test.127.0.0.1.nip.io

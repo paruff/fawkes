@@ -5737,10 +5737,10 @@ jenkins   nginx   jenkins.127.0.0.1.nip.io       192.168.x.x     80      5m
 </ul>
 <p>Check system message:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>jenkins-0<span class="w"> </span>-c<span class="w"> </span>jenkins<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8080/api/json<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;&quot;systemMessage&quot;:&quot;[^&quot;]*&quot;&#39;</span>
+<span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8080/api/json<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">'"systemMessage":"[^"]*"'</span>
 </code></pre></div>
 <p><strong>Expected output:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="nt">&quot;systemMessage&quot;</span><span class="p">:</span><span class="s2">&quot;Fawkes CI/CD Platform - Golden Path Enabled&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">"systemMessage"</span><span class="p">:</span><span class="s2">"Fawkes CI/CD Platform - Golden Path Enabled"</span>
 </code></pre></div>
 <h3 id="8-verify-kubernetes-cloud-configuration">8. Verify Kubernetes Cloud Configuration</h3>
 <p>Navigate to <strong>Manage Jenkins</strong> → <strong>Nodes and Clouds</strong> → <strong>Configure Clouds</strong></p>
@@ -5754,7 +5754,7 @@ jenkins   nginx   jenkins.127.0.0.1.nip.io       192.168.x.x     80      5m
 <li>Container Cap: <code>20</code></li>
 </ul>
 <p>Or check via CLI:</p>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>jenkins-casc<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">&quot;clouds:&quot;</span>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>jenkins-casc<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">"clouds:"</span>
 </code></pre></div>
 <h3 id="9-verify-agent-templates">9. Verify Agent Templates</h3>
 <p>Navigate to <strong>Manage Jenkins</strong> → <strong>Nodes and Clouds</strong> → <strong>Configure Clouds</strong> → <strong>Pod Templates</strong></p>
@@ -5814,7 +5814,7 @@ jenkins   nginx   jenkins.127.0.0.1.nip.io       192.168.x.x     80      5m
 </tbody>
 </table>
 <p>Or check via CLI:</p>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>jenkins-casc<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;templates:&quot;</span>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>jenkins-casc<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">"templates:"</span>
 </code></pre></div>
 <h3 id="10-test-dynamic-agent-provisioning">10. Test Dynamic Agent Provisioning</h3>
 <p>Create a test pipeline to verify dynamic agent provisioning:</p>
@@ -5826,14 +5826,14 @@ jenkins   nginx   jenkins.127.0.0.1.nip.io       192.168.x.x     80      5m
 </ol>
 <div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">label</span><span class="w"> </span><span class="s1">&#39;k8s-agent&#39;</span>
+<span class="w">        </span><span class="n">label</span><span class="w"> </span><span class="s1">'k8s-agent'</span>
 <span class="w">    </span><span class="o">}</span>
 <span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Test'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">echo</span><span class="w"> </span><span class="s1">&#39;Running on Kubernetes agent&#39;</span>
-<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;hostname&#39;</span>
-<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;uname -a&#39;</span>
+<span class="w">                </span><span class="n">echo</span><span class="w"> </span><span class="s1">'Running on Kubernetes agent'</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">'hostname'</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">'uname -a'</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>
@@ -5851,7 +5851,7 @@ jenkins   nginx   jenkins.127.0.0.1.nip.io       192.168.x.x     80      5m
 </ul>
 <p>Monitor agent pods:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Watch for agent pods being created</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--watch<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;jenkins-agent|jnlp&quot;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--watch<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"jenkins-agent|jnlp"</span>
 </code></pre></div>
 <p><strong>Expected output:</strong></p>
 <div class="highlight"><pre><span></span><code>jenkins-agent-xxxxx   0/2     Pending   0          0s
@@ -5883,10 +5883,10 @@ curl<span class="w"> </span>-I<span class="w"> </span>http://jenkins.127.0.0.1.n
 <p>Look for: <code>Number of executors: 0</code></p>
 <p>Or via CLI:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>jenkins-0<span class="w"> </span>-c<span class="w"> </span>jenkins<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8080/computer/api/json<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;&quot;numExecutors&quot;:[0-9]*&#39;</span>
+<span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8080/computer/api/json<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">'"numExecutors":[0-9]*'</span>
 </code></pre></div>
 <p><strong>Expected output:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="nt">&quot;numExecutors&quot;</span><span class="p">:</span><span class="mi">0</span>
+<div class="highlight"><pre><span></span><code><span class="nt">"numExecutors"</span><span class="p">:</span><span class="mi">0</span>
 </code></pre></div>
 <h3 id="13-run-bdd-acceptance-tests">13. Run BDD Acceptance Tests</h3>
 <p>Run the automated BDD tests to verify all acceptance criteria:</p>

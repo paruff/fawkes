@@ -5790,9 +5790,9 @@
 
 <span class="c1"># Configure resource</span>
 <span class="n">resource</span> <span class="o">=</span> <span class="n">Resource</span><span class="o">.</span><span class="n">create</span><span class="p">({</span>
-    <span class="s2">&quot;service.name&quot;</span><span class="p">:</span> <span class="s2">&quot;my-service&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;service.version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;deployment.environment&quot;</span><span class="p">:</span> <span class="s2">&quot;production&quot;</span><span class="p">,</span>
+    <span class="s2">"service.name"</span><span class="p">:</span> <span class="s2">"my-service"</span><span class="p">,</span>
+    <span class="s2">"service.version"</span><span class="p">:</span> <span class="s2">"1.0.0"</span><span class="p">,</span>
+    <span class="s2">"deployment.environment"</span><span class="p">:</span> <span class="s2">"production"</span><span class="p">,</span>
 <span class="p">})</span>
 
 <span class="c1"># Create tracer provider</span>
@@ -5800,7 +5800,7 @@
 
 <span class="c1"># Configure OTLP exporter</span>
 <span class="n">otlp_exporter</span> <span class="o">=</span> <span class="n">OTLPSpanExporter</span><span class="p">(</span>
-    <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317&quot;</span><span class="p">,</span>
+    <span class="n">endpoint</span><span class="o">=</span><span class="s2">"otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"</span><span class="p">,</span>
     <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 
@@ -5831,16 +5831,16 @@ go<span class="w"> </span>get<span class="w"> </span>go.opentelemetry.io/otel/sd
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;context&quot;</span>
-<span class="w">    </span><span class="s">&quot;log&quot;</span>
+<span class="w">    </span><span class="s">"context"</span>
+<span class="w">    </span><span class="s">"log"</span>
 
-<span class="w">    </span><span class="s">&quot;go.opentelemetry.io/otel&quot;</span>
-<span class="w">    </span><span class="s">&quot;go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc&quot;</span>
-<span class="w">    </span><span class="s">&quot;go.opentelemetry.io/otel/sdk/resource&quot;</span>
-<span class="w">    </span><span class="nx">sdktrace</span><span class="w"> </span><span class="s">&quot;go.opentelemetry.io/otel/sdk/trace&quot;</span>
-<span class="w">    </span><span class="nx">semconv</span><span class="w"> </span><span class="s">&quot;go.opentelemetry.io/otel/semconv/v1.21.0&quot;</span>
-<span class="w">    </span><span class="s">&quot;google.golang.org/grpc&quot;</span>
-<span class="w">    </span><span class="s">&quot;google.golang.org/grpc/credentials/insecure&quot;</span>
+<span class="w">    </span><span class="s">"go.opentelemetry.io/otel"</span>
+<span class="w">    </span><span class="s">"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"</span>
+<span class="w">    </span><span class="s">"go.opentelemetry.io/otel/sdk/resource"</span>
+<span class="w">    </span><span class="nx">sdktrace</span><span class="w"> </span><span class="s">"go.opentelemetry.io/otel/sdk/trace"</span>
+<span class="w">    </span><span class="nx">semconv</span><span class="w"> </span><span class="s">"go.opentelemetry.io/otel/semconv/v1.21.0"</span>
+<span class="w">    </span><span class="s">"google.golang.org/grpc"</span>
+<span class="w">    </span><span class="s">"google.golang.org/grpc/credentials/insecure"</span>
 <span class="p">)</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="nx">initTracer</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="nx">sdktrace</span><span class="p">.</span><span class="nx">TracerProvider</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -5848,7 +5848,7 @@ go<span class="w"> </span>get<span class="w"> </span>go.opentelemetry.io/otel/sd
 
 <span class="w">    </span><span class="c1">// Create OTLP exporter</span>
 <span class="w">    </span><span class="nx">exporter</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">otlptracegrpc</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">otlptracegrpc</span><span class="p">.</span><span class="nx">WithEndpoint</span><span class="p">(</span><span class="s">&quot;otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="nx">otlptracegrpc</span><span class="p">.</span><span class="nx">WithEndpoint</span><span class="p">(</span><span class="s">"otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"</span><span class="p">),</span>
 <span class="w">        </span><span class="nx">otlptracegrpc</span><span class="p">.</span><span class="nx">WithDialOption</span><span class="p">(</span><span class="nx">grpc</span><span class="p">.</span><span class="nx">WithTransportCredentials</span><span class="p">(</span><span class="nx">insecure</span><span class="p">.</span><span class="nx">NewCredentials</span><span class="p">())),</span>
 <span class="w">    </span><span class="p">)</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
@@ -5858,9 +5858,9 @@ go<span class="w"> </span>get<span class="w"> </span>go.opentelemetry.io/otel/sd
 <span class="w">    </span><span class="c1">// Create resource</span>
 <span class="w">    </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">resource</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span>
 <span class="w">        </span><span class="nx">resource</span><span class="p">.</span><span class="nx">WithAttributes</span><span class="p">(</span>
-<span class="w">            </span><span class="nx">semconv</span><span class="p">.</span><span class="nx">ServiceName</span><span class="p">(</span><span class="s">&quot;my-service&quot;</span><span class="p">),</span>
-<span class="w">            </span><span class="nx">semconv</span><span class="p">.</span><span class="nx">ServiceVersion</span><span class="p">(</span><span class="s">&quot;1.0.0&quot;</span><span class="p">),</span>
-<span class="w">            </span><span class="nx">semconv</span><span class="p">.</span><span class="nx">DeploymentEnvironment</span><span class="p">(</span><span class="s">&quot;production&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nx">semconv</span><span class="p">.</span><span class="nx">ServiceName</span><span class="p">(</span><span class="s">"my-service"</span><span class="p">),</span>
+<span class="w">            </span><span class="nx">semconv</span><span class="p">.</span><span class="nx">ServiceVersion</span><span class="p">(</span><span class="s">"1.0.0"</span><span class="p">),</span>
+<span class="w">            </span><span class="nx">semconv</span><span class="p">.</span><span class="nx">DeploymentEnvironment</span><span class="p">(</span><span class="s">"production"</span><span class="p">),</span>
 <span class="w">        </span><span class="p">),</span>
 <span class="w">    </span><span class="p">)</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
@@ -5885,20 +5885,20 @@ go<span class="w"> </span>get<span class="w"> </span>go.opentelemetry.io/otel/sd
 <span class="w">            </span>@opentelemetry/exporter-trace-otlp-grpc
 </code></pre></div>
 <h4 id="basic-setup_2">Basic Setup</h4>
-<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/sdk-node&quot;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/exporter-trace-otlp-grpc&quot;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/auto-instrumentations-node&quot;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Resource</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/resources&quot;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SemanticResourceAttributes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/semantic-conventions&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"@opentelemetry/sdk-node"</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"@opentelemetry/exporter-trace-otlp-grpc"</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"@opentelemetry/auto-instrumentations-node"</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Resource</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"@opentelemetry/resources"</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">SemanticResourceAttributes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"@opentelemetry/semantic-conventions"</span><span class="p">);</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">sdk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="p">({</span>
 <span class="w">  </span><span class="nx">resource</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Resource</span><span class="p">({</span>
-<span class="w">    </span><span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">SERVICE_NAME</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-service&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">SERVICE_VERSION</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">DEPLOYMENT_ENVIRONMENT</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">SERVICE_NAME</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="s2">"my-service"</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">SERVICE_VERSION</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="nx">SemanticResourceAttributes</span><span class="p">.</span><span class="nx">DEPLOYMENT_ENVIRONMENT</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}),</span>
 <span class="w">  </span><span class="nx">traceExporter</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;grpc://otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">"grpc://otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}),</span>
 <span class="w">  </span><span class="nx">instrumentations</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">getNodeAutoInstrumentations</span><span class="p">()],</span>
 <span class="p">});</span>
@@ -5906,11 +5906,11 @@ go<span class="w"> </span>get<span class="w"> </span>go.opentelemetry.io/otel/sd
 <span class="nx">sdk</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
 
 <span class="c1">// Graceful shutdown</span>
-<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;SIGTERM&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">"SIGTERM"</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">sdk</span>
 <span class="w">    </span><span class="p">.</span><span class="nx">shutdown</span><span class="p">()</span>
-<span class="w">    </span><span class="p">.</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Tracing terminated&quot;</span><span class="p">))</span>
-<span class="w">    </span><span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Error terminating tracing&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">))</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Tracing terminated"</span><span class="p">))</span>
+<span class="w">    </span><span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Error terminating tracing"</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">))</span>
 <span class="w">    </span><span class="p">.</span><span class="k">finally</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mf">0</span><span class="p">));</span>
 <span class="p">});</span>
 </code></pre></div>
@@ -5948,15 +5948,15 @@ go<span class="w"> </span>get<span class="w"> </span>go.opentelemetry.io/otel/sd
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">OpenTelemetry</span><span class="w"> </span><span class="nf">initOpenTelemetry</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="c1">// Create OTLP exporter</span>
 <span class="w">        </span><span class="n">OtlpGrpcSpanExporter</span><span class="w"> </span><span class="n">spanExporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OtlpGrpcSpanExporter</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-<span class="w">            </span><span class="p">.</span><span class="na">setEndpoint</span><span class="p">(</span><span class="s">&quot;http://otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">setEndpoint</span><span class="p">(</span><span class="s">"http://otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"</span><span class="p">)</span>
 <span class="w">            </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
 
 <span class="w">        </span><span class="c1">// Create resource</span>
 <span class="w">        </span><span class="n">Resource</span><span class="w"> </span><span class="n">resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Resource</span><span class="p">.</span><span class="na">getDefault</span><span class="p">()</span>
 <span class="w">            </span><span class="p">.</span><span class="na">merge</span><span class="p">(</span><span class="n">Resource</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">Attributes</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
-<span class="w">                </span><span class="n">ResourceAttributes</span><span class="p">.</span><span class="na">SERVICE_NAME</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;my-service&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="n">ResourceAttributes</span><span class="p">.</span><span class="na">SERVICE_VERSION</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1.0.0&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="n">ResourceAttributes</span><span class="p">.</span><span class="na">DEPLOYMENT_ENVIRONMENT</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;production&quot;</span>
+<span class="w">                </span><span class="n">ResourceAttributes</span><span class="p">.</span><span class="na">SERVICE_NAME</span><span class="p">,</span><span class="w"> </span><span class="s">"my-service"</span><span class="p">,</span>
+<span class="w">                </span><span class="n">ResourceAttributes</span><span class="p">.</span><span class="na">SERVICE_VERSION</span><span class="p">,</span><span class="w"> </span><span class="s">"1.0.0"</span><span class="p">,</span>
+<span class="w">                </span><span class="n">ResourceAttributes</span><span class="p">.</span><span class="na">DEPLOYMENT_ENVIRONMENT</span><span class="p">,</span><span class="w"> </span><span class="s">"production"</span>
 <span class="w">            </span><span class="p">)));</span>
 
 <span class="w">        </span><span class="c1">// Create tracer provider</span>
@@ -5975,11 +5975,11 @@ go<span class="w"> </span>get<span class="w"> </span>go.opentelemetry.io/otel/sd
 <p>Instead of hardcoding the endpoint, use environment variables:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_EXPORTER_OTLP_ENDPOINT</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_SERVICE_NAME</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;my-service&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"my-service"</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_RESOURCE_ATTRIBUTES</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;service.version=1.0.0,deployment.environment=production&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"service.version=1.0.0,deployment.environment=production"</span>
 </code></pre></div>
 <p>Most SDKs automatically read these environment variables.</p>
 <h2 id="kubernetes-deployment">Kubernetes Deployment</h2>
@@ -5993,18 +5993,18 @@ go<span class="w"> </span>get<span class="w"> </span>go.opentelemetry.io/otel/sd
 <span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-service</span>
-<span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.0.0&quot;</span>
+<span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"1.0.0"</span>
 <span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
 <span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-service:latest</span>
 <span class="w">          </span><span class="nt">env</span><span class="p">:</span>
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_EXPORTER_OTLP_ENDPOINT</span>
-<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317&quot;</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"</span>
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_SERVICE_NAME</span>
-<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;my-service&quot;</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"my-service"</span>
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OTEL_RESOURCE_ATTRIBUTES</span>
-<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;service.version=1.0.0,deployment.environment=production&quot;</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"service.version=1.0.0,deployment.environment=production"</span>
 </code></pre></div>
 <p>The OpenTelemetry Collector will automatically add:</p>
 <ul>
@@ -6021,17 +6021,17 @@ go<span class="w"> </span>get<span class="w"> </span>go.opentelemetry.io/otel/sd
 
 <span class="c1"># Configure structured logging</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
-    <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;{&quot;timestamp&quot;:&quot;</span><span class="si">%(asctime)s</span><span class="s1">&quot;,&quot;level&quot;:&quot;</span><span class="si">%(levelname)s</span><span class="s1">&quot;,&quot;message&quot;:&quot;</span><span class="si">%(message)s</span><span class="s1">&quot;,&quot;traceId&quot;:&quot;</span><span class="si">%(otelTraceID)s</span><span class="s1">&quot;,&quot;spanId&quot;:&quot;</span><span class="si">%(otelSpanID)s</span><span class="s1">&quot;}&#39;</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s1">'{"timestamp":"</span><span class="si">%(asctime)s</span><span class="s1">","level":"</span><span class="si">%(levelname)s</span><span class="s1">","message":"</span><span class="si">%(message)s</span><span class="s1">","traceId":"</span><span class="si">%(otelTraceID)s</span><span class="s1">","spanId":"</span><span class="si">%(otelSpanID)s</span><span class="s1">"}'</span>
 <span class="p">)</span>
 
 <span class="c1"># In your code</span>
 <span class="n">span</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">get_current_span</span><span class="p">()</span>
 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-    <span class="s2">&quot;User login successful&quot;</span><span class="p">,</span>
+    <span class="s2">"User login successful"</span><span class="p">,</span>
     <span class="n">extra</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;otelTraceID&quot;</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">span</span><span class="o">.</span><span class="n">get_span_context</span><span class="p">()</span><span class="o">.</span><span class="n">trace_id</span><span class="p">,</span> <span class="s1">&#39;032x&#39;</span><span class="p">),</span>
-        <span class="s2">&quot;otelSpanID&quot;</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">span</span><span class="o">.</span><span class="n">get_span_context</span><span class="p">()</span><span class="o">.</span><span class="n">span_id</span><span class="p">,</span> <span class="s1">&#39;016x&#39;</span><span class="p">),</span>
-        <span class="s2">&quot;userId&quot;</span><span class="p">:</span> <span class="n">user_id</span>
+        <span class="s2">"otelTraceID"</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">span</span><span class="o">.</span><span class="n">get_span_context</span><span class="p">()</span><span class="o">.</span><span class="n">trace_id</span><span class="p">,</span> <span class="s1">'032x'</span><span class="p">),</span>
+        <span class="s2">"otelSpanID"</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">span</span><span class="o">.</span><span class="n">get_span_context</span><span class="p">()</span><span class="o">.</span><span class="n">span_id</span><span class="p">,</span> <span class="s1">'016x'</span><span class="p">),</span>
+        <span class="s2">"userId"</span><span class="p">:</span> <span class="n">user_id</span>
     <span class="p">}</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -6041,19 +6041,19 @@ go<span class="w"> </span>get<span class="w"> </span>go.opentelemetry.io/otel/sd
 
 <span class="n">tracer</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">get_tracer</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">&quot;database_query&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">span</span><span class="p">:</span>
-    <span class="n">span</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">&quot;db.system&quot;</span><span class="p">,</span> <span class="s2">&quot;postgresql&quot;</span><span class="p">)</span>
-    <span class="n">span</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">&quot;db.statement&quot;</span><span class="p">,</span> <span class="s2">&quot;SELECT * FROM users WHERE id = ?&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">"database_query"</span><span class="p">)</span> <span class="k">as</span> <span class="n">span</span><span class="p">:</span>
+    <span class="n">span</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">"db.system"</span><span class="p">,</span> <span class="s2">"postgresql"</span><span class="p">)</span>
+    <span class="n">span</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">"db.statement"</span><span class="p">,</span> <span class="s2">"SELECT * FROM users WHERE id = ?"</span><span class="p">)</span>
 
     <span class="c1"># Your code here</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">execute_query</span><span class="p">()</span>
 
-    <span class="n">span</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">&quot;db.rows_returned&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+    <span class="n">span</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">"db.rows_returned"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
 </code></pre></div>
 <h3 id="adding-events-and-exceptions">Adding Events and Exceptions</h3>
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">risky_operation</span><span class="p">()</span>
-    <span class="n">span</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="s2">&quot;operation_completed&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;result_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)})</span>
+    <span class="n">span</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="s2">"operation_completed"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"result_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)})</span>
 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="n">span</span><span class="o">.</span><span class="n">record_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
     <span class="n">span</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">Status</span><span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">ERROR</span><span class="p">))</span>
@@ -6072,16 +6072,16 @@ go<span class="w"> </span>get<span class="w"> </span>go.opentelemetry.io/otel/sd
 </ol>
 <h3 id="common-queries">Common Queries</h3>
 <div class="highlight"><pre><span></span><code># All traces from a service
-{service.name=&quot;my-service&quot;}
+{service.name="my-service"}
 
 # Slow traces (&gt; 1 second)
-{service.name=&quot;my-service&quot; &amp;&amp; duration &gt; 1s}
+{service.name="my-service" &amp;&amp; duration &gt; 1s}
 
 # Error traces
-{service.name=&quot;my-service&quot; &amp;&amp; status=error}
+{service.name="my-service" &amp;&amp; status=error}
 
 # Traces for specific operation
-{service.name=&quot;my-service&quot; &amp;&amp; span.name=&quot;checkout&quot;}
+{service.name="my-service" &amp;&amp; span.name="checkout"}
 </code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <ol>

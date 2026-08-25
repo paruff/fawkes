@@ -6323,54 +6323,54 @@
 <h3 id="configuration-as-code-jcasc">Configuration as Code (JCasC)</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># jenkins-casc.yaml</span>
 <span class="nt">jenkins</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">systemMessage</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Fawkes</span><span class="nv"> </span><span class="s">Platform</span><span class="nv"> </span><span class="s">CI/CD&quot;</span>
+<span class="w">  </span><span class="nt">systemMessage</span><span class="p">:</span><span class="w"> </span><span class="s">"Fawkes</span><span class="nv"> </span><span class="s">Platform</span><span class="nv"> </span><span class="s">CI/CD"</span>
 <span class="w">  </span><span class="nt">numExecutors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"> </span><span class="c1"># Use Kubernetes agents only</span>
 
 <span class="w">  </span><span class="nt">securityRealm</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">github</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">githubWebUri</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://github.com&quot;</span>
-<span class="w">      </span><span class="nt">clientID</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${GITHUB_CLIENT_ID}&quot;</span>
-<span class="w">      </span><span class="nt">clientSecret</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${GITHUB_CLIENT_SECRET}&quot;</span>
+<span class="w">      </span><span class="nt">githubWebUri</span><span class="p">:</span><span class="w"> </span><span class="s">"https://github.com"</span>
+<span class="w">      </span><span class="nt">clientID</span><span class="p">:</span><span class="w"> </span><span class="s">"${GITHUB_CLIENT_ID}"</span>
+<span class="w">      </span><span class="nt">clientSecret</span><span class="p">:</span><span class="w"> </span><span class="s">"${GITHUB_CLIENT_SECRET}"</span>
 
 <span class="w">  </span><span class="nt">authorizationStrategy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">globalMatrix</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">permissions</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Overall/Administer:admin&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Overall/Read:authenticated&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Job/Build:authenticated&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Job/Cancel:authenticated&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Overall/Administer:admin"</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Overall/Read:authenticated"</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Job/Build:authenticated"</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Job/Cancel:authenticated"</span>
 
 <span class="w">  </span><span class="nt">clouds</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kubernetes</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes&quot;</span>
-<span class="w">        </span><span class="nt">serverUrl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://kubernetes.default&quot;</span>
-<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fawkes-ci&quot;</span>
-<span class="w">        </span><span class="nt">jenkinsUrl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://jenkins:8080&quot;</span>
-<span class="w">        </span><span class="nt">jenkinsTunnel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;jenkins-agent:50000&quot;</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"kubernetes"</span>
+<span class="w">        </span><span class="nt">serverUrl</span><span class="p">:</span><span class="w"> </span><span class="s">"https://kubernetes.default"</span>
+<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">"fawkes-ci"</span>
+<span class="w">        </span><span class="nt">jenkinsUrl</span><span class="p">:</span><span class="w"> </span><span class="s">"http://jenkins:8080"</span>
+<span class="w">        </span><span class="nt">jenkinsTunnel</span><span class="p">:</span><span class="w"> </span><span class="s">"jenkins-agent:50000"</span>
 <span class="w">        </span><span class="nt">templates</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven&quot;</span>
-<span class="w">            </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"maven"</span>
+<span class="w">            </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">"maven"</span>
 <span class="w">            </span><span class="nt">containers</span><span class="p">:</span>
-<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven&quot;</span>
-<span class="w">                </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven:3.8-openjdk-17&quot;</span>
-<span class="w">                </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/bin/sh</span><span class="nv"> </span><span class="s">-c&quot;</span>
-<span class="w">                </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cat&quot;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"maven"</span>
+<span class="w">                </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">"maven:3.8-openjdk-17"</span>
+<span class="w">                </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">"/bin/sh</span><span class="nv"> </span><span class="s">-c"</span>
+<span class="w">                </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="s">"cat"</span>
 <span class="w">                </span><span class="nt">ttyEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">                </span><span class="nt">resourceRequestCpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
-<span class="w">                </span><span class="nt">resourceRequestMemory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2Gi&quot;</span>
-<span class="w">                </span><span class="nt">resourceLimitCpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2&quot;</span>
-<span class="w">                </span><span class="nt">resourceLimitMemory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;4Gi&quot;</span>
+<span class="w">                </span><span class="nt">resourceRequestCpu</span><span class="p">:</span><span class="w"> </span><span class="s">"1"</span>
+<span class="w">                </span><span class="nt">resourceRequestMemory</span><span class="p">:</span><span class="w"> </span><span class="s">"2Gi"</span>
+<span class="w">                </span><span class="nt">resourceLimitCpu</span><span class="p">:</span><span class="w"> </span><span class="s">"2"</span>
+<span class="w">                </span><span class="nt">resourceLimitMemory</span><span class="p">:</span><span class="w"> </span><span class="s">"4Gi"</span>
 
 <span class="nt">unclassified</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">globalLibraries</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">libraries</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fawkes-pipeline-library&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"fawkes-pipeline-library"</span>
 <span class="w">        </span><span class="nt">retriever</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">modernSCM</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">scm</span><span class="p">:</span>
 <span class="w">              </span><span class="nt">git</span><span class="p">:</span>
-<span class="w">                </span><span class="nt">remote</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://github.com/paruff/fawkes-pipeline-library&quot;</span>
-<span class="w">                </span><span class="nt">credentialsId</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;github-token&quot;</span>
+<span class="w">                </span><span class="nt">remote</span><span class="p">:</span><span class="w"> </span><span class="s">"https://github.com/paruff/fawkes-pipeline-library"</span>
+<span class="w">                </span><span class="nt">credentialsId</span><span class="p">:</span><span class="w"> </span><span class="s">"github-token"</span>
 </code></pre></div>
 <h3 id="shared-pipeline-library-structure">Shared Pipeline Library Structure</h3>
 <div class="highlight"><pre><span></span><code>fawkes-pipeline-library/
@@ -6396,188 +6396,188 @@
 </code></pre></div>
 <h3 id="golden-path-jenkinsfile-examples">Golden Path Jenkinsfile Examples</h3>
 <p><strong>Java Spring Boot</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">'fawkes-pipeline-library'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 
 <span class="n">mavenPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">sonarQubeProject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
-<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
-<span class="w">    </span><span class="n">argocdApp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service-dev&#39;</span>
-<span class="w">    </span><span class="n">notifyChannel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;team-builds&#39;</span>
+<span class="w">    </span><span class="n">sonarQubeProject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service'</span>
+<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service'</span>
+<span class="w">    </span><span class="n">argocdApp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-service-dev'</span>
+<span class="w">    </span><span class="n">notifyChannel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'team-builds'</span>
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>Python FastAPI</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">'fawkes-pipeline-library'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 
 <span class="n">pythonPipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">pythonVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;3.11&#39;</span>
-<span class="w">    </span><span class="n">testCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pytest --cov=src tests/&#39;</span>
-<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-python-service&#39;</span>
-<span class="w">    </span><span class="n">argocdApp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-python-service-dev&#39;</span>
+<span class="w">    </span><span class="n">pythonVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'3.11'</span>
+<span class="w">    </span><span class="n">testCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'pytest --cov=src tests/'</span>
+<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-python-service'</span>
+<span class="w">    </span><span class="n">argocdApp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-python-service-dev'</span>
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>Node.js Express</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">'fawkes-pipeline-library'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
 
 <span class="n">nodePipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">nodeVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;18&#39;</span>
-<span class="w">    </span><span class="n">buildCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;npm run build&#39;</span>
-<span class="w">    </span><span class="n">testCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;npm test&#39;</span>
-<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-node-service&#39;</span>
-<span class="w">    </span><span class="n">argocdApp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-node-service-dev&#39;</span>
+<span class="w">    </span><span class="n">nodeVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'18'</span>
+<span class="w">    </span><span class="n">buildCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'npm run build'</span>
+<span class="w">    </span><span class="n">testCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'npm test'</span>
+<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-node-service'</span>
+<span class="w">    </span><span class="n">argocdApp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'my-node-service-dev'</span>
 <span class="o">}</span>
 </code></pre></div>
 <h3 id="complete-pipeline-example-without-library">Complete Pipeline Example (Without Library)</h3>
 <div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span>
-<span class="w">            </span><span class="n">yaml</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="n">yaml</span><span class="w"> </span><span class="s2">"""</span>
 <span class="s2">apiVersion: v1</span>
 <span class="s2">kind: Pod</span>
 <span class="s2">spec:</span>
 <span class="s2">  containers:</span>
 <span class="s2">  - name: maven</span>
 <span class="s2">    image: maven:3.8-openjdk-17</span>
-<span class="s2">    command: [&#39;cat&#39;]</span>
+<span class="s2">    command: ['cat']</span>
 <span class="s2">    tty: true</span>
 <span class="s2">  - name: docker</span>
 <span class="s2">    image: docker:latest</span>
-<span class="s2">    command: [&#39;cat&#39;]</span>
+<span class="s2">    command: ['cat']</span>
 <span class="s2">    tty: true</span>
 <span class="s2">    volumeMounts:</span>
 <span class="s2">    - name: docker-sock</span>
 <span class="s2">      mountPath: /var/run/docker.sock</span>
 <span class="s2">  - name: trivy</span>
 <span class="s2">    image: aquasec/trivy:latest</span>
-<span class="s2">    command: [&#39;cat&#39;]</span>
+<span class="s2">    command: ['cat']</span>
 <span class="s2">    tty: true</span>
 <span class="s2">  volumes:</span>
 <span class="s2">  - name: docker-sock</span>
 <span class="s2">    hostPath:</span>
 <span class="s2">      path: /var/run/docker.sock</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 <span class="w">        </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>
 
 <span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">DOCKER_REGISTRY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;harbor.fawkes.io&#39;</span>
-<span class="w">        </span><span class="n">IMAGE_NAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${DOCKER_REGISTRY}/myapp/myservice&quot;</span>
-<span class="w">        </span><span class="n">IMAGE_TAG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${env.GIT_COMMIT.take(7)}&quot;</span>
+<span class="w">        </span><span class="n">DOCKER_REGISTRY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'harbor.fawkes.io'</span>
+<span class="w">        </span><span class="n">IMAGE_NAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${DOCKER_REGISTRY}/myapp/myservice"</span>
+<span class="w">        </span><span class="n">IMAGE_TAG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${env.GIT_COMMIT.take(7)}"</span>
 <span class="w">    </span><span class="o">}</span>
 
 <span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Checkout&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Checkout'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
 <span class="w">                </span><span class="n">checkout</span><span class="w"> </span><span class="n">scm</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Build'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn clean package -DskipTests&#39;</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">'maven'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">'mvn clean package -DskipTests'</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Test'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn test&#39;</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">'maven'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">'mvn test'</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">            </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
 <span class="w">                </span><span class="n">always</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">junit</span><span class="w"> </span><span class="s1">&#39;target/surefire-reports/*.xml&#39;</span>
+<span class="w">                    </span><span class="n">junit</span><span class="w"> </span><span class="s1">'target/surefire-reports/*.xml'</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;SonarQube Analysis&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'SonarQube Analysis'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">withSonarQubeEnv</span><span class="o">(</span><span class="s1">&#39;SonarQube&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn sonar:sonar&#39;</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">'maven'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">withSonarQubeEnv</span><span class="o">(</span><span class="s1">'SonarQube'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s1">'mvn sonar:sonar'</span>
 <span class="w">                    </span><span class="o">}</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Quality Gate&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Quality Gate'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">timeout</span><span class="o">(</span><span class="nl">time:</span><span class="w"> </span><span class="mi">5</span><span class="o">,</span><span class="w"> </span><span class="nl">unit:</span><span class="w"> </span><span class="s1">&#39;MINUTES&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">timeout</span><span class="o">(</span><span class="nl">time:</span><span class="w"> </span><span class="mi">5</span><span class="o">,</span><span class="w"> </span><span class="nl">unit:</span><span class="w"> </span><span class="s1">'MINUTES'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">                    </span><span class="n">waitForQualityGate</span><span class="w"> </span><span class="nl">abortPipeline:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build Docker Image&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Build Docker Image'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;docker&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">'docker'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">"""</span>
 <span class="s2">                        docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .</span>
 <span class="s2">                        docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest</span>
-<span class="s2">                    &quot;&quot;&quot;</span>
+<span class="s2">                    """</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Security Scan&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Security Scan'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;trivy&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">'trivy'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">"""</span>
 <span class="s2">                        trivy image --severity HIGH,CRITICAL --exit-code 1 ${IMAGE_NAME}:${IMAGE_TAG}</span>
-<span class="s2">                    &quot;&quot;&quot;</span>
+<span class="s2">                    """</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Push Image&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Push Image'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;docker&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">withCredentials</span><span class="o">([</span><span class="n">usernamePassword</span><span class="o">(</span><span class="nl">credentialsId:</span><span class="w"> </span><span class="s1">&#39;harbor-credentials&#39;</span><span class="o">,</span>
-<span class="w">                                                     </span><span class="nl">usernameVariable:</span><span class="w"> </span><span class="s1">&#39;USER&#39;</span><span class="o">,</span>
-<span class="w">                                                     </span><span class="nl">passwordVariable:</span><span class="w"> </span><span class="s1">&#39;PASS&#39;</span><span class="o">)])</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">'docker'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">withCredentials</span><span class="o">([</span><span class="n">usernamePassword</span><span class="o">(</span><span class="nl">credentialsId:</span><span class="w"> </span><span class="s1">'harbor-credentials'</span><span class="o">,</span>
+<span class="w">                                                     </span><span class="nl">usernameVariable:</span><span class="w"> </span><span class="s1">'USER'</span><span class="o">,</span>
+<span class="w">                                                     </span><span class="nl">passwordVariable:</span><span class="w"> </span><span class="s1">'PASS'</span><span class="o">)])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s2">"""</span>
 <span class="s2">                            echo \$PASS | docker login ${DOCKER_REGISTRY} -u \$USER --password-stdin</span>
 <span class="s2">                            docker push ${IMAGE_NAME}:${IMAGE_TAG}</span>
 <span class="s2">                            docker push ${IMAGE_NAME}:latest</span>
-<span class="s2">                        &quot;&quot;&quot;</span>
+<span class="s2">                        """</span>
 <span class="w">                    </span><span class="o">}</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Update GitOps&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Update GitOps'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
 <span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
 <span class="w">                    </span><span class="c1">// Update image tag in GitOps repository</span>
-<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">"""</span>
 <span class="s2">                        git clone https://github.com/paruff/fawkes-gitops.git</span>
 <span class="s2">                        cd fawkes-gitops</span>
-<span class="s2">                        sed -i &#39;s|image: .*|image: ${IMAGE_NAME}:${IMAGE_TAG}|&#39; apps/dev/myservice/deployment.yaml</span>
+<span class="s2">                        sed -i 's|image: .*|image: ${IMAGE_NAME}:${IMAGE_TAG}|' apps/dev/myservice/deployment.yaml</span>
 <span class="s2">                        git add apps/dev/myservice/deployment.yaml</span>
-<span class="s2">                        git commit -m &quot;Update myservice to ${IMAGE_TAG}&quot;</span>
+<span class="s2">                        git commit -m "Update myservice to ${IMAGE_TAG}"</span>
 <span class="s2">                        git push</span>
-<span class="s2">                    &quot;&quot;&quot;</span>
+<span class="s2">                    """</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
 
-<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Notify DORA Service&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Notify DORA Service'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
 <span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
-<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">"""</span>
 <span class="s2">                        curl -X POST https://dora-metrics.fawkes.io/webhook/build \\</span>
-<span class="s2">                          -H &#39;Content-Type: application/json&#39; \\</span>
-<span class="s2">                          -d &#39;{</span>
-<span class="s2">                            &quot;service&quot;: &quot;myservice&quot;,</span>
-<span class="s2">                            &quot;commit&quot;: &quot;${env.GIT_COMMIT}&quot;,</span>
-<span class="s2">                            &quot;buildNumber&quot;: &quot;${env.BUILD_NUMBER}&quot;,</span>
-<span class="s2">                            &quot;status&quot;: &quot;SUCCESS&quot;,</span>
-<span class="s2">                            &quot;duration&quot;: &quot;${currentBuild.duration}&quot;,</span>
-<span class="s2">                            &quot;timestamp&quot;: &quot;${new Date().format(&#39;yyyy-MM-dd HH:mm:ss&#39;)}&quot;</span>
-<span class="s2">                          }&#39;</span>
-<span class="s2">                    &quot;&quot;&quot;</span>
+<span class="s2">                          -H 'Content-Type: application/json' \\</span>
+<span class="s2">                          -d '{</span>
+<span class="s2">                            "service": "myservice",</span>
+<span class="s2">                            "commit": "${env.GIT_COMMIT}",</span>
+<span class="s2">                            "buildNumber": "${env.BUILD_NUMBER}",</span>
+<span class="s2">                            "status": "SUCCESS",</span>
+<span class="s2">                            "duration": "${currentBuild.duration}",</span>
+<span class="s2">                            "timestamp": "${new Date().format('yyyy-MM-dd HH:mm:ss')}"</span>
+<span class="s2">                          }'</span>
+<span class="s2">                    """</span>
 <span class="w">                </span><span class="o">}</span>
 <span class="w">            </span><span class="o">}</span>
 <span class="w">        </span><span class="o">}</span>
@@ -6586,16 +6586,16 @@
 <span class="w">    </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
 <span class="w">        </span><span class="n">success</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">mattermostSend</span><span class="o">(</span>
-<span class="w">                </span><span class="nl">channel:</span><span class="w"> </span><span class="s1">&#39;team-builds&#39;</span><span class="o">,</span>
-<span class="w">                </span><span class="nl">color:</span><span class="w"> </span><span class="s1">&#39;good&#39;</span><span class="o">,</span>
-<span class="w">                </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;✅ Build #${env.BUILD_NUMBER} succeeded for ${env.JOB_NAME}\nCommit: ${env.GIT_COMMIT.take(7)}\nDuration: ${currentBuild.durationString}&quot;</span>
+<span class="w">                </span><span class="nl">channel:</span><span class="w"> </span><span class="s1">'team-builds'</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">color:</span><span class="w"> </span><span class="s1">'good'</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">message:</span><span class="w"> </span><span class="s2">"✅ Build #${env.BUILD_NUMBER} succeeded for ${env.JOB_NAME}\nCommit: ${env.GIT_COMMIT.take(7)}\nDuration: ${currentBuild.durationString}"</span>
 <span class="w">            </span><span class="o">)</span>
 <span class="w">        </span><span class="o">}</span>
 <span class="w">        </span><span class="n">failure</span><span class="w"> </span><span class="o">{</span>
 <span class="w">            </span><span class="n">mattermostSend</span><span class="o">(</span>
-<span class="w">                </span><span class="nl">channel:</span><span class="w"> </span><span class="s1">&#39;team-builds&#39;</span><span class="o">,</span>
-<span class="w">                </span><span class="nl">color:</span><span class="w"> </span><span class="s1">&#39;danger&#39;</span><span class="o">,</span>
-<span class="w">                </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;❌ Build #${env.BUILD_NUMBER} failed for ${env.JOB_NAME}\nCommit: ${env.GIT_COMMIT.take(7)}&quot;</span>
+<span class="w">                </span><span class="nl">channel:</span><span class="w"> </span><span class="s1">'team-builds'</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">color:</span><span class="w"> </span><span class="s1">'danger'</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">message:</span><span class="w"> </span><span class="s2">"❌ Build #${env.BUILD_NUMBER} failed for ${env.JOB_NAME}\nCommit: ${env.GIT_COMMIT.take(7)}"</span>
 <span class="w">            </span><span class="o">)</span>
 <span class="w">        </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>

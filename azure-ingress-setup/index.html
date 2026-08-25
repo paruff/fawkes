@@ -5963,20 +5963,20 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx
 
 <span class="c1"># Wait for external IP to be assigned (can take 2-3 minutes)</span>
-kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="o">=</span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="w"> </span><span class="se">\</span>
+kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="o">=</span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.loadBalancer.ingress[0].ip}'</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>svc/ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>--timeout<span class="o">=</span>300s
 </code></pre></div>
 <h3 id="step-2-configure-azure-dns-optional">Step 2: Configure Azure DNS (Optional)</h3>
 <h4 id="configure-terraform-variables">Configure Terraform Variables</h4>
 <p>Edit <code>infra/azure/terraform.tfvars</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Enable DNS zone creation</span>
-<span class="na">dns_zone_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes.yourdomain.com&quot;</span>
+<span class="na">dns_zone_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"fawkes.yourdomain.com"</span>
 
 <span class="c1"># Set to true after ingress-nginx is deployed</span>
 <span class="na">create_dns_records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 
 <span class="c1"># Default name of the public IP (or your custom static IP name)</span>
-<span class="na">ingress_public_ip_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;kubernetes&quot;</span>
+<span class="na">ingress_public_ip_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"kubernetes"</span>
 </code></pre></div>
 <h4 id="apply-terraform">Apply Terraform</h4>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra/azure
@@ -6019,7 +6019,7 @@ kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </sp
 </code></pre></div>
 <h4 id="configure-clusterissuers">Configure ClusterIssuers</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Update email address in issuer files</span>
-sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/platform-team@example.com/your-email@example.com/g&#39;</span><span class="w"> </span><span class="se">\</span>
+sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'s/platform-team@example.com/your-email@example.com/g'</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>platform/apps/cert-manager/cluster-issuer-*.yaml
 
 <span class="c1"># Apply ClusterIssuers</span>
@@ -6044,9 +6044,9 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 
 <span class="c1"># Get external IP</span>
 <span class="nv">EXTERNAL_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.loadBalancer.ingress[0].ip}'</span><span class="k">)</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;External IP: </span><span class="nv">$EXTERNAL_IP</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"External IP: </span><span class="nv">$EXTERNAL_IP</span><span class="s2">"</span>
 </code></pre></div>
 <h4 id="test-http-access">Test HTTP Access</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Test with nip.io (no DNS required)</span>
@@ -6122,8 +6122,8 @@ az<span class="w"> </span>network<span class="w"> </span>public-ip<span class="w
 <span class="w">  </span>--query<span class="w"> </span>ipAddress<span class="w"> </span>-o<span class="w"> </span>tsv
 
 <span class="c1"># Update values-azure.yaml annotations:</span>
-<span class="c1"># service.beta.kubernetes.io/azure-load-balancer-resource-group: &quot;MC_fawkes-rg_fawkes-aks_eastus&quot;</span>
-<span class="c1"># service.beta.kubernetes.io/azure-pip-name: &quot;fawkes-ingress-pip&quot;</span>
+<span class="c1"># service.beta.kubernetes.io/azure-load-balancer-resource-group: "MC_fawkes-rg_fawkes-aks_eastus"</span>
+<span class="c1"># service.beta.kubernetes.io/azure-pip-name: "fawkes-ingress-pip"</span>
 </code></pre></div>
 <h3 id="wildcard-certificates-with-azure-dns">Wildcard Certificates with Azure DNS</h3>
 <p>For wildcard certificates (e.g., <code>*.fawkes.yourdomain.com</code>):</p>
@@ -6149,7 +6149,7 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wildcard-tls</span>
 <span class="w">  </span><span class="nt">dnsNames</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;*.fawkes.yourdomain.com&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"*.fawkes.yourdomain.com"</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes.yourdomain.com</span>
 <span class="w">  </span><span class="nt">issuerRef</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt-dns-azure</span>
@@ -6158,13 +6158,13 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 <h3 id="internal-load-balancer">Internal Load Balancer</h3>
 <p>For private ingress (only accessible within VNet):</p>
 <p>Add annotation to service:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">service.beta.kubernetes.io/azure-load-balancer-internal</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">service.beta.kubernetes.io/azure-load-balancer-internal</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 </code></pre></div>
 <h3 id="proxy-protocol">PROXY Protocol</h3>
 <p>If your Azure Load Balancer uses PROXY protocol:</p>
 <p>Update values-azure.yaml:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">config</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">use-proxy-protocol</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">  </span><span class="nt">use-proxy-protocol</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 </code></pre></div>
 <h2 id="monitoring">Monitoring</h2>
 <h3 id="prometheus-metrics">Prometheus Metrics</h3>

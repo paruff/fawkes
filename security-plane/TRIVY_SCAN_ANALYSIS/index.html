@@ -5778,11 +5778,11 @@
 <p><strong>Applied Fix:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nb">network_profile</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">network_plugin</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">var.network_plugin</span>
-<span class="w">  </span><span class="na">network_policy</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">var.network_policy</span><span class="c1">  # Now configured with default &quot;azure&quot;</span>
+<span class="w">  </span><span class="na">network_policy</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">var.network_policy</span><span class="c1">  # Now configured with default "azure"</span>
 <span class="w">  </span><span class="na">dns_service_ip</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">var.dns_service_ip</span>
 <span class="w">  </span><span class="na">service_cidr</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">var.service_cidr</span>
-<span class="w">  </span><span class="na">load_balancer_sku</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;standard&quot;</span>
-<span class="w">  </span><span class="na">outbound_type</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;loadBalancer&quot;</span>
+<span class="w">  </span><span class="na">load_balancer_sku</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"standard"</span>
+<span class="w">  </span><span class="na">outbound_type</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"loadBalancer"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="2-aws-security-group-issues-infraawsmaintf-fixed">2. AWS Security Group Issues (infra/aws/main.tf) - ✅ FIXED</h3>
@@ -5807,16 +5807,16 @@
 <span class="nb">egress</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">from_port</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
 <span class="w">  </span><span class="na">to_port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
-<span class="w">  </span><span class="na">protocol</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;-1&quot;</span>
+<span class="w">  </span><span class="na">protocol</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"-1"</span>
 <span class="w">  </span><span class="na">cidr_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">module.vpc.vpc_cidr_block</span><span class="p">]</span><span class="c1">  # VPC CIDR only</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow all egress traffic within VPC only&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Allow all egress traffic within VPC only"</span>
 <span class="p">}</span>
 
 <span class="c1"># Also updated default variable value</span>
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;egress_cidr_block&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CIDR block for egress rules. Defaults to VPC CIDR for security.&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"egress_cidr_block"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"CIDR block for egress rules. Defaults to VPC CIDR for security."</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/8&quot;</span><span class="c1">  # Private network range instead of 0.0.0.0/0</span>
+<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/8"</span><span class="c1">  # Private network range instead of 0.0.0.0/0</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="3-kubernetes-deployment-issues-infraawsproxy-allyaml-fixed">3. Kubernetes Deployment Issues (infra/aws/proxy-all.yaml) - ✅ FIXED</h3>
@@ -5830,7 +5830,7 @@
 <p><strong>Applied Fix:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nt">containers</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
-<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;docker.com/paruff/fawkesproxy&quot;</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">"docker.com/paruff/fawkesproxy"</span>
 <span class="w">    </span><span class="nt">securityContext</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">      </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -5907,7 +5907,7 @@
 <span class="c"># Switch to non-root user</span>
 <span class="k">USER</span><span class="w"> </span><span class="s">nginx-user</span>
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;nginx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-g&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;daemon off;&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"nginx"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-g"</span><span class="p">,</span><span class="w"> </span><span class="s2">"daemon off;"</span><span class="p">]</span>
 </code></pre></div>
 <h2 id="summary-of-applied-fixes">Summary of Applied Fixes</h2>
 <p>All security issues have been resolved in this PR:</p>

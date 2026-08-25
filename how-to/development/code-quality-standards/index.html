@@ -6285,25 +6285,25 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
 <span class="c1"># Good</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">var</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Variable is set&quot;</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">var</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"value"</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Variable is set"</span>
 <span class="k">fi</span>
 
 <span class="c1"># Bad</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$var</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># Missing quotes, using [ ]</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Variable is set&quot;</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$var</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"value"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># Missing quotes, using [ ]</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Variable is set"</span>
 <span class="k">fi</span>
 </code></pre></div>
 <p><strong>Pre-commit hook</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/shellcheck-py/shellcheck-py</span>
 <span class="w">  </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shellcheck</span>
-<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;--severity=warning&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"--severity=warning"</span><span class="p p-Indicator">]</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/scop/pre-commit-shfmt</span>
 <span class="w">  </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shfmt</span>
-<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;-i&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;2&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-ci&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-bn&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-sr&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-w&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"-i"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"2"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"-ci"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"-bn"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"-sr"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"-w"</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <h3 id="python">Python</h3>
 <p><strong>Linters</strong>: Black (formatter), Flake8 (linter)</p>
@@ -6328,20 +6328,20 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 <span class="o">-</span> <span class="n">repo</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pycqa</span><span class="o">/</span><span class="n">flake8</span>
   <span class="n">hooks</span><span class="p">:</span>
     <span class="o">-</span> <span class="nb">id</span><span class="p">:</span> <span class="n">flake8</span>
-      <span class="n">args</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;--max-line-length=120&#39;</span><span class="p">,</span> <span class="s1">&#39;--extend-ignore=E203,W503&#39;</span><span class="p">]</span>
+      <span class="n">args</span><span class="p">:</span> <span class="p">[</span><span class="s1">'--max-line-length=120'</span><span class="p">,</span> <span class="s1">'--extend-ignore=E203,W503'</span><span class="p">]</span>
 </code></pre></div>
 <p><strong>Example</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;Module for user management.&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""Module for user management."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">active</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a new user.</span>
+<span class="w">    </span><span class="sd">"""Create a new user.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        username: The username for the new user</span>
-<span class="sd">        email: User&#39;s email address</span>
+<span class="sd">        email: User's email address</span>
 <span class="sd">        active: Whether the user is active (default: True)</span>
 
 <span class="sd">    Returns:</span>
@@ -6349,24 +6349,24 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If username or email is invalid</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">username</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">email</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Username and email are required&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Username and email are required"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
-        <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">email</span><span class="p">,</span>
-        <span class="s2">&quot;active&quot;</span><span class="p">:</span> <span class="n">active</span><span class="p">,</span>
+        <span class="s2">"username"</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
+        <span class="s2">"email"</span><span class="p">:</span> <span class="n">email</span><span class="p">,</span>
+        <span class="s2">"active"</span><span class="p">:</span> <span class="n">active</span><span class="p">,</span>
     <span class="p">}</span>
 </code></pre></div>
 <p><strong>IDE Integration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># VS Code settings.json</span>
 <span class="o">{</span>
-<span class="w">    </span><span class="s2">&quot;python.linting.enabled&quot;</span>:<span class="w"> </span>true,
-<span class="w">    </span><span class="s2">&quot;python.linting.flake8Enabled&quot;</span>:<span class="w"> </span>true,
-<span class="w">    </span><span class="s2">&quot;python.linting.flake8Args&quot;</span>:<span class="w"> </span><span class="o">[</span><span class="s2">&quot;--max-line-length=120&quot;</span><span class="o">]</span>,
-<span class="w">    </span><span class="s2">&quot;python.formatting.provider&quot;</span>:<span class="w"> </span><span class="s2">&quot;black&quot;</span>,
-<span class="w">    </span><span class="s2">&quot;editor.formatOnSave&quot;</span>:<span class="w"> </span><span class="nb">true</span>
+<span class="w">    </span><span class="s2">"python.linting.enabled"</span>:<span class="w"> </span>true,
+<span class="w">    </span><span class="s2">"python.linting.flake8Enabled"</span>:<span class="w"> </span>true,
+<span class="w">    </span><span class="s2">"python.linting.flake8Args"</span>:<span class="w"> </span><span class="o">[</span><span class="s2">"--max-line-length=120"</span><span class="o">]</span>,
+<span class="w">    </span><span class="s2">"python.formatting.provider"</span>:<span class="w"> </span><span class="s2">"black"</span>,
+<span class="w">    </span><span class="s2">"editor.formatOnSave"</span>:<span class="w"> </span><span class="nb">true</span>
 <span class="o">}</span>
 </code></pre></div>
 <h3 id="go">Go</h3>
@@ -6400,8 +6400,8 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 <span class="kn">package</span><span class="w"> </span><span class="nx">user</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;context&quot;</span>
-<span class="w">    </span><span class="s">&quot;fmt&quot;</span>
+<span class="w">    </span><span class="s">"context"</span>
+<span class="w">    </span><span class="s">"fmt"</span>
 <span class="p">)</span>
 
 <span class="c1">// User represents a user in the system.</span>
@@ -6413,8 +6413,8 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 
 <span class="c1">// CreateUser creates a new user in the database.</span>
 <span class="kd">func</span><span class="w"> </span><span class="nx">CreateUser</span><span class="p">(</span><span class="nx">ctx</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">username</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="nx">User</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">username</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">email</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;username and email are required&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">username</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">""</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">email</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">""</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">"username and email are required"</span><span class="p">)</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="nx">user</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span>
@@ -6500,15 +6500,15 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 </code></pre></div>
 <p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;apiVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;v1&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ConfigMap&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;app-config&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
+<span class="w">  </span><span class="nt">"apiVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ConfigMap"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"app-config"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;logLevel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;info&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;maxConnections&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;100&quot;</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"logLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"maxConnections"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6529,13 +6529,13 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--files<span class=
 <li>Linting: <code>.markdownlint.json</code></li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;MD013&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable line length</span>
-<span class="w">  </span><span class="nt">&quot;MD041&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable first line heading</span>
-<span class="w">  </span><span class="nt">&quot;MD025&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Allow multiple H1s</span>
-<span class="w">  </span><span class="nt">&quot;MD047&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable single trailing newline</span>
-<span class="w">  </span><span class="nt">&quot;MD032&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable blank lines around lists</span>
-<span class="w">  </span><span class="nt">&quot;MD034&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable bare URLs</span>
-<span class="w">  </span><span class="nt">&quot;MD040&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="c1">// Disable fenced code language</span>
+<span class="w">  </span><span class="nt">"MD013"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable line length</span>
+<span class="w">  </span><span class="nt">"MD041"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable first line heading</span>
+<span class="w">  </span><span class="nt">"MD025"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Allow multiple H1s</span>
+<span class="w">  </span><span class="nt">"MD047"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable single trailing newline</span>
+<span class="w">  </span><span class="nt">"MD032"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable blank lines around lists</span>
+<span class="w">  </span><span class="nt">"MD034"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="c1">// Disable bare URLs</span>
+<span class="w">  </span><span class="nt">"MD040"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="c1">// Disable fenced code language</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Example</strong>:</p>
@@ -6553,7 +6553,7 @@ The component follows the microservices pattern with the following structure:
 
 <span class="sb">```python</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">hello_world</span><span class="p">():</span>
-    <span class="k">return</span> <span class="s2">&quot;Hello, World!&quot;</span>
+    <span class="k">return</span> <span class="s2">"Hello, World!"</span>
 <span class="sb">```</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>### Terraform
@@ -6571,60 +6571,60 @@ The component follows the microservices pattern with the following structure:
 
 **Configuration**: `.tflint.hcl`
 ```hcl
-plugin &quot;aws&quot; {
+plugin "aws" {
   enabled = true
-  version = &quot;0.29.0&quot;
+  version = "0.29.0"
 }
 
-plugin &quot;azurerm&quot; {
+plugin "azurerm" {
   enabled = true
-  version = &quot;0.25.1&quot;
+  version = "0.25.1"
 }
 
-rule &quot;terraform_naming_convention&quot; {
+rule "terraform_naming_convention" {
   enabled = true
-  format  = &quot;snake_case&quot;
+  format  = "snake_case"
 }
 </code></pre></div>
 <p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Terraform &gt;= 1.6</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.6.0&quot;</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.6.0"</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">azurerm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/azurerm&quot;</span>
-<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 3.0&quot;</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"hashicorp/azurerm"</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 3.0"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1"># Variable definition with description</span>
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;resource_group_name&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Name of the Azure resource group&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"resource_group_name"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Name of the Azure resource group"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;location&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Azure region for resources&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"location"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Azure region for resources"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;eastus&quot;</span>
+<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"eastus"</span>
 <span class="p">}</span>
 
 <span class="c1"># Resource with proper naming</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_resource_group&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_resource_group"</span><span class="w"> </span><span class="nv">"main"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
-<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform&quot;</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"terraform"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1"># Output important values</span>
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;resource_group_id&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ID of the created resource group&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"resource_group_id"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ID of the created resource group"</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_resource_group.main.id</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6650,28 +6650,28 @@ rule &quot;terraform_naming_convention&quot; {
 </ul>
 <p><strong>Configuration</strong>: <code>.gitleaks.toml</code></p>
 <div class="highlight"><pre><span></span><code><span class="k">[allowlist]</span>
-<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allowlist for false positives&quot;</span>
+<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Allowlist for false positives"</span>
 
 <span class="c1"># Test fixtures</span>
 <span class="n">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;tests/fixtures/&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;examples/&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"tests/fixtures/"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"examples/"</span><span class="p">,</span>
 <span class="p">]</span>
 </code></pre></div>
 <p><strong>Example (BAD)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># ❌ NEVER do this</span>
-<span class="n">api_key</span> <span class="o">=</span> <span class="s2">&quot;sk-1234567890abcdef&quot;</span>  <span class="c1"># pragma: allowlist secret</span>
-<span class="n">database_url</span> <span class="o">=</span> <span class="s2">&quot;postgresql://user:password@localhost/db&quot;</span>  <span class="c1"># pragma: allowlist secret</span>
+<span class="n">api_key</span> <span class="o">=</span> <span class="s2">"sk-1234567890abcdef"</span>  <span class="c1"># pragma: allowlist secret</span>
+<span class="n">database_url</span> <span class="o">=</span> <span class="s2">"postgresql://user:password@localhost/db"</span>  <span class="c1"># pragma: allowlist secret</span>
 </code></pre></div>
 <p><strong>Example (GOOD)</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># ✅ Use environment variables</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">)</span>
-<span class="n">database_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DATABASE_URL&quot;</span><span class="p">)</span>
+<span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"API_KEY"</span><span class="p">)</span>
+<span class="n">database_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"DATABASE_URL"</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">database_url</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Required environment variables not set&quot;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Required environment variables not set"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="container-security">Container Security</h3>
 <p><strong>Tool</strong>: Trivy</p>
@@ -6701,7 +6701,7 @@ rule &quot;terraform_naming_convention&quot; {
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>--chown<span class="o">=</span>appuser:appuser<span class="w"> </span>.<span class="w"> </span>.
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;app.py&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"python"</span><span class="p">,</span><span class="w"> </span><span class="s2">"app.py"</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="code-quality-sast">Code Quality (SAST)</h3>
 <p><strong>Tool</strong>: SonarQube</p>
@@ -6717,34 +6717,34 @@ rule &quot;terraform_naming_convention&quot; {
 <h3 id="vs-code">VS Code</h3>
 <p><strong>Extensions</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;recommendations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;ms-python.python&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ms-python.vscode-pylance&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ms-azuretools.vscode-docker&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;redhat.vscode-yaml&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;hashicorp.terraform&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;golang.go&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;timonwong.shellcheck&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;davidanson.vscode-markdownlint&quot;</span>
+<span class="w">  </span><span class="nt">"recommendations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"ms-python.python"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ms-python.vscode-pylance"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ms-azuretools.vscode-docker"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"redhat.vscode-yaml"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"hashicorp.terraform"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"golang.go"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"timonwong.shellcheck"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"davidanson.vscode-markdownlint"</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Settings</strong> (<code>.vscode/settings.json</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;editor.formatOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;editor.codeActionsOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;source.organizeImports&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"editor.formatOnSave"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"editor.codeActionsOnSave"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"source.organizeImports"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;python.linting.enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;python.linting.flake8Enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;python.formatting.provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;files.trimTrailingWhitespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;files.insertFinalNewline&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;[yaml]&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;editor.defaultFormatter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;redhat.vscode-yaml&quot;</span>
+<span class="w">  </span><span class="nt">"python.linting.enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"python.linting.flake8Enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"python.formatting.provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"black"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"files.trimTrailingWhitespace"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"files.insertFinalNewline"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"[yaml]"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"editor.defaultFormatter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"redhat.vscode-yaml"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;[terraform]&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;editor.defaultFormatter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hashicorp.terraform&quot;</span>
+<span class="w">  </span><span class="nt">"[terraform]"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"editor.defaultFormatter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hashicorp.terraform"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6765,24 +6765,24 @@ rule &quot;terraform_naming_convention&quot; {
 </ol>
 <h3 id="vimneovim">Vim/Neovim</h3>
 <p><strong>Plugins</strong> (via vim-plug):</p>
-<div class="highlight"><pre><span></span><code>Plug <span class="s1">&#39;dense-analysis/ale&#39;</span>
-Plug <span class="s1">&#39;hashivim/vim-terraform&#39;</span>
-Plug <span class="s1">&#39;fatih/vim-go&#39;</span>
-Plug <span class="s1">&#39;ambv/black&#39;</span>
+<div class="highlight"><pre><span></span><code>Plug <span class="s1">'dense-analysis/ale'</span>
+Plug <span class="s1">'hashivim/vim-terraform'</span>
+Plug <span class="s1">'fatih/vim-go'</span>
+Plug <span class="s1">'ambv/black'</span>
 </code></pre></div>
 <p><strong>Configuration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c">&quot; ALE linters</span>
+<div class="highlight"><pre><span></span><code><span class="c">" ALE linters</span>
 <span class="k">let</span> <span class="k">g</span>:ale_linters <span class="p">=</span> {
-\   <span class="s1">&#39;python&#39;</span>: [<span class="s1">&#39;flake8&#39;</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span>]<span class="p">,</span>
-\   <span class="s1">&#39;bash&#39;</span>: [<span class="s1">&#39;shellcheck&#39;</span>]<span class="p">,</span>
-\   <span class="s1">&#39;terraform&#39;</span>: [<span class="s1">&#39;tflint&#39;</span>]<span class="p">,</span>
-\   <span class="s1">&#39;go&#39;</span>: [<span class="s1">&#39;golangci-lint&#39;</span>]<span class="p">,</span>
+\   <span class="s1">'python'</span>: [<span class="s1">'flake8'</span><span class="p">,</span> <span class="s1">'black'</span>]<span class="p">,</span>
+\   <span class="s1">'bash'</span>: [<span class="s1">'shellcheck'</span>]<span class="p">,</span>
+\   <span class="s1">'terraform'</span>: [<span class="s1">'tflint'</span>]<span class="p">,</span>
+\   <span class="s1">'go'</span>: [<span class="s1">'golangci-lint'</span>]<span class="p">,</span>
 \}
 
-<span class="c">&quot; Auto-format on save</span>
+<span class="c">" Auto-format on save</span>
 <span class="k">let</span> <span class="k">g</span>:ale_fixers <span class="p">=</span> {
-\   <span class="s1">&#39;python&#39;</span>: [<span class="s1">&#39;black&#39;</span>]<span class="p">,</span>
-\   <span class="s1">&#39;terraform&#39;</span>: [<span class="s1">&#39;terraform&#39;</span>]<span class="p">,</span>
+\   <span class="s1">'python'</span>: [<span class="s1">'black'</span>]<span class="p">,</span>
+\   <span class="s1">'terraform'</span>: [<span class="s1">'terraform'</span>]<span class="p">,</span>
 \}
 <span class="k">let</span> <span class="k">g</span>:ale_fix_on_save <span class="p">=</span> <span class="m">1</span>
 </code></pre></div>
@@ -6812,7 +6812,7 @@ Plug <span class="s1">&#39;ambv/black&#39;</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v6</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v6</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">"3.11"</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install pre-commit</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install pre-commit</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run pre-commit</span>
@@ -6873,7 +6873,7 @@ terraform<span class="w"> </span>validate
 <p><strong>Solution</strong>: Exclude vendor directories:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
 -<span class="w"> </span>id:<span class="w"> </span>shellcheck
-<span class="w">  </span>exclude:<span class="w"> </span><span class="s1">&#39;^vendor/|^third-party/&#39;</span>
+<span class="w">  </span>exclude:<span class="w"> </span><span class="s1">'^vendor/|^third-party/'</span>
 </code></pre></div>
 <h3 id="security-scanning-issues">Security Scanning Issues</h3>
 <p><strong>Issue</strong>: Secrets detected in test fixtures</p>
@@ -6881,8 +6881,8 @@ terraform<span class="w"> </span>validate
 <div class="highlight"><pre><span></span><code><span class="c1"># .gitleaks.toml</span>
 <span class="k">[allowlist]</span>
 <span class="n">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;tests/fixtures/&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;examples/test-data.json&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"tests/fixtures/"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"examples/test-data.json"</span><span class="p">,</span>
 <span class="p">]</span>
 </code></pre></div>
 <p><strong>Issue</strong>: Trivy reports false positive CVE</p>

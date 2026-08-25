@@ -5584,7 +5584,7 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>infra/local/cluster/<span
 <div class="highlight"><pre><span></span><code>Create a Terraform configuration for deploying a local Kubernetes cluster using kind:
 
 Requirements:
-1. Create a kind cluster named &quot;fawkes-local&quot;
+1. Create a kind cluster named "fawkes-local"
 2. Configure 4 worker nodes
 3. Each node: 4 CPU, 8GB memory
 4. Enable ingress (extraPortMappings for ports 80, 443)
@@ -5607,9 +5607,9 @@ Add comments explaining each configuration block.
 
 Test cases:
 1. Exactly 4 nodes exist in the cluster
-2. All nodes have status &quot;Ready&quot;
-3. All system pods in kube-system namespace are &quot;Running&quot;
-4. A StorageClass named &quot;local-path&quot; exists and is marked as default
+2. All nodes have status "Ready"
+3. All system pods in kube-system namespace are "Running"
+4. A StorageClass named "local-path" exists and is marked as default
 5. Kubernetes version is &gt;= 1.28.0
 6. No nodes have MemoryPressure or DiskPressure conditions
 
@@ -5829,7 +5829,7 @@ Include README with:
 2. Port-forward to argocd-server (8080:443)
 3. Login with credentials
 4. Add local cluster
-5. Create app project &quot;platform&quot;
+5. Create app project "platform"
 6. Set up repository credentials for GitHub
 7. Verify configuration
 
@@ -5845,7 +5845,7 @@ kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class
 <span class="c1"># Open browser: https://localhost:8080</span>
 
 <span class="c1"># CLI login</span>
-argocd<span class="w"> </span>login<span class="w"> </span>localhost:8080<span class="w"> </span>--username<span class="w"> </span>admin<span class="w"> </span>--password<span class="w"> </span><span class="k">$(</span>kubectl<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>argocd-initial-admin-secret<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.password}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="k">)</span>
+argocd<span class="w"> </span>login<span class="w"> </span>localhost:8080<span class="w"> </span>--username<span class="w"> </span>admin<span class="w"> </span>--password<span class="w"> </span><span class="k">$(</span>kubectl<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>argocd-initial-admin-secret<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">"{.data.password}"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="k">)</span>
 
 <span class="c1"># Verify</span>
 argocd<span class="w"> </span>cluster<span class="w"> </span>list
@@ -6068,7 +6068,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> <
 ./tests/acceptance/run-all-week1.sh
 
 <span class="c1"># Documentation complete</span>
-find<span class="w"> </span>docs/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.md&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w">  </span><span class="c1"># Should be increased</span>
+find<span class="w"> </span>docs/<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.md"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w">  </span><span class="c1"># Should be increased</span>
 
 <span class="c1"># Resource usage acceptable</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w">  </span><span class="c1"># All &lt;70%</span>
@@ -6167,7 +6167,7 @@ argocd<span class="w"> </span>app<span class="w"> </span>create<span class="w"> 
 
 Current task: Issue #Y - [Title]
 Problem: [Specific issue]
-What I&#39;ve tried: [Commands/approaches]
+What I've tried: [Commands/approaches]
 Error message: [If applicable]
 
 Context: See Week 1 Detailed Tasks document.

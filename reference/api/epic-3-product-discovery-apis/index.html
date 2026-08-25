@@ -6129,7 +6129,7 @@
 <h3 id="obtaining-api-keys">Obtaining API Keys</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># SPACE Metrics API Key (from ConfigMap)</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>space-metrics-config<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.API_KEY}&#39;</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.API_KEY}'</span>
 
 <span class="c1"># Unleash API Token (from UI)</span>
 <span class="c1"># Navigate to: https://unleash.fawkes.local → Settings → API Access → Create Token</span>
@@ -6146,10 +6146,10 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 </code></pre></div>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;connected&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"healthy"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connected"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="get-all-space-metrics">Get All SPACE Metrics</h3>
@@ -6164,35 +6164,35 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 </ul>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;period&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-25&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;end&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25&quot;</span>
+<span class="w">  </span><span class="nt">"period"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-11-25"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;metrics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;satisfaction&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;enps_score&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;avg_rating&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">4.2</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;response_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span>
+<span class="w">  </span><span class="nt">"metrics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"satisfaction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"enps_score"</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"avg_rating"</span><span class="p">:</span><span class="w"> </span><span class="mf">4.2</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"response_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;performance&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;deployment_frequency&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">12.5</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;lead_time_hours&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">4.2</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;build_success_rate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.95</span>
+<span class="w">    </span><span class="nt">"performance"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"deployment_frequency"</span><span class="p">:</span><span class="w"> </span><span class="mf">12.5</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"lead_time_hours"</span><span class="p">:</span><span class="w"> </span><span class="mf">4.2</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"build_success_rate"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.95</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;activity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;commits_per_week&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;prs_merged&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;active_days&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">4.8</span>
+<span class="w">    </span><span class="nt">"activity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"commits_per_week"</span><span class="p">:</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"prs_merged"</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"active_days"</span><span class="p">:</span><span class="w"> </span><span class="mf">4.8</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;communication&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;mattermost_messages&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">450</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;pr_comments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">156</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;docs_updates&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">    </span><span class="nt">"communication"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"mattermost_messages"</span><span class="p">:</span><span class="w"> </span><span class="mi">450</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"pr_comments"</span><span class="p">:</span><span class="w"> </span><span class="mi">156</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"docs_updates"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;efficiency&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;time_to_first_commit_hours&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">3.5</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;time_to_production_hours&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">8.2</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;cognitive_load_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">3.8</span>
+<span class="w">    </span><span class="nt">"efficiency"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"time_to_first_commit_hours"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.5</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"time_to_production_hours"</span><span class="p">:</span><span class="w"> </span><span class="mf">8.2</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"cognitive_load_index"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.8</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -6206,22 +6206,22 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 </code></pre></div>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;dimension&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;satisfaction&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;team&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;platform&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;period&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-25&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;end&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25&quot;</span>
+<span class="w">  </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"satisfaction"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"team"</span><span class="p">:</span><span class="w"> </span><span class="s2">"platform"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"period"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-11-25"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;enps_score&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;nps_breakdown&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;promoters&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;passives&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;detractors&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"enps_score"</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"nps_breakdown"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"promoters"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"passives"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"detractors"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;avg_rating&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">4.2</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;response_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;trend&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;improving&quot;</span>
+<span class="w">    </span><span class="nt">"avg_rating"</span><span class="p">:</span><span class="w"> </span><span class="mf">4.2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"response_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"trend"</span><span class="p">:</span><span class="w"> </span><span class="s2">"improving"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6232,21 +6232,21 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 </code></pre></div>
 <p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anonymous_12345&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;responses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;overall_satisfaction&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;productivity_this_week&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;blockers&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;None this week&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;wins&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployed new feature successfully&quot;</span>
+<span class="w">  </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"anonymous_12345"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"responses"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"overall_satisfaction"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"productivity_this_week"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"blockers"</span><span class="p">:</span><span class="w"> </span><span class="s2">"None this week"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"wins"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deployed new feature successfully"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;survey_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;survey_67890&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Thank you for your feedback!&quot;</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"survey_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"survey_67890"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Thank you for your feedback!"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="submit-friction-log">Submit Friction Log</h3>
@@ -6256,19 +6256,19 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 </code></pre></div>
 <p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anonymous_12345&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;deployment&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployment pipeline failed due to timeout&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;medium&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;time_lost_minutes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span>
+<span class="w">  </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"anonymous_12345"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"deployment"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deployment pipeline failed due to timeout"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"severity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"medium"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"time_lost_minutes"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;friction_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;friction_99999&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Friction point logged. Thank you for reporting!&quot;</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"friction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"friction_99999"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Friction point logged. Thank you for reporting!"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="cognitive-load-assessment">Cognitive Load Assessment</h3>
@@ -6281,16 +6281,16 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 </code></pre></div>
 <p><strong>Request Body</strong> (NASA-TLX scores, 0-100):</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anonymous_12345&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;task&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deploying microservice to production&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;scores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;mental_demand&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;physical_demand&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;temporal_demand&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;performance&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;effort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;frustration&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span>
+<span class="w">  </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"anonymous_12345"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"task"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deploying microservice to production"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"scores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"mental_demand"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"physical_demand"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"temporal_demand"</span><span class="p">:</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"performance"</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"effort"</span><span class="p">:</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"frustration"</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6314,8 +6314,8 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 </code></pre></div>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;connected&quot;</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connected"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="submit-feedback">Submit Feedback</h3>
@@ -6324,29 +6324,29 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 </code></pre></div>
 <p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;rating&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UI/UX&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The new dashboard is amazing!&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/dashboard&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;component&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span>
+<span class="w">  </span><span class="nt">"rating"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UI/UX"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The new dashboard is amazing!"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"page"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/dashboard"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"component"</span><span class="p">:</span><span class="w"> </span><span class="s2">"backstage"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user-123&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;John Doe&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;john@example.com&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;anonymous&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user-123"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Doe"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@example.com"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"anonymous"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;screenshot&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;base64-encoded-image&gt;&quot;</span><span class="w"> </span><span class="c1">// optional</span>
+<span class="w">  </span><span class="nt">"screenshot"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;base64-encoded-image&gt;"</span><span class="w"> </span><span class="c1">// optional</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fb_12345&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;new&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Thank you for your feedback!&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fb_12345"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"new"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Thank you for your feedback!"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="list-feedback-admin">List Feedback (Admin)</h3>
@@ -6364,26 +6364,26 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 </ul>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"feedback"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fb_12345&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;rating&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UI/UX&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The new dashboard is amazing!&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;sentiment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;validated&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;John Doe&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;john@example.com&quot;</span>
+<span class="w">      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fb_12345"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"rating"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UI/UX"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The new dashboard is amazing!"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"sentiment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"positive"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"validated"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Doe"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@example.com"</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;pagination&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;per_page&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;total_pages&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">  </span><span class="nt">"pagination"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"page"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"per_page"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"total_pages"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6392,26 +6392,26 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 </code></pre></div>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fb_12345&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;rating&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UI/UX&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The new dashboard is amazing!&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/dashboard&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;component&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fb_12345"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"rating"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UI/UX"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The new dashboard is amazing!"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"page"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/dashboard"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"component"</span><span class="p">:</span><span class="w"> </span><span class="s2">"backstage"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;sentiment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;validated&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;updated_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T11:00:00Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;John Doe&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;john@example.com&quot;</span>
+<span class="w">  </span><span class="nt">"sentiment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"positive"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"validated"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T11:00:00Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Doe"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@example.com"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;screenshot_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/v1/feedback/fb_12345/screenshot&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;github_issue&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;number&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/paruff/fawkes/issues/250&quot;</span>
+<span class="w">  </span><span class="nt">"screenshot_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/feedback/fb_12345/screenshot"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"github_issue"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://github.com/paruff/fawkes/issues/250"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6421,15 +6421,15 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 </code></pre></div>
 <p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;validated&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;notes&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Confirmed with 3 other users&quot;</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"validated"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"notes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Confirmed with 3 other users"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fb_12345&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;validated&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;updated_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T11:00:00Z&quot;</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fb_12345"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"validated"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T11:00:00Z"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="get-feedback-statistics">Get Feedback Statistics</h3>
@@ -6442,39 +6442,39 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 </ul>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;period&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-25&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;end&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25&quot;</span>
+<span class="w">  </span><span class="nt">"period"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-11-25"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;total_feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;by_rating&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;1&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;2&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;3&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;4&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;5&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">70</span>
+<span class="w">  </span><span class="nt">"total_feedback"</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"by_rating"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"1"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"2"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"3"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"4"</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"5"</span><span class="p">:</span><span class="w"> </span><span class="mi">70</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;by_category&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;UI/UX&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;Performance&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;Documentation&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;CI/CD&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;Other&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span>
+<span class="w">  </span><span class="nt">"by_category"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"UI/UX"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"Performance"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"Documentation"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"CI/CD"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"Other"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;by_status&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;new&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;validated&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;in_progress&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;resolved&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;archived&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">  </span><span class="nt">"by_status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"new"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"validated"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"in_progress"</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"resolved"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"archived"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;by_sentiment&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;positive&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;neutral&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;negative&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span>
+<span class="w">  </span><span class="nt">"by_sentiment"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"positive"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"neutral"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"negative"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;avg_rating&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">4.1</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;response_rate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.42</span>
+<span class="w">  </span><span class="nt">"avg_rating"</span><span class="p">:</span><span class="w"> </span><span class="mf">4.1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"response_rate"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.42</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="process-validated-feedback-automation">Process Validated Feedback (Automation)</h3>
@@ -6484,15 +6484,15 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 </code></pre></div>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;processed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;github_issues_created&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"processed"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"github_issues_created"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;feedback_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fb_12345&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;issue_number&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;issue_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/paruff/fawkes/issues/250&quot;</span>
+<span class="w">      </span><span class="nt">"feedback_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fb_12345"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"issue_number"</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"issue_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://github.com/paruff/fawkes/issues/250"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;errors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">  </span><span class="nt">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="prometheus-metrics_1">Prometheus Metrics</h3>
@@ -6516,7 +6516,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="
 <div class="highlight"><pre><span></span><code>The deployment experience could be improved
 </code></pre></div>
 <p><strong>Bot Response</strong>:</p>
-<div class="highlight"><pre><span></span><code>✅ Feedback received! I&#39;ve analyzed your message:
+<div class="highlight"><pre><span></span><code>✅ Feedback received! I've analyzed your message:
 • Category: CI/CD
 • Sentiment: Positive
 • Priority: Low
@@ -6531,7 +6531,7 @@ Would you like to add more details? Reply to this thread.
 • Total submissions: 15
 • Avg rating: 4.2
 • Your submissions: 3
-• Recent: &quot;The new CI/CD pipeline...&quot; (2 days ago)
+• Recent: "The new CI/CD pipeline..." (2 days ago)
 </code></pre></div>
 <h3 id="get-help">Get Help</h3>
 <div class="highlight"><pre><span></span><code>@feedback help
@@ -6562,20 +6562,20 @@ You can also DM me directly with feedback!
 </code></pre></div>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;features&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;new-dashboard&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;strategies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"new-dashboard"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"strategies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gradualRolloutUserId&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;parameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;percentage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;50&quot;</span>
+<span class="w">          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gradualRolloutUserId"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"50"</span>
 <span class="w">          </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;variants&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">      </span><span class="nt">"variants"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
@@ -6587,12 +6587,12 @@ You can also DM me directly with feedback!
 </code></pre></div>
 <p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;appName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;instanceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;instance-12345&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;sdkVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unleash-client-node:4.0.0&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;strategies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;gradualRolloutUserId&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;started&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15000</span>
+<span class="w">  </span><span class="nt">"appName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"backstage"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"instanceId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"instance-12345"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sdkVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unleash-client-node:4.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"strategies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"default"</span><span class="p">,</span><span class="w"> </span><span class="s2">"gradualRolloutUserId"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"started"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"interval"</span><span class="p">:</span><span class="w"> </span><span class="mi">15000</span>
 <span class="p">}</span>
 </code></pre></div>
 <h4 id="send-metrics">Send Metrics</h4>
@@ -6602,15 +6602,15 @@ You can also DM me directly with feedback!
 </code></pre></div>
 <p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;appName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;instanceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;instance-12345&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;stop&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:45:00Z&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;toggles&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;new-dashboard&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;yes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;no&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span>
+<span class="w">  </span><span class="nt">"appName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"backstage"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"instanceId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"instance-12345"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"stop"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:45:00Z"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"toggles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"new-dashboard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"yes"</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"no"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
@@ -6628,17 +6628,17 @@ You can also DM me directly with feedback!
 </code></pre></div>
 <p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;new-dashboard&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Enable new dashboard UI&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;release&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;stale&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;strategies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"new-dashboard"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Enable new dashboard UI"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"release"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"stale"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"strategies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gradualRolloutUserId&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;parameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;percentage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;25&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;groupId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;new-dashboard&quot;</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gradualRolloutUserId"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"25"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"groupId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"new-dashboard"</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
@@ -6654,12 +6654,12 @@ You can also DM me directly with feedback!
 </code></pre></div>
 <p><strong>Response</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;featureName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;new-dashboard&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;lastHourUsage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;yes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1500</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;no&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">500</span>
+<span class="w">  </span><span class="nt">"featureName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"new-dashboard"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"lastHourUsage"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"yes"</span><span class="p">:</span><span class="w"> </span><span class="mi">1500</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"no"</span><span class="p">:</span><span class="w"> </span><span class="mi">500</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;seenApplications&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;backstage&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;feedback-service&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"seenApplications"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"backstage"</span><span class="p">,</span><span class="w"> </span><span class="s2">"feedback-service"</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -6672,15 +6672,15 @@ You can also DM me directly with feedback!
 </code></pre></div>
 <p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;api_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;PROJECT_API_KEY&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;service_created&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;template&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;java-service&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;environment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;component&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span>
+<span class="w">  </span><span class="nt">"api_key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;PROJECT_API_KEY&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"service_created"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"java-service"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"environment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dev"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"component"</span><span class="p">:</span><span class="w"> </span><span class="s2">"backstage"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;distinct_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user-123&quot;</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"distinct_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user-123"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="batch-events">Batch Events</h3>
@@ -6689,19 +6689,19 @@ You can also DM me directly with feedback!
 </code></pre></div>
 <p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;api_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;PROJECT_API_KEY&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;batch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"api_key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;PROJECT_API_KEY&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"batch"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;page_view&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/dashboard&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;distinct_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user-123&quot;</span>
+<span class="w">      </span><span class="nt">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"page_view"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"page"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/dashboard"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"distinct_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user-123"</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;button_clicked&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;button&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;deploy&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:31:00Z&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;distinct_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user-123&quot;</span>
+<span class="w">      </span><span class="nt">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"button_clicked"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"button"</span><span class="p">:</span><span class="w"> </span><span class="s2">"deploy"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:31:00Z"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"distinct_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user-123"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
@@ -6713,12 +6713,12 @@ You can also DM me directly with feedback!
 </code></pre></div>
 <p><strong>Request Body</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EventsQuery&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;select&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;service_created&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;after&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-25&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;before&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25&quot;</span>
+<span class="w">  </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EventsQuery"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"select"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"*"</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"service_created"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"after"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-11-25"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"before"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6745,23 +6745,23 @@ You can also DM me directly with feedback!
 <p>To use components in your application:</p>
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>@fawkes/design-system
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Button</span><span class="p">,</span><span class="w"> </span><span class="nx">Card</span><span class="p">,</span><span class="w"> </span><span class="nx">Modal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system/dist/styles.css&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Button</span><span class="p">,</span><span class="w"> </span><span class="nx">Card</span><span class="p">,</span><span class="w"> </span><span class="nx">Modal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@fawkes/design-system"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="s2">"@fawkes/design-system/dist/styles.css"</span><span class="p">;</span>
 </code></pre></div>
 <hr />
 <h2 id="error-handling">Error Handling</h2>
 <p>All APIs follow a consistent error response format:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INVALID_REQUEST&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Missing required field: rating&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rating&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;constraint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;required&quot;</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INVALID_REQUEST"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Missing required field: rating"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rating"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"constraint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"required"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="common-http-status-codes">Common HTTP Status Codes</h3>
@@ -6866,18 +6866,18 @@ You can also DM me directly with feedback!
 <p><strong>Event</strong>: <code>feedback.github_issue_created</code></p>
 <p><strong>Payload</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;feedback.github_issue_created&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fb_12345&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;rating&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UI/UX&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The new dashboard is amazing!&quot;</span>
+<span class="w">  </span><span class="nt">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"feedback.github_issue_created"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"feedback"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fb_12345"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"rating"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UI/UX"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The new dashboard is amazing!"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;github_issue&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;number&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/paruff/fawkes/issues/250&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;[Feedback] The new dashboard is amazing!&quot;</span>
+<span class="w">  </span><span class="nt">"github_issue"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://github.com/paruff/fawkes/issues/250"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[Feedback] The new dashboard is amazing!"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6886,15 +6886,15 @@ You can also DM me directly with feedback!
 <p><strong>Event</strong>: <code>feature-updated</code></p>
 <p><strong>Payload</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;feature-updated&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-25T10:30:00Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;new-dashboard&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;strategies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"feature-updated"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-12-25T10:30:00Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"new-dashboard"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"project"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"strategies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">]</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;createdBy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;admin@example.com&quot;</span>
+<span class="w">  </span><span class="nt">"createdBy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin@example.com"</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -6904,42 +6904,42 @@ You can also DM me directly with feedback!
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">space_metrics_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPACEMetricsClient</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">SPACEMetricsClient</span><span class="p">(</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://space-metrics:8000&quot;</span><span class="p">,</span>
-    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;your-api-key&quot;</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">"http://space-metrics:8000"</span><span class="p">,</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="s2">"your-api-key"</span>
 <span class="p">)</span>
 
-<span class="n">metrics</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_all_metrics</span><span class="p">(</span><span class="n">team</span><span class="o">=</span><span class="s2">&quot;platform&quot;</span><span class="p">)</span>
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_all_metrics</span><span class="p">(</span><span class="n">team</span><span class="o">=</span><span class="s2">"platform"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">satisfaction</span><span class="o">.</span><span class="n">enps_score</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="feedback-service">Feedback Service</h3>
 <p><strong>JavaScript/TypeScript Client</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">FeedbackClient</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@fawkes/feedback-client&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">FeedbackClient</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@fawkes/feedback-client"</span><span class="p">;</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">FeedbackClient</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">baseURL</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;http://feedback-service:8080&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">baseURL</span><span class="o">:</span><span class="w"> </span><span class="s2">"http://feedback-service:8080"</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">submitFeedback</span><span class="p">({</span>
 <span class="w">  </span><span class="nx">rating</span><span class="o">:</span><span class="w"> </span><span class="kt">5</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">category</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;UI/UX&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Great experience!&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">category</span><span class="o">:</span><span class="w"> </span><span class="s2">"UI/UX"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">"Great experience!"</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
 <h3 id="unleash">Unleash</h3>
 <p><strong>OpenFeature SDK</strong> (Recommended):</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openfeature/server-sdk&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UnleashProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openfeature/unleash-provider&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@openfeature/server-sdk"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UnleashProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@openfeature/unleash-provider"</span><span class="p">;</span>
 
 <span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span>
 <span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">UnleashProvider</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;http://unleash:4242/api&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">clientKey</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;your-client-key&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">appName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-app&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">"http://unleash:4242/api"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">clientKey</span><span class="o">:</span><span class="w"> </span><span class="s2">"your-client-key"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">appName</span><span class="o">:</span><span class="w"> </span><span class="s2">"my-app"</span><span class="p">,</span>
 <span class="w">  </span><span class="p">})</span>
 <span class="p">);</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">getClient</span><span class="p">();</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s2">&quot;new-dashboard&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s2">"new-dashboard"</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
 </code></pre></div>
 <hr />
 <h2 id="related-documentation">Related Documentation</h2>

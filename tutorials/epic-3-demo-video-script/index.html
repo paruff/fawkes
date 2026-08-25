@@ -5751,13 +5751,13 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 </blockquote>
 <p>Demo submitting a friction log:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/v1/friction-log/submit<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<span class="s1">    &quot;category&quot;: &quot;deployment&quot;,</span>
-<span class="s1">    &quot;description&quot;: &quot;Had to manually restart pod after deploy&quot;,</span>
-<span class="s1">    &quot;severity&quot;: &quot;medium&quot;,</span>
-<span class="s1">    &quot;time_lost_minutes&quot;: 15</span>
-<span class="s1">  }&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<span class="s1">    "category": "deployment",</span>
+<span class="s1">    "description": "Had to manually restart pod after deploy",</span>
+<span class="s1">    "severity": "medium",</span>
+<span class="s1">    "time_lost_minutes": 15</span>
+<span class="s1">  }'</span>
 </code></pre></div>
 <blockquote>
 <p>"Friction logging is a key part of DevEx measurement. When developers hit a snag, they can quickly log it, and we track patterns over time."</p>
@@ -5803,7 +5803,7 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <blockquote>
 <p>"Second channel: our CLI tool. For developers who live in the terminal, we have a command-line feedback tool.</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code>fawkes-feedback<span class="w"> </span>submit<span class="w"> </span>-r<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;CI/CD&quot;</span><span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Pipeline is much faster after recent optimization&quot;</span>
+<div class="highlight"><pre><span></span><code>fawkes-feedback<span class="w"> </span>submit<span class="w"> </span>-r<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">"CI/CD"</span><span class="w"> </span>-m<span class="w"> </span><span class="s2">"Pipeline is much faster after recent optimization"</span>
 </code></pre></div>
 <blockquote>
 <p>It also has an interactive mode:</p>
@@ -5906,14 +5906,14 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>@fawkes/design-system
 </code></pre></div>
 <p>Then import components:</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Button</span><span class="p">,</span><span class="w"> </span><span class="nx">Card</span><span class="p">,</span><span class="w"> </span><span class="nx">Modal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system/dist/styles.css&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Button</span><span class="p">,</span><span class="w"> </span><span class="nx">Card</span><span class="p">,</span><span class="w"> </span><span class="nx">Modal</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@fawkes/design-system"</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="s2">"@fawkes/design-system/dist/styles.css"</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">MyApp</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="o">&lt;</span><span class="nx">Card</span><span class="o">&gt;</span>
 <span class="w">      </span><span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="nx">Hello</span><span class="w"> </span><span class="nx">World</span><span class="o">&lt;</span><span class="err">/h2&gt;</span>
-<span class="w">      </span><span class="o">&lt;</span><span class="nx">Button</span><span class="w"> </span><span class="nx">variant</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="o">&gt;</span><span class="nx">Click</span><span class="w"> </span><span class="nx">me</span><span class="o">&lt;</span><span class="err">/Button&gt;</span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">Button</span><span class="w"> </span><span class="nx">variant</span><span class="o">=</span><span class="s2">"primary"</span><span class="o">&gt;</span><span class="nx">Click</span><span class="w"> </span><span class="nx">me</span><span class="o">&lt;</span><span class="err">/Button&gt;</span>
 <span class="w">    </span><span class="o">&lt;</span><span class="err">/Card&gt;</span>
 <span class="w">  </span><span class="p">);</span>
 <span class="p">}</span>
@@ -5950,10 +5950,10 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <blockquote>
 <p>"Behind the scenes, we use event tracking. When a developer performs an action in Backstage or other UIs, we capture it:</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><span class="nx">analytics</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="s2">&quot;service_created&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">template</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;java-service&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">environment</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;backstage&quot;</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><code><span class="nx">analytics</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="s2">"service_created"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">template</span><span class="o">:</span><span class="w"> </span><span class="s2">"java-service"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">environment</span><span class="o">:</span><span class="w"> </span><span class="s2">"dev"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="s2">"backstage"</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
 <blockquote>
@@ -5990,10 +5990,10 @@ curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space<span clas
 <blockquote>
 <p>"In code, we use the OpenFeature SDK, which is vendor-neutral:</p>
 </blockquote>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openfeature/sdk&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@openfeature/sdk"</span><span class="p">;</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">OpenFeature</span><span class="p">.</span><span class="nx">getClient</span><span class="p">();</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">useNewDashboard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s2">&quot;new-dashboard-ui&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">useNewDashboard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">getBooleanValue</span><span class="p">(</span><span class="s2">"new-dashboard-ui"</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
 
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">useNewDashboard</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">NewDashboard</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">;</span>

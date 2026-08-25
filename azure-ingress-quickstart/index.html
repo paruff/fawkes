@@ -5530,7 +5530,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </
 </code></pre></div>
 <h2 id="2-configure-dns-optional-10-minutes">2. Configure DNS (Optional, 10 minutes)</h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Edit infra/azure/terraform.tfvars</span>
-<span class="nv">dns_zone_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes.yourdomain.com&quot;</span>
+<span class="nv">dns_zone_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"fawkes.yourdomain.com"</span>
 <span class="nv">create_dns_records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span>
 
 <span class="c1"># Apply Terraform</span>
@@ -5550,7 +5550,7 @@ kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </sp
 <span class="w">  </span>deployment/cert-manager<span class="w"> </span>-n<span class="w"> </span>cert-manager
 
 <span class="c1"># Update email address</span>
-sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/platform-team@example.com/your-email@example.com/g&#39;</span><span class="w"> </span><span class="se">\</span>
+sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'s/platform-team@example.com/your-email@example.com/g'</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>platform/apps/cert-manager/cluster-issuer-*.yaml
 
 <span class="c1"># Deploy ClusterIssuers</span>
@@ -5566,7 +5566,7 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 
 <span class="c1"># Get external IP</span>
 <span class="nv">EXTERNAL_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.loadBalancer.ingress[0].ip}'</span><span class="k">)</span>
 
 <span class="c1"># Test HTTP</span>
 curl<span class="w"> </span>http://test.<span class="si">${</span><span class="nv">EXTERNAL_IP</span><span class="si">}</span>.nip.io
@@ -5578,7 +5578,7 @@ curl<span class="w"> </span>http://test.<span class="si">${</span><span class="n
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cert-manager.io/cluster-issuer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;letsencrypt-staging&quot;</span>
+<span class="w">    </span><span class="nt">cert-manager.io/cluster-issuer</span><span class="p">:</span><span class="w"> </span><span class="s">"letsencrypt-staging"</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
 <span class="w">  </span><span class="nt">tls</span><span class="p">:</span>

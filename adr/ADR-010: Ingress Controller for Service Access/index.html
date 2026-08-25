@@ -6100,11 +6100,11 @@ https://fawkes.example.com/quality    → SonarQube
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-core</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cert-manager.io/cluster-issuer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;letsencrypt-prod&quot;</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/force-ssl-redirect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/ssl-protocols</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TLSv1.2</span><span class="nv"> </span><span class="s">TLSv1.3&quot;</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/proxy-body-size</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;50m&quot;</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/rate-limit</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100&quot;</span>
+<span class="w">    </span><span class="nt">cert-manager.io/cluster-issuer</span><span class="p">:</span><span class="w"> </span><span class="s">"letsencrypt-prod"</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/force-ssl-redirect</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/ssl-protocols</span><span class="p">:</span><span class="w"> </span><span class="s">"TLSv1.2</span><span class="nv"> </span><span class="s">TLSv1.3"</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/proxy-body-size</span><span class="p">:</span><span class="w"> </span><span class="s">"50m"</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/rate-limit</span><span class="p">:</span><span class="w"> </span><span class="s">"100"</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
 <span class="w">  </span><span class="nt">tls</span><span class="p">:</span>
@@ -6130,11 +6130,11 @@ https://fawkes.example.com/quality    → SonarQube
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mattermost</span>
 <span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-collaboration</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cert-manager.io/cluster-issuer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;letsencrypt-prod&quot;</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/force-ssl-redirect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/proxy-read-timeout</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;600&quot;</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/proxy-send-timeout</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;600&quot;</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/websocket-services</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;mattermost&quot;</span>
+<span class="w">    </span><span class="nt">cert-manager.io/cluster-issuer</span><span class="p">:</span><span class="w"> </span><span class="s">"letsencrypt-prod"</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/force-ssl-redirect</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/proxy-read-timeout</span><span class="p">:</span><span class="w"> </span><span class="s">"600"</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/proxy-send-timeout</span><span class="p">:</span><span class="w"> </span><span class="s">"600"</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/websocket-services</span><span class="p">:</span><span class="w"> </span><span class="s">"mattermost"</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
 <span class="w">  </span><span class="nt">tls</span><span class="p">:</span>
@@ -6156,20 +6156,20 @@ https://fawkes.example.com/quality    → SonarQube
 <h3 id="security-configuration">Security Configuration</h3>
 <p><strong>Rate Limiting</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/limit-rps</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10&quot;</span>
-<span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/limit-connections</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;20&quot;</span>
+<span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/limit-rps</span><span class="p">:</span><span class="w"> </span><span class="s">"10"</span>
+<span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/limit-connections</span><span class="p">:</span><span class="w"> </span><span class="s">"20"</span>
 </code></pre></div>
 <p><strong>IP Whitelisting</strong> (for admin services):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/whitelist-source-range</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10.0.0.0/8,172.16.0.0/12&quot;</span>
+<span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/whitelist-source-range</span><span class="p">:</span><span class="w"> </span><span class="s">"10.0.0.0/8,172.16.0.0/12"</span>
 </code></pre></div>
 <p><strong>Security Headers</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">annotations</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/configuration-snippet</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">more_set_headers &quot;X-Frame-Options: DENY&quot;;</span>
-<span class="w">    </span><span class="no">more_set_headers &quot;X-Content-Type-Options: nosniff&quot;;</span>
-<span class="w">    </span><span class="no">more_set_headers &quot;X-XSS-Protection: 1; mode=block&quot;;</span>
-<span class="w">    </span><span class="no">more_set_headers &quot;Strict-Transport-Security: max-age=31536000; includeSubDomains&quot;;</span>
+<span class="w">    </span><span class="no">more_set_headers "X-Frame-Options: DENY";</span>
+<span class="w">    </span><span class="no">more_set_headers "X-Content-Type-Options: nosniff";</span>
+<span class="w">    </span><span class="no">more_set_headers "X-XSS-Protection: 1; mode=block";</span>
+<span class="w">    </span><span class="no">more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains";</span>
 </code></pre></div>
 <h3 id="oauth2-proxy-integration">OAuth2 Proxy Integration</h3>
 <p>For services without native SSO support:</p>
@@ -6178,8 +6178,8 @@ https://fawkes.example.com/quality    → SonarQube
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana</span>
 <span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/auth-url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://oauth2.fawkes.example.com/oauth2/auth&quot;</span>
-<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/auth-signin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://oauth2.fawkes.example.com/oauth2/start?rd=$escaped_request_uri&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/auth-url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://oauth2.fawkes.example.com/oauth2/auth"</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/auth-signin</span><span class="p">:</span><span class="w"> </span><span class="s">"https://oauth2.fawkes.example.com/oauth2/start?rd=$escaped_request_uri"</span>
 </code></pre></div>
 <h3 id="monitoring-integration">Monitoring Integration</h3>
 <p>NGINX Ingress Controller exposes Prometheus metrics:</p>
@@ -6207,8 +6207,8 @@ https://fawkes.example.com/quality    → SonarQube
 <span class="w">  </span><span class="nt">service</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LoadBalancer</span>
 <span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">service.beta.kubernetes.io/aws-load-balancer-type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;nlb&quot;</span>
-<span class="w">      </span><span class="nt">service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">      </span><span class="nt">service.beta.kubernetes.io/aws-load-balancer-type</span><span class="p">:</span><span class="w"> </span><span class="s">"nlb"</span>
+<span class="w">      </span><span class="nt">service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 
 <span class="w">  </span><span class="nt">metrics</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -6216,17 +6216,17 @@ https://fawkes.example.com/quality    → SonarQube
 <span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
 <span class="w">  </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">use-forwarded-headers</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">    </span><span class="nt">compute-full-forwarded-for</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">    </span><span class="nt">use-proxy-protocol</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
-<span class="w">    </span><span class="nt">enable-real-ip</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">    </span><span class="nt">proxy-body-size</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;50m&quot;</span>
-<span class="w">    </span><span class="nt">ssl-protocols</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TLSv1.2</span><span class="nv"> </span><span class="s">TLSv1.3&quot;</span>
-<span class="w">    </span><span class="nt">ssl-ciphers</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384&quot;</span>
+<span class="w">    </span><span class="nt">use-forwarded-headers</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+<span class="w">    </span><span class="nt">compute-full-forwarded-for</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+<span class="w">    </span><span class="nt">use-proxy-protocol</span><span class="p">:</span><span class="w"> </span><span class="s">"false"</span>
+<span class="w">    </span><span class="nt">enable-real-ip</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+<span class="w">    </span><span class="nt">proxy-body-size</span><span class="p">:</span><span class="w"> </span><span class="s">"50m"</span>
+<span class="w">    </span><span class="nt">ssl-protocols</span><span class="p">:</span><span class="w"> </span><span class="s">"TLSv1.2</span><span class="nv"> </span><span class="s">TLSv1.3"</span>
+<span class="w">    </span><span class="nt">ssl-ciphers</span><span class="p">:</span><span class="w"> </span><span class="s">"ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384"</span>
 
 <span class="w">  </span><span class="nt">podAnnotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">prometheus.io/scrape</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">    </span><span class="nt">prometheus.io/port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10254&quot;</span>
+<span class="w">    </span><span class="nt">prometheus.io/scrape</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+<span class="w">    </span><span class="nt">prometheus.io/port</span><span class="p">:</span><span class="w"> </span><span class="s">"10254"</span>
 </code></pre></div>
 <h2 id="consequences">Consequences</h2>
 <h3 id="positive">Positive</h3>
@@ -6549,21 +6549,21 @@ https://fawkes.example.com/quality    → SonarQube
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingress_alerts</span>
 <span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighErrorRate</span>
-<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sum(rate(nginx_ingress_controller_requests{status=~&quot;5..&quot;}[5m])) / sum(rate(nginx_ingress_controller_requests[5m])) &gt; 0.05</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sum(rate(nginx_ingress_controller_requests{status=~"5.."}[5m])) / sum(rate(nginx_ingress_controller_requests[5m])) &gt; 0.05</span>
 <span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
 <span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">5xx</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">detected&quot;</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"High</span><span class="nv"> </span><span class="s">5xx</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">detected"</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CertificateExpiring</span>
 <span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(nginx_ingress_controller_ssl_expire_time_seconds - time()) / 86400 &lt; 7</span>
 <span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TLS</span><span class="nv"> </span><span class="s">certificate</span><span class="nv"> </span><span class="s">expiring</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">less</span><span class="nv"> </span><span class="s">than</span><span class="nv"> </span><span class="s">7</span><span class="nv"> </span><span class="s">days&quot;</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"TLS</span><span class="nv"> </span><span class="s">certificate</span><span class="nv"> </span><span class="s">expiring</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">less</span><span class="nv"> </span><span class="s">than</span><span class="nv"> </span><span class="s">7</span><span class="nv"> </span><span class="s">days"</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighLatency</span>
 <span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">histogram_quantile(0.95, nginx_ingress_controller_request_duration_seconds_bucket) &gt; 5</span>
 <span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
 <span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;P95</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">5</span><span class="nv"> </span><span class="s">seconds&quot;</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"P95</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">5</span><span class="nv"> </span><span class="s">seconds"</span>
 </code></pre></div>
 <h2 id="security-considerations">Security Considerations</h2>
 <h3 id="tlsssl-management">TLS/SSL Management</h3>

@@ -5824,24 +5824,24 @@
 <ul>
 <li>[ ] Service type is LoadBalancer:</li>
 </ul>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.type}&#39;</span>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.type}'</span>
 <span class="c1"># Expected: LoadBalancer</span>
 </code></pre></div>
 <ul>
 <li>[ ] External IP is assigned:</li>
 </ul>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.loadBalancer.ingress[0].ip}'</span>
 <span class="c1"># Expected: IP address (not &lt;pending&gt;)</span>
 </code></pre></div>
 <ul>
 <li>[ ] Azure Load Balancer health probe is configured:</li>
 </ul>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.metadata.annotations.service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path}&#39;</span>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.metadata.annotations.service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path}'</span>
 <span class="c1"># Expected: /healthz</span>
 </code></pre></div>
 <ul>
 <li>[ ] External traffic policy is Local:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.externalTrafficPolicy}&#39;</span>
+  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.externalTrafficPolicy}'</span>
 <span class="c1"># Expected: Local</span>
 </code></pre></div></li>
 </ul>
@@ -5854,7 +5854,7 @@
 </code></pre></div>
 <ul>
 <li>[ ] Pod anti-affinity is configured:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.template.spec.affinity}&#39;</span>
+  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.template.spec.affinity}'</span>
 <span class="c1"># Expected: podAntiAffinity configuration present</span>
 </code></pre></div></li>
 </ul>
@@ -5896,7 +5896,7 @@
 <ul>
 <li>[ ] DNS variables configured in <code>infra/azure/terraform.tfvars</code>:</li>
 </ul>
-<div class="highlight"><pre><span></span><code>dns_zone_name = &quot;fawkes.yourdomain.com&quot;
+<div class="highlight"><pre><span></span><code>dns_zone_name = "fawkes.yourdomain.com"
 create_dns_records = true
 </code></pre></div>
 <ul>
@@ -5984,7 +5984,7 @@ create_dns_records = true
 <ul>
 <li>[ ] Email address updated in ClusterIssuer files:</li>
 </ul>
-<div class="highlight"><pre><span></span><code>grep<span class="w"> </span><span class="s2">&quot;email:&quot;</span><span class="w"> </span>platform/apps/cert-manager/cluster-issuer-*.yaml
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span><span class="s2">"email:"</span><span class="w"> </span>platform/apps/cert-manager/cluster-issuer-*.yaml
 <span class="c1"># Expected: Your actual email, not platform-team@example.com</span>
 </code></pre></div>
 <ul>
@@ -6029,7 +6029,7 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 <ul>
 <li>[ ] Test HTTP access with nip.io:</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="nv">EXTERNAL_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
+<div class="highlight"><pre><span></span><code><span class="nv">EXTERNAL_IP</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ingress-nginx-controller<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.loadBalancer.ingress[0].ip}'</span><span class="k">)</span>
 curl<span class="w"> </span>http://test.<span class="si">${</span><span class="nv">EXTERNAL_IP</span><span class="si">}</span>.nip.io
 <span class="c1"># Expected: Echo server response (JSON with request details)</span>
 </code></pre></div>
@@ -6061,7 +6061,7 @@ curl<span class="w"> </span>http://test.<span class="si">${</span><span class="n
 <ul>
 <li>[ ] Certificate issued (may take 1-2 minutes):</li>
 </ul>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>certificate<span class="w"> </span>-n<span class="w"> </span>ingress-test<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[0].status.conditions[?(@.type==&quot;Ready&quot;)].status}&#39;</span>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>certificate<span class="w"> </span>-n<span class="w"> </span>ingress-test<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].status.conditions[?(@.type=="Ready")].status}'</span>
 <span class="c1"># Expected: True</span>
 </code></pre></div>
 <ul>

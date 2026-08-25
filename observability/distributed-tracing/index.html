@@ -6056,14 +6056,14 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 </code></pre></div>
 <h3 id="nodejs-applications-backstage-express">Node.js Applications (Backstage, Express)</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// tracing.js - Add at the very top of your application</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/sdk-node&quot;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/exporter-trace-otlp-grpc&quot;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;@opentelemetry/auto-instrumentations-node&quot;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"@opentelemetry/sdk-node"</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"@opentelemetry/exporter-trace-otlp-grpc"</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getNodeAutoInstrumentations</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"@opentelemetry/auto-instrumentations-node"</span><span class="p">);</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">sdk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">NodeSDK</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">serviceName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-nodejs-app&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">serviceName</span><span class="o">:</span><span class="w"> </span><span class="s2">"my-nodejs-app"</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">traceExporter</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">OTLPTraceExporter</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;grpc://otel-collector.monitoring.svc.cluster.local:4317&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">"grpc://otel-collector.monitoring.svc.cluster.local:4317"</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}),</span>
 <span class="w">  </span><span class="nx">instrumentations</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">getNodeAutoInstrumentations</span><span class="p">()],</span>
 <span class="p">});</span>
@@ -6072,16 +6072,16 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 </code></pre></div>
 <h3 id="go-applications-argocd-custom-controllers">Go Applications (ArgoCD, Custom Controllers)</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;go.opentelemetry.io/otel&quot;</span>
-<span class="w">    </span><span class="s">&quot;go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc&quot;</span>
-<span class="w">    </span><span class="s">&quot;go.opentelemetry.io/otel/sdk/resource&quot;</span>
-<span class="w">    </span><span class="nx">sdktrace</span><span class="w"> </span><span class="s">&quot;go.opentelemetry.io/otel/sdk/trace&quot;</span>
-<span class="w">    </span><span class="nx">semconv</span><span class="w"> </span><span class="s">&quot;go.opentelemetry.io/otel/semconv/v1.17.0&quot;</span>
+<span class="w">    </span><span class="s">"go.opentelemetry.io/otel"</span>
+<span class="w">    </span><span class="s">"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"</span>
+<span class="w">    </span><span class="s">"go.opentelemetry.io/otel/sdk/resource"</span>
+<span class="w">    </span><span class="nx">sdktrace</span><span class="w"> </span><span class="s">"go.opentelemetry.io/otel/sdk/trace"</span>
+<span class="w">    </span><span class="nx">semconv</span><span class="w"> </span><span class="s">"go.opentelemetry.io/otel/semconv/v1.17.0"</span>
 <span class="p">)</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="nx">initTracer</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="nx">sdktrace</span><span class="p">.</span><span class="nx">TracerProvider</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">exporter</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">otlptracegrpc</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span>
-<span class="w">        </span><span class="nx">otlptracegrpc</span><span class="p">.</span><span class="nx">WithEndpoint</span><span class="p">(</span><span class="s">&quot;otel-collector.monitoring.svc.cluster.local:4317&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="nx">otlptracegrpc</span><span class="p">.</span><span class="nx">WithEndpoint</span><span class="p">(</span><span class="s">"otel-collector.monitoring.svc.cluster.local:4317"</span><span class="p">),</span>
 <span class="w">        </span><span class="nx">otlptracegrpc</span><span class="p">.</span><span class="nx">WithInsecure</span><span class="p">(),</span>
 <span class="w">    </span><span class="p">)</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
@@ -6092,7 +6092,7 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span><span class="nx">sdktrace</span><span class="p">.</span><span class="nx">WithBatcher</span><span class="p">(</span><span class="nx">exporter</span><span class="p">),</span>
 <span class="w">        </span><span class="nx">sdktrace</span><span class="p">.</span><span class="nx">WithResource</span><span class="p">(</span><span class="nx">resource</span><span class="p">.</span><span class="nx">NewWithAttributes</span><span class="p">(</span>
 <span class="w">            </span><span class="nx">semconv</span><span class="p">.</span><span class="nx">SchemaURL</span><span class="p">,</span>
-<span class="w">            </span><span class="nx">semconv</span><span class="p">.</span><span class="nx">ServiceName</span><span class="p">(</span><span class="s">&quot;my-go-app&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="nx">semconv</span><span class="p">.</span><span class="nx">ServiceName</span><span class="p">(</span><span class="s">"my-go-app"</span><span class="p">),</span>
 <span class="w">        </span><span class="p">)),</span>
 <span class="w">    </span><span class="p">)</span>
 <span class="w">    </span><span class="nx">otel</span><span class="p">.</span><span class="nx">SetTracerProvider</span><span class="p">(</span><span class="nx">tp</span><span class="p">)</span>
@@ -6103,7 +6103,7 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <h3 id="querying-traces-in-grafana">Querying Traces in Grafana</h3>
 <p>Access Grafana at <code>http://grafana.127.0.0.1.nip.io</code> and navigate to Explore → Tempo.</p>
 <h4 id="find-traces-by-service">Find traces by service</h4>
-<div class="highlight"><pre><span></span><code>{resource.service.name=&quot;backstage&quot;}
+<div class="highlight"><pre><span></span><code>{resource.service.name="backstage"}
 </code></pre></div>
 <h4 id="find-slow-traces-1-second">Find slow traces (&gt; 1 second)</h4>
 <div class="highlight"><pre><span></span><code>{duration &gt; 1s}
@@ -6112,10 +6112,10 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <div class="highlight"><pre><span></span><code>{status = error}
 </code></pre></div>
 <h4 id="find-database-queries">Find database queries</h4>
-<div class="highlight"><pre><span></span><code>{span.db.system = &quot;postgresql&quot;}
+<div class="highlight"><pre><span></span><code>{span.db.system = "postgresql"}
 </code></pre></div>
 <h4 id="find-traces-by-http-route">Find traces by HTTP route</h4>
-<div class="highlight"><pre><span></span><code>{span.http.route = &quot;/api/catalog/*&quot;}
+<div class="highlight"><pre><span></span><code>{span.http.route = "/api/catalog/*"}
 </code></pre></div>
 <h3 id="trace-to-logs-correlation">Trace-to-Logs Correlation</h3>
 <ol>
@@ -6241,10 +6241,10 @@ curl<span class="w"> </span>http://localhost:3200/ready
 </code></pre></div>
 <h3 id="custom-spans">Custom Spans</h3>
 <p>Create spans for significant operations:</p>
-<div class="highlight"><pre><span></span><code><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">span</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">tracer</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;process-order&quot;</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><code><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">span</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">tracer</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="s">"process-order"</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">trace</span><span class="p">.</span><span class="nx">WithAttributes</span><span class="p">(</span>
-<span class="w">        </span><span class="nx">attribute</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">&quot;order.id&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">orderID</span><span class="p">),</span>
-<span class="w">        </span><span class="nx">attribute</span><span class="p">.</span><span class="nx">Int</span><span class="p">(</span><span class="s">&quot;order.items&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">items</span><span class="p">)),</span>
+<span class="w">        </span><span class="nx">attribute</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">"order.id"</span><span class="p">,</span><span class="w"> </span><span class="nx">orderID</span><span class="p">),</span>
+<span class="w">        </span><span class="nx">attribute</span><span class="p">.</span><span class="nx">Int</span><span class="p">(</span><span class="s">"order.items"</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">items</span><span class="p">)),</span>
 <span class="w">    </span><span class="p">),</span>
 <span class="p">)</span>
 <span class="k">defer</span><span class="w"> </span><span class="nx">span</span><span class="p">.</span><span class="nx">End</span><span class="p">()</span>

@@ -5685,15 +5685,15 @@
 <span class="w">    </span><span class="c1">// Arrange</span>
 <span class="w">    </span><span class="n">DeploymentMetrics</span><span class="w"> </span><span class="n">metrics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeploymentMetrics</span><span class="p">();</span>
 <span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Deployment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deployments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arrays</span><span class="p">.</span><span class="na">asList</span><span class="p">(</span>
-<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">Deployment</span><span class="p">(</span><span class="s">&quot;2023-01-01&quot;</span><span class="p">),</span>
-<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">Deployment</span><span class="p">(</span><span class="s">&quot;2023-01-02&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">Deployment</span><span class="p">(</span><span class="s">"2023-01-01"</span><span class="p">),</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">Deployment</span><span class="p">(</span><span class="s">"2023-01-02"</span><span class="p">)</span>
 <span class="w">    </span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// Act</span>
 <span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">metrics</span><span class="p">.</span><span class="na">calculateFrequency</span><span class="p">(</span><span class="n">deployments</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// Assert</span>
-<span class="w">    </span><span class="n">assertEquals</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="n">frequency</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Should calculate correct deployment frequency&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">assertEquals</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="n">frequency</span><span class="p">,</span><span class="w"> </span><span class="s">"Should calculate correct deployment frequency"</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="nd">@Test</span>
@@ -5711,16 +5711,16 @@
 <div class="highlight"><pre><span></span><code><span class="nd">@TestContainer</span>
 <span class="kd">class</span> <span class="nc">DeploymentRepositoryTest</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nd">@Container</span>
-<span class="w">    </span><span class="kd">static</span><span class="w"> </span><span class="n">PostgreSQLContainer</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">postgres</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PostgreSQLContainer</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="s">&quot;postgres:14&quot;</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="na">withDatabaseName</span><span class="p">(</span><span class="s">&quot;testdb&quot;</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="na">withUsername</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="na">withPassword</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">static</span><span class="w"> </span><span class="n">PostgreSQLContainer</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">postgres</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PostgreSQLContainer</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="s">"postgres:14"</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withDatabaseName</span><span class="p">(</span><span class="s">"testdb"</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withUsername</span><span class="p">(</span><span class="s">"test"</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withPassword</span><span class="p">(</span><span class="s">"test"</span><span class="p">);</span>
 
 <span class="w">    </span><span class="nd">@Test</span>
 <span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">shouldPersistDeployment</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="c1">// Arrange</span>
 <span class="w">        </span><span class="n">DeploymentRepository</span><span class="w"> </span><span class="n">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeploymentRepository</span><span class="p">(</span><span class="n">postgres</span><span class="p">.</span><span class="na">getJdbcUrl</span><span class="p">());</span>
-<span class="w">        </span><span class="n">Deployment</span><span class="w"> </span><span class="n">deployment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Deployment</span><span class="p">(</span><span class="s">&quot;2023-01-01&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Deployment</span><span class="w"> </span><span class="n">deployment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Deployment</span><span class="p">(</span><span class="s">"2023-01-01"</span><span class="p">);</span>
 
 <span class="w">        </span><span class="c1">// Act</span>
 <span class="w">        </span><span class="n">repository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">deployment</span><span class="p">);</span>
@@ -5728,42 +5728,42 @@
 <span class="w">        </span><span class="c1">// Assert</span>
 <span class="w">        </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Deployment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">repository</span><span class="p">.</span><span class="na">findById</span><span class="p">(</span><span class="n">deployment</span><span class="p">.</span><span class="na">getId</span><span class="p">());</span>
 <span class="w">        </span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">.</span><span class="na">isPresent</span><span class="p">());</span>
-<span class="w">        </span><span class="n">assertEquals</span><span class="p">(</span><span class="s">&quot;2023-01-01&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">found</span><span class="p">.</span><span class="na">get</span><span class="p">().</span><span class="na">getDate</span><span class="p">());</span>
+<span class="w">        </span><span class="n">assertEquals</span><span class="p">(</span><span class="s">"2023-01-01"</span><span class="p">,</span><span class="w"> </span><span class="n">found</span><span class="p">.</span><span class="na">get</span><span class="p">().</span><span class="na">getDate</span><span class="p">());</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="3-end-to-end-testing-with-cypress">3. End-to-End Testing with Cypress</h3>
-<div class="highlight"><pre><span></span><code><span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;Deployment Pipeline&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nx">describe</span><span class="p">(</span><span class="s2">"Deployment Pipeline"</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">beforeEach</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">intercept</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/api/deployments&quot;</span><span class="p">).</span><span class="kr">as</span><span class="p">(</span><span class="s2">&quot;getDeployments&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">intercept</span><span class="p">(</span><span class="s2">"GET"</span><span class="p">,</span><span class="w"> </span><span class="s2">"/api/deployments"</span><span class="p">).</span><span class="kr">as</span><span class="p">(</span><span class="s2">"getDeployments"</span><span class="p">);</span>
 <span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">login</span><span class="p">();</span><span class="w"> </span><span class="c1">// Custom command for authentication</span>
 <span class="w">  </span><span class="p">});</span>
 
-<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s2">&quot;shows deployment metrics dashboard&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s2">"shows deployment metrics dashboard"</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// Arrange</span>
-<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s2">&quot;/dashboard&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s2">"/dashboard"</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// Act</span>
-<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">wait</span><span class="p">(</span><span class="s2">&quot;@getDeployments&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">wait</span><span class="p">(</span><span class="s2">"@getDeployments"</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// Assert</span>
-<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;deployment-frequency&quot;]&#39;</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s2">&quot;be.visible&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;lead-time&quot;]&#39;</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s2">&quot;be.visible&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;change-failure-rate&quot;]&#39;</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s2">&quot;be.visible&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;mttr&quot;]&#39;</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s2">&quot;be.visible&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'[data-testid="deployment-frequency"]'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s2">"be.visible"</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'[data-testid="lead-time"]'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s2">"be.visible"</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'[data-testid="change-failure-rate"]'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s2">"be.visible"</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'[data-testid="mttr"]'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s2">"be.visible"</span><span class="p">);</span>
 <span class="w">  </span><span class="p">});</span>
 
-<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s2">&quot;creates new deployment&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s2">"creates new deployment"</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// Arrange</span>
-<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s2">&quot;/deployments/new&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s2">"/deployments/new"</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// Act</span>
-<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;service-name&quot;]&#39;</span><span class="p">).</span><span class="nx">type</span><span class="p">(</span><span class="s2">&quot;fawkes-web&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;version&quot;]&#39;</span><span class="p">).</span><span class="nx">type</span><span class="p">(</span><span class="s2">&quot;1.0.0&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;submit&quot;]&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'[data-testid="service-name"]'</span><span class="p">).</span><span class="nx">type</span><span class="p">(</span><span class="s2">"fawkes-web"</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'[data-testid="version"]'</span><span class="p">).</span><span class="nx">type</span><span class="p">(</span><span class="s2">"1.0.0"</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'[data-testid="submit"]'</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
 
 <span class="w">    </span><span class="c1">// Assert</span>
-<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;success-message&quot;]&#39;</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s2">&quot;be.visible&quot;</span><span class="p">).</span><span class="nx">and</span><span class="p">(</span><span class="s2">&quot;contain&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Deployment created successfully&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'[data-testid="success-message"]'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s2">"be.visible"</span><span class="p">).</span><span class="nx">and</span><span class="p">(</span><span class="s2">"contain"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Deployment created successfully"</span><span class="p">);</span>
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div>
@@ -5781,8 +5781,8 @@
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up JDK</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-java@v3</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">java-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;17&quot;</span>
-<span class="w">          </span><span class="nt">distribution</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;temurin&quot;</span>
+<span class="w">          </span><span class="nt">java-version</span><span class="p">:</span><span class="w"> </span><span class="s">"17"</span>
+<span class="w">          </span><span class="nt">distribution</span><span class="p">:</span><span class="w"> </span><span class="s">"temurin"</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Unit Tests</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./gradlew test</span>

@@ -6040,8 +6040,8 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 </code></pre></div>
 <ul>
 <li>[ ] Verify no CrashLoopBackOff or Error states:
-  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>devlake<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[*].status.phase}&#39;</span>
-<span class="c1"># Expected: All &quot;Running&quot;</span>
+  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>devlake<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[*].status.phase}'</span>
+<span class="c1"># Expected: All "Running"</span>
 </code></pre></div></li>
 </ul>
 <h3 id="4-verify-services">4. Verify Services</h3>
@@ -6062,7 +6062,7 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 <p>[ ] Test internal connectivity:
   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>debug<span class="w"> </span>--image<span class="o">=</span>alpine<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>wget<span class="w"> </span>-O-<span class="w"> </span>http://devlake-lake:8080/api/ping
-<span class="c1"># Expected: {&quot;message&quot;:&quot;pong&quot;}</span>
+<span class="c1"># Expected: {"message":"pong"}</span>
 </code></pre></div></p>
 </li>
 </ul>
@@ -6092,7 +6092,7 @@ curl<span class="w"> </span>http://devlake-grafana.127.0.0.1.nip.io/api/health
 <li>[ ] Connect to MySQL:</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get root password first</span>
-<span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>devlake-db<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.mysql-root-password}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="k">)</span>
+<span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>devlake-db<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.mysql-root-password}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="k">)</span>
 
 <span class="c1"># Connect to MySQL</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>devlake-mysql-0<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p
@@ -6102,7 +6102,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <li>[ ] Verify database exists:</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="k">SHOW</span><span class="w"> </span><span class="n">DATABASES</span><span class="p">;</span>
-<span class="c1">-- Expected: &#39;lake&#39; database listed</span>
+<span class="c1">-- Expected: 'lake' database listed</span>
 </code></pre></div>
 <ul>
 <li>[ ] Verify key tables exist:</li>
@@ -6141,7 +6141,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <li>[ ] Health check:</li>
 </ul>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/ping
-<span class="c1"># Expected: {&quot;message&quot;:&quot;pong&quot;}</span>
+<span class="c1"># Expected: {"message":"pong"}</span>
 </code></pre></div>
 <ul>
 <li>[ ] Get API version:</li>
@@ -6150,8 +6150,8 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 </code></pre></div>
 <ul>
 <li>[ ] Test authenticated endpoint (requires token):
-  <div class="highlight"><pre><span></span><code><span class="nv">API_TOKEN</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>devlake-api-token<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.token}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="k">)</span>
-curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$API_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+  <div class="highlight"><pre><span></span><code><span class="nv">API_TOKEN</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>devlake-api-token<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.token}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="k">)</span>
+curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$API_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>http://devlake.127.0.0.1.nip.io/api/projects
 </code></pre></div></li>
 </ul>
@@ -6160,14 +6160,14 @@ curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Aut
 <li>[ ] GraphQL introspection query:</li>
 </ul>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/graphql<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;:&quot;{ __schema { types { name } } }&quot;}&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"query":"{ __schema { types { name } } }"}'</span>
 </code></pre></div>
 <ul>
 <li>[ ] Test DORA metrics query (after data collection):
   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://devlake.127.0.0.1.nip.io/api/graphql<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;:&quot;query { projects { name } }&quot;}&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"query":"query { projects { name } }"}'</span>
 </code></pre></div></li>
 </ul>
 <h3 id="9-test-prometheus-metrics-endpoint">9. Test Prometheus Metrics Endpoint</h3>
@@ -6206,8 +6206,8 @@ curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Aut
 </ul>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>svc/prometheus-kube-prometheus-prometheus<span class="w"> </span><span class="m">9090</span>:9090
 <span class="c1"># Open http://localhost:9090/targets</span>
-<span class="c1"># Search for &quot;devlake&quot;</span>
-<span class="c1"># Expected: Target &quot;devlake-metrics&quot; is UP</span>
+<span class="c1"># Search for "devlake"</span>
+<span class="c1"># Expected: Target "devlake-metrics" is UP</span>
 </code></pre></div>
 <ul>
 <li>[ ] Query DORA metrics in Prometheus (after data collection):
@@ -6299,7 +6299,7 @@ curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Aut
 <p>[ ] Get webhook URL:</p>
 </li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;http://devlake.127.0.0.1.nip.io/api/plugins/webhook/1/incidents&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">"http://devlake.127.0.0.1.nip.io/api/plugins/webhook/1/incidents"</span>
 </code></pre></div>
 <ul>
 <li>[ ] Configure observability platform to send incidents to webhook</li>
@@ -6311,7 +6311,7 @@ curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Aut
 <li>[ ] Get Grafana admin password:</li>
 </ul>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>devlake-grafana-secrets<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.admin-password}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.admin-password}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
 </code></pre></div>
 <ul>
 <li>[ ] Access Grafana UI:

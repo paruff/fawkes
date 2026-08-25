@@ -6099,7 +6099,7 @@
 <li><strong>Symptom:</strong> Terraform or Azure CLI commands fail with "resource group not found."</li>
 <li><strong>Solution:</strong></li>
 <li>Verify the resource group exists:
-    <div class="highlight"><pre><span></span><code>az<span class="w"> </span>group<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;[].name&quot;</span>
+    <div class="highlight"><pre><span></span><code>az<span class="w"> </span>group<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s2">"[].name"</span>
 </code></pre></div></li>
 <li>Create the resource group if necessary:
     <div class="highlight"><pre><span></span><code>az<span class="w"> </span>group<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;resource-group&gt;<span class="w"> </span>--location<span class="w"> </span>&lt;location&gt;
@@ -6167,7 +6167,7 @@ argocd<span class="w"> </span>app<span class="w"> </span>diff<span class="w"> </
     <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>backstage<span class="w"> </span>-l<span class="w"> </span>cnpg.io/cluster<span class="o">=</span>db-backstage-dev
 </code></pre></div></li>
 <li>Check database connection:
-    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>backstage<span class="w"> </span>db-backstage-dev-1<span class="w"> </span>--<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1&quot;</span>
+    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>backstage<span class="w"> </span>db-backstage-dev-1<span class="w"> </span>--<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT 1"</span>
 </code></pre></div></li>
 </ul>
 <h4 id="catalog-not-loading">Catalog Not Loading</h4>
@@ -6264,7 +6264,7 @@ kubectl<span class="w"> </span>describe<span class="w"> </span>externalsecret<sp
     <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span>prometheus-kube-prometheus-prometheus-0<span class="w"> </span>--<span class="w"> </span>df<span class="w"> </span>-h
 </code></pre></div></li>
 <li>Increase PVC size:
-    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>patch<span class="w"> </span>pvc<span class="w"> </span>prometheus-kube-prometheus-prometheus-db-prometheus-kube-prometheus-prometheus-0<span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;resources&quot;:{&quot;requests&quot;:{&quot;storage&quot;:&quot;100Gi&quot;}}}}&#39;</span>
+    <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>patch<span class="w"> </span>pvc<span class="w"> </span>prometheus-kube-prometheus-prometheus-db-prometheus-kube-prometheus-prometheus-0<span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span>-p<span class="w"> </span><span class="s1">'{"spec":{"resources":{"requests":{"storage":"100Gi"}}}}'</span>
 </code></pre></div></li>
 <li>Or reduce retention period in Prometheus configuration</li>
 </ul>
@@ -6353,7 +6353,7 @@ kubectl<span class="w"> </span>describe<span class="w"> </span>certificate<span 
 <li><strong>Solution:</strong></li>
 <li>Check node resource usage:
     <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>top<span class="w"> </span>nodes
-kubectl<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Allocated resources&quot;</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">"Allocated resources"</span>
 </code></pre></div></li>
 <li>Identify resource-hungry pods:
     <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k<span class="w"> </span><span class="m">3</span><span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20

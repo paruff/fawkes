@@ -5968,7 +5968,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>nodes
 </ul>
 <h3 id="2-3-5-nodes-running-and-schedulable">2. 3-5 nodes running and schedulable</h3>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
-kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.items | length&#39;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.items | length'</span>
 </code></pre></div>
 <ul>
 <li>[ ] Total node count is 4+ (2 system + 2+ user)</li>
@@ -5979,7 +5979,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> 
 <div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;networkProfile.networkPlugin&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--query<span class="w"> </span><span class="s2">"networkProfile.networkPlugin"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>tsv
 </code></pre></div>
 <ul>
@@ -6016,7 +6016,7 @@ kubectl<span class="w"> </span>cluster-info
 <div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;addonProfiles.omsagent.enabled&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--query<span class="w"> </span><span class="s2">"addonProfiles.omsagent.enabled"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>tsv
 </code></pre></div>
 <ul>
@@ -6029,7 +6029,7 @@ kubectl<span class="w"> </span>cluster-info
 <div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;aadProfile&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--query<span class="w"> </span><span class="s2">"aadProfile"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>json
 </code></pre></div>
 <ul>
@@ -6060,7 +6060,7 @@ az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w">
 <div class="highlight"><pre><span></span><code>az<span class="w"> </span>keyvault<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>fawkes-kv<span class="w"> </span>--output<span class="w"> </span>table
 
 az<span class="w"> </span>keyvault<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>fawkes-kv<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;properties.enableSoftDelete&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--query<span class="w"> </span><span class="s2">"properties.enableSoftDelete"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>tsv
 </code></pre></div>
 <ul>
@@ -6127,7 +6127,7 @@ inspec<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 pytest<span class="w"> </span>tests/bdd/features/azure_aks_provisioning.feature<span class="w"> </span>-v
 
 <span class="c1"># Or run specific scenarios</span>
-pytest<span class="w"> </span>tests/bdd/features/azure_aks_provisioning.feature<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;AT-E1-001&quot;</span>
+pytest<span class="w"> </span>tests/bdd/features/azure_aks_provisioning.feature<span class="w"> </span>-k<span class="w"> </span><span class="s2">"AT-E1-001"</span>
 </code></pre></div>
 <ul>
 <li>[ ] All test scenarios pass</li>
@@ -6145,7 +6145,7 @@ pytest<span class="w"> </span>tests/bdd/features/azure_aks_provisioning.feature<
 </ul>
 <h3 id="actual-cost-check">Actual Cost Check</h3>
 <div class="highlight"><pre><span></span><code>az<span class="w"> </span>consumption<span class="w"> </span>usage<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--start-date<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;1 day ago&#39;</span><span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--start-date<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">'1 day ago'</span><span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--end-date<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>

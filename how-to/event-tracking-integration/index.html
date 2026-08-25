@@ -5707,13 +5707,13 @@
 <h2 id="setup">Setup</h2>
 <h3 id="1-initialize-the-tracker">1. Initialize the Tracker</h3>
 <p>Add initialization to your Backstage app's entry point (e.g., <code>packages/app/src/App.tsx</code> or <code>packages/app/src/index.tsx</code>):</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">initializeTracker</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system/analytics&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">initializeTracker</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@fawkes/design-system/analytics"</span><span class="p">;</span>
 
 <span class="c1">// Initialize tracker early in app lifecycle</span>
 <span class="nx">initializeTracker</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">baseUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://plausible.fawkes.idp&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">domain</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;backstage.fawkes.idp&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">debug</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.NODE_ENV</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;development&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">baseUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">"https://plausible.fawkes.idp"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">domain</span><span class="o">:</span><span class="w"> </span><span class="s2">"backstage.fawkes.idp"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">debug</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.NODE_ENV</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">"development"</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">trackLocalhost</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="c1">// Enable for development</span>
 <span class="p">});</span>
 </code></pre></div>
@@ -5727,14 +5727,14 @@
 
 <span class="nt">proxy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
-<span class="w">    </span><span class="s">&quot;/plausible/api&quot;</span><span class="p p-Indicator">:</span>
+<span class="w">    </span><span class="s">"/plausible/api"</span><span class="p p-Indicator">:</span>
 <span class="w">      </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://plausible.fawkes.svc:8000/api/</span>
 <span class="w">      </span><span class="nt">changeOrigin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">secure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </code></pre></div>
 <h2 id="usage-examples">Usage Examples</h2>
 <h3 id="track-page-views">Track Page Views</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">usePageViewTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">usePageViewTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">HomePage</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="c1">// Automatically track page view on mount</span>
@@ -5744,7 +5744,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="track-user-actions">Track User Actions</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">,</span><span class="w"> </span><span class="nx">PredefinedEvents</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">,</span><span class="w"> </span><span class="nx">PredefinedEvents</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">CatalogPage</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackPredefined</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">();</span>
@@ -5752,7 +5752,7 @@
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">handleViewService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">service</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">trackPredefined</span><span class="p">(</span><span class="nx">PredefinedEvents</span><span class="p">.</span><span class="nx">VIEW_SERVICE</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nx">entityName</span><span class="o">:</span><span class="w"> </span><span class="kt">service</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">entityKind</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;service&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">entityKind</span><span class="o">:</span><span class="w"> </span><span class="s1">'service'</span><span class="p">,</span>
 <span class="w">    </span><span class="p">});</span>
 <span class="w">  </span><span class="p">};</span>
 
@@ -5762,7 +5762,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="track-scaffolding-flow">Track Scaffolding Flow</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">,</span><span class="w"> </span><span class="nx">PredefinedEvents</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">,</span><span class="w"> </span><span class="nx">PredefinedEvents</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">ScaffoldingWizard</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackPredefined</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">();</span>
@@ -5800,10 +5800,10 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="track-search-queries">Track Search Queries</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useSearchTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useSearchTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">CatalogSearch</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackSearch</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useSearchTracking</span><span class="p">(</span><span class="s1">&#39;catalog&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackSearch</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useSearchTracking</span><span class="p">(</span><span class="s1">'catalog'</span><span class="p">);</span>
 
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">handleSearch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">results</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">[])</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">trackSearch</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span><span class="w"> </span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
@@ -5821,7 +5821,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="track-cicd-events">Track CI/CD Events</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">,</span><span class="w"> </span><span class="nx">PredefinedEvents</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">,</span><span class="w"> </span><span class="nx">PredefinedEvents</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">PipelineCard</span><span class="p">({</span><span class="w"> </span><span class="nx">pipelineId</span><span class="w"> </span><span class="p">}</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pipelineId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackPredefined</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">();</span>
@@ -5831,7 +5831,7 @@
 
 <span class="w">    </span><span class="nx">trackPredefined</span><span class="p">(</span><span class="nx">PredefinedEvents</span><span class="p">.</span><span class="nx">TRIGGER_BUILD</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nx">pipelineId</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;PipelineCard&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="s1">'PipelineCard'</span><span class="p">,</span>
 <span class="w">    </span><span class="p">});</span>
 
 <span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
@@ -5865,7 +5865,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="track-deployment-events">Track Deployment Events</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">,</span><span class="w"> </span><span class="nx">PredefinedEvents</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">,</span><span class="w"> </span><span class="nx">PredefinedEvents</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">DeployButton</span><span class="p">({</span><span class="w"> </span><span class="nx">serviceName</span><span class="p">,</span><span class="w"> </span><span class="nx">environment</span><span class="w"> </span><span class="p">}</span><span class="o">:</span><span class="w"> </span><span class="nx">DeployButtonProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackPredefined</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">();</span>
@@ -5900,10 +5900,10 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="track-form-interactions">Track Form Interactions</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useFormTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useFormTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">ServiceCreationForm</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackFormStart</span><span class="p">,</span><span class="w"> </span><span class="nx">trackFormSubmit</span><span class="p">,</span><span class="w"> </span><span class="nx">trackFormError</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useFormTracking</span><span class="p">(</span><span class="s1">&#39;service-creation&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackFormStart</span><span class="p">,</span><span class="w"> </span><span class="nx">trackFormSubmit</span><span class="p">,</span><span class="w"> </span><span class="nx">trackFormError</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useFormTracking</span><span class="p">(</span><span class="s1">'service-creation'</span><span class="p">);</span>
 
 <span class="w">  </span><span class="nx">useEffect</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">trackFormStart</span><span class="p">();</span>
@@ -5927,7 +5927,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="track-errors">Track Errors</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useErrorTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useErrorTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">ServiceDetailPage</span><span class="p">({</span><span class="w"> </span><span class="nx">serviceId</span><span class="w"> </span><span class="p">}</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">serviceId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackError</span><span class="p">,</span><span class="w"> </span><span class="nx">trackAPIError</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useErrorTracking</span><span class="p">();</span>
@@ -5942,13 +5942,13 @@
 <span class="w">          </span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">,</span>
 <span class="w">          </span><span class="nx">response</span><span class="p">.</span><span class="nx">statusText</span>
 <span class="w">        </span><span class="p">);</span>
-<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Failed to fetch service data&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">'Failed to fetch service data'</span><span class="p">);</span>
 <span class="w">      </span><span class="p">}</span>
 
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nx">trackError</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ServiceDetailPage&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="s1">'ServiceDetailPage'</span><span class="p">,</span>
 <span class="w">        </span><span class="nx">serviceId</span><span class="p">,</span>
 <span class="w">      </span><span class="p">});</span>
 <span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="nx">error</span><span class="p">;</span>
@@ -5959,10 +5959,10 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="track-performance">Track Performance</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">usePerformanceTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">usePerformanceTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">HeavyComponent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackPerformance</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">usePerformanceTracking</span><span class="p">(</span><span class="s1">&#39;heavy-component-load&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackPerformance</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">usePerformanceTracking</span><span class="p">(</span><span class="s1">'heavy-component-load'</span><span class="p">);</span>
 
 <span class="w">  </span><span class="nx">useEffect</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">startTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">performance</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
@@ -5970,7 +5970,7 @@
 <span class="w">    </span><span class="nx">loadHeavyData</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">performance</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">startTime</span><span class="p">;</span>
 <span class="w">      </span><span class="nx">trackPerformance</span><span class="p">(</span><span class="nx">duration</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;HeavyComponent&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="s1">'HeavyComponent'</span><span class="p">,</span>
 <span class="w">      </span><span class="p">});</span>
 <span class="w">    </span><span class="p">});</span>
 <span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="p">[]);</span>
@@ -5979,11 +5979,11 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="track-button-clicks">Track Button Clicks</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useButtonClick</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useButtonClick</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">FeedbackWidget</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">trackOpenFeedback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useButtonClick</span><span class="p">(</span><span class="s1">&#39;Open Feedback&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;FeedbackWidget&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">trackOpenFeedback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useButtonClick</span><span class="p">(</span><span class="s1">'Open Feedback'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="s1">'FeedbackWidget'</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
@@ -5994,7 +5994,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="track-documentation-access">Track Documentation Access</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">,</span><span class="w"> </span><span class="nx">PredefinedEvents</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">,</span><span class="w"> </span><span class="nx">PredefinedEvents</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">TechDocsViewer</span><span class="p">({</span><span class="w"> </span><span class="nx">docId</span><span class="w"> </span><span class="p">}</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">docId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackPredefined</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">();</span>
@@ -6008,7 +6008,7 @@
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">handleDownload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">trackPredefined</span><span class="p">(</span><span class="nx">PredefinedEvents</span><span class="p">.</span><span class="nx">DOWNLOAD_DOCS</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nx">entityId</span><span class="o">:</span><span class="w"> </span><span class="kt">docId</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">format</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">format</span><span class="o">:</span><span class="w"> </span><span class="s1">'pdf'</span><span class="p">,</span>
 <span class="w">    </span><span class="p">});</span>
 <span class="w">  </span><span class="p">};</span>
 
@@ -6021,7 +6021,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="track-plugin-interactions">Track Plugin Interactions</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">,</span><span class="w"> </span><span class="nx">PredefinedEvents</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">,</span><span class="w"> </span><span class="nx">PredefinedEvents</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">KubernetesPlugin</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackPredefined</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useEventTracking</span><span class="p">();</span>
@@ -6044,20 +6044,20 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="track-component-lifecycle">Track Component Lifecycle</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useComponentTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useComponentTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">ServiceCard</span><span class="p">({</span><span class="w"> </span><span class="nx">service</span><span class="w"> </span><span class="p">}</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">service</span><span class="o">:</span><span class="w"> </span><span class="kt">Service</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">useComponentTracking</span><span class="p">(</span><span class="s1">&#39;ServiceCard&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">useComponentTracking</span><span class="p">(</span><span class="s1">'ServiceCard'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">entityName</span><span class="o">:</span><span class="w"> </span><span class="kt">service.name</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">entityKind</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;service&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">entityKind</span><span class="o">:</span><span class="w"> </span><span class="s1">'service'</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">Card</span><span class="o">&gt;</span><span class="p">...</span><span class="o">&lt;</span><span class="err">/Card&gt;;</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="track-navigation">Track Navigation</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useNavigationTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useNavigate</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react-router-dom&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useNavigationTracking</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useNavigate</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'react-router-dom'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">NavigationMenu</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackNavigation</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useNavigationTracking</span><span class="p">();</span>
@@ -6065,17 +6065,17 @@
 
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">handleNavigate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">trackNavigation</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">source</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;navigation-menu&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">source</span><span class="o">:</span><span class="w"> </span><span class="s1">'navigation-menu'</span><span class="p">,</span>
 <span class="w">    </span><span class="p">});</span>
 <span class="w">    </span><span class="nx">navigate</span><span class="p">(</span><span class="nx">path</span><span class="p">);</span>
 <span class="w">  </span><span class="p">};</span>
 
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="o">&lt;</span><span class="nx">Menu</span><span class="o">&gt;</span>
-<span class="w">      </span><span class="o">&lt;</span><span class="nx">MenuItem</span><span class="w"> </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">handleNavigate</span><span class="p">(</span><span class="s1">&#39;/catalog&#39;</span><span class="p">)}</span><span class="o">&gt;</span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">MenuItem</span><span class="w"> </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">handleNavigate</span><span class="p">(</span><span class="s1">'/catalog'</span><span class="p">)}</span><span class="o">&gt;</span>
 <span class="w">        </span><span class="nx">Catalog</span>
 <span class="w">      </span><span class="o">&lt;</span><span class="err">/MenuItem&gt;</span>
-<span class="w">      </span><span class="o">&lt;</span><span class="nx">MenuItem</span><span class="w"> </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">handleNavigate</span><span class="p">(</span><span class="s1">&#39;/docs&#39;</span><span class="p">)}</span><span class="o">&gt;</span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">MenuItem</span><span class="w"> </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">handleNavigate</span><span class="p">(</span><span class="s1">'/docs'</span><span class="p">)}</span><span class="o">&gt;</span>
 <span class="w">        </span><span class="nx">Documentation</span>
 <span class="w">      </span><span class="o">&lt;</span><span class="err">/MenuItem&gt;</span>
 <span class="w">    </span><span class="o">&lt;</span><span class="err">/Menu&gt;</span>
@@ -6092,7 +6092,7 @@
 <span class="w">  </span><span class="nx">privacyMiddleware</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">enrichmentMiddleware</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">userContextMiddleware</span><span class="p">,</span>
-<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system/analytics&quot;</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@fawkes/design-system/analytics"</span><span class="p">;</span>
 
 <span class="c1">// Create custom middleware</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">customMiddleware</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -6101,7 +6101,7 @@
 <span class="w">    </span><span class="p">...</span><span class="nx">event</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="p">...</span><span class="nx">event</span><span class="p">.</span><span class="nx">properties</span><span class="p">,</span>
-<span class="w">      </span><span class="nx">appVersion</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">appVersion</span><span class="o">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">  </span><span class="p">};</span>
 <span class="p">};</span>
@@ -6110,7 +6110,7 @@
 <span class="kd">const</span><span class="w"> </span><span class="nx">chain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">MiddlewareChain</span><span class="p">();</span>
 <span class="nx">chain</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">validationMiddleware</span><span class="p">);</span>
 <span class="nx">chain</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">privacyMiddleware</span><span class="p">);</span>
-<span class="nx">chain</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">enrichmentMiddleware</span><span class="p">({</span><span class="w"> </span><span class="nx">platform</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;fawkes&quot;</span><span class="w"> </span><span class="p">}));</span>
+<span class="nx">chain</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">enrichmentMiddleware</span><span class="p">({</span><span class="w"> </span><span class="nx">platform</span><span class="o">:</span><span class="w"> </span><span class="s2">"fawkes"</span><span class="w"> </span><span class="p">}));</span>
 <span class="nx">chain</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span>
 <span class="w">  </span><span class="nx">userContextMiddleware</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
 <span class="w">    </span><span class="nx">userId</span><span class="o">:</span><span class="w"> </span><span class="kt">getCurrentUser</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
@@ -6121,8 +6121,8 @@
 
 <span class="c1">// Initialize tracker</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">tracker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">initializeTracker</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">baseUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://plausible.fawkes.idp&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">domain</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;backstage.fawkes.idp&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">baseUrl</span><span class="o">:</span><span class="w"> </span><span class="s2">"https://plausible.fawkes.idp"</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">domain</span><span class="o">:</span><span class="w"> </span><span class="s2">"backstage.fawkes.idp"</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="c1">// Track with middleware</span>
@@ -6132,22 +6132,22 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="custom-events">Custom Events</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackEvent</span><span class="p">,</span><span class="w"> </span><span class="nx">EventCategory</span><span class="p">,</span><span class="w"> </span><span class="nx">EventAction</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@fawkes/design-system/analytics&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackEvent</span><span class="p">,</span><span class="w"> </span><span class="nx">EventCategory</span><span class="p">,</span><span class="w"> </span><span class="nx">EventAction</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@fawkes/design-system/analytics"</span><span class="p">;</span>
 
 <span class="c1">// Track custom event</span>
 <span class="nx">trackEvent</span><span class="p">({</span>
 <span class="w">  </span><span class="nx">category</span><span class="o">:</span><span class="w"> </span><span class="kt">EventCategory.FEATURE_USAGE</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="kt">EventAction.CLICK</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Custom Feature&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">"Custom Feature"</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">featureName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-custom-feature&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">featureName</span><span class="o">:</span><span class="w"> </span><span class="s2">"my-custom-feature"</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
 <h3 id="conditional-tracking">Conditional Tracking</h3>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getTracker</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getTracker</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="kd">function</span><span class="w"> </span><span class="nx">ConditionalTracking</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">tracker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">getTracker</span><span class="p">();</span>
@@ -6159,14 +6159,14 @@
 
 <span class="w">  </span><span class="c1">// Check tracker status</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">tracker</span><span class="p">.</span><span class="nx">getStatus</span><span class="p">();</span>
-<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Tracker initialized:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">status</span><span class="p">.</span><span class="nx">initialized</span><span class="p">);</span>
-<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Queued events:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">status</span><span class="p">.</span><span class="nx">queueSize</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Tracker initialized:'</span><span class="p">,</span><span class="w"> </span><span class="nx">status</span><span class="p">.</span><span class="nx">initialized</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Queued events:'</span><span class="p">,</span><span class="w"> </span><span class="nx">status</span><span class="p">.</span><span class="nx">queueSize</span><span class="p">);</span>
 
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="o">&lt;</span><span class="nx">Toggle</span>
 <span class="w">      </span><span class="nx">checked</span><span class="o">=</span><span class="p">{</span><span class="nx">status</span><span class="p">.</span><span class="nx">initialized</span><span class="p">}</span>
 <span class="w">      </span><span class="nx">onChange</span><span class="o">=</span><span class="p">{</span><span class="nx">handleToggleTracking</span><span class="p">}</span>
-<span class="w">      </span><span class="nx">label</span><span class="o">=</span><span class="s2">&quot;Enable Analytics&quot;</span>
+<span class="w">      </span><span class="nx">label</span><span class="o">=</span><span class="s2">"Enable Analytics"</span>
 <span class="w">    </span><span class="o">/&gt;</span>
 <span class="w">  </span><span class="p">);</span>
 <span class="p">}</span>
@@ -6182,10 +6182,10 @@
 <li><strong>Validation</strong>: Events are automatically validated before sending</li>
 </ol>
 <h2 id="testing">Testing</h2>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackEvent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">trackEvent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">;</span>
 
 <span class="c1">// Mock in tests</span>
-<span class="nx">jest</span><span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="s1">&#39;@fawkes/design-system/analytics&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<span class="nx">jest</span><span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="s1">'@fawkes/design-system/analytics'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
 <span class="w">  </span><span class="nx">trackEvent</span><span class="o">:</span><span class="w"> </span><span class="kt">jest.fn</span><span class="p">(),</span>
 <span class="w">  </span><span class="nx">trackPredefinedEvent</span><span class="o">:</span><span class="w"> </span><span class="kt">jest.fn</span><span class="p">(),</span>
 <span class="w">  </span><span class="nx">useEventTracking</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
@@ -6195,9 +6195,9 @@
 <span class="p">}));</span>
 
 <span class="c1">// Test tracking</span>
-<span class="nx">test</span><span class="p">(</span><span class="s1">&#39;tracks deployment event&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="nx">test</span><span class="p">(</span><span class="s1">'tracks deployment event'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getByText</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">DeployButton</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">);</span>
-<span class="w">  </span><span class="nx">fireEvent</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="nx">getByText</span><span class="p">(</span><span class="s1">&#39;Deploy&#39;</span><span class="p">));</span>
+<span class="w">  </span><span class="nx">fireEvent</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="nx">getByText</span><span class="p">(</span><span class="s1">'Deploy'</span><span class="p">));</span>
 
 <span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">trackEvent</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span>
 <span class="w">    </span><span class="nx">expect</span><span class="p">.</span><span class="nx">objectContaining</span><span class="p">({</span>

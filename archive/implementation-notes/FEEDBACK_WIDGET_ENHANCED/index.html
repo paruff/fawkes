@@ -6165,16 +6165,16 @@
 <h4 id="post-apiv1feedback">POST /api/v1/feedback</h4>
 <p><strong>New Fields</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;rating&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bug Report&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Found an issue&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user@example.com&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;page_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://backstage.example.com/catalog&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;feedback_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bug_report&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;screenshot&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;data:image/png;base64,iVBORw0K...&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;browser_info&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Chrome 120.0&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;user_agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Mozilla/5.0...&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;create_github_issue&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"rating"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bug Report"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"comment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Found an issue"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user@example.com"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"page_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://backstage.example.com/catalog"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"feedback_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bug_report"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"screenshot"</span><span class="p">:</span><span class="w"> </span><span class="s2">"data:image/png;base64,iVBORw0K..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"browser_info"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chrome 120.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"user_agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mozilla/5.0..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"create_github_issue"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response includes</strong>:</p>
@@ -6188,14 +6188,14 @@
 <h4 id="get-apiv1feedbackidscreenshot-admin">GET /api/v1/feedback/{id}/screenshot (Admin)</h4>
 <p>Retrieves screenshot as base64-encoded data URL:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;feedback_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;screenshot&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;data:image/png;base64,iVBORw0K...&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;size_bytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45678</span>
+<span class="w">  </span><span class="nt">"feedback_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"screenshot"</span><span class="p">:</span><span class="w"> </span><span class="s2">"data:image/png;base64,iVBORw0K..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"size_bytes"</span><span class="p">:</span><span class="w"> </span><span class="mi">45678</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="database-schema-updates">Database Schema Updates</h3>
 <p>New columns added to <code>feedback</code> table:</p>
-<div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">feedback</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">feedback_type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;feedback&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">feedback</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">feedback_type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">'feedback'</span><span class="p">;</span>
 <span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">feedback</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">screenshot</span><span class="w"> </span><span class="n">BYTEA</span><span class="p">;</span>
 <span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">feedback</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">browser_info</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">;</span>
 <span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">feedback</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">user_agent</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">;</span>
@@ -6361,16 +6361,16 @@ kubectl<span class="w"> </span>edit<span class="w"> </span>deployment<span class
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">feedback-github-token</span>
 <span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GITHUB_OWNER</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;paruff&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"paruff"</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GITHUB_REPO</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fawkes&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"fawkes"</span>
 </code></pre></div>
 <h4 id="2-update-database-schema">2. Update Database Schema</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Connect to database</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>db-feedback-dev-1<span class="w"> </span>--<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>feedback<span class="w"> </span>-d<span class="w"> </span>feedback_db
 
 <span class="c1"># Run migration</span>
-ALTER<span class="w"> </span>TABLE<span class="w"> </span>feedback<span class="w"> </span>ADD<span class="w"> </span>COLUMN<span class="w"> </span>IF<span class="w"> </span>NOT<span class="w"> </span>EXISTS<span class="w"> </span>feedback_type<span class="w"> </span>VARCHAR<span class="o">(</span><span class="m">50</span><span class="o">)</span><span class="w"> </span>DEFAULT<span class="w"> </span><span class="s1">&#39;feedback&#39;</span><span class="p">;</span>
+ALTER<span class="w"> </span>TABLE<span class="w"> </span>feedback<span class="w"> </span>ADD<span class="w"> </span>COLUMN<span class="w"> </span>IF<span class="w"> </span>NOT<span class="w"> </span>EXISTS<span class="w"> </span>feedback_type<span class="w"> </span>VARCHAR<span class="o">(</span><span class="m">50</span><span class="o">)</span><span class="w"> </span>DEFAULT<span class="w"> </span><span class="s1">'feedback'</span><span class="p">;</span>
 ALTER<span class="w"> </span>TABLE<span class="w"> </span>feedback<span class="w"> </span>ADD<span class="w"> </span>COLUMN<span class="w"> </span>IF<span class="w"> </span>NOT<span class="w"> </span>EXISTS<span class="w"> </span>screenshot<span class="w"> </span>BYTEA<span class="p">;</span>
 ALTER<span class="w"> </span>TABLE<span class="w"> </span>feedback<span class="w"> </span>ADD<span class="w"> </span>COLUMN<span class="w"> </span>IF<span class="w"> </span>NOT<span class="w"> </span>EXISTS<span class="w"> </span>browser_info<span class="w"> </span>TEXT<span class="p">;</span>
 ALTER<span class="w"> </span>TABLE<span class="w"> </span>feedback<span class="w"> </span>ADD<span class="w"> </span>COLUMN<span class="w"> </span>IF<span class="w"> </span>NOT<span class="w"> </span>EXISTS<span class="w"> </span>user_agent<span class="w"> </span>TEXT<span class="p">;</span>
@@ -6426,23 +6426,23 @@ kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class
 <h3 id="manual-api-testing">Manual API Testing</h3>
 <h4 id="submit-feedback-with-screenshot">Submit feedback with screenshot</h4>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://feedback.127.0.0.1.nip.io/api/v1/feedback<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<span class="s1">    &quot;rating&quot;: 4,</span>
-<span class="s1">    &quot;category&quot;: &quot;Bug Report&quot;,</span>
-<span class="s1">    &quot;comment&quot;: &quot;Found a bug in the deployment workflow&quot;,</span>
-<span class="s1">    &quot;email&quot;: &quot;user@example.com&quot;,</span>
-<span class="s1">    &quot;page_url&quot;: &quot;https://backstage.fawkes.idp/catalog&quot;,</span>
-<span class="s1">    &quot;feedback_type&quot;: &quot;bug_report&quot;,</span>
-<span class="s1">    &quot;browser_info&quot;: &quot;Chrome 120.0&quot;,</span>
-<span class="s1">    &quot;user_agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64)...&quot;,</span>
-<span class="s1">    &quot;screenshot&quot;: &quot;data:image/png;base64,iVBORw0KGg...&quot;,</span>
-<span class="s1">    &quot;create_github_issue&quot;: true</span>
-<span class="s1">  }&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+<span class="s1">    "rating": 4,</span>
+<span class="s1">    "category": "Bug Report",</span>
+<span class="s1">    "comment": "Found a bug in the deployment workflow",</span>
+<span class="s1">    "email": "user@example.com",</span>
+<span class="s1">    "page_url": "https://backstage.fawkes.idp/catalog",</span>
+<span class="s1">    "feedback_type": "bug_report",</span>
+<span class="s1">    "browser_info": "Chrome 120.0",</span>
+<span class="s1">    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)...",</span>
+<span class="s1">    "screenshot": "data:image/png;base64,iVBORw0KGg...",</span>
+<span class="s1">    "create_github_issue": true</span>
+<span class="s1">  }'</span>
 </code></pre></div>
 <h4 id="retrieve-screenshot-admin">Retrieve screenshot (admin)</h4>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://feedback.127.0.0.1.nip.io/api/v1/feedback/1/screenshot<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer your-admin-token&quot;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer your-admin-token"</span>
 </code></pre></div>
 <h4 id="check-github-issue-created">Check GitHub issue created</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Visit https://github.com/paruff/fawkes/issues</span>

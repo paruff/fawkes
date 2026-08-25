@@ -5809,14 +5809,14 @@ modules with missing type hints or no existing tests.</p>
 </code></pre></div>
 <p><strong>Quick assessment script:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Count functions without type hints in a service</span>
-grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">&quot;^\s*\(async \)\?def &quot;</span><span class="w"> </span>services/&lt;service&gt;/app/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;) -&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">"^\s*\(async \)\?def "</span><span class="w"> </span>services/&lt;service&gt;/app/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">") -&gt;"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
 
 <span class="c1"># Count functions without docstrings (approximate)</span>
-python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <span class="s2">import ast, sys</span>
 <span class="s2">tree = ast.parse(open(sys.argv[1]).read())</span>
 <span class="s2">missing = [n.name for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and not ast.get_docstring(n)]</span>
-<span class="s2">print(f&#39;{len(missing)} functions without docstrings: {missing[:5]}&#39;)&quot;</span><span class="w"> </span>services/&lt;service&gt;/app/main.py
+<span class="s2">print(f'{len(missing)} functions without docstrings: {missing[:5]}')"</span><span class="w"> </span>services/&lt;service&gt;/app/main.py
 </code></pre></div>
 <hr />
 <h4 id="23-add-scriptscheck-ai-readinesssh-platform-health-script">2.3 Add <code>scripts/check-ai-readiness.sh</code> platform health script</h4>
@@ -5839,14 +5839,14 @@ manual and gets skipped.</p>
 <span class="c1">#   - bdd_coverage: 1 if tests/bdd/features/&lt;service&gt;*.feature exists</span>
 
 <span class="k">for</span><span class="w"> </span>service<span class="w"> </span><span class="k">in</span><span class="w"> </span>services/*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">    </span><span class="nv">name</span><span class="o">=</span><span class="k">$(</span>basename<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$service</span><span class="s2">&quot;</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">name</span><span class="o">=</span><span class="k">$(</span>basename<span class="w"> </span><span class="s2">"</span><span class="nv">$service</span><span class="s2">"</span><span class="k">)</span>
 <span class="w">    </span><span class="c1"># Count all function definitions (handles indentation correctly)</span>
-<span class="w">    </span><span class="nv">total</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">&quot;^\s*\(async \)\?def &quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$service</span><span class="s2">/app/&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="m">0</span><span class="k">)</span>
-<span class="w">    </span><span class="nv">typed</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">&quot;^\s*\(async \)\?def &quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$service</span><span class="s2">/app/&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;) -&gt;&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="m">0</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">total</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">"^\s*\(async \)\?def "</span><span class="w"> </span><span class="s2">"</span><span class="nv">$service</span><span class="s2">/app/"</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="m">0</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">typed</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">"^\s*\(async \)\?def "</span><span class="w"> </span><span class="s2">"</span><span class="nv">$service</span><span class="s2">/app/"</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">") -&gt;"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="m">0</span><span class="k">)</span>
 <span class="w">    </span><span class="c1"># Check tests</span>
-<span class="w">    </span><span class="nv">test_exists</span><span class="o">=</span><span class="k">$(</span>ls<span class="w"> </span>tests/unit/test_*<span class="s2">&quot;</span><span class="si">${</span><span class="nv">name</span><span class="si">}</span><span class="s2">&quot;</span>*.py<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="m">0</span><span class="k">)</span>
-<span class="w">    </span><span class="nv">bdd_exists</span><span class="o">=</span><span class="k">$(</span>ls<span class="w"> </span>tests/bdd/features/*<span class="s2">&quot;</span><span class="si">${</span><span class="nv">name</span><span class="si">}</span><span class="s2">&quot;</span>*.feature<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="m">0</span><span class="k">)</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;| </span><span class="nv">$name</span><span class="s2"> | </span><span class="nv">$typed</span><span class="s2">/</span><span class="nv">$total</span><span class="s2"> typed | </span><span class="si">${</span><span class="nv">test_exists</span><span class="si">}</span><span class="s2">+ unit tests | </span><span class="si">${</span><span class="nv">bdd_exists</span><span class="si">}</span><span class="s2">+ BDD |&quot;</span>
+<span class="w">    </span><span class="nv">test_exists</span><span class="o">=</span><span class="k">$(</span>ls<span class="w"> </span>tests/unit/test_*<span class="s2">"</span><span class="si">${</span><span class="nv">name</span><span class="si">}</span><span class="s2">"</span>*.py<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="m">0</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">bdd_exists</span><span class="o">=</span><span class="k">$(</span>ls<span class="w"> </span>tests/bdd/features/*<span class="s2">"</span><span class="si">${</span><span class="nv">name</span><span class="si">}</span><span class="s2">"</span>*.feature<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="m">0</span><span class="k">)</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"| </span><span class="nv">$name</span><span class="s2"> | </span><span class="nv">$typed</span><span class="s2">/</span><span class="nv">$total</span><span class="s2"> typed | </span><span class="si">${</span><span class="nv">test_exists</span><span class="si">}</span><span class="s2">+ unit tests | </span><span class="si">${</span><span class="nv">bdd_exists</span><span class="si">}</span><span class="s2">+ BDD |"</span>
 <span class="k">done</span>
 </code></pre></div>
 <hr />
@@ -5856,29 +5856,29 @@ CI, adding friction to every PR. Standardising settings in the repository ensure
 every developer and AI tool sees the same configuration.</p>
 <p><strong>File to create:</strong> <code>.vscode/settings.json</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;editor.formatOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;editor.defaultFormatter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ms-python.black-formatter&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;[python]&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;editor.formatOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;editor.codeActionsOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;source.organizeImports&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;explicit&quot;</span>
+<span class="w">  </span><span class="nt">"editor.formatOnSave"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"editor.defaultFormatter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ms-python.black-formatter"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"[python]"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"editor.formatOnSave"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"editor.codeActionsOnSave"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"source.organizeImports"</span><span class="p">:</span><span class="w"> </span><span class="s2">"explicit"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;[terraform]&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;editor.formatOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"[terraform]"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"editor.formatOnSave"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;[yaml]&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;editor.formatOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"[yaml]"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"editor.formatOnSave"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;python.linting.enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;python.linting.ruffEnabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;github.copilot.enable&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;*&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;plaintext&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;markdown&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"python.linting.enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"python.linting.ruffEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"github.copilot.enable"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"*"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"plaintext"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"markdown"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;github.copilot.advanced&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;listCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">  </span><span class="nt">"github.copilot.advanced"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"listCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
