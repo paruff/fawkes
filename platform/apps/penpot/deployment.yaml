@@ -113,6 +113,12 @@ spec:
           volumeMounts:
             - name: penpot-data
               mountPath: /opt/data
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
           resources:
             requests:
               cpu: 200m
@@ -170,6 +176,12 @@ spec:
           envFrom:
             - configMapRef:
                 name: penpot-config
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
           resources:
             requests:
               cpu: 100m
@@ -229,6 +241,12 @@ spec:
                 secretKeyRef:
                   name: penpot-secrets
                   key: PENPOT_REDIS_URI
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
           resources:
             requests:
               cpu: 100m
@@ -277,6 +295,15 @@ spec:
             - containerPort: 6379
               name: redis
               protocol: TCP
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
           resources:
             requests:
               cpu: 50m
@@ -294,6 +321,9 @@ spec:
               port: redis
             initialDelaySeconds: 5
             periodSeconds: 5
+      volumes:
+        - name: redis-data
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
