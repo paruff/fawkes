@@ -1,114 +1,34 @@
-# Copyright (c) 2025  Philip Ruff
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
-# OR OTHER DEALINGS IN THE SOFTWARE.
-
-# ============================================================================
-# FILE: platform/apps/postgresql/kustomization.yaml
-# PURPOSE: Kustomize configuration for PostgreSQL resources
-# ============================================================================
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
-namespace: fawkes
-
-resources:
-  # CloudNativePG Operator (deploys to cloudnativepg-system namespace)
-  - cloudnativepg-operator-application.yaml
-  # Focalboard database credentials (dev/local)
-  - db-focalboard-credentials.yaml
-  # Focalboard PostgreSQL cluster
-  - db-focalboard-cluster.yaml
-  # Note: For production, uncomment externalsecret-db-focalboard.yaml
-  # and comment out db-focalboard-credentials.yaml
-  # - externalsecret-db-focalboard.yaml
-  # SonarQube database credentials (dev/local)
-  - db-sonarqube-credentials.yaml
-  # SonarQube PostgreSQL cluster
-  - db-sonarqube-cluster.yaml
-  # Note: For production, uncomment externalsecret-db-sonarqube.yaml
-  # and comment out db-sonarqube-credentials.yaml
-  # - externalsecret-db-sonarqube.yaml
-  # Backstage database credentials (dev/local)
-  - db-backstage-credentials.yaml
-  # Backstage PostgreSQL cluster
-  - db-backstage-cluster.yaml
-  # Note: For production, uncomment externalsecret-db-backstage.yaml
-  # and comment out db-backstage-credentials.yaml
-  # - externalsecret-db-backstage.yaml
-  # Harbor database credentials (dev/local)
-  - db-harbor-credentials.yaml
-  # Harbor PostgreSQL cluster
-  - db-harbor-cluster.yaml
-  # Note: For production, uncomment externalsecret-db-harbor.yaml
-  # and comment out db-harbor-credentials.yaml
-  # - externalsecret-db-harbor.yaml
-  # DataHub database credentials (dev/local)
-  - db-datahub-credentials.yaml
-  # DataHub PostgreSQL cluster
-  - db-datahub-cluster.yaml
-  # Note: For production, uncomment externalsecret-db-datahub.yaml
-  # and comment out db-datahub-credentials.yaml
-  # - externalsecret-db-datahub.yaml
-  # Plausible database credentials (dev/local)
-  - db-plausible-credentials.yaml
-  # Plausible PostgreSQL cluster
-  - db-plausible-cluster.yaml
-  # Note: For production, uncomment externalsecret-db-plausible.yaml
-  # and comment out db-plausible-credentials.yaml
-  # - externalsecret-db-plausible.yaml
-  # Penpot database credentials (dev/local)
-  - db-penpot-credentials.yaml
-  # Penpot PostgreSQL cluster
-  - db-penpot-cluster.yaml
-  # Note: For production, uncomment externalsecret-db-penpot.yaml
-  # and comment out db-penpot-credentials.yaml
-  # - externalsecret-db-penpot.yaml
-  # VSM database credentials (dev/local)
-  - db-vsm-credentials.yaml
-  # VSM PostgreSQL cluster
-  - db-vsm-cluster.yaml
-  # Note: For production, uncomment externalsecret-db-vsm.yaml
-  # and comment out db-vsm-credentials.yaml
-  # - externalsecret-db-vsm.yaml
-  # Unleash database credentials (dev/local)
-  - db-unleash-credentials.yaml
-  # Unleash PostgreSQL cluster
-  - db-unleash-cluster.yaml
-  # Note: For production, uncomment externalsecret-db-unleash.yaml
-  # and comment out db-unleash-credentials.yaml
-  # - externalsecret-db-unleash.yaml
-  # Experimentation database credentials (dev/local)
-  - db-experiment-credentials.yaml
-  # Experimentation PostgreSQL cluster
-  - db-experiment-cluster.yaml
-  # Note: For production, uncomment externalsecret-db-experiment.yaml
-  # and comment out db-experiment-credentials.yaml
-  # - externalsecret-db-experiment.yaml
-  # Discovery Metrics database credentials (dev/local)
-  - db-discovery-credentials.yaml
-  # Discovery Metrics PostgreSQL cluster
-  - db-discovery-cluster.yaml
-  # Note: For production, uncomment externalsecret-db-discovery.yaml
-  # and comment out db-discovery-credentials.yaml
-  # - externalsecret-db-discovery.yaml
-
 labels:
-  - pairs:
-      app.kubernetes.io/managed-by: argocd
-      app.kubernetes.io/part-of: fawkes-platform
+- pairs:
+    app.kubernetes.io/managed-by: argocd
+    app.kubernetes.io/part-of: fawkes-platform
+namespace: fawkes
+resources:
+- cloudnativepg-operator-application.yaml
+- db-focalboard-cluster.yaml
+- db-sonarqube-cluster.yaml
+- db-backstage-cluster.yaml
+- db-harbor-cluster.yaml
+- db-datahub-cluster.yaml
+- db-plausible-cluster.yaml
+- db-penpot-cluster.yaml
+- db-vsm-cluster.yaml
+- db-unleash-cluster.yaml
+- db-experiment-cluster.yaml
+- db-discovery-cluster.yaml
+- secrets/db-focalboard-credentials-sealed.yaml
+- secrets/db-focalboard-readonly-credentials-sealed.yaml
+- secrets/db-backstage-credentials-sealed.yaml
+- secrets/db-backstage-readonly-credentials-sealed.yaml
+- secrets/db-harbor-credentials-sealed.yaml
+- secrets/db-datahub-credentials-sealed.yaml
+- secrets/db-plausible-credentials-sealed.yaml
+- secrets/penpot-db-credentials-sealed.yaml
+- secrets/db-sonarqube-credentials-sealed.yaml
+- secrets/db-sonarqube-readonly-credentials-sealed.yaml
+- secrets/db-vsm-credentials-sealed.yaml
+- secrets/db-unleash-credentials-sealed.yaml
+- secrets/db-experiment-credentials-sealed.yaml
+- secrets/db-discovery-credentials-sealed.yaml
