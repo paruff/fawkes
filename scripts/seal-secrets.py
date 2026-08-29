@@ -193,13 +193,13 @@ class SealedSecretGenerator:
                 # real values under other keys (over-approximate taint
                 # tracking on the whole dict, not an actual leak).
                 msg = f"Error sealing {secret['name']}: {result.stderr}"
-                print(msg, file=sys.stderr)  # lgtm[py/clear-text-logging-sensitive-data]
+                print(msg, file=sys.stderr)  # codeql[py/clear-text-logging-sensitive-data]
                 return None
 
             return result.stdout
 
         except subprocess.TimeoutExpired:
-            print(f"Timeout sealing {secret['name']}", file=sys.stderr)  # lgtm[py/clear-text-logging-sensitive-data]
+            print(f"Timeout sealing {secret['name']}", file=sys.stderr)  # codeql[py/clear-text-logging-sensitive-data]
             return None
         except FileNotFoundError:
             print("Error: kubeseal not found. Install kubeseal first.", file=sys.stderr)
@@ -223,7 +223,7 @@ def create_gitignore(secrets_dir: Path):
     if not gitignore_path.exists():
         gitignore_path.write_text(gitignore_content)
         msg = f"Created: {gitignore_path}"
-        print(msg)  # lgtm[py/clear-text-logging-sensitive-data] -- file path only, no secret value
+        print(msg)  # codeql[py/clear-text-logging-sensitive-data] -- file path only, no secret value
 
 
 def get_output_path(secret: dict, base_dir: Path) -> Path:
@@ -274,7 +274,7 @@ def update_kustomization(secrets_dir: Path, sealed_secret_name: str):
                 yaml.dump(kustomization, f, default_flow_style=False)
 
             msg = f"Updated kustomization: {kustomization_path}"
-            print(msg)  # lgtm[py/clear-text-logging-sensitive-data] -- file path only
+            print(msg)  # codeql[py/clear-text-logging-sensitive-data] -- file path only
     except Exception as e:
         print(f"Warning: Could not update kustomization: {e}", file=sys.stderr)
 
@@ -377,8 +377,8 @@ Examples:
     print(f"\nFound {len(secrets)} secret(s) to seal:")
     for s in secrets:
         status = "REAL VALUES" if s["has_real_values"] else "PLACEHOLDERS ONLY"
-        print(f"  - {s['name']} (ns: {s['namespace']}) - {status}")  # lgtm[py/clear-text-logging-sensitive-data]
-        print(f"    Source: {s['file']}")  # lgtm[py/clear-text-logging-sensitive-data]
+        print(f"  - {s['name']} (ns: {s['namespace']}) - {status}")  # codeql[py/clear-text-logging-sensitive-data]
+        print(f"    Source: {s['file']}")  # codeql[py/clear-text-logging-sensitive-data]
 
     if args.dry_run:
         print("\nDry run complete. No files written.")
@@ -398,23 +398,23 @@ Examples:
 
         if output_path.exists() and not args.force:
             msg = f"Skipping {secret['name']}: {output_path} already exists (use --force to overwrite)"
-            print(msg)  # lgtm[py/clear-text-logging-sensitive-data]
+            print(msg)  # codeql[py/clear-text-logging-sensitive-data]
             continue
 
-        print(f"\nSealing {secret['name']}...")  # lgtm[py/clear-text-logging-sensitive-data]
+        print(f"\nSealing {secret['name']}...")  # codeql[py/clear-text-logging-sensitive-data]
         sealed_yaml = generator.seal_secret(secret)
 
         if sealed_yaml:
             if not args.dry_run:
                 output_path.write_text(sealed_yaml)
-                print(f"  Written: {output_path}")  # lgtm[py/clear-text-logging-sensitive-data]
+                print(f"  Written: {output_path}")  # codeql[py/clear-text-logging-sensitive-data]
 
                 # Update kustomization
                 update_kustomization(output_path.parent, output_path.name)
 
             success_count += 1
         else:
-            print(f"  FAILED: {secret['name']}")  # lgtm[py/clear-text-logging-sensitive-data]
+            print(f"  FAILED: {secret['name']}")  # codeql[py/clear-text-logging-sensitive-data]
 
     print(f"\nSuccessfully sealed {success_count}/{len(secrets)} secrets.")
 
