@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Internal Developer Platform for Elite Performance">
+        <meta name="description" content="How to rotate secrets managed by Bitnami Sealed Secrets in Fawkes">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>Secrets Management and Detection - Fawkes</title>
+        <title>Rotate Sealed Secrets - Fawkes</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#secrets-management-and-detection" class="md-skip">
+        <a href="#rotate-sealed-secrets" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Secrets Management and Detection
+              Rotate Sealed Secrets
             
           </span>
         </div>
@@ -5365,22 +5365,56 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#tools-used" class="md-nav__link">
+  <a href="#when-to-rotate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tools Used
+        When to Rotate
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Tools Used">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rotation-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotation Process
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rotation Process">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#gitleaks" class="md-nav__link">
+  <a href="#method-1-re-seal-with-new-values-standard" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Gitleaks
+        Method 1: Re-seal with New Values (Standard)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method 1: Re-seal with New Values (Standard)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-generate-new-secret-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Generate New Secret Values
       
     </span>
   </a>
@@ -5388,10 +5422,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#detect-secrets-yelp" class="md-nav__link">
+  <a href="#step-2-create-updated-plaintext-secret" class="md-nav__link">
     <span class="md-ellipsis">
       
-        detect-secrets (Yelp)
+        Step 2: Create Updated Plaintext Secret
       
     </span>
   </a>
@@ -5399,10 +5433,148 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#detect-private-key" class="md-nav__link">
+  <a href="#step-3-re-seal-with-current-certificate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        detect-private-key
+        Step 3: Re-seal with Current Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-commit-and-push" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Commit and Push
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-verify-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Verify Rotation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-controller-re-key-rotation-key-compromise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Controller Re-key Rotation (Key Compromise)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method 2: Controller Re-key Rotation (Key Compromise)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-backup-current-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Backup Current Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-generate-new-key-pair" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Generate New Key Pair
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-fetch-new-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Fetch New Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-re-seal-all-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Re-seal ALL Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-commit-and-push-all-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Commit and Push All Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zero-downtime-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zero-Downtime Rotation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Zero-Downtime Rotation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-passwords" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Passwords
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Keys
       
     </span>
   </a>
@@ -5415,22 +5587,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#automation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How It Works
+        Automation
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="How It Works">
+    <nav class="md-nav" aria-label="Automation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pre-commit-protection" class="md-nav__link">
+  <a href="#scheduled-rotation-with-cronjob" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-commit Protection
+        Scheduled Rotation with CronJob
       
     </span>
   </a>
@@ -5438,21 +5610,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pipeline-protection" class="md-nav__link">
+  <a href="#gitops-based-rotation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline Protection
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#what-gets-detected" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Gets Detected
+        GitOps-Based Rotation
       
     </span>
   </a>
@@ -5465,22 +5626,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
+  <a href="#verification-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Best Practices
+        Verification Checklist
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Best Practices">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#do-use-secret-management-tools" class="md-nav__link">
+  <a href="#application-fails-after-rotation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ✅ DO: Use Secret Management Tools
+        Application Fails After Rotation
       
     </span>
   </a>
@@ -5488,10 +5671,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#do-use-environment-variables" class="md-nav__link">
+  <a href="#sealedsecret-stuck-in-not-decrypted" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ✅ DO: Use Environment Variables
+        SealedSecret Stuck in "Not Decrypted"
       
     </span>
   </a>
@@ -5499,32 +5682,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#do-use-configuration-files-gitignored" class="md-nav__link">
+  <a href="#certificate-mismatch" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ✅ DO: Use Configuration Files (Gitignored)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dont-hardcode-secrets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ❌ DON'T: Hardcode Secrets
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dont-commit-example-secrets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ❌ DON'T: Commit Example Secrets
+        Certificate Mismatch
       
     </span>
   </a>
@@ -5537,293 +5698,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
+  <a href="#related-documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#gitleaks-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Gitleaks Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#baseline-for-false-positives" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Baseline for False Positives
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pre-commit-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pre-commit Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#handling-detected-secrets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Handling Detected Secrets
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Handling Detected Secrets">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#if-pre-commit-blocks-your-commit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        If Pre-commit Blocks Your Commit
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#if-pipeline-fails-on-secrets-scan" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        If Pipeline Fails on Secrets Scan
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#if-you-accidentally-committed-a-secret" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        If You Accidentally Committed a Secret
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-secret-detection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing Secret Detection
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Testing Secret Detection">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#test-locally" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Locally
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#test-in-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test in Pipeline
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integration Examples
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Integration Examples">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#python-application" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Python Application
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nodejs-application" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Node.js Application
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#go-application" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Go Application
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#java-application" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Java Application
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#faq" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        FAQ
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="FAQ">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#q-can-i-disable-secret-scanning-for-a-specific-commit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Q: Can I disable secret scanning for a specific commit?
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#q-what-if-i-need-to-commit-a-test-fixture-with-a-fake-secret" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Q: What if I need to commit a test fixture with a fake secret?
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#q-how-do-i-update-the-secrets-baseline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Q: How do I update the secrets baseline?
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#q-whats-the-performance-impact" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Q: What's the performance impact?
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#q-can-i-use-trufflehog-instead-of-gitleaks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Q: Can I use TruffleHog instead of Gitleaks?
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resources
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Support
+        Related Documentation
       
     </span>
   </a>
@@ -5847,423 +5725,309 @@
 
 
 
-<h1 id="secrets-management-and-detection">Secrets Management and Detection</h1>
-<p>This guide explains how Fawkes prevents secrets from being committed to version control and how to handle secrets properly in your applications.</p>
+<h1 id="rotate-sealed-secrets">Rotate Sealed Secrets</h1>
+<p>This guide explains how to rotate secrets that are managed by Bitnami Sealed Secrets in Fawkes.</p>
 <h2 id="overview">Overview</h2>
-<p>Fawkes uses multiple layers of defense to prevent secrets from being exposed:</p>
-<ol>
-<li><strong>Pre-commit hooks</strong> - Catch secrets before they're committed locally</li>
-<li><strong>CI/CD pipeline scanning</strong> - Detect secrets in every build</li>
-<li><strong>Container scanning</strong> - Check container images for embedded secrets</li>
-<li><strong>Documentation and training</strong> - Educate developers on best practices</li>
-</ol>
-<hr />
-<h2 id="tools-used">Tools Used</h2>
-<h3 id="gitleaks">Gitleaks</h3>
-<p><strong>Primary secrets detection tool</strong> used in both pre-commit hooks and CI/CD pipelines.</p>
+<p>Sealed Secrets rotation involves:
+1. Generating new secret values
+2. Re-sealing with the current public key
+3. Updating the SealedSecret in Git
+4. ArgoCD syncing the change
+5. Controller decrypting the new value</p>
+<h2 id="when-to-rotate">When to Rotate</h2>
+<table>
+<thead>
+<tr>
+<th>Secret Type</th>
+<th>Frequency</th>
+<th>Trigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Database passwords</td>
+<td>Every 90 days</td>
+<td>Scheduled rotation</td>
+</tr>
+<tr>
+<td>API keys</td>
+<td>Every 90 days or on breach</td>
+<td>Scheduled or incident</td>
+</tr>
+<tr>
+<td>TLS certificates</td>
+<td>Every 90 days (automated)</td>
+<td>cert-manager renewal</td>
+</tr>
+<tr>
+<td>Service account tokens</td>
+<td>Every 30 days</td>
+<td>Scheduled rotation</td>
+</tr>
+<tr>
+<td>Root credentials</td>
+<td>Annually or on personnel change</td>
+<td>Offboarding</td>
+</tr>
+</tbody>
+</table>
+<h2 id="prerequisites">Prerequisites</h2>
 <ul>
-<li>Detects 100+ types of secrets (API keys, passwords, tokens, private keys)</li>
-<li>Configurable via <code>.gitleaks.toml</code></li>
-<li>Fast and accurate with low false-positive rate</li>
+<li>Access to the cluster with Sealed Secrets controller</li>
+<li><code>kubeseal</code> CLI installed</li>
+<li>Permissions to update the target namespace</li>
+<li>New secret values ready (generated or from provider)</li>
 </ul>
-<h3 id="detect-secrets-yelp">detect-secrets (Yelp)</h3>
-<p><strong>Baseline-based secret detection</strong> for managing known false positives.</p>
-<ul>
-<li>Uses <code>.secrets.baseline</code> to track known non-secret values</li>
-<li>Complementary to Gitleaks for additional coverage</li>
-</ul>
-<h3 id="detect-private-key">detect-private-key</h3>
-<p><strong>Specialized detection</strong> for SSH private keys and certificates.</p>
-<hr />
-<h2 id="how-it-works">How It Works</h2>
-<h3 id="pre-commit-protection">Pre-commit Protection</h3>
-<p>When you commit code locally, pre-commit hooks automatically scan for secrets:</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>myfile.py
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Add feature"</span>
-<span class="c1"># ⚡ Pre-commit hooks run automatically</span>
-<span class="c1"># ✅ Gitleaks: Passed</span>
-<span class="c1"># ✅ detect-secrets: Passed</span>
-<span class="c1"># ✅ detect-private-key: Passed</span>
-</code></pre></div>
-<p>If secrets are detected, the commit is <strong>blocked</strong>:</p>
-<div class="highlight"><pre><span></span><code>❌<span class="w"> </span>Gitleaks<span class="w"> </span>detected<span class="w"> </span>secrets:
-<span class="w">   </span>-<span class="w"> </span>AWS<span class="w"> </span>Access<span class="w"> </span>Key<span class="w"> </span><span class="k">in</span><span class="w"> </span>config.yaml:12
-<span class="w">   </span>-<span class="w"> </span>GitHub<span class="w"> </span>Token<span class="w"> </span><span class="k">in</span><span class="w"> </span>setup.sh:45
+<h2 id="rotation-process">Rotation Process</h2>
+<h3 id="method-1-re-seal-with-new-values-standard">Method 1: Re-seal with New Values (Standard)</h3>
+<h4 id="step-1-generate-new-secret-values">Step 1: Generate New Secret Values</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># For passwords</span>
+<span class="nv">NEW_PASSWORD</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span>
 
-Your<span class="w"> </span>commit<span class="w"> </span>has<span class="w"> </span>been<span class="w"> </span>blocked.<span class="w"> </span>Please<span class="w"> </span>remove<span class="w"> </span>secrets<span class="w"> </span>and<span class="w"> </span>try<span class="w"> </span>again.
+<span class="c1"># For API keys - get from provider (e.g., GitHub, AWS, Stripe)</span>
+<span class="c1"># For database - update in database first, then seal new password</span>
 </code></pre></div>
-<h3 id="pipeline-protection">Pipeline Protection</h3>
-<p>Every Jenkins pipeline includes a <strong>Secrets Scan</strong> stage:</p>
-<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">'Secrets Scan'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">container</span><span class="o">(</span><span class="s1">'gitleaks'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">            </span><span class="c1">// Gitleaks scans entire repository</span>
-<span class="w">            </span><span class="n">sh</span><span class="w"> </span><span class="s1">'gitleaks detect --source . --verbose'</span>
-<span class="w">        </span><span class="o">}</span>
-<span class="w">    </span><span class="o">}</span>
-<span class="o">}</span>
+<h4 id="step-2-create-updated-plaintext-secret">Step 2: Create Updated Plaintext Secret</h4>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>my-secret-new.yaml<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">apiVersion: v1</span>
+<span class="s">kind: Secret</span>
+<span class="s">metadata:</span>
+<span class="s">  name: my-app-secret</span>
+<span class="s">  namespace: fawkes</span>
+<span class="s">type: Opaque</span>
+<span class="s">stringData:</span>
+<span class="s">  api-key: "sk-new-api-key-from-provider"</span>
+<span class="s">  database-password: "new-generated-password"</span>
+<span class="s">EOF</span>
 </code></pre></div>
-<p><strong>Pipeline fails immediately</strong> if secrets are detected, preventing deployment of vulnerable code.</p>
-<h3 id="what-gets-detected">What Gets Detected</h3>
-<p>Common secrets that are automatically detected:</p>
-<ul>
-<li><strong>API Keys</strong>: AWS, Azure, GCP, GitHub, Slack, etc.</li>
-<li><strong>Passwords</strong>: Database passwords, service credentials</li>
-<li><strong>Private Keys</strong>: SSH keys, SSL certificates, JWT secrets</li>
-<li><strong>Tokens</strong>: OAuth tokens, personal access tokens, session tokens</li>
-<li><strong>Connection Strings</strong>: Database URLs with embedded credentials</li>
-<li><strong>Environment Variables</strong>: Hardcoded secrets in ENV declarations</li>
-</ul>
-<hr />
-<h2 id="best-practices">Best Practices</h2>
-<h3 id="do-use-secret-management-tools">✅ DO: Use Secret Management Tools</h3>
-<p><strong>HashiCorp Vault</strong> (recommended for Fawkes):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Kubernetes pod with Vault integration</span>
-<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
-<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">vault.hashicorp.com/agent-inject</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
-<span class="w">    </span><span class="nt">vault.hashicorp.com/role</span><span class="p">:</span><span class="w"> </span><span class="s">"my-app"</span>
-<span class="w">    </span><span class="nt">vault.hashicorp.com/agent-inject-secret-config</span><span class="p">:</span><span class="w"> </span><span class="s">"secret/data/my-app"</span>
-<span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
-</code></pre></div>
-<p><strong>External Secrets Operator</strong> (for cloud providers):</p>
-<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExternalSecret</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app-secrets</span>
-<span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">secretStoreRef</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-secrets-manager</span>
-<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SecretStore</span>
-<span class="w">  </span><span class="nt">target</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app-secrets</span>
-<span class="w">  </span><span class="nt">data</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api_key</span>
-<span class="w">      </span><span class="nt">remoteRef</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/my-app/api-key</span>
-</code></pre></div>
-<p><strong>Bitnami Sealed Secrets</strong> (for GitOps secret management):</p>
-<p>Sealed Secrets allows you to encrypt Kubernetes Secrets into <code>SealedSecret</code> resources that can be safely committed to Git. Only the Sealed Secrets controller in your cluster can decrypt them.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># SealedSecret (commit this to Git)</span>
-<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bitnami.com/v1alpha1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SealedSecret</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app-secret</span>
-<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes</span>
-<span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">encryptedData</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">api-key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AgBy3i4OJSWK+PiTySYZZA9rO...</span>
-<span class="w">    </span><span class="nt">database-password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AgBy3i4OJSWK+PiTySYZZA9rO...</span>
-<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app-secret</span>
-<span class="w">      </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes</span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Opaque</span>
-</code></pre></div>
-<p><strong>Workflow:</strong>
-1. Create plaintext secret locally (never commit)
-2. Seal it: <code>kubeseal --controller-name=sealed-secrets --controller-namespace=kube-system &lt; secret.yaml &gt; sealed-secret.yaml</code>
-3. Commit the SealedSecret to Git
-4. ArgoCD syncs, controller decrypts to Secret</p>
-<p>See <a href="../sealed-secrets-guide/">Sealed Secrets Developer Guide</a> for details.</p>
-<h3 id="do-use-environment-variables">✅ DO: Use Environment Variables</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># In Dockerfile (reference only, not the value)</span>
-ENV<span class="w"> </span><span class="nv">API_KEY</span><span class="o">=</span><span class="s2">""</span>
+<h4 id="step-3-re-seal-with-current-certificate">Step 3: Re-seal with Current Certificate</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Option A: Seal directly against cluster (recommended)</span>
+kubeseal<span class="w"> </span>--controller-name<span class="o">=</span>sealed-secrets<span class="w"> </span>--controller-namespace<span class="o">=</span>kube-system<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--format<span class="w"> </span>yaml<span class="w"> </span>&lt;<span class="w"> </span>my-secret-new.yaml<span class="w"> </span>&gt;<span class="w"> </span>my-sealed-secret.yaml
 
-<span class="c1"># Inject at runtime via Kubernetes</span>
-apiVersion:<span class="w"> </span>v1
-kind:<span class="w"> </span>Pod
-spec:
-<span class="w">  </span>containers:
-<span class="w">  </span>-<span class="w"> </span>name:<span class="w"> </span>app
-<span class="w">    </span>env:
-<span class="w">    </span>-<span class="w"> </span>name:<span class="w"> </span>API_KEY
-<span class="w">      </span>valueFrom:
-<span class="w">        </span>secretKeyRef:
-<span class="w">          </span>name:<span class="w"> </span>my-app-secrets
-<span class="w">          </span>key:<span class="w"> </span>api-key
+<span class="c1"># Option B: Use cached certificate (offline)</span>
+kubeseal<span class="w"> </span>--cert<span class="w"> </span>sealed-secrets-cert.pem<span class="w"> </span>--format<span class="w"> </span>yaml<span class="w"> </span>&lt;<span class="w"> </span>my-secret-new.yaml<span class="w"> </span>&gt;<span class="w"> </span>my-sealed-secret.yaml
 </code></pre></div>
-<h3 id="do-use-configuration-files-gitignored">✅ DO: Use Configuration Files (Gitignored)</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># .gitignore</span>
-.env
-.env.local
-secrets.yaml
-credentials.json
-*.pem
-*.key
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1"># Load from environment or file</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-
-<span class="c1"># Prefer environment variables</span>
-<span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'API_KEY'</span><span class="p">)</span>
-
-<span class="c1"># Fallback to gitignored file</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span><span class="p">:</span>
-    <span class="n">secrets_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'.env'</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">secrets_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="c1"># Load from file (not in Git)</span>
-        <span class="k">pass</span>
-</code></pre></div>
-<h3 id="dont-hardcode-secrets">❌ DON'T: Hardcode Secrets</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># ❌ NEVER DO THIS</span>
-<span class="n">api_key</span> <span class="o">=</span> <span class="s2">"sk-1234567890abcdef"</span>  <span class="c1"># DETECTED BY GITLEAKS</span>
-<span class="n">db_password</span> <span class="o">=</span> <span class="s2">"MySecretPass123"</span>   <span class="c1"># DETECTED BY GITLEAKS</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1"># ❌ NEVER DO THIS</span>
-<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-secret</span>
-<span class="nt">stringData</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">"hardcoded-secret"</span><span class="w"> </span><span class="c1"># DETECTED BY GITLEAKS</span>
-</code></pre></div>
-<h3 id="dont-commit-example-secrets">❌ DON'T: Commit Example Secrets</h3>
-<p>Even in example code, avoid realistic-looking secrets:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># ❌ BAD - Looks like real AWS key</span>
-<span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>AKIAIOSFODNN7EXAMPLE
-
-<span class="c1"># ✅ GOOD - Clearly a placeholder</span>
-<span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>YOUR_AWS_ACCESS_KEY_HERE
-</code></pre></div>
-<hr />
-<h2 id="configuration">Configuration</h2>
-<h3 id="gitleaks-configuration">Gitleaks Configuration</h3>
-<p>Edit <code>.gitleaks.toml</code> to customize detection rules:</p>
-<div class="highlight"><pre><span></span><code><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Fawkes Gitleaks Configuration"</span>
-
-<span class="k">[allowlist]</span>
-<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Allow placeholders used in educational materials"</span>
-<span class="n">regexes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="s1">'''PLACEHOLDER_BASE64_VALUE'''</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">'''CHANGEME_NOT_COMMITTED'''</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">'''YOUR_.*_HERE'''</span><span class="p">,</span>
-<span class="p">]</span>
-<span class="n">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="s1">'''tests/.*'''</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">'''.*test.*\.py'''</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">'''examples/.*'''</span><span class="p">,</span>
-<span class="p">]</span>
-</code></pre></div>
-<h3 id="baseline-for-false-positives">Baseline for False Positives</h3>
-<p>If Gitleaks detects a false positive, add it to the baseline:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Generate new baseline</span>
-detect-secrets<span class="w"> </span>scan<span class="w"> </span>&gt;<span class="w"> </span>.secrets.baseline
-
-<span class="c1"># Update existing baseline</span>
-detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<span class="w"> </span>.secrets.baseline
-</code></pre></div>
-<h3 id="pre-commit-configuration">Pre-commit Configuration</h3>
-<p>Enable/disable secret scanning in <code>.pre-commit-config.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">repos</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/gitleaks/gitleaks</span>
-<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v8.18.1</span>
-<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gitleaks</span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Detect secrets with Gitleaks</span>
-
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/Yelp/detect-secrets</span>
-<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.4.0</span>
-<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">detect-secrets</span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Detect secrets</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"--baseline"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">".secrets.baseline"</span><span class="p p-Indicator">]</span>
-</code></pre></div>
-<hr />
-<h2 id="handling-detected-secrets">Handling Detected Secrets</h2>
-<h3 id="if-pre-commit-blocks-your-commit">If Pre-commit Blocks Your Commit</h3>
-<ol>
-<li><strong>Identify the secret</strong> in the output</li>
-<li><strong>Remove or replace</strong> the secret:</li>
-<li>Use environment variable reference</li>
-<li>Use secret management tool</li>
-<li>Add to <code>.gitignore</code> if it's a local config file</li>
-<li><strong>Update .gitleaks.toml</strong> if it's a false positive</li>
-<li><strong>Try committing again</strong></li>
-</ol>
-<div class="highlight"><pre><span></span><code><span class="c1"># Fix the issue</span>
-vim<span class="w"> </span>config.yaml<span class="w">  </span><span class="c1"># Remove hardcoded secret</span>
-
-<span class="c1"># Commit again</span>
-git<span class="w"> </span>add<span class="w"> </span>config.yaml
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Add feature (secrets removed)"</span>
-</code></pre></div>
-<h3 id="if-pipeline-fails-on-secrets-scan">If Pipeline Fails on Secrets Scan</h3>
-<ol>
-<li><strong>Download the Gitleaks report</strong> from Jenkins artifacts</li>
-<li><strong>Review detected secrets</strong> in <code>gitleaks-report.json</code></li>
-<li><strong>Fix the issues</strong> in your code</li>
-<li><strong>Push the fix</strong>:</li>
-</ol>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"fix: Remove hardcoded secrets"</span>
+<h4 id="step-4-commit-and-push">Step 4: Commit and Push</h4>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>platform/apps/my-app/secrets/my-sealed-secret.yaml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"feat(secrets): Rotate my-app-secret credentials"</span>
 git<span class="w"> </span>push
 </code></pre></div>
-<h3 id="if-you-accidentally-committed-a-secret">If You Accidentally Committed a Secret</h3>
-<p><strong>CRITICAL</strong>: If a real secret was committed to Git history:</p>
+<h4 id="step-5-verify-rotation">Step 5: Verify Rotation</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Watch ArgoCD sync</span>
+argocd<span class="w"> </span>app<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>my-app<span class="w"> </span>--sync<span class="w"> </span>--timeout<span class="w"> </span><span class="m">300</span>
+
+<span class="c1"># Verify new secret in cluster</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>my-app-secret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span>yaml
+
+<span class="c1"># Check application health</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>deployment/my-app<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+</code></pre></div>
+<h3 id="method-2-controller-re-key-rotation-key-compromise">Method 2: Controller Re-key Rotation (Key Compromise)</h3>
+<p>If the Sealed Secrets private key is compromised or needs rotation:</p>
+<h4 id="step-1-backup-current-key">Step 1: Backup Current Key</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Backup the current private key</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>-l<span class="w"> </span>sealedsecrets.bitnami.com/sealed-secrets-key<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;<span class="w"> </span>sealed-secrets-key-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.yaml
+</code></pre></div>
+<h4 id="step-2-generate-new-key-pair">Step 2: Generate New Key Pair</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Delete existing key (controller will generate new one)</span>
+kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>-l<span class="w"> </span>sealedsecrets.bitnami.com/sealed-secrets-key
+
+<span class="c1"># Or use Helm to force rekey</span>
+helm<span class="w"> </span>upgrade<span class="w"> </span>sealed-secrets<span class="w"> </span>oci://registry-1.docker.io/bitnamicharts/sealed-secrets<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--namespace<span class="w"> </span>kube-system<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--set<span class="w"> </span><span class="nv">keyRenewalPeriod</span><span class="o">=</span><span class="m">0</span>
+</code></pre></div>
+<h4 id="step-3-fetch-new-certificate">Step 3: Fetch New Certificate</h4>
+<div class="highlight"><pre><span></span><code>kubeseal<span class="w"> </span>--controller-name<span class="o">=</span>sealed-secrets<span class="w"> </span>--controller-namespace<span class="o">=</span>kube-system<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fetch-cert<span class="w"> </span>&gt;<span class="w"> </span>sealed-secrets-cert-new.pem
+</code></pre></div>
+<h4 id="step-4-re-seal-all-secrets">Step 4: Re-seal ALL Secrets</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># This MUST be done for ALL SealedSecrets in the cluster</span>
+<span class="c1">#!/bin/bash</span>
+<span class="c1"># reseal-all.sh</span>
+
+<span class="nv">CERT</span><span class="o">=</span><span class="s2">"sealed-secrets-cert-new.pem"</span>
+<span class="nv">SECRETS_DIR</span><span class="o">=</span><span class="s2">"platform/apps"</span>
+
+find<span class="w"> </span><span class="s2">"</span><span class="nv">$SECRETS_DIR</span><span class="s2">"</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">"*-sealed.yaml"</span><span class="w"> </span>-o<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*sealedsecret*.yaml"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>sealed_file<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="c1"># Extract the original secret name/namespace from the SealedSecret</span>
+<span class="w">    </span><span class="nv">name</span><span class="o">=</span><span class="k">$(</span>yq<span class="w"> </span><span class="s1">'.metadata.name'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$sealed_file</span><span class="s2">"</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">namespace</span><span class="o">=</span><span class="k">$(</span>yq<span class="w"> </span><span class="s1">'.metadata.namespace'</span><span class="w"> </span><span class="s2">"</span><span class="nv">$sealed_file</span><span class="s2">"</span><span class="k">)</span>
+
+<span class="w">    </span><span class="c1"># Get the decrypted secret from cluster</span>
+<span class="w">    </span>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span><span class="s2">"</span><span class="nv">$name</span><span class="s2">"</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$namespace</span><span class="s2">"</span><span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;<span class="w"> </span>/tmp/original-secret.yaml
+
+<span class="w">    </span><span class="c1"># Re-seal with new certificate</span>
+<span class="w">    </span>kubeseal<span class="w"> </span>--cert<span class="w"> </span><span class="s2">"</span><span class="nv">$CERT</span><span class="s2">"</span><span class="w"> </span>--format<span class="w"> </span>yaml<span class="w"> </span>&lt;<span class="w"> </span>/tmp/original-secret.yaml<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$sealed_file</span><span class="s2">"</span>
+
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Re-sealed: </span><span class="nv">$sealed_file</span><span class="s2">"</span>
+<span class="k">done</span>
+</code></pre></div>
+<h4 id="step-5-commit-and-push-all-changes">Step 5: Commit and Push All Changes</h4>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>platform/apps/**/secrets/*-sealed.yaml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"feat(secrets): Re-seal all secrets after controller re-key"</span>
+git<span class="w"> </span>push
+</code></pre></div>
+<h2 id="zero-downtime-rotation">Zero-Downtime Rotation</h2>
+<p>For secrets used by running applications, use overlapping validity:</p>
+<h3 id="database-passwords">Database Passwords</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Add new password to database (keep old one working)</span>
+<span class="c1"># ALTER USER myapp_user WITH PASSWORD 'new_password';</span>
+
+<span class="c1"># 2. Update SealedSecret with BOTH passwords</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>db-secret-rotation.yaml<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">apiVersion: v1</span>
+<span class="s">kind: Secret</span>
+<span class="s">metadata:</span>
+<span class="s">  name: myapp-db-credentials</span>
+<span class="s">  namespace: fawkes</span>
+<span class="s">type: Opaque</span>
+<span class="s">stringData:</span>
+<span class="s">  username: "myapp_user"</span>
+<span class="s">  password: "new_password"      # New primary</span>
+<span class="s">  password_old: "old_password"  # Keep for transition</span>
+<span class="s">  host: "postgres.fawkes.svc.cluster.local"</span>
+<span class="s">EOF</span>
+
+<span class="c1"># 3. Deploy updated application to use new password</span>
+<span class="c1"># 4. Monitor logs for old password usage (7 days)</span>
+<span class="c1"># 5. Remove old password from database and SealedSecret</span>
+</code></pre></div>
+<h3 id="api-keys">API Keys</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Generate new API key from provider</span>
+<span class="c1"># 2. Add new key to application config (support multiple keys)</span>
+<span class="c1"># 3. Deploy application</span>
+<span class="c1"># 4. Revoke old key in provider dashboard</span>
+<span class="c1"># 5. Remove old key from SealedSecret</span>
+</code></pre></div>
+<h2 id="automation">Automation</h2>
+<h3 id="scheduled-rotation-with-cronjob">Scheduled Rotation with CronJob</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># platform/apps/sealed-secrets/rotation-cronjob.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">batch/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CronJob</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sealed-secrets-rotation</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kube-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">"0</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">*/3</span><span class="nv"> </span><span class="s">*"</span><span class="w">  </span><span class="c1"># Quarterly</span>
+<span class="w">  </span><span class="nt">jobTemplate</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sealed-secrets-rotator</span>
+<span class="w">          </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rotator</span>
+<span class="w">            </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bitnami/kubectl:latest</span>
+<span class="w">            </span><span class="nt">command</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/bin/bash</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-c</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no"># Rotation logic here</span>
+<span class="w">              </span><span class="no"># Use kubeseal to re-seal secrets</span>
+<span class="w">              </span><span class="no"># Commit changes via GitOps</span>
+<span class="w">          </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OnFailure</span>
+</code></pre></div>
+<h3 id="gitops-based-rotation">GitOps-Based Rotation</h3>
+<p>Use a GitOps workflow for rotation:</p>
 <ol>
-<li><strong>Rotate the secret immediately</strong> - Assume it's compromised</li>
-<li><strong>Remove from Git history</strong>:</li>
+<li><strong>Automation PR</strong> - Bot creates PR with re-sealed secrets</li>
+<li><strong>Review</strong> - Security team reviews</li>
+<li><strong>Merge</strong> - ArgoCD applies</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="c1"># Use BFG Repo-Cleaner or git filter-branch</span>
-git<span class="w"> </span>filter-branch<span class="w"> </span>--force<span class="w"> </span>--index-filter<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">"git rm --cached --ignore-unmatch config/secrets.yaml"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--prune-empty<span class="w"> </span>--tag-name-filter<span class="w"> </span>cat<span class="w"> </span>--<span class="w"> </span>--all
-
-<span class="c1"># Force push (requires admin privileges)</span>
-git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>--force<span class="w"> </span>--all
-</code></pre></div>
-<ol>
-<li><strong>Update secret stores</strong> (Vault, AWS Secrets Manager)</li>
-<li><strong>Notify security team</strong> if it's a production secret</li>
-</ol>
-<hr />
-<h2 id="testing-secret-detection">Testing Secret Detection</h2>
-<h3 id="test-locally">Test Locally</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run Gitleaks on your code</span>
-gitleaks<span class="w"> </span>detect<span class="w"> </span>--source<span class="w"> </span>.<span class="w"> </span>--verbose
-
-<span class="c1"># Run pre-commit hooks manually</span>
-pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
-
-<span class="c1"># Test specific hook</span>
-pre-commit<span class="w"> </span>run<span class="w"> </span>gitleaks<span class="w"> </span>--all-files
-</code></pre></div>
-<h3 id="test-in-pipeline">Test in Pipeline</h3>
-<p>Add a test file with a fake secret to verify detection:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># test_secrets_detection.py</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">test_pipeline_blocks_secrets</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""This should fail in CI/CD"""</span>
-    <span class="n">fake_aws_key</span> <span class="o">=</span> <span class="s2">"AKIAIOSFODNN7EXAMPLE"</span>  <span class="c1"># Gitleaks will catch this</span>
-</code></pre></div>
-<p>Commit and push - the pipeline should <strong>fail</strong> on the Secrets Scan stage.</p>
-<hr />
-<h2 id="integration-examples">Integration Examples</h2>
-<h3 id="python-application">Python Application</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
-
-<span class="c1"># Load from .env file (gitignored)</span>
-<span class="n">load_dotenv</span><span class="p">()</span>
-
-<span class="c1"># Get secrets from environment</span>
-<span class="n">DATABASE_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'DATABASE_URL'</span><span class="p">)</span>
-<span class="n">API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'API_KEY'</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="ow">not</span> <span class="n">DATABASE_URL</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"DATABASE_URL environment variable is required"</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="nodejs-application">Node.js Application</h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// Load from .env file (gitignored)</span>
-<span class="nx">require</span><span class="p">(</span><span class="s2">"dotenv"</span><span class="p">).</span><span class="nx">config</span><span class="p">();</span>
-
-<span class="c1">// Get secrets from environment</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">dbUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DATABASE_URL</span><span class="p">;</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">apiKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">API_KEY</span><span class="p">;</span>
-
-<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">dbUrl</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">"DATABASE_URL environment variable is required"</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="go-application">Go Application</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="s">"os"</span>
-<span class="w">    </span><span class="s">"github.com/joho/godotenv"</span>
-<span class="p">)</span>
-
-<span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// Load from .env file (gitignored)</span>
-<span class="w">    </span><span class="nx">godotenv</span><span class="p">.</span><span class="nx">Load</span><span class="p">()</span>
-
-<span class="w">    </span><span class="c1">// Get secrets from environment</span>
-<span class="w">    </span><span class="nx">dbUrl</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">"DATABASE_URL"</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">apiKey</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">"API_KEY"</span><span class="p">)</span>
-
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">dbUrl</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">""</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nb">panic</span><span class="p">(</span><span class="s">"DATABASE_URL environment variable is required"</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="java-application">Java Application</h3>
-<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Config</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">DB_URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">getenv</span><span class="p">(</span><span class="s">"DATABASE_URL"</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">API_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">getenv</span><span class="p">(</span><span class="s">"API_KEY"</span><span class="p">);</span>
-
-<span class="w">    </span><span class="kd">static</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">DB_URL</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">DB_URL</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">IllegalStateException</span><span class="p">(</span><span class="s">"DATABASE_URL environment variable is required"</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<hr />
-<h2 id="faq">FAQ</h2>
-<h3 id="q-can-i-disable-secret-scanning-for-a-specific-commit">Q: Can I disable secret scanning for a specific commit?</h3>
-<p><strong>A:</strong> You can skip pre-commit hooks with <code>git commit --no-verify</code>, but this is <strong>strongly discouraged</strong>. The pipeline will still fail if secrets are detected.</p>
-<h3 id="q-what-if-i-need-to-commit-a-test-fixture-with-a-fake-secret">Q: What if I need to commit a test fixture with a fake secret?</h3>
-<p><strong>A:</strong> Add it to the allowlist in <code>.gitleaks.toml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">[allowlist]</span>
-<span class="n">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="s1">'''tests/fixtures/.*'''</span><span class="p">,</span>
-<span class="p">]</span>
-</code></pre></div>
-<h3 id="q-how-do-i-update-the-secrets-baseline">Q: How do I update the secrets baseline?</h3>
-<p><strong>A:</strong> Run:</p>
-<div class="highlight"><pre><span></span><code>detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<span class="w"> </span>.secrets.baseline
-</code></pre></div>
-<p>Review changes carefully before committing.</p>
-<h3 id="q-whats-the-performance-impact">Q: What's the performance impact?</h3>
-<p><strong>A:</strong> Minimal:</p>
+<h2 id="verification-checklist">Verification Checklist</h2>
+<p>After rotation, verify:</p>
 <ul>
-<li>Pre-commit: ~2-5 seconds for typical changes</li>
-<li>Pipeline: ~10-20 seconds for full repository scan</li>
+<li>[ ] ArgoCD shows synced status</li>
+<li>[ ] SealedSecret status shows <code>SealedSecretDecrypted</code> condition</li>
+<li>[ ] Application pods are healthy (no CrashLoopBackOff)</li>
+<li>[ ] Application logs show successful connections</li>
+<li>[ ] No authentication errors in logs</li>
+<li>[ ] Health endpoints return 200 OK</li>
 </ul>
-<h3 id="q-can-i-use-trufflehog-instead-of-gitleaks">Q: Can I use TruffleHog instead of Gitleaks?</h3>
-<p><strong>A:</strong> Yes, but Gitleaks is the default. To add TruffleHog:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/trufflesecurity/trufflehog</span>
-<span class="w">  </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v3.63.0</span>
-<span class="w">  </span><span class="nt">hooks</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trufflehog</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TruffleHog secret scan</span>
-<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"filesystem"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"."</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"--json"</span><span class="p p-Indicator">]</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Quick verification script</span>
+<span class="c1">#!/bin/bash</span>
+<span class="nv">APP_NAMESPACE</span><span class="o">=</span><span class="s2">"fawkes"</span>
+<span class="nv">APP_NAME</span><span class="o">=</span><span class="s2">"my-app"</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== ArgoCD Status ==="</span>
+argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span><span class="s2">"</span><span class="nv">$APP_NAME</span><span class="s2">"</span><span class="w"> </span>--refresh
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== SealedSecret Status ==="</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>sealedsecret<span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$APP_NAMESPACE</span><span class="s2">"</span><span class="w"> </span>-o<span class="w"> </span>wide
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Pod Status ==="</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$APP_NAMESPACE</span><span class="s2">"</span><span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span><span class="s2">"</span><span class="nv">$APP_NAME</span><span class="s2">"</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Recent Logs ==="</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$APP_NAMESPACE</span><span class="s2">"</span><span class="w"> </span>deployment/<span class="s2">"</span><span class="nv">$APP_NAME</span><span class="s2">"</span><span class="w"> </span>--tail<span class="o">=</span><span class="m">20</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"error\|auth\|connect"</span>
 </code></pre></div>
-<hr />
-<h2 id="resources">Resources</h2>
+<h2 id="rollback-procedure">Rollback Procedure</h2>
+<p>If rotation causes issues:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Revert Git commit</span>
+git<span class="w"> </span>revert<span class="w"> </span>HEAD
+git<span class="w"> </span>push
+
+<span class="c1"># 2. Or manually re-apply previous SealedSecret</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>previous-sealed-secret.yaml
+
+<span class="c1"># 3. Force ArgoCD sync</span>
+argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </span><span class="s2">"</span><span class="nv">$APP_NAME</span><span class="s2">"</span><span class="w"> </span>--prune
+
+<span class="c1"># 4. Verify rollback</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/<span class="s2">"</span><span class="nv">$APP_NAME</span><span class="s2">"</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$APP_NAMESPACE</span><span class="s2">"</span>
+</code></pre></div>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="application-fails-after-rotation">Application Fails After Rotation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Check new secret value</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>my-app-secret<span class="w"> </span>-n<span class="w"> </span>fawkes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data.password}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d
+
+<span class="c1"># 2. Test connectivity manually</span>
+kubectl<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>test-connection<span class="w"> </span>--image<span class="o">=</span>postgres:15<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>psql<span class="w"> </span>-h<span class="w"> </span>postgres.fawkes.svc.cluster.local<span class="w"> </span>-U<span class="w"> </span>myapp_user<span class="w"> </span>-d<span class="w"> </span>myapp<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT 1"</span>
+
+<span class="c1"># 3. If failed, revert (see Rollback Procedure)</span>
+</code></pre></div>
+<h3 id="sealedsecret-stuck-in-not-decrypted">SealedSecret Stuck in "Not Decrypted"</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check controller logs</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>deployment/sealed-secrets-controller
+
+<span class="c1"># Check SealedSecret events</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>sealedsecret<span class="w"> </span>my-app-secret<span class="w"> </span>-n<span class="w"> </span>fawkes
+
+<span class="c1"># Common causes:</span>
+<span class="c1"># - Wrong scope (strict vs namespace-wide)</span>
+<span class="c1"># - Certificate mismatch</span>
+<span class="c1"># - Controller not running</span>
+</code></pre></div>
+<h3 id="certificate-mismatch">Certificate Mismatch</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Fetch current certificate and compare</span>
+kubeseal<span class="w"> </span>--controller-name<span class="o">=</span>sealed-secrets<span class="w"> </span>--controller-namespace<span class="o">=</span>kube-system<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fetch-cert<span class="w"> </span>&gt;<span class="w"> </span>current-cert.pem
+
+diff<span class="w"> </span>sealed-secrets-cert.pem<span class="w"> </span>current-cert.pem
+<span class="c1"># If different, re-seal with current certificate</span>
+</code></pre></div>
+<h2 id="related-documentation">Related Documentation</h2>
 <ul>
-<li><a href="https://github.com/gitleaks/gitleaks">Gitleaks Documentation</a></li>
-<li><a href="../../../platform/apps/vault/README.md">HashiCorp Vault for Kubernetes</a></li>
-<li><a href="../../../platform/apps/external-secrets/README.md">External Secrets Operator</a></li>
-<li><a href="https://github.com/bitnami-labs/sealed-secrets">Bitnami Sealed Secrets</a></li>
 <li><a href="../sealed-secrets-guide/">Sealed Secrets Developer Guide</a></li>
-<li><a href="../rotate-sealed-secrets/">Sealed Secrets Rotation</a></li>
 <li><a href="../sealed-secrets-backup/">Sealed Secrets Backup Strategy</a></li>
-<li><a href="../../../PRE-COMMIT/">Pre-commit Hooks Setup</a></li>
-<li><a href="../../architecture.md#security-architecture">Fawkes Security Architecture</a></li>
+<li><a href="../rotate-vault-secrets/">Rotate Vault Secrets</a></li>
+<li><a href="../secrets-management/">Secrets Management Overview</a></li>
 </ul>
 <hr />
-<h2 id="support">Support</h2>
-<ul>
-<li><strong>Found a secret in code?</strong> Remove it and rotate immediately</li>
-<li><strong>False positive?</strong> Update <code>.gitleaks.toml</code> allowlist</li>
-<li><strong>Questions?</strong> Open a GitHub Discussion or contact the security team</li>
-</ul>
-<hr />
-<p><strong>Remember</strong>: Secrets in Git history are <strong>permanent</strong> and <strong>compromised</strong>. Prevention is the only secure approach. 🔒</p>
+<p><em>Last updated: 2025</em>
+<em>Part of Fawkes security documentation</em></p>
 
 
 
 
 
 
+
+  
+  
 
 
 
