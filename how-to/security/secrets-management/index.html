@@ -5946,6 +5946,30 @@ Your<span class="w"> </span>commit<span class="w"> </span>has<span class="w"> </
 <span class="w">      </span><span class="nt">remoteRef</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/my-app/api-key</span>
 </code></pre></div>
+<p><strong>Bitnami Sealed Secrets</strong> (for GitOps secret management):</p>
+<p>Sealed Secrets allows you to encrypt Kubernetes Secrets into <code>SealedSecret</code> resources that can be safely committed to Git. Only the Sealed Secrets controller in your cluster can decrypt them.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># SealedSecret (commit this to Git)</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bitnami.com/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SealedSecret</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app-secret</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">encryptedData</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">api-key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AgBy3i4OJSWK+PiTySYZZA9rO...</span>
+<span class="w">    </span><span class="nt">database-password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AgBy3i4OJSWK+PiTySYZZA9rO...</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app-secret</span>
+<span class="w">      </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Opaque</span>
+</code></pre></div>
+<p><strong>Workflow:</strong>
+1. Create plaintext secret locally (never commit)
+2. Seal it: <code>kubeseal --controller-name=sealed-secrets --controller-namespace=kube-system &lt; secret.yaml &gt; sealed-secret.yaml</code>
+3. Commit the SealedSecret to Git
+4. ArgoCD syncs, controller decrypts to Secret</p>
+<p>See <a href="../sealed-secrets-guide/">Sealed Secrets Developer Guide</a> for details.</p>
 <h3 id="do-use-environment-variables">✅ DO: Use Environment Variables</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># In Dockerfile (reference only, not the value)</span>
 ENV<span class="w"> </span><span class="nv">API_KEY</span><span class="o">=</span><span class="s2">""</span>
@@ -6218,6 +6242,10 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>gitleaks<span class
 <li><a href="https://github.com/gitleaks/gitleaks">Gitleaks Documentation</a></li>
 <li><a href="../../../platform/apps/vault/README.md">HashiCorp Vault for Kubernetes</a></li>
 <li><a href="../../../platform/apps/external-secrets/README.md">External Secrets Operator</a></li>
+<li><a href="https://github.com/bitnami-labs/sealed-secrets">Bitnami Sealed Secrets</a></li>
+<li><a href="../sealed-secrets-guide/">Sealed Secrets Developer Guide</a></li>
+<li><a href="../rotate-sealed-secrets/">Sealed Secrets Rotation</a></li>
+<li><a href="../sealed-secrets-backup/">Sealed Secrets Backup Strategy</a></li>
 <li><a href="../../../PRE-COMMIT/">Pre-commit Hooks Setup</a></li>
 <li><a href="../../architecture.md#security-architecture">Fawkes Security Architecture</a></li>
 </ul>
