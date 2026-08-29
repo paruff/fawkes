@@ -196,12 +196,13 @@ jobs:
 
       - name: Parse violations and create issues
         uses: actions/github-script@v9
+        env:
+          NEEDS_CONTEXT: ${{ toJSON(needs) }}
         with:
-          needs-context: ${{ toJSON(needs) }}
           script: |
             const fs = require('fs');
             const path = require('path');
-            const needs = JSON.parse(inputs.needs-context || '{}');
+            const needs = JSON.parse(process.env.NEEDS_CONTEXT || '{}');
 
             // Check if this is a scheduled run or main branch
             const shouldCreateIssues = context.eventName === 'schedule' || context.ref === 'refs/heads/main';
