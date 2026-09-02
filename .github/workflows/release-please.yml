@@ -1,0 +1,47 @@
+name: Release Please
+
+# Proposes the next release; it does not cut one. release-please scans
+# Conventional Commits on main and maintains a standing "release PR" with the
+# next version bump plus a CHANGELOG entry. Nothing ships until a human merges
+# that PR, so this batches accumulated commits rather than releasing per merge.
+#
+# Migrated from paruff/uFawkesObs. One deliberate difference: uFawkesObs gates
+# this on a green "Acceptance Full (Post-Merge)" workflow_run. That workflow is
+# specific to uFawkesObs, so this repo uses release-please's canonical
+# `push: main` trigger instead. The safety property is unchanged -- the release
+# PR itself must pass this repo's required checks before anyone can merge it.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    name: Release Please
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: job-start
+        run: echo "job-start workflow=release-please job=release-please sha=${{ github.sha }} time=$(date -u +%FT%TZ)"
+
+      - uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4
+        with:
+          target-branch: main
+          # PRs created with the default GITHUB_TOKEN do not trigger other
+          # pull_request-scoped workflows (GitHub's anti-recursion protection).
+          # Confirmed live in uFawkesObs: the release PR never got its required
+          # checks to run, so it could never satisfy branch protection and sat
+          # permanently unmergeable. A PAT is not subject to that restriction.
+          # Falls back to the default token when the secret is absent, so this
+          # does not break anything before RELEASE_PLEASE_TOKEN is created.
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: job-finish
+        if: always()
+        run: echo "job-finish workflow=release-please job=release-please sha=${{ github.sha }} time=$(date -u +%FT%TZ)"
