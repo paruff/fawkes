@@ -59,6 +59,10 @@ repos:
       - id: markdownlint
         name: Lint Markdown files
         args: ["--config", ".markdownlint.json", "--fix"]
+        # release-please's changelog template uses dash bullets and double
+        # blank lines, which permanently conflict with MD004/MD012 here.
+        # Machine-generated, not hand-authored.
+        exclude: ^CHANGELOG\.md$
 
   # ============================================================================
   # Terraform Formatting & Validation
