@@ -5,6 +5,14 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.11](https://github.com/paruff/fawkes/compare/v0.3.10...v0.3.11) (2026-09-04)
+
+
+### Fixed
+
+* **security:** read-only rootfs for plausible containers ([#1707](https://github.com/paruff/fawkes/issues/1707)) ([b10400f](https://github.com/paruff/fawkes/commit/b10400f0199adc4ae53a140329ab5b6fd9219746))
+* **terraform:** sync lock and document EKS node SG egress decision ([#1706](https://github.com/paruff/fawkes/issues/1706)) ([002f91f](https://github.com/paruff/fawkes/commit/002f91fcedab9d2f0e3b301858132569531dd8f2))
+
 ## [0.3.10](https://github.com/paruff/fawkes/compare/v0.3.9...v0.3.10) (2026-09-04)
 
 
