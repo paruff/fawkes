@@ -1,12 +1,15 @@
 """Main FastAPI application for Friction Bot."""
 
+import hashlib
+import hmac
 import logging
 import os
+import time
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 import requests
-from fastapi import FastAPI, Form, HTTPException, Request
+from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.responses import Response
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 from pydantic import BaseModel, Field
@@ -21,6 +24,8 @@ logger = logging.getLogger(__name__)
 INSIGHTS_API_URL = os.getenv("INSIGHTS_API_URL", "http://insights-service.fawkes.svc.cluster.local:8000")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 MATTERMOST_URL = os.getenv("MATTERMOST_URL", "http://mattermost.fawkes.svc.cluster.local:8065")
+SLACK_SIGNING_SECRET = os.getenv("SLACK_SIGNING_SECRET", "")
+SLACK_TIMESTAMP_TOLERANCE_SECONDS = 300  # reject requests older than 5 minutes (replay protection)
 
 # Prometheus metrics
 friction_logs_total = Counter(
@@ -101,6 +106,34 @@ def send_mattermost_response(response_url: str, message: str, ephemeral: bool = 
         logger.error(f"Failed to send Mattermost response: {e}")
 
 
+def verify_slack_signature(timestamp: str, body: bytes, signature_header: str) -> bool:
+    """Verify a Slack request signature (Slack's v0 HMAC-SHA256 scheme).
+
+    See https://api.slack.com/authentication/verifying-requests-from-slack
+    """
+    if not SLACK_SIGNING_SECRET:
+        logger.warning("Slack signing secret not configured, skipping verification")
+        return True
+
+    if not timestamp or not signature_header:
+        return False
+
+    try:
+        request_timestamp = int(timestamp)
+    except ValueError:
+        return False
+
+    # Reject stale requests to prevent replay attacks.
+    if abs(time.time() - request_timestamp) > SLACK_TIMESTAMP_TOLERANCE_SECONDS:
+        return False
+
+    basestring = f"v0:{timestamp}:{body.decode()}"
+    computed_signature = (
+        "v0=" + hmac.new(SLACK_SIGNING_SECRET.encode(), basestring.encode(), hashlib.sha256).hexdigest()
+    )
+    return hmac.compare_digest(computed_signature, signature_header)
+
+
 def parse_friction_command(text: str) -> dict[str, str]:
     """Parse friction command text.
 
@@ -143,16 +176,9 @@ def metrics():
 
 @app.post("/slack/slash/friction")
 async def slack_friction_command(
-    token: str = Form(...),
-    team_id: str = Form(...),
-    team_domain: str = Form(...),
-    channel_id: str = Form(...),
-    channel_name: str = Form(...),
-    user_id: str = Form(...),
-    user_name: str = Form(...),
-    command: str = Form(...),
-    text: str = Form(...),
-    response_url: str = Form(...),
+    request: Request,
+    x_slack_signature: str | None = Header(None),
+    x_slack_request_timestamp: str | None = Header(None),
 ):
     """Handle Slack /friction slash command.
 
@@ -162,13 +188,23 @@ async def slack_friction_command(
     Example:
         /friction Slow CI builds | Maven builds take 20+ min | CI/CD | high
     """
+    # Read the raw body first — signature verification needs the exact bytes
+    # Slack signed, before form-decoding.
+    body = await request.body()
+    if not verify_slack_signature(x_slack_request_timestamp or "", body, x_slack_signature or ""):
+        logger.warning("Rejected Slack request with invalid signature")
+        raise HTTPException(status_code=401, detail="Invalid signature")
+
+    form = await request.form()
+    user_name = form.get("user_name", "unknown")
+    text = form.get("text", "")
+    team_id = form.get("team_id", "")
+    channel_id = form.get("channel_id", "")
+    user_id = form.get("user_id", "")
+
     slash_commands_total.labels(command="friction", platform="slack").inc()
 
     logger.info(f"Received Slack /friction command from {user_name}: {text}")
-
-    # Validate token (if configured)
-    if BOT_TOKEN and token != BOT_TOKEN:
-        raise HTTPException(status_code=403, detail="Invalid token")
 
     # Parse command
     if not text or not text.strip():
@@ -255,8 +291,8 @@ async def mattermost_friction_command(request: Request):
 
     logger.info(f"Received Mattermost /friction command from {user_name}: {text}")
 
-    # Validate token (if configured)
-    if BOT_TOKEN and token != BOT_TOKEN:
+    # Validate token (if configured) using a constant-time comparison
+    if BOT_TOKEN and not hmac.compare_digest(token, BOT_TOKEN):
         raise HTTPException(status_code=403, detail="Invalid token")
 
     # Parse command
