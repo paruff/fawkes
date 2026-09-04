@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.22](https://github.com/paruff/fawkes/compare/v0.3.21...v0.3.22) (2026-09-04)
+
+
+### Fixed
+
+* **observability:** bump opensearch/otel-collector/tempo, fix deploy-blocking + test bugs ([#1741](https://github.com/paruff/fawkes/issues/1741)) ([cfb400b](https://github.com/paruff/fawkes/commit/cfb400be8d2c7c5170581b0d054e37406ad4c46b))
+
 ## [0.3.21](https://github.com/paruff/fawkes/compare/v0.3.20...v0.3.21) (2026-09-04)
 
 
