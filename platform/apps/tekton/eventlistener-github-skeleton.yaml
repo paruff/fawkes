@@ -1,0 +1,211 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/tekton/eventlistener-github-skeleton.yaml
+# PURPOSE: Phase 1 GitHub webhook wiring skeleton (#1660) - proves an
+#          incoming GitHub push webhook can reach a Tekton EventListener and
+#          trigger a trivial TaskRun. No real Golden Path pipeline logic yet;
+#          that lands in a later migration phase.
+# ⚠️ SECURITY-SENSITIVE: this exposes a new webhook Ingress endpoint. The
+#    EventListener's "github" interceptor validates the X-Hub-Signature-256
+#    header against the shared secret below (HMAC-SHA256) and rejects any
+#    request with a missing or invalid signature before the TriggerBinding/
+#    TriggerTemplate below ever run. Per AGENTS.md §6 and this issue, must
+#    not be merged without maintainer review.
+# ============================================================================
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-webhook-secret
+  namespace: tekton-pipelines
+  labels:
+    app: tekton
+    component: cicd
+type: Opaque
+stringData:
+  # Must match the "Secret" field configured on the GitHub webhook
+  # (repo/org Settings -> Webhooks). Generate with: openssl rand -hex 20
+  # SECURITY: placeholder only - rotate before any real webhook is wired up.
+  secretToken: "CHANGE_ME_github_webhook_secret"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tekton-triggers-github-sa
+  namespace: tekton-pipelines
+  labels:
+    app: tekton
+    component: cicd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: tekton-triggers-github-role
+  namespace: tekton-pipelines
+  labels:
+    app: tekton
+    component: cicd
+rules:
+  # Standard Tekton Triggers EventListener permissions, scoped to this
+  # namespace only (no cluster-wide access needed for the skeleton).
+  - apiGroups: ["triggers.tekton.dev"]
+    resources:
+      - eventlisteners
+      - triggerbindings
+      - triggertemplates
+      - triggers
+      - clusterinterceptors
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["tekton.dev"]
+    resources: ["taskruns", "pipelineruns"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tekton-triggers-github-rolebinding
+  namespace: tekton-pipelines
+  labels:
+    app: tekton
+    component: cicd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: tekton-triggers-github-role
+subjects:
+  - kind: ServiceAccount
+    name: tekton-triggers-github-sa
+    namespace: tekton-pipelines
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: github-push-binding
+  namespace: tekton-pipelines
+  labels:
+    app: tekton
+    component: cicd
+spec:
+  params:
+    - name: repo-full-name
+      value: $(body.repository.full_name)
+    - name: git-revision
+      value: $(body.after)
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: github-push-template
+  namespace: tekton-pipelines
+  labels:
+    app: tekton
+    component: cicd
+spec:
+  params:
+    - name: repo-full-name
+      description: Full name of the repository that received the push (owner/repo)
+    - name: git-revision
+      description: Commit SHA the push landed on
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1
+      kind: TaskRun
+      metadata:
+        generateName: github-webhook-smoke-test-
+        namespace: tekton-pipelines
+        labels:
+          app: tekton
+          component: cicd
+      spec:
+        taskSpec:
+          steps:
+            - name: echo
+              image: docker.io/library/busybox:1.36
+              script: |
+                #!/bin/sh
+                echo "received push to $(params.repo-full-name) at $(params.git-revision)"
+        params: []
+      # NOTE: this proves the webhook -> EventListener -> TaskRun wiring
+      # only. Real Golden Path pipeline logic (checkout, build, test,
+      # publish) is a later migration phase, not this skeleton.
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: github-push-listener
+  namespace: tekton-pipelines
+  labels:
+    app: tekton
+    component: cicd
+spec:
+  serviceAccountName: tekton-triggers-github-sa
+  triggers:
+    - name: github-push-trigger
+      interceptors:
+        - ref:
+            name: "github"
+          params:
+            - name: secretRef
+              value:
+                secretName: github-webhook-secret
+                secretKey: secretToken
+            - name: eventTypes
+              value: ["push"]
+      bindings:
+        - ref: github-push-binding
+      template:
+        ref: github-push-template
+---
+# ============================================================================
+# Ingress for GitHub to reach the EventListener's Service.
+# Local dev: exposed at tekton-webhook.127.0.0.1.nip.io via ingress-nginx,
+# matching this repo's other local-dev host conventions - GitHub itself
+# cannot reach a local kind cluster directly; use a tunnel (e.g. smee.io,
+# ngrok) pointed at this host when testing real webhook delivery locally.
+# Production (fawkes-dev / real clusters): swap the host below for a real,
+# publicly resolvable DNS name and enable TLS - do not expose this endpoint
+# over plain HTTP outside local development.
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: github-push-listener
+  namespace: tekton-pipelines
+  labels:
+    app: tekton
+    component: cicd
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: tekton-webhook.127.0.0.1.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: el-github-push-listener
+                port:
+                  number: 8080
