@@ -41,7 +41,7 @@ spec:
   source:
     repoURL: https://opensearch-project.github.io/helm-charts/
     chart: opensearch
-    targetRevision: "2.17.0"
+    targetRevision: "3.8.0"
     helm:
       valuesObject:
         # Cluster Configuration
@@ -49,7 +49,13 @@ spec:
         nodeGroup: "master"
 
         # Single node for MVP
+        # singleNode: true is the chart's documented way to get single-node
+        # discovery behavior. Setting discovery.type: single-node manually in
+        # config below (without this) leaves the chart's own multi-node
+        # bootstrap env var (cluster.initial_master_nodes) in place, which
+        # OpenSearch refuses to start with alongside discovery.type: single-node.
         replicas: 1
+        singleNode: true
         minimumMasterNodes: 1
 
         # Node roles
@@ -60,12 +66,12 @@ spec:
           - remote_cluster_client
 
         # OpenSearch Version
-        opensearchVersion: "2.11.1"
+        opensearchVersion: "3.8.0"
 
         # Image Configuration
         image:
           repository: "opensearchproject/opensearch"
-          tag: "2.11.1"
+          tag: "3.8.0"
           pullPolicy: "IfNotPresent"
 
         # Resources
@@ -108,9 +114,6 @@ spec:
             # MVP: Disable security for simplicity
             plugins.security.disabled: true
 
-            # Discovery settings for single node
-            discovery.type: single-node
-
             # Index settings
             action.auto_create_index: true
 
@@ -141,18 +144,22 @@ spec:
               - ALL
           runAsNonRoot: true
           runAsUser: 1000
-          fsGroup: 1000
 
         podSecurityContext:
           fsGroup: 1000
           runAsUser: 1000
 
         # Sysctls
+        # sysctlInit uses a privileged initContainer to set vm.max_map_count,
+        # which works on any cluster. sysctl.enabled instead sets it via pod
+        # securityContext.sysctls, which requires the kubelet to have
+        # vm.max_map_count explicitly allowlisted (--allowed-unsafe-sysctls) -
+        # not the case on this repo's target clusters, so only sysctlInit is used.
         sysctlInit:
           enabled: true
 
         sysctl:
-          enabled: true
+          enabled: false
 
         # Service Account
         rbac:

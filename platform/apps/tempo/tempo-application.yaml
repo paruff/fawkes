@@ -53,14 +53,24 @@ spec:
       values: |
         # ============================================================
         # Resource Configuration - optimized for 70% target
+        # Note: resources and container securityContext both live under
+        # tempo: in this chart's schema, not at top level - a top-level
+        # resources:/containerSecurityContext: is silently ignored.
         # ============================================================
-        resources:
-          requests:
-            cpu: 150m
-            memory: 384Mi
-          limits:
-            cpu: 800m
-            memory: 1536Mi
+        tempo:
+          resources:
+            requests:
+              cpu: 150m
+              memory: 384Mi
+            limits:
+              cpu: 800m
+              memory: 1536Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
 
         # ============================================================
         # Persistence Configuration
@@ -91,16 +101,6 @@ spec:
           runAsUser: 10001
           runAsGroup: 10001
           fsGroup: 10001
-
-        # ============================================================
-        # Container Security Context
-        # ============================================================
-        containerSecurityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-              - ALL
 
         # ============================================================
         # Tempo Configuration Override

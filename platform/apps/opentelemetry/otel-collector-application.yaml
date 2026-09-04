@@ -93,6 +93,7 @@ spec:
                 - nodes
                 - nodes/proxy
                 - nodes/metrics
+                - nodes/stats
                 - services
                 - endpoints
                 - pods
@@ -251,7 +252,11 @@ spec:
             kubeletstats:
               collection_interval: 30s
               auth_type: "serviceAccount"
-              endpoint: "https://$${NODE_IP}:10250"
+              # ${env:VAR} is the current collector env-var expansion syntax;
+              # bare ${VAR} stopped auto-expanding as of newer collector cores.
+              # This chart does not run config through Helm's tpl, so a single
+              # $ (not $$) is what actually reaches the rendered ConfigMap.
+              endpoint: "https://${env:NODE_IP}:10250"
               insecure_skip_verify: true
               metric_groups:
                 - container
@@ -478,16 +483,13 @@ spec:
                   insecure: true
               logs_index: "otel-logs"
               # Retry configuration for transient failures
-              retry:
+              # Note: opensearchexporter has no sending_queue support (unlike
+              # otlp/tempo below) - only retry_on_failure.
+              retry_on_failure:
                 enabled: true
                 initial_interval: 5s
                 max_interval: 30s
                 max_elapsed_time: 300s
-              # Queue configuration for 5+ minute buffering
-              sending_queue:
-                enabled: true
-                num_consumers: 10
-                queue_size: 5000
 
             # ============================================================
             # Debug Exporter for Troubleshooting (disabled in production)

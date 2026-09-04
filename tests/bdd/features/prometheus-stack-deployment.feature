@@ -33,8 +33,8 @@ Feature: kube-prometheus-stack Deployment
       | prometheus-operator           |
       | prometheus-prometheus         |
       | alertmanager-prometheus-alertmanager |
-      | prometheus-grafana            |
-      | prometheus-kube-state-metrics |
+      | prometheus-stack-grafana            |
+      | prometheus-stack-kube-state-metrics |
     And all Prometheus pods should be in Ready state within 300 seconds
 
   @prometheus @scraping
@@ -61,7 +61,7 @@ Feature: kube-prometheus-stack Deployment
   Scenario: Grafana UI accessible via ingress
     Given Grafana is deployed with ingress enabled
     When I check the ingress configuration in namespace "monitoring"
-    Then an ingress should exist for "prometheus-grafana"
+    Then an ingress should exist for "prometheus-stack-grafana"
     And the ingress should have host "grafana.127.0.0.1.nip.io"
     And the ingress should use ingressClassName "nginx"
     And the Grafana UI should be accessible at "http://grafana.127.0.0.1.nip.io"
@@ -128,7 +128,7 @@ Feature: kube-prometheus-stack Deployment
     Given ServiceMonitors are configured in namespace "monitoring"
     When I check for ServiceMonitor "postgresql-metrics"
     Then the ServiceMonitor should exist
-    And Prometheus should be scraping PostgreSQL metrics from CloudNativePG clusters
+    And Prometheus should be scraping PostgreSQL metrics
 
   @servicemonitor @opentelemetry
   Scenario: ServiceMonitor for OpenTelemetry Collector
