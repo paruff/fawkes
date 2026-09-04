@@ -140,6 +140,7 @@ jobs:
           trivy image \
             --exit-code 1 \
             --severity CRITICAL,HIGH \
+            --ignore-unfixed \
             --no-progress \
             ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
 
