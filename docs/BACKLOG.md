@@ -339,9 +339,9 @@ the original issue."`
 
 | #   | Title                                                                | Source (PR/issue)          | Blocker? | Notes                                                          |
 | --- | -------------------------------------------------------------------- | -------------------------- | -------- | ------------------------------------------------------------- |
-| #1692 | data-quality kustomization references moved path (kustomize build fails) | #1686 / #1644            | Y        | `kustomize build` fails; update `configMapGenerator` source paths |
+| ~~#1692~~ | ~~data-quality kustomization references moved path~~ ✅ resolved | #1686 / #1644            | Y        | Fixed in #1699 (kustomization moved to `extensions/data-platform/`; ArgoCD path corrected) |
 | #1693 | rag-service Dockerfile omits `scripts/` and `indexers/`              | #1686 / #1644              | Y        | Indexing CronJob can't find `scripts/index-docs.py` in the image |
-| #1694 | emit accessibility metrics to Prometheus (populate Grafana dashboard) | #1690 / #396               | N        | Workflow change needs approval (AGENTS.md §6)                 |
+| #1694 | emit accessibility metrics to Prometheus (populate Grafana dashboard) | #1690 / #396               | N        | Workflow change needs approval (AGENTS.md §6); dashboard note panel added in #1700 |
 | #1695 | consolidate orphaned `accessibility-testing-guide.md`                | #1690 / #396               | N        | Docs cleanup; one canonical page                              |
 
 ---
