@@ -5,6 +5,14 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.15](https://github.com/paruff/fawkes/compare/v0.3.14...v0.3.15) (2026-09-04)
+
+
+### Fixed
+
+* **deps:** bump postcss to 8.5.28 for three CVEs ([#1718](https://github.com/paruff/fawkes/issues/1718)) ([46416a7](https://github.com/paruff/fawkes/commit/46416a70a0eec2dd1f5dbd352ec68bd2a0830742))
+* **deps:** upgrade storybook to 8 and vite to patched 6.4.3 ([#1717](https://github.com/paruff/fawkes/issues/1717)) ([fdca077](https://github.com/paruff/fawkes/commit/fdca077310b0744a3ef86737feb63c6419a197b7))
+
 ## [0.3.14](https://github.com/paruff/fawkes/compare/v0.3.13...v0.3.14) (2026-09-04)
 
 
