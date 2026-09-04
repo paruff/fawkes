@@ -338,6 +338,16 @@
             }
           }
         }
+      },
+      {
+        "id": 10,
+        "title": "Metrics Collection Status",
+        "type": "text",
+        "gridPos": { "h": 4, "w": 24, "x": 0, "y": 40 },
+        "options": {
+          "mode": "markdown",
+          "content": "## Metrics Collection Status\n\nPanels show **no data** until the accessibility CI pipeline pushes results to Prometheus. Tracked in issue #1694 — emit `lighthouse_accessibility_score`, `axe_*_violations`, and `accessibility_test_*` from the `accessibility-testing.yml` workflow (requires a push path from GitHub-hosted runners to the cluster, e.g. a Prometheus push gateway).\n\nUntil then, results are available from the GitHub Actions run summary, the PR comment, and the workflow artifacts (`axe-core-test-results`, `lighthouse-reports`)."
+        }
       }
     ],
     "annotations": {
