@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.8](https://github.com/paruff/fawkes/compare/v0.3.7...v0.3.8) (2026-09-04)
+
+
+### Fixed
+
+* **terraform:** default EKS endpoint_public_access to false ([#1697](https://github.com/paruff/fawkes/issues/1697)) ([5356bd0](https://github.com/paruff/fawkes/commit/5356bd0b38caaa8d8ffbc3f76595873a93d8fb5d))
+
+
+### Docs
+
+* **backlog:** fix orphan anchor and track flagged follow-ups ([#1696](https://github.com/paruff/fawkes/issues/1696)) ([583d63a](https://github.com/paruff/fawkes/commit/583d63a34633d97cb022dd8450aa8f499854a484))
+
 ## [0.3.7](https://github.com/paruff/fawkes/compare/v0.3.6...v0.3.7) (2026-09-04)
 
 
