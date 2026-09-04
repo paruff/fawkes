@@ -164,14 +164,14 @@ def check_prometheus_pods(context: dict):
         context["prometheus_pods"] = []
 
 
-@then(parsers.cfparse('the following pods should be running in namespace "{namespace}"'))
+@then(parsers.cfparse('the following pods should be running in namespace "{namespace}":'))
 def pods_running(namespace: str, datatable, context: dict):
     """Verify specified pods are running."""
     pods = context.get("prometheus_pods", [])
     pod_names = [pod.get("metadata", {}).get("name", "") for pod in pods]
 
-    for row in datatable:
-        component = row["component"]
+    for row in datatable[1:]:
+        component = row[0]
         matching_pods = [name for name in pod_names if component in name]
         assert len(matching_pods) > 0, f"No pods found matching component: {component}"
 
@@ -246,13 +246,13 @@ def prometheus_has_targets(context: dict):
     # In a real scenario, we'd verify the actual targets via API
 
 
-@then("the targets should include")
+@then("the targets should include:")
 def targets_include(datatable, context: dict):
     """Verify specific targets are being scraped."""
     # In a real scenario, we'd parse the targets from Prometheus API
     # For now, we'll check if ServiceMonitors exist
-    for row in datatable:
-        _ = row["target_type"]
+    for row in datatable[1:]:
+        assert row, "Empty target row"
         # Verification would happen here
 
 
@@ -320,7 +320,7 @@ def pvc_size(size: str, context: dict):
 def grafana_ingress_enabled():
     """Verify Grafana is deployed."""
     try:
-        _kubectl_json(["-n", "monitoring", "get", "deployment", "prometheus-grafana", "-o", "json"])
+        _kubectl_json(["-n", "monitoring", "get", "deployment", "prometheus-stack-grafana", "-o", "json"])
     except RuntimeError:
         pytest.skip("Grafana not deployed")
 
@@ -381,7 +381,7 @@ def grafana_ui_accessible(url: str):
 def grafana_ui_accessible_given():
     """Verify Grafana UI is accessible."""
     try:
-        _kubectl_json(["-n", "monitoring", "get", "deployment", "prometheus-grafana", "-o", "json"])
+        _kubectl_json(["-n", "monitoring", "get", "deployment", "prometheus-stack-grafana", "-o", "json"])
     except RuntimeError:
         pytest.skip("Grafana not deployed")
 
@@ -411,7 +411,7 @@ def see_grafana_dashboard(context: dict):
 @given("Grafana is deployed and accessible")
 def grafana_deployed_and_accessible():
     """Verify Grafana is deployed and accessible."""
-    data = _kubectl_json(["-n", "monitoring", "get", "deployment", "prometheus-grafana", "-o", "json"])
+    data = _kubectl_json(["-n", "monitoring", "get", "deployment", "prometheus-stack-grafana", "-o", "json"])
     status = data.get("status", {})
     ready_replicas = status.get("readyReplicas", 0)
     assert ready_replicas > 0, "Grafana not ready"
@@ -458,13 +458,13 @@ def query_grafana_dashboards(context: dict):
     context["grafana_dashboards_queried"] = True
 
 
-@then("the following dashboards should exist")
+@then("the following dashboards should exist:")
 def dashboards_exist(datatable, context: dict):
     """Verify specified dashboards exist."""
     assert context.get("grafana_dashboards_queried"), "Dashboards not queried"
     # In a real scenario, we'd verify each dashboard exists
-    for row in datatable:
-        _ = row["dashboard_name"]
+    for row in datatable[1:]:
+        assert row, "Empty dashboard row"
         # Verification would happen here
 
 
@@ -636,12 +636,17 @@ def query_kube_state_metrics(context: dict):
 
 @then("metrics should be available for:")
 def metrics_available(datatable, context: dict):
-    """Verify specified metrics are available."""
-    assert context.get("kube_state_metrics_queried"), "Metrics not queried"
-    # In a real scenario, we'd verify each metric type
-    for row in datatable:
-        _ = row["metric_type"]
-        # Verification would happen here
+    """Verify specified metrics are available.
+
+    Shared by two scenarios with different datatable columns
+    (metric_type vs component) and different query steps, so this
+    checks either "queried" flag rather than one specific column/key.
+    """
+    assert context.get("kube_state_metrics_queried") or context.get("platform_metrics_queried"), "Metrics not queried"
+    # datatable is a list of rows including the header row at index 0
+    for row in datatable[1:]:
+        assert row, "Empty metric row"
+        # In a real scenario, we'd verify each metric/component is scraped
 
 
 # Prometheus API scenario steps
