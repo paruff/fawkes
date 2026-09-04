@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.19](https://github.com/paruff/fawkes/compare/v0.3.18...v0.3.19) (2026-09-04)
+
+
+### Fixed
+
+* **test:** register missing pytest-bdd markers, fix doubled feature path ([#1732](https://github.com/paruff/fawkes/issues/1732)) ([7bb6bb9](https://github.com/paruff/fawkes/commit/7bb6bb9a0dafee54fe5b0bc130aa6aa40896e417))
+
 ## [0.3.18](https://github.com/paruff/fawkes/compare/v0.3.17...v0.3.18) (2026-09-04)
 
 
