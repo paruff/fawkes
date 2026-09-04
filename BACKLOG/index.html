@@ -5531,7 +5531,7 @@
   <a href="#needs-closure-cruft" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Needs Closure / Cruft
+        Needs Closure Cruft
       
     </span>
   </a>
@@ -5594,9 +5594,12 @@ DORA metrics automated.
 <li><a href="#post-mvp--jenkins--tekton-ci-migration">Post-MVP — Jenkins → Tekton CI Migration</a></li>
 <li><a href="#post-mvp--epic-3-discovery--ux">Post-MVP — Epic 3 Discovery &amp; UX</a></li>
 <li><a href="#post-mvp--remaining-epic-0">Post-MVP — Remaining Epic 0</a></li>
-<li><a href="#gap-issues">GAP Issues</a></li>
-<li><a href="#needs-closure--cruft">Needs Closure / Cruft</a></li>
+<li><a href="#gap-issues">GAP Issues</a><ul>
+<li><a href="#needs-closure-cruft">Needs Closure / Cruft</a></li>
 <li><a href="#duplicates-to-close">Duplicates to Close</a></li>
+<li><a href="#flagged-follow-ups-recent-pr-reviews">Flagged Follow-Ups</a></li>
+</ul>
+</li>
 <li><a href="#agent-assignment-map">Agent Assignment Map</a></li>
 <li><a href="#known-blockers">Known Blockers</a></li>
 </ol>
@@ -6886,7 +6889,7 @@ Work in parallel with post-MVP features.</p>
 </tbody>
 </table>
 <hr />
-<h3 id="needs-closure-cruft">Needs Closure / Cruft</h3>
+<h3 id="needs-closure-cruft">Needs Closure Cruft</h3>
 <blockquote>
 <p>These issues are empty templates or stubs with no real content. Close them.</p>
 </blockquote>
@@ -7094,6 +7097,53 @@ original.</p>
 </blockquote>
 <p><strong>Action:</strong> Close #978–#1004 with comment: <code>"Closing: duplicate of #NNN. Track work on
 the original issue."</code></p>
+<hr />
+<h3 id="flagged-follow-ups-recent-pr-reviews">Flagged Follow-Ups (recent PR reviews)</h3>
+<blockquote>
+<p>Pre-existing issues and deferred work surfaced during recent security/feature PRs.
+These are concrete, actionable follow-ups; fix them before they block deploys.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Title</th>
+<th>Source (PR/issue)</th>
+<th>Blocker?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#1692</td>
+<td>data-quality kustomization references moved path (kustomize build fails)</td>
+<td>#1686 / #1644</td>
+<td>Y</td>
+<td><code>kustomize build</code> fails; update <code>configMapGenerator</code> source paths</td>
+</tr>
+<tr>
+<td>#1693</td>
+<td>rag-service Dockerfile omits <code>scripts/</code> and <code>indexers/</code></td>
+<td>#1686 / #1644</td>
+<td>Y</td>
+<td>Indexing CronJob can't find <code>scripts/index-docs.py</code> in the image</td>
+</tr>
+<tr>
+<td>#1694</td>
+<td>emit accessibility metrics to Prometheus (populate Grafana dashboard)</td>
+<td>#1690 / #396</td>
+<td>N</td>
+<td>Workflow change needs approval (AGENTS.md §6)</td>
+</tr>
+<tr>
+<td>#1695</td>
+<td>consolidate orphaned <code>accessibility-testing-guide.md</code></td>
+<td>#1690 / #396</td>
+<td>N</td>
+<td>Docs cleanup; one canonical page</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="agent-assignment-map">Agent Assignment Map</h2>
 <table>
