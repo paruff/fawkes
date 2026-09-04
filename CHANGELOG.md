@@ -5,6 +5,19 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.9](https://github.com/paruff/fawkes/compare/v0.3.8...v0.3.9) (2026-09-04)
+
+
+### Added
+
+* **a11y:** note pending metrics in accessibility dashboard ([#1700](https://github.com/paruff/fawkes/issues/1700)) ([e50505a](https://github.com/paruff/fawkes/commit/e50505abe99e110492a7da6eeedea4265f50975b))
+
+
+### Fixed
+
+* **extensions:** repair data-quality kustomization and ArgoCD path ([#1699](https://github.com/paruff/fawkes/issues/1699)) ([c1bd146](https://github.com/paruff/fawkes/commit/c1bd1461c2875607334168addd680e459e8f1434))
+* **terraform:** reject postgres firewall rules without public access ([#1701](https://github.com/paruff/fawkes/issues/1701)) ([15dbed0](https://github.com/paruff/fawkes/commit/15dbed0412ee7f7c6c9d37fbec153cc1395560b1))
+
 ## [0.3.8](https://github.com/paruff/fawkes/compare/v0.3.7...v0.3.8) (2026-09-04)
 
 
