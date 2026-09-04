@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.18](https://github.com/paruff/fawkes/compare/v0.3.17...v0.3.18) (2026-09-04)
+
+
+### Fixed
+
+* **terraform:** stop overriding EKS module's safe encryption default ([#1730](https://github.com/paruff/fawkes/issues/1730)) ([20af291](https://github.com/paruff/fawkes/commit/20af291f60143d2971a7e1198d4caf48ed53e7b0))
+
 ## [0.3.17](https://github.com/paruff/fawkes/compare/v0.3.16...v0.3.17) (2026-09-04)
 
 
