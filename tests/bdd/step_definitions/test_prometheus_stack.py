@@ -198,6 +198,12 @@ def all_pods_ready(timeout: int, context: dict):
             all_ready = True
 
             for pod in pods.get("items", []):
+                # Skip completed one-shot pods (e.g. admission webhook
+                # setup jobs, grafana-test) - they exit after Completing
+                # their work and never carry Ready=True by design.
+                if pod.get("status", {}).get("phase") == "Succeeded":
+                    continue
+
                 conditions = pod.get("status", {}).get("conditions", [])
                 ready = False
                 for condition in conditions:

@@ -41,7 +41,7 @@ spec:
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    targetRevision: "66.3.1"
+    targetRevision: "70.10.0"
     helm:
       values: |
         # ============================================================
@@ -65,6 +65,17 @@ spec:
             limits:
               cpu: 200m
               memory: 256Mi
+          # config-reloader sidecar injected into every Prometheus/Alertmanager
+          # pod - had no resources set, failing the "all deployments have
+          # resource limits" acceptance check.
+          prometheusConfigReloader:
+            resources:
+              requests:
+                cpu: 50m
+                memory: 32Mi
+              limits:
+                cpu: 100m
+                memory: 64Mi
 
         # ============================================================
         # Prometheus Server
