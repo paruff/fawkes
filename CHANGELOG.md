@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.10](https://github.com/paruff/fawkes/compare/v0.3.9...v0.3.10) (2026-09-04)
+
+
+### Fixed
+
+* **security:** read-only rootfs for vsm-service deployment ([#1703](https://github.com/paruff/fawkes/issues/1703)) ([dc23cb1](https://github.com/paruff/fawkes/commit/dc23cb1535c18f33783f7edfe70de9ae98fb03eb))
+
+
+### Docs
+
+* **backlog:** mark resolved follow-up [#1692](https://github.com/paruff/fawkes/issues/1692) in flagged table ([#1704](https://github.com/paruff/fawkes/issues/1704)) ([227d395](https://github.com/paruff/fawkes/commit/227d3953f366efa12adbc60e83e113a812533daa))
+
 ## [0.3.9](https://github.com/paruff/fawkes/compare/v0.3.8...v0.3.9) (2026-09-04)
 
 
