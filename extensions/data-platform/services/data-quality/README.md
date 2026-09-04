@@ -110,7 +110,7 @@ Validates:
 The service is deployed using ArgoCD with the following resources:
 
 ```yaml
-platform/apps/data-quality/
+extensions/data-platform/
 ├── data-quality-application.yaml  # ArgoCD Application
 ├── configmap.yaml                 # Configuration
 ├── secret.yaml                    # Credentials
@@ -310,7 +310,7 @@ The CronJob runs every 6 hours by default:
 0 */6 * * *
 ```
 
-To change the schedule, edit `platform/apps/data-quality/cronjob.yaml`.
+To change the schedule, edit `extensions/data-platform/cronjob.yaml`.
 
 ### Job History
 
@@ -412,7 +412,7 @@ vim checkpoints/new_db_checkpoint.yml
 
 ### 3. Add to Kustomization
 
-Update `platform/apps/data-quality/kustomization.yaml` to include new files in ConfigMap.
+Update `extensions/data-platform/kustomization.yaml` to include new files in ConfigMap.
 
 ### 4. Update CronJob (Optional)
 

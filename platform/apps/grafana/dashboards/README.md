@@ -654,7 +654,7 @@ data_quality_expectations_successful{datasource="backstage"}
 Requires:
 
 1. Great Expectations data quality service running
-2. Prometheus exporter deployed (see `platform/apps/data-quality/`)
+2. Prometheus exporter deployed (see `extensions/data-platform/data-quality/`)
 3. ServiceMonitor configured for metrics scraping
 4. Data quality validations executed (CronJob runs every 6 hours)
 
