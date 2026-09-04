@@ -12,6 +12,8 @@ try:
 except Exception:  # pragma: no cover
     from tests.bdd.step_definitions import argocd_steps
 
-# Provide the feature filename only; pytest-bdd will resolve it relative to the
-# default feature base directory to avoid duplicating 'features/features'.
-scenarios("features/argocd_bootstrap.feature")
+# bdd_features_base_dir in pytest.ini is already "features/" (resolved
+# relative to tests/bdd/), and this module lives directly in tests/bdd/ —
+# so the path here must NOT repeat "features/", or it resolves to the
+# nonexistent tests/bdd/features/features/argocd_bootstrap.feature.
+scenarios("argocd_bootstrap.feature")
