@@ -124,6 +124,9 @@ spec:
                 sleep 2
               done
               echo "PostgreSQL is ready!"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
       containers:
         - name: unleash
           image: unleashorg/unleash-server:5.11
@@ -177,7 +180,7 @@ spec:
             failureThreshold: 3
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
+            readOnlyRootFilesystem: true
             runAsNonRoot: true
             runAsUser: 999
             capabilities:
@@ -185,6 +188,12 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
