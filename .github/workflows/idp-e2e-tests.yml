@@ -85,6 +85,31 @@ jobs:
             fi
           fi
 
+      - name: Build & load friction-bot image (local)
+        run: |
+          docker build -t ghcr.io/paruff/friction-bot:ci ./services/friction-bot
+          kind load docker-image ghcr.io/paruff/friction-bot:ci --name fawkes-test
+
+      - name: Deploy friction-bot (real GitOps manifests, platform/apps/friction-bot)
+        run: |
+          set -e
+          # Reuses the actual GitOps-managed manifests directly — no CI-only
+          # duplicate. Empty bot-token/slack-signing-secret placeholders are
+          # fine here: this only smoke-tests /health, not the slash-command
+          # flow (which also needs insights-service, not deployed in this
+          # minimal cluster).
+          kubectl apply -k platform/apps/friction-bot
+          kubectl -n fawkes set image deployment/friction-bot friction-bot=ghcr.io/paruff/friction-bot:ci
+          kubectl -n fawkes get deploy friction-bot -o yaml | sed -n '1,120p'
+          kubectl -n fawkes get pods -l app=friction-bot -o wide || true
+          kubectl -n fawkes get events --sort-by=.metadata.creationTimestamp | tail -n 40 || true
+          if kubectl -n fawkes get deploy friction-bot >/dev/null 2>&1; then
+            REPLICAS=$(kubectl -n fawkes get deploy friction-bot -o jsonpath='{.spec.replicas}')
+            if [ "$REPLICAS" != "0" ]; then
+              kubectl -n fawkes rollout status deployment/friction-bot --timeout=300s
+            fi
+          fi
+
       - name: Prepare reports directory
         run: |
           mkdir -p reports
