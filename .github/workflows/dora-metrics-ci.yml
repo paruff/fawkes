@@ -24,6 +24,7 @@ on:
 permissions:
   contents: write
   packages: write
+  id-token: write # for cosign keyless image signing
 
 env:
   IMAGE_NAME: ghcr.io/paruff/dora-metrics
@@ -146,13 +147,31 @@ jobs:
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
   # ==========================================================================
+  # Job 2b: Sign image + attach signed SBOM attestation (main only)
+  # ==========================================================================
+  sign-and-attest:
+    name: Sign & Attest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    uses: ./.github/workflows/reusable-image-signing.yml
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    with:
+      image-name: paruff/dora-metrics
+      image-tag: ${{ needs.build.outputs.image_tag }}
+    secrets:
+      registry-password: ${{ secrets.GITHUB_TOKEN }}
+
+  # ==========================================================================
   # Job 3: Update GitOps manifest (main only)
   # ==========================================================================
   update-gitops:
     name: Update GitOps
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: build
+    needs: [build, sign-and-attest]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: DORA job start
