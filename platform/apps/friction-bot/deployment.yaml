@@ -71,6 +71,12 @@ spec:
                   name: friction-bot-secret
                   key: bot-token
                   optional: true
+            - name: SLACK_SIGNING_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: friction-bot-secret
+                  key: slack-signing-secret
+                  optional: true
             - name: MATTERMOST_URL
               value: "http://mattermost.fawkes.svc.cluster.local:8065"
           resources:
