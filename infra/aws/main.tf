@@ -211,8 +211,15 @@ module "eks" {
   create_cloudwatch_log_group            = true
   cloudwatch_log_group_retention_in_days = 7
 
-  # Encryption config: Changed from list to object in EKS module v21
-  encryption_config = var.kms_key_arn == null ? null : {
+  # Encryption config: Changed from list to object in EKS module v21.
+  # provider_key_arn is optional(string) in the module — passing
+  # var.kms_key_arn directly (null by default) is equivalent to omitting it,
+  # so the module's own safe default still applies: create_kms_key defaults
+  # to true, provisioning and using its own customer-managed KMS key. The
+  # previous `... == null ? null : {...}` form explicitly passed null for
+  # the whole object when unset, which overrode that default and silently
+  # disabled encryption instead.
+  encryption_config = {
     provider_key_arn = var.kms_key_arn
     resources        = ["secrets"]
   }
