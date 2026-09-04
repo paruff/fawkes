@@ -55,6 +55,7 @@ module "vpc" {
 | availability_zones       | List of availability zones for subnets         | `list(string)` | n/a             |   yes    |
 | public_subnet_cidrs      | CIDR blocks for public subnets                 | `list(string)` | n/a             |   yes    |
 | private_subnet_cidrs     | CIDR blocks for private subnets                | `list(string)` | n/a             |   yes    |
+| public_subnet_map_public_ip_on_launch | Auto-assign a public IP to instances in public subnets | `bool` | `false` |    no    |
 | enable_nat_gateway       | Enable NAT Gateway for outbound connectivity   | `bool`         | `true`          |    no    |
 | single_nat_gateway       | Use a single NAT Gateway for cost optimization | `bool`         | `false`         |    no    |
 | enable_dns_hostnames     | Enable DNS hostnames in the VPC                | `bool`         | `true`          |    no    |
@@ -115,6 +116,7 @@ module "vpc" {
 3. **Flow Logs**: Enable VPC Flow Logs for security monitoring and compliance
 4. **Security Groups**: Use least privilege security groups for VPC endpoints
 5. **Public Access**: Block public access by default; use bastion hosts or VPN for access
+6. **Public IPs**: Instances do not auto-receive a public IP (`map_public_ip_on_launch` defaults to `false`); opt in per tier via `public_subnet_map_public_ip_on_launch` only when genuinely required
 
 ## Cost Optimization
 

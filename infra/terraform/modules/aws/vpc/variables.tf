@@ -107,6 +107,12 @@ variable "private_subnet_cidrs" {
   }
 }
 
+variable "public_subnet_map_public_ip_on_launch" {
+  description = "Auto-assign a public IP to instances launched in public subnets. Keep false unless the subnet genuinely needs direct public addressing (e.g. a load balancer tier); prefer NAT/bastion access otherwise"
+  type        = bool
+  default     = false
+}
+
 variable "enable_nat_gateway" {
   description = "Enable NAT Gateway for outbound connectivity from private subnets"
   type        = bool
