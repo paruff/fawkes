@@ -192,7 +192,7 @@ def trigger_error():
                 jsonify(
                     {
                         "error": "IntentionalError",
-                        "message": str(e),
+                        "message": "An error was intentionally triggered for tracing demonstration",
                         "trace_id": format(span.get_span_context().trace_id, "032x"),
                     }
                 ),

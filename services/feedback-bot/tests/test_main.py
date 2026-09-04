@@ -9,6 +9,7 @@ from fastapi.testclient import TestClient
 # Add parent directory to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+from app import main
 from app.main import analyze_sentiment, app, auto_categorize
 
 client = TestClient(app)
@@ -65,6 +66,31 @@ class TestAutoCategorization:
         """Test fallback to General category."""
         category = auto_categorize("Random feedback text")
         assert category == "General"
+
+
+class TestErrorResponseSanitization:
+    """Error responses must not leak raw exception text to callers."""
+
+    def test_slash_feedback_error_does_not_leak_exception(self, monkeypatch):
+        """Error response body must not contain the exception's str()."""
+
+        async def boom(feedback_data):
+            raise RuntimeError("INTERNAL_SECRET_DETAIL_12345")
+
+        monkeypatch.setattr(main, "submit_feedback_to_api", boom)
+
+        response = client.post(
+            "/mattermost/slash/feedback",
+            data={
+                "token": "",
+                "user_name": "tester",
+                "user_id": "u1",
+                "channel_id": "c1",
+                "text": "This is great feedback!",
+            },
+        )
+        assert response.status_code == 200
+        assert "INTERNAL_SECRET_DETAIL_12345" not in response.text
 
 
 if __name__ == "__main__":

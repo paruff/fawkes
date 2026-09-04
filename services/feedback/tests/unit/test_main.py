@@ -234,3 +234,40 @@ def test_get_stats_success(client):
         assert "by_category" in data
         assert "by_status" in data
         assert "by_rating" in data
+
+
+def test_automation_errors_do_not_leak_exception_text(client):
+    """Per-item automation errors must not expose raw exception text in the response."""
+    pool = MagicMock()
+    conn = AsyncMock()
+    pool.acquire.return_value.__aenter__.return_value = conn
+    conn.fetch = AsyncMock(
+        return_value=[
+            {
+                "id": 1,
+                "feedback_type": "feedback",
+                "category": "General",
+                "comment": "Test feedback",
+                "rating": 5,
+                "sentiment_compound": 0.0,
+                "page_url": None,
+                "email": None,
+                "browser_info": None,
+                "user_agent": None,
+            }
+        ]
+    )
+
+    with (
+        patch("app.main.db_pool", pool),
+        patch("app.main.is_github_enabled", return_value=True),
+        patch("app.main.triage_feedback", AsyncMock(side_effect=RuntimeError("INTERNAL_SECRET_DETAIL_12345"))),
+        patch("app.main.notify_automation_summary", AsyncMock()),
+    ):
+        response = client.post(
+            "/api/v1/automation/process-validated",
+            headers={"Authorization": "Bearer admin-secret-token"},
+        )
+
+    assert response.status_code == 200
+    assert "INTERNAL_SECRET_DETAIL_12345" not in response.text

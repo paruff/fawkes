@@ -317,7 +317,7 @@ _Your feedback will be reviewed by the team._
 
         return {
             "response_type": "ephemeral",
-            "text": f"❌ **Error submitting feedback**\n\n{e!s}\n\nPlease try again later.",
+            "text": "❌ **Error submitting feedback**\n\nSomething went wrong while processing your feedback. Please try again later.",
         }
 
 
@@ -361,7 +361,7 @@ async def api_submit_feedback(request: Request):
     except Exception as e:
         logger.error(f"Error in API endpoint: {e}")
         feedback_logs_total.labels(platform="api", status="error", sentiment="unknown", category="unknown").inc()
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Failed to submit feedback")
 
 
 if __name__ == "__main__":
