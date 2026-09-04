@@ -225,7 +225,7 @@ def all_pods_ready(timeout: int, context: dict):
 @given("Prometheus is deployed and running")
 def prometheus_running():
     """Verify Prometheus is running."""
-    data = _kubectl_json(["-n", "monitoring", "get", "statefulset", "prometheus-prometheus", "-o", "json"])
+    data = _kubectl_json(["-n", "monitoring", "get", "statefulset", "prometheus-prometheus-prometheus", "-o", "json"])
     status = data.get("status", {})
     ready_replicas = status.get("readyReplicas", 0)
     assert ready_replicas > 0, "Prometheus not ready"
@@ -263,7 +263,7 @@ def targets_include(datatable, context: dict):
 def prometheus_deployed_in_namespace(namespace: str):
     """Verify Prometheus is deployed in the namespace."""
     try:
-        _kubectl_json(["-n", namespace, "get", "statefulset", "prometheus-prometheus", "-o", "json"])
+        _kubectl_json(["-n", namespace, "get", "statefulset", "prometheus-prometheus-prometheus", "-o", "json"])
     except RuntimeError:
         pytest.skip(f"Prometheus not deployed in namespace {namespace}")
 
@@ -634,7 +634,7 @@ def query_kube_state_metrics(context: dict):
     context["kube_state_metrics_queried"] = True
 
 
-@then("metrics should be available for")
+@then("metrics should be available for:")
 def metrics_available(datatable, context: dict):
     """Verify specified metrics are available."""
     assert context.get("kube_state_metrics_queried"), "Metrics not queried"
@@ -650,7 +650,7 @@ def metrics_available(datatable, context: dict):
 @given("Prometheus is deployed and accessible")
 def prometheus_deployed_and_accessible():
     """Verify Prometheus is deployed and accessible."""
-    data = _kubectl_json(["-n", "monitoring", "get", "statefulset", "prometheus-prometheus", "-o", "json"])
+    data = _kubectl_json(["-n", "monitoring", "get", "statefulset", "prometheus-prometheus-prometheus", "-o", "json"])
     status = data.get("status", {})
     ready_replicas = status.get("readyReplicas", 0)
     assert ready_replicas > 0, "Prometheus not ready"
