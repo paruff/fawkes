@@ -158,6 +158,14 @@ module "vpc" {
   tags = local.tags
 }
 
+# EKS module node security group intentionally keeps the upstream module's
+# recommended all-egress rule (0.0.0.0/0). EKS nodes/pods require unrestricted
+# outbound (IMDS, ECR/image pulls, DNS, external APIs for Jenkins agents,
+# DevLake, DataHub ingestion). The module exposes no per-rule toggle for just
+# egress; node_security_group_enable_recommended_rules = false would also
+# remove the required node-to-node / cluster-to-node ingress rules and break
+# the cluster. Trivy AVD finding for unrestricted node-SG egress is a
+# justified dismissal (issue #1539).
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 21.0" # Updated to support AWS provider 6.x
