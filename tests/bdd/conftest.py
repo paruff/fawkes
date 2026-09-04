@@ -16,11 +16,13 @@ if _ROOT not in sys.path:
 # pytest 9.x no longer allows pytest_plugins in non-top-level conftest files
 
 # Exclude behave-framework step definition files from pytest collection.
-# These files use behave's @given/@when/@then decorators (a different BDD runner)
-# and are not executable as pytest tests.
+# These files use behave's @given/@when/@then decorators (a different BDD
+# runner) and are not executable as pytest tests. They live in
+# features/steps/ (behave's required location — see conftest.py comment
+# at repo root) rather than step_definitions/ (pytest-bdd's home, wired up
+# via pytest_plugins in the top-level tests/conftest.py).
 collect_ignore_glob = [
-    "step_definitions/test_e2e_integration.py",
-    "step_definitions/test_trivy_integration.py",
+    "features/steps/*.py",
 ]
 
 

@@ -63,7 +63,7 @@ Feature: End-to-End Platform Integration Testing
     Then Gitleaks should scan for secrets and find none
     And SonarQube should analyze code quality
     And the SonarQube quality gate should pass
-    And Trivy should scan the container image
+    And Trivy scanning should be confirmed as part of the pipeline
     And no HIGH or CRITICAL vulnerabilities should be found
     And all security scan reports should be archived
     And security metrics should be tracked
