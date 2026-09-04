@@ -638,10 +638,11 @@ def query_kube_state_metrics(context: dict):
 def metrics_available(datatable, context: dict):
     """Verify specified metrics are available."""
     assert context.get("kube_state_metrics_queried"), "Metrics not queried"
-    # In a real scenario, we'd verify each metric type
-    for row in datatable:
-        _ = row["metric_type"]
-        # Verification would happen here
+    # pytest-bdd's datatable fixture returns raw rows (list[list[str]]),
+    # including the header row as datatable[0] — not a list of dicts.
+    for row in datatable[1:]:
+        _ = row[0]
+        # In a real scenario, we'd verify each metric type against Prometheus
 
 
 # Prometheus API scenario steps
