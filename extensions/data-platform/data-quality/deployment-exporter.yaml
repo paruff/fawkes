@@ -49,16 +49,17 @@ spec:
       containers:
         - name: exporter
           image: python:3.11-slim
-          # Note: Dependencies are installed at runtime for simplicity in this deployment
-          # For production, consider creating a custom Docker image with pre-installed dependencies
-          # or using an init container for better reliability and faster startup times
+          # Note: Dependencies are installed at runtime for simplicity in this deployment.
+          # They are installed into the writable /deps emptyDir volume so the container
+          # can run as non-root with a read-only root filesystem.
           command:
             - /bin/bash
             - -c
             - |
               set -e
               echo "Installing dependencies..."
-              pip install -q prometheus-client==0.19.0 great-expectations==0.18.12 sqlalchemy==2.0.25 psycopg2-binary==2.9.9 requests==2.31.0
+              pip install -q --target /deps prometheus-client==0.19.0 great-expectations==0.18.12 sqlalchemy==2.0.25 psycopg2-binary==2.9.9 requests==2.31.0
+              export PYTHONPATH=/deps
 
               echo "Starting Prometheus exporter..."
               python3 /app/prometheus-exporter.py --port 9110 --results-dir /app/gx/uncommitted/validations
@@ -73,10 +74,11 @@ spec:
             - name: GX_RESULTS_DIR
               value: "/app/gx/uncommitted/validations"
           securityContext:
-            # ponytail: pip install at startup requires root + writable rootfs, so
-            # runAsNonRoot/readOnly are intentionally omitted. Pre-baked image needed
-            # for full hardening.
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
             allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
             capabilities:
               drop:
                 - ALL
@@ -90,6 +92,10 @@ spec:
               mountPath: /app/gx
             - name: validation-results
               mountPath: /app/gx/uncommitted/validations
+            - name: deps
+              mountPath: /deps
+            - name: tmp
+              mountPath: /tmp
           livenessProbe:
             httpGet:
               path: /health
@@ -122,4 +128,8 @@ spec:
           configMap:
             name: gx-full-config
         - name: validation-results
+          emptyDir: {}
+        - name: deps
+          emptyDir: {}
+        - name: tmp
           emptyDir: {}

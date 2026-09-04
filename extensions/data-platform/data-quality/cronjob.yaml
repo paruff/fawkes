@@ -55,7 +55,8 @@ spec:
                 - |
                   set -e
                   echo "Installing dependencies..."
-                  pip install -q great-expectations==0.18.12 sqlalchemy==2.0.25 psycopg2-binary==2.9.9 requests==2.31.0
+                  pip install -q --target /deps great-expectations==0.18.12 sqlalchemy==2.0.25 psycopg2-binary==2.9.9 requests==2.31.0
+                  export PYTHONPATH=/deps
 
                   echo "Setting up Great Expectations..."
                   cd /app
@@ -109,8 +110,25 @@ spec:
               volumeMounts:
                 - name: gx-config
                   mountPath: /app/gx
+                - name: gx-uncommitted
+                  mountPath: /app/gx/uncommitted
                 - name: scripts
                   mountPath: /app/scripts
+                - name: deps
+                  mountPath: /deps
+                - name: tmp
+                  mountPath: /tmp
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 1000
+                runAsGroup: 1000
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault
               resources:
                 requests:
                   cpu: 100m
@@ -122,7 +140,13 @@ spec:
             - name: gx-config
               configMap:
                 name: gx-full-config
+            - name: gx-uncommitted
+              emptyDir: {}
             - name: scripts
               configMap:
                 name: gx-scripts
                 defaultMode: 0755
+            - name: deps
+              emptyDir: {}
+            - name: tmp
+              emptyDir: {}
