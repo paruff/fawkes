@@ -265,6 +265,11 @@ variable "firewall_rules" {
     ])
     error_message = "Firewall rules must not start at 0.0.0.0 (exposes the database to all public IPs or Azure services). Scope rules to a specific VNet/subnet CIDR."
   }
+
+  validation {
+    condition     = var.engine != "postgresql" || var.public_network_access_enabled || length(var.firewall_rules) == 0
+    error_message = "PostgreSQL firewall_rules are only created when public_network_access_enabled = true; set it to true (with scoped CIDRs) or remove firewall_rules. (MySQL firewall rules are always created - they are the only access control.)"
+  }
 }
 
 variable "public_network_access_enabled" {
