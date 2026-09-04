@@ -5,20 +5,32 @@ This module provides step definitions for testing the complete Fawkes platform
 workflow from scaffolding to deployment to metrics collection.
 """
 
+import logging
 import subprocess
 
 from behave import given, then, when
 from kubernetes import client, config
 
-# Load kubernetes config
-try:
-    config.load_kube_config()
-except Exception:
-    config.load_incluster_config()
+logger = logging.getLogger(__name__)
 
-v1 = client.CoreV1Api()
-apps_v1 = client.AppsV1Api()
-custom_api = client.CustomObjectsApi()
+# Load kubernetes config. This module gets imported by behave just to
+# register its steps — even for --dry-run, and even when no cluster is
+# reachable (e.g. CI collection, local linting) — so a config-load failure
+# must not crash the import. Scenarios that actually need a cluster will
+# fail naturally when a step tries to use these clients.
+try:
+    try:
+        config.load_kube_config()
+    except Exception:
+        config.load_incluster_config()
+    v1 = client.CoreV1Api()
+    apps_v1 = client.AppsV1Api()
+    custom_api = client.CustomObjectsApi()
+except Exception as exc:
+    logger.warning("No Kubernetes config available at import time (%s); e2e-integration steps will fail if run", exc)
+    v1 = None
+    apps_v1 = None
+    custom_api = None
 
 
 # =============================================================================
@@ -382,7 +394,7 @@ def step_quality_gate_passes(context):
                     return
 
 
-@then("Trivy should scan the container image")
+@then("Trivy scanning should be confirmed as part of the pipeline")
 def step_trivy_scans_image(context):
     """Verify Trivy is configured"""
     # Already checked in previous step
