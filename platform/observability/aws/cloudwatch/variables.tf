@@ -30,9 +30,9 @@ variable "aws_region" {
 }
 
 variable "kms_key_id" {
-  description = "KMS key ID for SNS topic encryption (optional)"
+  description = "KMS key ID/alias for SNS topic encryption. Defaults to the AWS-managed SNS key (alias/aws/sns); override with a customer-managed key if required"
   type        = string
-  default     = ""
+  default     = "alias/aws/sns"
 }
 
 variable "mattermost_webhook_url" {
