@@ -117,6 +117,8 @@ spec:
               mountPath: /tmp
           securityContext:
             runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
@@ -169,6 +171,34 @@ spec:
         app: penpot
         component: frontend
     spec:
+      initContainers:
+        # The image's entrypoint rewrites files in-place under /etc/nginx
+        # (envsubst renders nginx.conf.template -> nginx.conf) and
+        # /var/www/app/js (sed -i on config.js) — both baked into the image.
+        # readOnlyRootFilesystem means those paths must instead be writable
+        # emptyDir volumes, but mounting an empty one directly over them
+        # would erase the shipped content. Seed the volumes from the image's
+        # own files first, then the main container mounts the seeded copies.
+        - name: seed-writable-dirs
+          image: penpotapp/frontend:2.0.3
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - "cp -r /etc/nginx/. /seed-nginx-conf/ && cp -r /var/www/app/. /seed-www-app/"
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /seed-nginx-conf
+            - name: www-app
+              mountPath: /seed-www-app
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 101
+            runAsGroup: 101
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
       containers:
         - name: penpot-frontend
           image: penpotapp/frontend:2.0.3
@@ -183,12 +213,23 @@ spec:
           volumeMounts:
             - name: tmp
               mountPath: /tmp
+            - name: nginx-conf
+              mountPath: /etc/nginx
+            - name: www-app
+              mountPath: /var/www/app
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+            - name: run
+              mountPath: /run
           securityContext:
             runAsNonRoot: true
+            runAsUser: 101
+            runAsGroup: 101
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
               drop: ["ALL"]
+              add: ["NET_BIND_SERVICE"]
           resources:
             requests:
               cpu: 100m
@@ -210,6 +251,14 @@ spec:
             periodSeconds: 5
       volumes:
         - name: tmp
+          emptyDir: {}
+        - name: nginx-conf
+          emptyDir: {}
+        - name: www-app
+          emptyDir: {}
+        - name: nginx-cache
+          emptyDir: {}
+        - name: run
           emptyDir: {}
 ---
 apiVersion: apps/v1
@@ -256,6 +305,8 @@ spec:
               mountPath: /tmp
           securityContext:
             runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
@@ -316,6 +367,8 @@ spec:
               mountPath: /data
           securityContext:
             runAsNonRoot: true
+            runAsUser: 999
+            runAsGroup: 1000
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
