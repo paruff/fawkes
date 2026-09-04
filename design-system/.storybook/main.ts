@@ -13,6 +13,14 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {},
   },
+  viteFinal: async (config) => {
+    // Storybook 8's default es2020+browser target triggers an esbuild
+    // downlevel limitation on its preview code; the docs build targets
+    // modern browsers only (the library itself ships via rollup).
+    config.build = config.build || {};
+    config.build.target = 'esnext';
+    return config;
+  },
   docs: {
     autodocs: 'tag',
   },
