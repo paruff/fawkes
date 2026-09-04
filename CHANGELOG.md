@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.14](https://github.com/paruff/fawkes/compare/v0.3.13...v0.3.14) (2026-09-04)
+
+
+### Fixed
+
+* **deps:** add safe npm overrides for design-system vulns ([#1714](https://github.com/paruff/fawkes/issues/1714)) ([45aa393](https://github.com/paruff/fawkes/commit/45aa39333b3fd94adc3b75b70e31b7e5b646f4fd))
+
 ## [0.3.13](https://github.com/paruff/fawkes/compare/v0.3.12...v0.3.13) (2026-09-04)
 
 
