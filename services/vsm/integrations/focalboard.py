@@ -173,7 +173,7 @@ async def handle_focalboard_webhook(
     except Exception as e:
         logger.error(f"Failed to process Focalboard webhook: {e}", exc_info=True)
         # Return 200 to avoid webhook retries for unrecoverable errors
-        return {"status": "error", "message": str(e), "card_id": payload.card.id}
+        return {"status": "error", "message": "Failed to process Focalboard webhook", "card_id": payload.card.id}
 
 
 async def _handle_card_created(card: FocalboardCard, db: Session):
@@ -336,7 +336,7 @@ async def sync_focalboard_board(request: FocalboardSyncRequest, db: Session = De
 
             except Exception as e:
                 failed_count += 1
-                details.append(f"Failed to sync card: {e!s}")
+                details.append("Failed to sync card")
                 logger.error(f"Failed to sync card: {e}", exc_info=True)
 
         return FocalboardSyncResponse(
@@ -345,7 +345,7 @@ async def sync_focalboard_board(request: FocalboardSyncRequest, db: Session = De
 
     except Exception as e:
         logger.error(f"Failed to sync Focalboard board: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Sync failed: {e!s}")
+        raise HTTPException(status_code=500, detail="Sync failed")
 
 
 async def _fetch_focalboard_cards(board_id: str) -> list[dict[str, Any]]:
@@ -443,7 +443,7 @@ async def sync_work_item_to_focalboard(work_item_id: int, db: Session = Depends(
         raise
     except Exception as e:
         logger.error(f"Failed to sync work item to Focalboard: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Sync failed: {e!s}")
+        raise HTTPException(status_code=500, detail="Sync failed")
 
 
 @router.get("/stages/mapping")

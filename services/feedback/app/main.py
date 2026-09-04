@@ -954,9 +954,8 @@ async def automate_validated_feedback(
                     issues_created += 1
 
                 except Exception as e:
-                    error_msg = f"Error processing feedback ID {feedback['id']}: {e!s}"
-                    logger.error(error_msg)
-                    errors.append(error_msg)
+                    logger.error(f"Error processing feedback ID {feedback['id']}: {e!s}", exc_info=True)
+                    errors.append(f"Error processing feedback ID {feedback['id']}")
 
             result = {
                 "status": "success",

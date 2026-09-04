@@ -42,6 +42,35 @@ def test_focalboard_webhook_endpoint_exists():
     assert response.status_code in [200, 500, 503]
 
 
+def test_webhook_error_does_not_leak_exception(monkeypatch):
+    """Webhook error responses must not expose raw exception text."""
+    from integrations import focalboard
+
+    async def boom(card, db):
+        raise RuntimeError("INTERNAL_SECRET_DETAIL_12345")
+
+    monkeypatch.setattr(focalboard, "_handle_card_created", boom)
+
+    payload = {
+        "action": "card.created",
+        "card": {
+            "id": "test-card-123",
+            "title": "Test Card",
+            "boardId": "test-board",
+            "status": "Backlog",
+            "createAt": int(datetime.now(timezone.utc).timestamp() * 1000),
+            "updateAt": int(datetime.now(timezone.utc).timestamp() * 1000),
+        },
+        "boardId": "test-board",
+        "workspaceId": "test-workspace",
+    }
+
+    response = client.post("/api/v1/focalboard/webhook", json=payload)
+    # Webhook returns 200 to avoid retries even on failure
+    assert response.status_code == 200
+    assert "INTERNAL_SECRET_DETAIL_12345" not in response.text
+
+
 def test_focalboard_stage_mapping_endpoint():
     """Test that stage mapping endpoint returns correct data."""
     response = client.get("/api/v1/focalboard/stages/mapping")
