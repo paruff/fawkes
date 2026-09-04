@@ -99,9 +99,8 @@ variable "api_server_authorized_ip_ranges" {
 }
 
 variable "kms_key_arn" {
-  description = "KMS key ARN for EKS secrets encryption. If null, encryption is disabled."
+  description = "KMS key ARN for EKS secrets encryption. Required — no default, so callers must make an explicit choice (terraform plan fails until set), matching the pattern used for api_server_authorized_ip_ranges above and the AKS authorized-IP-ranges fix in #1712. This module has no caller today (see infra/aws/main.tf, which uses the terraform-aws-modules/eks/aws community module instead); if it's ever wired up, plan will simply require this value from day one rather than silently deploying with encryption disabled."
   type        = string
-  default     = null
 }
 
 variable "egress_cidr_blocks" {
