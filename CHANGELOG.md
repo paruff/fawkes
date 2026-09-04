@@ -5,6 +5,14 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.17](https://github.com/paruff/fawkes/compare/v0.3.16...v0.3.17) (2026-09-04)
+
+
+### Fixed
+
+* **security:** add missing writable /tmp to readOnlyRootFilesystem containers ([#1728](https://github.com/paruff/fawkes/issues/1728)) ([9565eb0](https://github.com/paruff/fawkes/commit/9565eb0f54622e741f5ff72d778f1fd0fc0a6203))
+* **security:** unblock tracer-bullet's CI Trivy gate ([#1727](https://github.com/paruff/fawkes/issues/1727)) ([aedd800](https://github.com/paruff/fawkes/commit/aedd800af66775bf994b518bb25c29095eced5ca))
+
 ## [0.3.16](https://github.com/paruff/fawkes/compare/v0.3.15...v0.3.16) (2026-09-04)
 
 
