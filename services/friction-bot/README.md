@@ -71,6 +71,11 @@ env:
       secretKeyRef:
         name: friction-bot-secret
         key: bot-token
+  - name: SLACK_SIGNING_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: friction-bot-secret
+        key: slack-signing-secret
   - name: MATTERMOST_URL
     value: "http://mattermost.fawkes.svc.cluster.local:8065"
 ```
@@ -98,11 +103,19 @@ env:
 2. Click "Install to Workspace"
 3. Authorize the app
 
-### 4. Get Verification Token (Optional)
+### 4. Get Signing Secret (Required)
+
+Slack's legacy Verification Token is deprecated and is no longer checked by this
+service for Slack requests. Use the modern Signing Secret instead:
 
 1. Go to "Basic Information"
-2. Copy "Verification Token"
-3. Set as `BOT_TOKEN` environment variable
+2. Copy "Signing Secret"
+3. Set as `SLACK_SIGNING_SECRET` environment variable
+
+Every `/slack/slash/friction` request is verified against this secret using
+Slack's HMAC-SHA256 signature scheme, with a 5-minute freshness window to
+reject replayed requests. If `SLACK_SIGNING_SECRET` is left unset, verification
+is skipped (with a warning logged) — do not leave it unset in production.
 
 ## Mattermost Setup
 
