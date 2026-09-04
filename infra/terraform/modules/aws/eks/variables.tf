@@ -74,9 +74,9 @@ variable "endpoint_private_access" {
 }
 
 variable "endpoint_public_access" {
-  description = "Enable public API server endpoint"
+  description = "Enable public API server endpoint. Defaults to false (private-only cluster) for a secure-by-default posture; set to true only when the cluster must be reachable from outside the VPC, and pair it with api_server_authorized_ip_ranges"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "api_server_authorized_ip_ranges" {
