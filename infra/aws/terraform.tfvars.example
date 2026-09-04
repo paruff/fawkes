@@ -31,7 +31,8 @@ worker_group_1_max_size      = 5
 worker_group_2_min_size      = 1
 worker_group_2_max_size      = 3
 
-# Optional: provide a KMS key ARN to enable secret encryption
+# Secrets encryption is always on. Leave null to let the EKS module provision
+# its own KMS key, or provide your own key's ARN to bring your own.
 kms_key_arn = null
 
 # Legacy auth mappings -> aws-auth ConfigMap (consider migrating to EKS Access Entries when module/version supports)

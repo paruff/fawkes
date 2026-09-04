@@ -199,7 +199,7 @@ variable "map_users" {
 }
 
 variable "kms_key_arn" {
-  description = "KMS key ARN for EKS secrets encryption. If null, encryption is disabled."
+  description = "KMS key ARN for EKS secrets encryption. If null, the EKS module provisions and uses its own customer-managed KMS key (create_kms_key defaults to true) — encryption is always on, this only controls bring-your-own-key vs auto-provisioned."
   type        = string
   default     = null
 }
