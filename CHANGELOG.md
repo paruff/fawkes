@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.13](https://github.com/paruff/fawkes/compare/v0.3.12...v0.3.13) (2026-09-04)
+
+
+### Fixed
+
+* **terraform:** require authorized IP ranges for AKS API server ([#1712](https://github.com/paruff/fawkes/issues/1712)) ([23a7e3e](https://github.com/paruff/fawkes/commit/23a7e3eb5951c8d99381c8e21fa8862150aed330))
+
 ## [0.3.12](https://github.com/paruff/fawkes/compare/v0.3.11...v0.3.12) (2026-09-04)
 
 
