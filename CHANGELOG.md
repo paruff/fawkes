@@ -5,6 +5,14 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.4](https://github.com/paruff/fawkes/compare/v0.3.3...v0.3.4) (2026-09-04)
+
+
+### Fixed
+
+* **security:** run mcp-k8s-server and Dockerfile.secure as non-root ([#1685](https://github.com/paruff/fawkes/issues/1685)) ([feaaa61](https://github.com/paruff/fawkes/commit/feaaa614685fd4def81cfb658dced435406bf1c5))
+* **security:** scope Spring Boot actuator exposure ([#1683](https://github.com/paruff/fawkes/issues/1683)) ([7a0b4cf](https://github.com/paruff/fawkes/commit/7a0b4cfa086f2441a183dd3d371f757a3c5ee8f0))
+
 ## [0.3.3](https://github.com/paruff/fawkes/compare/v0.3.2...v0.3.3) (2026-09-04)
 
 
