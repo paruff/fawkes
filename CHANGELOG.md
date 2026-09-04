@@ -5,6 +5,14 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.12](https://github.com/paruff/fawkes/compare/v0.3.11...v0.3.12) (2026-09-04)
+
+
+### Fixed
+
+* **security:** read-only rootfs for unleash containers ([#1708](https://github.com/paruff/fawkes/issues/1708)) ([e47dc64](https://github.com/paruff/fawkes/commit/e47dc6456f3ec41ded22b97f82728a10e621fb21))
+* **terraform:** default SNS topic encryption to AWS-managed key ([#1710](https://github.com/paruff/fawkes/issues/1710)) ([034a40e](https://github.com/paruff/fawkes/commit/034a40eea084bb6fbe42e966bec40c4fba8675c5))
+
 ## [0.3.11](https://github.com/paruff/fawkes/compare/v0.3.10...v0.3.11) (2026-09-04)
 
 
