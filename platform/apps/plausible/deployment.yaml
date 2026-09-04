@@ -113,6 +113,14 @@ spec:
           env:
             - name: CLICKHOUSE_DB
               value: "plausible"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
           volumeMounts:
             - name: data
               mountPath: /var/lib/clickhouse
@@ -122,6 +130,10 @@ spec:
             - name: config
               mountPath: /etc/clickhouse-server/users.d/logging.xml
               subPath: users-logging.xml
+            - name: clickhouse-tmp
+              mountPath: /tmp
+            - name: clickhouse-log
+              mountPath: /var/log/clickhouse-server
           resources:
             requests:
               cpu: 200m
@@ -145,6 +157,10 @@ spec:
         - name: config
           configMap:
             name: clickhouse-config
+        - name: clickhouse-tmp
+          emptyDir: {}
+        - name: clickhouse-log
+          emptyDir: {}
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -252,6 +268,9 @@ spec:
                 echo "Waiting for PostgreSQL..."
                 sleep 2
               done
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
         # Wait for ClickHouse to be ready
         - name: wait-for-clickhouse
           image: busybox:1.36
@@ -263,6 +282,9 @@ spec:
                 echo "Waiting for ClickHouse..."
                 sleep 2
               done
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
         # Run database migrations
         - name: plausible-init
           image: plausible/analytics:v2.0
@@ -288,6 +310,17 @@ spec:
                 secretKeyRef:
                   name: db-plausible-credentials
                   key: password
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
       containers:
         - name: plausible
           image: plausible/analytics:v2.0
@@ -338,7 +371,7 @@ spec:
             timeoutSeconds: 5
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
+            readOnlyRootFilesystem: true
             runAsNonRoot: true
             runAsUser: 1000
             capabilities:
@@ -346,6 +379,12 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
