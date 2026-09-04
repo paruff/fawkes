@@ -233,6 +233,7 @@ See the [examples directory](../examples/) for complete usage examples:
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_cluster_name"></a> [cluster_name](#input_cluster_name) | Name of the EKS cluster | `string` | n/a | yes |
+| <a name="input_kms_key_arn"></a> [kms_key_arn](#input_kms_key_arn) | KMS key ARN for EKS secrets encryption. Required — no default, so callers must make an explicit choice (terraform plan fails until set), matching the pattern used for api_server_authorized_ip_ranges above and the AKS authorized-IP-ranges fix in #1712. This module has no caller today (see infra/aws/main.tf, which uses the terraform-aws-modules/eks/aws community module instead); if it's ever wired up, plan will simply require this value from day one rather than silently deploying with encryption disabled. | `string` | n/a | yes |
 | <a name="input_private_subnet_ids"></a> [private_subnet_ids](#input_private_subnet_ids) | List of private subnet IDs for EKS nodes | `list(string)` | n/a | yes |
 | <a name="input_vpc_id"></a> [vpc_id](#input_vpc_id) | ID of the VPC where EKS cluster will be created | `string` | n/a | yes |
 | <a name="input_api_server_authorized_ip_ranges"></a> [api_server_authorized_ip_ranges](#input_api_server_authorized_ip_ranges) | Authorized IP ranges for API server access (empty list denies all public access) | `list(string)` | `[]` | no |
@@ -246,7 +247,6 @@ See the [examples directory](../examples/) for complete usage examples:
 | <a name="input_enable_ebs_csi_driver"></a> [enable_ebs_csi_driver](#input_enable_ebs_csi_driver) | Enable EBS CSI driver addon | `bool` | `true` | no |
 | <a name="input_endpoint_private_access"></a> [endpoint_private_access](#input_endpoint_private_access) | Enable private API server endpoint | `bool` | `true` | no |
 | <a name="input_endpoint_public_access"></a> [endpoint_public_access](#input_endpoint_public_access) | Enable public API server endpoint. Defaults to false (private-only cluster) for a secure-by-default posture; set to true only when the cluster must be reachable from outside the VPC, and pair it with api_server_authorized_ip_ranges | `bool` | `false` | no |
-| <a name="input_kms_key_arn"></a> [kms_key_arn](#input_kms_key_arn) | KMS key ARN for EKS secrets encryption. If null, encryption is disabled. | `string` | `null` | no |
 | <a name="input_kube_proxy_addon_version"></a> [kube_proxy_addon_version](#input_kube_proxy_addon_version) | Version of the kube-proxy addon | `string` | `null` | no |
 | <a name="input_kubernetes_version"></a> [kubernetes_version](#input_kubernetes_version) | Kubernetes version to use for the EKS cluster | `string` | `"1.28"` | no |
 | <a name="input_node_capacity_type"></a> [node_capacity_type](#input_node_capacity_type) | Type of capacity for nodes (ON_DEMAND or SPOT) | `string` | `"ON_DEMAND"` | no |
