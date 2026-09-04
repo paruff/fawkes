@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.16](https://github.com/paruff/fawkes/compare/v0.3.15...v0.3.16) (2026-09-04)
+
+
+### Fixed
+
+* **security:** add signature verification to friction-bot slash commands ([#1720](https://github.com/paruff/fawkes/issues/1720)) ([c233e9f](https://github.com/paruff/fawkes/commit/c233e9f593997d7997a5795ecbb7671249f3d2ce))
+
+
+### Docs
+
+* correct DEPLOYMENT_STRATEGY.md gaps table against verified reality ([#1724](https://github.com/paruff/fawkes/issues/1724)) ([a92c4d4](https://github.com/paruff/fawkes/commit/a92c4d4e3f9ecfe461eecb7b6f2beb586f694f59))
+
 ## [0.3.15](https://github.com/paruff/fawkes/compare/v0.3.14...v0.3.15) (2026-09-04)
 
 
