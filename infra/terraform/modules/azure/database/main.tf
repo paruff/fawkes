@@ -54,6 +54,8 @@ resource "azurerm_postgresql_flexible_server" "main" {
   version    = var.engine_version
   storage_mb = var.storage_mb
 
+  public_network_access_enabled = var.public_network_access_enabled
+
   backup_retention_days        = var.backup_retention_days
   geo_redundant_backup_enabled = var.geo_redundant_backup_enabled
 
@@ -178,7 +180,7 @@ resource "azurerm_mysql_flexible_server_configuration" "main" {
 
 # PostgreSQL Firewall Rules
 resource "azurerm_postgresql_flexible_server_firewall_rule" "main" {
-  for_each         = var.engine == "postgresql" ? { for idx, rule in var.firewall_rules : idx => rule } : {}
+  for_each         = var.engine == "postgresql" && var.public_network_access_enabled ? { for idx, rule in var.firewall_rules : idx => rule } : {}
   name             = each.value.name
   server_id        = azurerm_postgresql_flexible_server.main[0].id
   start_ip_address = each.value.start_ip_address

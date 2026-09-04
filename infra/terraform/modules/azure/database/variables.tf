@@ -241,7 +241,7 @@ variable "database_parameters" {
 
 # Network Security
 variable "firewall_rules" {
-  description = "List of firewall rules"
+  description = "List of scoped firewall rules for public access. Wildcard rules starting at 0.0.0.0 (all public IPs or Azure services) are rejected"
   type = list(object({
     name             = string
     start_ip_address = string
@@ -257,6 +257,20 @@ variable "firewall_rules" {
     ])
     error_message = "All firewall rule IP addresses must be valid IPv4 addresses."
   }
+
+  validation {
+    condition = alltrue([
+      for rule in var.firewall_rules :
+      rule.start_ip_address != "0.0.0.0"
+    ])
+    error_message = "Firewall rules must not start at 0.0.0.0 (exposes the database to all public IPs or Azure services). Scope rules to a specific VNet/subnet CIDR."
+  }
+}
+
+variable "public_network_access_enabled" {
+  description = "Enable public network access to the PostgreSQL server. Keep false (default) and reach the database over a private endpoint; set true only for genuinely public tiers with scoped firewall_rules. MySQL Flexible Server has no such toggle - its public access is controlled solely by firewall_rules, which default to deny"
+  type        = bool
+  default     = false
 }
 
 variable "enable_private_endpoint" {
