@@ -23,9 +23,10 @@
    - [Post-MVP — Jenkins → Tekton CI Migration](#post-mvp--jenkins--tekton-ci-migration)
    - [Post-MVP — Epic 3 Discovery & UX](#post-mvp--epic-3-discovery--ux)
    - [Post-MVP — Remaining Epic 0](#post-mvp--remaining-epic-0)
-   - [GAP Issues](#gap-issues)
-   - [Needs Closure / Cruft](#needs-closure--cruft)
-   - [Duplicates to Close](#duplicates-to-close)
+- [GAP Issues](#gap-issues)
+    - [Needs Closure / Cruft](#needs-closure-cruft)
+    - [Duplicates to Close](#duplicates-to-close)
+    - [Flagged Follow-Ups](#flagged-follow-ups-recent-pr-reviews)
 5. [Agent Assignment Map](#agent-assignment-map)
 6. [Known Blockers](#known-blockers)
 
@@ -267,7 +268,7 @@ PR merges.
 
 ---
 
-### Needs Closure / Cruft
+### Needs Closure Cruft
 
 > These issues are empty templates or stubs with no real content. Close them.
 
@@ -328,6 +329,20 @@ templates in .github/ISSUE_TEMPLATE/ for new issues."`
 
 **Action:** Close #978–#1004 with comment: `"Closing: duplicate of #NNN. Track work on
 the original issue."`
+
+---
+
+### Flagged Follow-Ups (recent PR reviews)
+
+> Pre-existing issues and deferred work surfaced during recent security/feature PRs.
+> These are concrete, actionable follow-ups; fix them before they block deploys.
+
+| #   | Title                                                                | Source (PR/issue)          | Blocker? | Notes                                                          |
+| --- | -------------------------------------------------------------------- | -------------------------- | -------- | ------------------------------------------------------------- |
+| #1692 | data-quality kustomization references moved path (kustomize build fails) | #1686 / #1644            | Y        | `kustomize build` fails; update `configMapGenerator` source paths |
+| #1693 | rag-service Dockerfile omits `scripts/` and `indexers/`              | #1686 / #1644              | Y        | Indexing CronJob can't find `scripts/index-docs.py` in the image |
+| #1694 | emit accessibility metrics to Prometheus (populate Grafana dashboard) | #1690 / #396               | N        | Workflow change needs approval (AGENTS.md §6)                 |
+| #1695 | consolidate orphaned `accessibility-testing-guide.md`                | #1690 / #396               | N        | Docs cleanup; one canonical page                              |
 
 ---
 
