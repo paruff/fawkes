@@ -1,0 +1,88 @@
+name: Service Python Tests
+
+# Runs lint + unit tests for services/ Python microservices that don't yet
+# have their own dedicated CI pipeline (tracer-bullet and dora-metrics do,
+# see tracer-bullet-ci.yml / dora-metrics-ci.yml, and are intentionally
+# excluded here to avoid duplicate runs).
+#
+# The service list below is curated, not auto-discovered: several other
+# services under services/ have tests/ directories that don't pass lint or
+# test today (broken requirements.txt pins, real test failures, native-build
+# dependency issues). Adding a service here is a statement that it currently
+# passes — see reports/production-audit-2026-09.md (AUD-5) for the list of
+# services still pending a fix before they can be added.
+
+on:
+  pull_request:
+    paths:
+      - "services/ai-code-review/**"
+      - "services/feedback-bot/**"
+      - "services/feedback-cli/**"
+      - "services/friction-bot/**"
+      - ".github/workflows/service-python-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "services/ai-code-review/**"
+      - "services/feedback-bot/**"
+      - "services/feedback-cli/**"
+      - "services/friction-bot/**"
+      - ".github/workflows/service-python-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (${{ matrix.service }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - ai-code-review
+          - feedback-bot
+          - feedback-cli
+          - friction-bot
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: "pip"
+          cache-dependency-path: "services/${{ matrix.service }}/requirements*.txt"
+
+      - name: Install dependencies
+        working-directory: services/${{ matrix.service }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          if [ -f requirements-dev.txt ]; then
+            pip install -r requirements-dev.txt
+          fi
+          pip install ruff==0.15.4 black==26.1.0
+
+      - name: Lint
+        working-directory: services/${{ matrix.service }}
+        run: |
+          ruff check .
+          black --check --diff .
+
+      - name: Test
+        working-directory: services/${{ matrix.service }}
+        run: pytest --cov=app --cov-report=term-missing tests/
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
