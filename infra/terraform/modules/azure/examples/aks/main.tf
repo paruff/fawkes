@@ -98,6 +98,9 @@ module "aks" {
   # Network
   subnet_id = module.vnet.private_subnet_ids["aks-subnet"]
 
+  # API server access: required - restrict to your admin CIDRs (0.0.0.0/0 rejected)
+  api_server_authorized_ip_ranges = ["203.0.113.10/32"]
+
   # Default Node Pool
   default_node_pool_name = "systemnp"
   node_vm_size           = "Standard_D2s_v3"
