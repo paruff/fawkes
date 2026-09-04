@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.3](https://github.com/paruff/fawkes/compare/v0.3.2...v0.3.3) (2026-09-04)
+
+
+### Fixed
+
+* **terraform:** default VPC public IPs and DB firewall to private ([#1681](https://github.com/paruff/fawkes/issues/1681)) ([422b14c](https://github.com/paruff/fawkes/commit/422b14c5fbe465777010180827546e38bf9bf163))
+
 ## [0.3.2](https://github.com/paruff/fawkes/compare/v0.3.1...v0.3.2) (2026-09-02)
 
 
