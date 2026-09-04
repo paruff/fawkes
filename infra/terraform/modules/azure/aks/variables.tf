@@ -340,9 +340,8 @@ variable "load_balancer_managed_outbound_ip_count" {
 
 # API Server Access
 variable "api_server_authorized_ip_ranges" {
-  description = "Authorized IP ranges for API server access (empty list allows all)"
+  description = "Authorized IP ranges for AKS API server access. NO DEFAULT - each caller must explicitly decide. Provide the CIDRs that may reach the API server; use [] ONLY for a fully private cluster (the api_server_access_profile block is omitted). 0.0.0.0/0 is rejected; public open access is not allowed"
   type        = list(string)
-  default     = []
 
   validation {
     condition = alltrue([
@@ -350,6 +349,11 @@ variable "api_server_authorized_ip_ranges" {
       can(cidrhost(cidr, 0))
     ])
     error_message = "All IP ranges must be valid CIDR blocks."
+  }
+
+  validation {
+    condition     = alltrue([for cidr in var.api_server_authorized_ip_ranges : cidr != "0.0.0.0/0"])
+    error_message = "0.0.0.0/0 is not allowed; specify explicit authorized IP ranges, or use [] only for a fully private cluster."
   }
 }
 
