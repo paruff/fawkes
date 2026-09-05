@@ -8,6 +8,21 @@
 > DORA metrics automated.
 > **Triage Method:** See [Scoring System](#scoring-system) below.
 
+> **Status correction (2026-09-05):** the Wave 0-3 plan below describes a
+> pre-Jenkins/pre-CNPG/pre-observability snapshot of the platform and is
+> significantly out of date - many Wave 0/1/2 items marked "Not started" below
+> have since been superseded by live-verified work tracked in
+> [#1751](https://github.com/paruff/fawkes/issues/1751) instead (a plan
+> grounded in this week's live-cluster evidence, not this document). Notably:
+> Jenkins, CloudNativePG, and the observability stack (Prometheus/Grafana)
+> are live-tested and working; Terraform remote state (the "AWS credits /
+> EKS cluster not provisioned" blocker below) is resolved via Azure Blob
+> Storage, not AWS; ArgoCD's GitOps reconciliation is live-verified.
+> **Treat #1751 as the current source of truth for MVP status** until this
+> document is fully rewritten against the platform's actual state - see
+> `docs/KNOWN_LIMITATIONS.md` and `reports/production-audit-2026-09.md` for
+> further live-verified findings this document does not yet reflect.
+
 ---
 
 ## Table of Contents
