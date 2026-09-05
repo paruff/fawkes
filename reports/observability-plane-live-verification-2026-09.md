@@ -45,6 +45,19 @@ After deploying ingress-nginx + prometheus-stack + servicemonitors.yaml:
 
 ### Real bugs found (not "expected, nothing deployed" failures)
 
+> **Update (2026-09-05):** all three bugs below are already fixed in the
+> current codebase. #1 and #2 were fixed in `cfb400be` (#1741), the same
+> day this report was written — `metrics_available()` now matches both
+> scenarios and the StatefulSet name was corrected to
+> `prometheus-prometheus-prometheus`. #3 was fixed earlier the same day in
+> `64ae710b` (#1734, landed ~2h before this report's live-test run), which
+> added `grafana.sidecar.resources` (requests/limits) to
+> `prometheus-application.yaml` — confirmed against the vendored
+> `grafana/grafana` chart template that `sidecar.resources` is what sets
+> resources on the `grafana-sc-dashboard` container. The live cluster this
+> report tested against likely hadn't picked up that ArgoCD sync yet.
+> Findings left below for the record.
+
 1. **Missing step definition.** `Then "metrics should be available for:"` (a
    Gherkin data-table step used in 2 scenarios) has no matching
    `@then`/`@when` in `step_definitions/test_prometheus_stack.py` —
