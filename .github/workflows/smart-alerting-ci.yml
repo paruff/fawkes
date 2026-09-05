@@ -93,7 +93,7 @@ jobs:
     needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     outputs:
-      image_tag: ${{ steps.meta.outputs.version }}
+      image_tag: ${{ steps.image_tag.outputs.tag }}
     steps:
       - name: DORA job start
         run: |
@@ -104,6 +104,10 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v7
+
+      - name: Resolve immutable image tag
+        id: image_tag
+        run: echo "tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
       - name: Docker meta
         id: meta
