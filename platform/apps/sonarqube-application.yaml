@@ -50,6 +50,11 @@ spec:
         # SonarQube Helm Chart Configuration
         # ============================================================
 
+        # Community Build (no license) - the chart requires this explicit
+        # choice regardless of the image tag already being "-community".
+        community:
+          enabled: true
+
         # Image configuration
         image:
           repository: docker.io/sonarqube
@@ -122,6 +127,11 @@ spec:
           jdbcUsername: "sonarqube_user"
           jdbcSecretName: "db-sonarqube-credentials"
           jdbcSecretPasswordKey: "password"
+
+        # Required by the chart for the internal monitoring/health endpoint.
+        # DEV DEFAULT: local-dev-only value, same pattern as Harbor's dev-mode
+        # secretKey above (see #1797 for the tracked Sealed Secrets rollout).
+        monitoringPasscode: "AKtUFe1iwn5G2MW100fYwIHp"
 
         # ============================================================
         # Plugins Configuration
