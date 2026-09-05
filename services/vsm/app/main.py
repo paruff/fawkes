@@ -261,8 +261,13 @@ async def transition_work_item(
     Returns:
         Stage transition record
     """
-    # Verify work item exists
-    work_item = db.query(WorkItem).filter(WorkItem.id == work_item_id).first()
+    try:
+        # Verify work item exists
+        work_item = db.query(WorkItem).filter(WorkItem.id == work_item_id).first()
+    except Exception as e:
+        logger.error(f"Failed to look up work item {work_item_id}: {e}")
+        raise HTTPException(status_code=503, detail=f"Failed to look up work item: {e!s}")
+
     if not work_item:
         raise HTTPException(status_code=404, detail=f"Work item {work_item_id} not found")
 
@@ -525,7 +530,12 @@ async def list_stages(db: Session = Depends(get_db)):
     Returns:
         List of all stages in order
     """
-    stages = db.query(Stage).order_by(Stage.order.asc()).all()
+    try:
+        stages = db.query(Stage).order_by(Stage.order.asc()).all()
+    except Exception as e:
+        logger.error(f"Failed to list stages: {e}")
+        raise HTTPException(status_code=503, detail=f"Failed to list stages: {e!s}")
+
     return [
         StageResponse(
             id=stage.id,
