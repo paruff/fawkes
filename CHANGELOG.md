@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.49](https://github.com/paruff/fawkes/compare/v0.3.48...v0.3.49) (2026-09-05)
+
+
+### Added
+
+* **tekton:** wire in [#1660](https://github.com/paruff/fawkes/issues/1660)'s GitHub webhook skeleton ([#1823](https://github.com/paruff/fawkes/issues/1823)) ([d9c8594](https://github.com/paruff/fawkes/commit/d9c85940616f7814b96fa489c5f084bf1ef2f9d8))
+
 ## [0.3.48](https://github.com/paruff/fawkes/compare/v0.3.47...v0.3.48) (2026-09-05)
 
 
