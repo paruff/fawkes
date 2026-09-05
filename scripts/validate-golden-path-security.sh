@@ -135,7 +135,8 @@ check_smart_alerting_auth() {
 
   local status_code
   status_code=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 -X POST \
-    "http://localhost:18080/api/v1/alerts/webhook" -H "Content-Type: application/json" -d '{}' 2> /dev/null || echo "000")
+    "http://localhost:18080/api/v1/alerts/webhook" -H "Content-Type: application/json" -d '{}' 2> /dev/null || true)
+  status_code="${status_code:-000}"
   kill "$pf_pid" &> /dev/null || true
 
   if [ "$status_code" = "401" ] || [ "$status_code" = "403" ]; then
