@@ -1,32 +1,40 @@
-name: Smart Alerting CI/CD
+name: Reusable Python Service Golden Path
 
-# Pilot of the tracer-bullet-ci.yml pattern on a second, pre-existing
-# service (#1751 Phase 2): lint + test, build, push to GHCR, scan, SBOM,
-# sign, then commit the new image tag into the GitOps manifest so ArgoCD's
-# selfHeal syncs it. Replaces service-python-tests.yml's generic
-# lint-only coverage for this one service (see the exclusion added there).
+# Factors out the build->scan->sign->SBOM->GitOps-promote pattern proven
+# identically in tracer-bullet-ci.yml, dora-metrics-ci.yml, and
+# smart-alerting-ci.yml (#1751) into one parameterized workflow, so
+# extending it to the remaining services/*/ directories is a ~15-line
+# wrapper instead of a ~250-line near-duplicate file each time.
 #
 # ArgoCD auto-syncs the updated manifest to the cluster.
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "services/smart-alerting/**"
-  pull_request:
-    branches: [main]
-    paths:
-      - "services/smart-alerting/**"
+  workflow_call:
+    inputs:
+      service-name:
+        description: "Directory name under services/ (also used as the GHCR image name unless image-name is set)"
+        required: true
+        type: string
+      image-name:
+        description: "GHCR image name, defaults to service-name"
+        required: false
+        type: string
+        default: ""
+      manifest-dir:
+        description: "Directory containing deployment.yaml to update with the new image tag"
+        required: false
+        type: string
+        default: ""
+      coverage-fail-under:
+        description: "pytest --cov-fail-under threshold; empty disables the gate (matches this repo's other per-service pipelines until each service's own coverage is raised)"
+        required: false
+        type: string
+        default: ""
 
 permissions:
   contents: write
   packages: write
-  id-token: write # for cosign keyless image signing
-
-env:
-  IMAGE_NAME: ghcr.io/paruff/smart-alerting
-  SERVICE_DIR: services/smart-alerting
-  MANIFEST_DIR: services/smart-alerting/k8s
+  id-token: write
 
 jobs:
   # ==========================================================================
@@ -52,10 +60,10 @@ jobs:
         with:
           python-version: "3.13"
           cache: "pip"
-          cache-dependency-path: "${{ env.SERVICE_DIR }}/requirements*.txt"
+          cache-dependency-path: "services/${{ inputs.service-name }}/requirements*.txt"
 
       - name: Install dependencies
-        working-directory: ${{ env.SERVICE_DIR }}
+        working-directory: services/${{ inputs.service-name }}
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt -r requirements-dev.txt
@@ -65,19 +73,19 @@ jobs:
           pip install ruff
 
       - name: Lint
-        working-directory: ${{ env.SERVICE_DIR }}
+        working-directory: services/${{ inputs.service-name }}
         run: |
           ruff check .
           ruff format --check --diff .
 
       - name: Test
-        working-directory: ${{ env.SERVICE_DIR }}
+        working-directory: services/${{ inputs.service-name }}
         run: |
-          # No --cov-fail-under gate yet: current coverage is ~36%
-          # (routing.py/suppression.py are largely untested). Raising it to
-          # the repo's 80% target is tracked separately, not part of this
-          # pipeline pilot.
-          pytest --cov=app --cov-report=term-missing tests/
+          if [ -n "${{ inputs.coverage-fail-under }}" ]; then
+            pytest --cov=app --cov-report=term-missing --cov-fail-under=${{ inputs.coverage-fail-under }} tests/
+          else
+            pytest --cov=app --cov-report=term-missing tests/
+          fi
 
       - name: DORA job finish
         if: always()
@@ -113,7 +121,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6
         with:
-          images: ${{ env.IMAGE_NAME }}
+          images: ghcr.io/paruff/${{ inputs.image-name != '' && inputs.image-name || inputs.service-name }}
           tags: |
             type=sha,prefix=
             type=raw,value=latest
@@ -131,7 +139,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
-          context: ${{ env.SERVICE_DIR }}
+          context: services/${{ inputs.service-name }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -155,11 +163,11 @@ jobs:
       security-events: write
     with:
       scan-type: vulnerabilities
-      image-ref: ghcr.io/paruff/smart-alerting:${{ needs.build.outputs.image_tag }}
+      image-ref: ghcr.io/paruff/${{ inputs.image-name != '' && inputs.image-name || inputs.service-name }}:${{ needs.build.outputs.image_tag }}
       severity-threshold: "CRITICAL,HIGH"
       fail-on-critical: true
       ignore-unfixed: true
-      sarif-category: "trivy-image-smart-alerting"
+      sarif-category: "trivy-image-${{ inputs.service-name }}"
 
   # ==========================================================================
   # Job 2b: Generate downloadable SBOM artifact (main only)
@@ -173,7 +181,7 @@ jobs:
       contents: read
       packages: read
     with:
-      image-name: smart-alerting
+      image-name: ${{ inputs.image-name != '' && inputs.image-name || inputs.service-name }}
       image-tag: ${{ needs.build.outputs.image_tag }}
 
   # ==========================================================================
@@ -189,7 +197,7 @@ jobs:
       packages: write
       id-token: write
     with:
-      image-name: paruff/smart-alerting
+      image-name: paruff/${{ inputs.image-name != '' && inputs.image-name || inputs.service-name }}
       image-tag: ${{ needs.build.outputs.image_tag }}
     secrets:
       registry-password: ${{ secrets.GITHUB_TOKEN }}
@@ -218,27 +226,30 @@ jobs:
 
       - name: Update image tag in manifest
         env:
+          IMAGE_NAME: ghcr.io/paruff/${{ inputs.image-name != '' && inputs.image-name || inputs.service-name }}
+          MANIFEST_DIR: ${{ inputs.manifest-dir != '' && inputs.manifest-dir || format('services/{0}/k8s', inputs.service-name) }}
           NEW_TAG: ${{ needs.build.outputs.image_tag }}
         run: |
           echo "Updating image tag to: ${NEW_TAG}"
           sed -i "s|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${NEW_TAG}|g" \
-            ${MANIFEST_DIR}/deployment.yaml
-          # Also update the version label
+            "${MANIFEST_DIR}/deployment.yaml"
           sed -i "s|app.kubernetes.io/version:.*|app.kubernetes.io/version: ${NEW_TAG}|g" \
-            ${MANIFEST_DIR}/deployment.yaml
+            "${MANIFEST_DIR}/deployment.yaml"
 
       - name: Commit and push
         env:
+          MANIFEST_DIR: ${{ inputs.manifest-dir != '' && inputs.manifest-dir || format('services/{0}/k8s', inputs.service-name) }}
           NEW_TAG: ${{ needs.build.outputs.image_tag }}
+          SERVICE_NAME: ${{ inputs.service-name }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ${MANIFEST_DIR}/deployment.yaml
+          git add "${MANIFEST_DIR}/deployment.yaml"
           if git diff --staged --quiet; then
             echo "No changes to commit"
             exit 0
           fi
-          git commit -m "chore(smart-alerting): update image tag to ${NEW_TAG}"
+          git commit -m "chore(${SERVICE_NAME}): update image tag to ${NEW_TAG}"
           # main moves fast in this repo (release-please auto-commits, other
           # services' own GitOps-update jobs) - retry with rebase instead of
           # failing outright on a simple non-fast-forward race.
