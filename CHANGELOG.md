@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.30](https://github.com/paruff/fawkes/compare/v0.3.29...v0.3.30) (2026-09-05)
+
+
+### Docs
+
+* correct BACKLOG and DEPLOYMENT_STRATEGY against live state ([#1761](https://github.com/paruff/fawkes/issues/1761)) ([b5e0f2b](https://github.com/paruff/fawkes/commit/b5e0f2bf7a982f5d02e3e4ca618ef68970473397))
+
 ## [0.3.29](https://github.com/paruff/fawkes/compare/v0.3.28...v0.3.29) (2026-09-05)
 
 
