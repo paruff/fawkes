@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.37](https://github.com/paruff/fawkes/compare/v0.3.36...v0.3.37) (2026-09-05)
+
+
+### Docs
+
+* expand golden path planes with security/resources/devex scope ([#1780](https://github.com/paruff/fawkes/issues/1780)) ([55b8c9e](https://github.com/paruff/fawkes/commit/55b8c9e1be668bd55f1c85d537511142d3b948fe))
+
 ## [0.3.36](https://github.com/paruff/fawkes/compare/v0.3.35...v0.3.36) (2026-09-05)
 
 
