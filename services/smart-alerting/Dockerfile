@@ -1,11 +1,14 @@
-FROM python:3.13.14-slim
+FROM python:3.13.15-slim
 
 WORKDIR /app
 
 # Install dependencies (pip upgrade fixes CVE-2026-13346, present in the base image's bundled pip)
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt && \
+    rm -rf /usr/local/lib/python3.13/site-packages/pip* \
+      /usr/local/lib/python3.13/site-packages/setuptools* \
+      /usr/local/lib/python3.13/site-packages/pkg_resources
 
 # Copy application
 COPY app/ ./app/
