@@ -104,6 +104,12 @@ spec:
                   name: smart-alerting-secrets
                   key: pagerduty-api-key
                   optional: true
+            - name: ALERTING_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: smart-alerting-secrets
+                  key: alerting-api-token
+                  optional: true
           resources:
             requests:
               cpu: 200m
