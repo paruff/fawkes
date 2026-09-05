@@ -98,6 +98,16 @@ jobs:
           exit-code: ${{ inputs.fail-on-critical && '1' || '0' }}
           ignore-unfixed: ${{ inputs.ignore-unfixed }}
 
+      - name: Print Trivy findings (debug - runs even on failure)
+        if: always() && (inputs.scan-type == 'all' || inputs.scan-type == 'vulnerabilities')
+        run: |
+          if [ -f trivy-results.sarif ]; then
+            echo "### Trivy SARIF findings ###"
+            jq -r '.runs[].results[] | "\(.ruleId)\t\(.level)\t\(.message.text // "" | split("\n")[0])"' trivy-results.sarif || cat trivy-results.sarif
+          else
+            echo "No trivy-results.sarif file produced."
+          fi
+
       - name: Upload Trivy results to GitHub Security
         if: inputs.upload-sarif && (inputs.scan-type == 'all' || inputs.scan-type == 'vulnerabilities')
         uses: github/codeql-action/upload-sarif@v4
