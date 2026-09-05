@@ -10,9 +10,11 @@ The current deployment model is a minimal push-based trigger:
 - **Infrastructure**: Terraform modules are validated in CI but deployed manually or via external pipelines
 - **Reusable workflows**: Called from `paruff/ufawkespipe` and other repos; no cross-repo GitOps flow
 
-**Correction (2026-09):** this file previously stated there is no automated rollback and no cross-repo GitOps flow. Both tracer-bullet and dora-metrics already implement real GitOps artifact promotion: their CI builds an image, pushes it to GHCR, then commits the new tag directly into `platform/apps/<service>/deployment.yaml` on `main`. Both services' ArgoCD `Application` manifests have `syncPolicy.automated: {prune: true, selfHeal: true}`, which means ArgoCD auto-syncs that commit to the cluster. In principle, reverting that tag-bump commit should cause ArgoCD's `selfHeal` to roll the deployment back to the previous image automatically — **this has not actually been tested end-to-end** (tracked as AUD-4 in `reports/production-audit-2026-09.md`). This is in-tree GitOps (one repo, `platform/apps/`), not the separate GitOps repo the target model below describes — that's still a real gap, just a different one than "nothing works."
+**Correction (2026-09):** this file previously stated there is no automated rollback and no cross-repo GitOps flow. Both tracer-bullet and dora-metrics already implement real GitOps artifact promotion: their CI builds an image, pushes it to GHCR, then commits the new tag directly into `platform/apps/<service>/deployment.yaml` on `main`. Both services' ArgoCD `Application` manifests have `syncPolicy.automated: {prune: true, selfHeal: true}`, which means ArgoCD auto-syncs that commit to the cluster. This is in-tree GitOps (one repo, `platform/apps/`), not the separate GitOps repo the target model below describes — that's still a real gap, just a different one than "nothing works."
 
-`ai-code-review`, `feedback-bot`, `feedback-cli`, and `friction-bot` now have CI-run lint/tests (`service-python-tests.yml`) but do not yet build/push images or participate in GitOps promotion — extending the tracer-bullet/dora-metrics pattern to them is a natural next step, not yet done.
+**Update (2026-09-05, #1751 Phase 1):** ArgoCD's `selfHeal` mechanism is now live-verified on a real cluster (see Rollback Protocol below) - previously this section could only say "in principle." Note this is cluster-specific: ArgoCD needs to actually be running and synced on whichever cluster you're targeting (it is not persistently running anywhere by default in this repo - it's redeployed per session via `scripts/lib/argocd.sh`/`infra/terraform/argocd`, and the AKS cluster it was verified against this week is deliberately stopped/deallocated between sessions to control cost).
+
+**Update (2026-09-05):** all **17** Python services under `services/` now have CI-run lint/tests (`service-python-tests.yml`, added in #1747) but do not yet build/push images or participate in GitOps promotion — extending the tracer-bullet/dora-metrics pattern to them is a natural next step, in progress (#1751 Phase 2).
 
 `paruff/ufawkespipe`'s `reusable-rollback.yml` was checked as a possible shortcut for the "Automated rollback" gap below — it is **not applicable**: it's built for SSH-based deployment to a single host (`DEPLOY_HOST`/`DEPLOY_USER`/`DEPLOY_KEY` + a remote `git reset` and restart command), not a Kubernetes/ArgoCD GitOps model. The real rollback mechanism here is git-revert + ArgoCD `selfHeal`, described above.
 
@@ -85,6 +87,6 @@ in step 1.
 | Versioned artifacts | Partial | ✅ |
 | GitOps separate repo | In-tree only (works for tracer-bullet, dora-metrics) | ✅ (separate repo) |
 | Canary deployments | ❌ | ✅ |
-| Automated rollback | Unverified (git-revert + ArgoCD selfHeal *should* work, never tested) | ✅ |
+| Automated rollback | Mechanism verified live (2026-09-05, see Rollback Protocol above) - the `selfHeal` half is proven; a full `git revert` + PR merge cycle is not yet tested | ✅ |
 | Post-deployment verification | ❌ | ✅ |
 | deployment events | ❌ | ✅ |
