@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.45](https://github.com/paruff/fawkes/compare/v0.3.44...v0.3.45) (2026-09-05)
+
+
+### Added
+
+* **tekton:** propose deploying Tekton Pipelines + Triggers ([#1659](https://github.com/paruff/fawkes/issues/1659)) ([#1809](https://github.com/paruff/fawkes/issues/1809)) ([a52a7c0](https://github.com/paruff/fawkes/commit/a52a7c023ef443f82f16602621bf4bfee6aa2be7))
+
 ## [0.3.44](https://github.com/paruff/fawkes/compare/v0.3.43...v0.3.44) (2026-09-05)
 
 
