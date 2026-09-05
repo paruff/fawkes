@@ -5403,6 +5403,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Planes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#planned-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned additions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -5486,9 +5503,9 @@ workload. Each plane has its own <code>scripts/validate-golden-path-&lt;plane&gt
 </tr>
 <tr>
 <td><strong>Observability</strong></td>
-<td>Real traces reach Tempo and real metrics reach Prometheus for the service</td>
+<td>Real traces reach Tempo, real metrics reach Prometheus, the OpenTelemetry Collector is healthy, and OpenSearch (log backend) is reachable and green</td>
 <td><code>scripts/validate-golden-path-observability.sh</code></td>
-<td>Implemented — needs extension (OpenSearch log correlation, OpenTelemetry Collector pipeline health)</td>
+<td>Implemented</td>
 </tr>
 <tr>
 <td><strong>DORA</strong></td>
@@ -5498,24 +5515,107 @@ workload. Each plane has its own <code>scripts/validate-golden-path-&lt;plane&gt
 </tr>
 <tr>
 <td><strong>Security</strong></td>
-<td>No unauthenticated write endpoints, no exposed secrets, image signature verifies, no unresolved CRITICAL/HIGH vulnerabilities</td>
+<td>Live image signature verifies, pod securityContext is hardened, smart-alerting rejects unauthenticated alert-ingestion requests (AUD-2), no plaintext credential placeholders remain</td>
 <td><code>scripts/validate-golden-path-security.sh</code></td>
-<td>Planned</td>
+<td>Implemented — core checks. See below for planned additions (secrets management, policy, code analysis, network security)</td>
 </tr>
 <tr>
 <td><strong>Resources</strong></td>
-<td>The workload's actual pod/CPU/memory/storage footprint is known and within budget; PostgreSQL (CloudNativePG) backing store is healthy and reachable</td>
+<td>Every golden-path container declares CPU/memory requests and limits, actual usage is known, PVCs are Bound, and the PostgreSQL (CloudNativePG) backing cluster is healthy</td>
 <td><code>scripts/validate-golden-path-resources.sh</code></td>
-<td>Planned</td>
+<td>Implemented — core checks. See below for planned additions (messaging, key-value, SSO)</td>
 </tr>
 <tr>
 <td><strong>DevEx</strong></td>
-<td>The service is discoverable and usable through the platform's developer-facing surface — Backstage catalog entry, TechDocs, scaffolder template</td>
+<td>The service is discoverable and usable through the platform's developer-facing surface — catalog-info.yaml exists, Backstage is deployed, and the component is registered in its live catalog</td>
 <td><code>scripts/validate-golden-path-devex.sh</code></td>
-<td>Planned</td>
+<td>Implemented — core checks. See below for planned additions (CDE, chat, kanban)</td>
 </tr>
 </tbody>
 </table>
+<h3 id="planned-additions">Planned additions</h3>
+<p>Recorded here so scope is tracked before it's built — none of these have a script yet.
+Each row notes whether the underlying platform component already exists (a check-script
+task) or would need new platform infrastructure first (a bigger undertaking, out of scope
+for a quick follow-up).</p>
+<p><strong>Security plane:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Addition</th>
+<th>Existing platform component?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Secrets management (no secrets reachable outside Vault/Sealed Secrets/External Secrets)</td>
+<td>Yes — <code>platform/apps/vault</code>, <code>sealed-secrets</code>, <code>external-secrets</code></td>
+</tr>
+<tr>
+<td>Policy enforcement (Kyverno policies are actually enforced, not just installed)</td>
+<td>Yes — <code>platform/apps/kyverno</code>, <code>platform/policies/generation-policies.yaml</code></td>
+</tr>
+<tr>
+<td>Code analysis (SonarQube quality gate passes for the service)</td>
+<td>Yes — <code>platform/apps/sonarqube-application.yaml</code></td>
+</tr>
+<tr>
+<td>Network-based security (NetworkPolicies actually restrict traffic, not just exist)</td>
+<td>Yes — e.g. <code>platform/apps/eclipse-che/network-policies.yaml</code>; golden-path services don't have their own yet</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Resources plane:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Addition</th>
+<th>Existing platform component?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Messaging (e.g. RabbitMQ)</td>
+<td><strong>No</strong> — not yet in <code>platform/apps/</code></td>
+</tr>
+<tr>
+<td>Key-value store (e.g. Redis)</td>
+<td><strong>No</strong> — not yet in <code>platform/apps/</code></td>
+</tr>
+<tr>
+<td>Single sign-on</td>
+<td><strong>No</strong> — not yet in <code>platform/apps/</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>DevEx plane:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Addition</th>
+<th>Existing platform component?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CDE (cloud development environment)</td>
+<td>Yes — <code>platform/apps/eclipse-che</code> fills this role today</td>
+</tr>
+<tr>
+<td>Team chat</td>
+<td>Yes — <code>platform/apps/mattermost</code></td>
+</tr>
+<tr>
+<td>Kanban / project board</td>
+<td>Yes — <code>platform/apps/focalboard</code></td>
+</tr>
+</tbody>
+</table>
+<p>The Resources-plane items have no existing platform component — verifying them means
+standing up new infrastructure first, not just writing a check script. Recommend scoping
+that as its own issue rather than folding it into #1751 Phase 3, which is specifically
+about proving the tracer-bullet/smart-alerting golden path, not building out new platform
+capabilities.</p>
 <h2 id="adding-or-changing-a-plane">Adding or changing a plane</h2>
 <ol>
 <li>Add a row to the table above before writing code — this doc is the source of truth for
