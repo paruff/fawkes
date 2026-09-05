@@ -51,14 +51,19 @@
 # the vendored upstream YAML - not worth it for a Phase 1 "get it running"
 # task, so only the core namespace is remapped.
 #
-# Scope is deliberately limited to the controllers only - no Task/Pipeline/
-# Trigger resources yet (those come in a later phase once wiring is proven).
+# eventlistener-github-skeleton.yaml adds #1660's GitHub webhook skeleton
+# (EventListener/TriggerBinding/TriggerTemplate + a trivial smoke-test
+# TaskRun) - proves the webhook wiring only, no real Golden Path pipeline
+# logic yet. SECURITY-SENSITIVE: exposes a new webhook Ingress endpoint,
+# see that file's own header comment - must not be merged without
+# maintainer review, per AGENTS.md SS6 and issue #1660.
 # ============================================================================
 
 resources:
   - upstream/pipeline-v1.15.1.yaml
   - upstream/triggers-v0.37.0.yaml
   - upstream/triggers-interceptors-v0.37.0.yaml
+  - eventlistener-github-skeleton.yaml
 
 patches:
   # The vendored tekton-pipelines Namespace object is redundant once its
