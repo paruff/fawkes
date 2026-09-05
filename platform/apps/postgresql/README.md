@@ -135,7 +135,7 @@ metadata:
     environment: dev
 spec:
   instances: 3  # HA with 1 primary + 2 replicas
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.4
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.11
 
   bootstrap:
     initdb:
