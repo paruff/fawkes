@@ -34,7 +34,7 @@ spec:
     # Official Jenkins Helm repo
     repoURL: https://charts.jenkins.io
     chart: jenkins
-    targetRevision: "5.8.102" # required by ArgoCD for Helm charts
+    targetRevision: "5.9.56" # required by ArgoCD for Helm charts
     helm:
       # Keep values small and override via a dedicated values.yaml if you prefer
       values: |
@@ -200,48 +200,55 @@ spec:
                 pathType: Prefix
         # Golden Path required plugins
         controller:
+          # Plugin versions intentionally omitted (name only): pinned exact
+          # versions here had drifted incompatible with the current
+          # jenkins/jenkins:jdk21 core image - the init container crash-looped
+          # with "unresolvable dependencies" for several plugins whose
+          # transitive deps now require newer versions than the pinned ones.
+          # Unversioned entries resolve to the latest version compatible with
+          # the running core via the Jenkins Update Center.
           installPlugins:
             # Core Pipeline
-            - kubernetes:4029.v5712230ccb_f8
-            - workflow-aggregator:596.v8c21c963d92d
-            - workflow-job:1400.v7fd111b_ec82f
-            - workflow-multibranch:773.vc4fe1378f1d4
-            - pipeline-stage-view:2.34
-            - pipeline-utility-steps:2.16.2
+            - kubernetes
+            - workflow-aggregator
+            - workflow-job
+            - workflow-multibranch
+            - pipeline-stage-view
+            - pipeline-utility-steps
             # Source Control
-            - git:5.2.2
-            - github:1.38.0
-            - github-branch-source:1763.v8f8b_53a_e9299
+            - git
+            - github
+            - github-branch-source
             # Credentials & Security
-            - credentials-binding:677.vd7c1d3f1f0e5
-            - credentials:1343.v42313abcde26
+            - credentials-binding
+            - credentials
             # Configuration as Code
-            - configuration-as-code:1836.vccda_4a_122a_a_e
+            - configuration-as-code
             # Shared Libraries
-            - pipeline-github-lib:61.v629f2cc41d83
+            - pipeline-github-lib
             # Quality & Testing
-            - junit:1265.v65b_14fa_f12f0
-            - jacoco:3.3.7
-            - warnings-ng:11.5.0
-            - htmlpublisher:1.36
-            - cucumber-reports:5.8.3
+            - junit
+            - jacoco
+            - warnings-ng
+            - htmlpublisher
+            - cucumber-reports
             # Security Scanning
-            - sonar:2.17.2
+            - sonar
             # Notifications
-            - mattermost:3.0.0
-            - email-ext:1792.v3bff4c0819db
+            - mattermost
+            - email-ext
             # Kubernetes
-            - kubernetes-cli:1.11.0
+            - kubernetes-cli
             # Build Tools
-            - maven-plugin:3.23
-            - nodejs:1.6.2
+            - maven-plugin
+            - nodejs
             # Utilities
-            - http_request:1.18
-            - pipeline-input-step:477.v339683a_8d55d
-            - docker-workflow:580.vc0c340686b_54
-            - timestamper:1.27
-            - ansicolor:1.0.4
-            - build-discarder:138.v0f76e68ad430
+            - http_request
+            - pipeline-input-step
+            - docker-workflow
+            - timestamper
+            - ansicolor
+            - build-discarder
         persistence:
           enabled: true
           size: 8Gi
@@ -251,11 +258,14 @@ spec:
         rbac:
           create: true
         # Agent configuration
+        # image/tag intentionally omitted: the chart's own default is a
+        # structured map ({registry, repository, tag}), not a scalar string -
+        # overriding with a bare string broke Helm's default-merging and
+        # crashed the JCasC template. Let the chart's pinned default apply
+        # (also avoids a `latest` tag, disallowed per AGENTS.md).
         agent:
           enabled: true
           namespace: fawkes
-          image: jenkins/inbound-agent
-          tag: latest
 
   destination:
     server: https://kubernetes.default.svc
