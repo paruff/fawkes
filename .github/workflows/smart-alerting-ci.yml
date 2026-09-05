@@ -22,6 +22,7 @@ permissions:
   contents: write
   packages: write
   id-token: write # for cosign keyless image signing
+  pull-requests: write # for GitOps update PR (main-protection forbids direct push)
 
 env:
   IMAGE_NAME: ghcr.io/paruff/smart-alerting
@@ -227,9 +228,10 @@ jobs:
           sed -i "s|app.kubernetes.io/version:.*|app.kubernetes.io/version: ${NEW_TAG}|g" \
             ${MANIFEST_DIR}/deployment.yaml
 
-      - name: Commit and push
+      - name: Open and merge GitOps PR
         env:
           NEW_TAG: ${{ needs.build.outputs.image_tag }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -238,20 +240,24 @@ jobs:
             echo "No changes to commit"
             exit 0
           fi
+          # main-protection forbids direct pushes to main (GH013) - route the
+          # image-tag bump through a PR instead. required_approving_review_count
+          # is 0, so the bot can merge it immediately without a human click.
+          BRANCH="gitops/smart-alerting-${NEW_TAG}"
+          git checkout -b "${BRANCH}"
           git commit -m "chore(smart-alerting): update image tag to ${NEW_TAG}"
-          # main moves fast in this repo (release-please auto-commits, other
-          # services' own GitOps-update jobs) - retry with rebase instead of
-          # failing outright on a simple non-fast-forward race.
+          git push origin "${BRANCH}"
+          gh pr create --title "chore(smart-alerting): update image tag to ${NEW_TAG}" \
+            --body "Automated GitOps update for commit ${GITHUB_SHA}." \
+            --base main --head "${BRANCH}"
           for attempt in 1 2 3 4 5; do
-            if git push; then
+            if gh pr merge "${BRANCH}" --squash --delete-branch; then
               exit 0
             fi
-            echo "Push rejected (attempt ${attempt}/5), rebasing onto latest main..."
-            git fetch origin main
-            git rebase origin/main
-            sleep $((attempt * 3))
+            echo "Merge attempt ${attempt}/5 failed, retrying in 10s..."
+            sleep 10
           done
-          echo "::error::Failed to push GitOps update after 5 attempts"
+          echo "::error::Failed to merge GitOps PR after 5 attempts"
           exit 1
 
       - name: DORA job finish
