@@ -13,7 +13,7 @@ This document provides API references for all Epic 1 platform components, includ
 
 - ArgoCD REST API
 - Backstage Plugin APIs
-- Jenkins REST API & Webhooks
+- Tekton API (Kubernetes API for Pipelines/Tasks)
 - Prometheus Query API
 - Grafana API
 - Harbor Registry API
@@ -28,7 +28,7 @@ This document provides API references for all Epic 1 platform components, includ
 1. [Authentication](#authentication)
 2. [ArgoCD API](#argocd-api)
 3. [Backstage APIs](#backstage-apis)
-4. [Jenkins API](#jenkins-api)
+4. [Tekton API](#tekton-api)
 5. [Prometheus API](#prometheus-api)
 6. [Grafana API](#grafana-api)
 7. [Harbor API](#harbor-api)
@@ -46,7 +46,7 @@ Different components use different authentication methods:
 | ---------- | --------------- | -------------------------------- |
 | ArgoCD     | Bearer Token    | `argocd account get-user-token`  |
 | Backstage  | Session Cookie  | OAuth flow via UI                |
-| Jenkins    | API Token       | User settings → API Token        |
+| Tekton     | Kubernetes RBAC | kubectl with proper permissions  |
 | Prometheus | None (internal) | Port-forward only                |
 | Grafana    | API Key         | Settings → API Keys              |
 | Harbor     | Basic Auth      | Username/password                |
@@ -292,107 +292,59 @@ GET /techdocs/default/component/{name}/index.html
 
 ---
 
-## Jenkins API
+## Tekton API
 
-**Base URL:** `https://jenkins.fawkes.local`
-**Authentication:** Username + API token (Basic Auth)
+<!-- TODO: verify Tekton equivalent for this workflow -->
 
-### Get Jenkins Info
+Tekton has no bespoke REST API server — PipelineRuns and TaskRuns are
+Kubernetes custom resources, accessed via the standard Kubernetes API server
+or the `tkn` CLI.
 
-```http
-GET /api/json
-```
+**Base URL:** `<kube-api-server>/apis/tekton.dev/v1/namespaces/fawkes`
+**Authentication:** Kubernetes RBAC (bearer token or client cert)
 
-### List Jobs
-
-```http
-GET /api/json?tree=jobs[name,url,color]
-```
-
-**Response:**
-
-```json
-{
-  "jobs": [
-    {
-      "name": "payment-service-pipeline",
-      "url": "https://jenkins.fawkes.local/job/payment-service-pipeline/",
-      "color": "blue"
-    }
-  ]
-}
-```
-
-### Get Job Info
+### List PipelineRuns
 
 ```http
-GET /job/{job-name}/api/json
+GET /apis/tekton.dev/v1/namespaces/fawkes/pipelineruns
 ```
 
-### Trigger Build
+Or via CLI:
+
+```bash
+tkn pipelinerun list -n fawkes
+```
+
+### Get PipelineRun Status
 
 ```http
-POST /job/{job-name}/build
+GET /apis/tekton.dev/v1/namespaces/fawkes/pipelineruns/{pipelinerun-name}
 ```
 
-**With Parameters:**
+Or via CLI:
 
-```http
-POST /job/{job-name}/buildWithParameters?BRANCH=main&TAG=v1.0.0
+```bash
+tkn pipelinerun describe {pipelinerun-name} -n fawkes
 ```
 
-### Get Build Status
+### Trigger a PipelineRun
 
-```http
-GET /job/{job-name}/{build-number}/api/json
+```bash
+tkn pipeline start payment-service-pipeline -n fawkes -p BRANCH=main -p TAG=v1.0.0
 ```
 
-**Response:**
+### Get TaskRun Logs
 
-```json
-{
-  "number": 42,
-  "result": "SUCCESS",
-  "duration": 120000,
-  "timestamp": 1702731600000,
-  "building": false
-}
+```bash
+tkn pipelinerun logs {pipelinerun-name} -n fawkes -f
 ```
 
-### Get Console Output
+### Tekton EventListener Webhook Events
 
-```http
-GET /job/{job-name}/{build-number}/consoleText
-```
-
-### Jenkins Webhook Events
-
-Jenkins sends webhooks to registered URLs on build events:
-
-**Webhook Payload:**
-
-```json
-{
-  "name": "payment-service-pipeline",
-  "build": {
-    "number": 42,
-    "phase": "COMPLETED",
-    "status": "SUCCESS",
-    "url": "https://jenkins.fawkes.local/job/payment-service-pipeline/42/",
-    "full_url": "https://jenkins.fawkes.local/job/payment-service-pipeline/42/",
-    "timestamp": "2024-12-16T10:00:00Z",
-    "duration": 120000,
-    "parameters": {
-      "BRANCH": "main"
-    },
-    "scm": {
-      "commit": "abc123",
-      "branch": "main",
-      "url": "https://github.com/paruff/payment-service"
-    }
-  }
-}
-```
+<!-- TODO: verify Tekton equivalent for this workflow - the EventListener
+     webhook mechanism for triggering PipelineRuns from Git pushes, and the
+     event payload forwarded to DevLake for DORA metrics, is still being
+     built (issue #1660) -->
 
 ---
 
@@ -810,16 +762,18 @@ DevLake receives deployment events from ArgoCD:
 }
 ```
 
-#### Jenkins Build Webhook
+#### Tekton Build Webhook
 
-**Endpoint:** `POST /webhooks/jenkins`
+<!-- TODO: verify Tekton equivalent for this workflow -->
+
+**Endpoint:** `POST /webhooks/tekton`
 
 **Payload:**
 
 ```json
 {
-  "job": "payment-service-pipeline",
-  "build": 42,
+  "pipeline": "payment-service-pipeline",
+  "pipelineRun": 42,
   "status": "SUCCESS",
   "commit": "abc123",
   "timestamp": "2024-12-16T10:00:00Z"
@@ -906,12 +860,10 @@ kubectl get policyreport {name} -n {namespace} -o json
 ### Use Case 1: Trigger Deployment from External System
 
 ```bash
-# 1. Trigger Jenkins build
-curl -X POST https://jenkins.fawkes.local/job/payment-service/buildWithParameters \
-  -u user:token \
-  -d "BRANCH=main&TAG=v1.0.0"
+# 1. Trigger Tekton PipelineRun
+tkn pipeline start payment-service-pipeline -n fawkes -p BRANCH=main -p TAG=v1.0.0
 
-# 2. Wait for build to complete
+# 2. Wait for the PipelineRun to complete
 # 3. ArgoCD auto-syncs deployment
 # 4. DevLake webhook receives deployment event
 ```
@@ -968,7 +920,7 @@ kubectl get policyreport -n my-service
 | ---------- | ----------- | -------------- |
 | ArgoCD     | 30 req/min  | Per user/token |
 | Backstage  | 100 req/min | Per session    |
-| Jenkins    | 60 req/min  | Per API token  |
+| Tekton     | N/A         | Kubernetes API server default throttling |
 | Prometheus | Unlimited   | Internal only  |
 | Grafana    | 100 req/min | Per API key    |
 | Harbor     | 100 req/min | Per user       |
@@ -1011,18 +963,17 @@ All APIs follow a consistent error format:
 
 ## SDK & Client Libraries
 
-| Language   | ArgoCD             | Jenkins          | Prometheus                 | Grafana                     |
-| ---------- | ------------------ | ---------------- | -------------------------- | --------------------------- |
-| Python     | `argocd-python`    | `python-jenkins` | `prometheus-api-client`    | `grafana-client`            |
-| Go         | `argocd-client-go` | -                | `prometheus/client_golang` | `grafana-api-golang-client` |
-| JavaScript | -                  | `jenkins`        | `prom-client`              | `grafana-api-client`        |
+| Language   | ArgoCD             | Tekton (via Kubernetes API) | Prometheus                 | Grafana                     |
+| ---------- | ------------------ | ---------------------------- | --------------------------- | ---------------------------- |
+| Python     | `argocd-python`    | `kubernetes` (client-python) | `prometheus-api-client`    | `grafana-client`            |
+| Go         | `argocd-client-go` | `k8s.io/client-go`           | `prometheus/client_golang` | `grafana-api-golang-client` |
+| JavaScript | -                  | `@kubernetes/client-node`    | `prom-client`               | `grafana-api-client`        |
 
 ---
 
 ## Related Documentation
 
 - [Backstage Plugins API](./backstage-plugins.md)
-- [Jenkins Webhook API](./jenkins-webhook.md)
 - [DORA Metrics API](../dora-metrics-api.md)
 - [DORA Metrics Database Schema](../dora-metrics-database-schema.md)
 - [Epic 1 Platform Operations Runbook](../../runbooks/epic-1-platform-operations.md)

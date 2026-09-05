@@ -32,7 +32,6 @@ Verify access to these services before recording:
 
 - **Backstage Developer Portal**: `https://backstage.127.0.0.1.nip.io`
 - **ArgoCD**: `https://argocd.127.0.0.1.nip.io`
-- **Jenkins**: `https://jenkins.127.0.0.1.nip.io`
 - **Grafana Dashboards**: `https://grafana.127.0.0.1.nip.io`
 - **Prometheus**: `https://prometheus.127.0.0.1.nip.io`
 - **SonarQube**: `https://sonarqube.127.0.0.1.nip.io`
@@ -46,7 +45,7 @@ Verify access to these services before recording:
 - [ ] Sample deployments have been performed (for DORA metrics data)
 - [ ] Test data exists in all dashboards
 - [ ] No pending ArgoCD syncs
-- [ ] Jenkins pipelines are visible and some have run
+- [ ] Tekton PipelineRuns are visible and some have run
 - [ ] DORA metrics show actual data
 - [ ] Grafana dashboards loaded with metrics
 
@@ -68,7 +67,7 @@ Switch to architecture diagram or browser showing documentation:
 >
 > - **Developer Experience Layer** with Backstage as our developer portal
 > - **GitOps Layer** using ArgoCD for declarative deployments
-> - **CI/CD Layer** with Jenkins and our golden path pipelines
+> - **CI/CD Layer** with Tekton and our golden path pipelines
 > - **Security Layer** featuring SonarQube for SAST, Trivy for container scanning, Vault for secrets, and Kyverno for policy enforcement
 > - **Observability Layer** with Prometheus, Grafana, and OpenTelemetry
 > - **DORA Metrics Layer** powered by Apache DevLake
@@ -142,7 +141,7 @@ Navigate to "Create" section:
 >
 > Each template includes:
 >
-> - Pre-configured Jenkinsfile using our shared pipeline library
+> - Pre-configured Tekton Pipeline and Task YAML for CI
 > - Security scanning configuration
 > - Kubernetes manifests
 > - Dockerfile and .dockerignore
@@ -161,7 +160,7 @@ Walk through creating a service (can be fast-forwarded or summarized):
 > "Within seconds, we have:
 >
 > - A new Git repository with all the code
-> - Jenkins pipeline automatically configured
+> - Tekton Pipeline automatically configured
 > - ArgoCD application registered
 > - Service visible in Backstage catalog
 >
@@ -218,9 +217,9 @@ Show resource details and logs.
 
 > "The GitOps workflow is simple:
 >
-> 1. Developer pushes code to Git
-> 2. Jenkins pipeline runs tests and builds container image
-> 3. Jenkins updates the GitOps repo with new image tag
+> 1. Developer pushes code to Git, triggering the Tekton EventListener webhook <!-- TODO: verify Tekton equivalent for this workflow -->
+> 2. Tekton Pipeline runs tests and builds container image
+> 3. Tekton updates the GitOps repo with new image tag
 > 4. ArgoCD detects the change and syncs to Kubernetes
 > 5. Application is deployed with zero downtime
 > 6. DORA metrics are automatically recorded
@@ -237,20 +236,22 @@ Demonstrate the rollback UI (don't actually roll back):
 
 ---
 
-### Segment 4: CI/CD with Jenkins Golden Path (5 minutes)
+### Segment 4: CI/CD with Tekton Golden Path (5 minutes)
 
-**[12:00-13:00] Jenkins Dashboard**
+**[12:00-13:00] Tekton PipelineRuns**
 
-Navigate to Jenkins (`https://jenkins.127.0.0.1.nip.io`):
+<!-- TODO: verify Tekton equivalent for this workflow -->
 
-> "Jenkins is our CI/CD engine, and we've implemented a Golden Path pipeline that enforces best practices. Here's our Jenkins dashboard showing:
+Show PipelineRuns via the `tkn` CLI (no Tekton Dashboard UI is deployed yet):
+
+> "Tekton is our CI/CD engine, and we've implemented a Golden Path pipeline that enforces best practices. Here's `tkn pipelinerun list` showing:
 >
 > - All configured pipelines
 > - Recent build history
 > - Build success/failure rates
-> - Active build agents
+> - Active TaskRuns
 >
-> Every repository created from our Backstage templates automatically gets a Jenkins pipeline."
+> Every repository created from our Backstage templates automatically gets a Tekton Pipeline."
 
 **[13:00-15:00] Golden Path Pipeline Execution**
 
@@ -298,18 +299,11 @@ Show a PR pipeline:
 
 **[16:00-17:00] Pipeline Configuration**
 
-Show a Jenkinsfile:
+<!-- TODO: verify Tekton equivalent for this workflow -->
 
-> "The beauty is that developers don't need to maintain complex pipeline code. They just reference our shared pipeline library:"
+Show the golden-path Tekton Pipeline YAML:
 
-```groovy
-@Library('fawkes-pipeline-library') _
-
-goldenPathPipeline {
-    appName = 'my-service'
-    language = 'node'
-}
-```
+> "The beauty is that developers don't need to maintain complex pipeline code. They just reference our shared golden-path Pipeline definition, parameterized per service."
 
 > "That's it! The library handles all the complexity, and we can update the pipeline logic centrally."
 
@@ -414,7 +408,7 @@ Navigate to DevLake (`https://devlake.127.0.0.1.nip.io`):
 > "Now for the highlight - our DORA metrics automation! Apache DevLake collects data from:
 >
 > - GitHub (commits, PRs)
-> - Jenkins (builds, tests)
+> - Tekton (builds, tests)
 > - ArgoCD (deployments)
 > - Prometheus (incidents, uptime)
 >
@@ -508,7 +502,7 @@ Show drill-down views:
 Quick terminal demo:
 
 ```bash
-kubectl get pods -A | grep -E 'argocd|backstage|jenkins|prometheus|grafana'
+kubectl get pods -A | grep -E 'argocd|backstage|tekton|prometheus|grafana'
 kubectl top nodes
 ```
 
@@ -617,7 +611,7 @@ A comprehensive 30-minute demonstration of the Fawkes Internal Developer Platfor
 🎯 Complete platform overview
 🛠️ Developer portal (Backstage) with service catalog
 🔄 GitOps deployments with ArgoCD
-⚙️ CI/CD golden path with Jenkins
+⚙️ CI/CD golden path with Tekton
 🔒 Security scanning (SonarQube, Trivy, Vault)
 📊 Observability stack (Prometheus, Grafana, OpenTelemetry)
 📈 DORA metrics automation with Apache DevLake
@@ -629,7 +623,7 @@ A comprehensive 30-minute demonstration of the Fawkes Internal Developer Platfor
 0:00 - Introduction & Platform Overview
 3:00 - Developer Portal (Backstage)
 8:00 - GitOps with ArgoCD
-12:00 - CI/CD with Jenkins Golden Path
+12:00 - CI/CD with Tekton Golden Path
 17:00 - Security Scanning & DevSecOps
 20:00 - Observability Stack
 23:00 - DORA Metrics Dashboard
@@ -648,7 +642,7 @@ A comprehensive 30-minute demonstration of the Fawkes Internal Developer Platfor
 ✅ 4-node Kubernetes cluster
 ✅ GitOps with ArgoCD
 ✅ Developer portal (Backstage)
-✅ CI/CD pipelines (Jenkins)
+✅ CI/CD pipelines (Tekton)
 ✅ Security scanning (SonarQube, Trivy)
 ✅ Observability (Prometheus, Grafana, OpenTelemetry)
 ✅ DORA metrics automation (DevLake)

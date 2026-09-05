@@ -166,18 +166,6 @@ spec:
             description: "ArgoCD Server has been unavailable for more than 3 minutes."
             runbook_url: "https://docs.fawkes.io/runbooks/argocd-down"
 
-        # Jenkins Server unavailable
-        - alert: JenkinsServerDown
-          expr: up{job="jenkins"} == 0
-          for: 3m
-          labels:
-            severity: critical
-            team: platform
-          annotations:
-            summary: "Jenkins Server is down"
-            description: "Jenkins Server has been unavailable for more than 3 minutes."
-            runbook_url: "https://docs.fawkes.io/runbooks/jenkins-down"
-
         # Prometheus self-monitoring
         - alert: PrometheusTargetScrapesSlow
           expr: prometheus_target_sync_length_seconds{quantile="0.99"} > 10

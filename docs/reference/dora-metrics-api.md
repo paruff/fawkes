@@ -303,7 +303,7 @@ curl -X GET "http://devlake.127.0.0.1.nip.io/api/dora/mttr?project=payment-servi
 
 ### 6. Get CI/Rework Metrics
 
-Returns Jenkins CI metrics including rework rate.
+Returns Tekton CI metrics including rework rate.
 
 **Endpoint**: `GET /api/dora/rework`
 

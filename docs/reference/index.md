@@ -30,7 +30,7 @@ Reference content in Fawkes is designed to:
 
 | Component      | Version | Status                                      |
 | -------------- | ------- | ------------------------------------------- |
-| Jenkins        | 2.426+  | See [Jenkins tool doc](../tools/jenkins.md) |
+| Tekton         | v1.15+  | 🚧 Reference coming soon                    |
 | ArgoCD         | 2.9+    | 🚧 Reference coming soon                    |
 | GitHub Actions | N/A     | 🚧 Reference coming soon                    |
 
@@ -67,7 +67,6 @@ REST API specifications for platform services.
 | API                                               | Description                                                  | Status       |
 | ------------------------------------------------- | ------------------------------------------------------------ | ------------ |
 | [Backstage Plugins API](api/backstage-plugins.md) | Internal Backstage plugins (Che Launcher, DevLake Dashboard) | ✅ Available |
-| [Jenkins Webhook API](api/jenkins-webhook.md)     | Trigger Jenkins pipelines via webhooks                       | ✅ Available |
 
 ## Custom Resource Definitions (CRDs)
 
@@ -83,7 +82,6 @@ Helm values and configuration tables for platform components.
 
 | Component                                             | Description                                  | Status       |
 | ----------------------------------------------------- | -------------------------------------------- | ------------ |
-| [Jenkins Helm Values](config/jenkins-values.md)       | Complete Jenkins Helm chart configuration    | ✅ Available |
 | [Prometheus Helm Values](config/prometheus-values.md) | Complete Prometheus monitoring configuration | ✅ Available |
 | See [Configuration Guide](../configuration.md)        | General platform configuration               | ✅ Available |
 

@@ -221,7 +221,7 @@ Runs end-to-end tests for the entire platform.
 
 - ArgoCD deployment verification
 - Backstage functionality
-- Jenkins pipeline execution
+- Tekton pipeline execution
 - Observability stack validation
 
 **Trigger**: PR, manual, scheduled (nightly)

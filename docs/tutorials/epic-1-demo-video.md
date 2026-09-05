@@ -53,7 +53,7 @@ This 30-minute demo walkthrough demonstrates:
 
 ### ⚙️ CI/CD Golden Path (5 min)
 
-- Jenkins pipeline stages
+- Tekton Pipeline Tasks
 - Security scanning integration
 - Trunk-based development workflow
 

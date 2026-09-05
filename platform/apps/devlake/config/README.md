@@ -1,6 +1,6 @@
 # Webhook Configuration for DORA Metrics
 
-This directory contains webhook configurations and documentation for integrating GitHub, Jenkins, and ArgoCD with the DevLake DORA metrics service.
+This directory contains webhook configurations and documentation for integrating GitHub, Tekton, and ArgoCD with the DevLake DORA metrics service.
 
 ## Overview
 
@@ -9,7 +9,7 @@ Webhooks enable real-time event ingestion for DORA metrics calculation:
 | Source            | Events Captured                     | Metrics Impact                            |
 | ----------------- | ----------------------------------- | ----------------------------------------- |
 | **GitHub**        | Commits, PR merges                  | Lead Time for Changes                     |
-| **Jenkins**       | Build results, tests, quality gates | Build success rate, rework, quality       |
+| **Tekton**        | Build results, tests, quality gates | Build success rate, rework, quality       |
 | **ArgoCD**        | Deployment syncs, health status     | Deployment Frequency, Change Failure Rate |
 | **Observability** | Incidents                           | Mean Time to Restore                      |
 
@@ -36,41 +36,9 @@ Follow the detailed guide: [github-webhook-setup.md](github-webhook-setup.md)
 3. Point to: `https://devlake.fawkes.idp/api/plugins/webhook/1/commits`
 4. Test with a commit push
 
-### 3. Configure Jenkins Integration
+### 3. Configure Tekton Integration
 
-Jenkins integration uses the `doraMetrics.groovy` shared library.
-
-Follow the guide: [jenkins-webhook-setup.md](jenkins-webhook-setup.md)
-
-**Quick integration:**
-
-```groovy
-@Library('fawkes-pipeline-library') _
-
-pipeline {
-    stages {
-        stage('Build') {
-            steps { sh 'mvn package' }
-            post {
-                success {
-                    doraMetrics.recordBuild(
-                        service: env.JOB_BASE_NAME,
-                        status: 'success',
-                        stage: 'build'
-                    )
-                }
-            }
-        }
-    }
-    post {
-        always {
-            doraMetrics.recordPipelineComplete(
-                service: env.JOB_BASE_NAME
-            )
-        }
-    }
-}
-```
+<!-- TODO: verify Tekton equivalent for this workflow -->
 
 ### 4. Configure ArgoCD Notifications
 
@@ -93,7 +61,7 @@ All webhooks point to DevLake:
 | Webhook      | Endpoint                             | Source        |
 | ------------ | ------------------------------------ | ------------- |
 | Commits      | `/api/plugins/webhook/1/commits`     | GitHub        |
-| CI/CD Events | `/api/plugins/webhook/1/cicd`        | Jenkins       |
+| CI/CD Events | `/api/plugins/webhook/1/cicd`        | Tekton        |
 | Deployments  | `/api/plugins/webhook/1/deployments` | ArgoCD        |
 | Incidents    | `/api/plugins/webhook/1/incidents`   | Observability |
 
@@ -114,7 +82,7 @@ This tests:
 - ✅ DevLake service is running
 - ✅ Webhook endpoints are accessible
 - ✅ GitHub webhook endpoint responds
-- ✅ Jenkins webhook endpoint responds
+- ✅ Tekton webhook endpoint responds
 - ✅ ArgoCD webhook endpoint responds
 - ✅ Incident webhook endpoint responds
 - ✅ Network policies allow ingress
@@ -151,7 +119,7 @@ curl -X POST https://devlake.fawkes.idp/api/plugins/webhook/1/commits \
   -d "$PAYLOAD"
 ```
 
-#### Test Jenkins Webhook
+#### Test Tekton Webhook
 
 ```bash
 curl -X POST http://devlake.fawkes-devlake.svc:8080/api/plugins/webhook/1/cicd \
@@ -186,7 +154,8 @@ curl -X POST http://devlake.fawkes-devlake.svc:8080/api/plugins/webhook/1/deploy
 
 **GitHub**: Repository → Settings → Webhooks → Recent Deliveries
 
-**Jenkins**: Check console output for DORA messages:
+**Tekton**: Check TaskRun/PipelineRun logs for DORA messages.
+<!-- TODO: verify Tekton equivalent for this workflow -->
 
 ```
 ✅ DORA: Build event recorded for payment-service (build)
@@ -205,7 +174,7 @@ Query webhook metrics in Prometheus:
 ```promql
 # Total webhook requests
 devlake_webhook_requests_total{source="github"}
-devlake_webhook_requests_total{source="jenkins"}
+devlake_webhook_requests_total{source="tekton"}
 devlake_webhook_requests_total{source="argocd"}
 
 # Webhook errors
@@ -233,11 +202,10 @@ View webhook health:
    - ❌ Response 401: Check webhook secret
    - ❌ Timeout: DevLake may be overloaded
 
-### Jenkins Events Not Sending
+### Tekton Events Not Sending
 
-1. **Check doraMetrics calls**: Search Jenkinsfile for `doraMetrics.record`
-2. **Check Jenkins logs**: `kubectl logs -n fawkes jenkins-0 | grep DORA`
-3. **Test connectivity**: Add `sh 'curl http://devlake.fawkes-devlake.svc:8080/api/ping'` to pipeline
+<!-- TODO: verify Tekton equivalent for this workflow -->
+1. **Test connectivity**: `curl http://devlake.fawkes-devlake.svc:8080/api/ping` from a Tekton Task step
 
 ### ArgoCD Notifications Not Sending
 
@@ -300,7 +268,7 @@ kubectl get secret devlake-webhook-secrets -n fawkes-devlake -o yaml
 Network policies control webhook ingress:
 
 - GitHub webhooks: via ingress controller
-- Jenkins webhooks: from `fawkes` namespace
+- Tekton webhooks: from `fawkes` namespace
 - ArgoCD webhooks: from `argocd` namespace
 
 ### HMAC Validation
@@ -314,7 +282,6 @@ GitHub webhooks use HMAC-SHA256 signatures for validation. DevLake automatically
 | `webhooks.yaml`             | Central webhook configuration, secrets, network policies |
 | `argocd-notifications.yaml` | ArgoCD notifications to send deployment events           |
 | `github-webhook-setup.md`   | Step-by-step GitHub webhook configuration guide          |
-| `jenkins-webhook-setup.md`  | Jenkins integration guide using doraMetrics library      |
 | `README.md`                 | This file - overview and quick start                     |
 
 ## Next Steps

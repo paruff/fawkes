@@ -101,10 +101,6 @@ data:
           secure: false
           headers:
             Cookie: argocd.token=${ARGOCD_AUTH_TOKEN}
-        '/jenkins/api':
-          target: http://jenkins.fawkes.svc:8080/
-          changeOrigin: true
-          secure: false
         '/feedback/api':
           target: http://feedback-service.fawkes.svc:8000/
           changeOrigin: true
@@ -179,8 +175,3 @@ data:
           instances:
             - name: main
               url: http://argocd-server.argocd.svc:80
-
-    jenkins:
-      baseUrl: http://jenkins.fawkes.svc:8080
-      username: ${JENKINS_USERNAME}
-      apiKey: ${JENKINS_API_KEY}

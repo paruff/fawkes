@@ -87,22 +87,6 @@ data:
       capabilities = ["read", "list"]
     }
 
-  jenkins-policy.hcl: |
-    # Policy for Jenkins CI/CD secrets
-    path "secret/data/fawkes/cicd/jenkins/*" {
-      capabilities = ["read", "list"]
-    }
-
-    # Allow Jenkins to read all application deployment secrets
-    path "secret/data/fawkes/apps/*" {
-      capabilities = ["read", "list"]
-    }
-
-    # Allow Jenkins to read shared secrets
-    path "secret/data/fawkes/shared/*" {
-      capabilities = ["read", "list"]
-    }
-
   backstage-policy.hcl: |
     # Policy for Backstage developer portal
     path "secret/data/fawkes/core/backstage/*" {
@@ -161,9 +145,6 @@ data:
     # Create platform policy
     vault policy write platform-policy /vault/config/platform-policy.hcl
 
-    # Create Jenkins policy
-    vault policy write jenkins-policy /vault/config/jenkins-policy.hcl
-
     # Create Backstage policy
     vault policy write backstage-policy /vault/config/backstage-policy.hcl
 
@@ -174,13 +155,6 @@ data:
     vault policy write observability-policy /vault/config/observability-policy.hcl
 
     echo "=== Creating Kubernetes Auth Roles ==="
-
-    # Create role for Jenkins
-    vault write auth/kubernetes/role/jenkins \
-      bound_service_account_names=jenkins \
-      bound_service_account_namespaces=jenkins,fawkes \
-      policies=jenkins-policy \
-      ttl=1h
 
     # Create role for Backstage
     vault write auth/kubernetes/role/backstage \

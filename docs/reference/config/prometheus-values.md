@@ -195,10 +195,10 @@ Prometheus scrape configuration.
 serverFiles:
   prometheus.yml:
     scrape_configs:
-      - job_name: "jenkins"
+      - job_name: "my-app"
         static_configs:
-          - targets: ["jenkins.jenkins.svc.cluster.local:8080"]
-        metrics_path: "/prometheus"
+          - targets: ["my-app.fawkes.svc.cluster.local:8080"]
+        metrics_path: "/metrics"
         scrape_interval: 30s
 ```
 

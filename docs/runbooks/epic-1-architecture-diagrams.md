@@ -38,11 +38,11 @@
 │           │                   │                   │                          │
 │  ┌────────▼─────────┐ ┌──────▼────────┐ ┌───────▼────────┐                 │
 │  │   Developer      │ │    GitOps     │ │     CI/CD      │                 │
-│  │   Experience     │ │   ArgoCD      │ │    Jenkins     │                 │
+│  │   Experience     │ │   ArgoCD      │ │    Tekton      │                 │
 │  │   (Backstage)    │ │               │ │                │                 │
 │  │                  │ │ - Applications│ │ - Pipelines    │                 │
-│  │ - Service Catalog│ │ - Auto-sync   │ │ - Agents       │                 │
-│  │ - Templates      │ │ - Rollbacks   │ │ - Webhooks     │                 │
+│  │ - Service Catalog│ │ - Auto-sync   │ │ - TaskRuns     │                 │
+│  │ - Templates      │ │ - Rollbacks   │ │ - EventListener│                 │
 │  │ - TechDocs       │ │               │ │                │                 │
 │  │ - CDE Launcher   │ │               │ │                │                 │
 │  └──────────────────┘ └───────────────┘ └────────────────┘                 │
@@ -91,7 +91,7 @@
 │  │  - Persistent Volumes for databases                                 │     │
 │  │  - Prometheus metrics storage                                       │     │
 │  │  - Harbor image storage                                             │     │
-│  │  - Jenkins workspace volumes                                        │     │
+│  │  - Tekton workspace volumes                                         │     │
 │  └────────────────────────────────────────────────────────────────────┘     │
 │                                                                               │
 └──────────────────────────────────────────────────────────────────────────────┘
@@ -109,7 +109,7 @@
 │  │   Node 1       │  │   Node 2       │  │   Node 3       │    │
 │  │  (Control)     │  │   (Worker)     │  │   (Worker)     │    │
 │  │                │  │                │  │                │    │
-│  │ - API Server   │  │ - Backstage    │  │ - Jenkins      │    │
+│  │ - API Server   │  │ - Backstage    │  │ - Tekton       │    │
 │  │ - etcd         │  │ - ArgoCD       │  │ - SonarQube    │    │
 │  │ - Scheduler    │  │ - Prometheus   │  │ - Harbor       │    │
 │  │ - Controller   │  │ - Grafana      │  │ - DevLake      │    │
@@ -122,8 +122,8 @@
 │  │                │                                              │
 │  │ - Application  │                                              │
 │  │   Workloads    │                                              │
-│  │ - Jenkins      │                                              │
-│  │   Agents       │                                              │
+│  │ - Tekton       │                                              │
+│  │   TaskRuns     │                                              │
 │  │ - Kyverno      │                                              │
 │  │                │                                              │
 │  └────────────────┘                                              │
@@ -163,10 +163,10 @@ Developer Workflow:
 │   (Application Code) │
 └──────────┬───────────┘
            │
-           │ 2. Webhook triggers CI
+           │ 2. Tekton EventListener webhook triggers CI
            ▼
 ┌───────────────────────────────────────────────────────────────┐
-│                       Jenkins Pipeline                         │
+│                       Tekton Pipeline                          │
 │                                                                │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
 │  │  Build   │→ │  Test    │→ │  Scan    │→ │  Package │    │
@@ -195,7 +195,7 @@ Developer Workflow:
 │  │   │       └── production/                                 │
 │  │   │           ├── kustomization.yaml                      │
 │  │   │           └── values.yaml  # image.tag updated        │
-│  │   ├── jenkins/                                            │
+│  │   ├── tekton/                                             │
 │  │   └── prometheus/                                         │
 │  └── argocd/                                                 │
 │      └── applications/                                       │
@@ -294,7 +294,7 @@ Key Principles:
 │                                                               │
 │  Developer Experience Applications:                          │
 │  ├── backstage                                               │
-│  ├── jenkins                                                 │
+│  ├── tekton                                                  │
 │  └── eclipse-che                                             │
 │                                                               │
 │  Security Applications:                                      │
@@ -331,8 +331,8 @@ Data Sources:
 ────────────
 
 ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   GitHub    │    │   ArgoCD    │    │   Jenkins   │    │ Prometheus  │
-│             │    │             │    │             │    │             │
+│   GitHub    │    │   ArgoCD    │    │   Tekton    │    │ Prometheus  │
+│             │    │             │    │  (webhook)  │    │             │
 │ - Commits   │    │ - Syncs     │    │ - Builds    │    │ - Incidents │
 │ - PRs       │    │ - Deploys   │    │ - Tests     │    │ - Alerts    │
 │ - Reviews   │    │ - Status    │    │ - Results   │    │ - Uptime    │
@@ -348,10 +348,10 @@ Data Sources:
 │  ┌────────────────────────────────────────────────────────┐     │
 │  │               Data Collection Plugins                   │     │
 │  │                                                         │     │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────┐│     │
-│  │  │  GitHub  │  │  ArgoCD  │  │ Jenkins  │  │Webhook ││     │
-│  │  │  Plugin  │  │  Plugin  │  │  Plugin  │  │ Plugin ││     │
-│  │  └──────────┘  └──────────┘  └──────────┘  └────────┘│     │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────────────────┐│     │
+│  │  │  GitHub  │  │  ArgoCD  │  │   Webhook Plugin      ││     │
+│  │  │  Plugin  │  │  Plugin  │  │ (Tekton + Incidents)  ││     │
+│  │  └──────────┘  └──────────┘  └──────────────────────┘│     │
 │  └────────────────────────┬───────────────────────────────┘     │
 │                           │                                      │
 │                           ▼                                      │
@@ -436,7 +436,7 @@ Deployment Event:
 │ lead_time (calculated)                 │
 │ status (success/failure)               │
 │ argocd_sync_id                         │
-│ jenkins_build_id (optional)            │
+│ tekton_pipelinerun_id (optional)       │
 │ deployed_by                            │
 │ environment                            │
 └────────────────────────────────────────┘
@@ -472,18 +472,18 @@ Aggregated Metrics:
 
 ## CI/CD Pipeline
 
-### Jenkins Pipeline Architecture
+### Tekton Pipeline Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│                         Jenkins CI/CD Pipeline                                │
+│                         Tekton CI/CD Pipeline                                 │
 └──────────────────────────────────────────────────────────────────────────────┘
 
 Trigger:
 ───────
-Git commit/PR → GitHub Webhook → Jenkins
+Git commit/PR → GitHub Webhook → Tekton EventListener <!-- TODO: verify Tekton equivalent for this workflow -->
 
-Pipeline Stages:
+Pipeline Tasks:
 ───────────────
 
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -752,7 +752,6 @@ External Traffic:
 │  │                                                 │    │
 │  │ backstage.fawkes.local    → backstage:7007     │    │
 │  │ argocd.fawkes.local       → argocd-server:443  │    │
-│  │ jenkins.fawkes.local      → jenkins:8080       │    │
 │  │ grafana.fawkes.local      → grafana:80         │    │
 │  │ harbor.fawkes.local       → harbor:443         │    │
 │  │ sonarqube.fawkes.local    → sonarqube:9000     │    │
@@ -760,20 +759,20 @@ External Traffic:
 │  └─────────────────────────────────────────────────┘    │
 └─────────────────────────┬─────────────────────────────────┘
                           │
-            ┌─────────────┼─────────────┐
-            │             │             │
-            ▼             ▼             ▼
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│  backstage   │  │   argocd     │  │   jenkins    │
-│  Service     │  │   Service    │  │   Service    │
-│  (ClusterIP) │  │  (ClusterIP) │  │  (ClusterIP) │
-└──────┬───────┘  └──────┬───────┘  └──────┬───────┘
-       │                 │                  │
-       ▼                 ▼                  ▼
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│  backstage   │  │  argocd-     │  │   jenkins    │
-│  Pods        │  │  server Pods │  │   Pods       │
-└──────────────┘  └──────────────┘  └──────────────┘
+            ┌─────────────┐
+            │             │
+            ▼             ▼
+┌──────────────┐  ┌──────────────┐
+│  backstage   │  │   argocd     │
+│  Service     │  │   Service    │
+│  (ClusterIP) │  │  (ClusterIP) │
+└──────┬───────┘  └──────┬───────┘
+       │                 │
+       ▼                 ▼
+┌──────────────┐  ┌──────────────┐
+│  backstage   │  │  argocd-     │
+│  Pods        │  │  server Pods │
+└──────────────┘  └──────────────┘
 
 
 Internal Traffic:
@@ -789,14 +788,14 @@ Service-to-Service Communication (within cluster):
 └────────────────┘         └────────────────┘
 
 ┌────────────────┐         ┌────────────────┐
-│    Jenkins     │────────>│    Harbor      │
+│    Tekton      │────────>│    Harbor      │
 │                │  HTTPS  │                │
 │  Push Images   │         │  Container     │
 │                │         │  Registry      │
 └────────────────┘         └────────────────┘
 
 ┌────────────────┐         ┌────────────────┐
-│   Jenkins      │────────>│   SonarQube    │
+│   Tekton       │────────>│   SonarQube    │
 │                │  HTTP   │                │
 │  Send Analysis │         │  Code Quality  │
 │  Results       │         │  Gates         │
@@ -829,8 +828,8 @@ Default Deny + Explicit Allow:
 └──────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────┐
-│ Policy: Allow jenkins → harbor                       │
-│ - Namespace: jenkins                                 │
+│ Policy: Allow tekton → harbor                        │
+│ - Namespace: fawkes                                  │
 │ - To: harbor.harbor.svc:443                         │
 └──────────────────────────────────────────────────────┘
 
@@ -853,8 +852,8 @@ Developer commits code
          ▼
 GitHub (source control)
          │
-         ▼ Webhook triggers
-Jenkins Pipeline
+         ▼ Tekton EventListener webhook triggers <!-- TODO: verify Tekton equivalent for this workflow -->
+Tekton Pipeline
          │
          ├─> Build & Test
          ├─> Security Scans (SonarQube, Trivy)
@@ -929,7 +928,7 @@ Jenkins Pipeline
 │  │  10. PostgreSQL (HA) - for Backstage, SonarQube    │    │
 │  │  11. MySQL (HA) - for DevLake                       │    │
 │  │  12. Harbor (container registry)                    │    │
-│  │  13. Jenkins (CI/CD)                                │    │
+│  │  13. Tekton (CI/CD)                                 │    │
 │  │  14. SonarQube (code quality)                       │    │
 │  │  15. Backstage (developer portal)                   │    │
 │  └─────────────────────────────────────────────────────┘    │
@@ -969,7 +968,7 @@ Week 2:
 └─ Day 4-5: Harbor registry
 
 Week 3:
-├─ Day 1-2: Jenkins CI/CD
+├─ Day 1-2: Tekton CI/CD
 ├─ Day 3: SonarQube
 └─ Day 4-5: Backstage developer portal
 

@@ -21,11 +21,12 @@
 # DevLake Data Sources Configuration
 # ============================================================
 # This file configures the data source connections for DevLake
-# to collect DORA metrics from Git, ArgoCD, Jenkins, and Observability.
+# to collect DORA metrics from Git, ArgoCD, Tekton, and Observability.
 #
 # IMPORTANT: In a GitOps architecture:
 # - ArgoCD is the PRIMARY source for deployment metrics
-# - Jenkins provides CI/build metrics and rework tracking
+# - Tekton provides CI/build metrics and rework tracking (via webhook events;
+#   Jenkins was removed, Tekton is the sole CI engine — see issue #1815)
 # - GitHub/Git provides commit and PR data
 # - Observability provides incident data for MTTR
 #
@@ -72,16 +73,10 @@ data:
             "description": "Primary source for deployment frequency and lead time"
           },
           {
-            "plugin": "jenkins",
-            "connectionId": 1,
-            "scopes": [],
-            "description": "CI metrics, build success rate, rework tracking"
-          },
-          {
             "plugin": "webhook",
             "connectionId": 1,
             "scopes": [],
-            "description": "Incident events for CFR and MTTR"
+            "description": "Incident and Tekton CI events for CFR, MTTR, and rework tracking"
           }
         ]
       }
@@ -156,51 +151,11 @@ data:
     }
 
   # ============================================================
-  # Jenkins Data Source Configuration (CI AND REWORK METRICS)
-  # Collects build data for quality metrics, NOT deployment frequency
-  # Focus: Build success rate, test results, rework tracking
+  # NOTE: CI/build metrics (build success rate, rework tracking,
+  # quality gate pass rate, test flakiness, build duration) are now
+  # sourced from Tekton via the webhook connection below, since
+  # DevLake has no native Tekton plugin (Jenkins removed — see #1815).
   # ============================================================
-  jenkins-connection.json: |
-    {
-      "name": "Jenkins - Fawkes CI",
-      "endpoint": "${JENKINS_URL}",
-      "username": "${JENKINS_ADMIN_USER}",
-      "password": "${JENKINS_ADMIN_PASSWORD}",
-      "proxy": "",
-      "transformationRules": {
-        "buildSuccessPattern": "SUCCESS",
-        "buildFailurePattern": "FAILURE|ABORTED|UNSTABLE"
-      },
-      "scope": [
-        {
-          "connectionId": 1,
-          "fullName": "fawkes-golden-path",
-          "transformationRuleId": 1
-        }
-      ],
-      "metrics": {
-        "buildSuccessRate": {
-          "enabled": true,
-          "description": "Track CI build success/failure rate"
-        },
-        "reworkRate": {
-          "enabled": true,
-          "description": "Track builds triggered by same commit (retries)"
-        },
-        "qualityGatePassRate": {
-          "enabled": true,
-          "description": "Track SonarQube quality gate results"
-        },
-        "testFlakiness": {
-          "enabled": true,
-          "description": "Track non-deterministic test failures"
-        },
-        "buildDuration": {
-          "enabled": true,
-          "description": "Track build time trends"
-        }
-      }
-    }
 
   # ============================================================
   # Webhook Configuration for Incident Events
@@ -220,7 +175,7 @@ data:
           "name": "cicd-events",
           "description": "Receives CI/CD events for rework tracking",
           "endpoint": "/api/plugins/webhook/1/cicd",
-          "source": "jenkins"
+          "source": "tekton"
         }
       ]
     }
@@ -282,37 +237,6 @@ spec:
       remoteRef:
         key: secret/data/fawkes/devlake
         property: argocd-auth-token
-
----
-# ============================================================
-# External Secret for Jenkins Credentials (CI METRICS)
-# Uses External Secrets Operator to sync from Vault
-# ============================================================
-apiVersion: external-secrets.io/v1beta1
-kind: ExternalSecret
-metadata:
-  name: devlake-jenkins-creds
-  namespace: fawkes-devlake
-  labels:
-    app: devlake
-    component: secrets
-spec:
-  refreshInterval: 1h
-  secretStoreRef:
-    name: vault-backend
-    kind: ClusterSecretStore
-  target:
-    name: devlake-jenkins-secrets
-    creationPolicy: Owner
-  data:
-    - secretKey: jenkins-username
-      remoteRef:
-        key: secret/data/fawkes/devlake
-        property: jenkins-username
-    - secretKey: jenkins-password
-      remoteRef:
-        key: secret/data/fawkes/devlake
-        property: jenkins-password
 
 ---
 # ============================================================

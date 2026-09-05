@@ -316,26 +316,26 @@ Add to your workflow:
     path: reports/at-e1-001-validation-*.json
 ```
 
-### Jenkins
+### Tekton
 
-Add to your Jenkinsfile:
+Add a Task to your Pipeline:
 
-```groovy
-stage('AT-E1-001 Validation') {
-    steps {
-        withCredentials([azureServicePrincipal('azure-sp')]) {
-            sh '''
-                az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
-                ./scripts/validate-at-e1-001.sh --resource-group fawkes-rg --cluster-name fawkes-aks
-            '''
-        }
-    }
-    post {
-        always {
-            archiveArtifacts artifacts: 'reports/at-e1-001-validation-*.json', allowEmptyArchive: true
-        }
-    }
-}
+```yaml
+- name: at-e1-001-validation
+  taskSpec:
+    steps:
+      - name: validate
+        image: mcr.microsoft.com/azure-cli
+        env:
+          - name: AZURE_CLIENT_ID
+            valueFrom: { secretKeyRef: { name: azure-sp, key: client-id } }
+          - name: AZURE_CLIENT_SECRET
+            valueFrom: { secretKeyRef: { name: azure-sp, key: client-secret } }
+          - name: AZURE_TENANT_ID
+            valueFrom: { secretKeyRef: { name: azure-sp, key: tenant-id } }
+        script: |
+          az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
+          ./scripts/validate-at-e1-001.sh --resource-group fawkes-rg --cluster-name fawkes-aks
 ```
 
 ## Acceptance Criteria Mapping

@@ -191,13 +191,13 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
 
 **Actor**: Automated Process
 
-**Tools**: Jenkins, Penpot API, Design System
+**Tools**: Tekton, Penpot API, Design System
 
 **Steps**:
 
 1. **Automated Detection**:
 
-   - Jenkins job runs hourly
+   - Tekton PipelineRun triggers hourly
    - Detects new or updated Penpot components
    - Compares with design system components
 
@@ -286,7 +286,7 @@ sync:
 
 **Actor**: DevOps Engineer
 
-**Tools**: ArgoCD, Jenkins, Storybook
+**Tools**: ArgoCD, Tekton, Storybook
 
 **Steps**:
 

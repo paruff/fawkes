@@ -199,7 +199,6 @@ fawkes/
 │   ├── kubernetes/     # K8s manifests
 │   ├── local-dev/      # Local development scripts
 │   └── terraform/      # Terraform configurations
-├── jenkins-shared-library/ # Shared Jenkins pipeline code
 ├── platform/            # Platform components
 │   ├── apps/           # ArgoCD applications
 │   ├── bootstrap/      # Bootstrap configurations

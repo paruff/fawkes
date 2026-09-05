@@ -17,12 +17,12 @@ This document lists all service types available in the Fawkes platform catalog. 
 
 | Service | Version | Description                                                | ArgoCD Application         | Status    |
 | ------- | ------- | ---------------------------------------------------------- | -------------------------- | --------- |
-| Jenkins | 2.426+  | CI/CD automation server with Golden Path pipeline support. | `jenkins-application.yaml` | ✅ Active |
+| Tekton  | v1.15+  | CI/CD automation engine with Golden Path pipeline support. | `tekton-application.yaml`  | ✅ Active |
 | ArgoCD  | 2.9+    | GitOps continuous delivery for Kubernetes.                 | N/A (Bootstrap)            | ✅ Active |
 
 **Key Features:**
 
-- **Jenkins:** JCasC configuration, Kubernetes agents, GitHub integration, DORA metrics collection.
+- **Tekton:** Kubernetes-native Pipelines/Tasks, GitHub integration, DORA metrics collection.
 - **ArgoCD:** Auto-sync, health status monitoring, rollback capabilities.
 
 ---
@@ -87,7 +87,7 @@ Application
 | External Secrets Operator | 0.9+    | Sync secrets from Vault to Kubernetes Secrets.        | `external-secrets-operator-application.yaml` | ✅ Active |
 | Vault CSI Driver          | 1.3+    | Mount Vault secrets as volumes in Pods.               | `vault-csi-driver-application.yaml`          | ✅ Active |
 | SonarQube                 | 10.3+   | Static application security testing (SAST).           | `sonarqube-application.yaml`                 | ✅ Active |
-| Trivy                     | 0.47+   | Container image and filesystem vulnerability scanner. | N/A (Jenkins plugin)                         | ✅ Active |
+| Trivy                     | 0.47+   | Container image and filesystem vulnerability scanner. | N/A (Tekton Task)                            | ✅ Active |
 | Kyverno                   | 1.11+   | Kubernetes-native policy engine.                      | `kyverno-application.yaml`                   | ✅ Active |
 
 **Security Workflow:**
@@ -156,7 +156,7 @@ External Request
     │       ├─> TLS Termination (Cert-Manager certificates)
     │       │
     │       ▼
-    │   Backend Service (e.g., Jenkins, Backstage)
+    │   Backend Service (e.g., Backstage, Grafana)
 ```
 
 ---
@@ -195,16 +195,16 @@ For platform services managed via GitOps:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: jenkins
-  namespace: fawkes
+  name: tekton
+  namespace: argocd
 spec:
   source:
-    repoURL: https://charts.jenkins.io
-    chart: jenkins
-    targetRevision: 5.0.0
+    repoURL: https://github.com/paruff/fawkes.git
+    targetRevision: HEAD
+    path: platform/apps/tekton
   destination:
     server: https://kubernetes.default.svc
-    namespace: jenkins
+    namespace: fawkes
 ```
 
 ### Pattern 2: Helm Release
@@ -212,9 +212,9 @@ spec:
 For services deployed via Helm:
 
 ```bash
-helm upgrade --install jenkins jenkins/jenkins \
-  -f platform/apps/jenkins/values.yaml \
-  -n jenkins --create-namespace
+helm upgrade --install sonarqube sonarqube/sonarqube \
+  -f platform/apps/sonarqube/values.yaml \
+  -n sonarqube --create-namespace
 ```
 
 ### Pattern 3: Kustomize

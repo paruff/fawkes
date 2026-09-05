@@ -66,7 +66,7 @@ The SPACE metrics service is built with:
 
 **Data Sources**:
 
-- Jenkins API (builds, deployments)
+- Tekton (builds)
 - ArgoCD (deployments)
 - GitHub API (PRs, commits)
 
@@ -243,7 +243,7 @@ The overall DevEx health score combines all five dimensions into a single metric
 
 The service runs background tasks to automatically collect metrics:
 
-1. **Hourly**: Activity and performance metrics from GitHub/Jenkins
+1. **Hourly**: Activity and performance metrics from GitHub/Tekton
 2. **Daily**: Aggregate daily metrics, calculate trends
 3. **Weekly**: Process pulse survey responses
 
@@ -271,7 +271,7 @@ Developers log friction incidents in real-time:
 POST /api/v1/friction/log
 {
   "title": "Slow CI builds",
-  "description": "Jenkins builds taking over 30 minutes",
+  "description": "Tekton builds taking over 30 minutes",
   "severity": "high",
   "category": "ci"
 }

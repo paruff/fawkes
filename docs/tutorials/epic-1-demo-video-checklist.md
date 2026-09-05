@@ -17,7 +17,7 @@ description: Quick reference checklist for recording the Epic 1 demo video
 - [ ] Browser prepared with tabs:
   - [ ] Backstage
   - [ ] ArgoCD
-  - [ ] Jenkins
+  - [ ] Tekton <!-- TODO: verify Tekton equivalent for this workflow - no Tekton Dashboard UI is deployed yet, use `tkn` CLI or kubectl instead -->
   - [ ] Grafana
   - [ ] Prometheus
   - [ ] SonarQube
@@ -32,12 +32,11 @@ description: Quick reference checklist for recording the Epic 1 demo video
 ```bash
 # Quick health check
 kubectl get ingress -A
-kubectl get pods -A | grep -E 'backstage|argocd|jenkins|grafana|devlake'
+kubectl get pods -A | grep -E 'backstage|argocd|tekton|grafana|devlake'
 ```
 
 - [ ] `https://backstage.127.0.0.1.nip.io` - ✅ Loading
 - [ ] `https://argocd.127.0.0.1.nip.io` - ✅ Loading
-- [ ] `https://jenkins.127.0.0.1.nip.io` - ✅ Loading
 - [ ] `https://grafana.127.0.0.1.nip.io` - ✅ Loading
 - [ ] `https://devlake.127.0.0.1.nip.io` - ✅ Loading
 
@@ -65,10 +64,11 @@ kubectl get pods -A | grep -E 'backstage|argocd|jenkins|grafana|devlake'
 - [ ] GitOps workflow explanation
 - [ ] Rollback capabilities
 
-### ✅ Segment 4: Jenkins (5 min)
+### ✅ Segment 4: Tekton (5 min)
 
-- [ ] Dashboard overview
-- [ ] Golden path pipeline stages
+<!-- TODO: verify Tekton equivalent for this workflow -->
+- [ ] PipelineRun overview (`tkn pipelinerun list` / logs)
+- [ ] Golden path pipeline Tasks
 - [ ] Pipeline execution details
 - [ ] PR validation pipeline
 
@@ -107,7 +107,7 @@ kubectl get pods -A | grep -E 'backstage|argocd|jenkins|grafana|devlake'
 
 ```bash
 # Quick health check
-kubectl get pods -A | grep -E 'argocd|backstage|jenkins|prometheus|grafana'
+kubectl get pods -A | grep -E 'argocd|backstage|tekton|prometheus|grafana'
 
 # Resource utilization
 kubectl top nodes
@@ -128,7 +128,6 @@ git --no-pager log --oneline -5
 
 - Backstage: `https://backstage.127.0.0.1.nip.io`
 - ArgoCD: `https://argocd.127.0.0.1.nip.io`
-- Jenkins: `https://jenkins.127.0.0.1.nip.io`
 - Grafana: `https://grafana.127.0.0.1.nip.io`
 - DevLake: `https://devlake.127.0.0.1.nip.io`
 
@@ -230,7 +229,7 @@ git --no-pager log --oneline -5
 ### If Demo Data is Missing
 
 - Run sample deployments beforehand
-- Trigger Jenkins pipelines to populate data
+- Trigger Tekton PipelineRuns to populate data
 - Let platform run for a few hours to collect metrics
 
 ### If Recording Fails
@@ -248,7 +247,7 @@ git --no-pager log --oneline -5
 | Introduction  | 3:00   | 3:00          |
 | Backstage     | 5:00   | 8:00          |
 | ArgoCD        | 4:00   | 12:00         |
-| Jenkins       | 5:00   | 17:00         |
+| Tekton        | 5:00   | 17:00         |
 | Security      | 3:00   | 20:00         |
 | Observability | 3:00   | 23:00         |
 | DORA Metrics  | 5:00   | 28:00         |

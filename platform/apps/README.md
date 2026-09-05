@@ -22,7 +22,6 @@ platform/apps/
 ├── grafana/                          # Metrics visualization
 ├── harbor/                           # Container registry
 ├── ingress-nginx/                    # Ingress controller
-├── jenkins/                          # CI/CD pipelines
 ├── kyverno/                          # Policy enforcement
 ├── mattermost/                       # Team collaboration
 ├── opensearch/                       # Log aggregation
@@ -31,6 +30,7 @@ platform/apps/
 ├── prometheus/                       # Metrics monitoring
 ├── sonarqube/                        # Code quality & security
 ├── storage/                          # Storage classes
+├── tekton/                           # CI/CD pipelines
 ├── tempo/                            # Distributed tracing
 ├── trivy/                            # Security scanning
 ├── vault/                            # Secrets management
@@ -61,7 +61,7 @@ platform/apps/
 
 | Component               | Purpose                            | Namespace |
 | ----------------------- | ---------------------------------- | --------- |
-| [Jenkins](jenkins/)     | Build and deployment automation    | `fawkes`  |
+| [Tekton](tekton/)       | Build and deployment automation    | `fawkes`  |
 | [Harbor](harbor/)       | Container registry with scanning   | `harbor`  |
 | [SonarQube](sonarqube/) | Code quality and security analysis | `fawkes`  |
 | [Trivy](trivy/)         | Container security scanning        | `fawkes`  |
@@ -128,11 +128,11 @@ kubectl apply -f platform/bootstrap/platform-apps.yaml
 Each component can be deployed independently:
 
 ```bash
-# Example: Deploy Jenkins
-kubectl apply -f platform/apps/jenkins-application.yaml
+# Example: Deploy Tekton
+kubectl apply -f platform/apps/tekton/tekton-application.yaml
 
 # Wait for sync
-kubectl wait --for=condition=Synced application/jenkins -n argocd --timeout=5m
+kubectl wait --for=condition=Synced application/tekton -n argocd --timeout=5m
 ```
 
 ## Configuration

@@ -35,7 +35,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 
 - [ ] Cluster admin kubectl access
 - [ ] GitHub personal access token (for data collection)
-- [ ] Jenkins API token (optional, for CI metrics)
+- [ ] Tekton webhook connectivity (optional, for CI metrics)
 - [ ] ArgoCD API access configured
 
 ---
@@ -387,18 +387,13 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
   - Add all applications or specific projects
   - Enable sync event collection
 
-### 13. Configure Jenkins Data Source (Optional)
+### 13. Configure Tekton CI Metrics (Optional)
 
-- [ ] Add Jenkins connection:
-  - Click "Add Connection"
-  - Select "Jenkins"
-  - Enter:
-    - Name: "Jenkins - Fawkes"
-    - Endpoint: http://jenkins.fawkes.svc
-    - Username: admin
-    - Token: (Jenkins API token)
-  - Click "Test Connection"
-  - Click "Save"
+<!-- TODO: verify Tekton equivalent for this workflow -->
+
+DevLake has no native Tekton plugin. CI metrics arrive via the generic
+Webhook connection instead (see step 14) — no separate connection setup is
+needed here.
 
 ### 14. Configure Webhook for Incidents
 
@@ -535,7 +530,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 
 - [ ] Verify all scenarios pass:
   - Data ingestion from ArgoCD
-  - Data ingestion from Jenkins
+  - Data ingestion from Tekton
   - Deployment frequency calculation
   - Lead time calculation
   - Change failure rate calculation

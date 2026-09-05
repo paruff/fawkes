@@ -21,7 +21,7 @@ Backstage is the central developer portal for the Fawkes platform, providing a u
 │  ├─ Service Catalog                                             │
 │  ├─ Software Templates                                          │
 │  ├─ TechDocs                                                    │
-│  └─ Plugins (Kubernetes, ArgoCD, Jenkins)                       │
+│  └─ Plugins (Kubernetes, ArgoCD)                                │
 └────────────────────────┬────────────────────────────────────────┘
                          │
                          ▼
@@ -199,17 +199,6 @@ Monitor deployment status:
 metadata:
   annotations:
     argocd/app-name: my-service
-```
-
-### Jenkins Plugin
-
-View build status:
-
-```yaml
-# In catalog-info.yaml
-metadata:
-  annotations:
-    jenkins.io/job-full-name: folder/my-service
 ```
 
 ## TechDocs

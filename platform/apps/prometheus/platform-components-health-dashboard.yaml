@@ -21,7 +21,7 @@
 # ============================================================================
 # FILE: platform/apps/prometheus/platform-components-health-dashboard.yaml
 # PURPOSE: ConfigMap containing Grafana dashboard for Platform Components Health
-#          monitoring (ArgoCD, Jenkins, Backstage, Harbor, PostgreSQL, etc.)
+#          monitoring (ArgoCD, Backstage, Harbor, PostgreSQL, etc.)
 # ============================================================================
 apiVersion: v1
 kind: ConfigMap
@@ -41,7 +41,7 @@ data:
         "schemaVersion": 38,
         "version": 1,
         "refresh": "30s",
-        "description": "Monitor health and performance of Fawkes platform components including ArgoCD, Jenkins, Backstage, Harbor, and others",
+        "description": "Monitor health and performance of Fawkes platform components including ArgoCD, Backstage, Harbor, and others",
         "panels": [
           {
             "id": 1,
@@ -59,36 +59,6 @@ data:
             "targets": [
               {
                 "expr": "up{job=\"argocd-server-metrics\"}",
-                "refId": "A",
-                "datasource": {"type": "prometheus", "uid": "prometheus"}
-              }
-            ],
-            "fieldConfig": {
-              "defaults": {
-                "mappings": [
-                  {"type": "value", "value": "1", "text": "UP"},
-                  {"type": "value", "value": "0", "text": "DOWN"}
-                ],
-                "color": {"mode": "thresholds"},
-                "thresholds": {
-                  "mode": "absolute",
-                  "steps": [
-                    {"color": "red", "value": null},
-                    {"color": "green", "value": 1}
-                  ]
-                }
-              }
-            }
-          },
-          {
-            "id": 3,
-            "title": "Jenkins Status",
-            "type": "stat",
-            "gridPos": {"x": 4, "y": 1, "w": 4, "h": 4},
-            "description": "Jenkins CI/CD server health",
-            "targets": [
-              {
-                "expr": "up{job=\"jenkins-metrics\"}",
                 "refId": "A",
                 "datasource": {"type": "prometheus", "uid": "prometheus"}
               }
@@ -340,108 +310,6 @@ data:
             }
           },
           {
-            "id": 13,
-            "title": "Jenkins Metrics",
-            "type": "row",
-            "gridPos": {"x": 0, "y": 10, "w": 24, "h": 1},
-            "collapsed": false
-          },
-          {
-            "id": 14,
-            "title": "Jenkins Job Success Rate",
-            "type": "gauge",
-            "gridPos": {"x": 0, "y": 11, "w": 8, "h": 6},
-            "description": "Percentage of successful Jenkins jobs in last hour",
-            "targets": [
-              {
-                "expr": "sum(rate(jenkins_job_success_total[1h])) / sum(rate(jenkins_job_count_total[1h])) * 100",
-                "refId": "A",
-                "datasource": {"type": "prometheus", "uid": "prometheus"}
-              }
-            ],
-            "fieldConfig": {
-              "defaults": {
-                "unit": "percent",
-                "min": 0,
-                "max": 100,
-                "color": {"mode": "thresholds"},
-                "thresholds": {
-                  "mode": "absolute",
-                  "steps": [
-                    {"color": "red", "value": null},
-                    {"color": "yellow", "value": 70},
-                    {"color": "green", "value": 90}
-                  ]
-                }
-              }
-            }
-          },
-          {
-            "id": 15,
-            "title": "Jenkins Executor Usage",
-            "type": "timeseries",
-            "gridPos": {"x": 8, "y": 11, "w": 8, "h": 6},
-            "description": "Jenkins executor utilization",
-            "targets": [
-              {
-                "expr": "jenkins_executor_in_use_total",
-                "refId": "A",
-                "legendFormat": "In Use",
-                "datasource": {"type": "prometheus", "uid": "prometheus"}
-              },
-              {
-                "expr": "jenkins_executor_free_total",
-                "refId": "B",
-                "legendFormat": "Free",
-                "datasource": {"type": "prometheus", "uid": "prometheus"}
-              }
-            ],
-            "fieldConfig": {
-              "defaults": {
-                "unit": "short",
-                "color": {"mode": "palette-classic"},
-                "custom": {
-                  "drawStyle": "line",
-                  "lineInterpolation": "smooth",
-                  "fillOpacity": 10
-                }
-              }
-            }
-          },
-          {
-            "id": 16,
-            "title": "Jenkins Queue Length",
-            "type": "timeseries",
-            "gridPos": {"x": 16, "y": 11, "w": 8, "h": 6},
-            "description": "Number of jobs waiting in Jenkins queue",
-            "targets": [
-              {
-                "expr": "jenkins_queue_size_total",
-                "refId": "A",
-                "datasource": {"type": "prometheus", "uid": "prometheus"}
-              }
-            ],
-            "fieldConfig": {
-              "defaults": {
-                "unit": "short",
-                "color": {"mode": "palette-classic"},
-                "custom": {
-                  "drawStyle": "line",
-                  "lineInterpolation": "smooth",
-                  "fillOpacity": 10
-                },
-                "thresholds": {
-                  "mode": "absolute",
-                  "steps": [
-                    {"color": "green", "value": null},
-                    {"color": "yellow", "value": 5},
-                    {"color": "red", "value": 10}
-                  ]
-                }
-              }
-            }
-          },
-          {
             "id": 17,
             "title": "Container Registry",
             "type": "row",
@@ -632,7 +500,7 @@ data:
             "description": "Response time (P95) for platform components",
             "targets": [
               {
-                "expr": "histogram_quantile(0.95, sum by (le, job) (rate(http_request_duration_seconds_bucket{job=~\"argocd-server-metrics|jenkins-metrics|backstage-metrics\"}[5m])))",
+                "expr": "histogram_quantile(0.95, sum by (le, job) (rate(http_request_duration_seconds_bucket{job=~\"argocd-server-metrics|backstage-metrics\"}[5m])))",
                 "refId": "A",
                 "legendFormat": "{{job}}",
                 "datasource": {"type": "prometheus", "uid": "prometheus"}

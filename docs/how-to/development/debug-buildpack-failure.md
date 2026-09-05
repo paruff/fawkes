@@ -13,7 +13,7 @@ Identify and resolve failures when building container images using Cloud Native 
 
 Before you begin, ensure you have:
 
-- [ ] Access to the CI/CD system (Jenkins) where the build failed
+- [ ] Access to the CI/CD system (Tekton) where the build failed
 - [ ] Build logs from the failed buildpack execution
 - [ ] Source code repository access
 - [ ] `pack` CLI installed locally (optional, for local testing)
@@ -23,26 +23,20 @@ Before you begin, ensure you have:
 
 ### 1. Locate the Build Failure
 
-#### Access Jenkins Build Logs
+#### Access Tekton Build Logs
 
 ```bash
-# Get Jenkins URL
-echo "https://jenkins.127.0.0.1.nip.io"
+# List recent PipelineRuns
+tkn pipelinerun list -n fawkes
 
-# Navigate to the failed build
-# Jobs → Your Pipeline → Build #XX → Console Output
+# Get logs for the failed PipelineRun
+tkn pipelinerun logs my-pipeline-run -n fawkes -f
 ```
 
-Or using Jenkins CLI:
+Or using kubectl:
 
 ```bash
-# Download Jenkins CLI
-wget http://jenkins.127.0.0.1.nip.io/jnlpJars/jenkins-cli.jar
-
-# Get build log
-java -jar jenkins-cli.jar -s http://jenkins.127.0.0.1.nip.io \
-  -auth admin:password \
-  console my-pipeline 123  # build number
+kubectl logs -n fawkes -l tekton.dev/pipelineRun=my-pipeline-run --all-containers
 ```
 
 #### Identify the Failure Point
@@ -306,20 +300,16 @@ ERROR: layer restoration failed
 
 #### Fix: Clear Build Cache
 
-In Jenkins pipeline:
+In the Tekton Task step:
 
-```groovy
-stage('Build with Buildpack') {
-    steps {
-        sh '''
-            # Clear buildpack cache
-            pack build my-app:latest \
-              --builder paketobuildpacks/builder:base \
-              --clear-cache \
-              --path .
-        '''
-    }
-}
+```yaml
+- name: build-with-buildpack
+  script: |
+    # Clear buildpack cache
+    pack build my-app:latest \
+      --builder paketobuildpacks/builder:base \
+      --clear-cache \
+      --path .
 ```
 
 Or delete cache manually:
@@ -421,7 +411,7 @@ curl http://localhost:8080/health
 ### 1. Verify Build Succeeds
 
 ```bash
-# Re-run Jenkins build
+# Re-run the Tekton PipelineRun
 # Or build locally
 pack build my-app:verified \
   --builder paketobuildpacks/builder:base \
@@ -467,8 +457,8 @@ pack inspect my-app:verified
 ### 4. Verify in CI/CD Pipeline
 
 ```bash
-# Trigger Jenkins build
-# Navigate to Console Output
+# Trigger the Tekton PipelineRun
+# Follow logs with: tkn pipelinerun logs -f
 
 # Verify all stages pass:
 # [detector] ✓ paketo-buildpacks/node-engine
@@ -522,16 +512,14 @@ echo "registry=https://registry.npmjs.org" > .npmrc
 
 **Solution:**
 
-```groovy
-// Increase memory in Jenkins pipeline
-stage('Build') {
-    environment {
-        PACK_MEMORY_LIMIT = '4G'
-    }
-    steps {
-        sh 'pack build my-app --memory 4G'
-    }
-}
+```yaml
+# Increase memory in the Tekton Task step
+- name: build
+  env:
+    - name: PACK_MEMORY_LIMIT
+      value: "4G"
+  script: |
+    pack build my-app --memory 4G
 ```
 
 ## Troubleshooting Checklist
@@ -558,6 +546,5 @@ After resolving buildpack issues:
 ## Related Documentation
 
 - [Continuous Delivery Pattern](../../patterns/continuous-delivery.md) - Build and deployment best practices
-- [Jenkins Configuration](../../tools/jenkins.md) - CI/CD setup
 - [Paketo Buildpacks Documentation](https://paketo.io/docs/) - Official buildpack docs
 - [Cloud Native Buildpacks](https://buildpacks.io/) - CNB specification
