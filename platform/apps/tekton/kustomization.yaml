@@ -36,12 +36,20 @@
 # also makes ArgoCD sync fully offline-reproducible instead of depending on
 # a live fetch from GCS at sync time.
 #
-# Namespace: left as Tekton's own default (`tekton-pipelines`) rather than
-# remapped, since the release YAML hardcodes that namespace in multiple
-# RBAC subject references - overriding it via Kustomize risks silently
-# breaking ServiceAccount/RoleBinding wiring for a Phase 1 "get it running"
-# task. Runs alongside Jenkins (`platform/apps/jenkins/`) with no shared
-# resources or namespace collision.
+# Namespace: core Tekton controllers move into the already-existing `fawkes`
+# namespace - Tekton is Fawkes' own platform tooling, not a delivered app,
+# so it belongs alongside other platform resources (per the namespace
+# convention: `fawkes` for platform resources, `stage`/`prod` for delivered
+# apps). Upstream actually ships a SECOND namespace, `tekton-pipelines-
+# resolvers`, for a separately-isolated resolvers component (resolvers
+# execute remote pipeline/task resolution logic, so upstream keeps them
+# namespace-isolated as a blast-radius reduction) - that isolation is kept
+# as-is rather than merged into `fawkes` too: both namespaces independently
+# ship same-named ConfigMaps (config-logging, config-observability) that
+# the resolvers Deployment references via env-var literals, so merging them
+# would require hand-editing 2 ConfigMap names + 2 env vars directly inside
+# the vendored upstream YAML - not worth it for a Phase 1 "get it running"
+# task, so only the core namespace is remapped.
 #
 # Scope is deliberately limited to the controllers only - no Task/Pipeline/
 # Trigger resources yet (those come in a later phase once wiring is proven).
@@ -51,3 +59,23 @@ resources:
   - upstream/pipeline-v1.15.1.yaml
   - upstream/triggers-v0.37.0.yaml
   - upstream/triggers-interceptors-v0.37.0.yaml
+
+patches:
+  # The vendored tekton-pipelines Namespace object is redundant once its
+  # resources move into the already-existing `fawkes` namespace.
+  - patch: |-
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: tekton-pipelines
+      $patch: delete
+  # Move every resource that shipped in tekton-pipelines into fawkes.
+  # tekton-pipelines-resolvers resources are untouched by this selector
+  # (their original namespace value doesn't match), preserving upstream's
+  # isolation for that component.
+  - target:
+      namespace: tekton-pipelines
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: fawkes
