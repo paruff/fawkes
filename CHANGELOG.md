@@ -5,6 +5,14 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.38](https://github.com/paruff/fawkes/compare/v0.3.37...v0.3.38) (2026-09-05)
+
+
+### Fixed
+
+* **ci:** tag pushed images by immutable SHA, not floating :latest ([#1783](https://github.com/paruff/fawkes/issues/1783)) ([babab5e](https://github.com/paruff/fawkes/commit/babab5e7b4a0d0564e741f12baf5501b38a16ba1))
+* **golden-path:** fix 4 bugs found live-testing the new plane scripts ([#1781](https://github.com/paruff/fawkes/issues/1781)) ([74095ff](https://github.com/paruff/fawkes/commit/74095ffced8f087d6c8c5b0fb1bad8d64f8f9d85))
+
 ## [0.3.37](https://github.com/paruff/fawkes/compare/v0.3.36...v0.3.37) (2026-09-05)
 
 
