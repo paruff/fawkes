@@ -5,6 +5,21 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.46](https://github.com/paruff/fawkes/compare/v0.3.45...v0.3.46) (2026-09-05)
+
+
+### Fixed
+
+* **gitops:** exclude devlake from ApplicationSet auto-discovery ([#1814](https://github.com/paruff/fawkes/issues/1814)) ([7e1d8b9](https://github.com/paruff/fawkes/commit/7e1d8b90753e0fceb7b83e23d3ad7d8122d99843))
+* **sonarqube:** unblock deploy - dev-mode secrets, required chart fields ([#1816](https://github.com/paruff/fawkes/issues/1816)) ([06fc208](https://github.com/paruff/fawkes/commit/06fc208c83ec04f42fb0695621231d88f7ab59ed))
+* **tekton:** exclude from ApplicationSet collision, move core to fawkes namespace ([#1811](https://github.com/paruff/fawkes/issues/1811)) ([0c6abc5](https://github.com/paruff/fawkes/commit/0c6abc5cf4a46cd7553fa58bf69de4ca58a1038b))
+
+
+### Chores
+
+* **dora-metrics:** remove, replaced by DevLake ([#1817](https://github.com/paruff/fawkes/issues/1817)) ([235f0ef](https://github.com/paruff/fawkes/commit/235f0efa4c530717fe3eac6ebb76fd6f6d211829))
+* **tracer-bullet:** remove monorepo copy, superseded by paruff/tracer-bullet ([#1813](https://github.com/paruff/fawkes/issues/1813)) ([0515ed0](https://github.com/paruff/fawkes/commit/0515ed0d1f401515c32dc64180d171a1b0a172ad))
+
 ## [0.3.45](https://github.com/paruff/fawkes/compare/v0.3.44...v0.3.45) (2026-09-05)
 
 
