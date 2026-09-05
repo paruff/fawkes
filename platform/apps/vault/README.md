@@ -23,20 +23,20 @@ Platform.
 │              └───────────┬───────────┘                                       │
 └──────────────────────────┼──────────────────────────────────────────────────┘
                            │
-           ┌───────────────┼───────────────┐
-           │               │               │
-           ▼               ▼               ▼
-    ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-    │ Vault Agent  │ │ Vault Agent  │ │   CSI        │
-    │ Sidecar      │ │ Sidecar      │ │   Driver     │
-    │ (Jenkins)    │ │ (Backstage)  │ │   Provider   │
-    └──────────────┘ └──────────────┘ └──────────────┘
-           │               │               │
-           ▼               ▼               ▼
-    ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-    │  /vault/     │ │  /vault/     │ │   Mounted    │
-    │  secrets/    │ │  secrets/    │ │   Volume     │
-    └──────────────┘ └──────────────┘ └──────────────┘
+                   ┌───────────┴───────────┐
+                   │                       │
+                   ▼                       ▼
+            ┌──────────────┐        ┌──────────────┐
+            │ Vault Agent  │        │   CSI        │
+            │ Sidecar      │        │   Driver     │
+            │ (Backstage)  │        │   Provider   │
+            └──────────────┘        └──────────────┘
+                   │                       │
+                   ▼                       ▼
+            ┌──────────────┐        ┌──────────────┐
+            │  /vault/     │        │   Mounted    │
+            │  secrets/    │        │   Volume     │
+            └──────────────┘        └──────────────┘
 ```
 
 ## Components
@@ -144,27 +144,7 @@ spec:
           secretProviderClass: vault-database-creds
 ```
 
-### Option 3: Direct API Access (CI/CD)
-
-For Jenkins pipelines, use the Vault plugin or direct API calls:
-
-```groovy
-// In Jenkinsfile
-withVault(
-    configuration: [
-        vaultUrl: 'http://vault.vault.svc:8200',
-        vaultCredentialId: 'vault-approle'
-    ],
-    vaultSecrets: [
-        [path: 'secret/data/fawkes/cicd/jenkins', secretValues: [
-            [vaultKey: 'github_token', envVar: 'GITHUB_TOKEN']
-        ]]
-    ]
-) {
-    // Use GITHUB_TOKEN in your pipeline
-    sh 'echo "Token available"'
-}
-```
+<!-- TODO: verify Tekton equivalent for this workflow -->
 
 ## Secret Path Convention
 
@@ -179,7 +159,6 @@ secret/
         │   ├── argocd/
         │   └── postgres/
         ├── cicd/               # CI/CD pipeline secrets
-        │   ├── jenkins/
         │   └── harbor/
         ├── databases/          # Database credentials
         │   ├── sonarqube/
@@ -200,7 +179,6 @@ secret/
 | Policy                 | Bound Service Accounts    | Access                         |
 | ---------------------- | ------------------------- | ------------------------------ |
 | `platform-policy`      | All in `fawkes` namespace | Own namespace secrets + shared |
-| `jenkins-policy`       | `jenkins`                 | CI/CD + apps + shared          |
 | `backstage-policy`     | `backstage`               | Core/backstage + shared        |
 | `database-policy`      | Database consumers        | Database credentials           |
 | `observability-policy` | `grafana`, `prometheus`   | Observability + shared         |

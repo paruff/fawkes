@@ -16,7 +16,7 @@ The component library sync ensures that:
 ```
 ┌─────────────┐       ┌──────────────┐       ┌─────────────┐
 │   Penpot    │──────►│  Sync Service│──────►│   Design    │
-│   Designs   │       │  (Jenkins)   │       │   System    │
+│   Designs   │       │  (Tekton)    │       │   System    │
 └─────────────┘       └──────────────┘       └─────────────┘
        │                      │                      │
        │                      ▼                      │
@@ -47,45 +47,40 @@ The component library sync ensures that:
 3. Extract all components and their properties
 4. Build component inventory
 
-**Jenkins Job**: `penpot-component-discovery`
+**Tekton Pipeline**: `penpot-component-discovery`
 
-```groovy
-// Jenkinsfile for discovery
-pipeline {
-    agent any
-    triggers {
-        cron('0 * * * *')  // Every hour
-    }
-    stages {
-        stage('Fetch Penpot Projects') {
-            steps {
-                script {
-                    sh '''
-                        curl -H "Authorization: Token ${PENPOT_API_TOKEN}" \
-                             https://penpot.fawkes.local/api/rpc/command/get-projects \
-                             > penpot-projects.json
-                    '''
-                }
-            }
-        }
-        stage('Extract Components') {
-            steps {
-                script {
-                    sh '''
-                        python3 scripts/extract-penpot-components.py \
-                            --input penpot-projects.json \
-                            --output penpot-components.json
-                    '''
-                }
-            }
-        }
-        stage('Store Inventory') {
-            steps {
-                archiveArtifacts artifacts: 'penpot-components.json'
-            }
-        }
-    }
-}
+<!-- TODO: verify Tekton equivalent for this workflow -->
+
+```yaml
+# Tekton Pipeline for discovery, triggered hourly by a Kubernetes CronJob
+# that creates a PipelineRun from this Pipeline
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: penpot-component-discovery
+spec:
+  workspaces:
+    - name: shared-data
+  tasks:
+    - name: fetch-penpot-projects
+      taskSpec:
+        steps:
+          - name: fetch
+            image: curlimages/curl
+            script: |
+              curl -H "Authorization: Token $(params.penpot-api-token)" \
+                   https://penpot.fawkes.local/api/rpc/command/get-projects \
+                   > $(workspaces.shared-data.path)/penpot-projects.json
+    - name: extract-components
+      runAfter: ["fetch-penpot-projects"]
+      taskSpec:
+        steps:
+          - name: extract
+            image: python:3.12-slim
+            script: |
+              python3 scripts/extract-penpot-components.py \
+                  --input $(workspaces.shared-data.path)/penpot-projects.json \
+                  --output $(workspaces.shared-data.path)/penpot-components.json
 ```
 
 ### 2. Mapping Phase
@@ -325,7 +320,7 @@ sync_report:
         {
           "type": "button",
           "text": "View Full Report",
-          "url": "https://jenkins.fawkes.local/job/penpot-sync/lastBuild"
+          "url": "https://tekton-dashboard.fawkes.local/#/namespaces/fawkes/pipelineruns/penpot-sync"
         }
       ]
     }
@@ -337,16 +332,11 @@ sync_report:
 
 ### Sync Schedule
 
-Configure sync frequency in Jenkins:
+Configure sync frequency via the Kubernetes CronJob that triggers the Tekton PipelineRun:
 
-```groovy
-triggers {
-    // Run every hour
-    cron('0 * * * *')
-
-    // Or run on Penpot webhook (future)
-    // genericTrigger(...)
-}
+```yaml
+schedule: "0 * * * *" # Run every hour
+# Or trigger on Penpot webhook via a Tekton EventListener (future)
 ```
 
 ### Mapping Rules
@@ -405,9 +395,8 @@ validation:
 Trigger sync manually:
 
 ```bash
-# Via Jenkins
-curl -X POST https://jenkins.fawkes.local/job/penpot-sync/build \
-  --user $JENKINS_USER:$JENKINS_TOKEN
+# Via Tekton CLI
+tkn pipeline start penpot-component-discovery -n fawkes
 
 # Via kubectl (run sync job)
 kubectl create job --from=cronjob/penpot-sync penpot-sync-manual -n fawkes
@@ -479,7 +468,8 @@ validation:
 - [Penpot API Documentation](https://penpot.app/api/doc)
 - [Design System Guide](../design/design-system.md)
 - [Component Mapping Config](../../platform/apps/backstage/plugins/penpot-viewer.yaml)
-- [Sync Job Definition](../../platform/apps/jenkins/jobs/penpot-sync.groovy)
+<!-- TODO: verify Tekton equivalent for this workflow -->
+<!-- Sync Job Definition link removed - platform/apps/jenkins/ was deleted; Tekton Pipeline definition not yet created -->
 
 ## Support
 

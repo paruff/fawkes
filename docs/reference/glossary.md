@@ -49,7 +49,7 @@ Infrastructure-as-code tool that extends Kubernetes to manage cloud resources us
 
 ### DevLake (Apache DevLake)
 
-Data platform for collecting and analyzing DORA metrics from multiple sources (Jenkins, GitHub, etc.).
+Data platform for collecting and analyzing DORA metrics from multiple sources (Tekton, GitHub, etc.).
 
 ### Devfile
 
@@ -102,12 +102,6 @@ Self-service platform abstracting infrastructure complexity and providing standa
 ### Ignite
 
 Bootstrap script (`ignite.sh`) for initializing the Fawkes platform in a new environment.
-
-## J
-
-### JCasC (Jenkins Configuration as Code)
-
-Plugin allowing Jenkins configuration to be defined in YAML rather than manual UI setup.
 
 ## K
 
@@ -202,7 +196,6 @@ Human-readable data serialization language used throughout Kubernetes and Fawkes
 | DORA    | DevOps Research and Assessment               |
 | IaC     | Infrastructure as Code                       |
 | IDP     | Internal Developer Platform                  |
-| JCasC   | Jenkins Configuration as Code                |
 | K8s     | Kubernetes                                   |
 | MTTR    | Mean Time To Restore                         |
 | NPS     | Net Promoter Score                           |

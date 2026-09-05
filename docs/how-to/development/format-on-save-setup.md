@@ -334,7 +334,7 @@ make lint
 black --line-length=120 services/**/*.py
 
 # Go
-gofmt -w -s jenkins-shared-library/**/*.go
+gofmt -w -s tests/terratest/**/*.go
 
 # Shell scripts
 shfmt -i 2 -ci -bn -sr -w scripts/**/*.sh

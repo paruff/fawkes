@@ -583,7 +583,6 @@ curl -u admin:Harbor12345 \
 
 ### Fawkes Platform
 
-- [Jenkins Golden Path Pipeline](../jenkins/README.md)
 - [Harbor Container Registry](../harbor/README.md)
 - [Security Scanning (SonarQube)](../sonarqube/README.md)
 - [Grafana Dashboards](../grafana/dashboards/README.md)
@@ -598,8 +597,10 @@ curl -u admin:Harbor12345 \
 
 ### CI/CD Integration
 
-- [Jenkins Shared Library - securityScan.groovy](../../../jenkins-shared-library/vars/securityScan.groovy)
-- [Jenkins Shared Library - goldenPathPipeline.groovy](../../../jenkins-shared-library/vars/goldenPathPipeline.groovy)
+<!-- Jenkins Shared Library links (securityScan.groovy, goldenPathPipeline.groovy)
+     removed - jenkins-shared-library/ was deleted, Tekton is the sole CI
+     engine now. No equivalent Tekton Task definitions exist yet - see issue #1660. -->
+<!-- TODO: verify Tekton equivalent for this workflow -->
 - [BDD Tests - Trivy Integration](../../../tests/bdd/features/trivy-integration.feature)
 - [BDD Tests - Golden Path](../../../tests/bdd/features/jenkins/golden-path.feature)
 

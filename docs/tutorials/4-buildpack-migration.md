@@ -444,18 +444,14 @@ Now that you're using Buildpacks, the Dockerfile is obsolete.
 
 3. Update your CI/CD pipeline to use `pack build` instead of `docker build`.
 
-   Example Jenkins pipeline snippet:
+   Example Tekton Task step:
 
-   ```groovy
-   stage('Build Image') {
-     steps {
-       sh '''
-         pack build ${IMAGE_NAME}:${VERSION} \
-           --builder paketobuildpacks/builder:base \
-           --publish
-       '''
-     }
-   }
+   ```yaml
+   - name: build-image
+     script: |
+       pack build ${IMAGE_NAME}:${VERSION} \
+         --builder paketobuildpacks/builder:base \
+         --publish
    ```
 
 4. Commit the changes:

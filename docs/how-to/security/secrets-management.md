@@ -63,17 +63,16 @@ Your commit has been blocked. Please remove secrets and try again.
 
 ### Pipeline Protection
 
-Every Jenkins pipeline includes a **Secrets Scan** stage:
+Every Tekton Pipeline includes a **Secrets Scan** Task:
 
-```groovy
-stage('Secrets Scan') {
-    steps {
-        container('gitleaks') {
-            // Gitleaks scans entire repository
-            sh 'gitleaks detect --source . --verbose'
-        }
-    }
-}
+```yaml
+- name: secrets-scan
+  taskSpec:
+    steps:
+      - name: gitleaks
+        image: zricethezav/gitleaks
+        script: |
+          gitleaks detect --source . --verbose
 ```
 
 **Pipeline fails immediately** if secrets are detected, preventing deployment of vulnerable code.
@@ -320,7 +319,7 @@ git commit -m "Add feature (secrets removed)"
 
 ### If Pipeline Fails on Secrets Scan
 
-1. **Download the Gitleaks report** from Jenkins artifacts
+1. **Download the Gitleaks report** from the Tekton TaskRun results
 2. **Review detected secrets** in `gitleaks-report.json`
 3. **Fix the issues** in your code
 4. **Push the fix**:

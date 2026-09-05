@@ -113,7 +113,7 @@ To customize the quality gate for a specific project:
          runSecurityScan = false  // Requires justification!
      }
      ```
-   - Add detailed comment in Jenkinsfile explaining the exception
+   - Add detailed comment in the Tekton Pipeline definition explaining the exception
    - Schedule full security review for next sprint
 
 **Note**: The `runSecurityScan = false` option disables the entire Security Scan stage, including SonarQube, Trivy, and secrets scanning. There is no way to disable only the SonarQube quality gate check. This is intentional - if you need to bypass quality gates, you must do so consciously for all security scanning.
@@ -394,13 +394,13 @@ The Fawkes platform uses defense-in-depth with multiple quality gates:
 
 1. **Pipeline stops immediately** at the failing stage
 2. **Notification sent** to team via Mattermost
-3. **Detailed report** available in Jenkins artifacts
+3. **Detailed report** available as a Tekton Task result/artifact
 4. **SonarQube/Harbor link** provided for analysis
 5. **Metrics recorded** for DORA change failure rate
 
 **Developer workflow**:
 
-1. Review failure details in Jenkins build log
+1. Review failure details in the Tekton TaskRun log
 2. Access detailed report (SonarQube UI or Trivy JSON)
 3. Fix the identified issues
 4. Commit and push changes
@@ -410,21 +410,11 @@ The Fawkes platform uses defense-in-depth with multiple quality gates:
 
 ### Java Example
 
-```groovy
-// Jenkinsfile
-@Library('fawkes-pipeline-library') _
-goldenPathPipeline {
-    appName = 'user-service'
-    language = 'java'
-    dockerImage = 'harbor.fawkes.local/fawkes/user-service'
-    sonarProject = 'user-service'
-
-    // Quality gates (using defaults)
-    // trivySeverity = 'HIGH,CRITICAL'  // default
-    // trivyExitCode = '1'               // default
-    // runSecurityScan = true            // default
-}
-```
+<!-- TODO: verify Tekton equivalent for this workflow -->
+Golden Path Tekton Pipeline for `appName: user-service`, `language: java`,
+`dockerImage: harbor.fawkes.local/fawkes/user-service`, `sonarProject:
+user-service`, quality gates at their defaults (Trivy HIGH/CRITICAL, exit
+code 1, security scan enabled).
 
 **SonarQube configuration** (pom.xml):
 
@@ -438,18 +428,10 @@ goldenPathPipeline {
 
 ### Python Example
 
-```groovy
-// Jenkinsfile
-@Library('fawkes-pipeline-library') _
-goldenPathPipeline {
-    appName = 'analytics-api'
-    language = 'python'
-    dockerImage = 'harbor.fawkes.local/fawkes/analytics-api'
-
-    // Quality gates use defaults
-    // trivySeverity = 'HIGH,CRITICAL'
-}
-```
+<!-- TODO: verify Tekton equivalent for this workflow -->
+Golden Path Tekton Pipeline for `appName: analytics-api`, `language: python`,
+`dockerImage: harbor.fawkes.local/fawkes/analytics-api`, quality gates at
+their defaults (Trivy HIGH/CRITICAL).
 
 **SonarQube configuration** (sonar-project.properties):
 
@@ -463,17 +445,10 @@ sonar.python.version=3.11
 
 ### Node.js Example
 
-```groovy
-// Jenkinsfile
-@Library('fawkes-pipeline-library') _
-goldenPathPipeline {
-    appName = 'web-frontend'
-    language = 'node'
-    dockerImage = 'harbor.fawkes.local/fawkes/web-frontend'
-
-    // All quality gates enabled by default
-}
-```
+<!-- TODO: verify Tekton equivalent for this workflow -->
+Golden Path Tekton Pipeline for `appName: web-frontend`, `language: node`,
+`dockerImage: harbor.fawkes.local/fawkes/web-frontend`, all quality gates
+enabled by default.
 
 **SonarQube configuration** (sonar-project.js):
 
@@ -494,17 +469,10 @@ module.exports = {
 
 ### Go Example
 
-```groovy
-// Jenkinsfile
-@Library('fawkes-pipeline-library') _
-goldenPathPipeline {
-    appName = 'event-processor'
-    language = 'go'
-    dockerImage = 'harbor.fawkes.local/fawkes/event-processor'
-
-    // Quality gates enabled by default
-}
-```
+<!-- TODO: verify Tekton equivalent for this workflow -->
+Golden Path Tekton Pipeline for `appName: event-processor`, `language: go`,
+`dockerImage: harbor.fawkes.local/fawkes/event-processor`, quality gates
+enabled by default.
 
 **SonarQube configuration** (sonar-project.properties):
 
@@ -681,7 +649,6 @@ For questions or assistance:
 - [Trivy Container Scanning](../../../platform/apps/trivy/README.md)
 - [Secrets Management](./secrets-management.md)
 - [Golden Path Pipeline Usage](../../golden-path-usage.md)
-- [Jenkins Configuration as Code](../jenkins-casc-configuration.md)
 
 ---
 

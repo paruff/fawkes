@@ -21,7 +21,7 @@ Before deploying SonarQube, ensure the following components are running:
 ┌─────────────────────────────────────────────────────────────────┐
 │                     Developer Workflow                           │
 │                                                                   │
-│  Git Commit → Jenkins Pipeline → SonarQube Analysis → Quality Gate
+│  Git Commit → Tekton Pipeline → SonarQube Analysis → Quality Gate
 └─────────────────────────────────────────────────────────────────┘
                            │
                            ▼
@@ -183,12 +183,12 @@ https://sonarqube.fawkes.idp
 4. Enter new password
 5. Save changes
 
-#### 5.2 Generate Authentication Token for Jenkins
+#### 5.2 Generate Authentication Token for Tekton
 
 ```bash
 # Via UI:
 # 1. Go to My Account → Security → Generate Tokens
-# 2. Name: "jenkins-scanner"
+# 2. Name: "tekton-scanner"
 # 3. Type: "Project Analysis Token" or "Global Analysis Token"
 # 4. Click "Generate"
 # 5. Copy the token (you won't see it again!)
@@ -197,36 +197,37 @@ https://sonarqube.fawkes.idp
 SONAR_PASSWORD="your-new-admin-password"
 curl -u admin:${SONAR_PASSWORD} \
   -X POST \
-  "http://sonarqube.fawkes.svc:9000/api/user_tokens/generate?name=jenkins-scanner"
+  "http://sonarqube.fawkes.svc:9000/api/user_tokens/generate?name=tekton-scanner"
 
-# Save the token output for Jenkins configuration
+# Save the token output for the Tekton Pipeline configuration
 ```
 
-#### 5.3 Configure Jenkins Integration
+#### 5.3 Configure Tekton Integration
 
-**Add Token to Jenkins**:
+<!-- TODO: verify Tekton equivalent for this workflow -->
+
+**Add Token as a Kubernetes Secret**:
 
 ```bash
-# Via Jenkins UI:
-# 1. Jenkins → Manage Jenkins → Manage Credentials
-# 2. Select domain: (global)
-# 3. Add Credentials → Secret text
-# 4. Secret: <paste token>
-# 5. ID: "sonarqube-token"
-# 6. Description: "SonarQube Scanner Token"
-
-# Via Jenkins Configuration as Code (JCasC):
-# Already configured in jenkins-casc-configmap.yaml
+kubectl create secret generic sonarqube-token \
+  --from-literal=token=<paste token> \
+  -n fawkes
 ```
 
-**Configure SonarQube Server in Jenkins**:
+**Reference SonarQube in the Tekton Task**:
 
-```groovy
-// Already configured in Jenkins Shared Library
-withSonarQubeEnv('SonarQube') {
-    // SonarQube server URL: http://sonarqube.fawkes.svc:9000
-    // Scanner authentication via token
-}
+```yaml
+- name: sonarqube-analysis
+  taskSpec:
+    steps:
+      - name: scan
+        image: sonarsource/sonar-scanner-cli
+        env:
+          - name: SONAR_TOKEN
+            valueFrom:
+              secretKeyRef: { name: sonarqube-token, key: token }
+        script: |
+          sonar-scanner -Dsonar.host.url=http://sonarqube.fawkes.svc:9000
 ```
 
 #### 5.4 Create Quality Profiles
@@ -272,7 +273,7 @@ Or configure via UI:
 4. Add conditions as per [ADR-014](../adr/ADR-014 sonarqube quality gates.md)
 5. Set as default
 
-### Step 6: Test Integration with Jenkins
+### Step 6: Test Integration with Tekton
 
 **Create Test Project**:
 
@@ -283,19 +284,22 @@ Or configure via UI:
 # 2. Fill in details
 # 3. Create
 
-# Or manually create a simple project with Jenkinsfile
+# Or manually create a simple project with a Tekton Pipeline definition
 ```
 
-**Trigger Jenkins Build**:
+**Trigger Tekton PipelineRun**:
+
+<!-- TODO: verify Tekton equivalent for this workflow -->
 
 ```bash
-# Push code to trigger Jenkins pipeline
+# Push code to trigger the Tekton EventListener webhook
 git commit -m "Test SonarQube integration"
 git push
 
-# Monitor Jenkins build
-# Should see "SonarQube Analysis" stage execute successfully
-# Should see "Quality Gate" stage check results
+# Monitor the PipelineRun
+tkn pipelinerun logs -f -n fawkes
+# Should see the "sonarqube-analysis" Task execute successfully
+# Should see the Quality Gate check results
 ```
 
 **Verify in SonarQube**:
@@ -356,7 +360,7 @@ git push
 
 - Database credentials: Kubernetes secrets (dev/local)
 - Admin credentials: Manual change required
-- Scanner tokens: Jenkins credentials store
+- Scanner tokens: Kubernetes Secret (referenced by the Tekton Task)
 - Production: Use External Secrets Operator with Vault
 
 ### Plugins
@@ -489,16 +493,19 @@ kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller
 
 ### Quality Gate Timeout
 
-**Symptoms**: Jenkins pipeline times out waiting for Quality Gate
+**Symptoms**: Tekton PipelineRun times out waiting for Quality Gate
 
 **Solutions**:
 
-```bash
-# Increase timeout in Jenkinsfile
-timeout(time: 10, unit: 'MINUTES') {
-    waitForQualityGate abortPipeline: true
-}
+<!-- TODO: verify Tekton equivalent for this workflow -->
 
+```yaml
+# Increase the Task's timeout
+- name: wait-for-quality-gate
+  timeout: 10m
+```
+
+```bash
 # Check SonarQube compute engine
 curl -u admin:${SONAR_PASSWORD} \
   "http://sonarqube.fawkes.svc:9000/api/ce/activity"
@@ -649,7 +656,6 @@ kubectl logs -n fawkes -l app=sonarqube -f
 - [CloudNativePG Documentation](https://cloudnative-pg.io/)
 - [Fawkes ADR-014: SonarQube Quality Gates](../adr/ADR-014 sonarqube quality gates.md)
 - [Quality Profiles Guide](../../platform/apps/sonarqube/quality-profiles.md)
-- [Jenkins Integration](../../platform/apps/jenkins/README.md)
 
 ## Next Steps
 

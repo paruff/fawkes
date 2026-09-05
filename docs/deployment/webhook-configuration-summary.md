@@ -22,26 +22,19 @@ This document summarizes the webhook configurations implemented for DORA metrics
 3. Point to: `https://devlake.fawkes.idp/api/plugins/webhook/1/commits`
 4. Test with a commit push
 
-### ✅ Jenkins Webhooks Configured (Builds)
+### 🚧 Tekton Webhooks (Builds) — Not Yet Implemented
 
-- **Implementation**: `jenkins-shared-library/vars/doraMetrics.groovy`
-- **Documentation**: `platform/apps/devlake/config/jenkins-webhook-setup.md`
+<!-- TODO: verify Tekton equivalent for this workflow -->
+
+Jenkins has been removed; Tekton is now the sole CI engine, but the
+equivalent CI event emission mechanism (previously the `doraMetrics.groovy`
+Jenkins shared library) has no Tekton replacement yet. See issue #1660 for
+the in-progress Tekton EventListener/webhook design.
+
 - **Endpoint**: `/api/plugins/webhook/1/cicd`
 - **Events**: Build completion, test results, quality gates, incidents
 - **Security**: Internal cluster network (no external access needed)
 - **Purpose**: Tracks build success rate, rework rate, quality metrics
-
-**Integration Method**:
-
-```groovy
-@Library('fawkes-pipeline-library') _
-
-doraMetrics.recordBuild(service: 'my-service', status: 'success', stage: 'build')
-doraMetrics.recordTestResults(service: 'my-service', totalTests: 150, passedTests: 148)
-doraMetrics.recordQualityGate(service: 'my-service', passed: true, coveragePercent: 85)
-```
-
-**Usage**: Automatically available in all Jenkins pipelines via shared library. Golden Path pipelines automatically emit DORA events.
 
 ### ✅ ArgoCD Webhooks Configured (Deployments)
 
@@ -78,7 +71,7 @@ Tests performed:
 - ✅ DevLake service running
 - ✅ Webhook endpoints accessible
 - ✅ GitHub webhook endpoint responds
-- ✅ Jenkins webhook endpoint responds
+- 🚧 Tekton webhook endpoint responds (not yet implemented, see #1660)
 - ✅ ArgoCD webhook endpoint responds
 - ✅ Incident webhook endpoint responds
 - ✅ Network policies configured
@@ -89,8 +82,8 @@ Tests performed:
 Scenarios tested:
 
 - GitHub commit webhooks
-- Jenkins build webhooks
-- Jenkins quality gate webhooks
+- Tekton build webhooks (not yet implemented, see #1660)
+- Tekton quality gate webhooks (not yet implemented, see #1660)
 - ArgoCD deployment success webhooks
 - ArgoCD deployment failure webhooks
 - Incident creation/resolution webhooks
@@ -116,8 +109,9 @@ cd tests/bdd && pytest features/dora-webhooks.feature -v
 └─────────────┘                              │
                                               │
 ┌─────────────┐                              │
-│   Jenkins   │ ──build──> CI/CD events ─────┤──> DevLake
-└─────────────┘                              │    (DORA Metrics)
+│   Tekton    │ ──build──> CI/CD events ─────┤──> DevLake
+└─────────────┘  (not yet implemented,       │    (DORA Metrics)
+                  see #1660)                 │
                                               │
 ┌─────────────┐                              │
 │   ArgoCD    │ ──sync──> Deployment events ─┤
@@ -162,19 +156,21 @@ cd tests/bdd && pytest features/dora-webhooks.feature -v
 - **Calculation**: Average time from incident creation to resolution
 - **Webhook**: `/api/plugins/webhook/1/incidents`
 
-### Additional CI Metrics (Jenkins)
+### Additional CI Metrics (Tekton)
 
-- **Build Success Rate**: Jenkins webhook
-- **Rework Rate**: Jenkins webhook (retry builds)
-- **Quality Gate Pass Rate**: Jenkins webhook
-- **Test Flakiness**: Jenkins webhook
+<!-- TODO: verify Tekton equivalent for this workflow - not yet implemented, see #1660 -->
+
+- **Build Success Rate**: Tekton webhook
+- **Rework Rate**: Tekton webhook (retry builds)
+- **Quality Gate Pass Rate**: Tekton webhook
+- **Test Flakiness**: Tekton webhook
 
 ## Security
 
 ### Authentication
 
 - **GitHub**: HMAC-SHA256 signature validation (`X-Hub-Signature-256`)
-- **Jenkins**: Internal cluster network (no external access)
+- **Tekton**: Internal cluster network (no external access)
 - **ArgoCD**: Internal cluster network (no external access)
 
 ### Secrets Management
@@ -219,7 +215,7 @@ spec:
               name: fawkes
           podSelector:
             matchLabels:
-              app.kubernetes.io/name: jenkins
+              app.kubernetes.io/name: tekton
       ports:
         - protocol: TCP
           port: 8080
@@ -257,16 +253,14 @@ spec:
    - Troubleshooting guide
 
 4. `platform/apps/devlake/config/github-webhook-setup.md` (343 lines)
-
    - Step-by-step GitHub webhook setup
    - Security considerations
    - Troubleshooting
 
-5. `platform/apps/devlake/config/jenkins-webhook-setup.md` (588 lines)
-   - Jenkins integration guide
-   - doraMetrics library usage
-   - Example Jenkinsfiles
-   - Troubleshooting
+<!-- Jenkins integration guide (jenkins-webhook-setup.md) removed - Jenkins
+     was deleted, Tekton is the sole CI engine now. No equivalent Tekton
+     webhook setup guide exists yet - see issue #1660. -->
+<!-- TODO: verify Tekton equivalent for this workflow -->
 
 ### Testing
 
@@ -289,9 +283,9 @@ spec:
 
 ### Existing Files (Leveraged)
 
-- `jenkins-shared-library/vars/doraMetrics.groovy` (already exists)
-  - Jenkins webhook integration
-  - Functions: recordBuild, recordQualityGate, recordTestResults, recordIncident
+<!-- `jenkins-shared-library/vars/doraMetrics.groovy` removed along with
+     Jenkins - no Tekton equivalent exists yet, see issue #1660. -->
+<!-- TODO: verify Tekton equivalent for this workflow -->
 
 ## Next Steps
 
@@ -320,17 +314,15 @@ spec:
 
 ### For Developers
 
-**Jenkins pipelines automatically emit DORA events** if using:
-
-- Golden Path pipelines (automatic)
-- Shared library with `@Library('fawkes-pipeline-library')` (manual calls)
-
-**No action required** for most developers - webhooks are transparent.
+**Tekton PipelineRuns will automatically emit DORA events** once the
+EventListener/webhook mechanism is built (issue #1660). Until then, no CI
+event emission happens.
+<!-- TODO: verify Tekton equivalent for this workflow -->
 
 ## Success Criteria Met
 
 ✅ **GitHub webhooks configured (commits)** - Configuration and documentation complete
-✅ **Jenkins webhooks configured (builds)** - Integration via doraMetrics.groovy library
+🚧 **Tekton webhooks configured (builds)** - Not yet implemented, see issue #1660
 ✅ **ArgoCD webhooks configured (deployments)** - ArgoCD notifications configured
 ✅ **Test webhooks firing correctly** - Test script and BDD tests created
 
@@ -341,7 +333,7 @@ spec:
 ```promql
 # Webhook requests
 devlake_webhook_requests_total{source="github"}
-devlake_webhook_requests_total{source="jenkins"}
+devlake_webhook_requests_total{source="tekton"}
 devlake_webhook_requests_total{source="argocd"}
 
 # Webhook errors

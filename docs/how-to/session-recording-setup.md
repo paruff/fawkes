@@ -185,7 +185,7 @@ tracker.setMetadata("session_type", "usability_test");
 Similar configuration can be added to:
 
 - Grafana dashboards
-- Jenkins UI
+- Tekton Dashboard
 - Custom applications
 
 See OpenReplay documentation for framework-specific guides.

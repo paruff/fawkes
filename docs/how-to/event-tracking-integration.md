@@ -157,7 +157,7 @@ function PipelineCard({ pipelineId }: { pipelineId: string }) {
     });
 
     try {
-      await triggerJenkinsBuild(pipelineId);
+      await triggerTektonPipelineRun(pipelineId);
 
       trackPredefined(PredefinedEvents.BUILD_COMPLETE, {
         pipelineId,

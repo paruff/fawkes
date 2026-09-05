@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Apache DevLake is the DORA Metrics Collection Service for the Fawkes platform. It automates the collection, calculation, and visualization of the five DORA metrics from multiple data sources (GitHub, ArgoCD, Jenkins, and observability systems).
+Apache DevLake is the DORA Metrics Collection Service for the Fawkes platform. It automates the collection, calculation, and visualization of the five DORA metrics from multiple data sources (GitHub, ArgoCD, Tekton, and observability systems).
 
 ## Key Features
 
-- **Automated Collection**: Pull data from GitHub, Jenkins, ArgoCD, and incident management systems
+- **Automated Collection**: Pull data from GitHub, Tekton, ArgoCD, and incident management systems
 - **Five DORA Metrics**: Deployment Frequency, Lead Time for Changes, Change Failure Rate, MTTR, Operational Performance
 - **REST & GraphQL APIs**: Query metrics programmatically
 - **Grafana Dashboards**: Pre-built dashboards for DORA visualization
@@ -19,13 +19,13 @@ Apache DevLake is the DORA Metrics Collection Service for the Fawkes platform. I
 
 DevLake follows a three-layer architecture:
 
-1. **Data Collection Layer**: Plugins for GitHub, ArgoCD, Jenkins, webhooks
+1. **Data Collection Layer**: Plugins for GitHub, ArgoCD, webhooks (Tekton CI events)
 2. **Processing Layer**: Data transformation, DORA metric calculation
 3. **API Layer**: REST/GraphQL APIs, Prometheus metrics endpoint
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  Data Sources (GitHub, ArgoCD, Jenkins, Incidents)     │
+│  Data Sources (GitHub, ArgoCD, Tekton, Incidents)      │
 └───────────────────────┬─────────────────────────────────┘
                         │
                         ▼
@@ -163,14 +163,15 @@ scope:
 - Lead time (commit → sync completion)
 - Change failure rate (failed syncs)
 
-**Important**: In Fawkes GitOps architecture, ArgoCD is the source of truth for deployments, not Jenkins.
+**Important**: In Fawkes GitOps architecture, ArgoCD is the source of truth for deployments, not the CI pipeline.
 
-### 3. Jenkins (CI Metrics)
+### 3. Tekton (CI Metrics)
 
 ```yaml
 # Configured in: config/data-sources.yaml
-plugin: jenkins
-endpoint: http://jenkins.fawkes.svc
+plugin: webhook
+endpoint: /api/plugins/webhook/1/cicd
+source: tekton
 scope:
   - builds
   - pipelines
@@ -184,7 +185,9 @@ scope:
 - Quality gate pass rate
 - Test flakiness
 
-**Note**: Jenkins provides CI metrics, not deployment metrics.
+**Note**: Tekton provides CI metrics, not deployment metrics. DevLake has no
+native Tekton plugin, so events arrive via the webhook connection.
+<!-- TODO: verify Tekton equivalent for this workflow -->
 
 ### 4. Webhook (Incidents for MTTR)
 
@@ -388,7 +391,7 @@ DevLake uses MySQL 8.0 with InnoDB engine.
 
 **Key Tables**:
 
-- `deployments`: ArgoCD sync events, Jenkins deployments
+- `deployments`: ArgoCD sync events
 - `commits`: Git commit data from GitHub
 - `incidents`: Production incidents for MTTR
 - `cicd_deployments`: Links deployments to commits

@@ -63,7 +63,7 @@ The following how-to guides help you accomplish specific tasks with Fawkes.
 | ------------------------------------------------------------------ | ------------------------------------------------ | -------------- |
 | [Debug Buildpack Failures](development/debug-buildpack-failure.md) | Troubleshoot Cloud Native Buildpack build errors | ✅ Available   |
 | Set Up Local Development                                           | Configure local Fawkes environment               | 🚧 Coming soon |
-| Create Custom Pipeline                                             | Build Jenkins pipeline for your project          | 🚧 Coming soon |
+| Create Custom Pipeline                                             | Build Tekton pipeline for your project           | 🚧 Coming soon |
 
 ## How to Use These Guides
 

@@ -81,7 +81,7 @@ This guide covers deploying Backstage Developer Portal with PostgreSQL backend t
 
 - GitHub OAuth for authentication
 - GitHub API for repository discovery
-- Jenkins for CI/CD status
+- Tekton for CI/CD status
 - ArgoCD for deployment status
 - Kubernetes for resource monitoring
 - Prometheus for metrics
@@ -96,7 +96,7 @@ This guide covers deploying Backstage Developer Portal with PostgreSQL backend t
 
 - Platform system and domain definitions
 - Platform team group
-- Core components (Backstage, ArgoCD, Jenkins, Prometheus, Grafana, SonarQube)
+- Core components (Backstage, ArgoCD, Tekton, Prometheus, Grafana, SonarQube)
 - PostgreSQL database resource
 - Software template locations
 
@@ -179,7 +179,6 @@ vim platform/apps/backstage/secrets.yaml
 # Update:
 # - GitHub personal access token (for repo integration)
 # - ArgoCD credentials (optional)
-# - Jenkins credentials (optional)
 ```
 
 **Note**: GitHub OAuth credentials (client-id and client-secret) should already be configured from Step 0.
@@ -236,7 +235,7 @@ Expected catalog entities:
 - System: fawkes-platform
 - Domain: platform-engineering
 - Group: platform-team
-- Components: backstage, argocd, jenkins, prometheus, grafana, sonarqube
+- Components: backstage, argocd, tekton, prometheus, grafana, sonarqube
 - Resource: db-backstage-dev
 - Templates: python-service, java-service, nodejs-service
 

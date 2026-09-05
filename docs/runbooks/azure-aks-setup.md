@@ -192,7 +192,7 @@ Run the cost estimation script:
 
 **User Node Pool**:
 
-- Purpose: Application workloads (Backstage, Jenkins, Focalboard, etc.)
+- Purpose: Application workloads (Backstage, Tekton, Focalboard, etc.)
 - VM Size: Standard_D4s_v3 (4 vCPU, 16 GB RAM)
 - Node Count: 2-10 (auto-scaling enabled)
 - OS Disk: 128 GB Premium SSD

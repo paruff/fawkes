@@ -24,9 +24,9 @@ The DORA Metrics Service uses MySQL 8.0 as its primary data store. DevLake creat
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                      │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐    │
-│  │  _raw_github_   │  │  _raw_jenkins_  │  │  _raw_argocd_   │    │
-│  │  repos          │  │  builds         │  │  applications   │    │
-│  │  commits        │  │  jobs           │  │  syncs          │    │
+│  │  _raw_github_   │  │  _raw_webhook_  │  │  _raw_argocd_   │    │
+│  │  repos          │  │  (Tekton CI     │  │  applications   │    │
+│  │  commits        │  │   events)       │  │  syncs          │    │
 │  │  pull_requests  │  │  test_results   │  │  app_status     │    │
 │  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘    │
 │           │                    │                     │              │
@@ -70,7 +70,7 @@ The DORA Metrics Service uses MySQL 8.0 as its primary data store. DevLake creat
 
 ### 1. `deployments` Table
 
-Stores deployment events from ArgoCD (primary source) and Jenkins.
+Stores deployment events from ArgoCD (primary source) and Tekton.
 
 ```sql
 CREATE TABLE `deployments` (
@@ -104,7 +104,7 @@ CREATE TABLE `deployments` (
 
 **Key Fields**:
 
-- `id`: Unique deployment identifier (ArgoCD sync ID or Jenkins build ID)
+- `id`: Unique deployment identifier (ArgoCD sync ID or Tekton PipelineRun ID)
 - `cicd_scope_id`: Links to the project/service scope
 - `result`: Deployment result (`SUCCESS`, `FAILURE`, `ABORTED`)
 - `environment`: Target environment (`production`, `staging`, `dev`)

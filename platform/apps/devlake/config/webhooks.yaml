@@ -22,11 +22,11 @@
 # DevLake Webhooks Configuration
 # ============================================================
 # This file configures webhook endpoints for DORA metrics collection
-# from GitHub, Jenkins, and ArgoCD
+# from GitHub, Tekton, and ArgoCD
 #
 # Webhooks enable real-time event ingestion for:
 # - Commits (GitHub) → Lead time calculation
-# - Builds (Jenkins) → Build success rate, rework tracking
+# - Builds (Tekton) → Build success rate, rework tracking
 # - Deployments (ArgoCD) → Deployment frequency, CFR
 # - Incidents (Observability) → MTTR calculation
 # ============================================================
@@ -58,16 +58,16 @@ data:
           }
         },
         {
-          "name": "jenkins-builds",
+          "name": "tekton-builds",
           "endpoint": "/api/plugins/webhook/1/cicd",
-          "description": "Jenkins webhook for build and CI events",
-          "source": "jenkins",
+          "description": "Tekton webhook for build and CI events",
+          "source": "tekton",
           "enabled": true,
           "events": ["build_complete", "test_results", "quality_gate"],
           "validation": {
             "type": "none"
           },
-          "note": "Jenkins uses doraMetrics.groovy shared library to send events"
+          "note": "TODO: verify Tekton equivalent for this workflow - mechanism for Tekton Pipelines to emit DORA events to this endpoint is still being built, see issue #1660"
         },
         {
           "name": "argocd-deployments",
@@ -182,14 +182,17 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
-    # Allow from Jenkins
+    # Allow from Tekton
+    # TODO: verify Tekton equivalent for this workflow — pod selector for the
+    # Tekton component that will emit DORA events is still being built, see
+    # issue #1660
     - from:
         - namespaceSelector:
             matchLabels:
               name: fawkes
           podSelector:
             matchLabels:
-              app.kubernetes.io/name: jenkins
+              app.kubernetes.io/name: tekton
       ports:
         - protocol: TCP
           port: 8080

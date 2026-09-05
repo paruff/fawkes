@@ -446,7 +446,7 @@ File: `docs/research/data/processed/usability-tests/YYYY-MM-DD-{persona}-{featur
 
 - **Role**: [e.g., Senior Platform Engineer]
 - **Experience**: [e.g., 5 years DevOps, 1 year with platform]
-- **Tech Stack**: [e.g., Java, Kubernetes, Jenkins]
+- **Tech Stack**: [e.g., Java, Kubernetes, Tekton]
 
 ## Task Results
 

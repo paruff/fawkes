@@ -87,36 +87,6 @@ spec:
           targetLabel: service_name
 ---
 # ============================================================================
-# ServiceMonitor for Jenkins Metrics
-# ============================================================================
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: jenkins-metrics
-  namespace: monitoring
-  labels:
-    app: jenkins
-    prometheus: kube-prometheus
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: jenkins
-  namespaceSelector:
-    matchNames:
-      - fawkes
-  endpoints:
-    - port: http
-      interval: 60s
-      path: /prometheus
-      relabelings:
-        - sourceLabels: [__meta_kubernetes_namespace]
-          targetLabel: namespace
-        - sourceLabels: [__meta_kubernetes_pod_name]
-          targetLabel: pod_name
-        - sourceLabels: [__meta_kubernetes_service_name]
-          targetLabel: service_name
----
-# ============================================================================
 # ServiceMonitor for SonarQube Metrics
 # ============================================================================
 apiVersion: monitoring.coreos.com/v1

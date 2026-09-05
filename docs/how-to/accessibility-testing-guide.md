@@ -145,32 +145,13 @@ Accessibility tests run automatically on:
 
 **Workflow:** `.github/workflows/accessibility-testing.yml`
 
-### Jenkins Pipeline
+### Tekton Pipeline
 
-For services using the Golden Path pipeline, add accessibility testing:
+<!-- TODO: verify Tekton equivalent for this workflow -->
 
-```groovy
-@Library('fawkes-pipeline-library') _
-
-goldenPathPipeline {
-    appName = 'my-service'
-    language = 'node'
-    // ... other config
-}
-
-// Add accessibility stage after unit tests
-stage('Accessibility Tests') {
-    steps {
-        accessibilityTest {
-            runAxeCore = true
-            runLighthouse = true
-            wcagLevel = 'AA'
-            failOnViolations = true
-            lighthouseScoreThreshold = 90
-        }
-    }
-}
-```
+For services using the Golden Path pipeline, add an accessibility-testing
+`Task` (running axe-core and Lighthouse, WCAG AA, failing on violations)
+after the unit-test `Task` in the Pipeline definition.
 
 ### Quality Gates
 
@@ -435,13 +416,13 @@ wcag_aa_compliance_status
 4. Ensure Node version is compatible
 5. Re-run workflow after fixes
 
-### Jenkins Pipeline Hanging
+### Tekton Pipeline Hanging
 
 **Cause**: Lighthouse might be waiting for user input or timing out.
 
 **Solution**:
 
-1. Check Jenkins console output
+1. Check the TaskRun logs (`tkn taskrun logs <name>` or `kubectl logs`)
 2. Increase timeout in `lighthouserc.json`:
    ```json
    {
@@ -452,7 +433,7 @@ wcag_aa_compliance_status
      }
    }
    ```
-3. Use headless mode in Jenkins agent
+3. Use a headless-capable Task image
 
 ## Resources
 

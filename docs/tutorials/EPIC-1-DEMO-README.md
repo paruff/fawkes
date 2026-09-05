@@ -29,7 +29,7 @@ The recording script and checklist have been prepared. The video is ready to be 
 - Introduction & Platform Overview (3 min)
 - Developer Portal - Backstage (5 min)
 - GitOps with ArgoCD (4 min)
-- CI/CD with Jenkins (5 min)
+- CI/CD with Tekton (5 min)
 - Security Scanning (3 min)
 - Observability Stack (3 min)
 - DORA Metrics Dashboard (5 min)
@@ -71,7 +71,7 @@ The recording script and checklist have been prepared. The video is ready to be 
 
    ```bash
    # Ensure all pods are running
-   kubectl get pods -A | grep -E 'argocd|backstage|jenkins|prometheus|grafana'
+   kubectl get pods -A | grep -E 'argocd|backstage|tekton|prometheus|grafana'
 
    # Verify all ingress routes
    kubectl get ingress -A
@@ -118,7 +118,7 @@ The Epic 1 demo video provides a comprehensive walkthrough of:
 - **Infrastructure**: 4-node Kubernetes cluster
 - **Developer Portal**: Backstage with service catalog
 - **GitOps**: ArgoCD for declarative deployments
-- **CI/CD**: Jenkins with golden path pipelines
+- **CI/CD**: Tekton with golden path pipelines
 - **Security**: SonarQube, Trivy, Vault, Kyverno
 - **Observability**: Prometheus, Grafana, OpenTelemetry
 - **Registry**: Harbor with image scanning
@@ -199,7 +199,7 @@ From Issue #37: Create Epic 1 demo video walkthrough
 
 - All Epic 1 components deployed and healthy
 - Sample applications deployed (for metrics data)
-- Recent pipeline runs (for Jenkins history)
+- Recent pipeline runs (for Tekton PipelineRun history)
 - DORA metrics populated (requires previous deployments)
 - All services accessible via ingress
 

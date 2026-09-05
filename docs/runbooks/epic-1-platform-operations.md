@@ -26,7 +26,7 @@ This runbook provides operational procedures for the Epic 1 platform components,
 - **Infrastructure**: 4-node Kubernetes cluster
 - **GitOps**: ArgoCD
 - **Developer Portal**: Backstage
-- **CI/CD**: Jenkins
+- **CI/CD**: Tekton
 - **Security**: SonarQube, Trivy, Vault, Kyverno
 - **Observability**: Prometheus, Grafana, OpenTelemetry, Fluent Bit
 - **Registry**: Harbor
@@ -41,13 +41,13 @@ This runbook provides operational procedures for the Epic 1 platform components,
 
 ```bash
 # Check all platform namespaces
-kubectl get namespaces | grep -E 'argocd|backstage|jenkins|sonarqube|prometheus|grafana|harbor|devlake|vault|kyverno'
+kubectl get namespaces | grep -E 'argocd|backstage|tekton|sonarqube|prometheus|grafana|harbor|devlake|vault|kyverno'
 
 # Check pod status across all platform components
-kubectl get pods -A | grep -E 'argocd|backstage|jenkins|sonarqube|prometheus|grafana|harbor|devlake|vault|kyverno'
+kubectl get pods -A | grep -E 'argocd|backstage|tekton|sonarqube|prometheus|grafana|harbor|devlake|vault|kyverno'
 
 # Check all critical services
-kubectl get svc -A | grep -E 'argocd-server|backstage|jenkins|sonarqube|prometheus|grafana|harbor|devlake|vault'
+kubectl get svc -A | grep -E 'argocd-server|backstage|tekton|sonarqube|prometheus|grafana|harbor|devlake|vault'
 ```
 
 ### Kubernetes Cluster
@@ -104,22 +104,19 @@ kubectl port-forward svc/backstage -n backstage 7007:7007
 # Navigate to http://localhost:7007
 ```
 
-### Jenkins (CI/CD)
+### Tekton (CI/CD)
 
 ```bash
-# Check Jenkins health
-kubectl get pods -n jenkins
-kubectl logs -n jenkins -l app.kubernetes.io/component=jenkins-controller --tail=50
+# Check Tekton controller health
+kubectl get pods -n tekton-pipelines
+kubectl logs -n tekton-pipelines -l app=tekton-pipelines-controller --tail=50
 
-# Check Jenkins agents
-kubectl get pods -n jenkins -l jenkins/label
+# Check active PipelineRuns/TaskRuns (ephemeral pods, run in the fawkes namespace)
+kubectl get pipelineruns -n fawkes
+kubectl get pods -n fawkes -l tekton.dev/pipelineRun
 
-# Get Jenkins admin password
-kubectl get secret -n jenkins jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode
-
-# Access Jenkins UI
-kubectl port-forward svc/jenkins -n jenkins 8080:8080
-# Navigate to http://localhost:8080
+# View a PipelineRun via the Tekton CLI
+tkn pipelinerun logs <pipelinerun-name> -n fawkes -f
 ```
 
 ### SonarQube (Code Quality)
@@ -235,8 +232,8 @@ kubectl rollout restart deployment argocd-repo-server -n argocd
 # Restart Backstage
 kubectl rollout restart deployment backstage -n backstage
 
-# Restart Jenkins
-kubectl rollout restart deployment jenkins -n jenkins
+# Restart Tekton controller
+kubectl rollout restart deployment tekton-pipelines-controller -n tekton-pipelines
 
 # Restart SonarQube
 kubectl rollout restart deployment sonarqube-sonarqube -n sonarqube
@@ -254,8 +251,8 @@ kubectl rollout restart statefulset prometheus-kube-prometheus-prometheus -n pro
 # Scale Backstage
 kubectl scale deployment backstage -n backstage --replicas=3
 
-# Scale Jenkins agents (not the controller)
-# Note: Jenkins agents are ephemeral and scale automatically
+# Scale Tekton TaskRun pods
+# Note: Tekton TaskRun/PipelineRun pods are ephemeral and scale automatically
 
 # Scale Grafana
 kubectl scale deployment grafana -n grafana --replicas=2
@@ -275,9 +272,10 @@ kubectl rollout restart deployment argocd-server -n argocd
 kubectl edit configmap backstage-app-config -n backstage
 kubectl rollout restart deployment backstage -n backstage
 
-# Update Jenkins configuration (JCasC)
-kubectl edit configmap jenkins-casc-config -n jenkins
-kubectl rollout restart deployment jenkins -n jenkins
+# Update Tekton Pipeline/Task definitions
+# Tekton has no config-as-code layer distinct from its Pipeline/Task YAML;
+# commit changes under platform/apps/tekton/ to Git and let ArgoCD sync them
+argocd app sync tekton
 ```
 
 ### Checking Logs
@@ -447,34 +445,35 @@ argocd app sync <app-name> --prune
 argocd app get <app-name> --hard-refresh
 ```
 
-### Jenkins Build Failures
+### Tekton Build Failures
 
 **Symptoms**: Builds failing consistently
 
 **Diagnosis**:
 
 ```bash
-# Check Jenkins agent pods
-kubectl get pods -n jenkins -l jenkins/label
+# Check TaskRun/PipelineRun pods
+kubectl get pods -n fawkes -l tekton.dev/pipelineRun
 
-# Check Jenkins logs
-kubectl logs -n jenkins -l app.kubernetes.io/component=jenkins-controller --tail=200
+# Check Tekton controller logs
+kubectl logs -n tekton-pipelines -l app=tekton-pipelines-controller --tail=200
 
-# Access Jenkins and check build console output
+# Check the failing PipelineRun/TaskRun output
+tkn pipelinerun logs <pipelinerun-name> -n fawkes
 ```
 
 **Common Causes**:
 
-1. **Agent Connection Issues**: Agents can't connect to controller
-   **Solution**: Check network policies and service endpoints
+1. **TaskRun Scheduling Issues**: TaskRun pods can't be scheduled
+   **Solution**: Check node resources, network policies, and service endpoints
 
-2. **Insufficient Agent Resources**: Agents running out of memory/CPU
+2. **Insufficient TaskRun Resources**: TaskRun pods running out of memory/CPU
 
    ```bash
-   kubectl top pods -n jenkins -l jenkins/label
+   kubectl top pods -n fawkes -l tekton.dev/pipelineRun
    ```
 
-   **Solution**: Increase agent resource requests/limits
+   **Solution**: Increase Task resource requests/limits
 
 3. **Quality Gate Failures**: SonarQube or security scan blocking build
    **Solution**: Review scan results and fix issues or adjust quality gates
@@ -611,15 +610,14 @@ argocd app list -o yaml > argocd-apps-backup-$(date +%Y%m%d).yaml
 kubectl get secrets -n argocd -o yaml > argocd-secrets-backup-$(date +%Y%m%d).yaml
 ```
 
-#### Backup Jenkins Configuration
+#### Backup Tekton Configuration
+
+Tekton Pipeline and Task definitions live entirely as YAML under
+`platform/apps/tekton/` in Git — no separate backup is needed beyond the Git
+history itself. PipelineRun/TaskRun records can optionally be exported:
 
 ```bash
-# Export Jenkins configuration (JCasC)
-kubectl get configmap jenkins-casc-config -n jenkins -o yaml > jenkins-config-backup-$(date +%Y%m%d).yaml
-
-# Backup Jenkins jobs (if not in Git)
-kubectl exec -n jenkins jenkins-0 -- tar czf /tmp/jenkins-jobs.tar.gz /var/jenkins_home/jobs
-kubectl cp jenkins/jenkins-0:/tmp/jenkins-jobs.tar.gz ./jenkins-jobs-backup-$(date +%Y%m%d).tar.gz
+kubectl get pipelineruns -n fawkes -o yaml > tekton-pipelineruns-backup-$(date +%Y%m%d).yaml
 ```
 
 ### Update Procedures
@@ -695,7 +693,7 @@ kubectl get pods -A | grep -v Running
 # Check critical services
 kubectl get pods -n argocd
 kubectl get pods -n backstage
-kubectl get pods -n jenkins
+kubectl get pods -n tekton-pipelines
 ```
 
 #### Step 2: Gather Information
@@ -803,7 +801,7 @@ echo
 
 # Critical namespaces
 echo "--- Critical Namespaces ---"
-kubectl get namespaces | grep -E 'argocd|backstage|jenkins|prometheus|grafana|vault'
+kubectl get namespaces | grep -E 'argocd|backstage|tekton|prometheus|grafana|vault'
 echo
 
 # Pod health

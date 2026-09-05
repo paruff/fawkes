@@ -31,7 +31,7 @@ ArgoCD sync waves ensure proper ordering:
 | -10  | Networking | Ingress controller, cert-manager    |
 | -5   | Operators  | CloudNativePG, External Secrets     |
 | -4   | Databases  | PostgreSQL clusters                 |
-| 0    | Core Apps  | Jenkins, SonarQube, Harbor          |
+| 0    | Core Apps  | Tekton, SonarQube, Harbor           |
 | 5    | Portal     | Backstage, Grafana                  |
 | 10   | Additional | Mattermost, Focalboard, Eclipse Che |
 

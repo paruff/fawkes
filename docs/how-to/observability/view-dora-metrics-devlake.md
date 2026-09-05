@@ -14,7 +14,7 @@ Access and analyze DORA (DevOps Research and Assessment) metrics for your team t
 Before you begin, ensure you have:
 
 - [ ] DevLake deployed and configured (see [DORA Metrics Implementation](../../playbooks/dora-metrics-implementation.md))
-- [ ] Your project connected to DevLake data sources (Git, Jenkins, ArgoCD)
+- [ ] Your project connected to DevLake data sources (Git, Tekton, ArgoCD)
 - [ ] Access to Grafana UI (`https://grafana.127.0.0.1.nip.io`)
 - [ ] At least 7 days of deployment data for meaningful metrics
 
@@ -253,7 +253,7 @@ Click on a lead time data point to see:
 - Test execution time
 - Deployment start/end time
 - Link to ArgoCD application
-- Link to Jenkins pipeline
+- Link to Tekton PipelineRun
 
 #### Investigate Failed Deployments
 
@@ -423,8 +423,8 @@ If your team is not at Elite level, focus on:
 # Check DevLake data source connections
 kubectl get configmap -n devlake devlake-config -o yaml
 
-# Verify Jenkins connection
-curl -u admin:password http://jenkins.127.0.0.1.nip.io/api/json
+# Verify Tekton webhook connectivity
+curl -X POST http://devlake.fawkes-devlake.svc:8080/api/plugins/webhook/1/cicd -d '{}'
 
 # Verify ArgoCD connection
 argocd app list
@@ -442,7 +442,7 @@ argocd app list
    ```bash
    kubectl get application -n argocd -o yaml | grep -A 5 labels
    ```
-2. Ensure Jenkins pipelines emit DORA events
+2. Ensure Tekton PipelineRuns emit DORA events <!-- TODO: verify Tekton equivalent for this workflow -->
 3. Check DevLake collection logs for errors:
    ```bash
    kubectl logs -n devlake -l app=devlake-collector | grep ERROR

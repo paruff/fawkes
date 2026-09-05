@@ -26,7 +26,7 @@ the error message shows.
 - `.github/workflows/` — GitHub Actions workflows (14 total, mix of direct
   and reusable)
 - `.github/actions/` — Composite actions called by workflows
-- `jenkins-shared-library/` — Groovy shared library for DORA metrics
+- `platform/apps/tekton/` — Tekton Pipelines/Tasks (sole CI engine)
 - `infra/` — Terraform modules tested by `terraform-tests.yml`
 - `services/` — Python FastAPI services with pytest
 - `.trunk/trunk.yaml` — Trunk-based linting and formatting
