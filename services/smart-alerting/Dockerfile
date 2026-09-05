@@ -2,9 +2,10 @@ FROM python:3.13.14-slim
 
 WORKDIR /app
 
-# Install dependencies
+# Install dependencies (pip upgrade fixes CVE-2026-13346, present in the base image's bundled pip)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy application
 COPY app/ ./app/

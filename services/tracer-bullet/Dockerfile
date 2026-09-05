@@ -22,6 +22,17 @@ WORKDIR /app
 COPY --from=builder /install /usr/local
 COPY app/ ./app/
 
+# The app never invokes pip at runtime (dependencies are already installed
+# above) - remove pip/setuptools/pkg_resources rather than patch them.
+# pip vendors its own copies of setuptools and msgpack internally
+# (pip/_vendor/), so upgrading pip doesn't fully clear their CVEs; the base
+# image's own bundled pip/setuptools carry known vulnerabilities
+# (CVE-2026-13346, CVE-2025-47273, CVE-2026-59890, GHSA-6v7p-g79w-8964)
+# that are moot once the tooling that ships them is gone.
+RUN rm -rf /usr/local/lib/python3.13/site-packages/pip* \
+  /usr/local/lib/python3.13/site-packages/setuptools* \
+  /usr/local/lib/python3.13/site-packages/pkg_resources
+
 RUN chown -R appuser:appuser /app
 
 USER appuser
