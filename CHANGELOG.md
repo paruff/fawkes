@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.3.35](https://github.com/paruff/fawkes/compare/v0.3.34...v0.3.35) (2026-09-05)
 
 
+### Added
+
+* **golden-path:** add Security, Resources, and DevEx verification planes ([#1777](https://github.com/paruff/fawkes/issues/1777)) ([7503ecd](https://github.com/paruff/fawkes/commit/7503ecd9f6072e7cfed723c7518448ae7c89d81b))
+
+
 ### Docs
 
 * add golden path verification planes reference ([#1774](https://github.com/paruff/fawkes/issues/1774)) ([1b303a6](https://github.com/paruff/fawkes/commit/1b303a6816d9c3a5b65dbd4b3842f0478c5d1a22))
