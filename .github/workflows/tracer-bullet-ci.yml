@@ -214,8 +214,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update image tag in manifest
+        env:
+          NEW_TAG: ${{ needs.build.outputs.image_tag }}
         run: |
-          NEW_TAG="${{ needs.build.outputs.image_tag }}"
           echo "Updating image tag to: ${NEW_TAG}"
           sed -i "s|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${NEW_TAG}|g" \
             ${MANIFEST_DIR}/deployment.yaml
@@ -224,16 +225,31 @@ jobs:
             ${MANIFEST_DIR}/deployment.yaml
 
       - name: Commit and push
+        env:
+          NEW_TAG: ${{ needs.build.outputs.image_tag }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add ${MANIFEST_DIR}/deployment.yaml
           if git diff --staged --quiet; then
             echo "No changes to commit"
-          else
-            git commit -m "chore(tracer-bullet): update image tag to ${NEW_TAG}"
-            git push
+            exit 0
           fi
+          git commit -m "chore(tracer-bullet): update image tag to ${NEW_TAG}"
+          # main moves fast in this repo (release-please auto-commits, other
+          # services' own GitOps-update jobs) - retry with rebase instead of
+          # failing outright on a simple non-fast-forward race.
+          for attempt in 1 2 3 4 5; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push rejected (attempt ${attempt}/5), rebasing onto latest main..."
+            git fetch origin main
+            git rebase origin/main
+            sleep $((attempt * 3))
+          done
+          echo "::error::Failed to push GitOps update after 5 attempts"
+          exit 1
 
       - name: DORA job finish
         if: always()

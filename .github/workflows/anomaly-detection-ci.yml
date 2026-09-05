@@ -1,0 +1,29 @@
+name: Anomaly Detection CI/CD
+
+# Extends the build->scan->sign->SBOM->GitOps-promote pattern (proven on
+# tracer-bullet, dora-metrics, smart-alerting) to anomaly-detection via
+# the shared reusable-python-service-golden-path.yml workflow (#1751).
+# Replaces service-python-tests.yml's generic lint-only coverage for this
+# one service (see the exclusion added there).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "services/anomaly-detection/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "services/anomaly-detection/**"
+
+jobs:
+  golden-path:
+    uses: ./.github/workflows/reusable-python-service-golden-path.yml
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+      security-events: write
+    with:
+      service-name: anomaly-detection
+    secrets: inherit
