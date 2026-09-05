@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.29](https://github.com/paruff/fawkes/compare/v0.3.28...v0.3.29) (2026-09-05)
+
+
+### Fixed
+
+* **infra:** remove hardcoded storageClass: standard, fix ArgoCD namespace watch ([#1759](https://github.com/paruff/fawkes/issues/1759)) ([37b6bce](https://github.com/paruff/fawkes/commit/37b6bce327b085f432d2dff4ffe6d5197011cf08))
+
 ## [0.3.28](https://github.com/paruff/fawkes/compare/v0.3.27...v0.3.28) (2026-09-05)
 
 
