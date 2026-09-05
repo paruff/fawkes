@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.41](https://github.com/paruff/fawkes/compare/v0.3.40...v0.3.41) (2026-09-05)
+
+
+### Fixed
+
+* **security:** resolve the actual Trivy CVE blocking the golden path ([#1789](https://github.com/paruff/fawkes/issues/1789)) ([caf8ba4](https://github.com/paruff/fawkes/commit/caf8ba4588ef859140fbc0b89ab38bdb8ed255bd))
+
 ## [0.3.40](https://github.com/paruff/fawkes/compare/v0.3.39...v0.3.40) (2026-09-05)
 
 
