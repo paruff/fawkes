@@ -82,12 +82,16 @@ generate_traffic() {
 
 check_tempo_traces() {
   log_info "Checking Tempo for recent tracer-bullet traces..."
-  kubectl port-forward -n "$MONITORING_NAMESPACE" svc/tempo 3100:3100 &> /tmp/tempo-pf.log &
+  # NOTE: tempo's Service only exposes port 3100 (the chart's default
+  # query-API port), but this deployment overrides config.server.http_listen_port
+  # to 3200 without also exposing it on the Service - port-forward straight to
+  # the pod on 3200 instead (see tempo-application.yaml's `config:` override).
+  kubectl port-forward -n "$MONITORING_NAMESPACE" pod/tempo-0 3200:3200 &> /tmp/tempo-pf.log &
   PF_PID=$!
   sleep 3
 
   local resp
-  resp=$(curl -s --connect-timeout 5 "http://localhost:3100/api/search?tags=service.name%3D${SERVICE_NAME}&limit=5" 2> /dev/null || echo "")
+  resp=$(curl -s --connect-timeout 5 "http://localhost:3200/api/search?tags=service.name%3D${SERVICE_NAME}&limit=5" 2> /dev/null || echo "")
   kill "$PF_PID" &> /dev/null || true
   PF_PID=""
 
@@ -153,8 +157,15 @@ check_otel_collector_health() {
 
   local pod_name
   pod_name=$(echo "$pods_json" | jq -r '.items[0].metadata.name')
+  kubectl port-forward -n "$MONITORING_NAMESPACE" "pod/$pod_name" 13133:13133 &> /tmp/otel-health-pf.log &
+  PF_PID=$!
+  sleep 3
+
   local health_resp
-  health_resp=$(kubectl exec -n "$MONITORING_NAMESPACE" "$pod_name" -- wget -qO- http://localhost:13133 2> /dev/null || echo "")
+  health_resp=$(curl -s --connect-timeout 5 "http://localhost:13133" 2> /dev/null || echo "")
+  kill "$PF_PID" &> /dev/null || true
+  PF_PID=""
+
   if echo "$health_resp" | grep -qi "Server available"; then
     record_test "OTel Collector Health Endpoint" "PASS" "health_check extension reports available"
   else
