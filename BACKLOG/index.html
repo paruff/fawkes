@@ -5377,185 +5377,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#table-of-contents" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Table of Contents
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mvp-definition" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MVP Definition
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scoring-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scoring System
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mvp-wave-plan" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MVP Wave Plan
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#full-issue-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Full Issue Triage
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Full Issue Triage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#wave-0-ci-quality-gates-prerequisite" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Wave 0 — CI Quality Gates (Prerequisite)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#wave-1-tracer-bullet-core" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Wave 1 — Tracer Bullet Core
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#wave-2-observable-golden-path" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Wave 2 — Observable Golden Path
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#wave-3-self-service-gitops-polish" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Wave 3 — Self-Service &amp; GitOps Polish
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#post-mvp-jenkins-tekton-ci-migration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-MVP — Jenkins → Tekton CI Migration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#post-mvp-epic-3-discovery-ux" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-MVP — Epic 3 Discovery &amp; UX
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#post-mvp-remaining-epic-0" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-MVP — Remaining Epic 0
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gap-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GAP Issues
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#needs-closure-cruft" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Needs Closure Cruft
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#duplicates-to-close" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Duplicates to Close
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -5593,6 +5414,21 @@ Storage, not AWS; ArgoCD's GitOps reconciliation is live-verified.
 document is fully rewritten against the platform's actual state - see
 <code>docs/KNOWN_LIMITATIONS.md</code> and <code>reports/production-audit-2026-09.md</code> for
 further live-verified findings this document does not yet reflect.</p>
+<p><strong>Update (2026-09-05, #1751 Phase 3):</strong> this session root-caused and fixed
+the ArgoCD ApplicationSet auto-discovery colliding with hand-written
+Application manifests (3 directories excluded, 9 more tracked in #1772),
+a non-reproducible Trivy CI failure (a real vendored-pip CVE, not a
+flake), and a GitOps commit-push race — all blocking the "Hello World
+service... deployed via GitOps" row above from actually reaching
+<code>Running</code> on a live cluster. The build→scan→sign→SBOM→GitOps pattern
+(row "CI pipeline" / #85) is now piloted on 4 services (tracer-bullet,
+dora-metrics, smart-alerting, anomaly-detection); the other 13 still only
+get lint+test (#1792). New <code>docs/golden-path-verification-planes.md</code>
+defines 7 verification planes (Pipeline, GitOps, Observability, DORA,
+Security, Resources, DevEx) with a validation script each. BDD coverage
+for the "comprehensive BDD tests" row (#54) grew from 190→217 collected
+tests; 42 feature files still lack step definitions, prioritized in</p>
+<h1 id="1796-see-pr-1798-for-the-live-end-to-end-re-verification-run">1796. See PR #1798 for the live end-to-end re-verification run.</h1>
 </blockquote>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
