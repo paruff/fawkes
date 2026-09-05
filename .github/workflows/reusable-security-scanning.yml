@@ -28,6 +28,21 @@ on:
         required: false
         type: boolean
         default: true
+      image-ref:
+        description: "Container image ref (e.g. ghcr.io/org/app:tag) to scan instead of scan-path. When set, scan-type 'vulnerabilities' scans this image rather than the filesystem."
+        required: false
+        type: string
+        default: ""
+      ignore-unfixed:
+        description: "Ignore vulnerabilities with no available fix"
+        required: false
+        type: boolean
+        default: false
+      sarif-category:
+        description: "Category label for the uploaded SARIF results (distinguishes multiple scans in the same repo's Security tab)"
+        required: false
+        type: string
+        default: "trivy-filesystem"
 
 permissions:
   contents: read
@@ -58,7 +73,7 @@ jobs:
           GITLEAKS_ENABLE_SUMMARY: true
 
       - name: Run Trivy vulnerability scanner
-        if: inputs.scan-type == 'all' || inputs.scan-type == 'vulnerabilities'
+        if: (inputs.scan-type == 'all' || inputs.scan-type == 'vulnerabilities') && inputs.image-ref == ''
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: "fs"
@@ -67,13 +82,26 @@ jobs:
           output: "trivy-results.sarif"
           severity: ${{ inputs.severity-threshold }}
           exit-code: ${{ inputs.fail-on-critical && '1' || '0' }}
+          ignore-unfixed: ${{ inputs.ignore-unfixed }}
+
+      - name: Run Trivy image scanner
+        if: (inputs.scan-type == 'all' || inputs.scan-type == 'vulnerabilities') && inputs.image-ref != ''
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: "image"
+          image-ref: ${{ inputs.image-ref }}
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: ${{ inputs.severity-threshold }}
+          exit-code: ${{ inputs.fail-on-critical && '1' || '0' }}
+          ignore-unfixed: ${{ inputs.ignore-unfixed }}
 
       - name: Upload Trivy results to GitHub Security
         if: inputs.upload-sarif && (inputs.scan-type == 'all' || inputs.scan-type == 'vulnerabilities')
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: "trivy-results.sarif"
-          category: "trivy-filesystem"
+          category: ${{ inputs.sarif-category }}
 
       - name: Run Trivy for dependency scanning
         if: inputs.scan-type == 'all' || inputs.scan-type == 'dependencies'

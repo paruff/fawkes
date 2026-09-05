@@ -112,8 +112,7 @@ async def init_database():
 
         # Create tables if not exists
         async with db_pool.acquire() as conn:
-            await conn.execute(
-                """
+            await conn.execute("""
                 -- Survey links table
                 CREATE TABLE IF NOT EXISTS survey_links (
                     id SERIAL PRIMARY KEY,
@@ -158,8 +157,7 @@ async def init_database():
                 CREATE INDEX IF NOT EXISTS idx_survey_links_expires ON survey_links(expires_at);
                 CREATE INDEX IF NOT EXISTS idx_survey_responses_created ON survey_responses(created_at DESC);
                 CREATE INDEX IF NOT EXISTS idx_survey_responses_score_type ON survey_responses(score_type);
-            """
-            )
+            """)
             logger.info("✅ Database schema initialized")
     except Exception as e:
         logger.error(f"❌ Failed to connect to database: {e}")
