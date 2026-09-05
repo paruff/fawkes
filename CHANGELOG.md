@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.34](https://github.com/paruff/fawkes/compare/v0.3.33...v0.3.34) (2026-09-05)
+
+
+### Fixed
+
+* **ci:** pin Trivy to v0.74.0 in reusable-security-scanning.yml ([#1771](https://github.com/paruff/fawkes/issues/1771)) ([9ceee8b](https://github.com/paruff/fawkes/commit/9ceee8b52f7981f22891d9595c08b8a43254ba32))
+
 ## [0.3.33](https://github.com/paruff/fawkes/compare/v0.3.32...v0.3.33) (2026-09-05)
 
 
