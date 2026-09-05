@@ -25,11 +25,49 @@ workload. Each plane has its own `scripts/validate-golden-path-<plane>.sh` scrip
 | ------------------ | ------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ------------------------------ |
 | **Pipeline**      | The latest CI run actually built, scanned, SBOM'd, and signed a real image — not just that the workflow file exists | `scripts/validate-golden-path-pipeline.sh`        | Implemented                   |
 | **GitOps**        | ArgoCD's Application is Synced/Healthy and the live Deployment's image matches git HEAD          | `scripts/validate-golden-path-gitops.sh`          | Implemented                   |
-| **Observability** | Real traces reach Tempo and real metrics reach Prometheus for the service                        | `scripts/validate-golden-path-observability.sh`   | Implemented — needs extension (OpenSearch log correlation, OpenTelemetry Collector pipeline health) |
+| **Observability** | Real traces reach Tempo, real metrics reach Prometheus, the OpenTelemetry Collector is healthy, and OpenSearch (log backend) is reachable and green | `scripts/validate-golden-path-observability.sh`   | Implemented                   |
 | **DORA**          | Deployment-frequency/lead-time metrics for the service are visible and populated                 | `scripts/validate-golden-path-dora.sh`            | Implemented                   |
-| **Security**      | No unauthenticated write endpoints, no exposed secrets, image signature verifies, no unresolved CRITICAL/HIGH vulnerabilities | `scripts/validate-golden-path-security.sh`        | Planned                       |
-| **Resources**     | The workload's actual pod/CPU/memory/storage footprint is known and within budget; PostgreSQL (CloudNativePG) backing store is healthy and reachable | `scripts/validate-golden-path-resources.sh`       | Planned                       |
-| **DevEx**         | The service is discoverable and usable through the platform's developer-facing surface — Backstage catalog entry, TechDocs, scaffolder template | `scripts/validate-golden-path-devex.sh`           | Planned                       |
+| **Security**      | Live image signature verifies, pod securityContext is hardened, smart-alerting rejects unauthenticated alert-ingestion requests (AUD-2), no plaintext credential placeholders remain | `scripts/validate-golden-path-security.sh`        | Implemented — core checks. See below for planned additions (secrets management, policy, code analysis, network security) |
+| **Resources**     | Every golden-path container declares CPU/memory requests and limits, actual usage is known, PVCs are Bound, and the PostgreSQL (CloudNativePG) backing cluster is healthy | `scripts/validate-golden-path-resources.sh`       | Implemented — core checks. See below for planned additions (messaging, key-value, SSO) |
+| **DevEx**         | The service is discoverable and usable through the platform's developer-facing surface — catalog-info.yaml exists, Backstage is deployed, and the component is registered in its live catalog | `scripts/validate-golden-path-devex.sh`           | Implemented — core checks. See below for planned additions (CDE, chat, kanban) |
+
+### Planned additions
+
+Recorded here so scope is tracked before it's built — none of these have a script yet.
+Each row notes whether the underlying platform component already exists (a check-script
+task) or would need new platform infrastructure first (a bigger undertaking, out of scope
+for a quick follow-up).
+
+**Security plane:**
+
+| Addition | Existing platform component? |
+| -------- | ------------------------------ |
+| Secrets management (no secrets reachable outside Vault/Sealed Secrets/External Secrets) | Yes — `platform/apps/vault`, `sealed-secrets`, `external-secrets` |
+| Policy enforcement (Kyverno policies are actually enforced, not just installed) | Yes — `platform/apps/kyverno`, `platform/policies/generation-policies.yaml` |
+| Code analysis (SonarQube quality gate passes for the service) | Yes — `platform/apps/sonarqube-application.yaml` |
+| Network-based security (NetworkPolicies actually restrict traffic, not just exist) | Yes — e.g. `platform/apps/eclipse-che/network-policies.yaml`; golden-path services don't have their own yet |
+
+**Resources plane:**
+
+| Addition | Existing platform component? |
+| -------- | ------------------------------ |
+| Messaging (e.g. RabbitMQ) | **No** — not yet in `platform/apps/` |
+| Key-value store (e.g. Redis) | **No** — not yet in `platform/apps/` |
+| Single sign-on | **No** — not yet in `platform/apps/` |
+
+**DevEx plane:**
+
+| Addition | Existing platform component? |
+| -------- | ------------------------------ |
+| CDE (cloud development environment) | Yes — `platform/apps/eclipse-che` fills this role today |
+| Team chat | Yes — `platform/apps/mattermost` |
+| Kanban / project board | Yes — `platform/apps/focalboard` |
+
+The Resources-plane items have no existing platform component — verifying them means
+standing up new infrastructure first, not just writing a check script. Recommend scoping
+that as its own issue rather than folding it into #1751 Phase 3, which is specifically
+about proving the tracer-bullet/smart-alerting golden path, not building out new platform
+capabilities.
 
 ## Adding or changing a plane
 
