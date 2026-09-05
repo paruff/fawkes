@@ -1,6 +1,8 @@
 name: IDP E2E Tests
 
 on:
+  push:
+    branches: [main]
   pull_request:
   schedule:
     - cron: "0 */6 * * *" # Every 6 hours
@@ -122,6 +124,26 @@ jobs:
               kubectl -n fawkes rollout status deployment/friction-bot --timeout=300s
             fi
           fi
+
+      - name: Smoke-test /health on each deployed service
+        run: |
+          set -e
+          # Real HTTP checks against the in-cluster Service DNS name, not just
+          # rollout-status (a pod can be "Ready" per its own probe config while
+          # still returning something other than 200 to an external caller).
+          declare -a targets=(
+            "mcp-k8s-server.fawkes.svc.cluster.local:8080/healthz"
+            "friction-bot.fawkes.svc.cluster.local:8000/health"
+          )
+          i=0
+          for target in "${targets[@]}"; do
+            i=$((i + 1))
+            echo "Checking http://$target"
+            kubectl run health-check-$i --rm -i --restart=Never \
+              --namespace=fawkes --image=curlimages/curl:8.11.1 \
+              --command -- curl -sf -m 10 "http://$target"
+            echo "OK: $target"
+          done
 
       - name: Prepare reports directory
         run: |

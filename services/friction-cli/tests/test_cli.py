@@ -283,6 +283,7 @@ def test_config_init(mock_config_manager, mock_client_class, runner):
             "--author",
             "Test User",
         ],
+        input="n\n",  # "Do you have an API key?" prompt, since --api-key wasn't passed
     )
 
     assert result.exit_code == 0

@@ -1,7 +1,7 @@
 """Main FastAPI application for Insights service."""
 
-import os
 import logging
+import os
 from typing import List, Optional
 
 from fastapi import Depends, FastAPI, HTTPException, Query, status

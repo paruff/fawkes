@@ -131,30 +131,50 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Install Trivy
-        run: |
-          TRIVY_VERSION=v0.73.0
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin ${TRIVY_VERSION}
-
-      - name: Trivy scan
-        run: |
-          trivy image \
-            --exit-code 1 \
-            --severity CRITICAL,HIGH \
-            --ignore-unfixed \
-            --no-progress \
-            ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
-
       - name: DORA job finish
         if: always()
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
   # ==========================================================================
-  # Job 2b: Sign image + attach signed SBOM attestation (main only)
+  # Job 2a: Security scan the pushed image (main only)
+  # ==========================================================================
+  security-scan:
+    name: Security Scan
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    uses: ./.github/workflows/reusable-security-scanning.yml
+    permissions:
+      contents: read
+      security-events: write
+    with:
+      scan-type: vulnerabilities
+      image-ref: ghcr.io/paruff/tracer-bullet:${{ needs.build.outputs.image_tag }}
+      severity-threshold: "CRITICAL,HIGH"
+      fail-on-critical: true
+      ignore-unfixed: true
+      sarif-category: "trivy-image-tracer-bullet"
+
+  # ==========================================================================
+  # Job 2b: Generate downloadable SBOM artifact (main only)
+  # ==========================================================================
+  sbom:
+    name: Generate SBOM
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    uses: ./.github/workflows/reusable-sbom-generation.yml
+    permissions:
+      contents: read
+      packages: read
+    with:
+      image-name: tracer-bullet
+      image-tag: ${{ needs.build.outputs.image_tag }}
+
+  # ==========================================================================
+  # Job 2c: Sign image + attach signed SBOM attestation (main only)
   # ==========================================================================
   sign-and-attest:
     name: Sign & Attest
-    needs: build
+    needs: [build, security-scan]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     uses: ./.github/workflows/reusable-image-signing.yml
     permissions:
@@ -174,7 +194,7 @@ jobs:
     name: Update GitOps
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: [build, sign-and-attest]
+    needs: [build, security-scan, sbom, sign-and-attest]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: DORA job start
