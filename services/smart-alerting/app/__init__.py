@@ -1,3 +1,3 @@
 """Smart Alerting Service - Intelligent alert correlation and routing."""
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
