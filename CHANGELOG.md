@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.32](https://github.com/paruff/fawkes/compare/v0.3.31...v0.3.32) (2026-09-05)
+
+
+### Fixed
+
+* **gitops:** exclude golden-path apps from ApplicationSet auto-discovery ([#1767](https://github.com/paruff/fawkes/issues/1767)) ([7b35e09](https://github.com/paruff/fawkes/commit/7b35e097e2151464050ddc10431ededfd1781d77))
+
 ## [0.3.31](https://github.com/paruff/fawkes/compare/v0.3.30...v0.3.31) (2026-09-05)
 
 
