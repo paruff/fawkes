@@ -13,7 +13,7 @@ def test_root():
     assert response.status_code == 200
     data = response.json()
     assert data["message"] == "Hello from the tracer bullet!"
-    assert data["version"] == "0.1.0"
+    assert data["version"] == "0.1.1"
 
 
 @pytest.mark.unit
@@ -36,7 +36,7 @@ def test_info():
     assert response.status_code == 200
     data = response.json()
     assert data["service"] == "tracer-bullet"
-    assert data["version"] == "0.1.0"
+    assert data["version"] == "0.1.1"
 
 
 @pytest.mark.unit
