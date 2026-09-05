@@ -47,6 +47,17 @@ spec:
           # Each directory represents a platform component
           - path: platform/apps/*
             exclude: false
+          # Excluded: these directories ship their own hand-written Application
+          # manifest with the same name as the directory. Without this exclude,
+          # this ApplicationSet's auto-generated Application competes with the
+          # hand-written one over the same destination resources, causing
+          # continuous sync/prune churn (see #1751 Phase 3 golden-path verification).
+          - path: platform/apps/tracer-bullet
+            exclude: true
+          - path: platform/apps/dora-metrics
+            exclude: true
+          - path: platform/apps/tempo
+            exclude: true
 
   # Template for creating ArgoCD Applications
   template:
