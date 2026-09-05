@@ -2,9 +2,10 @@
 # =============================================================================
 # Script: validate-golden-path-observability.sh
 # Purpose: Validate the Observability plane of the tracer-bullet golden path
-#          (#1751 Phase 3): tracer-bullet's OTEL traces actually reach Tempo
-#          and its Prometheus metrics actually reach Prometheus - not just
-#          that the collector/backend pods are Running.
+#          (#1751 Phase 3): tracer-bullet's OTEL traces actually reach Tempo,
+#          its Prometheus metrics actually reach Prometheus, the OpenTelemetry
+#          Collector is healthy, and OpenSearch (log backend) is reachable and
+#          green - not just that the pods are Running.
 # Usage: ./scripts/validate-golden-path-observability.sh [--namespace NS]
 # Exit Codes: 0=success, 1=validation failed
 # =============================================================================
@@ -19,7 +20,10 @@ NC='\033[0m'
 
 NAMESPACE="${NAMESPACE:-fawkes}"
 MONITORING_NAMESPACE="${MONITORING_NAMESPACE:-monitoring}"
+LOGGING_NAMESPACE="${LOGGING_NAMESPACE:-logging}"
 SERVICE_NAME="tracer-bullet"
+OTEL_LABEL_SELECTOR="app.kubernetes.io/name=opentelemetry-collector"
+OPENSEARCH_SERVICE="${OPENSEARCH_SERVICE:-opensearch-cluster-master}"
 REPORT_FILE="reports/golden-path-observability-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
 
@@ -128,6 +132,63 @@ check_prometheus_metrics() {
   fi
 }
 
+check_otel_collector_health() {
+  log_info "Checking OpenTelemetry Collector health..."
+  local pods_json ready_count total_count
+  pods_json=$(kubectl get pods -n "$MONITORING_NAMESPACE" -l "$OTEL_LABEL_SELECTOR" -o json 2> /dev/null || echo '{"items":[]}')
+  total_count=$(echo "$pods_json" | jq '.items | length')
+
+  if [ "$total_count" -eq 0 ]; then
+    record_test "OTel Collector Pods" "FAIL" "No OpenTelemetry Collector pods found in namespace '$MONITORING_NAMESPACE'"
+    return 1
+  fi
+
+  ready_count=$(echo "$pods_json" | jq '[.items[] | select(.status.conditions[]? | select(.type=="Ready" and .status=="True"))] | length')
+  if [ "$ready_count" -eq "$total_count" ]; then
+    record_test "OTel Collector Pods" "PASS" "$ready_count/$total_count collector pod(s) Ready"
+  else
+    record_test "OTel Collector Pods" "FAIL" "$ready_count/$total_count collector pod(s) Ready"
+    return 1
+  fi
+
+  local pod_name
+  pod_name=$(echo "$pods_json" | jq -r '.items[0].metadata.name')
+  local health_resp
+  health_resp=$(kubectl exec -n "$MONITORING_NAMESPACE" "$pod_name" -- wget -qO- http://localhost:13133 2> /dev/null || echo "")
+  if echo "$health_resp" | grep -qi "Server available"; then
+    record_test "OTel Collector Health Endpoint" "PASS" "health_check extension reports available"
+  else
+    record_test "OTel Collector Health Endpoint" "FAIL" "health_check extension on port 13133 did not report available"
+  fi
+}
+
+check_opensearch_health() {
+  log_info "Checking OpenSearch cluster health..."
+  kubectl port-forward -n "$LOGGING_NAMESPACE" "svc/$OPENSEARCH_SERVICE" 9200:9200 &> /tmp/opensearch-pf.log &
+  PF_PID=$!
+  sleep 3
+
+  local resp
+  resp=$(curl -s -k --connect-timeout 5 "https://localhost:9200/_cluster/health" -u "admin:admin" 2> /dev/null \
+    || curl -s --connect-timeout 5 "http://localhost:9200/_cluster/health" 2> /dev/null || echo "")
+  kill "$PF_PID" &> /dev/null || true
+  PF_PID=""
+
+  if [ -z "$resp" ]; then
+    record_test "OpenSearch Reachable" "FAIL" "Could not reach OpenSearch cluster health API via port-forward"
+    return 1
+  fi
+  record_test "OpenSearch Reachable" "PASS" "OpenSearch cluster health API responded"
+
+  local status
+  status=$(echo "$resp" | jq -r '.status // "unknown"' 2> /dev/null || echo "unknown")
+  if [ "$status" = "green" ] || [ "$status" = "yellow" ]; then
+    record_test "OpenSearch Cluster Status" "PASS" "Cluster status is '$status'"
+  else
+    record_test "OpenSearch Cluster Status" "FAIL" "Cluster status is '$status' (expected green or yellow)"
+  fi
+}
+
 generate_report() {
   log_info "Generating test report..."
   mkdir -p "$REPORT_DIR"
@@ -192,6 +253,8 @@ main() {
   generate_traffic
   check_tempo_traces
   check_prometheus_metrics
+  check_otel_collector_health
+  check_opensearch_health
   generate_report
   print_summary
 }
