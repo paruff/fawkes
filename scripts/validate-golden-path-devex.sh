@@ -102,7 +102,8 @@ check_component_registered() {
 
   local resp status_code
   status_code=$(curl -s -o /tmp/backstage-catalog-resp.json -w "%{http_code}" --connect-timeout 5 \
-    "http://localhost:17007/api/catalog/entities/by-name/component/default/${SERVICE_NAME}" 2> /dev/null || echo "000")
+    "http://localhost:17007/api/catalog/entities/by-name/component/default/${SERVICE_NAME}" 2> /dev/null || true)
+  status_code="${status_code:-000}"
   kill "$PF_PID" &> /dev/null || true
   PF_PID=""
 
