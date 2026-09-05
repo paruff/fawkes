@@ -104,9 +104,10 @@ jobs:
           pip install -r requirements.txt
           if [ -f requirements-dev.txt ]; then
             pip install -r requirements-dev.txt
-          else
-            pip install ruff pytest pytest-cov
           fi
+          # Not every service's requirements-dev.txt includes lint/test tools
+          # (many have never run in CI before) - guarantee they're present.
+          pip install ruff pytest pytest-cov
 
       - name: Lint
         working-directory: services/${{ matrix.service }}
