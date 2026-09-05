@@ -2,6 +2,29 @@
 
 This document describes how to use and configure the PostgreSQL database service in the Fawkes platform.
 
+> **2026-09-05: consolidated onto one shared Cluster.** This repo used to run
+> one single-tenant CloudNativePG `Cluster` per service (11 of them, each its
+> own 1-3 instance Postgres cluster) - wasteful on a resource-constrained
+> local dev cluster that has already hit disk/memory exhaustion once. All 11
+> now live as separate databases inside one shared `Cluster`,
+> `db-shared-dev-cluster.yaml`, each with its own role (declaratively managed
+> via `spec.managed.roles`, password sourced from that service's existing
+> `db-<service>-credentials` Secret - unchanged). The trade-off: one Postgres
+> outage now affects every service at once instead of just one; acceptable
+> for local/dev, revisit before any shared production use. The rest of this
+> document (the per-service `Cluster` YAML template below) describes the
+> now-historical pattern each database's schema/role/extensions were
+> originally derived from - useful for understanding intent, not something
+> to copy for a new service anymore. To add a new service's database, add a
+> role + `CREATE ROLE`/`CREATE DATABASE` pair to `db-shared-dev-cluster.yaml`
+> instead.
+>
+> Known follow-up (not yet done): several `README.md`/`validate-*.sh` files
+> under other `platform/apps/*/` directories still reference the old
+> per-service `db-<service>-dev-rw` hostnames in prose/scripts, not just this
+> one - functional manifests (Deployments, ConfigMaps, ArgoCD Applications)
+> were all updated to `db-shared-dev-rw`.
+
 ## Overview
 
 The Fawkes platform uses [CloudNativePG](https://cloudnative-pg.io/) as the PostgreSQL Operator to manage highly available PostgreSQL clusters on Kubernetes. CloudNativePG provides:

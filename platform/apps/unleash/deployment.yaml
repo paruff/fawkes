@@ -35,7 +35,7 @@ metadata:
     component: feature-flags
 data:
   # Database connection (PostgreSQL)
-  DATABASE_HOST: "db-unleash-dev-rw.fawkes.svc.cluster.local"
+  DATABASE_HOST: "db-shared-dev-rw.fawkes.svc.cluster.local"
   DATABASE_PORT: "5432"
   DATABASE_NAME: "unleash"
   DATABASE_SSL: "false"
@@ -119,7 +119,7 @@ spec:
             - sh
             - -c
             - |
-              until nc -z db-unleash-dev-rw.fawkes.svc.cluster.local 5432; do
+              until nc -z db-shared-dev-rw.fawkes.svc.cluster.local 5432; do
                 echo "Waiting for PostgreSQL..."
                 sleep 2
               done

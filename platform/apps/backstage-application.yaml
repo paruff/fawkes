@@ -22,7 +22,7 @@
 # FILE: platform/apps/backstage-application.yaml
 # PURPOSE: ArgoCD Application for Backstage Developer Portal deployment
 #          Provides a unified developer portal with SSO authentication.
-# PREREQ: PostgreSQL cluster (db-backstage-dev) must be deployed first.
+# PREREQ: Shared PostgreSQL cluster (db-shared-dev) must be deployed first.
 #         OAuth credentials secret (backstage-oauth-credentials) must exist.
 # ============================================================================
 apiVersion: argoproj.io/v1alpha1
@@ -107,7 +107,7 @@ spec:
         # Environment variables for database and secrets
         extraEnvVars:
           - name: POSTGRES_HOST
-            value: "db-backstage-dev-rw.fawkes.svc.cluster.local"
+            value: "db-shared-dev-rw.fawkes.svc.cluster.local"
           - name: POSTGRES_PORT
             value: "5432"
           - name: POSTGRES_DB
