@@ -252,7 +252,12 @@ spec:
         persistence:
           enabled: true
           size: 8Gi
-          storageClass: standard
+          # No storageClass pinned: omitting it lets Kubernetes use whichever
+          # StorageClass is marked as the cluster default, which is portable
+          # across clouds. A hardcoded "standard" here worked on the local
+          # kind cluster but doesn't exist on AKS by default (its default
+          # class is literally named "default") - live-verified this gap
+          # during Phase 1 of #1751.
         serviceAccount:
           create: true
         rbac:
