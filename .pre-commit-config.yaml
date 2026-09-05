@@ -30,6 +30,7 @@ repos:
       - id: check-added-large-files
         name: Check for large files
         args: ["--maxkb=1024"]
+        exclude: '^platform/apps/.*/upstream/'
       - id: check-merge-conflict
         name: Check for merge conflicts
       - id: mixed-line-ending
@@ -116,7 +117,7 @@ repos:
           - LICENSE
           - --comment-style
           - "#"
-        exclude: '^(\.github/|\.pre-commit-config\.yaml|\.yamllint)'
+        exclude: '^(\.github/|\.pre-commit-config\.yaml|\.yamllint|platform/apps/.*/upstream/)'
 
   # ============================================================================
   # Secret Scanning (single comprehensive check - gitleaks)
