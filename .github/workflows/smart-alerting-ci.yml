@@ -1,0 +1,239 @@
+name: Smart Alerting CI/CD
+
+# Pilot of the tracer-bullet-ci.yml pattern on a second, pre-existing
+# service (#1751 Phase 2): lint + test, build, push to GHCR, scan, SBOM,
+# sign, then commit the new image tag into the GitOps manifest so ArgoCD's
+# selfHeal syncs it. Replaces service-python-tests.yml's generic
+# lint-only coverage for this one service (see the exclusion added there).
+#
+# ArgoCD auto-syncs the updated manifest to the cluster.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "services/smart-alerting/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "services/smart-alerting/**"
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write # for cosign keyless image signing
+
+env:
+  IMAGE_NAME: ghcr.io/paruff/smart-alerting
+  SERVICE_DIR: services/smart-alerting
+  MANIFEST_DIR: services/smart-alerting/k8s
+
+jobs:
+  # ==========================================================================
+  # Job 1: Lint + Test
+  # ==========================================================================
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: "pip"
+          cache-dependency-path: "${{ env.SERVICE_DIR }}/requirements*.txt"
+
+      - name: Install dependencies
+        working-directory: ${{ env.SERVICE_DIR }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+          # requirements-dev.txt doesn't pin a linter; use the same tool
+          # service-python-tests.yml's generic job installs for services
+          # that don't own one.
+          pip install ruff
+
+      - name: Lint
+        working-directory: ${{ env.SERVICE_DIR }}
+        run: |
+          ruff check .
+          ruff format --check --diff .
+
+      - name: Test
+        working-directory: ${{ env.SERVICE_DIR }}
+        run: |
+          # No --cov-fail-under gate yet: current coverage is ~36%
+          # (routing.py/suppression.py are largely untested). Raising it to
+          # the repo's 80% target is tracked separately, not part of this
+          # pipeline pilot.
+          pytest --cov=app --cov-report=term-missing tests/
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ==========================================================================
+  # Job 2: Build + Push Docker Image (main only)
+  # ==========================================================================
+  build:
+    name: Build & Push
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    outputs:
+      image_tag: ${{ steps.meta.outputs.version }}
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=
+            type=raw,value=latest
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
+        with:
+          context: ${{ env.SERVICE_DIR }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ==========================================================================
+  # Job 2a: Security scan the pushed image (main only)
+  # ==========================================================================
+  security-scan:
+    name: Security Scan
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    uses: ./.github/workflows/reusable-security-scanning.yml
+    permissions:
+      contents: read
+      security-events: write
+    with:
+      scan-type: vulnerabilities
+      image-ref: ghcr.io/paruff/smart-alerting:${{ needs.build.outputs.image_tag }}
+      severity-threshold: "CRITICAL,HIGH"
+      fail-on-critical: true
+      ignore-unfixed: true
+      sarif-category: "trivy-image-smart-alerting"
+
+  # ==========================================================================
+  # Job 2b: Generate downloadable SBOM artifact (main only)
+  # ==========================================================================
+  sbom:
+    name: Generate SBOM
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    uses: ./.github/workflows/reusable-sbom-generation.yml
+    permissions:
+      contents: read
+      packages: read
+    with:
+      image-name: smart-alerting
+      image-tag: ${{ needs.build.outputs.image_tag }}
+
+  # ==========================================================================
+  # Job 2c: Sign image + attach signed SBOM attestation (main only)
+  # ==========================================================================
+  sign-and-attest:
+    name: Sign & Attest
+    needs: [build, security-scan]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    uses: ./.github/workflows/reusable-image-signing.yml
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    with:
+      image-name: paruff/smart-alerting
+      image-tag: ${{ needs.build.outputs.image_tag }}
+    secrets:
+      registry-password: ${{ secrets.GITHUB_TOKEN }}
+
+  # ==========================================================================
+  # Job 3: Update GitOps manifest (main only)
+  # ==========================================================================
+  update-gitops:
+    name: Update GitOps
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [build, security-scan, sbom, sign-and-attest]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update image tag in manifest
+        run: |
+          NEW_TAG="${{ needs.build.outputs.image_tag }}"
+          echo "Updating image tag to: ${NEW_TAG}"
+          sed -i "s|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${NEW_TAG}|g" \
+            ${MANIFEST_DIR}/deployment.yaml
+          # Also update the version label
+          sed -i "s|app.kubernetes.io/version:.*|app.kubernetes.io/version: ${NEW_TAG}|g" \
+            ${MANIFEST_DIR}/deployment.yaml
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ${MANIFEST_DIR}/deployment.yaml
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore(smart-alerting): update image tag to ${NEW_TAG}"
+            git push
+          fi
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"

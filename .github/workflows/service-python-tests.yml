@@ -61,7 +61,7 @@ jobs:
           services=$(find services -mindepth 1 -maxdepth 1 -type d \
             -exec test -e "{}/requirements.txt" \; -print \
             | sed 's|^services/||' \
-            | grep -vE '^(tracer-bullet|dora-metrics)$' \
+            | grep -vE '^(tracer-bullet|dora-metrics|smart-alerting)$' \
             | sort | jq -R -s -c 'split("\n")[:-1]')
           echo "Discovered services: $services"
           echo "matrix=$services" >> "$GITHUB_OUTPUT"
