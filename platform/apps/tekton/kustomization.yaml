@@ -25,8 +25,10 @@
 # No official, actively-maintained Helm chart exists for Tekton (checked
 # Artifact Hub - only low-version/unofficial third-party charts turned up).
 # Upstream's own documented install method is applying pinned release YAML
-# directly. Vendored locally (platform/apps/tekton/vendor/, ~30k lines,
-# mostly CRD schemas) rather than referenced by remote URL: kustomize's
+# directly. Vendored locally (platform/apps/tekton/upstream/, ~30k lines,
+# mostly CRD schemas - named "upstream/" not "vendor/" since this repo's
+# root .gitignore blanket-excludes any "vendor/" directory) rather than
+# referenced by remote URL: kustomize's
 # remote-resource loader misidentifies storage.googleapis.com/<bucket>/<path>
 # URLs as git-repo references (its heuristic reads the first two path
 # segments as org/repo) and fails with "URL is a git repository" - a known
@@ -46,6 +48,6 @@
 # ============================================================================
 
 resources:
-  - vendor/pipeline-v1.15.1.yaml
-  - vendor/triggers-v0.37.0.yaml
-  - vendor/triggers-interceptors-v0.37.0.yaml
+  - upstream/pipeline-v1.15.1.yaml
+  - upstream/triggers-v0.37.0.yaml
+  - upstream/triggers-interceptors-v0.37.0.yaml
