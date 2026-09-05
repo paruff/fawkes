@@ -58,6 +58,18 @@ The target model follows a canary → staging → production progression with au
 3. Verification: ArgoCD syncs the previous known-good state; smoke tests re-run
 4. Communication: tag the incident in `#platform` Slack channel with deployment SHA and rollback reason
 
+**Verified (2026-09-05, Phase 1 of #1751):** the underlying mechanism this protocol
+depends on - ArgoCD's `selfHeal` detecting and correcting drift between the live
+cluster and the git-defined desired state - was live-tested on a real AKS cluster
+(`fawkes-aks-dev`), not just assumed. Manually patched a live Deployment's resource
+request away from what git specifies (drift, the same effect a stale/un-reverted
+bad deploy would leave behind); ArgoCD detected the mismatch and reverted the live
+resource back to match git within one sync cycle, with no manual intervention.
+This confirms the "ArgoCD syncs the previous known-good state" step of the
+protocol actually works as designed. Not yet tested: the full protocol end-to-end
+via an actual `git revert` + PR merge, or the post-deployment smoke-test trigger
+in step 1.
+
 ### Observability Built-in
 
 - Every CI job logs `job-start` and `job-finish` timestamps (already implemented across all workflows)

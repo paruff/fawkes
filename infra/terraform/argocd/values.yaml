@@ -98,6 +98,18 @@ configs:
     application.instanceLabelKey: "argocd.argoproj.io/instance"
     admin.enabled: "true"
 
+  # A vanilla ArgoCD install only watches Application resources in its own
+  # install namespace (argocd). This repo's own Application manifests are
+  # split across `namespace: argocd` and `namespace: fawkes` inconsistently
+  # (see reports/observability-plane-live-verification-2026-09.md) - this
+  # was previously patched by hand into argocd-cmd-params-cm after every
+  # fresh install; setting it here makes a fresh install correct from the
+  # start. The default AppProject's sourceNamespaces still needs `fawkes`
+  # added (and a controller restart) after the first install completes -
+  # not expressible via this chart's values.
+  params:
+    application.namespaces: "fawkes"
+
   # Admin credentials
   # For initial deployment, auto-generate the secret
   # For production, integrate with External Secrets Operator:
