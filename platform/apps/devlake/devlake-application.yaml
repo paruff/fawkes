@@ -26,196 +26,62 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://apache.github.io/incubator-devlake-helm-chart
+    repoURL: https://apache.github.io/devlake-helm-chart
     chart: devlake
-    targetRevision: 1.0.1
+    targetRevision: 1.0.2
     helm:
       values: |
         # ============================================================
         # DevLake Core Configuration
         # Apache DevLake for DORA Metrics Collection and Visualization
+        #
+        # This values block was rewritten from scratch (#1815) against the
+        # chart's *actual* schema (verified via `helm show values`), not
+        # guessed conventions from a generic bitnami-style chart. The
+        # original version used entirely fictional keys throughout
+        # (lake.image, ui.image, grafana.image, mysql.auth.existingSecret,
+        # mysql.resources/persistence, service.*, ingress.hosts[], config.
+        # metrics.*, top-level securityContext) that this chart doesn't
+        # have - never caught because the chart repo URL 404'd until fixed
+        # in this same PR, so this Application had never actually rendered
+        # before. Everything not explicitly set below uses the chart's own
+        # (sane) defaults - see `helm show values devlake/devlake` for the
+        # full schema.
         # ============================================================
 
-        # Namespace for DevLake deployment
-        namespace: fawkes
+        imageTag: v1.0.2
 
-        # ============================================================
-        # DevLake API Server Configuration
-        # ============================================================
-        lake:
-          image:
-            repository: apache/devlake
-            tag: v1.0.1
-            pullPolicy: IfNotPresent
-
-          replicas: 1
-
-          resources:
-            requests:
-              cpu: 150m
-              memory: 384Mi
-            limits:
-              cpu: 800m
-              memory: 1536Mi
-
-          # Use secret references for sensitive values
-          extraEnv:
-          - name: ENCRYPTION_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: devlake-secrets
-                key: encryption-secret
-
-        # ============================================================
-        # DevLake UI Configuration
-        # ============================================================
-        ui:
-          image:
-            repository: apache/devlake-config-ui
-            tag: v1.0.1
-            pullPolicy: IfNotPresent
-
-          replicas: 1
-
-          resources:
-            requests:
-              cpu: 80m
-              memory: 100Mi
-            limits:
-              cpu: 400m
-              memory: 400Mi
-
-        # ============================================================
-        # Grafana Configuration for DORA Dashboards
-        # ============================================================
-        grafana:
-          enabled: true
-          image:
-            repository: grafana/grafana
-            tag: 10.2.2
-            pullPolicy: IfNotPresent
-          resources:
-            requests:
-              cpu: 80m
-              memory: 200Mi
-            limits:
-              cpu: 400m
-              memory: 400Mi
-          # Admin credentials sourced from Secret (no inline password)
-          adminUser: admin
-          adminPasswordSecretName: devlake-grafana-secrets
-          adminPasswordSecretKey: admin-password
-          dashboards:
-            enabled: true
-            dora:
-              enabled: true
-
-        # ============================================================
-        # MySQL Database Configuration
-        # ============================================================
+        # DEV DEFAULT: generated, local-dev-only value (see #1797 for the
+        # tracked Sealed Secrets rollout) - mysql.password/rootPassword are
+        # flat top-level fields on this chart, not mysql.auth.*.
         mysql:
-          enabled: true
-          image:
-            repository: mysql
-            tag: "8.0"
-            pullPolicy: IfNotPresent
-          resources:
-            requests:
-              cpu: 400m
-              memory: 768Mi
-            limits:
-              cpu: 1600m
-              memory: 3Gi
-          persistence:
-            enabled: true
-            storageClass: ""
-            size: 20Gi
-          # Database credentials: reference External Secret, no inline values
-          auth:
-            database: lake
-            username: devlake
-            existingSecret: devlake-db
-            secretKeys:
-              rootPassword: mysql-root-password
-              password: mysql-password
+          username: devlake
+          password: "2veFWHWogn3OnTMvJiSueTCQ"
+          database: lake
+          rootPassword: "XuzzgQEPbUA9jA1qRLEcgVNU"
 
-        # ============================================================
-        # Service Configuration
-        # ============================================================
-        service:
-          type: ClusterIP
-          lake:
-            port: 8080
-          ui:
-            port: 4000
-          grafana:
-            port: 3000
+        lake:
+          # Encrypts DevLake's stored data-source credentials/tokens
+          # (GitHub PAT, etc.) at rest. secretName references the Secret
+          # in devlake-db-credentials-dev.yaml (confirmed working via a
+          # real helm template render - the chart's own validate.yaml
+          # Helm test hook checks this specific field).
+          encryptionSecret:
+            secretName: devlake-encryption-secret
+            autoCreateSecret: false
 
-        # ============================================================
-        # Ingress Configuration
-        # ============================================================
+        # DEV DEFAULT: generated, local-dev-only value - grafana.adminPassword
+        # is a flat top-level string on this chart, not a secret reference
+        # (adminPasswordSecretName/Key don't exist on this schema).
+        grafana:
+          adminPassword: "7i0xnKeONqDOvIHM5whRDyW9"
+
+        # Ingress left disabled - ingress-nginx isn't deployed on this
+        # cluster yet. Access via `kubectl port-forward` for now; revisit
+        # once ingress-nginx is live.
         ingress:
-          enabled: true
-          className: nginx
-          annotations:
-            nginx.ingress.kubernetes.io/proxy-body-size: 100m
-          hosts:
-            - host: devlake.127.0.0.1.nip.io
-              paths:
-                - path: /api
-                  pathType: Prefix
-                  service: lake
-                - path: /
-                  pathType: Prefix
-                  service: ui
-            - host: devlake-grafana.127.0.0.1.nip.io
-              paths:
-                - path: /
-                  pathType: Prefix
-                  service: grafana
+          enabled: false
 
-        # ============================================================
-        # DORA Metrics Configuration
-        # ============================================================
-        config:
-          metrics:
-            dora: true
-            deploymentFrequency:
-              enabled: true
-              window: 7
-            leadTime:
-              enabled: true
-              stages:
-                - development
-                - review
-                - production
-            changeFailureRate:
-              enabled: true
-              window: 30
-            timeToRestore:
-              enabled: true
-              severityLevels:
-                - high
-                - medium
-                - low
-            operationalPerformance:
-              enabled: true
-              sloTarget: 99.9
-
-        # ============================================================
-        # Security Context
-        # ============================================================
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 1000
-          fsGroup: 1000
-
-        # ============================================================
-        # Pod Labels and Annotations
-        # ============================================================
-        podLabels:
-          app.kubernetes.io/part-of: fawkes-platform
-          app.kubernetes.io/component: dora-metrics
         podAnnotations:
           prometheus.io/scrape: "true"
           prometheus.io/port: "8080"
