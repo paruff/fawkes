@@ -47,7 +47,12 @@ spec:
     path: platform/apps/tekton
   destination:
     server: https://kubernetes.default.svc
-    namespace: tekton-pipelines
+    # Primary/default namespace for resources with no explicit namespace of
+    # their own. Most resources here DO declare an explicit metadata.namespace
+    # (fawkes for the core controllers, tekton-pipelines-resolvers for the
+    # isolated resolvers component - see kustomization.yaml) and ArgoCD
+    # deploys each to its own declared namespace regardless of this field.
+    namespace: fawkes
   syncPolicy:
     automated:
       prune: true
