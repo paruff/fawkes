@@ -16,6 +16,15 @@ The current deployment model is a minimal push-based trigger:
 
 **Update (2026-09-05):** all **17** Python services under `services/` now have CI-run lint/tests (`service-python-tests.yml`, added in #1747) but do not yet build/push images or participate in GitOps promotion — extending the tracer-bullet/dora-metrics pattern to them is a natural next step, in progress (#1751 Phase 2).
 
+**Update (2026-09-05, later same day — #1751 Phase 3 hardening):** the in-tree GitOps flow above had two real bugs that were masked by non-obvious failure modes, both root-caused and fixed this session:
+- The "Update GitOps" commit-and-push step had no retry, so it silently lost the race whenever another automated commit (a sibling service's own GitOps update, or `release-please`) landed on `main` between checkout and push. Fixed with a fetch-rebase-retry loop (5 attempts) in `tracer-bullet-ci.yml`, `smart-alerting-ci.yml`, `dora-metrics-ci.yml`.
+- `docker/metadata-action`'s `outputs.version` silently resolved to the floating `:latest` tag instead of the immutable per-commit SHA tag whenever both tag types were configured — meaning the security scan, cosign signature, SBOM, and GitOps commit were all keyed off `:latest`, not the image actually built. Fixed by resolving the tag from `${GITHUB_SHA::7}` directly instead of trusting that output.
+- A related, separately-diagnosed CI flake (Trivy vulnerability scan failing non-reproducibly on identical image digests) turned out to be a real CVE in pip's vendored dependency snapshot inside the runtime image (`CVE-2026-13346`), invisible in the UI because SARIF output produces no console findings by default. Fixed by stripping pip/setuptools from the runtime stage of `tracer-bullet`'s Dockerfile (never invoked at runtime in a multi-stage build).
+
+The full build→scan→sign→SBOM→GitOps pattern was also factored into a new reusable workflow (`reusable-python-service-golden-path.yml`) and piloted on a 4th service, `anomaly-detection`, in addition to the existing `tracer-bullet`/`dora-metrics`/`smart-alerting`. 14 of the 17 services still only get lint+test (tracked in #1792).
+
+PR #1798 re-triggers `tracer-bullet` and `smart-alerting` to confirm all of the above lands correctly end-to-end (build → scan → sign → SBOM → GitOps commit succeeds on the first real attempt → ArgoCD syncs → pod `Running`) — see that PR for the live result.
+
 `paruff/ufawkespipe`'s `reusable-rollback.yml` was checked as a possible shortcut for the "Automated rollback" gap below — it is **not applicable**: it's built for SSH-based deployment to a single host (`DEPLOY_HOST`/`DEPLOY_USER`/`DEPLOY_KEY` + a remote `git reset` and restart command), not a Kubernetes/ArgoCD GitOps model. The real rollback mechanism here is git-revert + ArgoCD `selfHeal`, described above.
 
 There is no progressive delivery or canary analysis. Deployments are all-or-nothing on `main` push, and rollback (where it exists at all) is an unverified manual `git revert`.
