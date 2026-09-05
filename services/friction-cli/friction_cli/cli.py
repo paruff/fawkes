@@ -157,12 +157,12 @@ def log(ctx, title, description, category, priority, tags, interactive):
         sys.exit(1)
 
 
-@main.command()
+@main.command(name="list")
 @click.option("--category", "-c", help="Filter by category")
 @click.option("--priority", "-p", help="Filter by priority")
 @click.option("--limit", "-l", type=int, default=10, help="Number of results to show")
 @click.pass_context
-def list(ctx, category, priority, limit):
+def list_command(ctx, category, priority, limit):
     """List recent friction points.
 
     Examples:

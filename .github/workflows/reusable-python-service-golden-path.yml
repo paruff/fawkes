@@ -1,0 +1,276 @@
+name: Reusable Python Service Golden Path
+
+# Factors out the build->scan->sign->SBOM->GitOps-promote pattern proven
+# identically in tracer-bullet-ci.yml, dora-metrics-ci.yml, and
+# smart-alerting-ci.yml (#1751) into one parameterized workflow, so
+# extending it to the remaining services/*/ directories is a ~15-line
+# wrapper instead of a ~250-line near-duplicate file each time.
+#
+# ArgoCD auto-syncs the updated manifest to the cluster.
+
+on:
+  workflow_call:
+    inputs:
+      service-name:
+        description: "Directory name under services/ (also used as the GHCR image name unless image-name is set)"
+        required: true
+        type: string
+      image-name:
+        description: "GHCR image name, defaults to service-name"
+        required: false
+        type: string
+        default: ""
+      manifest-dir:
+        description: "Directory containing deployment.yaml to update with the new image tag"
+        required: false
+        type: string
+        default: ""
+      coverage-fail-under:
+        description: "pytest --cov-fail-under threshold; empty disables the gate (matches this repo's other per-service pipelines until each service's own coverage is raised)"
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+  pull-requests: write # for GitOps update PR (main-protection forbids direct push)
+
+jobs:
+  # ==========================================================================
+  # Job 1: Lint + Test
+  # ==========================================================================
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: "pip"
+          cache-dependency-path: "services/${{ inputs.service-name }}/requirements*.txt"
+
+      - name: Install dependencies
+        working-directory: services/${{ inputs.service-name }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+          # requirements-dev.txt doesn't pin a linter; use the same tool
+          # service-python-tests.yml's generic job installs for services
+          # that don't own one.
+          pip install ruff
+
+      - name: Lint
+        working-directory: services/${{ inputs.service-name }}
+        run: |
+          ruff check .
+          ruff format --check --diff .
+
+      - name: Test
+        working-directory: services/${{ inputs.service-name }}
+        run: |
+          if [ -n "${{ inputs.coverage-fail-under }}" ]; then
+            pytest --cov=app --cov-report=term-missing --cov-fail-under=${{ inputs.coverage-fail-under }} tests/
+          else
+            pytest --cov=app --cov-report=term-missing tests/
+          fi
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ==========================================================================
+  # Job 2: Build + Push Docker Image (main only)
+  # ==========================================================================
+  build:
+    name: Build & Push
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    outputs:
+      image_tag: ${{ steps.image_tag.outputs.tag }}
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Resolve immutable image tag
+        id: image_tag
+        run: echo "tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6
+        with:
+          images: ghcr.io/paruff/${{ inputs.image-name != '' && inputs.image-name || inputs.service-name }}
+          tags: |
+            type=sha,prefix=
+            type=raw,value=latest
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
+        with:
+          context: services/${{ inputs.service-name }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ==========================================================================
+  # Job 2a: Security scan the pushed image (main only)
+  # ==========================================================================
+  security-scan:
+    name: Security Scan
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    uses: ./.github/workflows/reusable-security-scanning.yml
+    permissions:
+      contents: read
+      security-events: write
+    with:
+      scan-type: vulnerabilities
+      image-ref: ghcr.io/paruff/${{ inputs.image-name != '' && inputs.image-name || inputs.service-name }}:${{ needs.build.outputs.image_tag }}
+      severity-threshold: "CRITICAL,HIGH"
+      fail-on-critical: true
+      ignore-unfixed: true
+      sarif-category: "trivy-image-${{ inputs.service-name }}"
+
+  # ==========================================================================
+  # Job 2b: Generate downloadable SBOM artifact (main only)
+  # ==========================================================================
+  sbom:
+    name: Generate SBOM
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    uses: ./.github/workflows/reusable-sbom-generation.yml
+    permissions:
+      contents: read
+      packages: read
+    with:
+      image-name: ${{ inputs.image-name != '' && inputs.image-name || inputs.service-name }}
+      image-tag: ${{ needs.build.outputs.image_tag }}
+
+  # ==========================================================================
+  # Job 2c: Sign image + attach signed SBOM attestation (main only)
+  # ==========================================================================
+  sign-and-attest:
+    name: Sign & Attest
+    needs: [build, security-scan]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    uses: ./.github/workflows/reusable-image-signing.yml
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    with:
+      image-name: paruff/${{ inputs.image-name != '' && inputs.image-name || inputs.service-name }}
+      image-tag: ${{ needs.build.outputs.image_tag }}
+    secrets:
+      registry-password: ${{ secrets.GITHUB_TOKEN }}
+
+  # ==========================================================================
+  # Job 3: Update GitOps manifest (main only)
+  # ==========================================================================
+  update-gitops:
+    name: Update GitOps
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [build, security-scan, sbom, sign-and-attest]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update image tag in manifest
+        env:
+          IMAGE_NAME: ghcr.io/paruff/${{ inputs.image-name != '' && inputs.image-name || inputs.service-name }}
+          MANIFEST_DIR: ${{ inputs.manifest-dir != '' && inputs.manifest-dir || format('services/{0}/k8s', inputs.service-name) }}
+          NEW_TAG: ${{ needs.build.outputs.image_tag }}
+        run: |
+          echo "Updating image tag to: ${NEW_TAG}"
+          sed -i "s|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${NEW_TAG}|g" \
+            "${MANIFEST_DIR}/deployment.yaml"
+          sed -i "s|app.kubernetes.io/version:.*|app.kubernetes.io/version: ${NEW_TAG}|g" \
+            "${MANIFEST_DIR}/deployment.yaml"
+
+      - name: Open and merge GitOps PR
+        env:
+          MANIFEST_DIR: ${{ inputs.manifest-dir != '' && inputs.manifest-dir || format('services/{0}/k8s', inputs.service-name) }}
+          NEW_TAG: ${{ needs.build.outputs.image_tag }}
+          SERVICE_NAME: ${{ inputs.service-name }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${MANIFEST_DIR}/deployment.yaml"
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          # main-protection forbids direct pushes to main (GH013) - route the
+          # image-tag bump through a PR instead. required_approving_review_count
+          # is 0, so the bot can merge it immediately without a human click.
+          BRANCH="gitops/${SERVICE_NAME}-${NEW_TAG}"
+          git checkout -b "${BRANCH}"
+          git commit -m "chore(${SERVICE_NAME}): update image tag to ${NEW_TAG}"
+          git push origin "${BRANCH}"
+          gh pr create --title "chore(${SERVICE_NAME}): update image tag to ${NEW_TAG}" \
+            --body "Automated GitOps update for commit ${GITHUB_SHA}." \
+            --base main --head "${BRANCH}"
+          for attempt in 1 2 3 4 5; do
+            if gh pr merge "${BRANCH}" --squash --delete-branch; then
+              exit 0
+            fi
+            echo "Merge attempt ${attempt}/5 failed, retrying in 10s..."
+            sleep 10
+          done
+          echo "::error::Failed to merge GitOps PR after 5 attempts"
+          exit 1
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"

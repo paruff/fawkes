@@ -8,6 +8,7 @@ This service provides intelligent alerting that reduces noise through:
 - Intelligent routing to appropriate teams and channels
 """
 
+import hmac
 import logging
 import os
 import uuid
@@ -17,7 +18,7 @@ from typing import Any, Dict, List, Optional
 
 import httpx
 import redis.asyncio as redis
-from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi import BackgroundTasks, Depends, FastAPI, Header, HTTPException
 from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
 from pydantic import BaseModel, Field
 
@@ -39,6 +40,29 @@ BACKSTAGE_URL = os.getenv("BACKSTAGE_URL", "http://backstage.fawkes.svc:7007")
 MATTERMOST_WEBHOOK_URL = os.getenv("MATTERMOST_WEBHOOK_URL", "")
 SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL", "")
 PAGERDUTY_API_KEY = os.getenv("PAGERDUTY_API_KEY", "")
+ALERTING_API_TOKEN = os.getenv("ALERTING_API_TOKEN", "")
+
+
+def verify_api_token(authorization: str | None = Header(None)) -> None:
+    """Verify the shared bearer token on every /api/v1/* route.
+
+    This service is exposed externally via k8s/ingress.yaml
+    (smart-alerting.fawkes.local) with no auth of its own otherwise -
+    without this, anyone reachable could ingest, acknowledge, resolve, or
+    suppress alerts. Same optional-token pattern as friction-bot's
+    BOT_TOKEN check: leave ALERTING_API_TOKEN empty only for local
+    development where auth isn't wanted; production must set it.
+    """
+    if not ALERTING_API_TOKEN:
+        return
+
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or malformed Authorization header")
+
+    token = authorization.removeprefix("Bearer ")
+    if not hmac.compare_digest(token, ALERTING_API_TOKEN):
+        raise HTTPException(status_code=401, detail="Invalid API token")
+
 
 # Global clients
 redis_client: redis.Redis | None = None
@@ -264,7 +288,9 @@ async def ready():
 
 
 @app.post("/api/v1/alerts/prometheus")
-async def ingest_prometheus_alerts(payload: PrometheusAlertPayload, background_tasks: BackgroundTasks):
+async def ingest_prometheus_alerts(
+    payload: PrometheusAlertPayload, background_tasks: BackgroundTasks, _: None = Depends(verify_api_token)
+):
     """Ingest alerts from Prometheus."""
     ALERTS_RECEIVED.labels(source="prometheus").inc(len(payload.alerts))
 
@@ -274,7 +300,9 @@ async def ingest_prometheus_alerts(payload: PrometheusAlertPayload, background_t
 
 
 @app.post("/api/v1/alerts/grafana")
-async def ingest_grafana_alerts(alerts: list[Alert], background_tasks: BackgroundTasks):
+async def ingest_grafana_alerts(
+    alerts: list[Alert], background_tasks: BackgroundTasks, _: None = Depends(verify_api_token)
+):
     """Ingest alerts from Grafana."""
     ALERTS_RECEIVED.labels(source="grafana").inc(len(alerts))
 
@@ -284,7 +312,9 @@ async def ingest_grafana_alerts(alerts: list[Alert], background_tasks: Backgroun
 
 
 @app.post("/api/v1/alerts/datahub")
-async def ingest_datahub_alerts(alerts: list[Alert], background_tasks: BackgroundTasks):
+async def ingest_datahub_alerts(
+    alerts: list[Alert], background_tasks: BackgroundTasks, _: None = Depends(verify_api_token)
+):
     """Ingest alerts from DataHub."""
     ALERTS_RECEIVED.labels(source="datahub").inc(len(alerts))
 
@@ -294,7 +324,9 @@ async def ingest_datahub_alerts(alerts: list[Alert], background_tasks: Backgroun
 
 
 @app.post("/api/v1/alerts/generic")
-async def ingest_generic_alerts(alerts: list[Alert], background_tasks: BackgroundTasks):
+async def ingest_generic_alerts(
+    alerts: list[Alert], background_tasks: BackgroundTasks, _: None = Depends(verify_api_token)
+):
     """Ingest generic alerts."""
     ALERTS_RECEIVED.labels(source="generic").inc(len(alerts))
 
@@ -304,7 +336,7 @@ async def ingest_generic_alerts(alerts: list[Alert], background_tasks: Backgroun
 
 
 @app.get("/api/v1/alert-groups")
-async def get_alert_groups(limit: int = 50) -> list[AlertGroup]:
+async def get_alert_groups(limit: int = 50, _: None = Depends(verify_api_token)) -> list[AlertGroup]:
     """Get recent alert groups."""
     if not correlator:
         raise HTTPException(status_code=503, detail="Correlator not initialized")
@@ -314,7 +346,7 @@ async def get_alert_groups(limit: int = 50) -> list[AlertGroup]:
 
 
 @app.get("/api/v1/alert-groups/{group_id}")
-async def get_alert_group(group_id: str) -> AlertGroup:
+async def get_alert_group(group_id: str, _: None = Depends(verify_api_token)) -> AlertGroup:
     """Get specific alert group."""
     if not correlator:
         raise HTTPException(status_code=503, detail="Correlator not initialized")
@@ -327,7 +359,7 @@ async def get_alert_group(group_id: str) -> AlertGroup:
 
 
 @app.get("/api/v1/alerts/{alert_id}")
-async def get_alert(alert_id: str) -> Alert:
+async def get_alert(alert_id: str, _: None = Depends(verify_api_token)) -> Alert:
     """Get specific alert."""
     if not redis_client:
         raise HTTPException(status_code=503, detail="Redis not initialized")
@@ -342,7 +374,7 @@ async def get_alert(alert_id: str) -> Alert:
 
 
 @app.put("/api/v1/alerts/{alert_id}/acknowledge")
-async def acknowledge_alert(alert_id: str):
+async def acknowledge_alert(alert_id: str, _: None = Depends(verify_api_token)):
     """Acknowledge an alert."""
     if not redis_client:
         raise HTTPException(status_code=503, detail="Redis not initialized")
@@ -354,7 +386,7 @@ async def acknowledge_alert(alert_id: str):
 
 
 @app.put("/api/v1/alerts/{alert_id}/resolve")
-async def resolve_alert(alert_id: str):
+async def resolve_alert(alert_id: str, _: None = Depends(verify_api_token)):
     """Resolve an alert."""
     if not redis_client:
         raise HTTPException(status_code=503, detail="Redis not initialized")
@@ -366,7 +398,7 @@ async def resolve_alert(alert_id: str):
 
 
 @app.get("/api/v1/rules")
-async def get_suppression_rules() -> list[SuppressionRule]:
+async def get_suppression_rules(_: None = Depends(verify_api_token)) -> list[SuppressionRule]:
     """Get all suppression rules."""
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
@@ -386,7 +418,7 @@ async def get_suppression_rules() -> list[SuppressionRule]:
 
 
 @app.post("/api/v1/rules")
-async def create_suppression_rule(rule: SuppressionRule) -> SuppressionRule:
+async def create_suppression_rule(rule: SuppressionRule, _: None = Depends(verify_api_token)) -> SuppressionRule:
     """Create a new suppression rule."""
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
@@ -397,7 +429,7 @@ async def create_suppression_rule(rule: SuppressionRule) -> SuppressionRule:
 
 
 @app.get("/api/v1/rules/{rule_id}")
-async def get_suppression_rule(rule_id: str) -> SuppressionRule:
+async def get_suppression_rule(rule_id: str, _: None = Depends(verify_api_token)) -> SuppressionRule:
     """Get specific suppression rule."""
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
@@ -415,7 +447,9 @@ async def get_suppression_rule(rule_id: str) -> SuppressionRule:
 
 
 @app.put("/api/v1/rules/{rule_id}")
-async def update_suppression_rule(rule_id: str, rule: SuppressionRule) -> SuppressionRule:
+async def update_suppression_rule(
+    rule_id: str, rule: SuppressionRule, _: None = Depends(verify_api_token)
+) -> SuppressionRule:
     """Update suppression rule."""
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
@@ -427,7 +461,7 @@ async def update_suppression_rule(rule_id: str, rule: SuppressionRule) -> Suppre
 
 
 @app.delete("/api/v1/rules/{rule_id}")
-async def delete_suppression_rule(rule_id: str):
+async def delete_suppression_rule(rule_id: str, _: None = Depends(verify_api_token)):
     """Delete suppression rule."""
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
@@ -437,7 +471,7 @@ async def delete_suppression_rule(rule_id: str):
 
 
 @app.get("/api/v1/stats")
-async def get_stats():
+async def get_stats(_: None = Depends(verify_api_token)):
     """Get alerting statistics."""
     if not redis_client:
         raise HTTPException(status_code=503, detail="Redis not initialized")
@@ -466,7 +500,7 @@ async def get_stats():
 
 
 @app.get("/api/v1/stats/reduction")
-async def get_reduction_stats():
+async def get_reduction_stats(_: None = Depends(verify_api_token)):
     """Get alert reduction metrics."""
     stats = await get_stats()
     return {

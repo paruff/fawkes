@@ -5,6 +5,217 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.47](https://github.com/paruff/fawkes/compare/v0.3.46...v0.3.47) (2026-09-05)
+
+
+### Chores
+
+* **jenkins:** remove - Tekton is the sole CI engine going forward ([#1819](https://github.com/paruff/fawkes/issues/1819)) ([0d0eb71](https://github.com/paruff/fawkes/commit/0d0eb7174d6e330dcd28b292badc238c91a953ca))
+
+## [0.3.46](https://github.com/paruff/fawkes/compare/v0.3.45...v0.3.46) (2026-09-05)
+
+
+### Fixed
+
+* **gitops:** exclude devlake from ApplicationSet auto-discovery ([#1814](https://github.com/paruff/fawkes/issues/1814)) ([7e1d8b9](https://github.com/paruff/fawkes/commit/7e1d8b90753e0fceb7b83e23d3ad7d8122d99843))
+* **sonarqube:** unblock deploy - dev-mode secrets, required chart fields ([#1816](https://github.com/paruff/fawkes/issues/1816)) ([06fc208](https://github.com/paruff/fawkes/commit/06fc208c83ec04f42fb0695621231d88f7ab59ed))
+* **tekton:** exclude from ApplicationSet collision, move core to fawkes namespace ([#1811](https://github.com/paruff/fawkes/issues/1811)) ([0c6abc5](https://github.com/paruff/fawkes/commit/0c6abc5cf4a46cd7553fa58bf69de4ca58a1038b))
+
+
+### Chores
+
+* **dora-metrics:** remove, replaced by DevLake ([#1817](https://github.com/paruff/fawkes/issues/1817)) ([235f0ef](https://github.com/paruff/fawkes/commit/235f0efa4c530717fe3eac6ebb76fd6f6d211829))
+* **tracer-bullet:** remove monorepo copy, superseded by paruff/tracer-bullet ([#1813](https://github.com/paruff/fawkes/issues/1813)) ([0515ed0](https://github.com/paruff/fawkes/commit/0515ed0d1f401515c32dc64180d171a1b0a172ad))
+
+## [0.3.45](https://github.com/paruff/fawkes/compare/v0.3.44...v0.3.45) (2026-09-05)
+
+
+### Added
+
+* **tekton:** propose deploying Tekton Pipelines + Triggers ([#1659](https://github.com/paruff/fawkes/issues/1659)) ([#1809](https://github.com/paruff/fawkes/issues/1809)) ([a52a7c0](https://github.com/paruff/fawkes/commit/a52a7c023ef443f82f16602621bf4bfee6aa2be7))
+
+## [0.3.44](https://github.com/paruff/fawkes/compare/v0.3.43...v0.3.44) (2026-09-05)
+
+
+### Fixed
+
+* **ci:** route GitOps updates through PRs; patch smart-alerting CVEs ([#1801](https://github.com/paruff/fawkes/issues/1801)) ([57282ad](https://github.com/paruff/fawkes/commit/57282ade6749622a5bdf9e72c1c3e8ba4324b8ee))
+
+## [0.3.43](https://github.com/paruff/fawkes/compare/v0.3.42...v0.3.43) (2026-09-05)
+
+
+### Docs
+
+* refresh BACKLOG and DEPLOYMENT_STRATEGY with Phase 3 fixes ([#1799](https://github.com/paruff/fawkes/issues/1799)) ([33ac3ba](https://github.com/paruff/fawkes/commit/33ac3ba3a60aed4204f25cb981fa89a0be55fc25))
+
+
+### Chores
+
+* **golden-path:** bump tracer-bullet and smart-alerting versions ([#1798](https://github.com/paruff/fawkes/issues/1798)) ([7c62857](https://github.com/paruff/fawkes/commit/7c62857b66f8d5d78c36ae9b2a4b232a198d2923))
+
+## [0.3.42](https://github.com/paruff/fawkes/compare/v0.3.41...v0.3.42) (2026-09-05)
+
+
+### Added
+
+* **ci:** extend golden path to anomaly-detection; fix GitOps commit race ([#1791](https://github.com/paruff/fawkes/issues/1791)) ([7ae29ed](https://github.com/paruff/fawkes/commit/7ae29edc874de68dc27028f42fa0f43539a2ad14))
+
+## [0.3.41](https://github.com/paruff/fawkes/compare/v0.3.40...v0.3.41) (2026-09-05)
+
+
+### Fixed
+
+* **security:** resolve the actual Trivy CVE blocking the golden path ([#1789](https://github.com/paruff/fawkes/issues/1789)) ([caf8ba4](https://github.com/paruff/fawkes/commit/caf8ba4588ef859140fbc0b89ab38bdb8ed255bd))
+
+## [0.3.40](https://github.com/paruff/fawkes/compare/v0.3.39...v0.3.40) (2026-09-05)
+
+
+### Fixed
+
+* **ci:** Trivy SARIF debug output; feat(bdd): smart-alerting.feature steps ([#1787](https://github.com/paruff/fawkes/issues/1787)) ([2b9ede7](https://github.com/paruff/fawkes/commit/2b9ede7b547bb775d6c337f850116c3a963299fc))
+
+## [0.3.39](https://github.com/paruff/fawkes/compare/v0.3.38...v0.3.39) (2026-09-05)
+
+
+### Chores
+
+* **golden-path:** retrigger tracer-bullet and smart-alerting CI again ([#1785](https://github.com/paruff/fawkes/issues/1785)) ([fcb6d08](https://github.com/paruff/fawkes/commit/fcb6d088b966f4a8ccc708579405e995afb118ca))
+
+## [0.3.38](https://github.com/paruff/fawkes/compare/v0.3.37...v0.3.38) (2026-09-05)
+
+
+### Fixed
+
+* **ci:** tag pushed images by immutable SHA, not floating :latest ([#1783](https://github.com/paruff/fawkes/issues/1783)) ([babab5e](https://github.com/paruff/fawkes/commit/babab5e7b4a0d0564e741f12baf5501b38a16ba1))
+* **golden-path:** fix 4 bugs found live-testing the new plane scripts ([#1781](https://github.com/paruff/fawkes/issues/1781)) ([74095ff](https://github.com/paruff/fawkes/commit/74095ffced8f087d6c8c5b0fb1bad8d64f8f9d85))
+
+## [0.3.37](https://github.com/paruff/fawkes/compare/v0.3.36...v0.3.37) (2026-09-05)
+
+
+### Docs
+
+* expand golden path planes with security/resources/devex scope ([#1780](https://github.com/paruff/fawkes/issues/1780)) ([55b8c9e](https://github.com/paruff/fawkes/commit/55b8c9e1be668bd55f1c85d537511142d3b948fe))
+
+## [0.3.36](https://github.com/paruff/fawkes/compare/v0.3.35...v0.3.36) (2026-09-05)
+
+
+### Chores
+
+* **main:** release 0.3.35 ([#1778](https://github.com/paruff/fawkes/issues/1778)) ([5bdf30a](https://github.com/paruff/fawkes/commit/5bdf30af3f4003e7b580259804af08506c394c4c))
+
+## [0.3.35](https://github.com/paruff/fawkes/compare/v0.3.34...v0.3.35) (2026-09-05)
+
+
+### Added
+
+* **golden-path:** add Security, Resources, and DevEx verification planes ([#1777](https://github.com/paruff/fawkes/issues/1777)) ([7503ecd](https://github.com/paruff/fawkes/commit/7503ecd9f6072e7cfed723c7518448ae7c89d81b))
+
+
+### Docs
+
+* add golden path verification planes reference ([#1774](https://github.com/paruff/fawkes/issues/1774)) ([1b303a6](https://github.com/paruff/fawkes/commit/1b303a6816d9c3a5b65dbd4b3842f0478c5d1a22))
+
+
+### Chores
+
+* **golden-path:** retrigger tracer-bullet and smart-alerting CI ([#1775](https://github.com/paruff/fawkes/issues/1775)) ([90e12ca](https://github.com/paruff/fawkes/commit/90e12ca2cd2895886f67a7c10390c5839d5a081d))
+
+## [0.3.34](https://github.com/paruff/fawkes/compare/v0.3.33...v0.3.34) (2026-09-05)
+
+
+### Fixed
+
+* **ci:** pin Trivy to v0.74.0 in reusable-security-scanning.yml ([#1771](https://github.com/paruff/fawkes/issues/1771)) ([9ceee8b](https://github.com/paruff/fawkes/commit/9ceee8b52f7981f22891d9595c08b8a43254ba32))
+
+## [0.3.33](https://github.com/paruff/fawkes/compare/v0.3.32...v0.3.33) (2026-09-05)
+
+
+### Chores
+
+* **tracer-bullet:** bump version to 0.1.1 ([#1768](https://github.com/paruff/fawkes/issues/1768)) ([e180392](https://github.com/paruff/fawkes/commit/e180392062b47f836df386b79ad87d531bd3bce9))
+
+## [0.3.32](https://github.com/paruff/fawkes/compare/v0.3.31...v0.3.32) (2026-09-05)
+
+
+### Fixed
+
+* **gitops:** exclude golden-path apps from ApplicationSet auto-discovery ([#1767](https://github.com/paruff/fawkes/issues/1767)) ([7b35e09](https://github.com/paruff/fawkes/commit/7b35e097e2151464050ddc10431ededfd1781d77))
+
+## [0.3.31](https://github.com/paruff/fawkes/compare/v0.3.30...v0.3.31) (2026-09-05)
+
+
+### Fixed
+
+* **ci:** install syft before SBOM attestation in reusable-image-signing ([#1765](https://github.com/paruff/fawkes/issues/1765)) ([6f0b09f](https://github.com/paruff/fawkes/commit/6f0b09f894cbc76bf2dc55a55c44c7f7e31340cc))
+
+## [0.3.30](https://github.com/paruff/fawkes/compare/v0.3.29...v0.3.30) (2026-09-05)
+
+
+### Docs
+
+* correct BACKLOG and DEPLOYMENT_STRATEGY against live state ([#1761](https://github.com/paruff/fawkes/issues/1761)) ([b5e0f2b](https://github.com/paruff/fawkes/commit/b5e0f2bf7a982f5d02e3e4ca618ef68970473397))
+
+## [0.3.29](https://github.com/paruff/fawkes/compare/v0.3.28...v0.3.29) (2026-09-05)
+
+
+### Fixed
+
+* **infra:** remove hardcoded storageClass: standard, fix ArgoCD namespace watch ([#1759](https://github.com/paruff/fawkes/issues/1759)) ([37b6bce](https://github.com/paruff/fawkes/commit/37b6bce327b085f432d2dff4ffe6d5197011cf08))
+
+## [0.3.28](https://github.com/paruff/fawkes/compare/v0.3.27...v0.3.28) (2026-09-05)
+
+
+### Fixed
+
+* **security:** resolve 4 of 5 open Dependabot npm alerts in design-system ([#1757](https://github.com/paruff/fawkes/issues/1757)) ([b2dad85](https://github.com/paruff/fawkes/commit/b2dad850e40e5d8c5937d0249570e738c1e01994))
+
+## [0.3.27](https://github.com/paruff/fawkes/compare/v0.3.26...v0.3.27) (2026-09-05)
+
+
+### Fixed
+
+* **terraform:** activate Azure Blob remote state backend for infra/azure ([#1755](https://github.com/paruff/fawkes/issues/1755)) ([8138d4b](https://github.com/paruff/fawkes/commit/8138d4b8b408bbf6d86fa921206fbceac9446302))
+
+## [0.3.26](https://github.com/paruff/fawkes/compare/v0.3.25...v0.3.26) (2026-09-05)
+
+
+### Fixed
+
+* **smart-alerting:** add auth (AUD-2) and fix a service-breaking import bug ([#1753](https://github.com/paruff/fawkes/issues/1753)) ([2702b65](https://github.com/paruff/fawkes/commit/2702b659c2212faa8f18d02660857d4b2e96d214))
+
+
+### Chores
+
+* **deps:** bump the npm_and_yarn group across 1 directory with 9 updates ([#1752](https://github.com/paruff/fawkes/issues/1752)) ([62bdc26](https://github.com/paruff/fawkes/commit/62bdc267efc805d5a4856b1e3fa28e5010707b38))
+
+## [0.3.25](https://github.com/paruff/fawkes/compare/v0.3.24...v0.3.25) (2026-09-05)
+
+
+### Changed
+
+* **postgresql:** consolidate 11 single-tenant CNPG Clusters into one shared cluster ([#1749](https://github.com/paruff/fawkes/issues/1749)) ([c879cbf](https://github.com/paruff/fawkes/commit/c879cbf24b4b812bf36f9b95fdf1449c2131acea))
+
+## [0.3.24](https://github.com/paruff/fawkes/compare/v0.3.23...v0.3.24) (2026-09-05)
+
+
+### Fixed
+
+* **pipeline:** bump all CNPG Postgres clusters to 17.11, fix segfaulting 16.4 ([#1746](https://github.com/paruff/fawkes/issues/1746)) ([7edfc07](https://github.com/paruff/fawkes/commit/7edfc07dc4895d80aff4eedb74114745897255b4))
+
+## [0.3.23](https://github.com/paruff/fawkes/compare/v0.3.22...v0.3.23) (2026-09-05)
+
+
+### Fixed
+
+* **pipeline:** fix Jenkins deploy-blocking bugs, CNPG managed.services API break ([#1744](https://github.com/paruff/fawkes/issues/1744)) ([ce89f16](https://github.com/paruff/fawkes/commit/ce89f1666fc69f0e65a4c366221bb80d580c9f4e))
+
+## [0.3.22](https://github.com/paruff/fawkes/compare/v0.3.21...v0.3.22) (2026-09-04)
+
+
+### Fixed
+
+* **observability:** bump opensearch/otel-collector/tempo, fix deploy-blocking + test bugs ([#1741](https://github.com/paruff/fawkes/issues/1741)) ([cfb400b](https://github.com/paruff/fawkes/commit/cfb400be8d2c7c5170581b0d054e37406ad4c46b))
+
 ## [0.3.21](https://github.com/paruff/fawkes/compare/v0.3.20...v0.3.21) (2026-09-04)
 
 

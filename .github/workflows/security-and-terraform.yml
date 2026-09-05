@@ -116,7 +116,8 @@ jobs:
           RETRY_DELAY=30
           for attempt in $(seq 1 $MAX_RETRIES); do
             echo "Trivy scan attempt $attempt/$MAX_RETRIES"
-            if trivy fs --format sarif --output trivy-results.sarif --offline-scan --scanners vuln,misconfig .; then
+            if trivy fs --format sarif --output trivy-results.sarif --offline-scan --scanners vuln,misconfig \
+              --skip-dirs "platform/apps/*/upstream" .; then
               echo "Trivy scan succeeded on attempt $attempt"
               exit 0
             fi

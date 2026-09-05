@@ -65,6 +65,10 @@ jobs:
             echo "No registry password provided, skipping login."
           fi
 
+      - name: Install Syft
+        if: inputs.sign-sbom
+        uses: anchore/sbom-action/download-syft@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26 # v0.24.2
+
       - name: Sign image with keyless signing
         run: |
           IMAGE_REF="${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}"

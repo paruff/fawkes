@@ -18,21 +18,64 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-labels:
-- pairs:
-    app.kubernetes.io/managed-by: argocd
-    app.kubernetes.io/part-of: fawkes-platform
+# ============================================================================
+# FILE: platform/apps/tekton/kustomization.yaml
+# PURPOSE: Install Tekton Pipelines + Triggers controllers (#1659).
+#
+# No official, actively-maintained Helm chart exists for Tekton (checked
+# Artifact Hub - only low-version/unofficial third-party charts turned up).
+# Upstream's own documented install method is applying pinned release YAML
+# directly. Vendored locally (platform/apps/tekton/upstream/, ~30k lines,
+# mostly CRD schemas - named "upstream/" not "vendor/" since this repo's
+# root .gitignore blanket-excludes any "vendor/" directory) rather than
+# referenced by remote URL: kustomize's
+# remote-resource loader misidentifies storage.googleapis.com/<bucket>/<path>
+# URLs as git-repo references (its heuristic reads the first two path
+# segments as org/repo) and fails with "URL is a git repository" - a known
+# kustomize limitation, not something fixable from this side. Vendoring
+# also makes ArgoCD sync fully offline-reproducible instead of depending on
+# a live fetch from GCS at sync time.
+#
+# Namespace: core Tekton controllers move into the already-existing `fawkes`
+# namespace - Tekton is Fawkes' own platform tooling, not a delivered app,
+# so it belongs alongside other platform resources (per the namespace
+# convention: `fawkes` for platform resources, `stage`/`prod` for delivered
+# apps). Upstream actually ships a SECOND namespace, `tekton-pipelines-
+# resolvers`, for a separately-isolated resolvers component (resolvers
+# execute remote pipeline/task resolution logic, so upstream keeps them
+# namespace-isolated as a blast-radius reduction) - that isolation is kept
+# as-is rather than merged into `fawkes` too: both namespaces independently
+# ship same-named ConfigMaps (config-logging, config-observability) that
+# the resolvers Deployment references via env-var literals, so merging them
+# would require hand-editing 2 ConfigMap names + 2 env vars directly inside
+# the vendored upstream YAML - not worth it for a Phase 1 "get it running"
+# task, so only the core namespace is remapped.
+#
+# Scope is deliberately limited to the controllers only - no Task/Pipeline/
+# Trigger resources yet (those come in a later phase once wiring is proven).
+# ============================================================================
+
 resources:
-# Tekton Pipelines v1.16.0 (latest stable) and Triggers v0.37.0 (latest
-# stable) upstream release manifests, referenced by URL rather than
-# vendored - the CRD-heavy pipeline release alone is >1.5MB and fails this
-# repo's check-added-large-files (1MB) and yamllint (upstream isn't
-# formatted to this repo's yamllint config) pre-commit hooks. Kustomize
-# fetches these at build/sync time; pin the exact tag in the URL so a
-# version bump is still an explicit, reviewable PR diff.
-- https://infra.tekton.dev/tekton-releases/pipeline/previous/v1.16.0/release.yaml
-- https://infra.tekton.dev/tekton-releases/triggers/previous/v0.37.0/release.yaml
-- https://infra.tekton.dev/tekton-releases/triggers/previous/v0.37.0/interceptors.yaml
-- eventlistener-github-skeleton.yaml
+  - upstream/pipeline-v1.15.1.yaml
+  - upstream/triggers-v0.37.0.yaml
+  - upstream/triggers-interceptors-v0.37.0.yaml
+
+patches:
+  # The vendored tekton-pipelines Namespace object is redundant once its
+  # resources move into the already-existing `fawkes` namespace.
+  - patch: |-
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: tekton-pipelines
+      $patch: delete
+  # Move every resource that shipped in tekton-pipelines into fawkes.
+  # tekton-pipelines-resolvers resources are untouched by this selector
+  # (their original namespace value doesn't match), preserving upstream's
+  # isolation for that component.
+  - target:
+      namespace: tekton-pipelines
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: fawkes

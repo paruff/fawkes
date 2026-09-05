@@ -8,6 +8,37 @@
 > DORA metrics automated.
 > **Triage Method:** See [Scoring System](#scoring-system) below.
 
+> **Status correction (2026-09-05):** the Wave 0-3 plan below describes a
+> pre-Jenkins/pre-CNPG/pre-observability snapshot of the platform and is
+> significantly out of date - many Wave 0/1/2 items marked "Not started" below
+> have since been superseded by live-verified work tracked in
+> [#1751](https://github.com/paruff/fawkes/issues/1751) instead (a plan
+> grounded in this week's live-cluster evidence, not this document). Notably:
+> Jenkins, CloudNativePG, and the observability stack (Prometheus/Grafana)
+> are live-tested and working; Terraform remote state (the "AWS credits /
+> EKS cluster not provisioned" blocker below) is resolved via Azure Blob
+> Storage, not AWS; ArgoCD's GitOps reconciliation is live-verified.
+> **Treat #1751 as the current source of truth for MVP status** until this
+> document is fully rewritten against the platform's actual state - see
+> `docs/KNOWN_LIMITATIONS.md` and `reports/production-audit-2026-09.md` for
+> further live-verified findings this document does not yet reflect.
+>
+> **Update (2026-09-05, #1751 Phase 3):** this session root-caused and fixed
+> the ArgoCD ApplicationSet auto-discovery colliding with hand-written
+> Application manifests (3 directories excluded, 9 more tracked in #1772),
+> a non-reproducible Trivy CI failure (a real vendored-pip CVE, not a
+> flake), and a GitOps commit-push race — all blocking the "Hello World
+> service... deployed via GitOps" row above from actually reaching
+> `Running` on a live cluster. The build→scan→sign→SBOM→GitOps pattern
+> (row "CI pipeline" / #85) is now piloted on 4 services (tracer-bullet,
+> dora-metrics, smart-alerting, anomaly-detection); the other 13 still only
+> get lint+test (#1792). New `docs/golden-path-verification-planes.md`
+> defines 7 verification planes (Pipeline, GitOps, Observability, DORA,
+> Security, Resources, DevEx) with a validation script each. BDD coverage
+> for the "comprehensive BDD tests" row (#54) grew from 190→217 collected
+> tests; 42 feature files still lack step definitions, prioritized in
+> #1796. See PR #1798 for the live end-to-end re-verification run.
+
 ---
 
 ## Table of Contents

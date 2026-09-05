@@ -26,7 +26,7 @@ metadata:
   labels:
     app: smart-alerting
     app.kubernetes.io/name: smart-alerting
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: 57282ad
     app.kubernetes.io/component: observability
     app.kubernetes.io/part-of: fawkes
     app.kubernetes.io/managed-by: argocd
@@ -40,7 +40,7 @@ spec:
       labels:
         app: smart-alerting
         app.kubernetes.io/name: smart-alerting
-        app.kubernetes.io/version: v1.0.0
+        app.kubernetes.io/version: 57282ad
         app.kubernetes.io/component: observability
         app.kubernetes.io/part-of: fawkes
       annotations:
@@ -56,7 +56,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: smart-alerting
-          image: smart-alerting:latest
+          image: ghcr.io/paruff/smart-alerting:57282ad
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -103,6 +103,12 @@ spec:
                 secretKeyRef:
                   name: smart-alerting-secrets
                   key: pagerduty-api-key
+                  optional: true
+            - name: ALERTING_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: smart-alerting-secrets
+                  key: alerting-api-token
                   optional: true
           resources:
             requests:
