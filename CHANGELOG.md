@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.26](https://github.com/paruff/fawkes/compare/v0.3.25...v0.3.26) (2026-09-05)
+
+
+### Fixed
+
+* **smart-alerting:** add auth (AUD-2) and fix a service-breaking import bug ([#1753](https://github.com/paruff/fawkes/issues/1753)) ([2702b65](https://github.com/paruff/fawkes/commit/2702b659c2212faa8f18d02660857d4b2e96d214))
+
+
+### Chores
+
+* **deps:** bump the npm_and_yarn group across 1 directory with 9 updates ([#1752](https://github.com/paruff/fawkes/issues/1752)) ([62bdc26](https://github.com/paruff/fawkes/commit/62bdc267efc805d5a4856b1e3fa28e5010707b38))
+
 ## [0.3.25](https://github.com/paruff/fawkes/compare/v0.3.24...v0.3.25) (2026-09-05)
 
 
