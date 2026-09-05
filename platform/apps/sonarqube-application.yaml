@@ -112,14 +112,14 @@ spec:
 
         # ============================================================
         # External PostgreSQL Configuration
-        # Uses CloudNativePG cluster: db-sonarqube-dev
+        # Uses shared CloudNativePG cluster: db-shared-dev
         # ============================================================
         postgresql:
           enabled: false  # Disable embedded PostgreSQL
 
         jdbcOverwrite:
           enable: true
-          jdbcUrl: "jdbc:postgresql://db-sonarqube-dev-rw.fawkes.svc.cluster.local:5432/sonarqube"
+          jdbcUrl: "jdbc:postgresql://db-shared-dev-rw.fawkes.svc.cluster.local:5432/sonarqube"
           jdbcUsername: "sonarqube_user"
           jdbcSecretName: "db-sonarqube-credentials"
           jdbcSecretPasswordKey: "password"

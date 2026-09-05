@@ -1,0 +1,197 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/postgresql/db-shared-dev-cluster.yaml
+# PURPOSE: Single shared CloudNativePG Cluster hosting one database per
+#          platform service, replacing the 11 separate single-tenant Clusters
+#          this repo used to run (backstage, datahub, discovery-metrics,
+#          experimentation, focalboard, harbor, plausible, sonarqube,
+#          unleash, vsm, penpot) - each of those was a full 1-3 instance
+#          Postgres cluster on a resource-constrained local dev cluster that
+#          has already hit disk/memory exhaustion once.
+# TRADEOFF: one shared instance means a single Postgres outage now affects
+#           every consuming service at once, instead of just one. Acceptable
+#           for local/dev; revisit before any shared production use.
+# ============================================================================
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: db-shared-dev
+  namespace: fawkes
+  labels:
+    component: database
+    environment: dev
+    team: platform
+spec:
+  instances: 1
+
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.11
+
+  primaryUpdateStrategy: unsupervised
+
+  postgresql:
+    parameters:
+      max_connections: "300"
+      shared_buffers: "512MB"
+      effective_cache_size: "1536MB"
+      maintenance_work_mem: "128MB"
+      checkpoint_completion_target: "0.9"
+      wal_buffers: "16MB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "200"
+      min_wal_size: "1GB"
+      max_wal_size: "4GB"
+      log_statement: "ddl"
+      log_min_duration_statement: "1000"
+      password_encryption: "scram-sha-256"
+    pg_hba:
+      - host all all 10.0.0.0/8 scram-sha-256
+      - host all all 172.16.0.0/12 scram-sha-256
+      - host all all 192.168.0.0/16 scram-sha-256
+      - host replication streaming_replica all scram-sha-256
+
+  bootstrap:
+    initdb:
+      database: app
+      owner: app
+      secret:
+        name: db-shared-dev-credentials
+      # Extensions every per-service database needs, applied to template1 so
+      # every CREATE DATABASE below (which defaults to TEMPLATE template1)
+      # inherits them automatically.
+      postInitTemplateSQL:
+        - CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+        - CREATE EXTENSION IF NOT EXISTS pgcrypto;
+      # Bare roles + databases only - no passwords here. Each role's real
+      # password is reconciled by spec.managed.roles below from the same
+      # per-service Secret each service already used before consolidation,
+      # so this file never contains a plaintext credential.
+      postInitSQL:
+        - CREATE ROLE backstage_user WITH LOGIN;
+        - CREATE DATABASE backstage_db OWNER backstage_user;
+        - CREATE ROLE datahub_user WITH LOGIN;
+        - CREATE DATABASE datahub OWNER datahub_user;
+        - CREATE ROLE focalboard_user WITH LOGIN;
+        - CREATE DATABASE focalboard OWNER focalboard_user;
+        - CREATE ROLE harbor_user WITH LOGIN;
+        - CREATE DATABASE harbor OWNER harbor_user;
+        - CREATE ROLE plausible_user WITH LOGIN;
+        - CREATE DATABASE plausible_db OWNER plausible_user;
+        - CREATE ROLE sonarqube_user WITH LOGIN;
+        - CREATE DATABASE sonarqube OWNER sonarqube_user;
+        - CREATE ROLE unleash_user WITH LOGIN;
+        - CREATE DATABASE unleash OWNER unleash_user;
+        - CREATE ROLE vsm_user WITH LOGIN;
+        - CREATE DATABASE vsm_db OWNER vsm_user;
+        - CREATE ROLE penpot WITH LOGIN;
+        - CREATE DATABASE penpot OWNER penpot;
+        - CREATE ROLE discovery_user WITH LOGIN;
+        - CREATE DATABASE discovery_metrics OWNER discovery_user;
+        - CREATE ROLE experiment_user WITH LOGIN;
+        - CREATE DATABASE experiment OWNER experiment_user;
+
+  storage:
+    size: 20Gi
+    storageClass: standard
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 2
+      memory: 2Gi
+
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: preferred
+
+  monitoring:
+    enablePodMonitor: true
+    customQueriesConfigMap:
+      - name: cnpg-default-monitoring
+        key: queries
+
+  # Declarative role management: reconciles each service's existing
+  # credentials Secret (already had username/password/dbname keys from the
+  # single-tenant Cluster era) onto the role postInitSQL created above.
+  managed:
+    roles:
+      - name: backstage_user
+        ensure: present
+        login: true
+        passwordSecret:
+          name: db-backstage-credentials
+      - name: datahub_user
+        ensure: present
+        login: true
+        passwordSecret:
+          name: db-datahub-credentials
+      - name: focalboard_user
+        ensure: present
+        login: true
+        passwordSecret:
+          name: db-focalboard-credentials
+      - name: harbor_user
+        ensure: present
+        login: true
+        passwordSecret:
+          name: db-harbor-credentials
+      - name: plausible_user
+        ensure: present
+        login: true
+        passwordSecret:
+          name: db-plausible-credentials
+      - name: sonarqube_user
+        ensure: present
+        login: true
+        passwordSecret:
+          name: db-sonarqube-credentials
+      - name: unleash_user
+        ensure: present
+        login: true
+        passwordSecret:
+          name: db-unleash-credentials
+      - name: vsm_user
+        ensure: present
+        login: true
+        passwordSecret:
+          name: db-vsm-credentials
+      - name: penpot
+        ensure: present
+        login: true
+        passwordSecret:
+          name: penpot-db-credentials
+      - name: discovery_user
+        ensure: present
+        login: true
+        passwordSecret:
+          name: db-discovery-credentials
+      - name: experiment_user
+        ensure: present
+        login: true
+        passwordSecret:
+          name: db-experiment-credentials
+
+  failoverDelay: 30
+  switchoverDelay: 60
