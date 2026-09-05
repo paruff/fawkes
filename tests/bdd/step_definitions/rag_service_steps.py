@@ -14,10 +14,12 @@ from typing import Dict
 
 import pytest
 import requests
-from pytest_bdd import given, parsers, then, when
+from pytest_bdd import given, parsers, scenarios, then, when
 
 if os.getenv("FAWKES_DEBUG_STEPS") == "1":  # pragma: no cover
     print("[bdd] Loaded rag_service_steps definitions")
+
+scenarios("../features/rag-service.feature")
 
 
 def _kubectl_json(args: list[str]) -> dict:
