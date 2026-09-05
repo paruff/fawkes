@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.35](https://github.com/paruff/fawkes/compare/v0.3.34...v0.3.35) (2026-09-05)
+
+
+### Docs
+
+* add golden path verification planes reference ([#1774](https://github.com/paruff/fawkes/issues/1774)) ([1b303a6](https://github.com/paruff/fawkes/commit/1b303a6816d9c3a5b65dbd4b3842f0478c5d1a22))
+
+
+### Chores
+
+* **golden-path:** retrigger tracer-bullet and smart-alerting CI ([#1775](https://github.com/paruff/fawkes/issues/1775)) ([90e12ca](https://github.com/paruff/fawkes/commit/90e12ca2cd2895886f67a7c10390c5839d5a081d))
+
 ## [0.3.34](https://github.com/paruff/fawkes/compare/v0.3.33...v0.3.34) (2026-09-05)
 
 
