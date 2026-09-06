@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.53](https://github.com/paruff/fawkes/compare/v0.3.52...v0.3.53) (2026-09-06)
+
+
+### Fixed
+
+* **observability:** unblock log shipping, add Tempo/OpenSearch datasources ([#1833](https://github.com/paruff/fawkes/issues/1833)) ([963ed7d](https://github.com/paruff/fawkes/commit/963ed7d4538a7d4b6878e55fcae1b9a26543267d))
+
 ## [0.3.52](https://github.com/paruff/fawkes/compare/v0.3.51...v0.3.52) (2026-09-06)
 
 
