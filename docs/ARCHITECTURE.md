@@ -144,6 +144,38 @@ Fawkes is composed of four platform layers that must only depend downward:
 | **Infrastructure** | `infra/`               | HCL (Terraform)  | Cloud provisioning, IaC modules                                                                                   |
 | **Scripts**        | `scripts/`             | Bash / Python    | Automation helpers that call services and CLI tools                                                               |
 
+### Platform App Registration (`platform/bootstrap/`)
+
+Every platform app (`platform/apps/**/*-application.yaml`) is registered with
+ArgoCD by a single `ApplicationSet` (`platform-applicationset.yaml`, #1842),
+using a `git` generator with `files` globbing - **not** the `directories`
+generator, which collided across ~29 of 45 matched directories in an earlier
+iteration of this same idea (worked around at the time with a 28-entry
+manual exclude list, itself later replaced). The ApplicationSet controller
+is the sole owner of every Application it generates: nothing else may apply,
+template, or manage those objects. A second, competing mechanism doing so is
+exactly what caused two separate live incidents before this design -
+`ingress-nginx` registered twice under one plain-Application directory scan,
+and a leftover app-of-apps Application independently reconciling the same
+directory.
+
+Two apps sit outside the ApplicationSet by design, not oversight:
+`fawkes-networking` and the default `AppProject` are foundational,
+one-of-a-kind resources, not instances of the repeating "one Helm chart or
+kustomize dir per app" pattern the generator solves - they stay as plain
+`Application`/`AppProject` manifests listed directly in
+`platform/bootstrap/kustomization.yaml`.
+
+**CI enforcement**: `scripts/render-all-applications.sh` actually fetches
+and renders every app's real Helm chart or kustomize source (`helm
+template` / `kubectl kustomize`) and fails the build on error, wired into
+the `argocd-validate` pre-commit hook. Its predecessor called `argocd app
+validate` - a client-side schema check on the Application CR itself, never
+touching the underlying chart - and silently downgraded every failure to a
+warning; it never once failed a build. The replacement caught two real,
+previously-undetected defects (a Helm values schema mismatch, an OCI chart
+reference bug) the first time it ran.
+
 ### Platform Services (`services/`)
 
 | Service             | Directory                                          | Purpose                                                                                    |
