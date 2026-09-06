@@ -146,15 +146,17 @@ def test_webhook_pull_request_opened(mock_env):
         "repository": {"full_name": "test/repo"},
     }
 
-    # TestClient (httpx) serializes json= with compact separators; the signature
-    # must be computed over the exact bytes transmitted or verification fails.
-    payload_bytes = json.dumps(payload, separators=(",", ":")).encode()
+    # Sign the exact bytes transmitted: send the payload as a raw body via
+    # content= so the HMAC covers precisely what the server receives, rather
+    # than depending on how httpx serializes json= (which changed between
+    # httpx 0.27 and 0.28).
+    payload_bytes = json.dumps(payload).encode()
     signature = hmac.new(b"test-secret", msg=payload_bytes, digestmod=hashlib.sha256).hexdigest()
 
     with patch("app.main.process_pull_request_review"):
         response = client.post(
             "/webhook/github",
-            json=payload,
+            content=payload_bytes,
             headers={
                 "X-Hub-Signature-256": f"sha256={signature}",
                 "X-GitHub-Event": "pull_request",
@@ -178,13 +180,17 @@ def test_webhook_ignores_other_events(mock_env):
     client = TestClient(app)
 
     payload = {"action": "created"}
-    payload_bytes = json.dumps(payload, separators=(",", ":")).encode()
+    payload_bytes = json.dumps(payload).encode()
     signature = hmac.new(b"test-secret", msg=payload_bytes, digestmod=hashlib.sha256).hexdigest()
 
     response = client.post(
         "/webhook/github",
-        json=payload,
-        headers={"X-Hub-Signature-256": f"sha256={signature}", "X-GitHub-Event": "issue_comment"},
+        content=payload_bytes,
+        headers={
+            "X-Hub-Signature-256": f"sha256={signature}",
+            "X-GitHub-Event": "issue_comment",
+            "Content-Type": "application/json",
+        },
     )
 
     assert response.status_code == 200

@@ -184,6 +184,100 @@ jobs:
         run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
   # ==========================================================================
+  # Python BDD Acceptance Tests (pytest-bdd step definitions)
+  # ==========================================================================
+  # Collects the entire step_definitions tree (catches the unregistered-marker
+  # and undefined-step errors that were previously invisible because no CI job
+  # ever collected tests/bdd) and executes the repo-static acceptance scenarios
+  # that need no live cluster. Cluster-dependent scenarios are validated by
+  # idp-e2e-tests.yml's kind cluster instead.
+  python-bdd-acceptance:
+    name: Python BDD Acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: detect-changes
+    if: needs.detect-changes.outputs.python == 'true'
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Python environment
+        uses: ./.github/actions/setup-python-env
+
+      - name: Collect entire step_definitions tree
+        run: |
+          pytest -c tests/bdd/pytest.ini tests/bdd/step_definitions/ --collect-only -q \
+            --junit-xml=reports/bdd-collection.xml
+
+      - name: Run repo-static BDD acceptance scenarios
+        run: |
+          mkdir -p reports
+          pytest -c tests/bdd/pytest.ini \
+            tests/bdd/step_definitions/security_plane_steps.py \
+            tests/bdd/step_definitions/secrets_scanning_steps.py \
+            tests/bdd/step_definitions/quality_gates_steps.py \
+            --junit-xml=reports/bdd-acceptance.xml
+
+      - name: Upload BDD test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: bdd-acceptance-results
+          path: reports/
+          if-no-files-found: ignore
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ==========================================================================
+  # Python Integration Tests (collection gate)
+  # ==========================================================================
+  # The integration tests under tests/integration/ target live Azure/AKS
+  # resources and are executed separately (terraform-tests.yml /
+  # idp-e2e-tests.yml). This job guarantees they at least collect without
+  # import or marker errors, so structural breakage surfaces in CI instead of
+  # going unnoticed.
+  python-integration:
+    name: Python Integration Collect
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: detect-changes
+    if: needs.detect-changes.outputs.python == 'true'
+    permissions:
+      contents: read
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Python environment
+        uses: ./.github/actions/setup-python-env
+
+      - name: Collect integration tests
+        run: pytest -c tests/pytest.ini tests/integration/ --collect-only -q
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ==========================================================================
   # TypeScript/JavaScript Quality (for design-system)
   # ==========================================================================
   typescript-quality:
@@ -550,6 +644,8 @@ jobs:
       [
         detect-changes,
         python-lint-and-test,
+        python-bdd-acceptance,
+        python-integration,
         typescript-quality,
         go-quality,
         shell-quality,
@@ -578,6 +674,8 @@ jobs:
           echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| Python Quality | ${{ needs.python-lint-and-test.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Python BDD Acceptance | ${{ needs.python-bdd-acceptance.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Python Integration Collect | ${{ needs.python-integration.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| TypeScript Quality | ${{ needs.typescript-quality.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Go Quality | ${{ needs.go-quality.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Shell Quality | ${{ needs.shell-quality.result }} |" >> $GITHUB_STEP_SUMMARY
@@ -604,6 +702,8 @@ jobs:
             | Check | Status |
             |-------|--------|
             | Python Quality | ${{ needs.python-lint-and-test.result }} |
+            | Python BDD Acceptance | ${{ needs.python-bdd-acceptance.result }} |
+            | Python Integration Collect | ${{ needs.python-integration.result }} |
             | TypeScript Quality | ${{ needs.typescript-quality.result }} |
             | Go Quality | ${{ needs.go-quality.result }} |
             | Shell Quality | ${{ needs.shell-quality.result }} |

@@ -39,22 +39,12 @@ logger = logging.getLogger(__name__)
 # PYTEST PLUGINS
 # ============================================================================
 
-# Register BDD step definitions as pytest plugins
-# Moved from tests/bdd/conftest.py for pytest 9.x compatibility
-#
-# Only step modules that pytest wouldn't otherwise auto-collect need to be
-# listed here explicitly — a step module named test_*.py is already
-# discovered by pytest's normal collection. azure_steps, infrastructure_steps,
-# postgresql_steps, and rag_service_steps use pytest-bdd (confirmed: each
-# calls `scenarios(...)` at module level) but don't match that naming
-# convention, so without this they were silently never collected at all.
-pytest_plugins = (
-    "tests.bdd.step_definitions.argocd_steps",
-    "tests.bdd.step_definitions.azure_steps",
-    "tests.bdd.step_definitions.infrastructure_steps",
-    "tests.bdd.step_definitions.postgresql_steps",
-    "tests.bdd.step_definitions.rag_service_steps",
-)
+# BDD step-definition modules are collected directly by
+# tests/bdd/pytest.ini's `python_files = *_steps.py` (see the comment in that
+# file), so no global pytest_plugins registration is needed here. Keeping
+# pytest-bdd plugins out of the root conftest prevents them being imported
+# (and failing) for unrelated test trees such as tests/integration/.
+pytest_plugins = ()
 
 
 # ============================================================================
