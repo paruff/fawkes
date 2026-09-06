@@ -5,6 +5,14 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.51](https://github.com/paruff/fawkes/compare/v0.3.50...v0.3.51) (2026-09-06)
+
+
+### Fixed
+
+* **sonarqube:** fix dead chart repo URL, bump to latest stable ([#1828](https://github.com/paruff/fawkes/issues/1828)) ([b0f5c51](https://github.com/paruff/fawkes/commit/b0f5c51a7fef6c0db3e53be996883ee54d786194))
+* **tekton:** fix webhook listener RBAC - CrashLoopBackOff on cluster-scoped resources ([#1827](https://github.com/paruff/fawkes/issues/1827)) ([69e0b2e](https://github.com/paruff/fawkes/commit/69e0b2e58252a9c579d2f5df2a24782844ed802b))
+
 ## [0.3.50](https://github.com/paruff/fawkes/compare/v0.3.49...v0.3.50) (2026-09-06)
 
 
