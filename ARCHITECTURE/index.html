@@ -2828,6 +2828,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#platform-app-registration-platformbootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform App Registration (platform/bootstrap/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#platform-services-services" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5725,6 +5736,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#platform-app-registration-platformbootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform App Registration (platform/bootstrap/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#platform-services-services" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6144,6 +6166,34 @@ scanning, log aggregation, DORA metrics, and enterprise collaboration.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="platform-app-registration-platformbootstrap">Platform App Registration (<code>platform/bootstrap/</code>)</h3>
+<p>Every platform app (<code>platform/apps/**/*-application.yaml</code>) is registered with
+ArgoCD by a single <code>ApplicationSet</code> (<code>platform-applicationset.yaml</code>, #1842),
+using a <code>git</code> generator with <code>files</code> globbing - <strong>not</strong> the <code>directories</code>
+generator, which collided across ~29 of 45 matched directories in an earlier
+iteration of this same idea (worked around at the time with a 28-entry
+manual exclude list, itself later replaced). The ApplicationSet controller
+is the sole owner of every Application it generates: nothing else may apply,
+template, or manage those objects. A second, competing mechanism doing so is
+exactly what caused two separate live incidents before this design -
+<code>ingress-nginx</code> registered twice under one plain-Application directory scan,
+and a leftover app-of-apps Application independently reconciling the same
+directory.</p>
+<p>Two apps sit outside the ApplicationSet by design, not oversight:
+<code>fawkes-networking</code> and the default <code>AppProject</code> are foundational,
+one-of-a-kind resources, not instances of the repeating "one Helm chart or
+kustomize dir per app" pattern the generator solves - they stay as plain
+<code>Application</code>/<code>AppProject</code> manifests listed directly in
+<code>platform/bootstrap/kustomization.yaml</code>.</p>
+<p><strong>CI enforcement</strong>: <code>scripts/render-all-applications.sh</code> actually fetches
+and renders every app's real Helm chart or kustomize source (<code>helm
+template</code> / <code>kubectl kustomize</code>) and fails the build on error, wired into
+the <code>argocd-validate</code> pre-commit hook. Its predecessor called <code>argocd app
+validate</code> - a client-side schema check on the Application CR itself, never
+touching the underlying chart - and silently downgraded every failure to a
+warning; it never once failed a build. The replacement caught two real,
+previously-undetected defects (a Helm values schema mismatch, an OCI chart
+reference bug) the first time it ran.</p>
 <h3 id="platform-services-services">Platform Services (<code>services/</code>)</h3>
 <table>
 <thead>
