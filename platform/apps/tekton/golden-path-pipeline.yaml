@@ -236,6 +236,11 @@ spec:
         steps:
           - name: trivy-scan
             image: docker.io/aquasec/trivy:0.74.0
+            # A stalled vuln-DB download (flaky network, GHCR rate limit) hung
+            # this step for 5+ hours with no feedback until TaskRunTimeout
+            # killed the whole PipelineRun - a real failure seen on this
+            # exact pipeline, not a hypothetical. Fail fast instead.
+            timeout: 10m
             script: |
               #!/bin/sh
               set -eu

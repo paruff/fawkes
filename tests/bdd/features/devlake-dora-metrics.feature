@@ -23,7 +23,7 @@ Feature: DevLake DORA Metrics Visualization
     And the raw data is stored in the metrics database
     And the deployment is correlated with the source commit
 
-  @data-ingestion @jenkins
+  @data-ingestion @ci
   Scenario: CI Build Data Ingestion from Jenkins
     Given the Jenkins collector is configured and running
     When a Golden Path pipeline completes a build
@@ -150,7 +150,7 @@ Feature: DevLake DORA Metrics Visualization
   # ============================================================
   # Jenkins CI Rework Metrics (Complementary)
   # ============================================================
-  @jenkins @rework-metrics
+  @ci @rework-metrics
   Scenario: CI Rework Metrics Display
     Given Jenkins has recorded build events for Service C
     And 5 out of 50 builds were retries of the same commit
@@ -158,7 +158,7 @@ Feature: DevLake DORA Metrics Visualization
     Then the Rework Rate is displayed as 10%
     And Build Success Rate and Quality Gate Pass Rate are visible
 
-  @jenkins @quality-gate
+  @ci @quality-gate
   Scenario: Quality Gate Tracking
     Given Jenkins records SonarQube quality gate results
     When a developer views the quality metrics

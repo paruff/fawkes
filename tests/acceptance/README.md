@@ -370,11 +370,12 @@ kubectl get applications -n argocd -o json | \
    - Validates ingress configuration
    - Checks admin credentials secret
 
-2. **BDD Tests** (`tests/bdd/features/jenkins/`)
-   - `jenkins-kubernetes-deployment.feature` - Jenkins deployment with Kubernetes plugin
-   - `jcasc-configuration.feature` - Jenkins Configuration as Code validation
-   - `golden-path.feature` - Golden Path CI/CD pipeline tests
-   - `pipeline-creation.feature` - Pipeline creation and execution
+2. **BDD Tests** (`tests/bdd/features/golden-path-tekton.feature`)
+   - Golden Path CI/CD pipeline tests against the current Tekton-based pipeline
+   - The Jenkins-based predecessors (`jenkins-kubernetes-deployment.feature`,
+     `jcasc-configuration.feature`, `golden-path.feature`, `pipeline-creation.feature`)
+     are archived under `tests/bdd/features/archive/jenkins/` - Jenkins was
+     removed from this platform in favor of Tekton
 
 ### Test Reports
 

@@ -4,7 +4,7 @@ import pytest
 from pytest_bdd import given, scenarios, then, when
 
 # Load ALL scenarios from the feature file
-scenarios("../features/jenkins/pipeline-creation.feature")
+scenarios("../../features/archive/jenkins/pipeline-creation.feature")
 
 
 # Fixtures for test context

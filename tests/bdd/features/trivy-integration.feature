@@ -11,7 +11,7 @@ Feature: Trivy Container Security Scanning Integration
     And Harbor is deployed with Trivy scanner enabled
     And the Golden Path pipeline is configured
 
-  @jenkins @pipeline
+  @ci @pipeline
   Scenario: Trivy integrated in Jenkins Golden Path pipeline
     Given a Jenkinsfile uses the Golden Path shared library
     And a Docker image has been built in the pipeline
@@ -21,7 +21,7 @@ Feature: Trivy Container Security Scanning Integration
     And the scan should check for HIGH and CRITICAL vulnerabilities
     And the scan report should be archived as a build artifact
 
-  @jenkins @scan-report
+  @ci @scan-report
   Scenario: Trivy scan generates reports in Jenkins
     Given a container image is scanned by Trivy in Jenkins
     When the scan completes
@@ -30,7 +30,7 @@ Feature: Trivy Container Security Scanning Integration
     And the reports should be archived in Jenkins
     And the reports should be accessible from the build page
 
-  @jenkins @quality-gate
+  @ci @quality-gate
   Scenario: Trivy scan enforces security quality gate
     Given a container image with CRITICAL vulnerabilities
     When Trivy scans the image with exit-code 1

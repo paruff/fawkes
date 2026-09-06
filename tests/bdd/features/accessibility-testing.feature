@@ -108,7 +108,7 @@ Feature: Automated Accessibility Testing
     And I should find examples of common violations and fixes
     And I should find links to accessibility resources
 
-  @accessibility @jenkins @important
+  @accessibility @ci @important
   Scenario: Jenkins pipeline includes accessibility testing stage
     Given a service uses the Golden Path pipeline
     When the Jenkins pipeline executes
