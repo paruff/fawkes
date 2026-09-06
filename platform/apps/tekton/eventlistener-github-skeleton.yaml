@@ -66,14 +66,20 @@ metadata:
     component: cicd
 rules:
   # Standard Tekton Triggers EventListener permissions, scoped to this
-  # namespace only (no cluster-wide access needed for the skeleton).
+  # namespace. "interceptors" (namespaced) was missing entirely; a Role
+  # granting "clusterinterceptors"/"clustertriggerbindings" here does
+  # nothing since those are cluster-scoped resources - a namespaced Role
+  # can never grant access to them regardless of what's listed (fixed
+  # below via a real ClusterRole+ClusterRoleBinding). Live-verified: this
+  # RBAC was never actually deployed until now, and the pod crash-looped
+  # on exactly this gap.
   - apiGroups: ["triggers.tekton.dev"]
     resources:
       - eventlisteners
       - triggerbindings
       - triggertemplates
       - triggers
-      - clusterinterceptors
+      - interceptors
     verbs: ["get", "list", "watch"]
   - apiGroups: ["tekton.dev"]
     resources: ["taskruns", "pipelineruns"]
@@ -81,6 +87,38 @@ rules:
   - apiGroups: [""]
     resources: ["configmaps", "secrets"]
     verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: tekton-triggers-github-clusterrole
+  labels:
+    app: tekton
+    component: cicd
+rules:
+  # ClusterInterceptor/ClusterTriggerBinding are cluster-scoped - only a
+  # ClusterRole can grant access to them, regardless of namespace.
+  - apiGroups: ["triggers.tekton.dev"]
+    resources:
+      - clusterinterceptors
+      - clustertriggerbindings
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: tekton-triggers-github-clusterrolebinding
+  labels:
+    app: tekton
+    component: cicd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tekton-triggers-github-clusterrole
+subjects:
+  - kind: ServiceAccount
+    name: tekton-triggers-github-sa
+    namespace: fawkes
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
