@@ -15,7 +15,7 @@ fi
 echo "Current working directory: $(pwd)"
 
 # Default configuration
-ARGO_NS="${ARGOCD_NAMESPACE:-fawkes}"
+ARGO_NS="${ARGOCD_NAMESPACE:-argocd}"
 ARGOCD_PASSWORD=""
 PROVIDER=""
 CLUSTER_NAME=""

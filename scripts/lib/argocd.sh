@@ -38,7 +38,8 @@ maybe_cleanup_argocd_cluster_resources() {
 }
 
 deploy_argocd() {
-  local TF_MODULE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infra/terraform/argocd" && pwd)"
+  local TF_MODULE_DIR
+  TF_MODULE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../infra/terraform/argocd" && pwd)"
   echo "Deploying ArgoCD via Terraform module at ${TF_MODULE_DIR}"
   local TEMP_KUBECONFIG
   TEMP_KUBECONFIG=$(mktemp -t fawkes-kubeconfig-XXXX.yaml)
@@ -168,7 +169,10 @@ deploy_argocd() {
 
 ensure_argocd_workloads() {
   echo "🌐 Ensuring ArgoCD deployments are available..."
-  for dep in argocd-server argocd-repo-server argocd-application-controller argocd-dex-server; do
+  # dex is deliberately disabled in this module's values.yaml ("disabled for
+  # MVP") - waiting on it here guaranteed a 300s timeout then a hard failure
+  # on every single run, live-confirmed during the KIND audit.
+  for dep in argocd-server argocd-repo-server argocd-application-controller; do
     if ! wait_for_workload "${dep}" "${ARGO_NS}" 300; then
       error_exit "Deployment ${dep} failed to become available"
     fi
