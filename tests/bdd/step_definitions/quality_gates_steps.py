@@ -34,9 +34,16 @@ def _read_repo_file(relative_path: str) -> str:
 
 @given("I have kubectl configured for the cluster")
 def step_given_kubectl_configured():
-    """Verify kubectl is configured and can reach the cluster."""
+    """Verify kubectl is configured and can reach the cluster.
+
+    Skips (rather than fails) when no cluster is reachable so the
+    file-based quality-gate assertions still run in bare CI runners.
+    """
     result = subprocess.run(["kubectl", "cluster-info"], capture_output=True, text=True, check=False)
-    assert result.returncode == 0, f"kubectl not configured or cluster unreachable: {result.stderr}"
+    if result.returncode != 0:
+        import pytest
+
+        pytest.skip("kubectl not configured or cluster unreachable")
 
 
 @given("the Jenkins shared library is loaded")
