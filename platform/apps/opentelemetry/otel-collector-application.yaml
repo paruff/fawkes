@@ -115,16 +115,20 @@ spec:
 
         # ============================================================
         # Pod Security Context
-        # Note: filelog receiver needs access to /var/log, running as
-        # non-root with fsGroup for log file access
+        # Note: the filelog receiver must run as root to read
+        # /var/log/containers. Those are symlinks into /var/log/pods, owned
+        # by root - and fsGroup only affects mounted volumes, not hostPath
+        # files, so the previous "non-root + fsGroup" setup could never work.
+        # Verified live: every file produced
+        #   "Failed to open file ... permission denied"
+        # and no logs ever reached OpenSearch as a result.
         # readOnlyRootFilesystem: false is required for file_storage
         # extension to persist queue state during restarts
         # ============================================================
         podSecurityContext:
-          runAsNonRoot: true
-          runAsUser: 10001
-          runAsGroup: 10001
-          fsGroup: 10001
+          runAsNonRoot: false
+          runAsUser: 0
+          runAsGroup: 0
 
         securityContext:
           allowPrivilegeEscalation: false

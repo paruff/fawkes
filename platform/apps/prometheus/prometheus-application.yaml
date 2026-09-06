@@ -264,6 +264,36 @@ spec:
               enabled: true
               defaultDatasourceEnabled: true
 
+          # Tempo (traces) and OpenSearch (logs) were missing entirely, so
+          # Grafana could only ever show metrics - even once the otel-collector
+          # started successfully shipping logs/traces, there was nothing in
+          # Grafana able to query them. Endpoints match the otel-collector's
+          # own exporter targets.
+          additionalDataSources:
+            - name: Tempo
+              type: tempo
+              access: proxy
+              uid: tempo
+              url: http://tempo.monitoring.svc.cluster.local:3200
+              jsonData:
+                tracesToLogsV2:
+                  datasourceUid: opensearch
+                  spanStartTimeShift: "-5m"
+                  spanEndTimeShift: "5m"
+                serviceMap:
+                  datasourceUid: prometheus
+            - name: OpenSearch
+              type: grafana-opensearch-datasource
+              access: proxy
+              uid: opensearch
+              url: http://opensearch-cluster-master.logging.svc.cluster.local:9200
+              jsonData:
+                database: "otel-logs*"
+                flavor: OpenSearch
+                version: 3.8.0
+                timeField: "@timestamp"
+                pplEnabled: true
+
           ingress:
             enabled: true
             ingressClassName: nginx
@@ -274,6 +304,9 @@ spec:
           plugins:
             - grafana-piechart-panel
             - grafana-clock-panel
+            # Required by the OpenSearch datasource added above - without it
+            # Grafana silently shows the datasource as an unknown type.
+            - grafana-opensearch-datasource
 
           defaultDashboardsEnabled: true
           defaultDashboardsTimezone: UTC
