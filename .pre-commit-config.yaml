@@ -245,20 +245,20 @@ repos:
         pass_filenames: false
         files: '(catalog-info|\.catalog-info)\.yaml$'
 
-      # ArgoCD Application validation (GitOps)
+      # ArgoCD Application validation (GitOps) - #1842. The previous version
+      # of this hook called `argocd app validate` (a client-side Application-
+      # CR schema check that never fetches/renders the underlying chart or
+      # kustomize source) and swallowed every failure into a warning echo -
+      # it never once failed a build. scripts/render-all-applications.sh
+      # actually renders each Application's real source and fails on error;
+      # it caught 2 genuine, previously-undetected defects (a kyverno values
+      # schema mismatch, an OCI chart reference bug) the first time it ran.
       - id: argocd-validate
-        name: Validate ArgoCD applications
-        entry: |
-          bash -c '
-            if command -v argocd &> /dev/null; then
-              find . -path "./.claude" -prune -o \( -name "*-application.yaml" -o -name "application.yaml" \) -print | xargs -I {} bash -c "argocd app validate {} 2>/dev/null || echo \"⚠️  ArgoCD validation skipped for {}\""
-            else
-              echo "⚠️  argocd CLI not installed, skipping ArgoCD validation"
-            fi
-          '
+        name: Validate ArgoCD applications (render check)
+        entry: scripts/render-all-applications.sh
         language: system
         pass_filenames: false
-        files: '.*application\.yaml$'
+        files: 'platform/apps/.*-application\.yaml$'
 
       # Helm chart linting (IDP components)
       - id: helm-lint
