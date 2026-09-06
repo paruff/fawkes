@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.59](https://github.com/paruff/fawkes/compare/v0.3.58...v0.3.59) (2026-09-06)
+
+
+### Docs
+
+* multi-provider git source and container registry setup guide ([#1849](https://github.com/paruff/fawkes/issues/1849)) ([2f8ea5b](https://github.com/paruff/fawkes/commit/2f8ea5bf05a4bab42a042930f967051dc8689eea))
+
+
+### Chores
+
+* **platform:** move non-Phase-1 apps out of the local deploy path ([#1845](https://github.com/paruff/fawkes/issues/1845)) ([61af0c9](https://github.com/paruff/fawkes/commit/61af0c975d3fb1295e0f16b52d1590e8c326ef1e))
+
 ## [0.3.58](https://github.com/paruff/fawkes/compare/v0.3.57...v0.3.58) (2026-09-06)
 
 
