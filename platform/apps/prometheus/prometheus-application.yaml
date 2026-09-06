@@ -41,7 +41,25 @@ spec:
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    targetRevision: "70.10.0"
+    # #1735: 70.10.0 -> 89.2.2 (prometheus-operator v0.81.0 -> v0.93.1).
+    #
+    # The issue title says "66.3.1 -> 89.2.1"; both ends were stale by the
+    # time it was actioned - the pin had already moved to 70.10.0, and
+    # 89.2.2 is now the latest stable.
+    #
+    # CRD migration: Helm does not upgrade CRDs on `helm upgrade`, but that
+    # is not the applying mechanism here - ArgoCD applies the chart's 10
+    # bundled CRDs directly, and `skipCrds` is not set. The usual blocker
+    # for these specific CRDs is that they exceed the 262144-byte
+    # last-applied-configuration annotation limit under client-side apply;
+    # `ServerSideApply=true` is already in syncOptions below, so that path
+    # is covered.
+    #
+    # Compatibility checked before pinning: all 10 CRDs in 89.2.2 still
+    # serve `v1`, and all 22 monitoring.coreos.com custom resources in this
+    # repo (ServiceMonitors, PrometheusRules, PodMonitors) are on
+    # monitoring.coreos.com/v1 - no API version is removed by this jump.
+    targetRevision: "89.2.2"
     helm:
       values: |
         # ============================================================
