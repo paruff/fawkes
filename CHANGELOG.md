@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.55](https://github.com/paruff/fawkes/compare/v0.3.54...v0.3.55) (2026-09-06)
+
+
+### Fixed
+
+* **gitops:** consolidate three competing ArgoCD bootstrap mechanisms ([#1837](https://github.com/paruff/fawkes/issues/1837)) ([1302f70](https://github.com/paruff/fawkes/commit/1302f70500242dc1b8258fcefca173e1b76a10bd))
+
 ## [0.3.54](https://github.com/paruff/fawkes/compare/v0.3.53...v0.3.54) (2026-09-06)
 
 
