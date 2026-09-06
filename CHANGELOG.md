@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.54](https://github.com/paruff/fawkes/compare/v0.3.53...v0.3.54) (2026-09-06)
+
+
+### Added
+
+* **observability:** upgrade otel-collector, Tempo, OpenSearch Dashboards ([#1737](https://github.com/paruff/fawkes/issues/1737), [#1738](https://github.com/paruff/fawkes/issues/1738)) ([#1835](https://github.com/paruff/fawkes/issues/1835)) ([8ecc8bb](https://github.com/paruff/fawkes/commit/8ecc8bbf12c4a5ff67bc12ac01f6b49413de4bbe))
+
 ## [0.3.53](https://github.com/paruff/fawkes/compare/v0.3.52...v0.3.53) (2026-09-06)
 
 
