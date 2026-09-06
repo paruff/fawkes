@@ -245,19 +245,51 @@ def secret_has_key(key: str, context: dict):
 
 @then("I should be able to login using argocd CLI")
 def argocd_cli_login(context: dict):
-    """Verify argocd CLI can login (if CLI is installed)."""
-    # Check if argocd CLI is available
+    """Actually log in via the ArgoCD API - a CLI-version-only check here
+    previously let a real regression through: deploy_argocd()'s password
+    reset silently failed (a curl call without -f/--fail treated a 4xx
+    response as success), and this step never noticed because it never
+    contacted a server at all.
+    """
+    port_forward = subprocess.Popen(
+        ["kubectl", "-n", "argocd", "port-forward", "svc/argocd-server", "18080:80"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
     try:
-        subprocess.check_output(["which", "argocd"], stderr=subprocess.DEVNULL)
-    except subprocess.CalledProcessError:
-        pytest.skip("argocd CLI not installed")
+        import time
 
-    # This is a basic check - full login test would require more setup
-    # Just verify the CLI can reach the server
-    try:
-        subprocess.check_output(["argocd", "version", "--client"], stderr=subprocess.DEVNULL)
-    except subprocess.CalledProcessError:
-        pytest.skip("argocd CLI not functional")
+        time.sleep(3)
+
+        initial_password = _kubectl_text(
+            [
+                "get",
+                "secret",
+                "argocd-initial-admin-secret",
+                "-n",
+                "argocd",
+                "-o",
+                "jsonpath={.data.password}",
+            ]
+        )
+        import base64
+
+        candidates = ["fawkesidp"]
+        if initial_password:
+            candidates.append(base64.b64decode(initial_password).decode())
+
+        for password in candidates:
+            response = requests.post(
+                "http://localhost:18080/api/v1/session",
+                json={"username": "admin", "password": password},
+                timeout=10,
+            )
+            if response.status_code == 200 and response.json().get("token"):
+                return
+        pytest.fail(f"Could not log in with any known admin password (tried {len(candidates)} candidates)")
+    finally:
+        port_forward.terminate()
+        port_forward.wait(timeout=5)
 
 
 # Security scenario steps
