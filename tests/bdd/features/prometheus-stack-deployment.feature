@@ -115,7 +115,7 @@ Feature: kube-prometheus-stack Deployment
     And the ServiceMonitor should target namespace "fawkes"
     And Prometheus should be scraping ArgoCD metrics
 
-  @servicemonitor @jenkins
+  @servicemonitor @ci
   Scenario: ServiceMonitor for Jenkins metrics
     Given ServiceMonitors are configured in namespace "monitoring"
     When I check for ServiceMonitor "jenkins-metrics"
