@@ -8,8 +8,18 @@ on:
 
 jobs:
   opencode:
+    # This repo is public: without an author-association check, anyone with
+    # a GitHub account could comment "/oc" on any issue/PR and get an agent
+    # holding contents:write + actions:write to act on attacker-controlled
+    # issue/PR text - a textbook "pwn request" (the write permissions below
+    # were previously gated on nothing but the comment author not being a
+    # bot). OWNER/MEMBER/COLLABORATOR are the three author_association
+    # values GitHub assigns to accounts with write access or higher; every
+    # other value (CONTRIBUTOR, FIRST_TIME_CONTRIBUTOR, FIRST_TIMER,
+    # MANNEQUIN, NONE) means the commenter has no write access to this repo.
     if: |
       github.event.comment.user.type != 'Bot' &&
+      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association) &&
       (contains(github.event.comment.body, '/oc') ||
        contains(github.event.comment.body, '/opencode'))
     runs-on: ubuntu-latest
