@@ -1,0 +1,155 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/bootstrap/platform-applicationset.yaml
+# PURPOSE: #1842 - replaces platform-applications.yaml's plain-Application
+#          directory.recurse workaround with ArgoCD's actual purpose-built
+#          mechanism for "many Applications from a directory of files."
+#
+# WHY THIS EXISTS: the old mechanism collided twice - once as an
+# ApplicationSet using a `directories` generator (29-of-45-directory
+# collision, worked around with a 28-entry exclude list), and again this
+# session as a plain Application whose directory-recurse silently failed to
+# register 31 of 44 apps and produced a live RepeatedResourceWarning on
+# ingress-nginx. An ApplicationSet with a `files` generator gives the
+# ApplicationSet controller unambiguous, sole ownership of every child
+# Application it generates - no second mechanism can plausibly claim them.
+#
+# HOW THE TEMPLATE WORKS - IMPORTANT CONSTRAINT DISCOVERED WHILE BUILDING
+# THIS: a K8s manifest must be valid YAML *before* ArgoCD ever sees it -
+# kubectl/the API server parses the whole file first. That means bare
+# `{{- if -}}` control flow spanning structural YAML keys (e.g. "emit chart:
+# OR path:, never both") is NOT viable here, unlike a Helm chart's raw-text
+# templates - a first attempt at exactly that failed with a plain YAML parse
+# error before ArgoCD's templating ever ran. The real, schema-verified
+# constraint (confirmed live via `kubectl apply --dry-run=server` against a
+# synthetic Application) is narrower: a per-field string substitution is
+# fine, and an *empty string* in an unused field (chart: "" alongside a
+# populated path:) passes schema validation. So every generated Application
+# always sets both `chart` and `path` (whichever the source file doesn't use
+# comes through empty), and always sets `helm.values` (empty string for
+# non-Helm/kustomize apps) and the standard ignoreDifferences block
+# (harmless no-op for apps that never trigger it) unconditionally, rather
+# than trying to structurally omit them.
+#
+# OPEN RISK, NOT YET VERIFIED: whether ArgoCD's repo-server treats an empty
+# `helm.values` string on a plain kustomize/path-based source as truly inert,
+# or whether merely having a `helm:` key present changes its tool-detection
+# behavior for that source. Schema-level dry-run cannot answer this - only a
+# real sync can. Flagged explicitly as the first thing to check during the
+# live cutover below, not assumed safe.
+#
+# WHAT'S DELIBERATELY NOT MIGRATED HERE: fawkes-networking and the AppProject
+# stay as their own plain Applications in kustomization.yaml (foundational,
+# not part of the "many similar apps" pattern this solves). Every app's
+# ignoreDifferences is standardized to the single common shape already used
+# by the large majority (Deployment/StatefulSet replica-count ignores).
+# Verified live this session: the version of tekton-application.yaml that
+# needed a *different* ignoreDifferences (webhook CA-bundle) was a stale
+# duplicate, deleted in #1851 - the current file needs none, so applying the
+# standard block to every app (rather than conditionally) loses nothing
+# that's actually in use today.
+#
+# NOT YET DONE: live cutover on a running cluster. This has been validated
+# via `kubectl apply --dry-run=server` schema checks only, deliberately,
+# given today's earlier incident from moving too fast on a different ArgoCD
+# bootstrap change, and given the open risk noted above needs a real sync to
+# resolve. Cutting the live platform-applications Application over to this
+# ApplicationSet (deleting the old one only after confirming this one
+# reconciles identical objects) is the explicit next step, not done here.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: platform-applications
+  namespace: argocd
+spec:
+  goTemplate: true
+  # ArgoCD's own docs recommend this as standard practice: a template
+  # referencing a key that doesn't exist in a given source file errors
+  # loudly instead of silently rendering an empty/wrong value. Every direct
+  # (non-dig) field access below (.metadata.name, .spec.source.repoURL/
+  # targetRevision, .spec.destination.server/namespace) was confirmed
+  # present in all 21 current source files via grep before relying on it
+  # unguarded; genuinely optional fields use dig with a default instead.
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/paruff/fawkes.git
+        revision: HEAD
+        files:
+          - path: "platform/apps/**/*-application.yaml"
+  template:
+    metadata:
+      name: '{{ .metadata.name }}'
+      namespace: argocd
+      labels:
+        app.kubernetes.io/managed-by: platform-applications-appset
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{ dig "metadata" "annotations" "argocd.argoproj.io/sync-wave" "0" . }}'
+    spec:
+      project: '{{ dig "spec" "project" "default" . }}'
+      source:
+        repoURL: '{{ .spec.source.repoURL }}'
+        targetRevision: '{{ .spec.source.targetRevision }}'
+        chart: '{{ dig "spec" "source" "chart" "" . }}'
+        path: '{{ dig "spec" "source" "path" "" . }}'
+        helm:
+          values: '{{ dig "spec" "source" "helm" "values" "" . }}'
+      destination:
+        server: '{{ .spec.destination.server }}'
+        namespace: '{{ .spec.destination.namespace }}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - PrunePropagationPolicy=foreground
+          - PruneLast=true
+          - ServerSideApply=true
+        retry:
+          # Standardized to 5 (the value nearly every source file already
+          # used) rather than templated - retry.limit is a strictly-typed
+          # integer field in the ApplicationSet CRD schema, confirmed live
+          # via `kubectl apply --dry-run=server` rejecting a templated
+          # string here ("must be of type integer"), and unquoting it to
+          # dodge that breaks YAML parsing outright (bare `{{` opens a flow
+          # mapping). The 2-3 apps that used a different value (sealed-
+          # secrets: 3, external-secrets-operator/devlake: unset) lose that
+          # specific override - a minor simplification, not a behavior loss
+          # that matters (all three still get retried, just with a common
+          # limit).
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m
+      ignoreDifferences:
+        - group: apps
+          kind: Deployment
+          jsonPointers:
+            - /spec/replicas
+        - group: apps
+          kind: StatefulSet
+          jsonPointers:
+            - /spec/replicas
+      revisionHistoryLimit: 10

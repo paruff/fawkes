@@ -20,7 +20,21 @@
 
 # ============================================================================
 # FILE: platform/bootstrap/platform-applications.yaml
-# PURPOSE: The single mechanism that registers every platform Application.
+#
+# SUPERSEDED BY platform-applicationset.yaml (#1842) - kept in the repo,
+# still the live mechanism as of this commit, not deleted from history.
+# This file's own directory.recurse approach is itself a workaround, not
+# ArgoCD's purpose-built mechanism for "many Applications from a directory":
+# it silently failed to register 31 of 44 apps this session (they landed in
+# a namespace ArgoCD doesn't watch by default) and produced a live
+# RepeatedResourceWarning once a second mechanism (app-of-apps) also tried
+# to manage the same objects. See platform-applicationset.yaml's own header
+# for the full replacement design and its ApplicationSet `files` generator.
+# Cutting the live cluster over to it is a deliberate separate step, done
+# only after confirming the ApplicationSet reconciles identical objects -
+# not rushed into the same change that introduced it.
+#
+# PURPOSE (as originally written): The single mechanism that registers every platform Application.
 #
 # This replaces two conflicting mechanisms that previously ran at once:
 #

@@ -242,16 +242,21 @@ spec:
         # Config (ConfigMap settings)
         # ============================================================
         config:
-          # Exclude system namespaces from policy enforcement
+          # Exclude system namespaces from policy enforcement.
+          # webhooks is a plain object in this chart's schema (confirmed via
+          # `helm show values kyverno/kyverno --version 3.3.3`), not a list -
+          # the list-wrapped form here failed `helm template` outright
+          # ("cannot overwrite table with non table"), caught live by the
+          # new render-all-applications.sh check (#1842).
           webhooks:
-            - namespaceSelector:
-                matchExpressions:
-                  - key: kubernetes.io/metadata.name
-                    operator: NotIn
-                    values:
-                      - kube-system
-                      - kube-public
-                      - kube-node-lease
+            namespaceSelector:
+              matchExpressions:
+                - key: kubernetes.io/metadata.name
+                  operator: NotIn
+                  values:
+                    - kube-system
+                    - kube-public
+                    - kube-node-lease
                       - kyverno
 
           # Resource filters - exclude system resources
