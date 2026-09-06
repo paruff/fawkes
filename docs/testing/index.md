@@ -24,7 +24,7 @@ Fawkes implements comprehensive testing at all levels to ensure platform reliabi
 
 ### BDD/Acceptance Testing
 
-- Run BDD tests with: `make test-bdd` or `behave tests/bdd/features --tags=@local`
+- Run BDD tests with: `make test-bdd` or `pytest -c tests/bdd/pytest.ini tests/bdd/step_definitions/`
 
 ## User Experience Testing
 
