@@ -1,0 +1,92 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/bootstrap/platform-applications.yaml
+# PURPOSE: The single mechanism that registers every platform Application.
+#
+# This replaces two conflicting mechanisms that previously ran at once:
+#
+#   1. applicationset.yaml - a git *directory* generator producing one
+#      auto-templated Application per platform/apps/* directory. 29 of 45
+#      directories already ship their own hand-written Application with the
+#      same name, so it needed a 28-entry exclude list and still collided
+#      (observed live as sync/prune churn on tempo/opensearch).
+#
+#   2. root-apps.yaml's `fawkes-app` - an Application syncing the WHOLE of
+#      platform/apps as one blob. That applies every app's raw workload
+#      manifests *and* every *-application.yaml as plain resources, fighting
+#      both the ApplicationSet and all 45 hand-written Applications for
+#      ownership of the same objects.
+#
+# The repo's actual, consistent convention is "one hand-written Application
+# manifest per app". The correct ArgoCD pattern for that is a plain
+# app-of-apps directory sync that applies ONLY those manifests - which is
+# what `directory.include` below does. No templating, no excludes, no
+# second opinion about what each app's Application should look like.
+#
+# Adding a new platform app = drop in its *-application.yaml. Nothing here
+# needs to change.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-applications
+  namespace: argocd
+  labels:
+    app: platform-applications
+    component: gitops
+    environment: all
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "-15"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    targetRevision: HEAD
+    path: platform/apps
+    directory:
+      recurse: true
+      # Only pick up Application manifests - never the raw workload YAML
+      # sitting alongside them (deployment.yaml, values.yaml, dashboards,
+      # index templates, ...). Those belong to whichever Application
+      # references them, not to this one.
+      include: "*-application.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    # Application objects themselves live in argocd; each one declares its
+    # own workload destination namespace.
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 10

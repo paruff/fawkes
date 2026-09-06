@@ -18,11 +18,27 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
+# ============================================================================
+# FILE: platform/bootstrap/networking-application.yaml
+# PURPOSE: Syncs platform/networking (cert-manager, external-dns, ingress
+#          controller, loadbalancer provisioning).
+#
+# Extracted verbatim from the old root-apps.yaml, which was deleted because
+# the *other* Application it contained (`fawkes-app`) synced the whole of
+# platform/apps as one blob and fought every hand-written Application for
+# ownership. This one is unaffected by that problem - platform/networking
+# sits outside platform/apps and nothing else claims it - so it is kept
+# as-is rather than lost along with the file it happened to live in.
+# ============================================================================
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: fawkes-networking
-  namespace: fawkes
+  namespace: argocd
+  labels:
+    app: fawkes-networking
+    component: gitops
+    team: platform
   annotations:
     argocd.argoproj.io/sync-wave: "-10"
 spec:
@@ -30,52 +46,6 @@ spec:
   source:
     repoURL: https://github.com/paruff/fawkes.git
     path: platform/networking
-    targetRevision: HEAD
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: fawkes
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: fawkes-app
-  namespace: fawkes
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/paruff/fawkes.git
-    path: platform/apps
-    targetRevision: HEAD
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: fawkes
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: fawkes-infra
-  namespace: fawkes
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/paruff/fawkes.git
-    path: infra/kubernetes
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
