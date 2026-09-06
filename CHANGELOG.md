@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.58](https://github.com/paruff/fawkes/compare/v0.3.57...v0.3.58) (2026-09-06)
+
+
+### Added
+
+* **tekton:** add SonarQube scan (quality, bugs, coverage) to golden path ([#1847](https://github.com/paruff/fawkes/issues/1847)) ([de46953](https://github.com/paruff/fawkes/commit/de46953e3a3a8a3a51c21838b22ce5c1b18325f2))
+
+
+### Fixed
+
+* **argocd:** detect silent password-reset failure, add real login check ([#1846](https://github.com/paruff/fawkes/issues/1846)) ([985ac6d](https://github.com/paruff/fawkes/commit/985ac6d1c7a0f058c68a39750224f99c3bc91ca7))
+
 ## [0.3.57](https://github.com/paruff/fawkes/compare/v0.3.56...v0.3.57) (2026-09-06)
 
 
