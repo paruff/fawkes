@@ -125,10 +125,21 @@ deploy_argocd() {
           -d '{"username":"admin","password":"'"${ARGOCD_PASSWORD}"'"}' \
           "${proxy_base}/api/v1/session" | jq -r '.token // empty')
         if [[ -n "${token}" ]]; then
-          curl -sk -X PUT -H "Authorization: Bearer ${token}" -H "Content-Type: application/json" \
+          # curl without -f/--fail exits 0 even on a 4xx/5xx response as long
+          # as the connection succeeded - a real failure here (e.g. a
+          # freshly-starting argocd-server not yet ready) was previously
+          # silently treated as success, leaving ARGOCD_PASSWORD printed as
+          # the new password when it had never actually been changed.
+          local http_status
+          http_status=$(curl -sk -o /dev/null -w '%{http_code}' -X PUT \
+            -H "Authorization: Bearer ${token}" -H "Content-Type: application/json" \
             -d '{"currentPassword":"'"${ARGOCD_PASSWORD}"'","newPassword":"'"${FAWKES_LOCAL_PASSWORD}"'"}' \
-            "${proxy_base}/api/v1/account/password" > /dev/null 2>&1 && ARGOCD_PASSWORD="${FAWKES_LOCAL_PASSWORD}" \
-            || echo "[WARN] Password change via API proxy did not succeed." >&2
+            "${proxy_base}/api/v1/account/password")
+          if [[ "${http_status}" == "200" ]]; then
+            ARGOCD_PASSWORD="${FAWKES_LOCAL_PASSWORD}"
+          else
+            echo "[WARN] Password change via API proxy did not succeed (HTTP ${http_status}) - keeping initial password." >&2
+          fi
         else
           echo "[WARN] Could not obtain ArgoCD auth token via API proxy; keeping initial password." >&2
         fi
