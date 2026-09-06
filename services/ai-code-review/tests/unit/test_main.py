@@ -146,7 +146,9 @@ def test_webhook_pull_request_opened(mock_env):
         "repository": {"full_name": "test/repo"},
     }
 
-    payload_bytes = json.dumps(payload).encode()
+    # TestClient (httpx) serializes json= with compact separators; the signature
+    # must be computed over the exact bytes transmitted or verification fails.
+    payload_bytes = json.dumps(payload, separators=(",", ":")).encode()
     signature = hmac.new(b"test-secret", msg=payload_bytes, digestmod=hashlib.sha256).hexdigest()
 
     with patch("app.main.process_pull_request_review"):
@@ -176,7 +178,7 @@ def test_webhook_ignores_other_events(mock_env):
     client = TestClient(app)
 
     payload = {"action": "created"}
-    payload_bytes = json.dumps(payload).encode()
+    payload_bytes = json.dumps(payload, separators=(",", ":")).encode()
     signature = hmac.new(b"test-secret", msg=payload_bytes, digestmod=hashlib.sha256).hexdigest()
 
     response = client.post(
