@@ -52,17 +52,33 @@ def _load_resolve_model_script() -> str:
     return str(step["run"])
 
 
-def _evaluate_if(expr: str, body: str, user_type: str) -> bool:
+def _evaluate_if(expr: str, body: str, user_type: str, author_association: str) -> bool:
     py_expr = expr
     py_expr = py_expr.replace("github.event.comment.user.type", "_user_type")
     py_expr = py_expr.replace("github.event.comment.body", "_body")
+    py_expr = py_expr.replace("github.event.comment.author_association", "_assoc")
     py_expr = re.sub(r"contains\(", "_contains(", py_expr)
+    # fromJSON('[...]') -> a real Python list, so _contains(list, x) below
+    # needs its own overload distinct from the substring _contains(str, str).
+    py_expr = re.sub(r"fromJSON\('(\[[^\]]*\])'\)", r"\1", py_expr)
     py_expr = py_expr.replace("&&", " and ").replace("||", " or ")
-    return bool(eval(py_expr, {"_contains": _contains, "_body": body, "_user_type": user_type}))
+    return bool(
+        eval(
+            py_expr,
+            {
+                "_contains": lambda haystack, needle: (
+                    needle in haystack if isinstance(haystack, list) else _contains(haystack, needle)
+                ),
+                "_body": body,
+                "_user_type": user_type,
+                "_assoc": author_association,
+            },
+        )
+    )
 
 
-def triggers(body: str, user_type: str = "User") -> bool:
-    return _evaluate_if(_load_if_expression(), body, user_type)
+def triggers(body: str, user_type: str = "User", author_association: str = "OWNER") -> bool:
+    return _evaluate_if(_load_if_expression(), body, user_type, author_association)
 
 
 def preferred_model(body: str) -> str:
@@ -105,6 +121,22 @@ class TestTrigger:
     def test_hyphenated_tag_still_triggers(self):
         # Confirmed live on issue #1587, run 32296616870.
         assert triggers("/oc-security implement the security fix") is True
+
+    @pytest.mark.parametrize("association", ["OWNER", "MEMBER", "COLLABORATOR"])
+    def test_write_access_associations_trigger(self, association):
+        assert triggers("/oc fix this", author_association=association) is True
+
+    @pytest.mark.parametrize(
+        "association",
+        ["NONE", "CONTRIBUTOR", "FIRST_TIME_CONTRIBUTOR", "FIRST_TIMER", "MANNEQUIN"],
+    )
+    def test_no_write_access_association_does_not_trigger(self, association):
+        # This repo is public: without this gate, anyone with a GitHub
+        # account could comment "/oc" on any issue/PR and get an agent
+        # holding contents:write + actions:write to act on attacker-
+        # controlled issue/PR text. A valid command from a non-collaborator
+        # must not trigger the job at all.
+        assert triggers("/oc fix this", author_association=association) is False
 
 
 @pytest.mark.unit
