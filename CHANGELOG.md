@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.50](https://github.com/paruff/fawkes/compare/v0.3.49...v0.3.50) (2026-09-06)
+
+
+### Fixed
+
+* **devlake:** unblock deploy - dev-mode secrets, fix ExternalSecret bugs ([#1825](https://github.com/paruff/fawkes/issues/1825)) ([6c6b61d](https://github.com/paruff/fawkes/commit/6c6b61d7b11d41a40373b08763973849f19b5410))
+
 ## [0.3.49](https://github.com/paruff/fawkes/compare/v0.3.48...v0.3.49) (2026-09-05)
 
 
