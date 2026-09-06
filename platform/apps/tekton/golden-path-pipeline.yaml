@@ -1,0 +1,291 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/tekton/golden-path-pipeline.yaml
+# PURPOSE: The Phase 1 (Alpha) golden path pipeline for #1804 - the real
+#          build/lint/test/scan/publish/GitOps-promote flow that the
+#          tracer-bullet example repo (paruff/tracer-bullet) runs through
+#          to prove the platform works end to end.
+#
+# Task specs are embedded rather than resolved from Tekton Hub on purpose:
+# remote resolution adds a runtime dependency on the resolvers component
+# and network egress at PipelineRun time, and this pipeline is the thing
+# meant to *prove* the platform works - it shouldn't be able to fail for
+# reasons outside the platform itself.
+#
+# Flow: clone -> lint+test -> build+push (kaniko) -> scan (trivy) ->
+#       GitOps image-tag bump PR against paruff/tracer-bullet-gitops
+#
+# The final gitops-promote task needs a GitHub token with contents+PR write
+# on the gitops repo, in a Secret named `tekton-gitops-github-token` (key:
+# token). It is deliberately NOT committed here - see #1797. Without it the
+# pipeline still runs everything up to and including scan; only promotion
+# is skipped (the task fails loudly rather than silently no-op'ing).
+# ============================================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: golden-path-workspace
+  namespace: fawkes
+  labels:
+    app: tekton
+    component: cicd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: golden-path-pipeline-sa
+  namespace: fawkes
+  labels:
+    app: tekton
+    component: cicd
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: golden-path
+  namespace: fawkes
+  labels:
+    app: tekton
+    component: cicd
+spec:
+  description: >-
+    Phase 1 Alpha golden path: clone, lint, test, build, scan, and promote a
+    service image via a GitOps pull request.
+  params:
+    - name: repo-url
+      type: string
+      description: Git URL of the application repo to build
+      default: https://github.com/paruff/tracer-bullet.git
+    - name: revision
+      type: string
+      description: Git revision (branch, tag, or commit SHA) to build
+      default: main
+    - name: image-name
+      type: string
+      description: Image repository to push to (without tag)
+      default: ghcr.io/paruff/tracer-bullet
+    - name: gitops-repo
+      type: string
+      description: owner/repo of the GitOps config repo to raise the promotion PR against
+      default: paruff/tracer-bullet-gitops
+  workspaces:
+    - name: source
+      description: Shared workspace holding the cloned source between tasks
+  results:
+    - name: image-tag
+      description: The immutable short-SHA tag the image was published under
+      value: $(tasks.fetch-source.results.short-sha)
+  tasks:
+    # ------------------------------------------------------------------
+    # 1. Clone
+    # ------------------------------------------------------------------
+    - name: fetch-source
+      workspaces:
+        - name: output
+          workspace: source
+      params:
+        - name: repo-url
+          value: $(params.repo-url)
+        - name: revision
+          value: $(params.revision)
+      taskSpec:
+        params:
+          - name: repo-url
+            type: string
+          - name: revision
+            type: string
+        workspaces:
+          - name: output
+        results:
+          - name: short-sha
+            description: Short (7 char) commit SHA of the checked-out revision
+        steps:
+          - name: clone
+            image: docker.io/alpine/git:v2.45.2
+            script: |
+              #!/bin/sh
+              set -eu
+              cd "$(workspaces.output.path)"
+              rm -rf ./* .git 2>/dev/null || true
+              git clone --depth 1 --branch "$(params.revision)" \
+                "$(params.repo-url)" .
+              git rev-parse --short=7 HEAD | tr -d '\n' \
+                > "$(results.short-sha.path)"
+              echo "cloned $(params.repo-url)@$(params.revision)"
+
+    # ------------------------------------------------------------------
+    # 2. Lint + unit tests (the Phase 1 "quality gate" - deliberately
+    #    lightweight; integration/acceptance suites are Phase 2, see #1805)
+    # ------------------------------------------------------------------
+    - name: lint-and-test
+      runAfter: [fetch-source]
+      workspaces:
+        - name: source
+          workspace: source
+      taskSpec:
+        workspaces:
+          - name: source
+        steps:
+          - name: lint
+            image: docker.io/library/python:3.13.15-slim
+            workingDir: $(workspaces.source.path)
+            script: |
+              #!/bin/sh
+              set -eu
+              pip install --no-cache-dir --quiet ruff
+              ruff check .
+              ruff format --check .
+          - name: test
+            image: docker.io/library/python:3.13.15-slim
+            workingDir: $(workspaces.source.path)
+            script: |
+              #!/bin/sh
+              set -eu
+              pip install --no-cache-dir --quiet \
+                -r requirements.txt -r requirements-dev.txt
+              pytest tests/unit -q
+
+    # ------------------------------------------------------------------
+    # 3. Build + push, tagged by immutable short SHA
+    #    (kaniko: no docker daemon / privileged container needed)
+    # ------------------------------------------------------------------
+    - name: build-and-push
+      runAfter: [lint-and-test]
+      workspaces:
+        - name: source
+          workspace: source
+      params:
+        - name: image
+          value: $(params.image-name):$(tasks.fetch-source.results.short-sha)
+      taskSpec:
+        params:
+          - name: image
+            type: string
+        workspaces:
+          - name: source
+        steps:
+          - name: build-and-push
+            image: gcr.io/kaniko-project/executor:v1.23.2
+            workingDir: $(workspaces.source.path)
+            args:
+              - --dockerfile=Dockerfile
+              - --context=$(workspaces.source.path)
+              - --destination=$(params.image)
+              - --cache=true
+
+    # ------------------------------------------------------------------
+    # 4. Vulnerability scan of the published image
+    # ------------------------------------------------------------------
+    - name: scan-image
+      runAfter: [build-and-push]
+      params:
+        - name: image
+          value: $(params.image-name):$(tasks.fetch-source.results.short-sha)
+      taskSpec:
+        params:
+          - name: image
+            type: string
+        steps:
+          - name: trivy-scan
+            image: docker.io/aquasec/trivy:0.74.0
+            script: |
+              #!/bin/sh
+              set -eu
+              # Fail the pipeline on CRITICAL/HIGH, matching the severity
+              # threshold the GitHub Actions pipeline already enforced.
+              trivy image --quiet --no-progress \
+                --severity CRITICAL,HIGH \
+                --exit-code 1 \
+                "$(params.image)"
+
+    # ------------------------------------------------------------------
+    # 5. GitOps promotion: raise a PR bumping the image tag in the
+    #    separate config repo. Direct pushes to main are rejected by the
+    #    main-protection ruleset (GH013), so this must be a PR - the same
+    #    constraint already proven on the GitHub Actions side.
+    # ------------------------------------------------------------------
+    - name: gitops-promote
+      runAfter: [scan-image]
+      params:
+        - name: gitops-repo
+          value: $(params.gitops-repo)
+        - name: image-name
+          value: $(params.image-name)
+        - name: new-tag
+          value: $(tasks.fetch-source.results.short-sha)
+      taskSpec:
+        params:
+          - name: gitops-repo
+            type: string
+          - name: image-name
+            type: string
+          - name: new-tag
+            type: string
+        steps:
+          - name: open-promotion-pr
+            image: docker.io/alpine/git:v2.45.2
+            env:
+              - name: GH_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: tekton-gitops-github-token
+                    key: token
+            script: |
+              #!/bin/sh
+              set -eu
+              apk add --no-cache github-cli >/dev/null
+
+              WORK=/tmp/gitops
+              rm -rf "$WORK"
+              git clone --depth 1 \
+                "https://x-access-token:${GH_TOKEN}@github.com/$(params.gitops-repo).git" \
+                "$WORK"
+              cd "$WORK"
+
+              BRANCH="promote/$(params.new-tag)"
+              git config user.email "tekton@fawkes.local"
+              git config user.name "fawkes-tekton"
+              git checkout -b "$BRANCH"
+
+              sed -i "s|image: $(params.image-name):.*|image: $(params.image-name):$(params.new-tag)|g" \
+                deployment.yaml
+
+              if git diff --quiet; then
+                echo "image tag already at $(params.new-tag) - nothing to promote"
+                exit 0
+              fi
+
+              git commit -am "chore: promote image to $(params.new-tag)"
+              git push origin "$BRANCH"
+              gh pr create \
+                --repo "$(params.gitops-repo)" \
+                --head "$BRANCH" \
+                --base main \
+                --title "chore: promote image to $(params.new-tag)" \
+                --body "Automated promotion from the Tekton golden-path pipeline."
+              gh pr merge "$BRANCH" --repo "$(params.gitops-repo)" --squash --admin
