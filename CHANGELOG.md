@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.57](https://github.com/paruff/fawkes/compare/v0.3.56...v0.3.57) (2026-09-06)
+
+
+### Fixed
+
+* **argocd:** resolve bootstrap namespace mismatch and app-of-apps collision ([#1843](https://github.com/paruff/fawkes/issues/1843)) ([68ad766](https://github.com/paruff/fawkes/commit/68ad766bf110d113ab0c90920514096ea7a46977))
+
 ## [0.3.56](https://github.com/paruff/fawkes/compare/v0.3.55...v0.3.56) (2026-09-06)
 
 
