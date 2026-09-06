@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.61](https://github.com/paruff/fawkes/compare/v0.3.60...v0.3.61) (2026-09-06)
+
+
+### Added
+
+* **argocd:** implement ApplicationSet migration + real render-check CI ([#1842](https://github.com/paruff/fawkes/issues/1842)) ([#1853](https://github.com/paruff/fawkes/issues/1853)) ([ebf2a95](https://github.com/paruff/fawkes/commit/ebf2a957b6980b54407002c80475f6071dda3ce5))
+
 ## [0.3.60](https://github.com/paruff/fawkes/compare/v0.3.59...v0.3.60) (2026-09-06)
 
 
