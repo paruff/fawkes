@@ -4,7 +4,7 @@ import pytest
 from pytest_bdd import given, parsers, scenarios, then, when
 
 # Load ALL scenarios from the feature file
-scenarios("../../features/archive/jenkins/golden-path.feature")
+scenarios("../features/archive/jenkins/golden-path.feature")
 
 
 # Fixtures for test context
