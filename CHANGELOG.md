@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.62](https://github.com/paruff/fawkes/compare/v0.3.61...v0.3.62) (2026-09-06)
+
+
+### Fixed
+
+* **ci:** require write access before opencode workflow can trigger ([#1861](https://github.com/paruff/fawkes/issues/1861)) ([26b0249](https://github.com/paruff/fawkes/commit/26b02498a593f90031a478870e6ad301cd7760b4))
+
 ## [0.3.61](https://github.com/paruff/fawkes/compare/v0.3.60...v0.3.61) (2026-09-06)
 
 
