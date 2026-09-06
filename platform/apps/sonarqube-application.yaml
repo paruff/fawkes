@@ -183,16 +183,17 @@ spec:
             namespace: fawkes
             interval: 30s
 
-        # ============================================================
-        # Additional environment variables
-        # ============================================================
-        env:
-          - name: SONAR_WEB_SYSTEMPASSCODE
-            valueFrom:
-              secretKeyRef:
-                name: sonarqube-admin-credentials
-                key: systempasscode
-                optional: true
+        # NOTE: no custom `env:` for SONAR_WEB_SYSTEMPASSCODE here. The chart
+        # already derives that env var from `monitoringPasscode` above, and
+        # setting it again produced a duplicate env key that made ArgoCD's
+        # server-side apply fail outright:
+        #   failed to create typed patch object (fawkes/sonarqube-sonarqube;
+        #   apps/v1, Kind=StatefulSet): .spec.template.spec.containers
+        #   [name="sonarqube"].env: duplicate entries for key
+        #   [name="SONAR_WEB_SYSTEMPASSCODE"]
+        # Found on a real sync, not review - this Application had never
+        # actually reached the apply stage before (its chart repo URL was a
+        # dead domain until #1828).
 
   destination:
     server: https://kubernetes.default.svc
