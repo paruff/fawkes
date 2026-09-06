@@ -9,7 +9,7 @@ import pytest
 from pytest_bdd import given, parsers, scenarios, then, when
 
 # Load all scenarios from the feature file
-scenarios("../../features/archive/jenkins/jenkins-kubernetes-deployment.feature")
+scenarios("../features/archive/jenkins/jenkins-kubernetes-deployment.feature")
 
 
 @pytest.fixture
