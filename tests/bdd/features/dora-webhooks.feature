@@ -18,7 +18,7 @@ Feature: DORA Metrics Webhooks Configuration
     And the commit should be stored in the DevLake database
     And the commit timestamp should be recorded for lead time calculation
 
-  @jenkins @webhook
+  @ci @webhook
   Scenario: Jenkins sends build events to DevLake via shared library
     Given the Jenkins shared library "doraMetrics.groovy" is available
     And the Jenkins pipeline includes "doraMetrics.recordBuild()" calls
@@ -28,7 +28,7 @@ Feature: DORA Metrics Webhooks Configuration
     And DevLake should receive the build event
     And the build metrics should be stored for rework rate calculation
 
-  @jenkins @webhook @quality-gate
+  @ci @webhook @quality-gate
   Scenario: Jenkins sends quality gate results to DevLake
     Given a Jenkins pipeline with SonarQube quality gate
     And the pipeline includes "doraMetrics.recordQualityGate()" calls
@@ -131,14 +131,14 @@ Feature: DORA Metrics Webhooks Configuration
     And the pipeline should continue execution
     And a warning should be logged about the webhook failure
 
-  @jenkins @rework-detection
+  @ci @rework-detection
   Scenario: isReworkCommit queries DevLake API to detect rework rate
     Given the Jenkins shared library "doraMetrics.groovy" is available
     And the DevLake rework API endpoint is available for service "my-service"
     When isReworkCommit is called for service "my-service"
     Then it should return true when DevLake reports a rework rate above 10 percent
 
-  @jenkins @rework-detection @resilience
+  @ci @rework-detection @resilience
   Scenario: isReworkCommit returns false when DevLake API is unreachable
     Given the Jenkins shared library "doraMetrics.groovy" is available
     And the DevLake rework API endpoint is unavailable

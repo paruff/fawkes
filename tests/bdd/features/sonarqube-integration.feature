@@ -18,7 +18,7 @@ Feature: SonarQube Integration and Quality Gate Enforcement
     And it must connect to the PostgreSQL backend
     And it must remain accessible via Ingress
 
-  @jenkins-integration @golden-path
+  @ci-integration @golden-path
   Scenario: Jenkins Integration (Golden Path)
     Given the Jenkins Shared Library has been updated
     When a Golden Path pipeline executes the Security Scan stage

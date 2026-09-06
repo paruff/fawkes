@@ -601,7 +601,7 @@ curl -u admin:Harbor12345 \
 - [Jenkins Shared Library - securityScan.groovy](../../../jenkins-shared-library/vars/securityScan.groovy)
 - [Jenkins Shared Library - goldenPathPipeline.groovy](../../../jenkins-shared-library/vars/goldenPathPipeline.groovy)
 - [BDD Tests - Trivy Integration](../../../tests/bdd/features/trivy-integration.feature)
-- [BDD Tests - Golden Path](../../../tests/bdd/features/jenkins/golden-path.feature)
+- [BDD Tests - Golden Path](../../../tests/bdd/features/golden-path-tekton.feature)
 
 ### Container Security Best Practices
 
