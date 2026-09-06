@@ -8,16 +8,18 @@ workflow from scaffolding to deployment to metrics collection.
 import logging
 import subprocess
 
-from behave import given, then, when
 from kubernetes import client, config
+from pytest_bdd import given, parsers, scenarios, then, when
+
+scenarios("../features/e2e-platform-integration.feature")
 
 logger = logging.getLogger(__name__)
 
-# Load kubernetes config. This module gets imported by behave just to
-# register its steps — even for --dry-run, and even when no cluster is
-# reachable (e.g. CI collection, local linting) — so a config-load failure
-# must not crash the import. Scenarios that actually need a cluster will
-# fail naturally when a step tries to use these clients.
+# Load kubernetes config. This module gets imported by pytest just to
+# collect its steps — even during --collect-only, and even when no cluster
+# is reachable (e.g. CI collection, local linting) — so a config-load
+# failure must not crash the import. Scenarios that actually need a cluster
+# will fail naturally when a step tries to use these clients.
 try:
     try:
         config.load_kube_config()
@@ -48,15 +50,15 @@ def step_platform_deployed(context):
     for ns in namespaces:
         try:
             api.read_namespace(ns)
-            context.test.log(f"✓ Namespace {ns} exists")
+            context["test"].log(f"✓ Namespace {ns} exists")
         except client.ApiException:
             raise AssertionError(f"Namespace {ns} not found")
 
 
-@given("all core components are healthy")
-def step_components_healthy(context):
+@given(parsers.parse("all core components are healthy:\n{table}"))
+def step_components_healthy(context, table):
     """Verify all core platform components are healthy"""
-    for row in context.table:
+    for row in table:
         component = row["component"]
         namespace = row["namespace"]
 
@@ -71,7 +73,7 @@ def step_components_healthy(context):
             running_pods = [p for p in pods.items if p.status.phase == "Running"]
 
         assert len(running_pods) > 0, f"{component} has no running pods in {namespace}"
-        context.test.log(f"✓ {component} is healthy ({len(running_pods)} pods running)")
+        context["test"].log(f"✓ {component} is healthy ({len(running_pods)} pods running)")
 
 
 @given("the golden path templates are available")
@@ -87,7 +89,7 @@ def step_templates_available(context):
         template_file = os.path.join(template_dir, "template.yaml")
         assert os.path.isfile(template_file), f"Template file {template_file} not found"
 
-        context.test.log(f"✓ Template available: {template_dir}")
+        context["test"].log(f"✓ Template available: {template_dir}")
 
 
 @given("no manual interventions are configured")
@@ -106,9 +108,9 @@ def step_no_manual_intervention(context):
             if sync_policy.get("automated"):
                 auto_sync_count += 1
 
-        context.test.log(f"✓ {auto_sync_count} ArgoCD apps have automated sync")
+        context["test"].log(f"✓ {auto_sync_count} ArgoCD apps have automated sync")
     except Exception as e:
-        context.test.log(f"! Could not verify ArgoCD automation: {e}")
+        context["test"].log(f"! Could not verify ArgoCD automation: {e}")
 
 
 # =============================================================================
@@ -116,11 +118,11 @@ def step_no_manual_intervention(context):
 # =============================================================================
 
 
-@given('I want to create a new Python microservice called "{service_name}"')
+@given(parsers.parse('I want to create a new Python microservice called "{service_name}"'))
 def step_want_create_service(context, service_name):
     """Store the desired service name in context"""
-    context.service_name = service_name
-    context.test.log(f"Planning to create service: {service_name}")
+    context["service_name"] = service_name
+    context["test"].log(f"Planning to create service: {service_name}")
 
 
 @when("I use the golden path Python template")
@@ -140,19 +142,19 @@ def step_use_golden_path_template(context):
         full_path = os.path.join(template_dir, file_path)
         assert os.path.isfile(full_path), f"Template file missing: {file_path}"
 
-    context.test.log("✓ Golden path template validated")
+    context["test"].log("✓ Golden path template validated")
 
 
-@then("the following resources should be created")
-def step_resources_created(context):
+@then(parsers.parse("the following resources should be created:\n{table}"))
+def step_resources_created(context, table):
     """Verify that scaffolding would create the expected resources"""
-    for row in context.table:
+    for row in table:
         resource = row["resource"]
         location = row["location"]
 
         # In a real test, we would check if these were actually created
         # For now, we validate the structure is correct
-        context.test.log(f"✓ Would create {resource} at {location}")
+        context["test"].log(f"✓ Would create {resource} at {location}")
 
 
 @then("the repository should contain working source code")
@@ -170,7 +172,7 @@ def step_repo_has_source_code(context):
                 if file.endswith(".py"):
                     python_files.append(os.path.join(root, file))
 
-        context.test.log(f"✓ Template contains {len(python_files)} Python source files")
+        context["test"].log(f"✓ Template contains {len(python_files)} Python source files")
 
 
 @then("the Jenkinsfile should use the golden path pipeline")
@@ -184,7 +186,7 @@ def step_jenkinsfile_uses_golden_path(context):
         with open(jenkinsfile_path, "r") as f:
             content = f.read()
             assert "goldenPathPipeline" in content, "Jenkinsfile does not use goldenPathPipeline"
-            context.test.log("✓ Jenkinsfile uses golden path pipeline")
+            context["test"].log("✓ Jenkinsfile uses golden path pipeline")
 
 
 @then("the catalog-info.yaml should be valid")
@@ -202,7 +204,7 @@ def step_catalog_info_valid(context):
             assert catalog.get("kind") == "Component", "Invalid catalog kind"
             assert "metadata" in catalog, "Missing metadata"
             assert "spec" in catalog, "Missing spec"
-            context.test.log("✓ catalog-info.yaml is valid")
+            context["test"].log("✓ catalog-info.yaml is valid")
 
 
 # =============================================================================
@@ -210,12 +212,12 @@ def step_catalog_info_valid(context):
 # =============================================================================
 
 
-@given('a scaffolded service "{service_name}" exists')
+@given(parsers.parse('a scaffolded service "{service_name}" exists'))
 def step_service_exists(context, service_name):
     """Verify or setup that a service exists for testing"""
-    context.service_name = service_name
+    context["service_name"] = service_name
     # In real test, would check if repo exists
-    context.test.log(f"✓ Service {service_name} exists (simulated)")
+    context["test"].log(f"✓ Service {service_name} exists (simulated)")
 
 
 @given("the service has a Jenkinsfile using goldenPathPipeline")
@@ -226,15 +228,15 @@ def step_service_has_jenkinsfile(context):
 
     pipeline_path = "jenkins-shared-library/vars/goldenPathPipeline.groovy"
     assert os.path.isfile(pipeline_path), "Golden path pipeline not found"
-    context.test.log("✓ Golden path pipeline available")
+    context["test"].log("✓ Golden path pipeline available")
 
 
 @when("I commit code changes and push to the main branch")
 def step_commit_and_push(context):
     """Simulate committing and pushing code"""
     # In real test, this would trigger actual Git operations
-    context.git_commit_sha = "abc1234"
-    context.test.log(f"✓ Code committed (SHA: {context.git_commit_sha})")
+    context["git_commit_sha"] = "abc1234"
+    context["test"].log(f"✓ Code committed (SHA: {context['git_commit_sha']})")
 
 
 @then("Jenkins should automatically trigger a build")
@@ -246,29 +248,29 @@ def step_jenkins_triggers_build(context):
             namespace="fawkes", label_selector="app.kubernetes.io/component=jenkins-controller"
         )
         assert len(pods.items) > 0, "Jenkins controller not found"
-        context.test.log("✓ Jenkins is ready to receive build triggers")
+        context["test"].log("✓ Jenkins is ready to receive build triggers")
     except Exception as e:
         raise AssertionError(f"Jenkins not accessible: {e}")
 
 
-@then("the build should execute these stages in order")
-def step_build_executes_stages(context):
+@then(parsers.parse("the build should execute these stages in order:\n{table}"))
+def step_build_executes_stages(context, table):
     """Verify pipeline stages are defined"""
     pipeline_file = "jenkins-shared-library/vars/goldenPathPipeline.groovy"
 
     with open(pipeline_file, "r") as f:
         content = f.read()
 
-        for row in context.table:
+        for row in table:
             stage_name = row["stage"]
             # Check if stage is defined in pipeline
             if f"stage('{stage_name}')" in content or f'stage("{stage_name}")' in content:
-                context.test.log(f"✓ Stage defined: {stage_name}")
+                context["test"].log(f"✓ Stage defined: {stage_name}")
             else:
-                context.test.log(f"! Stage may be missing: {stage_name}")
+                context["test"].log(f"! Stage may be missing: {stage_name}")
 
 
-@then("the build should complete in under {minutes:d} minutes")
+@then(parsers.parse("the build should complete in under {minutes:d} minutes"))
 def step_build_completes_in_time(context, minutes):
     """Verify build timeout is configured"""
     pipeline_file = "jenkins-shared-library/vars/goldenPathPipeline.groovy"
@@ -278,7 +280,7 @@ def step_build_completes_in_time(context, minutes):
 
         # Check for timeout configuration
         if "timeout" in content:
-            context.test.log("✓ Timeout configured in pipeline")
+            context["test"].log("✓ Timeout configured in pipeline")
 
 
 @then("build metrics should be sent to DevLake")
@@ -290,9 +292,9 @@ def step_metrics_sent_to_devlake(context):
     dora_file = "jenkins-shared-library/vars/doraMetrics.groovy"
 
     if os.path.isfile(dora_file):
-        context.test.log("✓ DORA metrics integration configured")
+        context["test"].log("✓ DORA metrics integration configured")
     else:
-        context.test.log("! DORA metrics file not found (may use alternative method)")
+        context["test"].log("! DORA metrics file not found (may use alternative method)")
 
 
 @then("the container image should be pushed to Harbor")
@@ -302,11 +304,11 @@ def step_image_pushed_to_harbor(context):
         # Check if Harbor is deployed
         pods = v1.list_namespaced_pod(namespace="fawkes", label_selector="app=harbor")
         if len(pods.items) > 0:
-            context.test.log("✓ Harbor registry is available")
+            context["test"].log("✓ Harbor registry is available")
         else:
-            context.test.log("! Harbor not found (may use external registry)")
+            context["test"].log("! Harbor not found (may use external registry)")
     except Exception as e:
-        context.test.log(f"! Could not verify Harbor: {e}")
+        context["test"].log(f"! Could not verify Harbor: {e}")
 
 
 @then("the container image should pass Trivy security scan")
@@ -320,10 +322,10 @@ def step_image_passes_trivy(context):
             file_path = os.path.join("jenkins-shared-library/vars", groovy_file)
             with open(file_path, "r") as f:
                 if "trivy" in f.read().lower():
-                    context.test.log("✓ Trivy scanning configured")
+                    context["test"].log("✓ Trivy scanning configured")
                     return
 
-    context.test.log("! Trivy scanning not found in pipeline")
+    context["test"].log("! Trivy scanning not found in pipeline")
 
 
 # =============================================================================
@@ -331,17 +333,17 @@ def step_image_passes_trivy(context):
 # =============================================================================
 
 
-@given('a Jenkins build is running for "{service_name}"')
+@given(parsers.parse('a Jenkins build is running for "{service_name}"'))
 def step_build_running(context, service_name):
     """Setup context for security scanning test"""
-    context.service_name = service_name
-    context.test.log(f"Build running for {service_name}")
+    context["service_name"] = service_name
+    context["test"].log(f"Build running for {service_name}")
 
 
 @when("the security scanning stages execute")
 def step_security_stages_execute(context):
     """Simulate security scanning execution"""
-    context.test.log("Security scanning stages executing...")
+    context["test"].log("Security scanning stages executing...")
 
 
 @then("Gitleaks should scan for secrets and find none")
@@ -356,10 +358,10 @@ def step_gitleaks_scans(context):
             with open(file_path, "r") as f:
                 content = f.read()
                 if "gitleaks" in content.lower() or "secrets" in content.lower():
-                    context.test.log("✓ Secrets scanning configured")
+                    context["test"].log("✓ Secrets scanning configured")
                     return
 
-    context.test.log("! Secrets scanning not found")
+    context["test"].log("! Secrets scanning not found")
 
 
 @then("SonarQube should analyze code quality")
@@ -371,11 +373,11 @@ def step_sonarqube_analyzes(context):
             ["kubectl", "get", "deployment", "sonarqube", "-n", "fawkes"], capture_output=True, text=True, check=False
         )
         if result.returncode == 0:
-            context.test.log("✓ SonarQube is deployed")
+            context["test"].log("✓ SonarQube is deployed")
         else:
-            context.test.log("! SonarQube deployment not found")
+            context["test"].log("! SonarQube deployment not found")
     except Exception as e:
-        context.test.log(f"! Could not verify SonarQube: {e}")
+        context["test"].log(f"! Could not verify SonarQube: {e}")
 
 
 @then("the SonarQube quality gate should pass")
@@ -390,7 +392,7 @@ def step_quality_gate_passes(context):
             with open(file_path, "r") as f:
                 content = f.read()
                 if "waitForQualityGate" in content or "quality gate" in content.lower():
-                    context.test.log("✓ Quality gate check configured")
+                    context["test"].log("✓ Quality gate check configured")
                     return
 
 
@@ -398,10 +400,10 @@ def step_quality_gate_passes(context):
 def step_trivy_scans_image(context):
     """Verify Trivy is configured"""
     # Already checked in previous step
-    context.test.log("✓ Trivy scanning configured (verified earlier)")
+    context["test"].log("✓ Trivy scanning configured (verified earlier)")
 
 
-@then("no {severity} or {severity2} vulnerabilities should be found")
+@then(parsers.parse("no {severity} or {severity2} vulnerabilities should be found"))
 def step_no_high_vulns(context, severity, severity2):
     """Verify severity thresholds are configured"""
     import os
@@ -413,7 +415,7 @@ def step_no_high_vulns(context, severity, severity2):
             with open(file_path, "r") as f:
                 content = f.read()
                 if severity.upper() in content or severity2.upper() in content:
-                    context.test.log(f"✓ Severity levels {severity}/{severity2} configured")
+                    context["test"].log(f"✓ Severity levels {severity}/{severity2} configured")
                     return
 
 
@@ -425,13 +427,13 @@ def step_reports_archived(context):
     with open(pipeline_file, "r") as f:
         content = f.read()
         if "archiveArtifacts" in content:
-            context.test.log("✓ Report archiving configured")
+            context["test"].log("✓ Report archiving configured")
 
 
 @then("security metrics should be tracked")
 def step_security_metrics_tracked(context):
     """Verify security metrics tracking"""
-    context.test.log("✓ Security metrics tracked via pipeline execution")
+    context["test"].log("✓ Security metrics tracked via pipeline execution")
 
 
 # =============================================================================
@@ -439,37 +441,37 @@ def step_security_metrics_tracked(context):
 # =============================================================================
 
 
-@given('Jenkins has successfully built "{service_name}"')
+@given(parsers.parse('Jenkins has successfully built "{service_name}"'))
 def step_jenkins_built_service(context, service_name):
     """Setup for GitOps deployment test"""
-    context.service_name = service_name
-    context.image_tag = "abc1234"
+    context["service_name"] = service_name
+    context["image_tag"] = "abc1234"
 
 
-@given('the container image is pushed to Harbor with tag "{tag_placeholder}"')
+@given(parsers.parse('the container image is pushed to Harbor with tag "{tag_placeholder}"'))
 def step_image_pushed_with_tag(context, tag_placeholder):
     """Verify image tagging"""
-    context.test.log(f"✓ Image tagged with {tag_placeholder}")
+    context["test"].log(f"✓ Image tagged with {tag_placeholder}")
 
 
 @when("Jenkins updates the GitOps repository with the new image tag")
 def step_jenkins_updates_gitops_repo(context):
     """Simulate GitOps repo update"""
-    context.test.log("✓ GitOps repository updated (simulated)")
+    context["test"].log("✓ GitOps repository updated (simulated)")
 
 
-@then("ArgoCD should detect the Git repository change within {minutes:d} minutes")
+@then(parsers.parse("ArgoCD should detect the Git repository change within {minutes:d} minutes"))
 def step_argocd_detects_change(context, minutes):
     """Verify ArgoCD is running and configured"""
     try:
         pods = v1.list_namespaced_pod(namespace="fawkes", label_selector="app.kubernetes.io/name=argocd-server")
         assert len(pods.items) > 0, "ArgoCD server not found"
-        context.test.log(f"✓ ArgoCD can detect changes (configured for <{minutes}min detection)")
+        context["test"].log(f"✓ ArgoCD can detect changes (configured for <{minutes}min detection)")
     except Exception as e:
         raise AssertionError(f"ArgoCD not accessible: {e}")
 
 
-@then('ArgoCD should sync the application "{app_name}"')
+@then(parsers.parse('ArgoCD should sync the application "{app_name}"'))
 def step_argocd_syncs_app(context, app_name):
     """Verify ArgoCD can sync applications"""
     try:
@@ -479,27 +481,27 @@ def step_argocd_syncs_app(context, app_name):
         )
 
         app_count = len(apps.get("items", []))
-        context.test.log(f"✓ ArgoCD managing {app_count} applications")
+        context["test"].log(f"✓ ArgoCD managing {app_count} applications")
     except Exception as e:
-        context.test.log(f"! Could not verify ArgoCD applications: {e}")
+        context["test"].log(f"! Could not verify ArgoCD applications: {e}")
 
 
 @then("the sync should complete successfully")
 def step_sync_completes(context):
     """Verify sync capability"""
-    context.test.log("✓ ArgoCD sync capability validated")
+    context["test"].log("✓ ArgoCD sync capability validated")
 
 
-@then('the application should reach "{status}" status')
+@then(parsers.parse('the application should reach "{status}" status'))
 def step_app_reaches_status(context, status):
     """Verify application health checking"""
-    context.test.log(f"✓ Application health status can be checked for {status}")
+    context["test"].log(f"✓ Application health status can be checked for {status}")
 
 
-@then("the deployment should have {count:d} ready replicas")
+@then(parsers.parse("the deployment should have {count:d} ready replicas"))
 def step_deployment_has_replicas(context, count):
     """Verify replica configuration"""
-    context.test.log(f"✓ Deployment configured for {count} replicas")
+    context["test"].log(f"✓ Deployment configured for {count} replicas")
 
 
 @then("the service should be accessible via ingress")
@@ -511,28 +513,28 @@ def step_service_accessible_via_ingress(context):
             namespace="ingress-nginx", label_selector="app.kubernetes.io/component=controller"
         )
         if len(pods.items) > 0:
-            context.test.log("✓ Ingress controller available")
+            context["test"].log("✓ Ingress controller available")
         else:
             # Try alternative namespace
             pods = v1.list_namespaced_pod(
                 namespace="kube-system", label_selector="app.kubernetes.io/component=controller"
             )
             if len(pods.items) > 0:
-                context.test.log("✓ Ingress controller available")
+                context["test"].log("✓ Ingress controller available")
     except Exception as e:
-        context.test.log(f"! Could not verify ingress: {e}")
+        context["test"].log(f"! Could not verify ingress: {e}")
 
 
 @then("ArgoCD should send deployment event to DevLake")
 def step_argocd_sends_event(context):
     """Verify ArgoCD webhook configuration"""
-    context.test.log("✓ ArgoCD-DevLake webhook integration configured")
+    context["test"].log("✓ ArgoCD-DevLake webhook integration configured")
 
 
 @then("no manual intervention should be required")
 def step_no_manual_intervention_required(context):
     """Verify automation"""
-    context.test.log("✓ Fully automated workflow - no manual steps")
+    context["test"].log("✓ Fully automated workflow - no manual steps")
 
 
 # =============================================================================
@@ -540,10 +542,10 @@ def step_no_manual_intervention_required(context):
 # =============================================================================
 
 
-@given('the "{service_name}" has been deployed via ArgoCD')
+@given(parsers.parse('the "{service_name}" has been deployed via ArgoCD'))
 def step_service_deployed(context, service_name):
     """Setup for metrics collection test"""
-    context.service_name = service_name
+    context["service_name"] = service_name
 
 
 @when("I query DevLake for DORA metrics")
@@ -553,32 +555,32 @@ def step_query_devlake(context):
     try:
         pods = v1.list_namespaced_pod(namespace="fawkes-devlake", label_selector="app=devlake")
         if len(pods.items) > 0:
-            context.test.log("✓ DevLake is accessible for metrics queries")
+            context["test"].log("✓ DevLake is accessible for metrics queries")
         else:
-            context.test.log("! DevLake not found")
+            context["test"].log("! DevLake not found")
     except Exception as e:
-        context.test.log(f"! Could not verify DevLake: {e}")
+        context["test"].log(f"! Could not verify DevLake: {e}")
 
 
-@then("the following metrics should be recorded")
-def step_metrics_recorded(context):
+@then(parsers.parse("the following metrics should be recorded:\n{table}"))
+def step_metrics_recorded(context, table):
     """Verify metrics can be collected"""
-    for row in context.table:
+    for row in table:
         metric = row["metric"]
         source = row["source"]
         should_exist = row["should_exist"]
 
         if should_exist == "true":
-            context.test.log(f"✓ Metric '{metric}' from {source} can be collected")
+            context["test"].log(f"✓ Metric '{metric}' from {source} can be collected")
 
 
-@then('I should be able to calculate "{metric_name}"')
+@then(parsers.parse('I should be able to calculate "{metric_name}"'))
 def step_can_calculate_metric(context, metric_name):
     """Verify DORA metric calculation capability"""
     dora_metrics = ["Deployment Frequency", "Lead Time for Changes", "Change Failure Rate", "Mean Time to Restore"]
 
     assert metric_name in dora_metrics, f"Unknown DORA metric: {metric_name}"
-    context.test.log(f"✓ {metric_name} calculation supported")
+    context["test"].log(f"✓ {metric_name} calculation supported")
 
 
 @then("metrics should be visible in Grafana dashboards")
@@ -587,9 +589,9 @@ def step_metrics_in_grafana(context):
     try:
         pods = v1.list_namespaced_pod(namespace="monitoring", label_selector="app.kubernetes.io/name=grafana")
         if len(pods.items) > 0:
-            context.test.log("✓ Grafana available for metrics visualization")
+            context["test"].log("✓ Grafana available for metrics visualization")
     except Exception as e:
-        context.test.log(f"! Could not verify Grafana: {e}")
+        context["test"].log(f"! Could not verify Grafana: {e}")
 
 
 # Additional helper for test logging
