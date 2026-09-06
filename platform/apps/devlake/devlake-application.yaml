@@ -61,6 +61,18 @@ spec:
           rootPassword: "XuzzgQEPbUA9jA1qRLEcgVNU"
 
         lake:
+          # The image sets USER to the *string* "devlake", and containerd on
+          # this node can't resolve it - every container create failed with
+          # "mount callback failed ...: no users found", leaving the lake pod
+          # in CreateContainerError for hours (so DevLake collected nothing).
+          # Specifying the same identity numerically (devlake = uid/gid 1010,
+          # confirmed by inspecting the image) bypasses the name lookup
+          # without changing who the process actually runs as.
+          securityContext:
+            runAsUser: 1010
+            runAsGroup: 1010
+            fsGroup: 1010
+
           # Encrypts DevLake's stored data-source credentials/tokens
           # (GitHub PAT, etc.) at rest. secretName references the Secret
           # in devlake-db-credentials-dev.yaml (confirmed working via a

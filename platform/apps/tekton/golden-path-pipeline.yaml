@@ -96,6 +96,17 @@ spec:
   workspaces:
     - name: source
       description: Shared workspace holding the cloned source between tasks
+    - name: dockerconfig
+      description: >-
+        Registry credentials for the build/push step. Attaching a
+        dockerconfigjson Secret to the pipeline ServiceAccount is NOT
+        sufficient for kaniko - it reads $DOCKER_CONFIG/config.json, and the
+        Secret's key is `.dockerconfigjson`, so it has to be mounted with an
+        explicit key->filename mapping (see the PipelineRun example in this
+        repo's docs). Verified: without this the push fails with
+        "UNAUTHORIZED: unauthenticated" even with the Secret attached to the
+        ServiceAccount.
+      optional: true
   results:
     - name: image-tag
       description: The immutable short-SHA tag the image was published under
@@ -183,6 +194,8 @@ spec:
       workspaces:
         - name: source
           workspace: source
+        - name: dockerconfig
+          workspace: dockerconfig
       params:
         - name: image
           value: $(params.image-name):$(tasks.fetch-source.results.short-sha)
@@ -192,10 +205,16 @@ spec:
             type: string
         workspaces:
           - name: source
+          - name: dockerconfig
+            optional: true
         steps:
           - name: build-and-push
             image: gcr.io/kaniko-project/executor:v1.23.2
             workingDir: $(workspaces.source.path)
+            env:
+              # kaniko looks for $DOCKER_CONFIG/config.json
+              - name: DOCKER_CONFIG
+                value: $(workspaces.dockerconfig.path)
             args:
               - --dockerfile=Dockerfile
               - --context=$(workspaces.source.path)
