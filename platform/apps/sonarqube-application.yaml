@@ -41,9 +41,13 @@ spec:
   project: default
 
   source:
-    repoURL: https://charts.sonarsource.com
+    # charts.sonarsource.com is a confirmed dead domain (NXDOMAIN) - this is
+    # why sonarqube's Application sat at sync status "Unknown" for this
+    # entire session, not a repo-server issue. Correct current repo found
+    # via the actual SonarSource/helm-chart-sonarqube GitHub repo's Pages site.
+    repoURL: https://sonarsource.github.io/helm-chart-sonarqube
     chart: sonarqube
-    targetRevision: "2025.1.0" # Helm chart version; adjust to desired release
+    targetRevision: "2026.4.1" # latest stable as of 2026-09-06, was 2025.1.0
     helm:
       values: |
         # ============================================================
