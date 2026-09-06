@@ -93,6 +93,14 @@ spec:
       type: string
       description: owner/repo of the GitOps config repo to raise the promotion PR against
       default: paruff/tracer-bullet-gitops
+    - name: sonar-host-url
+      type: string
+      description: >-
+        In-cluster SonarQube URL. Service name confirmed live this session
+        as sonarqube-sonarqube (Helm's fullname helper collapses release
+        name into chart name when they match, but this chart apparently
+        doesn't) - override if that changes.
+      default: http://sonarqube-sonarqube.fawkes.svc.cluster.local:9000
   workspaces:
     - name: source
       description: Shared workspace holding the cloned source between tasks
@@ -182,15 +190,65 @@ spec:
               #!/bin/sh
               set -eu
               pip install --no-cache-dir --quiet \
-                -r requirements.txt -r requirements-dev.txt
-              pytest tests/unit -q
+                -r requirements.txt -r requirements-dev.txt pytest-cov
+              # coverage.xml feeds sonar-scan's coverage metric below -
+              # without it SonarQube reports 0% regardless of real coverage.
+              pytest tests/unit -q --cov=app --cov-report=xml:coverage.xml
+
+    # ------------------------------------------------------------------
+    # 2b. SonarQube: code quality, potential bugs, coverage. Needs a
+    #     SONAR_TOKEN in a Secret named `sonarqube-scan-token` (key: token)
+    #     - not committed here, same pattern as tekton-gitops-github-token
+    #     (see #1797). Missing it fails loudly rather than silently
+    #     skipping the quality gate.
+    # ------------------------------------------------------------------
+    - name: sonar-scan
+      runAfter: [lint-and-test]
+      workspaces:
+        - name: source
+          workspace: source
+      params:
+        - name: sonar-host-url
+          value: $(params.sonar-host-url)
+        - name: sonar-project-key
+          value: $(params.repo-url)
+      taskSpec:
+        params:
+          - name: sonar-host-url
+            type: string
+          - name: sonar-project-key
+            type: string
+        workspaces:
+          - name: source
+        steps:
+          - name: sonar-scan
+            image: docker.io/sonarsource/sonar-scanner-cli:11.2
+            workingDir: $(workspaces.source.path)
+            env:
+              - name: SONAR_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: sonarqube-scan-token
+                    key: token
+            script: |
+              #!/bin/sh
+              set -eu
+              PROJECT_KEY=$(basename "$(params.sonar-project-key)" .git)
+              sonar-scanner \
+                -Dsonar.host.url="$(params.sonar-host-url)" \
+                -Dsonar.token="${SONAR_TOKEN}" \
+                -Dsonar.projectKey="${PROJECT_KEY}" \
+                -Dsonar.sources=app \
+                -Dsonar.tests=tests \
+                -Dsonar.python.coverage.reportPaths=coverage.xml \
+                -Dsonar.qualitygate.wait=true
 
     # ------------------------------------------------------------------
     # 3. Build + push, tagged by immutable short SHA
     #    (kaniko: no docker daemon / privileged container needed)
     # ------------------------------------------------------------------
     - name: build-and-push
-      runAfter: [lint-and-test]
+      runAfter: [lint-and-test, sonar-scan]
       workspaces:
         - name: source
           workspace: source
