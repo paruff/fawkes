@@ -95,7 +95,7 @@ jobs:
       - name: Install ServiceMonitor CRD (Prometheus Operator)
         run: |
           # friction-bot's real GitOps manifests include a ServiceMonitor
-          # (platform/apps/friction-bot/servicemonitor.yaml) — this minimal
+          # (platform/apps-deferred/friction-bot/servicemonitor.yaml) — this minimal
           # cluster has no Prometheus Operator, so `kubectl apply -k` fails
           # on that one resource ("no matches for kind ServiceMonitor")
           # unless the CRD type is at least registered. Installing just the
@@ -105,7 +105,7 @@ jobs:
           kubectl apply --server-side -f \
             https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.93.1/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
 
-      - name: Deploy friction-bot (real GitOps manifests, platform/apps/friction-bot)
+      - name: Deploy friction-bot (real GitOps manifests, platform/apps-deferred/friction-bot)
         run: |
           set -e
           # Reuses the actual GitOps-managed manifests directly — no CI-only
@@ -113,7 +113,12 @@ jobs:
           # fine here: this only smoke-tests /health, not the slash-command
           # flow (which also needs insights-service, not deployed in this
           # minimal cluster).
-          kubectl apply -k platform/apps/friction-bot
+          #
+          # friction-bot moved to platform/apps-deferred/ (#1845) - it's not
+          # part of the local Phase-1 GitOps bootstrap, but this workflow
+          # tests the service's own deployment manifests directly and is
+          # unaffected by which apps a given cluster's bootstrap deploys.
+          kubectl apply -k platform/apps-deferred/friction-bot
           kubectl -n fawkes set image deployment/friction-bot friction-bot=ghcr.io/paruff/friction-bot:ci
           kubectl -n fawkes get deploy friction-bot -o yaml | sed -n '1,120p'
           kubectl -n fawkes get pods -l app=friction-bot -o wide || true
