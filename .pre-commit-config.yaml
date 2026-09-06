@@ -251,7 +251,7 @@ repos:
         entry: |
           bash -c '
             if command -v argocd &> /dev/null; then
-              find . -name "*-application.yaml" -o -name "application.yaml" | xargs -I {} bash -c "argocd app validate {} 2>/dev/null || echo \"⚠️  ArgoCD validation skipped for {}\""
+              find . -path "./.claude" -prune -o \( -name "*-application.yaml" -o -name "application.yaml" \) -print | xargs -I {} bash -c "argocd app validate {} 2>/dev/null || echo \"⚠️  ArgoCD validation skipped for {}\""
             else
               echo "⚠️  argocd CLI not installed, skipping ArgoCD validation"
             fi
