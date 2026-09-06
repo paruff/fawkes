@@ -131,7 +131,11 @@ spec:
               #!/bin/sh
               set -eu
               cd "$(workspaces.output.path)"
-              rm -rf ./* .git 2>/dev/null || true
+              # The workspace PVC persists between runs. `rm -rf ./* .git`
+              # leaves other dotfiles (.gitignore, .github/, .dockerignore)
+              # behind, and git clone refuses a non-empty target - use a
+              # find-based wipe that actually clears everything.
+              find . -mindepth 1 -delete 2>/dev/null || true
               git clone --depth 1 --branch "$(params.revision)" \
                 "$(params.repo-url)" .
               git rev-parse --short=7 HEAD | tr -d '\n' \
