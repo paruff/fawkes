@@ -49,8 +49,8 @@ dev-status: ## Print service URLs and credentials for the local environment
 deploy-local: ## Deploy component to local K8s (COMPONENT=backstage|argocd|all)
 	@./infra/local-dev/deploy-local.sh $(NAMESPACE) $(COMPONENT)
 
-test-bdd: ## Run BDD acceptance tests (COMPONENT=backstage|argocd|all)
-	@behave tests/bdd/features --tags=@local -D namespace=$(NAMESPACE) -D component=$(COMPONENT)
+test-bdd: ## Run BDD acceptance tests
+	@pytest -c tests/bdd/pytest.ini tests/bdd/step_definitions/
 
 validate: ## Validate manifests and run policy checks
 	@./infra/local-dev/validate.sh $(NAMESPACE)
