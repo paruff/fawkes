@@ -1,0 +1,29 @@
+name: NPS CI/CD
+
+# Extends the build->scan->sign->SBOM->GitOps-promote pattern (proven on
+# tracer-bullet, dora-metrics, smart-alerting, anomaly-detection) to
+# nps via the shared reusable-python-service-golden-path.yml workflow
+# (#1792). Replaces service-python-tests.yml's generic lint-only coverage
+# for this service (see the exclusion added there).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "services/nps/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "services/nps/**"
+
+jobs:
+  golden-path:
+    uses: ./.github/workflows/reusable-python-service-golden-path.yml
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+      security-events: write
+    with:
+      service-name: nps
+    secrets: inherit
