@@ -5,6 +5,17 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.63](https://github.com/paruff/fawkes/compare/v0.3.62...v0.3.63) (2026-09-07)
+
+
+### Chores
+
+* **deps-dev:** bump gitpython from 3.1.60 to 3.1.61 ([#1867](https://github.com/paruff/fawkes/issues/1867)) ([480448c](https://github.com/paruff/fawkes/commit/480448c549832d54e5a1b856b1043e55e986def0))
+* **deps-dev:** bump ipython from 9.17.0 to 9.17.1 ([#1869](https://github.com/paruff/fawkes/issues/1869)) ([686a385](https://github.com/paruff/fawkes/commit/686a385285ce59799c84ad3c2f2df58d4c128e7e))
+* **deps-dev:** bump pylint from 4.0.7 to 4.0.8 ([#1868](https://github.com/paruff/fawkes/issues/1868)) ([8d6ba35](https://github.com/paruff/fawkes/commit/8d6ba3522b6780b3548345989fd6d079127cf08e))
+* **deps-dev:** bump redis from 5.0.1 to 8.1.0 ([#1871](https://github.com/paruff/fawkes/issues/1871)) ([55de317](https://github.com/paruff/fawkes/commit/55de31757ebc213e017c755f878b776e10cf679a))
+* **deps:** bump hashicorp/azurerm from 5.3.0 to 5.4.0 in /infra/azure ([#1866](https://github.com/paruff/fawkes/issues/1866)) ([7f37bb1](https://github.com/paruff/fawkes/commit/7f37bb1ea7c4554bac1a032425ee8401fd1449e5))
+
 ## [0.3.62](https://github.com/paruff/fawkes/compare/v0.3.61...v0.3.62) (2026-09-06)
 
 
