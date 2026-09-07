@@ -18,6 +18,15 @@ setup() {
   # Source the validation library
   source "${LIB_DIR}/validation.sh"
 
+  # `timeout N cmd` execs cmd directly (no shell involved) - it can never
+  # see a plain shell function, exported or not, since exported functions
+  # are only reconstructed by a *fresh bash interpreter* reading its
+  # inherited environment at startup, not by exec() itself. Exporting
+  # them here is still required so that a nested `bash -c` (used at the
+  # two `timeout 5 ...` call sites below) can see them.
+  export -f validate_cluster
+  export -f wait_for_workload
+
   # Setup kubectl mock
   setup_kubectl_mock
 }
@@ -80,7 +89,7 @@ esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
 
-  run timeout 5 validate_cluster
+  run timeout 5 bash -c validate_cluster
   # Should fail or timeout waiting for ready nodes
   assert_failure
 }
@@ -318,7 +327,7 @@ esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
 
-  run timeout 5 wait_for_workload "test-app" "default" "2"
+  run timeout 5 bash -c 'wait_for_workload "$@"' _ "test-app" "default" "2"
   assert_failure
 }
 

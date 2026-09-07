@@ -460,10 +460,30 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y jq coreutils
-          # Try to install kcov, but don't fail if unavailable (not in Ubuntu 24.04)
-          sudo apt-get install -y kcov || echo "⚠️  kcov not available, coverage reporting will be skipped"
           ./tests/bats/install-bats.sh --prefix "${HOME}/.local"
           echo "${HOME}/.local/bin" >> $GITHUB_PATH
+
+      - name: Cache kcov build
+        id: kcov-cache
+        uses: actions/cache@v4
+        with:
+          path: /usr/local/bin/kcov
+          key: kcov-v43-${{ runner.os }}-${{ runner.arch }}
+
+      - name: Build and install kcov
+        if: steps.kcov-cache.outputs.cache-hit != 'true'
+        run: |
+          # kcov isn't packaged for Ubuntu 24.04's apt repos (confirmed
+          # live: `apt-get install kcov` fails there), so build the
+          # official release from source instead of silently skipping
+          # coverage. Deps per https://github.com/SimonKagstrom/kcov/blob/master/INSTALL.md#ubuntu--debian
+          sudo apt-get install -y \
+            binutils-dev build-essential cmake libssl-dev libcurl4-openssl-dev \
+            libelf-dev libstdc++-12-dev zlib1g-dev libdw-dev libiberty-dev
+          git clone --depth 1 --branch v43 https://github.com/SimonKagstrom/kcov.git /tmp/kcov-src
+          cmake -S /tmp/kcov-src -B /tmp/kcov-build -DCMAKE_BUILD_TYPE=Release
+          cmake --build /tmp/kcov-build --parallel "$(nproc)"
+          sudo cmake --install /tmp/kcov-build
 
       - name: Run BATS tests
         run: |
