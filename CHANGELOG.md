@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.74](https://github.com/paruff/fawkes/compare/v0.3.73...v0.3.74) (2026-09-07)
+
+
+### Fixed
+
+* **otel-collector:** disable deprecated component name rewriting ([#1900](https://github.com/paruff/fawkes/issues/1900)) ([b4ec9d0](https://github.com/paruff/fawkes/commit/b4ec9d044a24f160957729cf6f4c0316c9ffed26))
+
 ## [0.3.73](https://github.com/paruff/fawkes/compare/v0.3.72...v0.3.73) (2026-09-07)
 
 
