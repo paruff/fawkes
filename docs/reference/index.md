@@ -40,7 +40,7 @@ Reference content in Fawkes is designed to:
 | ------------- | ------- | ------------------------------------------------------------------ |
 | Prometheus    | 2.47+   | See [Prometheus tool doc](../tools/prometheus.md)                  |
 | Grafana       | 10.2+   | 🚧 Reference coming soon                                           |
-| OpenSearch    | 2.11+   | See [Centralized Logging](../observability/centralized-logging.md) |
+| Loki          | 3.6+    | See [Centralized Logging](../observability/centralized-logging.md) |
 | Grafana Tempo | 2.3+    | See [Distributed Tracing](../observability/distributed-tracing.md) |
 
 ### Collaboration

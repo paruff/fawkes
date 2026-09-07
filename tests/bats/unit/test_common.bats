@@ -14,6 +14,14 @@ setup() {
 
   # Source the common library
   source "${LIB_DIR}/common.sh"
+
+  # common.sh's `set -euo pipefail` leaks into this test's own bats
+  # process (source doesn't fork), including into bats-core's own
+  # internal DEBUG-trap stack-trace machinery for the rest of this test -
+  # on some bash versions that trips a bare $BASH_SOURCE reference in
+  # bats-core's tracing.bash under nounset ("BASH_SOURCE: unbound
+  # variable"), unrelated to anything this test is actually checking.
+  set +u
 }
 
 teardown() {
@@ -31,7 +39,25 @@ teardown() {
 }
 
 @test "error_exit: uses custom exit code when provided" {
-  run bash -c "source ${LIB_DIR}/common.sh; error_exit 'Test error' 42"
+  # unset -f guards against a real name collision: error_handling.sh also
+  # exports its own, differently-behaved error_exit(), and when both
+  # libraries' tests run in the same overall bats invocation, whichever
+  # was exported last can leak into this fresh bash -c *before* the
+  # source line below locally redefines it.
+  #
+  # env -u BASH_ENV guards against kcov's coverage instrumentation (CI
+  # runs `run-tests.sh --coverage`): kcov exports BASH_ENV pointing at a
+  # helper script with `trap '...${BASH_SOURCE}...' DEBUG` (a bare,
+  # unindexed reference). Every fresh non-interactive bash process -
+  # including this nested bash -c - auto-sources BASH_ENV during its own
+  # startup, *before* any command in the -c string runs, so `unset
+  # BASH_ENV` as the first command inside the string is too late; it must
+  # be stripped from the environment the process is launched with
+  # instead. Combined with this library's own `set -euo pipefail`, that
+  # bare reference then trips "BASH_SOURCE: unbound variable", unrelated
+  # to anything this test is actually checking. Not reproducible without
+  # --coverage.
+  run env -u BASH_ENV bash -c "unset -f error_exit; source ${LIB_DIR}/common.sh; error_exit 'Test error' 42"
   assert_failure 42
 }
 

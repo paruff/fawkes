@@ -24,8 +24,8 @@ platform/apps/
 ├── ingress-nginx/                    # Ingress controller
 ├── jenkins/                          # CI/CD pipelines
 ├── kyverno/                          # Policy enforcement
+├── loki/                             # Log aggregation
 ├── mattermost/                       # Team collaboration
-├── opensearch/                       # Log aggregation
 ├── opentelemetry/                    # Observability pipeline
 ├── postgresql/                       # Database
 ├── prometheus/                       # Metrics monitoring
@@ -73,7 +73,7 @@ platform/apps/
 | [Prometheus](prometheus/)       | Metrics collection and alerting | `monitoring` |
 | [Grafana](grafana/)             | Metrics visualization           | `monitoring` |
 | [OpenTelemetry](opentelemetry/) | Telemetry data pipeline         | `monitoring` |
-| [OpenSearch](opensearch/)       | Log aggregation and search      | `logging`    |
+| [Loki](loki/)                   | Log aggregation and search      | `logging`    |
 | [Fluent Bit](fluent-bit/)       | Log collection                  | `logging`    |
 | [Tempo](tempo/)                 | Distributed tracing             | `monitoring` |
 

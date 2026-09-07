@@ -82,7 +82,17 @@ while IFS= read -r file; do
 
   if [ -n "$chart" ]; then
     values_file=$(mktemp)
-    yq -r '.spec.source.helm.values // ""' "$file" > "$values_file"
+    # helm.values (a YAML-string blob) and helm.valuesObject (a native YAML
+    # object) are mutually exclusive alternatives in the Application CRD -
+    # only reading .helm.values here silently rendered every valuesObject:
+    # based Application (opensearch included) with empty values, since that
+    # field never matched and the fallback was "". Read whichever is set.
+    values_string=$(yq -r '.spec.source.helm.values // ""' "$file")
+    if [ -n "$values_string" ]; then
+      printf '%s' "$values_string" > "$values_file"
+    else
+      yq '.spec.source.helm.valuesObject // {}' "$file" > "$values_file"
+    fi
     if ! render_chart "$file" "$repo_url" "$chart" "$revision" "$values_file"; then
       FAILED=$((FAILED + 1))
     fi

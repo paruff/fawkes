@@ -63,7 +63,7 @@ Traces are retained based on age:
 
 Tempo is configured as a data source in Grafana for trace visualization and correlation with logs/metrics.
 
-### With OpenSearch
+### With Loki
 
 Link traces to logs:
 

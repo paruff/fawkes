@@ -147,7 +147,7 @@ Use this method to jump from logs to traces.
 #### 1. Open Logs in Grafana
 
 1. Navigate to **Explore** in Grafana
-2. Select **OpenSearch** (or **Loki**) data source
+2. Select **Loki** data source
 
 #### 2. Query Application Logs
 

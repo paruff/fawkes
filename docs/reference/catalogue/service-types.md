@@ -54,7 +54,7 @@ This document lists all service types available in the Fawkes platform catalog. 
 | ----------------------- | ------- | --------------------------------------------------------- | --------------------------------- | --------- |
 | Prometheus              | 2.47+   | Metrics collection and time-series database.              | N/A                               | ✅ Active |
 | Grafana                 | 10.2+   | Visualization and analytics platform.                     | N/A                               | ✅ Active |
-| OpenSearch              | 2.11+   | Distributed search and analytics for centralized logging. | N/A                               | ✅ Active |
+| Loki                    | 3.6+    | Log aggregation and search, centralized logging.           | `loki-application.yaml`           | ✅ Active |
 | Grafana Tempo           | 2.3+    | Distributed tracing backend for OpenTelemetry traces.     | `tempo-application.yaml`          | ✅ Active |
 | OpenTelemetry Collector | 0.89+   | Vendor-neutral telemetry data collection and export.      | `otel-collector-application.yaml` | ✅ Active |
 | Apache DevLake          | 0.20+   | DORA metrics data platform.                               | `devlake-application.yaml`        | ✅ Active |
@@ -71,7 +71,7 @@ Application
     │       │
     │       ├─> Tempo (traces)
     │       ├─> Prometheus (metrics)
-    │       └─> OpenSearch (logs)
+    │       └─> Loki (logs)
     │               │
     │               ▼
     │           Grafana (unified visualization)

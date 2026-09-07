@@ -95,7 +95,7 @@ scanning, log aggregation, DORA metrics, and enterprise collaboration.
 │  ┌──────────────────────────────────────────────────────────┐  │
 │  │  Extended Observability                                   │  │
 │  │  ┌────────────┐  ┌──────────────┐  ┌─────────────────┐   │  │
-│  │  │ OpenSearch │  │ Grafana Tempo│  │ OTel Collector  │   │  │
+│  │  │ Loki       │  │ Grafana Tempo│  │ OTel Collector  │   │  │
 │  │  │ (logs)     │  │ (traces)     │  │ (fan-out)       │   │  │
 │  │  └────────────┘  └──────────────┘  └─────────────────┘   │  │
 │  └──────────────────────────────────────────────────────────┘  │
@@ -124,7 +124,7 @@ scanning, log aggregation, DORA metrics, and enterprise collaboration.
 | SonarQube (SAST)                  | —      | ✅     |
 | Trivy (container scanning)        | —      | ✅     |
 | Container registry (Harbor / ECR) | —      | ✅     |
-| OpenSearch (logs)                 | —      | ✅     |
+| Loki (logs)                       | —      | ✅     |
 | Grafana Tempo (traces)            | —      | ✅     |
 | External Secrets Operator         | —      | ✅     |
 | Mattermost + Focalboard           | —      | ✅     |
@@ -254,14 +254,13 @@ graph TD
     Backstage -->|plugin data| Jenkins
     Backstage -->|metrics display| DevLake
 
-    Services -->|OTLP metrics + traces| OTel[OpenTelemetry Collector]
-    Services -->|logs| FluentBitFwd[Fluent Bit]
+    Services -->|OTLP metrics + traces + logs| OTel[OpenTelemetry Collector]
     OTel -->|metrics| Prometheus[Prometheus]
     OTel -->|traces| Tempo[Grafana Tempo]
-    FluentBitFwd --> OpenSearch[OpenSearch]
+    OTel -->|logs| Loki[Loki]
 
     Prometheus -->|data source| Grafana[Grafana]
-    OpenSearch -->|data source| Grafana
+    Loki -->|data source| Grafana
     Tempo -->|data source| Grafana
 
     DevLake -->|DORA dashboards| Grafana
@@ -270,7 +269,7 @@ graph TD
         Prometheus
         Grafana
         Tempo
-        OpenSearch
+        Loki
         OTel[OpenTelemetry Collector]
     end
 
@@ -351,12 +350,11 @@ graph LR
     Apps[Platform Services] -->|OTLP| OTel[OpenTelemetry Collector]
     OTel -->|metrics| Prom[Prometheus]
     OTel -->|traces| Tempo[Grafana Tempo]
-    OTel -->|logs| FluentBit[Fluent Bit]
-    FluentBit --> OpenSearch[OpenSearch]
+    OTel -->|logs| Loki[Loki]
 
     Prom --> Grafana[Grafana]
     Tempo --> Grafana
-    OpenSearch --> Grafana
+    Loki --> Grafana
 
     Grafana -->|DORA dashboards| DevLake[DevLake]
     Grafana -->|alerts| Alertmanager[Alertmanager]
@@ -366,7 +364,7 @@ graph LR
 | Signal       | Collector               | Storage       | Query                 |
 | ------------ | ----------------------- | ------------- | --------------------- |
 | Metrics      | OpenTelemetry Collector | Prometheus    | Grafana / PromQL      |
-| Logs         | Fluent Bit              | OpenSearch    | Grafana / Lucene      |
+| Logs         | OpenTelemetry Collector | Loki          | Grafana / LogQL       |
 | Traces       | OpenTelemetry Collector | Grafana Tempo | Grafana / TraceQL     |
 | DORA metrics | DevLake                 | DevLake DB    | Grafana / DevLake API |
 
@@ -392,7 +390,7 @@ graph TD
     NS_Argocd -->|manages| NS_CICD
 
     NS_Platform -->|Backstage, Backstage DB| PlatComp[Portal Components]
-    NS_Obs -->|Prometheus, Grafana, Tempo, OpenSearch| ObsComp[Observability Components]
+    NS_Obs -->|Prometheus, Grafana, Tempo, Loki| ObsComp[Observability Components]
     NS_CICD -->|Jenkins, DevLake| CICDComp[CI/CD Components]
     NS_Security -->|Vault, SonarQube, Trivy| SecComp[Security Components]
     NS_Apps -->|team workloads| AppComp[Application Services]
@@ -402,7 +400,7 @@ graph TD
 | ---------------------- | ------------------------------------------------------ | --------------------------- |
 | `argocd`               | ArgoCD server, repo-server, application-controller     | Internal only               |
 | `fawkes-platform`      | Backstage portal, PostgreSQL                           | External (HTTPS)            |
-| `fawkes-observability` | Prometheus, Grafana, Tempo, OpenSearch, OTel Collector | Internal + Grafana external |
+| `fawkes-observability` | Prometheus, Grafana, Tempo, Loki, OTel Collector       | Internal + Grafana external |
 | `fawkes-cicd`          | Jenkins, DevLake                                       | Internal + Jenkins external |
 | `fawkes-security`      | Vault, SonarQube, Trivy operator                       | Internal only               |
 | `fawkes-apps`          | Platform microservices (`services/`)                   | Per-service ingress rules   |
@@ -419,7 +417,7 @@ require explicit policy approval.
 
 Fawkes services instrument themselves using the OpenTelemetry SDK and export to the
 in-cluster OpenTelemetry Collector. The collector fans out to Prometheus (metrics),
-Tempo (traces), and Fluent Bit → OpenSearch (logs). Grafana provides the unified
+Tempo (traces), and Loki (logs). Grafana provides the unified
 query and dashboard layer.
 
 **Dependency direction:** `services/` → OTel Collector → Obstackd storage backends.

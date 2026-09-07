@@ -18,6 +18,23 @@ setup() {
   # Source the validation library
   source "${LIB_DIR}/validation.sh"
 
+  # common.sh/validation.sh's `set -euo pipefail` leaks into this test's
+  # own bats process (source doesn't fork), including into bats-core's
+  # own internal DEBUG-trap stack-trace machinery for the rest of this
+  # test - on some bash versions that trips a bare $BASH_SOURCE reference
+  # in bats-core's tracing.bash under nounset ("BASH_SOURCE: unbound
+  # variable"), unrelated to anything this test is actually checking.
+  set +u
+
+  # `timeout N cmd` execs cmd directly (no shell involved) - it can never
+  # see a plain shell function, exported or not, since exported functions
+  # are only reconstructed by a *fresh bash interpreter* reading its
+  # inherited environment at startup, not by exec() itself. Exporting
+  # them here is still required so that a nested `bash -c` (used at the
+  # two `timeout 5 ...` call sites below) can see them.
+  export -f validate_cluster
+  export -f wait_for_workload
+
   # Setup kubectl mock
   setup_kubectl_mock
 }
@@ -80,7 +97,7 @@ esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
 
-  run timeout 5 validate_cluster
+  run timeout 5 bash -c validate_cluster
   # Should fail or timeout waiting for ready nodes
   assert_failure
 }
@@ -318,7 +335,7 @@ esac
 EOF
   chmod +x "${TEST_TEMP_DIR}/bin/kubectl"
 
-  run timeout 5 wait_for_workload "test-app" "default" "2"
+  run timeout 5 bash -c 'wait_for_workload "$@"' _ "test-app" "default" "2"
   assert_failure
 }
 
