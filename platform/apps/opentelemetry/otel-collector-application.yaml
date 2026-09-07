@@ -51,6 +51,18 @@ spec:
     targetRevision: "0.172.1" # #1738: was 0.108.0
     helm:
       values: |
+        # The chart's rewriteDeprecatedComponentNames defaults to true and
+        # silently rewrites the modern component names used in config:
+        # below (filelog, k8sattributes, otlp, otlphttp) into deprecated
+        # underscored aliases (file_log, k8s_attributes, otlp_grpc,
+        # otlp_http) intended for older collector images. Our pinned image
+        # (otel/opentelemetry-collector-contrib:0.114.0) only recognizes
+        # the modern names - confirmed live via a real collector startup
+        # failure ("unknown type: file_log", "unknown type: otlp_http",
+        # etc., with the valid-values list explicitly NOT containing the
+        # deprecated aliases). Every agent pod crash-looped on this.
+        rewriteDeprecatedComponentNames: false
+
         # ============================================================
         # Deployment Mode: DaemonSet for node-level log and metric collection
         # ============================================================
