@@ -5,6 +5,14 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.72](https://github.com/paruff/fawkes/compare/v0.3.71...v0.3.72) (2026-09-07)
+
+
+### Added
+
+* **observability:** consolidate onto prometheus-stack's Grafana ([#1895](https://github.com/paruff/fawkes/issues/1895)) ([0b8b499](https://github.com/paruff/fawkes/commit/0b8b499178eda729ea60aa7c835fced5f99ab374))
+* **tekton:** switch golden-path pipeline quality gate to SonarCloud ([#1896](https://github.com/paruff/fawkes/issues/1896)) ([2c9ca55](https://github.com/paruff/fawkes/commit/2c9ca5598d9afbce8470e333fe7f9d5131d99408))
+
 ## [0.3.71](https://github.com/paruff/fawkes/compare/v0.3.70...v0.3.71) (2026-09-07)
 
 
