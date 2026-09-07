@@ -53,7 +53,7 @@ jobs:
           terraform_version: 1.15.8
 
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@6e1e0642c0289bd619021bf6b34e3c08ed1e005a  # v6
+        uses: terraform-linters/setup-tflint@1cf010d3c7aef302051ccdb68c14c5dc2efa34ef  # v6
         with:
           tflint_version: v0.64.0
           github_token: ${{ github.token }}
@@ -135,7 +135,7 @@ jobs:
           echo "model=$PROVIDER/$FALLBACK" >> "$GITHUB_OUTPUT"
 
       - name: Run OpenCode
-        uses: anomalyco/opencode/github@cb7d8b2f5e44876ef98b661dc10590c915af3a9f  # v1.18.25
+        uses: anomalyco/opencode/github@16747470f976aca3d362ad730bcd3fe82ecc2c9a  # v1.18.29
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
