@@ -253,13 +253,18 @@ spec:
           enabled: true
           adminPassword: "fawkesidp"
 
+          # Bumped from the original 256Mi/512Mi after this instance became
+          # the single consolidated Grafana (DevLake's own bundled instance
+          # was disabled in favor of this one, see devlake-application.yaml)
+          # - it now also needs headroom for DevLake's DORA dashboards on
+          # top of its existing Loki/Tempo/Prometheus panels.
           resources:
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 150m
+              memory: 384Mi
             limits:
-              cpu: 200m
-              memory: 512Mi
+              cpu: 500m
+              memory: 1Gi
 
           persistence:
             enabled: true

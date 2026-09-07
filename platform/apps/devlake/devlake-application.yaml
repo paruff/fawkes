@@ -111,11 +111,22 @@ spec:
             successThreshold: 1
             timeoutSeconds: 5
 
-        # DEV DEFAULT: generated, local-dev-only value - grafana.adminPassword
-        # is a flat top-level string on this chart, not a secret reference
-        # (adminPasswordSecretName/Key don't exist on this schema).
+        # Consolidated onto prometheus-stack's Grafana instead of running a
+        # second one: DevLake's bundled Grafana is a fixed, purpose-built
+        # image (devlake-dashboard) with no datasource-provisioning hook in
+        # its values schema - it can only ever show DORA data, never
+        # metrics/logs/traces. prometheus-stack's Grafana is the standard
+        # chart, already has Loki/Tempo wired in as additionalDataSources,
+        # and is the more capable instance to consolidate onto (the chart's
+        # own values.yaml documents this exact external-Grafana pattern:
+        # "if grafana enabled is false, then external url should be
+        # provided"). DevLake's own DORA dashboard JSON still needs
+        # importing into that instance separately - not achievable via
+        # Helm values alone, tracked as a manual follow-up.
         grafana:
-          adminPassword: "7i0xnKeONqDOvIHM5whRDyW9"
+          enabled: false
+          external:
+            url: "http://prometheus-stack-grafana.monitoring.svc.cluster.local"
 
         # Ingress left disabled - ingress-nginx isn't deployed on this
         # cluster yet. Access via `kubectl port-forward` for now; revisit
