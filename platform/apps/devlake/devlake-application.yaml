@@ -82,6 +82,35 @@ spec:
             secretName: devlake-encryption-secret
             autoCreateSecret: false
 
+          # DevLake's `lake` container loads ~30 plugins sequentially at
+          # startup (ae, azuredevops, bamboo, ... github, gitlab, jenkins,
+          # jira, ... zentao) before /ping ever responds - confirmed live,
+          # this alone takes 55+ seconds. The chart's own default probes
+          # (30s initialDelay, 5 failures x 5s period = 55s total budget)
+          # killed the container mid-plugin-load every single time,
+          # producing a permanent CrashLoopBackOff that looked like an
+          # error but was exit code 143 (SIGTERM from the probe itself).
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+            periodSeconds: 5
+            failureThreshold: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+            periodSeconds: 5
+            failureThreshold: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+
         # DEV DEFAULT: generated, local-dev-only value - grafana.adminPassword
         # is a flat top-level string on this chart, not a secret reference
         # (adminPasswordSecretName/Key don't exist on this schema).
