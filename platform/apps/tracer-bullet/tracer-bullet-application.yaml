@@ -1,0 +1,64 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/tracer-bullet/tracer-bullet-application.yaml
+# PURPOSE: #1804/#1808 - ArgoCD Application syncing the tracer-bullet golden
+#          path example service from its desired-state GitOps repo
+#          (paruff/tracer-bullet-gitops) into the fawkes namespace. This is
+#          the missing link between the Tekton golden-path pipeline
+#          (platform/apps/tekton/golden-path-pipeline.yaml, which opens a
+#          GitOps PR against that repo on image promotion) and an actual
+#          running pod - without this Application, ArgoCD has nothing
+#          watching that repo at all.
+#
+# Per AGENTS.md section 6 ("Must Ask Before": creating or modifying ArgoCD
+# Application manifests), this was drafted by an agent and must not be
+# merged without maintainer review.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tracer-bullet
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/tracer-bullet-gitops.git
+    targetRevision: main
+    path: "."
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 10
