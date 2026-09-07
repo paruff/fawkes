@@ -63,6 +63,24 @@ spec:
 
           storage:
             type: filesystem
+            # The chart's storage-config helper (_helpers.tpl
+            # loki.commonStorageConfig) only takes the true filesystem
+            # branch when loki.storage.filesystem is itself a non-empty
+            # object - storage.type: filesystem alone is not sufficient,
+            # confirmed live via a real `helm template` failure
+            # ("Please define loki.storage.bucketNames.chunks"). Standard
+            # single-binary filesystem directories, per the chart's own
+            # generated config schema.
+            filesystem:
+              chunks_directory: /var/loki/chunks
+              rules_directory: /var/loki/rules
+            # Also set defensively in case a different code path still
+            # requires object-storage-style bucket names; inert under
+            # filesystem storage either way.
+            bucketNames:
+              chunks: unused-filesystem-storage
+              ruler: unused-filesystem-storage
+              admin: unused-filesystem-storage
 
           schemaConfig:
             configs:
