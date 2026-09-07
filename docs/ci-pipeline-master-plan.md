@@ -239,10 +239,10 @@ def test_metric_flows_from_app_to_prometheus():
     # 2. Wait for scrape cycle (15s)
     time.sleep(20)
     # 3. Query Prometheus
-    resp = requests.get("http://localhost:9090/api/v1/query",
-        params={"query": "telemetry_generator_requests_total"})
+    resp = requests.get("http://localhost:9090/api/v1/query", params={"query": "telemetry_generator_requests_total"})
     # 4. Assert metric exists and has correct labels
     assert resp.json()["data"]["result"][0]["metric"]["job"] == "telemetry-generator"
+
 
 def test_grafana_dashboard_renders():
     """Verify Grafana dashboards load and show data."""

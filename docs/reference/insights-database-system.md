@@ -833,11 +833,7 @@ insight = {
     "category_id": get_category_id("Technical"),
     "priority": "critical",
     "status": "published",
-    "tag_ids": [
-        get_tag_id("Incident"),
-        get_tag_id("Lesson Learned"),
-        get_tag_id("Performance")
-    ]
+    "tag_ids": [get_tag_id("Incident"), get_tag_id("Lesson Learned"), get_tag_id("Performance")],
 }
 ```
 
@@ -855,10 +851,7 @@ insight = {
     "category_id": get_category_id("Security"),
     "priority": "high",
     "status": "published",
-    "tag_ids": [
-        get_tag_id("Best Practice"),
-        get_tag_id("Documentation")
-    ]
+    "tag_ids": [get_tag_id("Best Practice"), get_tag_id("Documentation")],
 }
 ```
 
@@ -876,11 +869,7 @@ insight = {
     "category_id": get_category_id("Process"),
     "priority": "medium",
     "status": "published",
-    "tag_ids": [
-        get_tag_id("Improvement"),
-        get_tag_id("Quick Win"),
-        get_tag_id("Deployment")
-    ]
+    "tag_ids": [get_tag_id("Improvement"), get_tag_id("Quick Win"), get_tag_id("Deployment")],
 }
 ```
 
@@ -898,10 +887,7 @@ insight = {
     "category_id": get_category_id("Technical"),
     "priority": "medium",
     "status": "published",
-    "tag_ids": [
-        get_tag_id("Documentation"),
-        get_tag_id("Best Practice")
-    ]
+    "tag_ids": [get_tag_id("Documentation"), get_tag_id("Best Practice")],
 }
 ```
 
@@ -914,25 +900,20 @@ insight = {
 ```python
 import httpx
 
+
 class InsightsClient:
     def __init__(self, base_url: str = "http://localhost:8000"):
         self.base_url = base_url
         self.client = httpx.Client()
 
     def create_insight(self, insight_data: dict):
-        response = self.client.post(
-            f"{self.base_url}/insights",
-            json=insight_data
-        )
+        response = self.client.post(f"{self.base_url}/insights", json=insight_data)
         response.raise_for_status()
         return response.json()
 
     def search_insights(self, query: str, filters: dict = None):
         search_request = {"query": query, **(filters or {})}
-        response = self.client.post(
-            f"{self.base_url}/insights/search",
-            json=search_request
-        )
+        response = self.client.post(f"{self.base_url}/insights/search", json=search_request)
         response.raise_for_status()
         return response.json()
 
@@ -941,25 +922,25 @@ class InsightsClient:
         response.raise_for_status()
         return response.json()
 
+
 # Usage
 client = InsightsClient()
 
 # Create insight
-insight = client.create_insight({
-    "title": "My Learning",
-    "description": "What I learned",
-    "author": "me",
-    "category_id": 1,
-    "priority": "medium",
-    "status": "published",
-    "tag_ids": [1, 2]
-})
+insight = client.create_insight(
+    {
+        "title": "My Learning",
+        "description": "What I learned",
+        "author": "me",
+        "category_id": 1,
+        "priority": "medium",
+        "status": "published",
+        "tag_ids": [1, 2],
+    }
+)
 
 # Search insights
-results = client.search_insights(
-    "performance",
-    filters={"status": "published", "priority": "high"}
-)
+results = client.search_insights("performance", filters={"status": "published", "priority": "high"})
 
 # Get statistics
 stats = client.get_statistics()
@@ -1129,7 +1110,7 @@ import logging
 logging.basicConfig(
     level=logging.INFO,
     format='{"time":"%(asctime)s","level":"%(levelname)s","message":"%(message)s"}',
-    handlers=[logging.StreamHandler()]
+    handlers=[logging.StreamHandler()],
 )
 ```
 

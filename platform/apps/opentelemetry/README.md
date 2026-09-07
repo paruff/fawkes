@@ -87,10 +87,7 @@ exporter, _ := otlptracegrpc.New(ctx,
 ```python
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 
-exporter = OTLPSpanExporter(
-    endpoint="otel-collector.monitoring.svc:4317",
-    insecure=True
-)
+exporter = OTLPSpanExporter(endpoint="otel-collector.monitoring.svc:4317", insecure=True)
 ```
 
 ## Deployment

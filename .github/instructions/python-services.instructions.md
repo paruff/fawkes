@@ -110,8 +110,7 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
 
 
 @router.get("/items", response_model=list[ItemResponse])
-async def list_items(session: AsyncSession = Depends(get_db_session)) -> list[ItemResponse]:
-    ...
+async def list_items(session: AsyncSession = Depends(get_db_session)) -> list[ItemResponse]: ...
 
 
 # ❌ Never use global mutable state — module-level singletons are forbidden
@@ -142,9 +141,7 @@ async def calculate_lead_time(
         ValueError: If deploy_time is before commit_time.
     """
     if deploy_time < commit_time:
-        raise ValueError(
-            f"deploy_time ({deploy_time}) must be >= commit_time ({commit_time})"
-        )
+        raise ValueError(f"deploy_time ({deploy_time}) must be >= commit_time ({commit_time})")
     return deploy_time - commit_time
 
 
@@ -163,12 +160,14 @@ def parse_metric(raw: str) -> float:
     except ValueError as exc:
         raise ValueError(f"parse_metric: '{raw}' is not a valid float") from exc
 
+
 # ❌ Never silently discard errors
 def parse_metric(raw: str) -> float:
     try:
         return float(raw)
     except Exception:
         return 0.0  # hides bugs
+
 
 # ❌ Never use bare except
 try:
@@ -183,8 +182,10 @@ except:  # catches KeyboardInterrupt, SystemExit — never do this
 # ❌ Never
 _cache: dict[str, Any] = {}
 
+
 def get_cached(key: str) -> Any:
     return _cache.get(key)
+
 
 # ✅ Use dependency injection or class-scoped state
 class MetricsCache:
@@ -205,6 +206,7 @@ from opentelemetry import trace
 from opentelemetry.trace import Span
 
 tracer = trace.get_tracer(__name__)
+
 
 async def process_request(request_id: str) -> str:
     with tracer.start_as_current_span("process_request") as span:

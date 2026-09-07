@@ -197,11 +197,9 @@ emitter = DatahubRestEmitter("http://datahub-gms.datahub.svc:8080")
 lineage = {
     "upstream": [
         make_data_flow_urn("postgres", "backstage.services"),
-        make_data_flow_urn("postgres", "backstage.catalog")
+        make_data_flow_urn("postgres", "backstage.catalog"),
     ],
-    "downstream": [
-        make_data_flow_urn("postgres", "analytics.service_stats")
-    ]
+    "downstream": [make_data_flow_urn("postgres", "analytics.service_stats")],
 }
 
 # Emit lineage
@@ -217,16 +215,11 @@ from datahub.integrations.great_expectations.datahub_context import DatahubConte
 
 # Configure DataHub context
 datahub_context = DatahubContext(
-    datahub_url="http://datahub-gms.datahub.svc:8080",
-    platform="postgres",
-    platform_instance="production"
+    datahub_url="http://datahub-gms.datahub.svc:8080", platform="postgres", platform_instance="production"
 )
 
 # Great Expectations validation
-results = context.run_checkpoint(
-    checkpoint_name="my_checkpoint",
-    datahub_context=datahub_context
-)
+results = context.run_checkpoint(checkpoint_name="my_checkpoint", datahub_context=datahub_context)
 ```
 
 ## Search and Discovery
@@ -275,7 +268,7 @@ tag_proposal = MetadataChangeProposalWrapper(
     entityType="dataset",
     entityUrn="urn:li:dataset:(urn:li:dataPlatform:postgres,backstage.users,PROD)",
     aspectName="globalTags",
-    aspect=GlobalTagsClass(tags=[{"tag": "urn:li:tag:PII"}])
+    aspect=GlobalTagsClass(tags=[{"tag": "urn:li:tag:PII"}]),
 )
 
 emitter.emit_mcp(tag_proposal)
@@ -287,14 +280,7 @@ emitter.emit_mcp(tag_proposal)
 from datahub.metadata.schema_classes import OwnershipClass, OwnerClass
 
 # Assign owner
-ownership = OwnershipClass(
-    owners=[
-        OwnerClass(
-            owner="urn:li:corpuser:platform-team",
-            type="TECHNICAL_OWNER"
-        )
-    ]
-)
+ownership = OwnershipClass(owners=[OwnerClass(owner="urn:li:corpuser:platform-team", type="TECHNICAL_OWNER")])
 
 emitter.emit_mcp(ownership_proposal)
 ```

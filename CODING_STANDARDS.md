@@ -1652,8 +1652,7 @@ As an author:
 **A**: Start with function signatures:
 
 ```python
-def process_data(data: Dict[str, Any]) -> List[str]:
-    ...
+def process_data(data: Dict[str, Any]) -> List[str]: ...
 ```
 
 Run `mypy` to find issues incrementally.

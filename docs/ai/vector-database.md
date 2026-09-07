@@ -190,16 +190,7 @@ client = weaviate.Client("http://weaviate.fawkes.svc:80")
 schema = {
     "class": "FawkesDocument",
     "vectorizer": "text2vec-transformers",
-    "properties": [
-        {
-            "name": "title",
-            "dataType": ["string"]
-        },
-        {
-            "name": "content",
-            "dataType": ["text"]
-        }
-    ]
+    "properties": [{"name": "title", "dataType": ["string"]}, {"name": "content", "dataType": ["text"]}],
 }
 
 # Create class if doesn't exist
@@ -213,23 +204,17 @@ doc = {
     "title": "Getting Started Guide",
     "content": "This guide will help you get started with Fawkes...",
     "filepath": "docs/getting-started.md",
-    "category": "documentation"
+    "category": "documentation",
 }
 
-client.data_object.create(
-    data_object=doc,
-    class_name="FawkesDocument"
-)
+client.data_object.create(data_object=doc, class_name="FawkesDocument")
 
 # Batch indexing for better performance
 with client.batch as batch:
     batch.batch_size = 100
 
     for doc in documents:
-        batch.add_data_object(
-            data_object=doc,
-            class_name="FawkesDocument"
-        )
+        batch.add_data_object(data_object=doc, class_name="FawkesDocument")
 ```
 
 ### Indexing Strategies
@@ -274,11 +259,8 @@ Find documents by semantic similarity:
 ```python
 # Query by text
 result = (
-    client.query
-    .get("FawkesDocument", ["title", "content", "filepath"])
-    .with_near_text({
-        "concepts": ["How to deploy applications with ArgoCD"]
-    })
+    client.query.get("FawkesDocument", ["title", "content", "filepath"])
+    .with_near_text({"concepts": ["How to deploy applications with ArgoCD"]})
     .with_limit(5)
     .with_additional(["certainty", "distance"])
     .do()
@@ -297,11 +279,10 @@ Combine vector search with keyword search:
 
 ```python
 result = (
-    client.query
-    .get("FawkesDocument", ["title", "content"])
+    client.query.get("FawkesDocument", ["title", "content"])
     .with_hybrid(
         query="ArgoCD deployment",
-        alpha=0.5  # 0=keyword only, 1=vector only, 0.5=balanced
+        alpha=0.5,  # 0=keyword only, 1=vector only, 0.5=balanced
     )
     .with_limit(10)
     .do()
@@ -314,14 +295,9 @@ Add filters to narrow results:
 
 ```python
 result = (
-    client.query
-    .get("FawkesDocument", ["title", "content"])
+    client.query.get("FawkesDocument", ["title", "content"])
     .with_near_text({"concepts": ["security scanning"]})
-    .with_where({
-        "path": ["category"],
-        "operator": "Equal",
-        "valueString": "documentation"
-    })
+    .with_where({"path": ["category"], "operator": "Equal", "valueString": "documentation"})
     .with_limit(5)
     .do()
 )
@@ -361,8 +337,7 @@ def answer_question(question: str, llm_client) -> str:
 
     # 1. Retrieve relevant context from Weaviate
     result = (
-        client.query
-        .get("FawkesDocument", ["title", "content"])
+        client.query.get("FawkesDocument", ["title", "content"])
         .with_near_text({"concepts": [question]})
         .with_limit(5)
         .with_additional(["certainty"])
@@ -372,16 +347,10 @@ def answer_question(question: str, llm_client) -> str:
     docs = result["data"]["Get"]["FawkesDocument"]
 
     # 2. Filter by relevance threshold
-    relevant_docs = [
-        doc for doc in docs
-        if doc["_additional"]["certainty"] > 0.7
-    ]
+    relevant_docs = [doc for doc in docs if doc["_additional"]["certainty"] > 0.7]
 
     # 3. Construct context
-    context = "\n\n".join([
-        f"# {doc['title']}\n{doc['content']}"
-        for doc in relevant_docs
-    ])
+    context = "\n\n".join([f"# {doc['title']}\n{doc['content']}" for doc in relevant_docs])
 
     # 4. Create prompt with context
     prompt = f"""Based on the following context from Fawkes documentation,
@@ -411,9 +380,9 @@ schema = {
     "class": "FawkesDocument",
     "vectorIndexConfig": {
         "efConstruction": 128,  # Higher = better accuracy, slower build
-        "maxConnections": 64,   # Higher = better accuracy, more memory
-        "ef": 64                # Higher = better accuracy, slower query
-    }
+        "maxConnections": 64,  # Higher = better accuracy, more memory
+        "ef": 64,  # Higher = better accuracy, slower query
+    },
 }
 ```
 
@@ -421,8 +390,8 @@ schema = {
 
 ```python
 with client.batch as batch:
-    batch.batch_size = 100      # Tune based on document size
-    batch.num_workers = 4       # Parallel processing
+    batch.batch_size = 100  # Tune based on document size
+    batch.num_workers = 4  # Parallel processing
     batch.connection_error_retries = 3
 ```
 
@@ -432,6 +401,7 @@ with client.batch as batch:
 
 ```python
 from concurrent.futures import ThreadPoolExecutor
+
 
 def index_documents_parallel(documents, num_workers=4):
     with ThreadPoolExecutor(max_workers=num_workers) as executor:
@@ -566,13 +536,7 @@ with client.batch as batch:
 
 ```python
 # Try hybrid search instead
-result = (
-    client.query
-    .get("FawkesDocument", ["title"])
-    .with_hybrid(query="your query", alpha=0.5)
-    .with_limit(5)
-    .do()
-)
+result = client.query.get("FawkesDocument", ["title"]).with_hybrid(query="your query", alpha=0.5).with_limit(5).do()
 
 # Verify vectorizer is working
 modules = client.get_meta()["modules"]
@@ -610,19 +574,14 @@ client.schema.update_config(
         "vectorIndexConfig": {
             "ef": 128  # Increase from default 64
         }
-    }
+    },
 )
 
 # Use filters to reduce search space
 result = (
-    client.query
-    .get("FawkesDocument", ["title"])
+    client.query.get("FawkesDocument", ["title"])
     .with_near_text({"concepts": ["query"]})
-    .with_where({
-        "path": ["category"],
-        "operator": "Equal",
-        "valueString": "documentation"
-    })
+    .with_where({"path": ["category"], "operator": "Equal", "valueString": "documentation"})
     .with_limit(5)
     .do()
 )

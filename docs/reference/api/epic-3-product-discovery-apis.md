@@ -1000,10 +1000,7 @@ Unleash can send webhooks when feature flags change:
 ```python
 from space_metrics_client import SPACEMetricsClient
 
-client = SPACEMetricsClient(
-    base_url="http://space-metrics:8000",
-    api_key="your-api-key"
-)
+client = SPACEMetricsClient(base_url="http://space-metrics:8000", api_key="your-api-key")
 
 metrics = client.get_all_metrics(team="platform")
 print(metrics.satisfaction.enps_score)

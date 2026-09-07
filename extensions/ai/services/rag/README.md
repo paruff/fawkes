@@ -178,8 +178,7 @@ print(schema)
 
 # Semantic search
 result = (
-    client.query
-    .get("FawkesDocument", ["title", "content"])
+    client.query.get("FawkesDocument", ["title", "content"])
     .with_near_text({"concepts": ["deployment guide"]})
     .with_limit(5)
     .do()

@@ -273,127 +273,87 @@ from prometheus_client import Counter, Histogram, Gauge, Summary
 
 # Flow Velocity
 flow_velocity_items_per_week = Gauge(
-    'flow_velocity_items_per_week',
-    'Number of flow items completed per week',
-    ['team', 'item_type']
+    "flow_velocity_items_per_week", "Number of flow items completed per week", ["team", "item_type"]
 )
 
 # Flow Time
 flow_time_seconds = Histogram(
-    'flow_time_seconds',
-    'Total time from start to completion',
-    ['team', 'item_type'],
+    "flow_time_seconds",
+    "Total time from start to completion",
+    ["team", "item_type"],
     buckets=[
-        3600,      # 1 hour
-        21600,     # 6 hours
-        86400,     # 1 day
-        172800,    # 2 days
-        345600,    # 4 days
-        604800,    # 1 week
-        1209600,   # 2 weeks
-        2592000,   # 30 days
-    ]
+        3600,  # 1 hour
+        21600,  # 6 hours
+        86400,  # 1 day
+        172800,  # 2 days
+        345600,  # 4 days
+        604800,  # 1 week
+        1209600,  # 2 weeks
+        2592000,  # 30 days
+    ],
 )
 
 # Flow Efficiency
 flow_efficiency_percent = Histogram(
-    'flow_efficiency_percent',
-    'Flow efficiency (active time / total time)',
-    ['team'],
-    buckets=[10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    "flow_efficiency_percent",
+    "Flow efficiency (active time / total time)",
+    ["team"],
+    buckets=[10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
 )
 
 # Flow Load (WIP)
-flow_load_wip_current = Gauge(
-    'flow_load_wip_current',
-    'Current number of items in progress',
-    ['team']
-)
+flow_load_wip_current = Gauge("flow_load_wip_current", "Current number of items in progress", ["team"])
 
-flow_load_wip_limit = Gauge(
-    'flow_load_wip_limit',
-    'WIP limit for team',
-    ['team']
-)
+flow_load_wip_limit = Gauge("flow_load_wip_limit", "WIP limit for team", ["team"])
 
 # Stage Metrics
 stage_wait_time_seconds = Histogram(
-    'stage_wait_time_seconds',
-    'Wait time in each stage',
-    ['team', 'stage'],
-    buckets=[300, 1800, 3600, 21600, 86400, 172800, 604800]
+    "stage_wait_time_seconds",
+    "Wait time in each stage",
+    ["team", "stage"],
+    buckets=[300, 1800, 3600, 21600, 86400, 172800, 604800],
 )
 
 stage_active_time_seconds = Histogram(
-    'stage_active_time_seconds',
-    'Active time in each stage',
-    ['team', 'stage'],
-    buckets=[300, 1800, 3600, 21600, 86400, 172800]
+    "stage_active_time_seconds",
+    "Active time in each stage",
+    ["team", "stage"],
+    buckets=[300, 1800, 3600, 21600, 86400, 172800],
 )
 
-stage_flow_efficiency_percent = Gauge(
-    'stage_flow_efficiency_percent',
-    'Flow efficiency per stage',
-    ['team', 'stage']
-)
+stage_flow_efficiency_percent = Gauge("stage_flow_efficiency_percent", "Flow efficiency per stage", ["team", "stage"])
 
 # Event Counters
 webhook_events_received_total = Counter(
-    'webhook_events_received_total',
-    'Total webhook events received',
-    ['source', 'event_type']
+    "webhook_events_received_total", "Total webhook events received", ["source", "event_type"]
 )
 
 webhook_events_processed_total = Counter(
-    'webhook_events_processed_total',
-    'Total webhook events successfully processed',
-    ['source', 'event_type']
+    "webhook_events_processed_total", "Total webhook events successfully processed", ["source", "event_type"]
 )
 
 webhook_events_failed_total = Counter(
-    'webhook_events_failed_total',
-    'Total webhook events that failed processing',
-    ['source', 'event_type', 'error_type']
+    "webhook_events_failed_total", "Total webhook events that failed processing", ["source", "event_type", "error_type"]
 )
 
 # Flow Item Lifecycle
-flow_items_created_total = Counter(
-    'flow_items_created_total',
-    'Total flow items created',
-    ['team', 'item_type']
-)
+flow_items_created_total = Counter("flow_items_created_total", "Total flow items created", ["team", "item_type"])
 
-flow_items_completed_total = Counter(
-    'flow_items_completed_total',
-    'Total flow items completed',
-    ['team', 'item_type']
-)
+flow_items_completed_total = Counter("flow_items_completed_total", "Total flow items completed", ["team", "item_type"])
 
-flow_items_cancelled_total = Counter(
-    'flow_items_cancelled_total',
-    'Total flow items cancelled',
-    ['team', 'item_type']
-)
+flow_items_cancelled_total = Counter("flow_items_cancelled_total", "Total flow items cancelled", ["team", "item_type"])
 
 # Stage Transitions
 stage_transitions_total = Counter(
-    'stage_transitions_total',
-    'Total stage transitions',
-    ['team', 'from_stage', 'to_stage']
+    "stage_transitions_total", "Total stage transitions", ["team", "from_stage", "to_stage"]
 )
 
 # Bottleneck Detection
 bottleneck_detected = Gauge(
-    'bottleneck_detected',
-    'Binary indicator of bottleneck (1 = yes, 0 = no)',
-    ['team', 'stage']
+    "bottleneck_detected", "Binary indicator of bottleneck (1 = yes, 0 = no)", ["team", "stage"]
 )
 
-bottleneck_severity = Gauge(
-    'bottleneck_severity',
-    'Severity of bottleneck (0-100 scale)',
-    ['team', 'stage']
-)
+bottleneck_severity = Gauge("bottleneck_severity", "Severity of bottleneck (0-100 scale)", ["team", "stage"])
 ```
 
 ### Tertiary Storage: S3 (Cold Storage)
@@ -809,20 +769,22 @@ from sqlalchemy import create_engine
 from sqlalchemy.pool import QueuePool
 
 engine = create_engine(
-    'postgresql://flowmetrics:password@postgres:5432/flowmetrics',
+    "postgresql://flowmetrics:password@postgres:5432/flowmetrics",
     poolclass=QueuePool,
     pool_size=20,
     max_overflow=40,
-    pool_pre_ping=True  # Verify connections before use
+    pool_pre_ping=True,  # Verify connections before use
 )
 
 # Use prepared statements for repeated queries
 from sqlalchemy import text
 
+
 # Bad: Vulnerable to SQL injection, not prepared
 def get_team_metrics_bad(team_id):
     query = f"SELECT * FROM daily_team_metrics WHERE team_id = '{team_id}'"
     return engine.execute(query)
+
 
 # Good: Parameterized, prepared statement
 def get_team_metrics_good(team_id):
@@ -834,18 +796,22 @@ def get_team_metrics_good(team_id):
     """)
     return engine.execute(query, {"team_id": team_id})
 
+
 # Best: Use SQLAlchemy ORM with lazy loading
 from sqlalchemy.orm import sessionmaker
 
 Session = sessionmaker(bind=engine)
 
+
 def get_team_metrics_best(team_id):
     session = Session()
-    return session.query(DailyTeamMetrics)\
-        .filter_by(team_id=team_id)\
-        .order_by(DailyTeamMetrics.metric_date.desc())\
-        .limit(30)\
+    return (
+        session.query(DailyTeamMetrics)
+        .filter_by(team_id=team_id)
+        .order_by(DailyTeamMetrics.metric_date.desc())
+        .limit(30)
         .all()
+    )
 ```
 
 ### 5. Caching Strategy
@@ -855,7 +821,8 @@ def get_team_metrics_best(team_id):
 from redis import Redis
 import json
 
-redis_client = Redis(host='redis', port=6379, db=0)
+redis_client = Redis(host="redis", port=6379, db=0)
+
 
 def get_team_flow_metrics(team_id: str, force_refresh: bool = False):
     """
@@ -877,10 +844,11 @@ def get_team_flow_metrics(team_id: str, force_refresh: bool = False):
     redis_client.setex(
         cache_key,
         300,  # 5 minutes
-        json.dumps(metrics)
+        json.dumps(metrics),
     )
 
     return metrics
+
 
 # Cache invalidation on write
 def update_flow_item(flow_item_id: str, updates: dict):
@@ -1219,7 +1187,7 @@ python scripts/reprocess_failed_webhooks.py --hours=1 --limit=100
 ```python
 # Common error: missing flow item
 # Fix: Create flow item from webhook data
-if error_message == 'Flow item not found':
+if error_message == "Flow item not found":
     create_flow_item_from_webhook(webhook_event)
     retry_webhook_processing(webhook_event.id)
 ```
@@ -1326,9 +1294,7 @@ aws rds modify-db-instance \
 # Automated cleanup job (daily cron)
 def cleanup_old_data():
     # Archive flow items older than 90 days
-    old_items = FlowItem.query.filter(
-        FlowItem.completed_at < datetime.now() - timedelta(days=90)
-    ).all()
+    old_items = FlowItem.query.filter(FlowItem.completed_at < datetime.now() - timedelta(days=90)).all()
 
     for item in old_items:
         # Export to S3
@@ -1684,34 +1650,28 @@ from sqlalchemy.orm import sessionmaker
 import os
 
 # Database URL from environment
-DATABASE_URL = os.getenv(
-    'DATABASE_URL',
-    'postgresql://flowmetrics:password@postgres:5432/flowmetrics'
-)
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://flowmetrics:password@postgres:5432/flowmetrics")
 
 # Connection pool configuration
 engine = create_engine(
     DATABASE_URL,
     poolclass=QueuePool,
-    pool_size=20,              # Base connection pool size
-    max_overflow=40,           # Additional connections when needed
-    pool_timeout=30,           # Wait 30s for connection
-    pool_recycle=3600,         # Recycle connections after 1 hour
-    pool_pre_ping=True,        # Verify connections before use
-    echo=False,                # Don't log SQL (use for debugging only)
-    echo_pool=False,           # Don't log pool events
+    pool_size=20,  # Base connection pool size
+    max_overflow=40,  # Additional connections when needed
+    pool_timeout=30,  # Wait 30s for connection
+    pool_recycle=3600,  # Recycle connections after 1 hour
+    pool_pre_ping=True,  # Verify connections before use
+    echo=False,  # Don't log SQL (use for debugging only)
+    echo_pool=False,  # Don't log pool events
     connect_args={
-        'connect_timeout': 10,
-        'options': '-c statement_timeout=30000'  # 30s query timeout
-    }
+        "connect_timeout": 10,
+        "options": "-c statement_timeout=30000",  # 30s query timeout
+    },
 )
 
 # Session factory
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 # Dependency for FastAPI
 def get_db():

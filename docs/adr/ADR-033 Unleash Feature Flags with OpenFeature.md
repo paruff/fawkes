@@ -282,11 +282,11 @@ const enabled = await client.getBooleanValue("new-feature", false);
 from openfeature import api
 from openfeature.contrib.provider.unleash import UnleashProvider
 
-api.set_provider(UnleashProvider(
-    url="https://unleash.fawkes.idp/api",
-    app_name="python-service",
-    api_token=os.getenv("UNLEASH_API_TOKEN")
-))
+api.set_provider(
+    UnleashProvider(
+        url="https://unleash.fawkes.idp/api", app_name="python-service", api_token=os.getenv("UNLEASH_API_TOKEN")
+    )
+)
 
 client = api.get_client()
 enabled = client.get_boolean_value("new-feature", False)

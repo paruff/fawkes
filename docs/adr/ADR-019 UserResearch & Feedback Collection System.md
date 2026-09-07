@@ -485,8 +485,8 @@ def analyze_sentiment(feedback_text):
         model="gpt-4",
         messages=[
             {"role": "system", "content": "Classify sentiment as positive, neutral, or negative."},
-            {"role": "user", "content": feedback_text}
-        ]
+            {"role": "user", "content": feedback_text},
+        ],
     )
     return response.choices[0].message.content  # 'positive' | 'neutral' | 'negative'
 ```
@@ -517,11 +517,11 @@ def calculate_impact_score(feedback):
     score += count_similar_feedback(feedback) * 2  # 0-10 points
 
     # Severity (based on type)
-    severity_weights = {'bug': 3, 'friction': 2, 'feature-request': 1, 'praise': 0}
+    severity_weights = {"bug": 3, "friction": 2, "feature-request": 1, "praise": 0}
     score += severity_weights[feedback.type]
 
     # Sentiment (negative = more urgent)
-    if feedback.sentiment == 'negative':
+    if feedback.sentiment == "negative":
         score += 2
 
     # Recency (recent = more relevant)

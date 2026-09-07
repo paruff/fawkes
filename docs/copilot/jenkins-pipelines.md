@@ -395,11 +395,7 @@ spec:
 # ❌ Bad: Imperative approach (avoid this)
 import subprocess
 
-subprocess.run([
-    "kubectl", "create", "deployment", "backstage",
-    "--image=backstage/backstage:v1.20.0",
-    "--replicas=2"
-])
+subprocess.run(["kubectl", "create", "deployment", "backstage", "--image=backstage/backstage:v1.20.0", "--replicas=2"])
 ```
 
 ### 3. GitOps Workflow with ArgoCD
@@ -554,6 +550,7 @@ from datetime import datetime, timedelta
 import requests
 import time
 
+
 @given(parsers.parse('a Jenkins instance is running at "{url}"'))
 def jenkins_running(jenkins_client, url):
     """
@@ -561,11 +558,12 @@ def jenkins_running(jenkins_client, url):
 
     @dora-capability: continuous_integration
     """
-    response = jenkins_client.get(f'{url}/api/json')
+    response = jenkins_client.get(f"{url}/api/json")
     assert response.status_code == 200, f"Jenkins not accessible at {url}"
     data = response.json()
-    assert data.get('mode') == 'NORMAL', "Jenkins not in normal mode"
-    assert data.get('numExecutors', 0) > 0, "No Jenkins executors available"
+    assert data.get("mode") == "NORMAL", "Jenkins not in normal mode"
+    assert data.get("numExecutors", 0) > 0, "No Jenkins executors available"
+
 
 @when(parsers.parse('I commit a change to the "{branch}" branch'))
 def commit_change(git_repo, branch, dora_metrics):
@@ -578,22 +576,20 @@ def commit_change(git_repo, branch, dora_metrics):
 
     # Make traceable change
     commit_id = f"test-{datetime.utcnow().isoformat()}"
-    with open('README.md', 'a') as f:
-        f.write(f'\n<!-- Test commit {commit_id} -->')
+    with open("README.md", "a") as f:
+        f.write(f"\n<!-- Test commit {commit_id} -->")
 
-    git_repo.index.add(['README.md'])
-    commit = git_repo.index.commit(f'Test commit {commit_id}')
-    git_repo.remote('origin').push(branch)
+    git_repo.index.add(["README.md"])
+    commit = git_repo.index.commit(f"Test commit {commit_id}")
+    git_repo.remote("origin").push(branch)
 
     # Record commit time for DORA lead time metric
     dora_metrics.record_commit(
-        commit_sha=commit.hexsha,
-        timestamp=datetime.utcnow(),
-        service=git_repo.name,
-        branch=branch
+        commit_sha=commit.hexsha, timestamp=datetime.utcnow(), service=git_repo.name, branch=branch
     )
 
-@then(parsers.parse('a Jenkins build starts within {seconds:d} seconds'))
+
+@then(parsers.parse("a Jenkins build starts within {seconds:d} seconds"))
 def build_starts(jenkins_client, git_repo, seconds, dora_metrics):
     """
     Verify build triggered within SLA and update deployment frequency metric.
@@ -611,17 +607,17 @@ def build_starts(jenkins_client, git_repo, seconds, dora_metrics):
                 build_id=builds[0].id,
                 build_number=builds[0].number,
                 timestamp=builds[0].timestamp,
-                service=git_repo.name
+                service=git_repo.name,
             )
             return
         time.sleep(2)
 
     raise AssertionError(
-        f"No build started within {seconds}s of commit to {git_repo.name}. "
-        f"This impacts deployment frequency SLA."
+        f"No build started within {seconds}s of commit to {git_repo.name}. This impacts deployment frequency SLA."
     )
 
-@then('DORA metrics record the deployment')
+
+@then("DORA metrics record the deployment")
 def verify_dora_metrics(dora_metrics, git_repo):
     """
     Verify DORA metrics service recorded all events.
@@ -631,14 +627,14 @@ def verify_dora_metrics(dora_metrics, git_repo):
     # Verify metrics were recorded
     metrics = dora_metrics.get_metrics(service=git_repo.name)
 
-    assert metrics.get('deployment_frequency') is not None, \
-        "Deployment frequency not recorded"
-    assert metrics.get('lead_time') is not None, \
-        "Lead time not recorded"
+    assert metrics.get("deployment_frequency") is not None, "Deployment frequency not recorded"
+    assert metrics.get("lead_time") is not None, "Lead time not recorded"
 
     # Verify Prometheus metrics are accessible
-    prom_response = requests.get('http://prometheus.fawkes-platform.svc:9090/api/v1/query',
-                                 params={'query': f'deployments_total{{service="{git_repo.name}"}}'})
+    prom_response = requests.get(
+        "http://prometheus.fawkes-platform.svc:9090/api/v1/query",
+        params={"query": f'deployments_total{{service="{git_repo.name}"}}'},
+    )
     assert prom_response.status_code == 200, "Cannot query Prometheus metrics"
 ```
 
@@ -650,28 +646,27 @@ def verify_dora_metrics(dora_metrics, git_repo):
 import pytest
 from typing import Dict, List
 
+
 def pytest_collection_modifyitems(config, items):
     """
     Add belt level and DORA capability markers for tracking.
 
     @dora-capability: learning_culture
     """
-    belt_order = ['white-belt', 'yellow-belt', 'green-belt',
-                  'brown-belt', 'black-belt']
+    belt_order = ["white-belt", "yellow-belt", "green-belt", "brown-belt", "black-belt"]
 
     for item in items:
         # Extract belt level
-        belt_markers = [m.name for m in item.iter_markers()
-                       if m.name in belt_order]
+        belt_markers = [m.name for m in item.iter_markers() if m.name in belt_order]
         if belt_markers:
             item.add_marker(pytest.mark.belt_level(belt_markers[0]))
 
         # Extract DORA metrics
-        dora_markers = [m.name for m in item.iter_markers()
-                       if m.name.startswith('dora-')]
+        dora_markers = [m.name for m in item.iter_markers() if m.name.startswith("dora-")]
         for marker in dora_markers:
-            metric = marker.replace('dora-', '')
+            metric = marker.replace("dora-", "")
             item.add_marker(pytest.mark.dora_metric(metric))
+
 
 def pytest_terminal_summary(terminalreporter, exitstatus, config):
     """
@@ -679,34 +674,31 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     """
     belt_results: Dict[str, List[str]] = {}
 
-    for report in terminalreporter.stats.get('passed', []):
-        belt_marker = report.keywords.get('belt_level')
+    for report in terminalreporter.stats.get("passed", []):
+        belt_marker = report.keywords.get("belt_level")
         if belt_marker:
             belt = belt_marker[0].args[0]
             belt_results.setdefault(belt, []).append(report.nodeid)
 
-    terminalreporter.write_sep('=', 'Dojo Progression Summary')
-    for belt in ['white-belt', 'yellow-belt', 'green-belt',
-                 'brown-belt', 'black-belt']:
+    terminalreporter.write_sep("=", "Dojo Progression Summary")
+    for belt in ["white-belt", "yellow-belt", "green-belt", "brown-belt", "black-belt"]:
         scenarios = belt_results.get(belt, [])
-        status = '✅' if scenarios else '⏸️'
-        terminalreporter.write_line(
-            f'  {status} {belt.upper()}: {len(scenarios)} scenarios passed'
-        )
+        status = "✅" if scenarios else "⏸️"
+        terminalreporter.write_line(f"  {status} {belt.upper()}: {len(scenarios)} scenarios passed")
 
     # DORA metrics summary
     dora_results: Dict[str, int] = {}
-    for report in terminalreporter.stats.get('passed', []):
-        dora_marker = report.keywords.get('dora_metric')
+    for report in terminalreporter.stats.get("passed", []):
+        dora_marker = report.keywords.get("dora_metric")
         if dora_marker:
             for metric in dora_marker:
                 metric_name = metric.args[0]
                 dora_results[metric_name] = dora_results.get(metric_name, 0) + 1
 
     if dora_results:
-        terminalreporter.write_sep('=', 'DORA Metrics Coverage')
+        terminalreporter.write_sep("=", "DORA Metrics Coverage")
         for metric, count in sorted(dora_results.items()):
-            terminalreporter.write_line(f'  📊 {metric}: {count} tests')
+            terminalreporter.write_line(f"  📊 {metric}: {count} tests")
 ```
 
 ---
@@ -1096,51 +1088,44 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="Fawkes DORA Metrics Collector",
     description="Automated collection of the Four Key DORA metrics",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # Prometheus metrics
 deployment_counter = Counter(
-    'fawkes_deployments_total',
-    'Total number of deployments',
-    ['service', 'environment', 'version', 'status']
+    "fawkes_deployments_total", "Total number of deployments", ["service", "environment", "version", "status"]
 )
 
 lead_time_histogram = Histogram(
-    'fawkes_lead_time_seconds',
-    'Lead time from commit to deployment (seconds)',
-    ['service', 'environment'],
-    buckets=[60, 300, 900, 1800, 3600, 7200, 14400, 28800, 86400]  # 1m to 1d
+    "fawkes_lead_time_seconds",
+    "Lead time from commit to deployment (seconds)",
+    ["service", "environment"],
+    buckets=[60, 300, 900, 1800, 3600, 7200, 14400, 28800, 86400],  # 1m to 1d
 )
 
 failure_counter = Counter(
-    'fawkes_change_failures_total',
-    'Total number of failed changes',
-    ['service', 'environment', 'failure_type']
+    "fawkes_change_failures_total", "Total number of failed changes", ["service", "environment", "failure_type"]
 )
 
 mttr_histogram = Histogram(
-    'fawkes_mttr_seconds',
-    'Mean time to restore service (seconds)',
-    ['service', 'environment', 'incident_type'],
-    buckets=[300, 900, 1800, 3600, 7200, 14400, 28800, 86400]  # 5m to 1d
+    "fawkes_mttr_seconds",
+    "Mean time to restore service (seconds)",
+    ["service", "environment", "incident_type"],
+    buckets=[300, 900, 1800, 3600, 7200, 14400, 28800, 86400],  # 5m to 1d
 )
 
-active_incidents = Gauge(
-    'fawkes_active_incidents',
-    'Number of currently active incidents',
-    ['service', 'environment']
-)
+active_incidents = Gauge("fawkes_active_incidents", "Number of currently active incidents", ["service", "environment"])
+
 
 # Pydantic models
 class DeploymentEvent(BaseModel):
     service: str = Field(..., description="Service name")
     version: str = Field(..., description="Version or git commit SHA")
-    environment: Literal['dev', 'staging', 'production'] = Field(..., description="Target environment")
+    environment: Literal["dev", "staging", "production"] = Field(..., description="Target environment")
     commit_sha: str = Field(..., description="Git commit SHA")
     commit_timestamp: datetime = Field(..., description="When the commit was created")
     deployment_timestamp: datetime = Field(default_factory=datetime.utcnow, description="When deployment occurred")
-    status: Literal['success', 'failure'] = Field(..., description="Deployment outcome")
+    status: Literal["success", "failure"] = Field(..., description="Deployment outcome")
 
     class Config:
         json_schema_extra = {
@@ -1151,15 +1136,16 @@ class DeploymentEvent(BaseModel):
                 "commit_sha": "abc123def456",
                 "commit_timestamp": "2025-10-25T10:00:00Z",
                 "deployment_timestamp": "2025-10-25T10:15:00Z",
-                "status": "success"
+                "status": "success",
             }
         }
 
+
 class IncidentEvent(BaseModel):
     service: str = Field(..., description="Affected service name")
-    environment: Literal['dev', 'staging', 'production'] = Field(..., description="Affected environment")
+    environment: Literal["dev", "staging", "production"] = Field(..., description="Affected environment")
     incident_type: str = Field(..., description="Type of incident (e.g., 'outage', 'degradation')")
-    severity: Literal['low', 'medium', 'high', 'critical'] = Field(..., description="Incident severity")
+    severity: Literal["low", "medium", "high", "critical"] = Field(..., description="Incident severity")
     started_at: datetime = Field(..., description="When incident started")
     resolved_at: Optional[datetime] = Field(None, description="When incident was resolved")
     caused_by_deployment: Optional[str] = Field(None, description="Git commit SHA if caused by deployment")
@@ -1173,28 +1159,28 @@ class IncidentEvent(BaseModel):
                 "severity": "high",
                 "started_at": "2025-10-25T11:00:00Z",
                 "resolved_at": "2025-10-25T11:30:00Z",
-                "caused_by_deployment": "abc123def456"
+                "caused_by_deployment": "abc123def456",
             }
         }
+
 
 class SecurityScanResult(BaseModel):
     service: str
     version: str
-    scanner: Literal['trivy', 'sonarqube', 'snyk']
+    scanner: Literal["trivy", "sonarqube", "snyk"]
     high_vulnerabilities: int
     critical_vulnerabilities: int
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
+
 # API Endpoints
+
 
 @app.get("/")
 async def root():
     """Health check endpoint"""
-    return {
-        "service": "Fawkes DORA Metrics Collector",
-        "status": "healthy",
-        "version": "1.0.0"
-    }
+    return {"service": "Fawkes DORA Metrics Collector", "status": "healthy", "version": "1.0.0"}
+
 
 @app.post("/api/v1/deployments", status_code=201)
 async def record_deployment(event: DeploymentEvent):
@@ -1209,34 +1195,22 @@ async def record_deployment(event: DeploymentEvent):
     try:
         # Increment deployment counter
         deployment_counter.labels(
-            service=event.service,
-            environment=event.environment,
-            version=event.version,
-            status=event.status
+            service=event.service, environment=event.environment, version=event.version, status=event.status
         ).inc()
 
         # Calculate and record lead time
         lead_time = (event.deployment_timestamp - event.commit_timestamp).total_seconds()
-        lead_time_histogram.labels(
-            service=event.service,
-            environment=event.environment
-        ).observe(lead_time)
+        lead_time_histogram.labels(service=event.service, environment=event.environment).observe(lead_time)
 
         # Record failure if applicable
-        if event.status == 'failure':
+        if event.status == "failure":
             failure_counter.labels(
-                service=event.service,
-                environment=event.environment,
-                failure_type='deployment_failure'
+                service=event.service, environment=event.environment, failure_type="deployment_failure"
             ).inc()
 
-            logger.warning(
-                f"Deployment failure recorded: {event.service} v{event.version} to {event.environment}"
-            )
+            logger.warning(f"Deployment failure recorded: {event.service} v{event.version} to {event.environment}")
         else:
-            logger.info(
-                f"Deployment success recorded: {event.service} v{event.version} to {event.environment}"
-            )
+            logger.info(f"Deployment success recorded: {event.service} v{event.version} to {event.environment}")
 
         return {
             "status": "recorded",
@@ -1244,12 +1218,13 @@ async def record_deployment(event: DeploymentEvent):
             "metrics": {
                 "deployment_frequency": "updated",
                 "lead_time_seconds": round(lead_time, 2),
-                "change_failure_rate": "updated" if event.status == 'failure' else "n/a"
-            }
+                "change_failure_rate": "updated" if event.status == "failure" else "n/a",
+            },
         }
     except Exception as e:
         logger.error(f"Error recording deployment: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/api/v1/incidents", status_code=201)
 async def record_incident(event: IncidentEvent):
@@ -1264,56 +1239,43 @@ async def record_incident(event: IncidentEvent):
             # Calculate MTTR
             mttr = (event.resolved_at - event.started_at).total_seconds()
             mttr_histogram.labels(
-                service=event.service,
-                environment=event.environment,
-                incident_type=event.incident_type
+                service=event.service, environment=event.environment, incident_type=event.incident_type
             ).observe(mttr)
 
             # Decrement active incidents
-            active_incidents.labels(
-                service=event.service,
-                environment=event.environment
-            ).dec()
+            active_incidents.labels(service=event.service, environment=event.environment).dec()
 
             # If caused by deployment, count as change failure
             if event.caused_by_deployment:
                 failure_counter.labels(
-                    service=event.service,
-                    environment=event.environment,
-                    failure_type='incident_from_deployment'
+                    service=event.service, environment=event.environment, failure_type="incident_from_deployment"
                 ).inc()
 
             logger.info(
-                f"Incident resolved: {event.service} in {event.environment} "
-                f"after {round(mttr/60, 2)} minutes"
+                f"Incident resolved: {event.service} in {event.environment} after {round(mttr / 60, 2)} minutes"
             )
 
             return {
                 "status": "resolved",
                 "service": event.service,
                 "mttr_seconds": round(mttr, 2),
-                "mttr_minutes": round(mttr / 60, 2)
+                "mttr_minutes": round(mttr / 60, 2),
             }
         else:
             # Incident started but not resolved
-            active_incidents.labels(
-                service=event.service,
-                environment=event.environment
-            ).inc()
+            active_incidents.labels(service=event.service, environment=event.environment).inc()
 
-            logger.warning(
-                f"Incident started: {event.service} in {event.environment} "
-                f"(severity: {event.severity})"
-            )
+            logger.warning(f"Incident started: {event.service} in {event.environment} (severity: {event.severity})")
 
             return {
                 "status": "incident_started",
                 "service": event.service,
-                "message": "Call again with resolved_at to calculate MTTR"
+                "message": "Call again with resolved_at to calculate MTTR",
             }
     except Exception as e:
         logger.error(f"Error recording incident: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/api/v1/security-scan", status_code=201)
 async def record_security_scan(scan: SecurityScanResult):
@@ -1325,33 +1287,25 @@ async def record_security_scan(scan: SecurityScanResult):
         f"Critical: {scan.critical_vulnerabilities}, High: {scan.high_vulnerabilities}"
     )
 
-    return {
-        "status": "recorded",
-        "service": scan.service,
-        "version": scan.version
-    }
+    return {"status": "recorded", "service": scan.service, "version": scan.version}
+
 
 @app.get("/metrics")
 async def metrics():
     """Prometheus metrics endpoint for scraping"""
-    return Response(
-        content=generate_latest(),
-        media_type="text/plain"
-    )
+    return Response(content=generate_latest(), media_type="text/plain")
+
 
 @app.get("/health")
 async def health():
     """Health check for Kubernetes probes"""
     return {"status": "healthy"}
 
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(
-        app,
-        host="0.0.0.0",
-        port=8080,
-        log_level="info"
-    )
+
+    uvicorn.run(app, host="0.0.0.0", port=8080, log_level="info")
 ```
 
 ### Deployment for DORA Metrics Service
