@@ -56,13 +56,13 @@ Feature: OpenTelemetry Collector Deployment
     And the exporter should target "prometheus-prometheus.monitoring.svc.cluster.local:9090"
     And metrics should be exportable to Prometheus
 
-  @exporters @opensearch
-  Scenario: OpenSearch exporter is configured for logs
+  @exporters @loki
+  Scenario: Loki exporter is configured for logs
     Given OpenTelemetry Collector is deployed
     When I check the collector configuration for exporters
-    Then the opensearch exporter should be configured
-    And the exporter should target "opensearch-cluster-master.logging.svc.cluster.local:9200"
-    And logs should be exportable to OpenSearch
+    Then the otlphttp/loki exporter should be configured
+    And the exporter should target "loki.logging.svc.cluster.local:3100"
+    And logs should be exportable to Loki
 
   @exporters @tempo
   Scenario: Tempo exporter is configured for traces
@@ -88,7 +88,7 @@ Feature: OpenTelemetry Collector Deployment
     Then a logs pipeline should exist
     And the pipeline should include receivers: filelog, otlp
     And the pipeline should include processors: memory_limiter, attributes/logs, k8sattributes, resourcedetection, transform/logs, batch/logs
-    And the pipeline should export to opensearch
+    And the pipeline should export to otlphttp/loki
 
   @pipelines @traces
   Scenario: Traces pipeline is configured

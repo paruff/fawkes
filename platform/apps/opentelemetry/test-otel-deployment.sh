@@ -171,11 +171,11 @@ else
   echo -e "${YELLOW}⚠${NC} Prometheus not found"
 fi
 
-# Check if OpenSearch is configured
-if kubectl get service -n logging opensearch-cluster-master > /dev/null 2>&1; then
-  echo -e "${GREEN}✓${NC} OpenSearch exporter target available"
+# Check if Loki is configured
+if kubectl get service -n logging loki > /dev/null 2>&1; then
+  echo -e "${GREEN}✓${NC} Loki exporter target available"
 else
-  echo -e "${YELLOW}⚠${NC} OpenSearch not found (may not be deployed yet)"
+  echo -e "${YELLOW}⚠${NC} Loki not found (may not be deployed yet)"
 fi
 
 # Check if Tempo is configured
@@ -211,7 +211,7 @@ echo ""
 echo "Next steps:"
 echo "1. View traces in Grafana: http://grafana.127.0.0.1.nip.io"
 echo "2. Query Tempo directly for traces from service 'otel-sample-app'"
-echo "3. Check OpenSearch for logs with trace correlation"
+echo "3. Check Loki (via Grafana Explore) for logs with trace correlation"
 echo ""
 echo "Sample application endpoints:"
 echo "  kubectl port-forward -n $DEMO_NS svc/$SAMPLE_APP_NAME 8080:80"

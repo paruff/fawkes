@@ -13,15 +13,16 @@ The OpenTelemetry Collector provides unified telemetry collection (logs, metrics
 
 - Native Kubernetes metadata enrichment via k8sattributes processor
 - Trace correlation support (traceId, spanId)
-- Direct export to OpenSearch
+- Direct export to Loki (via OTLP)
 - Efficient batching and buffering
 
 ## Historical Context
 
 Fluent Bit was originally considered for log collection but was replaced by OpenTelemetry Collector to provide a unified observability pipeline. This decision aligns with:
 
-- ADR-011: Centralized Log Management
+- ADR-011: Centralized Log Management (superseded by ADR-035)
 - ADR-013: Distributed Tracing
+- ADR-035: Log Storage Migration from OpenSearch to Loki
 
 The content below is kept for reference purposes only.
 

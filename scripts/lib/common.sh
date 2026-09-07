@@ -31,8 +31,8 @@ error() {
 }
 
 error_exit() {
-  error "$@"
-  exit 1
+  echo "[ERROR] $1" >&2
+  exit "${2:-1}"
 }
 
 debug() {
@@ -48,12 +48,6 @@ export -f warn
 export -f error
 export -f error_exit
 export -f debug
-
-# Error handling
-error_exit() {
-  echo "[ERROR] $1" >&2
-  exit "${2:-1}"
-}
 
 # State tracking for --resume functionality
 context_id() {

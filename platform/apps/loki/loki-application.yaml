@@ -1,0 +1,161 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/loki/loki-application.yaml
+# PURPOSE: ArgoCD Application for Grafana Loki (log storage, replaces OpenSearch)
+# FEATURES: Single-binary MVP deployment, filesystem storage, 30-day retention
+# SEE: docs/adr/ADR-011 Centralized Log Management.md (superseded by ADR-035)
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki
+  namespace: argocd
+  labels:
+    app: loki
+    component: observability
+    environment: dev
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "1" # Deploy alongside/before OpenTelemetry Collector's log exporter
+spec:
+  project: default
+
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: loki
+    targetRevision: "7.3.0"
+    helm:
+      valuesObject:
+        # ===== Deployment Mode =====
+        # SingleBinary runs all Loki components (distributor, ingester,
+        # querier, etc.) in one process - the MVP equivalent of OpenSearch's
+        # singleNode: true. Suitable for the same low-volume, dev/small-team
+        # scale this platform already targets for logging.
+        deploymentMode: SingleBinary
+
+        loki:
+          # MVP: no multi-tenancy, matching OpenSearch's
+          # plugins.security.disabled: true stance.
+          auth_enabled: false
+
+          commonConfig:
+            # Single node - no point replicating data to itself.
+            replication_factor: 1
+
+          storage:
+            type: filesystem
+
+          schemaConfig:
+            configs:
+              - from: "2024-01-01"
+                store: tsdb
+                object_store: filesystem
+                schema: v13
+                index:
+                  prefix: loki_index_
+                  period: 24h
+
+          limits_config:
+            reject_old_samples: true
+            reject_old_samples_max_age: 168h
+            # Matches OpenSearch's ISM 30-day retention policy.
+            retention_period: 720h
+            volume_enabled: true
+
+          compactor:
+            retention_enabled: true
+            delete_request_store: filesystem
+
+        # ===== Single Binary Resources & Storage =====
+        singleBinary:
+          replicas: 1
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          persistence:
+            enabled: true
+            storageClass: "standard"
+            size: 20Gi
+
+        # ===== Components not used in SingleBinary mode =====
+        # (SimpleScalable/Distributed-mode-only components; explicitly zeroed
+        # so the chart doesn't render them)
+        write:
+          replicas: 0
+        read:
+          replicas: 0
+        backend:
+          replicas: 0
+
+        # ===== Disable extras not needed for MVP =====
+        minio:
+          enabled: false
+        gateway:
+          enabled: false
+        test:
+          enabled: false
+        lokiCanary:
+          enabled: false
+        chunksCache:
+          enabled: false
+        resultsCache:
+          enabled: false
+
+        monitoring:
+          serviceMonitor:
+            enabled: false
+          selfMonitoring:
+            enabled: false
+          lokiCanary:
+            enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logging
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/replicas
+
+  revisionHistoryLimit: 10

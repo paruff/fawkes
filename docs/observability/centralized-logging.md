@@ -4,7 +4,7 @@
 
 Fawkes implements centralized, structured logging for all Kubernetes workloads using OpenTelemetry Collector and OTLP. This enables reliable correlation of log events with traces and metrics, accelerating Mean Time to Resolution (MTTR) for application and platform incidents.
 
-**Reference**: See [ADR-011 Centralized Log Management](../adr/ADR-011%20Centralized%20Log%20Management.md) for architectural decisions.
+**Reference**: See [ADR-035 Log Storage Migration from OpenSearch to Loki](../adr/ADR-035%20Log%20Storage%20Migration%20from%20OpenSearch%20to%20Loki.md) for the current architecture, and [ADR-011 Centralized Log Management](../adr/ADR-011%20Centralized%20Log%20Management.md) (superseded) for the original decision.
 
 ## Architecture
 
@@ -29,7 +29,7 @@ Fawkes implements centralized, structured logging for all Kubernetes workloads u
 │  │ OpenTelemetry Collector DaemonSet                   │      │
 │  │ - filelog receiver: Tail container logs             │      │
 │  │ - k8sattributes: Add Kubernetes metadata            │      │
-│  │ - otlphttp exporter: Send to OpenSearch             │      │
+│  │ - otlphttp/loki exporter: Send to Loki              │      │
 │  │ - memory_limiter: Buffer during outages             │      │
 │  └───────────────────┬─────────────────────────────────┘      │
 │                      │ OTLP/HTTP                                │
@@ -37,9 +37,9 @@ Fawkes implements centralized, structured logging for all Kubernetes workloads u
                        │
                        ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│  OpenSearch Cluster                                              │
-│  - Centralized log storage and search                           │
-│  - OpenSearch Dashboards for visualization                      │
+│  Loki                                                             │
+│  - Centralized log storage (single-binary MVP deployment)        │
+│  - Queried via Grafana Explore (LogQL)                            │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
@@ -66,6 +66,12 @@ Every log record is enriched with Kubernetes metadata via the `k8sattributes` pr
 | `k8s.node.name`       | Node where pod is running                      |
 | `cluster`             | Cluster identifier                             |
 | `environment`         | Environment (development, staging, production) |
+
+Loki's OTLP ingestion endpoint automatically promotes a curated subset of
+these resource attributes to indexed stream labels (`k8s.namespace.name`,
+`k8s.pod.name`, `k8s.container.name`, `k8s.deployment.name` among them,
+sanitized to `k8s_namespace_name` etc. for LogQL); everything else stays as
+unindexed structured metadata, searchable but not part of the label index.
 
 ### 3. Trace Correlation
 
@@ -122,14 +128,12 @@ k8sattributes:
       # ... more attributes
 ```
 
-#### OpenSearch Exporter
+#### Loki Exporter (OTLP/HTTP)
 
 ```yaml
-opensearch:
-  http:
-    endpoint: "http://opensearch-cluster-master.logging.svc.cluster.local:9200"
-  logs_index: "otel-logs"
-  retry:
+otlphttp/loki:
+  logs_endpoint: "http://loki.logging.svc.cluster.local:3100/otlp/v1/logs"
+  retry_on_failure:
     enabled: true
     max_elapsed_time: 300s
   sending_queue:
@@ -137,42 +141,45 @@ opensearch:
     queue_size: 5000
 ```
 
-### OpenSearch Index Templates
+This uses Loki's native OTLP endpoint rather than the community
+`lokiexporter` component - Grafana's recommended path, since Loki applies
+its own resource-attribute-to-label mapping automatically.
 
-Index templates are defined in:
+### Loki Deployment
+
+Loki's chart values (schema, retention, storage) are defined in:
 
 ```text
-platform/apps/opensearch/index-template.yaml
+platform/apps/loki/loki-application.yaml
 ```
 
-Templates ensure proper mapping for:
-
-- OTLP log format (`otel-logs-*`)
-- Application logs (`application-logs-*`)
-- Kubernetes logs (`kubernetes-logs-*`)
+Single-binary MVP deployment: `deploymentMode: SingleBinary`, filesystem
+chunk storage, `retention_period: 720h` (30 days). No index-template or
+ILM-policy configuration is needed - Loki derives its index directly from
+stream labels and the schema config in the chart values.
 
 ## Usage
 
-### Searching Logs in OpenSearch
+### Searching Logs in Loki
 
-Access OpenSearch Dashboards and use these query patterns:
+Access Grafana Explore, select the **Loki** data source, and use LogQL:
 
 **Find logs from a specific namespace:**
 
-```text
-resource.attributes.k8s.namespace.name: "my-namespace"
+```logql
+{k8s_namespace_name="my-namespace"}
 ```
 
 **Find logs with a specific trace ID:**
 
-```text
-traceId: "<your-32-character-trace-id>"
+```logql
+{k8s_namespace_name="my-namespace"} | trace_id="<your-32-character-trace-id>"
 ```
 
 **Find error logs from a deployment:**
 
-```text
-resource.attributes.k8s.deployment.name: "my-app" AND severityText: "ERROR"
+```logql
+{k8s_deployment_name="my-app"} | severity_text="ERROR"
 ```
 
 ### Structured Logging Best Practices
@@ -238,7 +245,7 @@ The collector exposes Prometheus metrics at port 8888:
 
 ## Troubleshooting
 
-### Logs Not Appearing in OpenSearch
+### Logs Not Appearing in Loki
 
 1. **Check collector pods are running:**
 
@@ -252,10 +259,10 @@ The collector exposes Prometheus metrics at port 8888:
    kubectl logs -n monitoring -l app.kubernetes.io/name=opentelemetry-collector --tail=100
    ```
 
-3. **Verify OpenSearch connectivity:**
+3. **Verify Loki connectivity:**
 
    ```bash
-   kubectl exec -n monitoring -it <collector-pod> -- curl http://opensearch-cluster-master.logging.svc.cluster.local:9200/_cluster/health
+   kubectl exec -n monitoring -it <collector-pod> -- curl http://loki.logging.svc.cluster.local:3100/ready
    ```
 
 ### Missing Kubernetes Attributes
@@ -269,5 +276,6 @@ If the collector is using too much memory, adjust the `memory_limiter` settings 
 ## Related Documentation
 
 - [Architecture Overview](../architecture.md)
-- [ADR-011 Centralized Log Management](../adr/ADR-011%20Centralized%20Log%20Management.md)
+- [ADR-035 Log Storage Migration from OpenSearch to Loki](../adr/ADR-035%20Log%20Storage%20Migration%20from%20OpenSearch%20to%20Loki.md)
+- [ADR-011 Centralized Log Management](../adr/ADR-011%20Centralized%20Log%20Management.md) (superseded)
 - [Module 13: Observability](https://github.com/paruff/uFawkesDojo/blob/main/modules/brown-belt/module-13-observability.md)

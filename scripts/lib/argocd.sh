@@ -39,7 +39,7 @@ maybe_cleanup_argocd_cluster_resources() {
 
 deploy_argocd() {
   local TF_MODULE_DIR
-  TF_MODULE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../infra/terraform/argocd" && pwd)"
+  TF_MODULE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/../../infra/terraform/argocd" && pwd)"
   echo "Deploying ArgoCD via Terraform module at ${TF_MODULE_DIR}"
   local TEMP_KUBECONFIG
   TEMP_KUBECONFIG=$(mktemp -t fawkes-kubeconfig-XXXX.yaml)

@@ -2,7 +2,7 @@
 
 Repo-static assertions against the real OpenTelemetry Collector config in
 `platform/apps/opentelemetry/otel-collector-application.yaml` and the
-OpenSearch backend config under `platform/apps/opensearch/`. Following the
+Loki backend config under `platform/apps/loki/`. Following the
 established best-practice pattern.
 """
 
@@ -23,9 +23,9 @@ def _otel() -> str:
     return _OTEL.read_text(encoding="utf-8")
 
 
-def _opensearch() -> str:
-    path = _REPO_ROOT / "platform" / "apps" / "opensearch" / "README.md"
-    assert path.exists(), "opensearch README not found"
+def _loki() -> str:
+    path = _REPO_ROOT / "platform" / "apps" / "loki" / "loki-application.yaml"
+    assert path.exists(), "loki-application.yaml not found"
     return path.read_text(encoding="utf-8")
 
 
@@ -40,16 +40,16 @@ def step_given_otel_cluster():
     assert _OTEL.exists()
 
 
-@given("I have OpenSearch configured as the log backend")
-def step_given_opensearch():
-    """Verify the OpenSearch backend is configured."""
-    assert (_REPO_ROOT / "platform" / "apps" / "opensearch").exists()
+@given("I have Loki configured as the log backend")
+def step_given_loki():
+    """Verify the Loki backend is configured."""
+    assert (_REPO_ROOT / "platform" / "apps" / "loki").exists()
 
 
 @given("the logging namespace exists")
 def step_given_logging_ns():
     """Verify the logging namespace is referenced."""
-    assert "logging" in _opensearch()
+    assert "logging" in _loki()
 
 
 # ---------------------------------------------------------------------------
@@ -76,19 +76,19 @@ def step_then_agent_ingests():
     assert "otlp" in _otel()
 
 
-@then("the log record must be forwarded via OTLP to the OpenSearch backend")
-def step_then_forwarded_opensearch():
-    """Verify the OpenSearch exporter is configured."""
-    assert "opensearch" in _otel().lower() or "ln" in _otel()
+@then("the log record must be forwarded via OTLP to the Loki backend")
+def step_then_forwarded_loki():
+    """Verify the Loki exporter is configured."""
+    assert "otlphttp/loki" in _otel()
 
 
-@then("the log should be searchable in OpenSearch within 30 seconds")
+@then("the log should be searchable in Loki within 30 seconds")
 def step_then_searchable_30s():
-    """Verify OpenSearch is the log backend."""
-    assert "opensearch" in _opensearch().lower()
+    """Verify Loki is the log backend."""
+    assert "loki" in _loki().lower()
 
 
-@then('the final log record stored in OpenSearch must contain "k8s.pod.name"')
+@then('the final log record stored in Loki must contain "k8s.pod.name"')
 def step_then_k8s_pod_name():
     """Verify k8sattributes processor adds pod name."""
     assert "k8sattributes" in _otel()
@@ -123,10 +123,10 @@ def step_when_log_during_trace():
     """Record a log during a traced operation."""
 
 
-@then('the resulting log record stored in OpenSearch must include the "traceId"')
+@then('the resulting log record stored in Loki must include the "traceId"')
 def step_then_trace_id():
     """Verify trace correlation is supported."""
-    assert "trace" in _opensearch().lower() or "trace_id" in _opensearch().lower()
+    assert "trace_id" in _otel().lower()
 
 
 @then('the log record must include the "spanId" for immediate correlation')
@@ -139,11 +139,14 @@ def step_then_span_id():
 # ---------------------------------------------------------------------------
 
 
-@given("an authorized Platform Engineer accesses the OpenSearch Dashboards interface")
+@given("an authorized Platform Engineer accesses the Grafana Explore interface")
 @given("there are logs from a specific deployment")
-def step_given_dashboards_access():
-    """Verify OpenSearch Dashboards are configured."""
-    assert "dashboards" in _opensearch().lower() or "dashboard" in _opensearch().lower()
+def step_given_explore_access():
+    """Verify Grafana's Loki data source is configured."""
+    grafana_datasources = (_REPO_ROOT / "platform" / "apps" / "grafana" / "helm-release.yml").read_text(
+        encoding="utf-8"
+    )
+    assert "type: loki" in grafana_datasources
 
 
 @when(parsers.parse("they search for logs from that k8s.deployment.name"))
@@ -163,7 +166,7 @@ def step_given_memory_limiter():
     assert "memory_limiter" in _otel()
 
 
-@when("the OpenSearch backend becomes temporarily unavailable")
+@when("the Loki backend becomes temporarily unavailable")
 def step_when_backend_unavailable():
     """Record a backend outage."""
 
@@ -204,8 +207,8 @@ def step_when_log_collected():
 
 @then("the JSON fields should be extracted and indexed")
 def step_then_json_extracted():
-    """Verify structured logs are indexed in OpenSearch."""
-    assert "opensearch" in _opensearch().lower()
+    """Verify structured logs are indexed in Loki."""
+    assert "loki" in _loki().lower()
 
 
 @then("the log should be searchable by traceId")
@@ -282,10 +285,13 @@ def step_given_logs_multiple_pods():
     """Record logs from multiple pods."""
 
 
-@when("I access the OpenSearch Dashboards")
-def step_when_access_dashboards():
-    """Verify OpenSearch Dashboards exist."""
-    assert "dashboard" in _opensearch().lower()
+@when("I access the Grafana Explore interface")
+def step_when_access_explore():
+    """Verify Grafana's Loki data source is configured."""
+    grafana_datasources = (_REPO_ROOT / "platform" / "apps" / "grafana" / "helm-release.yml").read_text(
+        encoding="utf-8"
+    )
+    assert "type: loki" in grafana_datasources
 
 
 @then("I should see a dashboard showing log volume over time")

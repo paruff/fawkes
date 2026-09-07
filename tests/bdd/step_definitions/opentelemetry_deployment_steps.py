@@ -214,9 +214,9 @@ def _exporter_target(ctx, target):
     exporters = ctx["config"]["exporters"]
     found = False
     for exp in exporters.values():
-        # Most exporters put "endpoint" at the top level, but the opensearch
-        # exporter nests it under "http" instead.
-        endpoint = exp.get("endpoint") or exp.get("http", {}).get("endpoint", "")
+        # Most exporters put "endpoint" at the top level; otlphttp/loki uses
+        # "logs_endpoint" (a per-signal override) instead.
+        endpoint = exp.get("endpoint") or exp.get("http", {}).get("endpoint", "") or exp.get("logs_endpoint", "")
         if target in endpoint:
             found = True
     assert found, f"No exporter targets {target}; exporters: {exporters}"
@@ -227,14 +227,14 @@ def _metrics_exportable(ctx):
     assert "prometheusremotewrite" in ctx["config"]["service"]["pipelines"]["metrics"]["exporters"]
 
 
-@then("the opensearch exporter should be configured")
-def _opensearch_exporter_configured(ctx):
-    assert "opensearch" in ctx["config"]["exporters"]
+@then("the otlphttp/loki exporter should be configured")
+def _loki_exporter_configured(ctx):
+    assert "otlphttp/loki" in ctx["config"]["exporters"]
 
 
-@then("logs should be exportable to OpenSearch")
+@then("logs should be exportable to Loki")
 def _logs_exportable(ctx):
-    assert "opensearch" in ctx["config"]["service"]["pipelines"]["logs"]["exporters"]
+    assert "otlphttp/loki" in ctx["config"]["service"]["pipelines"]["logs"]["exporters"]
 
 
 @then("the otlp/tempo exporter should be configured")
@@ -284,9 +284,9 @@ def _pipeline_exports_prw(ctx):
     assert "prometheusremotewrite" in ctx["config"]["service"]["pipelines"]["metrics"]["exporters"]
 
 
-@then("the pipeline should export to opensearch")
-def _pipeline_exports_opensearch(ctx):
-    assert "opensearch" in ctx["config"]["service"]["pipelines"]["logs"]["exporters"]
+@then("the pipeline should export to otlphttp/loki")
+def _pipeline_exports_loki(ctx):
+    assert "otlphttp/loki" in ctx["config"]["service"]["pipelines"]["logs"]["exporters"]
 
 
 @then("the pipeline should export to otlp/tempo")

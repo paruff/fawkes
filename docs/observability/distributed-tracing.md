@@ -44,7 +44,7 @@ Fawkes implements centralized distributed tracing for all platform services and 
 │  ┌─────────────────────────────────────────────────────────────┐  │
 │  │ Grafana                                                      │  │
 │  │ - Trace visualization and flame graphs                       │  │
-│  │ - Trace-to-logs correlation (OpenSearch)                     │  │
+│  │ - Trace-to-logs correlation (Loki)                           │  │
 │  │ - Trace-to-metrics correlation (Prometheus)                  │  │
 │  │ - Service dependency node graph                              │  │
 │  └─────────────────────────────────────────────────────────────┘  │
@@ -154,7 +154,7 @@ Data sources configured:
 
 - **Tempo**: Trace storage and visualization
 - **Prometheus**: Trace-to-metrics correlation
-- **OpenSearch**: Trace-to-logs correlation
+- **Loki**: Trace-to-logs correlation
 
 ## Application Instrumentation
 
@@ -276,7 +276,7 @@ Access Grafana at `http://grafana.127.0.0.1.nip.io` and navigate to Explore → 
 
 1. Open a trace in Grafana Tempo
 2. Click on any span
-3. Click "Logs for this span" to jump to OpenSearch logs
+3. Click "Logs for this span" to jump to Loki logs
 4. Logs are filtered by trace ID and time range
 
 ### Trace-to-Metrics Correlation

@@ -159,27 +159,27 @@ test_postgresql() {
   echo ""
 }
 
-test_opensearch() {
+test_loki() {
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-  echo "Phase 3: OpenSearch"
+  echo "Phase 3: Loki"
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo ""
 
-  # Check OpenSearch pods
+  # Check Loki pods
   run_test
-  pod_count=$(kubectl get pods -n "$LOGGING_NAMESPACE" -l "app=opensearch" --field-selector=status.phase=Running --no-headers 2> /dev/null | wc -l)
+  pod_count=$(kubectl get pods -n "$LOGGING_NAMESPACE" -l "app.kubernetes.io/name=loki" --field-selector=status.phase=Running --no-headers 2> /dev/null | wc -l)
   if [ "$pod_count" -ge 1 ]; then
-    pass "OpenSearch has $pod_count running pod(s)"
+    pass "Loki has $pod_count running pod(s)"
   else
-    fail "No OpenSearch pods are running in namespace '$LOGGING_NAMESPACE'"
+    fail "No Loki pods are running in namespace '$LOGGING_NAMESPACE'"
   fi
 
-  # Check OpenSearch service
+  # Check Loki service
   run_test
-  if kubectl get service opensearch -n "$LOGGING_NAMESPACE" &> /dev/null; then
-    pass "OpenSearch service exists"
+  if kubectl get service loki -n "$LOGGING_NAMESPACE" &> /dev/null; then
+    pass "Loki service exists"
   else
-    fail "OpenSearch service not found"
+    fail "Loki service not found"
   fi
 
   echo ""
@@ -462,7 +462,7 @@ generate_report() {
   "acceptance_criteria": {
     "datahub_deployed": $([ $TESTS_PASSED -gt 0 ] && echo "true" || echo "false"),
     "postgresql_operational": $(kubectl get cluster db-datahub-dev -n "$NAMESPACE" &> /dev/null && echo "true" || echo "false"),
-    "opensearch_operational": $([ $(kubectl get pods -n "$LOGGING_NAMESPACE" -l "app=opensearch" --field-selector=status.phase=Running --no-headers 2> /dev/null | wc -l) -ge 1 ] && echo "true" || echo "false"),
+    "loki_operational": $([ $(kubectl get pods -n "$LOGGING_NAMESPACE" -l "app.kubernetes.io/name=loki" --field-selector=status.phase=Running --no-headers 2> /dev/null | wc -l) -ge 1 ] && echo "true" || echo "false"),
     "gms_accessible": $(kubectl get deployment datahub-datahub-gms -n "$NAMESPACE" &> /dev/null && echo "true" || echo "false"),
     "frontend_accessible": $(kubectl get deployment datahub-datahub-frontend -n "$NAMESPACE" &> /dev/null && echo "true" || echo "false"),
     "ingress_configured": $(kubectl get ingress datahub-datahub-frontend -n "$NAMESPACE" &> /dev/null && echo "true" || echo "false")
@@ -477,7 +477,7 @@ EOF
 # Run all tests
 test_prerequisites
 test_postgresql
-test_opensearch
+test_loki
 test_datahub_deployment
 test_services
 test_ingress

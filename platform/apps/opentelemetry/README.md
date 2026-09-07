@@ -12,7 +12,7 @@ OpenTelemetry Collector receives, processes, and exports telemetry data (metrics
 
 - **Multi-Protocol**: OTLP (gRPC/HTTP), Prometheus scraping, Filelog collection
 - **Processing**: Filtering, batching, Kubernetes attribute enrichment, transform operations
-- **Multiple Exporters**: Prometheus Remote Write, OpenSearch, Tempo
+- **Multiple Exporters**: Prometheus Remote Write, Loki, Tempo
 - **Kubernetes Enrichment**: Automatic enrichment with K8s pod, namespace, deployment metadata
 - **DaemonSet Deployment**: Runs on every node for efficient log and metric collection
 - **Low Overhead**: Efficient data pipeline with resource limits
@@ -20,7 +20,7 @@ OpenTelemetry Collector receives, processes, and exports telemetry data (metrics
 ## Architecture
 
 ```text
-Applications/Pods → OTLP/Logs → Collector (DaemonSet) → Prometheus/OpenSearch/Tempo
+Applications/Pods → OTLP/Logs → Collector (DaemonSet) → Prometheus/Loki/Tempo
                                     ↓
                             Kubernetes Enrichment
                                     ↓
@@ -52,8 +52,8 @@ processors:
 exporters:
   prometheus:
     endpoint: "0.0.0.0:8889"
-  opensearch:
-    endpoint: http://opensearch.logging.svc:9200
+  otlphttp/loki:
+    logs_endpoint: http://loki.logging.svc:3100/otlp/v1/logs
   otlp/tempo:
     endpoint: http://tempo.monitoring.svc:4317
 
@@ -155,7 +155,7 @@ View traces in Grafana by querying Tempo with:
 
 ✅ **OTel Collector deployed as DaemonSet** - Running on all nodes in monitoring namespace
 ✅ **Receivers configured (OTLP, Prometheus)** - OTLP gRPC (4317), HTTP (4318), Prometheus scraping, Kubeletstats, Hostmetrics
-✅ **Exporters configured (Prometheus, OpenSearch)** - Prometheus Remote Write, OpenSearch for logs, Tempo for traces
+✅ **Exporters configured (Prometheus, Loki)** - Prometheus Remote Write, Loki for logs, Tempo for traces
 ✅ **Sample traces flowing** - Sample application generates and exports traces via OTLP
 
 ## Configuration Files

@@ -7,9 +7,14 @@
 # =============================================================================
 
 # Ensure this script is sourced, not executed
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+# The :- fallback here is a sentinel, not $0: unlike prereqs.sh's path-only
+# use below, this line's whole job is comparing BASH_SOURCE[0] against $0
+# to detect direct execution vs sourcing - falling back to $0 would make
+# that comparison always true (falsely reporting "not sourced") on a bash
+# where BASH_SOURCE[0] is genuinely unset under set -u.
+if [[ "${BASH_SOURCE[0]:-__not_sourced__}" == "${0}" ]]; then
   echo "ERROR: This script must be sourced, not executed directly."
-  echo "Usage: source ${BASH_SOURCE[0]}"
+  echo "Usage: source ${BASH_SOURCE[0]:-${0}}"
   exit 1
 fi
 
@@ -102,7 +107,13 @@ error_exit() {
   log_error "$message"
   log_error "Script: $SCRIPT_NAME"
   log_error "Line: ${BASH_LINENO[0]}"
-  log_error "Function: ${FUNCNAME[1]}"
+  # FUNCNAME[1] is the caller of error_exit; when error_exit is called
+  # from top-level script code (no enclosing function) that frame doesn't
+  # exist, and under `set -u` referencing it throws "unbound variable"
+  # instead of returning empty - unlike error_handler's FUNCNAME[2] below,
+  # this one lacked the fallback bash's own docs use for the outermost
+  # frame ("the last element is main").
+  log_error "Function: ${FUNCNAME[1]:-main}"
 
   exit "$exit_code"
 }

@@ -119,6 +119,12 @@ Kubernetes configuration management tool using overlays to customize base manife
 
 Kubernetes-native policy engine for validation, mutation, and generation of resources.
 
+## L
+
+### Loki
+
+Grafana's log aggregation system, used for centralized logging in Fawkes. Indexes only log labels rather than full content, queried via LogQL alongside Prometheus (PromQL) and Tempo (TraceQL) in Grafana.
+
 ## M
 
 ### Mattermost
@@ -126,10 +132,6 @@ Kubernetes-native policy engine for validation, mutation, and generation of reso
 Open-source team collaboration platform integrated into Fawkes for ChatOps and notifications.
 
 ## O
-
-### OpenSearch
-
-Distributed search and analytics engine used for centralized logging in Fawkes.
 
 ### OpenTelemetry (OTel)
 

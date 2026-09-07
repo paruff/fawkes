@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Grafana provides powerful visualization and analytics for metrics, logs, and traces. It serves as the primary UI for observability, displaying data from Prometheus, OpenSearch, and Tempo.
+Grafana provides powerful visualization and analytics for metrics, logs, and traces. It serves as the primary UI for observability, displaying data from Prometheus, Loki, and Tempo.
 
 ## Key Features
 
-- **Multi-Source**: Query Prometheus, OpenSearch, Tempo simultaneously
+- **Multi-Source**: Query Prometheus, Loki, Tempo simultaneously
 - **Dashboards**: Pre-built and custom dashboards
 - **Alerting**: Native alerting with multiple notification channels
 - **Variables**: Dynamic dashboard filtering
@@ -44,15 +44,14 @@ access: proxy
 isDefault: true
 ```
 
-### OpenSearch
+### Loki
 
 Centralized logs:
 
 ```yaml
-name: OpenSearch
-type: elasticsearch
-url: http://opensearch.logging.svc:9200
-database: "[fawkes-]YYYY.MM.DD"
+name: Loki
+type: loki
+url: http://loki.logging.svc:3100
 ```
 
 ### Tempo
@@ -253,7 +252,7 @@ rate(http_requests_total{namespace="$namespace", service="$service"}[5m])
 Ad-hoc querying for troubleshooting:
 
 1. Navigate to Explore
-2. Select data source (Prometheus/OpenSearch/Tempo)
+2. Select data source (Prometheus/Loki/Tempo)
 3. Build query
 4. Add to dashboard or investigate further
 

@@ -4,8 +4,8 @@
 # Purpose: Validate the Observability plane of the tracer-bullet golden path
 #          (#1751 Phase 3): tracer-bullet's OTEL traces actually reach Tempo,
 #          its Prometheus metrics actually reach Prometheus, the OpenTelemetry
-#          Collector is healthy, and OpenSearch (log backend) is reachable and
-#          green - not just that the pods are Running.
+#          Collector is healthy, and Loki (log backend) is reachable and
+#          ready - not just that the pods are Running.
 # Usage: ./scripts/validate-golden-path-observability.sh [--namespace NS]
 # Exit Codes: 0=success, 1=validation failed
 # =============================================================================
@@ -23,7 +23,7 @@ MONITORING_NAMESPACE="${MONITORING_NAMESPACE:-monitoring}"
 LOGGING_NAMESPACE="${LOGGING_NAMESPACE:-logging}"
 SERVICE_NAME="tracer-bullet"
 OTEL_LABEL_SELECTOR="app.kubernetes.io/name=opentelemetry-collector"
-OPENSEARCH_SERVICE="${OPENSEARCH_SERVICE:-opensearch-cluster-master}"
+LOKI_SERVICE="${LOKI_SERVICE:-loki}"
 REPORT_FILE="reports/golden-path-observability-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
 
@@ -173,30 +173,27 @@ check_otel_collector_health() {
   fi
 }
 
-check_opensearch_health() {
-  log_info "Checking OpenSearch cluster health..."
-  kubectl port-forward -n "$LOGGING_NAMESPACE" "svc/$OPENSEARCH_SERVICE" 9200:9200 &> /tmp/opensearch-pf.log &
+check_loki_health() {
+  log_info "Checking Loki readiness..."
+  kubectl port-forward -n "$LOGGING_NAMESPACE" "svc/$LOKI_SERVICE" 3100:3100 &> /tmp/loki-pf.log &
   PF_PID=$!
   sleep 3
 
-  local resp
-  resp=$(curl -s -k --connect-timeout 5 "https://localhost:9200/_cluster/health" -u "admin:admin" 2> /dev/null \
-    || curl -s --connect-timeout 5 "http://localhost:9200/_cluster/health" 2> /dev/null || echo "")
+  local http_status
+  http_status=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 5 "http://localhost:3100/ready" 2> /dev/null || echo "")
   kill "$PF_PID" &> /dev/null || true
   PF_PID=""
 
-  if [ -z "$resp" ]; then
-    record_test "OpenSearch Reachable" "FAIL" "Could not reach OpenSearch cluster health API via port-forward"
+  if [ -z "$http_status" ]; then
+    record_test "Loki Reachable" "FAIL" "Could not reach Loki /ready endpoint via port-forward"
     return 1
   fi
-  record_test "OpenSearch Reachable" "PASS" "OpenSearch cluster health API responded"
+  record_test "Loki Reachable" "PASS" "Loki /ready endpoint responded"
 
-  local status
-  status=$(echo "$resp" | jq -r '.status // "unknown"' 2> /dev/null || echo "unknown")
-  if [ "$status" = "green" ] || [ "$status" = "yellow" ]; then
-    record_test "OpenSearch Cluster Status" "PASS" "Cluster status is '$status'"
+  if [ "$http_status" = "200" ]; then
+    record_test "Loki Ready" "PASS" "Loki reports ready (HTTP 200)"
   else
-    record_test "OpenSearch Cluster Status" "FAIL" "Cluster status is '$status' (expected green or yellow)"
+    record_test "Loki Ready" "FAIL" "Loki /ready returned HTTP $http_status (expected 200)"
   fi
 }
 
@@ -265,7 +262,7 @@ main() {
   check_tempo_traces
   check_prometheus_metrics
   check_otel_collector_health
-  check_opensearch_health
+  check_loki_health
   generate_report
   print_summary
 }
