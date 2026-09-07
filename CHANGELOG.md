@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.75](https://github.com/paruff/fawkes/compare/v0.3.74...v0.3.75) (2026-09-07)
+
+
+### Fixed
+
+* **tekton:** correct default SonarCloud organization key ([#1902](https://github.com/paruff/fawkes/issues/1902)) ([59de051](https://github.com/paruff/fawkes/commit/59de05130e373dd211de8ae0e77cf7d6689d1ebb))
+
 ## [0.3.74](https://github.com/paruff/fawkes/compare/v0.3.73...v0.3.74) (2026-09-07)
 
 
