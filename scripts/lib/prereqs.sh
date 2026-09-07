@@ -8,7 +8,7 @@ set -euo pipefail
 
 check_prereqs() {
   echo "🔎 Validating prerequisites..."
-  local script_dir="$(dirname "${BASH_SOURCE[0]}")/.."
+  local script_dir="$(dirname "${BASH_SOURCE[0]:-$0}")/.."
   if [[ -f "${script_dir}/tools.sh" ]]; then
     echo "➡ Running tools check via scripts/tools.sh"
     if ! "${script_dir}/tools.sh" check; then
