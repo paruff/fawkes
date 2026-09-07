@@ -159,17 +159,30 @@ teardown() {
   # tests run in the same overall bats invocation, whichever was exported
   # last can leak into this fresh bash -c before the source line below
   # locally redefines it.
-  run bash -c "unset -f error_exit; source ${LIB_DIR}/error_handling.sh; error_exit 'fatal'"
+  #
+  # env -u BASH_ENV guards against kcov's coverage instrumentation (CI
+  # runs `run-tests.sh --coverage`): kcov exports BASH_ENV pointing at a
+  # helper script with `trap '...${BASH_SOURCE}...' DEBUG` (a bare,
+  # unindexed reference). Every fresh non-interactive bash process -
+  # including this nested bash -c - auto-sources BASH_ENV during its own
+  # startup, *before* any command in the -c string runs, so `unset
+  # BASH_ENV` as the first command inside the string is too late; it must
+  # be stripped from the environment the process is launched with
+  # instead. Combined with this library's own `set -euo pipefail`, that
+  # bare reference then trips "BASH_SOURCE: unbound variable", unrelated
+  # to anything this test is actually checking. Not reproducible without
+  # --coverage.
+  run env -u BASH_ENV bash -c "unset -f error_exit; source ${LIB_DIR}/error_handling.sh; error_exit 'fatal'"
   assert_failure 1
 }
 
 @test "error_exit: exits with custom code" {
-  run bash -c "unset -f error_exit; source ${LIB_DIR}/error_handling.sh; error_exit 'fatal' 42"
+  run env -u BASH_ENV bash -c "unset -f error_exit; source ${LIB_DIR}/error_handling.sh; error_exit 'fatal' 42"
   assert_failure 42
 }
 
 @test "error_exit: displays error message" {
-  run bash -c "unset -f error_exit; source ${LIB_DIR}/error_handling.sh; error_exit 'something failed'"
+  run env -u BASH_ENV bash -c "unset -f error_exit; source ${LIB_DIR}/error_handling.sh; error_exit 'something failed'"
   assert_failure
   assert_output --partial "something failed"
 }
@@ -179,11 +192,11 @@ teardown() {
 # =============================================================================
 
 @test "log_fatal: exits with code 1 by default" {
-  run bash -c "source ${LIB_DIR}/error_handling.sh; log_fatal 'fatal error'"
+  run env -u BASH_ENV bash -c "source ${LIB_DIR}/error_handling.sh; log_fatal 'fatal error'"
   assert_failure 1
 }
 
 @test "log_fatal: exits with custom code" {
-  run bash -c "source ${LIB_DIR}/error_handling.sh; log_fatal 'fatal' 99"
+  run env -u BASH_ENV bash -c "source ${LIB_DIR}/error_handling.sh; log_fatal 'fatal' 99"
   assert_failure 99
 }

@@ -107,7 +107,13 @@ error_exit() {
   log_error "$message"
   log_error "Script: $SCRIPT_NAME"
   log_error "Line: ${BASH_LINENO[0]}"
-  log_error "Function: ${FUNCNAME[1]}"
+  # FUNCNAME[1] is the caller of error_exit; when error_exit is called
+  # from top-level script code (no enclosing function) that frame doesn't
+  # exist, and under `set -u` referencing it throws "unbound variable"
+  # instead of returning empty - unlike error_handler's FUNCNAME[2] below,
+  # this one lacked the fallback bash's own docs use for the outermost
+  # frame ("the last element is main").
+  log_error "Function: ${FUNCNAME[1]:-main}"
 
   exit "$exit_code"
 }
