@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.69](https://github.com/paruff/fawkes/compare/v0.3.68...v0.3.69) (2026-09-07)
+
+
+### Added
+
+* **tracer-bullet:** add phase-based ApplicationSets (alpha/beta/prod) ([#1889](https://github.com/paruff/fawkes/issues/1889)) ([0d51a42](https://github.com/paruff/fawkes/commit/0d51a42173fbadcefe8db379c31e08eaeead6d7b))
+
 ## [0.3.68](https://github.com/paruff/fawkes/compare/v0.3.67...v0.3.68) (2026-09-07)
 
 
