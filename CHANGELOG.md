@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.76](https://github.com/paruff/fawkes/compare/v0.3.75...v0.3.76) (2026-09-07)
+
+
+### Added
+
+* **tekton:** don't block golden-path pipeline on SonarCloud gate result ([#1904](https://github.com/paruff/fawkes/issues/1904)) ([31c7e6d](https://github.com/paruff/fawkes/commit/31c7e6dffe1dc4374fdc6e853923e26d0350bd78))
+
+
+### Fixed
+
+* **otel-collector:** enable Service creation for daemonset mode ([#1905](https://github.com/paruff/fawkes/issues/1905)) ([1c66fb5](https://github.com/paruff/fawkes/commit/1c66fb573ac7322591264d4ee682ccdbef66fc20))
+
 ## [0.3.75](https://github.com/paruff/fawkes/compare/v0.3.74...v0.3.75) (2026-09-07)
 
 
