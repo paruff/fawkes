@@ -8,6 +8,7 @@ best-practice pattern.
 
 from __future__ import annotations
 
+import re
 import subprocess
 from pathlib import Path
 
@@ -706,7 +707,7 @@ def step_then_workload_identity(annotation: str):
 @then("the annotation should reference a GCP service account")
 def step_then_gcp_sa():
     """Verify the annotation references a GCP SA."""
-    assert "iam.gserviceaccount.com" in _otel()  # codeql[py/incomplete-url-substring-sanitization]
+    assert re.search(r'iam\.gke\.io/gcp-service-account:\s*"[^"]*\.iam\.gserviceaccount\.com"', _otel())
 
 
 @when("I check pod health probes")

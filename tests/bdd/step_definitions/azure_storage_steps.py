@@ -8,6 +8,7 @@ best-practice pattern.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from pytest_bdd import given, parsers, scenarios, then, when
@@ -186,7 +187,7 @@ def step_then_standard_disk():
 def step_then_file_share():
     """Verify Azure File provisioning."""
     content = _read("azure-file-storageclass.yaml")
-    assert "file.csi.azure.com" in content  # codeql[py/incomplete-url-substring-sanitization]
+    assert re.search(r"^provisioner:\s*file\.csi\.azure\.com\s*$", content, re.MULTILINE)
 
 
 @when(parsers.parse('pod "{pod}" writes data to the volume'))
