@@ -185,7 +185,8 @@ def step_then_standard_disk():
 @then("the volume should be an Azure File Share")
 def step_then_file_share():
     """Verify Azure File provisioning."""
-    assert "file.csi.azure.com" in _read("azure-file-storageclass.yaml")
+    content = _read("azure-file-storageclass.yaml")
+    assert "file.csi.azure.com" in content  # codeql[py/incomplete-url-substring-sanitization]
 
 
 @when(parsers.parse('pod "{pod}" writes data to the volume'))

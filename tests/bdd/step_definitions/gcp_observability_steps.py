@@ -706,7 +706,7 @@ def step_then_workload_identity(annotation: str):
 @then("the annotation should reference a GCP service account")
 def step_then_gcp_sa():
     """Verify the annotation references a GCP SA."""
-    assert "iam.gserviceaccount.com" in _otel()
+    assert "iam.gserviceaccount.com" in _otel()  # codeql[py/incomplete-url-substring-sanitization]
 
 
 @when("I check pod health probes")
