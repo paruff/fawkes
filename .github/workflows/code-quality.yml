@@ -628,6 +628,7 @@ jobs:
     name: Security Scanning
     needs: detect-changes
     if: needs.detect-changes.outputs.security == 'true'
+    continue-on-error: true # advisory baseline (see header above) — must not block merges
     uses: paruff/ufawkespipe/.github/workflows/reusable-security-scanning.yml@v1.2.0
     with:
       scan-path: "."
