@@ -121,7 +121,7 @@ In addition to the Tier 1 components, Path B deploys the full platform:
 | Amazon RDS (PostgreSQL)      | Persistent storage for Backstage, SonarQube  |
 | Jenkins                      | CI/CD pipelines with golden path templates   |
 | SonarQube                    | Static application security testing (SAST)   |
-| OpenSearch                   | Log aggregation and search                   |
+| Loki                         | Log aggregation and search                   |
 | DevLake                      | DORA metrics aggregation                     |
 | External Secrets Operator    | Syncs secrets from Vault/AWS Secrets Manager |
 | Cert-manager + Let's Encrypt | Automated TLS certificates                   |

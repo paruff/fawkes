@@ -48,7 +48,7 @@ spec:
 
         # ============================================================
         # Data Sources Configuration
-        # Configures Prometheus, Tempo, and OpenSearch for unified observability
+        # Configures Prometheus, Tempo, and Loki for unified observability
         # Enables trace-to-logs and trace-to-metrics correlation
         # ============================================================
         datasources:
@@ -74,7 +74,7 @@ spec:
               # ============================================================
               # Grafana Tempo Data Source for Distributed Tracing
               # Enables TraceQL queries and service dependency graphs
-              # Configured with trace-to-logs correlation to OpenSearch
+              # Configured with trace-to-logs correlation to Loki
               # ============================================================
               - name: Tempo
                 type: tempo
@@ -84,7 +84,7 @@ spec:
                 jsonData:
                   httpMethod: GET
                   tracesToLogs:
-                    datasourceUid: opensearch
+                    datasourceUid: loki
                     tags:
                       - k8s.namespace.name
                       - k8s.pod.name
@@ -120,26 +120,19 @@ spec:
                   search:
                     hide: false
                   lokiSearch:
-                    datasourceUid: opensearch
+                    datasourceUid: loki
 
               # ============================================================
-              # OpenSearch Data Source for Logs
+              # Loki Data Source for Logs
               # Enables log search and trace correlation
               # ============================================================
-              - name: OpenSearch
-                type: opensearch
-                uid: opensearch
-                url: http://opensearch-cluster-master.logging.svc.cluster.local:9200
+              - name: Loki
+                type: loki
+                uid: loki
+                url: http://loki.logging.svc.cluster.local:3100
                 access: proxy
-                database: otel-logs*
                 jsonData:
-                  database: otel-logs*
-                  flavor: opensearch
-                  version: "2.11.0"
-                  timeField: "@timestamp"
-                  logMessageField: body
-                  logLevelField: severityText
-                  pplEnabled: true
+                  maxLines: 1000
                   derivedFields:
                     - name: TraceID
                       matcherRegex: '"trace_id"\s*:\s*"([a-fA-F0-9]{32})"'

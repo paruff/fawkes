@@ -2,7 +2,9 @@
 
 ## Status
 
-Accepted
+Superseded by [ADR-035: Log Storage Migration from OpenSearch to Loki](ADR-035%20Log%20Storage%20Migration%20from%20OpenSearch%20to%20Loki.md).
+Kept for historical context on the original OpenSearch decision and
+rejected alternatives.
 
 ## Context
 

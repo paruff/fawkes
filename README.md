@@ -147,7 +147,7 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 - **DORA Metrics** - Automated collection of all 4 key metrics
 - **Metrics & Dashboards** - Prometheus and Grafana
 - **Distributed Tracing** - Jaeger with OpenTelemetry
-- **Log Aggregation** - OpenSearch with Fluent Bit
+- **Log Aggregation** - Loki with OpenTelemetry Collector
 - **Custom Dashboards** - Team-level visibility
 
 ### Security & Compliance
@@ -272,7 +272,7 @@ Fawkes is built on a modern, cloud-native architecture:
 - **Jenkins** - CI/CD pipelines with golden paths
 - **ArgoCD** - GitOps-driven continuous delivery
 - **Prometheus & Grafana** - Metrics and dashboards
-- **OpenSearch** - Log aggregation and search
+- **Loki** - Log aggregation and search
 - **SonarQube & Trivy** - Security scanning
 - **Dojo Environment** - Isolated learning labs
 
