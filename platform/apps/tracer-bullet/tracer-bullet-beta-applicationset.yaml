@@ -1,0 +1,78 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/tracer-bullet/tracer-bullet-beta-applicationset.yaml
+# PURPOSE: #1805 - Phase 2 (Beta) promotion target scaffolding. #1805's
+#          scope (canary/blue-green via Argo Rollouts, chaos testing,
+#          Backstage portal) is not built yet - none of that exists in
+#          tracer-bullet-gitops today, which only has a plain Deployment.
+#
+# `automated` is deliberately OMITTED (manual sync only, via `argocd app
+# sync` or the UI) rather than wired to auto-promote: there is no quality
+# gate, canary rollout, or chaos-test gate to protect a beta environment
+# yet (that's #1805's actual scope), so auto-syncing here would silently
+# promote straight past every safeguard #1805 exists to add. Flip to
+# automated only once at least one of those gates is real.
+#
+# Per AGENTS.md section 6, ArgoCD Application/ApplicationSet manifests
+# require maintainer review before merge - flagging explicitly.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: tracer-bullet-beta
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - list:
+        elements:
+          - service: tracer-bullet
+            gitopsRepoURL: https://github.com/paruff/tracer-bullet-gitops.git
+  template:
+    metadata:
+      name: '{{ .service }}-beta'
+      namespace: argocd
+      labels:
+        app.kubernetes.io/managed-by: tracer-bullet-beta-appset
+        fawkes.io/phase: beta
+    spec:
+      project: default
+      source:
+        repoURL: '{{ .gitopsRepoURL }}'
+        targetRevision: main
+        path: "."
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: fawkes-beta
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+          - PrunePropagationPolicy=foreground
+          - PruneLast=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m
+      revisionHistoryLimit: 10

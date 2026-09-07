@@ -1,0 +1,85 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/tracer-bullet/tracer-bullet-alpha-applicationset.yaml
+# PURPOSE: #1804 - Phase 1 (Alpha) promotion target. Generates one
+#          Application per onboarded service (currently just tracer-bullet)
+#          into the alpha environment, using a list generator so a second
+#          golden-path service can be onboarded later by adding one list
+#          entry rather than a new file.
+#
+# RELATIONSHIP TO tracer-bullet-application.yaml (#1887, already merged):
+# that plain Application already syncs the same GitOps repo into the
+# `fawkes` namespace and is live today. This ApplicationSet targets a
+# separate `fawkes-alpha` namespace instead of migrating the live one, to
+# avoid a risky same-name ownership handoff on a cluster mid-demo. Kept
+# deliberately as an open, flagged item rather than silently duplicating
+# forever: once this is proven, retiring tracer-bullet-application.yaml in
+# favor of this ApplicationSet is the natural follow-up cleanup - not done
+# here.
+#
+# Per AGENTS.md section 6, ArgoCD Application/ApplicationSet manifests
+# require maintainer review before merge - flagging explicitly.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: tracer-bullet-alpha
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - list:
+        elements:
+          - service: tracer-bullet
+            gitopsRepoURL: https://github.com/paruff/tracer-bullet-gitops.git
+  template:
+    metadata:
+      name: '{{ .service }}-alpha'
+      namespace: argocd
+      labels:
+        app.kubernetes.io/managed-by: tracer-bullet-alpha-appset
+        fawkes.io/phase: alpha
+    spec:
+      project: default
+      source:
+        repoURL: '{{ .gitopsRepoURL }}'
+        targetRevision: main
+        path: "."
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: fawkes-alpha
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - PrunePropagationPolicy=foreground
+          - PruneLast=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m
+      revisionHistoryLimit: 10
