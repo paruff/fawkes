@@ -5,6 +5,17 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.64](https://github.com/paruff/fawkes/compare/v0.3.63...v0.3.64) (2026-09-07)
+
+
+### Chores
+
+* **deps-dev:** bump ruff from 0.16.5 to 0.16.6 ([#1870](https://github.com/paruff/fawkes/issues/1870)) ([d6c9076](https://github.com/paruff/fawkes/commit/d6c9076a8078ce0d6af1eeb46649cb95cf4a3ca4))
+* **deps:** bump docker/setup-qemu-action from 4.2.0 to 4.3.0 ([#1874](https://github.com/paruff/fawkes/issues/1874)) ([5ad606f](https://github.com/paruff/fawkes/commit/5ad606facd74bdf9ab9e3a6abfe4c90f768c7770))
+* **deps:** bump googleapis/release-please-action from 4.4.1 to 5.0.0 ([#1875](https://github.com/paruff/fawkes/issues/1875)) ([e1e4bf2](https://github.com/paruff/fawkes/commit/e1e4bf254240bb88f361921d6d208f5e77af13b6))
+* **deps:** bump helm/kind-action from 1.14.0 to 1.15.0 ([#1876](https://github.com/paruff/fawkes/issues/1876)) ([bd389aa](https://github.com/paruff/fawkes/commit/bd389aa18504b28d7a2316da3b38a4361dcf5863))
+* **deps:** bump the github-actions-patch group with 2 updates ([#1873](https://github.com/paruff/fawkes/issues/1873)) ([ef797de](https://github.com/paruff/fawkes/commit/ef797de3db02056fbc9c74aec8d5b2a3f7ee8cb6))
+
 ## [0.3.63](https://github.com/paruff/fawkes/compare/v0.3.62...v0.3.63) (2026-09-07)
 
 
