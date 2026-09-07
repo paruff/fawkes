@@ -31,7 +31,12 @@ teardown() {
 }
 
 @test "error_exit: uses custom exit code when provided" {
-  run bash -c "source ${LIB_DIR}/common.sh; error_exit 'Test error' 42"
+  # unset -f guards against a real name collision: error_handling.sh also
+  # exports its own, differently-behaved error_exit(), and when both
+  # libraries' tests run in the same overall bats invocation, whichever
+  # was exported last can leak into this fresh bash -c *before* the
+  # source line below locally redefines it.
+  run bash -c "unset -f error_exit; source ${LIB_DIR}/common.sh; error_exit 'Test error' 42"
   assert_failure 42
 }
 

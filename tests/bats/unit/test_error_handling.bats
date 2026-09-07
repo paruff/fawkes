@@ -146,17 +146,22 @@ teardown() {
 # =============================================================================
 
 @test "error_exit: exits with code 1 by default" {
-  run bash -c "source ${LIB_DIR}/error_handling.sh; error_exit 'fatal'"
+  # unset -f guards against a real name collision: common.sh also exports
+  # its own, differently-behaved error_exit(), and when both libraries'
+  # tests run in the same overall bats invocation, whichever was exported
+  # last can leak into this fresh bash -c before the source line below
+  # locally redefines it.
+  run bash -c "unset -f error_exit; source ${LIB_DIR}/error_handling.sh; error_exit 'fatal'"
   assert_failure 1
 }
 
 @test "error_exit: exits with custom code" {
-  run bash -c "source ${LIB_DIR}/error_handling.sh; error_exit 'fatal' 42"
+  run bash -c "unset -f error_exit; source ${LIB_DIR}/error_handling.sh; error_exit 'fatal' 42"
   assert_failure 42
 }
 
 @test "error_exit: displays error message" {
-  run bash -c "source ${LIB_DIR}/error_handling.sh; error_exit 'something failed'"
+  run bash -c "unset -f error_exit; source ${LIB_DIR}/error_handling.sh; error_exit 'something failed'"
   assert_failure
   assert_output --partial "something failed"
 }
