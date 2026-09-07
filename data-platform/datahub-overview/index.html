@@ -6973,27 +6973,13 @@ datahub<span class="w"> </span>ingest<span class="w"> </span>-c<span class="w"> 
 <span class="n">emitter</span> <span class="o">=</span> <span class="n">DatahubRestEmitter</span><span class="p">(</span><span class="s2">"http://datahub-datahub-gms.fawkes.svc:8080"</span><span class="p">)</span>
 
 <span class="c1"># Create dataset URN</span>
-<span class="n">dataset_urn</span> <span class="o">=</span> <span class="n">make_dataset_urn</span><span class="p">(</span>
-    <span class="n">platform</span><span class="o">=</span><span class="s2">"postgres"</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">"backstage.users"</span><span class="p">,</span>
-    <span class="n">env</span><span class="o">=</span><span class="s2">"PROD"</span>
-<span class="p">)</span>
+<span class="n">dataset_urn</span> <span class="o">=</span> <span class="n">make_dataset_urn</span><span class="p">(</span><span class="n">platform</span><span class="o">=</span><span class="s2">"postgres"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"backstage.users"</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="s2">"PROD"</span><span class="p">)</span>
 
 <span class="c1"># Add tags</span>
-<span class="n">tags</span> <span class="o">=</span> <span class="n">GlobalTagsClass</span><span class="p">(</span>
-    <span class="n">tags</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">TagAssociationClass</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">"urn:li:tag:PII"</span><span class="p">),</span>
-        <span class="n">TagAssociationClass</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">"urn:li:tag:Critical"</span><span class="p">)</span>
-    <span class="p">]</span>
-<span class="p">)</span>
+<span class="n">tags</span> <span class="o">=</span> <span class="n">GlobalTagsClass</span><span class="p">(</span><span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="n">TagAssociationClass</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">"urn:li:tag:PII"</span><span class="p">),</span> <span class="n">TagAssociationClass</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">"urn:li:tag:Critical"</span><span class="p">)])</span>
 
 <span class="c1"># Emit metadata</span>
-<span class="n">emitter</span><span class="o">.</span><span class="n">emit_mcp</span><span class="p">(</span>
-    <span class="n">entityType</span><span class="o">=</span><span class="s2">"dataset"</span><span class="p">,</span>
-    <span class="n">entityUrn</span><span class="o">=</span><span class="n">dataset_urn</span><span class="p">,</span>
-    <span class="n">aspectName</span><span class="o">=</span><span class="s2">"globalTags"</span><span class="p">,</span>
-    <span class="n">aspect</span><span class="o">=</span><span class="n">tags</span>
-<span class="p">)</span>
+<span class="n">emitter</span><span class="o">.</span><span class="n">emit_mcp</span><span class="p">(</span><span class="n">entityType</span><span class="o">=</span><span class="s2">"dataset"</span><span class="p">,</span> <span class="n">entityUrn</span><span class="o">=</span><span class="n">dataset_urn</span><span class="p">,</span> <span class="n">aspectName</span><span class="o">=</span><span class="s2">"globalTags"</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="understanding-lineage-graphs">Understanding Lineage Graphs</h2>
@@ -7041,14 +7027,8 @@ datahub<span class="w"> </span>ingest<span class="w"> </span>-c<span class="w"> 
 <span class="c1"># Define upstream datasets</span>
 <span class="n">upstream</span> <span class="o">=</span> <span class="n">UpstreamLineageClass</span><span class="p">(</span>
     <span class="n">upstreams</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">UpstreamClass</span><span class="p">(</span>
-            <span class="n">dataset</span><span class="o">=</span><span class="n">make_dataset_urn</span><span class="p">(</span><span class="s2">"postgres"</span><span class="p">,</span> <span class="s2">"backstage.services"</span><span class="p">),</span>
-            <span class="nb">type</span><span class="o">=</span><span class="s2">"TRANSFORMED"</span>
-        <span class="p">),</span>
-        <span class="n">UpstreamClass</span><span class="p">(</span>
-            <span class="n">dataset</span><span class="o">=</span><span class="n">make_dataset_urn</span><span class="p">(</span><span class="s2">"postgres"</span><span class="p">,</span> <span class="s2">"backstage.catalog"</span><span class="p">),</span>
-            <span class="nb">type</span><span class="o">=</span><span class="s2">"TRANSFORMED"</span>
-        <span class="p">)</span>
+        <span class="n">UpstreamClass</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">make_dataset_urn</span><span class="p">(</span><span class="s2">"postgres"</span><span class="p">,</span> <span class="s2">"backstage.services"</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"TRANSFORMED"</span><span class="p">),</span>
+        <span class="n">UpstreamClass</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">make_dataset_urn</span><span class="p">(</span><span class="s2">"postgres"</span><span class="p">,</span> <span class="s2">"backstage.catalog"</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"TRANSFORMED"</span><span class="p">),</span>
     <span class="p">]</span>
 <span class="p">)</span>
 
@@ -7057,7 +7037,7 @@ datahub<span class="w"> </span>ingest<span class="w"> </span>-c<span class="w"> 
     <span class="n">entityType</span><span class="o">=</span><span class="s2">"dataset"</span><span class="p">,</span>
     <span class="n">entityUrn</span><span class="o">=</span><span class="n">make_dataset_urn</span><span class="p">(</span><span class="s2">"postgres"</span><span class="p">,</span> <span class="s2">"analytics.service_stats"</span><span class="p">),</span>
     <span class="n">aspectName</span><span class="o">=</span><span class="s2">"upstreamLineage"</span><span class="p">,</span>
-    <span class="n">aspect</span><span class="o">=</span><span class="n">upstream</span>
+    <span class="n">aspect</span><span class="o">=</span><span class="n">upstream</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 <h4 id="using-dbt-integration">Using dbt Integration</h4>

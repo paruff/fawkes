@@ -5819,19 +5819,20 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">opentelemetry.sdk.trace.export</span><span class="w"> </span><span class="kn">import</span> <span class="n">BatchSpanProcessor</span>
 
 <span class="c1"># Configure resource</span>
-<span class="n">resource</span> <span class="o">=</span> <span class="n">Resource</span><span class="o">.</span><span class="n">create</span><span class="p">({</span>
-    <span class="s2">"service.name"</span><span class="p">:</span> <span class="s2">"my-service"</span><span class="p">,</span>
-    <span class="s2">"service.version"</span><span class="p">:</span> <span class="s2">"1.0.0"</span><span class="p">,</span>
-    <span class="s2">"deployment.environment"</span><span class="p">:</span> <span class="s2">"production"</span><span class="p">,</span>
-<span class="p">})</span>
+<span class="n">resource</span> <span class="o">=</span> <span class="n">Resource</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">"service.name"</span><span class="p">:</span> <span class="s2">"my-service"</span><span class="p">,</span>
+        <span class="s2">"service.version"</span><span class="p">:</span> <span class="s2">"1.0.0"</span><span class="p">,</span>
+        <span class="s2">"deployment.environment"</span><span class="p">:</span> <span class="s2">"production"</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">)</span>
 
 <span class="c1"># Create tracer provider</span>
 <span class="n">tracer_provider</span> <span class="o">=</span> <span class="n">TracerProvider</span><span class="p">(</span><span class="n">resource</span><span class="o">=</span><span class="n">resource</span><span class="p">)</span>
 
 <span class="c1"># Configure OTLP exporter</span>
 <span class="n">otlp_exporter</span> <span class="o">=</span> <span class="n">OTLPSpanExporter</span><span class="p">(</span>
-    <span class="n">endpoint</span><span class="o">=</span><span class="s2">"otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"</span><span class="p">,</span>
-    <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">endpoint</span><span class="o">=</span><span class="s2">"otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"</span><span class="p">,</span> <span class="n">insecure</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 
 <span class="c1"># Add span processor</span>
@@ -6059,10 +6060,10 @@ go<span class="w"> </span>get<span class="w"> </span>go.opentelemetry.io/otel/sd
 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
     <span class="s2">"User login successful"</span><span class="p">,</span>
     <span class="n">extra</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">"otelTraceID"</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">span</span><span class="o">.</span><span class="n">get_span_context</span><span class="p">()</span><span class="o">.</span><span class="n">trace_id</span><span class="p">,</span> <span class="s1">'032x'</span><span class="p">),</span>
-        <span class="s2">"otelSpanID"</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">span</span><span class="o">.</span><span class="n">get_span_context</span><span class="p">()</span><span class="o">.</span><span class="n">span_id</span><span class="p">,</span> <span class="s1">'016x'</span><span class="p">),</span>
-        <span class="s2">"userId"</span><span class="p">:</span> <span class="n">user_id</span>
-    <span class="p">}</span>
+        <span class="s2">"otelTraceID"</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">span</span><span class="o">.</span><span class="n">get_span_context</span><span class="p">()</span><span class="o">.</span><span class="n">trace_id</span><span class="p">,</span> <span class="s2">"032x"</span><span class="p">),</span>
+        <span class="s2">"otelSpanID"</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">span</span><span class="o">.</span><span class="n">get_span_context</span><span class="p">()</span><span class="o">.</span><span class="n">span_id</span><span class="p">,</span> <span class="s2">"016x"</span><span class="p">),</span>
+        <span class="s2">"userId"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
+    <span class="p">},</span>
 <span class="p">)</span>
 </code></pre></div>
 <h2 id="custom-spans">Custom Spans</h2>

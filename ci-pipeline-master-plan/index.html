@@ -6379,10 +6379,10 @@
     <span class="c1"># 2. Wait for scrape cycle (15s)</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
     <span class="c1"># 3. Query Prometheus</span>
-    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"http://localhost:9090/api/v1/query"</span><span class="p">,</span>
-        <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">"query"</span><span class="p">:</span> <span class="s2">"telemetry_generator_requests_total"</span><span class="p">})</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"http://localhost:9090/api/v1/query"</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">"query"</span><span class="p">:</span> <span class="s2">"telemetry_generator_requests_total"</span><span class="p">})</span>
     <span class="c1"># 4. Assert metric exists and has correct labels</span>
     <span class="k">assert</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">"data"</span><span class="p">][</span><span class="s2">"result"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"metric"</span><span class="p">][</span><span class="s2">"job"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"telemetry-generator"</span>
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_grafana_dashboard_renders</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">"""Verify Grafana dashboards load and show data."""</span>

@@ -6182,8 +6182,8 @@ Recommendations:
         <span class="n">model</span><span class="o">=</span><span class="s2">"gpt-4"</span><span class="p">,</span>
         <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
             <span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"system"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"Classify sentiment as positive, neutral, or negative."</span><span class="p">},</span>
-            <span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">feedback_text</span><span class="p">}</span>
-        <span class="p">]</span>
+            <span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">feedback_text</span><span class="p">},</span>
+        <span class="p">],</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>  <span class="c1"># 'positive' | 'neutral' | 'negative'</span>
 </code></pre></div>
@@ -6208,11 +6208,11 @@ Recommendations:
     <span class="n">score</span> <span class="o">+=</span> <span class="n">count_similar_feedback</span><span class="p">(</span><span class="n">feedback</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># 0-10 points</span>
 
     <span class="c1"># Severity (based on type)</span>
-    <span class="n">severity_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'bug'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'friction'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'feature-request'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'praise'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+    <span class="n">severity_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"bug"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"friction"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"feature-request"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"praise"</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
     <span class="n">score</span> <span class="o">+=</span> <span class="n">severity_weights</span><span class="p">[</span><span class="n">feedback</span><span class="o">.</span><span class="n">type</span><span class="p">]</span>
 
     <span class="c1"># Sentiment (negative = more urgent)</span>
-    <span class="k">if</span> <span class="n">feedback</span><span class="o">.</span><span class="n">sentiment</span> <span class="o">==</span> <span class="s1">'negative'</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">feedback</span><span class="o">.</span><span class="n">sentiment</span> <span class="o">==</span> <span class="s2">"negative"</span><span class="p">:</span>
         <span class="n">score</span> <span class="o">+=</span> <span class="mi">2</span>
 
     <span class="c1"># Recency (recent = more relevant)</span>

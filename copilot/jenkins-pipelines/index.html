@@ -6782,11 +6782,7 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
 <div class="highlight"><pre><span></span><code><span class="c1"># ❌ Bad: Imperative approach (avoid this)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 
-<span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span>
-    <span class="s2">"kubectl"</span><span class="p">,</span> <span class="s2">"create"</span><span class="p">,</span> <span class="s2">"deployment"</span><span class="p">,</span> <span class="s2">"backstage"</span><span class="p">,</span>
-    <span class="s2">"--image=backstage/backstage:v1.20.0"</span><span class="p">,</span>
-    <span class="s2">"--replicas=2"</span>
-<span class="p">])</span>
+<span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">"kubectl"</span><span class="p">,</span> <span class="s2">"create"</span><span class="p">,</span> <span class="s2">"deployment"</span><span class="p">,</span> <span class="s2">"backstage"</span><span class="p">,</span> <span class="s2">"--image=backstage/backstage:v1.20.0"</span><span class="p">,</span> <span class="s2">"--replicas=2"</span><span class="p">])</span>
 </code></pre></div>
 <h3 id="3-gitops-workflow-with-argocd">3. GitOps Workflow with ArgoCD</h3>
 <p><strong>All infrastructure changes through Git:</strong></p>
@@ -6924,6 +6920,7 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
+
 <span class="nd">@given</span><span class="p">(</span><span class="n">parsers</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s1">'a Jenkins instance is running at "</span><span class="si">{url}</span><span class="s1">"'</span><span class="p">))</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">jenkins_running</span><span class="p">(</span><span class="n">jenkins_client</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -6931,11 +6928,12 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
 
 <span class="sd">    @dora-capability: continuous_integration</span>
 <span class="sd">    """</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">jenkins_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s1">/api/json'</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">jenkins_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">/api/json"</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Jenkins not accessible at </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">"</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'mode'</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'NORMAL'</span><span class="p">,</span> <span class="s2">"Jenkins not in normal mode"</span>
-    <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'numExecutors'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"No Jenkins executors available"</span>
+    <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mode"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"NORMAL"</span><span class="p">,</span> <span class="s2">"Jenkins not in normal mode"</span>
+    <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"numExecutors"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"No Jenkins executors available"</span>
+
 
 <span class="nd">@when</span><span class="p">(</span><span class="n">parsers</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s1">'I commit a change to the "</span><span class="si">{branch}</span><span class="s1">" branch'</span><span class="p">))</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">commit_change</span><span class="p">(</span><span class="n">git_repo</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">dora_metrics</span><span class="p">):</span>
@@ -6948,22 +6946,20 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
 
     <span class="c1"># Make traceable change</span>
     <span class="n">commit_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"test-</span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'README.md'</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="s1">&lt;!-- Test commit </span><span class="si">{</span><span class="n">commit_id</span><span class="si">}</span><span class="s1"> --&gt;'</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"README.md"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">&lt;!-- Test commit </span><span class="si">{</span><span class="n">commit_id</span><span class="si">}</span><span class="s2"> --&gt;"</span><span class="p">)</span>
 
-    <span class="n">git_repo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="s1">'README.md'</span><span class="p">])</span>
-    <span class="n">commit</span> <span class="o">=</span> <span class="n">git_repo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">commit</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Test commit </span><span class="si">{</span><span class="n">commit_id</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-    <span class="n">git_repo</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="s1">'origin'</span><span class="p">)</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">branch</span><span class="p">)</span>
+    <span class="n">git_repo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="s2">"README.md"</span><span class="p">])</span>
+    <span class="n">commit</span> <span class="o">=</span> <span class="n">git_repo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">commit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Test commit </span><span class="si">{</span><span class="n">commit_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">git_repo</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="s2">"origin"</span><span class="p">)</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">branch</span><span class="p">)</span>
 
     <span class="c1"># Record commit time for DORA lead time metric</span>
     <span class="n">dora_metrics</span><span class="o">.</span><span class="n">record_commit</span><span class="p">(</span>
-        <span class="n">commit_sha</span><span class="o">=</span><span class="n">commit</span><span class="o">.</span><span class="n">hexsha</span><span class="p">,</span>
-        <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span>
-        <span class="n">service</span><span class="o">=</span><span class="n">git_repo</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="n">branch</span><span class="o">=</span><span class="n">branch</span>
+        <span class="n">commit_sha</span><span class="o">=</span><span class="n">commit</span><span class="o">.</span><span class="n">hexsha</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span> <span class="n">service</span><span class="o">=</span><span class="n">git_repo</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">branch</span><span class="o">=</span><span class="n">branch</span>
     <span class="p">)</span>
 
-<span class="nd">@then</span><span class="p">(</span><span class="n">parsers</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s1">'a Jenkins build starts within </span><span class="si">{seconds:d}</span><span class="s1"> seconds'</span><span class="p">))</span>
+
+<span class="nd">@then</span><span class="p">(</span><span class="n">parsers</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">"a Jenkins build starts within </span><span class="si">{seconds:d}</span><span class="s2"> seconds"</span><span class="p">))</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">build_starts</span><span class="p">(</span><span class="n">jenkins_client</span><span class="p">,</span> <span class="n">git_repo</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">dora_metrics</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Verify build triggered within SLA and update deployment frequency metric.</span>
@@ -6981,17 +6977,17 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
                 <span class="n">build_id</span><span class="o">=</span><span class="n">builds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
                 <span class="n">build_number</span><span class="o">=</span><span class="n">builds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">number</span><span class="p">,</span>
                 <span class="n">timestamp</span><span class="o">=</span><span class="n">builds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">timestamp</span><span class="p">,</span>
-                <span class="n">service</span><span class="o">=</span><span class="n">git_repo</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">service</span><span class="o">=</span><span class="n">git_repo</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">return</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"No build started within </span><span class="si">{</span><span class="n">seconds</span><span class="si">}</span><span class="s2">s of commit to </span><span class="si">{</span><span class="n">git_repo</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">. "</span>
-        <span class="sa">f</span><span class="s2">"This impacts deployment frequency SLA."</span>
+        <span class="sa">f</span><span class="s2">"No build started within </span><span class="si">{</span><span class="n">seconds</span><span class="si">}</span><span class="s2">s of commit to </span><span class="si">{</span><span class="n">git_repo</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">. This impacts deployment frequency SLA."</span>
     <span class="p">)</span>
 
-<span class="nd">@then</span><span class="p">(</span><span class="s1">'DORA metrics record the deployment'</span><span class="p">)</span>
+
+<span class="nd">@then</span><span class="p">(</span><span class="s2">"DORA metrics record the deployment"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">verify_dora_metrics</span><span class="p">(</span><span class="n">dora_metrics</span><span class="p">,</span> <span class="n">git_repo</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Verify DORA metrics service recorded all events.</span>
@@ -7001,14 +6997,14 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
     <span class="c1"># Verify metrics were recorded</span>
     <span class="n">metrics</span> <span class="o">=</span> <span class="n">dora_metrics</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="n">git_repo</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
-    <span class="k">assert</span> <span class="n">metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'deployment_frequency'</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> \
-        <span class="s2">"Deployment frequency not recorded"</span>
-    <span class="k">assert</span> <span class="n">metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'lead_time'</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> \
-        <span class="s2">"Lead time not recorded"</span>
+    <span class="k">assert</span> <span class="n">metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"deployment_frequency"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"Deployment frequency not recorded"</span>
+    <span class="k">assert</span> <span class="n">metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"lead_time"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"Lead time not recorded"</span>
 
     <span class="c1"># Verify Prometheus metrics are accessible</span>
-    <span class="n">prom_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'http://prometheus.fawkes-platform.svc:9090/api/v1/query'</span><span class="p">,</span>
-                                 <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">'query'</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'deployments_total</span><span class="se">{{</span><span class="s1">service="</span><span class="si">{</span><span class="n">git_repo</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">"</span><span class="se">}}</span><span class="s1">'</span><span class="p">})</span>
+    <span class="n">prom_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="s2">"http://prometheus.fawkes-platform.svc:9090/api/v1/query"</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">"query"</span><span class="p">:</span> <span class="sa">f</span><span class="s1">'deployments_total</span><span class="se">{{</span><span class="s1">service="</span><span class="si">{</span><span class="n">git_repo</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">"</span><span class="se">}}</span><span class="s1">'</span><span class="p">},</span>
+    <span class="p">)</span>
     <span class="k">assert</span> <span class="n">prom_response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">,</span> <span class="s2">"Cannot query Prometheus metrics"</span>
 </code></pre></div>
 <h3 id="test-organization">Test Organization</h3>
@@ -7017,28 +7013,27 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
 <span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">pytest_collection_modifyitems</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Add belt level and DORA capability markers for tracking.</span>
 
 <span class="sd">    @dora-capability: learning_culture</span>
 <span class="sd">    """</span>
-    <span class="n">belt_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'white-belt'</span><span class="p">,</span> <span class="s1">'yellow-belt'</span><span class="p">,</span> <span class="s1">'green-belt'</span><span class="p">,</span>
-                  <span class="s1">'brown-belt'</span><span class="p">,</span> <span class="s1">'black-belt'</span><span class="p">]</span>
+    <span class="n">belt_order</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"white-belt"</span><span class="p">,</span> <span class="s2">"yellow-belt"</span><span class="p">,</span> <span class="s2">"green-belt"</span><span class="p">,</span> <span class="s2">"brown-belt"</span><span class="p">,</span> <span class="s2">"black-belt"</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
         <span class="c1"># Extract belt level</span>
-        <span class="n">belt_markers</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">()</span>
-                       <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">belt_order</span><span class="p">]</span>
+        <span class="n">belt_markers</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">()</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">belt_order</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">belt_markers</span><span class="p">:</span>
             <span class="n">item</span><span class="o">.</span><span class="n">add_marker</span><span class="p">(</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">belt_level</span><span class="p">(</span><span class="n">belt_markers</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
         <span class="c1"># Extract DORA metrics</span>
-        <span class="n">dora_markers</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">()</span>
-                       <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'dora-'</span><span class="p">)]</span>
+        <span class="n">dora_markers</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">iter_markers</span><span class="p">()</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"dora-"</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">marker</span> <span class="ow">in</span> <span class="n">dora_markers</span><span class="p">:</span>
-            <span class="n">metric</span> <span class="o">=</span> <span class="n">marker</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'dora-'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+            <span class="n">metric</span> <span class="o">=</span> <span class="n">marker</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"dora-"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
             <span class="n">item</span><span class="o">.</span><span class="n">add_marker</span><span class="p">(</span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">dora_metric</span><span class="p">(</span><span class="n">metric</span><span class="p">))</span>
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">pytest_terminal_summary</span><span class="p">(</span><span class="n">terminalreporter</span><span class="p">,</span> <span class="n">exitstatus</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -7046,34 +7041,31 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
 <span class="sd">    """</span>
     <span class="n">belt_results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">for</span> <span class="n">report</span> <span class="ow">in</span> <span class="n">terminalreporter</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'passed'</span><span class="p">,</span> <span class="p">[]):</span>
-        <span class="n">belt_marker</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'belt_level'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">report</span> <span class="ow">in</span> <span class="n">terminalreporter</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"passed"</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="n">belt_marker</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"belt_level"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">belt_marker</span><span class="p">:</span>
             <span class="n">belt</span> <span class="o">=</span> <span class="n">belt_marker</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">belt_results</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">belt</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">nodeid</span><span class="p">)</span>
 
-    <span class="n">terminalreporter</span><span class="o">.</span><span class="n">write_sep</span><span class="p">(</span><span class="s1">'='</span><span class="p">,</span> <span class="s1">'Dojo Progression Summary'</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">belt</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'white-belt'</span><span class="p">,</span> <span class="s1">'yellow-belt'</span><span class="p">,</span> <span class="s1">'green-belt'</span><span class="p">,</span>
-                 <span class="s1">'brown-belt'</span><span class="p">,</span> <span class="s1">'black-belt'</span><span class="p">]:</span>
+    <span class="n">terminalreporter</span><span class="o">.</span><span class="n">write_sep</span><span class="p">(</span><span class="s2">"="</span><span class="p">,</span> <span class="s2">"Dojo Progression Summary"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">belt</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"white-belt"</span><span class="p">,</span> <span class="s2">"yellow-belt"</span><span class="p">,</span> <span class="s2">"green-belt"</span><span class="p">,</span> <span class="s2">"brown-belt"</span><span class="p">,</span> <span class="s2">"black-belt"</span><span class="p">]:</span>
         <span class="n">scenarios</span> <span class="o">=</span> <span class="n">belt_results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">belt</span><span class="p">,</span> <span class="p">[])</span>
-        <span class="n">status</span> <span class="o">=</span> <span class="s1">'✅'</span> <span class="k">if</span> <span class="n">scenarios</span> <span class="k">else</span> <span class="s1">'⏸️'</span>
-        <span class="n">terminalreporter</span><span class="o">.</span><span class="n">write_line</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">belt</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">scenarios</span><span class="p">)</span><span class="si">}</span><span class="s1"> scenarios passed'</span>
-        <span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="s2">"✅"</span> <span class="k">if</span> <span class="n">scenarios</span> <span class="k">else</span> <span class="s2">"⏸️"</span>
+        <span class="n">terminalreporter</span><span class="o">.</span><span class="n">write_line</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">belt</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">scenarios</span><span class="p">)</span><span class="si">}</span><span class="s2"> scenarios passed"</span><span class="p">)</span>
 
     <span class="c1"># DORA metrics summary</span>
     <span class="n">dora_results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">report</span> <span class="ow">in</span> <span class="n">terminalreporter</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'passed'</span><span class="p">,</span> <span class="p">[]):</span>
-        <span class="n">dora_marker</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'dora_metric'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">report</span> <span class="ow">in</span> <span class="n">terminalreporter</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"passed"</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="n">dora_marker</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"dora_metric"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dora_marker</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">dora_marker</span><span class="p">:</span>
                 <span class="n">metric_name</span> <span class="o">=</span> <span class="n">metric</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">dora_results</span><span class="p">[</span><span class="n">metric_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">dora_results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">metric_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
 
     <span class="k">if</span> <span class="n">dora_results</span><span class="p">:</span>
-        <span class="n">terminalreporter</span><span class="o">.</span><span class="n">write_sep</span><span class="p">(</span><span class="s1">'='</span><span class="p">,</span> <span class="s1">'DORA Metrics Coverage'</span><span class="p">)</span>
+        <span class="n">terminalreporter</span><span class="o">.</span><span class="n">write_sep</span><span class="p">(</span><span class="s2">"="</span><span class="p">,</span> <span class="s2">"DORA Metrics Coverage"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">metric</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">dora_results</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-            <span class="n">terminalreporter</span><span class="o">.</span><span class="n">write_line</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  📊 </span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1"> tests'</span><span class="p">)</span>
+            <span class="n">terminalreporter</span><span class="o">.</span><span class="n">write_line</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  📊 </span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> tests"</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="security-patterns">🔒 Security Patterns</h2>
@@ -7439,51 +7431,44 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
 <span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span>
     <span class="n">title</span><span class="o">=</span><span class="s2">"Fawkes DORA Metrics Collector"</span><span class="p">,</span>
     <span class="n">description</span><span class="o">=</span><span class="s2">"Automated collection of the Four Key DORA metrics"</span><span class="p">,</span>
-    <span class="n">version</span><span class="o">=</span><span class="s2">"1.0.0"</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">"1.0.0"</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># Prometheus metrics</span>
 <span class="n">deployment_counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
-    <span class="s1">'fawkes_deployments_total'</span><span class="p">,</span>
-    <span class="s1">'Total number of deployments'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'service'</span><span class="p">,</span> <span class="s1">'environment'</span><span class="p">,</span> <span class="s1">'version'</span><span class="p">,</span> <span class="s1">'status'</span><span class="p">]</span>
+    <span class="s2">"fawkes_deployments_total"</span><span class="p">,</span> <span class="s2">"Total number of deployments"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"service"</span><span class="p">,</span> <span class="s2">"environment"</span><span class="p">,</span> <span class="s2">"version"</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">]</span>
 <span class="p">)</span>
 
 <span class="n">lead_time_histogram</span> <span class="o">=</span> <span class="n">Histogram</span><span class="p">(</span>
-    <span class="s1">'fawkes_lead_time_seconds'</span><span class="p">,</span>
-    <span class="s1">'Lead time from commit to deployment (seconds)'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'service'</span><span class="p">,</span> <span class="s1">'environment'</span><span class="p">],</span>
-    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="mi">7200</span><span class="p">,</span> <span class="mi">14400</span><span class="p">,</span> <span class="mi">28800</span><span class="p">,</span> <span class="mi">86400</span><span class="p">]</span>  <span class="c1"># 1m to 1d</span>
+    <span class="s2">"fawkes_lead_time_seconds"</span><span class="p">,</span>
+    <span class="s2">"Lead time from commit to deployment (seconds)"</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">"service"</span><span class="p">,</span> <span class="s2">"environment"</span><span class="p">],</span>
+    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="mi">7200</span><span class="p">,</span> <span class="mi">14400</span><span class="p">,</span> <span class="mi">28800</span><span class="p">,</span> <span class="mi">86400</span><span class="p">],</span>  <span class="c1"># 1m to 1d</span>
 <span class="p">)</span>
 
 <span class="n">failure_counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
-    <span class="s1">'fawkes_change_failures_total'</span><span class="p">,</span>
-    <span class="s1">'Total number of failed changes'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'service'</span><span class="p">,</span> <span class="s1">'environment'</span><span class="p">,</span> <span class="s1">'failure_type'</span><span class="p">]</span>
+    <span class="s2">"fawkes_change_failures_total"</span><span class="p">,</span> <span class="s2">"Total number of failed changes"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"service"</span><span class="p">,</span> <span class="s2">"environment"</span><span class="p">,</span> <span class="s2">"failure_type"</span><span class="p">]</span>
 <span class="p">)</span>
 
 <span class="n">mttr_histogram</span> <span class="o">=</span> <span class="n">Histogram</span><span class="p">(</span>
-    <span class="s1">'fawkes_mttr_seconds'</span><span class="p">,</span>
-    <span class="s1">'Mean time to restore service (seconds)'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'service'</span><span class="p">,</span> <span class="s1">'environment'</span><span class="p">,</span> <span class="s1">'incident_type'</span><span class="p">],</span>
-    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="mi">7200</span><span class="p">,</span> <span class="mi">14400</span><span class="p">,</span> <span class="mi">28800</span><span class="p">,</span> <span class="mi">86400</span><span class="p">]</span>  <span class="c1"># 5m to 1d</span>
+    <span class="s2">"fawkes_mttr_seconds"</span><span class="p">,</span>
+    <span class="s2">"Mean time to restore service (seconds)"</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">"service"</span><span class="p">,</span> <span class="s2">"environment"</span><span class="p">,</span> <span class="s2">"incident_type"</span><span class="p">],</span>
+    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="mi">7200</span><span class="p">,</span> <span class="mi">14400</span><span class="p">,</span> <span class="mi">28800</span><span class="p">,</span> <span class="mi">86400</span><span class="p">],</span>  <span class="c1"># 5m to 1d</span>
 <span class="p">)</span>
 
-<span class="n">active_incidents</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
-    <span class="s1">'fawkes_active_incidents'</span><span class="p">,</span>
-    <span class="s1">'Number of currently active incidents'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'service'</span><span class="p">,</span> <span class="s1">'environment'</span><span class="p">]</span>
-<span class="p">)</span>
+<span class="n">active_incidents</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span><span class="s2">"fawkes_active_incidents"</span><span class="p">,</span> <span class="s2">"Number of currently active incidents"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"service"</span><span class="p">,</span> <span class="s2">"environment"</span><span class="p">])</span>
+
 
 <span class="c1"># Pydantic models</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">DeploymentEvent</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">service</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Service name"</span><span class="p">)</span>
     <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Version or git commit SHA"</span><span class="p">)</span>
-    <span class="n">environment</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">'dev'</span><span class="p">,</span> <span class="s1">'staging'</span><span class="p">,</span> <span class="s1">'production'</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Target environment"</span><span class="p">)</span>
+    <span class="n">environment</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"dev"</span><span class="p">,</span> <span class="s2">"staging"</span><span class="p">,</span> <span class="s2">"production"</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Target environment"</span><span class="p">)</span>
     <span class="n">commit_sha</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Git commit SHA"</span><span class="p">)</span>
     <span class="n">commit_timestamp</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"When the commit was created"</span><span class="p">)</span>
     <span class="n">deployment_timestamp</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"When deployment occurred"</span><span class="p">)</span>
-    <span class="n">status</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">'success'</span><span class="p">,</span> <span class="s1">'failure'</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Deployment outcome"</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"success"</span><span class="p">,</span> <span class="s2">"failure"</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Deployment outcome"</span><span class="p">)</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
         <span class="n">json_schema_extra</span> <span class="o">=</span> <span class="p">{</span>
@@ -7494,15 +7479,16 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
                 <span class="s2">"commit_sha"</span><span class="p">:</span> <span class="s2">"abc123def456"</span><span class="p">,</span>
                 <span class="s2">"commit_timestamp"</span><span class="p">:</span> <span class="s2">"2025-10-25T10:00:00Z"</span><span class="p">,</span>
                 <span class="s2">"deployment_timestamp"</span><span class="p">:</span> <span class="s2">"2025-10-25T10:15:00Z"</span><span class="p">,</span>
-                <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"success"</span>
+                <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"success"</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">}</span>
 
+
 <span class="k">class</span><span class="w"> </span><span class="nc">IncidentEvent</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">service</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Affected service name"</span><span class="p">)</span>
-    <span class="n">environment</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">'dev'</span><span class="p">,</span> <span class="s1">'staging'</span><span class="p">,</span> <span class="s1">'production'</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Affected environment"</span><span class="p">)</span>
+    <span class="n">environment</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"dev"</span><span class="p">,</span> <span class="s2">"staging"</span><span class="p">,</span> <span class="s2">"production"</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Affected environment"</span><span class="p">)</span>
     <span class="n">incident_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Type of incident (e.g., 'outage', 'degradation')"</span><span class="p">)</span>
-    <span class="n">severity</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">'low'</span><span class="p">,</span> <span class="s1">'medium'</span><span class="p">,</span> <span class="s1">'high'</span><span class="p">,</span> <span class="s1">'critical'</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Incident severity"</span><span class="p">)</span>
+    <span class="n">severity</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"low"</span><span class="p">,</span> <span class="s2">"medium"</span><span class="p">,</span> <span class="s2">"high"</span><span class="p">,</span> <span class="s2">"critical"</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Incident severity"</span><span class="p">)</span>
     <span class="n">started_at</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"When incident started"</span><span class="p">)</span>
     <span class="n">resolved_at</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"When incident was resolved"</span><span class="p">)</span>
     <span class="n">caused_by_deployment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Git commit SHA if caused by deployment"</span><span class="p">)</span>
@@ -7516,28 +7502,28 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
                 <span class="s2">"severity"</span><span class="p">:</span> <span class="s2">"high"</span><span class="p">,</span>
                 <span class="s2">"started_at"</span><span class="p">:</span> <span class="s2">"2025-10-25T11:00:00Z"</span><span class="p">,</span>
                 <span class="s2">"resolved_at"</span><span class="p">:</span> <span class="s2">"2025-10-25T11:30:00Z"</span><span class="p">,</span>
-                <span class="s2">"caused_by_deployment"</span><span class="p">:</span> <span class="s2">"abc123def456"</span>
+                <span class="s2">"caused_by_deployment"</span><span class="p">:</span> <span class="s2">"abc123def456"</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">}</span>
+
 
 <span class="k">class</span><span class="w"> </span><span class="nc">SecurityScanResult</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">service</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">scanner</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">'trivy'</span><span class="p">,</span> <span class="s1">'sonarqube'</span><span class="p">,</span> <span class="s1">'snyk'</span><span class="p">]</span>
+    <span class="n">scanner</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"trivy"</span><span class="p">,</span> <span class="s2">"sonarqube"</span><span class="p">,</span> <span class="s2">"snyk"</span><span class="p">]</span>
     <span class="n">high_vulnerabilities</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">critical_vulnerabilities</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">timestamp</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">)</span>
 
+
 <span class="c1"># API Endpoints</span>
+
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">root</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">"""Health check endpoint"""</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">"service"</span><span class="p">:</span> <span class="s2">"Fawkes DORA Metrics Collector"</span><span class="p">,</span>
-        <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"healthy"</span><span class="p">,</span>
-        <span class="s2">"version"</span><span class="p">:</span> <span class="s2">"1.0.0"</span>
-    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"service"</span><span class="p">:</span> <span class="s2">"Fawkes DORA Metrics Collector"</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"healthy"</span><span class="p">,</span> <span class="s2">"version"</span><span class="p">:</span> <span class="s2">"1.0.0"</span><span class="p">}</span>
+
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/api/v1/deployments"</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">record_deployment</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">DeploymentEvent</span><span class="p">):</span>
@@ -7552,34 +7538,22 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
     <span class="k">try</span><span class="p">:</span>
         <span class="c1"># Increment deployment counter</span>
         <span class="n">deployment_counter</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span>
-            <span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span>
-            <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span>
-            <span class="n">version</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
-            <span class="n">status</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">status</span>
+            <span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">status</span>
         <span class="p">)</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
 
         <span class="c1"># Calculate and record lead time</span>
         <span class="n">lead_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">deployment_timestamp</span> <span class="o">-</span> <span class="n">event</span><span class="o">.</span><span class="n">commit_timestamp</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
-        <span class="n">lead_time_histogram</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span>
-            <span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span>
-            <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">lead_time</span><span class="p">)</span>
+        <span class="n">lead_time_histogram</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="p">)</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">lead_time</span><span class="p">)</span>
 
         <span class="c1"># Record failure if applicable</span>
-        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">'failure'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">"failure"</span><span class="p">:</span>
             <span class="n">failure_counter</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span>
-                <span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span>
-                <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span>
-                <span class="n">failure_type</span><span class="o">=</span><span class="s1">'deployment_failure'</span>
+                <span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span> <span class="n">failure_type</span><span class="o">=</span><span class="s2">"deployment_failure"</span>
             <span class="p">)</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Deployment failure recorded: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Deployment failure recorded: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Deployment success recorded: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Deployment success recorded: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"recorded"</span><span class="p">,</span>
@@ -7587,12 +7561,13 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
             <span class="s2">"metrics"</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">"deployment_frequency"</span><span class="p">:</span> <span class="s2">"updated"</span><span class="p">,</span>
                 <span class="s2">"lead_time_seconds"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">lead_time</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                <span class="s2">"change_failure_rate"</span><span class="p">:</span> <span class="s2">"updated"</span> <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">'failure'</span> <span class="k">else</span> <span class="s2">"n/a"</span>
-            <span class="p">}</span>
+                <span class="s2">"change_failure_rate"</span><span class="p">:</span> <span class="s2">"updated"</span> <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">"failure"</span> <span class="k">else</span> <span class="s2">"n/a"</span><span class="p">,</span>
+            <span class="p">},</span>
         <span class="p">}</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error recording deployment: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/api/v1/incidents"</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">record_incident</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">IncidentEvent</span><span class="p">):</span>
@@ -7607,56 +7582,43 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
             <span class="c1"># Calculate MTTR</span>
             <span class="n">mttr</span> <span class="o">=</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">resolved_at</span> <span class="o">-</span> <span class="n">event</span><span class="o">.</span><span class="n">started_at</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
             <span class="n">mttr_histogram</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span>
-                <span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span>
-                <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span>
-                <span class="n">incident_type</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">incident_type</span>
+                <span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span> <span class="n">incident_type</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">incident_type</span>
             <span class="p">)</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">mttr</span><span class="p">)</span>
 
             <span class="c1"># Decrement active incidents</span>
-            <span class="n">active_incidents</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span>
-                <span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span>
-                <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">dec</span><span class="p">()</span>
+            <span class="n">active_incidents</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="p">)</span><span class="o">.</span><span class="n">dec</span><span class="p">()</span>
 
             <span class="c1"># If caused by deployment, count as change failure</span>
             <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">caused_by_deployment</span><span class="p">:</span>
                 <span class="n">failure_counter</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span>
-                    <span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span>
-                    <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span>
-                    <span class="n">failure_type</span><span class="o">=</span><span class="s1">'incident_from_deployment'</span>
+                    <span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span> <span class="n">failure_type</span><span class="o">=</span><span class="s2">"incident_from_deployment"</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Incident resolved: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="si">}</span><span class="s2"> "</span>
-                <span class="sa">f</span><span class="s2">"after </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mttr</span><span class="o">/</span><span class="mi">60</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> minutes"</span>
+                <span class="sa">f</span><span class="s2">"Incident resolved: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="si">}</span><span class="s2"> after </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mttr</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> minutes"</span>
             <span class="p">)</span>
 
             <span class="k">return</span> <span class="p">{</span>
                 <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"resolved"</span><span class="p">,</span>
                 <span class="s2">"service"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span>
                 <span class="s2">"mttr_seconds"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">mttr</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                <span class="s2">"mttr_minutes"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">mttr</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="s2">"mttr_minutes"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">mttr</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
             <span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Incident started but not resolved</span>
-            <span class="n">active_incidents</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span>
-                <span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span>
-                <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
+            <span class="n">active_incidents</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span><span class="n">service</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="p">)</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Incident started: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="si">}</span><span class="s2"> "</span>
-                <span class="sa">f</span><span class="s2">"(severity: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">severity</span><span class="si">}</span><span class="s2">)"</span>
-            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Incident started: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">environment</span><span class="si">}</span><span class="s2"> (severity: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">severity</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="p">{</span>
                 <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"incident_started"</span><span class="p">,</span>
                 <span class="s2">"service"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">service</span><span class="p">,</span>
-                <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"Call again with resolved_at to calculate MTTR"</span>
+                <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"Call again with resolved_at to calculate MTTR"</span><span class="p">,</span>
             <span class="p">}</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error recording incident: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/api/v1/security-scan"</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">record_security_scan</span><span class="p">(</span><span class="n">scan</span><span class="p">:</span> <span class="n">SecurityScanResult</span><span class="p">):</span>
@@ -7668,33 +7630,25 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
         <span class="sa">f</span><span class="s2">"Critical: </span><span class="si">{</span><span class="n">scan</span><span class="o">.</span><span class="n">critical_vulnerabilities</span><span class="si">}</span><span class="s2">, High: </span><span class="si">{</span><span class="n">scan</span><span class="o">.</span><span class="n">high_vulnerabilities</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
 
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"recorded"</span><span class="p">,</span>
-        <span class="s2">"service"</span><span class="p">:</span> <span class="n">scan</span><span class="o">.</span><span class="n">service</span><span class="p">,</span>
-        <span class="s2">"version"</span><span class="p">:</span> <span class="n">scan</span><span class="o">.</span><span class="n">version</span>
-    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"recorded"</span><span class="p">,</span> <span class="s2">"service"</span><span class="p">:</span> <span class="n">scan</span><span class="o">.</span><span class="n">service</span><span class="p">,</span> <span class="s2">"version"</span><span class="p">:</span> <span class="n">scan</span><span class="o">.</span><span class="n">version</span><span class="p">}</span>
+
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/metrics"</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">metrics</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">"""Prometheus metrics endpoint for scraping"""</span>
-    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
-        <span class="n">content</span><span class="o">=</span><span class="n">generate_latest</span><span class="p">(),</span>
-        <span class="n">media_type</span><span class="o">=</span><span class="s2">"text/plain"</span>
-    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">generate_latest</span><span class="p">(),</span> <span class="n">media_type</span><span class="o">=</span><span class="s2">"text/plain"</span><span class="p">)</span>
+
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/health"</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">health</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">"""Health check for Kubernetes probes"""</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"healthy"</span><span class="p">}</span>
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
-    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-        <span class="n">app</span><span class="p">,</span>
-        <span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
-        <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span>
-        <span class="n">log_level</span><span class="o">=</span><span class="s2">"info"</span>
-    <span class="p">)</span>
+
+    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s2">"info"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="deployment-for-dora-metrics-service">Deployment for DORA Metrics Service</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># File: infra/kubernetes/dora-metrics/deployment-dora-metrics.yaml</span>
