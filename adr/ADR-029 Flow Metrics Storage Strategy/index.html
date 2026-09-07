@@ -6286,127 +6286,87 @@
 
 <span class="c1"># Flow Velocity</span>
 <span class="n">flow_velocity_items_per_week</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
-    <span class="s1">'flow_velocity_items_per_week'</span><span class="p">,</span>
-    <span class="s1">'Number of flow items completed per week'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">,</span> <span class="s1">'item_type'</span><span class="p">]</span>
+    <span class="s2">"flow_velocity_items_per_week"</span><span class="p">,</span> <span class="s2">"Number of flow items completed per week"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"team"</span><span class="p">,</span> <span class="s2">"item_type"</span><span class="p">]</span>
 <span class="p">)</span>
 
 <span class="c1"># Flow Time</span>
 <span class="n">flow_time_seconds</span> <span class="o">=</span> <span class="n">Histogram</span><span class="p">(</span>
-    <span class="s1">'flow_time_seconds'</span><span class="p">,</span>
-    <span class="s1">'Total time from start to completion'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">,</span> <span class="s1">'item_type'</span><span class="p">],</span>
+    <span class="s2">"flow_time_seconds"</span><span class="p">,</span>
+    <span class="s2">"Total time from start to completion"</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">"team"</span><span class="p">,</span> <span class="s2">"item_type"</span><span class="p">],</span>
     <span class="n">buckets</span><span class="o">=</span><span class="p">[</span>
-        <span class="mi">3600</span><span class="p">,</span>      <span class="c1"># 1 hour</span>
-        <span class="mi">21600</span><span class="p">,</span>     <span class="c1"># 6 hours</span>
-        <span class="mi">86400</span><span class="p">,</span>     <span class="c1"># 1 day</span>
-        <span class="mi">172800</span><span class="p">,</span>    <span class="c1"># 2 days</span>
-        <span class="mi">345600</span><span class="p">,</span>    <span class="c1"># 4 days</span>
-        <span class="mi">604800</span><span class="p">,</span>    <span class="c1"># 1 week</span>
-        <span class="mi">1209600</span><span class="p">,</span>   <span class="c1"># 2 weeks</span>
-        <span class="mi">2592000</span><span class="p">,</span>   <span class="c1"># 30 days</span>
-    <span class="p">]</span>
+        <span class="mi">3600</span><span class="p">,</span>  <span class="c1"># 1 hour</span>
+        <span class="mi">21600</span><span class="p">,</span>  <span class="c1"># 6 hours</span>
+        <span class="mi">86400</span><span class="p">,</span>  <span class="c1"># 1 day</span>
+        <span class="mi">172800</span><span class="p">,</span>  <span class="c1"># 2 days</span>
+        <span class="mi">345600</span><span class="p">,</span>  <span class="c1"># 4 days</span>
+        <span class="mi">604800</span><span class="p">,</span>  <span class="c1"># 1 week</span>
+        <span class="mi">1209600</span><span class="p">,</span>  <span class="c1"># 2 weeks</span>
+        <span class="mi">2592000</span><span class="p">,</span>  <span class="c1"># 30 days</span>
+    <span class="p">],</span>
 <span class="p">)</span>
 
 <span class="c1"># Flow Efficiency</span>
 <span class="n">flow_efficiency_percent</span> <span class="o">=</span> <span class="n">Histogram</span><span class="p">(</span>
-    <span class="s1">'flow_efficiency_percent'</span><span class="p">,</span>
-    <span class="s1">'Flow efficiency (active time / total time)'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">],</span>
-    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+    <span class="s2">"flow_efficiency_percent"</span><span class="p">,</span>
+    <span class="s2">"Flow efficiency (active time / total time)"</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">"team"</span><span class="p">],</span>
+    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
 <span class="p">)</span>
 
 <span class="c1"># Flow Load (WIP)</span>
-<span class="n">flow_load_wip_current</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
-    <span class="s1">'flow_load_wip_current'</span><span class="p">,</span>
-    <span class="s1">'Current number of items in progress'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">]</span>
-<span class="p">)</span>
+<span class="n">flow_load_wip_current</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span><span class="s2">"flow_load_wip_current"</span><span class="p">,</span> <span class="s2">"Current number of items in progress"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"team"</span><span class="p">])</span>
 
-<span class="n">flow_load_wip_limit</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
-    <span class="s1">'flow_load_wip_limit'</span><span class="p">,</span>
-    <span class="s1">'WIP limit for team'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">]</span>
-<span class="p">)</span>
+<span class="n">flow_load_wip_limit</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span><span class="s2">"flow_load_wip_limit"</span><span class="p">,</span> <span class="s2">"WIP limit for team"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"team"</span><span class="p">])</span>
 
 <span class="c1"># Stage Metrics</span>
 <span class="n">stage_wait_time_seconds</span> <span class="o">=</span> <span class="n">Histogram</span><span class="p">(</span>
-    <span class="s1">'stage_wait_time_seconds'</span><span class="p">,</span>
-    <span class="s1">'Wait time in each stage'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">,</span> <span class="s1">'stage'</span><span class="p">],</span>
-    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="mi">21600</span><span class="p">,</span> <span class="mi">86400</span><span class="p">,</span> <span class="mi">172800</span><span class="p">,</span> <span class="mi">604800</span><span class="p">]</span>
+    <span class="s2">"stage_wait_time_seconds"</span><span class="p">,</span>
+    <span class="s2">"Wait time in each stage"</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">"team"</span><span class="p">,</span> <span class="s2">"stage"</span><span class="p">],</span>
+    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="mi">21600</span><span class="p">,</span> <span class="mi">86400</span><span class="p">,</span> <span class="mi">172800</span><span class="p">,</span> <span class="mi">604800</span><span class="p">],</span>
 <span class="p">)</span>
 
 <span class="n">stage_active_time_seconds</span> <span class="o">=</span> <span class="n">Histogram</span><span class="p">(</span>
-    <span class="s1">'stage_active_time_seconds'</span><span class="p">,</span>
-    <span class="s1">'Active time in each stage'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">,</span> <span class="s1">'stage'</span><span class="p">],</span>
-    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="mi">21600</span><span class="p">,</span> <span class="mi">86400</span><span class="p">,</span> <span class="mi">172800</span><span class="p">]</span>
+    <span class="s2">"stage_active_time_seconds"</span><span class="p">,</span>
+    <span class="s2">"Active time in each stage"</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">"team"</span><span class="p">,</span> <span class="s2">"stage"</span><span class="p">],</span>
+    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="mi">21600</span><span class="p">,</span> <span class="mi">86400</span><span class="p">,</span> <span class="mi">172800</span><span class="p">],</span>
 <span class="p">)</span>
 
-<span class="n">stage_flow_efficiency_percent</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
-    <span class="s1">'stage_flow_efficiency_percent'</span><span class="p">,</span>
-    <span class="s1">'Flow efficiency per stage'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">,</span> <span class="s1">'stage'</span><span class="p">]</span>
-<span class="p">)</span>
+<span class="n">stage_flow_efficiency_percent</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span><span class="s2">"stage_flow_efficiency_percent"</span><span class="p">,</span> <span class="s2">"Flow efficiency per stage"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"team"</span><span class="p">,</span> <span class="s2">"stage"</span><span class="p">])</span>
 
 <span class="c1"># Event Counters</span>
 <span class="n">webhook_events_received_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
-    <span class="s1">'webhook_events_received_total'</span><span class="p">,</span>
-    <span class="s1">'Total webhook events received'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'source'</span><span class="p">,</span> <span class="s1">'event_type'</span><span class="p">]</span>
+    <span class="s2">"webhook_events_received_total"</span><span class="p">,</span> <span class="s2">"Total webhook events received"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"source"</span><span class="p">,</span> <span class="s2">"event_type"</span><span class="p">]</span>
 <span class="p">)</span>
 
 <span class="n">webhook_events_processed_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
-    <span class="s1">'webhook_events_processed_total'</span><span class="p">,</span>
-    <span class="s1">'Total webhook events successfully processed'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'source'</span><span class="p">,</span> <span class="s1">'event_type'</span><span class="p">]</span>
+    <span class="s2">"webhook_events_processed_total"</span><span class="p">,</span> <span class="s2">"Total webhook events successfully processed"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"source"</span><span class="p">,</span> <span class="s2">"event_type"</span><span class="p">]</span>
 <span class="p">)</span>
 
 <span class="n">webhook_events_failed_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
-    <span class="s1">'webhook_events_failed_total'</span><span class="p">,</span>
-    <span class="s1">'Total webhook events that failed processing'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'source'</span><span class="p">,</span> <span class="s1">'event_type'</span><span class="p">,</span> <span class="s1">'error_type'</span><span class="p">]</span>
+    <span class="s2">"webhook_events_failed_total"</span><span class="p">,</span> <span class="s2">"Total webhook events that failed processing"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"source"</span><span class="p">,</span> <span class="s2">"event_type"</span><span class="p">,</span> <span class="s2">"error_type"</span><span class="p">]</span>
 <span class="p">)</span>
 
 <span class="c1"># Flow Item Lifecycle</span>
-<span class="n">flow_items_created_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
-    <span class="s1">'flow_items_created_total'</span><span class="p">,</span>
-    <span class="s1">'Total flow items created'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">,</span> <span class="s1">'item_type'</span><span class="p">]</span>
-<span class="p">)</span>
+<span class="n">flow_items_created_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="s2">"flow_items_created_total"</span><span class="p">,</span> <span class="s2">"Total flow items created"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"team"</span><span class="p">,</span> <span class="s2">"item_type"</span><span class="p">])</span>
 
-<span class="n">flow_items_completed_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
-    <span class="s1">'flow_items_completed_total'</span><span class="p">,</span>
-    <span class="s1">'Total flow items completed'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">,</span> <span class="s1">'item_type'</span><span class="p">]</span>
-<span class="p">)</span>
+<span class="n">flow_items_completed_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="s2">"flow_items_completed_total"</span><span class="p">,</span> <span class="s2">"Total flow items completed"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"team"</span><span class="p">,</span> <span class="s2">"item_type"</span><span class="p">])</span>
 
-<span class="n">flow_items_cancelled_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
-    <span class="s1">'flow_items_cancelled_total'</span><span class="p">,</span>
-    <span class="s1">'Total flow items cancelled'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">,</span> <span class="s1">'item_type'</span><span class="p">]</span>
-<span class="p">)</span>
+<span class="n">flow_items_cancelled_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="s2">"flow_items_cancelled_total"</span><span class="p">,</span> <span class="s2">"Total flow items cancelled"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"team"</span><span class="p">,</span> <span class="s2">"item_type"</span><span class="p">])</span>
 
 <span class="c1"># Stage Transitions</span>
 <span class="n">stage_transitions_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
-    <span class="s1">'stage_transitions_total'</span><span class="p">,</span>
-    <span class="s1">'Total stage transitions'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">,</span> <span class="s1">'from_stage'</span><span class="p">,</span> <span class="s1">'to_stage'</span><span class="p">]</span>
+    <span class="s2">"stage_transitions_total"</span><span class="p">,</span> <span class="s2">"Total stage transitions"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"team"</span><span class="p">,</span> <span class="s2">"from_stage"</span><span class="p">,</span> <span class="s2">"to_stage"</span><span class="p">]</span>
 <span class="p">)</span>
 
 <span class="c1"># Bottleneck Detection</span>
 <span class="n">bottleneck_detected</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
-    <span class="s1">'bottleneck_detected'</span><span class="p">,</span>
-    <span class="s1">'Binary indicator of bottleneck (1 = yes, 0 = no)'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">,</span> <span class="s1">'stage'</span><span class="p">]</span>
+    <span class="s2">"bottleneck_detected"</span><span class="p">,</span> <span class="s2">"Binary indicator of bottleneck (1 = yes, 0 = no)"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"team"</span><span class="p">,</span> <span class="s2">"stage"</span><span class="p">]</span>
 <span class="p">)</span>
 
-<span class="n">bottleneck_severity</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
-    <span class="s1">'bottleneck_severity'</span><span class="p">,</span>
-    <span class="s1">'Severity of bottleneck (0-100 scale)'</span><span class="p">,</span>
-    <span class="p">[</span><span class="s1">'team'</span><span class="p">,</span> <span class="s1">'stage'</span><span class="p">]</span>
-<span class="p">)</span>
+<span class="n">bottleneck_severity</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span><span class="s2">"bottleneck_severity"</span><span class="p">,</span> <span class="s2">"Severity of bottleneck (0-100 scale)"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"team"</span><span class="p">,</span> <span class="s2">"stage"</span><span class="p">])</span>
 </code></pre></div>
 <h3 id="tertiary-storage-s3-cold-storage">Tertiary Storage: S3 (Cold Storage)</h3>
 <p><strong>Purpose</strong>: Long-term archival and compliance</p>
@@ -6779,20 +6739,22 @@ Deletion Policy:
 <span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.pool</span><span class="w"> </span><span class="kn">import</span> <span class="n">QueuePool</span>
 
 <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span>
-    <span class="s1">'postgresql://flowmetrics:password@postgres:5432/flowmetrics'</span><span class="p">,</span>
+    <span class="s2">"postgresql://flowmetrics:password@postgres:5432/flowmetrics"</span><span class="p">,</span>
     <span class="n">poolclass</span><span class="o">=</span><span class="n">QueuePool</span><span class="p">,</span>
     <span class="n">pool_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
     <span class="n">max_overflow</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
-    <span class="n">pool_pre_ping</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># Verify connections before use</span>
+    <span class="n">pool_pre_ping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Verify connections before use</span>
 <span class="p">)</span>
 
 <span class="c1"># Use prepared statements for repeated queries</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
 
+
 <span class="c1"># Bad: Vulnerable to SQL injection, not prepared</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_team_metrics_bad</span><span class="p">(</span><span class="n">team_id</span><span class="p">):</span>
     <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"SELECT * FROM daily_team_metrics WHERE team_id = '</span><span class="si">{</span><span class="n">team_id</span><span class="si">}</span><span class="s2">'"</span>
     <span class="k">return</span> <span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
 
 <span class="c1"># Good: Parameterized, prepared statement</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_team_metrics_good</span><span class="p">(</span><span class="n">team_id</span><span class="p">):</span>
@@ -6804,25 +6766,30 @@ Deletion Policy:
 <span class="s2">    """</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">{</span><span class="s2">"team_id"</span><span class="p">:</span> <span class="n">team_id</span><span class="p">})</span>
 
+
 <span class="c1"># Best: Use SQLAlchemy ORM with lazy loading</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.orm</span><span class="w"> </span><span class="kn">import</span> <span class="n">sessionmaker</span>
 
 <span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">get_team_metrics_best</span><span class="p">(</span><span class="n">team_id</span><span class="p">):</span>
     <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">DailyTeamMetrics</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">team_id</span><span class="o">=</span><span class="n">team_id</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">DailyTeamMetrics</span><span class="o">.</span><span class="n">metric_date</span><span class="o">.</span><span class="n">desc</span><span class="p">())</span>\
-        <span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>\
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">DailyTeamMetrics</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">team_id</span><span class="o">=</span><span class="n">team_id</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">DailyTeamMetrics</span><span class="o">.</span><span class="n">metric_date</span><span class="o">.</span><span class="n">desc</span><span class="p">())</span>
+        <span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
         <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="p">)</span>
 </code></pre></div>
 <h3 id="5-caching-strategy">5. Caching Strategy</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Redis for hot data caching</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">redis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Redis</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
-<span class="n">redis_client</span> <span class="o">=</span> <span class="n">Redis</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">'redis'</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">6379</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">redis_client</span> <span class="o">=</span> <span class="n">Redis</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"redis"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">6379</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_team_flow_metrics</span><span class="p">(</span><span class="n">team_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">force_refresh</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -6844,10 +6811,11 @@ Deletion Policy:
     <span class="n">redis_client</span><span class="o">.</span><span class="n">setex</span><span class="p">(</span>
         <span class="n">cache_key</span><span class="p">,</span>
         <span class="mi">300</span><span class="p">,</span>  <span class="c1"># 5 minutes</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">metrics</span><span class="p">),</span>
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">metrics</span>
+
 
 <span class="c1"># Cache invalidation on write</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">update_flow_item</span><span class="p">(</span><span class="n">flow_item_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">updates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
@@ -7151,7 +7119,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 </ol>
 <div class="highlight"><pre><span></span><code><span class="c1"># Common error: missing flow item</span>
 <span class="c1"># Fix: Create flow item from webhook data</span>
-<span class="k">if</span> <span class="n">error_message</span> <span class="o">==</span> <span class="s1">'Flow item not found'</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">error_message</span> <span class="o">==</span> <span class="s2">"Flow item not found"</span><span class="p">:</span>
     <span class="n">create_flow_item_from_webhook</span><span class="p">(</span><span class="n">webhook_event</span><span class="p">)</span>
     <span class="n">retry_webhook_processing</span><span class="p">(</span><span class="n">webhook_event</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 </code></pre></div>
@@ -7247,9 +7215,7 @@ aws<span class="w"> </span>rds<span class="w"> </span>modify-db-instance<span cl
 <div class="highlight"><pre><span></span><code><span class="c1"># Automated cleanup job (daily cron)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_old_data</span><span class="p">():</span>
     <span class="c1"># Archive flow items older than 90 days</span>
-    <span class="n">old_items</span> <span class="o">=</span> <span class="n">FlowItem</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-        <span class="n">FlowItem</span><span class="o">.</span><span class="n">completed_at</span> <span class="o">&lt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">old_items</span> <span class="o">=</span> <span class="n">FlowItem</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">FlowItem</span><span class="o">.</span><span class="n">completed_at</span> <span class="o">&lt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">90</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">old_items</span><span class="p">:</span>
         <span class="c1"># Export to S3</span>
@@ -7570,34 +7536,28 @@ python<span class="w"> </span>scripts/validate_runbooks.py
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="c1"># Database URL from environment</span>
-<span class="n">DATABASE_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
-    <span class="s1">'DATABASE_URL'</span><span class="p">,</span>
-    <span class="s1">'postgresql://flowmetrics:password@postgres:5432/flowmetrics'</span>
-<span class="p">)</span>
+<span class="n">DATABASE_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"DATABASE_URL"</span><span class="p">,</span> <span class="s2">"postgresql://flowmetrics:password@postgres:5432/flowmetrics"</span><span class="p">)</span>
 
 <span class="c1"># Connection pool configuration</span>
 <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span>
     <span class="n">DATABASE_URL</span><span class="p">,</span>
     <span class="n">poolclass</span><span class="o">=</span><span class="n">QueuePool</span><span class="p">,</span>
-    <span class="n">pool_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>              <span class="c1"># Base connection pool size</span>
-    <span class="n">max_overflow</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>           <span class="c1"># Additional connections when needed</span>
-    <span class="n">pool_timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>           <span class="c1"># Wait 30s for connection</span>
-    <span class="n">pool_recycle</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>         <span class="c1"># Recycle connections after 1 hour</span>
-    <span class="n">pool_pre_ping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>        <span class="c1"># Verify connections before use</span>
-    <span class="n">echo</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>                <span class="c1"># Don't log SQL (use for debugging only)</span>
-    <span class="n">echo_pool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>           <span class="c1"># Don't log pool events</span>
+    <span class="n">pool_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>  <span class="c1"># Base connection pool size</span>
+    <span class="n">max_overflow</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>  <span class="c1"># Additional connections when needed</span>
+    <span class="n">pool_timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Wait 30s for connection</span>
+    <span class="n">pool_recycle</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>  <span class="c1"># Recycle connections after 1 hour</span>
+    <span class="n">pool_pre_ping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Verify connections before use</span>
+    <span class="n">echo</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Don't log SQL (use for debugging only)</span>
+    <span class="n">echo_pool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Don't log pool events</span>
     <span class="n">connect_args</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">'connect_timeout'</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="s1">'options'</span><span class="p">:</span> <span class="s1">'-c statement_timeout=30000'</span>  <span class="c1"># 30s query timeout</span>
-    <span class="p">}</span>
+        <span class="s2">"connect_timeout"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">"options"</span><span class="p">:</span> <span class="s2">"-c statement_timeout=30000"</span><span class="p">,</span>  <span class="c1"># 30s query timeout</span>
+    <span class="p">},</span>
 <span class="p">)</span>
 
 <span class="c1"># Session factory</span>
-<span class="n">SessionLocal</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span>
-    <span class="n">autocommit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">autoflush</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">bind</span><span class="o">=</span><span class="n">engine</span>
-<span class="p">)</span>
+<span class="n">SessionLocal</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">autocommit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">autoflush</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+
 
 <span class="c1"># Dependency for FastAPI</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_db</span><span class="p">():</span>

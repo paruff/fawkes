@@ -6046,11 +6046,11 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">openfeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">openfeature.contrib.provider.unleash</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnleashProvider</span>
 
-<span class="n">api</span><span class="o">.</span><span class="n">set_provider</span><span class="p">(</span><span class="n">UnleashProvider</span><span class="p">(</span>
-    <span class="n">url</span><span class="o">=</span><span class="s2">"https://unleash.fawkes.idp/api"</span><span class="p">,</span>
-    <span class="n">app_name</span><span class="o">=</span><span class="s2">"python-service"</span><span class="p">,</span>
-    <span class="n">api_token</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"UNLEASH_API_TOKEN"</span><span class="p">)</span>
-<span class="p">))</span>
+<span class="n">api</span><span class="o">.</span><span class="n">set_provider</span><span class="p">(</span>
+    <span class="n">UnleashProvider</span><span class="p">(</span>
+        <span class="n">url</span><span class="o">=</span><span class="s2">"https://unleash.fawkes.idp/api"</span><span class="p">,</span> <span class="n">app_name</span><span class="o">=</span><span class="s2">"python-service"</span><span class="p">,</span> <span class="n">api_token</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"UNLEASH_API_TOKEN"</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">)</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_client</span><span class="p">()</span>
 <span class="n">enabled</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_boolean_value</span><span class="p">(</span><span class="s2">"new-feature"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>

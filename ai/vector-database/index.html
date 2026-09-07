@@ -6794,16 +6794,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"class"</span><span class="p">:</span> <span class="s2">"FawkesDocument"</span><span class="p">,</span>
     <span class="s2">"vectorizer"</span><span class="p">:</span> <span class="s2">"text2vec-transformers"</span><span class="p">,</span>
-    <span class="s2">"properties"</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"title"</span><span class="p">,</span>
-            <span class="s2">"dataType"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"string"</span><span class="p">]</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"content"</span><span class="p">,</span>
-            <span class="s2">"dataType"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"text"</span><span class="p">]</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
+    <span class="s2">"properties"</span><span class="p">:</span> <span class="p">[{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"title"</span><span class="p">,</span> <span class="s2">"dataType"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"string"</span><span class="p">]},</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"content"</span><span class="p">,</span> <span class="s2">"dataType"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"text"</span><span class="p">]}],</span>
 <span class="p">}</span>
 
 <span class="c1"># Create class if doesn't exist</span>
@@ -6817,23 +6808,17 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
     <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Getting Started Guide"</span><span class="p">,</span>
     <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"This guide will help you get started with Fawkes..."</span><span class="p">,</span>
     <span class="s2">"filepath"</span><span class="p">:</span> <span class="s2">"docs/getting-started.md"</span><span class="p">,</span>
-    <span class="s2">"category"</span><span class="p">:</span> <span class="s2">"documentation"</span>
+    <span class="s2">"category"</span><span class="p">:</span> <span class="s2">"documentation"</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">client</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-    <span class="n">data_object</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
-    <span class="n">class_name</span><span class="o">=</span><span class="s2">"FawkesDocument"</span>
-<span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">data_object</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"FawkesDocument"</span><span class="p">)</span>
 
 <span class="c1"># Batch indexing for better performance</span>
 <span class="k">with</span> <span class="n">client</span><span class="o">.</span><span class="n">batch</span> <span class="k">as</span> <span class="n">batch</span><span class="p">:</span>
     <span class="n">batch</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">100</span>
 
     <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">:</span>
-        <span class="n">batch</span><span class="o">.</span><span class="n">add_data_object</span><span class="p">(</span>
-            <span class="n">data_object</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
-            <span class="n">class_name</span><span class="o">=</span><span class="s2">"FawkesDocument"</span>
-        <span class="p">)</span>
+        <span class="n">batch</span><span class="o">.</span><span class="n">add_data_object</span><span class="p">(</span><span class="n">data_object</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">"FawkesDocument"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="indexing-strategies">Indexing Strategies</h3>
 <p><strong>Full Re-index</strong>: Index all documents from scratch (for initial setup)</p>
@@ -6863,11 +6848,8 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <p>Find documents by semantic similarity:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Query by text</span>
 <span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">query</span>
-    <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"FawkesDocument"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"title"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">,</span> <span class="s2">"filepath"</span><span class="p">])</span>
-    <span class="o">.</span><span class="n">with_near_text</span><span class="p">({</span>
-        <span class="s2">"concepts"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"How to deploy applications with ArgoCD"</span><span class="p">]</span>
-    <span class="p">})</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"FawkesDocument"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"title"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">,</span> <span class="s2">"filepath"</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">with_near_text</span><span class="p">({</span><span class="s2">"concepts"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"How to deploy applications with ArgoCD"</span><span class="p">]})</span>
     <span class="o">.</span><span class="n">with_limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
     <span class="o">.</span><span class="n">with_additional</span><span class="p">([</span><span class="s2">"certainty"</span><span class="p">,</span> <span class="s2">"distance"</span><span class="p">])</span>
     <span class="o">.</span><span class="n">do</span><span class="p">()</span>
@@ -6882,11 +6864,10 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <h3 id="hybrid-search">Hybrid Search</h3>
 <p>Combine vector search with keyword search:</p>
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">query</span>
-    <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"FawkesDocument"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"title"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">])</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"FawkesDocument"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"title"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">])</span>
     <span class="o">.</span><span class="n">with_hybrid</span><span class="p">(</span>
         <span class="n">query</span><span class="o">=</span><span class="s2">"ArgoCD deployment"</span><span class="p">,</span>
-        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span>  <span class="c1"># 0=keyword only, 1=vector only, 0.5=balanced</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># 0=keyword only, 1=vector only, 0.5=balanced</span>
     <span class="p">)</span>
     <span class="o">.</span><span class="n">with_limit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
     <span class="o">.</span><span class="n">do</span><span class="p">()</span>
@@ -6895,14 +6876,9 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <h3 id="filtered-search">Filtered Search</h3>
 <p>Add filters to narrow results:</p>
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">query</span>
-    <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"FawkesDocument"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"title"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">])</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"FawkesDocument"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"title"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">])</span>
     <span class="o">.</span><span class="n">with_near_text</span><span class="p">({</span><span class="s2">"concepts"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"security scanning"</span><span class="p">]})</span>
-    <span class="o">.</span><span class="n">with_where</span><span class="p">({</span>
-        <span class="s2">"path"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"category"</span><span class="p">],</span>
-        <span class="s2">"operator"</span><span class="p">:</span> <span class="s2">"Equal"</span><span class="p">,</span>
-        <span class="s2">"valueString"</span><span class="p">:</span> <span class="s2">"documentation"</span>
-    <span class="p">})</span>
+    <span class="o">.</span><span class="n">with_where</span><span class="p">({</span><span class="s2">"path"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"category"</span><span class="p">],</span> <span class="s2">"operator"</span><span class="p">:</span> <span class="s2">"Equal"</span><span class="p">,</span> <span class="s2">"valueString"</span><span class="p">:</span> <span class="s2">"documentation"</span><span class="p">})</span>
     <span class="o">.</span><span class="n">with_limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
     <span class="o">.</span><span class="n">do</span><span class="p">()</span>
 <span class="p">)</span>
@@ -6934,8 +6910,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 
     <span class="c1"># 1. Retrieve relevant context from Weaviate</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">query</span>
-        <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"FawkesDocument"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"title"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">])</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"FawkesDocument"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"title"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">])</span>
         <span class="o">.</span><span class="n">with_near_text</span><span class="p">({</span><span class="s2">"concepts"</span><span class="p">:</span> <span class="p">[</span><span class="n">question</span><span class="p">]})</span>
         <span class="o">.</span><span class="n">with_limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
         <span class="o">.</span><span class="n">with_additional</span><span class="p">([</span><span class="s2">"certainty"</span><span class="p">])</span>
@@ -6945,16 +6920,10 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
     <span class="n">docs</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">"data"</span><span class="p">][</span><span class="s2">"Get"</span><span class="p">][</span><span class="s2">"FawkesDocument"</span><span class="p">]</span>
 
     <span class="c1"># 2. Filter by relevance threshold</span>
-    <span class="n">relevant_docs</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">doc</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span>
-        <span class="k">if</span> <span class="n">doc</span><span class="p">[</span><span class="s2">"_additional"</span><span class="p">][</span><span class="s2">"certainty"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.7</span>
-    <span class="p">]</span>
+    <span class="n">relevant_docs</span> <span class="o">=</span> <span class="p">[</span><span class="n">doc</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span> <span class="k">if</span> <span class="n">doc</span><span class="p">[</span><span class="s2">"_additional"</span><span class="p">][</span><span class="s2">"certainty"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.7</span><span class="p">]</span>
 
     <span class="c1"># 3. Construct context</span>
-    <span class="n">context</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-        <span class="sa">f</span><span class="s2">"# </span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">'content'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
-        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">relevant_docs</span>
-    <span class="p">])</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">"# </span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">'content'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">relevant_docs</span><span class="p">])</span>
 
     <span class="c1"># 4. Create prompt with context</span>
     <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"""Based on the following context from Fawkes documentation,</span>
@@ -6979,20 +6948,21 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
     <span class="s2">"class"</span><span class="p">:</span> <span class="s2">"FawkesDocument"</span><span class="p">,</span>
     <span class="s2">"vectorIndexConfig"</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">"efConstruction"</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>  <span class="c1"># Higher = better accuracy, slower build</span>
-        <span class="s2">"maxConnections"</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>   <span class="c1"># Higher = better accuracy, more memory</span>
-        <span class="s2">"ef"</span><span class="p">:</span> <span class="mi">64</span>                <span class="c1"># Higher = better accuracy, slower query</span>
-    <span class="p">}</span>
+        <span class="s2">"maxConnections"</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>  <span class="c1"># Higher = better accuracy, more memory</span>
+        <span class="s2">"ef"</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>  <span class="c1"># Higher = better accuracy, slower query</span>
+    <span class="p">},</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Batch Size</strong>: Optimize batch operations</p>
 <div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">client</span><span class="o">.</span><span class="n">batch</span> <span class="k">as</span> <span class="n">batch</span><span class="p">:</span>
-    <span class="n">batch</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">100</span>      <span class="c1"># Tune based on document size</span>
-    <span class="n">batch</span><span class="o">.</span><span class="n">num_workers</span> <span class="o">=</span> <span class="mi">4</span>       <span class="c1"># Parallel processing</span>
+    <span class="n">batch</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># Tune based on document size</span>
+    <span class="n">batch</span><span class="o">.</span><span class="n">num_workers</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># Parallel processing</span>
     <span class="n">batch</span><span class="o">.</span><span class="n">connection_error_retries</span> <span class="o">=</span> <span class="mi">3</span>
 </code></pre></div>
 <h3 id="indexing-performance">Indexing Performance</h3>
 <p><strong>Parallel Indexing</strong>: Use multiple workers</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">index_documents_parallel</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
     <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
@@ -7090,13 +7060,7 @@ kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class
 </ol>
 <p><strong>Solution</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Try hybrid search instead</span>
-<span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">query</span>
-    <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"FawkesDocument"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"title"</span><span class="p">])</span>
-    <span class="o">.</span><span class="n">with_hybrid</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="s2">"your query"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">with_limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">do</span><span class="p">()</span>
-<span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"FawkesDocument"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"title"</span><span class="p">])</span><span class="o">.</span><span class="n">with_hybrid</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="s2">"your query"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">with_limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">do</span><span class="p">()</span>
 
 <span class="c1"># Verify vectorizer is working</span>
 <span class="n">modules</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_meta</span><span class="p">()[</span><span class="s2">"modules"</span><span class="p">]</span>
@@ -7124,19 +7088,14 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pod<span class="w"> </
         <span class="s2">"vectorIndexConfig"</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">"ef"</span><span class="p">:</span> <span class="mi">128</span>  <span class="c1"># Increase from default 64</span>
         <span class="p">}</span>
-    <span class="p">}</span>
+    <span class="p">},</span>
 <span class="p">)</span>
 
 <span class="c1"># Use filters to reduce search space</span>
 <span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">query</span>
-    <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"FawkesDocument"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"title"</span><span class="p">])</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"FawkesDocument"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"title"</span><span class="p">])</span>
     <span class="o">.</span><span class="n">with_near_text</span><span class="p">({</span><span class="s2">"concepts"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"query"</span><span class="p">]})</span>
-    <span class="o">.</span><span class="n">with_where</span><span class="p">({</span>
-        <span class="s2">"path"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"category"</span><span class="p">],</span>
-        <span class="s2">"operator"</span><span class="p">:</span> <span class="s2">"Equal"</span><span class="p">,</span>
-        <span class="s2">"valueString"</span><span class="p">:</span> <span class="s2">"documentation"</span>
-    <span class="p">})</span>
+    <span class="o">.</span><span class="n">with_where</span><span class="p">({</span><span class="s2">"path"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"category"</span><span class="p">],</span> <span class="s2">"operator"</span><span class="p">:</span> <span class="s2">"Equal"</span><span class="p">,</span> <span class="s2">"valueString"</span><span class="p">:</span> <span class="s2">"documentation"</span><span class="p">})</span>
     <span class="o">.</span><span class="n">with_limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
     <span class="o">.</span><span class="n">do</span><span class="p">()</span>
 <span class="p">)</span>

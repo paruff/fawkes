@@ -5737,30 +5737,19 @@
 
     <span class="k">for</span> <span class="n">penpot_comp</span> <span class="ow">in</span> <span class="n">penpot_components</span><span class="p">:</span>
         <span class="c1"># Try exact name match</span>
-        <span class="n">ds_comp</span> <span class="o">=</span> <span class="n">find_by_name</span><span class="p">(</span><span class="n">design_system_components</span><span class="p">,</span> <span class="n">penpot_comp</span><span class="p">[</span><span class="s1">'name'</span><span class="p">])</span>
+        <span class="n">ds_comp</span> <span class="o">=</span> <span class="n">find_by_name</span><span class="p">(</span><span class="n">design_system_components</span><span class="p">,</span> <span class="n">penpot_comp</span><span class="p">[</span><span class="s2">"name"</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="n">ds_comp</span><span class="p">:</span>
-            <span class="n">mappings</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                <span class="s1">'penpot'</span><span class="p">:</span> <span class="n">penpot_comp</span><span class="p">,</span>
-                <span class="s1">'designSystem'</span><span class="p">:</span> <span class="n">ds_comp</span><span class="p">,</span>
-                <span class="s1">'status'</span><span class="p">:</span> <span class="s1">'mapped'</span>
-            <span class="p">})</span>
+            <span class="n">mappings</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"penpot"</span><span class="p">:</span> <span class="n">penpot_comp</span><span class="p">,</span> <span class="s2">"designSystem"</span><span class="p">:</span> <span class="n">ds_comp</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"mapped"</span><span class="p">})</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Try fuzzy match</span>
-            <span class="n">ds_comp</span> <span class="o">=</span> <span class="n">fuzzy_match</span><span class="p">(</span><span class="n">design_system_components</span><span class="p">,</span> <span class="n">penpot_comp</span><span class="p">[</span><span class="s1">'name'</span><span class="p">])</span>
+            <span class="n">ds_comp</span> <span class="o">=</span> <span class="n">fuzzy_match</span><span class="p">(</span><span class="n">design_system_components</span><span class="p">,</span> <span class="n">penpot_comp</span><span class="p">[</span><span class="s2">"name"</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">ds_comp</span><span class="p">:</span>
-                <span class="n">mappings</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                    <span class="s1">'penpot'</span><span class="p">:</span> <span class="n">penpot_comp</span><span class="p">,</span>
-                    <span class="s1">'designSystem'</span><span class="p">:</span> <span class="n">ds_comp</span><span class="p">,</span>
-                    <span class="s1">'status'</span><span class="p">:</span> <span class="s1">'fuzzy-mapped'</span><span class="p">,</span>
-                    <span class="s1">'confidence'</span><span class="p">:</span> <span class="mf">0.85</span>
-                <span class="p">})</span>
+                <span class="n">mappings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span><span class="s2">"penpot"</span><span class="p">:</span> <span class="n">penpot_comp</span><span class="p">,</span> <span class="s2">"designSystem"</span><span class="p">:</span> <span class="n">ds_comp</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"fuzzy-mapped"</span><span class="p">,</span> <span class="s2">"confidence"</span><span class="p">:</span> <span class="mf">0.85</span><span class="p">}</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">mappings</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                    <span class="s1">'penpot'</span><span class="p">:</span> <span class="n">penpot_comp</span><span class="p">,</span>
-                    <span class="s1">'designSystem'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                    <span class="s1">'status'</span><span class="p">:</span> <span class="s1">'unmapped'</span>
-                <span class="p">})</span>
+                <span class="n">mappings</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"penpot"</span><span class="p">:</span> <span class="n">penpot_comp</span><span class="p">,</span> <span class="s2">"designSystem"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"unmapped"</span><span class="p">})</span>
 
     <span class="k">return</span> <span class="n">mappings</span>
 </code></pre></div>
@@ -5809,6 +5798,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_design_tokens</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">design_system_component</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Validate that design tokens are used consistently."""</span>
     <span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
@@ -5827,6 +5817,7 @@
 
     <span class="k">return</span> <span class="n">issues</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_accessibility</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Validate accessibility requirements."""</span>
     <span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
@@ -5837,18 +5828,19 @@
 
     <span class="c1"># Check touch targets</span>
     <span class="n">size</span> <span class="o">=</span> <span class="n">get_component_size</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">size</span><span class="p">[</span><span class="s1">'width'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">44</span> <span class="ow">or</span> <span class="n">size</span><span class="p">[</span><span class="s1">'height'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">44</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">size</span><span class="p">[</span><span class="s2">"width"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">44</span> <span class="ow">or</span> <span class="n">size</span><span class="p">[</span><span class="s2">"height"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">44</span><span class="p">:</span>
         <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Touch target too small: </span><span class="si">{</span><span class="n">size</span><span class="p">[</span><span class="s1">'width'</span><span class="p">]</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">size</span><span class="p">[</span><span class="s1">'height'</span><span class="p">]</span><span class="si">}</span><span class="s2">px (min 44x44px)"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">issues</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_component</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">design_system_component</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Run all validations on a component."""</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s1">'component'</span><span class="p">:</span> <span class="n">penpot_component</span><span class="p">[</span><span class="s1">'name'</span><span class="p">],</span>
-        <span class="s1">'token_issues'</span><span class="p">:</span> <span class="n">validate_design_tokens</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">,</span> <span class="n">design_system_component</span><span class="p">),</span>
-        <span class="s1">'accessibility_issues'</span><span class="p">:</span> <span class="n">validate_accessibility</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">),</span>
-        <span class="s1">'mapping_confidence'</span><span class="p">:</span> <span class="n">calculate_mapping_confidence</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">,</span> <span class="n">design_system_component</span><span class="p">)</span>
+        <span class="s2">"component"</span><span class="p">:</span> <span class="n">penpot_component</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+        <span class="s2">"token_issues"</span><span class="p">:</span> <span class="n">validate_design_tokens</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">,</span> <span class="n">design_system_component</span><span class="p">),</span>
+        <span class="s2">"accessibility_issues"</span><span class="p">:</span> <span class="n">validate_accessibility</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">),</span>
+        <span class="s2">"mapping_confidence"</span><span class="p">:</span> <span class="n">calculate_mapping_confidence</span><span class="p">(</span><span class="n">penpot_component</span><span class="p">,</span> <span class="n">design_system_component</span><span class="p">),</span>
     <span class="p">}</span>
 </code></pre></div>
 <h3 id="4-sync-phase">4. Sync Phase</h3>
