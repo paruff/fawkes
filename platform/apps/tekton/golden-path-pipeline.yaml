@@ -96,11 +96,18 @@ spec:
     - name: sonar-host-url
       type: string
       description: >-
-        In-cluster SonarQube URL. Service name confirmed live this session
-        as sonarqube-sonarqube (Helm's fullname helper collapses release
-        name into chart name when they match, but this chart apparently
-        doesn't) - override if that changes.
-      default: http://sonarqube-sonarqube.fawkes.svc.cluster.local:9000
+        SonarCloud (not self-hosted SonarQube) - switched to eliminate the
+        cloudnativepg-operator/postgresql dependency chain the self-hosted
+        chart needed for its database, which never came up in time on a
+        resource-constrained local kind cluster. Self-hosted SonarQube
+        remains available for other environments (sonarqube-application.yaml
+        is untouched) - this only changes the golden-path pipeline's own
+        default target.
+      default: https://sonarcloud.io
+    - name: sonar-organization
+      type: string
+      description: SonarCloud organization key (required by SonarCloud, not by self-hosted SonarQube).
+      default: paruff
   workspaces:
     - name: source
       description: Shared workspace holding the cloned source between tasks
@@ -210,11 +217,15 @@ spec:
       params:
         - name: sonar-host-url
           value: $(params.sonar-host-url)
+        - name: sonar-organization
+          value: $(params.sonar-organization)
         - name: sonar-project-key
           value: $(params.repo-url)
       taskSpec:
         params:
           - name: sonar-host-url
+            type: string
+          - name: sonar-organization
             type: string
           - name: sonar-project-key
             type: string
@@ -236,6 +247,7 @@ spec:
               PROJECT_KEY=$(basename "$(params.sonar-project-key)" .git)
               sonar-scanner \
                 -Dsonar.host.url="$(params.sonar-host-url)" \
+                -Dsonar.organization="$(params.sonar-organization)" \
                 -Dsonar.token="${SONAR_TOKEN}" \
                 -Dsonar.projectKey="${PROJECT_KEY}" \
                 -Dsonar.sources=app \
