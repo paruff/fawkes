@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.77](https://github.com/paruff/fawkes/compare/v0.3.76...v0.3.77) (2026-09-07)
+
+
+### Fixed
+
+* **tekton:** don't block golden-path pipeline on unfixable CVEs ([#1907](https://github.com/paruff/fawkes/issues/1907)) ([7e23624](https://github.com/paruff/fawkes/commit/7e236240551055188e72213a1129f3796d1d2d16))
+
 ## [0.3.76](https://github.com/paruff/fawkes/compare/v0.3.75...v0.3.76) (2026-09-07)
 
 
