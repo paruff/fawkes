@@ -308,8 +308,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
             recipient = result.scalar_one_or_none()
 
             if not recipient:
-                return HTMLResponse(
-                    content="""
+                return HTMLResponse(content="""
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -326,12 +325,10 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <p>This survey link is not valid.</p>
                     </body>
                     </html>
-                """
-                )
+                """)
 
             if recipient.responded_at:
-                return HTMLResponse(
-                    content="""
+                return HTMLResponse(content="""
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -348,8 +345,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <p>You have already completed this survey.</p>
                     </body>
                     </html>
-                """
-                )
+                """)
 
             # Get campaign type
             result = await session.execute(select(SurveyCampaign).where(SurveyCampaign.id == recipient.campaign_id))
@@ -372,8 +368,7 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
     # HTML-escaping alone wouldn't stop a value containing a `'` or
     # `</script>` from breaking out of that context.
     token_url = quote(token, safe="")
-    return HTMLResponse(
-        content=f"""
+    return HTMLResponse(content=f"""
         <!DOCTYPE html>
         <html>
         <head>
@@ -600,15 +595,13 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
             </script>
         </body>
         </html>
-    """
-    )
+    """)
 
 
 def _render_deep_dive_survey(token: str) -> HTMLResponse:
     """Render deep-dive survey HTML (placeholder)"""
     token_html = html.escape(token)
-    return HTMLResponse(
-        content=f"""
+    return HTMLResponse(content=f"""
         <!DOCTYPE html>
         <html>
         <head>
@@ -624,8 +617,7 @@ def _render_deep_dive_survey(token: str) -> HTMLResponse:
             <p>Token: {token_html}</p>
         </body>
         </html>
-    """
-    )
+    """)
 
 
 @app.post("/api/v1/survey/{token}/submit", response_model=SurveySubmissionResponse, tags=["Survey"])
@@ -684,8 +676,7 @@ async def submit_survey(token: str = Path(..., description="Survey token"), resp
 @app.get("/survey/{token}/thanks", response_class=HTMLResponse, tags=["Survey"])
 async def thank_you_page(token: str = Path(..., description="Survey token")):
     """Thank you page after survey submission"""
-    return HTMLResponse(
-        content="""
+    return HTMLResponse(content="""
         <!DOCTYPE html>
         <html>
         <head>
@@ -731,8 +722,7 @@ async def thank_you_page(token: str = Path(..., description="Survey token")):
             </div>
         </body>
         </html>
-    """
-    )
+    """)
 
 
 @app.get("/nasa-tlx", response_class=HTMLResponse, tags=["NASA-TLX"])
@@ -743,8 +733,7 @@ async def get_nasa_tlx_page():
     (see script below) rather than interpolated server-side, so untrusted
     request data never flows into the rendered HTML.
     """
-    return HTMLResponse(
-        content="""
+    return HTMLResponse(content="""
         <!DOCTYPE html>
         <html>
         <head>
@@ -1129,8 +1118,7 @@ async def get_nasa_tlx_page():
             </script>
         </body>
         </html>
-    """
-    )
+    """)
 
 
 @app.get("/api/v1/analytics/pulse/weekly", response_model=list[PulseAnalytics], tags=["Analytics"])
