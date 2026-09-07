@@ -5513,10 +5513,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#opensearch-exporter" class="md-nav__link">
+  <a href="#loki-exporter-otlphttp" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OpenSearch Exporter
+        Loki Exporter (OTLP/HTTP)
       
     </span>
   </a>
@@ -5529,10 +5529,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#opensearch-index-templates" class="md-nav__link">
+  <a href="#loki-deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OpenSearch Index Templates
+        Loki Deployment
       
     </span>
   </a>
@@ -5557,10 +5557,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#searching-logs-in-opensearch" class="md-nav__link">
+  <a href="#searching-logs-in-loki" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Searching Logs in OpenSearch
+        Searching Logs in Loki
       
     </span>
   </a>
@@ -5668,10 +5668,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#logs-not-appearing-in-opensearch" class="md-nav__link">
+  <a href="#logs-not-appearing-in-loki" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Logs Not Appearing in OpenSearch
+        Logs Not Appearing in Loki
       
     </span>
   </a>
@@ -5736,7 +5736,7 @@
 <h1 id="centralized-log-management-with-opentelemetry">Centralized Log Management with OpenTelemetry</h1>
 <h2 id="overview">Overview</h2>
 <p>Fawkes implements centralized, structured logging for all Kubernetes workloads using OpenTelemetry Collector and OTLP. This enables reliable correlation of log events with traces and metrics, accelerating Mean Time to Resolution (MTTR) for application and platform incidents.</p>
-<p><strong>Reference</strong>: See <a href="../../adr/ADR-011%20Centralized%20Log%20Management/">ADR-011 Centralized Log Management</a> for architectural decisions.</p>
+<p><strong>Reference</strong>: See <a href="../../adr/ADR-035%20Log%20Storage%20Migration%20from%20OpenSearch%20to%20Loki/">ADR-035 Log Storage Migration from OpenSearch to Loki</a> for the current architecture, and <a href="../../adr/ADR-011%20Centralized%20Log%20Management/">ADR-011 Centralized Log Management</a> (superseded) for the original decision.</p>
 <h2 id="architecture">Architecture</h2>
 <div class="highlight"><pre><span></span><code>┌────────────────────────────────────────────────────────────────┐
 │  Kubernetes Cluster                                            │
@@ -5758,7 +5758,7 @@
 │  │ OpenTelemetry Collector DaemonSet                   │      │
 │  │ - filelog receiver: Tail container logs             │      │
 │  │ - k8sattributes: Add Kubernetes metadata            │      │
-│  │ - otlphttp exporter: Send to OpenSearch             │      │
+│  │ - otlphttp/loki exporter: Send to Loki              │      │
 │  │ - memory_limiter: Buffer during outages             │      │
 │  └───────────────────┬─────────────────────────────────┘      │
 │                      │ OTLP/HTTP                                │
@@ -5766,9 +5766,9 @@
                        │
                        ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│  OpenSearch Cluster                                              │
-│  - Centralized log storage and search                           │
-│  - OpenSearch Dashboards for visualization                      │
+│  Loki                                                             │
+│  - Centralized log storage (single-binary MVP deployment)        │
+│  - Queried via Grafana Explore (LogQL)                            │
 └──────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="key-features">Key Features</h2>
@@ -5819,6 +5819,11 @@
 </tr>
 </tbody>
 </table>
+<p>Loki's OTLP ingestion endpoint automatically promotes a curated subset of
+these resource attributes to indexed stream labels (<code>k8s.namespace.name</code>,
+<code>k8s.pod.name</code>, <code>k8s.container.name</code>, <code>k8s.deployment.name</code> among them,
+sanitized to <code>k8s_namespace_name</code> etc. for LogQL); everything else stays as
+unindexed structured metadata, searchable but not part of the label index.</p>
 <h3 id="3-trace-correlation">3. Trace Correlation</h3>
 <p>Logs are automatically correlated with traces when applications use OpenTelemetry instrumentation:</p>
 <ul>
@@ -5859,39 +5864,38 @@
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s.deployment.name</span>
 <span class="w">      </span><span class="c1"># ... more attributes</span>
 </code></pre></div>
-<h4 id="opensearch-exporter">OpenSearch Exporter</h4>
-<div class="highlight"><pre><span></span><code><span class="nt">opensearch</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">http</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="s">"http://opensearch-cluster-master.logging.svc.cluster.local:9200"</span>
-<span class="w">  </span><span class="nt">logs_index</span><span class="p">:</span><span class="w"> </span><span class="s">"otel-logs"</span>
-<span class="w">  </span><span class="nt">retry</span><span class="p">:</span>
+<h4 id="loki-exporter-otlphttp">Loki Exporter (OTLP/HTTP)</h4>
+<div class="highlight"><pre><span></span><code><span class="nt">otlphttp/loki</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">logs_endpoint</span><span class="p">:</span><span class="w"> </span><span class="s">"http://loki.logging.svc.cluster.local:3100/otlp/v1/logs"</span>
+<span class="w">  </span><span class="nt">retry_on_failure</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">max_elapsed_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300s</span>
 <span class="w">  </span><span class="nt">sending_queue</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">queue_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
 </code></pre></div>
-<h3 id="opensearch-index-templates">OpenSearch Index Templates</h3>
-<p>Index templates are defined in:</p>
-<div class="highlight"><pre><span></span><code>platform/apps/opensearch/index-template.yaml
+<p>This uses Loki's native OTLP endpoint rather than the community
+<code>lokiexporter</code> component - Grafana's recommended path, since Loki applies
+its own resource-attribute-to-label mapping automatically.</p>
+<h3 id="loki-deployment">Loki Deployment</h3>
+<p>Loki's chart values (schema, retention, storage) are defined in:</p>
+<div class="highlight"><pre><span></span><code>platform/apps/loki/loki-application.yaml
 </code></pre></div>
-<p>Templates ensure proper mapping for:</p>
-<ul>
-<li>OTLP log format (<code>otel-logs-*</code>)</li>
-<li>Application logs (<code>application-logs-*</code>)</li>
-<li>Kubernetes logs (<code>kubernetes-logs-*</code>)</li>
-</ul>
+<p>Single-binary MVP deployment: <code>deploymentMode: SingleBinary</code>, filesystem
+chunk storage, <code>retention_period: 720h</code> (30 days). No index-template or
+ILM-policy configuration is needed - Loki derives its index directly from
+stream labels and the schema config in the chart values.</p>
 <h2 id="usage">Usage</h2>
-<h3 id="searching-logs-in-opensearch">Searching Logs in OpenSearch</h3>
-<p>Access OpenSearch Dashboards and use these query patterns:</p>
+<h3 id="searching-logs-in-loki">Searching Logs in Loki</h3>
+<p>Access Grafana Explore, select the <strong>Loki</strong> data source, and use LogQL:</p>
 <p><strong>Find logs from a specific namespace:</strong></p>
-<div class="highlight"><pre><span></span><code>resource.attributes.k8s.namespace.name: "my-namespace"
+<div class="highlight"><pre><span></span><code>{k8s_namespace_name="my-namespace"}
 </code></pre></div>
 <p><strong>Find logs with a specific trace ID:</strong></p>
-<div class="highlight"><pre><span></span><code>traceId: "&lt;your-32-character-trace-id&gt;"
+<div class="highlight"><pre><span></span><code>{k8s_namespace_name="my-namespace"} | trace_id="&lt;your-32-character-trace-id&gt;"
 </code></pre></div>
 <p><strong>Find error logs from a deployment:</strong></p>
-<div class="highlight"><pre><span></span><code>resource.attributes.k8s.deployment.name: "my-app" AND severityText: "ERROR"
+<div class="highlight"><pre><span></span><code>{k8s_deployment_name="my-app"} | severity_text="ERROR"
 </code></pre></div>
 <h3 id="structured-logging-best-practices">Structured Logging Best Practices</h3>
 <p>For optimal trace correlation, applications should emit structured JSON logs:</p>
@@ -5975,7 +5979,7 @@ curl<span class="w"> </span>http://localhost:13133/
 <li><code>otelcol_exporter_queue_size</code>: Current queue size</li>
 </ul>
 <h2 id="troubleshooting">Troubleshooting</h2>
-<h3 id="logs-not-appearing-in-opensearch">Logs Not Appearing in OpenSearch</h3>
+<h3 id="logs-not-appearing-in-loki">Logs Not Appearing in Loki</h3>
 <ol>
 <li><strong>Check collector pods are running:</strong></li>
 </ol>
@@ -5987,9 +5991,9 @@ curl<span class="w"> </span>http://localhost:13133/
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>opentelemetry-collector<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
 </code></pre></div>
 <ol>
-<li><strong>Verify OpenSearch connectivity:</strong></li>
+<li><strong>Verify Loki connectivity:</strong></li>
 </ol>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>-it<span class="w"> </span>&lt;collector-pod&gt;<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>http://opensearch-cluster-master.logging.svc.cluster.local:9200/_cluster/health
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>monitoring<span class="w"> </span>-it<span class="w"> </span>&lt;collector-pod&gt;<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>http://loki.logging.svc.cluster.local:3100/ready
 </code></pre></div>
 <h3 id="missing-kubernetes-attributes">Missing Kubernetes Attributes</h3>
 <p>Ensure the collector service account has proper RBAC permissions to read pod metadata.</p>
@@ -5998,7 +6002,8 @@ curl<span class="w"> </span>http://localhost:13133/
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>
 <li><a href="../architecture.md">Architecture Overview</a></li>
-<li><a href="../../adr/ADR-011%20Centralized%20Log%20Management/">ADR-011 Centralized Log Management</a></li>
+<li><a href="../../adr/ADR-035%20Log%20Storage%20Migration%20from%20OpenSearch%20to%20Loki/">ADR-035 Log Storage Migration from OpenSearch to Loki</a></li>
+<li><a href="../../adr/ADR-011%20Centralized%20Log%20Management/">ADR-011 Centralized Log Management</a> (superseded)</li>
 <li><a href="https://github.com/paruff/uFawkesDojo/blob/main/modules/brown-belt/module-13-observability.md">Module 13: Observability</a></li>
 </ul>
 

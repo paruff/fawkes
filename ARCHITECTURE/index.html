@@ -6020,7 +6020,7 @@ scanning, log aggregation, DORA metrics, and enterprise collaboration.</p>
 │  ┌──────────────────────────────────────────────────────────┐  │
 │  │  Extended Observability                                   │  │
 │  │  ┌────────────┐  ┌──────────────┐  ┌─────────────────┐   │  │
-│  │  │ OpenSearch │  │ Grafana Tempo│  │ OTel Collector  │   │  │
+│  │  │ Loki       │  │ Grafana Tempo│  │ OTel Collector  │   │  │
 │  │  │ (logs)     │  │ (traces)     │  │ (fan-out)       │   │  │
 │  │  └────────────┘  └──────────────┘  └─────────────────┘   │  │
 │  └──────────────────────────────────────────────────────────┘  │
@@ -6096,7 +6096,7 @@ scanning, log aggregation, DORA metrics, and enterprise collaboration.</p>
 <td>✅</td>
 </tr>
 <tr>
-<td>OpenSearch (logs)</td>
+<td>Loki (logs)</td>
 <td>—</td>
 <td>✅</td>
 </tr>
@@ -6332,14 +6332,13 @@ catalog) are optional extensions. See <a href="../extensions/README.md"><code>ex
     Backstage --&gt;|plugin data| Jenkins
     Backstage --&gt;|metrics display| DevLake
 
-    Services --&gt;|OTLP metrics + traces| OTel[OpenTelemetry Collector]
-    Services --&gt;|logs| FluentBitFwd[Fluent Bit]
+    Services --&gt;|OTLP metrics + traces + logs| OTel[OpenTelemetry Collector]
     OTel --&gt;|metrics| Prometheus[Prometheus]
     OTel --&gt;|traces| Tempo[Grafana Tempo]
-    FluentBitFwd --&gt; OpenSearch[OpenSearch]
+    OTel --&gt;|logs| Loki[Loki]
 
     Prometheus --&gt;|data source| Grafana[Grafana]
-    OpenSearch --&gt;|data source| Grafana
+    Loki --&gt;|data source| Grafana
     Tempo --&gt;|data source| Grafana
 
     DevLake --&gt;|DORA dashboards| Grafana
@@ -6348,7 +6347,7 @@ catalog) are optional extensions. See <a href="../extensions/README.md"><code>ex
         Prometheus
         Grafana
         Tempo
-        OpenSearch
+        Loki
         OTel[OpenTelemetry Collector]
     end
 
@@ -6468,12 +6467,11 @@ catalog) are optional extensions. See <a href="../extensions/README.md"><code>ex
     Apps[Platform Services] --&gt;|OTLP| OTel[OpenTelemetry Collector]
     OTel --&gt;|metrics| Prom[Prometheus]
     OTel --&gt;|traces| Tempo[Grafana Tempo]
-    OTel --&gt;|logs| FluentBit[Fluent Bit]
-    FluentBit --&gt; OpenSearch[OpenSearch]
+    OTel --&gt;|logs| Loki[Loki]
 
     Prom --&gt; Grafana[Grafana]
     Tempo --&gt; Grafana
-    OpenSearch --&gt; Grafana
+    Loki --&gt; Grafana
 
     Grafana --&gt;|DORA dashboards| DevLake[DevLake]
     Grafana --&gt;|alerts| Alertmanager[Alertmanager]
@@ -6496,9 +6494,9 @@ catalog) are optional extensions. See <a href="../extensions/README.md"><code>ex
 </tr>
 <tr>
 <td>Logs</td>
-<td>Fluent Bit</td>
-<td>OpenSearch</td>
-<td>Grafana / Lucene</td>
+<td>OpenTelemetry Collector</td>
+<td>Loki</td>
+<td>Grafana / LogQL</td>
 </tr>
 <tr>
 <td>Traces</td>
@@ -6532,7 +6530,7 @@ catalog) are optional extensions. See <a href="../extensions/README.md"><code>ex
     NS_Argocd --&gt;|manages| NS_CICD
 
     NS_Platform --&gt;|Backstage, Backstage DB| PlatComp[Portal Components]
-    NS_Obs --&gt;|Prometheus, Grafana, Tempo, OpenSearch| ObsComp[Observability Components]
+    NS_Obs --&gt;|Prometheus, Grafana, Tempo, Loki| ObsComp[Observability Components]
     NS_CICD --&gt;|Jenkins, DevLake| CICDComp[CI/CD Components]
     NS_Security --&gt;|Vault, SonarQube, Trivy| SecComp[Security Components]
     NS_Apps --&gt;|team workloads| AppComp[Application Services]</code></pre>
@@ -6557,7 +6555,7 @@ catalog) are optional extensions. See <a href="../extensions/README.md"><code>ex
 </tr>
 <tr>
 <td><code>fawkes-observability</code></td>
-<td>Prometheus, Grafana, Tempo, OpenSearch, OTel Collector</td>
+<td>Prometheus, Grafana, Tempo, Loki, OTel Collector</td>
 <td>Internal + Grafana external</td>
 </tr>
 <tr>
@@ -6585,7 +6583,7 @@ require explicit policy approval.</p>
 <h3 id="fawkes-obstackd-observability-platform">Fawkes ↔ Obstackd (Observability Platform)</h3>
 <p>Fawkes services instrument themselves using the OpenTelemetry SDK and export to the
 in-cluster OpenTelemetry Collector. The collector fans out to Prometheus (metrics),
-Tempo (traces), and Fluent Bit → OpenSearch (logs). Grafana provides the unified
+Tempo (traces), and Loki (logs). Grafana provides the unified
 query and dashboard layer.</p>
 <p><strong>Dependency direction:</strong> <code>services/</code> → OTel Collector → Obstackd storage backends.
 Obstackd does not call back into Fawkes services.</p>
