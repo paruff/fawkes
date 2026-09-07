@@ -1,0 +1,79 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/tracer-bullet/tracer-bullet-prod-applicationset.yaml
+# PURPOSE: #1806 - Phase 3 (Production/Elite) promotion target scaffolding.
+#          #1806's scope (service-mesh traffic splitting, Backstage
+#          portal-gated manual approval, error-budget-triggered automated
+#          rollback) is not built yet.
+#
+# `automated` is deliberately OMITTED, same reasoning as the beta
+# ApplicationSet but stronger: #1806 explicitly requires a *human-approved*
+# portal gate before any production rollout - auto-syncing here would be
+# the exact failure mode #1806 exists to prevent, not just a missing nice
+# -to-have. Do not flip this to automated; production promotion should
+# route through the portal gate once #1806 builds it, not through ArgoCD's
+# own auto-sync.
+#
+# Per AGENTS.md section 6, ArgoCD Application/ApplicationSet manifests
+# require maintainer review before merge - flagging explicitly.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: tracer-bullet-prod
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - list:
+        elements:
+          - service: tracer-bullet
+            gitopsRepoURL: https://github.com/paruff/tracer-bullet-gitops.git
+  template:
+    metadata:
+      name: '{{ .service }}-prod'
+      namespace: argocd
+      labels:
+        app.kubernetes.io/managed-by: tracer-bullet-prod-appset
+        fawkes.io/phase: prod
+    spec:
+      project: default
+      source:
+        repoURL: '{{ .gitopsRepoURL }}'
+        targetRevision: main
+        path: "."
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: fawkes-prod
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+          - PrunePropagationPolicy=foreground
+          - PruneLast=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m
+      revisionHistoryLimit: 10
