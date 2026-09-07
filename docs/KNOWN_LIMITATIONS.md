@@ -160,3 +160,56 @@ churn or correlate fixes to specific features or PRs.
 
 **Tracking:** No dedicated issue. Consider integrating with GitHub PR labels (e.g.,
 `type: bug`) or Jira issue types for a stronger rework signal.
+
+---
+
+## KL-09 — DevLake GitHub GraphQL Collection Fails for Any Repo (Root Cause Unknown)
+
+**Description:** DevLake's `github_graphql` plugin subtasks (Collect Pull Requests,
+Collect Issues) fail with a generic "graphql query got error" against a real,
+correctly-scoped GitHub connection. Confirmed against `paruff/tracer-bullet` with a
+working connection (`GET /proceed-db-migration` completed, `PUT
+.../connections/{id}/scopes` accepted the repo's real numeric GitHub ID). The
+leading theory — OAuth (`gho_`) vs. classic (`ghp_`) token format — was tested live
+with a real classic PAT swapped into the connection and produced the identical
+failure, disproving it.
+
+**Impact:**
+
+- DORA deployment-frequency/lead-time metrics cannot be collected for any repo via
+  this DevLake instance until this is fixed — the DORA plane of the golden path
+  (see `docs/golden-path-verification-planes.md`) is unverifiable end-to-end.
+- The separately-observed `gitextractor` "Invalid Git URL" failure was set aside
+  during triage (not needed for the DORA-relevant subtask list) and remains
+  undiagnosed too.
+
+**Tracking:** [#1855](https://github.com/paruff/fawkes/issues/1855) — comment added
+2026-09-07 documenting the disproven token-type theory. Next step per that comment:
+enable DevLake's debug-level logging for `github_graphql`, or read its source for
+where the raw GraphQL error response is being swallowed before it reaches the
+pipeline's task-level error message.
+
+---
+
+## KL-10 — SonarCloud Project Registered Under Wrong Default Branch
+
+**Description:** The `tracer-bullet` SonarCloud project's default branch is
+registered as `master`, but the repository's actual default branch is `main`. This
+was discovered live during golden-path pipeline debugging (#1804) and is a likely
+contributor to an observed quality-gate/New-Code-period inconsistency (the API's
+`qualitygates/project_status` returned `"status":"NONE"` on a first analysis with
+89.3% coverage and zero bugs/vulnerabilities/code smells).
+
+**Impact:**
+
+- Quality gate evaluation and "new code" baselines may be computed against the
+  wrong branch's history.
+- `sonar.qualitygate.wait` was disabled in the golden-path Tekton pipeline
+  (`platform/apps/tekton/golden-path-pipeline.yaml`) as a workaround for Phase 1,
+  deliberately not blocking on quality gates — see
+  `docs/DEPLOYMENT_STRATEGY.md`'s 2026-09-07 update. That workaround should be
+  revisited once this is fixed.
+
+**Tracking:** No dedicated issue yet. Likely fix: pass `-Dsonar.branch.name=main` to
+the scanner invocation, or ensure a non-shallow clone so SonarCloud's own SCM
+detection identifies `main` correctly.
