@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.68](https://github.com/paruff/fawkes/compare/v0.3.67...v0.3.68) (2026-09-07)
+
+
+### Added
+
+* **tracer-bullet:** add ArgoCD Application to sync tracer-bullet-gitops ([#1887](https://github.com/paruff/fawkes/issues/1887)) ([ef667bc](https://github.com/paruff/fawkes/commit/ef667bcfca358a02bf9c4773440b0310df7f52a2))
+
 ## [0.3.67](https://github.com/paruff/fawkes/compare/v0.3.66...v0.3.67) (2026-09-07)
 
 
