@@ -273,27 +273,13 @@ from datahub.metadata.schema_classes import GlobalTagsClass, TagAssociationClass
 emitter = DatahubRestEmitter("http://datahub-datahub-gms.fawkes.svc:8080")
 
 # Create dataset URN
-dataset_urn = make_dataset_urn(
-    platform="postgres",
-    name="backstage.users",
-    env="PROD"
-)
+dataset_urn = make_dataset_urn(platform="postgres", name="backstage.users", env="PROD")
 
 # Add tags
-tags = GlobalTagsClass(
-    tags=[
-        TagAssociationClass(tag="urn:li:tag:PII"),
-        TagAssociationClass(tag="urn:li:tag:Critical")
-    ]
-)
+tags = GlobalTagsClass(tags=[TagAssociationClass(tag="urn:li:tag:PII"), TagAssociationClass(tag="urn:li:tag:Critical")])
 
 # Emit metadata
-emitter.emit_mcp(
-    entityType="dataset",
-    entityUrn=dataset_urn,
-    aspectName="globalTags",
-    aspect=tags
-)
+emitter.emit_mcp(entityType="dataset", entityUrn=dataset_urn, aspectName="globalTags", aspect=tags)
 ```
 
 ---
@@ -349,14 +335,8 @@ from datahub.metadata.schema_classes import UpstreamLineageClass, UpstreamClass
 # Define upstream datasets
 upstream = UpstreamLineageClass(
     upstreams=[
-        UpstreamClass(
-            dataset=make_dataset_urn("postgres", "backstage.services"),
-            type="TRANSFORMED"
-        ),
-        UpstreamClass(
-            dataset=make_dataset_urn("postgres", "backstage.catalog"),
-            type="TRANSFORMED"
-        )
+        UpstreamClass(dataset=make_dataset_urn("postgres", "backstage.services"), type="TRANSFORMED"),
+        UpstreamClass(dataset=make_dataset_urn("postgres", "backstage.catalog"), type="TRANSFORMED"),
     ]
 )
 
@@ -365,7 +345,7 @@ emitter.emit_mcp(
     entityType="dataset",
     entityUrn=make_dataset_urn("postgres", "analytics.service_stats"),
     aspectName="upstreamLineage",
-    aspect=upstream
+    aspect=upstream,
 )
 ```
 

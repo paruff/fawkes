@@ -237,6 +237,7 @@ GitHub Copilot uses open files and workspace context for suggestions. To leverag
 # See docs/ai/vector-database.md for Weaviate setup
 import weaviate
 
+
 def search_documentation(query: str):
     """Search internal docs using Weaviate.
 
@@ -341,11 +342,14 @@ GitHub is developing workspace-level instructions for Copilot. When available:
 # Copilot should suggest something like:
 def query_weaviate(query: str, limit: int = 5):
     import weaviate
+
     client = weaviate.Client("http://weaviate.fawkes.svc:80")
-    result = client.query.get("FawkesDocument", ["title", "content"]) \
-        .with_near_text({"concepts": [query]}) \
-        .with_limit(limit) \
+    result = (
+        client.query.get("FawkesDocument", ["title", "content"])
+        .with_near_text({"concepts": [query]})
+        .with_limit(limit)
         .do()
+    )
     return result
 ```
 
@@ -407,19 +411,21 @@ import weaviate
 app = FastAPI()
 client = weaviate.Client("http://weaviate.fawkes.svc:80")
 
+
 class Query(BaseModel):
     query: str
     limit: int = 5
 
+
 @app.post("/api/v1/search")
 async def search_docs(query: Query):
     try:
-        result = client.query.get(
-            "FawkesDocument",
-            ["title", "content", "filepath"]
-        ).with_near_text({
-            "concepts": [query.query]
-        }).with_limit(query.limit).do()
+        result = (
+            client.query.get("FawkesDocument", ["title", "content", "filepath"])
+            .with_near_text({"concepts": [query.query]})
+            .with_limit(query.limit)
+            .do()
+        )
 
         return {"results": result["data"]["Get"]["FawkesDocument"]}
     except Exception as e:

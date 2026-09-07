@@ -132,10 +132,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-logger.info("Processing request", extra={
-    "user_id": user_id,
-    "request_id": request_id
-})
+logger.info("Processing request", extra={"user_id": user_id, "request_id": request_id})
 ```
 
 ### Metrics

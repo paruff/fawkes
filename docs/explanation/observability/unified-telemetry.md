@@ -324,6 +324,7 @@ from opentelemetry import trace
 
 tracer = trace.get_tracer(__name__)
 
+
 def process_order(order_id):
     with tracer.start_as_current_span("process_order") as span:
         span.set_attribute("order.id", order_id)

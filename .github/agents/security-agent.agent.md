@@ -130,10 +130,12 @@ subprocess.run(["ping", host], shell=False)
 ```python
 # ❌ Vulnerable — user-controlled filename joined to base path unchecked
 file_path = os.path.join(BASE_DIR, user_filename)
-with open(file_path) as f: ...
+with open(file_path) as f:
+    ...
 
 # ✅ Safe — resolve both paths (handles symlinks) and verify prefix
 import pathlib
+
 base = pathlib.Path(BASE_DIR).resolve()
 resolved = (base / user_filename).resolve()
 if not resolved.is_relative_to(base):

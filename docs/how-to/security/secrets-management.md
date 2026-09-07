@@ -198,11 +198,11 @@ import os
 from pathlib import Path
 
 # Prefer environment variables
-api_key = os.getenv('API_KEY')
+api_key = os.getenv("API_KEY")
 
 # Fallback to gitignored file
 if not api_key:
-    secrets_file = Path('.env')
+    secrets_file = Path(".env")
     if secrets_file.exists():
         # Load from file (not in Git)
         pass
@@ -213,7 +213,7 @@ if not api_key:
 ```python
 # ❌ NEVER DO THIS
 api_key = "sk-1234567890abcdef"  # DETECTED BY GITLEAKS
-db_password = "MySecretPass123"   # DETECTED BY GITLEAKS
+db_password = "MySecretPass123"  # DETECTED BY GITLEAKS
 ```
 
 ```yaml
@@ -396,8 +396,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Get secrets from environment
-DATABASE_URL = os.getenv('DATABASE_URL')
-API_KEY = os.getenv('API_KEY')
+DATABASE_URL = os.getenv("DATABASE_URL")
+API_KEY = os.getenv("API_KEY")
 
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL environment variable is required")

@@ -32,19 +32,20 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 # Configure resource
-resource = Resource.create({
-    "service.name": "my-service",
-    "service.version": "1.0.0",
-    "deployment.environment": "production",
-})
+resource = Resource.create(
+    {
+        "service.name": "my-service",
+        "service.version": "1.0.0",
+        "deployment.environment": "production",
+    }
+)
 
 # Create tracer provider
 tracer_provider = TracerProvider(resource=resource)
 
 # Configure OTLP exporter
 otlp_exporter = OTLPSpanExporter(
-    endpoint="otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317",
-    insecure=True
+    endpoint="otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317", insecure=True
 )
 
 # Add span processor
@@ -309,10 +310,10 @@ span = trace.get_current_span()
 logger.info(
     "User login successful",
     extra={
-        "otelTraceID": format(span.get_span_context().trace_id, '032x'),
-        "otelSpanID": format(span.get_span_context().span_id, '016x'),
-        "userId": user_id
-    }
+        "otelTraceID": format(span.get_span_context().trace_id, "032x"),
+        "otelSpanID": format(span.get_span_context().span_id, "016x"),
+        "userId": user_id,
+    },
 )
 ```
 

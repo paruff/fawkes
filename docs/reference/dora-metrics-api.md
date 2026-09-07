@@ -579,16 +579,10 @@ DevLake accepts webhook events for real-time metrics updates.
 ```python
 from devlake import DevLakeClient
 
-client = DevLakeClient(
-    base_url="http://devlake.127.0.0.1.nip.io/api",
-    token="your-api-token"
-)
+client = DevLakeClient(base_url="http://devlake.127.0.0.1.nip.io/api", token="your-api-token")
 
 # Get DORA metrics
-metrics = client.get_dora_metrics(
-    project="payment-service",
-    time_range="last30days"
-)
+metrics = client.get_dora_metrics(project="payment-service", time_range="last30days")
 
 print(f"Deployment Frequency: {metrics.deployment_frequency.value} {metrics.deployment_frequency.unit}")
 print(f"Lead Time: {metrics.lead_time.value} {metrics.lead_time.unit}")

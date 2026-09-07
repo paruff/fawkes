@@ -167,11 +167,7 @@ Add to Mattermost bot commands:
 async def nasa_tlx_command(ctx, task_type: str = "general"):
     """Submit a NASA-TLX cognitive load assessment"""
     user_id = ctx.user.username
-    assessment_url = (
-        f"https://surveys.fawkes.idp/nasa-tlx?"
-        f"task_type={task_type}&"
-        f"user_id={user_id}"
-    )
+    assessment_url = f"https://surveys.fawkes.idp/nasa-tlx?task_type={task_type}&user_id={user_id}"
 
     await ctx.respond(
         f"📊 **NASA-TLX Cognitive Load Assessment**\n\n"

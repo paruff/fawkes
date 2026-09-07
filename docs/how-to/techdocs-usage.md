@@ -251,7 +251,7 @@ Always include working code examples:
 # Good - Complete, working example
 import requests
 
-response = requests.get('https://api.example.com/users')
+response = requests.get("https://api.example.com/users")
 users = response.json()
 
 for user in users:

@@ -297,17 +297,15 @@ Feature: <issue title>
 from behave import given, when, then
 import subprocess
 
-@when('the validation script is executed')
-def step_run_validation(context):
-    context.result = subprocess.run(
-        ["bash", "scripts/validate-code-quality.sh"],
-        capture_output=True, text=True
-    )
 
-@then('trunk check passes')
+@when("the validation script is executed")
+def step_run_validation(context):
+    context.result = subprocess.run(["bash", "scripts/validate-code-quality.sh"], capture_output=True, text=True)
+
+
+@then("trunk check passes")
 def step_trunk_passes(context):
-    assert context.result.returncode == 0, \
-        f"Failed:\n{context.result.stdout}\n{context.result.stderr}"
+    assert context.result.returncode == 0, f"Failed:\n{context.result.stdout}\n{context.result.stderr}"
     assert "[PASS] trunk" in context.result.stdout
 ```
 

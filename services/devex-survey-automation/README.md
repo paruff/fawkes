@@ -287,12 +287,14 @@ Pulse survey responses are automatically forwarded to space-metrics:
 
 ```python
 # After pulse survey submission
-response = await submit_to_space_metrics({
-    "valuable_work_percentage": data.valuable_work_pct,
-    "flow_state_days": data.flow_state_days,
-    "cognitive_load": data.cognitive_load,
-    "friction_experienced": data.friction_incidents
-})
+response = await submit_to_space_metrics(
+    {
+        "valuable_work_percentage": data.valuable_work_pct,
+        "flow_state_days": data.flow_state_days,
+        "cognitive_load": data.cognitive_load,
+        "friction_experienced": data.friction_incidents,
+    }
+)
 ```
 
 ### With NPS Service
