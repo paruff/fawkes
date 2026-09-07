@@ -72,15 +72,20 @@ func TestDORALeadTime(t *testing.T) {
 import pytest
 from decimal import Decimal
 
-@pytest.mark.parametrize("deployment_freq, lead_time, expected_tier", [
-    (10.0, 0.5, "elite"),
-    (1.0, 24.0, "high"),
-    (0.1, 168.0, "medium"),
-    (0.01, 720.0, "low"),
-])
+
+@pytest.mark.parametrize(
+    "deployment_freq, lead_time, expected_tier",
+    [
+        (10.0, 0.5, "elite"),
+        (1.0, 24.0, "high"),
+        (0.1, 168.0, "medium"),
+        (0.01, 720.0, "low"),
+    ],
+)
 def test_dora_performance_tier(deployment_freq, lead_time, expected_tier):
     result = classify_dora_tier(deployment_freq, lead_time)
     assert result == expected_tier
+
 
 def test_dora_tier_invalid_negative_freq():
     with pytest.raises(ValueError, match="deployment_freq must be > 0"):

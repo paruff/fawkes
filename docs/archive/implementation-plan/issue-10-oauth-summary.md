@@ -100,8 +100,8 @@ Created three levels of documentation to support different user needs:
 Constants defined:
 
 ```python
-PLACEHOLDER_SECRET_VALUE = 'CHANGE_ME'
-EXPECTED_OAUTH_REDIRECT_CODES = ['404', '400', '302']
+PLACEHOLDER_SECRET_VALUE = "CHANGE_ME"
+EXPECTED_OAUTH_REDIRECT_CODES = ["404", "400", "302"]
 EXPECTED_AUTH_REQUIRED_CODES = [302, 401, 403]
 ```
 

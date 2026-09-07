@@ -286,17 +286,20 @@ public class UserRegistrationSteps {
 ```python
 from behave import given, when, then
 
-@given('the registration service is available')
+
+@given("the registration service is available")
 def service_available(context):
     # Verify service is running
     pass
 
-@when('I submit the registration form')
+
+@when("I submit the registration form")
 def submit_form(context):
     # Submit registration
     pass
 
-@then('my account is created')
+
+@then("my account is created")
 def account_created(context):
     # Verify account exists
     pass

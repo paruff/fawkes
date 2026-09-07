@@ -77,11 +77,11 @@ from openfeature import api
 from openfeature.contrib.provider.unleash import UnleashProvider
 
 # Set Unleash as the provider
-api.set_provider(UnleashProvider(
-    url="https://unleash.fawkes.idp/api",
-    app_name="python-service",
-    api_token=os.getenv("UNLEASH_API_TOKEN")
-))
+api.set_provider(
+    UnleashProvider(
+        url="https://unleash.fawkes.idp/api", app_name="python-service", api_token=os.getenv("UNLEASH_API_TOKEN")
+    )
+)
 
 # Use feature flags
 client = api.get_client()

@@ -103,30 +103,19 @@ def map_components(penpot_components, design_system_components):
 
     for penpot_comp in penpot_components:
         # Try exact name match
-        ds_comp = find_by_name(design_system_components, penpot_comp['name'])
+        ds_comp = find_by_name(design_system_components, penpot_comp["name"])
 
         if ds_comp:
-            mappings.append({
-                'penpot': penpot_comp,
-                'designSystem': ds_comp,
-                'status': 'mapped'
-            })
+            mappings.append({"penpot": penpot_comp, "designSystem": ds_comp, "status": "mapped"})
         else:
             # Try fuzzy match
-            ds_comp = fuzzy_match(design_system_components, penpot_comp['name'])
+            ds_comp = fuzzy_match(design_system_components, penpot_comp["name"])
             if ds_comp:
-                mappings.append({
-                    'penpot': penpot_comp,
-                    'designSystem': ds_comp,
-                    'status': 'fuzzy-mapped',
-                    'confidence': 0.85
-                })
+                mappings.append(
+                    {"penpot": penpot_comp, "designSystem": ds_comp, "status": "fuzzy-mapped", "confidence": 0.85}
+                )
             else:
-                mappings.append({
-                    'penpot': penpot_comp,
-                    'designSystem': None,
-                    'status': 'unmapped'
-                })
+                mappings.append({"penpot": penpot_comp, "designSystem": None, "status": "unmapped"})
 
     return mappings
 ```
@@ -165,6 +154,7 @@ def map_components(penpot_components, design_system_components):
 import json
 from typing import Dict, List
 
+
 def validate_design_tokens(penpot_component: Dict, design_system_component: Dict) -> List[str]:
     """Validate that design tokens are used consistently."""
     issues = []
@@ -183,6 +173,7 @@ def validate_design_tokens(penpot_component: Dict, design_system_component: Dict
 
     return issues
 
+
 def validate_accessibility(penpot_component: Dict) -> List[str]:
     """Validate accessibility requirements."""
     issues = []
@@ -193,18 +184,19 @@ def validate_accessibility(penpot_component: Dict) -> List[str]:
 
     # Check touch targets
     size = get_component_size(penpot_component)
-    if size['width'] < 44 or size['height'] < 44:
+    if size["width"] < 44 or size["height"] < 44:
         issues.append(f"Touch target too small: {size['width']}x{size['height']}px (min 44x44px)")
 
     return issues
 
+
 def validate_component(penpot_component: Dict, design_system_component: Dict) -> Dict:
     """Run all validations on a component."""
     return {
-        'component': penpot_component['name'],
-        'token_issues': validate_design_tokens(penpot_component, design_system_component),
-        'accessibility_issues': validate_accessibility(penpot_component),
-        'mapping_confidence': calculate_mapping_confidence(penpot_component, design_system_component)
+        "component": penpot_component["name"],
+        "token_issues": validate_design_tokens(penpot_component, design_system_component),
+        "accessibility_issues": validate_accessibility(penpot_component),
+        "mapping_confidence": calculate_mapping_confidence(penpot_component, design_system_component),
     }
 ```
 

@@ -290,9 +290,9 @@ def all_nodes_ready():
         conditions = node["status"]["conditions"]
         ready_condition = next((c for c in conditions if c["type"] == "Ready"), None)
         assert ready_condition, f"Ready condition not found for node {node['metadata']['name']}"
-        assert (
-            ready_condition["status"] == "True"
-        ), f"Node {node['metadata']['name']} is not Ready: {ready_condition.get('reason')}"
+        assert ready_condition["status"] == "True", (
+            f"Node {node['metadata']['name']} is not Ready: {ready_condition.get('reason')}"
+        )
 
 
 @then(parsers.parse("the system node pool should have {count:d} nodes"))

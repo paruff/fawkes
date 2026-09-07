@@ -165,7 +165,8 @@ async def dashboard():
         logger.warning(f"Could not load dashboard from {dashboard_path}: {e}")
 
     # Fallback: return simple inline dashboard
-    return HTMLResponse(content="""
+    return HTMLResponse(
+        content="""
     <!DOCTYPE html>
     <html>
     <head>
@@ -218,7 +219,8 @@ async def dashboard():
         </script>
     </body>
     </html>
-    """)
+    """
+    )
 
 
 @app.get("/api/v1/health", response_model=HealthResponse, tags=["Health"])

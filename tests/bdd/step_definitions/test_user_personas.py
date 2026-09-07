@@ -392,9 +392,9 @@ def personas_have_minimum_goals(context, count):
     results = context.get("goals_results", [])
 
     for result in results:
-        assert (
-            result["goal_count"] >= count
-        ), f"Persona {result['file']} has only {result['goal_count']} goals, expected at least {count}"
+        assert result["goal_count"] >= count, (
+            f"Persona {result['file']} has only {result['goal_count']} goals, expected at least {count}"
+        )
 
 
 @then("each persona should have defined success metrics")
@@ -421,9 +421,9 @@ def personas_have_minimum_pain_points(context, count):
     results = context.get("pain_points_results", [])
 
     for result in results:
-        assert (
-            result["pain_point_count"] >= count
-        ), f"Persona {result['file']} has only {result['pain_point_count']} pain points, expected at least {count}"
+        assert result["pain_point_count"] >= count, (
+            f"Persona {result['file']} has only {result['pain_point_count']} pain points, expected at least {count}"
+        )
 
 
 @then("each pain point should include a description")
@@ -518,18 +518,18 @@ def file_exists_in_personas(context, filename):
 def validation_has_methodology(context):
     """Verify validation document has methodology."""
     content = context.get("validation_content", "")
-    assert (
-        "Methodology" in content or "Research Approach" in content
-    ), "Validation document missing research methodology"
+    assert "Methodology" in content or "Research Approach" in content, (
+        "Validation document missing research methodology"
+    )
 
 
 @then("it should include participant demographics for each persona")
 def validation_has_demographics(context):
     """Verify validation document has participant demographics."""
     content = context.get("validation_content", "")
-    assert (
-        "Participants" in content or "Research Participants" in content
-    ), "Validation document missing participant information"
+    assert "Participants" in content or "Research Participants" in content, (
+        "Validation document missing participant information"
+    )
 
 
 @then("it should include validation confidence levels")
@@ -619,9 +619,9 @@ def readme_has_persona_details(context):
         content = f.read()
 
     # Check for key characteristics in listings
-    assert (
-        "pain points" in content.lower() or "focused on" in content.lower()
-    ), "README persona listings missing key characteristics"
+    assert "pain points" in content.lower() or "focused on" in content.lower(), (
+        "README persona listings missing key characteristics"
+    )
 
 
 @then("personas should be linked from the main research documentation")
@@ -655,9 +655,9 @@ def readme_has_update_procedures(context):
 def validation_has_review_schedule(context):
     """Verify validation document has review schedule."""
     content = context["lifecycle_docs"].get("validation", "")
-    assert (
-        "quarterly" in content.lower() or "review schedule" in content.lower()
-    ), "Validation document missing quarterly review schedule"
+    assert "quarterly" in content.lower() or "review schedule" in content.lower(), (
+        "Validation document missing quarterly review schedule"
+    )
 
 
 @then("there should be a process for continuous validation")

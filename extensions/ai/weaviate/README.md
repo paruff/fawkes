@@ -85,9 +85,9 @@ client.data_object.create(
     {
         "title": "Getting Started with Fawkes",
         "content": "Fawkes is an Internal Delivery Platform...",
-        "url": "https://fawkes.io/docs/getting-started"
+        "url": "https://fawkes.io/docs/getting-started",
     },
-    "Documentation"
+    "Documentation",
 )
 ```
 
@@ -119,18 +119,13 @@ def query_rag(question: str) -> str:
     embedding = embed_text(question)
 
     # 2. Query Weaviate for relevant docs
-    results = client.query.get("Documentation", ["content"]) \
-        .with_near_vector({"vector": embedding}) \
-        .with_limit(5) \
-        .do()
+    results = client.query.get("Documentation", ["content"]).with_near_vector({"vector": embedding}).with_limit(5).do()
 
     # 3. Construct context from results
     context = "\n\n".join([doc["content"] for doc in results])
 
     # 4. Send to LLM with context
-    response = llm.generate(
-        prompt=f"Context: {context}\n\nQuestion: {question}"
-    )
+    response = llm.generate(prompt=f"Context: {context}\n\nQuestion: {question}")
 
     return response
 ```

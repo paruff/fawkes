@@ -140,6 +140,6 @@ def test_requirements_includes_prometheus_client():
 
     with open(requirements_path, "r") as f:
         content = f.read()
-        assert (
-            "prometheus-client" in content or "prometheus_client" in content
-        ), "prometheus-client not found in requirements.txt"
+        assert "prometheus-client" in content or "prometheus_client" in content, (
+            "prometheus-client not found in requirements.txt"
+        )

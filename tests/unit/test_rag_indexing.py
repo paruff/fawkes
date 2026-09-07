@@ -96,9 +96,9 @@ def test_document_categories(category, expected_count):
     documents = get_sample_documents()
     category_docs = [doc for doc in documents if doc["category"] == category]
 
-    assert (
-        len(category_docs) >= expected_count
-    ), f"Expected at least {expected_count} {category} documents, got {len(category_docs)}"
+    assert len(category_docs) >= expected_count, (
+        f"Expected at least {expected_count} {category} documents, got {len(category_docs)}"
+    )
 
 
 @pytest.mark.unit
