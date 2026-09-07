@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.65](https://github.com/paruff/fawkes/compare/v0.3.64...v0.3.65) (2026-09-07)
+
+
+### Fixed
+
+* **ci:** fix invalid code-quality.yml workflow schema (P0, breaks all PRs) ([#1880](https://github.com/paruff/fawkes/issues/1880)) ([8dcd4e7](https://github.com/paruff/fawkes/commit/8dcd4e7659b4c59cb1ac23be5f49f6c1f37067d3))
+
+
+### Docs
+
+* **security-plane:** pin example base image tag in secure Dockerfile template ([#1881](https://github.com/paruff/fawkes/issues/1881)) ([2c31245](https://github.com/paruff/fawkes/commit/2c31245ed964fe6cdc3f5ccfc9766ace64d9196c))
+
 ## [0.3.64](https://github.com/paruff/fawkes/compare/v0.3.63...v0.3.64) (2026-09-07)
 
 
