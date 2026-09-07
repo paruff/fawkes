@@ -112,8 +112,8 @@ lint-base: ## Run base hooks (whitespace, YAML/JSON syntax, secrets, formatting)
 	@pre-commit run insert-license --all-files
 
 lint-lang: ## Run language hooks (Python, Shell, Go, Markdown)
-	@pre-commit run black --all-files
 	@pre-commit run ruff --all-files
+	@pre-commit run ruff-format --all-files
 	@pre-commit run flake8 --all-files
 	@pre-commit run shellcheck --all-files
 	@pre-commit run shfmt --all-files
@@ -139,12 +139,12 @@ lint-platform: ## Run platform hooks (K8s, ArgoCD, Helm, Backstage, MkDocs, secu
 	@pre-commit run gitleaks --all-files
 	@pre-commit run detect-secrets --all-files
 
-format: ## Apply all code formatters (Black, shfmt, terraform fmt)
-	@echo "🎨 Formatting Python with Black..."
-	@if command -v black > /dev/null 2>&1; then \
-		black .; \
+format: ## Apply all code formatters (Ruff, shfmt, terraform fmt)
+	@echo "🎨 Formatting Python with Ruff..."
+	@if command -v ruff > /dev/null 2>&1; then \
+		ruff format .; \
 	else \
-		echo "⚠️  black not installed, skipping Python formatting"; \
+		echo "⚠️  ruff not installed, skipping Python formatting"; \
 	fi
 	@echo "🎨 Formatting shell scripts with shfmt..."
 	@if command -v shfmt > /dev/null 2>&1; then \
@@ -161,11 +161,11 @@ format: ## Apply all code formatters (Black, shfmt, terraform fmt)
 	@echo "✅ Formatters applied (install missing tools above to format all file types)"
 
 format-check: ## Check formatting without applying changes (fails if any files need formatting)
-	@echo "🔍 Checking Python formatting with Black..."
-	@if command -v black > /dev/null 2>&1; then \
-		black --check --diff .; \
+	@echo "🔍 Checking Python formatting with Ruff..."
+	@if command -v ruff > /dev/null 2>&1; then \
+		ruff format --check --diff .; \
 	else \
-		echo "⚠️  black not installed, skipping Python format check (install black to enforce)"; \
+		echo "⚠️  ruff not installed, skipping Python format check (install ruff to enforce)"; \
 	fi
 	@echo "🔍 Checking shell script formatting with shfmt..."
 	@if command -v shfmt > /dev/null 2>&1; then \
