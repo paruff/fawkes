@@ -18,6 +18,14 @@ setup() {
   # Source the prereqs library
   source "${LIB_DIR}/prereqs.sh"
 
+  # prereqs.sh's `set -euo pipefail` leaks into this test's own bats
+  # process (source doesn't fork), including into bats-core's own
+  # internal DEBUG-trap stack-trace machinery for the rest of this test -
+  # on some bash versions that trips a bare $BASH_SOURCE reference in
+  # bats-core's tracing.bash under nounset ("BASH_SOURCE: unbound
+  # variable"), unrelated to anything this test is actually checking.
+  set +u
+
   # Set AUTO_INSTALL to avoid interactive prompts
   export AUTO_INSTALL=0
 }
