@@ -610,8 +610,10 @@ jobs:
         run: |
           if [ -f ".pre-commit-config.yaml" ]; then
             echo "✅ Pre-commit configuration exists"
+            # Secret scanning is a single comprehensive gitleaks hook (see
+            # .pre-commit-config.yaml) -- there is no separate detect-secrets
+            # hook to check for.
             grep -q "gitleaks" .pre-commit-config.yaml && echo "✅ Gitleaks hook configured"
-            grep -q "detect-secrets" .pre-commit-config.yaml && echo "✅ Detect-secrets hook configured"
           else
             echo "❌ Pre-commit configuration not found"
             exit 1
