@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.71](https://github.com/paruff/fawkes/compare/v0.3.70...v0.3.71) (2026-09-07)
+
+
+### Fixed
+
+* **devlake:** raise lake probe timing to survive its plugin load time ([#1893](https://github.com/paruff/fawkes/issues/1893)) ([12eed6b](https://github.com/paruff/fawkes/commit/12eed6bb1435eb1aa46b39c379713bb01404b4ec))
+
 ## [0.3.70](https://github.com/paruff/fawkes/compare/v0.3.69...v0.3.70) (2026-09-07)
 
 
