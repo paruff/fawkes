@@ -24,4 +24,13 @@ namespace: argocd
 resources:
   - project-default.yaml
   - networking-application.yaml
-  - platform-applications.yaml
+  - platform-applicationset.yaml
+  # #1853-deferred live cutover, completed: platform-applications.yaml
+  # (the old plain-Application directory-recurse) is superseded by
+  # platform-applicationset.yaml above - verified live on a local kind
+  # cluster this session (#1804), resolving #1853's own explicit
+  # "argocd appset generate for real template-rendering verification -
+  # attempted repeatedly this session, blocked by cluster instability,
+  # not resolved" test-plan item. The old file is kept (not deleted,
+  # matching #1853's own precedent) for history; it is no longer
+  # referenced here.
