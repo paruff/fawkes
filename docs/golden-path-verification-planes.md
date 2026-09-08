@@ -9,6 +9,23 @@ Do not confuse this with `docs/golden-path-usage.md`, which documents the Jenkin
 `goldenPathPipeline` shared-library pipeline for application teams — an older, separate
 concept that predates this GitHub-Actions-based verification effort.
 
+**Update (2026-09-07, #1804):** the reference service these planes verify against —
+tracer-bullet — was extracted out of the monorepo into its own repo pair:
+[`paruff/tracer-bullet`](https://github.com/paruff/tracer-bullet) (app source, plus the
+Tekton `golden-path` pipeline definition it runs against —
+`platform/apps/tekton/golden-path-pipeline.yaml`, in-cluster, not GitHub Actions) and
+[`paruff/tracer-bullet-gitops`](https://github.com/paruff/tracer-bullet-gitops) (desired
+state, watched by `platform/apps/tracer-bullet/tracer-bullet-application.yaml`). All
+seven planes were exercised live on a local kind cluster this session against this real
+pipeline run. That live run surfaced 4 concrete bugs in the plane scripts themselves,
+filed as [#1909](https://github.com/paruff/fawkes/issues/1909): the Pipeline script
+hardcodes a workflow filename deleted in #1813 and the monorepo's own repo slug (needs to
+target the external repo); the GitOps script's namespace default doesn't match where
+`Application` CRs actually live (`argocd`, not `fawkes`); the DORA script looks for a pod
+that doesn't exist. The Observability script was the one plane confirmed accurate as-is.
+The "Implemented" status below predates this finding — treat it as "script exists," not
+"script is correct," until #1909 is fixed.
+
 ## What a "plane" is
 
 A **plane** is one independently-verifiable slice of the golden path: `git push` → CI
@@ -84,3 +101,4 @@ capabilities.
 - `reports/observability-plane-live-verification-2026-09.md`
 - `docs/DEPLOYMENT_STRATEGY.md` — MVP Definition of Done, rollback protocol
 - `docs/BACKLOG.md` — wave plan and service inventory
+- [#1909](https://github.com/paruff/fawkes/issues/1909) — the 4 plane-script bugs found during the 2026-09-07 live verification, with acceptance criteria to fix them and wire them into a scheduled (≥weekly) CI job

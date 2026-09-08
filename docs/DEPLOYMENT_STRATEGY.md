@@ -5,8 +5,8 @@
 The current deployment model is a minimal push-based trigger:
 
 - **docs/ pages**: `deploy.yml` builds and deploys MkDocs to GitHub Pages on push to `main` affecting `docs/**`, `mkdocs.yml`, or `requirements.txt`
-- **Tracer Bullet**: `tracer-bullet-ci.yml` builds a Docker image, pushes to GHCR, and updates the GitOps manifest in-tree on push to `main`
-- **DORA Metrics**: `dora-metrics-ci.yml` follows the identical pattern (build → push → in-tree manifest update)
+- **Tracer Bullet**: extracted out of the monorepo (#1813) into its own repo pair — app source + a Tekton-based CI pipeline (`platform/apps/tekton/golden-path-pipeline.yaml`, run in-cluster, not GitHub Actions) in [`paruff/tracer-bullet`](https://github.com/paruff/tracer-bullet), and desired-state manifests in [`paruff/tracer-bullet-gitops`](https://github.com/paruff/tracer-bullet-gitops). This is now a real, separate-repo GitOps flow — see "Update (2026-09-07)" below.
+- **DORA Metrics**: `dora-metrics-ci.yml` still follows the older in-tree pattern (build → push → in-tree manifest update)
 - **Infrastructure**: Terraform modules are validated in CI but deployed manually or via external pipelines
 - **Reusable workflows**: Called from `paruff/ufawkespipe` and other repos; no cross-repo GitOps flow
 
@@ -24,6 +24,8 @@ The current deployment model is a minimal push-based trigger:
 The full build→scan→sign→SBOM→GitOps pattern was also factored into a new reusable workflow (`reusable-python-service-golden-path.yml`) and piloted on a 4th service, `anomaly-detection`, in addition to the existing `tracer-bullet`/`dora-metrics`/`smart-alerting`. 14 of the 17 services still only get lint+test (tracked in #1792).
 
 PR #1798 re-triggers `tracer-bullet` and `smart-alerting` to confirm all of the above lands correctly end-to-end (build → scan → sign → SBOM → GitOps commit succeeds on the first real attempt → ArgoCD syncs → pod `Running`) — see that PR for the live result.
+
+**Update (2026-09-07, #1804 Phase 1 tracer bullet):** tracer-bullet now runs the target Phase 2 model for real, not just in-tree. The full chain was exercised live on a local kind cluster: a commit to [`paruff/tracer-bullet`](https://github.com/paruff/tracer-bullet) triggers the Tekton `golden-path` pipeline (`platform/apps/tekton/golden-path-pipeline.yaml`) — fetch-source → lint-and-test → SonarCloud scan → build-and-push (real GHCR image, `ghcr.io/paruff/tracer-bullet`) → Trivy image scan → `gitops-promote`, which opens a real PR against [`paruff/tracer-bullet-gitops`](https://github.com/paruff/tracer-bullet-gitops). Merging that PR lets ArgoCD (via `platform/apps/tracer-bullet/tracer-bullet-application.yaml`, plus phase-scoped `tracer-bullet-{alpha,beta,prod}-applicationset.yaml`) auto-sync the new image into the cluster, producing a running, traced, metriced, logged pod. This is the separate-GitOps-repo model the gap table below previously listed as unmet — it is now proven for this one service. Two real gaps found and left open: SonarCloud quality-gate blocking is deliberately disabled for now (`sonar.qualitygate.wait=false` — new-project baseline was inconsistent; revisit in Phase 2), and DevLake's DORA collection for this repo is blocked by unresolved issue #1855.
 
 `paruff/ufawkespipe`'s `reusable-rollback.yml` was checked as a possible shortcut for the "Automated rollback" gap below — it is **not applicable**: it's built for SSH-based deployment to a single host (`DEPLOY_HOST`/`DEPLOY_USER`/`DEPLOY_KEY` + a remote `git reset` and restart command), not a Kubernetes/ArgoCD GitOps model. The real rollback mechanism here is git-revert + ArgoCD `selfHeal`, described above.
 
@@ -94,7 +96,7 @@ in step 1.
 |---|---|---|
 | CI guard on main | ❌ | ✅ (Phase 1) |
 | Versioned artifacts | Partial | ✅ |
-| GitOps separate repo | In-tree only (works for tracer-bullet, dora-metrics) | ✅ (separate repo) |
+| GitOps separate repo | ✅ for tracer-bullet (`paruff/tracer-bullet-gitops`, proven live 2026-09-07); in-tree only for dora-metrics/smart-alerting | ✅ (separate repo) |
 | Canary deployments | ❌ | ✅ |
 | Automated rollback | Mechanism verified live (2026-09-05, see Rollback Protocol above) - the `selfHeal` half is proven; a full `git revert` + PR merge cycle is not yet tested | ✅ |
 | Post-deployment verification | ❌ | ✅ |
