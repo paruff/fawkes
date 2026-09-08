@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.82](https://github.com/paruff/fawkes/compare/v0.3.81...v0.3.82) (2026-09-08)
+
+
+### Chores
+
+* **devlake:** upgrade to 1.0.3-beta15 (latest available) ([#1920](https://github.com/paruff/fawkes/issues/1920)) ([a3ed623](https://github.com/paruff/fawkes/commit/a3ed623ac9782667b85c1d3e421374688be3e35c))
+
 ## [0.3.81](https://github.com/paruff/fawkes/compare/v0.3.80...v0.3.81) (2026-09-08)
 
 
