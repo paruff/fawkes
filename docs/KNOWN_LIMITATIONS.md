@@ -213,3 +213,34 @@ contributor to an observed quality-gate/New-Code-period inconsistency (the API's
 **Tracking:** No dedicated issue yet. Likely fix: pass `-Dsonar.branch.name=main` to
 the scanner invocation, or ensure a non-shallow clone so SonarCloud's own SCM
 detection identifies `main` correctly.
+
+---
+
+## KL-11 — tracer-bullet Metrics Not Reaching Prometheus (Traces and Logs Unaffected)
+
+**Description:** Live re-verification on 2026-09-08 found zero Prometheus series for
+`tracer-bullet` (`{job=~".*tracer.*"}` and `__name__` search both empty), while the
+same OpenTelemetry Collector pipeline's traces and logs paths for the same service
+are confirmed working (5 recent traces in Tempo, logs in Loki, both same-session).
+The collector pod is healthy (1/1 Ready, health-check extension OK), its metrics
+pipeline is configured with a `prometheusremotewrite` exporter pointed at
+`prometheus-prometheus.monitoring.svc.cluster.local:9090/api/v1/write`, and the
+target Prometheus has `enableRemoteWriteReceiver: true` — so the wiring that
+*should* carry metrics end-to-end looks correct on both ends, but no data is
+arriving. Root cause not yet diagnosed (not investigated further this session
+given cost — see [[fawkes_tracer_bullet_golden_path_1804]]).
+
+**Impact:**
+
+- The Observability plane of the golden path (see
+  `docs/golden-path-verification-planes.md`) is 7/8 passing, not fully green, purely
+  on this metrics gap — traces and logs are unaffected.
+- Any Grafana dashboard or alert relying on live `tracer-bullet` metrics will show no
+  data.
+
+**Tracking:** No dedicated issue yet. Next step: check the otel-collector-agent's own
+logs for `prometheusremotewrite` export errors (none seen in a quick tail this
+session, but a longer window wasn't checked), and confirm the tracer-bullet app is
+actually configured to emit OTLP metrics at all (vs. only traces/logs) — the app-side
+instrumentation should be checked in `paruff/tracer-bullet` before assuming the
+platform side is at fault.
