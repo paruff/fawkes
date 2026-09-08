@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.81](https://github.com/paruff/fawkes/compare/v0.3.80...v0.3.81) (2026-09-08)
+
+
+### Added
+
+* **golden-path:** record GitHub Deployment for DORA tracking (KL-12) ([#1917](https://github.com/paruff/fawkes/issues/1917)) ([7f70b84](https://github.com/paruff/fawkes/commit/7f70b845af29a94ac99ea6d9c4d92130139184b1))
+
 ## [0.3.80](https://github.com/paruff/fawkes/compare/v0.3.79...v0.3.80) (2026-09-08)
 
 
