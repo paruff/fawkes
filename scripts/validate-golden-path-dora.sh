@@ -2,10 +2,18 @@
 # =============================================================================
 # Script: validate-golden-path-dora.sh
 # Purpose: Validate the DORA plane of the tracer-bullet golden path
-#          (#1751 Phase 3): dora-metrics has actually scraped a real
-#          deployment-frequency data point for tracer-bullet - not just
-#          that the dora-metrics pod is Running.
-# Usage: ./scripts/validate-golden-path-dora.sh [--namespace NAMESPACE]
+#          (#1751 Phase 3, updated #1909): DevLake has a configured project
+#          for the service and its latest pipeline actually completed - not
+#          just that DevLake's pods are Running.
+#
+#          This script previously checked for a "dora-metrics" pod/service
+#          that does not exist in this platform - DORA collection here is
+#          done by DevLake (platform/apps/devlake), configured via its own
+#          REST API (see docs/KNOWN_LIMITATIONS.md KL-09 for the current
+#          known blocker: DevLake's github_graphql collector fails for any
+#          repo, tracked in #1855). This script now checks DevLake itself.
+# Usage: ./scripts/validate-golden-path-dora.sh [--namespace NAMESPACE] [--project NAME]
+# Requires: kubectl (cluster access), curl, jq
 # Exit Codes: 0=success, 1=validation failed
 # =============================================================================
 
@@ -18,7 +26,10 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 NAMESPACE="${NAMESPACE:-fawkes}"
-SERVICE_NAME="tracer-bullet"
+PROJECT_NAME="${PROJECT_NAME:-tracer-bullet}"
+DEVLAKE_SERVICE="devlake-lake"
+DEVLAKE_PORT=8080
+LOCAL_PORT=18080
 REPORT_FILE="reports/golden-path-dora-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
 
@@ -37,11 +48,12 @@ usage() {
   cat << EOF
 Usage: $0 [OPTIONS]
 
-Validate the DORA plane: dora-metrics has scraped a real deployment
-data point for tracer-bullet from GitHub Actions.
+Validate the DORA plane: DevLake has a project configured for '$PROJECT_NAME'
+and its most recent pipeline run actually completed successfully.
 
 OPTIONS:
-    -n, --namespace NAMESPACE   Workload namespace (default: $NAMESPACE)
+    -n, --namespace NAMESPACE   Cluster namespace DevLake runs in (default: $NAMESPACE)
+    -p, --project NAME          DevLake project name to check (default: $PROJECT_NAME)
     -h, --help                  Show this help message
 EOF
 }
@@ -66,66 +78,62 @@ cleanup() {
 }
 trap cleanup EXIT
 
-check_pod_running() {
-  log_info "Checking dora-metrics pod is Running..."
-  local pods_json running_count total_count
-  pods_json=$(kubectl get pods -n "$NAMESPACE" -l app=dora-metrics -o json 2> /dev/null || echo '{"items":[]}')
+check_pods_running() {
+  log_info "Checking DevLake pods are Running in namespace '$NAMESPACE'..."
+  local pods_json ready_count total_count
+  pods_json=$(kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/name=devlake -o json 2> /dev/null || echo '{"items":[]}')
   total_count=$(echo "$pods_json" | jq '.items | length')
 
   if [ "$total_count" -eq 0 ]; then
-    record_test "Pod Running" "FAIL" "No dora-metrics pods found in namespace '$NAMESPACE'"
+    record_test "DevLake Pods Running" "FAIL" "No DevLake pods found in namespace '$NAMESPACE'"
     return 1
   fi
 
-  running_count=$(echo "$pods_json" | jq '[.items[] | select(.status.phase=="Running")] | length')
-  if [ "$running_count" -gt 0 ]; then
-    record_test "Pod Running" "PASS" "$running_count/$total_count dora-metrics pod(s) Running"
+  ready_count=$(echo "$pods_json" | jq '[.items[] | select(.status.containerStatuses[]?.ready==true)] | length')
+  if [ "$ready_count" -eq "$total_count" ]; then
+    record_test "DevLake Pods Running" "PASS" "$ready_count/$total_count DevLake pod(s) Ready"
   else
-    record_test "Pod Running" "FAIL" "0/$total_count dora-metrics pod(s) Running"
+    record_test "DevLake Pods Running" "FAIL" "$ready_count/$total_count DevLake pod(s) Ready"
     return 1
   fi
 }
 
-trigger_scrape_and_check() {
-  log_info "Triggering a fresh scrape and checking for tracer-bullet data..."
-  kubectl port-forward -n "$NAMESPACE" svc/dora-metrics 8090:8000 &> /tmp/dora-pf.log &
+check_project_and_pipeline() {
+  log_info "Checking DevLake project '$PROJECT_NAME' and its latest pipeline..."
+  kubectl port-forward -n "$NAMESPACE" "svc/$DEVLAKE_SERVICE" "$LOCAL_PORT:$DEVLAKE_PORT" &> /tmp/devlake-dora-pf.log &
   PF_PID=$!
   sleep 3
 
-  local scrape_resp
-  scrape_resp=$(curl -s --connect-timeout 10 -X GET "http://localhost:8090/api/v1/scrape" 2> /dev/null || echo "")
-  if [ -z "$scrape_resp" ]; then
-    record_test "Scrape Trigger" "FAIL" "Could not reach dora-metrics /api/v1/scrape via port-forward"
-    kill "$PF_PID" &> /dev/null || true
-    PF_PID=""
+  local project_json blueprint_id
+  project_json=$(curl -s --connect-timeout 10 "http://localhost:$LOCAL_PORT/projects/$PROJECT_NAME" 2> /dev/null || echo "")
+  if [ -z "$project_json" ] || [ "$(echo "$project_json" | jq -r '.name // empty')" != "$PROJECT_NAME" ]; then
+    record_test "DevLake Project" "FAIL" "No DevLake project named '$PROJECT_NAME' found - run the DevLake connection/project setup first"
     return 1
   fi
-  record_test "Scrape Trigger" "PASS" "Scrape endpoint responded: $(echo "$scrape_resp" | jq -c '.')"
+  record_test "DevLake Project" "PASS" "DevLake project '$PROJECT_NAME' exists"
 
-  local metrics_resp
-  metrics_resp=$(curl -s --connect-timeout 5 "http://localhost:8090/metrics" 2> /dev/null || echo "")
-  kill "$PF_PID" &> /dev/null || true
-  PF_PID=""
-
-  if [ -z "$metrics_resp" ]; then
-    record_test "Metrics Endpoint" "FAIL" "Could not reach dora-metrics /metrics via port-forward"
+  blueprint_id=$(echo "$project_json" | jq -r '.blueprint.id // empty')
+  if [ -z "$blueprint_id" ]; then
+    record_test "DevLake Blueprint" "FAIL" "Project '$PROJECT_NAME' has no blueprint configured"
     return 1
   fi
-  record_test "Metrics Endpoint" "PASS" "/metrics endpoint responded"
+  record_test "DevLake Blueprint" "PASS" "Project '$PROJECT_NAME' has blueprint id $blueprint_id"
 
-  if echo "$metrics_resp" | grep -q "dora_deployments_total"; then
-    record_test "DORA Metric Family" "PASS" "dora_deployments_total metric family is present"
+  local pipelines_json pipeline_status pipeline_message
+  pipelines_json=$(curl -s --connect-timeout 10 "http://localhost:$LOCAL_PORT/pipelines?blueprint_id=${blueprint_id}&pageSize=1" 2> /dev/null || echo "")
+  if [ -z "$pipelines_json" ] || [ "$(echo "$pipelines_json" | jq '.pipelines | length')" -eq 0 ]; then
+    record_test "DevLake Pipeline Run" "FAIL" "No pipeline runs found for blueprint $blueprint_id - trigger one via POST /blueprints/$blueprint_id/trigger"
+    return 1
+  fi
+
+  pipeline_status=$(echo "$pipelines_json" | jq -r '.pipelines[0].status')
+  pipeline_message=$(echo "$pipelines_json" | jq -r '.pipelines[0].message // ""' | head -c 200)
+
+  if [ "$pipeline_status" = "TASK_COMPLETED" ]; then
+    record_test "DevLake Pipeline Run" "PASS" "Latest pipeline for '$PROJECT_NAME' completed successfully"
   else
-    record_test "DORA Metric Family" "FAIL" "dora_deployments_total metric family not found in /metrics output"
+    record_test "DevLake Pipeline Run" "FAIL" "Latest pipeline for '$PROJECT_NAME' is '$pipeline_status': ${pipeline_message}..."
     return 1
-  fi
-
-  local tb_line
-  tb_line=$(echo "$metrics_resp" | grep "dora_deployments_total" | grep -i "$SERVICE_NAME" || true)
-  if [ -n "$tb_line" ]; then
-    record_test "Tracer-Bullet Data Point" "PASS" "Found deployment data for '$SERVICE_NAME': $tb_line"
-  else
-    record_test "Tracer-Bullet Data Point" "FAIL" "No dora_deployments_total series labeled service='$SERVICE_NAME' - check GITHUB_TOKEN scope / workflow name matching in dora-metrics config"
   fi
 }
 
@@ -143,10 +151,10 @@ generate_report() {
     --arg plane "dora" \
     --arg test_name "Golden Path - DORA Plane" \
     --arg timestamp "$timestamp" \
-    --arg service "$SERVICE_NAME" \
+    --arg project "$PROJECT_NAME" \
     --argjson total "$TOTAL_TESTS" --argjson passed "$PASSED_TESTS" --argjson failed "$FAILED_TESTS" \
     --arg pass_rate "${pass_rate}%" --argjson results "$results_json" \
-    '{plane:$plane,test_name:$test_name,timestamp:$timestamp,service:$service,summary:{total:$total,passed:$passed,failed:$failed,pass_rate:$pass_rate},results:$results}' \
+    '{plane:$plane,test_name:$test_name,timestamp:$timestamp,project:$project,summary:{total:$total,passed:$passed,failed:$failed,pass_rate:$pass_rate},results:$results}' \
     > "$REPORT_FILE"
   log_info "Report saved to: $REPORT_FILE"
 }
@@ -161,7 +169,7 @@ print_summary() {
     log_success "DORA plane verified ✅"
     return 0
   else
-    log_error "DORA plane has failures ❌"
+    log_error "DORA plane has failures ❌ (see docs/KNOWN_LIMITATIONS.md KL-09 if this is the github_graphql collector failure)"
     return 1
   fi
 }
@@ -171,6 +179,10 @@ main() {
     case $1 in
       -n | --namespace)
         NAMESPACE="$2"
+        shift 2
+        ;;
+      -p | --project)
+        PROJECT_NAME="$2"
         shift 2
         ;;
       -h | --help)
@@ -185,13 +197,13 @@ main() {
     esac
   done
 
-  log_info "Starting golden path dora-plane validation..."
-  check_pod_running || {
+  log_info "Starting golden path dora-plane validation (project: $PROJECT_NAME)..."
+  check_pods_running || {
     generate_report
     print_summary
     exit 1
   }
-  trigger_scrape_and_check
+  check_project_and_pipeline
   generate_report
   print_summary
 }

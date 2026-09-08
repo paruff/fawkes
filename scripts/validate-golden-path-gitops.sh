@@ -2,10 +2,13 @@
 # =============================================================================
 # Script: validate-golden-path-gitops.sh
 # Purpose: Validate the GitOps plane of the tracer-bullet golden path
-#          (#1751 Phase 3): ArgoCD actually synced the image tag CI committed,
-#          and the live Deployment matches what's in git HEAD - not just that
-#          the Application object exists.
+#          (#1751 Phase 3, updated #1909): ArgoCD actually synced the image
+#          tag CI committed, and the live Deployment matches what's in the
+#          tracer-bullet-gitops repo's HEAD - not just that the Application
+#          object exists.
 # Usage: ./scripts/validate-golden-path-gitops.sh [--namespace NAMESPACE]
+# Requires: kubectl (cluster access), gh CLI (authenticated, to read the
+#           gitops repo's manifest)
 # Exit Codes: 0=success, 1=validation failed
 # =============================================================================
 
@@ -19,7 +22,11 @@ NC='\033[0m'
 
 NAMESPACE="${NAMESPACE:-fawkes}"
 ARGOCD_NAMESPACE="${ARGOCD_NAMESPACE:-argocd}"
-MANIFEST_FILE="platform/apps/tracer-bullet/deployment.yaml"
+# tracer-bullet's desired-state manifests were extracted to their own repo in
+# #1813/#1804 (paruff/tracer-bullet-gitops) - there is no local file to read
+# git HEAD from any more. Fetched live via `gh api` instead.
+GITOPS_REPO="${GITOPS_REPO:-paruff/tracer-bullet-gitops}"
+GITOPS_MANIFEST_PATH="deployment.yaml"
 REPORT_FILE="reports/golden-path-gitops-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
 
@@ -61,19 +68,25 @@ record_test() {
 
 check_cluster_access() {
   log_info "Checking cluster access..."
-  if kubectl cluster-info &> /dev/null; then
-    record_test "Cluster Access" "PASS" "Kubernetes cluster is accessible"
-  else
+  if ! kubectl cluster-info &> /dev/null; then
     record_test "Cluster Access" "FAIL" "Cannot access Kubernetes cluster"
     return 1
   fi
+  if ! command -v gh &> /dev/null || ! gh auth status &> /dev/null; then
+    record_test "Cluster Access" "FAIL" "gh CLI not found or not authenticated (needed to read $GITOPS_REPO)"
+    return 1
+  fi
+  record_test "Cluster Access" "PASS" "Kubernetes cluster is accessible and gh CLI is authenticated"
 }
 
 check_application_status() {
   log_info "Checking tracer-bullet Application status..."
   local app_json
-  if ! app_json=$(kubectl get application tracer-bullet -n "$NAMESPACE" -o json 2> /dev/null); then
-    record_test "Application Exists" "FAIL" "Application 'tracer-bullet' not found in namespace '$NAMESPACE'"
+  # ArgoCD Application CRs always live in the ArgoCD namespace, not the
+  # workload's own namespace - $NAMESPACE (fawkes/fawkes-alpha/etc.) is where
+  # the Deployment/pods live, which is a different thing (see check_pods_ready).
+  if ! app_json=$(kubectl get application tracer-bullet -n "$ARGOCD_NAMESPACE" -o json 2> /dev/null); then
+    record_test "Application Exists" "FAIL" "Application 'tracer-bullet' not found in namespace '$ARGOCD_NAMESPACE'"
     return 1
   fi
   record_test "Application Exists" "PASS" "Application 'tracer-bullet' found"
@@ -105,21 +118,24 @@ check_application_status() {
 }
 
 check_image_matches_git() {
-  log_info "Checking live image tag matches git HEAD's manifest..."
+  log_info "Checking live image tag matches $GITOPS_REPO HEAD's manifest..."
 
-  if [ ! -f "$MANIFEST_FILE" ]; then
-    record_test "Manifest Present" "FAIL" "$MANIFEST_FILE not found locally"
+  local manifest_content
+  manifest_content=$(gh api "repos/$GITOPS_REPO/contents/$GITOPS_MANIFEST_PATH" --jq '.content' 2> /dev/null | base64 -d 2> /dev/null || echo "")
+
+  if [ -z "$manifest_content" ]; then
+    record_test "Manifest Present" "FAIL" "Could not fetch $GITOPS_MANIFEST_PATH from $GITOPS_REPO (check gh auth / repo access)"
     return 1
   fi
 
   local git_image live_image
-  git_image=$(grep -oE 'image: ghcr\.io/paruff/tracer-bullet:[^[:space:]]+' "$MANIFEST_FILE" | head -1 | sed 's/image: //')
+  git_image=$(echo "$manifest_content" | grep -oE 'image: ghcr\.io/paruff/tracer-bullet:[^[:space:]]+' | head -1 | sed 's/image: //')
 
   if [ -z "$git_image" ]; then
-    record_test "Git Image Tag" "FAIL" "Could not find tracer-bullet image line in $MANIFEST_FILE"
+    record_test "Git Image Tag" "FAIL" "Could not find tracer-bullet image line in $GITOPS_REPO's $GITOPS_MANIFEST_PATH"
     return 1
   fi
-  record_test "Git Image Tag" "PASS" "git HEAD specifies $git_image"
+  record_test "Git Image Tag" "PASS" "$GITOPS_REPO HEAD specifies $git_image"
 
   live_image=$(kubectl get deployment tracer-bullet -n "$NAMESPACE" -o jsonpath='{.spec.template.spec.containers[0].image}' 2> /dev/null || echo "")
 
@@ -129,9 +145,9 @@ check_image_matches_git() {
   fi
 
   if [ "$live_image" = "$git_image" ]; then
-    record_test "Image Match" "PASS" "Live Deployment image ($live_image) matches git HEAD"
+    record_test "Image Match" "PASS" "Live Deployment image ($live_image) matches $GITOPS_REPO HEAD"
   else
-    record_test "Image Match" "FAIL" "Live Deployment image ($live_image) does NOT match git HEAD ($git_image) - ArgoCD hasn't synced the latest commit yet"
+    record_test "Image Match" "FAIL" "Live Deployment image ($live_image) does NOT match $GITOPS_REPO HEAD ($git_image) - ArgoCD hasn't synced the latest commit yet"
   fi
 }
 

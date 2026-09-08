@@ -2,11 +2,18 @@
 # =============================================================================
 # Script: validate-golden-path-pipeline.sh
 # Purpose: Validate the Pipeline plane of the tracer-bullet golden path
-#          (#1751 Phase 3): the latest CI run for services/tracer-bullet
-#          actually built, scanned, SBOM'd, and signed an image - not just
-#          that the workflow file exists.
-# Usage: ./scripts/validate-golden-path-pipeline.sh [--repo OWNER/REPO]
-# Requires: gh CLI (authenticated), cosign (optional, for signature check)
+#          (#1751 Phase 3, updated #1909): the latest Tekton `golden-path`
+#          PipelineRun for tracer-bullet actually built, scanned, and pushed
+#          an image - not just that the Pipeline definition exists.
+#
+#          tracer-bullet was extracted to its own repo pair in #1813/#1804:
+#          app source lives in paruff/tracer-bullet, but CI now runs as an
+#          in-cluster Tekton pipeline (platform/apps/tekton/golden-path-pipeline.yaml),
+#          not a GitHub Actions workflow. This script was previously written
+#          against the deleted tracer-bullet-ci.yml GitHub Actions workflow
+#          and always failed for the wrong reason (workflow not found).
+# Usage: ./scripts/validate-golden-path-pipeline.sh [--namespace NAMESPACE] [--image-repo OWNER/REPO]
+# Requires: kubectl (cluster access), gh CLI (authenticated, for the GHCR check)
 # Exit Codes: 0=success, 1=validation failed
 # =============================================================================
 
@@ -18,9 +25,10 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-REPO="${REPO:-paruff/fawkes}"
-IMAGE="ghcr.io/paruff/tracer-bullet"
-WORKFLOW="tracer-bullet-ci.yml"
+NAMESPACE="${NAMESPACE:-fawkes}"
+IMAGE_REPO="${IMAGE_REPO:-paruff/tracer-bullet}"
+PIPELINE_NAME="golden-path"
+EXPECTED_TASKS=(fetch-source lint-and-test sonar-scan build-and-push scan-image gitops-promote)
 REPORT_FILE="reports/golden-path-pipeline-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
 
@@ -39,12 +47,13 @@ usage() {
 Usage: $0 [OPTIONS]
 
 Validate the Pipeline plane of the tracer-bullet golden path: the most
-recent push to main triggered $WORKFLOW, and that run built, scanned,
-SBOM'd, and signed a real image in GHCR.
+recent Tekton '$PIPELINE_NAME' PipelineRun in namespace '$NAMESPACE'
+completed successfully and pushed a real image to GHCR.
 
 OPTIONS:
-    -r, --repo REPO     GitHub repo as owner/name (default: $REPO)
-    -h, --help          Show this help message
+    -n, --namespace NAMESPACE   Cluster namespace the pipeline runs in (default: $NAMESPACE)
+    -i, --image-repo REPO       GHCR image repo as owner/name (default: $IMAGE_REPO)
+    -h, --help                  Show this help message
 EOF
 }
 
@@ -63,89 +72,100 @@ record_test() {
 
 check_prerequisites() {
   log_info "Checking prerequisites..."
-  if ! command -v gh &> /dev/null; then
-    record_test "Prerequisites" "FAIL" "gh CLI not found"
+  if ! command -v kubectl &> /dev/null; then
+    record_test "Prerequisites" "FAIL" "kubectl not found"
     return 1
   fi
-  if ! gh auth status &> /dev/null; then
-    record_test "Prerequisites" "FAIL" "gh CLI not authenticated"
+  if ! kubectl cluster-info &> /dev/null; then
+    record_test "Prerequisites" "FAIL" "Cannot access Kubernetes cluster"
     return 1
   fi
-  record_test "Prerequisites" "PASS" "gh CLI installed and authenticated"
+  if ! command -v gh &> /dev/null || ! gh auth status &> /dev/null; then
+    record_test "Prerequisites" "FAIL" "gh CLI not found or not authenticated"
+    return 1
+  fi
+  record_test "Prerequisites" "PASS" "kubectl and gh CLI available and authenticated"
 }
 
 check_latest_run() {
-  log_info "Checking latest $WORKFLOW run on main..."
+  log_info "Checking latest '$PIPELINE_NAME' PipelineRun in namespace '$NAMESPACE'..."
   local run_json
-  run_json=$(gh run list --repo "$REPO" --workflow "$WORKFLOW" --branch main --limit 1 --json databaseId,status,conclusion,headSha,createdAt 2> /dev/null)
+  run_json=$(kubectl get pipelinerun -n "$NAMESPACE" \
+    -l "tekton.dev/pipeline=$PIPELINE_NAME" \
+    --sort-by=.metadata.creationTimestamp \
+    -o json 2> /dev/null)
 
-  if [ -z "$run_json" ] || [ "$(echo "$run_json" | jq 'length')" -eq 0 ]; then
-    record_test "Latest Run" "FAIL" "No $WORKFLOW runs found on main"
+  local run_count
+  run_count=$(echo "$run_json" | jq '.items | length')
+  if [ "$run_count" -eq 0 ]; then
+    record_test "Latest Run" "FAIL" "No '$PIPELINE_NAME' PipelineRuns found in namespace '$NAMESPACE'"
     return 1
   fi
 
-  RUN_ID=$(echo "$run_json" | jq -r '.[0].databaseId')
-  RUN_STATUS=$(echo "$run_json" | jq -r '.[0].status')
-  RUN_CONCLUSION=$(echo "$run_json" | jq -r '.[0].conclusion')
-  RUN_SHA=$(echo "$run_json" | jq -r '.[0].headSha')
+  RUN_NAME=$(echo "$run_json" | jq -r '.items[-1].metadata.name')
+  RUN_JSON=$(echo "$run_json" | jq '.items[-1]')
+  local succeeded_status succeeded_reason
+  succeeded_status=$(echo "$RUN_JSON" | jq -r '.status.conditions[]? | select(.type=="Succeeded") | .status')
+  succeeded_reason=$(echo "$RUN_JSON" | jq -r '.status.conditions[]? | select(.type=="Succeeded") | .reason')
 
-  if [ "$RUN_STATUS" != "completed" ]; then
-    record_test "Latest Run" "FAIL" "Run $RUN_ID is '$RUN_STATUS', not completed yet"
+  # The pipeline's own top-level result is named "image-tag" (see
+  # platform/apps/tekton/golden-path-pipeline.yaml's results: block) - it's
+  # the immutable short-SHA the build-and-push task tagged the image with,
+  # sourced from $(tasks.fetch-source.results.short-sha).
+  RUN_SHA=$(echo "$RUN_JSON" | jq -r '.status.results[]? | select(.name=="image-tag") | .value // empty' | head -1)
+
+  if [ "$succeeded_status" = "True" ]; then
+    record_test "Latest Run" "PASS" "PipelineRun '$RUN_NAME' completed successfully (reason: $succeeded_reason)"
+  elif [ "$succeeded_status" = "Unknown" ] || [ -z "$succeeded_status" ]; then
+    record_test "Latest Run" "FAIL" "PipelineRun '$RUN_NAME' is still running or has no Succeeded condition yet"
     return 1
-  fi
-
-  if [ "$RUN_CONCLUSION" = "success" ]; then
-    record_test "Latest Run" "PASS" "Run $RUN_ID (sha ${RUN_SHA:0:7}) completed successfully"
   else
-    record_test "Latest Run" "FAIL" "Run $RUN_ID (sha ${RUN_SHA:0:7}) concluded '$RUN_CONCLUSION'"
+    record_test "Latest Run" "FAIL" "PipelineRun '$RUN_NAME' concluded '$succeeded_reason'"
     return 1
   fi
 }
 
-check_jobs() {
-  log_info "Checking individual job outcomes for run $RUN_ID..."
-  local jobs_json
-  jobs_json=$(gh api "repos/$REPO/actions/runs/$RUN_ID/jobs" 2> /dev/null)
+check_tasks() {
+  log_info "Checking individual task outcomes for run '$RUN_NAME'..."
+  local taskrun_json
+  taskrun_json=$(kubectl get taskrun -n "$NAMESPACE" \
+    -l "tekton.dev/pipelineRun=$RUN_NAME" -o json 2> /dev/null)
 
-  for job in test build security-scan sbom sign-and-attest update-gitops; do
-    local conclusion
-    conclusion=$(echo "$jobs_json" | jq -r --arg n "$job" '.jobs[] | select(.name==$n or (.name | startswith($n))) | .conclusion' | head -1)
-    if [ "$conclusion" = "success" ]; then
-      record_test "Job: $job" "PASS" "Job '$job' succeeded"
-    elif [ -z "$conclusion" ]; then
-      record_test "Job: $job" "FAIL" "Job '$job' not found in this run"
+  for task in "${EXPECTED_TASKS[@]}"; do
+    local reason
+    reason=$(echo "$taskrun_json" | jq -r --arg t "$task" \
+      '.items[] | select(.metadata.labels["tekton.dev/pipelineTask"]==$t) | .status.conditions[]? | select(.type=="Succeeded") | .reason' | head -1)
+    if [ "$reason" = "Succeeded" ]; then
+      record_test "Task: $task" "PASS" "Task '$task' succeeded"
+    elif [ -z "$reason" ]; then
+      record_test "Task: $task" "FAIL" "Task '$task' not found in run '$RUN_NAME'"
     else
-      record_test "Job: $job" "FAIL" "Job '$job' concluded '$conclusion'"
+      record_test "Task: $task" "FAIL" "Task '$task' concluded '$reason'"
     fi
   done
 }
 
 check_image_pushed() {
   log_info "Checking image was pushed to GHCR..."
-  local pkg_json
-  pkg_json=$(gh api "/repos/$REPO/packages/container/tracer-bullet/versions" --paginate 2> /dev/null || echo "[]")
-  local tag_match
-  tag_match=$(echo "$pkg_json" | jq -r --arg sha "${RUN_SHA:0:40}" '[.[] | select(.metadata.container.tags[]? | startswith($sha[0:7]))] | length')
-
-  if [ "${tag_match:-0}" -gt 0 ] 2> /dev/null; then
-    record_test "Image Pushed" "PASS" "Found a GHCR image version tagged with sha ${RUN_SHA:0:7}"
-  else
-    record_test "Image Pushed" "FAIL" "No GHCR image version found tagged with sha ${RUN_SHA:0:7} (check GITHUB_TOKEN package read scope)"
-  fi
-}
-
-check_signature() {
-  log_info "Checking image signature (cosign)..."
-  if ! command -v cosign &> /dev/null; then
-    record_test "Image Signature" "FAIL" "cosign not installed - cannot verify (install to complete this check)"
+  if [ -z "${RUN_SHA:-}" ]; then
+    record_test "Image Pushed" "FAIL" "Could not determine the commit SHA this run built (no short-sha/commit-sha result on the PipelineRun)"
     return
   fi
-  if cosign verify "${IMAGE}:${RUN_SHA:0:7}" \
-    --certificate-identity-regexp "https://github.com/${REPO}/.github/workflows/${WORKFLOW}.*" \
-    --certificate-oidc-issuer "https://token.actions.githubusercontent.com" &> /dev/null; then
-    record_test "Image Signature" "PASS" "cosign verified a valid keyless signature for ${IMAGE}:${RUN_SHA:0:7}"
+
+  # GHCR package versions are queried under /users (or /orgs) per the GitHub
+  # Packages API, not /repos - confirmed live against ghcr.io/paruff/tracer-bullet.
+  local pkg_json tag_match
+  pkg_json=$(gh api "/users/${IMAGE_REPO%/*}/packages/container/${IMAGE_REPO#*/}/versions" --paginate 2> /dev/null || echo "[]")
+  if ! echo "$pkg_json" | jq -e 'type=="array"' &> /dev/null; then
+    record_test "Image Pushed" "FAIL" "GHCR API did not return a version list for $IMAGE_REPO: $(echo "$pkg_json" | jq -r '.message // "unknown error"')"
+    return
+  fi
+  tag_match=$(echo "$pkg_json" | jq -r --arg sha "${RUN_SHA:0:7}" '[.[] | select(.metadata.container.tags[]? | startswith($sha))] | length')
+
+  if [ "${tag_match:-0}" -gt 0 ] 2> /dev/null; then
+    record_test "Image Pushed" "PASS" "Found a GHCR image version for $IMAGE_REPO tagged with sha ${RUN_SHA:0:7}"
   else
-    record_test "Image Signature" "FAIL" "cosign could not verify a signature for ${IMAGE}:${RUN_SHA:0:7}"
+    record_test "Image Pushed" "FAIL" "No GHCR image version found for $IMAGE_REPO tagged with sha ${RUN_SHA:0:7}"
   fi
 }
 
@@ -163,10 +183,11 @@ generate_report() {
     --arg plane "pipeline" \
     --arg test_name "Golden Path - Pipeline Plane" \
     --arg timestamp "$timestamp" \
-    --arg repo "$REPO" \
+    --arg namespace "$NAMESPACE" \
+    --arg image_repo "$IMAGE_REPO" \
     --argjson total "$TOTAL_TESTS" --argjson passed "$PASSED_TESTS" --argjson failed "$FAILED_TESTS" \
     --arg pass_rate "${pass_rate}%" --argjson results "$results_json" \
-    '{plane:$plane,test_name:$test_name,timestamp:$timestamp,repo:$repo,summary:{total:$total,passed:$passed,failed:$failed,pass_rate:$pass_rate},results:$results}' \
+    '{plane:$plane,test_name:$test_name,timestamp:$timestamp,namespace:$namespace,image_repo:$image_repo,summary:{total:$total,passed:$passed,failed:$failed,pass_rate:$pass_rate},results:$results}' \
     > "$REPORT_FILE"
   log_info "Report saved to: $REPORT_FILE"
 }
@@ -189,8 +210,12 @@ print_summary() {
 main() {
   while [[ $# -gt 0 ]]; do
     case $1 in
-      -r | --repo)
-        REPO="$2"
+      -n | --namespace)
+        NAMESPACE="$2"
+        shift 2
+        ;;
+      -i | --image-repo)
+        IMAGE_REPO="$2"
         shift 2
         ;;
       -h | --help)
@@ -205,7 +230,7 @@ main() {
     esac
   done
 
-  log_info "Starting golden path pipeline-plane validation for $REPO..."
+  log_info "Starting golden path pipeline-plane validation (namespace: $NAMESPACE, image: $IMAGE_REPO)..."
   check_prerequisites || {
     generate_report
     print_summary
@@ -216,9 +241,8 @@ main() {
     print_summary
     exit 1
   }
-  check_jobs
+  check_tasks
   check_image_pushed
-  check_signature
   generate_report
   print_summary
 }

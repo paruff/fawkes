@@ -1,0 +1,116 @@
+name: Golden Path Acceptance Tests
+
+# Runs the tracer-bullet golden-path verification-plane scripts
+# (scripts/validate-golden-path-*.sh, see docs/golden-path-verification-planes.md)
+# against a live, already-bootstrapped cluster on a weekly schedule, per #1909.
+#
+# These scripts check REAL live state (an ArgoCD-synced Application, a
+# completed Tekton PipelineRun, a pushed GHCR image, a DevLake project/
+# pipeline) on a cluster that already has the platform + tracer-bullet
+# deployed - they cannot run against a fresh ephemeral CI cluster the way
+# idp-e2e-tests.yml's ephemeral kind cluster does, because standing up the
+# full platform (ArgoCD, Tekton, DevLake, the golden-path pipeline) from
+# scratch on every run is exactly the expensive `scripts/ignite.sh` bootstrap
+# this weekly check is meant to avoid repeating.
+#
+# Requires a repo secret GOLDEN_PATH_KUBECONFIG: a base64-encoded kubeconfig
+# for whichever cluster is kept available for this purpose (a persistent
+# AKS dev cluster, for example). As of #1909 no such persistent cluster
+# exists yet - the "No cluster configured" step below fails loudly and
+# points back here rather than silently skipping, so this doesn't rot into
+# a false-green check once it starts running on schedule.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Every Monday 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: golden-path-acceptance-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify-planes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:${{ github.job }}"
+
+      - uses: actions/checkout@v7
+
+      - name: No cluster configured
+        if: ${{ env.HAS_KUBECONFIG != 'true' }}
+        env:
+          HAS_KUBECONFIG: ${{ secrets.GOLDEN_PATH_KUBECONFIG != '' }}
+        run: |
+          echo "::error::GOLDEN_PATH_KUBECONFIG repo secret is not set - there is no" \
+               "persistent cluster configured for this weekly check to verify against." \
+               "See the comment at the top of this workflow file and" \
+               "docs/golden-path-verification-planes.md for what this check needs."
+          exit 1
+
+      - name: Set up kubeconfig
+        env:
+          HAS_KUBECONFIG: ${{ secrets.GOLDEN_PATH_KUBECONFIG != '' }}
+        if: ${{ env.HAS_KUBECONFIG == 'true' }}
+        run: |
+          mkdir -p "$HOME/.kube"
+          echo "${{ secrets.GOLDEN_PATH_KUBECONFIG }}" | base64 -d > "$HOME/.kube/config"
+          echo "KUBECONFIG=$HOME/.kube/config" >> "$GITHUB_ENV"
+
+      - name: Prepare reports directory
+        if: ${{ env.HAS_KUBECONFIG == 'true' }}
+        env:
+          HAS_KUBECONFIG: ${{ secrets.GOLDEN_PATH_KUBECONFIG != '' }}
+        run: mkdir -p reports
+
+      - name: Pipeline plane
+        if: ${{ env.HAS_KUBECONFIG == 'true' }}
+        env:
+          HAS_KUBECONFIG: ${{ secrets.GOLDEN_PATH_KUBECONFIG != '' }}
+        run: ./scripts/validate-golden-path-pipeline.sh || echo "PLANE_FAILED=pipeline" >> "$GITHUB_ENV"
+
+      - name: GitOps plane
+        if: ${{ env.HAS_KUBECONFIG == 'true' }}
+        env:
+          HAS_KUBECONFIG: ${{ secrets.GOLDEN_PATH_KUBECONFIG != '' }}
+        run: ./scripts/validate-golden-path-gitops.sh || echo "PLANE_FAILED=${PLANE_FAILED:-},gitops" >> "$GITHUB_ENV"
+
+      - name: Observability plane
+        if: ${{ env.HAS_KUBECONFIG == 'true' }}
+        env:
+          HAS_KUBECONFIG: ${{ secrets.GOLDEN_PATH_KUBECONFIG != '' }}
+        run: ./scripts/validate-golden-path-observability.sh || echo "PLANE_FAILED=${PLANE_FAILED:-},observability" >> "$GITHUB_ENV"
+
+      - name: DORA plane
+        if: ${{ env.HAS_KUBECONFIG == 'true' }}
+        env:
+          HAS_KUBECONFIG: ${{ secrets.GOLDEN_PATH_KUBECONFIG != '' }}
+        run: ./scripts/validate-golden-path-dora.sh || echo "PLANE_FAILED=${PLANE_FAILED:-},dora" >> "$GITHUB_ENV"
+
+      - name: Upload plane reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: golden-path-plane-reports-${{ github.run_id }}
+          path: reports/golden-path-*-validation-*.json
+          retention-days: 30
+          if-no-files-found: ignore
+
+      - name: Fail if any plane failed
+        if: ${{ env.PLANE_FAILED != '' }}
+        run: |
+          echo "::error::Golden path plane(s) failed: $PLANE_FAILED"
+          exit 1
+
+      - name: DORA job finish
+        if: always()
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
