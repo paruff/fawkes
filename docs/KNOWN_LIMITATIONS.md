@@ -235,23 +235,23 @@ detection identifies `main` correctly.
 
 ---
 
-## KL-11 — tracer-bullet Metrics Not Reaching Prometheus (Fix Open, Not Yet Merged)
+## KL-11 — tracer-bullet Metrics Not Reaching Prometheus (RESOLVED 2026-09-08)
 
 **Description:** tracer-bullet exposes Prometheus-format metrics via a pull-based
 `/metrics` endpoint (FastAPI + `prometheus_client`'s `make_asgi_app()`), but nothing
 was scraping it: the platform's OTel Collector only runs an OTLP receiver for its
 metrics pipeline (push-based), and no ServiceMonitor existed for this service.
-Traces and logs are both confirmed working through the same OTel Collector — only
+Traces and logs were both confirmed working through the same OTel Collector — only
 metrics were affected, and only because of this missing scrape target.
 
 **Fix:** [`paruff/tracer-bullet-gitops#2`](https://github.com/paruff/tracer-bullet-gitops/pull/2)
 adds a `ServiceMonitor` (selector `app: tracer-bullet`, port `http`, path
-`/metrics`). Verified live before opening the PR: applied directly to the cluster,
-`up{job="tracer-bullet"}` == 1 for both pods after two Prometheus scrape cycles.
-**Not yet merged** — until it is, this remains a real gap on `main`'s desired state.
+`/metrics`), merged 2026-09-08. Verified live end-to-end after the merge: ArgoCD
+synced the new commit (`a97b71f`), the `ServiceMonitor` shows as an ArgoCD-managed
+resource, and Prometheus reports `up{job="tracer-bullet"}` == 1 for both pods.
 
 **Tracking:** [tracer-bullet-gitops#2](https://github.com/paruff/tracer-bullet-gitops/pull/2),
-open, awaiting review.
+merged.
 
 ---
 
