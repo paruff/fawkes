@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.78](https://github.com/paruff/fawkes/compare/v0.3.77...v0.3.78) (2026-09-08)
+
+
+### Added
+
+* **argocd:** complete live cutover to platform-applicationset ([#1910](https://github.com/paruff/fawkes/issues/1910)) ([224f84c](https://github.com/paruff/fawkes/commit/224f84c54e7047c62f7e899bcda6cb7e6c559493))
+
+
+### Docs
+
+* reflect tracer-bullet's extraction to external golden-path repos ([#1911](https://github.com/paruff/fawkes/issues/1911)) ([f47c1f9](https://github.com/paruff/fawkes/commit/f47c1f9647509539edad54589fd3695843101dbf))
+
 ## [0.3.77](https://github.com/paruff/fawkes/compare/v0.3.76...v0.3.77) (2026-09-07)
 
 
