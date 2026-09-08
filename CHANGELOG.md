@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.79](https://github.com/paruff/fawkes/compare/v0.3.78...v0.3.79) (2026-09-08)
+
+
+### Fixed
+
+* **golden-path:** repair acceptance-test scripts and add weekly CI run ([#1913](https://github.com/paruff/fawkes/issues/1913)) ([66f915d](https://github.com/paruff/fawkes/commit/66f915d9bbd7b2c44d2e87a8d498926b17e09680))
+
 ## [0.3.78](https://github.com/paruff/fawkes/compare/v0.3.77...v0.3.78) (2026-09-08)
 
 
