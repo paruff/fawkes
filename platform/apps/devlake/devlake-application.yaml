@@ -26,9 +26,15 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://apache.github.io/devlake-helm-chart
+    # Switched from the classic Helm repo (https://apache.github.io/devlake-helm-chart,
+    # which only ever publishes up to 1.0.2 - confirmed live via `helm search repo`)
+    # to the OCI registry, which is where every 1.0.3-beta* release actually lives.
+    # DevLake's own release history has iterated 1.0.3-beta9 through beta17 since
+    # January without cutting a final GA tag - none are flagged as GitHub
+    # prereleases, so the latest beta is the real current version, not a preview.
+    repoURL: oci://ghcr.io/apache/devlake-helm-chart/devlake
     chart: devlake
-    targetRevision: 1.0.2
+    targetRevision: 1.0.3-beta15
     helm:
       values: |
         # ============================================================
@@ -49,7 +55,7 @@ spec:
         # full schema.
         # ============================================================
 
-        imageTag: v1.0.2
+        imageTag: v1.0.3-beta15
 
         # DEV DEFAULT: generated, local-dev-only value (see #1797 for the
         # tracked Sealed Secrets rollout) - mysql.password/rootPassword are
