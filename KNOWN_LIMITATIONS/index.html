@@ -5471,6 +5471,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#kl-09-devlake-github-graphql-collection-fails-for-any-repo-root-cause-unknown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-09 — DevLake GitHub GraphQL Collection Fails for Any Repo (Root Cause Unknown)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kl-10-sonarcloud-project-registered-under-wrong-default-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-10 — SonarCloud Project Registered Under Wrong Default Branch
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5618,6 +5640,51 @@ churn or correlate fixes to specific features or PRs.</p>
 </ul>
 <p><strong>Tracking:</strong> No dedicated issue. Consider integrating with GitHub PR labels (e.g.,
 <code>type: bug</code>) or Jira issue types for a stronger rework signal.</p>
+<hr />
+<h2 id="kl-09-devlake-github-graphql-collection-fails-for-any-repo-root-cause-unknown">KL-09 — DevLake GitHub GraphQL Collection Fails for Any Repo (Root Cause Unknown)</h2>
+<p><strong>Description:</strong> DevLake's <code>github_graphql</code> plugin subtasks (Collect Pull Requests,
+Collect Issues) fail with a generic "graphql query got error" against a real,
+correctly-scoped GitHub connection. Confirmed against <code>paruff/tracer-bullet</code> with a
+working connection (<code>GET /proceed-db-migration</code> completed, <code>PUT
+.../connections/{id}/scopes</code> accepted the repo's real numeric GitHub ID). The
+leading theory — OAuth (<code>gho_</code>) vs. classic (<code>ghp_</code>) token format — was tested live
+with a real classic PAT swapped into the connection and produced the identical
+failure, disproving it.</p>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>DORA deployment-frequency/lead-time metrics cannot be collected for any repo via
+  this DevLake instance until this is fixed — the DORA plane of the golden path
+  (see <code>docs/golden-path-verification-planes.md</code>) is unverifiable end-to-end.</li>
+<li>The separately-observed <code>gitextractor</code> "Invalid Git URL" failure was set aside
+  during triage (not needed for the DORA-relevant subtask list) and remains
+  undiagnosed too.</li>
+</ul>
+<p><strong>Tracking:</strong> <a href="https://github.com/paruff/fawkes/issues/1855">#1855</a> — comment added
+2026-09-07 documenting the disproven token-type theory. Next step per that comment:
+enable DevLake's debug-level logging for <code>github_graphql</code>, or read its source for
+where the raw GraphQL error response is being swallowed before it reaches the
+pipeline's task-level error message.</p>
+<hr />
+<h2 id="kl-10-sonarcloud-project-registered-under-wrong-default-branch">KL-10 — SonarCloud Project Registered Under Wrong Default Branch</h2>
+<p><strong>Description:</strong> The <code>tracer-bullet</code> SonarCloud project's default branch is
+registered as <code>master</code>, but the repository's actual default branch is <code>main</code>. This
+was discovered live during golden-path pipeline debugging (#1804) and is a likely
+contributor to an observed quality-gate/New-Code-period inconsistency (the API's
+<code>qualitygates/project_status</code> returned <code>"status":"NONE"</code> on a first analysis with
+89.3% coverage and zero bugs/vulnerabilities/code smells).</p>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>Quality gate evaluation and "new code" baselines may be computed against the
+  wrong branch's history.</li>
+<li><code>sonar.qualitygate.wait</code> was disabled in the golden-path Tekton pipeline
+  (<code>platform/apps/tekton/golden-path-pipeline.yaml</code>) as a workaround for Phase 1,
+  deliberately not blocking on quality gates — see
+  <code>docs/DEPLOYMENT_STRATEGY.md</code>'s 2026-09-07 update. That workaround should be
+  revisited once this is fixed.</li>
+</ul>
+<p><strong>Tracking:</strong> No dedicated issue yet. Likely fix: pass <code>-Dsonar.branch.name=main</code> to
+the scanner invocation, or ensure a non-shallow clone so SonarCloud's own SCM
+detection identifies <code>main</code> correctly.</p>
 
 
 

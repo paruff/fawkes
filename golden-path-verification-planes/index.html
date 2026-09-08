@@ -5469,6 +5469,22 @@ plane, and where does each plane's check live?</p>
 <p>Do not confuse this with <code>docs/golden-path-usage.md</code>, which documents the Jenkins-based
 <code>goldenPathPipeline</code> shared-library pipeline for application teams — an older, separate
 concept that predates this GitHub-Actions-based verification effort.</p>
+<p><strong>Update (2026-09-07, #1804):</strong> the reference service these planes verify against —
+tracer-bullet — was extracted out of the monorepo into its own repo pair:
+<a href="https://github.com/paruff/tracer-bullet"><code>paruff/tracer-bullet</code></a> (app source, plus the
+Tekton <code>golden-path</code> pipeline definition it runs against —
+<code>platform/apps/tekton/golden-path-pipeline.yaml</code>, in-cluster, not GitHub Actions) and
+<a href="https://github.com/paruff/tracer-bullet-gitops"><code>paruff/tracer-bullet-gitops</code></a> (desired
+state, watched by <code>platform/apps/tracer-bullet/tracer-bullet-application.yaml</code>). All
+seven planes were exercised live on a local kind cluster this session against this real
+pipeline run. That live run surfaced 4 concrete bugs in the plane scripts themselves,
+filed as <a href="https://github.com/paruff/fawkes/issues/1909">#1909</a>: the Pipeline script
+hardcodes a workflow filename deleted in #1813 and the monorepo's own repo slug (needs to
+target the external repo); the GitOps script's namespace default doesn't match where
+<code>Application</code> CRs actually live (<code>argocd</code>, not <code>fawkes</code>); the DORA script looks for a pod
+that doesn't exist. The Observability script was the one plane confirmed accurate as-is.
+The "Implemented" status below predates this finding — treat it as "script exists," not
+"script is correct," until #1909 is fixed.</p>
 <h2 id="what-a-plane-is">What a "plane" is</h2>
 <p>A <strong>plane</strong> is one independently-verifiable slice of the golden path: <code>git push</code> → CI
 build/scan/sign → ArgoCD auto-sync → traces/metrics/DORA visible → running healthy
@@ -5631,6 +5647,7 @@ capabilities.</p>
 <li><code>reports/observability-plane-live-verification-2026-09.md</code></li>
 <li><code>docs/DEPLOYMENT_STRATEGY.md</code> — MVP Definition of Done, rollback protocol</li>
 <li><code>docs/BACKLOG.md</code> — wave plan and service inventory</li>
+<li><a href="https://github.com/paruff/fawkes/issues/1909">#1909</a> — the 4 plane-script bugs found during the 2026-09-07 live verification, with acceptance criteria to fix them and wire them into a scheduled (≥weekly) CI job</li>
 </ul>
 
 
