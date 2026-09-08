@@ -255,32 +255,41 @@ merged.
 
 ---
 
-## KL-12 — tracer-bullet's Golden Path Emits No Deployment Signal for DevLake DORA
+## KL-12 — DevLake `dora` Plugin Needs `cicd_tasks`, Not Just `cicd_deployments` (Partially Fixed)
 
 **Description:** With KL-09's collection bug fixed, DevLake's `github_graphql`
-plugin runs clean for `paruff/tracer-bullet` — but DORA metrics still show no data,
-because every layer of DevLake's data (raw GitHub API responses, tool tables, and
-domain tables — `pull_requests`, `cicd_deployments`, `cicd_deployment_commits`) has
-**zero rows** for this repo. Confirmed by querying `devlake-mysql` directly. This
-isn't a bug: tracer-bullet's golden path (`platform/apps/tekton/golden-path-pipeline.yaml`)
-pushes an image to GHCR and opens a GitOps PR — it never opens a PR against
-`paruff/tracer-bullet` itself, and never calls GitHub's Deployments API
-(`POST /repos/paruff/tracer-bullet/deployments`). DevLake's `dora` plugin computes
-its four keys from `cicd_tasks` rows with `type = "Deployment"`, and nothing
-currently produces one.
+plugin ran clean for `paruff/tracer-bullet` — but DORA metrics still showed no
+data, because every layer of DevLake's data (raw GitHub API responses, tool
+tables, and domain tables) had **zero rows** for this repo. Root cause: tracer-bullet's
+golden path (`platform/apps/tekton/golden-path-pipeline.yaml`) pushed an image to
+GHCR and opened a GitOps PR, but never opened a PR against `paruff/tracer-bullet`
+itself and never called GitHub's Deployments API.
+
+**Partial fix, `platform/apps/tekton/golden-path-pipeline.yaml` (PR #1917):** the
+`gitops-promote` task now creates a real GitHub Deployment
+(`POST /repos/paruff/tracer-bullet/deployments`) and marks it successful after
+every promotion. Verified live: `github_graphql`'s existing "Collect Deployments"
+subtask picks this up and it reaches the domain-layer `cicd_deployments` table
+(confirmed 0 → 1 row via a direct `devlake-mysql` query).
+
+**Still not enough, confirmed live:** DevLake's `dora` plugin (queried its own
+`/plugins` metadata: `{"model":"cicd_tasks","requiredFields":{"column":"type","execptedValue":"Deployment"}}`)
+requires `cicd_tasks` rows with `type = "Deployment"` specifically — a *different*
+domain table from `cicd_deployments`, populated by `github_graphql` from GitHub
+Actions workflow/job run data, not from the Deployments API. Since the golden path
+runs on Tekton, there are no GitHub Actions workflow runs for `github_graphql` to
+convert, so `cicd_tasks` stays empty regardless of how many real Deployments this
+fix creates — confirmed live (still 0 rows after re-collection).
 
 **Impact:**
 
-- DORA metrics in DevLake will show no data for tracer-bullet even with a fully
-  healthy DevLake instance and a fully working `github_graphql` collector — this is
-  the actual remaining reason the DORA plane of the golden path
-  (`docs/golden-path-verification-planes.md`) can't go green yet, now that KL-09 is
-  fixed.
+- DORA metrics in DevLake still won't compute for tracer-bullet even after PR
+  #1917 merges — this is the precise remaining reason the DORA plane of the
+  golden path (`docs/golden-path-verification-planes.md`) can't go green.
 
-**Tracking:** No dedicated issue yet. Two possible fixes, not yet evaluated against
-each other: (1) have the `gitops-promote` task in the golden-path pipeline call
-GitHub's Deployments API on success, which `github_graphql`'s existing "Collect
-Deployments" subtask would then pick up naturally; or (2) push deployment events
-directly to DevLake's own `webhook` plugin from the same pipeline step, bypassing
-GitHub entirely. This is new pipeline instrumentation, not a bug fix — scope it as
-its own issue rather than folding it into #1855.
+**Tracking:** No dedicated issue yet. Next step, not yet attempted: DevLake's
+`webhook` plugin, which can accept a directly-shaped deployment task event without
+needing GitHub Actions at all — unlike the Deployments-API approach, it isn't
+structurally blocked by this being a Tekton-based pipeline. This is new pipeline
+instrumentation and new DevLake connection configuration, not a bug fix — scope it
+as its own issue.

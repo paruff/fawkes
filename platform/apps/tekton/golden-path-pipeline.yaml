@@ -93,6 +93,16 @@ spec:
       type: string
       description: owner/repo of the GitOps config repo to raise the promotion PR against
       default: paruff/tracer-bullet-gitops
+    - name: app-repo
+      type: string
+      description: >-
+        owner/repo of the application source repo (not the GitOps repo).
+        Used to record a GitHub Deployment on a successful promotion, so
+        DevLake's github_graphql "Collect Deployments" subtask has a
+        deployment_status row to compute DORA metrics from - see
+        docs/KNOWN_LIMITATIONS.md KL-12. Before this, the pipeline built and
+        promoted images with no deployment signal DevLake could see at all.
+      default: paruff/tracer-bullet
     - name: sonar-host-url
       type: string
       description: >-
@@ -353,6 +363,8 @@ spec:
       params:
         - name: gitops-repo
           value: $(params.gitops-repo)
+        - name: app-repo
+          value: $(params.app-repo)
         - name: image-name
           value: $(params.image-name)
         - name: new-tag
@@ -360,6 +372,8 @@ spec:
       taskSpec:
         params:
           - name: gitops-repo
+            type: string
+          - name: app-repo
             type: string
           - name: image-name
             type: string
@@ -377,7 +391,7 @@ spec:
             script: |
               #!/bin/sh
               set -eu
-              apk add --no-cache github-cli >/dev/null
+              apk add --no-cache github-cli jq >/dev/null
 
               WORK=/tmp/gitops
               rm -rf "$WORK"
@@ -408,3 +422,23 @@ spec:
                 --title "chore: promote image to $(params.new-tag)" \
                 --body "Automated promotion from the Tekton golden-path pipeline."
               gh pr merge "$BRANCH" --repo "$(params.gitops-repo)" --squash --admin
+
+              # Record a GitHub Deployment against the APPLICATION repo (not
+              # the GitOps repo) now that the promotion actually landed. This
+              # is what DevLake's github_graphql "Collect Deployments"
+              # subtask reads to compute DORA metrics - without it, DORA has
+              # zero deployment-frequency/lead-time data no matter how
+              # healthy DevLake's collection otherwise is (KL-12). A failure
+              # here should not fail the pipeline: the promotion itself
+              # already succeeded, and DORA visibility is observability, not
+              # a build-correctness gate.
+              DEPLOY_PAYLOAD=$(jq -n --arg ref "$(params.new-tag)" \
+                '{ref:$ref, environment:"production", auto_merge:false, required_contexts:[]}')
+              DEPLOY_ID=$(echo "$DEPLOY_PAYLOAD" \
+                | gh api "repos/$(params.app-repo)/deployments" --method POST --input - --jq '.id' 2>&1) \
+                || { echo "WARNING: failed to create GitHub Deployment for DORA tracking: $DEPLOY_ID"; exit 0; }
+
+              STATUS_PAYLOAD=$(jq -n '{state:"success", environment:"production"}')
+              echo "$STATUS_PAYLOAD" \
+                | gh api "repos/$(params.app-repo)/deployments/${DEPLOY_ID}/statuses" --method POST --input - > /dev/null \
+                || echo "WARNING: created Deployment ${DEPLOY_ID} but failed to mark it successful"
