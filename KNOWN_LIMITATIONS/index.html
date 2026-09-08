@@ -5505,10 +5505,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kl-12-tracer-bullets-golden-path-emits-no-deployment-signal-for-devlake-dora" class="md-nav__link">
+  <a href="#kl-12-devlake-dora-plugin-needs-cicd_tasks-not-just-cicd_deployments-partially-fixed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        KL-12 — tracer-bullet's Golden Path Emits No Deployment Signal for DevLake DORA
+        KL-12 — DevLake dora Plugin Needs cicd_tasks, Not Just cicd_deployments (Partially Fixed)
       
     </span>
   </a>
@@ -5735,33 +5735,40 @@ resource, and Prometheus reports <code>up{job="tracer-bullet"}</code> == 1 for b
 <p><strong>Tracking:</strong> <a href="https://github.com/paruff/tracer-bullet-gitops/pull/2">tracer-bullet-gitops#2</a>,
 merged.</p>
 <hr />
-<h2 id="kl-12-tracer-bullets-golden-path-emits-no-deployment-signal-for-devlake-dora">KL-12 — tracer-bullet's Golden Path Emits No Deployment Signal for DevLake DORA</h2>
+<h2 id="kl-12-devlake-dora-plugin-needs-cicd_tasks-not-just-cicd_deployments-partially-fixed">KL-12 — DevLake <code>dora</code> Plugin Needs <code>cicd_tasks</code>, Not Just <code>cicd_deployments</code> (Partially Fixed)</h2>
 <p><strong>Description:</strong> With KL-09's collection bug fixed, DevLake's <code>github_graphql</code>
-plugin runs clean for <code>paruff/tracer-bullet</code> — but DORA metrics still show no data,
-because every layer of DevLake's data (raw GitHub API responses, tool tables, and
-domain tables — <code>pull_requests</code>, <code>cicd_deployments</code>, <code>cicd_deployment_commits</code>) has
-<strong>zero rows</strong> for this repo. Confirmed by querying <code>devlake-mysql</code> directly. This
-isn't a bug: tracer-bullet's golden path (<code>platform/apps/tekton/golden-path-pipeline.yaml</code>)
-pushes an image to GHCR and opens a GitOps PR — it never opens a PR against
-<code>paruff/tracer-bullet</code> itself, and never calls GitHub's Deployments API
-(<code>POST /repos/paruff/tracer-bullet/deployments</code>). DevLake's <code>dora</code> plugin computes
-its four keys from <code>cicd_tasks</code> rows with <code>type = "Deployment"</code>, and nothing
-currently produces one.</p>
+plugin ran clean for <code>paruff/tracer-bullet</code> — but DORA metrics still showed no
+data, because every layer of DevLake's data (raw GitHub API responses, tool
+tables, and domain tables) had <strong>zero rows</strong> for this repo. Root cause: tracer-bullet's
+golden path (<code>platform/apps/tekton/golden-path-pipeline.yaml</code>) pushed an image to
+GHCR and opened a GitOps PR, but never opened a PR against <code>paruff/tracer-bullet</code>
+itself and never called GitHub's Deployments API.</p>
+<p><strong>Partial fix, <code>platform/apps/tekton/golden-path-pipeline.yaml</code> (PR #1917):</strong> the
+<code>gitops-promote</code> task now creates a real GitHub Deployment
+(<code>POST /repos/paruff/tracer-bullet/deployments</code>) and marks it successful after
+every promotion. Verified live: <code>github_graphql</code>'s existing "Collect Deployments"
+subtask picks this up and it reaches the domain-layer <code>cicd_deployments</code> table
+(confirmed 0 → 1 row via a direct <code>devlake-mysql</code> query).</p>
+<p><strong>Still not enough, confirmed live:</strong> DevLake's <code>dora</code> plugin (queried its own
+<code>/plugins</code> metadata: <code>{"model":"cicd_tasks","requiredFields":{"column":"type","execptedValue":"Deployment"}}</code>)
+requires <code>cicd_tasks</code> rows with <code>type = "Deployment"</code> specifically — a <em>different</em>
+domain table from <code>cicd_deployments</code>, populated by <code>github_graphql</code> from GitHub
+Actions workflow/job run data, not from the Deployments API. Since the golden path
+runs on Tekton, there are no GitHub Actions workflow runs for <code>github_graphql</code> to
+convert, so <code>cicd_tasks</code> stays empty regardless of how many real Deployments this
+fix creates — confirmed live (still 0 rows after re-collection).</p>
 <p><strong>Impact:</strong></p>
 <ul>
-<li>DORA metrics in DevLake will show no data for tracer-bullet even with a fully
-  healthy DevLake instance and a fully working <code>github_graphql</code> collector — this is
-  the actual remaining reason the DORA plane of the golden path
-  (<code>docs/golden-path-verification-planes.md</code>) can't go green yet, now that KL-09 is
-  fixed.</li>
+<li>DORA metrics in DevLake still won't compute for tracer-bullet even after PR
+  #1917 merges — this is the precise remaining reason the DORA plane of the
+  golden path (<code>docs/golden-path-verification-planes.md</code>) can't go green.</li>
 </ul>
-<p><strong>Tracking:</strong> No dedicated issue yet. Two possible fixes, not yet evaluated against
-each other: (1) have the <code>gitops-promote</code> task in the golden-path pipeline call
-GitHub's Deployments API on success, which <code>github_graphql</code>'s existing "Collect
-Deployments" subtask would then pick up naturally; or (2) push deployment events
-directly to DevLake's own <code>webhook</code> plugin from the same pipeline step, bypassing
-GitHub entirely. This is new pipeline instrumentation, not a bug fix — scope it as
-its own issue rather than folding it into #1855.</p>
+<p><strong>Tracking:</strong> No dedicated issue yet. Next step, not yet attempted: DevLake's
+<code>webhook</code> plugin, which can accept a directly-shaped deployment task event without
+needing GitHub Actions at all — unlike the Deployments-API approach, it isn't
+structurally blocked by this being a Tekton-based pipeline. This is new pipeline
+instrumentation and new DevLake connection configuration, not a bug fix — scope it
+as its own issue.</p>
 
 
 
