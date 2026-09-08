@@ -5472,10 +5472,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kl-09-devlake-github-graphql-collection-fails-for-any-repo-root-cause-unknown" class="md-nav__link">
+  <a href="#kl-09-devlake-github-graphql-collection-resolved-2026-09-08-root-cause-was-token-scope" class="md-nav__link">
     <span class="md-ellipsis">
       
-        KL-09 — DevLake GitHub GraphQL Collection Fails for Any Repo (Root Cause Unknown)
+        KL-09 — DevLake GitHub GraphQL Collection (RESOLVED 2026-09-08 — root cause was token scope)
       
     </span>
   </a>
@@ -5487,6 +5487,28 @@
     <span class="md-ellipsis">
       
         KL-10 — SonarCloud Project Registered Under Wrong Default Branch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kl-11-tracer-bullet-metrics-not-reaching-prometheus-resolved-2026-09-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-11 — tracer-bullet Metrics Not Reaching Prometheus (RESOLVED 2026-09-08)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kl-12-tracer-bullets-golden-path-emits-no-deployment-signal-for-devlake-dora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-12 — tracer-bullet's Golden Path Emits No Deployment Signal for DevLake DORA
       
     </span>
   </a>
@@ -5641,29 +5663,41 @@ churn or correlate fixes to specific features or PRs.</p>
 <p><strong>Tracking:</strong> No dedicated issue. Consider integrating with GitHub PR labels (e.g.,
 <code>type: bug</code>) or Jira issue types for a stronger rework signal.</p>
 <hr />
-<h2 id="kl-09-devlake-github-graphql-collection-fails-for-any-repo-root-cause-unknown">KL-09 — DevLake GitHub GraphQL Collection Fails for Any Repo (Root Cause Unknown)</h2>
-<p><strong>Description:</strong> DevLake's <code>github_graphql</code> plugin subtasks (Collect Pull Requests,
-Collect Issues) fail with a generic "graphql query got error" against a real,
-correctly-scoped GitHub connection. Confirmed against <code>paruff/tracer-bullet</code> with a
-working connection (<code>GET /proceed-db-migration</code> completed, <code>PUT
-.../connections/{id}/scopes</code> accepted the repo's real numeric GitHub ID). The
-leading theory — OAuth (<code>gho_</code>) vs. classic (<code>ghp_</code>) token format — was tested live
-with a real classic PAT swapped into the connection and produced the identical
-failure, disproving it.</p>
-<p><strong>Impact:</strong></p>
-<ul>
-<li>DORA deployment-frequency/lead-time metrics cannot be collected for any repo via
-  this DevLake instance until this is fixed — the DORA plane of the golden path
-  (see <code>docs/golden-path-verification-planes.md</code>) is unverifiable end-to-end.</li>
-<li>The separately-observed <code>gitextractor</code> "Invalid Git URL" failure was set aside
-  during triage (not needed for the DORA-relevant subtask list) and remains
-  undiagnosed too.</li>
-</ul>
-<p><strong>Tracking:</strong> <a href="https://github.com/paruff/fawkes/issues/1855">#1855</a> — comment added
-2026-09-07 documenting the disproven token-type theory. Next step per that comment:
-enable DevLake's debug-level logging for <code>github_graphql</code>, or read its source for
-where the raw GraphQL error response is being swallowed before it reaches the
-pipeline's task-level error message.</p>
+<h2 id="kl-09-devlake-github-graphql-collection-resolved-2026-09-08-root-cause-was-token-scope">KL-09 — DevLake GitHub GraphQL Collection (RESOLVED 2026-09-08 — root cause was token scope)</h2>
+<p><strong>Description (original problem, kept for history):</strong> DevLake's <code>github_graphql</code>
+plugin subtasks (Collect Pull Requests, Collect Issues) failed with a generic
+"graphql query got error" against a real, correctly-scoped-looking GitHub
+connection. The leading theory — OAuth (<code>gho_</code>) vs. classic (<code>ghp_</code>) token format —
+was tested live with a real classic PAT and produced the identical failure,
+disproving it.</p>
+<p><strong>Root cause, found via DevLake debug-level logging</strong> (<code>LOGGING_LEVEL=debug</code> on the
+<code>devlake-lake</code> Deployment, then reading <code>/app/logs/pipeline-&lt;id&gt;-*/task-*-github_graphql.log</code>
+inside the pod directly — the generic pipeline-status message was wrapping and
+truncating the real error before it ever reached the API):</p>
+<div class="highlight"><pre><span></span><code>Your token has not been granted the required scopes to execute this query. The
+'email' field requires one of the following scopes: ['user:email', 'read:user'],
+but your token has only been granted the: ['repo'] scopes.
+</code></pre></div>
+<p>Both tokens tested this session (<code>gho_</code> OAuth token, <code>ghp_</code> classic PAT) had only
+<code>repo</code> scope — neither had <code>read:user</code>/<code>user:email</code>, which is why both failed
+identically and the token-<em>type</em> theory looked plausible but was actually a red
+herring; the real gap was token <em>scope</em>, present in both.</p>
+<p><strong>Fix applied and verified live:</strong> ran <code>gh auth refresh -s read:user</code> (interactive
+device-code flow) to add the missing scope, <code>PATCH</code>ed the DevLake GitHub connection
+with the refreshed token, and retriggered the pipeline. <code>github_graphql</code> (all 41
+collect/extract/convert subtasks, including Deployments/Releases/PRs/Issues)
+completed with <code>TASK_COMPLETED</code> and zero errors.</p>
+<p><strong>Impact of the original bug:</strong> DevLake's <code>github_graphql</code> collection was unusable
+for any repo/connection using a token without this scope — not specific to
+tracer-bullet.</p>
+<p><strong>Still open, separately:</strong> the <code>gitextractor</code> "Invalid Git URL" failure on the same
+pipeline is unrelated to this bug (a different task, different error) and remains
+unfixed — not part of the DORA-relevant subtask list, so not chased further. And see
+KL-12 below: fixing collection did not make DORA metrics appear, because
+tracer-bullet's golden path doesn't yet emit anything for <code>github_graphql</code> to
+collect.</p>
+<p><strong>Tracking:</strong> <a href="https://github.com/paruff/fawkes/issues/1855">#1855</a> — root cause and
+fix documented in a comment; recommend closing once reviewed.</p>
 <hr />
 <h2 id="kl-10-sonarcloud-project-registered-under-wrong-default-branch">KL-10 — SonarCloud Project Registered Under Wrong Default Branch</h2>
 <p><strong>Description:</strong> The <code>tracer-bullet</code> SonarCloud project's default branch is
@@ -5685,6 +5719,49 @@ contributor to an observed quality-gate/New-Code-period inconsistency (the API's
 <p><strong>Tracking:</strong> No dedicated issue yet. Likely fix: pass <code>-Dsonar.branch.name=main</code> to
 the scanner invocation, or ensure a non-shallow clone so SonarCloud's own SCM
 detection identifies <code>main</code> correctly.</p>
+<hr />
+<h2 id="kl-11-tracer-bullet-metrics-not-reaching-prometheus-resolved-2026-09-08">KL-11 — tracer-bullet Metrics Not Reaching Prometheus (RESOLVED 2026-09-08)</h2>
+<p><strong>Description:</strong> tracer-bullet exposes Prometheus-format metrics via a pull-based
+<code>/metrics</code> endpoint (FastAPI + <code>prometheus_client</code>'s <code>make_asgi_app()</code>), but nothing
+was scraping it: the platform's OTel Collector only runs an OTLP receiver for its
+metrics pipeline (push-based), and no ServiceMonitor existed for this service.
+Traces and logs were both confirmed working through the same OTel Collector — only
+metrics were affected, and only because of this missing scrape target.</p>
+<p><strong>Fix:</strong> <a href="https://github.com/paruff/tracer-bullet-gitops/pull/2"><code>paruff/tracer-bullet-gitops#2</code></a>
+adds a <code>ServiceMonitor</code> (selector <code>app: tracer-bullet</code>, port <code>http</code>, path
+<code>/metrics</code>), merged 2026-09-08. Verified live end-to-end after the merge: ArgoCD
+synced the new commit (<code>a97b71f</code>), the <code>ServiceMonitor</code> shows as an ArgoCD-managed
+resource, and Prometheus reports <code>up{job="tracer-bullet"}</code> == 1 for both pods.</p>
+<p><strong>Tracking:</strong> <a href="https://github.com/paruff/tracer-bullet-gitops/pull/2">tracer-bullet-gitops#2</a>,
+merged.</p>
+<hr />
+<h2 id="kl-12-tracer-bullets-golden-path-emits-no-deployment-signal-for-devlake-dora">KL-12 — tracer-bullet's Golden Path Emits No Deployment Signal for DevLake DORA</h2>
+<p><strong>Description:</strong> With KL-09's collection bug fixed, DevLake's <code>github_graphql</code>
+plugin runs clean for <code>paruff/tracer-bullet</code> — but DORA metrics still show no data,
+because every layer of DevLake's data (raw GitHub API responses, tool tables, and
+domain tables — <code>pull_requests</code>, <code>cicd_deployments</code>, <code>cicd_deployment_commits</code>) has
+<strong>zero rows</strong> for this repo. Confirmed by querying <code>devlake-mysql</code> directly. This
+isn't a bug: tracer-bullet's golden path (<code>platform/apps/tekton/golden-path-pipeline.yaml</code>)
+pushes an image to GHCR and opens a GitOps PR — it never opens a PR against
+<code>paruff/tracer-bullet</code> itself, and never calls GitHub's Deployments API
+(<code>POST /repos/paruff/tracer-bullet/deployments</code>). DevLake's <code>dora</code> plugin computes
+its four keys from <code>cicd_tasks</code> rows with <code>type = "Deployment"</code>, and nothing
+currently produces one.</p>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>DORA metrics in DevLake will show no data for tracer-bullet even with a fully
+  healthy DevLake instance and a fully working <code>github_graphql</code> collector — this is
+  the actual remaining reason the DORA plane of the golden path
+  (<code>docs/golden-path-verification-planes.md</code>) can't go green yet, now that KL-09 is
+  fixed.</li>
+</ul>
+<p><strong>Tracking:</strong> No dedicated issue yet. Two possible fixes, not yet evaluated against
+each other: (1) have the <code>gitops-promote</code> task in the golden-path pipeline call
+GitHub's Deployments API on success, which <code>github_graphql</code>'s existing "Collect
+Deployments" subtask would then pick up naturally; or (2) push deployment events
+directly to DevLake's own <code>webhook</code> plugin from the same pipeline step, bypassing
+GitHub entirely. This is new pipeline instrumentation, not a bug fix — scope it as
+its own issue rather than folding it into #1855.</p>
 
 
 
