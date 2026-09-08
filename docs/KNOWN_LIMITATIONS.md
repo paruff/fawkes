@@ -163,31 +163,50 @@ churn or correlate fixes to specific features or PRs.
 
 ---
 
-## KL-09 — DevLake GitHub GraphQL Collection Fails for Any Repo (Root Cause Unknown)
+## KL-09 — DevLake GitHub GraphQL Collection (RESOLVED 2026-09-08 — root cause was token scope)
 
-**Description:** DevLake's `github_graphql` plugin subtasks (Collect Pull Requests,
-Collect Issues) fail with a generic "graphql query got error" against a real,
-correctly-scoped GitHub connection. Confirmed against `paruff/tracer-bullet` with a
-working connection (`GET /proceed-db-migration` completed, `PUT
-.../connections/{id}/scopes` accepted the repo's real numeric GitHub ID). The
-leading theory — OAuth (`gho_`) vs. classic (`ghp_`) token format — was tested live
-with a real classic PAT swapped into the connection and produced the identical
-failure, disproving it.
+**Description (original problem, kept for history):** DevLake's `github_graphql`
+plugin subtasks (Collect Pull Requests, Collect Issues) failed with a generic
+"graphql query got error" against a real, correctly-scoped-looking GitHub
+connection. The leading theory — OAuth (`gho_`) vs. classic (`ghp_`) token format —
+was tested live with a real classic PAT and produced the identical failure,
+disproving it.
 
-**Impact:**
+**Root cause, found via DevLake debug-level logging** (`LOGGING_LEVEL=debug` on the
+`devlake-lake` Deployment, then reading `/app/logs/pipeline-<id>-*/task-*-github_graphql.log`
+inside the pod directly — the generic pipeline-status message was wrapping and
+truncating the real error before it ever reached the API):
 
-- DORA deployment-frequency/lead-time metrics cannot be collected for any repo via
-  this DevLake instance until this is fixed — the DORA plane of the golden path
-  (see `docs/golden-path-verification-planes.md`) is unverifiable end-to-end.
-- The separately-observed `gitextractor` "Invalid Git URL" failure was set aside
-  during triage (not needed for the DORA-relevant subtask list) and remains
-  undiagnosed too.
+```
+Your token has not been granted the required scopes to execute this query. The
+'email' field requires one of the following scopes: ['user:email', 'read:user'],
+but your token has only been granted the: ['repo'] scopes.
+```
 
-**Tracking:** [#1855](https://github.com/paruff/fawkes/issues/1855) — comment added
-2026-09-07 documenting the disproven token-type theory. Next step per that comment:
-enable DevLake's debug-level logging for `github_graphql`, or read its source for
-where the raw GraphQL error response is being swallowed before it reaches the
-pipeline's task-level error message.
+Both tokens tested this session (`gho_` OAuth token, `ghp_` classic PAT) had only
+`repo` scope — neither had `read:user`/`user:email`, which is why both failed
+identically and the token-*type* theory looked plausible but was actually a red
+herring; the real gap was token *scope*, present in both.
+
+**Fix applied and verified live:** ran `gh auth refresh -s read:user` (interactive
+device-code flow) to add the missing scope, `PATCH`ed the DevLake GitHub connection
+with the refreshed token, and retriggered the pipeline. `github_graphql` (all 41
+collect/extract/convert subtasks, including Deployments/Releases/PRs/Issues)
+completed with `TASK_COMPLETED` and zero errors.
+
+**Impact of the original bug:** DevLake's `github_graphql` collection was unusable
+for any repo/connection using a token without this scope — not specific to
+tracer-bullet.
+
+**Still open, separately:** the `gitextractor` "Invalid Git URL" failure on the same
+pipeline is unrelated to this bug (a different task, different error) and remains
+unfixed — not part of the DORA-relevant subtask list, so not chased further. And see
+KL-12 below: fixing collection did not make DORA metrics appear, because
+tracer-bullet's golden path doesn't yet emit anything for `github_graphql` to
+collect.
+
+**Tracking:** [#1855](https://github.com/paruff/fawkes/issues/1855) — root cause and
+fix documented in a comment; recommend closing once reviewed.
 
 ---
 
@@ -213,3 +232,55 @@ contributor to an observed quality-gate/New-Code-period inconsistency (the API's
 **Tracking:** No dedicated issue yet. Likely fix: pass `-Dsonar.branch.name=main` to
 the scanner invocation, or ensure a non-shallow clone so SonarCloud's own SCM
 detection identifies `main` correctly.
+
+---
+
+## KL-11 — tracer-bullet Metrics Not Reaching Prometheus (Fix Open, Not Yet Merged)
+
+**Description:** tracer-bullet exposes Prometheus-format metrics via a pull-based
+`/metrics` endpoint (FastAPI + `prometheus_client`'s `make_asgi_app()`), but nothing
+was scraping it: the platform's OTel Collector only runs an OTLP receiver for its
+metrics pipeline (push-based), and no ServiceMonitor existed for this service.
+Traces and logs are both confirmed working through the same OTel Collector — only
+metrics were affected, and only because of this missing scrape target.
+
+**Fix:** [`paruff/tracer-bullet-gitops#2`](https://github.com/paruff/tracer-bullet-gitops/pull/2)
+adds a `ServiceMonitor` (selector `app: tracer-bullet`, port `http`, path
+`/metrics`). Verified live before opening the PR: applied directly to the cluster,
+`up{job="tracer-bullet"}` == 1 for both pods after two Prometheus scrape cycles.
+**Not yet merged** — until it is, this remains a real gap on `main`'s desired state.
+
+**Tracking:** [tracer-bullet-gitops#2](https://github.com/paruff/tracer-bullet-gitops/pull/2),
+open, awaiting review.
+
+---
+
+## KL-12 — tracer-bullet's Golden Path Emits No Deployment Signal for DevLake DORA
+
+**Description:** With KL-09's collection bug fixed, DevLake's `github_graphql`
+plugin runs clean for `paruff/tracer-bullet` — but DORA metrics still show no data,
+because every layer of DevLake's data (raw GitHub API responses, tool tables, and
+domain tables — `pull_requests`, `cicd_deployments`, `cicd_deployment_commits`) has
+**zero rows** for this repo. Confirmed by querying `devlake-mysql` directly. This
+isn't a bug: tracer-bullet's golden path (`platform/apps/tekton/golden-path-pipeline.yaml`)
+pushes an image to GHCR and opens a GitOps PR — it never opens a PR against
+`paruff/tracer-bullet` itself, and never calls GitHub's Deployments API
+(`POST /repos/paruff/tracer-bullet/deployments`). DevLake's `dora` plugin computes
+its four keys from `cicd_tasks` rows with `type = "Deployment"`, and nothing
+currently produces one.
+
+**Impact:**
+
+- DORA metrics in DevLake will show no data for tracer-bullet even with a fully
+  healthy DevLake instance and a fully working `github_graphql` collector — this is
+  the actual remaining reason the DORA plane of the golden path
+  (`docs/golden-path-verification-planes.md`) can't go green yet, now that KL-09 is
+  fixed.
+
+**Tracking:** No dedicated issue yet. Two possible fixes, not yet evaluated against
+each other: (1) have the `gitops-promote` task in the golden-path pipeline call
+GitHub's Deployments API on success, which `github_graphql`'s existing "Collect
+Deployments" subtask would then pick up naturally; or (2) push deployment events
+directly to DevLake's own `webhook` plugin from the same pipeline step, bypassing
+GitHub entirely. This is new pipeline instrumentation, not a bug fix — scope it as
+its own issue rather than folding it into #1855.
