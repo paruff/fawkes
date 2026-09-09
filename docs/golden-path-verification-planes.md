@@ -47,6 +47,7 @@ workload. Each plane has its own `scripts/validate-golden-path-<plane>.sh` scrip
 | **Security**      | Live image signature verifies, pod securityContext is hardened, smart-alerting rejects unauthenticated alert-ingestion requests (AUD-2), no plaintext credential placeholders remain | `scripts/validate-golden-path-security.sh`        | Implemented — core checks. See below for planned additions (secrets management, policy, code analysis, network security) |
 | **Resources**     | Every golden-path container declares CPU/memory requests and limits, actual usage is known, PVCs are Bound, and the PostgreSQL (CloudNativePG) backing cluster is healthy | `scripts/validate-golden-path-resources.sh`       | Implemented — core checks. See below for planned additions (messaging, key-value, SSO) |
 | **DevEx**         | The service is discoverable and usable through the platform's developer-facing surface — catalog-info.yaml exists, Backstage is deployed, and the component is registered in its live catalog | `scripts/validate-golden-path-devex.sh`           | Implemented — core checks. See below for planned additions (CDE, chat, kanban) |
+| **Progressive Delivery** | Argo Rollouts' Rollout CRD exists with a canary strategy, an AnalysisTemplate is referenced, and any rollback event in status/history completed successfully | `scripts/validate-golden-path-progressive-delivery.sh` | Implemented |
 
 ### Planned additions
 
