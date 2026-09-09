@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.86](https://github.com/paruff/fawkes/compare/v0.3.85...v0.3.86) (2026-09-09)
+
+
+### Fixed
+
+* **opencode:** remove deepseek-v4-flash-free, switch default to mimo-v2.5-free ([#1956](https://github.com/paruff/fawkes/issues/1956)) ([d5d3a41](https://github.com/paruff/fawkes/commit/d5d3a413bde550736526ee5e405d80572c8f6a45))
+
 ## [0.3.85](https://github.com/paruff/fawkes/compare/v0.3.84...v0.3.85) (2026-09-09)
 
 
