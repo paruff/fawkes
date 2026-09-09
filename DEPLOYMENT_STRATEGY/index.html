@@ -5395,6 +5395,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#progressive-delivery-decision-canary-over-bluegreen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progressive Delivery Decision: Canary over Blue/Green
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#target-progressive-delivery-model" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5543,7 +5554,36 @@
 <p>PR #1798 re-triggers <code>tracer-bullet</code> and <code>smart-alerting</code> to confirm all of the above lands correctly end-to-end (build → scan → sign → SBOM → GitOps commit succeeds on the first real attempt → ArgoCD syncs → pod <code>Running</code>) — see that PR for the live result.</p>
 <p><strong>Update (2026-09-07, #1804 Phase 1 tracer bullet):</strong> tracer-bullet now runs the target Phase 2 model for real, not just in-tree. The full chain was exercised live on a local kind cluster: a commit to <a href="https://github.com/paruff/tracer-bullet"><code>paruff/tracer-bullet</code></a> triggers the Tekton <code>golden-path</code> pipeline (<code>platform/apps/tekton/golden-path-pipeline.yaml</code>) — fetch-source → lint-and-test → SonarCloud scan → build-and-push (real GHCR image, <code>ghcr.io/paruff/tracer-bullet</code>) → Trivy image scan → <code>gitops-promote</code>, which opens a real PR against <a href="https://github.com/paruff/tracer-bullet-gitops"><code>paruff/tracer-bullet-gitops</code></a>. Merging that PR lets ArgoCD (via <code>platform/apps/tracer-bullet/tracer-bullet-application.yaml</code>, plus phase-scoped <code>tracer-bullet-{alpha,beta,prod}-applicationset.yaml</code>) auto-sync the new image into the cluster, producing a running, traced, metriced, logged pod. This is the separate-GitOps-repo model the gap table below previously listed as unmet — it is now proven for this one service. Two real gaps found and left open: SonarCloud quality-gate blocking is deliberately disabled for now (<code>sonar.qualitygate.wait=false</code> — new-project baseline was inconsistent; revisit in Phase 2), and DevLake's DORA collection for this repo is blocked by unresolved issue #1855.</p>
 <p><code>paruff/ufawkespipe</code>'s <code>reusable-rollback.yml</code> was checked as a possible shortcut for the "Automated rollback" gap below — it is <strong>not applicable</strong>: it's built for SSH-based deployment to a single host (<code>DEPLOY_HOST</code>/<code>DEPLOY_USER</code>/<code>DEPLOY_KEY</code> + a remote <code>git reset</code> and restart command), not a Kubernetes/ArgoCD GitOps model. The real rollback mechanism here is git-revert + ArgoCD <code>selfHeal</code>, described above.</p>
-<p>There is no progressive delivery or canary analysis. Deployments are all-or-nothing on <code>main</code> push, and rollback (where it exists at all) is an unverified manual <code>git revert</code>.</p>
+<p>There is no progressive delivery or canary analysis deployed for services yet — the Argo Rollouts controller is installed (see Progressive Delivery Decision below) but no service-level <code>Rollout</code> or <code>AnalysisTemplate</code> manifests exist. Deployments are all-or-nothing on <code>main</code> push, and rollback (where it exists at all) is an unverified manual <code>git revert</code>.</p>
+<h2 id="progressive-delivery-decision-canary-over-bluegreen">Progressive Delivery Decision: Canary over Blue/Green</h2>
+<p>Phase 2 (#1805) evaluated both Blue/Green and Canary deployment strategies.
+<strong>Canary was chosen</strong> for the following reasons:</p>
+<ul>
+<li><strong>Traffic-based validation</strong>: Canary shifts traffic incrementally (10% → 50% → 100%),
+  allowing smoke tests and SLO checks against real production traffic before full rollout.
+  Blue/Green switches all traffic at once — a bad deploy hits 100% of users immediately.</li>
+<li><strong>Automated rollback via analysis</strong>: Argo Rollouts' <code>AnalysisTemplate</code> can query Prometheus
+  metrics (error rate, latency) at each canary step and automatically promote or roll back.
+  Blue/Green rollback is fast (switch back to the old ReplicaSet) but has no automated
+  quality gate — it requires a human decision or a separate verification step.</li>
+<li><strong>Reduced blast radius</strong>: A canary step that fails analysis terminates before the next step,
+  limiting exposure to the percentage of traffic routed to the canary. Blue/Green's
+  instantaneous switch means full blast radius until rollback completes.</li>
+<li><strong>GitOps alignment</strong>: both strategies work with GitOps, but canary's incremental nature
+  pairs better with the staged promotion model (staging → production) already planned in
+  the target architecture.</li>
+</ul>
+<p>The tradeoff is that canary requires more infrastructure (Argo Rollouts controller, traffic
+splitting via service mesh or Ingress annotations, <code>AnalysisTemplate</code> resources) and slightly
+more complex rollback logic. This was accepted because the infrastructure is now in place
+(Argo Rollouts controller deployed via <code>platform/apps/argo-rollouts/argo-rollouts-application.yaml</code>)
+and the operational benefits outweigh the setup cost.</p>
+<blockquote>
+<p><strong>Status</strong>: The Argo Rollouts controller is installed and synced on the cluster. No
+service-level <code>Rollout</code> or <code>AnalysisTemplate</code> manifests have been created yet — these
+are tracked in the Phase 2 issues in this list. The concrete manifest shapes will be
+documented in Phase 3 below once they exist for real.</p>
+</blockquote>
 <h2 id="target-progressive-delivery-model">Target Progressive Delivery Model</h2>
 <p>The target model follows a canary → staging → production progression with automated gates at each stage.</p>
 <h3 id="phases">Phases</h3>
@@ -5566,6 +5606,8 @@
 <li>Automated smoke tests run at each step (health endpoints, BDD scenarios)</li>
 <li>Rollback is automatic if smoke tests fail at any canary step</li>
 <li>Metrics (error budget, latency SLOs) are evaluated before promotion</li>
+<li>Implementation: per-service <code>Rollout</code> manifests replace <code>Deployment</code> resources; <code>AnalysisTemplate</code> resources query Prometheus for golden-signal checks at each canary step</li>
+<li><strong>Pending</strong>: no service-level <code>Rollout</code> or <code>AnalysisTemplate</code> manifests exist yet — tracked in the Phase 2 issues in this epic (#1805). This section will be updated with cross-links to the actual manifest files once they are implemented.</li>
 </ul>
 <h4 id="phase-4-production-gate">Phase 4: Production Gate</h4>
 <ul>
@@ -5611,7 +5653,7 @@ in step 1.</p>
 <tbody>
 <tr>
 <td>CI guard on main</td>
-<td>❌</td>
+<td>✅ (Phase 1, <code>code-quality.yml</code> via reusable workflow)</td>
 <td>✅ (Phase 1)</td>
 </tr>
 <tr>
@@ -5626,7 +5668,7 @@ in step 1.</p>
 </tr>
 <tr>
 <td>Canary deployments</td>
-<td>❌</td>
+<td>❌ — Argo Rollouts controller installed (<code>platform/apps/argo-rollouts/argo-rollouts-application.yaml</code>); no service-level <code>Rollout</code> or <code>AnalysisTemplate</code> manifests yet</td>
 <td>✅</td>
 </tr>
 <tr>
