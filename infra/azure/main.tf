@@ -48,6 +48,16 @@ resource "azurerm_subnet" "aks_subnet" {
   resource_group_name  = azurerm_resource_group.aks_rg.name
   virtual_network_name = azurerm_virtual_network.aks_vnet.name
   address_prefixes     = [var.aks_subnet_address_prefix]
+  # Required by azurerm_storage_account.terraform_state's network_rules
+  # below, which ACLs itself to this subnet - confirmed live via a real
+  # apply failure ("SubnetsHaveNoServiceEndpointsConfigured") before this
+  # was added. azurerm provider v5 moved this from a plain
+  # service_endpoints list to a repeatable service_endpoint block -
+  # confirmed against the live provider schema (`terraform providers
+  # schema -json`), not guessed from older provider-version docs.
+  service_endpoint {
+    service = "Microsoft.Storage"
+  }
 }
 
 # Log Analytics workspace for monitoring
