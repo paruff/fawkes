@@ -2,7 +2,9 @@
 
 > For GitHub Copilot on github.com. OpenCode uses `.agents/skills/` instead.
 >
-> **Models available:** gemma4:e4b, deepseek v4 flash, mimo v2.5 free (OpenCode Zen free tier).
+> **Models available:** gemma4:e4b, mimo v2.5 free (OpenCode Zen free tier). deepseek v4 flash was
+> dropped after a real run failed with "Model not found" despite the model still being listed in
+> models.dev's public catalog at the time.
 > Copilot agents below use GPT-4.1 (0x credits) or Claude Sonnet 4.6 (1x credits).
 
 ## Available Agents
