@@ -92,11 +92,24 @@ spec:
   # unguarded; genuinely optional fields use dig with a default instead.
   goTemplateOptions: ["missingkey=error"]
   generators:
+    # Scoped to Phase 1 Tracer Bullet Alpha (#1804) apps only - git, gitops,
+    # container, and the observability/DORA/endpoint evidence chain it
+    # needs (Prometheus+Grafana, Loki, Tempo, otel-collector, DevLake,
+    # ingress-nginx, storage-classes) - plus tracer-bullet itself. Revert to
+    # the single recursive glob ("platform/apps/**/*-application.yaml") when
+    # moving to beta scope.
     - git:
         repoURL: https://github.com/paruff/fawkes.git
         revision: HEAD
         files:
-          - path: "platform/apps/**/*-application.yaml"
+          - path: "platform/apps/tracer-bullet/tracer-bullet-application.yaml"
+          - path: "platform/apps/prometheus/prometheus-application.yaml"
+          - path: "platform/apps/loki/loki-application.yaml"
+          - path: "platform/apps/tempo/tempo-application.yaml"
+          - path: "platform/apps/opentelemetry/otel-collector-application.yaml"
+          - path: "platform/apps/devlake/devlake-application.yaml"
+          - path: "platform/apps/ingress-nginx/ingress-nginx-application.yaml"
+          - path: "platform/apps/storage/storage-application.yaml"
   template:
     metadata:
       name: '{{ .metadata.name }}'
