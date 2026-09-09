@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.92](https://github.com/paruff/fawkes/compare/v0.3.91...v0.3.92) (2026-09-09)
+
+
+### Chores
+
+* **argocd:** scope platform ApplicationSet to alpha-only apps ([#1973](https://github.com/paruff/fawkes/issues/1973)) ([7729d3e](https://github.com/paruff/fawkes/commit/7729d3eec2f49d1c7882c8a0fc91e15714a69942))
+
 ## [0.3.91](https://github.com/paruff/fawkes/compare/v0.3.90...v0.3.91) (2026-09-09)
 
 
