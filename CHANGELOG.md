@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.89](https://github.com/paruff/fawkes/compare/v0.3.88...v0.3.89) (2026-09-09)
+
+
+### Fixed
+
+* New progressive-delivery plane script ([#1966](https://github.com/paruff/fawkes/issues/1966)) ([7c8efdd](https://github.com/paruff/fawkes/commit/7c8efdd2ea0a4c10fc874f35c68782dfe38c5f2f))
+
 ## [0.3.88](https://github.com/paruff/fawkes/compare/v0.3.87...v0.3.88) (2026-09-09)
 
 
