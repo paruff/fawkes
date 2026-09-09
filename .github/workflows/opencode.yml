@@ -97,7 +97,16 @@ jobs:
           fi
 
           if [ "$STRONG_MODEL" = "true" ]; then
-            PREFERRED="nvidia/nvidia/nemotron-3-ultra-550b-a55b"
+            # Switched from nvidia/nvidia/nemotron-3-ultra-550b-a55b (paid:
+            # $0.50/$2.50 per million tokens via NVIDIA's own API, confirmed
+            # live against models.dev) to opencode's own Zen-hosted free
+            # variant of the same model family - confirmed live via Zen's
+            # docs page and cross-checked against models.dev
+            # ($0/$0/$0, tool_call=true, 1M context, not deprecated). Same
+            # model tier, no cost, as long as Zen keeps offering it free -
+            # Zen's own docs note free-tier models are promotional
+            # ("collecting feedback"), so re-verify this if it ever breaks.
+            PREFERRED="opencode/nemotron-3-ultra-free"
           else
             # deepseek-v4-flash-free was removed here after a real run failed
             # with "Model not found: opencode/deepseek-v4-flash-free" even
