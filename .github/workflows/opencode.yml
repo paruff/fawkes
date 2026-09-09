@@ -99,7 +99,16 @@ jobs:
           if [ "$STRONG_MODEL" = "true" ]; then
             PREFERRED="nvidia/nvidia/nemotron-3-ultra-550b-a55b"
           else
-            PREFERRED="opencode/deepseek-v4-flash-free"
+            # deepseek-v4-flash-free was removed here after a real run failed
+            # with "Model not found: opencode/deepseek-v4-flash-free" even
+            # though models.dev's catalog still listed it as existing at the
+            # time - the live-catalog check below caught renames/removals
+            # from the catalog itself, but not this kind of catalog/runtime
+            # drift (the model was gone from opencode's actual backend before
+            # the public catalog caught up). mimo-v2.5-free is the current
+            # replacement; if this ever breaks the same way, verify against
+            # a real invocation, not just the catalog, before trusting it.
+            PREFERRED="opencode/mimo-v2.5-free"
           fi
 
           curl -fsSL https://models.dev/api.json -o /tmp/catalog.json

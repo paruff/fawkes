@@ -81,7 +81,8 @@ None are deployed to a live cluster.
 
 ### OpenCode Skills (`.agents/skills/`)
 
-6 skills for free-tier models (gemma4:e4b, deepseek v4 flash, mimo v2.5):
+6 skills for free-tier models (gemma4:e4b, mimo v2.5 - deepseek v4 flash was dropped, see
+`.github/agents/AGENTS.md`):
 
 - `kubernetes-manifests` — K8s labels, limits, security context
 - `opentelemetry` — OTEL SDK, FastAPI instrumentor, gen_ai.\* conventions
