@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.88](https://github.com/paruff/fawkes/compare/v0.3.87...v0.3.88) (2026-09-09)
+
+
+### Fixed
+
+* Added Argo Rollouts controller ArgoCD Application ([#1963](https://github.com/paruff/fawkes/issues/1963)) ([00c19ff](https://github.com/paruff/fawkes/commit/00c19ff393c9819bd9cfc29c806888b6d8ae10eb))
+
 ## [0.3.87](https://github.com/paruff/fawkes/compare/v0.3.86...v0.3.87) (2026-09-09)
 
 
