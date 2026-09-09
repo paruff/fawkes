@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.91](https://github.com/paruff/fawkes/compare/v0.3.90...v0.3.91) (2026-09-09)
+
+
+### Fixed
+
+* **azure:** add missing service_endpoint for storage account network ACL ([#1970](https://github.com/paruff/fawkes/issues/1970)) ([891e7ea](https://github.com/paruff/fawkes/commit/891e7ea79bc8374a401facf07052cd75d1b7b9c9))
+
 ## [0.3.90](https://github.com/paruff/fawkes/compare/v0.3.89...v0.3.90) (2026-09-09)
 
 
