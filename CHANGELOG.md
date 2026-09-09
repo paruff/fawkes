@@ -5,6 +5,14 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.85](https://github.com/paruff/fawkes/compare/v0.3.84...v0.3.85) (2026-09-09)
+
+
+### Fixed
+
+* Fixed sonar.branch.name=main in Tekton pipeline ([#1952](https://github.com/paruff/fawkes/issues/1952)) ([a465e8f](https://github.com/paruff/fawkes/commit/a465e8fb7b7158032f6cf7b702be8c3461ef4d57))
+* Opencode workflow copied to tracer-bullet; needs API keys ([#1954](https://github.com/paruff/fawkes/issues/1954)) ([5776632](https://github.com/paruff/fawkes/commit/5776632dc80ddde9fbd26f6a7bbe8bf30b983bf9))
+
 ## [0.3.84](https://github.com/paruff/fawkes/compare/v0.3.83...v0.3.84) (2026-09-09)
 
 
