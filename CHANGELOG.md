@@ -5,6 +5,14 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.87](https://github.com/paruff/fawkes/compare/v0.3.86...v0.3.87) (2026-09-09)
+
+
+### Fixed
+
+* Created Backstage OAuth SealedSecret + kustomization update ([#1960](https://github.com/paruff/fawkes/issues/1960)) ([fec0c69](https://github.com/paruff/fawkes/commit/fec0c69a84e5f674def13ac5867672ebea0b7bed))
+* **opencode:** switch strong model to free opencode/nemotron-3-ultra-free ([#1961](https://github.com/paruff/fawkes/issues/1961)) ([4388b21](https://github.com/paruff/fawkes/commit/4388b21f8889c3d1f2df0e0804545a5dce9a3bd4))
+
 ## [0.3.86](https://github.com/paruff/fawkes/compare/v0.3.85...v0.3.86) (2026-09-09)
 
 
