@@ -29,7 +29,37 @@ PR #1798 re-triggers `tracer-bullet` and `smart-alerting` to confirm all of the 
 
 `paruff/ufawkespipe`'s `reusable-rollback.yml` was checked as a possible shortcut for the "Automated rollback" gap below — it is **not applicable**: it's built for SSH-based deployment to a single host (`DEPLOY_HOST`/`DEPLOY_USER`/`DEPLOY_KEY` + a remote `git reset` and restart command), not a Kubernetes/ArgoCD GitOps model. The real rollback mechanism here is git-revert + ArgoCD `selfHeal`, described above.
 
-There is no progressive delivery or canary analysis. Deployments are all-or-nothing on `main` push, and rollback (where it exists at all) is an unverified manual `git revert`.
+There is no progressive delivery or canary analysis deployed for services yet — the Argo Rollouts controller is installed (see Progressive Delivery Decision below) but no service-level `Rollout` or `AnalysisTemplate` manifests exist. Deployments are all-or-nothing on `main` push, and rollback (where it exists at all) is an unverified manual `git revert`.
+
+## Progressive Delivery Decision: Canary over Blue/Green
+
+Phase 2 (#1805) evaluated both Blue/Green and Canary deployment strategies.
+**Canary was chosen** for the following reasons:
+
+- **Traffic-based validation**: Canary shifts traffic incrementally (10% → 50% → 100%),
+  allowing smoke tests and SLO checks against real production traffic before full rollout.
+  Blue/Green switches all traffic at once — a bad deploy hits 100% of users immediately.
+- **Automated rollback via analysis**: Argo Rollouts' `AnalysisTemplate` can query Prometheus
+  metrics (error rate, latency) at each canary step and automatically promote or roll back.
+  Blue/Green rollback is fast (switch back to the old ReplicaSet) but has no automated
+  quality gate — it requires a human decision or a separate verification step.
+- **Reduced blast radius**: A canary step that fails analysis terminates before the next step,
+  limiting exposure to the percentage of traffic routed to the canary. Blue/Green's
+  instantaneous switch means full blast radius until rollback completes.
+- **GitOps alignment**: both strategies work with GitOps, but canary's incremental nature
+  pairs better with the staged promotion model (staging → production) already planned in
+  the target architecture.
+
+The tradeoff is that canary requires more infrastructure (Argo Rollouts controller, traffic
+splitting via service mesh or Ingress annotations, `AnalysisTemplate` resources) and slightly
+more complex rollback logic. This was accepted because the infrastructure is now in place
+(Argo Rollouts controller deployed via `platform/apps/argo-rollouts/argo-rollouts-application.yaml`)
+and the operational benefits outweigh the setup cost.
+
+> **Status**: The Argo Rollouts controller is installed and synced on the cluster. No
+> service-level `Rollout` or `AnalysisTemplate` manifests have been created yet — these
+> are tracked in the Phase 2 issues in this list. The concrete manifest shapes will be
+> documented in Phase 3 below once they exist for real.
 
 ## Target Progressive Delivery Model
 
@@ -56,6 +86,8 @@ The target model follows a canary → staging → production progression with au
 - Automated smoke tests run at each step (health endpoints, BDD scenarios)
 - Rollback is automatic if smoke tests fail at any canary step
 - Metrics (error budget, latency SLOs) are evaluated before promotion
+- Implementation: per-service `Rollout` manifests replace `Deployment` resources; `AnalysisTemplate` resources query Prometheus for golden-signal checks at each canary step
+- **Pending**: no service-level `Rollout` or `AnalysisTemplate` manifests exist yet — tracked in the Phase 2 issues in this epic (#1805). This section will be updated with cross-links to the actual manifest files once they are implemented.
 
 #### Phase 4: Production Gate
 
@@ -94,10 +126,10 @@ in step 1.
 
 | Capability | Current | Target |
 |---|---|---|
-| CI guard on main | ❌ | ✅ (Phase 1) |
+| CI guard on main | ✅ (Phase 1, `code-quality.yml` via reusable workflow) | ✅ (Phase 1) |
 | Versioned artifacts | Partial | ✅ |
 | GitOps separate repo | ✅ for tracer-bullet (`paruff/tracer-bullet-gitops`, proven live 2026-09-07); in-tree only for dora-metrics/smart-alerting | ✅ (separate repo) |
-| Canary deployments | ❌ | ✅ |
+| Canary deployments | ❌ — Argo Rollouts controller installed (`platform/apps/argo-rollouts/argo-rollouts-application.yaml`); no service-level `Rollout` or `AnalysisTemplate` manifests yet | ✅ |
 | Automated rollback | Mechanism verified live (2026-09-05, see Rollback Protocol above) - the `selfHeal` half is proven; a full `git revert` + PR merge cycle is not yet tested | ✅ |
 | Post-deployment verification | ❌ | ✅ |
 | deployment events | ❌ | ✅ |
