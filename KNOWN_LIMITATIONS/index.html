@@ -5515,6 +5515,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#kl-13-trivy-image-scan-ignores-unfixed-cves-ignore-unfixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-13 — Trivy Image Scan Ignores Unfixed CVEs (--ignore-unfixed)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5769,6 +5780,46 @@ needing GitHub Actions at all — unlike the Deployments-API approach, it isn't
 structurally blocked by this being a Tekton-based pipeline. This is new pipeline
 instrumentation and new DevLake connection configuration, not a bug fix — scope it
 as its own issue.</p>
+<hr />
+<h2 id="kl-13-trivy-image-scan-ignores-unfixed-cves-ignore-unfixed">KL-13 — Trivy Image Scan Ignores Unfixed CVEs (<code>--ignore-unfixed</code>)</h2>
+<p><strong>Description:</strong> The golden-path pipeline's <code>scan-image</code> task (<code>platform/apps/tekton/golden-path-pipeline.yaml</code>) runs:
+<div class="highlight"><pre><span></span><code>trivy image --severity CRITICAL,HIGH --ignore-unfixed --exit-code 1
+</code></pre></div>
+The <code>--ignore-unfixed</code> flag causes Trivy to <strong>not fail</strong> on CRITICAL/HIGH vulnerabilities that have no vendor fix published yet. This was added after a real pipeline run blocked on freshly-disclosed 2026 CVEs in <code>perl</code> and <code>util-linux</code> (e.g., <code>CVE-2026-13346</code>) that were already at the latest Debian 13 patch level (<code>2.41.5-0+deb13u1</code>) with no upstream fix available. Bumping the base image tag cannot resolve these — any current <code>python:3.13.x-slim</code> pulls the same Debian 13 base with the same unfixed CVEs.</p>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>Images with known CRITICAL/HIGH CVEs that have no vendor fix <strong>pass</strong> the quality gate.</li>
+<li>The gate only blocks on vulnerabilities that <em>have</em> an available fix (i.e., actionable findings).</li>
+<li>This is a deliberate tradeoff: a gate that permanently blocks on unactionable CVEs loses signal value and prevents any deployment, including security fixes for other issues.</li>
+</ul>
+<p><strong>Legitimate Exception vs. Real Problem:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Policy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CVE has a vendor fix available (newer package version in upstream distro)</td>
+<td><strong>Block</strong> — the gate should catch this; rebuild on updated base image</td>
+</tr>
+<tr>
+<td>CVE has <strong>no</strong> vendor fix yet (upstream hasn't released a patch)</td>
+<td><strong>Allow via <code>--ignore-unfixed</code></strong> — unactionable; document in release notes</td>
+</tr>
+<tr>
+<td>CVE is in a transitive dependency not directly used at runtime</td>
+<td><strong>Allow</strong> — multi-stage Dockerfiles should strip unused runtime deps (e.g., <code>pip</code>/<code>setuptools</code> removed from runtime stage)</td>
+</tr>
+<tr>
+<td>CVE is a false positive / not applicable to the service's code paths</td>
+<td><strong>Allow</strong> — suppress via <code>.trivyignore</code> with justification</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tracking:</strong> Related to Phase 2 quality-gate hardening (#1805). Revisit when distroless/chainguard base images are adopted (tracked separately) — those reduce the unfixed-CVE surface area significantly.</p>
 
 
 
