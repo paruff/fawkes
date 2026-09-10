@@ -126,7 +126,21 @@ spec:
         chart: '{{ dig "spec" "source" "chart" "" . }}'
         path: '{{ dig "spec" "source" "path" "" . }}'
         helm:
-          values: '{{ dig "spec" "source" "helm" "values" "" . }}'
+          # Some source files set helm.valuesObject (a structured YAML object)
+          # instead of helm.values (a plain string) - falling back to only
+          # `.helm.values` here silently dropped valuesObject entirely
+          # (confirmed live: loki's committed valuesObject, including a real
+          # storage-config fix, was rendered with empty helm values and its
+          # own generated Application never carried it). A block scalar (|)
+          # is required, not a single-quoted flow scalar, so multi-line YAML
+          # from toYaml isn't corrupted by single-quote line-folding.
+          values: |
+            {{- $v := dig "spec" "source" "helm" "values" "" . }}
+            {{- if $v }}
+            {{- $v | nindent 12 }}
+            {{- else }}
+            {{- dig "spec" "source" "helm" "valuesObject" dict . | toYaml | nindent 12 }}
+            {{- end }}
       destination:
         server: '{{ .spec.destination.server }}'
         namespace: '{{ .spec.destination.namespace }}'
