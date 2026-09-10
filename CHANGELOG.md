@@ -5,6 +5,15 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.93](https://github.com/paruff/fawkes/compare/v0.3.92...v0.3.93) (2026-09-10)
+
+
+### Fixed
+
+* **argocd:** honor helm.valuesObject in the platform ApplicationSet template ([#1979](https://github.com/paruff/fawkes/issues/1979)) ([fca4819](https://github.com/paruff/fawkes/commit/fca48196d4ee57f534c1dc285129300e3697075a))
+* **platform:** remove hardcoded storageClassName: standard ([#1980](https://github.com/paruff/fawkes/issues/1980)) ([28619d5](https://github.com/paruff/fawkes/commit/28619d5a25218e329a011098c121e90d6850594a))
+* **scripts:** land homelab unattended-startup files missed by PR [#1974](https://github.com/paruff/fawkes/issues/1974) ([#1978](https://github.com/paruff/fawkes/issues/1978)) ([71cc572](https://github.com/paruff/fawkes/commit/71cc572bb388647e12b7dad681401455bf0e9927))
+
 ## [0.3.92](https://github.com/paruff/fawkes/compare/v0.3.91...v0.3.92) (2026-09-09)
 
 
