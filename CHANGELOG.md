@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.94](https://github.com/paruff/fawkes/compare/v0.3.93...v0.3.94) (2026-09-10)
+
+
+### Fixed
+
+* Removed hardcoded storageClass: standard from 4 PVCs ([#1981](https://github.com/paruff/fawkes/issues/1981)) ([7ce929e](https://github.com/paruff/fawkes/commit/7ce929e1d310a6c5f9c19b58927ee4b67fac1dad))
+
 ## [0.3.93](https://github.com/paruff/fawkes/compare/v0.3.92...v0.3.93) (2026-09-10)
 
 
