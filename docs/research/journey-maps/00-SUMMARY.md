@@ -181,23 +181,23 @@ These pain points appear across multiple journeys, indicating systemic issues:
 
 | Metric                            | Current    | Target    | Journey |
 | --------------------------------- | ---------- | --------- | ------- |
-| **Onboarding**                    |
+| **Onboarding**                    |            |           |         |
 | Time to first deployment          | 7-10 days  | < 3 days  | #1      |
 | Time to independence              | 3-4 weeks  | < 2 weeks | #1      |
 | New hire satisfaction             | 6/10       | > 8/10    | #1      |
-| **Deployment**                    |
+| **Deployment**                    |            |           |         |
 | Time to deploy new service        | 8-10 hours | < 4 hours | #2      |
 | First-time success rate           | 40%        | > 80%     | #2      |
 | Developer confidence              | 5/10       | > 8/10    | #2      |
-| **Incidents**                     |
+| **Incidents**                     |            |           |         |
 | Mean Time to Investigate          | 35 min     | < 10 min  | #3      |
 | Mean Time to Resolve              | 80 min     | < 30 min  | #3      |
 | Incidents requiring platform team | 60%        | < 20%     | #3      |
-| **Feature Requests**              |
+| **Feature Requests**              |            |           |         |
 | Time to initial response          | 1 week     | < 2 days  | #4      |
 | Time to prioritization            | 4 weeks    | < 2 weeks | #4      |
 | Requester satisfaction            | 5/10       | > 8/10    | #4      |
-| **Contributions**                 |
+| **Contributions**                 |            |           |         |
 | Time to first contribution        | 4 weeks    | < 2 weeks | #5      |
 | Contribution acceptance rate      | 60%        | > 80%     | #5      |
 | Repeat contributors               | 30%        | > 50%     | #5      |

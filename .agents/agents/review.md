@@ -1,7 +1,7 @@
 ---
 name: review
 description: Reviews PRs for architecture violations, test gaps, security surface, and completeness of the AI-Assisted Review Block. Use when a PR is ready for review or when assessing risk before merging a change.
-model: claude-sonnet-4-6
+model: frontier
 ---
 
 # Review Agent

@@ -15,6 +15,7 @@ import (
 
     "github.com/open-feature/go-sdk/openfeature"
     unleash "github.com/open-feature/go-sdk-contrib/providers/unleash/pkg"
+    unleashclient "github.com/Unleash/unleash-client-go/v4"
 )
 
 // InitializeFeatureFlags initializes OpenFeature with Unleash provider
@@ -29,12 +30,16 @@ func InitializeFeatureFlags() error {
         return fmt.Errorf("UNLEASH_API_TOKEN not set")
     }
 
-    provider := unleash.NewProvider(
-        unleash.WithURL(unleashURL),
-        unleash.WithAppName("go-service"),
-        unleash.WithAPIToken(apiToken),
-        unleash.WithRefreshInterval(30 * time.Second),
-    )
+    provider, err := unleash.NewProvider(unleash.ProviderConfig{
+        Options: []unleashclient.ConfigOption{
+            unleashclient.WithUrl(unleashURL),
+            unleashclient.WithAppName("go-service"),
+            unleashclient.WithRefreshInterval(30 * time.Second),
+        },
+    })
+    if err != nil {
+        return fmt.Errorf("failed to create Unleash provider: %w", err)
+    }
 
     openfeature.SetProvider(provider)
     return nil

@@ -140,13 +140,13 @@ find "$SECRETS_DIR" -name "*-sealed.yaml" -o -name "*sealedsecret*.yaml" | while
     # Extract the original secret name/namespace from the SealedSecret
     name=$(yq '.metadata.name' "$sealed_file")
     namespace=$(yq '.metadata.namespace' "$sealed_file")
-    
+
     # Get the decrypted secret from cluster
     kubectl get secret "$name" -n "$namespace" -o yaml > /tmp/original-secret.yaml
-    
+
     # Re-seal with new certificate
     kubeseal --cert "$CERT" --format yaml < /tmp/original-secret.yaml > "$sealed_file"
-    
+
     echo "Re-sealed: $sealed_file"
 done
 ```

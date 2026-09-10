@@ -9,9 +9,9 @@ This section covers AI-powered features, machine learning integrations, and AI u
 - [DORA 2025 AI Capabilities — Fawkes Alignment](dora-2025-alignment.md) - How the seven DORA 2025 AI foundations map to Fawkes practices
 - [Foundation 7 Platform Quality Improvement Guide](foundation-7-platform-quality-guide.md) - Ranked actions to improve platform quality and AI effectiveness
 
-## Agent Suggestions (review and apply to `.github/agents/`)
+## Agent Suggestions (review and apply to `.agents/agents/`)
 
-These files contain suggested `.github/agents/` content for manual review and application.
+These files contain suggested `.agents/agents/` content for manual review and application.
 Copy the YAML block into the target file, remove the header comment, and commit.
 
 | Agent                                              | Model             | Cost | Purpose                        | Status            |

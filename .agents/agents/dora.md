@@ -1,7 +1,7 @@
 ---
 name: dora
 description: Interprets DORA delivery metrics, diagnoses high rework rate, identifies team archetype from docs/TEAM_ARCHETYPE.md, and recommends one specific next action. Use when reviewing weekly metrics output, investigating why rework is high, or seeking DORA-aligned coaching on delivery improvement.
-model: claude-sonnet-4-6
+model: frontier
 ---
 
 # DORA Agent

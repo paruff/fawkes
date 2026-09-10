@@ -1,5 +1,12 @@
 # GitHub Copilot Instructions for Fawkes
 
+> **DEPRECATED:** These instructions have been migrated to generic `.agents/` configuration.
+> See `.agents/INSTRUCTIONS.md` for universal agent instructions that work with any AI tool
+> (Copilot, OpenCode, Cursor, etc.).
+>
+> This file is retained for backward compatibility with GitHub Copilot on github.com.
+> New development should use `.agents/INSTRUCTIONS.md` instead.
+
 ## Repository Context
 
 This is **Fawkes**, an Internal Product Delivery Platform with integrated dojo learning.
