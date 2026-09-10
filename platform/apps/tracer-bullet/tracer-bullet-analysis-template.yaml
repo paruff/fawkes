@@ -1,0 +1,102 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/tracer-bullet/tracer-bullet-analysis-template.yaml
+# PURPOSE: #1805 - Argo Rollouts AnalysisTemplate for canary success gate.
+#          Queries Prometheus for the error rate of tracer-bullet's HTTP
+#          server during canary rollout. If error rate exceeds threshold,
+#          the canary is marked as failed and Argo Rollouts triggers rollback.
+#
+# Prometheus endpoint: prometheus.monitoring.svc.cluster.local:9090
+# (from platform/apps/prometheus/prometheus-application.yaml, fullnameOverride: prometheus)
+#
+# IMPORTANT: The PromQL query below uses standard http_request_duration_seconds
+# metrics which are the most common HTTP metrics from libraries like
+# prometheus_client (Python) or promhttp (Go). The exact metric name exposed
+# by tracer-bullet MUST be verified against the running application's
+# /metrics endpoint before this template is used in production.
+#
+# Per AGENTS.md section 6, this manifest requires maintainer review before
+# merge - flagging explicitly.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: tracer-bullet-canary-success
+  namespace: fawkes
+  labels:
+    app: tracer-bullet
+    component: progressive-delivery
+    managed-by: fawkes
+spec:
+  args:
+    - name: service-name
+      # Default to the tracer-bullet service name; can be overridden by
+      # the Rollout's analysisRef args if needed.
+      value: tracer-bullet
+    - name: namespace
+      value: fawkes
+    - name: error-rate-threshold
+      # Maximum acceptable error rate (0.05 = 5%) during canary.
+      value: "0.05"
+    - name: prometheus-endpoint
+      value: http://prometheus.monitoring.svc.cluster.local:9090
+  metrics:
+    - name: error-rate
+      # Run this metric check every 60s during canary rollout.
+      interval: 60s
+      # Count of consecutive failures before marking canary as failed.
+      # 3 failures x 60s interval = 3 minute observation window.
+      count: 3
+      successCondition: "result[0] < {{args.error-rate-threshold}}"
+      # If the metric doesn't exist or Prometheus errors out, fail
+      # conservatively — a missing error metric should not be treated as
+      # success during a canary.
+      failureLimit: 0
+      provider:
+        prometheus:
+          address: "{{args.prometheus-endpoint}}"
+          # ==========================================================================
+          # PLACEHOLDER — verify metric name against running tracer-bullet /metrics
+          # ==========================================================================
+          # The query below assumes the standard Prometheus client convention of
+          # http_request_duration_seconds_bucket (Python prometheus_client) or
+          # http_request_duration_seconds_bucket (Go promhttp). Tracer-bullet is a
+          # Python FastAPI service, so prometheus_client is the likely exporter.
+          #
+          # To verify: port-forward to tracer-bullet and hit /metrics:
+          #   kubectl port-forward -n fawkes svc/tracer-bullet 8080:8080
+          #   curl http://localhost:8080/metrics | grep http_request_duration
+          #
+          # If the metric name differs (e.g., http_requests_total with a
+          # status_code label), adjust the query accordingly.
+          #
+          # For a Python FastAPI service using prometheus_fastapi_instrumentator
+          # (the common choice), the metric is typically:
+          #   http_requests_total{app="{{args.service-name}}"}
+          #   http_request_duration_seconds_bucket{app="{{args.service-name}}"}
+          #
+          # The query below uses http_requests_total which is the most standard
+          # for request count metrics, with a 5xx status code filter.
+          query: |
+            sum(rate(http_requests_total{app="{{args.service-name}}", namespace="{{args.namespace}}", code=~"5.."}[2m]))
+            /
+            sum(rate(http_requests_total{app="{{args.service-name}}", namespace="{{args.namespace}}"}[2m]))
