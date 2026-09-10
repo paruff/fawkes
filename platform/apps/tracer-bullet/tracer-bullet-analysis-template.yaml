@@ -66,14 +66,14 @@ spec:
       # Count of consecutive failures before marking canary as failed.
       # 3 failures x 60s interval = 3 minute observation window.
       count: 3
-      successCondition: result[0] < {{args.error-rate-threshold}}
+      successCondition: "result[0] < {{args.error-rate-threshold}}"
       # If the metric doesn't exist or Prometheus errors out, fail
       # conservatively — a missing error metric should not be treated as
       # success during a canary.
       failureLimit: 0
       provider:
         prometheus:
-          address: {{args.prometheus-endpoint}}
+          address: "{{args.prometheus-endpoint}}"
           # ==========================================================================
           # PLACEHOLDER — verify metric name against running tracer-bullet /metrics
           # ==========================================================================
