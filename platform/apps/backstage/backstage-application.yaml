@@ -65,8 +65,8 @@ spec:
         # Service configuration
         service:
           type: ClusterIP
-          port: 7007
-          targetPort: 7007
+          ports:
+            backend: 7007
 
         # Ingress configuration for external access
         ingress:
@@ -79,15 +79,10 @@ spec:
             nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
             nginx.ingress.kubernetes.io/ssl-redirect: "true"
             cert-manager.io/cluster-issuer: "letsencrypt-prod"
-          hosts:
-            - host: backstage.fawkes.idp
-              paths:
-                - path: /
-                  pathType: Prefix
+          host: backstage.fawkes.idp
           tls:
-            - secretName: backstage-tls
-              hosts:
-                - backstage.fawkes.idp
+            enabled: true
+            secretName: backstage-tls
 
         # Mount external ConfigMap for app-config
         extraVolumes:
@@ -249,7 +244,6 @@ spec:
         metrics:
           serviceMonitor:
             enabled: true
-            namespace: fawkes
             interval: 30s
 
   destination:

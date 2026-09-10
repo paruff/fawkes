@@ -21,7 +21,7 @@ To bring one back into scope for a later phase: `git mv` it back into
 on the next sync - no other config change needed.
 
 Contents: ai-code-review, analytics-dashboard, anomaly-detection,
-backstage, design-system, devex-survey-automation, discovery-metrics,
+design-system, devex-survey-automation, discovery-metrics,
 eclipse-che, experimentation, feedback-service, focalboard, friction-bot,
 harbor, hasura, openreplay, opensearch, penpot, plausible, samples
 (sample-java-app, sample-nodejs-app, sample-python-app), smart-alerting,
