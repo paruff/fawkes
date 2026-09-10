@@ -1,7 +1,7 @@
 ---
 name: docs
 description: Writes and updates documentation, ADRs, runbooks, and inline code comments. Use when creating or updating docs/, writing an Architecture Decision Record, adding a runbook procedure, or documenting a public API surface.
-model: claude-sonnet-4-6
+model: frontier
 ---
 
 # Docs Agent

@@ -1,7 +1,7 @@
 ---
 name: obs
 description: Adds OpenTelemetry instrumentation, DORA deployment spans, and uFawkesObs connection config to a service. Use when instrumenting a new service, adding observability to existing code, or connecting to the Prometheus/Loki/Tempo/Grafana stack.
-model: claude-sonnet-4-6
+model: frontier
 ---
 
 # Obs Agent

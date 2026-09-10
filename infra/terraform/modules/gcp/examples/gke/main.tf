@@ -72,11 +72,6 @@ module "vpc" {
   ]
 
   enable_nat_gateway = true
-
-  tags = {
-    platform    = "fawkes"
-    environment = "example"
-  }
 }
 
 # Then create GKE cluster

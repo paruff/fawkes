@@ -257,7 +257,7 @@ responsibility, contextual error messages, and BDD coverage. Note gaps as TODO i
 
 ## 13. See Also
 
-- `.github/agents/` — specialist agent profiles
+- `.agents/agents/` — specialist agent profiles
 - `.github/instructions/` — path-scoped instruction files by language
 - `docs/BACKLOG.md` — triaged backlog with value/effort scores, agent assignments, MVP wave plan
 - `docs/GOLDEN_PATH.md` — standard feature development workflow (also in docs site)

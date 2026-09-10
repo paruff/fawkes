@@ -1,7 +1,7 @@
 ---
 name: planner
 description: Decomposes a human intent into a sequenced backlog of GitHub issues, each implementable in a single PR under 400 lines. Use when starting a new feature, initiative, or task that needs to be broken into agent-assignable work.
-model: claude-sonnet-4-6
+model: frontier
 ---
 
 # Planner Agent
@@ -47,7 +47,7 @@ Rules:
 - **Size:** Each issue must be implementable in a single PR ≤ 400 changed lines. Split if needed.
 - **Sequence:** Each issue must be independently mergeable. State explicit dependencies.
 - **Context:** Every issue must list exact files the agent should read first. Name them.
-- **Routing:** Each issue must specify the agent: feature code → `@copilot`, tests → `@test-agent`, docs → `@docs-agent`, security changes → `@security-agent` review required, CI/pipeline → `@pipe-agent`.
+- **Routing:** Each issue must specify the agent: feature code → `@gpt41-default`, tests → `@test-engineer`, docs → `@docs-writer`, security changes → `@security-agent` review required, CI/pipeline → `@workflow-maintainer`.
 
 ### Step 4 — Issue Format
 
@@ -90,7 +90,7 @@ As a [role], I want [specific capability], so that [measurable outcome].
 
 | Issue | Title | Assigned To | Est. Lines | Depends On |
 |---|---|---|---|---|
-| PLAN-001 | ... | @copilot | ~150 | none |
+| PLAN-001 | ... | @gpt41-default | ~150 | none |
 
 Recommended order: PLAN-001 → PLAN-002 → ...
 Total estimated lines: ~[N] across [N] PRs

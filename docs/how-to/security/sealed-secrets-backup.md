@@ -65,27 +65,27 @@ spec:
             - -c
             - |
               set -euo pipefail
-              
+
               TIMESTAMP=$(date -u +%Y%m%d-%H%M%S)
               BACKUP_FILE="sealed-secrets-key-${TIMESTAMP}.yaml.enc"
-              
+
               # Get the private key secret
               kubectl get secret -n kube-system \
                 -l sealedsecrets.bitnami.com/sealed-secrets-key \
                 -o yaml > /tmp/sealed-secrets-key.yaml
-              
+
               # Encrypt backup
               gpg --symmetric --cipher-algo AES256 \
                 --passphrase "${ENCRYPTION_KEY}" \
                 --output "/tmp/${BACKUP_FILE}" \
                 /tmp/sealed-secrets-key.yaml
-              
+
               # Upload to S3 (or GCS, Azure Blob)
               aws s3 cp "/tmp/${BACKUP_FILE}" "${BACKUP_BUCKET}/${BACKUP_FILE}"
-              
+
               # Verify upload
               aws s3 ls "${BACKUP_BUCKET}/${BACKUP_FILE}"
-              
+
               echo "Backup completed: ${BACKUP_FILE}"
 ---
 # RBAC for backup job
@@ -259,9 +259,9 @@ stage('Verify Sealed Secrets Backup') {
               --recursive --exclude "*" --include "*.gpg" \
               --query "reverse(sort_by(Contents, &LastModified))[0].Key" \
               --output text | read LATEST_BACKUP
-            
+
             aws s3 cp "s3://fawkes-sealed-secrets-backups/${LATEST_BACKUP}" /tmp/
-            
+
             # Run verification script
             ./scripts/verify-sealed-secrets-backup.sh "/tmp/${LATEST_BACKUP}"
             '''
