@@ -5,6 +5,56 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.92](https://github.com/paruff/fawkes/compare/v0.3.91...v0.3.92) (2026-09-09)
+
+
+### Chores
+
+* **argocd:** scope platform ApplicationSet to alpha-only apps ([#1973](https://github.com/paruff/fawkes/issues/1973)) ([7729d3e](https://github.com/paruff/fawkes/commit/7729d3eec2f49d1c7882c8a0fc91e15714a69942))
+
+## [0.3.91](https://github.com/paruff/fawkes/compare/v0.3.90...v0.3.91) (2026-09-09)
+
+
+### Fixed
+
+* **azure:** add missing service_endpoint for storage account network ACL ([#1970](https://github.com/paruff/fawkes/issues/1970)) ([891e7ea](https://github.com/paruff/fawkes/commit/891e7ea79bc8374a401facf07052cd75d1b7b9c9))
+
+## [0.3.90](https://github.com/paruff/fawkes/compare/v0.3.89...v0.3.90) (2026-09-09)
+
+
+### Fixed
+
+* Documented canary decision, manifests pending. ([#1968](https://github.com/paruff/fawkes/issues/1968)) ([69a46aa](https://github.com/paruff/fawkes/commit/69a46aa20da0a2f5afe2bdaa9f03e66953e8a8cb))
+
+## [0.3.89](https://github.com/paruff/fawkes/compare/v0.3.88...v0.3.89) (2026-09-09)
+
+
+### Fixed
+
+* New progressive-delivery plane script ([#1966](https://github.com/paruff/fawkes/issues/1966)) ([7c8efdd](https://github.com/paruff/fawkes/commit/7c8efdd2ea0a4c10fc874f35c68782dfe38c5f2f))
+
+## [0.3.88](https://github.com/paruff/fawkes/compare/v0.3.87...v0.3.88) (2026-09-09)
+
+
+### Fixed
+
+* Added Argo Rollouts controller ArgoCD Application ([#1963](https://github.com/paruff/fawkes/issues/1963)) ([00c19ff](https://github.com/paruff/fawkes/commit/00c19ff393c9819bd9cfc29c806888b6d8ae10eb))
+
+## [0.3.87](https://github.com/paruff/fawkes/compare/v0.3.86...v0.3.87) (2026-09-09)
+
+
+### Fixed
+
+* Created Backstage OAuth SealedSecret + kustomization update ([#1960](https://github.com/paruff/fawkes/issues/1960)) ([fec0c69](https://github.com/paruff/fawkes/commit/fec0c69a84e5f674def13ac5867672ebea0b7bed))
+* **opencode:** switch strong model to free opencode/nemotron-3-ultra-free ([#1961](https://github.com/paruff/fawkes/issues/1961)) ([4388b21](https://github.com/paruff/fawkes/commit/4388b21f8889c3d1f2df0e0804545a5dce9a3bd4))
+
+## [0.3.86](https://github.com/paruff/fawkes/compare/v0.3.85...v0.3.86) (2026-09-09)
+
+
+### Fixed
+
+* **opencode:** remove deepseek-v4-flash-free, switch default to mimo-v2.5-free ([#1956](https://github.com/paruff/fawkes/issues/1956)) ([d5d3a41](https://github.com/paruff/fawkes/commit/d5d3a413bde550736526ee5e405d80572c8f6a45))
+
 ## [0.3.85](https://github.com/paruff/fawkes/compare/v0.3.84...v0.3.85) (2026-09-09)
 
 
