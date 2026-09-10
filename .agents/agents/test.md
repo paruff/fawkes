@@ -1,7 +1,7 @@
 ---
 name: test
 description: Writes failing tests before implementation, increases coverage on existing code, and generates language-appropriate test patterns. Use when implementing TDD, fixing a coverage gap, or adding tests for a new feature.
-model: claude-sonnet-4-6
+model: frontier
 ---
 
 # Test Agent

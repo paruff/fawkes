@@ -37,14 +37,12 @@ provider "kubernetes" {
   config_path = var.kubeconfig_path
 }
 
-/*
-The helm provider will inherit kubeconfig from the environment or the
-kubernetes provider; avoid specifying a nested `kubernetes {}` block here
-because some provider versions expect different configuration shapes and
-it can cause HCL parsing errors in older/newer provider combinations.
-If you need to customize Kubernetes connection for Helm, set `kubeconfig`
-or configure a separate provider alias.
-*/
+# The helm provider will inherit kubeconfig from the environment or the
+# kubernetes provider; avoid specifying a nested `kubernetes {}` block here
+# because some provider versions expect different configuration shapes and
+# it can cause HCL parsing errors in older/newer provider combinations.
+# If you need to customize Kubernetes connection for Helm, set `kubeconfig`
+# or configure a separate provider alias.
 
 provider "helm" {
   kubernetes {

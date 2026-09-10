@@ -114,10 +114,4 @@ module "vpc" {
   create_default_firewall_rules = true
   allow_ssh_from_iap            = true
   deny_all_egress               = false
-
-  tags = {
-    platform    = "fawkes"
-    environment = "example"
-    managed_by  = "terraform"
-  }
 }

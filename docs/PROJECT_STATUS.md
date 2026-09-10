@@ -82,7 +82,7 @@ None are deployed to a live cluster.
 ### OpenCode Skills (`.agents/skills/`)
 
 6 skills for free-tier models (gemma4:e4b, mimo v2.5 - deepseek v4 flash was dropped, see
-`.github/agents/AGENTS.md`):
+`.agents/agents/AGENTS.md`):
 
 - `kubernetes-manifests` — K8s labels, limits, security context
 - `opentelemetry` — OTEL SDK, FastAPI instrumentor, gen_ai.\* conventions
@@ -91,7 +91,7 @@ None are deployed to a live cluster.
 - `security-hardening` — Container security, RBAC, SAST
 - `terraform-modules` — Variables, remote backend, tagging
 
-### Copilot Agents (`.github/agents/`)
+### Copilot Agents (`.agents/agents/`)
 
 8 agents for GitHub.com Copilot workflows: gpt41-default, infra-gitops, test-engineer, docs-writer, issue-writer, code-reviewer, ci-debugger, security-agent.
 

@@ -1,7 +1,7 @@
 ---
 name: security
 description: Audits PRs and code changes for secrets, dependency risks, auth vulnerabilities, data handling issues, and fawkes suite security gates. Use when a PR touches auth, adds dependencies, changes infrastructure, or is flagged by the review agent.
-model: claude-sonnet-4-6
+model: frontier
 ---
 
 # Security Agent

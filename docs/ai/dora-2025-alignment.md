@@ -29,7 +29,7 @@ leverage AI safely.
 **Fawkes implementation:**
 
 - `AGENTS.md` — universal instructions for any AI coding agent working in this repo
-- `.github/agents/` — specialist agent profiles with task-scoped instructions
+- `.agents/agents/` — specialist agent profiles with task-scoped instructions
 - `AGENTS.md § 11` — Task Routing & Supportive Resources
 
 **What to improve:** Ensure `docs/ai/usage-policy.md` is linked prominently from

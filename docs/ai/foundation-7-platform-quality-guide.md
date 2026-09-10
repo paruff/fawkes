@@ -101,7 +101,7 @@ behind the code, agents invent endpoints and function names that do not exist.
 - Every known limitation → entry in `docs/KNOWN_LIMITATIONS.md`
 - Every cross-component dependency change → update `docs/CHANGE_IMPACT_MAP.md`
 
-**File to create:** `.github/agents/docs-writer.agent.md`
+**File to create:** `.agents/agents/docs-writer.agent.md`
 
 ---
 
@@ -255,7 +255,7 @@ builds trust faster than a generalist reviewer.
 - Terraform security: `tfsec`, public bucket detection, over-permissive IAM
 - Kubernetes RBAC: minimal-privilege principle, ClusterRole vs Role scope
 
-**File to create:** `.github/agents/security-agent.agent.md`
+**File to create:** `.agents/agents/security-agent.agent.md`
 
 ---
 
@@ -304,7 +304,7 @@ context:
 
 | Step | Action                                                        | Effort | Impact    | Agent                              |
 | ---- | ------------------------------------------------------------- | ------ | --------- | ---------------------------------- |
-| 1    | Apply the 5 new agent suggestion files in `.github/agents/`   | 30 min | Very High | Manual                             |
+| 1    | Apply the 5 new agent suggestion files in `.agents/agents/`   | 30 min | Very High | Manual                             |
 | 2    | Create `.github/instructions/python-services.instructions.md` | 2h     | Very High | `docs-writer`                      |
 | 3    | Create `docs/GOLDEN_PATH.md`                                  | 2h     | High      | `docs-writer`                      |
 | 4    | Create `docs/agents/docs-writer.agent.md`                     | 1h     | High      | Manual / `gpt41-default`           |
