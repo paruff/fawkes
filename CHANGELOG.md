@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.96](https://github.com/paruff/fawkes/compare/v0.3.95...v0.3.96) (2026-09-10)
+
+
+### Fixed
+
+* add trailing newline to scripts/README.md ([#1986](https://github.com/paruff/fawkes/issues/1986)) ([38c687e](https://github.com/paruff/fawkes/commit/38c687e2651dbfc81f5d4f7701ae44394dfd095f))
+
 ## [0.3.95](https://github.com/paruff/fawkes/compare/v0.3.94...v0.3.95) (2026-09-10)
 
 
