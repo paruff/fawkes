@@ -293,3 +293,30 @@ needing GitHub Actions at all — unlike the Deployments-API approach, it isn't
 structurally blocked by this being a Tekton-based pipeline. This is new pipeline
 instrumentation and new DevLake connection configuration, not a bug fix — scope it
 as its own issue.
+
+---
+
+## KL-13 — Trivy Image Scan Ignores Unfixed CVEs (`--ignore-unfixed`)
+
+**Description:** The golden-path pipeline's `scan-image` task (`platform/apps/tekton/golden-path-pipeline.yaml`) runs:
+```
+trivy image --severity CRITICAL,HIGH --ignore-unfixed --exit-code 1
+```
+The `--ignore-unfixed` flag causes Trivy to **not fail** on CRITICAL/HIGH vulnerabilities that have no vendor fix published yet. This was added after a real pipeline run blocked on freshly-disclosed 2026 CVEs in `perl` and `util-linux` (e.g., `CVE-2026-13346`) that were already at the latest Debian 13 patch level (`2.41.5-0+deb13u1`) with no upstream fix available. Bumping the base image tag cannot resolve these — any current `python:3.13.x-slim` pulls the same Debian 13 base with the same unfixed CVEs.
+
+**Impact:**
+
+- Images with known CRITICAL/HIGH CVEs that have no vendor fix **pass** the quality gate.
+- The gate only blocks on vulnerabilities that *have* an available fix (i.e., actionable findings).
+- This is a deliberate tradeoff: a gate that permanently blocks on unactionable CVEs loses signal value and prevents any deployment, including security fixes for other issues.
+
+**Legitimate Exception vs. Real Problem:**
+
+| Scenario | Policy |
+|---|---|
+| CVE has a vendor fix available (newer package version in upstream distro) | **Block** — the gate should catch this; rebuild on updated base image |
+| CVE has **no** vendor fix yet (upstream hasn't released a patch) | **Allow via `--ignore-unfixed`** — unactionable; document in release notes |
+| CVE is in a transitive dependency not directly used at runtime | **Allow** — multi-stage Dockerfiles should strip unused runtime deps (e.g., `pip`/`setuptools` removed from runtime stage) |
+| CVE is a false positive / not applicable to the service's code paths | **Allow** — suppress via `.trivyignore` with justification |
+
+**Tracking:** Related to Phase 2 quality-gate hardening (#1805). Revisit when distroless/chainguard base images are adopted (tracked separately) — those reduce the unfixed-CVE surface area significantly.
