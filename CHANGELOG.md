@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.99](https://github.com/paruff/fawkes/compare/v0.3.98...v0.3.99) (2026-09-11)
+
+
+### Chores
+
+* **deps:** bump AWS SDK for Go v2 in tests/terratest ([#1994](https://github.com/paruff/fawkes/issues/1994)) ([f7ff24f](https://github.com/paruff/fawkes/commit/f7ff24f1c9a35996db8936c8005dcd85673f4469)), closes [#1568](https://github.com/paruff/fawkes/issues/1568)
+
 ## [0.3.98](https://github.com/paruff/fawkes/compare/v0.3.97...v0.3.98) (2026-09-11)
 
 
