@@ -6,22 +6,45 @@ Welcome to the Fawkes Internal Developer Platform. Choose the path below that ma
 
 ## Which path is right for you?
 
-|                   | **Path A — Evaluate Locally**            | **Path B — Deploy to Cloud**          | **Path C — Enterprise Multi-Cloud**        |
-| ----------------- | ---------------------------------------- | ------------------------------------- | ------------------------------------------ |
-| **Goal**          | Explore the platform without cloud costs | Run a real platform on AWS EKS        | Multi-cloud or enterprise-scale deployment |
-| **Time**          | ~20 minutes                              | 2–4 hours                             | 1–2 days                                   |
-| **Cloud account** | Not required                             | AWS account required                  | AWS + Azure or GCP                         |
-| **Kubernetes**    | k3d (local, auto-provisioned)            | Amazon EKS (provisioned by Terraform) | Managed K8s per cloud                      |
-| **Components**    | 5 core components                        | Full core platform                    | Full platform + enterprise extensions      |
-| **Best for**      | Evaluation, learning, demos              | Teams adopting Fawkes                 | Platform teams operating at scale          |
+|                   | **Path 0 — Learn via Docker Stacks**            | **Path A — Evaluate Locally**            | **Path B — Deploy to Cloud**          | **Path C — Enterprise Multi-Cloud**        |
+| ----------------- | ----------------------------------------------- | ---------------------------------------- | ------------------------------------- | ------------------------------------------ |
+| **Goal**          | Learn by doing: one stack + Dojo belt, no K8s   | Explore the platform without cloud costs | Run a real platform on AWS EKS        | Multi-cloud or enterprise-scale deployment |
+| **Time**          | ~10 minutes                                     | ~20 minutes                              | 2–4 hours                             | 1–2 days                                   |
+| **Cloud account** | Not required                                    | Not required                             | AWS account required                  | AWS + Azure or GCP                         |
+| **Runtime**       | Docker Compose (per-stack repo)                 | k3d (local, auto-provisioned)            | Amazon EKS (provisioned by Terraform) | Managed K8s per cloud                      |
+| **Components**    | One composable stack                            | 5 core components                        | Full core platform                    | Full platform + enterprise extensions      |
+| **Best for**      | Learning, Dojo labs, demos                      | Evaluation, learning, demos              | Teams adopting Fawkes                 | Platform teams operating at scale          |
 
-Jump to: [Path A](#path-a--evaluate-locally) · [Path B](#path-b--deploy-to-cloud-aws-eks) · [Path C](#path-c--enterprise-multi-cloud)
+Jump to: [Path 0](#path-0--learn-via-docker-stacks) · [Path A](#path-a--evaluate-locally) · [Path B](#path-b--deploy-to-cloud-aws-eks) · [Path C](#path-c--enterprise-multi-cloud)
+
+---
+
+## Path 0 — Learn via Docker Stacks
+
+> **You should choose this if:** you want to learn by doing with the least setup — one composable stack plus the matching [Dojo belt](https://github.com/paruff/uFawkesDojo), no Kubernetes cluster required.
+
+**Estimated time:** ~10 minutes per stack. Each stack lives in its own repo with its own `docker compose` quickstart:
+
+| Stack                                                                       | Gives you                                              | Then work this Dojo belt                                                              |
+| --------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------- |
+| [uFawkesObs](https://github.com/paruff/uFawkesObs) — `docker compose up`    | Prometheus + Grafana + Loki running locally            | Brown Belt observability labs (DORA dashboards, alerting)                             |
+| [uFawkesPipe](https://github.com/paruff/uFawkesPipe) — `docker compose up`  | CI/CD service running locally                          | Yellow Belt CI/CD labs (pipelines, security scanning)                                 |
+| [uFawkesDevX](https://github.com/paruff/uFawkesDevX) — `docker compose up`  | Developer experience + golden-path templates           | Green Belt GitOps labs (templates, self-service)                                      |
+
+```bash
+# Example: observability in under a minute (see that repo's README for details)
+git clone https://github.com/paruff/uFawkesObs.git
+cd uFawkesObs
+docker compose up
+```
+
+When you outgrow a single stack, continue with [Path A](#path-a--evaluate-locally) for the full platform on k3d.
 
 ---
 
 ## Path A — Evaluate Locally
 
-> **You should choose this if:** you want to explore Fawkes features, run the Dojo learning labs, or demo the platform to stakeholders — without spending on cloud infrastructure.
+> **You should choose this if:** you want to explore Fawkes features or demo the platform to stakeholders — without spending on cloud infrastructure. (Dojo labs now run against [Path 0](#path-0--learn-via-docker-stacks) stacks or the [uFawkesDojo](https://github.com/paruff/uFawkesDojo) curriculum repo.)
 
 **Estimated time:** ~20 minutes from clone to running platform.
 
@@ -45,7 +68,7 @@ Path A brings up the **five core components** needed to experience the platform:
 | Component            | Purpose                                       |
 | -------------------- | --------------------------------------------- |
 | ArgoCD               | GitOps controller — reconciles platform state |
-| Backstage            | Developer portal and Dojo learning hub        |
+| Backstage            | Developer portal and service catalog          |
 | Prometheus + Grafana | Metrics collection and DORA dashboards        |
 | Vault (dev mode)     | Secrets management (local, non-persistent)    |
 | Sample application   | Demonstrates CI/CD and DORA metrics           |
@@ -67,7 +90,7 @@ make dev-status
 make dev-down
 ```
 
-> **Troubleshooting:** If any service does not reach `Running` status within 5 minutes, see [docs/tutorials/local-dev-setup.md](tutorials/local-dev-setup.md) for port-forward commands and diagnostics.
+> **Troubleshooting:** If any service does not reach `Running` status within 5 minutes, see [local-dev-setup](tutorials/local-dev-setup.md) for port-forward commands and diagnostics.
 
 ### Access the platform
 
@@ -82,7 +105,7 @@ After `make dev-up` completes, `make dev-status` prints the local URLs. Typical 
 ### Next steps after Path A
 
 - [Dojo White Belt](https://github.com/paruff/uFawkesDojo) — start your learning journey
-- [Quick Start Tutorial](tutorials/quick-start.md) — guided walkthrough of all features
+- [Deploy Your First Service](tutorials/1-deploy-first-service.md) — guided walkthrough of all features
 - When ready to deploy to the cloud, continue with [Path B](#path-b--deploy-to-cloud-aws-eks)
 
 ---
@@ -109,7 +132,7 @@ After `make dev-up` completes, `make dev-status` prints the local URLs. Typical 
 - Service quotas: at least 3 `m5.large` (or equivalent) EC2 instances available
 - A registered domain name (for TLS certificates and Backstage OAuth callbacks)
 
-**Resource requirements:** 3-node EKS cluster (`m5.large`), ~$150–300/month at standard AWS pricing. See [AWS Cost Estimation](<AWS cost estimation.md>) for a full breakdown.
+**Resource requirements:** 3-node EKS cluster (`m5.large`), ~$150–300/month at standard AWS pricing. A detailed cost breakdown is not yet published.
 
 ### Tier 2 components deployed
 
@@ -119,7 +142,7 @@ In addition to the Tier 1 components, Path B deploys the full platform:
 | ---------------------------- | -------------------------------------------- |
 | Amazon EKS                   | Managed Kubernetes control plane             |
 | Amazon RDS (PostgreSQL)      | Persistent storage for Backstage, SonarQube  |
-| Jenkins                      | CI/CD pipelines with golden path templates   |
+| Tekton golden path           | CI/CD pipelines with golden path templates (see [DEPLOYMENT_STRATEGY](DEPLOYMENT_STRATEGY.md); Jenkins retained for legacy only) |
 | SonarQube                    | Static application security testing (SAST)   |
 | Loki                         | Log aggregation and search                   |
 | DevLake                      | DORA metrics aggregation                     |
@@ -135,8 +158,9 @@ git clone https://github.com/paruff/fawkes.git
 cd fawkes
 
 # 2. Configure your environment
-cp config/example.tfvars config/terraform.tfvars
-# Edit terraform.tfvars with your AWS account ID, region, and domain
+# Copy the example tfvars for your provider (under infra/terraform/ or infra/aws/)
+# and edit it with your AWS account ID, region, and domain
+# (no remote backend is configured yet — see KL-01 in docs/KNOWN_LIMITATIONS.md)
 
 # 3. Configure GitHub OAuth for Backstage (required before first login)
 # See: docs/how-to/security/github-oauth-quickstart.md
@@ -165,9 +189,9 @@ make test-bdd
 
 ### Next steps after Path B
 
-- [Deployment Guide](deployment/) — operational runbooks and day-2 operations
+- [Runbooks](runbooks/index.md) — operational procedures and day-2 operations
 - [Golden Path Templates](golden-path-usage.md) — onboard your development teams
-- [DORA Metrics Setup](observability/) — configure team-level dashboards
+- [DORA Metrics Setup](observability/dora-metrics-guide.md) — configure team-level dashboards
 - For multi-cloud or enterprise needs, see [Path C](#path-c--enterprise-multi-cloud)
 
 ---
@@ -189,19 +213,19 @@ make test-bdd
 
 | Cloud               | Guide                                                                                                    |
 | ------------------- | -------------------------------------------------------------------------------------------------------- |
-| AWS (multi-account) | [AWS Deployment Guide](AWS_deployment_guide.md)                                                          |
+| AWS (multi-account) | [AWS Deployment Guide](archive/AWS_deployment_guide.md)                                                 |
 | Azure AKS           | [Azure Ingress Setup](azure-ingress-setup.md) · [Azure Ingress Quick Start](azure-ingress-quickstart.md) |
-| Multi-cloud         | [docs/deployment/](deployment/) directory                                                                |
+| Multi-cloud         | [deployment/](deployment/) directory                                                                     |
 
 ### Enterprise features
 
 - **SSO integration** — Backstage and ArgoCD authenticate via your identity provider
 - **Multi-tenancy** — isolated namespaces and network policies per team or business unit
-- **Compliance controls** — OPA/Rego policies, audit logs, SBOM generation
+- **Compliance controls** — Kyverno/OPA policies, audit logs, SBOM generation (see [security](security.md))
 - **High availability** — multi-zone EKS, RDS multi-AZ, Prometheus federation
-- **Cost allocation** — per-namespace resource tagging and cost dashboards
+- **Cost allocation** — per-namespace resource tagging and cost dashboards (see [RBAC setup](how-to/security/rbac-setup.md) for tenant isolation)
 
-> For enterprise deployment support, open a [GitHub Discussion](https://github.com/paruff/fawkes/discussions) or refer to the [deployment guides](deployment/).
+> For enterprise deployment support, open a [GitHub Discussion](https://github.com/paruff/fawkes/discussions) or refer to the [runbooks](runbooks/index.md).
 
 ---
 
@@ -215,9 +239,9 @@ fawkes/
 │   ├── explanation/               # Understanding-oriented discussions
 │   ├── reference/                 # API docs, config tables, glossary
 │   ├── deployment/                # Cloud deployment guides (Path B and C)
-│   └── dojo/                      # Belt-based learning modules
+│   └── dojo/                      # Pointer to the uFawkesDojo curriculum repo
 ├── platform/                      # Platform components
-│   ├── apps/                      # ArgoCD applications (Jenkins, Backstage, etc.)
+│   ├── apps/                      # ArgoCD applications (Backstage, Tekton, etc.)
 │   ├── policies/                  # Kyverno policies (security, mutation, generation)
 │   ├── devfiles/                  # Eclipse Che development environments
 │   ├── networking/                # Ingress, cert-manager, external-dns
@@ -243,6 +267,7 @@ fawkes/
 - [GitHub Issues](https://github.com/paruff/fawkes/issues)
 - [Community Discussions](https://github.com/paruff/fawkes/discussions)
 
-[Path A — Evaluate Locally :computer:](#path-a--evaluate-locally){ .md-button .md-button--primary }
+[Path 0 — Docker Stacks :whale:](#path-0--learn-via-docker-stacks){ .md-button .md-button--primary }
+[Path A — Evaluate Locally :computer:](#path-a--evaluate-locally){ .md-button }
 [Path B — Cloud Deployment :cloud:](#path-b--deploy-to-cloud-aws-eks){ .md-button }
 [Architecture Overview :books:](ARCHITECTURE.md){ .md-button }

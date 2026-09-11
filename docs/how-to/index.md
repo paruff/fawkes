@@ -34,7 +34,7 @@ The following how-to guides help you accomplish specific tasks with Fawkes.
 
 | Guide                                                             | Description                                     | Status                                                                      |
 | ----------------------------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------- |
-| Provision Infrastructure with Terraform                           | Create cloud resources declaratively            | See [Infrastructure as Code Pattern](../patterns/infrastructure-as-code.md) |
+| Provision Infrastructure with Terraform                           | Create cloud resources declaratively            | See `infra/terraform/` (no remote backend yet — [KL-01](../KNOWN_LIMITATIONS.md)) |
 | [Configure Ingress with TLS](networking/configure-ingress-tls.md) | Set up HTTPS access with automatic certificates | ✅ Available                                                                |
 
 ### Observability
@@ -55,15 +55,16 @@ The following how-to guides help you accomplish specific tasks with Fawkes.
 | [Troubleshoot Kyverno Policy Violations](policy/troubleshoot-kyverno-violation.md) | Resolve policy blocks and enforcement issues      | ✅ Available                   |
 | [Rotate Vault Secrets](security/rotate-vault-secrets.md)                           | Securely rotate secrets and update applications   | ✅ Available                   |
 | Implement Security Scanning                                                        | Add SAST and container scanning                   | See [Security](../security.md) |
-| Set Up RBAC                                                                        | Configure role-based access control               | 🚧 Coming soon                 |
+| [Set Up RBAC](security/rbac-setup.md)                                              | Configure role-based access control               | ✅ Available                   |
 
 ### Development
 
 | Guide                                                              | Description                                      | Status         |
 | ------------------------------------------------------------------ | ------------------------------------------------ | -------------- |
 | [Debug Buildpack Failures](development/debug-buildpack-failure.md) | Troubleshoot Cloud Native Buildpack build errors | ✅ Available   |
+| [Register a Service in the Catalog](development/register-service-catalog.md) | Make your service discoverable in Backstage | ✅ Available |
 | Set Up Local Development                                           | Configure local Fawkes environment               | 🚧 Coming soon |
-| Create Custom Pipeline                                             | Build Jenkins pipeline for your project          | 🚧 Coming soon |
+| Create Custom Pipeline                                             | Build a golden-path pipeline for your project (Tekton direction — see [golden-path usage](../golden-path-usage.md)) | 🚧 Coming soon |
 
 ## How to Use These Guides
 
