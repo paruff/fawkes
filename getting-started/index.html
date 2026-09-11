@@ -569,6 +569,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#path-0-learn-via-docker-stacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path 0 — Learn via Docker Stacks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#path-a-evaluate-locally" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5675,6 +5686,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#path-0-learn-via-docker-stacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path 0 — Learn via Docker Stacks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#path-a-evaluate-locally" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5915,6 +5937,7 @@
 <thead>
 <tr>
 <th></th>
+<th><strong>Path 0 — Learn via Docker Stacks</strong></th>
 <th><strong>Path A — Evaluate Locally</strong></th>
 <th><strong>Path B — Deploy to Cloud</strong></th>
 <th><strong>Path C — Enterprise Multi-Cloud</strong></th>
@@ -5923,12 +5946,14 @@
 <tbody>
 <tr>
 <td><strong>Goal</strong></td>
+<td>Learn by doing: one stack + Dojo belt, no K8s</td>
 <td>Explore the platform without cloud costs</td>
 <td>Run a real platform on AWS EKS</td>
 <td>Multi-cloud or enterprise-scale deployment</td>
 </tr>
 <tr>
 <td><strong>Time</strong></td>
+<td>~10 minutes</td>
 <td>~20 minutes</td>
 <td>2–4 hours</td>
 <td>1–2 days</td>
@@ -5936,34 +5961,76 @@
 <tr>
 <td><strong>Cloud account</strong></td>
 <td>Not required</td>
+<td>Not required</td>
 <td>AWS account required</td>
 <td>AWS + Azure or GCP</td>
 </tr>
 <tr>
-<td><strong>Kubernetes</strong></td>
+<td><strong>Runtime</strong></td>
+<td>Docker Compose (per-stack repo)</td>
 <td>k3d (local, auto-provisioned)</td>
 <td>Amazon EKS (provisioned by Terraform)</td>
 <td>Managed K8s per cloud</td>
 </tr>
 <tr>
 <td><strong>Components</strong></td>
+<td>One composable stack</td>
 <td>5 core components</td>
 <td>Full core platform</td>
 <td>Full platform + enterprise extensions</td>
 </tr>
 <tr>
 <td><strong>Best for</strong></td>
+<td>Learning, Dojo labs, demos</td>
 <td>Evaluation, learning, demos</td>
 <td>Teams adopting Fawkes</td>
 <td>Platform teams operating at scale</td>
 </tr>
 </tbody>
 </table>
-<p>Jump to: <a href="#path-a--evaluate-locally">Path A</a> · <a href="#path-b--deploy-to-cloud-aws-eks">Path B</a> · <a href="#path-c--enterprise-multi-cloud">Path C</a></p>
+<p>Jump to: <a href="#path-0--learn-via-docker-stacks">Path 0</a> · <a href="#path-a--evaluate-locally">Path A</a> · <a href="#path-b--deploy-to-cloud-aws-eks">Path B</a> · <a href="#path-c--enterprise-multi-cloud">Path C</a></p>
+<hr />
+<h2 id="path-0-learn-via-docker-stacks">Path 0 — Learn via Docker Stacks</h2>
+<blockquote>
+<p><strong>You should choose this if:</strong> you want to learn by doing with the least setup — one composable stack plus the matching <a href="https://github.com/paruff/uFawkesDojo">Dojo belt</a>, no Kubernetes cluster required.</p>
+</blockquote>
+<p><strong>Estimated time:</strong> ~10 minutes per stack. Each stack lives in its own repo with its own <code>docker compose</code> quickstart:</p>
+<table>
+<thead>
+<tr>
+<th>Stack</th>
+<th>Gives you</th>
+<th>Then work this Dojo belt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/paruff/uFawkesObs">uFawkesObs</a> — <code>docker compose up</code></td>
+<td>Prometheus + Grafana + Loki running locally</td>
+<td>Brown Belt observability labs (DORA dashboards, alerting)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/paruff/uFawkesPipe">uFawkesPipe</a> — <code>docker compose up</code></td>
+<td>CI/CD service running locally</td>
+<td>Yellow Belt CI/CD labs (pipelines, security scanning)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/paruff/uFawkesDevX">uFawkesDevX</a> — <code>docker compose up</code></td>
+<td>Developer experience + golden-path templates</td>
+<td>Green Belt GitOps labs (templates, self-service)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="c1"># Example: observability in under a minute (see that repo's README for details)</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/paruff/uFawkesObs.git
+<span class="nb">cd</span><span class="w"> </span>uFawkesObs
+docker<span class="w"> </span>compose<span class="w"> </span>up
+</code></pre></div>
+<p>When you outgrow a single stack, continue with <a href="#path-a--evaluate-locally">Path A</a> for the full platform on k3d.</p>
 <hr />
 <h2 id="path-a-evaluate-locally">Path A — Evaluate Locally</h2>
 <blockquote>
-<p><strong>You should choose this if:</strong> you want to explore Fawkes features, run the Dojo learning labs, or demo the platform to stakeholders — without spending on cloud infrastructure.</p>
+<p><strong>You should choose this if:</strong> you want to explore Fawkes features or demo the platform to stakeholders — without spending on cloud infrastructure. (Dojo labs now run against <a href="#path-0--learn-via-docker-stacks">Path 0</a> stacks or the <a href="https://github.com/paruff/uFawkesDojo">uFawkesDojo</a> curriculum repo.)</p>
 </blockquote>
 <p><strong>Estimated time:</strong> ~20 minutes from clone to running platform.</p>
 <h3 id="prerequisites">Prerequisites</h3>
@@ -6025,7 +6092,7 @@
 </tr>
 <tr>
 <td>Backstage</td>
-<td>Developer portal and Dojo learning hub</td>
+<td>Developer portal and service catalog</td>
 </tr>
 <tr>
 <td>Prometheus + Grafana</td>
@@ -6056,7 +6123,7 @@ make<span class="w"> </span>dev-status
 make<span class="w"> </span>dev-down
 </code></pre></div>
 <blockquote>
-<p><strong>Troubleshooting:</strong> If any service does not reach <code>Running</code> status within 5 minutes, see <a href="../tutorials/local-dev-setup/">docs/tutorials/local-dev-setup.md</a> for port-forward commands and diagnostics.</p>
+<p><strong>Troubleshooting:</strong> If any service does not reach <code>Running</code> status within 5 minutes, see <a href="../tutorials/local-dev-setup/">local-dev-setup</a> for port-forward commands and diagnostics.</p>
 </blockquote>
 <h3 id="access-the-platform">Access the platform</h3>
 <p>After <code>make dev-up</code> completes, <code>make dev-status</code> prints the local URLs. Typical defaults:</p>
@@ -6089,7 +6156,7 @@ make<span class="w"> </span>dev-down
 <h3 id="next-steps-after-path-a">Next steps after Path A</h3>
 <ul>
 <li><a href="https://github.com/paruff/uFawkesDojo">Dojo White Belt</a> — start your learning journey</li>
-<li><a href="tutorials/quick-start.md">Quick Start Tutorial</a> — guided walkthrough of all features</li>
+<li><a href="../tutorials/1-deploy-first-service/">Deploy Your First Service</a> — guided walkthrough of all features</li>
 <li>When ready to deploy to the cloud, continue with <a href="#path-b--deploy-to-cloud-aws-eks">Path B</a></li>
 </ul>
 <hr />
@@ -6141,7 +6208,7 @@ make<span class="w"> </span>dev-down
 <li>Service quotas: at least 3 <code>m5.large</code> (or equivalent) EC2 instances available</li>
 <li>A registered domain name (for TLS certificates and Backstage OAuth callbacks)</li>
 </ul>
-<p><strong>Resource requirements:</strong> 3-node EKS cluster (<code>m5.large</code>), ~$150–300/month at standard AWS pricing. See <a href="AWS cost estimation.md">AWS Cost Estimation</a> for a full breakdown.</p>
+<p><strong>Resource requirements:</strong> 3-node EKS cluster (<code>m5.large</code>), ~$150–300/month at standard AWS pricing. A detailed cost breakdown is not yet published.</p>
 <h3 id="tier-2-components-deployed">Tier 2 components deployed</h3>
 <p>In addition to the Tier 1 components, Path B deploys the full platform:</p>
 <table>
@@ -6161,8 +6228,8 @@ make<span class="w"> </span>dev-down
 <td>Persistent storage for Backstage, SonarQube</td>
 </tr>
 <tr>
-<td>Jenkins</td>
-<td>CI/CD pipelines with golden path templates</td>
+<td>Tekton golden path</td>
+<td>CI/CD pipelines with golden path templates (see <a href="../DEPLOYMENT_STRATEGY/">DEPLOYMENT_STRATEGY</a>; Jenkins retained for legacy only)</td>
 </tr>
 <tr>
 <td>SonarQube</td>
@@ -6196,8 +6263,9 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/paruf
 <span class="nb">cd</span><span class="w"> </span>fawkes
 
 <span class="c1"># 2. Configure your environment</span>
-cp<span class="w"> </span>config/example.tfvars<span class="w"> </span>config/terraform.tfvars
-<span class="c1"># Edit terraform.tfvars with your AWS account ID, region, and domain</span>
+<span class="c1"># Copy the example tfvars for your provider (under infra/terraform/ or infra/aws/)</span>
+<span class="c1"># and edit it with your AWS account ID, region, and domain</span>
+<span class="c1"># (no remote backend is configured yet — see KL-01 in docs/KNOWN_LIMITATIONS.md)</span>
 
 <span class="c1"># 3. Configure GitHub OAuth for Backstage (required before first login)</span>
 <span class="c1"># See: docs/how-to/security/github-oauth-quickstart.md</span>
@@ -6223,9 +6291,9 @@ make<span class="w"> </span>test-bdd
 </code></pre></div>
 <h3 id="next-steps-after-path-b">Next steps after Path B</h3>
 <ul>
-<li><a href="deployment/">Deployment Guide</a> — operational runbooks and day-2 operations</li>
+<li><a href="../runbooks/">Runbooks</a> — operational procedures and day-2 operations</li>
 <li><a href="../golden-path-usage/">Golden Path Templates</a> — onboard your development teams</li>
-<li><a href="observability/">DORA Metrics Setup</a> — configure team-level dashboards</li>
+<li><a href="../observability/dora-metrics-guide/">DORA Metrics Setup</a> — configure team-level dashboards</li>
 <li>For multi-cloud or enterprise needs, see <a href="#path-c--enterprise-multi-cloud">Path C</a></li>
 </ul>
 <hr />
@@ -6252,7 +6320,7 @@ make<span class="w"> </span>test-bdd
 <tbody>
 <tr>
 <td>AWS (multi-account)</td>
-<td><a href="AWS_deployment_guide.md">AWS Deployment Guide</a></td>
+<td><a href="../archive/AWS_deployment_guide/">AWS Deployment Guide</a></td>
 </tr>
 <tr>
 <td>Azure AKS</td>
@@ -6260,7 +6328,7 @@ make<span class="w"> </span>test-bdd
 </tr>
 <tr>
 <td>Multi-cloud</td>
-<td><a href="deployment/">docs/deployment/</a> directory</td>
+<td><a href="deployment/">deployment/</a> directory</td>
 </tr>
 </tbody>
 </table>
@@ -6268,12 +6336,12 @@ make<span class="w"> </span>test-bdd
 <ul>
 <li><strong>SSO integration</strong> — Backstage and ArgoCD authenticate via your identity provider</li>
 <li><strong>Multi-tenancy</strong> — isolated namespaces and network policies per team or business unit</li>
-<li><strong>Compliance controls</strong> — OPA/Rego policies, audit logs, SBOM generation</li>
+<li><strong>Compliance controls</strong> — Kyverno/OPA policies, audit logs, SBOM generation (see <a href="../security/">security</a>)</li>
 <li><strong>High availability</strong> — multi-zone EKS, RDS multi-AZ, Prometheus federation</li>
-<li><strong>Cost allocation</strong> — per-namespace resource tagging and cost dashboards</li>
+<li><strong>Cost allocation</strong> — per-namespace resource tagging and cost dashboards (see <a href="../how-to/security/rbac-setup/">RBAC setup</a> for tenant isolation)</li>
 </ul>
 <blockquote>
-<p>For enterprise deployment support, open a <a href="https://github.com/paruff/fawkes/discussions">GitHub Discussion</a> or refer to the <a href="deployment/">deployment guides</a>.</p>
+<p>For enterprise deployment support, open a <a href="https://github.com/paruff/fawkes/discussions">GitHub Discussion</a> or refer to the <a href="../runbooks/">runbooks</a>.</p>
 </blockquote>
 <hr />
 <h2 id="repository-structure">Repository Structure</h2>
@@ -6284,9 +6352,9 @@ make<span class="w"> </span>test-bdd
 │   ├── explanation/               # Understanding-oriented discussions
 │   ├── reference/                 # API docs, config tables, glossary
 │   ├── deployment/                # Cloud deployment guides (Path B and C)
-│   └── dojo/                      # Belt-based learning modules
+│   └── dojo/                      # Pointer to the uFawkesDojo curriculum repo
 ├── platform/                      # Platform components
-│   ├── apps/                      # ArgoCD applications (Jenkins, Backstage, etc.)
+│   ├── apps/                      # ArgoCD applications (Backstage, Tekton, etc.)
 │   ├── policies/                  # Kyverno policies (security, mutation, generation)
 │   ├── devfiles/                  # Eclipse Che development environments
 │   ├── networking/                # Ingress, cert-manager, external-dns
@@ -6310,7 +6378,8 @@ make<span class="w"> </span>test-bdd
 <li><a href="https://github.com/paruff/fawkes/issues">GitHub Issues</a></li>
 <li><a href="https://github.com/paruff/fawkes/discussions">Community Discussions</a></li>
 </ul>
-<p><a class="md-button md-button--primary" href="#path-a--evaluate-locally">Path A — Evaluate Locally <img alt="💻" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4bb.svg" title=":computer:" /></a>
+<p><a class="md-button md-button--primary" href="#path-0--learn-via-docker-stacks">Path 0 — Docker Stacks <img alt="🐳" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f433.svg" title=":whale:" /></a>
+<a class="md-button" href="#path-a--evaluate-locally">Path A — Evaluate Locally <img alt="💻" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4bb.svg" title=":computer:" /></a>
 <a class="md-button" href="#path-b--deploy-to-cloud-aws-eks">Path B — Cloud Deployment <img alt="☁" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/2601.svg" title=":cloud:" /></a>
 <a class="md-button" href="../ARCHITECTURE/">Architecture Overview <img alt="📚" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f4da.svg" title=":books:" /></a></p>
 
