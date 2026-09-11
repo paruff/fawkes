@@ -311,6 +311,12 @@ spec:
               - --context=$(workspaces.source.path)
               - --destination=$(params.image)
               - --cache=true
+              # Multi-arch: previous images were amd64-only (ghcr.io/paruff/tracer-bullet:95a552d
+              # is amd64-only, causing exec format error on arm64 nodes like lima-k3s-worker).
+              # Kaniko supports --customPlatform for cross-build; for true multi-arch
+              # manifest list, buildx (as in reusable-python-service-golden-path.yml) is
+              # preferred. This flag at least documents the required platforms for alpha.
+              - --customPlatform=linux/amd64,linux/arm64
 
     # ------------------------------------------------------------------
     # 4. Vulnerability scan of the published image
