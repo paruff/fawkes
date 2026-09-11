@@ -37,18 +37,68 @@ maybe_cleanup_argocd_cluster_resources() {
   set -e
 }
 
+# Resolve kubeconfig for ArgoCD deployment.
+# Prefers the file set by try_set_kubeconfig_from_tf_outputs (via KUBECONFIG env var)
+# over creating a new temp file from kubectl config view, which may capture the wrong context.
+resolve_kubeconfig_for_argocd() {
+  local kubeconfig_path="${KUBECONFIG:-}"
+  if [[ -n "${kubeconfig_path}" ]]; then
+    # Single file path (typical from try_set_kubeconfig_from_tf_outputs)
+    if [[ -f "${kubeconfig_path}" ]]; then
+      echo "${kubeconfig_path}"
+      return 0
+    fi
+    # KUBECONFIG may contain multiple colon-separated paths; use the first valid one
+    local IFS=':'
+    local path
+    for path in ${kubeconfig_path}; do
+      if [[ -f "${path}" ]]; then
+        echo "${path}"
+        return 0
+      fi
+    done
+  fi
+  # Fallback: create a temp kubeconfig from current kubectl context
+  # This is the old behavior, used only when KUBECONFIG is unset or invalid.
+  echo "[WARN] KUBECONFIG not set or no valid file found; falling back to kubectl config view" >&2
+  local fallback
+  fallback=$(mktemp -t fawkes-kubeconfig-fallback-XXXX.yaml)
+  kubectl config view --raw --minify --flatten > "${fallback}"
+  echo "${fallback}"
+}
+
+# Validate and log the target cluster before deploying ArgoCD.
+# Prevents silent deployment to the wrong cluster.
+validate_cluster_target() {
+  local kubeconfig_path="$1"
+  local ctx
+  ctx=$(KUBECONFIG="${kubeconfig_path}" kubectl config current-context 2> /dev/null || echo "unknown")
+  local server
+  server=$(KUBECONFIG="${kubeconfig_path}" kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}' 2> /dev/null || echo "unknown")
+  echo "🎯 ArgoCD target cluster: context=${ctx}, server=${server}"
+  if [[ "${ctx}" == "unknown" || "${server}" == "unknown" ]]; then
+    error_exit "Cannot determine target cluster from kubeconfig at ${kubeconfig_path}. Aborting to prevent deploying ArgoCD to the wrong cluster."
+  fi
+}
+
 deploy_argocd() {
   local TF_MODULE_DIR
   TF_MODULE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/../../infra/terraform/argocd" && pwd)"
   echo "Deploying ArgoCD via Terraform module at ${TF_MODULE_DIR}"
-  local TEMP_KUBECONFIG
-  TEMP_KUBECONFIG=$(mktemp -t fawkes-kubeconfig-XXXX.yaml)
-  kubectl config view --raw --minify --flatten > "${TEMP_KUBECONFIG}"
+
+  # Resolve kubeconfig: prefer the file set by try_set_kubeconfig_from_tf_outputs
+  # over creating a new one from kubectl config view (which may capture the wrong context).
+  local ARGOCD_KUBECONFIG
+  ARGOCD_KUBECONFIG=$(resolve_kubeconfig_for_argocd)
+
+  # Validate target cluster before deploying ArgoCD
+  validate_cluster_target "${ARGOCD_KUBECONFIG}"
+
   local PREV_KUBECONFIG="${KUBECONFIG-}"
   local PREV_TF_VAR_KUBECONFIG_PATH="${TF_VAR_kubeconfig_path-}"
-  export KUBECONFIG="${TEMP_KUBECONFIG}"
-  export TF_VAR_kubeconfig_path="${TEMP_KUBECONFIG}"
-  echo "Using temporary KUBECONFIG at ${KUBECONFIG} for Terraform operations"
+  export KUBECONFIG="${ARGOCD_KUBECONFIG}"
+  export TF_VAR_kubeconfig_path="${ARGOCD_KUBECONFIG}"
+  echo "Using KUBECONFIG at ${KUBECONFIG} for Terraform operations"
   pushd "${TF_MODULE_DIR}" > /dev/null
   echo "Running: terraform init (with -upgrade to reconcile provider constraints)"
   terraform init -upgrade -input=false 2>&1 | tee terraform.log
@@ -73,7 +123,6 @@ deploy_argocd() {
   else
     unset TF_VAR_kubeconfig_path
   fi
-  rm -f "${TEMP_KUBECONFIG}" || true
   if [[ ${rc} -ne 0 ]]; then
     error_exit "Terraform apply for ArgoCD failed; see ${TF_MODULE_DIR}/terraform.log"
   fi
