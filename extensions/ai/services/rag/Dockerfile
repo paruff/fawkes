@@ -31,8 +31,10 @@ RUN addgroup --gid 65534 appuser && \
 COPY --from=build /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 COPY --from=build /usr/local/bin /usr/local/bin
 
-# Copy application code
+# Copy application code, scripts, and indexers
 COPY app ./app
+COPY scripts ./scripts
+COPY indexers ./indexers
 
 # Change ownership
 RUN chown -R appuser:appuser /app
