@@ -5,6 +5,19 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.98](https://github.com/paruff/fawkes/compare/v0.3.97...v0.3.98) (2026-09-11)
+
+
+### Fixed
+
+* **scripts:** use KUBECONFIG from TF outputs in deploy_argocd ([#1990](https://github.com/paruff/fawkes/issues/1990)) ([dc3fda6](https://github.com/paruff/fawkes/commit/dc3fda67f0aa9554c1d6b953b0f7b7573bcc9738)), closes [#1972](https://github.com/paruff/fawkes/issues/1972)
+
+
+### Chores
+
+* **deps:** add ip-address and picomatch npm overrides ([#1991](https://github.com/paruff/fawkes/issues/1991)) ([9804144](https://github.com/paruff/fawkes/commit/9804144cd2f8bb94318f669e803320e82e990d83)), closes [#1567](https://github.com/paruff/fawkes/issues/1567)
+* **security:** bump tar override to &gt;=7.5.7 for CVE-2026-24842 ([#1992](https://github.com/paruff/fawkes/issues/1992)) ([9130e25](https://github.com/paruff/fawkes/commit/9130e25a21a9c1883c486a69c04be0d599f6ee6c)), closes [#1566](https://github.com/paruff/fawkes/issues/1566)
+
 ## [0.3.97](https://github.com/paruff/fawkes/compare/v0.3.96...v0.3.97) (2026-09-11)
 
 
