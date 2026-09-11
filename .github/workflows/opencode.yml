@@ -96,44 +96,16 @@ jobs:
             fi
           fi
 
+          # No hardcoded model IDs — previous Zen free models are gone
+          # from the runtime (catalog/runtime drift). Resolve live from
+          # models.dev instead of trusting a hardcoded string.
           if [ "$STRONG_MODEL" = "true" ]; then
-            # Switched from nvidia/nvidia/nemotron-3-ultra-550b-a55b (paid:
-            # $0.50/$2.50 per million tokens via NVIDIA's own API, confirmed
-            # live against models.dev) to opencode's own Zen-hosted free
-            # variant of the same model family - confirmed live via Zen's
-            # docs page and cross-checked against models.dev
-            # ($0/$0/$0, tool_call=true, 1M context, not deprecated). Same
-            # model tier, no cost, as long as Zen keeps offering it free -
-            # Zen's own docs note free-tier models are promotional
-            # ("collecting feedback"), so re-verify this if it ever breaks.
-            PREFERRED="opencode/nemotron-3-ultra-free"
-          else
-            # deepseek-v4-flash-free was removed here after a real run failed
-            # with "Model not found: opencode/deepseek-v4-flash-free" even
-            # though models.dev's catalog still listed it as existing at the
-            # time - the live-catalog check below caught renames/removals
-            # from the catalog itself, but not this kind of catalog/runtime
-            # drift (the model was gone from opencode's actual backend before
-            # the public catalog caught up). mimo-v2.5-free is the current
-            # replacement; if this ever breaks the same way, verify against
-            # a real invocation, not just the catalog, before trusting it.
-            PREFERRED="opencode/mimo-v2.5-free"
+            echo "Strong model requested (security/feature) — selecting most recent free tool_call model."
           fi
 
           curl -fsSL https://models.dev/api.json -o /tmp/catalog.json
 
-          PROVIDER="${PREFERRED%%/*}"
-          MODEL_ID="${PREFERRED#*/}"
-
-          EXISTS=$(jq --arg p "$PROVIDER" --arg m "$MODEL_ID" '.[$p].models[$m] != null' /tmp/catalog.json)
-
-          if [ "$EXISTS" = "true" ]; then
-            echo "model=$PREFERRED" >> "$GITHUB_OUTPUT"
-            echo "Model verified against live catalog: $PREFERRED"
-            exit 0
-          fi
-
-          echo "::warning::Preferred model '$PREFERRED' no longer exists in the live models.dev catalog (renamed or removed) -- falling back to a free tool-calling model on the same provider ($PROVIDER)."
+          PROVIDER="opencode"
 
           FALLBACK=$(jq -r --arg p "$PROVIDER" '
             .[$p].models
@@ -145,12 +117,12 @@ jobs:
           ' /tmp/catalog.json)
 
           if [ -z "$FALLBACK" ]; then
-            echo "::error::No free tool-calling fallback model found for provider $PROVIDER either. Failing closed rather than silently using a paid or non-functional model."
+            echo "::error::No free tool-calling fallback model found for provider $PROVIDER. Failing closed."
             exit 1
           fi
 
-          echo "::warning::Falling back to $PROVIDER/$FALLBACK"
           echo "model=$PROVIDER/$FALLBACK" >> "$GITHUB_OUTPUT"
+          echo "Model resolved from live catalog: $PROVIDER/$FALLBACK"
 
       - name: Run OpenCode
         uses: anomalyco/opencode/github@3104c1428ec91f809e5ab86631300de41eb6952e  # v1.18.30

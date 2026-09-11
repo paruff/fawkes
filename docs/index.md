@@ -10,7 +10,7 @@ description: Fawkes Internal Developer Platform - Data-Driven Approach to Softwa
   <figcaption>Fawkes Platform Overview</figcaption>
 </figure>
 
-Welcome to the Fawkes project! Fawkes is an open-source platform designed to help teams achieve **elite performance** in software delivery by implementing all **24 DORA capabilities** through integrated tooling and practices. Based on research from "Accelerate" and the DORA State of DevOps reports, organizations that excel in these capabilities are **twice as likely to exceed their organizational performance goals**.
+Welcome to the Fawkes project! Fawkes is an open-source platform designed to help teams achieve **elite performance** in software delivery by implementing the **7 DORA AI capabilities** (plus the classic Accelerate delivery capabilities) through integrated tooling and practices. Based on research from "Accelerate" and the DORA State of DevOps reports, organizations that excel in these capabilities are **twice as likely to exceed their organizational performance goals**. See the [DORA research library](research/dora/README.md) and [AI capabilities alignment](ai/dora-2025-alignment.md).
 
 ## 🎯 Elite Performance Metrics
 
@@ -31,10 +31,10 @@ These capabilities have the strongest positive correlation with deployment frequ
 
 | Capability                                                                                                                     | Purpose                                           | Implementation                                         | Performance Impact               |
 | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------- | ------------------------------------------------------ | -------------------------------- |
-| ![](assets/images/icons/continuous-delivery.png){ width="24" } [Continuous Delivery](patterns/continuous-delivery.md)          | Ensuring software is always in a deployable state | [Spinnaker](tools/spinnaker.md), [Flux](tools/flux.md) | 2.5x higher deployment frequency |
-| ![](assets/images/icons/automation.png){ width="24" } [Deployment Automation](patterns/deployment-automation.md)               | Automating the deployment process                 | [Jenkins](tools/jenkins.md)                            | 3x more frequent deployments     |
-| ![](assets/images/icons/continuous-integration.png){ width="24" } [Continuous Integration](patterns/continuous-integration.md) | Frequently merging code changes                   | GitHub Actions                                         | 2x higher deployment frequency   |
-| ![](assets/images/icons/infrastructure.png){ width="24" } [Infrastructure as Code](patterns/infrastructure-as-code.md)         | Using cloud and infrastructure-as-code            | Terraform                                              | 1.8x more frequent deployments   |
+| ![](assets/images/icons/continuous-delivery.png){ width="24" } **Continuous Delivery**          | Ensuring software is always in a deployable state | [Spinnaker](tools/spinnaker.md), Flux | 2.5x higher deployment frequency |
+| ![](assets/images/icons/automation.png){ width="24" } **Deployment Automation**               | Automating the deployment process                 | [Jenkins](tools/jenkins.md)                            | 3x more frequent deployments     |
+| ![](assets/images/icons/continuous-integration.png){ width="24" } **Continuous Integration** | Frequently merging code changes                   | GitHub Actions                                         | 2x higher deployment frequency   |
+| ![](assets/images/icons/infrastructure.png){ width="24" } **Infrastructure as Code**         | Using cloud and infrastructure-as-code            | Terraform                                              | 1.8x more frequent deployments   |
 
 ### Lead Time Reducers
 
@@ -42,10 +42,10 @@ These capabilities have the strongest positive correlation with reducing lead ti
 
 | Capability                                                                                                                     | Purpose                               | Implementation  | Performance Impact         |
 | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------- | --------------- | -------------------------- |
-| ![](assets/images/icons/continuous-integration.png){ width="24" } [Continuous Integration](patterns/continuous-integration.md) | Frequently merging code changes       | GitHub Actions  | 74% reduction in lead time |
-| ![](assets/images/icons/testing.png){ width="24" } [Test Automation](patterns/test-automation.md)                              | Automated testing at all levels       | Selenium, JUnit | 67% reduction in lead time |
-| ![](assets/images/icons/architecture.png){ width="24" } [Loosely Coupled Architecture](patterns/architecture.md)               | Enabling independent team work        | Kubernetes      | 56% reduction in lead time |
-| ![](assets/images/icons/database.png){ width="24" } [Database Change Management](patterns/database-changes.md)                 | Managing database changes effectively | Flyway          | 43% reduction in lead time |
+| ![](assets/images/icons/continuous-integration.png){ width="24" } **Continuous Integration** | Frequently merging code changes       | GitHub Actions  | 74% reduction in lead time |
+| ![](assets/images/icons/testing.png){ width="24" } **Test Automation**                              | Automated testing at all levels       | Selenium, JUnit | 67% reduction in lead time |
+| ![](assets/images/icons/architecture.png){ width="24" } **Loosely Coupled Architecture**               | Enabling independent team work        | Kubernetes      | 56% reduction in lead time |
+| ![](assets/images/icons/database.png){ width="24" } **Database Change Management**                 | Managing database changes effectively | Flyway          | 43% reduction in lead time |
 
 ### Change Failure Rate Reducers
 
@@ -53,10 +53,10 @@ These capabilities have the strongest positive correlation with reducing change 
 
 | Capability                                                                                                   | Purpose                               | Implementation      | Performance Impact                             |
 | ------------------------------------------------------------------------------------------------------------ | ------------------------------------- | ------------------- | ---------------------------------------------- |
-| ![](assets/images/icons/testing.png){ width="24" } [Test Automation](patterns/test-automation.md)            | Automated testing at all levels       | Selenium, JUnit     | 3x lower change failure rate                   |
-| ![](assets/images/icons/quality.png){ width="24" } [Change Failure Rate Reduction](patterns/quality.md)      | Improving code quality                | SonarQube           | 1.8x fewer production defects                  |
-| ![](assets/images/icons/security.png){ width="24" } [Shift Left on Security](patterns/security.md)           | Early security testing                | OWASP ZAP           | 2x fewer security incidents                    |
-| ![](assets/images/icons/monitoring.png){ width="24" } [Monitoring and Observability](patterns/monitoring.md) | Implementing comprehensive monitoring | Prometheus, Grafana | 2x more likely to detect issues before failure |
+| ![](assets/images/icons/testing.png){ width="24" } **Test Automation**            | Automated testing at all levels       | Selenium, JUnit     | 3x lower change failure rate                   |
+| ![](assets/images/icons/quality.png){ width="24" } **Change Failure Rate Reduction**      | Improving code quality                | SonarQube           | 1.8x fewer production defects                  |
+| ![](assets/images/icons/security.png){ width="24" } **Shift Left on Security**           | Early security testing                | OWASP ZAP           | 2x fewer security incidents                    |
+| ![](assets/images/icons/monitoring.png){ width="24" } **Monitoring and Observability** | Implementing comprehensive monitoring | Prometheus, Grafana | 2x more likely to detect issues before failure |
 
 ### MTTR Improvers
 
@@ -64,10 +64,10 @@ These capabilities have the strongest positive correlation with reducing mean ti
 
 | Capability                                                                                                             | Purpose                                | Implementation      | Performance Impact              |
 | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------- | ------------------- | ------------------------------- |
-| ![](assets/images/icons/incident.png){ width="24" } [Time to Restore Service](patterns/incident-response.md)           | Quick incident resolution              | Grafana             | 73% faster MTTR                 |
-| ![](assets/images/icons/monitoring.png){ width="24" } [Monitoring and Observability](patterns/monitoring.md)           | Implementing comprehensive monitoring  | Prometheus, Grafana | 2.1x faster incident detection  |
-| ![](assets/images/icons/chaos.png){ width="24" } [Proactive Failure Management](patterns/chaos-engineering.md)         | Testing system resilience              | Chaos Mesh          | 1.5x faster incident resolution |
-| ![](assets/images/icons/infrastructure.png){ width="24" } [Infrastructure as Code](patterns/infrastructure-as-code.md) | Using cloud and infrastructure-as-code | Terraform           | 1.7x faster recovery time       |
+| ![](assets/images/icons/incident.png){ width="24" } **Time to Restore Service**           | Quick incident resolution              | Grafana             | 73% faster MTTR                 |
+| ![](assets/images/icons/monitoring.png){ width="24" } **Monitoring and Observability**           | Implementing comprehensive monitoring  | Prometheus, Grafana | 2.1x faster incident detection  |
+| ![](assets/images/icons/chaos.png){ width="24" } **Proactive Failure Management**         | Testing system resilience              | Chaos Mesh          | 1.5x faster incident resolution |
+| ![](assets/images/icons/infrastructure.png){ width="24" } **Infrastructure as Code** | Using cloud and infrastructure-as-code | Terraform           | 1.7x faster recovery time       |
 
 ## 🔄 Capability Synergies
 
@@ -107,9 +107,9 @@ Organizations that implement capabilities across all three categories (Flow, Fee
 
 ### Alternative Learning Paths
 
-1. [Assess your current capabilities](getting-started/assessment.md)
-2. [Choose your implementation path](getting-started/implementation-paths.md)
-3. [Set up your first capability](getting-started/quick-wins.md)
+1. [Choose your path](../README.md#-quick-start) — Docker stacks (10 min) or local k3d (20 min)
+2. [Deploy your first service](tutorials/1-deploy-first-service.md)
+3. [Dojo White Belt](https://github.com/paruff/uFawkesDojo) — guided curriculum
 
 [View All Tutorials](tutorials/index.md){ .md-button }
 [Explore All Capabilities](capabilities.md){ .md-button }
@@ -147,7 +147,7 @@ Start here if you're building, operating, or contributing to the platform:
 - **Deployment**: [Deployment Guides](deployment/index.md) | [GitOps How-Tos](how-to/gitops/onboard-service-argocd.md)
 - **Observability**: [Observability Overview](observability/index.md) | [DORA Metrics](tutorials/6-measure-dora-metrics.md)
 - **Security**: [Security Plane](security-plane/index.md) | [Security How-Tos](how-to/security/quality-gates-configuration.md)
-- **Testing**: [Testing Overview](testing/index.md) | [Test Patterns](patterns/test-automation.md)
+- **Testing**: [Testing Overview](testing/index.md) | [Test Strategy](test-strategy.md)
 - **AI/ML**: [AI Documentation](ai/index.md) | [Vector Database](ai/vector-database.md)
 - **Data Platform**: [Data Platform](data-platform/index.md)
 - **Design System**: [Design Documentation](design/index.md)

@@ -53,11 +53,11 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Check dependency graph availability
         id: dependency-graph
-        uses: actions/github-script@v9
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553  # v9
         with:
           script: |
             try {
@@ -82,7 +82,7 @@ jobs:
       - name: Determine refs
         id: refs
         if: steps.dependency-graph.outputs.enabled == 'true'
-        uses: actions/github-script@v9
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553  # v9
         with:
           script: |
             let baseRef = '${{ inputs.base-ref }}';
@@ -114,7 +114,7 @@ jobs:
 
       - name: Review dependencies
         if: steps.dependency-graph.outputs.enabled == 'true' && steps.refs.outputs.skip != 'true'
-        uses: actions/dependency-review-action@v5
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294  # v5
         with:
           fail-on-severity: ${{ inputs.fail-on-severity }}
           base-ref: ${{ steps.refs.outputs.base-ref }}
@@ -123,7 +123,7 @@ jobs:
 
       - name: Deny specific licenses
         if: inputs.deny-licenses != '' && steps.dependency-graph.outputs.enabled == 'true' && steps.refs.outputs.skip != 'true'
-        uses: actions/github-script@v9
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553  # v9
         with:
           script: |
             const denyLicenses = '${{ inputs.deny-licenses }}'.split(',').map(l => l.trim()).filter(Boolean);

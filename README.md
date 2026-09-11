@@ -2,6 +2,10 @@
 
 > **🎓 Learn platform engineering while building a world-class delivery platform**
 
+> **Status**: Pre-alpha (`v0.3.95`, September 2026) — local k3d evaluation works; cloud production is not yet ready. See [Known Limitations](docs/KNOWN_LIMITATIONS.md).
+
+> **Scope**: Fawkes is the core IDP (platform orchestration). It is **not** the Dojo curriculum (now at [uFawkesDojo](https://github.com/paruff/uFawkesDojo)) and **not** a CI SaaS — composable stacks ([uFawkesObs / Pipe / DevX](#ufawkes-stack-ecosystem)) cover observability, delivery, and developer experience.
+
 <p align="center">
   <img src="docs/images/fawkes-logo.png" alt="Fawkes Logo" width="200"/>
 </p>
@@ -72,54 +76,21 @@ Fawkes is applying for the AWS Activate program to accelerate development and pr
 
 **AWS Services Used**: EKS, RDS, S3, ALB, CloudWatch, X-Ray, Secrets Manager, IAM, VPC, Certificate Manager
 
-[Apply for AWS Activate](https://aws.amazon.com/activate/) | [See our AWS Cost Estimation](docs/AWS_COST_ESTIMATION.md)
+[Apply for AWS Activate](https://aws.amazon.com/activate/) | [AWS Deployment Guide](docs/archive/AWS_deployment_guide.md)
 
 ## AWS Activate Application
 
-📊 [AWS Cost Estimation](docs/AWS_COST_ESTIMATION.md)
-📈 [Business Case & Value Proposition](docs/BUSINESS_CASE.md)
+📊 Cost estimation and business case docs are not yet published — see the [archive deployment guide](docs/archive/AWS_deployment_guide.md) for current AWS notes.
 
 ---
 
 ## 🥋 The Fawkes Dojo: Learn by Doing
 
-**The Problem**: Platform engineering skills are in high demand but hard to acquire. Reading docs ≠ real expertise.
-
-**The Fawkes Solution**: An immersive learning environment where you build actual platform skills on production-like infrastructure.
-
-### Belt Progression System
-
-Progress through 5 belt levels, each building on the last:
-
-```
-🥋 White Belt (8 hours)      →  Platform Fundamentals
-   ↓ Deploy your first app, understand DORA metrics
-
-🟡 Yellow Belt (8 hours)     →  CI/CD Mastery
-   ↓ Build pipelines, implement security scanning
-
-🟢 Green Belt (8 hours)      →  GitOps & Deployment
-   ↓ Master blue-green and canary deployments
-
-🟤 Brown Belt (8 hours)      →  Observability & SRE
-   ↓ Configure full observability, respond to incidents
-
-⚫ Black Belt (8 hours)      →  Platform Architecture
-   ↓ Design platforms, mentor others
-
-Total: 40 hours from novice to platform architect
-```
-
-### What You Get
-
-✅ **Hands-On Labs** - Practice in isolated, safe environments
-✅ **Immediate Feedback** - Auto-graded labs, real-time validation
-✅ **Production Skills** - Same tools used in enterprise platforms
-✅ **Recognized Credentials** - Digital badges and certificates
-✅ **Community Learning** - Learn with peers, get mentorship
-✅ **Platform Engineering University Integration** - Aligned with industry certifications
+Platform engineering skills are hard to acquire by reading docs. The Dojo curriculum — 5 belt levels, 40 hours from novice to platform architect, hands-on labs with auto-graded validation — now lives in its own repo so it can be shared across the whole stack family:
 
 **[Start Your Dojo Journey →](https://github.com/paruff/uFawkesDojo)**
+
+Fastest way to learn by doing: run one composable Docker stack locally (`uFawkesObs` for observability, `uFawkesPipe` for delivery, `uFawkesDevX` for developer experience — see [Quick Start](#-quick-start)), then work the matching Dojo belt against it.
 
 ---
 
@@ -174,18 +145,18 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 
 ## 📊 DORA Metrics: Built-In, Not Bolt-On
 
-Fawkes automates collection and visualization of the **Four Key Metrics** that separate high performers from the rest:
+Fawkes collects and visualizes the **Four Key Metrics** that separate high performers from the rest. Collection is **partial in pre-alpha** — pipelines emit deployment events, but DevLake DORA dashboards are not yet populated (see [KL-12](docs/KNOWN_LIMITATIONS.md)):
 
-| Metric                      | What It Measures                   | Fawkes Automation                   |
-| --------------------------- | ---------------------------------- | ----------------------------------- |
-| **Deployment Frequency**    | How often you deploy to production | ✅ Automated via webhooks           |
-| **Lead Time for Changes**   | Time from commit to production     | ✅ Git → CI → CD tracking           |
-| **Change Failure Rate**     | % of deployments causing failures  | ✅ Deployment correlation           |
-| **Time to Restore Service** | Time to recover from incidents     | ✅ Incident detection to resolution |
+| Metric                      | What It Measures                   | Fawkes Status                                  |
+| --------------------------- | ---------------------------------- | ---------------------------------------------- |
+| **Deployment Frequency**    | How often you deploy to production | 🚧 Partial — events emitted, dashboards pending |
+| **Lead Time for Changes**   | Time from commit to production     | 🚧 Partial — Git → CI → CD tracking, no baseline yet |
+| **Change Failure Rate**     | % of deployments causing failures  | 🚧 Partial — rework-rate proxy in [METRICS](docs/METRICS.md) |
+| **Time to Restore Service** | Time to recover from incidents     | 🚧 Planned — incident detection not yet wired  |
 
-**Real-time dashboards** show your team's performance and track improvement over time.
+**DORA capability**: Fawkes provides the quality-internal-platform, version-control, and small-batch foundations; per-stack capability mapping lives in [ROADMAP](ROADMAP.md).
 
-**[View DORA Dashboard Demo →](docs/dora/dashboard-demo.md)**
+**[DORA Metrics Guide →](docs/observability/dora-metrics-guide.md)**
 
 ---
 
@@ -219,9 +190,10 @@ Not sure where to begin? Choose the path that fits your goal:
 
 | Path                                                                                    | Goal                                                         | Time      |
 | --------------------------------------------------------------------------------------- | ------------------------------------------------------------ | --------- |
-| **[A — Evaluate Locally](docs/getting-started.md#path-a-evaluate-locally)**             | Try Fawkes on your laptop with k3d — no cloud account needed | ~20 min   |
-| **[B — Deploy to Cloud](docs/getting-started.md#path-b-deploy-to-cloud-aws-eks)**       | Production-capable deployment on AWS EKS                     | 2–4 hours |
-| **[C — Enterprise Multi-Cloud](docs/getting-started.md#path-c-enterprise-multi-cloud)** | Multi-cloud, SSO, RBAC, compliance                           | 1–2 days  |
+| **[0 — Learn via Docker Stacks](docs/getting-started.md#path-0--learn-via-docker-stacks)** | Learn by doing: one composable stack + Dojo belt, no cluster | ~10 min   |
+| **[A — Evaluate Locally](docs/getting-started.md#path-a--evaluate-locally)**             | Try Fawkes on your laptop with k3d — no cloud account needed | ~20 min   |
+| **[B — Deploy to Cloud](docs/getting-started.md#path-b--deploy-to-cloud-aws-eks)**       | Production-capable deployment on AWS EKS                     | 2–4 hours |
+| **[C — Enterprise Multi-Cloud](docs/getting-started.md#path-c--enterprise-multi-cloud)** | Multi-cloud, SSO, RBAC, compliance                           | 1–2 days  |
 
 **Fastest start (Path A):**
 
@@ -345,8 +317,8 @@ Comprehensive documentation for all aspects of Fawkes:
 ### Getting Started
 
 - [Installation Guide](docs/getting-started.md)
-- [Quick Start Tutorial](docs/tutorials/quick-start.md)
-- [Architecture Overview](docs/architecture.md)
+- [Deploy Your First Service](docs/tutorials/1-deploy-first-service.md) - 30-minute quick start
+- [Architecture Overview](docs/ARCHITECTURE.md)
 - [Configuration Reference](docs/configuration.md)
 - 🎥 [Epic 1 Demo Video Script](docs/tutorials/epic-1-demo-video-script.md) - 30-minute platform walkthrough
 - 📋 [Epic 1 Demo Checklist](docs/tutorials/epic-1-demo-video-checklist.md) - Quick reference for recording
@@ -362,27 +334,24 @@ Comprehensive documentation for all aspects of Fawkes:
 
 ### Platform Components
 
-- [Backstage Setup](docs/components/backstage.md)
-- [Mattermost Deployment](docs/components/mattermost.md)
-- [Focalboard Usage](docs/components/focalboard.md)
-- [Jenkins Configuration](docs/components/jenkins.md)
-- [ArgoCD Setup](docs/components/argocd.md)
-- [Observability Stack](docs/components/observability.md)
+- [Backstage](platform/apps/backstage/README.md) - Developer portal and service catalog
+- [Mattermost](platform/apps/mattermost/README.md) - Team collaboration and ChatOps
+- [CI Direction: Tekton + uFawkesPipe](docs/DEPLOYMENT_STRATEGY.md) - Golden-path pipeline (Jenkins retained only for legacy; see [Jenkins CaSC notes](docs/how-to/jenkins-casc-configuration.md))
+- [ArgoCD / GitOps](docs/DEPLOYMENT_STRATEGY.md) - Declarative delivery and rollback protocol
+- [Observability Stack](docs/observability/index.md) - Prometheus, Grafana, OTEL, Loki
 
 ### Operations
 
-- [Day 2 Operations](docs/operations/day2.md)
-- [Backup & Disaster Recovery](docs/operations/backup.md)
-- [Monitoring & Alerting](docs/operations/monitoring.md)
-- [Security Best Practices](docs/operations/security.md)
+- [Runbooks](docs/runbooks/index.md) - Platform operations procedures
+- [Security](docs/security.md) - Best practices and security plane
 - [Troubleshooting Guide](docs/troubleshooting.md)
 - [AT-E1-001 Validation Tests](docs/runbooks/at-e1-001-validation.md)
 - [Azure AKS Validation Checklist](docs/runbooks/azure-aks-validation-checklist.md)
 
 ### Contributing
 
-- [Contributing Guide](CONTRIBUTING.md)
-- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Contributing Guide](docs/contributing.md)
+- [Code of Conduct](docs/CODE_OF_CONDUCT.md)
 - [Development Setup](docs/development.md)
 - [Pre-commit Hooks Setup](docs/PRE-COMMIT.md)
 - [Architectural Decision Records](docs/adr/)
@@ -448,18 +417,18 @@ Community is forming. Join the conversation in [GitHub Discussions](https://gith
 
 ## 🗺️ Roadmap
 
-### Current Release: [v0.3.0](https://github.com/paruff/fawkes/releases/tag/v0.3.0) (December 2025)
+### Current Release: [v0.3.95](https://github.com/paruff/fawkes/releases/tag/v0.3.95) (September 2026, pre-alpha)
 
 - ✅ Core architecture and governance
-- ✅ Dojo learning system design
+- ✅ Dojo curriculum spun out to [uFawkesDojo](https://github.com/paruff/uFawkesDojo)
 - ✅ User research infrastructure — personas, interview guides, insights database
 - ✅ Product discovery and adoption support
 - ✅ Security plane — SBOM, image signing, policy enforcement
-- ✅ DORA metrics automation and dashboards
-- ✅ Multi-cloud support (AWS, Azure, GCP)
+- 🚧 DORA metrics collection partial — dashboards pending ([KL-12](docs/KNOWN_LIMITATIONS.md))
+- 🚧 Multi-cloud support (AWS, Azure, GCP) — evaluation only, no remote state ([KL-01](docs/KNOWN_LIMITATIONS.md))
 - ✅ GitOps workflows with ArgoCD
 - ✅ Observability stack (Prometheus, Grafana, OpenTelemetry)
-- ✅ Jenkins CI/CD with golden path templates
+- ✅ Tekton golden-path pipeline + CI direction set ([uFawkesPipe](https://github.com/paruff/ufawkespipe))
 - ✅ Backstage developer portal
 - ✅ Mattermost collaboration platform
 - ✅ Extensions — AI (Weaviate, RAG service) and Data Platform (DataHub) available as opt-in add-ons
@@ -496,7 +465,7 @@ Community is forming. Join the conversation in [GitHub Discussions](https://gith
 - FinOps integration
 - 1,000+ community members
 
-**[View Detailed Roadmap →](docs/roadmap.md)**
+**[View Detailed Roadmap →](ROADMAP.md)**
 
 ---
 
@@ -524,7 +493,7 @@ Fawkes is open source and community-driven. We welcome contributions of all kind
 
 ### Getting Started with Contributing
 
-1. **Read** [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+1. **Read** [Contributing Guide](docs/contributing.md) and [Code of Conduct](docs/CODE_OF_CONDUCT.md)
 2. **Join** the [GitHub Discussions](https://github.com/paruff/fawkes/discussions)
 3. **Browse** [good first issues](https://github.com/paruff/fawkes/labels/good%20first%20issue)
 4. **Fork** the repository and create a branch
@@ -553,11 +522,13 @@ All contributions must pass:
 
 📖 **See**: [CODING_STANDARDS.md](CODING_STANDARDS.md) - Comprehensive coding standards guide with examples and FAQs
 
+**Tests**: `make test-all` runs unit + BATS + BDD + integration suites (`tests/`, see [test strategy](docs/test-strategy.md)). Integration tests need a live cluster; unit tests run anywhere.
+
 ### Recognition
 
 All contributors are recognized in:
 
-- [CONTRIBUTORS.md](CONTRIBUTORS.md) (automated via all-contributors bot)
+- [Contributors graph](https://github.com/paruff/fawkes/graphs/contributors) (all-contributors automation planned)
 - Monthly "Contributor of the Month" spotlight
 - Annual "Top Contributors" feature
 - Speaking opportunities at community events
@@ -597,7 +568,7 @@ Fawkes is built on the shoulders of giants and inspired by:
 
 ### Special Thanks
 
-- All our [contributors](CONTRIBUTORS.md)
+- All our [contributors](https://github.com/paruff/fawkes/graphs/contributors)
 - [Platform Engineering University](https://platformengineering.university/) for certification partnership
 - The open source community for feedback and support
 - Early adopters who believed in the vision
@@ -676,7 +647,7 @@ Fawkes is the core platform. The uFawkes stacks are composable components that e
 | Stack           | Description                                          | Link                                            |
 | --------------- | ---------------------------------------------------- | ----------------------------------------------- |
 | **uFawkesObs**  | Observability — Prometheus, Grafana, AI dashboards   | [GitHub](https://github.com/paruff/ufawkesobs)  |
-| **uFawkesPipe** | CI/CD — Jenkins, Buildpacks, DevSecOps               | [GitHub](https://github.com/paruff/ufawkespipe) |
+| **uFawkesPipe** | CI/CD — Tekton golden path, Woodpecker, DevSecOps    | [GitHub](https://github.com/paruff/ufawkespipe) |
 | **uFawkesDORA** | DORA metrics — dashboards, VSM, delivery performance | [GitHub](https://github.com/paruff/ufawkesdora) |
 | **uFawkesSec**  | Security — policy-as-code, supply chain, guardrails  | [GitHub](https://github.com/paruff/ufawkessec)  |
 | **uFawkesDevX** | Developer experience — golden paths, IDP templates   | [GitHub](https://github.com/paruff/ufawkesdevx) |
