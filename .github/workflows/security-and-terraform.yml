@@ -26,7 +26,7 @@ jobs:
           echo "job:${{ github.job }}"
 
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       # 1️⃣ Terraform validation
       - name: Setup Terraform
@@ -36,7 +36,7 @@ jobs:
 
       # Cache Terraform providers (global plugin cache only — avoids filling disk with per-module .terraform/)
       - name: Cache Terraform providers
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6
         with:
           path: ~/.terraform.d/plugin-cache
           key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
@@ -133,19 +133,19 @@ jobs:
 
       # 4️⃣ Upload SARIF results for GitHub Security tab
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@311b4ee155dcdab395044f00946f664bd51ff173  # v4
         with:
           sarif_file: trivy-results.sarif
 
       - name: Upload Gitleaks results to GitHub Security tab
         if: always() && hashFiles('gitleaks-results.sarif') != ''
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@311b4ee155dcdab395044f00946f664bd51ff173  # v4
         with:
           sarif_file: gitleaks-results.sarif
 
       # 5️⃣ Upload artifacts for later review
       - name: Upload reports
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7
         with:
           name: security-reports
           path: |

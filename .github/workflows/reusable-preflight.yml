@@ -50,7 +50,7 @@ jobs:
 
       # ── Checkout ────────────────────────────────────────────────────────────
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
         with:
           fetch-depth: 0
 
@@ -69,7 +69,7 @@ jobs:
       # ── Pre-commit Validation ───────────────────────────────────────────────
       - name: Set up Python
         if: steps.bypass.outputs.skipped != 'true'
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7
         with:
           python-version: "3.13"
 
@@ -79,7 +79,7 @@ jobs:
 
       - name: Cache pre-commit environments
         if: steps.bypass.outputs.skipped != 'true'
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
@@ -105,7 +105,7 @@ jobs:
           steps.bypass.outputs.skipped != 'true' &&
           inputs.pr-size-limit > 0 &&
           github.event_name == 'pull_request'
-        uses: actions/github-script@v9
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553  # v9
         with:
           script: |
             const { data: pr } = await github.rest.pulls.get({
@@ -140,7 +140,7 @@ jobs:
         if: |
           steps.bypass.outputs.skipped != 'true' &&
           inputs.commit-format == 'conventional'
-        uses: actions/github-script@v9
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553  # v9
         with:
           script: |
             const conventionalRegex = /^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|revert)(\(.+\))?: .{1,72}$/;

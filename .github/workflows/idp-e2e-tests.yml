@@ -33,10 +33,10 @@ jobs:
           echo "workflow:${{ github.workflow }}"
           echo "job:${{ github.job }}"
 
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7
         with:
           python-version: "3.13"
           cache: "pip"
@@ -179,7 +179,7 @@ jobs:
           echo '<testsuite name="e2e" tests="0" />' > reports/e2e-placeholder.xml
       - name: Upload test reports
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7
         with:
           name: test-reports-${{ github.run_id }}
           path: reports/
@@ -193,7 +193,7 @@ jobs:
 
       - name: Comment PR with results
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@v9
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553  # v9
         with:
           script: |
             github.rest.issues.createComment({
