@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.100](https://github.com/paruff/fawkes/compare/v0.3.99...v0.3.100) (2026-09-11)
+
+
+### Chores
+
+* **security:** add scoped minimatch+brace-expansion npm overrides ([#1996](https://github.com/paruff/fawkes/issues/1996)) ([e66c51a](https://github.com/paruff/fawkes/commit/e66c51a8868d542317ce477ada5327dd5ea89fe9))
+
 ## [0.3.99](https://github.com/paruff/fawkes/compare/v0.3.98...v0.3.99) (2026-09-11)
 
 
