@@ -9,7 +9,7 @@ package main
 # an explicit storageClassName silently bound to whichever one Kubernetes
 # picked - in that case an Azure CSI class with no working driver on that
 # cluster, leaving the PVC stuck Pending.
-deny[msg] {
+deny contains msg if {
     input.kind == "StorageClass"
     input.metadata.annotations["storageclass.kubernetes.io/is-default-class"] == "true"
 

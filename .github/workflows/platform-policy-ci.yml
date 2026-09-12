@@ -39,6 +39,7 @@ jobs:
     needs: dora-start
     uses: ./.github/workflows/reusable-policy-enforcement.yml
     with:
+      policy-path: .security-plane/policies/kubernetes
       target-path: platform
       fail-on-violation: true
     permissions:

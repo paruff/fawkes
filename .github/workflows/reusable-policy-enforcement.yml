@@ -77,7 +77,8 @@ jobs:
           K8S_FILES=$(find ${{ inputs.target-path }} -type f \( -name "*.yaml" -o -name "*.yml" \) \
             -not -path "*/node_modules/*" \
             -not -path "*/.github/*" \
-            -not -path "*/vendor/*")
+            -not -path "*/vendor/*" \
+            -not -path "*/upstream/*")
 
           if [ -z "$K8S_FILES" ]; then
             echo "⚠️  No Kubernetes manifest files found"
