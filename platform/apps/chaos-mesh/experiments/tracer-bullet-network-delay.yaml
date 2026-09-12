@@ -1,0 +1,68 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/chaos-mesh/experiments/tracer-bullet-network-delay.yaml
+# PURPOSE: #1941 - second concrete Chaos Mesh experiment: inject network
+#          latency into tracer-bullet and confirm the canary
+#          AnalysisTemplate (progressive-delivery issues, separate) actually
+#          detects degraded behavior.
+#
+# Latency: 300ms with 50ms jitter - large enough to meaningfully degrade
+# p99 latency against tracer-bullet's fast baseline (a "hello world"
+# FastAPI service, normally single-digit ms) without being so extreme
+# (e.g. multi-second) that it would trivially fail any check regardless of
+# the AnalysisTemplate's actual sensitivity. Duration: 60s, long enough to
+# span several Prometheus scrape intervals for the error-rate/latency
+# check to observe.
+#
+# NOT wired into any ArgoCD Application/kustomization on purpose - same
+# reasoning as tracer-bullet-pod-kill.yaml (#1940): auto-sync would fire
+# this immediately, which isn't "manually-triggerable only". Apply by hand:
+#   kubectl apply -f platform/apps/chaos-mesh/experiments/tracer-bullet-network-delay.yaml
+#   kubectl delete -f platform/apps/chaos-mesh/experiments/tracer-bullet-network-delay.yaml
+# Requires the Chaos Mesh controller (#1939) installed first.
+#
+# Namespace: targets `fawkes`, where tracer-bullet actually runs today -
+# see tracer-bullet-pod-kill.yaml's header comment for the same namespace
+# note and its follow-up caveat.
+# ============================================================================
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: tracer-bullet-network-delay
+  namespace: chaos-mesh
+  labels:
+    app: chaos-mesh
+    component: resilience
+    target: tracer-bullet
+spec:
+  action: delay
+  mode: one
+  selector:
+    namespaces:
+      - fawkes
+    labelSelectors:
+      app: tracer-bullet
+  delay:
+    latency: "300ms"
+    jitter: "50ms"
+    correlation: "25"
+  duration: "60s"
