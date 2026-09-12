@@ -134,12 +134,20 @@ spec:
             replicas: 1
 
             resources:
+              # Lowered from 500m/1Gi request: the cluster's 2 untainted
+              # user-pool nodes (aks-usernp-*, 1900m allocatable each) were
+              # already at 75-80% CPU requested by other workloads, leaving
+              # <500m free on either - confirmed live via `kubectl describe
+              # node` after the pod sat Pending with FailedScheduling:
+              # Insufficient cpu. This is a small cost-managed dev cluster,
+              # not sized for a 500m Prometheus request; revisit if the
+              # node pool is ever resized.
               requests:
+                cpu: 250m
+                memory: 512Mi
+              limits:
                 cpu: 500m
                 memory: 1Gi
-              limits:
-                cpu: 1000m
-                memory: 2Gi
 
             storageSpec:
               volumeClaimTemplate:
