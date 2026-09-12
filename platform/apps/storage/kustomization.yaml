@@ -25,7 +25,15 @@ resources:
   - azure-disk-premium-storageclass.yaml
   - azure-disk-standard-storageclass.yaml
   - azure-file-storageclass.yaml
-  - azure-disk-volumesnapshotclass.yaml
+  # azure-disk-volumesnapshotclass.yaml is deliberately not listed here:
+  # StorageClass is a built-in Kubernetes type, so the 3 above apply
+  # harmlessly on any cluster (they just sit unused unless a PVC requests
+  # them by name), but VolumeSnapshotClass is a CRD-defined type from
+  # snapshot.storage.k8s.io - applying it fails outright on any cluster
+  # without Azure's CSI VolumeSnapshot CRDs installed (confirmed live:
+  # ArgoCD retried 5 times and gave up with "could not find
+  # snapshot.storage.k8s.io/VolumeSnapshotClass ... CRD is installed").
+  # Kept in the directory for AKS use, just not synced by default here.
 
 labels:
   - pairs:
