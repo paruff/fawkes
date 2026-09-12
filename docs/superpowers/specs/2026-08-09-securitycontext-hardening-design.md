@@ -8,11 +8,11 @@
 
 Eliminate "Default security context configured" / "Root file system is not read-only"
 alerts for `platform/apps/` workloads by adding hardened container `securityContext`
-blocks, mirroring the existing `platform/apps/tracer-bullet/deployment.yaml` template.
+blocks, mirroring the existing `platform/apps/python-fawkes-path/deployment.yaml` template.
 
 ## Template
 
-Full hardening block (matches tracer-bullet):
+Full hardening block (matches python-fawkes-path):
 
 ```yaml
 securityContext:
@@ -26,7 +26,7 @@ securityContext:
 ```
 
 For every container flipped to `readOnlyRootFilesystem: true` that lacks a writable
-mount, add a `/tmp` emptyDir volumeMount + volume (the tracer-bullet pattern), so temp
+mount, add a `/tmp` emptyDir volumeMount + volume (the python-fawkes-path pattern), so temp
 writes keep working on a read-only root filesystem.
 
 ## Files and changes

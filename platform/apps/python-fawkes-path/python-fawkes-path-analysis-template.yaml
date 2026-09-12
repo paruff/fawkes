@@ -19,19 +19,19 @@
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
 # ============================================================================
-# FILE: platform/apps/tracer-bullet/tracer-bullet-analysis-template.yaml
+# FILE: platform/apps/python-fawkes-path/python-fawkes-path-analysis-template.yaml
 # PURPOSE: #1805 - Argo Rollouts AnalysisTemplate for canary success gate.
-#          Queries Prometheus for the error rate of tracer-bullet's HTTP
+#          Queries Prometheus for the error rate of python-fawkes-path's HTTP
 #          server during canary rollout. If error rate exceeds threshold,
 #          the canary is marked as failed and Argo Rollouts triggers rollback.
 #
 # Prometheus endpoint: prometheus.monitoring.svc.cluster.local:9090
 # (from platform/apps/prometheus/prometheus-application.yaml, fullnameOverride: prometheus)
 #
-# Query verified against tracer-bullet's actual source (app/main.py):
+# Query verified against python-fawkes-path's actual source (app/main.py):
 # Counter("http_requests_total", ..., ["method", "endpoint", "status"]) - no
 # "app" label on the metric itself, and the status label is "status", not
-# "code". tracer-bullet-gitops/servicemonitor.yaml sets no targetLabels, so
+# "code". python-fawkes-path-gitops/servicemonitor.yaml sets no targetLabels, so
 # Prometheus Operator only auto-injects the standard ServiceMonitor labels
 # (namespace, service, pod, job) - "app" is not among them either. The query
 # below was updated accordingly (was previously a placeholder using
@@ -43,18 +43,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: tracer-bullet-canary-success
+  name: python-fawkes-path-canary-success
   namespace: fawkes
   labels:
-    app: tracer-bullet
+    app: python-fawkes-path
     component: progressive-delivery
     managed-by: fawkes
 spec:
   args:
     - name: service-name
-      # Default to the tracer-bullet service name; can be overridden by
+      # Default to the python-fawkes-path service name; can be overridden by
       # the Rollout's analysisRef args if needed.
-      value: tracer-bullet
+      value: python-fawkes-path
     - name: namespace
       value: fawkes
     - name: error-rate-threshold
@@ -78,7 +78,7 @@ spec:
         prometheus:
           address: "{{args.prometheus-endpoint}}"
           # Verified live against the running fawkes-dev-aks cluster:
-          # `kubectl port-forward -n fawkes svc/tracer-bullet 8000:80` then
+          # `kubectl port-forward -n fawkes svc/python-fawkes-path 8000:80` then
           # `curl -L http://localhost:8000/metrics` (note: /metrics 307s to
           # /metrics/) returns exactly
           # http_requests_total{endpoint="...",method="...",status="..."} -

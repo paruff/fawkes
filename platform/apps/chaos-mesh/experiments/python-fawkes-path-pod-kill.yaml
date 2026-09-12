@@ -19,20 +19,20 @@
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
 # ============================================================================
-# FILE: platform/apps/chaos-mesh/experiments/tracer-bullet-pod-kill.yaml
+# FILE: platform/apps/chaos-mesh/experiments/python-fawkes-path-pod-kill.yaml
 # PURPOSE: #1940 - first concrete Chaos Mesh experiment: kill a running
-#          tracer-bullet pod and confirm the Deployment/Rollout self-heals.
+#          python-fawkes-path pod and confirm the Deployment/Rollout self-heals.
 #
 # NOT wired into any ArgoCD Application/kustomization on purpose - if it
 # were auto-synced it would fire the moment it landed, which is exactly
 # what "manually-triggerable only" (per the issue) rules out. Apply by
 # hand when you want to run this experiment:
-#   kubectl apply -f platform/apps/chaos-mesh/experiments/tracer-bullet-pod-kill.yaml
-#   kubectl delete -f platform/apps/chaos-mesh/experiments/tracer-bullet-pod-kill.yaml
+#   kubectl apply -f platform/apps/chaos-mesh/experiments/python-fawkes-path-pod-kill.yaml
+#   kubectl delete -f platform/apps/chaos-mesh/experiments/python-fawkes-path-pod-kill.yaml
 # Requires the Chaos Mesh controller (#1939) installed first.
 #
-# Namespace: targets `fawkes`, where tracer-bullet actually runs today
-# (confirmed live: `kubectl get pods -n fawkes` shows tracer-bullet-*).
+# Namespace: targets `fawkes`, where python-fawkes-path actually runs today
+# (confirmed live: `kubectl get pods -n fawkes` shows python-fawkes-path-*).
 # Re-point at fawkes-alpha/-beta once the phased ApplicationSet promotion
 # (#1804) actually migrates it there - tracked as a follow-up, not done
 # here since that migration hasn't landed yet.
@@ -40,12 +40,12 @@
 apiVersion: chaos-mesh.org/v1alpha1
 kind: PodChaos
 metadata:
-  name: tracer-bullet-pod-kill
+  name: python-fawkes-path-pod-kill
   namespace: chaos-mesh
   labels:
     app: chaos-mesh
     component: resilience
-    target: tracer-bullet
+    target: python-fawkes-path
 spec:
   action: pod-kill
   mode: one
@@ -53,4 +53,4 @@ spec:
     namespaces:
       - fawkes
     labelSelectors:
-      app: tracer-bullet
+      app: python-fawkes-path

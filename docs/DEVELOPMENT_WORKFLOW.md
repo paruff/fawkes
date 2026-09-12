@@ -112,7 +112,7 @@ git checkout -b feat/add-health-endpoint origin/main
 
 # Make changes, commit with conventional commits
 git add .
-git commit -m "feat(service): add /health endpoint to tracer-bullet"
+git commit -m "feat(service): add /health endpoint to python-fawkes-path"
 
 # Push to remote
 git push -u origin feat/add-health-endpoint
@@ -135,7 +135,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 **Examples:**
 
 ```
-feat(service): add /health endpoint to tracer-bullet
+feat(service): add /health endpoint to python-fawkes-path
 fix(ci): pin action versions to SHA hashes
 docs: update DEVELOPMENT_WORKFLOW.md with GitOps branching
 test(service): add unit tests for /health endpoint
@@ -148,8 +148,8 @@ test(service): add unit tests for /health endpoint
 opencode
 
 # In the chat, describe the task:
-> Add a /health endpoint to services/tracer-bullet/app/main.py
-> that returns {"status": "healthy", "service": "tracer-bullet"}
+> Add a /health endpoint to services/python-fawkes-path/app/main.py
+> that returns {"status": "healthy", "service": "python-fawkes-path"}
 > Follow the existing pattern in the file.
 
 # gemma4:e4b will:
@@ -181,7 +181,7 @@ gh pr create \
   --head feat/add-health-endpoint \
   --title "feat(service): add /health endpoint" \
   --body "## Summary
-Adds /health endpoint to tracer-bullet service.
+Adds /health endpoint to python-fawkes-path service.
 
 ## Changes
 - Added GET /health endpoint
@@ -298,7 +298,7 @@ argocd app list
 kubectl get pods -n fawkes
 
 # Check service health
-curl http://tracer-bullet.fawkes.svc/health
+curl http://python-fawkes-path.fawkes.svc/health
 ```
 
 ---
@@ -333,7 +333,7 @@ git branch -d feat/my-feature
 
 ```
 # Good prompt (specific, with context):
-> Read services/tracer-bullet/app/main.py
+> Read services/python-fawkes-path/app/main.py
 > Add a GET /info endpoint that returns the service version
 > from the VERSION file. Follow the existing pattern.
 

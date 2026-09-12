@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# E2E Pipeline Validation — Tracer Bullet
+# E2E Pipeline Validation — python-fawkes-path
 # =============================================================================
 # Validates the full deployment pipeline:
 # 1. Service is running in cluster
@@ -28,7 +28,7 @@ for cmd in curl jq kubectl; do
 done
 
 NAMESPACE="${1:-fawkes}"
-SERVICE="${2:-tracer-bullet}"
+SERVICE="${2:-python-fawkes-path}"
 BASE_URL="http://${SERVICE}.${NAMESPACE}.svc.cluster.local"
 TEMPO_URL="http://tempo.monitoring.svc.cluster.local:3200"
 PASS=0

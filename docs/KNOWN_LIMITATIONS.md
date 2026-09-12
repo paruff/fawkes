@@ -196,13 +196,13 @@ completed with `TASK_COMPLETED` and zero errors.
 
 **Impact of the original bug:** DevLake's `github_graphql` collection was unusable
 for any repo/connection using a token without this scope — not specific to
-tracer-bullet.
+python-fawkes-path.
 
 **Still open, separately:** the `gitextractor` "Invalid Git URL" failure on the same
 pipeline is unrelated to this bug (a different task, different error) and remains
 unfixed — not part of the DORA-relevant subtask list, so not chased further. And see
 KL-12 below: fixing collection did not make DORA metrics appear, because
-tracer-bullet's golden path doesn't yet emit anything for `github_graphql` to
+python-fawkes-path's golden path doesn't yet emit anything for `github_graphql` to
 collect.
 
 **Tracking:** [#1855](https://github.com/paruff/fawkes/issues/1855) — root cause and
@@ -212,7 +212,7 @@ fix documented in a comment; recommend closing once reviewed.
 
 ## KL-10 — SonarCloud Project Registered Under Wrong Default Branch (RESOLVED 2026-09-09)
 
-**Description:** The `tracer-bullet` SonarCloud project's default branch was
+**Description:** The `python-fawkes-path` SonarCloud project's default branch was
 registered as `master`, but the repository's actual default branch is `main`. This
 was discovered live during golden-path pipeline debugging (#1804) and was a likely
 contributor to an observed quality-gate/New-Code-period inconsistency (the API's
@@ -230,22 +230,22 @@ before relying on it to block promotion.
 
 ---
 
-## KL-11 — tracer-bullet Metrics Not Reaching Prometheus (RESOLVED 2026-09-08)
+## KL-11 — python-fawkes-path Metrics Not Reaching Prometheus (RESOLVED 2026-09-08)
 
-**Description:** tracer-bullet exposes Prometheus-format metrics via a pull-based
+**Description:** python-fawkes-path exposes Prometheus-format metrics via a pull-based
 `/metrics` endpoint (FastAPI + `prometheus_client`'s `make_asgi_app()`), but nothing
 was scraping it: the platform's OTel Collector only runs an OTLP receiver for its
 metrics pipeline (push-based), and no ServiceMonitor existed for this service.
 Traces and logs were both confirmed working through the same OTel Collector — only
 metrics were affected, and only because of this missing scrape target.
 
-**Fix:** [`paruff/tracer-bullet-gitops#2`](https://github.com/paruff/tracer-bullet-gitops/pull/2)
-adds a `ServiceMonitor` (selector `app: tracer-bullet`, port `http`, path
+**Fix:** [`paruff/python-fawkes-path-gitops#2`](https://github.com/paruff/python-fawkes-path-gitops/pull/2)
+adds a `ServiceMonitor` (selector `app: python-fawkes-path`, port `http`, path
 `/metrics`), merged 2026-09-08. Verified live end-to-end after the merge: ArgoCD
 synced the new commit (`a97b71f`), the `ServiceMonitor` shows as an ArgoCD-managed
-resource, and Prometheus reports `up{job="tracer-bullet"}` == 1 for both pods.
+resource, and Prometheus reports `up{job="python-fawkes-path"}` == 1 for both pods.
 
-**Tracking:** [tracer-bullet-gitops#2](https://github.com/paruff/tracer-bullet-gitops/pull/2),
+**Tracking:** [python-fawkes-path-gitops#2](https://github.com/paruff/python-fawkes-path-gitops/pull/2),
 merged.
 
 ---
@@ -253,16 +253,16 @@ merged.
 ## KL-12 — DevLake `dora` Plugin Needs `cicd_tasks`, Not Just `cicd_deployments` (Partially Fixed)
 
 **Description:** With KL-09's collection bug fixed, DevLake's `github_graphql`
-plugin ran clean for `paruff/tracer-bullet` — but DORA metrics still showed no
+plugin ran clean for `paruff/python-fawkes-path` — but DORA metrics still showed no
 data, because every layer of DevLake's data (raw GitHub API responses, tool
-tables, and domain tables) had **zero rows** for this repo. Root cause: tracer-bullet's
+tables, and domain tables) had **zero rows** for this repo. Root cause: python-fawkes-path's
 golden path (`platform/apps/tekton/golden-path-pipeline.yaml`) pushed an image to
-GHCR and opened a GitOps PR, but never opened a PR against `paruff/tracer-bullet`
+GHCR and opened a GitOps PR, but never opened a PR against `paruff/python-fawkes-path`
 itself and never called GitHub's Deployments API.
 
 **Partial fix, `platform/apps/tekton/golden-path-pipeline.yaml` (PR #1917):** the
 `gitops-promote` task now creates a real GitHub Deployment
-(`POST /repos/paruff/tracer-bullet/deployments`) and marks it successful after
+(`POST /repos/paruff/python-fawkes-path/deployments`) and marks it successful after
 every promotion. Verified live: `github_graphql`'s existing "Collect Deployments"
 subtask picks this up and it reaches the domain-layer `cicd_deployments` table
 (confirmed 0 → 1 row via a direct `devlake-mysql` query).
@@ -278,7 +278,7 @@ fix creates — confirmed live (still 0 rows after re-collection).
 
 **Impact:**
 
-- DORA metrics in DevLake still won't compute for tracer-bullet even after PR
+- DORA metrics in DevLake still won't compute for python-fawkes-path even after PR
   #1917 merges — this is the precise remaining reason the DORA plane of the
   golden path (`docs/golden-path-verification-planes.md`) can't go green.
 

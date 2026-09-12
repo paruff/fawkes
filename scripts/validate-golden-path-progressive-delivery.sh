@@ -1,7 +1,7 @@
 #!/bin/bash
 # =============================================================================
 # Script: validate-golden-path-progressive-delivery.sh
-# Purpose: Validate the Progressive Delivery plane of the tracer-bullet golden
+# Purpose: Validate the Progressive Delivery plane of the python-fawkes-path golden
 #          path (#1751 Phase 3, #1805): Argo Rollouts' Rollout CRD exists with
 #          a canary strategy, an AnalysisTemplate is referenced, and (if a
 #          rollback event exists in status/history) it completed successfully.
@@ -20,7 +20,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 NAMESPACE="${NAMESPACE:-fawkes}"
-ROLLOUT_NAME="${ROLLOUT_NAME:-tracer-bullet}"
+ROLLOUT_NAME="${ROLLOUT_NAME:-python-fawkes-path}"
 REPORT_FILE="reports/golden-path-progressive-delivery-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
 

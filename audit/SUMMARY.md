@@ -70,7 +70,7 @@ These items are safe to execute in bulk and clear significant dead weight.
 ### P1-F: Pin `trivy-action@master` → `@0.28.0`
 
 **Impact:** Eliminates supply chain risk (tracks HEAD of master)
-**Risk:** LOW — `tracer-bullet-ci.yml` already uses `@0.28.0` successfully
+**Risk:** LOW — `python-fawkes-path-ci.yml` already uses `@0.28.0` successfully
 **Files:** `.github/workflows/{reusable-security-scanning.yml,security-and-terraform.yml}`
 
 ---
