@@ -1,0 +1,110 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# docs/elite-engineering-bridge-plan.md Phase 1: "make done mean verified,
+# automatically". Runs the 8 existing scripts/validate-golden-path-*.sh
+# scripts against whichever cluster KUBECONFIG points at, aggregates their
+# JSON reports into docs/PLATFORM_STATUS.md, and publishes both as build
+# artifacts + a dedicated results branch (not main - main is branch-
+# protected, and a nightly job force-committing to it would be noisy PR
+# churn for a fully-regenerated file).
+#
+# KNOWN GAP, flagged not silently assumed away: this workflow needs a
+# `GOLDEN_PATH_KUBECONFIG` repo secret (base64-encoded kubeconfig for
+# whichever cluster is currently canonical) that does not exist yet - see
+# docs/elite-engineering-bridge-plan.md Phase 3's cluster-identity decision.
+# Until that secret is added, every plane reports "no data", which is
+# itself honest signal (not a false green), not a workflow bug.
+name: Golden Path Verification
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # nightly, 03:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Run golden-path verification planes
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure kubeconfig
+        env:
+          KUBECONFIG_B64: ${{ secrets.GOLDEN_PATH_KUBECONFIG }}
+        run: |
+          if [ -z "${KUBECONFIG_B64:-}" ]; then
+            echo "::warning::GOLDEN_PATH_KUBECONFIG secret not set - all planes will report 'no data', not a false pass. See docs/elite-engineering-bridge-plan.md Phase 3."
+            exit 0
+          fi
+          mkdir -p "$HOME/.kube"
+          echo "$KUBECONFIG_B64" | base64 -d > "$HOME/.kube/config"
+
+      - name: Run each verification plane (independently - one failure must not hide the others)
+        run: |
+          set +e
+          for script in scripts/validate-golden-path-*.sh; do
+            echo "::group::$script"
+            bash "$script" || echo "::warning::$script reported failures (see its own report in reports/)"
+            echo "::endgroup::"
+          done
+          exit 0
+
+      - name: Generate docs/PLATFORM_STATUS.md
+        run: bash scripts/generate-platform-status.sh
+
+      - name: Upload reports as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-path-reports-${{ github.run_id }}
+          path: |
+            reports/golden-path-*-validation-*.json
+            docs/PLATFORM_STATUS.md
+          retention-days: 90
+
+      - name: Publish PLATFORM_STATUS.md to the platform-status branch
+        run: |
+          set -euo pipefail
+          # Copy the just-generated files out of the working tree before
+          # switching branches - an orphan checkout keeps untracked files
+          # on disk, but being explicit here avoids relying on that.
+          mkdir -p /tmp/publish/reports
+          cp docs/PLATFORM_STATUS.md /tmp/publish/PLATFORM_STATUS.md
+          cp reports/golden-path-*-validation-*.json /tmp/publish/reports/ 2>/dev/null || true
+
+          git config user.email "github-actions@fawkes.local"
+          git config user.name "golden-path-verification"
+          git checkout --orphan platform-status-tmp
+          git rm -rf . > /dev/null 2>&1 || true
+
+          mkdir -p docs reports
+          cp /tmp/publish/PLATFORM_STATUS.md docs/PLATFORM_STATUS.md
+          cp /tmp/publish/reports/*.json reports/ 2>/dev/null || true
+
+          git add docs/PLATFORM_STATUS.md reports/
+          git commit -m "chore: platform status $(date -u +%Y-%m-%dT%H:%M:%SZ) [skip ci]"
+          git branch -M platform-status-tmp platform-status
+          git push origin platform-status --force

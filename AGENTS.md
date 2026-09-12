@@ -185,6 +185,7 @@ added/updated, linters passing locally, judgment calls flagged for human review,
 - `infra/` changes require a second human reviewer
 - New Helm chart versions require `helm lint` + `helm template` output in the PR
 - Rework rate > 10% → stop adding features, fix the instructions instead
+- No phase-completion claim in `docs/BACKLOG.md` without a linked verification artifact (a `golden-path-verification` workflow run, or equivalent live evidence) — a status cell claiming 🟢 on a hand-typed assertion alone is exactly the drift pattern `docs/elite-engineering-bridge-plan.md` was written to stop
 
 ### Deployment Gates
 
