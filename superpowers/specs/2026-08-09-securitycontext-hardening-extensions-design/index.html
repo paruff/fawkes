@@ -5501,7 +5501,7 @@
 <h2 id="goal">Goal</h2>
 <p>Eliminate "Default security context configured" / "Root file system is not read-only"
 alerts for <code>extensions/data-platform/</code> workloads by adding hardened container
-<code>securityContext</code> blocks, mirroring the <code>platform/apps/tracer-bullet/deployment.yaml</code>
+<code>securityContext</code> blocks, mirroring the <code>platform/apps/python-fawkes-path/deployment.yaml</code>
 template (same pattern as companion issue #1583).</p>
 <h2 id="template">Template</h2>
 <div class="highlight"><pre><span></span><code><span class="nt">securityContext</span><span class="p">:</span>
@@ -5514,7 +5514,7 @@ template (same pattern as companion issue #1583).</p>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RuntimeDefault</span>
 </code></pre></div>
 <p>For containers flipped to <code>readOnlyRootFilesystem: true</code> lacking a writable mount,
-add a <code>/tmp</code> emptyDir volumeMount + volume (tracer-bullet pattern).</p>
+add a <code>/tmp</code> emptyDir volumeMount + volume (python-fawkes-path pattern).</p>
 <h2 id="files-and-changes">Files and changes</h2>
 <h3 id="a-full-template-3-ingestion-cronjobs">A. Full template — 3 ingestion CronJobs</h3>
 <p>Image <code>acryldata/datahub-ingestion:v0.14.0</code> already declares <code>USER: datahub</code>

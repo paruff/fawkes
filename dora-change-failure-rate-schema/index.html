@@ -5484,19 +5484,19 @@ implementation — that API is a fixed external contract, independent of how #19
 gets built. Once #1919 lands and creates the real webhook connection, this schema
 should still apply unmodified, <strong>provided</strong> the deployment and incident events are
 both submitted to a webhook connection scoped into the same DevLake project as
-tracer-bullet (see <a href="#correlation-mechanism">Correlation mechanism</a> below — this is
+python-fawkes-path (see <a href="#correlation-mechanism">Correlation mechanism</a> below — this is
 the one thing #1919's implementation must get right for CFR to work at all).</p>
 <h2 id="deployment-payload">Deployment payload</h2>
 <p><code>POST &lt;devlake-host&gt;/api/rest/plugins/webhook/:connectionId/deployments</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tracer-bullet-&lt;short-sha&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"python-fawkes-path-&lt;short-sha&gt;"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"startedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-12T14:00:00Z"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"finishedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-12T14:01:30Z"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"environment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PRODUCTION"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SUCCESS"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"deploymentCommits"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">"repoUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://github.com/paruff/tracer-bullet"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"repoUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://github.com/paruff/python-fawkes-path"</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">"refName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">"startedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-12T14:00:00Z"</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">"finishedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-12T14:01:30Z"</span><span class="p">,</span>
@@ -5518,7 +5518,7 @@ the one thing #1919's implementation must get right for CFR to work at all).</p>
 <tr>
 <td><code>id</code></td>
 <td>yes</td>
-<td>Must be unique per <code>cicd_deployments</code> row — <code>tracer-bullet-&lt;short-sha&gt;</code> matches the tag scheme <code>gitops-promote</code> already uses</td>
+<td>Must be unique per <code>cicd_deployments</code> row — <code>python-fawkes-path-&lt;short-sha&gt;</code> matches the tag scheme <code>gitops-promote</code> already uses</td>
 </tr>
 <tr>
 <td><code>startedDate</code> / <code>finishedDate</code></td>
@@ -5545,7 +5545,7 @@ the one thing #1919's implementation must get right for CFR to work at all).</p>
 <h2 id="incident-payload">Incident payload</h2>
 <p><code>POST &lt;devlake-host&gt;/api/rest/plugins/webhook/:connectionId/issues</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"issueKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tracer-bullet-incident-&lt;n&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"issueKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"python-fawkes-path-incident-&lt;n&gt;"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;short description of the production incident&gt;"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INCIDENT"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TODO"</span><span class="p">,</span>
@@ -5604,7 +5604,7 @@ that is before the incident's timestamp."</em> Correlation is implicit:</p>
 <p>This means #1944's schema work is really only half the story: <strong>whoever
 implements #1919/#1945 must also ensure the deployment webhook connection and
 whatever eventually submits incident events (#1945's Alertmanager receiver, most
-likely) are both scoped into the same DevLake project as tracer-bullet</strong> — a
+likely) are both scoped into the same DevLake project as python-fawkes-path</strong> — a
 connection/scoping detail, not a payload field, and easy to get silently wrong
 (events would still accept and store, but never correlate).</p>
 <h2 id="what-this-doc-does-not-do">What this doc does NOT do</h2>

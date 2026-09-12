@@ -5512,9 +5512,9 @@
 <h2 id="goal">Goal</h2>
 <p>Eliminate "Default security context configured" / "Root file system is not read-only"
 alerts for <code>platform/apps/</code> workloads by adding hardened container <code>securityContext</code>
-blocks, mirroring the existing <code>platform/apps/tracer-bullet/deployment.yaml</code> template.</p>
+blocks, mirroring the existing <code>platform/apps/python-fawkes-path/deployment.yaml</code> template.</p>
 <h2 id="template">Template</h2>
-<p>Full hardening block (matches tracer-bullet):</p>
+<p>Full hardening block (matches python-fawkes-path):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">securityContext</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
@@ -5525,7 +5525,7 @@ blocks, mirroring the existing <code>platform/apps/tracer-bullet/deployment.yaml
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RuntimeDefault</span>
 </code></pre></div>
 <p>For every container flipped to <code>readOnlyRootFilesystem: true</code> that lacks a writable
-mount, add a <code>/tmp</code> emptyDir volumeMount + volume (the tracer-bullet pattern), so temp
+mount, add a <code>/tmp</code> emptyDir volumeMount + volume (the python-fawkes-path pattern), so temp
 writes keep working on a read-only root filesystem.</p>
 <h2 id="files-and-changes">Files and changes</h2>
 <h3 id="a-full-template-missing-nearly-complete">A. Full template (missing / nearly complete)</h3>
