@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.113](https://github.com/paruff/fawkes/compare/v0.3.112...v0.3.113) (2026-09-12)
+
+
+### Fixed
+
+* **azure:** add explicit zone pinning for system/spot node pools ([#2029](https://github.com/paruff/fawkes/issues/2029)) ([cc3b2ac](https://github.com/paruff/fawkes/commit/cc3b2acc3c537dcad7cbb7d39a102f6d4034ffb7))
+
 ## [0.3.112](https://github.com/paruff/fawkes/compare/v0.3.111...v0.3.112) (2026-09-12)
 
 
