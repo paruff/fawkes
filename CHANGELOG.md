@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.125](https://github.com/paruff/fawkes/compare/v0.3.124...v0.3.125) (2026-09-12)
+
+
+### Fixed
+
+* **tekton:** use computeResources, not resources, for Task step limits ([#2062](https://github.com/paruff/fawkes/issues/2062)) ([2f93563](https://github.com/paruff/fawkes/commit/2f93563628b9506916ec41377d6a4cd8344bf3a3))
+
 ## [0.3.124](https://github.com/paruff/fawkes/compare/v0.3.123...v0.3.124) (2026-09-12)
 
 
