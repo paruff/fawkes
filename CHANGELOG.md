@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.110](https://github.com/paruff/fawkes/compare/v0.3.109...v0.3.110) (2026-09-12)
+
+
+### Added
+
+* **observability:** import DORA dashboards from uFawkesObs for [#1572](https://github.com/paruff/fawkes/issues/1572) ([#2023](https://github.com/paruff/fawkes/issues/2023)) ([9956b58](https://github.com/paruff/fawkes/commit/9956b58e65698ba126f1cf5e431a43f9871efdf3))
+
 ## [0.3.109](https://github.com/paruff/fawkes/compare/v0.3.108...v0.3.109) (2026-09-12)
 
 
