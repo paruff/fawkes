@@ -279,6 +279,24 @@ repos:
         pass_filenames: false
         files: '^infra/kubernetes/.*/Chart\.yaml$'
 
+      # ADR-034: warn on >= in requirements files (must use == exact pins)
+      - id: requirements-pin-check
+        name: Check requirements pinning (ADR-034)
+        entry: |
+          bash -c '
+            found=0
+            for f in "$@"; do
+              if grep -nE ">=" "$f" | grep -vE "^\s*#" | grep -vE "python_requires|requires>;python_requires"; then
+                echo "⚠️  $f: ADR-034 requires == exact pins. Found >= above."
+                found=1
+              fi
+            done
+            exit $found
+          ' --
+        language: system
+        types: [text]
+        files: '(requirements.*\.txt|requirements.*\.in)$'
+
       # Check for hardcoded secrets in manifests
       - id: check-k8s-secrets
         name: Check for hardcoded secrets in K8s manifests
