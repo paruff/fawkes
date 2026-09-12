@@ -25,8 +25,11 @@
 #          server during canary rollout. If error rate exceeds threshold,
 #          the canary is marked as failed and Argo Rollouts triggers rollback.
 #
-# Prometheus endpoint: prometheus.monitoring.svc.cluster.local:9090
-# (from platform/apps/prometheus/prometheus-application.yaml, fullnameOverride: prometheus)
+# Prometheus endpoint: prometheus-prometheus.monitoring.svc.cluster.local:9090
+# (kube-prometheus-stack's operated Prometheus service - live-verified via
+# `kubectl get svc -A`; fullnameOverride: prometheus still appends the
+# chart's own "-prometheus" component suffix, so the service is
+# "prometheus-prometheus", not "prometheus")
 #
 # Query verified against python-fawkes-path's actual source (app/main.py):
 # Counter("http_requests_total", ..., ["method", "endpoint", "status"]) - no
@@ -61,7 +64,7 @@ spec:
       # Maximum acceptable error rate (0.05 = 5%) during canary.
       value: "0.05"
     - name: prometheus-endpoint
-      value: http://prometheus.monitoring.svc.cluster.local:9090
+      value: http://prometheus-prometheus.monitoring.svc.cluster.local:9090
   metrics:
     - name: error-rate
       # Run this metric check every 60s during canary rollout.
