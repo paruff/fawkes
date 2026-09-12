@@ -1,0 +1,56 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/chaos-mesh/experiments/tracer-bullet-pod-kill.yaml
+# PURPOSE: #1940 - first concrete Chaos Mesh experiment: kill a running
+#          tracer-bullet pod and confirm the Deployment/Rollout self-heals.
+#
+# NOT wired into any ArgoCD Application/kustomization on purpose - if it
+# were auto-synced it would fire the moment it landed, which is exactly
+# what "manually-triggerable only" (per the issue) rules out. Apply by
+# hand when you want to run this experiment:
+#   kubectl apply -f platform/apps/chaos-mesh/experiments/tracer-bullet-pod-kill.yaml
+#   kubectl delete -f platform/apps/chaos-mesh/experiments/tracer-bullet-pod-kill.yaml
+# Requires the Chaos Mesh controller (#1939) installed first.
+#
+# Namespace: targets `fawkes`, where tracer-bullet actually runs today
+# (confirmed live: `kubectl get pods -n fawkes` shows tracer-bullet-*).
+# Re-point at fawkes-alpha/-beta once the phased ApplicationSet promotion
+# (#1804) actually migrates it there - tracked as a follow-up, not done
+# here since that migration hasn't landed yet.
+# ============================================================================
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: tracer-bullet-pod-kill
+  namespace: chaos-mesh
+  labels:
+    app: chaos-mesh
+    component: resilience
+    target: tracer-bullet
+spec:
+  action: pod-kill
+  mode: one
+  selector:
+    namespaces:
+      - fawkes
+    labelSelectors:
+      app: tracer-bullet
