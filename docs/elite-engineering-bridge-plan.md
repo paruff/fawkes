@@ -98,8 +98,8 @@ Phase 3 should actually run in parallel with or slightly before Phase 1 — the 
 
 ## Acceptance
 
-- [ ] Phase 1: verification workflow live, `BACKLOG.md` linked to real run results
-- [ ] Phase 2: full backlog audit complete, stale claims corrected
-- [ ] Phase 3: ADR written, concrete infra blockers (Azure quota, devlake-lake, bootstrap drift) resolved
-- [ ] Phase 4: epic-sizing rule adopted, applied to at least the next new phase
-- [ ] Phase 5: fawkes-on-fawkes DORA dashboard live and linked from README
+- [x] Phase 1: verification workflow live, `BACKLOG.md` linked to real run results — `.github/workflows/golden-path-verification.yml` live, first run [34715862843](https://github.com/paruff/fawkes/actions/runs/34715862843), `docs/PLATFORM_STATUS.md` on the `platform-status` branch
+- [x] Phase 2: full backlog audit complete, stale claims corrected — #2075 (15 stale closed-issue entries removed)
+- [x] Phase 3: ADR written, concrete infra blockers resolved — cluster-topology ADR (#2070); Azure scheduling fix #2073 (works around the vCPU quota cap rather than requesting an increase); `devlake-lake` confirmed healthy and bootstrap chicken-and-egg documented (#2078, `KL-14`). New blocker found while verifying this: DevLake's own API is down pending an unapproved migration (`KL-15`) — a human decision, not resolved here
+- [x] Phase 4: epic-sizing rule adopted, applied to at least the next new phase — rule + template requirement (#2074), applied by splitting the untracked Alertmanager-adapter step into #2079 (#2080)
+- [ ] Phase 5: fawkes-on-fawkes DORA dashboard live and linked from README — scoped and filed as #2081, blocked on `KL-15` (DevLake API down) before it can start
