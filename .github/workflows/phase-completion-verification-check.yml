@@ -1,0 +1,55 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# docs/elite-engineering-bridge-plan.md Phase 1, item 4: soft-enforce first.
+# This ALWAYS passes (exit 0) - it only posts a warning annotation, never
+# blocks a merge. Deliberately weak: tighten to a real blocking gate only
+# once the golden-path-verification workflow has been running long enough
+# to be trusted (per the plan's own risk note - a noisy/flaky gate gets
+# ignored and recreates the exact problem this is meant to fix).
+name: Phase Completion Verification Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  check:
+    name: Check for a verification-run link
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Look for an issue reference and a verification link in the PR body
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          set +e
+          if echo "$PR_BODY" | grep -qiE '#[0-9]+'; then
+            if echo "$PR_BODY" | grep -qE 'actions/runs/[0-9]+'; then
+              echo "PR references an issue and links a workflow run - good."
+            else
+              echo "::warning::This PR references an issue but has no linked verification-run URL (e.g. a golden-path-verification run). Per docs/elite-engineering-bridge-plan.md Phase 1, phase-completion claims should link evidence, not just merge. This is advisory only and does not block merge."
+            fi
+          fi
+          exit 0
