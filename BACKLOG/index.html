@@ -5762,7 +5762,7 @@ two are not yet the same thing.</p>
 <tr>
 <td>Observability</td>
 <td>Alertmanager + crash-loop notifications</td>
-<td>🟢 Live since Phase 1 (<code>KubernetesPodCrashLooping</code> → <code>platform-team</code> Slack receiver). A second receiver routing the same alert to DevLake for Change Failure Rate correlation is merged (#2042) but not yet functional — no SealedSecret exists yet, and Alertmanager's own webhook payload shape doesn't match DevLake's <code>/issues</code> API without an adapter (not built)</td>
+<td>🟢 Live since Phase 1 (<code>KubernetesPodCrashLooping</code> → <code>platform-team</code> Slack receiver). A second receiver routing the same alert to DevLake for Change Failure Rate correlation is merged (#2042) but not yet functional — no SealedSecret exists yet, and Alertmanager's own webhook payload shape doesn't match DevLake's <code>/issues</code> API without an adapter (tracked as its own issue, #2079, per Phase 4's epic-splitting rule)</td>
 </tr>
 <tr>
 <td>Security</td>
@@ -5782,7 +5782,7 @@ two are not yet the same thing.</p>
 - Trigger a real canary rollout on tracer-bullet/python-fawkes-path and observe an automated rollback
 - #1942 — wire chaos experiments into the canary traffic-shift step (depends on the above)
 - #1919 — DevLake webhook plugin wiring for deployment signal (real prerequisite for CFR)
-- Build the Alertmanager→DevLake incident-payload adapter
+- #2079 — Build the Alertmanager→DevLake incident-payload adapter
 - #1946 — add the real CFR dashboard panel once #1919 + the adapter produce real data</p>
 <h3 id="phase-3-production-human-in-the-loop-1806">Phase 3 — Production: Human-in-the-Loop (#1806)</h3>
 <p><strong>Goal:</strong> Production deployment requires human approval through portal. Traffic split between versions. All 5 DORA metrics visible. Error-budget breach triggers automated rollback.</p>
