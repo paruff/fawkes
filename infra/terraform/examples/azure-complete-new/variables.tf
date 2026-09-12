@@ -70,6 +70,30 @@ variable "system_zones" {
   default     = null
 }
 
+variable "enable_user_node_pool" {
+  description = "Add a regular-priced, untainted user node pool for normal workloads"
+  type        = bool
+  default     = false
+}
+
+variable "user_vm_size" {
+  description = "VM size for the user node pool"
+  type        = string
+  default     = "Standard_B2ms"
+}
+
+variable "user_node_count" {
+  description = "Number of nodes in the user node pool"
+  type        = number
+  default     = 2
+}
+
+variable "user_zones" {
+  description = "Availability zones for the user node pool (null = Azure auto-selects)"
+  type        = list(string)
+  default     = null
+}
+
 variable "spot_zones" {
   description = "Availability zones for the Spot node pool (null = Azure auto-selects)"
   type        = list(string)

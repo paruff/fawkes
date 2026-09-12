@@ -62,11 +62,22 @@ module "aks_cluster" {
   node_vm_size = "Standard_B2ms"
   node_count   = 3
   system_zones = var.system_zones
+  # Tried disabling only_critical_addons_enabled instead of adding a user
+  # pool - reverted. AKS requires temporary_name_for_rotation for that
+  # in-place change, which needs temporary capacity for a whole second
+  # 3-node pool (6 vCPU) alongside the existing one, exceeding this
+  # subscription's remaining regional vCPU quota (4). A user pool sized to
+  # fit current quota avoids the rotation entirely.
 
   enable_spot_node_pool = var.enable_spot_node_pool
   spot_vm_size          = var.spot_vm_size
   spot_node_count       = var.spot_node_count
   spot_zones            = var.spot_zones
+
+  enable_user_node_pool = var.enable_user_node_pool
+  user_vm_size          = var.user_vm_size
+  user_node_count       = var.user_node_count
+  user_zones            = var.user_zones
 
   network_plugin = "azure"
   service_cidr   = "10.1.0.0/16"
