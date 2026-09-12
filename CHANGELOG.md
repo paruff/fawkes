@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.114](https://github.com/paruff/fawkes/compare/v0.3.113...v0.3.114) (2026-09-12)
+
+
+### Fixed
+
+* **tekton:** re-enable sonar.qualitygate.wait now that KL-10 is fixed ([#2033](https://github.com/paruff/fawkes/issues/2033)) ([ed8674d](https://github.com/paruff/fawkes/commit/ed8674d7cfea2b14ab791c34421fadd47f43492d)), closes [#1934](https://github.com/paruff/fawkes/issues/1934)
+
 ## [0.3.113](https://github.com/paruff/fawkes/compare/v0.3.112...v0.3.113) (2026-09-12)
 
 
