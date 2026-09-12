@@ -1,0 +1,1197 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-dora-overview
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  dora-overview.json: |
+    {
+      "title": "DORA Overview",
+      "uid": "ufawkesobs-dora-overview",
+      "version": 1,
+      "schemaVersion": 39,
+      "tags": [
+        "ufawkesobs",
+        "dora",
+        "ufawkes",
+        "delivery-metrics"
+      ],
+      "description": "Five DORA delivery metrics: current values, 30/90-day trends, and tier classifications per the DORA 2025 framework. Reads from Prometheus (time-series) and Postgres (snapshots).",
+      "time": {
+        "from": "now-30d",
+        "to": "now"
+      },
+      "timepicker": {
+        "refresh_intervals": [
+          "5s",
+          "10s",
+          "30s",
+          "1m",
+          "5m",
+          "15m",
+          "30m",
+          "1h",
+          "2h",
+          "1d"
+        ],
+        "time_options": [
+          "5m",
+          "15m",
+          "1h",
+          "6h",
+          "12h",
+          "24h",
+          "2d",
+          "7d",
+          "30d",
+          "90d"
+        ]
+      },
+      "refresh": "5m",
+      "editable": true,
+      "graphTooltip": 0,
+      "templating": {
+        "list": [
+          {
+            "name": "team_id",
+            "type": "query",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "query": "label_values(dora_deployment_frequency_per_week, team_id)",
+            "refresh": 1,
+            "includeAll": true,
+            "allValue": ".*",
+            "sort": 1,
+            "label": "Team",
+            "multi": false
+          },
+          {
+            "name": "window",
+            "type": "interval",
+            "query": "7d,30d,90d",
+            "auto": false,
+            "auto_step": 30,
+            "refresh": 1,
+            "label": "Window",
+            "current": {
+              "text": "30d",
+              "value": "30d"
+            }
+          }
+        ]
+      },
+      "panels": [
+        {
+          "id": 1,
+          "title": "",
+          "type": "text",
+          "gridPos": {
+            "h": 3,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "transparent": true,
+          "options": {
+            "content": "<div style=\"display: flex; justify-content: space-between; align-items: center; padding: 8px 16px;\">\n  <div>\n    <h1 style=\"margin: 0;\">DORA Overview</h1>\n    <span style=\"color: #888; font-size: 0.9em;\">DORA 2025 framework \u2014 Five delivery metrics</span>\n  </div>\n  <div style=\"text-align: right;\">\n    <span style=\"color: #aaa; font-size: 0.85em;\">Data refreshes every 5m from Prometheus pushgateway + Postgres</span>\n  </div>\n</div>",
+            "mode": "html"
+          }
+        },
+        {
+          "id": 3,
+          "title": "Deployment Frequency",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "How often code is successfully deployed to production. DORA 2025 classifications: Elite = On-demand (multiple/day), High = 1/week\u20131/day, Medium = 1/month\u20131/week, Low = < 1/month",
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 0,
+            "y": 5
+          },
+          "targets": [
+            {
+              "expr": "last_over_time(dora_deployment_frequency_per_week{team_id=~\"$team_id\"}[$window])",
+              "legendFormat": "{{team_id}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "color": {
+                "mode": "thresholds"
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "#d63902",
+                    "value": null
+                  },
+                  {
+                    "color": "#d68b00",
+                    "value": 0.25
+                  },
+                  {
+                    "color": "#6cc644",
+                    "value": 1
+                  },
+                  {
+                    "color": "#1b7f3a",
+                    "value": 7
+                  }
+                ]
+              },
+              "mappings": [],
+              "decimals": 1,
+              "displayName": "Deployments / week"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "value": "A"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Deployments / week"
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "interval": "$window",
+          "maxDataPoints": 100
+        },
+        {
+          "id": 4,
+          "title": "Lead Time for Changes",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Time from first commit to running in production (P50). DORA 2025 classifications: Elite = < 1 hour, High = 1 day\u20131 week, Medium = 1 week\u20131 month, Low = > 1 month",
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 5,
+            "y": 5
+          },
+          "targets": [
+            {
+              "expr": "last_over_time(dora_lead_time_p50_hours{team_id=~\"$team_id\"}[$window])",
+              "legendFormat": "{{team_id}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "h",
+              "color": {
+                "mode": "thresholds"
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "#1b7f3a",
+                    "value": null
+                  },
+                  {
+                    "color": "#6cc644",
+                    "value": 1
+                  },
+                  {
+                    "color": "#d68b00",
+                    "value": 24
+                  },
+                  {
+                    "color": "#d63902",
+                    "value": 168
+                  },
+                  {
+                    "color": "#b71c1c",
+                    "value": 720
+                  }
+                ]
+              },
+              "mappings": [],
+              "decimals": 1,
+              "displayName": "Hours (P50)"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "value": "dora_lead_time_p50_hours"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Lead Time P50 (hours)"
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "interval": "$window",
+          "maxDataPoints": 100
+        },
+        {
+          "id": 5,
+          "title": "Failed Deployment Recovery Time (FDRT)",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Time from a failed deployment to the next successful deployment of the same service. DORA 2025 reclassified FDRT from Stability to Throughput. DORA 2025: Elite = < 1 hour, High = < 1 day, Medium = 1 day\u20131 week, Low = > 1 week. This is NOT MTTR \u2014 MTTR measured incident resolution time, FDRT measures deployment recovery.",
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 10,
+            "y": 5
+          },
+          "targets": [
+            {
+              "expr": "last_over_time(dora_fdrt_p50_hours{team_id=~\"$team_id\"}[$window])",
+              "legendFormat": "{{team_id}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "h",
+              "color": {
+                "mode": "thresholds"
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "#1b7f3a",
+                    "value": null
+                  },
+                  {
+                    "color": "#6cc644",
+                    "value": 1
+                  },
+                  {
+                    "color": "#d68b00",
+                    "value": 24
+                  },
+                  {
+                    "color": "#d63902",
+                    "value": 168
+                  }
+                ]
+              },
+              "mappings": [],
+              "decimals": 1,
+              "displayName": "Hours (P50)",
+              "description": "\ud83d\udccc DORA 2025: FDRT is a Throughput metric. Fast recovery enables faster re-deployment."
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "value": "dora_fdrt_p50_hours"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "FDRT P50 (hours)"
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "interval": "$window",
+          "maxDataPoints": 100
+        },
+        {
+          "id": 6,
+          "title": "Change Failure Rate",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Percentage of deployments causing a production failure requiring remediation. DORA 2025: Elite = 0\u20135%, High = 5\u201310%, Medium = 10\u201315%, Low = > 15%",
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 15,
+            "y": 5
+          },
+          "targets": [
+            {
+              "expr": "last_over_time(dora_cfr_pct{team_id=~\"$team_id\"}[$window]) * 100",
+              "legendFormat": "{{team_id}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "color": {
+                "mode": "thresholds"
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "#1b7f3a",
+                    "value": null
+                  },
+                  {
+                    "color": "#6cc644",
+                    "value": 5
+                  },
+                  {
+                    "color": "#d68b00",
+                    "value": 10
+                  },
+                  {
+                    "color": "#d63902",
+                    "value": 15
+                  }
+                ]
+              },
+              "mappings": [],
+              "decimals": 1,
+              "max": 100,
+              "min": 0,
+              "displayName": "CFR (%)"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "value": "dora_cfr_pct"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "CFR (%)"
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "interval": "$window",
+          "maxDataPoints": 100
+        },
+        {
+          "id": 7,
+          "title": "Rework Rate",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Percentage of deployments that are unplanned fixes for user-visible issues from a recent deployment. Only counts user-visible unplanned deployments \u2014 internal hotfixes, dependency updates, and config corrections that do not affect users are excluded.",
+          "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 20,
+            "y": 5
+          },
+          "targets": [
+            {
+              "expr": "last_over_time(dora_rework_rate_pct{team_id=~\"$team_id\"}[$window])",
+              "legendFormat": "{{team_id}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "color": {
+                "mode": "thresholds"
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "#1b7f3a",
+                    "value": null
+                  },
+                  {
+                    "color": "#6cc644",
+                    "value": 0.05
+                  },
+                  {
+                    "color": "#d68b00",
+                    "value": 0.1
+                  },
+                  {
+                    "color": "#d63902",
+                    "value": 0.15
+                  }
+                ]
+              },
+              "mappings": [],
+              "decimals": 1,
+              "max": 1,
+              "min": 0,
+              "displayName": "Rework Rate (%)"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "value": "dora_rework_rate_pct"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Rework Rate (%)"
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "interval": "$window",
+          "maxDataPoints": 100
+        },
+        {
+          "id": 8,
+          "title": "Deployment Frequency Trend",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "30/90 day trend",
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 11
+          },
+          "targets": [
+            {
+              "expr": "dora_deployment_frequency_per_week{team_id=~\"$team_id\"}",
+              "legendFormat": "{{team_id}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 20,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "smooth",
+                "lineWidth": 2,
+                "pointSize": 4,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "dashed"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "orange",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 1
+                  },
+                  {
+                    "color": "dark-green",
+                    "value": 7
+                  }
+                ]
+              },
+              "decimals": 1
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max",
+                "mean"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "interval": "$window"
+        },
+        {
+          "id": 9,
+          "title": "Lead Time Trend",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "P50 and P95 lead time trend",
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 11
+          },
+          "targets": [
+            {
+              "expr": "dora_lead_time_p50_hours{team_id=~\"$team_id\"}",
+              "legendFormat": "P50 - {{team_id}}",
+              "refId": "A"
+            },
+            {
+              "expr": "dora_lead_time_p95_hours{team_id=~\"$team_id\"}",
+              "legendFormat": "P95 - {{team_id}}",
+              "refId": "B"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "h",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 15,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "smooth",
+                "lineWidth": 2,
+                "pointSize": 4,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "dashed"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "dark-yellow",
+                    "value": 1
+                  },
+                  {
+                    "color": "orange",
+                    "value": 24
+                  },
+                  {
+                    "color": "red",
+                    "value": 168
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 720
+                  }
+                ]
+              },
+              "decimals": 0
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max",
+                "mean"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "interval": "$window"
+        },
+        {
+          "id": 10,
+          "title": "FDRT Trend",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Failed Deployment Recovery Time trend. FDRT is a Throughput metric per DORA 2025 \u2014 fast recovery enables faster re-deployment. This is NOT MTTR.",
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 11
+          },
+          "targets": [
+            {
+              "expr": "dora_fdrt_p50_hours{team_id=~\"$team_id\"}",
+              "legendFormat": "P50 - {{team_id}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "h",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 15,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "smooth",
+                "lineWidth": 2,
+                "pointSize": 4,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "dashed"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "dark-yellow",
+                    "value": 1
+                  },
+                  {
+                    "color": "orange",
+                    "value": 24
+                  },
+                  {
+                    "color": "red",
+                    "value": 168
+                  }
+                ]
+              },
+              "decimals": 0
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max",
+                "mean"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "interval": "$window"
+        },
+        {
+          "id": 11,
+          "title": "CFR Trend",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Change Failure Rate trend",
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 18
+          },
+          "targets": [
+            {
+              "expr": "dora_cfr_pct{team_id=~\"$team_id\"} * 100",
+              "legendFormat": "{{team_id}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 20,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "smooth",
+                "lineWidth": 2,
+                "pointSize": 4,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "dashed"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "dark-yellow",
+                    "value": 5
+                  },
+                  {
+                    "color": "orange",
+                    "value": 10
+                  },
+                  {
+                    "color": "red",
+                    "value": 15
+                  }
+                ]
+              },
+              "decimals": 1,
+              "max": 100,
+              "min": 0
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max",
+                "mean"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "interval": "$window"
+        },
+        {
+          "id": 12,
+          "title": "Rework Rate Trend",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Rework Rate trend \u2014 only counts user-visible unplanned deployments. This is the primary signal for AI-assisted development quality: AI-generated code with higher churn pushes Rework Rate up before CFR spikes.",
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 18
+          },
+          "targets": [
+            {
+              "expr": "dora_rework_rate_pct{team_id=~\"$team_id\"}",
+              "legendFormat": "{{team_id}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 20,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "smooth",
+                "lineWidth": 2,
+                "pointSize": 4,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "dashed"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "dark-yellow",
+                    "value": 0.05
+                  },
+                  {
+                    "color": "orange",
+                    "value": 0.1
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.15
+                  }
+                ]
+              },
+              "decimals": 2,
+              "max": 1,
+              "min": 0
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max",
+                "mean"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "interval": "$window"
+        },
+        {
+          "id": 14,
+          "type": "row",
+          "title": "Tier Legend",
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 26
+          },
+          "collapsed": true,
+          "panels": [
+            {
+              "id": 15,
+              "title": "DORA 2025 Tier Thresholds",
+              "type": "table",
+              "gridPos": {
+                "h": 7,
+                "w": 24,
+                "x": 0,
+                "y": 27
+              },
+              "targets": [
+                {
+                  "format": "table",
+                  "group": [],
+                  "metricColumn": "none",
+                  "rawQuery": true,
+                  "rawSql": "SELECT 'Deployment Frequency' AS metric, 'On-demand (multiple/day)' AS elite, '1/week \u2013 1/day' AS high, '1/month \u2013 1/week' AS medium, '< 1/month' AS low\nUNION ALL\nSELECT 'Lead Time for Changes', '< 1 hour', '1 day \u2013 1 week', '1 week \u2013 1 month', '> 1 month'\nUNION ALL\nSELECT 'FDRT', '< 1 hour', '< 1 day', '1 day \u2013 1 week', '> 1 week'\nUNION ALL\nSELECT 'Change Failure Rate', '0 \u2013 5%', '5 \u2013 10%', '10 \u2013 15%', '> 15%'\nUNION ALL\nSELECT 'Rework Rate', 'TBD [VERIFY at dora.dev]', 'TBD [VERIFY]', 'TBD [VERIFY]', 'TBD [VERIFY]'",
+                  "refId": "A",
+                  "select": [
+                    [
+                      {
+                        "params": [
+                          "id"
+                        ],
+                        "type": "column"
+                      }
+                    ]
+                  ],
+                  "timeColumn": "recorded_at",
+                  "where": [
+                    {
+                      "name": "$__timeFilter",
+                      "params": [],
+                      "type": "macro"
+                    }
+                  ]
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "custom": {
+                    "align": "left",
+                    "displayMode": "auto",
+                    "filterable": false
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "cellHeight": "sm",
+                "footer": {
+                  "show": false,
+                  "countRows": false,
+                  "fields": ""
+                },
+                "showHeader": true
+              }
+            }
+          ]
+        }
+      ],
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": {
+              "type": "grafana",
+              "uid": "-- Grafana --"
+            },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "target": {
+              "limit": 100,
+              "matchAny": false,
+              "tags": [],
+              "type": "dashboard"
+            },
+            "type": "dashboard"
+          }
+        ]
+      },
+      "links": [
+        {
+          "title": "Leading Indicators",
+          "type": "link",
+          "url": "/d/leading-indicators/leading-indicators",
+          "tags": [],
+          "asDropdown": false,
+          "icon": "external link"
+        },
+        {
+          "title": "DORA spec",
+          "type": "link",
+          "targetBlank": true,
+          "url": "https://github.com/paruff/uFawkesDORA/blob/main/docs/spec/specification.md",
+          "tags": [],
+          "asDropdown": false,
+          "icon": "document"
+        }
+      ],
+      "id": null
+    }

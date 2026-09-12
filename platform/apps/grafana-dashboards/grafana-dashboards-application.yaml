@@ -1,0 +1,75 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/grafana-dashboards/grafana-dashboards-application.yaml
+# PURPOSE: ArgoCD Application for Grafana dashboard ConfigMaps (#1572).
+#          kube-prometheus-stack's Grafana sidecar (sidecar.dashboards.enabled:
+#          true, searchNamespace: ALL - see prometheus-application.yaml) auto-
+#          imports any ConfigMap labeled grafana_dashboard: "1" in any
+#          namespace, so these just need to exist - no Grafana-side wiring.
+#          Sourced from https://github.com/paruff/uFawkesObs/tree/main/dashboards.
+#          Plain path source (no chart) - same shape as storage-classes and
+#          tracer-bullet, so this belongs on path-based-applications.yaml's
+#          ApplicationSet, not platform-applicationset.yaml (see that
+#          ApplicationSet's header comment for why the two can't share one
+#          template).
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana-dashboards
+  namespace: argocd
+  labels:
+    app: grafana-dashboards
+    component: observability
+    environment: production
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "5" # After prometheus-stack creates the monitoring namespace
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    targetRevision: HEAD
+    path: platform/apps/grafana-dashboards
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - PrunePropagationPolicy=foreground
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  revisionHistoryLimit: 10
