@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.115](https://github.com/paruff/fawkes/compare/v0.3.114...v0.3.115) (2026-09-12)
+
+
+### Added
+
+* **tekton:** add ephemeral per-PR preview environment task ([#2035](https://github.com/paruff/fawkes/issues/2035)) ([5c7d160](https://github.com/paruff/fawkes/commit/5c7d1609c9d08bbe830c30a55fdb2f3da4355b3d))
+
 ## [0.3.114](https://github.com/paruff/fawkes/compare/v0.3.113...v0.3.114) (2026-09-12)
 
 
