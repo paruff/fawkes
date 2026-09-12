@@ -1,0 +1,182 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/tekton/pr-preview-environment-task.yaml
+# PURPOSE: #1937 - namespace-per-PR ephemeral test environment, standalone
+#          from golden-path-pipeline.yaml on purpose (per the issue: land
+#          this as a separate, reviewable Task first; wiring it into the
+#          main pipeline trigger path is a follow-up once this is proven).
+#
+# Scope, deliberately first-cut:
+#  - pr-preview-deploy: creates namespace fawkes-pr-<pr-number>, kustomize
+#    overlays the GitOps repo's Deployment/Service/ServiceAccount into it
+#    with the PR's image tag, applies. Ingress/ServiceMonitor are left out
+#    of the overlay - a preview environment for integration/acceptance
+#    tests needs a reachable Service, not external ingress or Prometheus
+#    scraping.
+#  - pr-preview-teardown: deletes the namespace. That's the whole teardown
+#    story for now - no TTL controller/CronJob garbage collection. Per the
+#    issue: a full auto-expiry mechanism is a non-trivial second project,
+#    explicitly deferred. Until it exists, an abandoned PR (closed without
+#    the teardown task running) leaves its fawkes-pr-<n> namespace
+#    orphaned - someone has to run pr-preview-teardown by hand or wire it
+#    into a PR-closed webhook (not built here).
+#
+# RBAC gap, flagged not fixed: namespace creation is cluster-scoped, so
+# pr-preview-sa's ClusterRole grants create/get/delete on Deployments/
+# Services/ServiceAccounts across ALL namespaces, not just fawkes-pr-*
+# ones - Kubernetes RBAC can't scope a ClusterRole to a dynamic namespace
+# name pattern created after the binding exists. Tightening this (e.g. a
+# small controller that mints a per-namespace Role+RoleBinding right after
+# each namespace create) is follow-up work, not this issue's scope.
+# ============================================================================
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pr-preview-sa
+  namespace: fawkes
+  labels:
+    app: tekton
+    component: pr-preview
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pr-preview-role
+  labels:
+    app: tekton
+    component: pr-preview
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["create", "get", "delete"]
+  - apiGroups: [""]
+    resources: ["services", "serviceaccounts"]
+    verbs: ["create", "get", "update", "patch", "delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["create", "get", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pr-preview-role-binding
+  labels:
+    app: tekton
+    component: pr-preview
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pr-preview-role
+subjects:
+  - kind: ServiceAccount
+    name: pr-preview-sa
+    namespace: fawkes
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: pr-preview-deploy
+  namespace: fawkes
+  labels:
+    app: tekton
+    component: pr-preview
+spec:
+  description: >-
+    Create (or update) an ephemeral fawkes-pr-<pr-number> namespace and
+    deploy the PR's image into it, for integration/acceptance tests to run
+    against before the golden path promotes to staging.
+  params:
+    - name: pr-number
+      type: string
+      description: Pull request number - namespace becomes fawkes-pr-<pr-number>
+    - name: gitops-repo
+      type: string
+      description: owner/repo of the GitOps config repo to source the base manifests from
+      default: paruff/tracer-bullet-gitops
+    - name: image-name
+      type: string
+      description: Image repository (without tag) to deploy
+      default: ghcr.io/paruff/tracer-bullet
+    - name: image-tag
+      type: string
+      description: Image tag to deploy - normally the PR's commit short-SHA
+  workspaces:
+    - name: source
+  steps:
+    - name: clone-gitops-base
+      image: docker.io/alpine/git:v2.45.2
+      workingDir: $(workspaces.source.path)
+      script: |
+        #!/bin/sh
+        set -eu
+        rm -rf base
+        git clone --depth 1 "https://github.com/$(params.gitops-repo).git" base
+
+    - name: deploy-preview
+      image: docker.io/bitnami/kubectl:1.31.2
+      workingDir: $(workspaces.source.path)
+      script: |
+        #!/bin/sh
+        set -eu
+        NAMESPACE="fawkes-pr-$(params.pr-number)"
+
+        kubectl create namespace "$NAMESPACE" \
+          --dry-run=client -o yaml | kubectl apply -f -
+
+        mkdir -p overlay
+        cat > overlay/kustomization.yaml <<EOF
+        resources:
+          - ../base/deployment.yaml
+          - ../base/service.yaml
+          - ../base/serviceaccount.yaml
+        namespace: ${NAMESPACE}
+        images:
+          - name: $(params.image-name)
+            newTag: $(params.image-tag)
+        EOF
+
+        kubectl apply -k overlay/
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: pr-preview-teardown
+  namespace: fawkes
+  labels:
+    app: tekton
+    component: pr-preview
+spec:
+  description: >-
+    Delete a PR preview namespace. Manual/scripted first cut (#1937) - no
+    TTL or auto-expiry; run this by hand (or wire into a PR-closed webhook,
+    not built here) once the PR is merged or closed.
+  params:
+    - name: pr-number
+      type: string
+      description: Pull request number - deletes namespace fawkes-pr-<pr-number>
+  steps:
+    - name: delete-namespace
+      image: docker.io/bitnami/kubectl:1.31.2
+      script: |
+        #!/bin/sh
+        set -eu
+        kubectl delete namespace "fawkes-pr-$(params.pr-number)" --ignore-not-found
