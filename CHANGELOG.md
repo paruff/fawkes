@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.106](https://github.com/paruff/fawkes/compare/v0.3.105...v0.3.106) (2026-09-12)
+
+
+### Fixed
+
+* **gitops:** register path-based-applications.yaml in bootstrap kustomization ([#2012](https://github.com/paruff/fawkes/issues/2012)) ([03a3336](https://github.com/paruff/fawkes/commit/03a33363a8f61628be1f962a56b6825419bbfd58))
+
 ## [0.3.105](https://github.com/paruff/fawkes/compare/v0.3.104...v0.3.105) (2026-09-12)
 
 
