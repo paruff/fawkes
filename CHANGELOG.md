@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.101](https://github.com/paruff/fawkes/compare/v0.3.100...v0.3.101) (2026-09-12)
+
+
+### Fixed
+
+* **rag:** add scripts/ and indexers/ to Dockerfile COPY ([#1998](https://github.com/paruff/fawkes/issues/1998)) ([0e393fd](https://github.com/paruff/fawkes/commit/0e393fd70147211aec33d73d283c784324b8267b)), closes [#1693](https://github.com/paruff/fawkes/issues/1693)
+
 ## [0.3.100](https://github.com/paruff/fawkes/compare/v0.3.99...v0.3.100) (2026-09-11)
 
 
