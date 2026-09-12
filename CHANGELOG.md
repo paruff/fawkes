@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.120](https://github.com/paruff/fawkes/compare/v0.3.119...v0.3.120) (2026-09-12)
+
+
+### Fixed
+
+* **argocd:** wire tekton-application.yaml into path-based-applications ([#2051](https://github.com/paruff/fawkes/issues/2051)) ([c0b4b7a](https://github.com/paruff/fawkes/commit/c0b4b7aaace894046fc4e2c391362b4022d2f73d))
+
 ## [0.3.119](https://github.com/paruff/fawkes/compare/v0.3.118...v0.3.119) (2026-09-12)
 
 
