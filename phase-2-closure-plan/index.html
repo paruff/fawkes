@@ -5473,10 +5473,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#phase-5-alertmanagerdevlake-incident-payload-adapter" class="md-nav__link">
+  <a href="#phase-5-2079-alertmanagerdevlake-incident-payload-adapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 5 — Alertmanager→DevLake incident-payload adapter
+        Phase 5 — #2079: Alertmanager→DevLake incident-payload adapter
       
     </span>
   </a>
@@ -5570,7 +5570,7 @@ see <code>docs/BACKLOG.md</code>'s Phase 2 table for current status.</p>
 <p>Six remaining items, with real dependencies between them:</p>
 <div class="highlight"><pre><span></span><code>(1) Live-verify quality gate blocks a bad deploy ──┐
 (2) Live canary rollout + observed rollback ───────┼─→ (3) #1942 chaos-in-canary wiring
-(4) #1919 DevLake webhook (deployment side) ───────┬─→ (5) Alertmanager→DevLake adapter ─→ (6) #1946 dashboard panel
+(4) #1919 DevLake webhook (deployment side) ───────┬─→ (5) #2079 Alertmanager→DevLake adapter ─→ (6) #1946 dashboard panel
 </code></pre></div>
 <p>(1) and (4) are independent starting points. (2) depends on <code>argo-rollouts</code>/<code>chaos-mesh</code> actually finishing their sync (triggered live already, not yet confirmed <code>Synced</code>). (3) depends on (2). (5) depends on (4)'s schema being final (already is, per #1944). (6) depends on (4)+(5) producing real rows.</p>
 <h2 id="pattern-grounding-from-live-investigation">Pattern Grounding (from live investigation)</h2>
@@ -5656,7 +5656,7 @@ see <code>docs/BACKLOG.md</code>'s Phase 2 table for current status.</p>
 4. Verify DevLake's own dashboard/API shows a deployment-frequency data point
 5. Update <code>docs/KNOWN_LIMITATIONS.md</code> KL-12 to resolved</p>
 <p><strong>Risk (resolved 2026-09-12):</strong> <code>devlake-lake</code> pod was in <code>CreateContainerConfigError</code> as of an earlier session's last check. Live-verified now on <code>mac-mini-k3s</code>: <code>devlake-lake</code> is <code>Running</code> (1/1, one restart 2d11h ago, healthy since), <code>devlake-mysql</code> and <code>devlake-ui</code> are both <code>Running</code> with zero restarts, and <code>devlake-lake</code>'s logs show clean <code>/ping</code> health checks with no errors. This blocker self-resolved (likely once the ExternalSecret it depends on synced) and no longer blocks starting the webhook-wiring work above.</p>
-<h3 id="phase-5-alertmanagerdevlake-incident-payload-adapter">Phase 5 — Alertmanager→DevLake incident-payload adapter</h3>
+<h3 id="phase-5-2079-alertmanagerdevlake-incident-payload-adapter">Phase 5 — #2079: Alertmanager→DevLake incident-payload adapter</h3>
 <p><strong>Depends on:</strong> Phase 4 (needs a real webhook connection to target) and fawkes#2042 (Alertmanager receiver, already merged)
 1. Build a small adapter (Tekton Task, or a lightweight Job/CronJob — no existing pattern to mirror, this is genuinely new) that receives Alertmanager's native webhook payload (<code>{version, status, alerts: [...]}</code>) and transforms it into DevLake's <code>issues</code> schema (<code>issueKey</code>, <code>title</code>, <code>type: INCIDENT</code>, <code>status</code>, <code>createdDate</code>, etc.)
 2. Point the <code>devlake-cfr</code> receiver (already in <code>prometheus-application.yaml</code>) at this adapter instead of DevLake directly
