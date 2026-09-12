@@ -5,6 +5,14 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.130](https://github.com/paruff/fawkes/compare/v0.3.129...v0.3.130) (2026-09-12)
+
+
+### Docs
+
+* **backlog:** remove 15 stale closed-issue entries, flag verification gap ([#2075](https://github.com/paruff/fawkes/issues/2075)) ([986f83e](https://github.com/paruff/fawkes/commit/986f83e2dc454624f517290e3ea274b3ecae28a1))
+* **process:** add Phase 4 phase-gate rule and epic complexity-table requirement ([#2074](https://github.com/paruff/fawkes/issues/2074)) ([8f43d71](https://github.com/paruff/fawkes/commit/8f43d712467bf96b2e552571831dc348f223a885))
+
 ## [0.3.129](https://github.com/paruff/fawkes/compare/v0.3.128...v0.3.129) (2026-09-12)
 
 
