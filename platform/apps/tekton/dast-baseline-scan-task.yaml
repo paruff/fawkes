@@ -1,0 +1,87 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/tekton/dast-baseline-scan-task.yaml
+# PURPOSE: #2046 - shift-left DAST. First cut: an OWASP ZAP baseline
+#          (passive) scan against a real, reachable tracer-bullet endpoint.
+#
+# Standalone Task, not wired into golden-path-pipeline.yaml's task graph -
+# same reasoning as pr-preview-environment-task.yaml (#1937): land as a
+# separate, reviewable capability first.
+#
+# Target: staging (fawkes namespace, tracer-bullet's live in-cluster
+# Service), not the per-PR preview environment - #1937's ephemeral
+# namespace exists but isn't wired into any trigger path yet (explicitly
+# deferred there), so there's nothing to scan pre-promotion today. This
+# is a post-promotion DAST pass, not the shift-left ideal of pre-promotion
+# scanning - revisit once #1937's environment is actually reachable from
+# a pipeline run.
+#
+# Explicitly non-blocking (per the issue): zap-baseline.py exits non-zero
+# when it finds any WARN-level issue, which would fail the step and any
+# runAfter dependent on it. `|| true` on the script's own exit keeps this
+# Task green regardless of findings - the point of this first cut is
+# visibility (scan runs, results are logged), not gating. Revisit once a
+# human has reviewed a few real scan results and decided which rule IDs
+# are worth actually blocking on.
+# ============================================================================
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: dast-baseline-scan
+  namespace: fawkes
+  labels:
+    app: tekton
+    component: security
+spec:
+  description: >-
+    OWASP ZAP baseline (passive) scan against a running tracer-bullet
+    endpoint. Non-blocking first cut - reports findings, does not fail
+    the pipeline on them.
+  params:
+    - name: target-url
+      type: string
+      description: Base URL of the tracer-bullet instance to scan
+      default: http://tracer-bullet.fawkes.svc.cluster.local
+  workspaces:
+    - name: reports
+  steps:
+    - name: zap-baseline-scan
+      image: ghcr.io/zaproxy/zaproxy:2.16.1
+      workingDir: $(workspaces.reports.path)
+      resources:
+        requests:
+          cpu: 250m
+          memory: 512Mi
+        limits:
+          cpu: 500m
+          memory: 1Gi
+      script: |
+        #!/bin/sh
+        set -u
+        zap-baseline.py \
+          -t "$(params.target-url)" \
+          -r zap-baseline-report.html \
+          -x zap-baseline-report.xml \
+          -I
+        SCAN_EXIT=$?
+        echo "zap-baseline.py exited $SCAN_EXIT (non-blocking first cut - not failing the Task on this)"
+        exit 0
