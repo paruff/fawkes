@@ -5,6 +5,14 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.105](https://github.com/paruff/fawkes/compare/v0.3.104...v0.3.105) (2026-09-12)
+
+
+### Fixed
+
+* **ci:** enforce coverage gate and fix AT-E1 acceptance validator bugs ([#2009](https://github.com/paruff/fawkes/issues/2009)) ([e41733d](https://github.com/paruff/fawkes/commit/e41733dee0467bacd211dd23c5adf7adc6d81705))
+* **gitops:** split path-based apps out of platform-applications ApplicationSet ([#2010](https://github.com/paruff/fawkes/issues/2010)) ([a47a557](https://github.com/paruff/fawkes/commit/a47a557c5e076ef25adc720cbbdf093741dd5e23))
+
 ## [0.3.104](https://github.com/paruff/fawkes/compare/v0.3.103...v0.3.104) (2026-09-12)
 
 
