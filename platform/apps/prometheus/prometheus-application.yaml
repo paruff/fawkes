@@ -76,6 +76,20 @@ spec:
         # ============================================================
         prometheusOperator:
           enabled: true
+          # The chart's default cert-generation PreSync hook Job
+          # (prometheus-admission-create, kube-webhook-certgen) crash-loops
+          # on the mini-gamer WSL2 node with exit code 1 - confirmed live,
+          # blocking the entire sync (including the already-configured
+          # Grafana/Prometheus Ingresses) since ArgoCD won't proceed past a
+          # failed PreSync hook. Disabling the webhook is a standard
+          # simplification for non-production clusters - it only validates
+          # PrometheusRule CRD syntax at admission time, not core
+          # functionality. Root-causing the underlying WSL2/mini-gamer
+          # issue (likely the same class of node-specific gap as the
+          # earlier node-exporter mount-propagation and kubelet log-proxy
+          # 502 issues) is a separate follow-up, not blocking here.
+          admissionWebhooks:
+            enabled: false
           resources:
             requests:
               cpu: 100m
