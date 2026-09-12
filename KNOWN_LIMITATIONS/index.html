@@ -5483,10 +5483,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kl-10-sonarcloud-project-registered-under-wrong-default-branch" class="md-nav__link">
+  <a href="#kl-10-sonarcloud-project-registered-under-wrong-default-branch-resolved-2026-09-09" class="md-nav__link">
     <span class="md-ellipsis">
       
-        KL-10 — SonarCloud Project Registered Under Wrong Default Branch
+        KL-10 — SonarCloud Project Registered Under Wrong Default Branch (RESOLVED 2026-09-09)
       
     </span>
   </a>
@@ -5710,26 +5710,20 @@ collect.</p>
 <p><strong>Tracking:</strong> <a href="https://github.com/paruff/fawkes/issues/1855">#1855</a> — root cause and
 fix documented in a comment; recommend closing once reviewed.</p>
 <hr />
-<h2 id="kl-10-sonarcloud-project-registered-under-wrong-default-branch">KL-10 — SonarCloud Project Registered Under Wrong Default Branch</h2>
-<p><strong>Description:</strong> The <code>tracer-bullet</code> SonarCloud project's default branch is
+<h2 id="kl-10-sonarcloud-project-registered-under-wrong-default-branch-resolved-2026-09-09">KL-10 — SonarCloud Project Registered Under Wrong Default Branch (RESOLVED 2026-09-09)</h2>
+<p><strong>Description:</strong> The <code>tracer-bullet</code> SonarCloud project's default branch was
 registered as <code>master</code>, but the repository's actual default branch is <code>main</code>. This
-was discovered live during golden-path pipeline debugging (#1804) and is a likely
+was discovered live during golden-path pipeline debugging (#1804) and was a likely
 contributor to an observed quality-gate/New-Code-period inconsistency (the API's
 <code>qualitygates/project_status</code> returned <code>"status":"NONE"</code> on a first analysis with
 89.3% coverage and zero bugs/vulnerabilities/code smells).</p>
-<p><strong>Impact:</strong></p>
-<ul>
-<li>Quality gate evaluation and "new code" baselines may be computed against the
-  wrong branch's history.</li>
-<li><code>sonar.qualitygate.wait</code> was disabled in the golden-path Tekton pipeline
-  (<code>platform/apps/tekton/golden-path-pipeline.yaml</code>) as a workaround for Phase 1,
-  deliberately not blocking on quality gates — see
-  <code>docs/DEPLOYMENT_STRATEGY.md</code>'s 2026-09-07 update. That workaround should be
-  revisited once this is fixed.</li>
-</ul>
-<p><strong>Tracking:</strong> No dedicated issue yet. Likely fix: pass <code>-Dsonar.branch.name=main</code> to
-the scanner invocation, or ensure a non-shallow clone so SonarCloud's own SCM
-detection identifies <code>main</code> correctly.</p>
+<p><strong>Fix:</strong> #1952 added <code>-Dsonar.branch.name=main</code> to the scanner invocation in
+<code>platform/apps/tekton/golden-path-pipeline.yaml</code>, forcing analysis against the
+correct branch regardless of the project's registered default. Per the
+follow-up in #1934, <code>sonar.qualitygate.wait</code> is now re-enabled — a human should
+confirm the next real pipeline run reports a clean <code>qualitygates/project_status</code>
+before relying on it to block promotion.</p>
+<p><strong>Tracking:</strong> #1927 (fix), #1934 (re-enable the gate).</p>
 <hr />
 <h2 id="kl-11-tracer-bullet-metrics-not-reaching-prometheus-resolved-2026-09-08">KL-11 — tracer-bullet Metrics Not Reaching Prometheus (RESOLVED 2026-09-08)</h2>
 <p><strong>Description:</strong> tracer-bullet exposes Prometheus-format metrics via a pull-based
