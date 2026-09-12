@@ -315,3 +315,16 @@ The `--ignore-unfixed` flag causes Trivy to **not fail** on CRITICAL/HIGH vulner
 | CVE is a false positive / not applicable to the service's code paths | **Allow** — suppress via `.trivyignore` with justification |
 
 **Tracking:** Related to Phase 2 quality-gate hardening (#1805). Revisit when distroless/chainguard base images are adopted (tracked separately) — those reduce the unfixed-CVE surface area significantly.
+
+## KL-14 — `platform/bootstrap/` Is Not Self-Healing From Git (Bootstrap Chicken-and-Egg)
+
+**Description:** Every Application under `platform/apps/` gets `syncPolicy.automated.selfHeal: true` — ArgoCD reverts manual drift automatically. `platform/bootstrap/` (the app-of-apps root and its `ApplicationSet`/`Application` definitions) is the one exception: it's what *creates* ArgoCD's own management of the cluster, so nothing is watching it. A change to a file under `platform/bootstrap/` only takes effect after someone manually runs `kubectl apply -k platform/bootstrap` (or `scripts/bootstrap.sh` / `scripts/ignite.sh`) — merging a PR that touches this directory does **not**, by itself, change anything live.
+
+**Impact:**
+
+- A merged PR that edits `platform/bootstrap/*.yaml` can silently not be reflected on any live cluster until someone remembers the manual step.
+- No alert exists for "bootstrap files changed in git but the live ApplicationSet/Application specs still differ" — drift here is invisible until someone notices unexpected behavior downstream.
+
+**Accepted for now, not silently assumed away** (per `docs/elite-engineering-bridge-plan.md` Phase 3): this is a one-time-per-change manual bootstrap step, not a bug. `platform/bootstrap/README.md`'s "Bootstrap the Platform" / "Bootstrap Failed" sections are the runbook — re-run `kubectl apply -k platform/bootstrap` (or `scripts/bootstrap.sh`) after any change under this directory.
+
+**Tracking:** No reconciliation job exists yet to diff live `ApplicationSet`/`Application` specs against git and alert on drift for this directory specifically — that would close the gap fully but is real new infrastructure, not wiring. Revisit if bootstrap-directory drift causes a real incident.
