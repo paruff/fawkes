@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.112](https://github.com/paruff/fawkes/compare/v0.3.111...v0.3.112) (2026-09-12)
+
+
+### Added
+
+* **azure:** add optional Spot-priced user node pool to AKS module ([#2027](https://github.com/paruff/fawkes/issues/2027)) ([69a1ba2](https://github.com/paruff/fawkes/commit/69a1ba2cbb82bc3a3466e11dfb5c07b4a4a070d3))
+
 ## [0.3.111](https://github.com/paruff/fawkes/compare/v0.3.110...v0.3.111) (2026-09-12)
 
 
