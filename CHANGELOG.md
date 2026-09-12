@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.102](https://github.com/paruff/fawkes/compare/v0.3.101...v0.3.102) (2026-09-12)
+
+
+### Docs
+
+* rewrite BACKLOG.md as integrated IDP roadmap ([#2000](https://github.com/paruff/fawkes/issues/2000)) ([09b4e69](https://github.com/paruff/fawkes/commit/09b4e69fed47cf2d00be6fdb55db697e173147cc)), closes [#1573](https://github.com/paruff/fawkes/issues/1573)
+
 ## [0.3.101](https://github.com/paruff/fawkes/compare/v0.3.100...v0.3.101) (2026-09-12)
 
 
