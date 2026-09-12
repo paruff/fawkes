@@ -1,0 +1,56 @@
+name: Platform Policy Enforcement
+
+# reusable-policy-enforcement.yml existed with zero callers anywhere in
+# this repo before this file - the OPA/Rego policies under
+# .security-plane/policies/ (including storage-operational.rego, added
+# alongside this workflow) were never actually run in CI. Scoped to
+# platform/ since that's where every policy so far applies (ArgoCD
+# Application/ApplicationSet manifests, StorageClasses, etc.).
+
+on:
+  pull_request:
+    paths:
+      - "platform/**"
+      - ".security-plane/policies/**"
+  push:
+    branches: [main]
+    paths:
+      - "platform/**"
+      - ".security-plane/policies/**"
+
+permissions:
+  contents: read
+
+jobs:
+  dora-start:
+    name: DORA job start
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: DORA job start
+        run: |
+          echo "job-start:$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "sha:${{ github.sha }}"
+          echo "workflow:${{ github.workflow }}"
+          echo "job:platform-policy-ci"
+
+  policy-check:
+    name: Enforce platform/ policies
+    needs: dora-start
+    uses: ./.github/workflows/reusable-policy-enforcement.yml
+    with:
+      target-path: platform
+      fail-on-violation: true
+    permissions:
+      contents: read
+      security-events: write
+
+  dora-finish:
+    name: DORA job finish
+    needs: policy-check
+    runs-on: ubuntu-latest
+    if: always()
+    timeout-minutes: 10
+    steps:
+      - name: DORA job finish
+        run: echo "job-finish:$(date -u +%Y-%m-%dT%H:%M:%SZ)"

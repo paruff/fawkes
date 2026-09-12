@@ -313,12 +313,18 @@ jobs:
         with:
           version: "v3.21.3"
 
-      - name: Install kubeval
+      # kubeconform (actively maintained) rather than kubeval (last commit
+      # Jan 2026, effectively unmaintained): the kubeval pre-commit hook
+      # already prefers kubeconform when available and only falls back to
+      # kubeval otherwise, but CI never installed kubeconform, so it always
+      # ran the fallback tool. Installing kubeconform here means CI now
+      # actually exercises the preferred path.
+      - name: Install kubeconform
         run: |
-          wget -q https://github.com/instrumenta/kubeval/releases/download/v0.16.1/kubeval-linux-amd64.tar.gz
-          tar xf kubeval-linux-amd64.tar.gz
-          sudo mv kubeval /usr/local/bin
-          rm kubeval-linux-amd64.tar.gz
+          wget -q https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-amd64.tar.gz
+          tar xf kubeconform-linux-amd64.tar.gz
+          sudo mv kubeconform /usr/local/bin
+          rm kubeconform-linux-amd64.tar.gz
 
       - name: Install kustomize
         run: |
