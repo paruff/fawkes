@@ -8,6 +8,7 @@
 ## Table of Contents
 
 1. [Deployment Tiers](#deployment-tiers)
+1a. [Cluster Topology (Which Cluster Is Canonical?)](#cluster-topology-which-cluster-is-canonical)
 2. [Component Overview](#component-overview)
 3. [Layer Dependency Rules](#layer-dependency-rules)
 4. [Component Diagram](#component-diagram)
@@ -65,6 +66,31 @@ cloud deployment.
 | Prometheus + Grafana | ✅ in-cluster                | ✅ in-cluster      |
 | Vault                | ✅ dev mode (non-persistent) | ✅ production mode |
 | Sample application   | ✅                           | ✅                 |
+
+### Cluster Topology (Which Cluster Is Canonical?)
+
+Three clusters have been used at different points in this project's history
+with no prior reconciliation: a local `kind` cluster, a LAN homelab k3s
+cluster (Mac Mini control-plane + a Windows/WSL2 worker node, `mini-gamer`),
+and Azure AKS. As of 2026-09-12, live-verified:
+
+- **Azure AKS (`fawkes-dev-aks`) is the canonical golden-path proving
+  ground.** All Phase 2 live verification this project has done — golden
+  path CI runs, ArgoCD sync checks, canary rollout + automated rollback —
+  has run against this cluster. Cost-managed: it is provisioned and
+  destroyed per session (see runbook notes in `docs/BACKLOG.md`), so do not
+  assume it persists between sessions.
+- **The homelab k3s cluster (`mac-mini-k3s` kubeconfig context) is kept
+  running as a secondary/dev cluster**, not torn down. It is not currently
+  used for golden-path verification.
+- **`kind-fawkes`** is a local, ephemeral dev cluster (Docker Desktop);
+  no canonical role, safe to create/destroy freely.
+
+Known bootstrap gap (tracked, not yet fixed): `platform/bootstrap/*.yaml`
+ApplicationSet changes require a manual `kubectl apply -k platform/bootstrap`
+re-apply after merge — the ApplicationSet controller reconciles from its own
+live spec, not directly from git, so a merged bootstrap change does nothing
+until someone re-applies it by hand.
 
 ### Tier 2 — Full Platform (cloud deployments only)
 
