@@ -80,6 +80,20 @@ resource "azurerm_kubernetes_cluster" "main" {
   tags = var.tags
 }
 
+resource "azurerm_kubernetes_cluster_node_pool" "user" {
+  count = var.enable_user_node_pool ? 1 : 0
+
+  name                  = "usernp"
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.main.id
+  vm_size               = var.user_vm_size
+  node_count            = var.user_node_count
+  vnet_subnet_id        = var.subnet_id
+  mode                  = "User"
+  zones                 = var.user_zones
+
+  tags = var.tags
+}
+
 resource "azurerm_kubernetes_cluster_node_pool" "spot" {
   count = var.enable_spot_node_pool ? 1 : 0
 

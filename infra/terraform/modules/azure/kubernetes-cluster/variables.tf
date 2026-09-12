@@ -84,6 +84,30 @@ variable "only_critical_addons_enabled" {
   default     = true
 }
 
+variable "enable_user_node_pool" {
+  description = "Add a regular-priced, untainted user node pool for normal workloads, alongside the system pool (which may have only_critical_addons_enabled set) and any Spot pool"
+  type        = bool
+  default     = false
+}
+
+variable "user_vm_size" {
+  description = "VM size for the user node pool"
+  type        = string
+  default     = "Standard_B2ms"
+}
+
+variable "user_node_count" {
+  description = "Number of nodes in the user node pool"
+  type        = number
+  default     = 2
+}
+
+variable "user_zones" {
+  description = "Availability zones for the user node pool (null = Azure auto-selects)"
+  type        = list(string)
+  default     = null
+}
+
 variable "system_zones" {
   description = "Availability zones for the system node pool (null = Azure auto-selects across all zones - fails outright if the chosen VM size is restricted in a zone for this subscription). Set explicitly to route around a known per-subscription zone restriction."
   type        = list(string)

@@ -23,6 +23,15 @@ installCRDs: true
 # Global configuration
 global:
   domain: argocd.127.0.0.1.nip.io
+  # AKS's default_node_pool with only_critical_addons_enabled=true taints
+  # the system pool CriticalAddonsOnly=true:NoSchedule, and a Spot node
+  # pool is separately tainted for its own reasons - confirmed live, with
+  # only those two pools nothing could schedule ArgoCD at all
+  # ("0/4 nodes are available: 4 node(s) had untolerated taint(s)").
+  # No-op on clusters without this taint (e.g. the LAN k3s cluster).
+  tolerations:
+    - key: CriticalAddonsOnly
+      operator: Exists
 
 server:
   # Enable HTTP UI (no TLS) for local development convenience
