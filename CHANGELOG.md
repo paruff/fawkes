@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.121](https://github.com/paruff/fawkes/compare/v0.3.120...v0.3.121) (2026-09-12)
+
+
+### Fixed
+
+* **argocd:** wire argo-rollouts and chaos-mesh into the platform ApplicationSet ([#2049](https://github.com/paruff/fawkes/issues/2049)) ([2001f63](https://github.com/paruff/fawkes/commit/2001f63ec293758495668f35525dfc8baf4b3981))
+
 ## [0.3.120](https://github.com/paruff/fawkes/compare/v0.3.119...v0.3.120) (2026-09-12)
 
 
