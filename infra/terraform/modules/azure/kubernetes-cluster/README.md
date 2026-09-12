@@ -146,6 +146,8 @@ The interface is identical - only the source path changes.
 | <a name="input_spot_max_price"></a> [spot_max_price](#input_spot_max_price) | Maximum hourly price (USD) per Spot node; -1 means pay up to the regular on-demand price (Azure's recommended default - avoids eviction purely on price, only capacity-driven eviction remains possible) | `number` | `-1` | no |
 | <a name="input_spot_node_count"></a> [spot_node_count](#input_spot_node_count) | Number of nodes in the Spot node pool | `number` | `2` | no |
 | <a name="input_spot_vm_size"></a> [spot_vm_size](#input_spot_vm_size) | VM size for the Spot node pool | `string` | `"Standard_D4s_v3"` | no |
+| <a name="input_spot_zones"></a> [spot_zones](#input_spot_zones) | Availability zones for the Spot node pool (null = Azure auto-selects across all zones - fails outright if the chosen VM size is restricted in a zone for this subscription). Set explicitly to route around a known per-subscription zone restriction. | `list(string)` | `null` | no |
+| <a name="input_system_zones"></a> [system_zones](#input_system_zones) | Availability zones for the system node pool (null = Azure auto-selects across all zones - fails outright if the chosen VM size is restricted in a zone for this subscription). Set explicitly to route around a known per-subscription zone restriction. | `list(string)` | `null` | no |
 | <a name="input_tags"></a> [tags](#input_tags) | Tags to apply to the AKS cluster | `map(string)` | `{}` | no |
 
 ## Outputs
