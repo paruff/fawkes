@@ -76,3 +76,25 @@ resource "azurerm_kubernetes_cluster" "main" {
 
   tags = var.tags
 }
+
+resource "azurerm_kubernetes_cluster_node_pool" "spot" {
+  count = var.enable_spot_node_pool ? 1 : 0
+
+  name                  = "spotnp"
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.main.id
+  vm_size               = var.spot_vm_size
+  node_count            = var.spot_node_count
+  vnet_subnet_id        = var.subnet_id
+  mode                  = "User"
+
+  priority        = "Spot"
+  eviction_policy = var.spot_eviction_policy
+  spot_max_price  = var.spot_max_price
+
+  # Workloads must explicitly tolerate this taint to land here - Spot nodes
+  # can be reclaimed by Azure with 30s notice, so nothing should be
+  # scheduled onto them by default.
+  node_taints = ["kubernetes.azure.com/scalesetpriority=spot:NoSchedule"]
+
+  tags = var.tags
+}

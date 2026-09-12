@@ -45,3 +45,21 @@ variable "api_server_authorized_ip_ranges" {
   type        = list(string)
   default     = []
 }
+
+variable "enable_spot_node_pool" {
+  description = "Add a second, Spot-priced node pool for larger/cheaper burst capacity alongside the regular-priced system pool"
+  type        = bool
+  default     = false
+}
+
+variable "spot_vm_size" {
+  description = "VM size for the Spot node pool"
+  type        = string
+  default     = "Standard_D4s_v3"
+}
+
+variable "spot_node_count" {
+  description = "Number of nodes in the Spot node pool"
+  type        = number
+  default     = 2
+}
