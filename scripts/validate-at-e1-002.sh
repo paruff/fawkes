@@ -16,7 +16,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Default values
-ARGO_NAMESPACE="${ARGOCD_NAMESPACE:-fawkes}"
+ARGO_NAMESPACE="${ARGOCD_NAMESPACE:-argocd}"
 VERBOSE=false
 REPORT_FILE="reports/at-e1-002-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
@@ -160,8 +160,8 @@ check_argocd_deployment() {
   local all_running=true
 
   for component in "${required_components[@]}"; do
-    if kubectl get deployment -n "$ARGO_NAMESPACE" -l "app.kubernetes.io/name=$component" &> /dev/null 2>&1 \
-      || kubectl get statefulset -n "$ARGO_NAMESPACE" -l "app.kubernetes.io/name=$component" &> /dev/null 2>&1 \
+    if [ -n "$(kubectl get deployment -n "$ARGO_NAMESPACE" -l "app.kubernetes.io/name=$component" -o name 2> /dev/null)" ] \
+      || [ -n "$(kubectl get statefulset -n "$ARGO_NAMESPACE" -l "app.kubernetes.io/name=$component" -o name 2> /dev/null)" ] \
       || kubectl get deployment -n "$ARGO_NAMESPACE" "$component" &> /dev/null 2>&1 \
       || kubectl get statefulset -n "$ARGO_NAMESPACE" "$component" &> /dev/null 2>&1; then
       record_test "ArgoCD Component" "PASS" "$component is deployed"
@@ -179,11 +179,11 @@ check_argocd_deployment() {
 check_argocd_pods() {
   log_info "Checking ArgoCD pods..."
 
-  local pods=$(kubectl get pods -n "$ARGO_NAMESPACE" -o json)
+  local pods=$(kubectl get pods -n "$ARGO_NAMESPACE" -l "app.kubernetes.io/part-of=argocd" -o json)
   local pod_count=$(echo "$pods" | jq -r '.items | length')
 
   if [ "$pod_count" -eq 0 ]; then
-    record_test "ArgoCD Pods" "FAIL" "No pods found in namespace '$ARGO_NAMESPACE'"
+    record_test "ArgoCD Pods" "FAIL" "No ArgoCD pods found in namespace '$ARGO_NAMESPACE'"
     return 1
   fi
 
