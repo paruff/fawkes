@@ -1,0 +1,99 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/bootstrap/path-based-applications.yaml
+# PURPOSE: Sibling to the platform-applications ApplicationSet
+#          (platform-applicationset.yaml), for apps whose source is a plain
+#          `path:` (a kustomize/raw-manifest directory, or an external Git
+#          repo root) rather than a Helm `chart:`.
+#
+# WHY THIS EXISTS: platform-applicationset.yaml's template unconditionally
+# emits a `helm:` block (see its header comment's "OPEN RISK" section)
+# because goTemplate:true parses YAML structure before templating string
+# values, so one shared template can't conditionally omit a structural key
+# per source. That risk is now confirmed live: storage-classes and
+# tracer-bullet - the only 2 of that ApplicationSet's 8 apps using a plain
+# `path:` source instead of `chart:` - both hit
+# `ComparisonError: ... open <path>/Chart.yaml: no such file or directory`,
+# because a non-nil `helm:` block (even one that renders to just "{}") makes
+# ArgoCD's repo-server require a Chart.yaml regardless of whether `chart:` is
+# set. Splitting these two into their own ApplicationSet with a template that
+# has no `helm:` key at all sidesteps the constraint - no per-app conditional
+# needed since every app this generator lists shares the same source shape.
+# Removed from platform-applicationset.yaml's file list accordingly.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: path-based-applications
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/paruff/fawkes.git
+        revision: HEAD
+        files:
+          - path: "platform/apps/tracer-bullet/tracer-bullet-application.yaml"
+          - path: "platform/apps/storage/storage-application.yaml"
+  template:
+    metadata:
+      name: '{{ .metadata.name }}'
+      namespace: argocd
+      labels:
+        app.kubernetes.io/managed-by: path-based-applications-appset
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{ dig "metadata" "annotations" "argocd.argoproj.io/sync-wave" "0" . }}'
+    spec:
+      project: '{{ dig "spec" "project" "default" . }}'
+      source:
+        repoURL: '{{ .spec.source.repoURL }}'
+        targetRevision: '{{ .spec.source.targetRevision }}'
+        path: '{{ .spec.source.path }}'
+      destination:
+        server: '{{ .spec.destination.server }}'
+        namespace: '{{ .spec.destination.namespace }}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - PrunePropagationPolicy=foreground
+          - PruneLast=true
+          - ServerSideApply=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m
+      ignoreDifferences:
+        - group: apps
+          kind: Deployment
+          jsonPointers:
+            - /spec/replicas
+        - group: apps
+          kind: StatefulSet
+          jsonPointers:
+            - /spec/replicas
+      revisionHistoryLimit: 10
