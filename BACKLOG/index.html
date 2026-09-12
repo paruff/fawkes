@@ -5511,96 +5511,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#phase-1-alpha-nice-to-have" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 1 — Alpha (Nice to Have)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-2-beta" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 2 — Beta
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-23-cross-cutting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 2/3 — Cross-cutting
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#not-phase-scoped-infrastructure-ops" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Not Phase-Scoped (Infrastructure / Ops)
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scoring-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scoring System
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#agent-assignment-map" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Agent Assignment Map
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-limitations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known Limitations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-use-this-document" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How to Use This Document
-      
-    </span>
-  </a>
   
 </li>
       
@@ -5765,6 +5677,13 @@ for why). The authoritative, machine-generated source of truth is the
 regenerated nightly (and on-demand) by <code>.github/workflows/golden-path-verification.yml</code>
 from the real <code>scripts/validate-golden-path-*.sh</code> results. Check there before
 trusting a 🟢 here.</p>
+<p><strong>Known gap (2026-09-12):</strong> that workflow's first run shows every plane
+🔴/⚪ — not because the platform is down, but because no
+<code>GOLDEN_PATH_KUBECONFIG</code> repo secret exists yet, so the GitHub-hosted
+runner can't reach any cluster (LAN k3s or AKS). Until that secret is
+added (see <code>docs/elite-engineering-bridge-plan.md</code> Phase 3), a 🟢 in this
+file still means "last manually verified live," not "CI-confirmed" — the
+two are not yet the same thing.</p>
 </blockquote>
 <div class="highlight"><pre><span></span><code>Phase 1 (Alpha)     Phase 2 (Beta)      Phase 3 (Production)
   Commit→Staging      Shift-Left Security   Human-in-the-Loop
@@ -5807,16 +5726,16 @@ trusting a 🟢 here.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Remaining tasks:</strong>
+<p><strong>Remaining tasks (audited 2026-09-12 against actual GitHub issue state):</strong>
 - #1572 — Confirm DORA metrics queryable in Grafana (P0)
 - #1569 — Terraform remote state backend (P0)
-- #1959 — ArgoCD stability (P0 — crash-looping under load)
 - #1855 — DevLake GitHub GraphQL collector fix (P0)
-- #1693 — rag-service Dockerfile fix (PR #1998 ready)
 - #1797 — Replace CHANGE_ME_* with Sealed Secrets
 - #1578 — Wire IRSA role ARN into python-fawkes-path
 - #1581 — Verify CI quality gates are green
-- #1936 — BDD step definitions for quality gates
+- ~~#1959 — ArgoCD stability (P0 — crash-looping under load)~~ ✅ Closed — <code>chore(argocd): throttle repo-server/controller concurrency to stop crash-looping under load</code>
+- ~~#1693 — rag-service Dockerfile fix~~ ✅ Closed via PR #1998
+- ~~#1936 — BDD step definitions for quality gates~~ ✅ Closed
 - ~~#1842 — ApplicationSet for platform-applications~~ ✅ Done — confirmed live 2026-09-12: both <code>platform-applications</code> and <code>path-based-applications</code> ApplicationSets are the real, active owners of every current Application (verified via <code>ownerReferences</code> on the live cluster)</p>
 <h3 id="phase-2-beta-shift-left-security-1805">Phase 2 — Beta: Shift-Left Security (#1805)</h3>
 <p><strong>Goal:</strong> Failing quality gates block promotion. At least one service deploys via canary/blue-green with automated rollback. Chaos experiments on staging. Change Failure Rate visible.</p>
@@ -5954,6 +5873,11 @@ Pipeline, GitOps, Observability, DORA, Security, Resources, DevEx.</p>
 <hr />
 <h2 id="open-issues-by-phase">Open Issues by Phase</h2>
 <h3 id="phase-1-alpha-critical-path">Phase 1 — Alpha (Critical Path)</h3>
+<blockquote>
+<p>Audited 2026-09-12 against live GitHub issue state (Phase 2 backlog-audit
+pass, <code>docs/elite-engineering-bridge-plan.md</code> Phase 2). Closed since last
+update, removed from this table: #1959, #1693, #1842, #1573 (all ✅ closed).</p>
+</blockquote>
 <table>
 <thead>
 <tr>
@@ -5964,12 +5888,6 @@ Pipeline, GitOps, Observability, DORA, Security, Resources, DevEx.</p>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>#1959</td>
-<td>ArgoCD repo-server/controller crash-looping</td>
-<td>P0</td>
-<td>infra (cluster)</td>
-</tr>
 <tr>
 <td>#1855</td>
 <td>DevLake GitHub GraphQL collector failing</td>
@@ -5989,12 +5907,6 @@ Pipeline, GitOps, Observability, DORA, Security, Resources, DevEx.</p>
 <td>infra (cluster)</td>
 </tr>
 <tr>
-<td>#1693</td>
-<td>rag-service Dockerfile missing scripts/</td>
-<td>P1</td>
-<td>✅ PR #1998</td>
-</tr>
-<tr>
 <td>#1797</td>
 <td>Replace CHANGE_ME_* with Sealed Secrets</td>
 <td>P1</td>
@@ -6012,21 +5924,13 @@ Pipeline, GitOps, Observability, DORA, Security, Resources, DevEx.</p>
 <td>P1</td>
 <td>mimo ✅</td>
 </tr>
-<tr>
-<td>#1842</td>
-<td>Replace platform-applications.yaml with ApplicationSet</td>
-<td>P1</td>
-<td>mimo ✅</td>
-</tr>
-<tr>
-<td>#1573</td>
-<td>Refresh BACKLOG.md and PROJECT_STATUS.md</td>
-<td>P1</td>
-<td>mimo ✅</td>
-</tr>
 </tbody>
 </table>
 <h3 id="phase-1-alpha-important">Phase 1 — Alpha (Important)</h3>
+<blockquote>
+<p>Closed since last update, removed from this table: #1936, #1947, #1944,</p>
+<h1 id="1945-all-closed">1945 (all ✅ closed).</h1>
+</blockquote>
 <table>
 <thead>
 <tr>
@@ -6037,30 +5941,6 @@ Pipeline, GitOps, Observability, DORA, Security, Resources, DevEx.</p>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>#1936</td>
-<td>BDD step definitions for quality gates</td>
-<td>P1</td>
-<td>mimo ✅</td>
-</tr>
-<tr>
-<td>#1947</td>
-<td>BDD scenario for Change Failure Rate</td>
-<td>P1</td>
-<td>mimo ✅</td>
-</tr>
-<tr>
-<td>#1944</td>
-<td>Design incident-to-deployment webhook payload</td>
-<td>P1</td>
-<td>mimo ✅</td>
-</tr>
-<tr>
-<td>#1945</td>
-<td>Add Alertmanager webhook receiver for DevLake</td>
-<td>P1</td>
-<td>infra (cluster)</td>
-</tr>
 <tr>
 <td>#1946</td>
 <td>Add CFR panel to DORA Grafana dashboard</td>
@@ -6082,6 +5962,9 @@ Pipeline, GitOps, Observability, DORA, Security, Resources, DevEx.</p>
 </tbody>
 </table>
 <h3 id="phase-1-alpha-nice-to-have">Phase 1 — Alpha (Nice to Have)</h3>
+<blockquote>
+<p>Closed since last update, removed from this table: #1495 (✅ closed).</p>
+</blockquote>
 <table>
 <thead>
 <tr>
@@ -6101,12 +5984,6 @@ Pipeline, GitOps, Observability, DORA, Security, Resources, DevEx.</p>
 <tr>
 <td>#1943</td>
 <td>Write chaos-testing runbook</td>
-<td>P2</td>
-<td>mimo ✅</td>
-</tr>
-<tr>
-<td>#1495</td>
-<td>Pre-commit hook for requirements pinning</td>
 <td>P2</td>
 <td>mimo ✅</td>
 </tr>
@@ -6131,6 +6008,11 @@ Pipeline, GitOps, Observability, DORA, Security, Resources, DevEx.</p>
 </tbody>
 </table>
 <h3 id="phase-2-beta">Phase 2 — Beta</h3>
+<blockquote>
+<p>Closed since last update, removed from this table: #1925, #1934, #1937,</p>
+<h1 id="1939-1940-1941-all-closed-matches-the-codegitops-merged">1939, #1940, #1941 (all ✅ closed) — matches the "code/GitOps merged"</h1>
+<p>status already noted in the Phase 2 table above.</p>
+</blockquote>
 <table>
 <thead>
 <tr>
@@ -6142,44 +6024,8 @@ Pipeline, GitOps, Observability, DORA, Security, Resources, DevEx.</p>
 </thead>
 <tbody>
 <tr>
-<td>#1925</td>
-<td>Verify gitops-promote step is Rollout-aware</td>
-<td>P1</td>
-<td>mimo ✅</td>
-</tr>
-<tr>
-<td>#1934</td>
-<td>Re-enable sonar.qualitygate.wait=true</td>
-<td>P1</td>
-<td>mimo ✅</td>
-</tr>
-<tr>
-<td>#1937</td>
-<td>Design ephemeral per-PR test environment</td>
-<td>P1</td>
-<td>infra</td>
-</tr>
-<tr>
 <td>#1938</td>
 <td>Add python-fawkes-path integration test suite</td>
-<td>P1</td>
-<td>mimo ✅</td>
-</tr>
-<tr>
-<td>#1939</td>
-<td>Add Chaos Mesh controller ArgoCD Application</td>
-<td>P1</td>
-<td>infra</td>
-</tr>
-<tr>
-<td>#1940</td>
-<td>Write pod-kill chaos experiment manifest</td>
-<td>P1</td>
-<td>mimo ✅</td>
-</tr>
-<tr>
-<td>#1941</td>
-<td>Write network-latency chaos experiment manifest</td>
 <td>P1</td>
 <td>mimo ✅</td>
 </tr>
