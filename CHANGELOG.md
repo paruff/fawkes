@@ -5,6 +5,23 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.117](https://github.com/paruff/fawkes/compare/v0.3.116...v0.3.117) (2026-09-12)
+
+
+### Added
+
+* **alertmanager:** add DevLake receiver on crash-loop alert for CFR ([#2042](https://github.com/paruff/fawkes/issues/2042)) ([8c17ea1](https://github.com/paruff/fawkes/commit/8c17ea1e522ee906b0b86fd926f91fc6443f539a)), closes [#1945](https://github.com/paruff/fawkes/issues/1945)
+
+
+### Docs
+
+* **dora:** design deployment/incident webhook schema for Change Failure Rate ([#2040](https://github.com/paruff/fawkes/issues/2040)) ([e4d197b](https://github.com/paruff/fawkes/commit/e4d197b4aa70301072a74f1741c90c5cc70bd178)), closes [#1944](https://github.com/paruff/fawkes/issues/1944)
+
+
+### Chores
+
+* **main:** release 0.3.116 ([#2041](https://github.com/paruff/fawkes/issues/2041)) ([55a0171](https://github.com/paruff/fawkes/commit/55a01711f99f5432c0d95f720b6a0c45ff9ee5f4))
+
 ## [0.3.116](https://github.com/paruff/fawkes/compare/v0.3.115...v0.3.116) (2026-09-12)
 
 
