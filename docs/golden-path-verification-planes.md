@@ -1,6 +1,6 @@
 # Golden Path Verification Planes
 
-This is the canonical reference for the tracer-bullet / smart-alerting golden-path
+This is the canonical reference for the python-fawkes-path / smart-alerting golden-path
 verification effort tracked under [#1751](https://github.com/paruff/fawkes/issues/1751)
 Phase 3. It answers: what does "the golden path is verified" actually mean, plane by
 plane, and where does each plane's check live?
@@ -10,12 +10,12 @@ Do not confuse this with `docs/golden-path-usage.md`, which documents the Jenkin
 concept that predates this GitHub-Actions-based verification effort.
 
 **Update (2026-09-07, #1804):** the reference service these planes verify against —
-tracer-bullet — was extracted out of the monorepo into its own repo pair:
-[`paruff/tracer-bullet`](https://github.com/paruff/tracer-bullet) (app source, plus the
+python-fawkes-path — was extracted out of the monorepo into its own repo pair:
+[`paruff/python-fawkes-path`](https://github.com/paruff/python-fawkes-path) (app source, plus the
 Tekton `golden-path` pipeline definition it runs against —
 `platform/apps/tekton/golden-path-pipeline.yaml`, in-cluster, not GitHub Actions) and
-[`paruff/tracer-bullet-gitops`](https://github.com/paruff/tracer-bullet-gitops) (desired
-state, watched by `platform/apps/tracer-bullet/tracer-bullet-application.yaml`). All
+[`paruff/python-fawkes-path-gitops`](https://github.com/paruff/python-fawkes-path-gitops) (desired
+state, watched by `platform/apps/python-fawkes-path/python-fawkes-path-application.yaml`). All
 seven planes were exercised live on a local kind cluster this session against this real
 pipeline run. That live run surfaced 4 concrete bugs in the plane scripts themselves,
 filed as [#1909](https://github.com/paruff/fawkes/issues/1909): the Pipeline script
@@ -84,7 +84,7 @@ for a quick follow-up).
 The Resources-plane items have no existing platform component — verifying them means
 standing up new infrastructure first, not just writing a check script. Recommend scoping
 that as its own issue rather than folding it into #1751 Phase 3, which is specifically
-about proving the tracer-bullet/smart-alerting golden path, not building out new platform
+about proving the python-fawkes-path/smart-alerting golden path, not building out new platform
 capabilities.
 
 ## Adding or changing a plane

@@ -21,13 +21,13 @@
 # ============================================================================
 # FILE: platform/apps/tekton/dast-baseline-scan-task.yaml
 # PURPOSE: #2046 - shift-left DAST. First cut: an OWASP ZAP baseline
-#          (passive) scan against a real, reachable tracer-bullet endpoint.
+#          (passive) scan against a real, reachable python-fawkes-path endpoint.
 #
 # Standalone Task, not wired into golden-path-pipeline.yaml's task graph -
 # same reasoning as pr-preview-environment-task.yaml (#1937): land as a
 # separate, reviewable capability first.
 #
-# Target: staging (fawkes namespace, tracer-bullet's live in-cluster
+# Target: staging (fawkes namespace, python-fawkes-path's live in-cluster
 # Service), not the per-PR preview environment - #1937's ephemeral
 # namespace exists but isn't wired into any trigger path yet (explicitly
 # deferred there), so there's nothing to scan pre-promotion today. This
@@ -53,14 +53,14 @@ metadata:
     component: security
 spec:
   description: >-
-    OWASP ZAP baseline (passive) scan against a running tracer-bullet
+    OWASP ZAP baseline (passive) scan against a running python-fawkes-path
     endpoint. Non-blocking first cut - reports findings, does not fail
     the pipeline on them.
   params:
     - name: target-url
       type: string
-      description: Base URL of the tracer-bullet instance to scan
-      default: http://tracer-bullet.fawkes.svc.cluster.local
+      description: Base URL of the python-fawkes-path instance to scan
+      default: http://python-fawkes-path.fawkes.svc.cluster.local
   workspaces:
     - name: reports
   steps:

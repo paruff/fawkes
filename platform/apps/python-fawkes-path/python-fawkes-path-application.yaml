@@ -19,10 +19,10 @@
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
 # ============================================================================
-# FILE: platform/apps/tracer-bullet/tracer-bullet-application.yaml
-# PURPOSE: #1804/#1808 - ArgoCD Application syncing the tracer-bullet golden
+# FILE: platform/apps/python-fawkes-path/python-fawkes-path-application.yaml
+# PURPOSE: #1804/#1808 - ArgoCD Application syncing the python-fawkes-path golden
 #          path example service from its desired-state GitOps repo
-#          (paruff/tracer-bullet-gitops) into the fawkes namespace. This is
+#          (paruff/python-fawkes-path-gitops) into the fawkes namespace. This is
 #          the missing link between the Tekton golden-path pipeline
 #          (platform/apps/tekton/golden-path-pipeline.yaml, which opens a
 #          GitOps PR against that repo on image promotion) and an actual
@@ -36,12 +36,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: tracer-bullet
+  name: python-fawkes-path
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://github.com/paruff/tracer-bullet-gitops.git
+    repoURL: https://github.com/paruff/python-fawkes-path-gitops.git
     targetRevision: main
     path: "."
   destination:

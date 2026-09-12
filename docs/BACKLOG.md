@@ -86,7 +86,7 @@ Phase 1 (Alpha)     Phase 2 (Beta)      Phase 3 (Production)
 - #1855 — DevLake GitHub GraphQL collector fix (P0)
 - #1693 — rag-service Dockerfile fix (PR #1998 ready)
 - #1797 — Replace CHANGE_ME_* with Sealed Secrets
-- #1578 — Wire IRSA role ARN into tracer-bullet
+- #1578 — Wire IRSA role ARN into python-fawkes-path
 - #1581 — Verify CI quality gates are green
 - #1936 — BDD step definitions for quality gates
 - #1842 — ApplicationSet for platform-applications
@@ -152,7 +152,7 @@ Pipeline, GitOps, Observability, DORA, Security, Resources, DevEx.
 | #1572 | Confirm DORA metrics queryable in Grafana | P0 | infra (cluster) |
 | #1693 | rag-service Dockerfile missing scripts/ | P1 | ✅ PR #1998 |
 | #1797 | Replace CHANGE_ME_* with Sealed Secrets | P1 | mimo ✅ |
-| #1578 | Wire IRSA role ARN into tracer-bullet | P1 | mimo ✅ |
+| #1578 | Wire IRSA role ARN into python-fawkes-path | P1 | mimo ✅ |
 | #1581 | Verify CI quality gates are green | P1 | mimo ✅ |
 | #1842 | Replace platform-applications.yaml with ApplicationSet | P1 | mimo ✅ |
 | #1573 | Refresh BACKLOG.md and PROJECT_STATUS.md | P1 | mimo ✅ |
@@ -187,7 +187,7 @@ Pipeline, GitOps, Observability, DORA, Security, Resources, DevEx.
 | #1925 | Verify gitops-promote step is Rollout-aware | P1 | mimo ✅ |
 | #1934 | Re-enable sonar.qualitygate.wait=true | P1 | mimo ✅ |
 | #1937 | Design ephemeral per-PR test environment | P1 | infra |
-| #1938 | Add tracer-bullet integration test suite | P1 | mimo ✅ |
+| #1938 | Add python-fawkes-path integration test suite | P1 | mimo ✅ |
 | #1939 | Add Chaos Mesh controller ArgoCD Application | P1 | infra |
 | #1940 | Write pod-kill chaos experiment manifest | P1 | mimo ✅ |
 | #1941 | Write network-latency chaos experiment manifest | P1 | mimo ✅ |

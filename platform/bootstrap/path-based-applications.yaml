@@ -30,7 +30,7 @@
 # because goTemplate:true parses YAML structure before templating string
 # values, so one shared template can't conditionally omit a structural key
 # per source. That risk is now confirmed live: storage-classes and
-# tracer-bullet - the only 2 of that ApplicationSet's 8 apps using a plain
+# python-fawkes-path - the only 2 of that ApplicationSet's 8 apps using a plain
 # `path:` source instead of `chart:` - both hit
 # `ComparisonError: ... open <path>/Chart.yaml: no such file or directory`,
 # because a non-nil `helm:` block (even one that renders to just "{}") makes
@@ -53,7 +53,7 @@ spec:
         repoURL: https://github.com/paruff/fawkes.git
         revision: HEAD
         files:
-          - path: "platform/apps/tracer-bullet/tracer-bullet-application.yaml"
+          - path: "platform/apps/python-fawkes-path/python-fawkes-path-application.yaml"
           - path: "platform/apps/storage/storage-application.yaml"
           - path: "platform/apps/grafana-dashboards/grafana-dashboards-application.yaml"
           - path: "platform/apps/tekton/tekton-application.yaml"

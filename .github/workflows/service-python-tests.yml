@@ -22,7 +22,7 @@ name: Service Python Tests
 
 # Generalized lint+test CI for every services/*/ directory with a
 # requirements.txt that ISN'T already covered by its own dedicated pipeline
-# (tracer-bullet-ci.yml, dora-metrics-ci.yml, smart-alerting-ci.yml, and
+# (python-fawkes-path-ci.yml, dora-metrics-ci.yml, smart-alerting-ci.yml, and
 # anomaly-detection-ci.yml also build+push+sign images, so they're excluded
 # here to avoid double-testing).
 #
@@ -62,7 +62,7 @@ jobs:
           services=$(find services -mindepth 1 -maxdepth 1 -type d \
             -exec test -e "{}/requirements.txt" \; -print \
             | sed 's|^services/||' \
-            | grep -vE '^(tracer-bullet|dora-metrics|smart-alerting|anomaly-detection|ai-code-review|nps)$' \
+            | grep -vE '^(python-fawkes-path|dora-metrics|smart-alerting|anomaly-detection|ai-code-review|nps)$' \
             | sort | jq -R -s -c 'split("\n")[:-1]')
           echo "Discovered services: $services"
           echo "matrix=$services" >> "$GITHUB_OUTPUT"

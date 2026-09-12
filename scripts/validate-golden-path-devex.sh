@@ -1,8 +1,8 @@
 #!/bin/bash
 # =============================================================================
 # Script: validate-golden-path-devex.sh
-# Purpose: Validate the DevEx plane of the tracer-bullet golden path
-#          (#1751 Phase 3): tracer-bullet is discoverable and usable through
+# Purpose: Validate the DevEx plane of the python-fawkes-path golden path
+#          (#1751 Phase 3): python-fawkes-path is discoverable and usable through
 #          the platform's developer-facing surface - a catalog-info.yaml
 #          exists, Backstage is deployed, and the component is actually
 #          registered in its catalog - not just that Backstage is Running.
@@ -19,7 +19,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 NAMESPACE="${NAMESPACE:-fawkes}"
-SERVICE_NAME="tracer-bullet"
+SERVICE_NAME="python-fawkes-path"
 CATALOG_INFO_PATH="services/${SERVICE_NAME}/catalog-info.yaml"
 REPORT_FILE="reports/golden-path-devex-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
@@ -39,7 +39,7 @@ usage() {
   cat << EOF
 Usage: $0 [OPTIONS]
 
-Validate the DevEx plane: tracer-bullet has a catalog-info.yaml, Backstage
+Validate the DevEx plane: python-fawkes-path has a catalog-info.yaml, Backstage
 is deployed, and the component is actually registered in its catalog.
 
 OPTIONS:
@@ -95,7 +95,7 @@ check_backstage_deployed() {
 }
 
 check_component_registered() {
-  log_info "Checking tracer-bullet is registered in the Backstage catalog..."
+  log_info "Checking python-fawkes-path is registered in the Backstage catalog..."
   kubectl port-forward -n "$NAMESPACE" svc/backstage 17007:7007 &> /tmp/backstage-pf.log &
   PF_PID=$!
   sleep 3

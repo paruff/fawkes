@@ -19,7 +19,7 @@
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
 # ============================================================================
-# FILE: platform/apps/tracer-bullet/tracer-bullet-prod-applicationset.yaml
+# FILE: platform/apps/python-fawkes-path/python-fawkes-path-prod-applicationset.yaml
 # PURPOSE: #1806 - Phase 3 (Production/Elite) promotion target scaffolding.
 #          #1806's scope (service-mesh traffic splitting, Backstage
 #          portal-gated manual approval, error-budget-triggered automated
@@ -39,7 +39,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: tracer-bullet-prod
+  name: python-fawkes-path-prod
   namespace: argocd
 spec:
   goTemplate: true
@@ -47,14 +47,14 @@ spec:
   generators:
     - list:
         elements:
-          - service: tracer-bullet
-            gitopsRepoURL: https://github.com/paruff/tracer-bullet-gitops.git
+          - service: python-fawkes-path
+            gitopsRepoURL: https://github.com/paruff/python-fawkes-path-gitops.git
   template:
     metadata:
       name: '{{ .service }}-prod'
       namespace: argocd
       labels:
-        app.kubernetes.io/managed-by: tracer-bullet-prod-appset
+        app.kubernetes.io/managed-by: python-fawkes-path-prod-appset
         fawkes.io/phase: prod
     spec:
       project: default
