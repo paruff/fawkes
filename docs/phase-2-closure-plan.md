@@ -11,7 +11,7 @@ Six remaining items, with real dependencies between them:
 ```
 (1) Live-verify quality gate blocks a bad deploy ──┐
 (2) Live canary rollout + observed rollback ───────┼─→ (3) #1942 chaos-in-canary wiring
-(4) #1919 DevLake webhook (deployment side) ───────┬─→ (5) Alertmanager→DevLake adapter ─→ (6) #1946 dashboard panel
+(4) #1919 DevLake webhook (deployment side) ───────┬─→ (5) #2079 Alertmanager→DevLake adapter ─→ (6) #1946 dashboard panel
 ```
 
 (1) and (4) are independent starting points. (2) depends on `argo-rollouts`/`chaos-mesh` actually finishing their sync (triggered live already, not yet confirmed `Synced`). (3) depends on (2). (5) depends on (4)'s schema being final (already is, per #1944). (6) depends on (4)+(5) producing real rows.
@@ -80,7 +80,7 @@ Before any of the 6 items, confirm the ground truth hasn't drifted further:
 
 **Risk:** `devlake-lake` pod was in `CreateContainerConfigError` as of this session's last check — fix that first or this entire phase is blocked on infrastructure, not code.
 
-### Phase 5 — Alertmanager→DevLake incident-payload adapter
+### Phase 5 — #2079: Alertmanager→DevLake incident-payload adapter
 
 **Depends on:** Phase 4 (needs a real webhook connection to target) and fawkes#2042 (Alertmanager receiver, already merged)
 1. Build a small adapter (Tekton Task, or a lightweight Job/CronJob — no existing pattern to mirror, this is genuinely new) that receives Alertmanager's native webhook payload (`{version, status, alerts: [...]}`) and transforms it into DevLake's `issues` schema (`issueKey`, `title`, `type: INCIDENT`, `status`, `createdDate`, etc.)
