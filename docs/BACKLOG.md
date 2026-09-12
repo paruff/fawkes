@@ -65,6 +65,14 @@ Weekly review via `scripts/weekly-metrics.sh`
 > regenerated nightly (and on-demand) by `.github/workflows/golden-path-verification.yml`
 > from the real `scripts/validate-golden-path-*.sh` results. Check there before
 > trusting a 🟢 here.
+>
+> **Known gap (2026-09-12):** that workflow's first run shows every plane
+> 🔴/⚪ — not because the platform is down, but because no
+> `GOLDEN_PATH_KUBECONFIG` repo secret exists yet, so the GitHub-hosted
+> runner can't reach any cluster (LAN k3s or AKS). Until that secret is
+> added (see `docs/elite-engineering-bridge-plan.md` Phase 3), a 🟢 in this
+> file still means "last manually verified live," not "CI-confirmed" — the
+> two are not yet the same thing.
 
 ```
 Phase 1 (Alpha)     Phase 2 (Beta)      Phase 3 (Production)
@@ -87,16 +95,16 @@ Phase 1 (Alpha)     Phase 2 (Beta)      Phase 3 (Production)
 | Observability | OTel collector + Prometheus + Grafana | ✅ Live |
 | DORA (2-key) | Deployment Frequency + Lead Time in Grafana | 🟡 Needs verification |
 
-**Remaining tasks:**
+**Remaining tasks (audited 2026-09-12 against actual GitHub issue state):**
 - #1572 — Confirm DORA metrics queryable in Grafana (P0)
 - #1569 — Terraform remote state backend (P0)
-- #1959 — ArgoCD stability (P0 — crash-looping under load)
 - #1855 — DevLake GitHub GraphQL collector fix (P0)
-- #1693 — rag-service Dockerfile fix (PR #1998 ready)
 - #1797 — Replace CHANGE_ME_* with Sealed Secrets
 - #1578 — Wire IRSA role ARN into python-fawkes-path
 - #1581 — Verify CI quality gates are green
-- #1936 — BDD step definitions for quality gates
+- ~~#1959 — ArgoCD stability (P0 — crash-looping under load)~~ ✅ Closed — `chore(argocd): throttle repo-server/controller concurrency to stop crash-looping under load`
+- ~~#1693 — rag-service Dockerfile fix~~ ✅ Closed via PR #1998
+- ~~#1936 — BDD step definitions for quality gates~~ ✅ Closed
 - ~~#1842 — ApplicationSet for platform-applications~~ ✅ Done — confirmed live 2026-09-12: both `platform-applications` and `path-based-applications` ApplicationSets are the real, active owners of every current Application (verified via `ownerReferences` on the live cluster)
 
 ### Phase 2 — Beta: Shift-Left Security (#1805)
@@ -162,53 +170,51 @@ Pipeline, GitOps, Observability, DORA, Security, Resources, DevEx.
 
 ### Phase 1 — Alpha (Critical Path)
 
+> Audited 2026-09-12 against live GitHub issue state (Phase 2 backlog-audit
+> pass, `docs/elite-engineering-bridge-plan.md` Phase 2). Closed since last
+> update, removed from this table: #1959, #1693, #1842, #1573 (all ✅ closed).
+
 | # | Title | Priority | Agent? |
 |---|-------|----------|--------|
-| #1959 | ArgoCD repo-server/controller crash-looping | P0 | infra (cluster) |
 | #1855 | DevLake GitHub GraphQL collector failing | P0 | infra (cluster) |
 | #1569 | Terraform remote state backend | P0 | infra (credentials) |
 | #1572 | Confirm DORA metrics queryable in Grafana | P0 | infra (cluster) |
-| #1693 | rag-service Dockerfile missing scripts/ | P1 | ✅ PR #1998 |
 | #1797 | Replace CHANGE_ME_* with Sealed Secrets | P1 | mimo ✅ |
 | #1578 | Wire IRSA role ARN into python-fawkes-path | P1 | mimo ✅ |
 | #1581 | Verify CI quality gates are green | P1 | mimo ✅ |
-| #1842 | Replace platform-applications.yaml with ApplicationSet | P1 | mimo ✅ |
-| #1573 | Refresh BACKLOG.md and PROJECT_STATUS.md | P1 | mimo ✅ |
 
 ### Phase 1 — Alpha (Important)
 
+> Closed since last update, removed from this table: #1936, #1947, #1944,
+> #1945 (all ✅ closed).
+
 | # | Title | Priority | Agent? |
 |---|-------|----------|--------|
-| #1936 | BDD step definitions for quality gates | P1 | mimo ✅ |
-| #1947 | BDD scenario for Change Failure Rate | P1 | mimo ✅ |
-| #1944 | Design incident-to-deployment webhook payload | P1 | mimo ✅ |
-| #1945 | Add Alertmanager webhook receiver for DevLake | P1 | infra (cluster) |
 | #1946 | Add CFR panel to DORA Grafana dashboard | P1 | mimo ✅ |
 | #1796 | BDD step-definition gap for 42 feature files | P1 | mimo ✅ |
 | #1792 | Extend build→scan→sign→SBOM→GitOps to 14 services | P1 | mimo ✅ |
 
 ### Phase 1 — Alpha (Nice to Have)
 
+> Closed since last update, removed from this table: #1495 (✅ closed).
+
 | # | Title | Priority | Agent? |
 |---|-------|----------|--------|
 | #1948 | Document CFR methodology in docs/METRICS.md | P2 | mimo ✅ |
 | #1943 | Write chaos-testing runbook | P2 | mimo ✅ |
-| #1495 | Pre-commit hook for requirements pinning | P2 | mimo ✅ |
 | #1496 | Weekly CI job for pip determinism | P2 | mimo ✅ |
 | #1950 | Add scripts/validate-golden-path-devportal.sh | P2 | mimo ✅ |
 | #1949 | Add pipeline-status card for Backstage | P2 | mimo ✅ |
 
 ### Phase 2 — Beta
 
+> Closed since last update, removed from this table: #1925, #1934, #1937,
+> #1939, #1940, #1941 (all ✅ closed) — matches the "code/GitOps merged"
+> status already noted in the Phase 2 table above.
+
 | # | Title | Priority | Agent? |
 |---|-------|----------|--------|
-| #1925 | Verify gitops-promote step is Rollout-aware | P1 | mimo ✅ |
-| #1934 | Re-enable sonar.qualitygate.wait=true | P1 | mimo ✅ |
-| #1937 | Design ephemeral per-PR test environment | P1 | infra |
 | #1938 | Add python-fawkes-path integration test suite | P1 | mimo ✅ |
-| #1939 | Add Chaos Mesh controller ArgoCD Application | P1 | infra |
-| #1940 | Write pod-kill chaos experiment manifest | P1 | mimo ✅ |
-| #1941 | Write network-latency chaos experiment manifest | P1 | mimo ✅ |
 | #1942 | Wire chaos experiments into canary traffic-shift | P2 | mimo ✅ |
 
 ### Phase 2/3 — Cross-cutting
