@@ -5,6 +5,14 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.132](https://github.com/paruff/fawkes/compare/v0.3.131...v0.3.132) (2026-09-12)
+
+
+### Docs
+
+* **phase3:** resolve devlake-lake blocker, document bootstrap gap ([#2078](https://github.com/paruff/fawkes/issues/2078)) ([f3b5252](https://github.com/paruff/fawkes/commit/f3b52529ee418003356e9a525bfbc3b56f6637a6))
+* **plan:** update acceptance checklist with evidence links ([#2082](https://github.com/paruff/fawkes/issues/2082)) ([19296ec](https://github.com/paruff/fawkes/commit/19296ec1c988790259baefb768a79d208f96ce0b))
+
 ## [0.3.131](https://github.com/paruff/fawkes/compare/v0.3.130...v0.3.131) (2026-09-12)
 
 
