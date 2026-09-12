@@ -118,6 +118,7 @@ The interface is identical - only the source path changes.
 | ---- | ---- |
 | [azurerm_kubernetes_cluster.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) | resource |
 | [azurerm_kubernetes_cluster_node_pool.spot](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_node_pool) | resource |
+| [azurerm_kubernetes_cluster_node_pool.user](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_node_pool) | resource |
 
 ## Inputs
 
@@ -133,6 +134,7 @@ The interface is identical - only the source path changes.
 | <a name="input_enable_managed_identity"></a> [enable_managed_identity](#input_enable_managed_identity) | Enable SystemAssigned managed identity for the cluster | `bool` | `true` | no |
 | <a name="input_enable_rbac"></a> [enable_rbac](#input_enable_rbac) | Enable Kubernetes RBAC | `bool` | `true` | no |
 | <a name="input_enable_spot_node_pool"></a> [enable_spot_node_pool](#input_enable_spot_node_pool) | Add a second, Spot-priced node pool alongside the (always regular-priced) system pool | `bool` | `false` | no |
+| <a name="input_enable_user_node_pool"></a> [enable_user_node_pool](#input_enable_user_node_pool) | Add a regular-priced, untainted user node pool for normal workloads, alongside the system pool (which may have only_critical_addons_enabled set) and any Spot pool | `bool` | `false` | no |
 | <a name="input_load_balancer_sku"></a> [load_balancer_sku](#input_load_balancer_sku) | SKU for the load balancer | `string` | `"standard"` | no |
 | <a name="input_max_surge"></a> [max_surge](#input_max_surge) | Maximum surge during node pool upgrades | `string` | `"33%"` | no |
 | <a name="input_network_plugin"></a> [network_plugin](#input_network_plugin) | Network plugin for AKS (azure or kubenet) | `string` | `"azure"` | no |
@@ -149,6 +151,9 @@ The interface is identical - only the source path changes.
 | <a name="input_spot_zones"></a> [spot_zones](#input_spot_zones) | Availability zones for the Spot node pool (null = Azure auto-selects across all zones - fails outright if the chosen VM size is restricted in a zone for this subscription). Set explicitly to route around a known per-subscription zone restriction. | `list(string)` | `null` | no |
 | <a name="input_system_zones"></a> [system_zones](#input_system_zones) | Availability zones for the system node pool (null = Azure auto-selects across all zones - fails outright if the chosen VM size is restricted in a zone for this subscription). Set explicitly to route around a known per-subscription zone restriction. | `list(string)` | `null` | no |
 | <a name="input_tags"></a> [tags](#input_tags) | Tags to apply to the AKS cluster | `map(string)` | `{}` | no |
+| <a name="input_user_node_count"></a> [user_node_count](#input_user_node_count) | Number of nodes in the user node pool | `number` | `2` | no |
+| <a name="input_user_vm_size"></a> [user_vm_size](#input_user_vm_size) | VM size for the user node pool | `string` | `"Standard_B2ms"` | no |
+| <a name="input_user_zones"></a> [user_zones](#input_user_zones) | Availability zones for the user node pool (null = Azure auto-selects) | `list(string)` | `null` | no |
 
 ## Outputs
 
