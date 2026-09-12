@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.104](https://github.com/paruff/fawkes/compare/v0.3.103...v0.3.104) (2026-09-12)
+
+
+### Fixed
+
+* **deps:** bump google.golang.org/grpc to v1.83.2 ([#2007](https://github.com/paruff/fawkes/issues/2007)) ([7c62945](https://github.com/paruff/fawkes/commit/7c62945b1847af9431096da13f526758a1350783))
+
 ## [0.3.103](https://github.com/paruff/fawkes/compare/v0.3.102...v0.3.103) (2026-09-12)
 
 
