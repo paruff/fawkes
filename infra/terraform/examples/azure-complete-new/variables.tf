@@ -63,3 +63,15 @@ variable "spot_node_count" {
   type        = number
   default     = 2
 }
+
+variable "system_zones" {
+  description = "Availability zones for the system node pool (null = Azure auto-selects)"
+  type        = list(string)
+  default     = null
+}
+
+variable "spot_zones" {
+  description = "Availability zones for the Spot node pool (null = Azure auto-selects)"
+  type        = list(string)
+  default     = null
+}
