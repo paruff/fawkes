@@ -328,3 +328,25 @@ The `--ignore-unfixed` flag causes Trivy to **not fail** on CRITICAL/HIGH vulner
 **Accepted for now, not silently assumed away** (per `docs/elite-engineering-bridge-plan.md` Phase 3): this is a one-time-per-change manual bootstrap step, not a bug. `platform/bootstrap/README.md`'s "Bootstrap the Platform" / "Bootstrap Failed" sections are the runbook — re-run `kubectl apply -k platform/bootstrap` (or `scripts/bootstrap.sh`) after any change under this directory.
 
 **Tracking:** No reconciliation job exists yet to diff live `ApplicationSet`/`Application` specs against git and alert on drift for this directory specifically — that would close the gap fully but is real new infrastructure, not wiring. Revisit if bootstrap-directory drift causes a real incident.
+
+## KL-15 — DevLake's Live API Is Blocked on an Unapproved DB Migration
+
+**Description:** As of 2026-09-12, every DevLake API endpoint on `mac-mini-k3s` (`devlake-lake`, port 8080, checked via `kubectl port-forward`) returns HTTP 428 with:
+
+```
+New migration scripts detected. Database migration is required to launch DevLake.
+WARNING: Performing migration may wipe collected data for consistency and
+re-collecting data may be required. To proceed, please send a request to
+<config-ui-endpoint>/api/proceed-db-migration (or <devlake-endpoint>/proceed-db-migration).
+```
+
+This is distinct from KL-09's (resolved) token-scope bug and from the `devlake-lake` pod's own health — the pod itself is `Running` (see the "Risk (resolved)" note above), but the application layer refuses every request until someone explicitly approves the migration.
+
+**Impact:**
+
+- Every DevLake-dependent item is currently unverifiable live: `#1919` (deployment webhook wiring), `#2079` (Alertmanager adapter), `#1946` (CFR dashboard panel), and `docs/elite-engineering-bridge-plan.md` Phase 5 (fawkes-on-fawkes DORA) all need a working DevLake API first.
+- `scripts/weekly-metrics.sh`'s rework-rate query (`/api/plugins/devlake/rework-rate`) is also blocked by this.
+
+**Deliberately not auto-approved:** the migration's own warning says it may wipe collected data. Whether that's acceptable (e.g., because the data is re-collectible from GitHub, or because some of it isn't) is a judgment call for whoever owns this cluster, not something to approve unattended — matches `docs/BACKLOG.md`'s Agent Assignment Map convention of "cluster debugging" being human-only.
+
+**Tracking:** No dedicated issue yet. Next step: a human decides whether wiping DevLake's collected data is acceptable, then runs `POST <devlake-endpoint>/proceed-db-migration`, then re-triggers collection for existing projects (tracer-bullet, python-fawkes-path) to confirm no regression before building anything new (like Phase 5) on top.
