@@ -17,7 +17,7 @@ NC='\033[0m' # No Color
 
 # Default values
 NAMESPACE="${NAMESPACE:-monitoring}"
-ARGOCD_NAMESPACE="${ARGOCD_NAMESPACE:-fawkes}"
+ARGOCD_NAMESPACE="${ARGOCD_NAMESPACE:-argocd}"
 VERBOSE=false
 REPORT_FILE="reports/at-e1-006-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"

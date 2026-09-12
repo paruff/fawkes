@@ -195,7 +195,7 @@ validate_harbor_database() {
   if kubectl get cluster db-harbor-dev -n "$NAMESPACE" &> /dev/null 2>&1; then
     local instances=$(kubectl get cluster db-harbor-dev -n "$NAMESPACE" -o jsonpath='{.spec.instances}' 2> /dev/null || echo "0")
     record_test "Harbor Database Cluster" "PASS" "Harbor PostgreSQL cluster exists with $instances instances"
-  elif kubectl get statefulset -n "$NAMESPACE" -l app=postgresql,component=harbor &> /dev/null; then
+  elif [ -n "$(kubectl get statefulset -n "$NAMESPACE" -l app=postgresql,component=harbor -o name 2> /dev/null)" ]; then
     record_test "Harbor Database" "PASS" "Harbor database StatefulSet found"
   else
     record_test "Harbor Database" "WARN" "Harbor database configuration not found (may use external DB)"

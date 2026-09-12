@@ -398,7 +398,7 @@ validate_security_policy() {
   if kubectl get pods -n gatekeeper-system &> /dev/null 2>&1 \
     || kubectl get constrainttemplates &> /dev/null 2>&1; then
     record_test "Policy-as-Code (OPA)" "PASS" "OPA Gatekeeper deployed"
-  elif kubectl get pods -n "$NAMESPACE" -l app=opa &> /dev/null 2>&1; then
+  elif [ -n "$(kubectl get pods -n "$NAMESPACE" -l app=opa -o name 2> /dev/null)" ]; then
     record_test "Policy-as-Code (OPA)" "PASS" "OPA deployed"
   else
     # Check for Kyverno

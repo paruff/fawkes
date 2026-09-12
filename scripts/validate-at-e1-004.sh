@@ -363,7 +363,7 @@ validate_trivy_integration() {
   # Check if Trivy is available in the cluster or referenced in shared library
   if grep -r -q "trivy" jenkins-shared-library/ 2> /dev/null; then
     record_test "Trivy Integration" "PASS" "Trivy integration found in shared library"
-  elif kubectl get pods -n "$NAMESPACE" -l app=trivy &> /dev/null; then
+  elif [ -n "$(kubectl get pods -n "$NAMESPACE" -l app=trivy -o name 2> /dev/null)" ]; then
     record_test "Trivy Integration" "PASS" "Trivy pods found in cluster"
   else
     record_test "Trivy Integration" "WARN" "Trivy integration not clearly configured (may be in pipeline)"
