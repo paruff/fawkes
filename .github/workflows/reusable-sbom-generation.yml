@@ -56,9 +56,17 @@ jobs:
       - name: Generate SBOM for source
         id: generate
         run: |
-          SBOM_FILE="sbom-${{ inputs.image-name }}-${{ inputs.image-tag }}.json"
+          # image-name may be owner-prefixed (e.g. "paruff/some-service") -
+          # sanitize before using it in a filename/artifact name, or the "/"
+          # is read as a path separator and the write fails (confirmed live
+          # via fawkes#2032's java-fawkes-path: SBOM_FILE resolved to
+          # "sbom-paruff/java-fawkes-path-<sha>.json", i.e. a nonexistent
+          # "paruff/" subdirectory).
+          SAFE_NAME="$(echo '${{ inputs.image-name }}' | tr '/' '-')"
+          SBOM_FILE="sbom-${SAFE_NAME}-${{ inputs.image-tag }}.json"
           syft packages dir:. -o ${{ inputs.sbom-format }} > "$SBOM_FILE"
           echo "sbom-path=$SBOM_FILE" >> $GITHUB_OUTPUT
+          echo "safe-name=$SAFE_NAME" >> $GITHUB_OUTPUT
           echo "✅ SBOM generated: $SBOM_FILE"
 
       - name: Display SBOM summary
@@ -78,7 +86,7 @@ jobs:
         if: inputs.upload-artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7
         with:
-          name: sbom-${{ inputs.image-name }}-${{ inputs.image-tag }}
+          name: sbom-${{ steps.generate.outputs.safe-name }}-${{ inputs.image-tag }}
           path: ${{ steps.generate.outputs.sbom-path }}
           retention-days: 90
 
