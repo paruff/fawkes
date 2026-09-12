@@ -5,6 +5,19 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.124](https://github.com/paruff/fawkes/compare/v0.3.123...v0.3.124) (2026-09-12)
+
+
+### Added
+
+* **verification-culture:** wire golden-path scripts into automated verification ([#2060](https://github.com/paruff/fawkes/issues/2060)) ([1f01ac0](https://github.com/paruff/fawkes/commit/1f01ac06d7395e4512e9709cfe5aa1e35dc4dc21))
+
+
+### Docs
+
+* **backlog:** update Phase 1/2 status to reflect actual merged work ([#2058](https://github.com/paruff/fawkes/issues/2058)) ([420bfe8](https://github.com/paruff/fawkes/commit/420bfe8403f5b3258ecfd164607d2d42b317aed1))
+* save Phase 2 closure and elite-engineering-bridge plans ([#2059](https://github.com/paruff/fawkes/issues/2059)) ([92ab0d9](https://github.com/paruff/fawkes/commit/92ab0d9e5a08a3610e2c34f01f94dd817212b3ad))
+
 ## [0.3.123](https://github.com/paruff/fawkes/compare/v0.3.122...v0.3.123) (2026-09-12)
 
 
