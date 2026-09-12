@@ -211,6 +211,17 @@ spec:
               repeat_interval: 4h
               receiver: 'platform-team'
               routes:
+                # #1945 (DORA Change Failure Rate): fire the DevLake
+                # webhook receiver alongside whichever chat receiver ends
+                # up handling this alert - continue:true lets evaluation
+                # fall through to the severity-based routes below, so both
+                # receivers fire for the same KubernetesPodCrashLooping
+                # alert. Scoped to this one alert by name, not by severity,
+                # so it doesn't fire for every warning-level alert.
+                - match:
+                    alertname: KubernetesPodCrashLooping
+                  receiver: 'devlake-cfr'
+                  continue: true
                 # Critical SLO violations go to on-call
                 - match:
                     severity: critical
@@ -242,6 +253,40 @@ spec:
                       *Namespace:* {{ .CommonLabels.namespace }}
                       *Description:* {{ .CommonAnnotations.description }}
                       *Runbook:* {{ .CommonAnnotations.runbook_url }}
+              # #1945: posts to DevLake's webhook plugin for Change
+              # Failure Rate correlation (see docs/dora-change-failure-rate-schema.md,
+              # #1944). NOT functional yet - both gaps below are real,
+              # flagged, not silently papered over:
+              #
+              # 1. No SealedSecret ships in this PR. devlake-webhook-url
+              #    doesn't exist as a real secret anywhere yet - #1919
+              #    (still open) hasn't created the actual DevLake webhook
+              #    connection/token this would point at, and this session
+              #    has no sealed-secrets controller reachable to seal a
+              #    real value against. Once #1919 lands with a real
+              #    connection URL, seal it per
+              #    docs/how-to/security/sealed-secrets-guide.md (or
+              #    scripts/seal-secrets.py) into a SealedSecret named
+              #    devlake-webhook-url in the fawkes namespace, exposing
+              #    key `url` (mounted at
+              #    /etc/alertmanager/secrets/devlake-webhook-url per
+              #    alertmanagerSpec.secrets, same convention as
+              #    slack-webhook-url already uses).
+              #
+              # 2. Alertmanager's own webhook_configs POST body (its fixed
+              #    {version, status, alerts: [...]} shape) does NOT match
+              #    DevLake's expected incident payload
+              #    (issueKey/title/type/status/createdDate/... - see
+              #    docs/dora-change-failure-rate-schema.md). Alertmanager
+              #    has no way to reshape a webhook body via config alone,
+              #    so a small transform adapter between Alertmanager and
+              #    DevLake's /issues endpoint is required before this
+              #    receiver can actually deliver a usable incident event -
+              #    not built here, tracked as a new follow-up gap.
+              - name: 'devlake-cfr'
+                webhook_configs:
+                  - url_file: /etc/alertmanager/secrets/devlake-webhook-url
+                    send_resolved: false
 
             inhibit_rules:
               - source_match:
