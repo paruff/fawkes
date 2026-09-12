@@ -255,16 +255,13 @@ spec:
               #!/bin/sh
               set -eu
               PROJECT_KEY=$(basename "$(params.sonar-project-key)" .git)
-              # qualitygate.wait=false: the first real run against this
-              # brand-new SonarCloud project reported "QUALITY GATE STATUS:
-              # FAILED" despite clean metrics (89% coverage, 0 bugs/
-              # vulnerabilities/code smells) - the project/gate API queried
-              # immediately after returned an empty/inconsistent status,
-              # consistent with a new-project baseline not being fully
-              # established yet rather than a genuine quality problem.
-              # Not blocking on it for Phase 1 - the analysis still
-              # uploads and is visible in SonarCloud either way. Revisit
-              # once the project has a stable baseline (a few real runs).
+              # qualitygate.wait=true (KL-10, #1934): the Phase 1 false
+              # gate failure traced to the SonarCloud project being
+              # registered under the wrong default branch (master, not
+              # main), which #1952 fixed by passing sonar.branch.name=main
+              # below. Blocking on the gate now enforces Phase 2's first
+              # acceptance criterion: a failing quality gate blocks
+              # promotion to staging automatically.
               sonar-scanner \
                 -Dsonar.host.url="$(params.sonar-host-url)" \
                 -Dsonar.organization="$(params.sonar-organization)" \
@@ -274,7 +271,7 @@ spec:
                 -Dsonar.tests=tests \
                 -Dsonar.python.coverage.reportPaths=coverage.xml \
                 -Dsonar.branch.name=main \
-                -Dsonar.qualitygate.wait=false
+                -Dsonar.qualitygate.wait=true
 
     # ------------------------------------------------------------------
     # 3. Build + push, tagged by immutable short SHA
