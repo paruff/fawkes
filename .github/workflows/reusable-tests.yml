@@ -17,7 +17,7 @@ on:
         description: "Command to run unit tests"
         required: false
         type: string
-        default: "pytest tests/unit/ -v --tb=short"
+        default: "pytest tests/unit/ -v --tb=short --cov=. --cov-report=xml"
       integration-test-command:
         description: "Command to run integration tests"
         required: false
@@ -91,6 +91,17 @@ jobs:
 
       - name: Run unit tests
         run: ${{ inputs.unit-test-command }}
+
+      - name: Enforce coverage threshold
+        if: hashFiles('coverage.xml') != ''
+        run: |
+          python -c "
+          import sys, xml.etree.ElementTree as ET
+          rate = float(ET.parse('coverage.xml').getroot().get('line-rate')) * 100
+          threshold = ${{ inputs.coverage-threshold }}
+          print(f'Coverage: {rate:.1f}% (threshold: {threshold}%)')
+          sys.exit(0 if rate >= threshold else 1)
+          "
 
       - name: Upload test results
         if: always()
