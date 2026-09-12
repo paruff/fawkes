@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.116](https://github.com/paruff/fawkes/compare/v0.3.115...v0.3.116) (2026-09-12)
+
+
+### Added
+
+* **chaos-mesh:** add Chaos Mesh controller ArgoCD Application ([#2037](https://github.com/paruff/fawkes/issues/2037)) ([9a5d039](https://github.com/paruff/fawkes/commit/9a5d039fb76ad8550e5e93f569110912cee8f96e)), closes [#1939](https://github.com/paruff/fawkes/issues/1939)
+
 ## [0.3.115](https://github.com/paruff/fawkes/compare/v0.3.114...v0.3.115) (2026-09-12)
 
 
