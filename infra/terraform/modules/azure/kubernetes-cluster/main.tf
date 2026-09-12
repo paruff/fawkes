@@ -42,6 +42,9 @@ resource "azurerm_kubernetes_cluster" "main" {
     type                         = "VirtualMachineScaleSets"
     vnet_subnet_id               = var.subnet_id
     only_critical_addons_enabled = var.only_critical_addons_enabled
+    # See the spot pool's zones comment below - same per-subscription,
+    # per-region zone restriction can apply to the system pool's VM size too.
+    zones = var.system_zones
 
     upgrade_settings {
       max_surge = var.max_surge
@@ -86,6 +89,13 @@ resource "azurerm_kubernetes_cluster_node_pool" "spot" {
   node_count            = var.spot_node_count
   vnet_subnet_id        = var.subnet_id
   mode                  = "User"
+  # Some subscriptions have a per-zone SKU restriction for certain VM sizes
+  # in certain regions (confirmed live: Standard_D4s_v3 is
+  # NotAvailableForSubscription in westeurope zones 1-2 for this
+  # subscription) - null lets Azure auto-select across all zones, which
+  # fails outright if it picks a restricted one. Set explicitly to route
+  # around a known restriction.
+  zones = var.spot_zones
 
   priority        = "Spot"
   eviction_policy = var.spot_eviction_policy

@@ -84,6 +84,12 @@ variable "only_critical_addons_enabled" {
   default     = true
 }
 
+variable "system_zones" {
+  description = "Availability zones for the system node pool (null = Azure auto-selects across all zones - fails outright if the chosen VM size is restricted in a zone for this subscription). Set explicitly to route around a known per-subscription zone restriction."
+  type        = list(string)
+  default     = null
+}
+
 variable "max_surge" {
   description = "Maximum surge during node pool upgrades"
   type        = string
@@ -239,6 +245,12 @@ variable "spot_max_price" {
   description = "Maximum hourly price (USD) per Spot node; -1 means pay up to the regular on-demand price (Azure's recommended default - avoids eviction purely on price, only capacity-driven eviction remains possible)"
   type        = number
   default     = -1
+}
+
+variable "spot_zones" {
+  description = "Availability zones for the Spot node pool (null = Azure auto-selects across all zones - fails outright if the chosen VM size is restricted in a zone for this subscription). Set explicitly to route around a known per-subscription zone restriction."
+  type        = list(string)
+  default     = null
 }
 
 variable "spot_eviction_policy" {
