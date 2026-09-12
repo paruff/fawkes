@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.127](https://github.com/paruff/fawkes/compare/v0.3.126...v0.3.127) (2026-09-12)
+
+
+### Fixed
+
+* **rollouts:** correct AnalysisTemplate's Prometheus service address ([#2066](https://github.com/paruff/fawkes/issues/2066)) ([5534768](https://github.com/paruff/fawkes/commit/55347687bc314462e91c7fb1915999626862a2bb))
+
 ## [0.3.126](https://github.com/paruff/fawkes/compare/v0.3.125...v0.3.126) (2026-09-12)
 
 
