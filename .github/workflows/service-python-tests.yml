@@ -120,7 +120,7 @@ jobs:
         working-directory: services/${{ matrix.service }}
         run: |
           if [ -d tests ]; then
-            pytest tests/
+            pytest tests/ --cov=. --cov-report=term-missing
           else
             echo "No tests/ directory for ${{ matrix.service }}; skipping"
           fi
