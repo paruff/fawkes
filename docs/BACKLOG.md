@@ -1,421 +1,267 @@
-# Fawkes Backlog — Triage, Prioritization & MVP Path
+# Fawkes IDP — Roadmap, Backlog & DORA Strategy
 
-> **Purpose:** Triaged backlog with value/effort scoring, agent-readiness, and a
-> wave-by-wave path to a deployable MVP.
+> **Purpose:** Single source of truth for the Fawkes Internal Developer Platform roadmap,
+> prioritized backlog, and DORA metrics strategy. Integrates IDP core features,
+> phased delivery, and the belt-level learning curriculum.
 >
-> **Last Updated:** 2026-03-12
-> **MVP Target:** Tracer-Bullet — one service, deployed via GitOps, fully observable,
-> DORA metrics automated.
-> **Triage Method:** See [Scoring System](#scoring-system) below.
-
-> **Status correction (2026-09-05):** the Wave 0-3 plan below describes a
-> pre-Jenkins/pre-CNPG/pre-observability snapshot of the platform and is
-> significantly out of date - many Wave 0/1/2 items marked "Not started" below
-> have since been superseded by live-verified work tracked in
-> [#1751](https://github.com/paruff/fawkes/issues/1751) instead (a plan
-> grounded in this week's live-cluster evidence, not this document). Notably:
-> Jenkins, CloudNativePG, and the observability stack (Prometheus/Grafana)
-> are live-tested and working; Terraform remote state (the "AWS credits /
-> EKS cluster not provisioned" blocker below) is resolved via Azure Blob
-> Storage, not AWS; ArgoCD's GitOps reconciliation is live-verified.
-> **Treat #1751 as the current source of truth for MVP status** until this
-> document is fully rewritten against the platform's actual state - see
-> `docs/KNOWN_LIMITATIONS.md` and `reports/production-audit-2026-09.md` for
-> further live-verified findings this document does not yet reflect.
->
-> **Update (2026-09-05, #1751 Phase 3):** this session root-caused and fixed
-> the ArgoCD ApplicationSet auto-discovery colliding with hand-written
-> Application manifests (3 directories excluded, 9 more tracked in #1772),
-> a non-reproducible Trivy CI failure (a real vendored-pip CVE, not a
-> flake), and a GitOps commit-push race — all blocking the "Hello World
-> service... deployed via GitOps" row above from actually reaching
-> `Running` on a live cluster. The build→scan→sign→SBOM→GitOps pattern
-> (row "CI pipeline" / #85) is now piloted on 4 services (tracer-bullet,
-> dora-metrics, smart-alerting, anomaly-detection); the other 13 still only
-> get lint+test (#1792). New `docs/golden-path-verification-planes.md`
-> defines 7 verification planes (Pipeline, GitOps, Observability, DORA,
-> Security, Resources, DevEx) with a validation script each. BDD coverage
-> for the "comprehensive BDD tests" row (#54) grew from 190→217 collected
-> tests; 42 feature files still lack step definitions, prioritized in
-> #1796. See PR #1798 for the live end-to-end re-verification run.
+> **Last Updated:** 2026-09-11
+> **Current State:** Phase 1 (Alpha) — live-verified on mac-mini-k3s cluster
+> **Source of Truth for Live Status:** [#1751](https://github.com/paruff/fawkes/issues/1751)
 
 ---
 
-## Table of Contents
+## What Fawkes Is
 
-1. [MVP Definition](#mvp-definition)
-2. [Scoring System](#scoring-system)
-3. [MVP Wave Plan](#mvp-wave-plan)
-4. [Full Issue Triage](#full-issue-triage)
-   - [Wave 0 — CI Quality Gates](#wave-0--ci-quality-gates-prerequisite)
-   - [Wave 1 — Tracer Bullet Core](#wave-1--tracer-bullet-core)
-   - [Wave 2 — Observable Golden Path](#wave-2--observable-golden-path)
-   - [Wave 3 — Self-Service & GitOps Polish](#wave-3--self-service--gitops-polish)
-   - [Post-MVP — Jenkins → Tekton CI Migration](#post-mvp--jenkins--tekton-ci-migration)
-   - [Post-MVP — Epic 3 Discovery & UX](#post-mvp--epic-3-discovery--ux)
-   - [Post-MVP — Remaining Epic 0](#post-mvp--remaining-epic-0)
-- [GAP Issues](#gap-issues)
-    - [Needs Closure / Cruft](#needs-closure-cruft)
-    - [Duplicates to Close](#duplicates-to-close)
-    - [Flagged Follow-Ups](#flagged-follow-ups-recent-pr-reviews)
-5. [Agent Assignment Map](#agent-assignment-map)
-6. [Known Blockers](#known-blockers)
+Fawkes is a **modular GitOps Internal Developer Platform** that combines CI/CD,
+observability, security, and multi-cloud provisioning. It is also a **learning
+platform** (belt-level dojo) and a **DORA metrics showcase**.
+
+The platform teaches what it implements: every feature maps to a DORA capability,
+a belt level, and a concrete IDP function.
 
 ---
 
-## MVP Definition
+## IDP Core Features
 
-A **deployable MVP** for Fawkes is defined as:
+| Feature | Description | Fawkes Implementation | Status |
+|---------|-------------|----------------------|--------|
+| **Self-Service Portal** | Central dashboard for developers to request resources | Backstage Developer Portal | 🔴 Not started |
+| **Infra Provisioning** | Automated cloud resource provisioning (DBs, clusters, networks) | Terraform modules + ArgoCD | 🟡 Partial (local k3s) |
+| **Deployment Management** | Automated pipelines: testing → staging → production | Tekton CI + ArgoCD GitOps | 🟡 Alpha (staging only) |
+| **Service Catalog** | Searchable registry of microservices, templates, components | Backstage catalog | 🔴 Not started |
+| **CI/CD Orchestration** | Integrated CI/CD tools to test and build software | Tekton (CI) + ArgoCD (CD) | 🟡 Alpha (build+scan+deploy) |
+| **Observability** | Dashboards and alerts: health, logs, metrics, errors | Prometheus + Grafana + OTel + Tempo + Loki | 🟢 Live (Prometheus/Grafana/Tempo) |
+| **RBAC** | Security rules: who can view, change, or deploy | ArgoCD RBAC + Sealed Secrets | 🔴 Not started |
 
-| Capability                 | Description                                                                  | Issues     |
-| -------------------------- | ---------------------------------------------------------------------------- | ---------- |
-| **Hello World service**    | A containerised Python/Go service with a working Dockerfile                  | #83        |
-| **Infrastructure as Code** | Terraform module provisions EKS namespace + IAM roles                        | #82        |
-| **Helm chart + ArgoCD**    | Helm chart deployed via ArgoCD (GitOps)                                      | #84, #86   |
-| **CI pipeline**            | Jenkins (or GH Actions) builds, scans, and pushes image; updates GitOps repo | #85        |
-| **Observability**          | OpenTelemetry traces + Prometheus metrics visible in Grafana                 | #87, #89   |
-| **Structured logging**     | JSON logs with trace-ID injection                                            | #88        |
-| **DORA metrics**           | Deployment frequency + lead-time visible in Grafana                          | #90        |
-| **CI quality gates pass**  | `ruff`, `black`, `mypy`, `shellcheck`, `helm lint`, `tflint` all green       | #621       |
-| **Secrets managed safely** | No secrets in Git; Sealed Secrets deployed                                   | #683, #684 |
-| **Remote Terraform state** | S3 + DynamoDB backend prevents state-file corruption                         | #1153      |
+---
 
-**Definition of Done:** A developer can `git push` to a feature branch, watch the CI
-pipeline build and scan the image, see ArgoCD automatically deploy it to the cluster,
-and view traces/metrics in Grafana — all without manual steps.
+## DORA Metrics Strategy
+
+Fawkes tracks all four DORA metrics plus a fifth (Reliability) and a
+platform-specific sixth (Rework Rate).
+
+| Metric | Elite Target | Alpha (Phase 1) | Beta (Phase 2) | Production (Phase 3) |
+|--------|-------------|-----------------|----------------|---------------------|
+| **Deployment Frequency** | ≥ 1/day | ✅ Tracked | ✅ Tracked | ✅ Tracked |
+| **Lead Time for Changes** | < 1 hour | ✅ Tracked | ✅ Tracked | ✅ Tracked |
+| **Change Failure Rate** | < 5% | — | ✅ Added | ✅ Added |
+| **MTTR** | < 1 hour | — | — | ✅ Added |
+| **Reliability (SLO)** | 99.9% | — | — | ✅ Added |
+| **Rework Rate** (Fawkes-specific) | < 10% | 🟡 Baseline TBD | 🟡 Tracked | 🟢 Tracked |
+
+**Data pipeline:** GitHub Events → DevLake → Prometheus → Grafana dashboards
+
+**Rework Rate thresholds:** <10% 🟢 | 10-20% 🟡 | >20% 🔴
+Weekly review via `scripts/weekly-metrics.sh`
+
+---
+
+## Delivery Phases
+
+```
+Phase 1 (Alpha)     Phase 2 (Beta)      Phase 3 (Production)
+  Commit→Staging      Shift-Left Security   Human-in-the-Loop
+  Basic Observability  Progressive Delivery  5-Key DORA
+  2-Key DORA           Self-Service Portal   SLO-Based Rollback
+        │                     │                     │
+        ▼                     ▼                     ▼
+  #1804 / #1808         #1805                 #1806
+```
+
+### Phase 1 — Alpha: Commit-to-Staging (#1804, #1808)
+
+**Goal:** Push to `main` → CI builds → scans → signs → pushes image → GitOps PR → ArgoCD syncs to staging → basic observability visible.
+
+| IDP Feature | Deliverable | Status |
+|-------------|-------------|--------|
+| CI/CD Orchestration | Build → scan → sign → SBOM → GHCR push | ✅ Live |
+| Deployment Management | GitOps PR + auto-merge → ArgoCD sync | ✅ Live |
+| Observability | OTel collector + Prometheus + Grafana | ✅ Live |
+| DORA (2-key) | Deployment Frequency + Lead Time in Grafana | 🟡 Needs verification |
+
+**Remaining tasks:**
+- #1572 — Confirm DORA metrics queryable in Grafana (P0)
+- #1569 — Terraform remote state backend (P0)
+- #1959 — ArgoCD stability (P0 — crash-looping under load)
+- #1855 — DevLake GitHub GraphQL collector fix (P0)
+- #1693 — rag-service Dockerfile fix (PR #1998 ready)
+- #1797 — Replace CHANGE_ME_* with Sealed Secrets
+- #1578 — Wire IRSA role ARN into tracer-bullet
+- #1581 — Verify CI quality gates are green
+- #1936 — BDD step definitions for quality gates
+- #1842 — ApplicationSet for platform-applications
+
+### Phase 2 — Beta: Shift-Left Security (#1805)
+
+**Goal:** Failing quality gates block promotion. At least one service deploys via canary/blue-green with automated rollback. Chaos experiments on staging. Change Failure Rate visible.
+
+| IDP Feature | Deliverable | Status |
+|-------------|-------------|--------|
+| CI/CD Orchestration | Quality gates block bad deploys | 🔴 Not started |
+| Deployment Management | Argo Rollouts canary/blue-green | 🔴 Not started |
+| Observability | Alertmanager + crash-loop notifications | 🔴 Not started |
+| Security | Shift-left SAST/DAST in pipeline | 🔴 Not started |
+| DORA (3-key) | Add Change Failure Rate | 🔴 Not started |
+
+**Key issues:** #1925, #1934, #1937, #1938, #1939-#1942, #1944-#1947
+
+### Phase 3 — Production: Human-in-the-Loop (#1806)
+
+**Goal:** Production deployment requires human approval through portal. Traffic split between versions. All 5 DORA metrics visible. Error-budget breach triggers automated rollback.
+
+| IDP Feature | Deliverable | Status |
+|-------------|-------------|--------|
+| Self-Service Portal | Backstage with pipeline status, TechDocs | 🔴 Not started |
+| Service Catalog | Backstage catalog for all services | 🔴 Not started |
+| RBAC | Portal-gated production promotion | 🔴 Not started |
+| Deployment Management | Production traffic routing | 🔴 Not started |
+| DORA (5-key) | All metrics in one dashboard | 🔴 Not started |
+
+**Key issues:** #1805, #1806, Backstage portal work
+
+---
+
+## Education Principles (Belt Levels)
+
+Fawkes teaches platform engineering through a belt-level curriculum:
+
+| Belt | Focus | DORA Capability |
+|------|-------|-----------------|
+| **White** | Basic CI/CD, Git fundamentals | Deployment Frequency |
+| **Yellow** | Observability basics, structured logging | Lead Time for Changes |
+| **Orange** | Security scanning, secrets management | Change Failure Rate |
+| **Green** | Progressive delivery, chaos engineering | MTTR |
+| **Blue** | Self-service portals, developer experience | Reliability |
+| **Black** | Full platform ownership, DORA optimization | All 5 metrics |
+
+Each belt maps to concrete issues and verification planes. See
+`docs/golden-path-verification-planes.md` for the 7 verification planes:
+Pipeline, GitOps, Observability, DORA, Security, Resources, DevEx.
+
+---
+
+## Open Issues by Phase
+
+### Phase 1 — Alpha (Critical Path)
+
+| # | Title | Priority | Agent? |
+|---|-------|----------|--------|
+| #1959 | ArgoCD repo-server/controller crash-looping | P0 | infra (cluster) |
+| #1855 | DevLake GitHub GraphQL collector failing | P0 | infra (cluster) |
+| #1569 | Terraform remote state backend | P0 | infra (credentials) |
+| #1572 | Confirm DORA metrics queryable in Grafana | P0 | infra (cluster) |
+| #1693 | rag-service Dockerfile missing scripts/ | P1 | ✅ PR #1998 |
+| #1797 | Replace CHANGE_ME_* with Sealed Secrets | P1 | mimo ✅ |
+| #1578 | Wire IRSA role ARN into tracer-bullet | P1 | mimo ✅ |
+| #1581 | Verify CI quality gates are green | P1 | mimo ✅ |
+| #1842 | Replace platform-applications.yaml with ApplicationSet | P1 | mimo ✅ |
+| #1573 | Refresh BACKLOG.md and PROJECT_STATUS.md | P1 | mimo ✅ |
+
+### Phase 1 — Alpha (Important)
+
+| # | Title | Priority | Agent? |
+|---|-------|----------|--------|
+| #1936 | BDD step definitions for quality gates | P1 | mimo ✅ |
+| #1947 | BDD scenario for Change Failure Rate | P1 | mimo ✅ |
+| #1944 | Design incident-to-deployment webhook payload | P1 | mimo ✅ |
+| #1945 | Add Alertmanager webhook receiver for DevLake | P1 | infra (cluster) |
+| #1946 | Add CFR panel to DORA Grafana dashboard | P1 | mimo ✅ |
+| #1796 | BDD step-definition gap for 42 feature files | P1 | mimo ✅ |
+| #1792 | Extend build→scan→sign→SBOM→GitOps to 14 services | P1 | mimo ✅ |
+
+### Phase 1 — Alpha (Nice to Have)
+
+| # | Title | Priority | Agent? |
+|---|-------|----------|--------|
+| #1948 | Document CFR methodology in docs/METRICS.md | P2 | mimo ✅ |
+| #1943 | Write chaos-testing runbook | P2 | mimo ✅ |
+| #1495 | Pre-commit hook for requirements pinning | P2 | mimo ✅ |
+| #1496 | Weekly CI job for pip determinism | P2 | mimo ✅ |
+| #1950 | Add scripts/validate-golden-path-devportal.sh | P2 | mimo ✅ |
+| #1949 | Add pipeline-status card for Backstage | P2 | mimo ✅ |
+
+### Phase 2 — Beta
+
+| # | Title | Priority | Agent? |
+|---|-------|----------|--------|
+| #1925 | Verify gitops-promote step is Rollout-aware | P1 | mimo ✅ |
+| #1934 | Re-enable sonar.qualitygate.wait=true | P1 | mimo ✅ |
+| #1937 | Design ephemeral per-PR test environment | P1 | infra |
+| #1938 | Add tracer-bullet integration test suite | P1 | mimo ✅ |
+| #1939 | Add Chaos Mesh controller ArgoCD Application | P1 | infra |
+| #1940 | Write pod-kill chaos experiment manifest | P1 | mimo ✅ |
+| #1941 | Write network-latency chaos experiment manifest | P1 | mimo ✅ |
+| #1942 | Wire chaos experiments into canary traffic-shift | P2 | mimo ✅ |
+
+### Phase 2/3 — Cross-cutting
+
+| # | Title | Priority | Agent? |
+|---|-------|----------|--------|
+| #1715 | Upgrade design-system toolchain (storybook 7→10, vite 5→8) | P2 | mimo ✅ |
+| #1735 | Upgrade kube-prometheus-stack 66→89 | P2 | infra |
+| #1737 | Upgrade OpenSearch 2→3.8 | P2 | infra |
+| #1680 | Consolidate to one DORA implementation | P2 | infra |
+| #1856 | Tekton: set up tunnel for GitHub webhook | P1 | infra |
+| #1858 | Tekton: exercise gitops-promote end-to-end | P1 | infra |
+| #1661 | Tekton: validate Phase 1 deployment | P2 | mimo ✅ |
+| #1922 | Move k8s dev off MacBook to multi-node pool | P2 | human |
+
+### Not Phase-Scoped (Infrastructure / Ops)
+
+| # | Title | Priority |
+|---|-------|----------|
+| #684 | Audit and purge secrets from Git history | P1 (human) |
+| #1153 | Terraform remote state backend (Azure Blob) | P0 |
+| #1156 | Wire gen_ai.* OTEL spans to Prometheus | P2 |
 
 ---
 
 ## Scoring System
 
-| Field           | Values              | Meaning                                                                                                                            |
-| --------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| **V** (Value)   | 1–5                 | 5 = MVP blocker; 4 = high value; 3 = medium; 2 = nice-to-have; 1 = minimal                                                         |
-| **E** (Effort)  | XS / S / M / L / XL | XS < 2 h; S = 2–4 h; M = 4–8 h; L = 1–2 d; XL > 2 d                                                                                |
-| **Score**       | integer             | `(V × 2) − effort_pts` where XS=1, S=2, M=3, L=4, XL=5. Higher = do first. Negative score = defer until higher-value work is done. |
-| **Agent Ready** | Y / P / N           | Y = fully specced (start now), P = partial (run `issue-writer` first), N = human-only                                              |
-| **Agent**       | agent name          | Recommended agent from `AGENTS.md`. Maps to GitHub Actions labels via AGENTS.md §10.                                               |
-
----
-
-## MVP Wave Plan
-
-```
-Wave 0  ──► Wave 1  ──► Wave 2  ──► Wave 3  ──► MVP ✅
-  CI           Tracer     Observable   Self-       Deployable
-  Quality      Bullet     Golden       Service     IDP
-  Gates        Core       Path         Catalog
- (parallel)
-```
-
-| Wave  | Focus                                          | Key Issues                                | Est. Effort | State          |
-| ----- | ---------------------------------------------- | ----------------------------------------- | ----------- | -------------- |
-| **0** | CI quality gates — prerequisite for merge      | #621, #632, #634, #646, #683, #684, #1153 | ~3 d        | 🔴 Not started |
-| **1** | Tracer bullet — deploy Hello World via GitOps  | #82, #83, #84, #85, #86                   | ~4 d        | 🔴 Not started |
-| **2** | Observable golden path — traces, metrics, logs | #87, #88, #89, #90, #1156                 | ~3 d        | 🔴 Not started |
-| **3** | Self-service & ArgoCD polish                   | #49, #81                                  | ~3 d        | 🔴 Not started |
-
-**Wave 0 runs in parallel with Wave 1.** Agents can begin Wave 1 stories while CI
-quality work is in review, as long as the quality gate issues do not block the Wave 1
-PR merges.
-
----
-
-## Full Issue Triage
-
-### Wave 0 — CI Quality Gates (Prerequisite)
-
-> Must pass before Wave 1 PRs can merge. Run in parallel with Wave 1 story work.
-
-| #        | Title                                               | V   | E   | Score | Agent Ready | Agent           | Notes                                                                                                                                                                                            |
-| -------- | --------------------------------------------------- | --- | --- | ----- | ----------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **#621** | ✅ Validate Code Quality Standards (AT-E0-001)      | 5   | S   | 8     | ✅ Done      | `test-engineer` | Run `ruff`, `black`, `mypy`, `shellcheck`; fix any failures                                                                                                                                      |
-| **#632** | ✅ Refactor ignite.sh into Modular Architecture     | 4   | L   | 4     | ✅ Done      | `gpt41-default` | Split monolithic script into modules (do not change CLI interface); `shellcheck` must pass; break into sub-issues if > 400 lines changed; flag for human review if module boundaries are unclear |
-| **#633** | ✅ Implement Comprehensive Error Handling           | 3   | M   | 3     | ✅ Done      | `gpt41-default` | Add trap-based error handling in Bash scripts                                                                                                                                                    |
-| **#634** | ✅ Create BATS Testing Framework for Scripts        | 4   | M   | 5     | ✅ Done      | `test-engineer` | Use bats-core (not legacy bats); see AGENTS.md                                                                                                                                                   |
-| **#635** | ✅ Validate Script Refactoring (AT-E0-002)          | 3   | S   | 4     | ✅ Done      | `test-engineer` | Run bats tests; assert shellcheck clean                                                                                                                                                          |
-| **#645** | ✅ Refactor Terraform for Module Reusability        | 3   | L   | 2     | ✅ Done      | `infra-gitops`  | Needs list of modules to consolidate; add descriptions to all variables                                                                                                                          |
-| **#646** | ✅ Implement Terraform State Management Best Practices | 4 | M   | 5     | ✅ Done      | `infra-gitops`  | Add S3 backend + DynamoDB locking; see KL-01 and #1153 (GAP-07)                                                                                                                                  |
-| **#647** | Create Terratest Suite for Infrastructure           | 3   | L   | 2     | P           | `test-engineer` | Use `tests/terratest/`; go 1.24.11 required (see repo memories)                                                                                                                                  |
-| **#648** | Standardize Kubernetes Manifests                    | 4   | M   | 5     | Y           | `infra-gitops`  | Add required labels (`app`, `version`, `component`, `managed-by: fawkes`); add resource limits                                                                                                   |
-| **#649** | Implement Kustomize for Environment Management      | 3   | M   | 3     | Y           | `infra-gitops`  | Scope to ONE service PoC first (see AGENTS.md task routing)                                                                                                                                      |
-| **#650** | Validate Infrastructure Refactoring (AT-E0-003)     | 3   | S   | 4     | Y           | `test-engineer` | `terraform validate`; `tflint`; `helm lint`                                                                                                                                                      |
-| **#683** | Deploy Sealed Secrets for Secret Management         | 5   | M   | 7     | Y           | `infra-gitops`  | MVP blocker — no plaintext secrets in Git                                                                                                                                                        |
-| **#684** | Audit and Purge Secrets from Git History            | 5   | M   | 7     | N           | **Human**       | Requires coordinated BFG force-push; cannot be delegated to agent                                                                                                                                |
-| **#685** | Create Environment-Specific Configuration System    | 3   | M   | 3     | Y           | `infra-gitops`  | Helm values override pattern per environment                                                                                                                                                     |
-| **#686** | Validate Configuration Management (AT-E0-004)       | 3   | S   | 4     | Y           | `test-engineer` | Assert no `env.value` with secrets; assert sealed-secret CRDs exist                                                                                                                              |
-
----
-
-### Wave 1 — Tracer Bullet Core
-
-> The simplest possible end-to-end path from `git push` to running pod.
-
-| #       | Title                                                           | V   | E   | Score | Agent Ready | Agent           | Notes                                                              |
-| ------- | --------------------------------------------------------------- | --- | --- | ----- | ----------- | --------------- | ------------------------------------------------------------------ |
-| **#74** | Epic 1: DORA-Driven IDP Foundation                              | 5   | XS  | 9     | Y           | —               | Parent epic; track progress here                                   |
-| **#76** | Feature 1.1: The Tracer Bullet End-to-End Walkthrough           | 5   | XS  | 9     | Y           | —               | Parent feature; decomposed into #77–#90                            |
-| **#77** | 1.1.1. Minimal Service Blueprint                                | 5   | XS  | 9     | Y           | —               | Parent story group; decomposed into #82–#84                        |
-| **#82** | STORY: Boilerplate Terraform Module — EKS Namespace & IAM Roles | 5   | M   | 7     | Y           | `infra-gitops`  | Create `infra/terraform/modules/eks-app-namespace/`; IRSA binding  |
-| **#83** | STORY: Minimal App Code — "Hello World" Service and Dockerfile  | 5   | S   | 8     | Y           | `gpt41-default` | Python FastAPI; multi-stage Dockerfile; Jenkinsfile stub           |
-| **#84** | STORY: Helm/ArgoCD Config — Define Deployment Manifests         | 5   | M   | 7     | Y           | `infra-gitops`  | Helm chart in `charts/tracer-bullet/`; ArgoCD Application manifest |
-| **#85** | STORY: CI Pipeline Logic — Build, Scan, and Update GitOps Repo  | 5   | L   | 6     | Y           | `infra-gitops`  | Jenkins Jenkinsfile; Trivy scan; git-commit image tag to values    |
-| **#86** | STORY: ArgoCD Configuration — Automatic Sync and Deployment     | 5   | S   | 8     | Y           | `infra-gitops`  | Enable `automated.prune` + `selfHeal` in ArgoCD Application        |
-
----
-
-### Wave 2 — Observable Golden Path
-
-> Every service deployed through Fawkes must be observable from day one.
-
-| #         | Title                                                                     | V   | E   | Score | Agent Ready | Agent           | Notes                                                                                                                                          |
-| --------- | ------------------------------------------------------------------------- | --- | --- | ----- | ----------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| **#78**   | FEATURE: GitOps End-to-End Pipeline — Connect CI/CD and ArgoCD            | 4   | XS  | 7     | Y           | —               | Parent feature; covered by #85 + #86                                                                                                           |
-| **#79**   | FEATURE: Observable Golden Path — Implement Logging, Metrics, and Tracing | 4   | XS  | 7     | Y           | —               | Parent feature; covered by #87–#89                                                                                                             |
-| **#87**   | STORY: App Instrumentation — OpenTelemetry Tracing and Custom Metrics     | 5   | M   | 7     | Y           | `gpt41-default` | Add OTEL SDK to the tracer-bullet service; export to Tempo + Prometheus                                                                        |
-| **#88**   | STORY: Log Correlation — Structured Logging and Trace ID Injection        | 4   | S   | 6     | Y           | `gpt41-default` | structlog JSON; inject `trace_id` + `span_id` into every log line                                                                              |
-| **#89**   | STORY: E2E Observability — Validate Data Flow to Dashboards               | 4   | M   | 5     | Y           | `test-engineer` | BDD scenario; Grafana Tempo + Prometheus queries return data                                                                                   |
-| **#90**   | STORY: CI/CD Metrics — Expose Pipeline Duration and Status                | 4   | M   | 5     | Y           | `infra-gitops`  | Emit `dora_lead_time_seconds` and `dora_deployment_frequency` from Jenkins                                                                     |
-| **#1156** | FAW-GAP-10 — Wire AI/LLM OTEL pipeline: gen_ai.\* spans → Prometheus      | 3   | L   | 2     | P           | `gpt41-default` | Wire existing `gen_ai.*` metrics from `services/ai-code-review/` to Prometheus scrape; use GPT-5.1-Codex per AGENTS.md if free model struggles |
-
----
-
-### Wave 3 — Self-Service & GitOps Polish
-
-> After the tracer bullet works, make it self-service and robust.
-
-| #       | Title                                                                        | V   | E   | Score | Agent Ready | Agent           | Notes                                                                                      |
-| ------- | ---------------------------------------------------------------------------- | --- | --- | ----- | ----------- | --------------- | ------------------------------------------------------------------------------------------ |
-| **#49** | I want ArgoCD to deploy all the apps via GitOps                              | 4   | L   | 4     | P           | `infra-gitops`  | Needs issue body expanded with list of apps and dependency order; use `issue-writer` first |
-| **#81** | FEATURE: User-Centric "Day 1" Experience — Self-Service Catalog & Automation | 3   | XL  | 1     | P           | `gpt41-default` | Backstage Software Template; scaffolder; needs infra from Wave 1 first                     |
-| **#53** | I want a standardized build tool for paved paths                             | 3   | L   | 2     | P           | `infra-gitops`  | Cloud Native Buildpacks in Jenkins Shared Library; needs issue body                        |
-| **#54** | I want comprehensive BDD tests                                               | 3   | L   | 2     | P           | `test-engineer` | BDD step definitions for KL-05 gap; needs issue body per service                           |
-| **#55** | I want comprehensive integration tests                                       | 3   | L   | 2     | P           | `test-engineer` | pytest integration suite; needs per-service scope in issue body                            |
-
----
-
-### Post-MVP — Jenkins → Tekton CI Migration
-
-> Fawkes' "Golden Path CI/CD" product (`platform/apps/jenkins/`,
-> `jenkins-shared-library/`) migrating from Jenkins to Tekton. NOT MVP-blocking —
-> the MVP definition already accepts "Jenkins (or GH Actions)" for the tracer-bullet
-> CI pipeline (#85). Jenkins stays fully operational throughout Phase 1; nothing is
-> removed until the final decommission phase (not yet issued). Phases 2-6 (porting
-> each Groovy pipeline step, pilot migration on tracer-bullet, Backstage template
-> updates, decommission) are not yet broken into issues — file them after Phase 1
-> proves out.
-
-| #         | Title                                                            | V   | E   | Score | Agent Ready | Agent          | Notes                                                                             |
-| --------- | ----------------------------------------------------------------- | --- | --- | ----- | ----------- | -------------- | ------------------------------------------------------------------------------- |
-| **#1659** | Deploy Tekton Pipelines + Triggers via new ArgoCD Application    | 3   | M   | 3     | P           | `infra-gitops` | New ArgoCD `Application` — Must Ask Before (AGENTS.md §6); propose, don't merge  |
-| **#1660** | Wire GitHub webhook EventListener (skeleton, no pipeline yet)    | 3   | M   | 3     | P           | `infra-gitops` | New network-exposure surface — security-sensitive, flag for human review        |
-| **#1661** | Validate Phase 1 deployment (AT-TEKTON-001)                      | 2   | S   | 2     | Y           | `test-engineer`| Run after #1659 and #1660 land                                                  |
-
----
-
-### Post-MVP — Epic 3 Discovery & UX
-
-> User research, DevEx metrics, feedback loops, and design system.
-> Start after MVP is deployed and receiving real user feedback.
-
-| #    | Title                                                     | V   | E   | Score | Agent Ready | Agent           | Notes                                                   |
-| ---- | --------------------------------------------------------- | --- | --- | ----- | ----------- | --------------- | ------------------------------------------------------- |
-| #189 | Deploy research repository in Backstage                   | 3   | M   | 3     | Y           | `gpt41-default` | Only issue with `type-ai-agent` label; already specced  |
-| #259 | Create Persona Templates and Initial Personas             | 2   | S   | 2     | Y           | `docs-writer`   | Documentation work                                      |
-| #260 | Create Interview Guides for User Research                 | 2   | S   | 2     | Y           | `docs-writer`   | Documentation work                                      |
-| #261 | Create Insights Database and Tracking System              | 2   | M   | 1     | P           | `gpt41-default` | Needs database choice decision                          |
-| #262 | Build Research Dashboard for Insights Visualization       | 2   | L   | 0     | P           | `gpt41-default` | Depends on #261                                         |
-| #263 | Validate Research Infrastructure (AT-E3-001)              | 2   | S   | 2     | Y           | `test-engineer` | —                                                       |
-| #264 | Create User Research Repository Structure                 | 2   | S   | 2     | Y           | `docs-writer`   | —                                                       |
-| #270 | Implement SPACE Framework Metrics Collection              | 3   | L   | 2     | P           | `gpt41-default` | Extend SPACE metrics service; needs schema              |
-| #271 | Build DevEx Dashboard in Grafana                          | 3   | L   | 2     | P           | `gpt41-default` | Use GPT-5.1-Codex for Grafana JSON per AGENTS.md        |
-| #272 | Create DevEx Survey Automation System                     | 2   | M   | 1     | P           | `gpt41-default` | —                                                       |
-| #273 | Implement Friction Logging System                         | 2   | M   | 1     | P           | `gpt41-default` | —                                                       |
-| #274 | Deploy Cognitive Load Assessment Tool                     | 2   | L   | 0     | P           | `gpt41-default` | —                                                       |
-| #275 | Validate DevEx Measurement System (AT-E3-002)             | 2   | S   | 2     | Y           | `test-engineer` | —                                                       |
-| #300 | Deploy Enhanced Feedback Widget in Backstage              | 2   | M   | 1     | P           | `gpt41-default` | —                                                       |
-| #301 | Create CLI Feedback Tool                                  | 2   | M   | 1     | P           | `gpt41-default` | —                                                       |
-| #304 | Create Interview Guides for User Research                 | 2   | S   | 2     | Y           | `docs-writer`   | Likely duplicate of #260 — verify before starting       |
-| #316 | Deploy Mattermost Feedback Bot                            | 2   | M   | 1     | P           | `gpt41-default` | —                                                       |
-| #350 | Implement Feedback-to-Issue Automation                    | 2   | M   | 1     | P           | `gpt41-default` | —                                                       |
-| #351 | Build Feedback Analytics Dashboard                        | 2   | L   | 0     | P           | `gpt41-default` | Use GPT-5.1-Codex for Grafana JSON per AGENTS.md        |
-| #352 | Validate Multi-Channel Feedback System (AT-E3-003)        | 2   | S   | 2     | Y           | `test-engineer` | —                                                       |
-| #353 | Create Design System Component Library                    | 2   | XL  | -1    | P           | `gpt41-default` | Large scope; break into sub-issues first                |
-| #373 | Integrate Design Tool (Figma/Penpot)                      | 2   | M   | 1     | P           | `gpt41-default` | —                                                       |
-| #374 | Deploy Storybook for Component Documentation              | 2   | M   | 1     | P           | `gpt41-default` | —                                                       |
-| #396 | Implement Automated Accessibility Testing                 | 3   | M   | 3     | Y           | `test-engineer` | —                                                       |
-| #397 | Create User Journey Maps (5 Key Workflows)                | 2   | M   | 1     | Y           | `docs-writer`   | —                                                       |
-| #398 | Validate Design Systems (AT-E3-004, AT-E3-005, AT-E3-009) | 2   | S   | 2     | Y           | `test-engineer` | —                                                       |
-| #423 | Deploy Product Analytics Platform (Plausible/Matomo)      | 2   | L   | 0     | P           | `infra-gitops`  | —                                                       |
-| #450 | Implement Event Tracking Infrastructure                   | 2   | L   | 0     | P           | `gpt41-default` | —                                                       |
-| #451 | Deploy Feature Flags Platform (Unleash)                   | 2   | L   | 0     | P           | `infra-gitops`  | —                                                       |
-| #452 | Build Experimentation Framework                           | 2   | XL  | -1    | P           | `gpt41-default` | Break into sub-issues                                   |
-| #37  | I want Crossplane                                         | 1   | XL  | -3    | N           | **Human**       | Significant architecture decision; add ADR first        |
-| #50  | I want add VSM to Backstage                               | 2   | M   | 1     | P           | `gpt41-default` | Needs Backstage plugin design; use `issue-writer` first |
-| #51  | I want p3d configuration                                  | 1   | XL  | -3    | N           | **Human**       | Needs product decision on p3d scope                     |
-| #56  | I want user via PostHog                                   | 2   | M   | 1     | P           | `gpt41-default` | PostHog privacy review required first                   |
-
----
-
-### Post-MVP — Remaining Epic 0
-
-> Code quality improvements that are valuable but not MVP-blocking.
-> Work in parallel with post-MVP features.
-
-| #    | Title                                                         | V   | E   | Score | Agent Ready | Agent           | Notes                                                     |
-| ---- | ------------------------------------------------------------- | --- | --- | ----- | ----------- | --------------- | --------------------------------------------------------- |
-| #666 | Implement Hierarchical Configuration Management               | 3   | M   | 3     | Y           | `infra-gitops`  | —                                                         |
-| #707 | Restructure Documentation with Clear Information Architecture | 2   | L   | 0     | Y           | `docs-writer`   | —                                                         |
-| #708 | Implement Automated Documentation Generation                  | 3   | M   | 3     | Y           | `docs-writer`   | —                                                         |
-| #709 | Create Comprehensive Runbooks                                 | 3   | L   | 2     | Y           | `docs-writer`   | —                                                         |
-| #710 | Build Troubleshooting Knowledge Base                          | 2   | L   | 0     | Y           | `docs-writer`   | —                                                         |
-| #711 | Achieve 90%+ Documentation Coverage                           | 2   | L   | 0     | P           | `docs-writer`   | Measure first; automate gap-finding                       |
-| #712 | Validate Documentation Excellence (AT-E0-005)                 | 2   | S   | 2     | Y           | `test-engineer` | `markdownlint` sweep                                      |
-| #765 | Optimize CI/CD Pipeline Performance                           | 3   | L   | 2     | P           | `ci-debugger`   | Needs baseline measurement first                          |
-| #793 | Implement Pipeline Failure Analysis and Alerting              | 3   | M   | 3     | Y           | `infra-gitops`  | Alertmanager rules for Jenkins                            |
-| #822 | Create Pipeline-as-Code Templates                             | 3   | M   | 3     | Y           | `infra-gitops`  | Jenkinsfile shared library templates                      |
-| #823 | Validate CI/CD Optimization (AT-E0-006)                       | 2   | S   | 2     | Y           | `test-engineer` | —                                                         |
-| #854 | Implement Comprehensive Logging Strategy                      | 3   | M   | 3     | Y           | `gpt41-default` | structlog rollout; add `services/shared/logging.py` first |
-| #886 | Deploy Advanced Monitoring and Alerting                       | 3   | L   | 2     | Y           | `infra-gitops`  | Alertmanager + PagerDuty integration                      |
-| #887 | Create Observability Runbooks                                 | 2   | M   | 1     | Y           | `docs-writer`   | —                                                         |
-| #888 | Validate Observability Enhancement (AT-E0-007)                | 2   | S   | 2     | Y           | `test-engineer` | —                                                         |
-| #923 | Conduct Code Review of All Epic 0 Changes                     | 2   | M   | 1     | Y           | `code-reviewer` | Use `@copilot` review or PR review button                 |
-| #924 | Perform Regression Testing                                    | 2   | M   | 1     | Y           | `test-engineer` | `pytest tests/` + `behave tests/bdd/`                     |
-| #961 | Measure and Document Technical Debt Reduction                 | 2   | S   | 2     | Y           | `docs-writer`   | Update METRICS.md                                         |
-| #962 | Create Epic 0 Retrospective and Lessons Learned               | 1   | S   | 1     | N           | **Human**       | Genuine reflection required                               |
-| #963 | Update Onboarding Documentation for New Contributors          | 2   | S   | 2     | Y           | `docs-writer`   | —                                                         |
-| #964 | Validate Final Epic 0 Integration (AT-E0-008)                 | 2   | S   | 2     | Y           | `test-engineer` | —                                                         |
-
----
-
-### GAP Issues
-
-> Known platform gaps that were added as tracked issues outside the epic structure.
-
-| #         | Title                                                                | V   | E   | Score | Agent Ready | Agent           | Notes                                                     |
-| --------- | -------------------------------------------------------------------- | --- | --- | ----- | ----------- | --------------- | --------------------------------------------------------- |
-| **#1153** | FAW-GAP-07 — Add Terraform remote state backend configuration        | 5   | M   | 7     | Y           | `infra-gitops`  | MVP blocker; resolves KL-01; S3 + DynamoDB locking        |
-| **#1156** | FAW-GAP-10 — Wire AI/LLM OTEL pipeline: gen_ai.\* spans → Prometheus | 3   | L   | 2     | P           | `gpt41-default` | Gen AI telemetry; use GPT-5.1-Codex if PromQL work needed |
-
----
-
-### Needs Closure Cruft
-
-> These issues are empty templates or stubs with no real content. Close them.
-
-| #   | Title             | Reason                              |
-| --- | ----------------- | ----------------------------------- |
-| #39 | I want (template) | Empty template stub — no content    |
-| #69 | Story:            | Empty story template — no content   |
-| #70 | Feature:          | Empty feature template — no content |
-| #71 | Epic:             | Empty epic template — no content    |
-
-**Action:** Close each with comment: `"Closing: empty template stub. Use the issue
-templates in .github/ISSUE_TEMPLATE/ for new issues."`
-
----
-
-### Duplicates to Close
-
-> Issues #978–#1006 are numbered re-imports of issues #649–#964. The canonical issues
-> (lower number) are the ones to track. Close the duplicates with a reference to the
-> original.
-
-| Duplicate | Original | Title                                                                                                   |
-| --------- | -------- | ------------------------------------------------------------------------------------------------------- |
-| #978      | #649     | Implement Kustomize for Environment Management                                                          |
-| #979      | #650     | Validate Infrastructure Refactoring (AT-E0-003)                                                         |
-| #980      | #666     | Implement Hierarchical Configuration Management                                                         |
-| #981      | #683     | Deploy Sealed Secrets for Secret Management                                                             |
-| #982      | #684     | Audit and Purge Secrets from Git History                                                                |
-| #983      | #685     | Create Environment-Specific Configuration System                                                        |
-| #984      | #686     | Validate Configuration Management (AT-E0-004)                                                           |
-| #985      | #707     | Restructure Documentation with Clear Information Architecture                                           |
-| #986      | #708     | Implement Automated Documentation Generation                                                            |
-| #987      | #709     | Create Comprehensive Runbooks                                                                           |
-| #988      | #710     | Build Troubleshooting Knowledge Base                                                                    |
-| #989      | #711     | Achieve 90%+ Documentation Coverage                                                                     |
-| #990      | #712     | Validate Documentation Excellence (AT-E0-005)                                                           |
-| #991      | #765     | Optimize CI/CD Pipeline Performance                                                                     |
-| #992      | #793     | Implement Pipeline Failure Analysis and Alerting                                                        |
-| #993      | #822     | Create Pipeline-as-Code Templates                                                                       |
-| #994      | #823     | Validate CI/CD Optimization (AT-E0-006)                                                                 |
-| #995      | #854     | Implement Comprehensive Logging Strategy                                                                |
-| #996      | #886     | Deploy Advanced Monitoring and Alerting                                                                 |
-| #997      | #887     | Create Observability Runbooks                                                                           |
-| #998      | #888     | Validate Observability Enhancement (AT-E0-007)                                                          |
-| #999      | #923     | Conduct Code Review of All Epic 0 Changes                                                               |
-| #1000     | #924     | Perform Regression Testing                                                                              |
-| #1001     | #961     | Measure and Document Technical Debt Reduction                                                           |
-| #1002     | #962     | Create Epic 0 Retrospective and Lessons Learned                                                         |
-| #1003     | #963     | Update Onboarding Documentation for New Contributors                                                    |
-| #1004     | #964     | Validate Final Epic 0 Integration (AT-E0-008)                                                           |
-| #1005     | —        | Calculate and Publish Epic 0 ROI Report (no lower-numbered original exists; keep as canonical)          |
-| #1006     | —        | Final Epic 0 Validation and Sign-off (AT-E0-009) (no lower-numbered original exists; keep as canonical) |
-
-> **Why #1005 and #1006 are kept:** The numbered re-import batch covers items #121–#148
-> (mapped to issues #649–#1004). Items labelled "149" and "150" in the batch (#1005 and
-> #1006) have no lower-numbered canonical counterparts in the backlog — they are net-new
-> issues, not re-imports. Close only #978–#1004.
-
-**Action:** Close #978–#1004 with comment: `"Closing: duplicate of #NNN. Track work on
-the original issue."`
-
----
-
-### Flagged Follow-Ups (recent PR reviews)
-
-> Pre-existing issues and deferred work surfaced during recent security/feature PRs.
-> These are concrete, actionable follow-ups; fix them before they block deploys.
-
-| #   | Title                                                                | Source (PR/issue)          | Blocker? | Notes                                                          |
-| --- | -------------------------------------------------------------------- | -------------------------- | -------- | ------------------------------------------------------------- |
-| ~~#1692~~ | ~~data-quality kustomization references moved path~~ ✅ resolved | #1686 / #1644            | Y        | Fixed in #1699 (kustomization moved to `extensions/data-platform/`; ArgoCD path corrected) |
-| #1693 | rag-service Dockerfile omits `scripts/` and `indexers/`              | #1686 / #1644              | Y        | Indexing CronJob can't find `scripts/index-docs.py` in the image |
-| #1694 | emit accessibility metrics to Prometheus (populate Grafana dashboard) | #1690 / #396               | N        | Workflow change needs approval (AGENTS.md §6); dashboard note panel added in #1700 |
-| #1695 | consolidate orphaned `accessibility-testing-guide.md`                | #1690 / #396               | N        | Docs cleanup; one canonical page                              |
+| Field | Values | Meaning |
+|-------|--------|---------|
+| **V** (Value) | 1–5 | 5 = Phase blocker; 4 = high value; 3 = medium; 2 = nice-to-have; 1 = minimal |
+| **E** (Effort) | XS / S / M / L / XL | XS < 2h; S = 2–4h; M = 4–8h; L = 1–2d; XL > 2d |
+| **Score** | integer | `(V × 2) − effort_pts` where XS=1, S=2, M=3, L=4, XL=5. Higher = do first. |
+| **Agent Ready** | Y / P / N | Y = fully specced; P = run `issue-writer` first; N = human-only |
 
 ---
 
 ## Agent Assignment Map
 
-| Agent           | Issues                                                                                              | Specialty                                                                             |
-| --------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `gpt41-default` | #83, #87, #88, #1156, #633, #632, #854, #189, #270, #50, #53–55 (after speccing)                    | Python FastAPI services, GitHub Actions YAML, Bash scripts, multi-file refactor       |
-| `infra-gitops`  | #82, #84, #85, #86, #90, #646, #648, #649, #645, #683, #685, #793, #822, #886, #1153, #49           | Terraform modules, Helm charts, ArgoCD Applications, K8s manifests, Jenkins pipelines |
-| `test-engineer` | #621, #634, #635, #647, #650, #686, #89, #888, #712, #263, #275, #352, #396, #398, #823, #924, #964 | pytest, behave BDD, BATS, acceptance tests                                            |
-| `docs-writer`   | #259, #260, #264, #397, #707, #709, #710, #711, #887, #961, #963                                    | README, ADRs, runbooks, API docs                                                      |
-| `ci-debugger`   | #765                                                                                                | CI pipeline performance analysis, failure root-cause                                  |
-| `code-reviewer` | #923                                                                                                | PR review sweeps                                                                      |
-| `issue-writer`  | #49, #50, #51, #53, #54, #55, #81 (before starting)                                                 | Convert vague "I want..." issues into fully-specced agent-ready issues                |
-| **Human only**  | #684, #37, #51, #962                                                                                | Git history rewrite (BFG), architecture decisions, retrospective                      |
+| Agent | Specialty | Example Issues |
+|-------|-----------|----------------|
+| `mimo` (opencode) | Python, YAML, docs, config edits, test writing | #1693, #1797, #1578, #1936, #1947 |
+| `infra-gitops` | Terraform, Helm, ArgoCD, K8s manifests | #1153, #1842, #1939 |
+| `test-engineer` | pytest, behave BDD, BATS, acceptance tests | #1581, #1936, #1947 |
+| `docs-writer` | README, ADRs, runbooks, API docs | #1573, #1948, #1943 |
+| **Human only** | Git history rewrite, cluster debugging, architecture decisions | #684, #1959, #1855 |
 
 ---
 
-## Known Blockers
+## Known Limitations
 
-| Blocker                                                    | Impact                                                     | Issues Affected         | Resolution                                                                                                                                                                                                                                                  |
-| ---------------------------------------------------------- | ---------------------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AWS credits / EKS cluster not provisioned                  | Wave 1 cannot deploy                                       | #82, #83, #84, #85, #86 | AWS Activate application pending; use `kind` or `k3s` locally as interim                                                                                                                                                                                    |
-| No Terraform remote backend (KL-01)                        | State corruption risk in CI                                | #646, #1153             | Fix #1153 first before any `terraform apply` in CI                                                                                                                                                                                                          |
-| 45 BDD features with no step definitions (KL-05)           | False sense of test coverage                               | #634, #54               | Create step definitions incrementally; start with Wave 1 service                                                                                                                                                                                            |
-| Secrets possibly in Git history (KL)                       | Security risk                                              | #684                    | Human-led BFG run required before public launch                                                                                                                                                                                                             |
-| Focalboard integration degraded (KL-03)                    | DORA change-failure-rate incomplete                        | —                       | Post-MVP; add alerting on degraded mode                                                                                                                                                                                                                     |
-| DevLake ArgoCD plugin manual config (KL-06)                | DORA metrics break after re-install                        | #90                     | Add post-install Helm hook; include in Wave 2                                                                                                                                                                                                               |
-| `type-ai-agent` GitHub label used on only one issue (#189) | Agents cannot filter the backlog using GitHub label search | All issues              | The `Agent Ready = Y` column in this document is the source of truth. Optionally create a `agent-ready` GitHub label and apply it to Wave 0–2 issues as they are specced. The GitHub label mirrors the `Agent Ready = Y` status — they mean the same thing. |
+| ID | Description | Impact | Tracking |
+|----|-------------|--------|----------|
+| KL-01 | No Terraform remote backend | State corruption risk | #1153 |
+| KL-02 | Weaviate required for RAG (no local fallback) | RAG service can't run locally | — |
+| KL-03 | Focalboard integration degraded | DORA CFR incomplete | Post-MVP |
+| KL-04 | Azure module duplication | Maintenance burden | — |
+| KL-05 | 45 BDD features with no step definitions | False test coverage | #1796 |
+| KL-06 | DevLake ArgoCD plugin manual config | DORA breaks after reinstall | — |
+| KL-10 | SonarCloud default branch mismatch | Quality gate can't wait | #1934 |
+
+See `docs/KNOWN_LIMITATIONS.md` for full details.
 
 ---
 
 ## How to Use This Document
 
-1. **Pick the top-scored issue from the current wave** that is `Agent Ready = Y`.
-2. **Assign it to the recommended agent** from the Agent Assignment Map.
-3. **After completion**, update the wave status and move to the next.
-4. **For `Agent Ready = P` issues**, run the `issue-writer` agent first to expand the
-   issue body with: goal, context, affected files, acceptance criteria, and "do not" list.
-5. **Close duplicates** (#978–#1004) as you encounter them to keep the backlog clean.
-6. **Update this document** after each wave completes — mark issues ✅ and update wave
-   status emoji.
+1. **Pick the top-scored issue from the current phase** that is `Agent Ready = Y`.
+2. **Check cluster state** — P0 issues require cluster access; P1/P2 may be mimo-compatible.
+3. **For `Agent Ready = P` issues**, run `issue-writer` first to expand the issue body.
+4. **After completion**, update issue status and move to the next.
+5. **Update this document** after each phase completes.
 
 ---
 
