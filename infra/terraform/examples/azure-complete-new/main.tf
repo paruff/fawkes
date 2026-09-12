@@ -62,6 +62,10 @@ module "aks_cluster" {
   node_vm_size = "Standard_B2ms"
   node_count   = 3
 
+  enable_spot_node_pool = var.enable_spot_node_pool
+  spot_vm_size          = var.spot_vm_size
+  spot_node_count       = var.spot_node_count
+
   network_plugin = "azure"
   service_cidr   = "10.1.0.0/16"
   dns_service_ip = "10.1.0.10"

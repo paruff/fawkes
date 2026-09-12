@@ -117,6 +117,7 @@ The interface is identical - only the source path changes.
 | Name | Type |
 | ---- | ---- |
 | [azurerm_kubernetes_cluster.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) | resource |
+| [azurerm_kubernetes_cluster_node_pool.spot](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_node_pool) | resource |
 
 ## Inputs
 
@@ -131,6 +132,7 @@ The interface is identical - only the source path changes.
 | <a name="input_dns_service_ip"></a> [dns_service_ip](#input_dns_service_ip) | DNS service IP (must be within service_cidr) | `string` | `"10.1.0.10"` | no |
 | <a name="input_enable_managed_identity"></a> [enable_managed_identity](#input_enable_managed_identity) | Enable SystemAssigned managed identity for the cluster | `bool` | `true` | no |
 | <a name="input_enable_rbac"></a> [enable_rbac](#input_enable_rbac) | Enable Kubernetes RBAC | `bool` | `true` | no |
+| <a name="input_enable_spot_node_pool"></a> [enable_spot_node_pool](#input_enable_spot_node_pool) | Add a second, Spot-priced node pool alongside the (always regular-priced) system pool | `bool` | `false` | no |
 | <a name="input_load_balancer_sku"></a> [load_balancer_sku](#input_load_balancer_sku) | SKU for the load balancer | `string` | `"standard"` | no |
 | <a name="input_max_surge"></a> [max_surge](#input_max_surge) | Maximum surge during node pool upgrades | `string` | `"33%"` | no |
 | <a name="input_network_plugin"></a> [network_plugin](#input_network_plugin) | Network plugin for AKS (azure or kubenet) | `string` | `"azure"` | no |
@@ -140,6 +142,10 @@ The interface is identical - only the source path changes.
 | <a name="input_only_critical_addons_enabled"></a> [only_critical_addons_enabled](#input_only_critical_addons_enabled) | Enable only critical addons in the system node pool | `bool` | `true` | no |
 | <a name="input_outbound_type"></a> [outbound_type](#input_outbound_type) | Outbound routing type | `string` | `"loadBalancer"` | no |
 | <a name="input_service_cidr"></a> [service_cidr](#input_service_cidr) | Service CIDR for Kubernetes services | `string` | `"10.1.0.0/16"` | no |
+| <a name="input_spot_eviction_policy"></a> [spot_eviction_policy](#input_spot_eviction_policy) | What happens to a Spot node when Azure reclaims it | `string` | `"Delete"` | no |
+| <a name="input_spot_max_price"></a> [spot_max_price](#input_spot_max_price) | Maximum hourly price (USD) per Spot node; -1 means pay up to the regular on-demand price (Azure's recommended default - avoids eviction purely on price, only capacity-driven eviction remains possible) | `number` | `-1` | no |
+| <a name="input_spot_node_count"></a> [spot_node_count](#input_spot_node_count) | Number of nodes in the Spot node pool | `number` | `2` | no |
+| <a name="input_spot_vm_size"></a> [spot_vm_size](#input_spot_vm_size) | VM size for the Spot node pool | `string` | `"Standard_D4s_v3"` | no |
 | <a name="input_tags"></a> [tags](#input_tags) | Tags to apply to the AKS cluster | `map(string)` | `{}` | no |
 
 ## Outputs

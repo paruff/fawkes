@@ -196,3 +196,58 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+# ============================================================================
+# Optional Spot-priced user node pool
+# AKS requires the default_node_pool (system pool, above) to run on regular
+# VMs - system pods need guaranteed availability that Spot can't provide, so
+# Spot capacity always goes in a separate user node pool. Off by default;
+# enable to add larger, cheaper burst capacity for non-critical workloads
+# (tag anything scheduled there as evictable - Spot nodes can be reclaimed
+# by Azure at any time with a 30s notice).
+# ============================================================================
+
+variable "enable_spot_node_pool" {
+  description = "Add a second, Spot-priced node pool alongside the (always regular-priced) system pool"
+  type        = bool
+  default     = false
+}
+
+variable "spot_vm_size" {
+  description = "VM size for the Spot node pool"
+  type        = string
+  default     = "Standard_D4s_v3"
+
+  validation {
+    condition     = can(regex("^Standard_[A-Z][0-9]+[a-z]*s?(_v[0-9]+)?$", var.spot_vm_size))
+    error_message = "Spot VM size must be a valid Azure VM SKU (e.g., Standard_D4s_v3)."
+  }
+}
+
+variable "spot_node_count" {
+  description = "Number of nodes in the Spot node pool"
+  type        = number
+  default     = 2
+
+  validation {
+    condition     = var.spot_node_count >= 1 && var.spot_node_count <= 1000
+    error_message = "Spot node count must be between 1 and 1000."
+  }
+}
+
+variable "spot_max_price" {
+  description = "Maximum hourly price (USD) per Spot node; -1 means pay up to the regular on-demand price (Azure's recommended default - avoids eviction purely on price, only capacity-driven eviction remains possible)"
+  type        = number
+  default     = -1
+}
+
+variable "spot_eviction_policy" {
+  description = "What happens to a Spot node when Azure reclaims it"
+  type        = string
+  default     = "Delete"
+
+  validation {
+    condition     = contains(["Delete", "Deallocate"], var.spot_eviction_policy)
+    error_message = "Spot eviction policy must be either 'Delete' or 'Deallocate'."
+  }
+}
