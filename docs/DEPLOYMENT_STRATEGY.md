@@ -129,7 +129,7 @@ in step 1.
 | CI guard on main | ✅ (Phase 1, `code-quality.yml` via reusable workflow) | ✅ (Phase 1) |
 | Versioned artifacts | Partial | ✅ |
 | GitOps separate repo | ✅ for tracer-bullet (`paruff/tracer-bullet-gitops`, proven live 2026-09-07); in-tree only for dora-metrics/smart-alerting | ✅ (separate repo) |
-| Canary deployments | ❌ — Argo Rollouts controller installed (`platform/apps/argo-rollouts/argo-rollouts-application.yaml`); no service-level `Rollout` or `AnalysisTemplate` manifests yet | ✅ |
+| Canary deployments | 🟡 — controller, `AnalysisTemplate`, and tracer-bullet's `Rollout` conversion all exist (`platform/apps/argo-rollouts/argo-rollouts-application.yaml`, `platform/apps/tracer-bullet/tracer-bullet-analysis-template.yaml`, `tracer-bullet-gitops#6`); pending human merge + a live canary run to confirm the analysis step actually gates a rollout | ✅ |
 | Automated rollback | Mechanism verified live (2026-09-05, see Rollback Protocol above) - the `selfHeal` half is proven; a full `git revert` + PR merge cycle is not yet tested | ✅ |
 | Post-deployment verification | ❌ | ✅ |
 | deployment events | ❌ | ✅ |
