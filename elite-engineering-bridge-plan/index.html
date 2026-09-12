@@ -5677,11 +5677,11 @@ Phase 3 (infra identity) ────────────→ Phase 1 (verifi
 <p><strong>This is the actual highest-value work available right now</strong> — more so than any single remaining Phase 2 feature — because it's what determines whether the <em>next</em> six months of this repo produce the same "looks done, isn't" pattern found repeatedly this session, or whether it stops recurring.</p>
 <h2 id="acceptance">Acceptance</h2>
 <ul>
-<li>[ ] Phase 1: verification workflow live, <code>BACKLOG.md</code> linked to real run results</li>
-<li>[ ] Phase 2: full backlog audit complete, stale claims corrected</li>
-<li>[ ] Phase 3: ADR written, concrete infra blockers (Azure quota, devlake-lake, bootstrap drift) resolved</li>
-<li>[ ] Phase 4: epic-sizing rule adopted, applied to at least the next new phase</li>
-<li>[ ] Phase 5: fawkes-on-fawkes DORA dashboard live and linked from README</li>
+<li>[x] Phase 1: verification workflow live, <code>BACKLOG.md</code> linked to real run results — <code>.github/workflows/golden-path-verification.yml</code> live, first run <a href="https://github.com/paruff/fawkes/actions/runs/34715862843">34715862843</a>, <code>docs/PLATFORM_STATUS.md</code> on the <code>platform-status</code> branch</li>
+<li>[x] Phase 2: full backlog audit complete, stale claims corrected — #2075 (15 stale closed-issue entries removed)</li>
+<li>[x] Phase 3: ADR written, concrete infra blockers resolved — cluster-topology ADR (#2070); Azure scheduling fix #2073 (works around the vCPU quota cap rather than requesting an increase); <code>devlake-lake</code> confirmed healthy and bootstrap chicken-and-egg documented (#2078, <code>KL-14</code>). New blocker found while verifying this: DevLake's own API is down pending an unapproved migration (<code>KL-15</code>) — a human decision, not resolved here</li>
+<li>[x] Phase 4: epic-sizing rule adopted, applied to at least the next new phase — rule + template requirement (#2074), applied by splitting the untracked Alertmanager-adapter step into #2079 (#2080)</li>
+<li>[ ] Phase 5: fawkes-on-fawkes DORA dashboard live and linked from README — scoped and filed as #2081, blocked on <code>KL-15</code> (DevLake API down) before it can start</li>
 </ul>
 
 
