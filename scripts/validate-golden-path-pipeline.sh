@@ -1,16 +1,16 @@
 #!/bin/bash
 # =============================================================================
 # Script: validate-golden-path-pipeline.sh
-# Purpose: Validate the Pipeline plane of the tracer-bullet golden path
+# Purpose: Validate the Pipeline plane of the python-fawkes-path golden path
 #          (#1751 Phase 3, updated #1909): the latest Tekton `golden-path`
-#          PipelineRun for tracer-bullet actually built, scanned, and pushed
+#          PipelineRun for python-fawkes-path actually built, scanned, and pushed
 #          an image - not just that the Pipeline definition exists.
 #
-#          tracer-bullet was extracted to its own repo pair in #1813/#1804:
-#          app source lives in paruff/tracer-bullet, but CI now runs as an
+#          python-fawkes-path was extracted to its own repo pair in #1813/#1804:
+#          app source lives in paruff/python-fawkes-path, but CI now runs as an
 #          in-cluster Tekton pipeline (platform/apps/tekton/golden-path-pipeline.yaml),
 #          not a GitHub Actions workflow. This script was previously written
-#          against the deleted tracer-bullet-ci.yml GitHub Actions workflow
+#          against the deleted python-fawkes-path-ci.yml GitHub Actions workflow
 #          and always failed for the wrong reason (workflow not found).
 # Usage: ./scripts/validate-golden-path-pipeline.sh [--namespace NAMESPACE] [--image-repo OWNER/REPO]
 # Requires: kubectl (cluster access), gh CLI (authenticated, for the GHCR check)
@@ -26,7 +26,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 NAMESPACE="${NAMESPACE:-fawkes}"
-IMAGE_REPO="${IMAGE_REPO:-paruff/tracer-bullet}"
+IMAGE_REPO="${IMAGE_REPO:-paruff/python-fawkes-path}"
 PIPELINE_NAME="golden-path"
 EXPECTED_TASKS=(fetch-source lint-and-test sonar-scan build-and-push scan-image gitops-promote)
 REPORT_FILE="reports/golden-path-pipeline-validation-$(date +%Y%m%d-%H%M%S).json"
@@ -46,7 +46,7 @@ usage() {
   cat << EOF
 Usage: $0 [OPTIONS]
 
-Validate the Pipeline plane of the tracer-bullet golden path: the most
+Validate the Pipeline plane of the python-fawkes-path golden path: the most
 recent Tekton '$PIPELINE_NAME' PipelineRun in namespace '$NAMESPACE'
 completed successfully and pushed a real image to GHCR.
 
@@ -153,7 +153,7 @@ check_image_pushed() {
   fi
 
   # GHCR package versions are queried under /users (or /orgs) per the GitHub
-  # Packages API, not /repos - confirmed live against ghcr.io/paruff/tracer-bullet.
+  # Packages API, not /repos - confirmed live against ghcr.io/paruff/python-fawkes-path.
   local pkg_json tag_match
   pkg_json=$(gh api "/users/${IMAGE_REPO%/*}/packages/container/${IMAGE_REPO#*/}/versions" --paginate 2> /dev/null || echo "[]")
   if ! echo "$pkg_json" | jq -e 'type=="array"' &> /dev/null; then

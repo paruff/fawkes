@@ -1,8 +1,8 @@
 #!/bin/bash
 # =============================================================================
 # Script: validate-golden-path-observability.sh
-# Purpose: Validate the Observability plane of the tracer-bullet golden path
-#          (#1751 Phase 3): tracer-bullet's OTEL traces actually reach Tempo,
+# Purpose: Validate the Observability plane of the python-fawkes-path golden path
+#          (#1751 Phase 3): python-fawkes-path's OTEL traces actually reach Tempo,
 #          its Prometheus metrics actually reach Prometheus, the OpenTelemetry
 #          Collector is healthy, and Loki (log backend) is reachable and
 #          ready - not just that the pods are Running.
@@ -21,7 +21,7 @@ NC='\033[0m'
 NAMESPACE="${NAMESPACE:-fawkes}"
 MONITORING_NAMESPACE="${MONITORING_NAMESPACE:-monitoring}"
 LOGGING_NAMESPACE="${LOGGING_NAMESPACE:-logging}"
-SERVICE_NAME="tracer-bullet"
+SERVICE_NAME="python-fawkes-path"
 OTEL_LABEL_SELECTOR="app.kubernetes.io/name=opentelemetry-collector"
 LOKI_SERVICE="${LOKI_SERVICE:-loki}"
 REPORT_FILE="reports/golden-path-observability-validation-$(date +%Y%m%d-%H%M%S).json"
@@ -42,7 +42,7 @@ usage() {
   cat << EOF
 Usage: $0 [OPTIONS]
 
-Validate the Observability plane: real traces for tracer-bullet reach
+Validate the Observability plane: real traces for python-fawkes-path reach
 Tempo and real metrics reach Prometheus.
 
 OPTIONS:
@@ -73,15 +73,15 @@ cleanup() {
 trap cleanup EXIT
 
 generate_traffic() {
-  log_info "Generating a request to tracer-bullet so it emits a fresh trace..."
-  kubectl exec -n "$NAMESPACE" deploy/tracer-bullet -- \
+  log_info "Generating a request to python-fawkes-path so it emits a fresh trace..."
+  kubectl exec -n "$NAMESPACE" deploy/python-fawkes-path -- \
     python3 -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/')" &> /dev/null \
-    || log_warning "Could not exec into tracer-bullet to generate traffic (continuing - may already have recent traces)"
+    || log_warning "Could not exec into python-fawkes-path to generate traffic (continuing - may already have recent traces)"
   sleep 5
 }
 
 check_tempo_traces() {
-  log_info "Checking Tempo for recent tracer-bullet traces..."
+  log_info "Checking Tempo for recent python-fawkes-path traces..."
   # NOTE: tempo's Service only exposes port 3100 (the chart's default
   # query-API port), but this deployment overrides config.server.http_listen_port
   # to 3200 without also exposing it on the Service - port-forward straight to
@@ -111,7 +111,7 @@ check_tempo_traces() {
 }
 
 check_prometheus_metrics() {
-  log_info "Checking Prometheus for recent tracer-bullet metrics..."
+  log_info "Checking Prometheus for recent python-fawkes-path metrics..."
   kubectl port-forward -n "$MONITORING_NAMESPACE" svc/prometheus-prometheus 9090:9090 &> /tmp/prom-pf.log &
   PF_PID=$!
   sleep 3

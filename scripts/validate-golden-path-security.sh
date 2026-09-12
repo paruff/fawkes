@@ -1,7 +1,7 @@
 #!/bin/bash
 # =============================================================================
 # Script: validate-golden-path-security.sh
-# Purpose: Validate the Security plane of the tracer-bullet golden path
+# Purpose: Validate the Security plane of the python-fawkes-path golden path
 #          (#1751 Phase 3): the live deployed image is signed, workload pods
 #          run with a hardened securityContext, and smart-alerting's alert
 #          endpoints actually reject unauthenticated requests (AUD-2) - not
@@ -21,8 +21,8 @@ NC='\033[0m'
 
 NAMESPACE="${NAMESPACE:-fawkes}"
 REPO="${REPO:-paruff/fawkes}"
-TRACER_BULLET_IMAGE="ghcr.io/paruff/tracer-bullet"
-WORKFLOW="tracer-bullet-ci.yml"
+PYTHON_FAWKES_PATH_IMAGE="ghcr.io/paruff/python-fawkes-path"
+WORKFLOW="python-fawkes-path-ci.yml"
 REPORT_FILE="reports/golden-path-security-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
 
@@ -40,7 +40,7 @@ usage() {
   cat << EOF
 Usage: $0 [OPTIONS]
 
-Validate the Security plane: the live tracer-bullet image is signed,
+Validate the Security plane: the live python-fawkes-path image is signed,
 workload pods run hardened, and smart-alerting rejects unauthenticated
 alert-ingestion requests.
 
@@ -74,16 +74,16 @@ check_cluster_access() {
 }
 
 check_live_image_signature() {
-  log_info "Checking the live tracer-bullet image is signed..."
+  log_info "Checking the live python-fawkes-path image is signed..."
   if ! command -v cosign &> /dev/null; then
     record_test "Live Image Signature" "FAIL" "cosign not installed - cannot verify (install to complete this check)"
     return
   fi
 
   local live_image
-  live_image=$(kubectl get deployment tracer-bullet -n "$NAMESPACE" -o jsonpath='{.spec.template.spec.containers[0].image}' 2> /dev/null || echo "")
+  live_image=$(kubectl get deployment python-fawkes-path -n "$NAMESPACE" -o jsonpath='{.spec.template.spec.containers[0].image}' 2> /dev/null || echo "")
   if [ -z "$live_image" ]; then
-    record_test "Live Image Signature" "FAIL" "Could not read the live tracer-bullet Deployment image"
+    record_test "Live Image Signature" "FAIL" "Could not read the live python-fawkes-path Deployment image"
     return
   fi
 
@@ -222,7 +222,7 @@ main() {
     exit 1
   }
   check_live_image_signature
-  check_pod_security_context "tracer-bullet"
+  check_pod_security_context "python-fawkes-path"
   check_pod_security_context "smart-alerting"
   check_smart_alerting_auth
   check_no_placeholder_credentials

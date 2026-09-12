@@ -18,7 +18,7 @@ implementation — that API is a fixed external contract, independent of how #19
 gets built. Once #1919 lands and creates the real webhook connection, this schema
 should still apply unmodified, **provided** the deployment and incident events are
 both submitted to a webhook connection scoped into the same DevLake project as
-tracer-bullet (see [Correlation mechanism](#correlation-mechanism) below — this is
+python-fawkes-path (see [Correlation mechanism](#correlation-mechanism) below — this is
 the one thing #1919's implementation must get right for CFR to work at all).
 
 ## Deployment payload
@@ -27,14 +27,14 @@ the one thing #1919's implementation must get right for CFR to work at all).
 
 ```json
 {
-  "id": "tracer-bullet-<short-sha>",
+  "id": "python-fawkes-path-<short-sha>",
   "startedDate": "2026-09-12T14:00:00Z",
   "finishedDate": "2026-09-12T14:01:30Z",
   "environment": "PRODUCTION",
   "result": "SUCCESS",
   "deploymentCommits": [
     {
-      "repoUrl": "https://github.com/paruff/tracer-bullet",
+      "repoUrl": "https://github.com/paruff/python-fawkes-path",
       "refName": "main",
       "startedDate": "2026-09-12T14:00:00Z",
       "finishedDate": "2026-09-12T14:01:30Z",
@@ -47,7 +47,7 @@ the one thing #1919's implementation must get right for CFR to work at all).
 
 | Field | Required | Notes for this project |
 |---|---|---|
-| `id` | yes | Must be unique per `cicd_deployments` row — `tracer-bullet-<short-sha>` matches the tag scheme `gitops-promote` already uses |
+| `id` | yes | Must be unique per `cicd_deployments` row — `python-fawkes-path-<short-sha>` matches the tag scheme `gitops-promote` already uses |
 | `startedDate` / `finishedDate` | yes | Bracket the `gitops-promote` task's own runtime, not the whole pipeline |
 | `environment` | no (default `PRODUCTION`) | Should be set explicitly once alpha/beta/prod ApplicationSets (#1804) are all live, so CFR can eventually be sliced by environment |
 | `result` | no (default `SUCCESS`) | `gitops-promote` should send `FAILURE` if the promotion PR merge fails, not just skip the call |
@@ -59,7 +59,7 @@ the one thing #1919's implementation must get right for CFR to work at all).
 
 ```json
 {
-  "issueKey": "tracer-bullet-incident-<n>",
+  "issueKey": "python-fawkes-path-incident-<n>",
   "title": "<short description of the production incident>",
   "type": "INCIDENT",
   "status": "TODO",
@@ -96,7 +96,7 @@ that is before the incident's timestamp."* Correlation is implicit:
 This means #1944's schema work is really only half the story: **whoever
 implements #1919/#1945 must also ensure the deployment webhook connection and
 whatever eventually submits incident events (#1945's Alertmanager receiver, most
-likely) are both scoped into the same DevLake project as tracer-bullet** — a
+likely) are both scoped into the same DevLake project as python-fawkes-path** — a
 connection/scoping detail, not a payload field, and easy to get silently wrong
 (events would still accept and store, but never correlate).
 

@@ -22,7 +22,7 @@
 # FILE: platform/apps/tekton/golden-path-pipeline.yaml
 # PURPOSE: The Phase 1 (Alpha) golden path pipeline for #1804 - the real
 #          build/lint/test/scan/publish/GitOps-promote flow that the
-#          tracer-bullet example repo (paruff/tracer-bullet) runs through
+#          python-fawkes-path example repo (paruff/python-fawkes-path) runs through
 #          to prove the platform works end to end.
 #
 # Task specs are embedded rather than resolved from Tekton Hub on purpose:
@@ -32,7 +32,7 @@
 # reasons outside the platform itself.
 #
 # Flow: clone -> lint+test -> build+push (kaniko) -> scan (trivy) ->
-#       GitOps image-tag bump PR against paruff/tracer-bullet-gitops
+#       GitOps image-tag bump PR against paruff/python-fawkes-path-gitops
 #
 # The final gitops-promote task needs a GitHub token with contents+PR write
 # on the gitops repo, in a Secret named `tekton-gitops-github-token` (key:
@@ -80,7 +80,7 @@ spec:
     - name: repo-url
       type: string
       description: Git URL of the application repo to build
-      default: https://github.com/paruff/tracer-bullet.git
+      default: https://github.com/paruff/python-fawkes-path.git
     - name: revision
       type: string
       description: Git revision (branch, tag, or commit SHA) to build
@@ -88,11 +88,11 @@ spec:
     - name: image-name
       type: string
       description: Image repository to push to (without tag)
-      default: ghcr.io/paruff/tracer-bullet
+      default: ghcr.io/paruff/python-fawkes-path
     - name: gitops-repo
       type: string
       description: owner/repo of the GitOps config repo to raise the promotion PR against
-      default: paruff/tracer-bullet-gitops
+      default: paruff/python-fawkes-path-gitops
     - name: app-repo
       type: string
       description: >-
@@ -102,7 +102,7 @@ spec:
         deployment_status row to compute DORA metrics from - see
         docs/KNOWN_LIMITATIONS.md KL-12. Before this, the pipeline built and
         promoted images with no deployment signal DevLake could see at all.
-      default: paruff/tracer-bullet
+      default: paruff/python-fawkes-path
     - name: sonar-host-url
       type: string
       description: >-
@@ -308,7 +308,7 @@ spec:
               - --context=$(workspaces.source.path)
               - --destination=$(params.image)
               - --cache=true
-              # Multi-arch: previous images were amd64-only (ghcr.io/paruff/tracer-bullet:95a552d
+              # Multi-arch: previous images were amd64-only (ghcr.io/paruff/python-fawkes-path:95a552d
               # is amd64-only, causing exec format error on arm64 nodes like lima-k3s-worker).
               # Kaniko supports --customPlatform for cross-build; for true multi-arch
               # manifest list, buildx (as in reusable-python-service-golden-path.yml) is

@@ -1,7 +1,7 @@
 #!/bin/bash
 # =============================================================================
 # Script: validate-golden-path-resources.sh
-# Purpose: Validate the Resources plane of the tracer-bullet golden path
+# Purpose: Validate the Resources plane of the python-fawkes-path golden path
 #          (#1751 Phase 3): every golden-path container declares CPU/memory
 #          requests and limits, actual usage is known, PVCs are Bound, and
 #          the PostgreSQL (CloudNativePG) backing cluster is healthy - not
@@ -19,7 +19,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 NAMESPACE="${NAMESPACE:-fawkes}"
-GOLDEN_PATH_DEPLOYMENTS=("tracer-bullet" "dora-metrics" "smart-alerting")
+GOLDEN_PATH_DEPLOYMENTS=("python-fawkes-path" "dora-metrics" "smart-alerting")
 REPORT_FILE="reports/golden-path-resources-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 # =============================================================================
 # Script: validate-golden-path-dora.sh
-# Purpose: Validate the DORA plane of the tracer-bullet golden path
+# Purpose: Validate the DORA plane of the python-fawkes-path golden path
 #          (#1751 Phase 3, updated #1909): DevLake has a configured project
 #          for the service and its latest pipeline actually completed - not
 #          just that DevLake's pods are Running.
@@ -26,7 +26,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 NAMESPACE="${NAMESPACE:-fawkes}"
-PROJECT_NAME="${PROJECT_NAME:-tracer-bullet}"
+PROJECT_NAME="${PROJECT_NAME:-python-fawkes-path}"
 DEVLAKE_SERVICE="devlake-lake"
 DEVLAKE_PORT=8080
 LOCAL_PORT=18080

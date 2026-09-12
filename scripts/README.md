@@ -76,7 +76,7 @@ Per-issue validation scripts that verify specific acceptance criteria (AC). Nami
 
 ### 3. Golden Path Validation (`validate-golden-path-*.sh`)
 
-Validates the **tracer-bullet** golden path across 4 planes (tracer-bullet is the reference application demonstrating Fawkes end-to-end):
+Validates the **python-fawkes-path** golden path across 4 planes (python-fawkes-path is the reference application demonstrating Fawkes end-to-end):
 
 | Script | Plane | Validates |
 |--------|-------|-----------|
@@ -284,7 +284,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib/flags.sh"
 
 **Key Distinction:**
 - **AT scripts** (`validate-at-e*`) = Verify *specific issue acceptance criteria* (contractual)
-- **Golden Path scripts** = Verify *end-to-end runtime behavior* of tracer-bullet (evidence)
+- **Golden Path scripts** = Verify *end-to-end runtime behavior* of python-fawkes-path (evidence)
 - **Epic scripts** = Aggregate AT results for milestone reporting
 
 ## Reports

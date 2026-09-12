@@ -20,7 +20,7 @@
 | 8   | `security-and-terraform.yml`      | Security & Terraform Validation    | push main, PR main                  |
 | 9   | `security-plane-adoption.yml`     | Security Plane - Complete Adoption | manual only                         |
 | 10  | `terraform-tests.yml`             | Terraform Terratest Suite          | PR (infra paths), push main, manual |
-| 11  | `tracer-bullet-ci.yml`            | Tracer Bullet CI/CD                | push/PR (tracer-bullet paths)       |
+| 11  | `python-fawkes-path-ci.yml`            | python-fawkes-path CI/CD                | push/PR (python-fawkes-path paths)       |
 | 12  | `reusable-image-signing.yml`      | Reusable Image Signing             | workflow_call                       |
 | 13  | `reusable-policy-enforcement.yml` | Reusable Policy Enforcement        | workflow_call                       |
 | 14  | `reusable-sbom-generation.yml`    | Reusable SBOM Generation           | workflow_call                       |
@@ -44,7 +44,7 @@ All first-party actions (`actions/*`) use `@v4`–`@v8` version tags. Most third
 | `code-quality.yml`               | `golangci-lint version`     | `latest`      | MEDIUM — non-reproducible                                  |
 | `security-and-terraform.yml`     | `tflint_version`            | `latest`      | MEDIUM — non-reproducible                                  |
 
-**Note:** `tracer-bullet-ci.yml` correctly pins Trivy to `@0.28.0`.
+**Note:** `python-fawkes-path-ci.yml` correctly pins Trivy to `@0.28.0`.
 
 ---
 
@@ -64,12 +64,12 @@ All first-party actions (`actions/*`) use `@v4`–`@v8` version tags. Most third
 | security-and-terraform  | read      | —             | —        | write           | —      | —      | —        |
 | security-plane-adoption | read      | —             | write    | write           | —      | —      | write    |
 | terraform-tests         | read      | write         | —        | —               | —      | —      | —        |
-| tracer-bullet-ci        | **write** | —             | write    | —               | —      | —      | —        |
+| python-fawkes-path-ci        | **write** | —             | write    | —               | —      | —      | —        |
 
 **Issues:**
 
 - `ci-pr-size.yml` has NO permissions block — inherits repository defaults
-- `deploy.yml` and `tracer-bullet-ci.yml` need `contents: write` (legitimate for gh-deploy and GitOps commits)
+- `deploy.yml` and `python-fawkes-path-ci.yml` need `contents: write` (legitimate for gh-deploy and GitOps commits)
 
 ---
 
@@ -78,7 +78,7 @@ All first-party actions (`actions/*`) use `@v4`–`@v8` version tags. Most third
 | Secret                  | Workflow                                                        | Purpose                               |
 | ----------------------- | --------------------------------------------------------------- | ------------------------------------- |
 | `LHCI_GITHUB_APP_TOKEN` | accessibility-testing                                           | Lighthouse CI GitHub integration      |
-| `GITHUB_TOKEN`          | build-mcp-k8s-server, tracer-bullet-ci, security-plane-adoption | GHCR login, GitOps commits            |
+| `GITHUB_TOKEN`          | build-mcp-k8s-server, python-fawkes-path-ci, security-plane-adoption | GHCR login, GitOps commits            |
 | `INFRACOST_API_KEY`     | terraform-tests                                                 | Cost estimation                       |
 | `AZURE_CREDENTIALS`     | terraform-tests                                                 | Azure Login (manual dispatch only)    |
 | `ARM_*` (4 secrets)     | terraform-tests                                                 | Azure integration tests (manual only) |
@@ -91,12 +91,12 @@ All first-party actions (`actions/*`) use `@v4`–`@v8` version tags. Most third
 
 | Cache Type          | Mechanism                       | Workflows                                  |
 | ------------------- | ------------------------------- | ------------------------------------------ |
-| pip                 | `actions/setup-python@v6` cache | deploy, idp-e2e, pre-commit, tracer-bullet |
+| pip                 | `actions/setup-python@v6` cache | deploy, idp-e2e, pre-commit, python-fawkes-path |
 | npm                 | `actions/setup-node@v6` cache   | accessibility-testing, code-quality        |
 | Go modules          | `actions/setup-go@v6` cache     | code-quality, terraform-tests              |
 | Pre-commit envs     | `actions/cache@v5`              | pre-commit (4 jobs)                        |
 | Terraform providers | `actions/cache@v5`              | pre-commit, security-and-terraform         |
-| Docker layers       | GHA cache                       | tracer-bullet-ci only                      |
+| Docker layers       | GHA cache                       | python-fawkes-path-ci only                      |
 
 **Not cached:** `build-mcp-k8s-server.yml` has no Docker layer caching.
 
@@ -123,13 +123,13 @@ All workflows (except `ci-pr-size.yml` and most of `security-plane-adoption.yml`
 
 ## 8. GitOps Patterns
 
-### Tracer Bullet CI/CD
+### python-fawkes-path CI/CD
 
 Complete GitOps pipeline: lint → test → Docker build → Trivy scan → update K8s manifest → commit back to repo → ArgoCD auto-sync.
 
 ### ArgoCD Applications
 
-48 ArgoCD Application manifests under `platform/apps/`. Key apps: backstage, prometheus, grafana, tempo, vault, kyverno, harbor, sonarqube, devlake, ingress-nginx, tracer-bullet, plus sample and analytics apps.
+48 ArgoCD Application manifests under `platform/apps/`. Key apps: backstage, prometheus, grafana, tempo, vault, kyverno, harbor, sonarqube, devlake, ingress-nginx, python-fawkes-path, plus sample and analytics apps.
 
 ---
 

@@ -1,10 +1,10 @@
 #!/bin/bash
 # =============================================================================
 # Script: validate-golden-path-gitops.sh
-# Purpose: Validate the GitOps plane of the tracer-bullet golden path
+# Purpose: Validate the GitOps plane of the python-fawkes-path golden path
 #          (#1751 Phase 3, updated #1909): ArgoCD actually synced the image
 #          tag CI committed, and the live Deployment matches what's in the
-#          tracer-bullet-gitops repo's HEAD - not just that the Application
+#          python-fawkes-path-gitops repo's HEAD - not just that the Application
 #          object exists.
 # Usage: ./scripts/validate-golden-path-gitops.sh [--namespace NAMESPACE]
 # Requires: kubectl (cluster access), gh CLI (authenticated, to read the
@@ -22,10 +22,10 @@ NC='\033[0m'
 
 NAMESPACE="${NAMESPACE:-fawkes}"
 ARGOCD_NAMESPACE="${ARGOCD_NAMESPACE:-argocd}"
-# tracer-bullet's desired-state manifests were extracted to their own repo in
-# #1813/#1804 (paruff/tracer-bullet-gitops) - there is no local file to read
+# python-fawkes-path's desired-state manifests were extracted to their own repo in
+# #1813/#1804 (paruff/python-fawkes-path-gitops) - there is no local file to read
 # git HEAD from any more. Fetched live via `gh api` instead.
-GITOPS_REPO="${GITOPS_REPO:-paruff/tracer-bullet-gitops}"
+GITOPS_REPO="${GITOPS_REPO:-paruff/python-fawkes-path-gitops}"
 GITOPS_MANIFEST_PATH="deployment.yaml"
 REPORT_FILE="reports/golden-path-gitops-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
@@ -44,7 +44,7 @@ usage() {
   cat << EOF
 Usage: $0 [OPTIONS]
 
-Validate the GitOps plane: ArgoCD's tracer-bullet Application is
+Validate the GitOps plane: ArgoCD's python-fawkes-path Application is
 Synced/Healthy and the live Deployment's image matches git HEAD.
 
 OPTIONS:
@@ -80,31 +80,31 @@ check_cluster_access() {
 }
 
 check_application_status() {
-  log_info "Checking tracer-bullet Application status..."
+  log_info "Checking python-fawkes-path Application status..."
   local app_json
   # ArgoCD Application CRs always live in the ArgoCD namespace, not the
   # workload's own namespace - $NAMESPACE (fawkes/fawkes-alpha/etc.) is where
   # the Deployment/pods live, which is a different thing (see check_pods_ready).
-  if ! app_json=$(kubectl get application tracer-bullet -n "$ARGOCD_NAMESPACE" -o json 2> /dev/null); then
-    record_test "Application Exists" "FAIL" "Application 'tracer-bullet' not found in namespace '$ARGOCD_NAMESPACE'"
+  if ! app_json=$(kubectl get application python-fawkes-path -n "$ARGOCD_NAMESPACE" -o json 2> /dev/null); then
+    record_test "Application Exists" "FAIL" "Application 'python-fawkes-path' not found in namespace '$ARGOCD_NAMESPACE'"
     return 1
   fi
-  record_test "Application Exists" "PASS" "Application 'tracer-bullet' found"
+  record_test "Application Exists" "PASS" "Application 'python-fawkes-path' found"
 
   local sync_status health_status
   sync_status=$(echo "$app_json" | jq -r '.status.sync.status // "Unknown"')
   health_status=$(echo "$app_json" | jq -r '.status.health.status // "Unknown"')
 
   if [ "$sync_status" = "Synced" ]; then
-    record_test "Sync Status" "PASS" "tracer-bullet is Synced"
+    record_test "Sync Status" "PASS" "python-fawkes-path is Synced"
   else
-    record_test "Sync Status" "FAIL" "tracer-bullet sync status is '$sync_status'"
+    record_test "Sync Status" "FAIL" "python-fawkes-path sync status is '$sync_status'"
   fi
 
   if [ "$health_status" = "Healthy" ]; then
-    record_test "Health Status" "PASS" "tracer-bullet is Healthy"
+    record_test "Health Status" "PASS" "python-fawkes-path is Healthy"
   else
-    record_test "Health Status" "FAIL" "tracer-bullet health status is '$health_status'"
+    record_test "Health Status" "FAIL" "python-fawkes-path health status is '$health_status'"
   fi
 
   local auto_sync self_heal
@@ -129,18 +129,18 @@ check_image_matches_git() {
   fi
 
   local git_image live_image
-  git_image=$(echo "$manifest_content" | grep -oE 'image: ghcr\.io/paruff/tracer-bullet:[^[:space:]]+' | head -1 | sed 's/image: //')
+  git_image=$(echo "$manifest_content" | grep -oE 'image: ghcr\.io/paruff/python-fawkes-path:[^[:space:]]+' | head -1 | sed 's/image: //')
 
   if [ -z "$git_image" ]; then
-    record_test "Git Image Tag" "FAIL" "Could not find tracer-bullet image line in $GITOPS_REPO's $GITOPS_MANIFEST_PATH"
+    record_test "Git Image Tag" "FAIL" "Could not find python-fawkes-path image line in $GITOPS_REPO's $GITOPS_MANIFEST_PATH"
     return 1
   fi
   record_test "Git Image Tag" "PASS" "$GITOPS_REPO HEAD specifies $git_image"
 
-  live_image=$(kubectl get deployment tracer-bullet -n "$NAMESPACE" -o jsonpath='{.spec.template.spec.containers[0].image}' 2> /dev/null || echo "")
+  live_image=$(kubectl get deployment python-fawkes-path -n "$NAMESPACE" -o jsonpath='{.spec.template.spec.containers[0].image}' 2> /dev/null || echo "")
 
   if [ -z "$live_image" ]; then
-    record_test "Live Deployment" "FAIL" "Deployment 'tracer-bullet' not found or has no image set"
+    record_test "Live Deployment" "FAIL" "Deployment 'python-fawkes-path' not found or has no image set"
     return 1
   fi
 
@@ -152,21 +152,21 @@ check_image_matches_git() {
 }
 
 check_pods_ready() {
-  log_info "Checking tracer-bullet pods are Ready..."
+  log_info "Checking python-fawkes-path pods are Ready..."
   local pods_json ready_count total_count
-  pods_json=$(kubectl get pods -n "$NAMESPACE" -l app=tracer-bullet -o json 2> /dev/null || echo '{"items":[]}')
+  pods_json=$(kubectl get pods -n "$NAMESPACE" -l app=python-fawkes-path -o json 2> /dev/null || echo '{"items":[]}')
   total_count=$(echo "$pods_json" | jq '.items | length')
 
   if [ "$total_count" -eq 0 ]; then
-    record_test "Pods Ready" "FAIL" "No tracer-bullet pods found"
+    record_test "Pods Ready" "FAIL" "No python-fawkes-path pods found"
     return 1
   fi
 
   ready_count=$(echo "$pods_json" | jq '[.items[] | select(.status.conditions[]? | select(.type=="Ready" and .status=="True"))] | length')
   if [ "$ready_count" -eq "$total_count" ]; then
-    record_test "Pods Ready" "PASS" "$ready_count/$total_count tracer-bullet pods Ready"
+    record_test "Pods Ready" "PASS" "$ready_count/$total_count python-fawkes-path pods Ready"
   else
-    record_test "Pods Ready" "FAIL" "$ready_count/$total_count tracer-bullet pods Ready"
+    record_test "Pods Ready" "FAIL" "$ready_count/$total_count python-fawkes-path pods Ready"
   fi
 }
 
