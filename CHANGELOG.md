@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.118](https://github.com/paruff/fawkes/compare/v0.3.117...v0.3.118) (2026-09-12)
+
+
+### Fixed
+
+* **argo-rollouts:** correct tracer-bullet AnalysisTemplate's PromQL query ([#2045](https://github.com/paruff/fawkes/issues/2045)) ([e5c078b](https://github.com/paruff/fawkes/commit/e5c078b12f825fc60b76bca36eb195166b0a4075))
+
 ## [0.3.117](https://github.com/paruff/fawkes/compare/v0.3.116...v0.3.117) (2026-09-12)
 
 
