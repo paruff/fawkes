@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.123](https://github.com/paruff/fawkes/compare/v0.3.122...v0.3.123) (2026-09-12)
+
+
+### Fixed
+
+* **ci:** sanitize slash in image-name for reusable-sbom-generation.yml ([#2056](https://github.com/paruff/fawkes/issues/2056)) ([34862eb](https://github.com/paruff/fawkes/commit/34862eb56af3bc2d857ac4c9b32b19d6f789ec00))
+
 ## [0.3.122](https://github.com/paruff/fawkes/compare/v0.3.121...v0.3.122) (2026-09-12)
 
 
