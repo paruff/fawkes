@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.128](https://github.com/paruff/fawkes/compare/v0.3.127...v0.3.128) (2026-09-12)
+
+
+### Fixed
+
+* **prometheus:** also disable operator's own TLS to unblock stuck pod ([#2068](https://github.com/paruff/fawkes/issues/2068)) ([7286546](https://github.com/paruff/fawkes/commit/72865468c0096fea3997245abdbc54c226657111))
+
+
+### Docs
+
+* **architecture:** document canonical cluster topology decision ([#2070](https://github.com/paruff/fawkes/issues/2070)) ([8c39e55](https://github.com/paruff/fawkes/commit/8c39e552895146a8db2e8ba1b214816a4653d48f))
+
 ## [0.3.127](https://github.com/paruff/fawkes/compare/v0.3.126...v0.3.127) (2026-09-12)
 
 
