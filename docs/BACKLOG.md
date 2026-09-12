@@ -58,6 +58,14 @@ Weekly review via `scripts/weekly-metrics.sh`
 
 ## Delivery Phases
 
+> **Live status:** the status cells below are hand-maintained snapshots and can
+> drift from reality (see the Phase 2 audit and `docs/elite-engineering-bridge-plan.md`
+> for why). The authoritative, machine-generated source of truth is the
+> [`platform-status` branch's `docs/PLATFORM_STATUS.md`](https://github.com/paruff/fawkes/blob/platform-status/docs/PLATFORM_STATUS.md),
+> regenerated nightly (and on-demand) by `.github/workflows/golden-path-verification.yml`
+> from the real `scripts/validate-golden-path-*.sh` results. Check there before
+> trusting a 🟢 here.
+
 ```
 Phase 1 (Alpha)     Phase 2 (Beta)      Phase 3 (Production)
   Commit→Staging      Shift-Left Security   Human-in-the-Loop
