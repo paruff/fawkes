@@ -3,7 +3,7 @@ package main
 # Policy: Block critical vulnerabilities
 # Note: List of vulnerable base images should be maintained separately
 # Consider using input.data.vulnerable_images for dynamic configuration
-deny[msg] {
+deny contains msg if {
     input.kind == "Deployment"
     container := input.spec.template.spec.containers[_]
 
@@ -17,15 +17,22 @@ deny[msg] {
 }
 
 # Policy: Require non-root user
-deny[msg] {
+# Checked at pod level OR per-container: Kubernetes allows either, and a
+# container-level securityContext takes precedence over (and is just as
+# valid as) the pod-level one. Confirmed live: 3 manifests that correctly
+# set this at container level only were false-positived by a pod-level-only
+# check before this fix.
+deny contains msg if {
     input.kind == "Deployment"
     not input.spec.template.spec.securityContext.runAsNonRoot
+    container := input.spec.template.spec.containers[_]
+    not container.securityContext.runAsNonRoot
 
-    msg := "Containers must run as non-root user. Add securityContext.runAsNonRoot: true"
+    msg := sprintf("Container '%s' must run as non-root user (set at pod or container level securityContext.runAsNonRoot)", [container.name])
 }
 
 # Policy: Disallow privileged containers
-deny[msg] {
+deny contains msg if {
     input.kind == "Deployment"
     container := input.spec.template.spec.containers[_]
     container.securityContext.privileged
@@ -34,7 +41,7 @@ deny[msg] {
 }
 
 # Policy: Require resource limits
-deny[msg] {
+deny contains msg if {
     input.kind == "Deployment"
     container := input.spec.template.spec.containers[_]
     not container.resources.limits
@@ -43,7 +50,7 @@ deny[msg] {
 }
 
 # Policy: Require resource requests
-deny[msg] {
+deny contains msg if {
     input.kind == "Deployment"
     container := input.spec.template.spec.containers[_]
     not container.resources.requests
@@ -52,7 +59,7 @@ deny[msg] {
 }
 
 # Policy: Disallow host network
-deny[msg] {
+deny contains msg if {
     input.kind == "Deployment"
     input.spec.template.spec.hostNetwork
 
@@ -60,7 +67,7 @@ deny[msg] {
 }
 
 # Policy: Disallow host PID
-deny[msg] {
+deny contains msg if {
     input.kind == "Deployment"
     input.spec.template.spec.hostPID
 
@@ -68,7 +75,7 @@ deny[msg] {
 }
 
 # Policy: Disallow host IPC
-deny[msg] {
+deny contains msg if {
     input.kind == "Deployment"
     input.spec.template.spec.hostIPC
 
@@ -76,7 +83,7 @@ deny[msg] {
 }
 
 # Policy: Require liveness probe
-warn[msg] {
+warn contains msg if {
     input.kind == "Deployment"
     container := input.spec.template.spec.containers[_]
     not container.livenessProbe
@@ -85,7 +92,7 @@ warn[msg] {
 }
 
 # Policy: Require readiness probe
-warn[msg] {
+warn contains msg if {
     input.kind == "Deployment"
     container := input.spec.template.spec.containers[_]
     not container.readinessProbe
@@ -94,7 +101,7 @@ warn[msg] {
 }
 
 # Policy: Image must use specific tag (not latest)
-warn[msg] {
+warn contains msg if {
     input.kind == "Deployment"
     container := input.spec.template.spec.containers[_]
     endswith(container.image, ":latest")
@@ -103,7 +110,7 @@ warn[msg] {
 }
 
 # Policy: Require security context
-deny[msg] {
+deny contains msg if {
     input.kind == "Deployment"
     container := input.spec.template.spec.containers[_]
     not container.securityContext
@@ -112,7 +119,7 @@ deny[msg] {
 }
 
 # Policy: Drop all capabilities
-deny[msg] {
+deny contains msg if {
     input.kind == "Deployment"
     container := input.spec.template.spec.containers[_]
     not container.securityContext.capabilities.drop

@@ -62,6 +62,16 @@ jobs:
           kubectl cluster-info
           kubectl get nodes -o wide
 
+      - name: Apply platform/apps/storage (regression check)
+        run: |
+          # kind, like this cluster, has no Azure CSI driver installed -
+          # the same gap the mac-mini-k3s homelab cluster hit (#2015/#2018).
+          # A real apply here catches anything in this directory that
+          # depends on a CRD or provisioner the target cluster doesn't
+          # have, before it ever reaches a real cluster via ArgoCD.
+          kubectl apply -k platform/apps/storage
+          kubectl get storageclass
+
       - name: Bootstrap minimal platform (namespace + policies + inspector)
         run: |
           set -e

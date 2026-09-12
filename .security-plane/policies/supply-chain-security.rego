@@ -1,7 +1,7 @@
 package main
 
 # Policy: Block images with CRITICAL vulnerabilities
-deny[msg] {
+deny contains msg if {
     input.vulnerabilities[_].severity == "CRITICAL"
     critical_count := count([v | input.vulnerabilities[v]; input.vulnerabilities[v].severity == "CRITICAL"])
     critical_count > 0
@@ -10,7 +10,7 @@ deny[msg] {
 }
 
 # Policy: Warn on HIGH vulnerabilities
-warn[msg] {
+warn contains msg if {
     input.vulnerabilities[_].severity == "HIGH"
     high_count := count([v | input.vulnerabilities[v]; input.vulnerabilities[v].severity == "HIGH"])
     high_count > 5
@@ -19,7 +19,7 @@ warn[msg] {
 }
 
 # Policy: Require SBOM presence
-deny[msg] {
+deny contains msg if {
     not input.sbom
     not input.metadata.sbom_generated
 
@@ -27,7 +27,7 @@ deny[msg] {
 }
 
 # Policy: Require image signature
-deny[msg] {
+deny contains msg if {
     not input.signature
     not input.metadata.signed
     not input.metadata.cosign_verified
@@ -36,7 +36,7 @@ deny[msg] {
 }
 
 # Policy: Block unsigned images in production
-deny[msg] {
+deny contains msg if {
     input.environment == "production"
     not input.metadata.signed
 
@@ -44,7 +44,7 @@ deny[msg] {
 }
 
 # Policy: Require base image from approved registries
-deny[msg] {
+deny contains msg if {
     input.base_image
     approved_registries := ["ghcr.io", "docker.io/library", "gcr.io/distroless", "mcr.microsoft.com"]
     not registry_approved(input.base_image, approved_registries)
@@ -52,18 +52,18 @@ deny[msg] {
     msg := sprintf("Base image '%s' is not from an approved registry. Approved: %v", [input.base_image, approved_registries])
 }
 
-registry_approved(image, approved) {
+registry_approved(image, approved) if {
     registry := split(image, "/")[0]
     approved[_] == registry
 }
 
-registry_approved(image, approved) {
+registry_approved(image, approved) if {
     # Allow official Docker library images without registry prefix
     not contains(image, "/")
     startswith(image, "alpine")
 }
 
-registry_approved(image, approved) {
+registry_approved(image, approved) if {
     not contains(image, "/")
     startswith(image, "ubuntu")
 }
@@ -80,14 +80,14 @@ registry_approved(image, approved) {
 # }
 
 # Policy: Require vulnerability scan timestamp
-warn[msg] {
+warn contains msg if {
     not input.metadata.last_scanned
 
     msg := "Image should have vulnerability scan metadata with timestamp"
 }
 
 # Policy: Block images with outdated packages
-warn[msg] {
+warn contains msg if {
     input.packages[_].version
     input.packages[_].latest_version
     input.packages[p].version != input.packages[p].latest_version
