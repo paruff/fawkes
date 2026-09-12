@@ -90,6 +90,20 @@ spec:
           # 502 issues) is a separate follow-up, not blocking here.
           admissionWebhooks:
             enabled: false
+          # admissionWebhooks.enabled: false does NOT disable the operator's
+          # own --web.enable-tls flag - that's a separate toggle. Without
+          # this, the operator Deployment mounts a "tls-secret" volume from
+          # a "prometheus-admission" Secret that's never created (same
+          # disabled cert-gen Job above), leaving the pod permanently stuck
+          # in ContainerCreating (FailedMount, confirmed live on
+          # fawkes-dev-aks - a different failure mode than the mini-gamer
+          # WSL2 crash-loop noted above, but the same root cause: no cert
+          # source for this webhook TLS). Verified via
+          # `helm template ... --show-only .../prometheus-operator/deployment.yaml`
+          # that tls.enabled: false removes --web.enable-tls, the cert-file
+          # args, and the volume mount entirely.
+          tls:
+            enabled: false
           resources:
             requests:
               cpu: 100m
