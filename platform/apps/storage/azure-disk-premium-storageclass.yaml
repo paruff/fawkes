@@ -34,7 +34,13 @@ metadata:
     team: platform
     backup: "true"
   annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
+    # Not marked default: this directory's StorageClasses are additional
+    # options, not meant to override whatever default the target cluster
+    # already provides. Marking this default here created a second
+    # "(default)" StorageClass alongside k3s's own local-path on the
+    # mac-mini-k3s cluster - confirmed live, it caused a PVC without an
+    # explicit storageClassName to bind to this (no working CSI driver on
+    # that cluster) instead of local-path.
     description: "Premium SSD managed disk for high-performance workloads (databases)"
 provisioner: disk.csi.azure.com
 parameters:
