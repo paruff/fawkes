@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 * **chaos-mesh:** add Chaos Mesh controller ArgoCD Application ([#2037](https://github.com/paruff/fawkes/issues/2037)) ([9a5d039](https://github.com/paruff/fawkes/commit/9a5d039fb76ad8550e5e93f569110912cee8f96e)), closes [#1939](https://github.com/paruff/fawkes/issues/1939)
+* **chaos-mesh:** add tracer-bullet pod-kill and network-delay experiments ([#2038](https://github.com/paruff/fawkes/issues/2038)) ([a9dda9e](https://github.com/paruff/fawkes/commit/a9dda9e1f6496f16e8e4829f3168102c6091e4be)), closes [#1940](https://github.com/paruff/fawkes/issues/1940) [#1941](https://github.com/paruff/fawkes/issues/1941)
 
 ## [0.3.115](https://github.com/paruff/fawkes/compare/v0.3.114...v0.3.115) (2026-09-12)
 
