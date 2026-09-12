@@ -117,7 +117,7 @@ Phase 1 (Alpha)     Phase 2 (Beta)      Phase 3 (Production)
 |-------------|-------------|--------|
 | CI/CD Orchestration | Quality gates block bad deploys | 🟡 `sonar.qualitygate.wait=true` merged (#2033); Tekton itself only just got wired onto the cluster (#2051 + `platform/bootstrap` re-apply) — no live pipeline run has yet proven a bad quality gate actually blocks promotion |
 | Deployment Management | Argo Rollouts canary/blue-green | 🟡 Controller (#1930), `AnalysisTemplate` (#1931, query bug fixed in #2045), and tracer-bullet's `Rollout` conversion (tracer-bullet-gitops#6) are all merged; ApplicationSet wiring (#2049) applied live — `argo-rollouts`/`chaos-mesh` Applications now exist on-cluster. No live canary rollout has been triggered yet, so automated rollback is unverified |
-| Observability | Alertmanager + crash-loop notifications | 🟢 Live since Phase 1 (`KubernetesPodCrashLooping` → `platform-team` Slack receiver). A second receiver routing the same alert to DevLake for Change Failure Rate correlation is merged (#2042) but not yet functional — no SealedSecret exists yet, and Alertmanager's own webhook payload shape doesn't match DevLake's `/issues` API without an adapter (not built) |
+| Observability | Alertmanager + crash-loop notifications | 🟢 Live since Phase 1 (`KubernetesPodCrashLooping` → `platform-team` Slack receiver). A second receiver routing the same alert to DevLake for Change Failure Rate correlation is merged (#2042) but not yet functional — no SealedSecret exists yet, and Alertmanager's own webhook payload shape doesn't match DevLake's `/issues` API without an adapter (tracked as its own issue, #2079, per Phase 4's epic-splitting rule) |
 | Security | Shift-left SAST/DAST in pipeline | 🟡 SAST (SonarCloud gate) live via the row above. DAST (`dast-baseline-scan` OWASP ZAP task, #2048) is merged but standalone — not yet wired into a pipeline trigger path or run against a live target |
 | DORA (3-key) | Add Change Failure Rate | 🔴 Schema design (#1944), Alertmanager receiver (#2042), and a deterministic BDD test for the formula (#1947) are merged, but no real CFR number is computing yet — #1919 (DevLake webhook wiring for the deployment side) hasn't been started, and the dashboard panel (#1946) is explicitly blocked pending real data |
 
@@ -128,7 +128,7 @@ Phase 1 (Alpha)     Phase 2 (Beta)      Phase 3 (Production)
 - Trigger a real canary rollout on tracer-bullet/python-fawkes-path and observe an automated rollback
 - #1942 — wire chaos experiments into the canary traffic-shift step (depends on the above)
 - #1919 — DevLake webhook plugin wiring for deployment signal (real prerequisite for CFR)
-- Build the Alertmanager→DevLake incident-payload adapter
+- #2079 — Build the Alertmanager→DevLake incident-payload adapter
 - #1946 — add the real CFR dashboard panel once #1919 + the adapter produce real data
 
 ### Phase 3 — Production: Human-in-the-Loop (#1806)
