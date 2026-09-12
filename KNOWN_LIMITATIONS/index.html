@@ -5526,6 +5526,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#kl-14-platformbootstrap-is-not-self-healing-from-git-bootstrap-chicken-and-egg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-14 — platform/bootstrap/ Is Not Self-Healing From Git (Bootstrap Chicken-and-Egg)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kl-15-devlakes-live-api-is-blocked-on-an-unapproved-db-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-15 — DevLake's Live API Is Blocked on an Unapproved DB Migration
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5814,6 +5836,30 @@ The <code>--ignore-unfixed</code> flag causes Trivy to <strong>not fail</strong>
 </tbody>
 </table>
 <p><strong>Tracking:</strong> Related to Phase 2 quality-gate hardening (#1805). Revisit when distroless/chainguard base images are adopted (tracked separately) — those reduce the unfixed-CVE surface area significantly.</p>
+<h2 id="kl-14-platformbootstrap-is-not-self-healing-from-git-bootstrap-chicken-and-egg">KL-14 — <code>platform/bootstrap/</code> Is Not Self-Healing From Git (Bootstrap Chicken-and-Egg)</h2>
+<p><strong>Description:</strong> Every Application under <code>platform/apps/</code> gets <code>syncPolicy.automated.selfHeal: true</code> — ArgoCD reverts manual drift automatically. <code>platform/bootstrap/</code> (the app-of-apps root and its <code>ApplicationSet</code>/<code>Application</code> definitions) is the one exception: it's what <em>creates</em> ArgoCD's own management of the cluster, so nothing is watching it. A change to a file under <code>platform/bootstrap/</code> only takes effect after someone manually runs <code>kubectl apply -k platform/bootstrap</code> (or <code>scripts/bootstrap.sh</code> / <code>scripts/ignite.sh</code>) — merging a PR that touches this directory does <strong>not</strong>, by itself, change anything live.</p>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>A merged PR that edits <code>platform/bootstrap/*.yaml</code> can silently not be reflected on any live cluster until someone remembers the manual step.</li>
+<li>No alert exists for "bootstrap files changed in git but the live ApplicationSet/Application specs still differ" — drift here is invisible until someone notices unexpected behavior downstream.</li>
+</ul>
+<p><strong>Accepted for now, not silently assumed away</strong> (per <code>docs/elite-engineering-bridge-plan.md</code> Phase 3): this is a one-time-per-change manual bootstrap step, not a bug. <code>platform/bootstrap/README.md</code>'s "Bootstrap the Platform" / "Bootstrap Failed" sections are the runbook — re-run <code>kubectl apply -k platform/bootstrap</code> (or <code>scripts/bootstrap.sh</code>) after any change under this directory.</p>
+<p><strong>Tracking:</strong> No reconciliation job exists yet to diff live <code>ApplicationSet</code>/<code>Application</code> specs against git and alert on drift for this directory specifically — that would close the gap fully but is real new infrastructure, not wiring. Revisit if bootstrap-directory drift causes a real incident.</p>
+<h2 id="kl-15-devlakes-live-api-is-blocked-on-an-unapproved-db-migration">KL-15 — DevLake's Live API Is Blocked on an Unapproved DB Migration</h2>
+<p><strong>Description:</strong> As of 2026-09-12, every DevLake API endpoint on <code>mac-mini-k3s</code> (<code>devlake-lake</code>, port 8080, checked via <code>kubectl port-forward</code>) returns HTTP 428 with:</p>
+<div class="highlight"><pre><span></span><code>New migration scripts detected. Database migration is required to launch DevLake.
+WARNING: Performing migration may wipe collected data for consistency and
+re-collecting data may be required. To proceed, please send a request to
+&lt;config-ui-endpoint&gt;/api/proceed-db-migration (or &lt;devlake-endpoint&gt;/proceed-db-migration).
+</code></pre></div>
+<p>This is distinct from KL-09's (resolved) token-scope bug and from the <code>devlake-lake</code> pod's own health — the pod itself is <code>Running</code> (see the "Risk (resolved)" note above), but the application layer refuses every request until someone explicitly approves the migration.</p>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>Every DevLake-dependent item is currently unverifiable live: <code>#1919</code> (deployment webhook wiring), <code>#2079</code> (Alertmanager adapter), <code>#1946</code> (CFR dashboard panel), and <code>docs/elite-engineering-bridge-plan.md</code> Phase 5 (fawkes-on-fawkes DORA) all need a working DevLake API first.</li>
+<li><code>scripts/weekly-metrics.sh</code>'s rework-rate query (<code>/api/plugins/devlake/rework-rate</code>) is also blocked by this.</li>
+</ul>
+<p><strong>Deliberately not auto-approved:</strong> the migration's own warning says it may wipe collected data. Whether that's acceptable (e.g., because the data is re-collectible from GitHub, or because some of it isn't) is a judgment call for whoever owns this cluster, not something to approve unattended — matches <code>docs/BACKLOG.md</code>'s Agent Assignment Map convention of "cluster debugging" being human-only.</p>
+<p><strong>Tracking:</strong> No dedicated issue yet. Next step: a human decides whether wiping DevLake's collected data is acceptable, then runs <code>POST &lt;devlake-endpoint&gt;/proceed-db-migration</code>, then re-triggers collection for existing projects (tracer-bullet, python-fawkes-path) to confirm no regression before building anything new (like Phase 5) on top.</p>
 
 
 
