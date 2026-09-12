@@ -5,6 +5,18 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.108](https://github.com/paruff/fawkes/compare/v0.3.107...v0.3.108) (2026-09-12)
+
+
+### Fixed
+
+* **gitops:** remove is-default-class from azure-disk-premium StorageClass ([#2018](https://github.com/paruff/fawkes/issues/2018)) ([5378404](https://github.com/paruff/fawkes/commit/5378404d1481a705ce94efa618f0c87ee120f8aa))
+
+
+### Chores
+
+* **main:** release 0.3.107 ([#2017](https://github.com/paruff/fawkes/issues/2017)) ([5637208](https://github.com/paruff/fawkes/commit/5637208f04e17dc724a704a1d27b6d74a781a897))
+
 ## [0.3.107](https://github.com/paruff/fawkes/compare/v0.3.106...v0.3.107) (2026-09-12)
 
 
