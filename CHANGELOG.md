@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.129](https://github.com/paruff/fawkes/compare/v0.3.128...v0.3.129) (2026-09-12)
+
+
+### Fixed
+
+* **prometheus:** lower server CPU/memory request to fit node capacity ([#2071](https://github.com/paruff/fawkes/issues/2071)) ([32bd93c](https://github.com/paruff/fawkes/commit/32bd93c7670d7f4d3eef910ad9eb9da508ed17ad))
+
 ## [0.3.128](https://github.com/paruff/fawkes/compare/v0.3.127...v0.3.128) (2026-09-12)
 
 
