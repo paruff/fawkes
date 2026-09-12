@@ -40,13 +40,17 @@
 #    orphaned - someone has to run pr-preview-teardown by hand or wire it
 #    into a PR-closed webhook (not built here).
 #
-# RBAC gap, flagged not fixed: namespace creation is cluster-scoped, so
-# pr-preview-sa's ClusterRole grants create/get/delete on Deployments/
-# Services/ServiceAccounts across ALL namespaces, not just fawkes-pr-*
-# ones - Kubernetes RBAC can't scope a ClusterRole to a dynamic namespace
-# name pattern created after the binding exists. Tightening this (e.g. a
-# small controller that mints a per-namespace Role+RoleBinding right after
-# each namespace create) is follow-up work, not this issue's scope.
+# RBAC scoping: namespace creation is unavoidably cluster-scoped, but the
+# Deployment/Service/ServiceAccount write access is NOT granted at that
+# scope (Trivy KSV-0056/KSV-0048 correctly flagged an earlier version of
+# this file that did exactly that - a ClusterRole with those verbs is a
+# real lateral-movement risk, not a false positive). Instead,
+# pr-preview-sa's ClusterRole only covers what genuinely has no
+# namespace-scoped equivalent (namespaces themselves, and creating
+# Role/RoleBinding objects), and the deploy-preview step mints a
+# namespace-scoped Role+RoleBinding immediately after creating each
+# fawkes-pr-<n> namespace - so the actual workload write access is
+# confined to that one namespace, not every namespace on the cluster.
 # ============================================================================
 apiVersion: v1
 kind: ServiceAccount
@@ -68,12 +72,9 @@ rules:
   - apiGroups: [""]
     resources: ["namespaces"]
     verbs: ["create", "get", "delete"]
-  - apiGroups: [""]
-    resources: ["services", "serviceaccounts"]
-    verbs: ["create", "get", "update", "patch", "delete"]
-  - apiGroups: ["apps"]
-    resources: ["deployments"]
-    verbs: ["create", "get", "update", "patch", "delete"]
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources: ["roles", "rolebindings"]
+    verbs: ["create"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -125,6 +126,13 @@ spec:
     - name: clone-gitops-base
       image: docker.io/alpine/git:v2.45.2
       workingDir: $(workspaces.source.path)
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 250m
+          memory: 128Mi
       script: |
         #!/bin/sh
         set -eu
@@ -134,6 +142,13 @@ spec:
     - name: deploy-preview
       image: docker.io/bitnami/kubectl:1.31.2
       workingDir: $(workspaces.source.path)
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 250m
+          memory: 128Mi
       script: |
         #!/bin/sh
         set -eu
@@ -141,6 +156,40 @@ spec:
 
         kubectl create namespace "$NAMESPACE" \
           --dry-run=client -o yaml | kubectl apply -f -
+
+        # Mint a namespace-scoped Role+RoleBinding right after creating the
+        # namespace, so the Deployment/Service/ServiceAccount write access
+        # below is confined to THIS namespace only - pr-preview-sa's
+        # ClusterRole grants nothing beyond namespace and roles/rolebindings
+        # creation (see this file's header comment).
+        kubectl apply -n "$NAMESPACE" -f - <<ROLE_EOF
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: Role
+        metadata:
+          name: pr-preview-workload-role
+          namespace: ${NAMESPACE}
+        rules:
+          - apiGroups: [""]
+            resources: ["services", "serviceaccounts"]
+            verbs: ["create", "get", "update", "patch", "delete"]
+          - apiGroups: ["apps"]
+            resources: ["deployments"]
+            verbs: ["create", "get", "update", "patch", "delete"]
+        ---
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: RoleBinding
+        metadata:
+          name: pr-preview-workload-binding
+          namespace: ${NAMESPACE}
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: Role
+          name: pr-preview-workload-role
+        subjects:
+          - kind: ServiceAccount
+            name: pr-preview-sa
+            namespace: fawkes
+        ROLE_EOF
 
         mkdir -p overlay
         cat > overlay/kustomization.yaml <<EOF
@@ -176,6 +225,13 @@ spec:
   steps:
     - name: delete-namespace
       image: docker.io/bitnami/kubectl:1.31.2
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 250m
+          memory: 128Mi
       script: |
         #!/bin/sh
         set -eu
