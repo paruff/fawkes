@@ -116,6 +116,14 @@ spec:
           persistence:
             enabled: true
             size: 20Gi
+            # The chart defaults storageClass to "standard" when unset,
+            # which doesn't exist on this cluster (only "local-path" does,
+            # confirmed via `kubectl get storageclass`) - the PVC sat
+            # Pending indefinitely as a result. Empty string is the
+            # Kubernetes convention for "use whatever StorageClass the
+            # cluster marks default", more portable than hardcoding
+            # local-path.
+            storageClass: ""
 
         # ===== Components not used in SingleBinary mode =====
         # (SimpleScalable/Distributed-mode-only components; explicitly zeroed
