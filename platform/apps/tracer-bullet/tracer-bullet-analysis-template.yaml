@@ -28,11 +28,14 @@
 # Prometheus endpoint: prometheus.monitoring.svc.cluster.local:9090
 # (from platform/apps/prometheus/prometheus-application.yaml, fullnameOverride: prometheus)
 #
-# IMPORTANT: The PromQL query below uses standard http_request_duration_seconds
-# metrics which are the most common HTTP metrics from libraries like
-# prometheus_client (Python) or promhttp (Go). The exact metric name exposed
-# by tracer-bullet MUST be verified against the running application's
-# /metrics endpoint before this template is used in production.
+# Query verified against tracer-bullet's actual source (app/main.py):
+# Counter("http_requests_total", ..., ["method", "endpoint", "status"]) - no
+# "app" label on the metric itself, and the status label is "status", not
+# "code". tracer-bullet-gitops/servicemonitor.yaml sets no targetLabels, so
+# Prometheus Operator only auto-injects the standard ServiceMonitor labels
+# (namespace, service, pod, job) - "app" is not among them either. The query
+# below was updated accordingly (was previously a placeholder using
+# app="..."/code=~"5.." from a generic FastAPI assumption, never verified).
 #
 # Per AGENTS.md section 6, this manifest requires maintainer review before
 # merge - flagging explicitly.
@@ -74,29 +77,19 @@ spec:
       provider:
         prometheus:
           address: "{{args.prometheus-endpoint}}"
-          # ==========================================================================
-          # PLACEHOLDER — verify metric name against running tracer-bullet /metrics
-          # ==========================================================================
-          # The query below assumes the standard Prometheus client convention of
-          # http_request_duration_seconds_bucket (Python prometheus_client) or
-          # http_request_duration_seconds_bucket (Go promhttp). Tracer-bullet is a
-          # Python FastAPI service, so prometheus_client is the likely exporter.
-          #
-          # To verify: port-forward to tracer-bullet and hit /metrics:
-          #   kubectl port-forward -n fawkes svc/tracer-bullet 8080:8080
-          #   curl http://localhost:8080/metrics | grep http_request_duration
-          #
-          # If the metric name differs (e.g., http_requests_total with a
-          # status_code label), adjust the query accordingly.
-          #
-          # For a Python FastAPI service using prometheus_fastapi_instrumentator
-          # (the common choice), the metric is typically:
-          #   http_requests_total{app="{{args.service-name}}"}
-          #   http_request_duration_seconds_bucket{app="{{args.service-name}}"}
-          #
-          # The query below uses http_requests_total which is the most standard
-          # for request count metrics, with a 5xx status code filter.
+          # Verified live against the running fawkes-dev-aks cluster:
+          # `kubectl port-forward -n fawkes svc/tracer-bullet 8000:80` then
+          # `curl -L http://localhost:8000/metrics` (note: /metrics 307s to
+          # /metrics/) returns exactly
+          # http_requests_total{endpoint="...",method="...",status="..."} -
+          # a plain Counter, no "app" label. namespace/service come from the
+          # ServiceMonitor's auto-injected target labels, not the metric
+          # itself.
           query: |
-            sum(rate(http_requests_total{app="{{args.service-name}}", namespace="{{args.namespace}}", code=~"5.."}[2m]))
+            sum(rate(http_requests_total{
+              namespace="{{args.namespace}}", service="{{args.service-name}}", status=~"5.."
+            }[2m]))
             /
-            sum(rate(http_requests_total{app="{{args.service-name}}", namespace="{{args.namespace}}"}[2m]))
+            sum(rate(http_requests_total{
+              namespace="{{args.namespace}}", service="{{args.service-name}}"
+            }[2m]))
