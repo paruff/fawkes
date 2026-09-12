@@ -2800,6 +2800,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#cluster-topology-which-cluster-is-canonical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Topology (Which Cluster Is Canonical?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#tier-2-full-platform-cloud-deployments-only" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5708,6 +5719,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#cluster-topology-which-cluster-is-canonical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Topology (Which Cluster Is Canonical?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#tier-2-full-platform-cloud-deployments-only" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5914,7 +5936,8 @@ See also: <code>AGENTS.md</code> §4 (Architecture Rules), <code>docs/CHANGE_IMP
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol>
-<li><a href="#deployment-tiers">Deployment Tiers</a></li>
+<li><a href="#deployment-tiers">Deployment Tiers</a>
+1a. <a href="#cluster-topology-which-cluster-is-canonical">Cluster Topology (Which Cluster Is Canonical?)</a></li>
 <li><a href="#component-overview">Component Overview</a></li>
 <li><a href="#layer-dependency-rules">Layer Dependency Rules</a></li>
 <li><a href="#component-diagram">Component Diagram</a></li>
@@ -5994,6 +6017,29 @@ cloud deployment.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="cluster-topology-which-cluster-is-canonical">Cluster Topology (Which Cluster Is Canonical?)</h3>
+<p>Three clusters have been used at different points in this project's history
+with no prior reconciliation: a local <code>kind</code> cluster, a LAN homelab k3s
+cluster (Mac Mini control-plane + a Windows/WSL2 worker node, <code>mini-gamer</code>),
+and Azure AKS. As of 2026-09-12, live-verified:</p>
+<ul>
+<li><strong>Azure AKS (<code>fawkes-dev-aks</code>) is the canonical golden-path proving
+  ground.</strong> All Phase 2 live verification this project has done — golden
+  path CI runs, ArgoCD sync checks, canary rollout + automated rollback —
+  has run against this cluster. Cost-managed: it is provisioned and
+  destroyed per session (see runbook notes in <code>docs/BACKLOG.md</code>), so do not
+  assume it persists between sessions.</li>
+<li><strong>The homelab k3s cluster (<code>mac-mini-k3s</code> kubeconfig context) is kept
+  running as a secondary/dev cluster</strong>, not torn down. It is not currently
+  used for golden-path verification.</li>
+<li><strong><code>kind-fawkes</code></strong> is a local, ephemeral dev cluster (Docker Desktop);
+  no canonical role, safe to create/destroy freely.</li>
+</ul>
+<p>Known bootstrap gap (tracked, not yet fixed): <code>platform/bootstrap/*.yaml</code>
+ApplicationSet changes require a manual <code>kubectl apply -k platform/bootstrap</code>
+re-apply after merge — the ApplicationSet controller reconciles from its own
+live spec, not directly from git, so a merged bootstrap change does nothing
+until someone re-applies it by hand.</p>
 <h3 id="tier-2-full-platform-cloud-deployments-only">Tier 2 — Full Platform (cloud deployments only)</h3>
 <p>Tier 2 extends Tier 1 with the components needed for production use: CI/CD, security
 scanning, log aggregation, DORA metrics, and enterprise collaboration.</p>
