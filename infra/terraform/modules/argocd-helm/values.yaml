@@ -100,6 +100,21 @@ configs:
     application.instanceLabelKey: "argocd.argoproj.io/instance"
     admin.enabled: "true"
 
+  # Populates argocd-cmd-params-cm directly. Without a concurrency cap,
+  # repo-server has crash-looped repeatedly under load (many Applications
+  # reconciling/syncing at once, e.g. right after ignite.sh bootstraps all
+  # ~19 Applications) - its liveness probe kills it mid-render once CPU is
+  # starved, which looks like a crash but is resource starvation with no
+  # cap in place. See #1959. Values below were applied live as an
+  # unblocking kubectl patch first and are being made permanent here
+  # unchanged - they were chosen under pressure during an incident, not
+  # carefully tuned, so treat them as a starting point to re-validate
+  # rather than a fixed target.
+  params:
+    reposerver.parallelism.limit: "2"
+    controller.status.processors: "5"
+    controller.operation.processors: "5"
+
   # Admin credentials
   # For initial deployment, auto-generate the secret
   # For production, integrate with External Secrets Operator:
