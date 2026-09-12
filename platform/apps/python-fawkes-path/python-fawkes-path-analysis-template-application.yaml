@@ -1,0 +1,78 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/python-fawkes-path/python-fawkes-path-analysis-template-application.yaml
+# PURPOSE: ArgoCD Application syncing python-fawkes-path-analysis-template.yaml
+#          (the Argo Rollouts AnalysisTemplate the python-fawkes-path canary
+#          Rollout references) from this repo into the fawkes namespace.
+#
+# WHY THIS EXISTS: live-cluster verification found the python-fawkes-path
+# Rollout permanently Degraded/InvalidSpec ("AnalysisTemplate
+# 'python-fawkes-path-canary-success' not found") because no ArgoCD
+# Application had ever synced this directory's AnalysisTemplate - the
+# sibling python-fawkes-path-application.yaml only syncs the *gitops* repo
+# (the Rollout/Service/etc.), not this repo's platform/apps/python-fawkes-path/.
+# Source is scoped via this directory's kustomization.yaml to just the
+# AnalysisTemplate file, so this Application does not also try to raw-apply
+# the other Application/ApplicationSet manifests that live alongside it here.
+#
+# Per AGENTS.md SS6, creating an ArgoCD Application requires human approval
+# before merge - this PR proposes it, it does not merge it.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: python-fawkes-path-analysis-template
+  namespace: argocd
+  labels:
+    app: python-fawkes-path
+    app.kubernetes.io/name: python-fawkes-path-analysis-template
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: progressive-delivery
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    targetRevision: HEAD
+    path: platform/apps/python-fawkes-path
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=false
+      - PruneLast=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
