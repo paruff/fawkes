@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+* **gitops:** make storage-classes and loki portable off AKS ([#2015](https://github.com/paruff/fawkes/issues/2015)) ([3b078db](https://github.com/paruff/fawkes/commit/3b078dbb5d7cec09dffac2d4279eb669b1148591))
 * **scripts:** correct hardcoded resource names in AT-E1-006 validator ([#2014](https://github.com/paruff/fawkes/issues/2014)) ([e78f878](https://github.com/paruff/fawkes/commit/e78f8784c433a274969bffc5efd78047c49eb4f6))
 
 ## [0.3.106](https://github.com/paruff/fawkes/compare/v0.3.105...v0.3.106) (2026-09-12)
