@@ -5462,7 +5462,7 @@
 
 
 <h1 id="golden-path-verification-planes">Golden Path Verification Planes</h1>
-<p>This is the canonical reference for the tracer-bullet / smart-alerting golden-path
+<p>This is the canonical reference for the python-fawkes-path / smart-alerting golden-path
 verification effort tracked under <a href="https://github.com/paruff/fawkes/issues/1751">#1751</a>
 Phase 3. It answers: what does "the golden path is verified" actually mean, plane by
 plane, and where does each plane's check live?</p>
@@ -5470,12 +5470,12 @@ plane, and where does each plane's check live?</p>
 <code>goldenPathPipeline</code> shared-library pipeline for application teams — an older, separate
 concept that predates this GitHub-Actions-based verification effort.</p>
 <p><strong>Update (2026-09-07, #1804):</strong> the reference service these planes verify against —
-tracer-bullet — was extracted out of the monorepo into its own repo pair:
-<a href="https://github.com/paruff/tracer-bullet"><code>paruff/tracer-bullet</code></a> (app source, plus the
+python-fawkes-path — was extracted out of the monorepo into its own repo pair:
+<a href="https://github.com/paruff/python-fawkes-path"><code>paruff/python-fawkes-path</code></a> (app source, plus the
 Tekton <code>golden-path</code> pipeline definition it runs against —
 <code>platform/apps/tekton/golden-path-pipeline.yaml</code>, in-cluster, not GitHub Actions) and
-<a href="https://github.com/paruff/tracer-bullet-gitops"><code>paruff/tracer-bullet-gitops</code></a> (desired
-state, watched by <code>platform/apps/tracer-bullet/tracer-bullet-application.yaml</code>). All
+<a href="https://github.com/paruff/python-fawkes-path-gitops"><code>paruff/python-fawkes-path-gitops</code></a> (desired
+state, watched by <code>platform/apps/python-fawkes-path/python-fawkes-path-application.yaml</code>). All
 seven planes were exercised live on a local kind cluster this session against this real
 pipeline run. That live run surfaced 4 concrete bugs in the plane scripts themselves,
 filed as <a href="https://github.com/paruff/fawkes/issues/1909">#1909</a>: the Pipeline script
@@ -5636,7 +5636,7 @@ for a quick follow-up).</p>
 <p>The Resources-plane items have no existing platform component — verifying them means
 standing up new infrastructure first, not just writing a check script. Recommend scoping
 that as its own issue rather than folding it into #1751 Phase 3, which is specifically
-about proving the tracer-bullet/smart-alerting golden path, not building out new platform
+about proving the python-fawkes-path/smart-alerting golden path, not building out new platform
 capabilities.</p>
 <h2 id="adding-or-changing-a-plane">Adding or changing a plane</h2>
 <ol>
