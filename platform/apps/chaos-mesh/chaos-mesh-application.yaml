@@ -1,0 +1,116 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/chaos-mesh/chaos-mesh-application.yaml
+# PURPOSE: #1939 - Chaos Mesh controller only. No experiment manifests and
+#          no pipeline wiring here on purpose - those are separate issues,
+#          deliberately sequenced after the Argo Rollouts canary mechanics
+#          stabilize (see #1805's complexity note: don't attempt chaos and
+#          traffic-shifting at once).
+#
+# Runtime override: chaosDaemon.runtime defaults to docker/docker.sock in
+# the upstream chart, but this cluster (AKS, and kind for local dev) uses
+# containerd - overridden below, otherwise chaos-daemon can't reach the
+# container runtime to inject faults at all.
+#
+# Dashboard kept internal per the issue: service.type overridden from the
+# chart's own default (NodePort) to ClusterIP - no Ingress, reach it via
+# `kubectl port-forward` only. NodePort would have exposed it on every
+# node's IP without any additional resource.
+#
+# chaos-daemon runs privileged (DaemonSet, hostNetwork+hostPID via the
+# chart) - that's inherent to how Chaos Mesh injects network/IO/process
+# faults on the host, not a misconfiguration introduced here.
+#
+# Per AGENTS.md section 6, ArgoCD Application manifests require maintainer
+# review before merge - flagging explicitly, not merging this myself.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-mesh
+  namespace: argocd
+  labels:
+    app: chaos-mesh
+    component: resilience
+    environment: dev
+    team: platform
+spec:
+  project: default
+
+  source:
+    repoURL: https://charts.chaos-mesh.org
+    chart: chaos-mesh
+    targetRevision: 2.8.4
+    helm:
+      valuesObject:
+        chaosDaemon:
+          runtime: containerd
+          socketPath: /run/containerd/containerd.sock
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+
+        controllerManager:
+          replicaCount: 1
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+
+        dashboard:
+          service:
+            type: ClusterIP
+          resources:
+            requests:
+              cpu: 25m
+              memory: 256Mi
+            limits:
+              cpu: 250m
+              memory: 512Mi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: chaos-mesh
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  revisionHistoryLimit: 10
