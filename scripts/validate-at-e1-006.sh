@@ -18,6 +18,7 @@ NC='\033[0m' # No Color
 # Default values
 NAMESPACE="${NAMESPACE:-monitoring}"
 ARGOCD_NAMESPACE="${ARGOCD_NAMESPACE:-argocd}"
+RELEASE_NAME="${RELEASE_NAME:-prometheus-stack}"
 VERBOSE=false
 REPORT_FILE="reports/at-e1-006-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
@@ -164,9 +165,9 @@ validate_prometheus_operator() {
 validate_prometheus_server() {
   log_info "Validating Prometheus Server..."
 
-  if kubectl get statefulset prometheus-prometheus -n "$NAMESPACE" &> /dev/null; then
-    local ready=$(kubectl get statefulset prometheus-prometheus -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
-    local desired=$(kubectl get statefulset prometheus-prometheus -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
+  if kubectl get statefulset prometheus-prometheus-prometheus -n "$NAMESPACE" &> /dev/null; then
+    local ready=$(kubectl get statefulset prometheus-prometheus-prometheus -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
+    local desired=$(kubectl get statefulset prometheus-prometheus-prometheus -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
 
     if [ "$ready" = "$desired" ] && [ "$ready" -gt 0 ]; then
       record_test "prometheus_server" "PASS" "Prometheus Server is running ($ready/$desired replicas ready)"
@@ -181,9 +182,9 @@ validate_prometheus_server() {
 validate_grafana() {
   log_info "Validating Grafana deployment..."
 
-  if kubectl get deployment prometheus-grafana -n "$NAMESPACE" &> /dev/null; then
-    local ready=$(kubectl get deployment prometheus-grafana -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
-    local desired=$(kubectl get deployment prometheus-grafana -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
+  if kubectl get deployment ${RELEASE_NAME}-grafana -n "$NAMESPACE" &> /dev/null; then
+    local ready=$(kubectl get deployment ${RELEASE_NAME}-grafana -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
+    local desired=$(kubectl get deployment ${RELEASE_NAME}-grafana -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
 
     if [ "$ready" = "$desired" ] && [ "$ready" -gt 0 ]; then
       record_test "grafana" "PASS" "Grafana is running ($ready/$desired replicas ready)"
@@ -215,9 +216,9 @@ validate_alertmanager() {
 validate_node_exporter() {
   log_info "Validating Node Exporter DaemonSet..."
 
-  if kubectl get daemonset prometheus-prometheus-node-exporter -n "$NAMESPACE" &> /dev/null; then
-    local desired=$(kubectl get daemonset prometheus-prometheus-node-exporter -n "$NAMESPACE" -o jsonpath='{.status.desiredNumberScheduled}')
-    local ready=$(kubectl get daemonset prometheus-prometheus-node-exporter -n "$NAMESPACE" -o jsonpath='{.status.numberReady}')
+  if kubectl get daemonset ${RELEASE_NAME}-prometheus-node-exporter -n "$NAMESPACE" &> /dev/null; then
+    local desired=$(kubectl get daemonset ${RELEASE_NAME}-prometheus-node-exporter -n "$NAMESPACE" -o jsonpath='{.status.desiredNumberScheduled}')
+    local ready=$(kubectl get daemonset ${RELEASE_NAME}-prometheus-node-exporter -n "$NAMESPACE" -o jsonpath='{.status.numberReady}')
 
     if [ "$ready" = "$desired" ] && [ "$ready" -gt 0 ]; then
       record_test "node_exporter" "PASS" "Node Exporter is running on all nodes ($ready/$desired ready)"
@@ -232,9 +233,9 @@ validate_node_exporter() {
 validate_kube_state_metrics() {
   log_info "Validating kube-state-metrics..."
 
-  if kubectl get deployment prometheus-kube-state-metrics -n "$NAMESPACE" &> /dev/null; then
-    local ready=$(kubectl get deployment prometheus-kube-state-metrics -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
-    local desired=$(kubectl get deployment prometheus-kube-state-metrics -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
+  if kubectl get deployment ${RELEASE_NAME}-kube-state-metrics -n "$NAMESPACE" &> /dev/null; then
+    local ready=$(kubectl get deployment ${RELEASE_NAME}-kube-state-metrics -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
+    local desired=$(kubectl get deployment ${RELEASE_NAME}-kube-state-metrics -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
 
     if [ "$ready" = "$desired" ] && [ "$ready" -gt 0 ]; then
       record_test "kube_state_metrics" "PASS" "kube-state-metrics is running ($ready/$desired replicas ready)"
