@@ -131,7 +131,7 @@ spec:
 | -------------------- | --------------------------- | -------------------------------- |
 | `INGRESS_DOMAIN`     | `fawkes.idp`                | Base domain for ingress          |
 | `TLS_CLUSTER_ISSUER` | `letsencrypt-prod`          | Default certificate issuer       |
-| `LETSENCRYPT_EMAIL`  | `platform-admin@fawkes.idp` | Let's Encrypt notification email |
+| `LETSENCRYPT_EMAIL`  | `admin@ufawkes.dev` | Let's Encrypt notification email |
 | `DNS_PROVIDER`       | `aws`                       | DNS provider for ExternalDNS     |
 
 ### Cloud Provider Setup
