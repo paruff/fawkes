@@ -126,7 +126,7 @@ spec:
     - name: clone-gitops-base
       image: docker.io/alpine/git:v2.45.2
       workingDir: $(workspaces.source.path)
-      resources:
+      computeResources:
         requests:
           cpu: 50m
           memory: 64Mi
@@ -142,7 +142,7 @@ spec:
     - name: deploy-preview
       image: docker.io/bitnami/kubectl:1.31.2
       workingDir: $(workspaces.source.path)
-      resources:
+      computeResources:
         requests:
           cpu: 50m
           memory: 64Mi
@@ -225,7 +225,7 @@ spec:
   steps:
     - name: delete-namespace
       image: docker.io/bitnami/kubectl:1.31.2
-      resources:
+      computeResources:
         requests:
           cpu: 50m
           memory: 64Mi
