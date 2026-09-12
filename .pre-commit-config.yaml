@@ -196,21 +196,27 @@ repos:
         stages: [commit-msg]
 
       # Kubernetes manifest validation with kubeconform (preferred) or kubeval (fallback)
+      # Covers platform/ too (not just infra/kubernetes): every StorageClass/
+      # VolumeSnapshotClass/etc bug found in #2010-#2018 lived under platform/apps/,
+      # which this hook never touched before. -ignore-missing-schemas skips
+      # CRD types kubeconform doesn't have a schema for (ArgoCD Application,
+      # ApplicationSet, etc.) rather than failing on them.
       - id: kubeval
         name: Validate Kubernetes manifests (kubeconform/kubeval)
         entry: |
           bash -c '
+            EXCLUDE_PATTERN="values.*\.yaml|kustomization\.yaml|devfiles/|recording-rules\.yaml|scrape-configs\.yaml|aliases\.yaml"
             if command -v kubeconform &> /dev/null; then
-              find infra/kubernetes -name "*.yaml" -o -name "*.yml" | grep -v values.yaml | xargs -I {} kubeconform -strict -ignore-missing-schemas {}
+              find infra/kubernetes platform -name "*.yaml" -o -name "*.yml" | grep -vE "$EXCLUDE_PATTERN" | xargs -I {} kubeconform -strict -ignore-missing-schemas {}
             elif command -v kubeval &> /dev/null; then
-              find infra/kubernetes -name "*.yaml" -o -name "*.yml" | grep -v values.yaml | xargs -I {} kubeval --ignore-missing-schemas {}
+              find infra/kubernetes platform -name "*.yaml" -o -name "*.yml" | grep -vE "$EXCLUDE_PATTERN" | xargs -I {} kubeval --ignore-missing-schemas {}
             else
               echo "⚠️  kubeconform/kubeval not installed, skipping K8s validation"
             fi
           '
         language: system
         pass_filenames: false
-        files: '^infra/kubernetes/.*\.(yaml|yml)$'
+        files: '^(infra/kubernetes|platform)/.*\.(yaml|yml)$'
 
       # Kustomize build validation
       - id: kustomize-validate
@@ -337,5 +343,5 @@ ci:
   autoupdate_branch: ""
   autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
   autoupdate_schedule: monthly
-  skip: [terraform_tflint, terraform_tfsec, kubeval, kustomize-validate, helm-lint, mkdocs-validate]
+  skip: [terraform_tflint, terraform_tfsec, kustomize-validate, helm-lint, mkdocs-validate]
   submodules: false
