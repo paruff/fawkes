@@ -4,6 +4,8 @@ This directory contains the bootstrap configuration for the Fawkes platform usin
 
 ## Overview
 
+> ⚠️ **This directory is the one exception to "GitOps is the source of truth."** Unlike everything under `platform/apps/`, ArgoCD isn't watching `platform/bootstrap/` itself — it's what *creates* ArgoCD's management of the cluster. A merged change here has no live effect until someone re-runs `kubectl apply -k platform/bootstrap` (see "Bootstrap the Platform" below). See `docs/KNOWN_LIMITATIONS.md` KL-14.
+
 The app-of-apps pattern is an ArgoCD best practice where a single "root" Application manages all other platform Applications. This provides:
 
 - **Centralized Management**: One place to manage all platform components

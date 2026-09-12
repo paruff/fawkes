@@ -78,7 +78,7 @@ Before any of the 6 items, confirm the ground truth hasn't drifted further:
 4. Verify DevLake's own dashboard/API shows a deployment-frequency data point
 5. Update `docs/KNOWN_LIMITATIONS.md` KL-12 to resolved
 
-**Risk:** `devlake-lake` pod was in `CreateContainerConfigError` as of this session's last check — fix that first or this entire phase is blocked on infrastructure, not code.
+**Risk (resolved 2026-09-12):** `devlake-lake` pod was in `CreateContainerConfigError` as of an earlier session's last check. Live-verified now on `mac-mini-k3s`: `devlake-lake` is `Running` (1/1, one restart 2d11h ago, healthy since), `devlake-mysql` and `devlake-ui` are both `Running` with zero restarts, and `devlake-lake`'s logs show clean `/ping` health checks with no errors. This blocker self-resolved (likely once the ExternalSecret it depends on synced) and no longer blocks starting the webhook-wiring work above.
 
 ### Phase 5 — Alertmanager→DevLake incident-payload adapter
 
