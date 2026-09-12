@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.109](https://github.com/paruff/fawkes/compare/v0.3.108...v0.3.109) (2026-09-12)
+
+
+### Fixed
+
+* **argocd:** make repo-server/controller concurrency limits permanent ([#1959](https://github.com/paruff/fawkes/issues/1959)) ([#2021](https://github.com/paruff/fawkes/issues/2021)) ([6be9b41](https://github.com/paruff/fawkes/commit/6be9b416c84c1c457f1282137f7cc2986e960c20))
+
 ## [0.3.108](https://github.com/paruff/fawkes/compare/v0.3.107...v0.3.108) (2026-09-12)
 
 
