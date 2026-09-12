@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.122](https://github.com/paruff/fawkes/compare/v0.3.121...v0.3.122) (2026-09-12)
+
+
+### Changed
+
+* **golden-path:** rename tracer-bullet to python-fawkes-path ([#2054](https://github.com/paruff/fawkes/issues/2054)) ([b77f545](https://github.com/paruff/fawkes/commit/b77f5452e81b0c1ea4e6631291e66fd12ebfd8ed))
+
 ## [0.3.121](https://github.com/paruff/fawkes/compare/v0.3.120...v0.3.121) (2026-09-12)
 
 
