@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.134](https://github.com/paruff/fawkes/compare/v0.3.133...v0.3.134) (2026-09-13)
+
+
+### Docs
+
+* **planning:** add 4-tier planning cascade + product discovery docs ([#2085](https://github.com/paruff/fawkes/issues/2085)) ([c03f4bd](https://github.com/paruff/fawkes/commit/c03f4bd1cd8f008759b397c84c7a17c44561c603))
+
 ## [0.3.133](https://github.com/paruff/fawkes/compare/v0.3.132...v0.3.133) (2026-09-12)
 
 
