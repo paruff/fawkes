@@ -48,7 +48,7 @@ cloud deployment.
 │  └──────────────┴─────────────────────┘                        │
 │                          │                                       │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │  Vault (dev mode local / prod mode cloud)               │   │
+│  │  OpenBao (dev mode local / prod mode cloud)             │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                          │                                       │
 │  ┌─────────────────────────────────────────────────────────┐   │
@@ -59,13 +59,13 @@ cloud deployment.
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-| Component            | Local (Path A)               | Cloud (Path B/C)   |
-| -------------------- | ---------------------------- | ------------------ |
-| ArgoCD               | ✅ k3d                       | ✅ EKS / AKS       |
-| Backstage            | ✅ SQLite                    | ✅ RDS PostgreSQL  |
-| Prometheus + Grafana | ✅ in-cluster                | ✅ in-cluster      |
-| Vault                | ✅ dev mode (non-persistent) | ✅ production mode |
-| Sample application   | ✅                           | ✅                 |
+| Component            | Local (Path A)                 | Cloud (Path B/C)       |
+| -------------------- | ------------------------------ | ---------------------- |
+| ArgoCD               | ✅ k3d                         | ✅ EKS / AKS           |
+| Backstage            | ✅ SQLite                      | ✅ RDS PostgreSQL      |
+| Prometheus + Grafana | ✅ in-cluster                  | ✅ in-cluster          |
+| OpenBao              | ✅ dev mode (non-persistent)   | ✅ production mode     |
+| Sample application   | ✅                             | ✅                     |
 
 ### Cluster Topology (Which Cluster Is Canonical?)
 
@@ -104,10 +104,13 @@ scanning, log aggregation, DORA metrics, and enterprise collaboration.
 │                                                                  │
 │  ┌──────────────────────────────────────────────────────────┐  │
 │  │  CI/CD Layer                                              │  │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────────────────┐   │  │
-│  │  │ Jenkins  │  │ DevLake  │  │ Container Registry   │   │  │
-│  │  │ (CI/CD)  │  │ (DORA)   │  │ (Harbor / ECR)       │   │  │
-│  │  └──────────┘  └──────────┘  └──────────────────────┘   │  │
+│  │  ┌────────────────────┐  ┌──────────────────────────┐    │  │
+│  │  │ Tekton (CI only)   │  │ Container Registry       │    │  │
+│  │  │ build/test/scan    │  │ (Harbor / ECR)           │    │  │
+│  │  │ SBOM/sign/promote  │  │                          │    │  │
+│  │  └────────────────────┘  └──────────────────────────┘    │  │
+│  │                                                            │  │
+│  │  ArgoCD (CD only) — GitOps deployment & reconciliation   │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │                                                                  │
 │  ┌──────────────────────────────────────────────────────────┐  │
@@ -143,10 +146,9 @@ scanning, log aggregation, DORA metrics, and enterprise collaboration.
 | ArgoCD                            | ✅     | ✅     |
 | Backstage                         | ✅     | ✅     |
 | Prometheus + Grafana              | ✅     | ✅     |
-| Vault                             | ✅     | ✅     |
+| OpenBao (secrets management)      | ✅     | ✅     |
 | Sample application                | ✅     | ✅     |
-| Jenkins CI/CD                     | —      | ✅     |
-| DevLake (DORA aggregation)        | —      | ✅     |
+| Tekton CI/CD                      | —      | ✅     |
 | SonarQube (SAST)                  | —      | ✅     |
 | Trivy (container scanning)        | —      | ✅     |
 | Container registry (Harbor / ECR) | —      | ✅     |
@@ -204,26 +206,21 @@ reference bug) the first time it ran.
 
 ### Platform Services (`services/`)
 
-| Service             | Directory                                          | Purpose                                                                                    |
-| ------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| VSM                 | `services/vsm/`                                    | Value Stream Mapping — tracks work items through 8-stage pipeline, calculates flow metrics |
-| Analytics Dashboard | `services/analytics-dashboard/`                    | DORA trend data for Backstage portal widgets                                               |
-| Anomaly Detection   | `services/anomaly-detection/`                      | ML-based anomaly detection using Prometheus metrics                                        |
-| Smart Alerting      | `services/smart-alerting/`                         | Intelligent alert routing via Grafana Alertmanager                                         |
-| Feedback            | `services/feedback/`                               | Collect and store developer feedback events                                                |
-| Feedback Bot        | `services/feedback-bot/`                           | Automated feedback collection via Mattermost                                               |
-| Friction CLI / Bot  | `services/friction-cli/`, `services/friction-bot/` | Friction signal collection and aggregation                                                 |
-| Discovery Metrics   | `services/discovery-metrics/`                      | Service health summaries for Backstage                                                     |
-| SPACE Metrics       | `services/space-metrics/`                          | SPACE framework metrics collection                                                         |
-| AI Code Review      | `services/ai-code-review/`                         | AI-powered code review automation                                                          |
-| NPS                 | `services/nps/`                                    | Net Promoter Score collection                                                              |
-| DevEx Survey        | `services/devex-survey-automation/`                | Developer experience survey automation                                                     |
-| Insights            | `services/insights/`                               | Aggregated insight queries over analytics data                                             |
-| Data API            | `services/data-api/`                               | Unified data access layer                                                                  |
-| MCP K8s Server      | `services/mcp-k8s-server/`                         | Model Context Protocol server for Kubernetes                                               |
+Following the consolidation directive (17 microservices → 2 domain monoliths), Fawkes now runs two unified platform services:
 
-> **Extensions**: The RAG service (Weaviate + semantic search) and DataHub (data
-> catalog) are optional extensions. See [`extensions/`](../extensions/README.md).
+| Service             | Directory                              | Database             | Purpose                                                                                    |
+| ------------------- | -------------------------------------- | -------------------- | ------------------------------------------------------------------------------------------ |
+| **Telemetry Engine** | `services/fawkes-telemetry-engine/`    | `telemetry_db`       | Unified telemetry: DORA metrics (native PromQL), SPACE metrics, anomaly detection, analytics dashboard, insights, discovery metrics, data API |
+| **DevEx Service**   | `services/fawkes-devex-service/`       | `devex_db`           | Developer experience: feedback collection, friction tracking, VSM, NPS, **SPACE surveys (quarterly NPS, weekly pulse, friction widget)**, AI code review, MCP K8s server |
+
+> **Shared PostgreSQL Instance**: Both monoliths connect to a single PostgreSQL instance (managed via CloudNativePG / Patroni on Kubernetes, or managed RDS/CloudSQL) but use **separate databases** (`telemetry_db`, `devex_db`) with dedicated users and connection pools. This provides operational simplicity (one instance to manage) while preserving logical isolation and independent schema evolution.
+>
+> **Migration Note**: The following 17 microservices have been consolidated:
+> - `vsm`, `analytics-dashboard`, `anomaly-detection`, `smart-alerting`, `feedback`, `feedback-bot`, `friction-cli`, `friction-bot`, `discovery-metrics`, `space-metrics`, `ai-code-review`, `nps`, `devx-survey-automation`, `insights`, `data-api`, `mcp-k8s-server`
+>
+> Their functionality is preserved as internal modules within the two monoliths. Inter-service HTTP calls have been replaced with direct Go/Python imports. Shared libraries live in `services/common/`.
+>
+> **Extensions**: The RAG service (Weaviate + semantic search) and DataHub (data catalog) remain optional extensions. See [`extensions/`](../extensions/README.md).
 
 ---
 
@@ -263,11 +260,11 @@ Dependencies flow **downward only**. No layer may import or depend on a layer ab
 graph TD
     Dev[Developer] -->|git push| GitHub[GitHub SCM]
 
-    GitHub -->|webhook| Jenkins[Jenkins CI]
+    GitHub -->|webhook| Tekton[Tekton CI]
     GitHub -->|GitOps sync| ArgoCD[ArgoCD]
 
-    Jenkins -->|build & push| Registry[Container Registry]
-    Jenkins -->|deploy events| DevLake[DevLake DORA]
+    Tekton -->|build & push| Registry[Container Registry]
+    Tekton -->|promote events| GitOps[GitOps Repo]
 
     ArgoCD -->|reconcile| K8s[Kubernetes Cluster]
     Registry -->|image pull| K8s
@@ -277,19 +274,16 @@ graph TD
     K8s -->|hosts| Observability[Observability Stack]
 
     Backstage -->|catalog / templates| ArgoCD
-    Backstage -->|plugin data| Jenkins
-    Backstage -->|metrics display| DevLake
+    Backstage -->|metrics display| Prometheus
 
     Services -->|OTLP metrics + traces + logs| OTel[OpenTelemetry Collector]
     OTel -->|metrics| Prometheus[Prometheus]
     OTel -->|traces| Tempo[Grafana Tempo]
     OTel -->|logs| Loki[Loki]
 
-    Prometheus -->|data source| Grafana[Grafana]
+    Prometheus -->|data source + native DORA PromQL| Grafana[Grafana]
     Loki -->|data source| Grafana
     Tempo -->|data source| Grafana
-
-    DevLake -->|DORA dashboards| Grafana
 
     subgraph Obstackd [Observability — obstackd]
         Prometheus
@@ -300,9 +294,8 @@ graph TD
     end
 
     subgraph Deliveryd [CI/CD — deliveryd]
-        Jenkins
+        Tekton
         ArgoCD
-        DevLake
     end
 ```
 
@@ -310,33 +303,33 @@ graph TD
 
 ## Data Flow: Commit to Metrics
 
-The end-to-end journey from a code commit to DORA metrics:
+The end-to-end journey from a code commit to DORA metrics (native PromQL, no DevLake):
 
 ```mermaid
 sequenceDiagram
     participant Dev as Developer
     participant GH as GitHub
-    participant Jenkins as Jenkins CI
+    participant Tekton as Tekton CI
     participant Registry as Container Registry
+    participant GitOps as GitOps Repo
     participant ArgoCD as ArgoCD
     participant K8s as Kubernetes
-    participant DevLake as DevLake
+    participant Prometheus as Prometheus
     participant Grafana as Grafana
 
     Dev->>GH: git push / PR merge
-    GH->>Jenkins: webhook trigger
-    Jenkins->>Jenkins: build, test, scan (SAST, container)
-    Jenkins->>Registry: push image (pinned tag/digest)
-    Jenkins->>GH: update image tag in GitOps repo
-    Jenkins->>DevLake: emit build event (lead-time start)
+    GH->>Tekton: webhook trigger
+    Tekton->>Tekton: build, test, scan (SAST, container)
+    Tekton->>Registry: push image (pinned tag/digest)
+    Tekton->>GitOps: update image tag in GitOps repo (promote)
+    Tekton->>Prometheus: emit build event (lead-time start, via OTLP)
 
     GH->>ArgoCD: detect diff in desired state
     ArgoCD->>K8s: apply manifests / Helm upgrade
     K8s-->>ArgoCD: reconciled (healthy)
-    ArgoCD->>DevLake: emit deploy event (lead-time end)
+    ArgoCD->>Prometheus: emit deploy event (lead-time end, via OTLP)
 
-    DevLake->>DevLake: calculate DORA metrics
-    DevLake->>Grafana: expose metrics via API
+    Prometheus->>Prometheus: calculate DORA metrics via native PromQL
     Grafana-->>Dev: DORA dashboard updated
 ```
 
@@ -344,24 +337,21 @@ sequenceDiagram
 
 ## Allowed Inter-Service Communication
 
-Services communicate via HTTP/REST only. Direct database sharing is not permitted.
+Platform services communicate via HTTP/REST only. Direct database sharing is not permitted.
+Internal module calls within the two monoliths use direct Go/Python imports (no network hop).
 
-| Caller              | Callee                  | Protocol      | Notes                              |
-| ------------------- | ----------------------- | ------------- | ---------------------------------- |
-| Backstage (portal)  | `analytics-dashboard`   | HTTP          | DORA trend data for portal widgets |
-| Backstage (portal)  | `discovery-metrics`     | HTTP          | Service health summaries           |
-| `feedback-bot`      | `feedback` service      | HTTP          | Store feedback events              |
-| `friction-bot`      | `friction-cli`          | HTTP          | Friction signal aggregation        |
-| `smart-alerting`    | Grafana Alertmanager    | HTTP          | Route alert rules                  |
-| `anomaly-detection` | Prometheus              | HTTP (PromQL) | Pull metrics for ML analysis       |
-| `insights`          | `analytics-dashboard`   | HTTP          | Aggregated insight queries         |
-| `vsm` service       | DevLake                 | HTTP          | Value stream mapping data          |
-| Any service         | OpenTelemetry Collector | OTLP/gRPC     | Traces and metrics export          |
+| Caller              | Callee                    | Protocol    | Notes                              |
+| ------------------- | ------------------------- | ----------- | ---------------------------------- |
+| Backstage (portal)  | `fawkes-telemetry-engine` | HTTP        | DORA trend data, service health    |
+| Backstage (portal)  | `fawkes-devex-service`    | HTTP        | Feedback, VSM, NPS, surveys        |
+| `fawkes-devex-service` | Grafana Alertmanager    | HTTP        | Route alert rules (via smart-alerting module) |
+| `fawkes-telemetry-engine` | Prometheus            | HTTP (PromQL) | Pull metrics for anomaly detection |
+| Any service         | OpenTelemetry Collector   | OTLP/gRPC   | Traces and metrics export          |
 
 **Rules:**
 
 - Services do **not** call `infra/` APIs or Terraform directly.
-- Services do **not** share databases — each service owns its own data store.
+- Services do **not** share database schemas/tables — each monolith owns its database (`telemetry_db`, `devex_db`) on a shared PostgreSQL instance.
 - All external traffic routes through the Kubernetes Ingress controller.
 - Service-to-service calls within the cluster use Kubernetes DNS (`svc.cluster.local`).
 
@@ -378,21 +368,198 @@ graph LR
     OTel -->|traces| Tempo[Grafana Tempo]
     OTel -->|logs| Loki[Loki]
 
-    Prom --> Grafana[Grafana]
+    Prom -->|native DORA PromQL| Grafana[Grafana]
     Tempo --> Grafana
     Loki --> Grafana
 
-    Grafana -->|DORA dashboards| DevLake[DevLake]
     Grafana -->|alerts| Alertmanager[Alertmanager]
-    Alertmanager -->|notify| SmartAlerting[smart-alerting service]
+    Alertmanager -->|notify| SmartAlerting[smart-alerting module]
 ```
 
-| Signal       | Collector               | Storage       | Query                 |
-| ------------ | ----------------------- | ------------- | --------------------- |
-| Metrics      | OpenTelemetry Collector | Prometheus    | Grafana / PromQL      |
-| Logs         | OpenTelemetry Collector | Loki          | Grafana / LogQL       |
-| Traces       | OpenTelemetry Collector | Grafana Tempo | Grafana / TraceQL     |
-| DORA metrics | DevLake                 | DevLake DB    | Grafana / DevLake API |
+| Signal          | Collector               | Storage       | Query                 |
+| --------------- | ----------------------- | ------------- | --------------------- |
+| Metrics         | OpenTelemetry Collector | Prometheus    | Grafana / PromQL      |
+| Logs            | OpenTelemetry Collector | Loki          | Grafana / LogQL       |
+| Traces          | OpenTelemetry Collector | Grafana Tempo | Grafana / TraceQL     |
+| DORA metrics    | Native PromQL (no ETL)  | Prometheus    | Grafana / PromQL      |
+
+---
+
+## DORA Metrics: Native PromQL Recording Rules
+
+All 5 DORA metrics are computed natively in Prometheus via recording rules — **no DevLake ETL required**. Recording rules are deployed via `platform/apps/prometheus/rules/dora.yml`.
+
+### Raw Events Required (Emitted via OTLP)
+
+| Event | Source | Key Labels |
+|-------|--------|------------|
+| `tekton_pipelinerun_start` | Tekton CI | `commit_sha`, `pipeline`, `namespace` |
+| `tekton_pipelinerun_finished` | Tekton CI | `commit_sha`, `pipeline`, `status` (success/failed) |
+| `argocd_application_sync_started` | ArgoCD | `app`, `commit_sha`, `namespace` |
+| `argocd_application_sync_succeeded` | ArgoCD | `app`, `commit_sha`, `namespace` |
+| `argocd_application_sync_failed` | ArgoCD | `app`, `commit_sha`, `namespace` |
+| `argocd_application_rollback` | ArgoCD | `app`, `commit_sha`, `namespace` |
+| `alertmanager_alert_firing` | Alertmanager | `incident_id`, `alertname`, `severity` |
+| `alertmanager_alert_resolved` | Alertmanager | `incident_id`, `alertname` |
+| `service_up` | Prometheus | `service`, `namespace`, `job` |
+
+### Recording Rules (`dora.yml`)
+
+```yaml
+groups:
+- name: dora-metrics
+  interval: 30s
+  rules:
+  # Deployment Frequency: syncs per day per app/env
+  - expr: |
+      sum by (app, namespace) (
+        rate(argocd_application_sync_succeeded_total[24h])
+      )
+    record: dora:deployment_frequency:ratio_1d
+
+  # Lead Time for Changes: commit → production sync (hours)
+  - expr: |
+      histogram_quantile(0.5,
+        sum by (le, commit_sha) (
+          rate(
+            (
+              argocd_application_sync_succeeded_timestamp_seconds{job="argocd"}
+              -
+              tekton_pipelinerun_start_timestamp_seconds{job="tekton"}
+            ) / 3600
+          )[24h]
+        )
+      )
+    record: dora:lead_time_for_changes:hours_1d
+
+  # Change Failure Rate: failed syncs / total syncs
+  - expr: |
+      sum by (app, namespace) (
+        rate(argocd_application_sync_failed_total[24h])
+      )
+      /
+      sum by (app, namespace) (
+        rate(argocd_application_sync_total[24h])
+      )
+    record: dora:change_failure_rate:ratio_1d
+
+  # Mean Time to Recovery: alert firing → resolved (hours)
+  - expr: |
+      histogram_quantile(0.5,
+        sum by (le, incident_id) (
+          rate(
+            (
+              alertmanager_alert_resolved_timestamp_seconds
+              -
+              alertmanager_alert_firing_timestamp_seconds
+            ) / 3600
+          )[24h]
+        )
+      )
+    record: dora:mttr:hours_1d
+
+  # Reliability (5th key): service availability % meeting SLO
+  - expr: |
+      sum by (service, namespace) (
+        rate(service_up_total{job="prometheus"}[30d])
+      )
+      /
+      sum by (service, namespace) (
+        rate(service_up_total{job="prometheus"}[30d]) + rate(service_down_total{job="prometheus"}[30d])
+      )
+    record: dora:reliability:ratio_30d
+```
+
+### Grafana Dashboard Queries
+
+| Metric | Grafana Query |
+|--------|---------------|
+| Deployment Frequency | `dora:deployment_frequency:ratio_1d` |
+| Lead Time (P50) | `dora:lead_time_for_changes:hours_1d` |
+| Change Failure Rate | `dora:change_failure_rate:ratio_1d * 100` |
+| MTTR (P50) | `dora:mttr:hours_1d` |
+| Reliability | `dora:reliability:ratio_30d * 100` |
+
+---
+
+## OTel Sidecar Configurations
+
+### Tekton CI: Built-in OTel Exporter
+
+Tekton Pipelines supports native OTel export via controller config:
+
+```yaml
+# platform/apps/tekton/config/observability.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tekton-pipeline-observability
+  namespace: tekton-pipelines
+data:
+  _observability: |
+    metrics:
+      backend-destination: "otlp"
+      otlp:
+        endpoint: "http://otel-collector.fawkes-observability.svc:4317"
+        insecure: true
+    tracing:
+      backend-destination: "otlp"
+      otlp:
+        endpoint: "http://otel-collector.fawkes-observability.svc:4317"
+        insecure: true
+      sampling-rate: "1.0"
+```
+
+**Events emitted**: PipelineRun/TaskRun start/end with `commit_sha`, `pipeline`, `status` attributes.
+
+### ArgoCD: OTel Sidecar for Sync Events
+
+ArgoCD doesn't natively emit OTel; deploy a sidecar that watches Application status:
+
+```yaml
+# platform/apps/argo-cd/argocd-otel-sidecar.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-application-controller
+  namespace: argocd
+spec:
+  template:
+    spec:
+      containers:
+      - name: application-controller
+        # ... existing config ...
+      - name: otel-sync-exporter
+        image: ghcr.io/paruff/argocd-otel-exporter:v0.1.0
+        env:
+        - name: ARGOCD_SERVER
+          value: "argocd-server.argocd.svc:443"
+        - name: OTLP_ENDPOINT
+          value: "http://otel-collector.fawkes-observability.svc:4317"
+        - name: SYNC_INTERVAL
+          value: "30s"
+        # Emits: argocd_application_sync_started/succeeded/failed/rollback
+        # with labels: app, commit_sha, namespace, revision
+```
+
+### Alertmanager: Native OTel Integration
+
+```yaml
+# platform/apps/alertmanager/config.yaml
+global:
+  resolve_timeout: 5m
+route:
+  group_by: ['alertname', 'namespace', 'app']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  receiver: 'default'
+receivers:
+- name: 'default'
+  otlp:
+    endpoint: 'http://otel-collector.fawkes-observability.svc:4317'
+    # Emits: alertmanager_alert_firing/resolved with incident_id
+```
 
 ---
 
@@ -417,8 +584,8 @@ graph TD
 
     NS_Platform -->|Backstage, Backstage DB| PlatComp[Portal Components]
     NS_Obs -->|Prometheus, Grafana, Tempo, Loki| ObsComp[Observability Components]
-    NS_CICD -->|Jenkins, DevLake| CICDComp[CI/CD Components]
-    NS_Security -->|Vault, SonarQube, Trivy| SecComp[Security Components]
+    NS_CICD -->|Tekton| CICDComp[CI/CD Components]
+    NS_Security -->|OpenBao, SonarQube, Trivy| SecComp[Security Components]
     NS_Apps -->|team workloads| AppComp[Application Services]
 ```
 
@@ -427,8 +594,8 @@ graph TD
 | `argocd`               | ArgoCD server, repo-server, application-controller     | Internal only               |
 | `fawkes-platform`      | Backstage portal, PostgreSQL                           | External (HTTPS)            |
 | `fawkes-observability` | Prometheus, Grafana, Tempo, Loki, OTel Collector       | Internal + Grafana external |
-| `fawkes-cicd`          | Jenkins, DevLake                                       | Internal + Jenkins external |
-| `fawkes-security`      | Vault, SonarQube, Trivy operator                       | Internal only               |
+| `fawkes-cicd`          | Tekton                                                 | Internal + Tekton external  |
+| `fawkes-security`      | OpenBao, SonarQube, Trivy operator                       | Internal only               |
 | `fawkes-apps`          | Platform microservices (`services/`)                   | Per-service ingress rules   |
 
 **NetworkPolicy rule**: namespaces may only receive traffic from namespaces explicitly
@@ -451,22 +618,19 @@ Obstackd does not call back into Fawkes services.
 
 ### Fawkes ↔ Deliveryd (CI/CD Platform)
 
-Jenkins receives webhooks from GitHub and emits build/deploy events to DevLake.
-ArgoCD polls the GitOps repository and applies manifests to Kubernetes. DevLake
-aggregates events from both Jenkins (build lead time) and ArgoCD (deployment
-frequency, change failure rate) to compute DORA metrics.
+Tekton receives webhooks from GitHub and emits build events via OTLP to the collector. ArgoCD polls the GitOps repository and applies manifests to Kubernetes, emitting sync events via OTLP. **All 5 DORA metrics are computed natively in Prometheus via recording rules — DevLake is optional for historical cross-repo analytics only.**
 
-**Dependency direction:** GitHub → Jenkins → DevLake ← ArgoCD ← GitHub.
-DevLake and Grafana are read-only consumers of these events.
+**Dependency direction:** GitHub → Tekton (CI) → OTel Collector → Prometheus ← ArgoCD (CD).
+Grafana queries Prometheus for DORA dashboards. DevLake is not on the critical path.
 
-### Fawkes ↔ External Identity (GitHub OAuth / Vault)
+### Fawkes ↔ External Identity (GitHub OAuth / OpenBao)
 
 Backstage and ArgoCD authenticate users via GitHub OAuth. Secrets (API keys,
-DB passwords, image pull secrets) are stored in Vault and synced to Kubernetes
+DB passwords, image pull secrets) are stored in OpenBao and synced to Kubernetes
 Secrets by the External Secrets Operator.
 
-**Dependency direction:** Platform components → Vault (read). `infra/` Terraform
-provisions Vault; `platform/` manifests consume it.
+**Dependency direction:** Platform components → OpenBao (read). `infra/` Terraform
+provisions OpenBao; `platform/` manifests consume it.
 
 ---
 
@@ -485,6 +649,66 @@ Helper libraries for bats tests live in `tests/bats/helpers/`:
 
 - `test_helper.bash` — project root detection, environment setup/teardown, mock helpers
 - `mocks.bash` — mock implementations for `kubectl`, `helm`, external CLIs
+
+---
+
+## Implementation Action Items (Post-Architecture Update)
+
+The following items are required to fully implement the architecture described above:
+
+### 1. OTel Sidecars for Tekton and ArgoCD
+
+- **Tekton**: Enable native OTel export via `tekton-pipeline-observability` ConfigMap (see §OTel Sidecar Configurations)
+- **ArgoCD**: Deploy `argocd-otel-exporter` sidecar to emit sync/rollback events
+- **Alertmanager**: Configure OTLP receiver for alert firing/resolved events
+- **Status**: Documented in architecture; implementation pending
+
+### 2. PromQL Recording Rules for 5 DORA Metrics
+
+- **File**: `platform/apps/prometheus/rules/dora.yml`
+- **Rules**: Deployment Frequency, Lead Time, Change Failure Rate, MTTR, Reliability
+- **Status**: Documented in architecture (§DORA Metrics: Native PromQL Recording Rules); file needs creation
+
+### 3. DevLake Dependency Removal from Tier 2
+
+- **Action**: Remove DevLake from Tier 2 component table; mark as optional extension
+- **Impact**: Eliminates MySQL dependency, DB migration blockers (KL-15), manual ArgoCD connection config (KL-06)
+- **Status**: Architecture updated; manifests need removal
+
+### 4. SPACE Surveys in fawkes-devex-service
+
+- **Modules**: NPS (quarterly), Weekly Pulse (2-min), Friction Widget (always-on), Annual DevEx (15-min)
+- **Storage**: `devex_db` with dedicated survey schema
+- **Collection**: Backstage plugin for surveys; Mattermost bot for pulse reminders
+- **Status**: Architecture updated; code migration pending
+
+### 5. Service Consolidation: 17 → 2 Monoliths
+
+- **Target**: `fawkes-telemetry-engine`, `fawkes-devex-service`
+- **Shared**: `services/common/` (DB, auth, config, logging, metrics)
+- **Migration**: Internal modules replace HTTP calls; single Deployment per monolith
+- **Status**: Architecture defined; code migration in progress (KL-17)
+
+### 6. OpenBao Deployment via Terraform
+
+- **Module**: `infra/terraform/openbao/` (replaces `infra/terraform/vault/`)
+- **Provider**: `openbao` (not `vault`)
+- **Integration**: External Secrets Operator unchanged
+- **Status**: Architecture updated; Terraform module pending
+
+### 7. Prometheus Rules File Creation
+
+- **Path**: `platform/apps/prometheus/rules/dora.yml`
+- **Content**: Recording rules from §DORA Metrics: Native PromQL Recording Rules
+- **Deployment**: ArgoCD Application for Prometheus rules
+- **Status**: Rules documented; file needs creation
+
+### 8. OTel Exporter Images Build
+
+- **Images**: `ghcr.io/paruff/tekton-otel-exporter`, `ghcr.io/paruff/argocd-otel-exporter`
+- **Base**: `otel/opentelemetry-collector-contrib` with custom config
+- **Pipeline**: Build → Scan → Sign → SBOM → GHCR push (Tekton golden path)
+- **Status**: Architecture documented; Dockerfiles and pipeline tasks pending
 
 ---
 

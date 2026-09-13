@@ -1,0 +1,183 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# DORA Metrics Recording Rules
+# Computed natively in Prometheus — no DevLake ETL required
+# Deployed via ArgoCD Application: platform/apps/prometheus/prometheus-rules-dora.yaml
+#
+# Required OTLP Events (emitted by Tekton, ArgoCD, Alertmanager):
+# - tekton_pipelinerun_start{commit_sha, pipeline, namespace}
+# - tekton_pipelinerun_finished{commit_sha, pipeline, status}
+# - argocd_application_sync_started{app, commit_sha, namespace}
+# - argocd_application_sync_succeeded{app, commit_sha, namespace}
+# - argocd_application_sync_failed{app, commit_sha, namespace}
+# - argocd_application_rollback{app, commit_sha, namespace}
+# - alertmanager_alert_firing{incident_id, alertname, severity}
+# - alertmanager_alert_resolved{incident_id, alertname}
+# - service_up{service, namespace, job}
+# - service_down{service, namespace, job}
+
+groups:
+- name: dora-metrics
+  interval: 30s
+  rules:
+  # Deployment Frequency: successful syncs per day per app/env
+  - expr: |
+      sum by (app, namespace) (
+        rate(argocd_application_sync_succeeded_total[24h])
+      )
+    record: dora:deployment_frequency:ratio_1d
+    labels:
+      metric_type: "dora"
+      dora_key: "deployment_frequency"
+
+  # Lead Time for Changes: commit → production sync (hours)
+  # Uses timestamp difference between Tekton PipelineRun start and ArgoCD sync success
+  - expr: |
+      histogram_quantile(0.5,
+        sum by (le, commit_sha) (
+          rate(
+            (
+              argocd_application_sync_succeeded_timestamp_seconds{job="argocd"}
+              -
+              tekton_pipelinerun_start_timestamp_seconds{job="tekton"}
+            ) / 3600
+          )[24h]
+        )
+      )
+    record: dora:lead_time_for_changes:hours_1d
+    labels:
+      metric_type: "dora"
+      dora_key: "lead_time_for_changes"
+      quantile: "0.5"
+
+  - expr: |
+      histogram_quantile(0.9,
+        sum by (le, commit_sha) (
+          rate(
+            (
+              argocd_application_sync_succeeded_timestamp_seconds{job="argocd"}
+              -
+              tekton_pipelinerun_start_timestamp_seconds{job="tekton"}
+            ) / 3600
+          )[24h]
+        )
+      )
+    record: dora:lead_time_for_changes:hours_1d_p90
+    labels:
+      metric_type: "dora"
+      dora_key: "lead_time_for_changes"
+      quantile: "0.9"
+
+  # Change Failure Rate: failed syncs / total syncs
+  - expr: |
+      sum by (app, namespace) (
+        rate(argocd_application_sync_failed_total[24h])
+      )
+      /
+      sum by (app, namespace) (
+        rate(argocd_application_sync_total[24h])
+      )
+    record: dora:change_failure_rate:ratio_1d
+    labels:
+      metric_type: "dora"
+      dora_key: "change_failure_rate"
+
+  # Mean Time to Recovery: alert firing → resolved (hours)
+  # P50
+  - expr: |
+      histogram_quantile(0.5,
+        sum by (le, incident_id) (
+          rate(
+            (
+              alertmanager_alert_resolved_timestamp_seconds
+              -
+              alertmanager_alert_firing_timestamp_seconds
+            ) / 3600
+          )[24h]
+        )
+      )
+    record: dora:mttr:hours_1d
+    labels:
+      metric_type: "dora"
+      dora_key: "mttr"
+      quantile: "0.5"
+
+  # MTTR P90
+  - expr: |
+      histogram_quantile(0.9,
+        sum by (le, incident_id) (
+          rate(
+            (
+              alertmanager_alert_resolved_timestamp_seconds
+              -
+              alertmanager_alert_firing_timestamp_seconds
+            ) / 3600
+          )[24h]
+        )
+      )
+    record: dora:mttr:hours_1d_p90
+    labels:
+      metric_type: "dora"
+      dora_key: "mttr"
+      quantile: "0.9"
+
+  # Reliability (5th DORA key): service availability % meeting SLO over 30d
+  # Uses service_up / (service_up + service_down) ratio
+  - expr: |
+      sum by (service, namespace) (
+        rate(service_up_total{job="prometheus"}[30d])
+      )
+      /
+      sum by (service, namespace) (
+        rate(service_up_total{job="prometheus"}[30d]) + rate(service_down_total{job="prometheus"}[30d])
+      )
+    record: dora:reliability:ratio_30d
+    labels:
+      metric_type: "dora"
+      dora_key: "reliability"
+
+  # Additional: Deployment success rate (for correlation)
+  - expr: |
+      sum by (app, namespace) (
+        rate(argocd_application_sync_succeeded_total[24h])
+      )
+      /
+      sum by (app, namespace) (
+        rate(argocd_application_sync_total[24h])
+      )
+    record: dora:deployment_success_rate:ratio_1d
+    labels:
+      metric_type: "dora"
+      dora_key: "deployment_success_rate"
+
+  # Additional: Rollback rate
+  - expr: |
+      sum by (app, namespace) (
+        rate(argocd_application_rollback_total[24h])
+      )
+      /
+      sum by (app, namespace) (
+        rate(argocd_application_sync_total[24h])
+      )
+    record: dora:rollback_rate:ratio_1d
+    labels:
+      metric_type: "dora"
+      dora_key: "rollback_rate"
