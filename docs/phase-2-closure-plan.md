@@ -39,6 +39,8 @@ Before any of the 6 items, confirm the ground truth hasn't drifted further:
 - `kubectl get pipeline golden-path -n fawkes` and `kubectl get rollout -n fawkes` — confirm the CRDs actually landed
 - If anything is still stuck `OutOfSync`/`Degraded`, diagnose with `superpowers:systematic-debugging` before proceeding — don't build on top of infrastructure that hasn't actually synced
 
+**Result (2026-09-13, root-caused via `superpowers:systematic-debugging`):** every `Application` showed `Unknown` sync status, and `tekton`/`argo-rollouts`/`chaos-mesh` didn't appear in the ApplicationSet-generated list at all. Root cause: `argocd-repo-server` was in `CrashLoopBackOff` (500+ restarts over 27h) on the cluster's WSL2/Windows node. Pattern analysis (comparing restart counts across every pod on that node) ruled out a node-wide network problem — only `argocd-repo-server` and `loki-0`'s sidecar were failing, everything else on the same node (network-only or light workloads) was healthy. The actual cause: the upstream `argo-cd` Helm chart's own default `repoServer.livenessProbe` hits `/healthz?full=true` (validates connectivity to *every* configured repo, OCI registries included) with only `timeoutSeconds: 1` — too tight for a "full" check on this node's slower I/O, so a healthy process kept getting killed mid-check. Fixed by overriding `repoServer.livenessProbe.timeoutSeconds: 10` in `infra/terraform/argocd/values.yaml`, verified via `helm template` that it renders correctly. **Not yet confirmed live** — this needs the PR merged and `terraform apply`'d (CI-gated, not applied by hand) before re-running the checks above. Phases 1-6 below are blocked on that landing; don't attempt them against the currently-degraded cluster.
+
 ### Phase 1 — Live-verify the quality gate blocks a bad deploy
 
 **Depends on:** Phase 0 (Tekton healthy)
@@ -136,7 +138,7 @@ Before any of the 6 items, confirm the ground truth hasn't drifted further:
 
 ## Acceptance
 
-- [ ] Phase 0: infrastructure confirmed synced before proceeding
+- [x] Phase 0: root cause found (`argocd-repo-server` liveness-probe timeout) and fixed in `infra/terraform/argocd/values.yaml` — pending merge + `terraform apply` before infrastructure sync can be re-confirmed live
 - [ ] Phase 1: quality gate live-verified to block a bad deploy
 - [ ] Phase 2: canary rollout + automated rollback observed live
 - [ ] Phase 3: #1942 chaos-in-canary wiring implemented and verified
