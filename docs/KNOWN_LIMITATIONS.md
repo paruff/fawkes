@@ -350,3 +350,18 @@ This is distinct from KL-09's (resolved) token-scope bug and from the `devlake-l
 **Deliberately not auto-approved:** the migration's own warning says it may wipe collected data. Whether that's acceptable (e.g., because the data is re-collectible from GitHub, or because some of it isn't) is a judgment call for whoever owns this cluster, not something to approve unattended — matches `docs/BACKLOG.md`'s Agent Assignment Map convention of "cluster debugging" being human-only.
 
 **Tracking:** No dedicated issue yet. Next step: a human decides whether wiping DevLake's collected data is acceptable, then runs `POST <devlake-endpoint>/proceed-db-migration`, then re-triggers collection for existing projects (tracer-bullet, python-fawkes-path) to confirm no regression before building anything new (like Phase 5) on top.
+
+## KL-16 — `argocd-repo-server`'s Default Liveness Probe Is Too Tight for `/healthz?full=true` (Fix Pending Deployment)
+
+**Description:** Root-caused 2026-09-13 while running `docs/phase-2-closure-plan.md`'s Phase 0 prerequisite check, via `superpowers:systematic-debugging`. `argocd-repo-server` was in `CrashLoopBackOff` (500+ restarts over 27h), which made every ArgoCD `Application` show `Unknown` sync status and kept `tekton`/`argo-rollouts`/`chaos-mesh` from ever appearing as synced Applications.
+
+Pattern analysis first ruled out a node-wide network problem: only `argocd-repo-server` and `loki-0`'s sidecar were failing on the node in question; everything else there (network-only or lightweight pods) was healthy. The actual cause is the upstream `argo-cd` Helm chart's own default: `repoServer.livenessProbe` hits `/healthz?full=true` (which validates connectivity to *every* configured repo, OCI registries included) but ships with only `timeoutSeconds: 1` — too tight for a "full" check on a node with slower disk I/O, so a healthy process kept getting killed mid-check by its own liveness probe.
+
+**Impact:**
+
+- Blocked Phase 0 of `docs/phase-2-closure-plan.md`, and by extension every phase after it (1-6) that depends on ArgoCD actually reconciling.
+- Not specific to this repo's config — any `argo-cd` chart install with a comparably slower node in the mix could hit the same default.
+
+**Fix:** `infra/terraform/argocd/values.yaml` now overrides `repoServer.livenessProbe.timeoutSeconds: 10`, verified via `helm template` to render correctly. **Not yet confirmed live** — needs the PR merged and `terraform apply`'d (CI-gated, not applied by hand per `AGENTS.md` §2's GitOps rule) before re-checking `kubectl get applications -n argocd` shows real sync statuses again.
+
+**Tracking:** No dedicated issue yet — fixed directly as part of closing `docs/phase-2-closure-plan.md`'s Phase 0.
