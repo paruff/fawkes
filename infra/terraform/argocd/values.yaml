@@ -82,6 +82,16 @@ repoServer:
     limits:
       cpu: 500m
       memory: 512Mi
+  # Root-caused live (docs/phase-2-closure-plan.md Phase 0): argocd-repo-server
+  # was crash-looping (500+ restarts over 27h) on the k3s cluster's WSL2/Windows
+  # node. The chart's own default liveness probe hits /healthz?full=true (which
+  # validates connectivity to every configured repo - OCI registries included)
+  # with only a 1-second timeoutSeconds - too tight for a "full" check on this
+  # node's slower disk I/O, so a perfectly healthy process kept getting killed
+  # mid-check. Bumped to 10s; every other probe field is left at the chart's
+  # default (Helm deep-merges this map into repoServer.livenessProbe).
+  livenessProbe:
+    timeoutSeconds: 10
 
 # Redis configuration
 redis:
