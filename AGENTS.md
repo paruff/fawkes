@@ -73,16 +73,26 @@ Read this before touching any file. Each area of the repo has a primary language
 
 ## 4. Context Files — Read Before Generating Any Code
 
+Priority 2-5 is the planning cascade (years → months → weeks → today) — each links to the tier above and below it in its own "How This Connects" table. Priority 6+ is cross-cutting reference, read as relevant to the specific change.
+
 | Priority | File                              | What You Learn                                                          |
 | -------- | ---------------------------------- | ------------------------------------------------------------------------- |
 | 1        | `AGENTS.md` (this file)           | Language map, boundaries, PM contract                                   |
-| 2        | `docs/ARCHITECTURE.md`            | Component relationships, allowed dependencies                           |
-| 3        | `docs/API_SURFACE.md`             | Public interfaces across services                                       |
-| 4        | `docs/KNOWN_LIMITATIONS.md`       | Known issues — do not make these worse                                  |
-| 5        | `docs/CHANGE_IMPACT_MAP.md`       | Which files break when a component changes                              |
-| 6        | `docs/BACKLOG.md`                 | Triaged backlog — value/effort scores, agent assignments, MVP wave plan |
-| 7        | `docs/PR_STANDARD.md`             | Conventional Commits, branch naming, CI requirements, PR body rules     |
-| 8        | `docs/DEPLOYMENT_STRATEGY.md`     | Current deploy model, target progressive delivery, rollback protocol    |
+| 2        | `VISION.md`                       | North star, core principles, current-stage non-goals, riskiest assumption |
+| 3        | `MILESTONES.md`                   | Which phase we're in, release gates, milestone-to-vision traceability   |
+| 4        | `EXECUTION_QUEUE.md`              | This week's priority-ordered work (P0-P3), scope-drift protection       |
+| 5        | `plan-for-the-day.md`             | Today's single goal, target issues, TDD protocol, retrospective        |
+| 6        | `docs/ARCHITECTURE.md`            | Component relationships, allowed dependencies                           |
+| 7        | `docs/API_SURFACE.md`             | Public interfaces across services (this repo's contracts reference)    |
+| 8        | `docs/KNOWN_LIMITATIONS.md`       | Known issues — do not make these worse                                  |
+| 9        | `docs/CHANGE_IMPACT_MAP.md`       | Which files break when a component changes                              |
+| 10       | `docs/BACKLOG.md`                 | Triaged backlog — value/effort scores, agent assignments, MVP wave plan |
+| 11       | `docs/PR_STANDARD.md`             | Conventional Commits, branch naming, CI requirements, PR body rules     |
+| 12       | `docs/DEPLOYMENT_STRATEGY.md`     | Current deploy model, target progressive delivery, rollback protocol    |
+
+Feature-specific, read only when working on that feature: `docs/product/discovery-draft.md` and `docs/product/spec.md` (currently scoped to the Phase 5 self-measurement work, issue #2081 — not a universal read).
+
+**Hard rules vs. docs-based guidance:** §5 (Architecture Rules) and §6's "Must Ask Before"/"Must Never" lists are non-negotiable — never delegated to judgment, regardless of what any doc above suggests. Everything else in this table (including `VISION.md`'s principles and `MILESTONES.md`/`EXECUTION_QUEUE.md`'s priorities) is context meant to *inform* judgment on priority, scope, and approach — it can be wrong or stale, and disagreeing with a doc is a reason to flag it for update, not a violation. If a doc ever conflicts with §5/§6, §5/§6 wins.
 
 ---
 
