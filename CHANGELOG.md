@@ -5,6 +5,13 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.137](https://github.com/paruff/fawkes/compare/v0.3.136...v0.3.137) (2026-09-14)
+
+
+### Added
+
+* **arch:** integrate architect feedback — Tekton, 2 monoliths, OpenBao, native DORA ([#2091](https://github.com/paruff/fawkes/issues/2091)) ([1677efb](https://github.com/paruff/fawkes/commit/1677efb15e559768c17e0781cebdcccf4003d776))
+
 ## [0.3.136](https://github.com/paruff/fawkes/compare/v0.3.135...v0.3.136) (2026-09-13)
 
 
