@@ -8,8 +8,8 @@ Fawkes already has a concrete 3-phase delivery model (`docs/BACKLOG.md`) — thi
 
 | Horizon | Phase | Epic | Goal |
 |---|---|---|---|
-| **H1 (now)** | Phase 1 — Alpha: Commit-to-Staging | #1804, #1808 | Push to `main` → build → scan → sign → GitOps PR → ArgoCD sync → basic observability, live-verified |
-| **H2** | Phase 2 — Beta: Shift-Left Security | #1805 | Failing quality gates block promotion; canary/blue-green with automated rollback; chaos on staging; Change Failure Rate visible |
+| **H1 (now)** | Phase 1 — Alpha: Commit-to-Staging | #1804, #1808 | Push to `main` → Tekton build → scan → sign → SBOM → GHCR push → GitOps PR → ArgoCD sync → basic observability, live-verified |
+| **H2** | Phase 2 — Beta: Shift-Left Security | #1805 | Failing quality gates block promotion; canary with automated rollback; chaos on staging; Change Failure Rate visible |
 | **H3** | Phase 3 — Production: Human-in-the-Loop | #1806 | Production requires portal-gated human approval; traffic-split releases; all 5 DORA keys; error-budget-triggered rollback |
 
 ## Milestones
@@ -18,10 +18,10 @@ Fawkes already has a concrete 3-phase delivery model (`docs/BACKLOG.md`) — thi
 
 | Deliverable | Status | Evidence / Issue |
 |---|---|---|
-| Build → scan → sign → SBOM → GHCR push | ✅ Live | `platform/apps/tekton/golden-path-pipeline.yaml` |
+| Tekton build → scan → sign → SBOM → GHCR push | ✅ Live | `platform/apps/tekton/golden-path-pipeline.yaml` |
 | GitOps PR + auto-merge → ArgoCD sync | ✅ Live | `gitops-promote` task |
 | OTel collector + Prometheus + Grafana | ✅ Live | — |
-| DORA 2-key (Deployment Frequency, Lead Time) in Grafana | 🟡 Needs verification | #1572 |
+| DORA 2-key (Deployment Frequency, Lead Time) in Grafana via native PromQL | 🟡 Needs verification | #1572 |
 | Terraform remote state backend | 🔴 Open | #1569 |
 | DevLake GitHub GraphQL collector | 🟡 Fixed, but DevLake itself now blocked on a DB migration | #1855, `docs/KNOWN_LIMITATIONS.md` KL-15 |
 | Sealed Secrets replacing `CHANGE_ME_*` | 🔴 Open | #1797 |
@@ -75,6 +75,8 @@ What must be true before any change ships to `main`, per `AGENTS.md` §9 and `do
 | RBAC-gated production promotion | Security is non-negotiable |
 | Multi-cloud (AWS/Azure now, GCP deferred) | Multi-cloud from day one |
 | Dojo/belt-level curriculum tie-in per phase | Learn while building |
+| Tekton-first CI/CD (Jenkins retired) | Tekton-first CI/CD |
+| 17 Python services → 2 domain monoliths | Opinionated but extensible |
 
 ## How This Connects
 

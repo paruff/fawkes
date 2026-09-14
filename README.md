@@ -102,9 +102,9 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 
 - **Kubernetes Orchestration** - Multi-cloud ready (AWS, Azure, GCP)
 - **Infrastructure as Code** - Terraform and Crossplane
-- **CI/CD Pipelines** - Jenkins with golden path templates
+- **CI/CD Pipelines** - Tekton (in-cluster) with golden path templates
 - **GitOps Workflows** - ArgoCD for declarative deployments
-- **Progressive Delivery** - Blue-green, canary, automated rollback
+- **Progressive Delivery** - Canary, automated rollback via Argo Rollouts
 
 ### Collaboration & Planning
 
@@ -129,7 +129,7 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 - **Policy Enforcement** - Kyverno for Kubernetes policies + OPA/Rego for CI/CD
 - **SBOM Generation** - Syft-based Software Bill of Materials
 - **Image Signing** - Cosign for cryptographic signatures
-- **Secrets Management** - External Secrets Operator + HashiCorp Vault
+- **Secrets Management** - External Secrets Operator + OpenBao
 - **Zero Trust Architecture** - Security-first architecture
 
 **[Learn more about the Security Plane →](.security-plane/README.md)**
@@ -145,14 +145,15 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 
 ## 📊 DORA Metrics: Built-In, Not Bolt-On
 
-Fawkes collects and visualizes the **Four Key Metrics** that separate high performers from the rest. Collection is **partial in pre-alpha** — pipelines emit deployment events, but DevLake DORA dashboards are not yet populated (see [KL-12](docs/KNOWN_LIMITATIONS.md)):
+Fawkes collects and visualizes the **Five Key Metrics** (DORA 2025) natively via PromQL — no DevLake ETL required:
 
 | Metric                      | What It Measures                   | Fawkes Status                                  |
 | --------------------------- | ---------------------------------- | ---------------------------------------------- |
-| **Deployment Frequency**    | How often you deploy to production | 🚧 Partial — events emitted, dashboards pending |
-| **Lead Time for Changes**   | Time from commit to production     | 🚧 Partial — Git → CI → CD tracking, no baseline yet |
-| **Change Failure Rate**     | % of deployments causing failures  | 🚧 Partial — rework-rate proxy in [METRICS](docs/METRICS.md) |
-| **Time to Restore Service** | Time to recover from incidents     | 🚧 Planned — incident detection not yet wired  |
+| **Deployment Frequency**    | How often you deploy to production | ✅ Native PromQL (ArgoCD sync events)          |
+| **Lead Time for Changes**   | Time from commit to production     | ✅ Native PromQL (Tekton → ArgoCD correlation) |
+| **Change Failure Rate**     | % of deployments causing failures  | ✅ Native PromQL (ArgoCD health + rollbacks)   |
+| **Time to Restore Service** | Time to recover from incidents     | ✅ Native PromQL (Alertmanager events)         |
+| **Reliability** (5th key)   | Service availability meeting SLOs  | ✅ Native PromQL (service SLIs)                |
 
 **DORA capability**: Fawkes provides the quality-internal-platform, version-control, and small-batch foundations; per-stack capability mapping lives in [ROADMAP](ROADMAP.md).
 
