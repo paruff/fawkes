@@ -133,13 +133,13 @@ jobs:
 
       # 4️⃣ Upload SARIF results for GitHub Security tab
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@311b4ee155dcdab395044f00946f664bd51ff173  # v4
+        uses: github/codeql-action/upload-sarif@b96794f015dfd88f77b49b1c93e0fa7110f94c63  # v4
         with:
           sarif_file: trivy-results.sarif
 
       - name: Upload Gitleaks results to GitHub Security tab
         if: always() && hashFiles('gitleaks-results.sarif') != ''
-        uses: github/codeql-action/upload-sarif@311b4ee155dcdab395044f00946f664bd51ff173  # v4
+        uses: github/codeql-action/upload-sarif@b96794f015dfd88f77b49b1c93e0fa7110f94c63  # v4
         with:
           sarif_file: gitleaks-results.sarif
 
