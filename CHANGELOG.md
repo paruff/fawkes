@@ -5,6 +5,17 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.139](https://github.com/paruff/fawkes/compare/v0.3.138...v0.3.139) (2026-09-14)
+
+
+### Chores
+
+* **deps-dev:** bump weaviate-client from 4.23.0 to 4.23.1 ([#2099](https://github.com/paruff/fawkes/issues/2099)) ([d2e31c3](https://github.com/paruff/fawkes/commit/d2e31c3deec332e1d81fc002370bb9e651c02724))
+* **deps:** bump actions/checkout from 4 to 7 ([#2105](https://github.com/paruff/fawkes/issues/2105)) ([ed3f39e](https://github.com/paruff/fawkes/commit/ed3f39e3bf085ad38228c92a8e760dd04ecb5fa8))
+* **deps:** bump actions/github-script ([#2109](https://github.com/paruff/fawkes/issues/2109)) ([25ce315](https://github.com/paruff/fawkes/commit/25ce31521fb123b04903bfce9f25d87f802e45b8))
+* **deps:** bump github/codeql-action/analyze ([#2106](https://github.com/paruff/fawkes/issues/2106)) ([5d9d2fe](https://github.com/paruff/fawkes/commit/5d9d2fefc0f3b23d46bb90514da40a64da280700))
+* **deps:** bump github/codeql-action/upload-sarif ([#2108](https://github.com/paruff/fawkes/issues/2108)) ([ba3c040](https://github.com/paruff/fawkes/commit/ba3c040619fa2c31935660e3f18495f848a3cf34))
+
 ## [0.3.138](https://github.com/paruff/fawkes/compare/v0.3.137...v0.3.138) (2026-09-14)
 
 
