@@ -57,7 +57,7 @@ jobs:
 
       - name: Check dependency graph availability
         id: dependency-graph
-        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553  # v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3  # v9
         with:
           script: |
             try {
@@ -82,7 +82,7 @@ jobs:
       - name: Determine refs
         id: refs
         if: steps.dependency-graph.outputs.enabled == 'true'
-        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553  # v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3  # v9
         with:
           script: |
             let baseRef = '${{ inputs.base-ref }}';
@@ -123,7 +123,7 @@ jobs:
 
       - name: Deny specific licenses
         if: inputs.deny-licenses != '' && steps.dependency-graph.outputs.enabled == 'true' && steps.refs.outputs.skip != 'true'
-        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553  # v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3  # v9
         with:
           script: |
             const denyLicenses = '${{ inputs.deny-licenses }}'.split(',').map(l => l.trim()).filter(Boolean);
