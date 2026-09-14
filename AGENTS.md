@@ -57,13 +57,12 @@ Read this before touching any file. Each area of the repo has a primary language
 
 | Directory                 | Language         | What Lives Here                                     | Do Not                                                   |
 | ------------------------- | ---------------- | ----------------------------------------------------- | --------------------------------------------------------- |
-| `services/`               | Python (FastAPI) | Microservices, APIs, business logic                 | Embed shell business logic here — use `scripts/` instead |
+| `services/`               | Python (FastAPI) | **2 domain monoliths** (telemetry engine, devex service) | Embed shell business logic here — use `scripts/` instead |
 | `infra/`                  | HCL (Terraform)  | Cloud provisioning, IaC modules                     | Hardcode cloud credentials or region defaults            |
 | `platform/`               | YAML + Helm      | Kubernetes manifests, ArgoCD apps, Backstage config | Bypass Helm templating with raw manifests                |
 | `scripts/`                | Bash / Python    | Automation helpers, `ignite.sh`, dev tooling        | Put business logic here — scripts call services          |
 | `design-system/`          | CSS / JS         | UI components for platform web interfaces           | Mix with backend logic                                   |
-| `jenkins-shared-library/` | Groovy           | Shared Jenkins pipeline steps                       | Put Groovy logic in `scripts/`                           |
-| `tests/`                  | Python / Go      | Unit, integration, BDD tests                        | Delete failing tests to make CI pass                     |
+| `tests/`                  | Python / Go      | Unit, integration, pytest/bats/terratest            | Delete failing tests to make CI pass                     |
 | `charts/`                 | Helm / YAML      | Helm chart definitions                              | Override chart values in the chart itself                |
 | `docs/`                   | Markdown         | MkDocs site (Diataxis)                              | Add non-Diataxis content without a category decision     |
 | `templates/`              | YAML / Devfile   | Golden path templates for Backstage                 | Hardcode team-specific values                            |
@@ -101,7 +100,7 @@ Feature-specific, read only when working on that feature: `docs/product/discover
 ### Platform Boundaries
 
 ```
-services/     → Stateless Python (FastAPI) microservices. No direct infra provisioning.
+services/     → Stateless Python (FastAPI) — 2 domain monoliths (telemetry engine, devex service). No direct infra provisioning.
 infra/        → Terraform only. No application code. No shell business logic.
 platform/     → Kubernetes/Helm declarative state. No imperative scripts.
 scripts/      → Call services and CLI tools. Never contain business logic.
@@ -124,6 +123,8 @@ tests/        → Test the above layers. Never import from multiple layers in on
 
 > Go is not used in `services/` — only in `tests/terratest/` for infra tests.
 
+Services are organized as **2 domain monoliths** (`fawkes-telemetry-engine`, `fawkes-devex-service`), not microservices. Shared code lives in `services/common/`.
+
 Prefer established PyPI packages over reinventing. Type hints on all signatures.
 Explicit exceptions with context, never silently discarded. No global mutable state.
 
@@ -132,6 +133,18 @@ Explicit exceptions with context, never silently discarded. No global mutable st
 Every job logs start timestamp, commit SHA, finish timestamp (DORA logging).
 Secrets via `${{ secrets.NAME }}` only. Matrix builds where applicable.
 Jobs must set `timeout-minutes`.
+
+### Tekton CI (In-Cluster)
+
+All CI pipelines run as Tekton PipelineRuns in-cluster (no Jenkins). Pipeline definitions live in `platform/apps/tekton/`. Tasks emit OTel spans to the collector for DORA metrics.
+
+### Secrets Management (OpenBao)
+
+Vault replaced with OpenBao (MPL-2.0). All secrets via External Secrets Operator syncing from OpenBao. No hardcoded credentials in Git or CI.
+
+### Native DORA Metrics (PromQL)
+
+All 5 DORA keys computed natively in Prometheus via recording rules (`platform/apps/prometheus/rules/dora.yml`). DevLake is optional (historical analytics only). No DevLake ETL required for DORA dashboards.
 
 ---
 

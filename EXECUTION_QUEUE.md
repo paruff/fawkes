@@ -11,8 +11,9 @@
 | # | Item | Why P0 |
 |---|---|---|
 | — | **Decide + run the DevLake DB migration** (`docs/KNOWN_LIMITATIONS.md` KL-15) | Every DevLake endpoint returns HTTP 428 until this is approved. Blocks #1919, #2079, #1946, and all of Phase 5. Requires direct cluster access — not agent-executable (see `AI_STANCE.md`). |
+| — | **Replace Jenkins with Tekton across all pipelines** | Migrate every Jenkinsfile/JCasC to Tekton pipeline/task definitions; update all CI references from Jenkins to Tekton; retire Jenkins infrastructure. Blocks all pipeline-dependent work. |
 | #1569 | Terraform remote state backend | `KL-01`: no state locking today — concurrent applies can corrupt state |
-| #1572 | Confirm DORA lead-time/deployment-frequency queryable in Grafana | Phase 1's last unverified acceptance criterion |
+| #1572 | Confirm DORA lead-time/deployment-frequency queryable in Grafana via native PromQL | Phase 1's last unverified acceptance criterion; replace DevLake-dependent queries with native PromQL |
 | #1855 | DevLake GitHub GraphQL collector | Root cause fixed (`KL-09`) but the issue itself is still open — re-verify and close once DevLake is reachable again (`KL-15`), don't just assume it's done |
 | #2004 | `extract-zip` arbitrary file write via symlinks (design-system build toolchain) | `p0-critical` security advisory, no patched version exists yet; related to the broader toolchain upgrade in #1715 |
 
@@ -20,6 +21,7 @@
 
 | # | Item | Notes |
 |---|---|---|
+| — | **Collapse 17 Python services into 2 domain monoliths** | Refactor `services/` from 17 microservices (`vsm`, `analytics-dashboard`, `anomaly-detection`, `smart-alerting`, `feedback`, `feedback-bot`, `friction-cli`, `friction-bot`, `discovery-metrics`, `space-metrics`, `ai-code-review`, `nps`, `devx-survey-automation`, `insights`, `data-api`, `mcp-k8s-server`) into 2 domain monoliths (e.g., `fawkes-telemetry-engine` and `fawkes-devex-service`) sharing common libraries; update all inter-service HTTP calls to internal imports; reduce cluster resource footprint by ~70% |
 | #1797 | Replace `CHANGE_ME_*` with Sealed Secrets | Blocks Backstage deployment (H3) and is its own security gap today |
 | #1578 | Wire IRSA role ARN into python-fawkes-path | |
 | #1581 | Verify CI quality gates are green | |

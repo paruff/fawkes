@@ -205,7 +205,7 @@ repos:
         name: Validate Kubernetes manifests (kubeconform/kubeval)
         entry: |
           bash -c '
-            EXCLUDE_PATTERN="values.*\.yaml|kustomization\.yaml|devfiles/|recording-rules\.yaml|scrape-configs\.yaml|aliases\.yaml"
+            EXCLUDE_PATTERN="values.*\.yaml|kustomization\.yaml|devfiles/|recording-rules\.yaml|scrape-configs\.yaml|aliases\.yaml|dora\.yml"
             if command -v kubeconform &> /dev/null; then
               find infra/kubernetes platform -name "*.yaml" -o -name "*.yml" | grep -vE "$EXCLUDE_PATTERN" | xargs -I {} kubeconform -strict -ignore-missing-schemas {}
             elif command -v kubeval &> /dev/null; then

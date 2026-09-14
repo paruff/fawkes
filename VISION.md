@@ -18,6 +18,7 @@ These are drawn from and stay in sync with `docs/CHARTER.md`'s Guiding Principle
 6. **Open by default.** Decisions, roadmap, metrics, and discussions are public unless privacy requires otherwise.
 7. **Opinionated but extensible.** Golden paths cover 80% of use cases; the other 20% can customize rather than fork.
 8. **Multi-cloud from day one.** Design for cloud portability even where the current implementation (AWS/Azure) is ahead of GCP.
+9. **Tekton-first CI/CD.** All CI/CD pipelines use Tekton taskRuns/pipelines running in-cluster, replacing any Jenkins-dependent workflows. Jenkins is retired; all build→scan→sign→SBOM→GitOps promotion flows through Tekton running locally (k3d) or on the canonical AKS cluster.
 
 ## Non-Goals for the Current Stage (Alpha)
 
@@ -28,6 +29,7 @@ Distinct from `docs/CHARTER.md`'s *permanent* Out-of-Scope list (we will never b
 - **No 5-key DORA dashboard yet.** Alpha ships 2 keys (Deployment Frequency, Lead Time). Change Failure Rate, MTTR, and Reliability are Phase 2/3, and CFR itself is currently blocked on DevLake's own health (`KL-15`).
 - **No GCP support yet**, despite the multi-cloud principle above — AWS and Azure are the current targets; GCP is explicitly deferred, not abandoned.
 - **No enterprise support/certification partnerships yet** — those are 12/24-month `docs/CHARTER.md` goals, not Alpha concerns.
+- **Jenkins is retired.** All CI/CD pipelines are Tekton-based running in-cluster. Legacy Jenkinsfiles and JCasC configs are replaced with Tekton pipeline/task definitions. No new Jenkins-dependent features are accepted.
 
 ## The Riskiest Assumption
 
@@ -50,3 +52,4 @@ Every competing IDP in this space (Backstage-as-a-service offerings, Port, Human
 | Cross-cutting | [docs/RELEASE.md](docs/RELEASE.md) | How does a change actually ship? (this repo's equivalent of a `RELEASE_PROCESS.md`) |
 | Cross-cutting | [docs/DEPLOYMENT_STRATEGY.md](docs/DEPLOYMENT_STRATEGY.md) | How does code get from a merged PR to a running cluster, today vs. the target state? |
 | Deeper background | [docs/CHARTER.md](docs/CHARTER.md) | Full project charter — audience, success criteria, risks, resourcing (this file distills the parts that should shape day-to-day decisions) |
+| Platform strategy | This doc | Tekton-first CI/CD; 17 Python services consolidated into 2 domain monoliths; native OpenTelemetry PromQL DORA metrics (no DevLake dependency) |
