@@ -2945,7 +2945,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/api/jenkins-webhook/" class="md-nav__link">
+      <a href="../reference/api/jenkins-webhook.md" class="md-nav__link">
         
   
   
@@ -3137,7 +3137,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/config/jenkins-values/" class="md-nav__link">
+      <a href="../reference/config/jenkins-values.md" class="md-nav__link">
         
   
   
@@ -3557,7 +3557,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tools/jenkins/" class="md-nav__link">
+      <a href="../tools/jenkins.md" class="md-nav__link">
         
   
   
@@ -5439,10 +5439,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kl-06-devlake-argocd-plugin-requires-manual-connection-configuration" class="md-nav__link">
+  <a href="#kl-06-devlake-argocd-plugin-requires-manual-connection-configuration-deprecated" class="md-nav__link">
     <span class="md-ellipsis">
       
-        KL-06 — DevLake ArgoCD Plugin Requires Manual Connection Configuration
+        KL-06 — DevLake ArgoCD Plugin Requires Manual Connection Configuration (DEPRECATED)
       
     </span>
   </a>
@@ -5450,10 +5450,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kl-07-mttr-tracking-covers-only-jenkins-pipeline-failures" class="md-nav__link">
+  <a href="#kl-07-mttr-tracking-updated-jenkins-retired-native-alertmanagerargocd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        KL-07 — MTTR Tracking Covers Only Jenkins Pipeline Failures
+        KL-07 — MTTR Tracking (UPDATED: Jenkins Retired → Native Alertmanager/ArgoCD)
       
     </span>
   </a>
@@ -5505,10 +5505,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kl-12-devlake-dora-plugin-needs-cicd_tasks-not-just-cicd_deployments-partially-fixed" class="md-nav__link">
+  <a href="#kl-12-devlake-dora-plugin-needs-cicd_tasks-deprecated-devlake-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        KL-12 — DevLake dora Plugin Needs cicd_tasks, Not Just cicd_deployments (Partially Fixed)
+        KL-12 — DevLake dora Plugin Needs cicd_tasks (DEPRECATED: DevLake Optional)
       
     </span>
   </a>
@@ -5538,10 +5538,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kl-15-devlakes-live-api-is-blocked-on-an-unapproved-db-migration" class="md-nav__link">
+  <a href="#kl-15-devlakes-live-api-is-blocked-on-an-unapproved-db-migration-deprecated-devlake-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        KL-15 — DevLake's Live API Is Blocked on an Unapproved DB Migration
+        KL-15 — DevLake's Live API Is Blocked on an Unapproved DB Migration (DEPRECATED: DevLake Optional)
       
     </span>
   </a>
@@ -5553,6 +5553,39 @@
     <span class="md-ellipsis">
       
         KL-16 — argocd-repo-server's Default Liveness Probe Is Too Tight for /healthz?full=true (Fix Pending Deployment)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kl-17-17-microservices-consolidated-into-2-domain-monoliths-in-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-17 — 17 Microservices Consolidated into 2 Domain Monoliths (IN PROGRESS)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kl-18-vault-migrated-to-openbao-completed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-18 — Vault Migrated to OpenBao (COMPLETED)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kl-19-bddgherkin-tests-deprecated-in-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-19 — BDD/Gherkin Tests Deprecated (IN PROGRESS)
       
     </span>
   </a>
@@ -5583,6 +5616,7 @@ in the Fawkes platform. Agents are instructed not to make these worse. Humans re
 agent-generated changes should verify that none of these limitations are exacerbated.</p>
 <p>Update this file whenever a limitation is discovered, resolved, or worsened.
 Link to the tracking issue where one exists.</p>
+<p><strong>Major Architecture Updates (2026-09):</strong> Jenkins retired → Tekton-only CI; 17 microservices consolidated into 2 domain monoliths; Vault → OpenBao; Native PromQL DORA metrics (DevLake now optional); BDD/Gherkin tests deprecated in favor of pytest/bats/terratest.</p>
 </blockquote>
 <hr />
 <h2 id="kl-01-no-terraform-remote-backend">KL-01 — No Terraform Remote Backend</h2>
@@ -5655,37 +5689,24 @@ whose scenarios have no corresponding step-definition implementations. Running
 <p><strong>Tracking:</strong> Tracked implicitly by the Sprint 2 BDD implementation backlog. No single
 consolidated issue exists.</p>
 <hr />
-<h2 id="kl-06-devlake-argocd-plugin-requires-manual-connection-configuration">KL-06 — DevLake ArgoCD Plugin Requires Manual Connection Configuration</h2>
+<h2 id="kl-06-devlake-argocd-plugin-requires-manual-connection-configuration-deprecated">KL-06 — DevLake ArgoCD Plugin Requires Manual Connection Configuration (DEPRECATED)</h2>
 <p><strong>Description:</strong> The DevLake integration with ArgoCD (used for DORA deployment-frequency
 and lead-time metrics) requires a one-time manual configuration step inside the DevLake
 admin UI to establish the ArgoCD API connection. Specifically, an engineer must navigate
 to <strong>Settings → Connections → ArgoCD</strong> and supply the ArgoCD server URL, bearer token,
 and TLS verification settings. This step is not automated by Helm values, Kubernetes
 Jobs, or any GitOps mechanism.</p>
-<p><strong>Impact:</strong></p>
-<ul>
-<li>After every fresh DevLake install (or namespace wipe), an engineer must manually
-  re-enter the ArgoCD connection details in the DevLake UI.</li>
-<li>Automated environment provisioning (e.g., ephemeral preview environments) will not
-  collect DORA metrics until the manual step is completed.</li>
-<li>There is no validation in CI that the connection is healthy.</li>
-</ul>
-<p><strong>Tracking:</strong> No dedicated issue. Add a post-install Helm hook or a <code>scripts/</code> helper
-to automate this step.</p>
+<p><strong>Status: DEPRECATED</strong> — DevLake is no longer required for DORA metrics. Fawkes now computes all 5 DORA metrics natively in Prometheus via recording rules (see <code>docs/ARCHITECTURE.md</code> §DORA Metrics). DevLake is retained only for historical comparison and cross-repo analytics; it is not on the critical path.</p>
+<p><strong>Impact:</strong> Removed from Phase 1/2 blocking items. No manual DevLake configuration needed for DORA metrics to function.</p>
+<p><strong>Tracking:</strong> DevLake migration to optional component tracked in separate epic.</p>
 <hr />
-<h2 id="kl-07-mttr-tracking-covers-only-jenkins-pipeline-failures">KL-07 — MTTR Tracking Covers Only Jenkins Pipeline Failures</h2>
-<p><strong>Description:</strong> Mean Time To Recovery (MTTR) is currently measured only for Jenkins
-pipeline failures — specifically the duration between a pipeline failure event and the
-next successful run of the same pipeline. Production incidents (PagerDuty alerts, SLO
-breaches, rollback events) are not tracked.</p>
-<p><strong>Impact:</strong></p>
-<ul>
-<li>The MTTR metric shown in Grafana dashboards is not a true production MTTR.</li>
-<li>Elite/High/Medium/Low tier classification based on MTTR may be misleading.</li>
-<li>Post-incident reviews cannot be correlated with MTTR data from the platform.</li>
-</ul>
-<p><strong>Tracking:</strong> No dedicated issue. Extend MTTR collection to ingest PagerDuty or
-Alertmanager resolved-alert events.</p>
+<h2 id="kl-07-mttr-tracking-updated-jenkins-retired-native-alertmanagerargocd">KL-07 — MTTR Tracking (UPDATED: Jenkins Retired → Native Alertmanager/ArgoCD)</h2>
+<p><strong>Description:</strong> MTTR is now computed natively via PromQL using Alertmanager alert firing → resolved events and ArgoCD rollback events. The legacy Jenkins-only MTTR measurement has been retired with Jenkins.</p>
+<p><strong>Status: UPDATED</strong> — Native implementation uses:
+- <code>alertmanager_alert_firing</code> → <code>alertmanager_alert_resolved</code> for incident MTTR
+- <code>argocd_application_rollback</code> events for deployment rollback MTTR</p>
+<p><strong>Impact:</strong> MTTR now covers production incidents (not just CI failures). Requires Alertmanager OTel integration (see <code>docs/ARCHITECTURE.md</code> §OTel Sidecar Configurations).</p>
+<p><strong>Tracking:</strong> Implement Alertmanager OTel exporter and ArgoCD rollback event emission.</p>
 <hr />
 <h2 id="kl-08-rework-rate-detection-uses-sha-heuristic-weak-signal">KL-08 — Rework Rate Detection Uses SHA Heuristic (Weak Signal)</h2>
 <p><strong>Description:</strong> The rework rate metric (<code>docs/METRICS.md</code>, computed by
@@ -5773,7 +5794,7 @@ resource, and Prometheus reports <code>up{job="python-fawkes-path"}</code> == 1 
 <p><strong>Tracking:</strong> <a href="https://github.com/paruff/python-fawkes-path-gitops/pull/2">python-fawkes-path-gitops#2</a>,
 merged.</p>
 <hr />
-<h2 id="kl-12-devlake-dora-plugin-needs-cicd_tasks-not-just-cicd_deployments-partially-fixed">KL-12 — DevLake <code>dora</code> Plugin Needs <code>cicd_tasks</code>, Not Just <code>cicd_deployments</code> (Partially Fixed)</h2>
+<h2 id="kl-12-devlake-dora-plugin-needs-cicd_tasks-deprecated-devlake-optional">KL-12 — DevLake <code>dora</code> Plugin Needs <code>cicd_tasks</code> (DEPRECATED: DevLake Optional)</h2>
 <p><strong>Description:</strong> With KL-09's collection bug fixed, DevLake's <code>github_graphql</code>
 plugin ran clean for <code>paruff/python-fawkes-path</code> — but DORA metrics still showed no
 data, because every layer of DevLake's data (raw GitHub API responses, tool
@@ -5786,7 +5807,7 @@ itself and never called GitHub's Deployments API.</p>
 (<code>POST /repos/paruff/python-fawkes-path/deployments</code>) and marks it successful after
 every promotion. Verified live: <code>github_graphql</code>'s existing "Collect Deployments"
 subtask picks this up and it reaches the domain-layer <code>cicd_deployments</code> table
-(confirmed 0 → 1 row via a direct <code>devlake-mysql</code> query).</p>
+(confirmed 0 — 1 row via a direct <code>devlake-mysql</code> query).</p>
 <p><strong>Still not enough, confirmed live:</strong> DevLake's <code>dora</code> plugin (queried its own
 <code>/plugins</code> metadata: <code>{"model":"cicd_tasks","requiredFields":{"column":"type","execptedValue":"Deployment"}}</code>)
 requires <code>cicd_tasks</code> rows with <code>type = "Deployment"</code> specifically — a <em>different</em>
@@ -5795,18 +5816,8 @@ Actions workflow/job run data, not from the Deployments API. Since the golden pa
 runs on Tekton, there are no GitHub Actions workflow runs for <code>github_graphql</code> to
 convert, so <code>cicd_tasks</code> stays empty regardless of how many real Deployments this
 fix creates — confirmed live (still 0 rows after re-collection).</p>
-<p><strong>Impact:</strong></p>
-<ul>
-<li>DORA metrics in DevLake still won't compute for python-fawkes-path even after PR
-  #1917 merges — this is the precise remaining reason the DORA plane of the
-  golden path (<code>docs/golden-path-verification-planes.md</code>) can't go green.</li>
-</ul>
-<p><strong>Tracking:</strong> No dedicated issue yet. Next step, not yet attempted: DevLake's
-<code>webhook</code> plugin, which can accept a directly-shaped deployment task event without
-needing GitHub Actions at all — unlike the Deployments-API approach, it isn't
-structurally blocked by this being a Tekton-based pipeline. This is new pipeline
-instrumentation and new DevLake connection configuration, not a bug fix — scope it
-as its own issue.</p>
+<p><strong>Status: DEPRECATED</strong> — Fawkes now computes all 5 DORA metrics natively in Prometheus via recording rules (see <code>docs/ARCHITECTURE.md</code> §DORA Metrics). DevLake is no longer on the critical path for DORA metrics. The golden path verification planes no longer depend on DevLake.</p>
+<p><strong>Tracking:</strong> DevLake retained as optional historical analytics component only.</p>
 <hr />
 <h2 id="kl-13-trivy-image-scan-ignores-unfixed-cves-ignore-unfixed">KL-13 — Trivy Image Scan Ignores Unfixed CVEs (<code>--ignore-unfixed</code>)</h2>
 <p><strong>Description:</strong> The golden-path pipeline's <code>scan-image</code> task (<code>platform/apps/tekton/golden-path-pipeline.yaml</code>) runs:
@@ -5856,7 +5867,7 @@ The <code>--ignore-unfixed</code> flag causes Trivy to <strong>not fail</strong>
 </ul>
 <p><strong>Accepted for now, not silently assumed away</strong> (per <code>docs/elite-engineering-bridge-plan.md</code> Phase 3): this is a one-time-per-change manual bootstrap step, not a bug. <code>platform/bootstrap/README.md</code>'s "Bootstrap the Platform" / "Bootstrap Failed" sections are the runbook — re-run <code>kubectl apply -k platform/bootstrap</code> (or <code>scripts/bootstrap.sh</code>) after any change under this directory.</p>
 <p><strong>Tracking:</strong> No reconciliation job exists yet to diff live <code>ApplicationSet</code>/<code>Application</code> specs against git and alert on drift for this directory specifically — that would close the gap fully but is real new infrastructure, not wiring. Revisit if bootstrap-directory drift causes a real incident.</p>
-<h2 id="kl-15-devlakes-live-api-is-blocked-on-an-unapproved-db-migration">KL-15 — DevLake's Live API Is Blocked on an Unapproved DB Migration</h2>
+<h2 id="kl-15-devlakes-live-api-is-blocked-on-an-unapproved-db-migration-deprecated-devlake-optional">KL-15 — DevLake's Live API Is Blocked on an Unapproved DB Migration (DEPRECATED: DevLake Optional)</h2>
 <p><strong>Description:</strong> As of 2026-09-12, every DevLake API endpoint on <code>mac-mini-k3s</code> (<code>devlake-lake</code>, port 8080, checked via <code>kubectl port-forward</code>) returns HTTP 428 with:</p>
 <div class="highlight"><pre><span></span><code>New migration scripts detected. Database migration is required to launch DevLake.
 WARNING: Performing migration may wipe collected data for consistency and
@@ -5864,13 +5875,9 @@ re-collecting data may be required. To proceed, please send a request to
 &lt;config-ui-endpoint&gt;/api/proceed-db-migration (or &lt;devlake-endpoint&gt;/proceed-db-migration).
 </code></pre></div>
 <p>This is distinct from KL-09's (resolved) token-scope bug and from the <code>devlake-lake</code> pod's own health — the pod itself is <code>Running</code> (see the "Risk (resolved)" note above), but the application layer refuses every request until someone explicitly approves the migration.</p>
-<p><strong>Impact:</strong></p>
-<ul>
-<li>Every DevLake-dependent item is currently unverifiable live: <code>#1919</code> (deployment webhook wiring), <code>#2079</code> (Alertmanager adapter), <code>#1946</code> (CFR dashboard panel), and <code>docs/elite-engineering-bridge-plan.md</code> Phase 5 (fawkes-on-fawkes DORA) all need a working DevLake API first.</li>
-<li><code>scripts/weekly-metrics.sh</code>'s rework-rate query (<code>/api/plugins/devlake/rework-rate</code>) is also blocked by this.</li>
-</ul>
-<p><strong>Deliberately not auto-approved:</strong> the migration's own warning says it may wipe collected data. Whether that's acceptable (e.g., because the data is re-collectible from GitHub, or because some of it isn't) is a judgment call for whoever owns this cluster, not something to approve unattended — matches <code>docs/BACKLOG.md</code>'s Agent Assignment Map convention of "cluster debugging" being human-only.</p>
-<p><strong>Tracking:</strong> No dedicated issue yet. Next step: a human decides whether wiping DevLake's collected data is acceptable, then runs <code>POST &lt;devlake-endpoint&gt;/proceed-db-migration</code>, then re-triggers collection for existing projects (tracer-bullet, python-fawkes-path) to confirm no regression before building anything new (like Phase 5) on top.</p>
+<p><strong>Status: DEPRECATED</strong> — DevLake is no longer required for DORA metrics (native PromQL implementation). The blocked items (#1919, #2079, #1946, Phase 5) now use native Prometheus/ArgoCD/Alertmanager events instead of DevLake.</p>
+<p><strong>Impact:</strong> Removed from critical path. DevLake migration approval only needed for historical analytics, not for DORA metrics or platform verification.</p>
+<p><strong>Tracking:</strong> DevLake retained as optional component. Migration can be approved at leisure for historical data access.</p>
 <h2 id="kl-16-argocd-repo-servers-default-liveness-probe-is-too-tight-for-healthzfulltrue-fix-pending-deployment">KL-16 — <code>argocd-repo-server</code>'s Default Liveness Probe Is Too Tight for <code>/healthz?full=true</code> (Fix Pending Deployment)</h2>
 <p><strong>Description:</strong> Root-caused 2026-09-13 while running <code>docs/phase-2-closure-plan.md</code>'s Phase 0 prerequisite check, via <code>superpowers:systematic-debugging</code>. <code>argocd-repo-server</code> was in <code>CrashLoopBackOff</code> (500+ restarts over 27h), which made every ArgoCD <code>Application</code> show <code>Unknown</code> sync status and kept <code>tekton</code>/<code>argo-rollouts</code>/<code>chaos-mesh</code> from ever appearing as synced Applications.</p>
 <p>Pattern analysis first ruled out a node-wide network problem: only <code>argocd-repo-server</code> and <code>loki-0</code>'s sidecar were failing on the node in question; everything else there (network-only or lightweight pods) was healthy. The actual cause is the upstream <code>argo-cd</code> Helm chart's own default: <code>repoServer.livenessProbe</code> hits <code>/healthz?full=true</code> (which validates connectivity to <em>every</em> configured repo, OCI registries included) but ships with only <code>timeoutSeconds: 1</code> — too tight for a "full" check on a node with slower disk I/O, so a healthy process kept getting killed mid-check by its own liveness probe.</p>
@@ -5881,6 +5888,36 @@ re-collecting data may be required. To proceed, please send a request to
 </ul>
 <p><strong>Fix:</strong> <code>infra/terraform/argocd/values.yaml</code> now overrides <code>repoServer.livenessProbe.timeoutSeconds: 10</code>, verified via <code>helm template</code> to render correctly. <strong>Not yet confirmed live</strong> — needs the PR merged and <code>terraform apply</code>'d (CI-gated, not applied by hand per <code>AGENTS.md</code> §2's GitOps rule) before re-checking <code>kubectl get applications -n argocd</code> shows real sync statuses again.</p>
 <p><strong>Tracking:</strong> No dedicated issue yet — fixed directly as part of closing <code>docs/phase-2-closure-plan.md</code>'s Phase 0.</p>
+<hr />
+<h2 id="kl-17-17-microservices-consolidated-into-2-domain-monoliths-in-progress">KL-17 — 17 Microservices Consolidated into 2 Domain Monoliths (IN PROGRESS)</h2>
+<p><strong>Description:</strong> The platform previously ran 17 separate Python FastAPI microservices (<code>vsm</code>, <code>analytics-dashboard</code>, <code>anomaly-detection</code>, <code>smart-alerting</code>, <code>feedback</code>, <code>feedback-bot</code>, <code>friction-cli</code>, <code>friction-bot</code>, <code>discovery-metrics</code>, <code>space-metrics</code>, <code>ai-code-review</code>, <code>nps</code>, <code>devx-survey-automation</code>, <code>insights</code>, <code>data-api</code>, <code>mcp-k8s-server</code>, <code>tracer-bullet</code>). These have been consolidated into 2 domain monoliths:
+- <code>fawkes-telemetry-engine</code> (telemetry, DORA, SPACE, anomaly detection, analytics, insights, discovery, data API)
+- <code>fawkes-devex-service</code> (feedback, friction, VSM, NPS, DevEx surveys, AI code review, MCP K8s server)</p>
+<p><strong>Impact:</strong>
+- ~70% reduction in cluster resource footprint (memory, CPU, pod count)
+- Eliminated inter-service HTTP latency and failure modes
+- Simplified local development (2 services vs 17 in k3d)
+- Single PostgreSQL instance with separate databases (<code>telemetry_db</code>, <code>devex_db</code>)
+- Shared libraries in <code>services/common/</code></p>
+<p><strong>Tracking:</strong> Migration in progress. Each monolith deployed as single Deployment with multiple internal modules. Inter-service HTTP calls replaced with direct imports.</p>
+<hr />
+<h2 id="kl-18-vault-migrated-to-openbao-completed">KL-18 — Vault Migrated to OpenBao (COMPLETED)</h2>
+<p><strong>Description:</strong> HashiCorp Vault (BSL license) replaced with OpenBao (open-source fork, MPL-2.0). All secrets management, dynamic credentials, and Kubernetes auth workflows migrated.</p>
+<p><strong>Impact:</strong>
+- Eliminates license compliance risk
+- Drop-in API compatibility maintained
+- External Secrets Operator continues to work unchanged
+- Terraform provider updated to <code>openbao</code> provider</p>
+<p><strong>Tracking:</strong> Completed. All <code>platform/</code> manifests and <code>infra/</code> modules updated to reference OpenBao.</p>
+<hr />
+<h2 id="kl-19-bddgherkin-tests-deprecated-in-progress">KL-19 — BDD/Gherkin Tests Deprecated (IN PROGRESS)</h2>
+<p><strong>Description:</strong> The <code>tests/bdd/</code> directory contained ~45 Gherkin feature files with no step definitions (KL-05). The BDD approach (<code>behave</code>/<code>pytest-bdd</code>) has been deprecated in favor of native pytest (Python), bats (Bash), and terratest (Go) test suites.</p>
+<p><strong>Impact:</strong>
+- Removes unmaintained test debt
+- Faster test execution (no Gherkin parsing overhead)
+- Better integration with CI/CD pipelines
+- Aligns with TDD workflow (write failing test first)</p>
+<p><strong>Tracking:</strong> Remove <code>tests/bdd/</code> directory. Migrate any valid scenarios to pytest integration tests in <code>tests/integration/</code>.</p>
 
 
 
