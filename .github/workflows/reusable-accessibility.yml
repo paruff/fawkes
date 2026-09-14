@@ -143,7 +143,7 @@ jobs:
 
       - name: Comment PR with results
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553  # v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3  # v9
         with:
           script: |
             const fs = require('fs');
@@ -206,7 +206,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Create GitHub issue
-        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553  # v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3  # v9
         with:
           script: |
             const shouldCreateIssues = context.eventName === 'schedule' || context.ref === 'refs/heads/main';
