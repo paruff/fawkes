@@ -5,6 +5,23 @@ All notable changes to the Fawkes platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.138](https://github.com/paruff/fawkes/compare/v0.3.137...v0.3.138) (2026-09-14)
+
+
+### Chores
+
+* **deps-dev:** bump boto3 from 1.43.89 to 1.43.92 ([#2098](https://github.com/paruff/fawkes/issues/2098)) ([32f2d28](https://github.com/paruff/fawkes/commit/32f2d283332339a8032236fe24b2411a8813fde1))
+* **deps-dev:** bump croniter from 2.0.1 to 6.2.4 ([#2095](https://github.com/paruff/fawkes/issues/2095)) ([1ab8859](https://github.com/paruff/fawkes/commit/1ab8859100b9b67ba102cf75c3b9533ca8a21630))
+* **deps-dev:** bump hypothesis from 6.165.10 to 6.168.0 ([#2094](https://github.com/paruff/fawkes/issues/2094)) ([745e383](https://github.com/paruff/fawkes/commit/745e3832e7c7c11f2c38a4f168d3e439a7be57f4))
+* **deps-dev:** bump ruff from 0.16.6 to 0.16.7 ([#2096](https://github.com/paruff/fawkes/issues/2096)) ([c6488f6](https://github.com/paruff/fawkes/commit/c6488f681dd1229599487fa30eac9b73e8c7ca79))
+* **deps:** bump actions/cache from 4.3.0 to 6.1.0 ([#2100](https://github.com/paruff/fawkes/issues/2100)) ([001899b](https://github.com/paruff/fawkes/commit/001899bdc88c202f4db8dc65638a4792f03045fa))
+* **deps:** bump actions/upload-artifact from 4 to 7 ([#2101](https://github.com/paruff/fawkes/issues/2101)) ([a0fec9c](https://github.com/paruff/fawkes/commit/a0fec9c6b4c965d8b8eac122eb87301b359693d3))
+* **deps:** bump anomalyco/opencode/github from 1.18.30 to 2.0.0 ([#2103](https://github.com/paruff/fawkes/issues/2103)) ([ee4f87e](https://github.com/paruff/fawkes/commit/ee4f87e4910baead61489bb77be6c58916afdb5b))
+* **deps:** bump azure/login from 3.0.2 to 3.1.0 ([#2104](https://github.com/paruff/fawkes/issues/2104)) ([e5c517c](https://github.com/paruff/fawkes/commit/e5c517c35b170a1888ec645f334679872100db3e))
+* **deps:** bump github/codeql-action/autobuild ([#2102](https://github.com/paruff/fawkes/issues/2102)) ([e6c2ba5](https://github.com/paruff/fawkes/commit/e6c2ba5113df871cff9cd7f48ca9fded5ae8f24a))
+* **deps:** bump hashicorp/aws from 6.63.0 to 6.64.0 in /infra/aws ([#2097](https://github.com/paruff/fawkes/issues/2097)) ([9b54d06](https://github.com/paruff/fawkes/commit/9b54d0670d49de1bf342d09e4e52a5833b6c1096))
+* **deps:** bump hashicorp/azurerm from 5.4.0 to 5.5.0 in /infra/azure ([#2093](https://github.com/paruff/fawkes/issues/2093)) ([a555262](https://github.com/paruff/fawkes/commit/a5552620837b62f2c2950e37b38db2a6f3cb8a7c))
+
 ## [0.3.137](https://github.com/paruff/fawkes/compare/v0.3.136...v0.3.137) (2026-09-14)
 
 
