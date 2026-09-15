@@ -5592,6 +5592,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#kl-20-extract-zip-vulnerability-in-design-system-accepted-risk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-20 — extract-zip Vulnerability in design-system/ (Accepted Risk)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5762,7 +5773,8 @@ KL-12 below: fixing collection did not make DORA metrics appear, because
 python-fawkes-path's golden path doesn't yet emit anything for <code>github_graphql</code> to
 collect.</p>
 <p><strong>Tracking:</strong> <a href="https://github.com/paruff/fawkes/issues/1855">#1855</a> — root cause and
-fix documented in a comment; recommend closing once reviewed.</p>
+fix documented in a comment. <strong>Can be closed:</strong> root cause fixed (token scope), and
+DevLake is now optional per KL-15. No remaining dependency on this issue.</p>
 <hr />
 <h2 id="kl-10-sonarcloud-project-registered-under-wrong-default-branch-resolved-2026-09-09">KL-10 — SonarCloud Project Registered Under Wrong Default Branch (RESOLVED 2026-09-09)</h2>
 <p><strong>Description:</strong> The <code>python-fawkes-path</code> SonarCloud project's default branch was
@@ -5918,6 +5930,17 @@ re-collecting data may be required. To proceed, please send a request to
 - Better integration with CI/CD pipelines
 - Aligns with TDD workflow (write failing test first)</p>
 <p><strong>Tracking:</strong> Remove <code>tests/bdd/</code> directory. Migrate any valid scenarios to pytest integration tests in <code>tests/integration/</code>.</p>
+<hr />
+<h2 id="kl-20-extract-zip-vulnerability-in-design-system-accepted-risk">KL-20 — <code>extract-zip</code> Vulnerability in <code>design-system/</code> (Accepted Risk)</h2>
+<p><strong>Advisory:</strong> <a href="https://github.com/advisories/GHSA-jmr9-qjv8-65gv">GHSA-jmr9-qjv8-65gv</a>, <a href="https://github.com/advisories/GHSA-7pqw-9j4j-h8q3">GHSA-7pqw-9j4j-h8q3</a></p>
+<p><strong>Description:</strong> <code>extract-zip</code> (all versions, <code>*</code>) has a symlink path traversal vulnerability allowing arbitrary file writes during zip extraction. The transitive dependency chain is <code>@lhci/cli</code> → <code>lighthouse</code> → <code>puppeteer-core</code> → <code>@puppeteer/browsers</code> → <code>extract-zip</code>. This only affects the design-system's Lighthouse CI toolchain (<code>npm run lighthouse:ci</code>) — no production code.</p>
+<p><strong>Impact:</strong>
+- Dev-only toolchain dependency; never ships to production
+- No upstream fix available (<code>extract-zip</code> has no patched version)
+- <code>npm audit fix --force</code> would downgrade <code>@lhci/cli</code> to <code>0.12.0</code> (breaking change)
+- Accepted risk: Lighthouse CI runs locally or in isolated CI environments where symlink archive exploitation is not a practical attack vector</p>
+<p><strong>Mitigation:</strong> Documented as accepted risk. Monitor upstream (<code>@lhci/cli</code>, <code>puppeteer-core</code>) for migration away from <code>extract-zip</code>. Revisit when a patched version or alternative is available.</p>
+<p><strong>Tracking:</strong> Issue #2004.</p>
 
 
 
