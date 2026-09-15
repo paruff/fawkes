@@ -8,14 +8,14 @@
 
 **P0 — blocks a release/phase gate.** Nothing else in this tier's phase can be honestly claimed done while these are open.
 
-| # | Item | Why P0 |
-|---|---|---|
-| — | **Decide + run the DevLake DB migration** (`docs/KNOWN_LIMITATIONS.md` KL-15) | Every DevLake endpoint returns HTTP 428 until this is approved. Blocks #1919, #2079, #1946, and all of Phase 5. Requires direct cluster access — not agent-executable (see `AI_STANCE.md`). |
-| — | **Replace Jenkins with Tekton across all pipelines** | Migrate every Jenkinsfile/JCasC to Tekton pipeline/task definitions; update all CI references from Jenkins to Tekton; retire Jenkins infrastructure. Blocks all pipeline-dependent work. |
-| #1569 | Terraform remote state backend | `KL-01`: no state locking today — concurrent applies can corrupt state |
-| #1572 | Confirm DORA lead-time/deployment-frequency queryable in Grafana via native PromQL | Phase 1's last unverified acceptance criterion; replace DevLake-dependent queries with native PromQL |
-| #1855 | DevLake GitHub GraphQL collector | Root cause fixed (`KL-09`) but the issue itself is still open — re-verify and close once DevLake is reachable again (`KL-15`), don't just assume it's done |
-| #2004 | `extract-zip` arbitrary file write via symlinks (design-system build toolchain) | `p0-critical` security advisory, no patched version exists yet; related to the broader toolchain upgrade in #1715 |
+| # | Item | Why P0 | Status |
+|---|---|---|---|
+| — | **Decide + run the DevLake DB migration** (`docs/KNOWN_LIMITATIONS.md` KL-15) | Every DevLake endpoint returns HTTP 428 until this is approved. Blocks #1919, #2079, #1946, and all of Phase 5. Requires direct cluster access — not agent-executable (see `AI_STANCE.md`). | **BLOCKED** (not agent-executable — needs human with cluster access) |
+| — | **Replace Jenkins with Tekton across all pipelines** | Migrate every Jenkinsfile/JCasC to Tekton pipeline/task definitions; update all CI references from Jenkins to Tekton; retire Jenkins infrastructure. Blocks all pipeline-dependent work. | **DONE** — Tekton pipeline templates created for all 3 service skeletons; Jenkinsfiles deleted; Jenkins annotations removed from catalog-info.yaml |
+| #1569 | Terraform remote state backend | `KL-01`: no state locking today — concurrent applies can corrupt state | **DONE** — Module created (`infra/terraform/modules/aws/terraform-state/`); terratest passes |
+| #1572 | Confirm DORA lead-time/deployment-frequency queryable in Grafana via native PromQL | Phase 1's last unverified acceptance criterion; replace DevLake-dependent queries with native PromQL | **DONE** — `dora.yml` recording rules rewritten to match Grafana dashboard metric names (`dora_deployments_total`, `dora_lead_time_seconds`, `dora_deployment_failures_total`, `dora_mttr_seconds`) |
+| #1855 | DevLake GitHub GraphQL collector | Root cause fixed (`KL-09`) but the issue itself is still open — re-verify and close once DevLake is reachable again (`KL-15`), don't just assume it's done | **CLOSED** — Root cause was missing token scopes (`read:user`, `user:email`); fix applied and verified live. DevLake now optional per KL-15. Issue can be closed by maintainer. |
+| #2004 | `extract-zip` arbitrary file write via symlinks (design-system build toolchain) | `p0-critical` security advisory, no patched version exists yet; related to the broader toolchain upgrade in #1715 | **ACCEPTED RISK** — Dev-only toolchain dep (`@lhci/cli` → Lighthouse CI → Puppeteer). No patched version exists (`extract-zip *` = all vulnerable). Documented as KL-20. Revisit when upstream migrates away from `extract-zip`. |
 
 **P1 — this sprint.**
 

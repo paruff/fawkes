@@ -199,7 +199,8 @@ python-fawkes-path's golden path doesn't yet emit anything for `github_graphql` 
 collect.
 
 **Tracking:** [#1855](https://github.com/paruff/fawkes/issues/1855) — root cause and
-fix documented in a comment; recommend closing once reviewed.
+fix documented in a comment. **Can be closed:** root cause fixed (token scope), and
+DevLake is now optional per KL-15. No remaining dependency on this issue.
 
 ---
 
@@ -391,3 +392,21 @@ Pattern analysis first ruled out a node-wide network problem: only `argocd-repo-
 - Aligns with TDD workflow (write failing test first)
 
 **Tracking:** Remove `tests/bdd/` directory. Migrate any valid scenarios to pytest integration tests in `tests/integration/`.
+
+---
+
+## KL-20 — `extract-zip` Vulnerability in `design-system/` (Accepted Risk)
+
+**Advisory:** [GHSA-jmr9-qjv8-65gv](https://github.com/advisories/GHSA-jmr9-qjv8-65gv), [GHSA-7pqw-9j4j-h8q3](https://github.com/advisories/GHSA-7pqw-9j4j-h8q3)
+
+**Description:** `extract-zip` (all versions, `*`) has a symlink path traversal vulnerability allowing arbitrary file writes during zip extraction. The transitive dependency chain is `@lhci/cli` → `lighthouse` → `puppeteer-core` → `@puppeteer/browsers` → `extract-zip`. This only affects the design-system's Lighthouse CI toolchain (`npm run lighthouse:ci`) — no production code.
+
+**Impact:**
+- Dev-only toolchain dependency; never ships to production
+- No upstream fix available (`extract-zip` has no patched version)
+- `npm audit fix --force` would downgrade `@lhci/cli` to `0.12.0` (breaking change)
+- Accepted risk: Lighthouse CI runs locally or in isolated CI environments where symlink archive exploitation is not a practical attack vector
+
+**Mitigation:** Documented as accepted risk. Monitor upstream (`@lhci/cli`, `puppeteer-core`) for migration away from `extract-zip`. Revisit when a patched version or alternative is available.
+
+**Tracking:** Issue #2004.
