@@ -78,6 +78,20 @@ func TestAWSS3ModuleValidation(t *testing.T) {
 	terraform.Validate(t, terraformOptions)
 }
 
+// TestAWSTerraformStateModuleValidation validates the AWS Terraform state backend module
+// Closes KL-01 / #1569 — S3 bucket + DynamoDB table for remote state with locking
+func TestAWSTerraformStateModuleValidation(t *testing.T) {
+	t.Parallel()
+
+	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+		TerraformDir: "../../infra/terraform/modules/aws/terraform-state",
+		NoColor:      true,
+	})
+
+	terraform.Init(t, terraformOptions)
+	terraform.Validate(t, terraformOptions)
+}
+
 // TestAWSVPCExampleValidation validates the VPC example
 func TestAWSVPCExampleValidation(t *testing.T) {
 	t.Parallel()
