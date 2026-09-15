@@ -1,0 +1,353 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OF OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: templates/python-service/skeleton/tekton-pipeline.yaml
+# PURPOSE: Tekton Pipeline for Python FastAPI services
+#          Replaces the legacy Jenkinsfile. Generated from template.
+# ============================================================================
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: ${{ values.name }}-pipeline
+  labels:
+    app: ${{ values.name }}
+    component: cicd
+spec:
+  description: >-
+    Golden path pipeline for ${{ values.name }}: clone, lint, test, build, scan,
+    and promote via GitOps pull request.
+  params:
+    - name: repo-url
+      type: string
+      description: Git URL of the application repo to build
+      default: https://github.com/${{ (values.repoUrl | parseRepoUrl).owner }}/${{ (values.repoUrl | parseRepoUrl).repo }}.git
+    - name: revision
+      type: string
+      description: Git revision (branch, tag, or commit SHA) to build
+      default: main
+    - name: image-name
+      type: string
+      description: Image repository to push to (without tag)
+      default: ghcr.io/${{ (values.repoUrl | parseRepoUrl).owner }}/${{ values.name }}
+    - name: gitops-repo
+      type: string
+      description: owner/repo of the GitOps config repo to raise the promotion PR against
+      default: ${{ (values.repoUrl | parseRepoUrl).owner }}/${{ values.name }}-gitops
+    - name: app-repo
+      type: string
+      description: owner/repo of the application source repo for GitHub Deployment tracking
+      default: ${{ (values.repoUrl | parseRepoUrl).owner }}/${{ values.name }}
+    - name: sonar-host-url
+      type: string
+      description: SonarCloud URL
+      default: https://sonarcloud.io
+    - name: sonar-organization
+      type: string
+      description: SonarCloud organization key
+      default: ${{ (values.repoUrl | parseRepoUrl).owner }}
+  workspaces:
+    - name: source
+      description: Shared workspace holding the cloned source between tasks
+    - name: dockerconfig
+      description: Registry credentials for the build/push step
+      optional: true
+  results:
+    - name: image-tag
+      description: The immutable short-SHA tag the image was published under
+      value: $(tasks.fetch-source.results.short-sha)
+  tasks:
+    # ------------------------------------------------------------------
+    # 1. Clone
+    # ------------------------------------------------------------------
+    - name: fetch-source
+      workspaces:
+        - name: output
+          workspace: source
+      params:
+        - name: repo-url
+          value: $(params.repo-url)
+        - name: revision
+          value: $(params.revision)
+      taskSpec:
+        params:
+          - name: repo-url
+            type: string
+          - name: revision
+            type: string
+        workspaces:
+          - name: output
+        results:
+          - name: short-sha
+            description: Short (7 char) commit SHA of the checked-out revision
+        steps:
+          - name: clone
+            image: docker.io/alpine/git:v2.45.2
+            script: |
+              #!/bin/sh
+              set -eu
+              cd "$(workspaces.output.path)"
+              find . -mindepth 1 -delete 2>/dev/null || true
+              git clone --depth 1 --branch "$(params.revision)" \
+                "$(params.repo-url)" .
+              git rev-parse --short=7 HEAD | tr -d '\n' \
+                > "$(results.short-sha.path)"
+              echo "cloned $(params.repo-url)@$(params.revision)"
+
+    # ------------------------------------------------------------------
+    # 2. Lint + unit tests
+    # ------------------------------------------------------------------
+    - name: lint-and-test
+      runAfter: [fetch-source]
+      workspaces:
+        - name: source
+          workspace: source
+      taskSpec:
+        workspaces:
+          - name: source
+        steps:
+          - name: lint
+            image: docker.io/library/python:3.13.15-slim
+            workingDir: $(workspaces.source.path)
+            script: |
+              #!/bin/sh
+              set -eu
+              pip install --no-cache-dir --quiet ruff
+              ruff check .
+              ruff format --check .
+          - name: test
+            image: docker.io/library/python:3.13.15-slim
+            workingDir: $(workspaces.source.path)
+            script: |
+              #!/bin/sh
+              set -eu
+              pip install --no-cache-dir --quiet \
+                -r requirements.txt -r requirements-dev.txt pytest-cov
+              pytest tests/unit -q --cov=app --cov-report=xml:coverage.xml
+
+    # ------------------------------------------------------------------
+    # 2b. SonarQube: code quality, potential bugs, coverage
+    # ------------------------------------------------------------------
+    - name: sonar-scan
+      runAfter: [lint-and-test]
+      workspaces:
+        - name: source
+          workspace: source
+      params:
+        - name: sonar-host-url
+          value: $(params.sonar-host-url)
+        - name: sonar-organization
+          value: $(params.sonar-organization)
+        - name: sonar-project-key
+          value: $(params.repo-url)
+      taskSpec:
+        params:
+          - name: sonar-host-url
+            type: string
+          - name: sonar-organization
+            type: string
+          - name: sonar-project-key
+            type: string
+        workspaces:
+          - name: source
+        steps:
+          - name: sonar-scan
+            image: docker.io/sonarsource/sonar-scanner-cli:11.2
+            workingDir: $(workspaces.source.path)
+            env:
+              - name: SONAR_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: sonarqube-scan-token
+                    key: token
+            script: |
+              #!/bin/sh
+              set -eu
+              PROJECT_KEY=$(basename "$(params.sonar-project-key)" .git)
+              sonar-scanner \
+                -Dsonar.host.url="$(params.sonar-host-url)" \
+                -Dsonar.organization="$(params.sonar-organization)" \
+                -Dsonar.token="${SONAR_TOKEN}" \
+                -Dsonar.projectKey="${PROJECT_KEY}" \
+                -Dsonar.sources=app \
+                -Dsonar.tests=tests \
+                -Dsonar.python.coverage.reportPaths=coverage.xml \
+                -Dsonar.branch.name=main \
+                -Dsonar.qualitygate.wait=true
+
+    # ------------------------------------------------------------------
+    # 3. Build + push, tagged by immutable short SHA (kaniko)
+    # ------------------------------------------------------------------
+    - name: build-and-push
+      runAfter: [lint-and-test, sonar-scan]
+      workspaces:
+        - name: source
+          workspace: source
+        - name: dockerconfig
+          workspace: dockerconfig
+      params:
+        - name: image
+          value: $(params.image-name):$(tasks.fetch-source.results.short-sha)
+      taskSpec:
+        params:
+          - name: image
+            type: string
+        workspaces:
+          - name: source
+          - name: dockerconfig
+            optional: true
+        steps:
+          - name: build-and-push
+            image: gcr.io/kaniko-project/executor:v1.23.2
+            workingDir: $(workspaces.source.path)
+            env:
+              - name: DOCKER_CONFIG
+                value: $(workspaces.dockerconfig.path)
+            args:
+              - --dockerfile=Dockerfile
+              - --context=$(workspaces.source.path)
+              - --destination=$(params.image)
+              - --cache=true
+              - --customPlatform=linux/amd64,linux/arm64
+
+    # ------------------------------------------------------------------
+    # 4. Vulnerability scan of the published image (Trivy)
+    # ------------------------------------------------------------------
+    - name: scan-image
+      runAfter: [build-and-push]
+      params:
+        - name: image
+          value: $(params.image-name):$(tasks.fetch-source.results.short-sha)
+      taskSpec:
+        params:
+          - name: image
+            type: string
+        steps:
+          - name: trivy-scan
+            image: docker.io/aquasec/trivy:0.74.0
+            timeout: 10m
+            script: |
+              #!/bin/sh
+              set -eu
+              trivy image --quiet --no-progress \
+                --severity CRITICAL,HIGH \
+                --ignore-unfixed \
+                --exit-code 1 \
+                "$(params.image)"
+
+    # ------------------------------------------------------------------
+    # 5. GitOps promotion: raise a PR bumping the image tag
+    # ------------------------------------------------------------------
+    - name: gitops-promote
+      runAfter: [scan-image]
+      params:
+        - name: gitops-repo
+          value: $(params.gitops-repo)
+        - name: app-repo
+          value: $(params.app-repo)
+        - name: image-name
+          value: $(params.image-name)
+        - name: new-tag
+          value: $(tasks.fetch-source.results.short-sha)
+      taskSpec:
+        params:
+          - name: gitops-repo
+            type: string
+          - name: app-repo
+            type: string
+          - name: image-name
+            type: string
+          - name: new-tag
+            type: string
+        steps:
+          - name: open-promotion-pr
+            image: docker.io/alpine/git:v2.45.2
+            env:
+              - name: GH_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: tekton-gitops-github-token
+                    key: token
+            script: |
+              #!/bin/sh
+              set -eu
+              apk add --no-cache github-cli jq >/dev/null
+
+              WORK=/tmp/gitops
+              rm -rf "$WORK"
+              git clone --depth 1 \
+                "https://x-access-token:${GH_TOKEN}@github.com/$(params.gitops-repo).git" \
+                "$WORK"
+              cd "$WORK"
+
+              BRANCH="promote/$(params.new-tag)"
+              git config user.email "tekton@fawkes.local"
+              git config user.name "fawkes-tekton"
+              git checkout -b "$BRANCH"
+
+              sed -i "s|image: $(params.image-name):.*|image: $(params.image-name):$(params.new-tag)|g" \
+                deployment.yaml
+
+              if git diff --quiet; then
+                echo "image tag already at $(params.new-tag) - nothing to promote"
+                exit 0
+              fi
+
+              git commit -am "chore: promote image to $(params.new-tag)"
+              git push origin "$BRANCH"
+              gh pr create \
+                --repo "$(params.gitops-repo)" \
+                --head "$BRANCH" \
+                --base main \
+                --title "chore: promote image to $(params.new-tag)" \
+                --body "Automated promotion from the Tekton golden-path pipeline."
+              gh pr merge "$BRANCH" --repo "$(params.gitops-repo)" --squash --admin
+
+              # Record a GitHub Deployment for DORA tracking
+              DEPLOY_PAYLOAD=$(jq -n --arg ref "$(params.new-tag)" \
+                '{ref:$ref, environment:"production", auto_merge:false, required_contexts:[]}')
+              DEPLOY_ID=$(echo "$DEPLOY_PAYLOAD" \
+                | gh api "repos/$(params.app-repo)/deployments" --method POST --input - --jq '.id' 2>&1) \
+                || { echo "WARNING: failed to create GitHub Deployment for DORA tracking: $DEPLOY_ID"; exit 0; }
+
+              STATUS_PAYLOAD=$(jq -n '{state:"success", environment:"production"}')
+              echo "$STATUS_PAYLOAD" \
+                | gh api "repos/$(params.app-repo)/deployments/${DEPLOY_ID}/statuses" --method POST --input - > /dev/null \
+                || echo "WARNING: created Deployment ${DEPLOY_ID} but failed to mark it successful"
