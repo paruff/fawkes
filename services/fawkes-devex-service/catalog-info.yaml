@@ -19,21 +19,32 @@
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
 apiVersion: backstage.io/v1alpha1
-kind: Location
+kind: Component
 metadata:
-  name: fawkes-services
-  title: Fawkes Services
-  description: All microservices in the Fawkes platform
+  name: fawkes-devex-service
+  title: Fawkes DevEx Service
+  description: >
+    Consolidated developer experience domain monolith. Combines Feedback,
+    Feedback Bot, NPS Surveys, DevEx Survey Automation, Insights, and
+    Experimentation into a single FastAPI service.
   annotations:
-    backstage.io/managed-by-location: url:https://github.com/paruff/fawkes/blob/main/services/location.yaml
+    backstage.io/managed-by-location: url:https://github.com/paruff/fawkes/blob/main/services/fawkes-devex-service/catalog-info.yaml
+    github.com/project-slug: paruff/fawkes
+  tags:
+    - python
+    - fastapi
+    - devex
+    - feedback
+  links:
+    - url: https://backstage.fawkes.idp
+      title: Backstage Portal
+      icon: dashboard
 spec:
-  type: url
-  targets:
-    # Consolidated domain monoliths
-    - https://github.com/paruff/fawkes/blob/main/services/fawkes-telemetry-engine/catalog-info.yaml
-    - https://github.com/paruff/fawkes/blob/main/services/fawkes-devex-service/catalog-info.yaml
-    # Standalone services (retained — different lifecycle or CLI tools)
-    - https://github.com/paruff/fawkes/blob/main/services/ai-code-review/catalog-info.yaml
-    - https://github.com/paruff/fawkes/blob/main/services/feedback-cli/catalog-info.yaml
-    - https://github.com/paruff/fawkes/blob/main/services/friction-cli/catalog-info.yaml
-    - https://github.com/paruff/fawkes/blob/main/services/mcp-k8s-server/catalog-info.yaml
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: fawkes
+  providesApis:
+    - fawkes-devex-service
+  dependsOn:
+    - resource:fawkes-postgresql
