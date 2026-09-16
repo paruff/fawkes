@@ -140,7 +140,7 @@ All CI pipelines run as Tekton PipelineRuns in-cluster (no Jenkins). Pipeline de
 
 ### Secrets Management (OpenBao)
 
-Vault replaced with OpenBao (MPL-2.0). All secrets via External Secrets Operator syncing from OpenBao. No hardcoded credentials in Git or CI.
+Target: Vault replaced with OpenBao (MPL-2.0), all secrets via External Secrets Operator syncing from OpenBao. **Not yet deployed** — `platform/apps/` still only has `vault`/`vault-csi-driver`, no `openbao` app exists yet (tracked as part of the P1 secrets work). No hardcoded credentials in Git or CI regardless of which backend is live.
 
 ### Native DORA Metrics (PromQL)
 

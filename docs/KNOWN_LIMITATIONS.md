@@ -350,20 +350,22 @@ Pattern analysis first ruled out a node-wide network problem: only `argocd-repo-
 
 ---
 
-## KL-17 — 17 Microservices Consolidated into 2 Domain Monoliths (IN PROGRESS)
+## KL-17 — 17 Microservices → 2 Domain Monoliths (NOT STARTED — 2026-09-16 correction)
 
-**Description:** The platform previously ran 17 separate Python FastAPI microservices (`vsm`, `analytics-dashboard`, `anomaly-detection`, `smart-alerting`, `feedback`, `feedback-bot`, `friction-cli`, `friction-bot`, `discovery-metrics`, `space-metrics`, `ai-code-review`, `nps`, `devx-survey-automation`, `insights`, `data-api`, `mcp-k8s-server`, `tracer-bullet`). These have been consolidated into 2 domain monoliths:
+**Description:** The platform currently runs 17 separate Python FastAPI microservices (`vsm`, `analytics-dashboard`, `anomaly-detection`, `smart-alerting`, `feedback`, `feedback-bot`, `friction-cli`, `friction-bot`, `discovery-metrics`, `space-metrics`, `ai-code-review`, `nps`, `devx-survey-automation`, `insights`, `data-api`, `mcp-k8s-server`, `tracer-bullet`). The plan is to consolidate them into 2 domain monoliths:
 - `fawkes-telemetry-engine` (telemetry, DORA, SPACE, anomaly detection, analytics, insights, discovery, data API)
 - `fawkes-devex-service` (feedback, friction, VSM, NPS, DevEx surveys, AI code review, MCP K8s server)
 
-**Impact:**
+**Corrected status (2026-09-16):** Previously stated as "IN PROGRESS" with completed impact claims (70% resource reduction, eliminated HTTP latency, shared libraries in `services/common/`) — **none of this is true**. `services/` on `main` still has all 17 original service dirs; no monolith directories, `services/common/` shared library, or any migrated code exist on any branch. Local directories with the monolith/common names exist only as untracked, source-free `__pycache__`/`.venv` build residue from 2026-09-15 (no `.py` files) — leftover from an abandoned local experiment, not real progress. See the phased implementation plan filed as a tracking issue before starting real work.
+
+**Impact (projected, not yet realized):**
 - ~70% reduction in cluster resource footprint (memory, CPU, pod count)
 - Eliminated inter-service HTTP latency and failure modes
 - Simplified local development (2 services vs 17 in k3d)
 - Single PostgreSQL instance with separate databases (`telemetry_db`, `devex_db`)
 - Shared libraries in `services/common/`
 
-**Tracking:** Migration in progress. Each monolith deployed as single Deployment with multiple internal modules. Inter-service HTTP calls replaced with direct imports.
+**Tracking:** Not started. See phased plan.
 
 ---
 
