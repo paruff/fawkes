@@ -19,9 +19,8 @@
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
 # DORA Metrics Recording Rules — rewritten 2026-09-16 against REAL, live-verified
-# metric names on fawkes-dev-aks (the previous version's names were guessed and
-# never matched anything real - see git history). Targets the exact 5 metric
-# names platform/apps/grafana-dashboards/dora-metrics-dashboard-configmap.yaml's
+# metric names on fawkes-dev-aks. Targets the exact 5 metric names
+# platform/apps/grafana-dashboards/dora-metrics-dashboard-configmap.yaml's
 # "DORA 2026 — Five Key Metrics" panel queries (that dashboard is the ArgoCD-
 # managed one; two other "DORA dashboard" files elsewhere in this repo
 # (platform/apps/prometheus/dora-metrics-dashboard.yaml,
@@ -30,39 +29,74 @@
 # not reconciled here, flagged as a separate cleanup).
 #
 # Deploy target: platform/apps/prometheus/prometheus-application.yaml's
-# additionalPrometheusRulesMap.dora-metrics (kept in sync by hand - this file
-# is the readable reference copy, not the live source).
+# additionalPrometheusRulesMap (kept in sync by hand - this file is the
+# readable reference copy, not the live source).
 #
 # Real source metrics confirmed live on fawkes-dev-aks 2026-09-16:
 # - argocd_app_sync_total{name,namespace,project,dest_server,dry_run,phase}
 #   (phase="Succeeded"|"Failed") - argocd-application-controller-metrics:8082
 # - tekton_pipelines_controller_pipelinerun_duration_seconds_bucket
 #   {namespace,pipeline,status} - tekton-pipelines-controller:9090
+# - ALERTS / ALERTS_FOR_STATE{alertname="ArgoCDAppDegraded"} - Prometheus's
+#   own alerting engine output, confirmed reaching Alertmanager live
+#   (/api/v2/alerts showed it "active") after a real devlake Degraded
+#   incident on this cluster.
 #
-# Two of five keys (FDRT/MTTR and Rework Rate) don't have a clean source
-# metric yet - see their rules below for what's actually being computed and
-# why it's a proxy, not the textbook definition. Real MTTR needs Alertmanager
-# wiring (tracked in #2117); not fabricating a better number than the data
-# supports.
+# Lead Time uses raw cumulative bucket sums, not rate()/increase() - with
+# only a handful of real PipelineRuns so far, rate()/increase() over a 30d
+# window returned NaN (needs 2+ samples spaced apart to compute a slope,
+# confirmed live). Revisit once real PipelineRun volume is high enough for
+# rate() to behave, so this stops being effectively all-time instead of a
+# rolling window.
+#
+# FDRT/MTTR uses REAL Alertmanager-backed incident data now, not a proxy -
+# ALERTS_FOR_STATE for the ArgoCDAppDegraded alert defined below, which
+# actually fires through Prometheus's alerting engine and reaches
+# Alertmanager. Still a simplification: this only covers currently-firing
+# incidents (average duration so far), not a rolling history of resolved
+# ones - Prometheus doesn't retain ALERTS_FOR_STATE once an alert resolves,
+# so this can't yet compute a true historical p50 over 30d. Real, live,
+# honestly labeled - not yet a full distribution.
+#
+# Rework Rate remains a proxy (see its own comment below) - no ADR or
+# other authoritative definition exists in this repo for what "rework"
+# means here; the dashboard panel referencing it says "ADR-006: DORA
+# Metric Definitions" but ADR-006 in this repo is actually about Postgres,
+# a stale/wrong cross-reference found during the same investigation.
 
 groups:
+- name: dora-alerts
+  rules:
+  # Fires when an ArgoCD-managed app goes Degraded or Missing for 1+ minute.
+  # This is the actual incident signal FDRT/MTTR below reads from - it's a
+  # real Prometheus alerting rule, not a synthetic metric, so it genuinely
+  # exercises the Alertmanager pipeline (confirmed live: reaches
+  # Alertmanager's /api/v2/alerts as "active").
+  - alert: ArgoCDAppDegraded
+    expr: argocd_app_info{health_status=~"Degraded|Missing"} == 1
+    for: 1m
+    labels:
+      severity: warning
+      source: dora-mttr
+    annotations:
+      summary: "ArgoCD app {{ $labels.name }} is {{ $labels.health_status }}"
+
 - name: dora-metrics
   interval: 30s
   rules:
   # Deployment Frequency: successful ArgoCD syncs per day, 30d window.
-  # Panel: platform/apps/grafana-dashboards/dora-metrics-dashboard-configmap.yaml
   - record: dora:deployment_frequency:rate30d
     expr: |
       sum(increase(argocd_app_sync_total{phase="Succeeded"}[30d])) / 30
 
-  # Lead Time for Changes: median Tekton PipelineRun duration, 30d window.
+  # Lead Time for Changes: median Tekton PipelineRun duration.
   # Proxy: pipeline-execution time (commit-received-by-CI to build/deploy-done),
   # not full idea-to-production lead time - no commit-timestamp correlation
   # exists yet to measure that more strictly.
   - record: dora:lead_time_hours:p50_30d
     expr: |
       histogram_quantile(0.5,
-        sum(rate(tekton_pipelines_controller_pipelinerun_duration_seconds_bucket{status="success"}[30d])) by (le)
+        sum(tekton_pipelines_controller_pipelinerun_duration_seconds_bucket{status="success"}) by (le)
       ) / 3600
 
   # Change Failure Rate: failed syncs / total syncs, 30d window.
@@ -72,17 +106,13 @@ groups:
       /
       sum(increase(argocd_app_sync_total[30d]))
 
-  # Failed Deployment Recovery Time (MTTR): PROXY, not the textbook
-  # incident-to-resolution metric - that needs Alertmanager firing/resolved
-  # timestamps, which aren't wired yet (#2117). This instead uses the
-  # cumulative sync duration recorded against apps that have had at least
-  # one Failed sync, as a rough "how long was spent on the failing app"
-  # signal. Revisit once Alertmanager is wired rather than trusting this
-  # as real MTTR.
+  # Failed Deployment Recovery Time (MTTR): real Alertmanager-backed
+  # incident data (see the dora-alerts group above and the file header
+  # comment for what's still simplified about this).
   - record: dora:fdrt_hours:p50_30d
     expr: |
       (
-        sum(argocd_app_sync_duration_seconds_total and on(name) argocd_app_sync_total{phase="Failed"})
+        avg(time() - ALERTS_FOR_STATE{alertname="ArgoCDAppDegraded"})
         or vector(0)
       ) / 3600
 
@@ -91,9 +121,7 @@ groups:
   # argocd_app_sync_total has no per-sync timestamp to bucket by age
   # without a recording-rule history of its own). A high value means apps
   # are needing repeated syncs to reach the desired state, which is a
-  # reasonable rework signal even if it's not a named-in-any-ADR metric -
-  # see dora.yml's own file header for the ADR-006 mislabeling found in
-  # the dashboard this targets.
+  # reasonable rework signal even if it's not a named-in-any-ADR metric.
   - record: dora:rework_rate:ratio
     expr: |
       (
