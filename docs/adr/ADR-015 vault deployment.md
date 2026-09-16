@@ -2,7 +2,13 @@
 
 ## Status
 
-Accepted
+Accepted, migration in progress — see
+[ADR-037: OpenBao for Secrets Management](ADR-037%20openbao-secrets-management.md)
+(2026-09-16). HashiCorp Vault is being replaced by OpenBao, the MPL-2.0
+fork, in response to HashiCorp's 2023 BSL relicensing. `platform/apps/`
+still deploys `vault`/`vault-csi-driver` as of this note — the cutover is
+decided (ADR-037) but not yet executed. Do not treat this ADR's Decision
+section as final; ADR-037 will formally supersede it once OpenBao is live.
 
 ## Context
 
