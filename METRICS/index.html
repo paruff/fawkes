@@ -5395,10 +5395,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-how-to-read-the-devlake-rework-dashboard" class="md-nav__link">
+  <a href="#2-how-to-compute-the-rework-rate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. How to Read the DevLake Rework Dashboard
+        2. How to Compute the Rework Rate
       
     </span>
   </a>
@@ -5534,9 +5534,23 @@ Rework rate is tracked here and checked weekly via <code>scripts/weekly-metrics.
 </blockquote>
 <hr />
 <h2 id="1-rework-rate-definition">1. Rework Rate Definition</h2>
-<p><strong>Rework rate</strong> measures the percentage of pull requests that required follow-up fixes
-within seven days of merging (bug fixes, reverts, or hotfixes traceable to a recently
-merged PR).</p>
+<p><strong>Resolved 2026-09-16</strong>, grounded in Google DORA's AI-era research (referenced in
+<code>docs/research/dora/README.md</code>: the 2025 DORA AI Capabilities Model, the 2025 State of
+AI-Assisted Software Development report, and the 2026 ROI of AI-Assisted Software
+Development report). Those three PDFs are image/CID-font marketing documents with no
+extractable text layer via this repo's available tooling, so the definition below is
+grounded in the DORA 2026 framing already embedded in this repo's own Grafana panel
+(<code>platform/apps/grafana-dashboards/dora-metrics-dashboard-configmap.yaml</code>): <em>"Fraction of
+AI output requiring rework (5th DORA metric, DORA 2026)."</em></p>
+<p><strong>Rework rate</strong> = the percentage of AI-assisted merged PRs (commits carrying this repo's
+own <code>Co-Authored-By: Claude</code> attribution trailer) that needed a fix/revert follow-up PR
+within seven days of merging. This approximates "AI output requiring rework" using signals
+this repo already produces — no new label convention, no IDE-level suggestion
+accept/reject telemetry Fawkes doesn't collect.</p>
+<p>Two other definitions exist elsewhere in this repo's history and are superseded by this
+one: ADR-016's "Jenkins rebuilds / unique commits" (dead — Jenkins was replaced by Tekton,
+see the ADR index) and <code>docs/research/dora/README.md</code>'s "PR labels (rework) / total PRs"
+proxy (never implemented — no label convention was ever adopted).</p>
 <table>
 <thead>
 <tr>
@@ -5565,24 +5579,28 @@ merged PR).</p>
 </table>
 <p>These thresholds align with DORA's definition of <em>change failure rate</em> and are applied to
 the Fawkes mono-repo across all layers (services, infra, platform, scripts, docs).</p>
+<p><strong>Known limitation</strong>: <code>scripts/weekly-metrics.sh</code> counts a fix/revert PR as a follow-up
+based on time proximity (merged within 7 days), not file-overlap with the AI PR it's
+"reworking" — see the script's header comment for why (added API cost on a repo that
+regularly merges 200+ PRs per 14 days). Read the computed rate as an upper bound.</p>
 <hr />
-<h2 id="2-how-to-read-the-devlake-rework-dashboard">2. How to Read the DevLake Rework Dashboard</h2>
-<ol>
-<li>Open Grafana at <code>http://devlake-grafana.127.0.0.1.nip.io</code> (local) or the environment
-   URL configured in your <code>GRAFANA_URL</code> environment variable.</li>
-<li>Navigate to <strong>Dashboards → DORA Metrics → Rework Rate</strong>.</li>
-<li>Set the time range to <strong>Last 7 days</strong> (use the date picker in the top-right corner).</li>
-<li>Key panels:</li>
-<li><strong>Rework Rate (%)</strong> — headline percentage for the selected period.</li>
-<li><strong>Rework PRs</strong> — list of individual PRs counted as rework.</li>
-<li><strong>Trend</strong> — 12-week rolling chart; look for sustained upward movement.</li>
-<li>Hover over any bar in the <strong>Rework PRs</strong> panel to see the PR title, author, and the
-   original PR it is fixing.</li>
-</ol>
+<h2 id="2-how-to-compute-the-rework-rate">2. How to Compute the Rework Rate</h2>
+<p><code>scripts/weekly-metrics.sh</code> computes this directly from GitHub via the <code>gh</code> CLI — no
+DevLake dependency (DevLake was decommissioned 2026-09-16 in favor of native PromQL DORA
+metrics, see <code>platform/apps/prometheus/rules/dora.yml</code>).</p>
+<div class="highlight"><pre><span></span><code>./scripts/weekly-metrics.sh<span class="w">            </span><span class="c1"># updates section 3's baseline table</span>
+./scripts/weekly-metrics.sh<span class="w"> </span>--dry-run<span class="w">  </span><span class="c1"># prints the status without writing the table</span>
+</code></pre></div>
+<p>It prints the traffic-light status plus the underlying counts (<code>reworked/total AI-assisted
+PRs</code>) and updates the baseline table below. Requires <code>gh auth login</code> to have been run
+locally or in CI.</p>
 <hr />
 <h2 id="3-current-baseline">3. Current Baseline</h2>
 <blockquote>
-<p><strong>Status as of last update:</strong> TBD — baseline not yet established.</p>
+<p><strong>Status as of last update:</strong> 🔴 RED (2026-09-16) — first real baseline, established during
+this session's methodology switch from DevLake to GitHub-derived data. See the "Known
+limitation" note in Section 1: this reading is inflated by the session's own unusually
+high fix-commit volume and the lack of file-overlap checking, not a steady-state signal.</p>
 </blockquote>
 <table>
 <thead>
@@ -5595,10 +5613,10 @@ the Fawkes mono-repo across all layers (services, infra, platform, scripts, docs
 </thead>
 <tbody>
 <tr>
-<td>TBD</td>
-<td>TBD %</td>
-<td>TBD</td>
-<td>Awaiting first DevLake data collection cycle</td>
+<td>2026-09-16</td>
+<td>98.0 %</td>
+<td>RED</td>
+<td>Auto-updated by weekly-metrics.sh (50/51 AI-assisted PRs)</td>
 </tr>
 </tbody>
 </table>
@@ -5616,7 +5634,7 @@ that any degradation is caught early.</p>
 <li>One rotating team member (shadow reviewer)</li>
 </ul>
 <h3 id="steps">Steps</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># 1. Run the metrics script — it queries DevLake and updates this file</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Run the metrics script — it queries GitHub via `gh` and updates this file</span>
 ./scripts/weekly-metrics.sh
 
 <span class="c1"># 2. Check the terminal output for the traffic-light status</span>
@@ -5653,7 +5671,7 @@ that any degradation is caught early.</p>
 <hr />
 <h2 id="5-related-metrics">5. Related Metrics</h2>
 <p>The following DORA metrics are tracked alongside rework rate.
-See the DevLake DORA dashboard for full details.</p>
+The other 4 are computed natively in Prometheus; see <code>platform/apps/prometheus/rules/dora.yml</code>.</p>
 <table>
 <thead>
 <tr>
@@ -5666,27 +5684,27 @@ See the DevLake DORA dashboard for full details.</p>
 <tr>
 <td>Deployment Frequency</td>
 <td>≥ 1/day</td>
-<td>DevLake / ArgoCD events</td>
+<td>Prometheus <code>dora:deployment_frequency:rate30d</code></td>
 </tr>
 <tr>
 <td>Lead Time for Changes</td>
 <td>&lt; 1 hour</td>
-<td>DevLake / GitHub PRs</td>
+<td>Prometheus <code>dora:lead_time_hours:p50_30d</code></td>
 </tr>
 <tr>
 <td>Change Failure Rate</td>
 <td>&lt; 5 %</td>
-<td>DevLake / incident records</td>
+<td>Prometheus <code>dora:change_failure_rate:ratio30d</code></td>
 </tr>
 <tr>
 <td>MTTR</td>
 <td>&lt; 1 hour</td>
-<td>DevLake / PagerDuty</td>
+<td>Prometheus <code>dora:fdrt_hours:p50_30d</code> (Alertmanager-backed)</td>
 </tr>
 <tr>
 <td><strong>Rework Rate</strong></td>
 <td><strong>&lt; 10 %</strong></td>
-<td><strong>DevLake / GitHub PRs</strong></td>
+<td><strong>GitHub PRs via <code>scripts/weekly-metrics.sh</code></strong></td>
 </tr>
 </tbody>
 </table>
@@ -5694,9 +5712,10 @@ See the DevLake DORA dashboard for full details.</p>
 <h2 id="6-see-also">6. See Also</h2>
 <ul>
 <li><code>scripts/weekly-metrics.sh</code> — automated weekly data collection</li>
+<li><code>platform/apps/prometheus/rules/dora.yml</code> — the other 4 DORA keys (native PromQL)</li>
 <li><code>docs/runbooks/</code> — incident runbooks</li>
 <li><code>docs/AGENTS.md</code> Section 9 — platform principles</li>
-<li>DevLake documentation: <a href="https://devlake.apache.org/docs">https://devlake.apache.org/docs</a></li>
+<li><code>docs/research/dora/README.md</code> — DORA research reference table</li>
 </ul>
 <h2 id="ai-readiness-metrics">AI-Readiness Metrics</h2>
 <blockquote>

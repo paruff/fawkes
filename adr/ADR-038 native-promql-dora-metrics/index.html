@@ -21,7 +21,7 @@
     
     
       
-        <title>ADR-016: DevLake for DORA Metrics Visualization - Fawkes</title>
+        <title>ADR-038: Native PromQL DORA Metrics - Fawkes</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adr-016-devlake-for-dora-metrics-visualization" class="md-skip">
+        <a href="#adr-038-native-promql-dora-metrics" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADR-016: DevLake for DORA Metrics Visualization
+              ADR-038: Native PromQL DORA Metrics
             
           </span>
         </div>
@@ -5403,45 +5403,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Context">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#current-state" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Current State
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirements
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#evaluation-criteria" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Evaluation Criteria
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -5457,87 +5418,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#why-apache-devlake" class="md-nav__link">
+  <a href="#rework-rate-resolving-a-previously-undefined-metric" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Apache DevLake
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dora-metrics-calculation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DORA Metrics Calculation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#jenkins-rework-metrics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Jenkins Rework Metrics
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deployment-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Deployment Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data-source-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Source Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#backstage-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backstage Integration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#edge-case-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Edge Case Handling
+        Rework Rate: resolving a previously-undefined metric
       
     </span>
   </a>
@@ -5583,149 +5467,16 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#risks-and-mitigations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Risks and Mitigations
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
+  <a href="#related-decisions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Alternatives Considered
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Alternatives Considered">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-custom-dora-metrics-service-adr-012-approach" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Custom DORA Metrics Service (ADR-012 Approach)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-sleuthio-commercial" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Sleuth.io (Commercial)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-faros-ai-commercial" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Faros AI (Commercial)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-haystack-open-source" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Haystack (Open Source)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-plan" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Implementation Plan
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Implementation Plan">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#phase-1-core-deployment-week-1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 1: Core Deployment (Week 1)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-2-data-source-integration-week-2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 2: Data Source Integration (Week 2)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-3-visualization-week-3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 3: Visualization (Week 3)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-4-documentation-training-week-4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 4: Documentation &amp; Training (Week 4)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        References
+        Related Decisions
       
     </span>
   </a>
@@ -5749,413 +5500,122 @@
 
 
 
-<h1 id="adr-016-devlake-for-dora-metrics-visualization">ADR-016: DevLake for DORA Metrics Visualization</h1>
+<h1 id="adr-038-native-promql-dora-metrics">ADR-038: Native PromQL DORA Metrics</h1>
 <h2 id="status">Status</h2>
-<p><strong>Superseded by
-<a href="../ADR-038%20native-promql-dora-metrics/">ADR-038: Native PromQL DORA Metrics</a></strong>
-- 2026-09-16. DevLake was decommissioned this date (removed from
-<code>platform/bootstrap/platform-applicationset.yaml</code>'s generator, live-pruned
-from the cluster) in favor of Prometheus recording rules
-(<code>platform/apps/prometheus/rules/dora.yml</code>) computed directly against
-ArgoCD, Tekton, and Alertmanager metrics already present in-cluster — no
-separate ETL stack. This ADR's "Jenkins Rework Metrics" section
-(line ~139) is additionally dead twice over: Jenkins was replaced by
-Tekton (ADR-036), and DevLake itself is gone. See ADR-038 and
-<code>docs/METRICS.md</code> for the current Rework Rate definition and pipeline.</p>
+<p>Accepted - 2026-09-16</p>
 <h2 id="context">Context</h2>
-<p>The Fawkes platform requires a unified way to collect, calculate, and display the
-five core DORA metrics to enable teams to assess their service performance,
-identify bottlenecks, and ensure adherence to Golden Path standards.</p>
-<h3 id="current-state">Current State</h3>
-<p>IDP concepts (CI/CD, secrets, infrastructure provisioning, policy enforcement)
-are disconnected, residing across various URLs (Jenkins, Vault UI, Kubernetes CLI).
-There is no integrated interface for developers to interact with the platform or
-view consolidated DORA metrics.</p>
-<p>The existing ADR-012 (Metrics Monitoring and Management) defines a custom DORA
-Metrics Service for webhook-based event collection. While this approach provides
-flexibility, it requires significant custom development effort.</p>
-<h3 id="requirements">Requirements</h3>
-<ol>
-<li><strong>Deployment Frequency</strong>: Track successful production deployments per day/week</li>
-<li><strong>Lead Time for Changes</strong>: Measure commit time to production deployment time</li>
-<li><strong>Change Failure Rate (CFR)</strong>: Calculate failed deployments / total deployments</li>
-<li><strong>Mean Time to Restore (MTTR)</strong>: Measure incident detection to resolution time</li>
-<li><strong>Operational Performance</strong>: Track SLO/SLI adherence for reliability metrics</li>
-</ol>
-<h3 id="evaluation-criteria">Evaluation Criteria</h3>
-<ul>
-<li>Open source with active community</li>
-<li>Native DORA metrics calculation</li>
-<li>Integration with Git, Jenkins, and incident management</li>
-<li>Backstage integration capability</li>
-<li>Kubernetes-native deployment</li>
-<li>Minimal operational overhead</li>
-</ul>
+<p><a href="../ADR-016%20devlake-dora-strategy/">ADR-016</a> chose Apache DevLake as a dedicated
+DORA-metrics ETL/visualization stack (MySQL + API + UI + collector workers) to avoid
+building custom collectors. In practice, running it added a database and three services
+for data that Prometheus — already deployed for cluster observability — could compute
+directly from metrics ArgoCD and Tekton already expose, once the real metric names were
+identified (<code>argocd_app_sync_total</code>, <code>tekton_pipelines_controller_pipelinerun_duration_seconds_bucket</code>,
+confirmed live 2026-09-16 against <code>fawkes-dev-aks</code>).</p>
+<p>DevLake was decommissioned this date: removed from
+<code>platform/bootstrap/platform-applicationset.yaml</code>'s generator, live-pruned from the
+cluster. <code>AGENTS.md</code> §5 already states "All 5 DORA keys computed natively in Prometheus
+via recording rules... DevLake is optional (historical analytics only)" — this ADR is the
+decision record that statement was missing.</p>
 <h2 id="decision">Decision</h2>
-<p>We will deploy <strong>Apache DevLake</strong> as the DORA metrics collection, calculation,
-and visualization platform for Fawkes.</p>
-<h3 id="why-apache-devlake">Why Apache DevLake</h3>
-<p><strong>Advantages</strong>:</p>
-<ol>
-<li><strong>Purpose-built for DORA</strong>: Native support for all four DORA metrics</li>
-<li><strong>Multi-source Integration</strong>: Pre-built collectors for GitHub, GitLab, Jenkins,
-   Jira, and more</li>
-<li><strong>Open Source</strong>: Apache 2.0 license, active CNCF community</li>
-<li><strong>Extensible</strong>: Plugin architecture for custom data sources</li>
-<li><strong>Grafana Integration</strong>: Pre-built dashboards for DORA visualization</li>
-<li><strong>Low Custom Development</strong>: Reduces need for custom webhook handlers</li>
-</ol>
-<p><strong>Trade-offs</strong>:</p>
-<ol>
-<li><strong>Additional Component</strong>: Adds DevLake stack (API, UI, collector workers)</li>
-<li><strong>Database Requirement</strong>: Requires MySQL/PostgreSQL for data storage</li>
-<li><strong>Learning Curve</strong>: Teams need to understand DevLake configuration</li>
-</ol>
-<h3 id="architecture">Architecture</h3>
-<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────────────────┐
-│                          DevLake DORA Metrics Layer                          │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                               │
-│  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │                       Data Sources (Collectors)                          │ │
-│  │                                                                           │ │
-│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │ │
-│  │  │   GitHub    │  │   Jenkins   │  │ Observability│ │   Custom    │    │ │
-│  │  │   Plugin    │  │   Plugin    │  │   Webhook   │  │   Webhook   │    │ │
-│  │  │             │  │             │  │             │  │             │    │ │
-│  │  │ • Commits   │  │ • Builds    │  │ • Incidents │  │ • CFR Events│    │ │
-│  │  │ • PRs       │  │ • Deploys   │  │ • Restores  │  │ • MTTR Data │    │ │
-│  │  │ • Branches  │  │ • Pipelines │  │ • Alerts    │  │             │    │ │
-│  │  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘    │ │
-│  │         │                 │                 │                │          │ │
-│  └─────────┼─────────────────┼─────────────────┼────────────────┼──────────┘ │
-│            │                 │                 │                │            │
-│            └─────────────────┴─────────────────┴────────────────┘            │
-│                                      │                                        │
-│                                      ▼                                        │
-│  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │                      DevLake Core Services                               │ │
-│  │                                                                           │ │
-│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐         │ │
-│  │  │  DevLake API    │  │  DevLake UI     │  │  Lake Workers   │         │ │
-│  │  │  (Config/Data)  │  │  (Dashboard)    │  │  (Collectors)   │         │ │
-│  │  └────────┬────────┘  └─────────────────┘  └────────┬────────┘         │ │
-│  │           │                                          │                  │ │
-│  │           └────────────────┬─────────────────────────┘                  │ │
-│  │                            │                                             │ │
-│  │                            ▼                                             │ │
-│  │  ┌─────────────────────────────────────────────────────────────────────┐│ │
-│  │  │                      MySQL Database                                  ││ │
-│  │  │     (Raw data, domain models, DORA calculations)                    ││ │
-│  │  └─────────────────────────────────────────────────────────────────────┘│ │
-│  └─────────────────────────────────────────────────────────────────────────┘ │
-│                                      │                                        │
-│                                      │ Prometheus Metrics Export              │
-│                                      ▼                                        │
-│  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │                      Visualization Layer                                 │ │
-│  │                                                                           │ │
-│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐         │ │
-│  │  │    Grafana      │  │    Backstage    │  │   DevLake UI    │         │ │
-│  │  │  DORA Dashboard │  │  Plugin Widget  │  │  (Native UI)    │         │ │
-│  │  └─────────────────┘  └─────────────────┘  └─────────────────┘         │ │
-│  └─────────────────────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<h3 id="dora-metrics-calculation">DORA Metrics Calculation</h3>
-<p>DevLake calculates DORA metrics using the appropriate data sources for a GitOps
-architecture where ArgoCD handles deployments:</p>
+<p><strong>4 of the 5 DORA keys are computed as Prometheus recording rules; the 5th (Rework Rate)
+is computed separately from GitHub PR history.</strong></p>
+<p><code>platform/apps/prometheus/rules/dora.yml</code> (deployed via
+<code>prometheus-application.yaml</code>'s <code>additionalPrometheusRulesMap</code>):</p>
 <table>
 <thead>
 <tr>
 <th>Metric</th>
-<th>Primary Data Source</th>
-<th>Secondary Source</th>
-<th>Calculation</th>
+<th>Rule</th>
+<th>Real source</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Deployment Frequency</td>
-<td><strong>ArgoCD</strong> sync events</td>
-<td>GitHub deployments</td>
-<td>Successful production syncs per time period</td>
+<td><code>dora:deployment_frequency:rate30d</code></td>
+<td><code>argocd_app_sync_total{phase="Succeeded"}</code></td>
 </tr>
 <tr>
 <td>Lead Time for Changes</td>
-<td>Git commits + <strong>ArgoCD</strong></td>
-<td>-</td>
-<td>Time from first commit to ArgoCD sync completion</td>
+<td><code>dora:lead_time_hours:p50_30d</code></td>
+<td><code>tekton_pipelines_controller_pipelinerun_duration_seconds_bucket</code></td>
 </tr>
 <tr>
 <td>Change Failure Rate</td>
-<td><strong>ArgoCD</strong> + Incidents</td>
-<td>Observability alerts</td>
-<td>Failed syncs / Total syncs</td>
+<td><code>dora:change_failure_rate:ratio30d</code></td>
+<td><code>argocd_app_sync_total{phase="Failed"}</code> / total</td>
 </tr>
 <tr>
-<td>Mean Time to Restore</td>
-<td>Incident records + <strong>ArgoCD</strong></td>
-<td>-</td>
-<td>Time from incident to restore sync</td>
+<td>MTTR (FDRT)</td>
+<td><code>dora:fdrt_hours:p50_30d</code></td>
+<td><code>ALERTS_FOR_STATE{alertname="ArgoCDAppDegraded"}</code>, a real alerting rule wired to Alertmanager (confirmed live: reached <code>/api/v2/alerts</code> during a genuine <code>devlake</code> Degraded incident)</td>
 </tr>
 <tr>
-<td>Operational Performance</td>
-<td>Prometheus SLO/SLI data</td>
-<td>-</td>
-<td>Uptime, latency, error rate adherence</td>
+<td><strong>Rework Rate</strong></td>
+<td>not a Prometheus rule</td>
+<td><code>scripts/weekly-metrics.sh</code>, GitHub PR data via <code>gh</code></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Note on Jenkins Role</strong>: In a GitOps architecture, Jenkins handles CI (build,
-test, scan) but does <strong>not</strong> perform deployments. Jenkins updates the GitOps
-repository, which ArgoCD then reconciles. Therefore:</p>
-<ul>
-<li><strong>ArgoCD</strong> is the source of truth for deployment events</li>
-<li><strong>Jenkins</strong> provides build/test metrics and rework tracking (build failures,
-  test reruns, quality gate failures)</li>
-</ul>
-<h3 id="jenkins-rework-metrics">Jenkins Rework Metrics</h3>
-<p>Jenkins contributes to developer productivity metrics beyond core DORA:</p>
-<table>
-<thead>
-<tr>
-<th>Metric</th>
-<th>Description</th>
-<th>Calculation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Build Success Rate</td>
-<td>Percentage of successful builds</td>
-<td>Passed builds / Total builds</td>
-</tr>
-<tr>
-<td>Test Flakiness</td>
-<td>Frequency of non-deterministic test failures</td>
-<td>Flaky runs / Total runs</td>
-</tr>
-<tr>
-<td>Quality Gate Pass Rate</td>
-<td>SonarQube gate success</td>
-<td>Passed gates / Total scans</td>
-</tr>
-<tr>
-<td>Rework Rate</td>
-<td>Builds triggered by same commit</td>
-<td>Rebuilds / Unique commits</td>
-</tr>
-<tr>
-<td>Build Duration Trend</td>
-<td>Average build time over time</td>
-<td>Mean/P95 build duration</td>
-</tr>
-</tbody>
-</table>
-<h3 id="deployment-configuration">Deployment Configuration</h3>
-<p><strong>Namespace Isolation</strong>:</p>
-<ul>
-<li>DevLake deployed in <code>fawkes-devlake</code> namespace</li>
-<li>Secrets managed via Vault/External Secrets</li>
-<li>Network policies restrict access to approved sources</li>
-</ul>
-<p><strong>Resource Requirements</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">devlake-api</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200m</span>
-<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512Mi</span>
-<span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000m</span>
-<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2Gi</span>
-
-<span class="nt">devlake-ui</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span>
-<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128Mi</span>
-<span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
-<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512Mi</span>
-
-<span class="nt">mysql</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
-<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
-<span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2000m</span>
-<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4Gi</span>
-</code></pre></div>
-<h3 id="data-source-configuration">Data Source Configuration</h3>
-<p><strong>GitHub/Git Integration</strong>:</p>
-<ul>
-<li>OAuth app for repository access</li>
-<li>Webhook receiver for real-time events</li>
-<li>Collect: commits, PRs, branches</li>
-</ul>
-<p><strong>ArgoCD Integration</strong> (Primary deployment source):</p>
-<ul>
-<li>API access for sync event collection</li>
-<li>Deployment frequency from successful syncs</li>
-<li>Lead time correlation with commit timestamps</li>
-<li>Failure detection from sync failures</li>
-</ul>
-<p><strong>Jenkins Integration</strong> (CI and rework metrics):</p>
-<ul>
-<li>API token for build data access</li>
-<li>Build success/failure tracking</li>
-<li>Quality gate results</li>
-<li><strong>Rework metrics</strong>: build retries, flaky tests, repeated failures</li>
-</ul>
-<p><strong>Observability Integration</strong>:</p>
-<ul>
-<li>Webhook endpoint for incident events</li>
-<li>Alert-to-incident correlation</li>
-<li>Resolution tracking for MTTR</li>
-</ul>
-<h3 id="backstage-integration">Backstage Integration</h3>
-<p>DevLake will integrate with Backstage via:</p>
-<ol>
-<li><strong>Iframe Plugin</strong>: Embed DevLake dashboards in Backstage</li>
-<li><strong>API Integration</strong>: Fetch DORA metrics for service cards</li>
-<li><strong>Entity Annotation</strong>: Link catalog entities to DevLake projects</li>
-</ol>
-<h3 id="edge-case-handling">Edge Case Handling</h3>
-<table>
-<thead>
-<tr>
-<th>Scenario</th>
-<th>Behavior</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No deployments for service</td>
-<td>Display "N/A" instead of 0</td>
-</tr>
-<tr>
-<td>Partial data (missing incidents)</td>
-<td>Calculate available metrics, show warnings</td>
-</tr>
-<tr>
-<td>High cardinality (many services)</td>
-<td>Use pagination and caching</td>
-</tr>
-<tr>
-<td>Data source unavailable</td>
-<td>Show last known values with staleness indicator</td>
-</tr>
-</tbody>
-</table>
+<h3 id="rework-rate-resolving-a-previously-undefined-metric">Rework Rate: resolving a previously-undefined metric</h3>
+<p>Three conflicting, mutually-inconsistent definitions existed in this repo before this ADR:
+ADR-016's "Jenkins rebuilds / unique commits" (dead twice over — Jenkins is gone per
+ADR-036, and so is DevLake), <code>docs/research/dora/README.md</code>'s "PR labels (rework) / total
+PRs" proxy (never implemented — no label convention was adopted), and an earlier
+same-session Prometheus proxy (<code>sum(argocd_app_sync_total) - count(...) / count(...)</code>,
+i.e. extra ArgoCD syncs per app — real data, but not actually measuring rework of
+developer output).</p>
+<p><strong>Resolved definition</strong>: the percentage of AI-assisted merged PRs (commits carrying this
+repo's own <code>Co-Authored-By: Claude</code> attribution trailer) that needed a fix/revert
+follow-up PR within 7 days of merging. This is grounded in the DORA 2026 framing already
+present in this repo's own Grafana panel
+(<code>platform/apps/grafana-dashboards/dora-metrics-dashboard-configmap.yaml</code>): <em>"Fraction of
+AI output requiring rework (5th DORA metric, DORA 2026)"</em> — the most specific definition
+this repo had, and the one referenced material (the 2025 DORA AI Capabilities Model, the
+2025 State of AI-Assisted Software Development report, and the 2026 DORA ROI report;
+listed in <code>docs/research/dora/README.md</code>) is consistent with, though those three PDFs are
+image/CID-font marketing documents with no extractable text layer via this repo's
+available tooling — direct quotation wasn't possible, so this definition is grounded in
+the in-repo source, not a verbatim citation.</p>
+<p>Implementation: <code>scripts/weekly-metrics.sh</code>, rewritten 2026-09-16 to query GitHub directly
+via <code>gh</code> (previously queried DevLake's now-dead rework-rate API). A pluggable
+<code>RepoSourceCollector</code> interface (<code>services/dora-metrics/app/collectors/</code>) generalizes this
+beyond GitHub — GitLab, Bitbucket, AWS/Azure/GCP git+registry, in-cluster git, and Harbor
+are named but not yet implemented, gated behind <code>AGENTS.md</code> §6's "ask before adding an
+external dependency" rule. See <code>docs/METRICS.md</code> for the full definition, thresholds, and
+known limitations (time-proximity follow-up matching, not file-overlap — see that script's
+header comment).</p>
 <h2 id="consequences">Consequences</h2>
 <h3 id="positive">Positive</h3>
-<ol>
-<li><strong>Immediate DORA visibility</strong>: Pre-built dashboards reduce time to value</li>
-<li><strong>Standardized metrics</strong>: Consistent calculation across all teams</li>
-<li><strong>Reduced custom development</strong>: Leverage DevLake's tested collectors</li>
-<li><strong>Extensibility</strong>: Plugin architecture for future data sources</li>
-<li><strong>Community support</strong>: Active Apache project with regular updates</li>
-</ol>
+<ul>
+<li>One fewer stateful stack to operate (no MySQL, no DevLake API/UI/collector pods).</li>
+<li>4 of 5 metrics are genuinely live and real-time (30s recording-rule interval) rather
+  than batch-ETL-delayed.</li>
+<li>Rework Rate finally has one authoritative, documented definition instead of three
+  conflicting ones scattered across an ADR, a research doc, and undocumented code.</li>
+</ul>
 <h3 id="negative">Negative</h3>
-<ol>
-<li><strong>Additional infrastructure</strong>: MySQL database and DevLake services</li>
-<li><strong>Configuration complexity</strong>: Multiple data source configurations</li>
-<li><strong>Storage requirements</strong>: Historical data requires database capacity</li>
-</ol>
-<h3 id="risks-and-mitigations">Risks and Mitigations</h3>
-<table>
-<thead>
-<tr>
-<th>Risk</th>
-<th>Mitigation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DevLake version incompatibility</td>
-<td>Pin to stable versions, test upgrades</td>
-</tr>
-<tr>
-<td>Data collection failures</td>
-<td>Alerting on collector health, retry logic</td>
-</tr>
-<tr>
-<td>Dashboard performance</td>
-<td>Enable caching, limit historical queries</td>
-</tr>
-<tr>
-<td>Security exposure</td>
-<td>Vault-managed credentials, network policies</td>
-</tr>
-</tbody>
-</table>
-<h2 id="alternatives-considered">Alternatives Considered</h2>
-<h3 id="1-custom-dora-metrics-service-adr-012-approach">1. Custom DORA Metrics Service (ADR-012 Approach)</h3>
-<p><strong>Description</strong>: Build custom Go/Python service with webhook receivers</p>
-<p><strong>Rejected because</strong>:</p>
 <ul>
-<li>Higher development and maintenance cost</li>
-<li>Need to implement all collectors from scratch</li>
-<li>No pre-built visualization</li>
+<li>Lead Time uses raw cumulative bucket sums, not <code>rate()</code>/<code>increase()</code> — with few real
+  PipelineRuns so far, a 30d rolling window returns NaN (needs 2+ spaced samples). This is
+  effectively an all-time distribution until PipelineRun volume is higher — flagged, not
+  hidden, in <code>dora.yml</code>'s own comments.</li>
+<li>MTTR only covers currently/recently-firing incidents (<code>ALERTS_FOR_STATE</code>); Prometheus
+  doesn't retain that series once an alert resolves, so no true historical p50 over 30d yet.</li>
+<li>Rework Rate's "follow-up" match is time-proximity only, not file-overlap — on a
+  high-PR-volume week this over-counts (see <code>docs/METRICS.md</code>'s "Known limitation" note).</li>
+<li>No Backstage/DevLake-UI-style dashboard for historical drill-down; Grafana is the only
+  visualization layer now.</li>
 </ul>
-<h3 id="2-sleuthio-commercial">2. Sleuth.io (Commercial)</h3>
-<p><strong>Description</strong>: SaaS DORA metrics platform</p>
-<p><strong>Rejected because</strong>:</p>
+<h2 id="related-decisions">Related Decisions</h2>
 <ul>
-<li>Commercial licensing costs</li>
-<li>External data residency concerns</li>
-<li>Vendor lock-in</li>
-</ul>
-<h3 id="3-faros-ai-commercial">3. Faros AI (Commercial)</h3>
-<p><strong>Description</strong>: Engineering metrics platform</p>
-<p><strong>Rejected because</strong>:</p>
-<ul>
-<li>Commercial licensing</li>
-<li>More complex than needed</li>
-<li>Over-featured for core DORA requirements</li>
-</ul>
-<h3 id="4-haystack-open-source">4. Haystack (Open Source)</h3>
-<p><strong>Description</strong>: Engineering analytics platform</p>
-<p><strong>Rejected because</strong>:</p>
-<ul>
-<li>Smaller community than DevLake</li>
-<li>Less mature DORA implementation</li>
-<li>Limited documentation</li>
-</ul>
-<h2 id="implementation-plan">Implementation Plan</h2>
-<h3 id="phase-1-core-deployment-week-1">Phase 1: Core Deployment (Week 1)</h3>
-<ul>
-<li>[x] Create ADR-016 for DevLake strategy</li>
-<li>[ ] Deploy DevLake Helm chart via ArgoCD</li>
-<li>[ ] Configure MySQL persistence</li>
-<li>[ ] Set up ingress for DevLake UI</li>
-</ul>
-<h3 id="phase-2-data-source-integration-week-2">Phase 2: Data Source Integration (Week 2)</h3>
-<ul>
-<li>[ ] Configure GitHub/Git collector</li>
-<li>[ ] Configure Jenkins collector</li>
-<li>[ ] Set up incident webhook receiver</li>
-<li>[ ] Create initial projects in DevLake</li>
-</ul>
-<h3 id="phase-3-visualization-week-3">Phase 3: Visualization (Week 3)</h3>
-<ul>
-<li>[ ] Import DORA Grafana dashboards</li>
-<li>[ ] Create Backstage DevLake plugin</li>
-<li>[ ] Configure team-level views</li>
-<li>[ ] Set up alerting for metric degradation</li>
-</ul>
-<h3 id="phase-4-documentation-training-week-4">Phase 4: Documentation &amp; Training (Week 4)</h3>
-<ul>
-<li>[ ] Update architecture documentation</li>
-<li>[ ] Create DORA metrics definition guide</li>
-<li>[ ] Add Dojo learning module</li>
-<li>[ ] Create runbooks for operations</li>
-</ul>
-<h2 id="references">References</h2>
-<ul>
-<li><a href="https://devlake.apache.org/docs/Overview/Introduction">Apache DevLake Documentation</a></li>
-<li><a href="https://dora.dev/guides/dora-metrics-four-keys/">DORA Metrics Definition</a></li>
-<li><a href="https://devlake.apache.org/docs/Configuration/Dashboards/">DevLake Grafana Dashboards</a></li>
-<li><a href="../ADR-012%20Metrics%20Monitoring%20and%20Management/">ADR-012: Metrics Monitoring and Management</a></li>
+<li>Supersedes <a href="../ADR-016%20devlake-dora-strategy/">ADR-016: DevLake for DORA Metrics Visualization</a></li>
+<li>Depends on <a href="../ADR-036%20tekton-for-ci-cd/">ADR-036: Tekton for CI/CD</a> for the Lead Time
+  source metric</li>
+<li><a href="../ADR-012%20Metrics%20Monitoring%20and%20Management/">ADR-012: Metrics Monitoring and Management</a>
+  — the original custom-DORA-service approach ADR-016 rejected in favor of DevLake; this
+  ADR returns to a native-Prometheus approach closer to ADR-012's spirit, without the
+  custom webhook service ADR-012 originally proposed</li>
 </ul>
 
 
