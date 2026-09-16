@@ -28,6 +28,8 @@ Fawkes already has a concrete 3-phase delivery model (`docs/BACKLOG.md`) — thi
 | IRSA role ARN wired into python-fawkes-path | 🔴 Open | #1578 |
 | CI quality gates verified green | 🔴 Open | #1581 |
 
+**Planes required this phase** (per `docs/golden-path-verification-planes.md`; "Alpha" here is the platform-maturity phase, not a golden path's `alpha` environment tier): Pipeline, GitOps, Observability, DORA (2-key: deployment frequency, lead time).
+
 ### H2 — Phase 2 (Beta)
 
 **Status:** code/GitOps wiring for every row is merged; what's open is *live end-to-end verification*, not new construction — see `docs/phase-2-closure-plan.md`.
@@ -41,6 +43,10 @@ Fawkes already has a concrete 3-phase delivery model (`docs/BACKLOG.md`) — thi
 | Alertmanager→DevLake incident-payload adapter | 🔴 Open, blocked on `KL-15` | #2079 |
 | CFR panel on DORA dashboard | 🔴 Open, blocked on the two rows above | #1946 |
 
+**Planes required this phase**: Security (core — quality gates actually block a bad deploy), Progressive Delivery (canary/blue-green with rollback, chaos wired into the traffic-shift step), DORA (+CFR = 3-key). **DevEx (basic: `catalog-info.yaml` exists, Backstage deployed, component registered in its live catalog) — added 2026-09-16, not previously listed here.** Rationale: Beta is when the platform needs to be genuinely usable by other developers, not just a pipeline proof-of-concept, so basic discoverability belongs here rather than waiting for Production's deeper DevEx (self-service portal, RBAC-gated approval).
+
+*(Note 2026-09-16: the #1919/#2079 rows above still cite the old `KL-15`/DevLake blocker — corrected elsewhere to depend on #2117 (native PromQL) instead; not re-litigated here, see `EXECUTION_QUEUE.md`.)*
+
 ### H3 — Phase 3 (Production)
 
 All 🔴 not started — correctly so, this is the next horizon, not a current gap:
@@ -51,6 +57,8 @@ All 🔴 not started — correctly so, this is the next horizon, not a current g
 | RBAC-gated production promotion | 🔴 Not started |
 | Production traffic routing | 🔴 Not started |
 | All 5 DORA keys in one dashboard | 🔴 Not started |
+
+**Planes required this phase**: DevEx (deep — self-service portal, RBAC-gated approval, beyond Beta's basic catalog registration), Progressive Delivery (deepened — production traffic routing), DORA (all 5 keys), Security (deepened — the four "planned additions" already listed in `docs/golden-path-verification-planes.md`: secrets management enforcement, policy enforcement, code analysis, network-based security), Resources (production-grade — CPU/memory limits enforced with real usage data, PVCs Bound, backing database healthy under production load).
 
 ## Release Gates
 
