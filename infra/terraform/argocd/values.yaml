@@ -41,6 +41,15 @@ server:
   service:
     # Avoid localhost port conflicts; expose via Ingress instead
     type: ClusterIP
+  # #2117: the chart's metrics port (8083 on this pod) already existed but
+  # had no Service/ServiceMonitor pointing at it - confirmed live nothing
+  # was scraping it. Prometheus already watches ServiceMonitors across
+  # namespaces (the existing fawkes/tracer-bullet ServiceMonitor proves
+  # this), so no extra namespace selector config needed.
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -72,6 +81,11 @@ controller:
     limits:
       cpu: 1000m
       memory: 1Gi
+  # #2117: same gap as server.metrics below - port 8082 existed, nothing scraped it.
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
 
 # Repo server configuration
 repoServer:
@@ -92,6 +106,11 @@ repoServer:
   # default (Helm deep-merges this map into repoServer.livenessProbe).
   livenessProbe:
     timeoutSeconds: 10
+  # #2117: same gap as server.metrics above.
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
 
 # Redis configuration
 redis:

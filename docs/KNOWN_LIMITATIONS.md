@@ -327,11 +327,11 @@ re-collecting data may be required. To proceed, please send a request to
 
 This is distinct from KL-09's (resolved) token-scope bug and from the `devlake-lake` pod's own health — the pod itself is `Running` (see the "Risk (resolved)" note above), but the application layer refuses every request until someone explicitly approves the migration.
 
-**Status: DEPRECATED** — DevLake is no longer required for DORA metrics (native PromQL implementation). The blocked items (#1919, #2079, #1946, Phase 5) now use native Prometheus/ArgoCD/Alertmanager events instead of DevLake.
+**Status: DEPRECATED (decision confirmed 2026-09-16)** — DevLake is no longer the intended path for DORA metrics; native PromQL is. **Correction (2026-09-16):** this entry previously claimed #1919/#2079/#1946/Phase 5 "now use native Prometheus/ArgoCD/Alertmanager events" — that was false; those issues were unchanged and still required DevLake tables/dashboards. They've now actually been rescoped (2026-09-16) to depend on #2117 instead. #2117 is also where the real gap lives: `platform/apps/prometheus/rules/dora.yml`'s recording rules were themselves orphaned (never deployed by anything) until 2026-09-16, and even now that they're wired into `prometheus-application.yaml`, they compute from metric names (`tekton_pipelinerun_*`, `argocd_application_sync_*`, `alertmanager_alert_*`) that don't exist on `mac-mini-k3s` — ArgoCD has no metrics Service/ServiceMonitor here, and Tekton isn't deployed on this cluster at all.
 
-**Impact:** Removed from critical path. DevLake migration approval only needed for historical analytics, not for DORA metrics or platform verification.
+**Impact:** DevLake DB migration removed from the critical path for DORA metrics — but native PromQL isn't a working replacement yet either. See #2117 for the actual remaining work.
 
-**Tracking:** DevLake retained as optional component. Migration can be approved at leisure for historical data access.
+**Tracking:** DevLake retained as optional component; migration can be approved at leisure for historical data access. #2117 tracks the real native-PromQL prerequisite work.
 
 ## KL-16 — `argocd-repo-server`'s Default Liveness Probe Is Too Tight for `/healthz?full=true` (Fix Pending Deployment)
 
@@ -350,20 +350,22 @@ Pattern analysis first ruled out a node-wide network problem: only `argocd-repo-
 
 ---
 
-## KL-17 — 17 Microservices Consolidated into 2 Domain Monoliths (IN PROGRESS)
+## KL-17 — 17 Microservices → 2 Domain Monoliths (NOT STARTED — 2026-09-16 correction)
 
-**Description:** The platform previously ran 17 separate Python FastAPI microservices (`vsm`, `analytics-dashboard`, `anomaly-detection`, `smart-alerting`, `feedback`, `feedback-bot`, `friction-cli`, `friction-bot`, `discovery-metrics`, `space-metrics`, `ai-code-review`, `nps`, `devx-survey-automation`, `insights`, `data-api`, `mcp-k8s-server`, `tracer-bullet`). These have been consolidated into 2 domain monoliths:
+**Description:** The platform currently runs 17 separate Python FastAPI microservices (`vsm`, `analytics-dashboard`, `anomaly-detection`, `smart-alerting`, `feedback`, `feedback-bot`, `friction-cli`, `friction-bot`, `discovery-metrics`, `space-metrics`, `ai-code-review`, `nps`, `devx-survey-automation`, `insights`, `data-api`, `mcp-k8s-server`, `tracer-bullet`). The plan is to consolidate them into 2 domain monoliths:
 - `fawkes-telemetry-engine` (telemetry, DORA, SPACE, anomaly detection, analytics, insights, discovery, data API)
 - `fawkes-devex-service` (feedback, friction, VSM, NPS, DevEx surveys, AI code review, MCP K8s server)
 
-**Impact:**
+**Corrected status (2026-09-16):** Previously stated as "IN PROGRESS" with completed impact claims (70% resource reduction, eliminated HTTP latency, shared libraries in `services/common/`) — **none of this is true**. `services/` on `main` still has all 17 original service dirs; no monolith directories, `services/common/` shared library, or any migrated code exist on any branch. Local directories with the monolith/common names exist only as untracked, source-free `__pycache__`/`.venv` build residue from 2026-09-15 (no `.py` files) — leftover from an abandoned local experiment, not real progress. See the phased implementation plan filed as a tracking issue before starting real work.
+
+**Impact (projected, not yet realized):**
 - ~70% reduction in cluster resource footprint (memory, CPU, pod count)
 - Eliminated inter-service HTTP latency and failure modes
 - Simplified local development (2 services vs 17 in k3d)
 - Single PostgreSQL instance with separate databases (`telemetry_db`, `devex_db`)
 - Shared libraries in `services/common/`
 
-**Tracking:** Migration in progress. Each monolith deployed as single Deployment with multiple internal modules. Inter-service HTTP calls replaced with direct imports.
+**Tracking:** Not started. See phased plan.
 
 ---
 
