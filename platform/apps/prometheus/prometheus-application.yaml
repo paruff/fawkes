@@ -144,7 +144,37 @@ spec:
         # Real source metrics confirmed live 2026-09-16:
         # - argocd_app_sync_total{name,namespace,phase} - phase="Succeeded"|"Failed"
         # - tekton_pipelines_controller_pipelinerun_duration_seconds_bucket{status,pipeline}
+        #
+        # Lead Time uses raw cumulative bucket sums, not rate()/increase() -
+        # with only a handful of real PipelineRuns so far, rate()/increase()
+        # over a 30d window returned NaN (needs 2+ samples spaced apart to
+        # compute a slope; confirmed live). Revisit once real PipelineRun
+        # volume is high enough for rate() to behave, so this stops being
+        # effectively all-time instead of a rolling window.
+        #
+        # FDRT/MTTR now uses REAL Alertmanager-backed incident data (not a
+        # proxy) via the dora-alerts group below: ALERTS_FOR_STATE for the
+        # ArgoCDAppDegraded alert, which actually fires through Prometheus's
+        # alerting engine and reaches Alertmanager - confirmed live via
+        # Alertmanager's /api/v2/alerts showing it "active". This only
+        # covers currently-firing incidents (average duration so far), not
+        # a rolling history of resolved ones - Prometheus doesn't retain
+        # ALERTS_FOR_STATE once an alert resolves, so this can't yet compute
+        # a true historical p50. Good enough to be honestly real-time,
+        # not yet a full 30d distribution.
         additionalPrometheusRulesMap:
+          dora-alerts:
+            groups:
+            - name: dora-alerts
+              rules:
+              - alert: ArgoCDAppDegraded
+                expr: argocd_app_info{health_status=~"Degraded|Missing"} == 1
+                for: 1m
+                labels:
+                  severity: warning
+                  source: dora-mttr
+                annotations:
+                  summary: "ArgoCD app {{ $labels.name }} is {{ $labels.health_status }}"
           dora-metrics:
             groups:
             - name: dora-metrics
@@ -156,7 +186,7 @@ spec:
               - record: "dora:lead_time_hours:p50_30d"
                 expr: |
                   histogram_quantile(0.5,
-                    sum(rate(tekton_pipelines_controller_pipelinerun_duration_seconds_bucket{status="success"}[30d])) by (le)
+                    sum(tekton_pipelines_controller_pipelinerun_duration_seconds_bucket{status="success"}) by (le)
                   ) / 3600
               - record: "dora:change_failure_rate:ratio30d"
                 expr: |
@@ -166,7 +196,7 @@ spec:
               - record: "dora:fdrt_hours:p50_30d"
                 expr: |
                   (
-                    sum(argocd_app_sync_duration_seconds_total and on(name) argocd_app_sync_total{phase="Failed"})
+                    avg(time() - ALERTS_FOR_STATE{alertname="ArgoCDAppDegraded"})
                     or vector(0)
                   ) / 3600
               - record: "dora:rework_rate:ratio"
