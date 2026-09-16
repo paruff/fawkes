@@ -252,16 +252,16 @@ module "eks" {
   tags = local.tags
 }
 
-module "tracer_bullet_irsa" {
+module "python_fawkes_path_irsa" {
   source = "../terraform/modules/aws/eks-namespace"
 
   namespace = "fawkes"
   # ArgoCD owns namespace creation via CreateNamespace=true
-  # (platform/apps/tracer-bullet/tracer-bullet-application.yaml) — this
-  # module call only manages the IRSA role, not the namespace object.
+  # (platform/apps/python-fawkes-path/python-fawkes-path-application.yaml) —
+  # this module call only manages the IRSA role, not the namespace object.
   manage_namespace     = false
   create_irsa_role     = true
-  service_account_name = "tracer-bullet"
+  service_account_name = "python-fawkes-path"
   oidc_provider_arn    = module.eks.oidc_provider_arn
   oidc_provider_url    = module.eks.oidc_provider
   iam_policy_arns      = []
@@ -290,7 +290,7 @@ output "vpc_id" {
   value       = module.vpc.vpc_id
 }
 
-output "tracer_bullet_irsa_role_arn" {
-  description = "IAM role ARN for tracer-bullet's IRSA-bound ServiceAccount."
-  value       = module.tracer_bullet_irsa.irsa_role_arn
+output "python_fawkes_path_irsa_role_arn" {
+  description = "IAM role ARN for python-fawkes-path's IRSA-bound ServiceAccount."
+  value       = module.python_fawkes_path_irsa.irsa_role_arn
 }
