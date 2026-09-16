@@ -5560,10 +5560,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kl-17-17-microservices-consolidated-into-2-domain-monoliths-in-progress" class="md-nav__link">
+  <a href="#kl-17-17-microservices-2-domain-monoliths-not-started-2026-09-16-correction" class="md-nav__link">
     <span class="md-ellipsis">
       
-        KL-17 — 17 Microservices Consolidated into 2 Domain Monoliths (IN PROGRESS)
+        KL-17 — 17 Microservices → 2 Domain Monoliths (NOT STARTED — 2026-09-16 correction)
       
     </span>
   </a>
@@ -5887,9 +5887,9 @@ re-collecting data may be required. To proceed, please send a request to
 &lt;config-ui-endpoint&gt;/api/proceed-db-migration (or &lt;devlake-endpoint&gt;/proceed-db-migration).
 </code></pre></div>
 <p>This is distinct from KL-09's (resolved) token-scope bug and from the <code>devlake-lake</code> pod's own health — the pod itself is <code>Running</code> (see the "Risk (resolved)" note above), but the application layer refuses every request until someone explicitly approves the migration.</p>
-<p><strong>Status: DEPRECATED</strong> — DevLake is no longer required for DORA metrics (native PromQL implementation). The blocked items (#1919, #2079, #1946, Phase 5) now use native Prometheus/ArgoCD/Alertmanager events instead of DevLake.</p>
-<p><strong>Impact:</strong> Removed from critical path. DevLake migration approval only needed for historical analytics, not for DORA metrics or platform verification.</p>
-<p><strong>Tracking:</strong> DevLake retained as optional component. Migration can be approved at leisure for historical data access.</p>
+<p><strong>Status: DEPRECATED (decision confirmed 2026-09-16)</strong> — DevLake is no longer the intended path for DORA metrics; native PromQL is. <strong>Correction (2026-09-16):</strong> this entry previously claimed #1919/#2079/#1946/Phase 5 "now use native Prometheus/ArgoCD/Alertmanager events" — that was false; those issues were unchanged and still required DevLake tables/dashboards. They've now actually been rescoped (2026-09-16) to depend on #2117 instead. #2117 is also where the real gap lives: <code>platform/apps/prometheus/rules/dora.yml</code>'s recording rules were themselves orphaned (never deployed by anything) until 2026-09-16, and even now that they're wired into <code>prometheus-application.yaml</code>, they compute from metric names (<code>tekton_pipelinerun_*</code>, <code>argocd_application_sync_*</code>, <code>alertmanager_alert_*</code>) that don't exist on <code>mac-mini-k3s</code> — ArgoCD has no metrics Service/ServiceMonitor here, and Tekton isn't deployed on this cluster at all.</p>
+<p><strong>Impact:</strong> DevLake DB migration removed from the critical path for DORA metrics — but native PromQL isn't a working replacement yet either. See #2117 for the actual remaining work.</p>
+<p><strong>Tracking:</strong> DevLake retained as optional component; migration can be approved at leisure for historical data access. #2117 tracks the real native-PromQL prerequisite work.</p>
 <h2 id="kl-16-argocd-repo-servers-default-liveness-probe-is-too-tight-for-healthzfulltrue-fix-pending-deployment">KL-16 — <code>argocd-repo-server</code>'s Default Liveness Probe Is Too Tight for <code>/healthz?full=true</code> (Fix Pending Deployment)</h2>
 <p><strong>Description:</strong> Root-caused 2026-09-13 while running <code>docs/phase-2-closure-plan.md</code>'s Phase 0 prerequisite check, via <code>superpowers:systematic-debugging</code>. <code>argocd-repo-server</code> was in <code>CrashLoopBackOff</code> (500+ restarts over 27h), which made every ArgoCD <code>Application</code> show <code>Unknown</code> sync status and kept <code>tekton</code>/<code>argo-rollouts</code>/<code>chaos-mesh</code> from ever appearing as synced Applications.</p>
 <p>Pattern analysis first ruled out a node-wide network problem: only <code>argocd-repo-server</code> and <code>loki-0</code>'s sidecar were failing on the node in question; everything else there (network-only or lightweight pods) was healthy. The actual cause is the upstream <code>argo-cd</code> Helm chart's own default: <code>repoServer.livenessProbe</code> hits <code>/healthz?full=true</code> (which validates connectivity to <em>every</em> configured repo, OCI registries included) but ships with only <code>timeoutSeconds: 1</code> — too tight for a "full" check on a node with slower disk I/O, so a healthy process kept getting killed mid-check by its own liveness probe.</p>
@@ -5901,17 +5901,18 @@ re-collecting data may be required. To proceed, please send a request to
 <p><strong>Fix:</strong> <code>infra/terraform/argocd/values.yaml</code> now overrides <code>repoServer.livenessProbe.timeoutSeconds: 10</code>, verified via <code>helm template</code> to render correctly. <strong>Not yet confirmed live</strong> — needs the PR merged and <code>terraform apply</code>'d (CI-gated, not applied by hand per <code>AGENTS.md</code> §2's GitOps rule) before re-checking <code>kubectl get applications -n argocd</code> shows real sync statuses again.</p>
 <p><strong>Tracking:</strong> No dedicated issue yet — fixed directly as part of closing <code>docs/phase-2-closure-plan.md</code>'s Phase 0.</p>
 <hr />
-<h2 id="kl-17-17-microservices-consolidated-into-2-domain-monoliths-in-progress">KL-17 — 17 Microservices Consolidated into 2 Domain Monoliths (IN PROGRESS)</h2>
-<p><strong>Description:</strong> The platform previously ran 17 separate Python FastAPI microservices (<code>vsm</code>, <code>analytics-dashboard</code>, <code>anomaly-detection</code>, <code>smart-alerting</code>, <code>feedback</code>, <code>feedback-bot</code>, <code>friction-cli</code>, <code>friction-bot</code>, <code>discovery-metrics</code>, <code>space-metrics</code>, <code>ai-code-review</code>, <code>nps</code>, <code>devx-survey-automation</code>, <code>insights</code>, <code>data-api</code>, <code>mcp-k8s-server</code>, <code>tracer-bullet</code>). These have been consolidated into 2 domain monoliths:
+<h2 id="kl-17-17-microservices-2-domain-monoliths-not-started-2026-09-16-correction">KL-17 — 17 Microservices → 2 Domain Monoliths (NOT STARTED — 2026-09-16 correction)</h2>
+<p><strong>Description:</strong> The platform currently runs 17 separate Python FastAPI microservices (<code>vsm</code>, <code>analytics-dashboard</code>, <code>anomaly-detection</code>, <code>smart-alerting</code>, <code>feedback</code>, <code>feedback-bot</code>, <code>friction-cli</code>, <code>friction-bot</code>, <code>discovery-metrics</code>, <code>space-metrics</code>, <code>ai-code-review</code>, <code>nps</code>, <code>devx-survey-automation</code>, <code>insights</code>, <code>data-api</code>, <code>mcp-k8s-server</code>, <code>tracer-bullet</code>). The plan is to consolidate them into 2 domain monoliths:
 - <code>fawkes-telemetry-engine</code> (telemetry, DORA, SPACE, anomaly detection, analytics, insights, discovery, data API)
 - <code>fawkes-devex-service</code> (feedback, friction, VSM, NPS, DevEx surveys, AI code review, MCP K8s server)</p>
-<p><strong>Impact:</strong>
+<p><strong>Corrected status (2026-09-16):</strong> Previously stated as "IN PROGRESS" with completed impact claims (70% resource reduction, eliminated HTTP latency, shared libraries in <code>services/common/</code>) — <strong>none of this is true</strong>. <code>services/</code> on <code>main</code> still has all 17 original service dirs; no monolith directories, <code>services/common/</code> shared library, or any migrated code exist on any branch. Local directories with the monolith/common names exist only as untracked, source-free <code>__pycache__</code>/<code>.venv</code> build residue from 2026-09-15 (no <code>.py</code> files) — leftover from an abandoned local experiment, not real progress. See the phased implementation plan filed as a tracking issue before starting real work.</p>
+<p><strong>Impact (projected, not yet realized):</strong>
 - ~70% reduction in cluster resource footprint (memory, CPU, pod count)
 - Eliminated inter-service HTTP latency and failure modes
 - Simplified local development (2 services vs 17 in k3d)
 - Single PostgreSQL instance with separate databases (<code>telemetry_db</code>, <code>devex_db</code>)
 - Shared libraries in <code>services/common/</code></p>
-<p><strong>Tracking:</strong> Migration in progress. Each monolith deployed as single Deployment with multiple internal modules. Inter-service HTTP calls replaced with direct imports.</p>
+<p><strong>Tracking:</strong> Not started. See phased plan.</p>
 <hr />
 <h2 id="kl-18-vault-migrated-to-openbao-completed">KL-18 — Vault Migrated to OpenBao (COMPLETED)</h2>
 <p><strong>Description:</strong> HashiCorp Vault (BSL license) replaced with OpenBao (open-source fork, MPL-2.0). All secrets management, dynamic credentials, and Kubernetes auth workflows migrated.</p>
