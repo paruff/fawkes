@@ -386,17 +386,20 @@ spec:
           enabled: true
           adminPassword: "fawkesidp"
 
-          # 2026-09-16: the chart's default grafana/grafana:X.Y.Z-distroless
-          # image doesn't register the core "prometheus" datasource plugin -
-          # confirmed live (`/api/plugins` lists 39 plugins, cloudwatch/
-          # graphite/alertmanager present, prometheus absent; any datasource
-          # query against it 404s with "Unable to find datasource plugin").
-          # Reproduced across a full pod restart AND a from-scratch PVC wipe,
-          # ruling out state corruption - this is the image itself. Pinning
-          # the non-distroless tag fixes it; ArgoCD's selfHeal would
-          # otherwise revert any live-only image patch back to this default.
+          # 2026-09-16: the chart's default Grafana 13.2.1 (both distroless
+          # and standard tags) never registers the core "prometheus"
+          # datasource plugin - confirmed live (`/api/plugins` lists 39
+          # plugins, cloudwatch/graphite/alertmanager present, prometheus
+          # absent; any datasource query 404s with "Unable to find
+          # datasource plugin"). Reproduced across a pod restart, a
+          # from-scratch PVC wipe, AND both image variants - ruled out state
+          # corruption and the distroless variant specifically. Pinning
+          # 11.5.2 (a known-stable prior major version) fixed it immediately
+          # - this is a Grafana 13.2.1 regression, not a config issue on our
+          # side. See #2130 for the full investigation; revisit pinning
+          # forward once upstream fixes this.
           image:
-            tag: "13.2.1"
+            tag: "11.5.2"
 
           # Bumped from the original 256Mi/512Mi after this instance became
           # the single consolidated Grafana (DevLake's own bundled instance
