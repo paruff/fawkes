@@ -327,11 +327,11 @@ re-collecting data may be required. To proceed, please send a request to
 
 This is distinct from KL-09's (resolved) token-scope bug and from the `devlake-lake` pod's own health — the pod itself is `Running` (see the "Risk (resolved)" note above), but the application layer refuses every request until someone explicitly approves the migration.
 
-**Status: DEPRECATED** — DevLake is no longer required for DORA metrics (native PromQL implementation). The blocked items (#1919, #2079, #1946, Phase 5) now use native Prometheus/ArgoCD/Alertmanager events instead of DevLake.
+**Status: DEPRECATED (decision confirmed 2026-09-16)** — DevLake is no longer the intended path for DORA metrics; native PromQL is. **Correction (2026-09-16):** this entry previously claimed #1919/#2079/#1946/Phase 5 "now use native Prometheus/ArgoCD/Alertmanager events" — that was false; those issues were unchanged and still required DevLake tables/dashboards. They've now actually been rescoped (2026-09-16) to depend on #2117 instead. #2117 is also where the real gap lives: `platform/apps/prometheus/rules/dora.yml`'s recording rules were themselves orphaned (never deployed by anything) until 2026-09-16, and even now that they're wired into `prometheus-application.yaml`, they compute from metric names (`tekton_pipelinerun_*`, `argocd_application_sync_*`, `alertmanager_alert_*`) that don't exist on `mac-mini-k3s` — ArgoCD has no metrics Service/ServiceMonitor here, and Tekton isn't deployed on this cluster at all.
 
-**Impact:** Removed from critical path. DevLake migration approval only needed for historical analytics, not for DORA metrics or platform verification.
+**Impact:** DevLake DB migration removed from the critical path for DORA metrics — but native PromQL isn't a working replacement yet either. See #2117 for the actual remaining work.
 
-**Tracking:** DevLake retained as optional component. Migration can be approved at leisure for historical data access.
+**Tracking:** DevLake retained as optional component; migration can be approved at leisure for historical data access. #2117 tracks the real native-PromQL prerequisite work.
 
 ## KL-16 — `argocd-repo-server`'s Default Liveness Probe Is Too Tight for `/healthz?full=true` (Fix Pending Deployment)
 
