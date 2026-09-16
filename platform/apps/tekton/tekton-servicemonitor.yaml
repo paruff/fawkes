@@ -1,0 +1,59 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# ============================================================================
+# FILE: platform/apps/tekton/tekton-servicemonitor.yaml
+# PURPOSE: 2026-09-16 - Tekton's controller metrics port (9090, service
+# tekton-pipelines-controller) already existed but had no ServiceMonitor,
+# so Prometheus never scraped it. Confirmed live via manual port-forward
+# that the real metric family is tekton_pipelines_controller_* (NOT
+# tekton_pipelinerun_* as earlier assumed elsewhere in this repo), needed
+# for rules/dora.yml's Lead Time recording rule.
+#
+# Selector/port verified live against the actual Service object
+# (`kubectl get svc tekton-pipelines-controller -o yaml`) - its label is
+# the plain `app: tekton-pipelines-controller`, not
+# app.kubernetes.io/name (that's set to "controller", shared across
+# other Tekton components, too broad to select just this one).
+#
+# Prometheus already watches ServiceMonitors across namespaces regardless
+# of this resource's own namespace (ruleSelectorNilUsesHelmValues: false
+# etc. in prometheus-application.yaml) - same pattern already proven by
+# the existing fawkes/python-fawkes-path ServiceMonitor.
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: tekton-pipelines-controller
+  namespace: fawkes
+  labels:
+    app: tekton
+    component: ci-cd
+spec:
+  selector:
+    matchLabels:
+      app: tekton-pipelines-controller
+  namespaceSelector:
+    matchNames:
+      - fawkes
+  endpoints:
+    - port: http-metrics
+      interval: 30s
+      path: /metrics
