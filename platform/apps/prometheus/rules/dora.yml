@@ -20,7 +20,18 @@
 
 # DORA Metrics Recording Rules
 # Computed natively in Prometheus — no DevLake ETL required
-# Deployed via ArgoCD Application: platform/apps/prometheus/prometheus-rules-dora.yaml
+#
+# 2026-09-16: this file itself was never deployed by anything - the
+# prometheus-rules-dora.yaml Application referenced below was never
+# created (confirmed: file doesn't exist; zero dora_* metrics live on
+# mac-mini-k3s). Actual deploy target is now
+# platform/apps/prometheus/prometheus-application.yaml's
+# additionalPrometheusRulesMap.dora-metrics (same rules, kept in sync
+# by hand - this file is the readable reference copy, not the live source).
+#
+# Also still needed before any of this produces real data: ArgoCD has no
+# metrics Service/ServiceMonitor on this cluster, and Tekton isn't deployed
+# on mac-mini-k3s at all - see the prerequisite tracking issue.
 #
 # Required OTLP Events (emitted by Tekton, ArgoCD, Alertmanager):
 # - tekton_pipelinerun_start{commit_sha, pipeline, namespace}
