@@ -141,6 +141,23 @@ resource "azurerm_kubernetes_cluster" "aks" {
   tags = var.tags
 }
 
+# Writes the kubeconfig to the path outputs.tf's kubeconfig_path output
+# declares. Without this, that output is just a string with nothing behind
+# it - scripts/ignite.sh's try_set_kubeconfig_from_tf_outputs() checks for
+# a file at this path, finds none, warns, and silently leaves KUBECONFIG
+# pointed at whatever context was active before terraform ran (#1972 - can
+# misdirect a deploy at the wrong cluster with no error). Azure RBAC is
+# enabled on this cluster, so this raw kubeconfig uses client-cert auth
+# only until scripts/lib/providers/azure.sh's own `kubelogin
+# convert-kubeconfig` step runs against it (that step already exists
+# downstream - this resource only needed to exist for it to have something
+# to convert).
+resource "local_file" "kubeconfig" {
+  content         = azurerm_kubernetes_cluster.aks.kube_config_raw
+  filename        = "${path.root}/.kube/config"
+  file_permission = "0600"
+}
+
 # User node pool with auto-scaling
 resource "azurerm_kubernetes_cluster_node_pool" "user" {
   name                  = "user"
