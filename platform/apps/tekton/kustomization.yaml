@@ -67,6 +67,7 @@ resources:
   - golden-path-pipeline.yaml
   - pr-preview-environment-task.yaml
   - dast-baseline-scan-task.yaml
+  - tekton-servicemonitor.yaml
 
 patches:
   # The vendored tekton-pipelines Namespace object is redundant once its
@@ -87,3 +88,22 @@ patches:
       - op: replace
         path: /metadata/namespace
         value: fawkes
+  # 2026-09-16: fawkes-dev-aks's user node pool runs on Spot priority
+  # (cost savings, terraform.tfvars user_node_pool_priority=spot), which
+  # AKS auto-taints kubernetes.azure.com/scalesetpriority=spot:NoSchedule.
+  # None of Tekton's vendored Deployments tolerate it (unlike ArgoCD's own
+  # Helm values, which already carry a toleration for the *system* pool's
+  # CriticalAddonsOnly taint - same class of problem, different taint).
+  # Confirmed live: every Tekton pod sat Pending ("untolerated taint(s)")
+  # until this was added. Matches ArgoCD's Application manifest review
+  # note above - flagging for maintainer review, not silently assumed ok.
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: add
+        path: /spec/template/spec/tolerations
+        value:
+          - key: kubernetes.azure.com/scalesetpriority
+            operator: Equal
+            value: spot
+            effect: NoSchedule

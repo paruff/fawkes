@@ -126,151 +126,56 @@ spec:
         # ============================================================
         # Additional Prometheus Rules — DORA metrics (native PromQL)
         # ============================================================
-        # #1572 / KL-15 pivot: previously an orphaned file
-        # (platform/apps/prometheus/rules/dora.yml) that nothing deployed -
-        # its own header comment pointed at a companion Application
-        # (prometheus-rules-dora.yaml) that was never created. Wired in
-        # here instead via the chart's native additionalPrometheusRulesMap,
-        # full rule set carried over unchanged from rules/dora.yml.
+        # 2026-09-16: rewritten against REAL, live-verified metric names on
+        # fawkes-dev-aks - the previous version's names
+        # (argocd_application_sync_succeeded_total, tekton_pipelinerun_*,
+        # alertmanager_alert_*) were guessed and never matched anything
+        # real; confirmed live that zero series existed for any of them.
+        # Targets the exact 5 metric names
+        # platform/apps/grafana-dashboards/dora-metrics-dashboard-configmap.yaml's
+        # "DORA 2026 — Five Key Metrics" panel queries (the ArgoCD-managed
+        # dashboard - two other "DORA dashboard" files elsewhere in this
+        # repo are unwired orphans using yet another naming scheme, not
+        # reconciled here). Full explanation of each rule, including which
+        # two are honest proxies rather than textbook DORA definitions, in
+        # platform/apps/prometheus/rules/dora.yml (readable reference copy,
+        # kept in sync by hand - this block is the live source).
         #
-        # NOTE: deploying this does NOT mean DORA metrics are live. The
-        # rules below aggregate from tekton_pipelinerun_*, argocd_application_sync_*,
-        # alertmanager_alert_*, and service_up/down metrics that do not
-        # exist in this cluster's Prometheus yet (verified live 2026-09-16:
-        # zero series for any of them; ArgoCD has no metrics Service/
-        # ServiceMonitor, Tekton is not even deployed on mac-mini-k3s).
-        # See the prerequisite tracking issue before assuming this produces
-        # any data.
+        # Real source metrics confirmed live 2026-09-16:
+        # - argocd_app_sync_total{name,namespace,phase} - phase="Succeeded"|"Failed"
+        # - tekton_pipelines_controller_pipelinerun_duration_seconds_bucket{status,pipeline}
         additionalPrometheusRulesMap:
           dora-metrics:
             groups:
             - name: dora-metrics
               interval: 30s
               rules:
-              - expr: |
-                  sum by (app, namespace) (
-                    increase(argocd_application_sync_succeeded_total[1d])
-                  )
-                record: dora_deployments_total
-                labels:
-                  metric_type: "dora"
-                  dora_key: "deployment_frequency"
-              - expr: |
-                  sum by (app, namespace) (
-                    increase(argocd_application_sync_failed_total[1d])
-                  )
-                record: dora_deployment_failures_total
-                labels:
-                  metric_type: "dora"
-                  dora_key: "change_failure_rate"
-              - expr: |
+              - record: "dora:deployment_frequency:rate30d"
+                expr: |
+                  sum(increase(argocd_app_sync_total{phase="Succeeded"}[30d])) / 30
+              - record: "dora:lead_time_hours:p50_30d"
+                expr: |
                   histogram_quantile(0.5,
-                    sum by (le, app, namespace) (
-                      increase(
-                        (
-                          argocd_application_sync_succeeded_timestamp_seconds{job="argocd"}
-                          -
-                          tekton_pipelinerun_start_timestamp_seconds{job="tekton"}
-                        ) / 3600
-                      )[24h]
-                    )
-                  ) * 3600
-                record: dora_lead_time_seconds
-                labels:
-                  metric_type: "dora"
-                  dora_key: "lead_time_for_changes"
-              - expr: |
-                  histogram_quantile(0.5,
-                    sum by (le, app, namespace) (
-                      increase(
-                        (
-                          alertmanager_alert_resolved_timestamp_seconds
-                          -
-                          alertmanager_alert_firing_timestamp_seconds
-                        ) / 3600
-                      )[24h]
-                    )
-                  ) * 3600
-                record: dora_mttr_seconds
-                labels:
-                  metric_type: "dora"
-                  dora_key: "mttr"
-              - expr: |
-                  sum by (app, namespace) (
-                    rate(argocd_application_sync_succeeded_total[24h])
-                  )
-                record: "dora:deployment_frequency:ratio_1d"
-                labels:
-                  metric_type: "dora"
-                  dora_key: "deployment_frequency"
-              - expr: |
-                  histogram_quantile(0.9,
-                    sum by (le, app, namespace) (
-                      increase(
-                        (
-                          argocd_application_sync_succeeded_timestamp_seconds{job="argocd"}
-                          -
-                          tekton_pipelinerun_start_timestamp_seconds{job="tekton"}
-                        ) / 3600
-                      )[24h]
-                    )
-                  ) * 3600
-                record: "dora:lead_time_for_changes:p90_seconds"
-                labels:
-                  metric_type: "dora"
-                  dora_key: "lead_time_for_changes"
-              - expr: |
-                  histogram_quantile(0.9,
-                    sum by (le, app, namespace) (
-                      increase(
-                        (
-                          alertmanager_alert_resolved_timestamp_seconds
-                          -
-                          alertmanager_alert_firing_timestamp_seconds
-                        ) / 3600
-                      )[24h]
-                    )
-                  ) * 3600
-                record: "dora:mttr:p90_seconds"
-                labels:
-                  metric_type: "dora"
-                  dora_key: "mttr"
-              - expr: |
-                  sum by (service, namespace) (
-                    rate(service_up_total{job="prometheus"}[30d])
+                    sum(rate(tekton_pipelines_controller_pipelinerun_duration_seconds_bucket{status="success"}[30d])) by (le)
+                  ) / 3600
+              - record: "dora:change_failure_rate:ratio30d"
+                expr: |
+                  sum(increase(argocd_app_sync_total{phase="Failed"}[30d]))
+                  /
+                  sum(increase(argocd_app_sync_total[30d]))
+              - record: "dora:fdrt_hours:p50_30d"
+                expr: |
+                  (
+                    sum(argocd_app_sync_duration_seconds_total and on(name) argocd_app_sync_total{phase="Failed"})
+                    or vector(0)
+                  ) / 3600
+              - record: "dora:rework_rate:ratio"
+                expr: |
+                  (
+                    sum(argocd_app_sync_total) - count(count by (name) (argocd_app_sync_total))
                   )
                   /
-                  sum by (service, namespace) (
-                    rate(service_up_total{job="prometheus"}[30d]) + rate(service_down_total{job="prometheus"}[30d])
-                  )
-                record: "dora:reliability:ratio_30d"
-                labels:
-                  metric_type: "dora"
-                  dora_key: "reliability"
-              - expr: |
-                  sum by (app, namespace) (
-                    rate(argocd_application_sync_succeeded_total[24h])
-                  )
-                  /
-                  sum by (app, namespace) (
-                    rate(argocd_application_sync_total[24h])
-                  )
-                record: "dora:deployment_success_rate:ratio_1d"
-                labels:
-                  metric_type: "dora"
-                  dora_key: "deployment_success_rate"
-              - expr: |
-                  sum by (app, namespace) (
-                    rate(argocd_application_rollback_total[24h])
-                  )
-                  /
-                  sum by (app, namespace) (
-                    rate(argocd_application_sync_total[24h])
-                  )
-                record: "dora:rollback_rate:ratio_1d"
-                labels:
-                  metric_type: "dora"
-                  dora_key: "rollback_rate"
+                  count(count by (name) (argocd_app_sync_total))
 
         # ============================================================
         # Prometheus Server
@@ -480,6 +385,21 @@ spec:
         grafana:
           enabled: true
           adminPassword: "fawkesidp"
+
+          # 2026-09-16: the chart's default Grafana 13.2.1 (both distroless
+          # and standard tags) never registers the core "prometheus"
+          # datasource plugin - confirmed live (`/api/plugins` lists 39
+          # plugins, cloudwatch/graphite/alertmanager present, prometheus
+          # absent; any datasource query 404s with "Unable to find
+          # datasource plugin"). Reproduced across a pod restart, a
+          # from-scratch PVC wipe, AND both image variants - ruled out state
+          # corruption and the distroless variant specifically. Pinning
+          # 11.5.2 (a known-stable prior major version) fixed it immediately
+          # - this is a Grafana 13.2.1 regression, not a config issue on our
+          # side. See #2130 for the full investigation; revisit pinning
+          # forward once upstream fixes this.
+          image:
+            tag: "11.5.2"
 
           # Bumped from the original 256Mi/512Mi after this instance became
           # the single consolidated Grafana (DevLake's own bundled instance
